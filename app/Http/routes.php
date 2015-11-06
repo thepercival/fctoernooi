@@ -12,5 +12,19 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
+});
+
+// API ROUTES ==================================
+Route::group(array('prefix' => 'api/v1'), function() {
+
+    // http://localhost:8000/api/v1/competitionseason/
+    Route::resource('competitionseason', 'ApiCtrl',
+        array('only' => array('index')));
+
+});
+
+Route::any('{{catch_all}}', function()
+{
+    App::abort(404);
 });
