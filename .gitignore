@@ -1,7 +1,1 @@
-/public/bower_components
-/public/node_modules
-/vendor
-/bootstrap/compiled.php
-.env.*.php
-.env.php
-.env
+.idea
