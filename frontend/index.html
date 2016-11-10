@@ -3,9 +3,10 @@
     <title>Angular QuickStart</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="node_modules/skeleton-css/css/normalize.css">
-    <link rel="stylesheet" href="node_modules/skeleton-css/css/skeleton.css">
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css" />
     <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/bootstrap-theme.css">
     <!-- 1. Load libraries -->
     <!-- Polyfill for older browsers -->
     <script src="node_modules/core-js/client/shim.min.js"></script>
@@ -20,6 +21,55 @@
 </head>
 <!-- 3. Display the application -->
 <body>
+<nav class="navbar navbar-default header">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <h1>
+                <a class="navbar-brand" href="/"><img alt="FC Toernooi" width="20" height="20" src="images/brand.png"></a>
+                <a class="navbar-brand" href="/">FC Toernooi</a>
+            </h1>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="navbar">
+            <ul class="nav navbar-nav">
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="https://www.fctoernooi.nl/user/login/">
+                        <span class="glyphicon glyphicon-log-in"></span>&nbsp;<span>inloggen</span>
+                    </a>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
 <fctoernooi-app>Loading...</fctoernooi-app>
+<footer class="footer container">
+    <div class="row" id="ft">
+        <div class="col-xs-12 col-sm-4">
+            <h6>contact</h6>
+            <div><span class="glyphicon glyphicon-phone"></span> +31 614363514</div>
+            <div><span class="glyphicon glyphicon-envelope"></span> coendunnink@gmail.com</div>
+        </div>
+        <div class="col-xs-12 col-sm-4">
+            <h6>projecten</h6>
+            <div><a target="_blank" href="https://www.voetbaloog.nl/">voetbaloog</a></div>
+            <div><a target="_blank" href="https://www.superelf-eredivisie.nl/">superelf</a></div>
+        </div>
+        <div class="col-xs-12 col-sm-4">
+            <h6>links</h6>
+            <div><a target="_blank" rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">cc by-nc-sa<span> 3.0 licentie</span></a></div>
+            <div><a target="_blank" rel="license" href="http://www.flaticon.com/">flaticon.com</a></div>
+        </div>
+    </div>
+    <div class="hidden-xs" style="text-align: center; padding-top:50px;"><span class="glyphicon glyphicon-copyright-mark"></span> Coen Dunnink</div>
+</footer>
 </body>
 </html>

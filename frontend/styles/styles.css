@@ -18,3 +18,63 @@ body {
 input {
     color: black;
 }
+<!-- from old -->
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 275px;
+    background-color: #222222;
+    letter-spacing: 1px;
+}
+#ft {
+    padding:10px;
+    padding-top: 30px;
+    background-color: #222222;
+}
+nav.header{
+    background-color: #222222;
+}
+h1 {
+    margin:0px;
+    padding:0px;
+    font-size:100%;
+    letter-spacing: 2px;
+}
+h1:before {
+    background-image: url(../images/brand.png);
+    background-repeat: no-repeat;
+    background-position:center;
+    padding: 0px;
+}
+h2, .h2 {
+    font-size: 35px;
+}
+h3, .h3 {
+    font-size: 25px;
+}
+h2, .h2 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+h3, .h3 {
+    margin-top:5px;
+    margin-bottom:5px;
+}
+#content {
+    padding-bottom: 30px;
+}
+.page-header {
+    border-bottom: 1px solid white;
+}
+span.required {
+    color: #cc0000;
+}
+hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+a{
+    text-decoration: underline;
+}
