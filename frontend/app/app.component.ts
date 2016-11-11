@@ -68,7 +68,7 @@ const COMPETITIONSEASONS: CompetitionSeason[] = [
 `]
 })
 export class AppComponent {
-    title = 'FCToernooi';
+    title = 'FCToernooi2';
     competitionseasons = COMPETITIONSEASONS;
     competitionseason: CompetitionSeason = null;
     selectedCompetitionSeason: CompetitionSeason;

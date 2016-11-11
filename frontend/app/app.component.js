@@ -22,7 +22,7 @@ var COMPETITIONSEASONS = [
 ];
 var AppComponent = (function () {
     function AppComponent() {
-        this.title = 'FCToernooi';
+        this.title = 'FCToernooi2';
         this.competitionseasons = COMPETITIONSEASONS;
         this.competitionseason = null;
     }
