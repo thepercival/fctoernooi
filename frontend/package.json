@@ -41,6 +41,7 @@
     "gulp": "^3.9.1",
     "gulp-clean-css": "^2.0.13",
     "gulp-config": "^0.3.0",
+    "gulp-customize-bootstrap": "0.0.6",
     "gulp-inject": "^4.1.0",
     "gulp-minify": "0.0.14",
     "gulp-notify": "^2.2.0",

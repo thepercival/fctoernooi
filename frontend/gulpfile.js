@@ -6,6 +6,7 @@ var notify = require("gulp-notify");
 var browserSync = require('browser-sync').create();
 var sourcemaps = require('gulp-sourcemaps');
 var del = require('del');
+var customizeBootstrap = require('gulp-customize-bootstrap');
 
 var config = {
     paths: {
@@ -57,6 +58,13 @@ gulp.task('css', function() {
             } }))
         .pipe(sourcemaps.write( "." ))
         .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('compileBootstrap', function() {
+    return gulp.src('node_modules/bootstrap/scss/bootstrap.scss')
+        .pipe(customizeBootstrap('sass/*.scss'))
+        .pipe(sass())
+        .pipe(gulp.dest('dist/'));
 });
 
 gulp.task('build:css', [
