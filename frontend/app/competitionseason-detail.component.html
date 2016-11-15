@@ -1,0 +1,16 @@
+<div *ngIf="object">
+    <h2>toernooi</h2>
+    <div>
+        <label>id: </label>{{object.id}}
+    </div>
+    <div>
+        <label>naam: </label>
+        <input type="text" class="" [(ngModel)]="object.name" placeholder="naam">
+    </div>
+    <div>
+        <label>naam: </label>
+        <input type="text" class="" [(ngModel)]="object.seasonname" placeholder="2012/2013">
+    </div>
+    <button (click)="save()">Save</button>
+    <button (click)="goBack()">Back</button>
+</div>

@@ -1,0 +1,42 @@
+<div>
+    <label>toernooinaam:</label> <input #competitionseasonName />
+    <button (click)="add(competitionseasonName.value); competitionseasonName.value=''">
+        toevoegen
+    </button>
+</div>
+
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>naam</th>
+        <th>seizoen</th>
+        <th><button class="btn btn-default btn-cs-add"><i class="fa fa-plus fa-fw"></i></button></th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let competitionseason of competitionseasons" class="competitionseason" [class.selected]="competitionseason === selectedCompetitionSeason" (click)="onSelect(competitionseason)">
+        <td>{{competitionseason.name}}</td><td>{{competitionseason.seasonname}}</td>
+        <td>
+            <!-- <div ngbDropdown [up]="true" class="d-inline-block"> -->
+
+                <button class="btn btn-outline-default csDropdownBtn" id="dropdownMenu{{competitionseason.id}}" ngbDropdownToggle><i class="fa fa-ellipsis-v fa-fw"></i></button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu">
+                    <button class="dropdown-item" (click)="onSelect(competitionseason)"><i class="fa fa-edit fa-fw"></i> wijzigen</button>
+                    <button class="dropdown-item"><i class="fa fa-tv fa-fw"></i> tv-schermm</button>
+                    <button class="dropdown-item"><i class="fa fa-remove fa-fw"></i> vewijderen</button>
+                </div>
+
+                <button class="delete" (click)="delete(competitionseason); $event.stopPropagation()">x</button>
+            <!-- </div> -->
+        </td>
+        </tr>
+    </tbody>
+</table>
+
+<div *ngIf="selectedCompetitionSeason">
+    <h2>
+        {{selectedCompetitionSeason.name | uppercase}} is my toernooi
+    </h2>
+    <button (click)="gotoDetail()">View Details</button>
+</div>

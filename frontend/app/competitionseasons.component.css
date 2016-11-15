@@ -1,0 +1,13 @@
+.selected {
+    background-color: #CFD8DC !important;
+}
+.dropdown-toggle::after {
+    margin-left: 0;
+}
+.csDropdownBtn::after{
+    border-left: 0;
+    border-right: 0;
+}
+.btn{
+    padding: 4px;
+}
