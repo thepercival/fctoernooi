@@ -36,3 +36,7 @@ $container['App\Action\UserAction'] = function ($c) {
     $userResource = new \App\Resource\UserResource($c->get('em'));
     return new App\Action\UserAction($userResource);
 };
+$container['App\Action\CompetitionSeasonAction'] = function ($c) {
+    $userResource = new \App\Resource\CompetitionSeasonResource($c->get('em'));
+    return new App\Action\CompetitionSeasonAction($competitionSeasonResource);
+};

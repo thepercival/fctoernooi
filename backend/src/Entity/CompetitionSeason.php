@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: cdunnink
  * Date: 15-11-2016
- * Time: 09:36
+ * Time: 16:25
  */
 
 namespace App\Entity;
@@ -13,9 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="users")
+ * @ORM\Table(name="competitionseasons")
  */
-class User
+class CompetitionSeason
 {
     /**
      * @var integer
@@ -27,23 +27,32 @@ class User
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=64)
+     *
+     * CONST MAX_NAME_LENGTH = 20;
+     *
+     * @ORM\Column(type="string", length=20)
      */
     protected $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * CONST MAX_NAME_LENGTH = 9;
+     *
+     * @ORM\Column(type="string", length=9)
      */
-    protected $email;
+    protected $seasonname;
 
     /**
-     * @ORM\ManyToMany(targetEntity="CompetitionSeason", inversedBy="users")
-     * @ORM\JoinTable(name="users_competitionseasons")
+     * @ORM\Column(type="json_array")
      */
-    private $competitionseasons;
+    protected $structure;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="competitionseasons")
+     */
+    private $users;
 
     public function __construct() {
-        $this->competitionseasons = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -78,24 +87,45 @@ class User
     }
 
     /**
-     * Get email
+     * Get seasonname
      *
      * @ORM\return string
      */
-    public function getEmail()
+    public function getSeasonName()
     {
-        return $this->email;
+        return $this->seasonname;
     }
 
     /**
-     * Set email
+     * Set seasonname
      *
      * @ORM\param string
      * @ORM\return void
      */
-    public function setEmail( $email )
+    public function setSeasonName( $seasonname )
     {
-        $this->email = $email;
+        $this->seasonname = $seasonname;
+    }
+
+    /**
+     * Get structure
+     *
+     * @ORM\return json_array
+     */
+    public function getStructure()
+    {
+        return $this->structure;
+    }
+
+    /**
+     * Set structure
+     *
+     * @ORM\param json_array
+     * @ORM\return void
+     */
+    public function setStructure( $structure )
+    {
+        $this->structure = $structure;
     }
 
     /**

@@ -43,7 +43,7 @@ class UserResource extends AbstractResource
                 return $user->getArrayCopy();
             }
         }
-        return false;
+        return null;
     }
 
     public function post( $arrProps )
