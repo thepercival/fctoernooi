@@ -9,14 +9,14 @@ import { CompetitionSeason } from './competitionseason';
 export class CompetitionSeasonService {
 
     private headers = new Headers({'Content-Type': 'application/json'});
-    private competitionseasonsUrl = 'app/competitionseasons';  // URL to web api
+    private competitionseasonsUrl = 'http://localhost:2999/competitionseasons';  // URL to web api
 
     constructor(private http: Http) { }
 
     getCompetitionSeasons(): Promise<CompetitionSeason[]> {
         return this.http.get(this.competitionseasonsUrl)
             .toPromise()
-            .then(response => response.json().data as CompetitionSeason[])
+            .then(response => response.json() as CompetitionSeason[])
             .catch(this.handleError);
     }
 
@@ -31,11 +31,11 @@ export class CompetitionSeasonService {
             .then(competitionseasons => competitionseasons.find(competitionseason => competitionseason.id === id));
     }
 
-    create(name: string): Promise<CompetitionSeason> {
+    create(name: string, seasonname: string): Promise<CompetitionSeason> {
         return this.http
-            .post(this.competitionseasonsUrl, JSON.stringify({name: name}), {headers: this.headers})
+            .post(this.competitionseasonsUrl, JSON.stringify({name: name, seasonname: seasonname, structure: '{}'}), {headers: this.headers})
             .toPromise()
-            .then(res => res.json().data)
+            .then(res => res.json())
             .catch(this.handleError);
     }
 
