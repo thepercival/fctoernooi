@@ -38,12 +38,16 @@ export class CompetitionSeasonsComponent implements OnInit {
         this.getCompetitionSeasons();
     }
 
-    add(name: string): void {
+    add(name: string, seasonname: string): void {
         name = name.trim();
         if (!name) {
             return;
         }
-        this.competitionSeasonService.create(name)
+        seasonname = seasonname.trim();
+        if (!seasonname) {
+            return;
+        }
+        this.competitionSeasonService.create(name,seasonname)
             .then(competitionseason => {
                 this.competitionseasons.push(competitionseason);
                 this.selectedCompetitionSeason = null;

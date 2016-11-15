@@ -1,6 +1,7 @@
 <div>
     <label>toernooinaam:</label> <input #competitionseasonName />
-    <button (click)="add(competitionseasonName.value); competitionseasonName.value=''">
+    <label>seizoensnaam:</label> <input #seasonName />
+    <button (click)="add(competitionseasonName.value, seasonName.value); competitionseasonName.value='' ">
         toevoegen
     </button>
 </div>
