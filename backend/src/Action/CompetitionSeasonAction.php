@@ -8,63 +8,65 @@
 
 namespace App\Action;
 
-use App\Resource\UserResource;
+use App\Resource\CompetitionSeasonResource;
 use Slim\ServerRequestInterface;
 
-final class UserAction
+final class CompetitionSeasonAction
 {
-    private $userResource;
+    private $competitionseasonResource;
 
-    public function __construct(UserResource $userResource)
+    public function __construct(CompetitionSeasonResource $competitionseasonResource)
     {
-        $this->userResource = $userResource;
+        $this->competitionseasonResource = $competitionseasonResource;
     }
 
     public function fetch($request, $response, $args)
     {
-        $users = $this->userResource->get();
-        return $response->withJSON($users);
+        $competitionseasons = $this->competitionseasonResource->get();
+        return $response->withJSON($competitionseasons);
     }
 
     public function fetchOne($request, $response, $args)
     {
-        $user = $this->userResource->get($args['id']);
-        if ($user) {
-            return $response->withJSON($user);
+	    $competitionseason = $this->competitionseasonResource->get($args['id']);
+        if ($competitionseason) {
+            return $response->withJSON($competitionseason);
         }
         return $response->withStatus(404, 'geen gebruiker met het opgegeven id gevonden');
     }
 
     public function add( $request, $response, $args)
     {
-        $user = $this->userResource->post( array(
-                "name"=> $request->getParam('name'),
-                "email" => $request->getParam('email') )
+	    $competitionseason = $this->competitionseasonResource->post( array(
+		        "name"=> $request->getParam('name'),
+		        "seasonname"=> $request->getParam('seasonname'),
+		        "structure" => $request->getParam('structure') )
         );
-        if ($user) {
-            return $response->withJSON($user);
+        if ($competitionseason) {
+            return $response->withJSON($competitionseason);
         }
-        return $response->withStatus(404, 'geen gebruiker toegevoegd');
+        return $response->withStatus(404, 'geen toernooi toegevoegd');
     }
 
     public function edit( $request, $response, $args)
     {
-        $user = $this->userResource->put( $args['id'], array(
+	    $competitionseason = $this->competitionseasonResource->put( $args['id'], array(
             "name"=> $request->getParam('name'),
-            "email" => $request->getParam('email') )
+            "seasonname"=> $request->getParam('seasonname'),
+            "structure" => $request->getParam('structure') )
         );
-        if ($user) {
-            return $response->withJSON($user);
+        if ($competitionseason) {
+            return $response->withJSON($competitionseason);
         }
-        return $response->withStatus(404, 'geen gebruiker met het opgegeven id gevonden');
+        return $response->withStatus(404, 'geen toernooi met het opgegeven id gevonden');
     }
 
     public function remove( $request, $response, $args)
     {
-        $user = $this->userResource->delete( $args['id'] );
-        if ($user) {
-            return $response->withJSON($user);
+	    $competitionseason = $this->competitionseasonResource->delete( $args['id'] );
+        if ($competitionseason) {
+            return $response->withJSON($competitionseason);
         }
-        return $response->withStatus(404, 'geen gebruiker met het opgegeven id gevonden');
+        return $response->withStatus(404, 'geen toernooi met het opgegeven id gevonden');
     }
 }
