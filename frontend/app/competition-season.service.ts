@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Headers, Http, Response, RequestOptions } from '@angular/http';
+import {Observable} from 'rxjs/Rx';
 
-import 'rxjs/add/operator/toPromise';
+// Import RxJs required methods
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
 
 import { CompetitionSeason } from './competitionseason';
 
@@ -9,57 +12,72 @@ import { CompetitionSeason } from './competitionseason';
 export class CompetitionSeasonService {
 
     private headers = new Headers({'Content-Type': 'application/json'});
-    private competitionseasonsUrl = 'http://localhost:2999/competitionseasons';  // URL to web api
+    private competitionseasonsUrl = 'app/competitionseasons';  // localhost:2999/competitionseasons
 
     constructor(private http: Http) { }
 
-    getCompetitionSeasons(): Promise<CompetitionSeason[]> {
+    getCompetitionSeasons(): Observable<CompetitionSeason[]> {
         return this.http.get(this.competitionseasonsUrl)
-            .toPromise()
-            .then(response => response.json() as CompetitionSeason[])
-            .catch(this.handleError);
+            // ...and calling .json() on the response to return data
+            .map((res:Response) => res.json().data)
+            //...errors if any
+            .catch((error:any) => Observable.throw(error.message || 'Server error' ));
     }
 
-    getCompetitionSeasonsSlow(): Promise<CompetitionSeason[]> {
-        return new Promise<CompetitionSeason[]>(resolve =>
+    /*getCompetitionSeasonsSlow(): Observable<CompetitionSeason[]> {
+
+        setTimeout( () => {
+            this.getCompetitionSeasons()
+        });
+        var source = new Observable<CompetitionSeason[]>(resolve =>
             setTimeout(resolve, 2000)) // delay 2 seconds
-            .then(() => this.getCompetitionSeasons());
+            .then(() => );
+        source.forEach( x => );
+    }*/
+
+    getCompetitionSeason(id: number): Observable<CompetitionSeason> {
+        // var x = this.getCompetitionSeasons().forEach(competitionseasons => competitionseasons.find(competitionseason => competitionseason.id === id));
+        const url = `${this.competitionseasonsUrl}/${id}`;
+        return this.http.get(url)
+        // ...and calling .json() on the response to return data
+            .map((res:Response) => res.json().data)
+            //...errors if any
+            .catch((error:any) => Observable.throw(error.message || 'Server error' ));
     }
 
-    getCompetitionSeason(id: number): Promise<CompetitionSeason> {
-        return this.getCompetitionSeasonsSlow()
-            .then(competitionseasons => competitionseasons.find(competitionseason => competitionseason.id === id));
-    }
+    create(name: string, seasonname: string): Observable<CompetitionSeason> {
 
-    create(name: string, seasonname: string): Promise<CompetitionSeason> {
         return this.http
             .post(this.competitionseasonsUrl, JSON.stringify({name: name, seasonname: seasonname, structure: '{}'}), {headers: this.headers})
-            .toPromise()
-            .then(res => res.json())
-            .catch(this.handleError);
+            // ...and calling .json() on the response to return data
+            .map((res:Response) => res.json().data)
+            //...errors if any
+            .catch((error:any) => Observable.throw(error.message || 'Server error'));
     }
 
-    update(competitionseason: CompetitionSeason): Promise<CompetitionSeason> {
+    update(competitionseason: CompetitionSeason): Observable<CompetitionSeason> {
+
         const url = `${this.competitionseasonsUrl}/${competitionseason.id}`;
         return this.http
             .put(url, JSON.stringify(competitionseason), {headers: this.headers})
-            .toPromise()
-            .then(() => competitionseason)
-            .catch(this.handleError);
+            // ...and calling .json() on the response to return data
+            .map((res:Response) => res.json())
+            //...errors if any
+            .catch((error:any) => Observable.throw(error.message || 'Server error'));
     }
 
-    delete(id: number): Promise<void> {
+    delete(id: number): Observable<void> {
         const url = `${this.competitionseasonsUrl}/${id}`;
-        return this.http.delete(url, {headers: this.headers})
-            .toPromise()
-            .then(() => null)
-            .catch(this.handleError);
+        return this.http
+            .delete(url, {headers: this.headers})
+            // ...and calling .json() on the response to return data
+            .map((res:Response) => res.json().data)
+            //...errors if any
+            .catch((error:any) => Observable.throw(error.message || 'Server error'));
     }
 
-    private handleError(error: any): Promise<any> {
+    /*private handleError(error: any): Promise<any> {
         console.error('An error occurred', error); // for demo purposes only
         return Promise.reject(error.message || error);
-    }
-
-
+    }*/
 }

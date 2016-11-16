@@ -3,11 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent }   from './dashboard.component';
 import { CompetitionSeasonsComponent }      from './competitionseasons.component';
 import { CompetitionSeasonDetailComponent }  from './competitionseason-detail.component';
+import { LoginComponent }  from './login.component';
 const routes: Routes = [
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     { path: 'dashboard',  component: DashboardComponent },
     { path: 'detail/:id', component: CompetitionSeasonDetailComponent },
-    { path: 'competitionseasons',     component: CompetitionSeasonsComponent }
+    { path: 'competitionseasons', component: CompetitionSeasonsComponent },
+    { path: 'login', component: LoginComponent }
 ];
 @NgModule({
     imports: [ RouterModule.forRoot(routes) ],

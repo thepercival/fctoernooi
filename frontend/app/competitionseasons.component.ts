@@ -25,7 +25,7 @@ export class CompetitionSeasonsComponent implements OnInit {
 
     // methods
     getCompetitionSeasons(): void {
-        this.competitionSeasonService.getCompetitionSeasonsSlow().then( competitionseasons => this.competitionseasons = competitionseasons);
+        this.competitionSeasonService.getCompetitionSeasons().forEach( competitionseasons => this.competitionseasons = competitionseasons);
     }
 
     onSelect(competitionseason: CompetitionSeason): void {
@@ -48,7 +48,7 @@ export class CompetitionSeasonsComponent implements OnInit {
             return;
         }
         this.competitionSeasonService.create(name,seasonname)
-            .then(competitionseason => {
+            .forEach(competitionseason => {
                 this.competitionseasons.push(competitionseason);
                 this.selectedCompetitionSeason = null;
             });
@@ -57,7 +57,7 @@ export class CompetitionSeasonsComponent implements OnInit {
     delete(competitionseason: CompetitionSeason): void {
         this.competitionSeasonService
             .delete(competitionseason.id)
-            .then(() => {
+            .forEach(() => {
                 this.competitionseasons = this.competitionseasons.filter(h => h !== competitionseason);
                 if (this.selectedCompetitionSeason === competitionseason) { this.selectedCompetitionSeason = null; }
             });

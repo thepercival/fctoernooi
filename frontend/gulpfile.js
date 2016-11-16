@@ -7,13 +7,13 @@ var browserSync = require('browser-sync').create();
 // var sourcemaps = require('gulp-sourcemaps');
 var del = require('del');
 var customizeBootstrap = require('gulp-customize-bootstrap');
-var less2sass = require('gulp-less2sass');
+// var less2sass = require('gulp-less2sass');
 
 var config = {
     paths: {
         src: {
-            npm: './node_modules',
-            sass: './sass'
+            npm: '/node_modules',
+            sass: '/sass'
         }
     }
 };
@@ -64,9 +64,9 @@ gulp.task('compileBootstrap', function() {
         .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('less2sass', function() {
+/*gulp.task('less2sass', function() {
     gulp.src( config.paths.src.sass + '/*.less' )
         .pipe(less2sass())
         .pipe(gulp.dest( config.paths.src.sass ));
-});
+});*/
 

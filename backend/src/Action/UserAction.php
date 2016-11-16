@@ -37,34 +37,52 @@ final class UserAction
 
     public function add( $request, $response, $args)
     {
-        $user = $this->userResource->post( array(
-                "name"=> $request->getParam('name'),
-                "email" => $request->getParam('email') )
-        );
-        if ($user) {
+        $sErrorMessage = null;
+        try{
+            $user = $this->userResource->post( array(
+                    "name"=> $request->getParam('name'),
+                    "email" => $request->getParam('email') )
+            );
+            if (!$user)
+                throw new \Exception( "de nieuwe gebruiker kan niet worden geretouneerd");
+
             return $response->withJSON($user);
         }
-        return $response->withStatus(404, 'geen gebruiker toegevoegd');
+        catch( \Exception $e ){
+            $sErrorMessage = $e->getMessage();
+        }
+        return $response->withStatus(404, 'geen gebruiker toegevoegd : ' . urlencode( $sErrorMessage ) );
     }
 
     public function edit( $request, $response, $args)
     {
-        $user = $this->userResource->put( $args['id'], array(
-            "name"=> $request->getParam('name'),
-            "email" => $request->getParam('email') )
-        );
-        if ($user) {
+        $sErrorMessage = null;
+        try{
+            $user = $this->userResource->put( $args['id'], array(
+                "name"=> $request->getParam('name'),
+                "email" => $request->getParam('email') )
+            );
+            if (!$user)
+                throw new \Exception( "de gewijzigde gebruiker kan niet worden geretouneerd");
+
             return $response->withJSON($user);
         }
-        return $response->withStatus(404, 'geen gebruiker met het opgegeven id gevonden');
+        catch( \Exception $e ){
+            $sErrorMessage = $e->getMessage();
+        }
+        return $response->withStatus(404, 'de gebruiker is niet bijgewerkt : ' . urlencode( $sErrorMessage ) );
     }
 
     public function remove( $request, $response, $args)
     {
-        $user = $this->userResource->delete( $args['id'] );
-        if ($user) {
-            return $response->withJSON($user);
+        $sErrorMessage = null;
+        try{
+            $user = $this->userResource->delete( $args['id'] );
+            return $response;
         }
-        return $response->withStatus(404, 'geen gebruiker met het opgegeven id gevonden');
+        catch( \Exception $e ){
+            $sErrorMessage = $e->getMessage();
+        }
+        return $response->withStatus(404, 'de gebruiker is niet verwijdered : ' . $sErrorMessage );
     }
 }

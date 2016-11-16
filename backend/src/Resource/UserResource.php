@@ -57,6 +57,7 @@ class UserResource extends AbstractResource
 
         /** @var User $user */
         $user = new User();
+
         $user->setEmail($email);
         $user->setName($name);
 
@@ -78,7 +79,7 @@ class UserResource extends AbstractResource
         /** @var User $user */
         $user = $this->entityManager->find('App\Entity\User', $id);
         if ( $user === null )
-            return false;
+            throw new \Exception("de te wijzigen gebruiker met id ".$id.", kan niet worden gevonden", E_ERROR );
 
         $user->setEmail($email);
         $user->setName($name);
@@ -98,7 +99,7 @@ class UserResource extends AbstractResource
         /** @var User $user */
         $user = $this->entityManager->find('App\Entity\User', $id);
         if ( $user === null )
-            return false;
+            throw new \Exception("de te verwijderen gebruiker met id ".$id.", kan niet worden gevonden", E_ERROR );
 
         $this->entityManager->remove($user);;
         $this->entityManager->flush();
