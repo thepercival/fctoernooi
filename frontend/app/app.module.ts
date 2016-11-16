@@ -17,6 +17,7 @@ import { CompetitionSeasonDetailComponent } from './competitionseason-detail.com
 import { CompetitionSeasonsComponent } from './competitionseasons.component';
 import { CompetitionSeasonService } from './competition-season.service';
 import { CompetitionSeasonSearchComponent } from './competition-season-search.component';
+import { LoginComponent }  from './login.component';
 
 @NgModule({
     imports:      [
@@ -31,7 +32,8 @@ import { CompetitionSeasonSearchComponent } from './competition-season-search.co
         DashboardComponent,
         CompetitionSeasonDetailComponent,
         CompetitionSeasonsComponent,
-        CompetitionSeasonSearchComponent
+        CompetitionSeasonSearchComponent,
+        LoginComponent
     ],
     providers:    [
         CompetitionSeasonService

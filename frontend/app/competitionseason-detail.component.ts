@@ -26,13 +26,13 @@ export class CompetitionSeasonDetailComponent implements OnInit{
         this.route.params.forEach((params: Params) => {
             let id = +params['id'];
             this.cbjectService.getCompetitionSeason(id)
-                .then(object => this.object = object);
+                .forEach(object => this.object = object);
         });
     }
 
     save(): void {
         this.cbjectService.update(this.object)
-            .then(() => this.goBack());
+            .forEach(() => this.goBack());
     }
 
     goBack(): void {
