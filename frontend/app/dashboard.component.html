@@ -1,5 +1,7 @@
 <h3>top toernooien</h3>
 
+<p>You're logged in with JWT!!</p>
+
 <div class="grid grid-pad">
     <a *ngFor="let competitionseason of competitionSeasons" [routerLink]="['/detail', competitionseason.id]"  class="col-1-4">
         <div class="module competitionseason">
@@ -8,4 +10,6 @@
     </a>
 </div>
 <div style="clear:both;"></div>
+<hr>
+<p><a [routerLink]="['/login']">logout</a></p>
 <competition-season-search></competition-season-search>

@@ -38,7 +38,7 @@ final class AuthAction
 			);
 
 			if (!$user) {
-				throw new \Exception( "ongeldige email en wachtwoord combinatie");
+				throw new \Exception( "ongeldige email(".$email.") en wachtwoord(".$password.") combinatie");
 			}
 			// or return token
 			return $response->withJSON( array( "token" => "?" ) );

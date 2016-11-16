@@ -8,8 +8,8 @@ import { HttpModule }    from '@angular/http';
 
 import { AppRoutingModule }     from './app-routing.module';
 
-import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { InMemoryDataService }  from './in-memory-data.service';
+// import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
+// import { InMemoryDataService }  from './in-memory-data.service';
 
 import { AppComponent }   from './app.component';
 import { DashboardComponent } from './dashboard.component';
@@ -17,14 +17,17 @@ import { CompetitionSeasonDetailComponent } from './competitionseason-detail.com
 import { CompetitionSeasonsComponent } from './competitionseasons.component';
 import { CompetitionSeasonService } from './competition-season.service';
 import { CompetitionSeasonSearchComponent } from './competition-season-search.component';
-import { LoginComponent }  from './login.component';
+import { AuthGuard } from './auth/guard';
+import { AuthenticationService } from './auth/service';
+import { UserService } from './user/service';
+import { LoginComponent }  from './user/login.component';
 
 @NgModule({
-    imports:      [
+   imports:      [
         BrowserModule,
         FormsModule,
         HttpModule,
-        InMemoryWebApiModule.forRoot(InMemoryDataService),
+        // InMemoryWebApiModule.forRoot(InMemoryDataService),
         AppRoutingModule
     ],
     declarations: [
@@ -36,7 +39,10 @@ import { LoginComponent }  from './login.component';
         LoginComponent
     ],
     providers:    [
-        CompetitionSeasonService
+       CompetitionSeasonService,
+        AuthGuard,
+        AuthenticationService,
+        UserService
     ],
     bootstrap:    [
         AppComponent

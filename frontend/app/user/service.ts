@@ -6,60 +6,66 @@ import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
-import { CompetitionSeason } from './competitionseason';
+import { User } from './user';
+import { AuthenticationService } from '../auth/service';
 
 @Injectable()
-export class CompetitionSeasonService {
+export class UserService {
 
     private headers = new Headers({'Content-Type': 'application/json'});
-    private competitionseasonsUrl = 'http://localhost:2999/competitionseasons';  // localhost:2999/competitionseasons
+    private usersUrl = 'localhost:2999/users';  // localhost:2999/users
 
-    constructor(private http: Http) { }
+    constructor(
+        private http: Http,
+        private authenticationService: AuthenticationService) {
+    }
 
-    getCompetitionSeasons(): Observable<CompetitionSeason[]> {
-        return this.http.get(this.competitionseasonsUrl, {headers: this.headers} )
+    getUsers(): Observable<User[]> {
+        let headers = new Headers({ 'Authorization': 'Bearer ' + this.authenticationService.token });
+        let options = new RequestOptions({ headers: headers });
+        return this.http.get(this.usersUrl, options)
             // ...and calling .json() on the response to return data
-            .map((res:Response) => res.json())
+            .map((res:Response) => res.json().data)
             //...errors if any
             .catch((error:any) => Observable.throw(error.message || 'Server error' ));
     }
 
-    /*getCompetitionSeasonsSlow(): Observable<CompetitionSeason[]> {
+    /*getUsersSlow(): Observable<User[]> {
 
         setTimeout( () => {
-            this.getCompetitionSeasons()
+            this.getUsers()
         });
-        var source = new Observable<CompetitionSeason[]>(resolve =>
+        var source = new Observable<User[]>(resolve =>
             setTimeout(resolve, 2000)) // delay 2 seconds
             .then(() => );
         source.forEach( x => );
     }*/
 
-    getCompetitionSeason(id: number): Observable<CompetitionSeason> {
-        // var x = this.getCompetitionSeasons().forEach(competitionseasons => competitionseasons.find(competitionseason => competitionseason.id === id));
-        const url = `${this.competitionseasonsUrl}/${id}`;
+    getUser(id: number): Observable<User> {
+        // var x = this.getUsers().forEach(users => users.find(user => user.id === id));
+        const url = `${this.usersUrl}/${id}`;
         return this.http.get(url)
         // ...and calling .json() on the response to return data
-            .map((res:Response) => res.json())
+            .map((res:Response) => res.json().data)
             //...errors if any
             .catch((error:any) => Observable.throw(error.message || 'Server error' ));
     }
 
-    create(name: string, seasonname: string): Observable<CompetitionSeason> {
+    create(name: string, seasonname: string): Observable<User> {
 
         return this.http
-            .post(this.competitionseasonsUrl, JSON.stringify({name: name, seasonname: seasonname, structure: '{}'}), {headers: this.headers})
+            .post(this.usersUrl, JSON.stringify({name: name, seasonname: seasonname, structure: '{}'}), {headers: this.headers})
             // ...and calling .json() on the response to return data
-            .map((res:Response) => res.json())
+            .map((res:Response) => res.json().data)
             //...errors if any
             .catch((error:any) => Observable.throw(error.message || 'Server error'));
     }
 
-    update(competitionseason: CompetitionSeason): Observable<CompetitionSeason> {
+    update(user: User): Observable<User> {
 
-        const url = `${this.competitionseasonsUrl}/${competitionseason.id}`;
+        const url = `${this.usersUrl}/${user.id}`;
         return this.http
-            .put(url, JSON.stringify(competitionseason), {headers: this.headers})
+            .put(url, JSON.stringify(user), {headers: this.headers})
             // ...and calling .json() on the response to return data
             .map((res:Response) => res.json())
             //...errors if any
@@ -67,11 +73,11 @@ export class CompetitionSeasonService {
     }
 
     delete(id: number): Observable<void> {
-        const url = `${this.competitionseasonsUrl}/${id}`;
+        const url = `${this.usersUrl}/${id}`;
         return this.http
             .delete(url, {headers: this.headers})
             // ...and calling .json() on the response to return data
-            .map((res:Response) => res.json())
+            .map((res:Response) => res.json().data)
             //...errors if any
             .catch((error:any) => Observable.throw(error.message || 'Server error'));
     }
