@@ -80,8 +80,8 @@ class CompetitionSeasonResource extends AbstractResource
 
         /** @var CompetitionSeason $competitionseason */
         $competitionseason = $this->entityManager->find('App\Entity\CompetitionSeason', $id);
-        if ( $competitionseason === null )
-            return false;
+	    if ( $competitionseason === null )
+		    throw new \Exception("het te wijzigen toernooi met id ".$id.", kan niet worden gevonden", E_ERROR );
 
         $competitionseason->setName($name);
         $competitionseason->setSeasonName($seasonname);

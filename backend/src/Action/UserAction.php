@@ -44,7 +44,7 @@ final class UserAction
                     "email" => $request->getParam('email') )
             );
             if (!$user)
-                throw new \Exception( "de nieuwe gebruiker kan niet worden geretouneerd");
+                throw new \Exception( "de nieuwe gebruiker kan niet worden geretourneerd");
 
             return $response->withJSON($user);
         }

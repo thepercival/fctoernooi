@@ -37,36 +37,54 @@ final class CompetitionSeasonAction
 
     public function add( $request, $response, $args)
     {
-	    $competitionseason = $this->competitionseasonResource->post( array(
+	    $sErrorMessage = null;
+	    try{
+	        $competitionseason = $this->competitionseasonResource->post( array(
 		        "name"=> $request->getParam('name'),
 		        "seasonname"=> $request->getParam('seasonname'),
 		        "structure" => $request->getParam('structure') )
-        );
-        if ($competitionseason) {
-            return $response->withJSON($competitionseason);
-        }
-        return $response->withStatus(404, 'geen toernooi toegevoegd');
+            );
+		    if (!$competitionseason)
+			    throw new \Exception( "het nieuwe toernooi kan niet worden geretourneerd");
+
+		    return $response->withJSON($competitionseason);
+	    }
+	    catch( \Exception $e ){
+		    $sErrorMessage = $e->getMessage();
+	    }
+	    return $response->withStatus(404, 'geen toernooi toegevoegd : ' . urlencode( $sErrorMessage ) );
     }
 
     public function edit( $request, $response, $args)
     {
-	    $competitionseason = $this->competitionseasonResource->put( $args['id'], array(
-            "name"=> $request->getParam('name'),
-            "seasonname"=> $request->getParam('seasonname'),
-            "structure" => $request->getParam('structure') )
-        );
-        if ($competitionseason) {
-            return $response->withJSON($competitionseason);
-        }
-        return $response->withStatus(404, 'geen toernooi met het opgegeven id gevonden');
+	    $sErrorMessage = null;
+	    try{
+		    $competitionseason = $this->competitionseasonResource->put( $args['id'], array(
+	            "name"=> $request->getParam('name'),
+	            "seasonname"=> $request->getParam('seasonname'),
+	            "structure" => $request->getParam('structure') )
+	        );
+		    if (!$competitionseason)
+			    throw new \Exception( "het gewijzigde toernooi kan niet worden geretouneerd");
+
+		    return $response->withJSON($competitionseason);
+	    }
+	    catch( \Exception $e ){
+		    $sErrorMessage = $e->getMessage();
+	    }
+	    return $response->withStatus(404, 'het toernooi is niet bijgewerkt : ' . urlencode( $sErrorMessage ) );
     }
 
     public function remove( $request, $response, $args)
     {
-	    $competitionseason = $this->competitionseasonResource->delete( $args['id'] );
-        if ($competitionseason) {
-            return $response->withJSON($competitionseason);
-        }
-        return $response->withStatus(404, 'geen toernooi met het opgegeven id gevonden');
+	    $sErrorMessage = null;
+	    try{
+		    $this->userResource->delete( $args['id'] );
+		    return $response;
+	    }
+	    catch( \Exception $e ){
+		    $sErrorMessage = $e->getMessage();
+	    }
+	    return $response->withStatus(404, 'het toernooi is niet verwijdered : ' . $sErrorMessage );
     }
 }
