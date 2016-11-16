@@ -26,6 +26,10 @@ $app->group('', function () use ($app) {
 		->withHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS'));
 })*/;
 
+//$app->group('/auth', function () use ($app) {
+	$app->post('/auth/login', 'App\Action\AuthAction:login');
+//});
+
 /*$app->get('/:resourceType(/(:id)(/))', function($resourceType, $id = null) {
     $resource = ResourceFactory::get($resourceType);
     echo $resource->get($id);

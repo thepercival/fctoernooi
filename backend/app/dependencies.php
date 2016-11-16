@@ -32,6 +32,9 @@ $container['em'] = function ($c) {
 };
 
 // actions
+$container['App\Action\AuthAction'] = function ($c) {
+	return new App\Action\AuthAction( $c->get('em') );
+};
 $container['App\Action\UserAction'] = function ($c) {
     $userResource = new \App\Resource\UserResource($c->get('em'));
     return new App\Action\UserAction($userResource);

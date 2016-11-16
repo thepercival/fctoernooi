@@ -31,8 +31,13 @@ class User
      */
     protected $name;
 
+	/**
+	 * @ORM\Column(type="string", length=256)
+	 */
+	protected $password = null;
+
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=100)
      */
     protected $email;
 
@@ -76,6 +81,27 @@ class User
     {
         $this->name = $name;
     }
+
+	/**
+	 * Get password
+	 *
+	 * @ORM\return string
+	 */
+	public function getPassword()
+	{
+		return $this->password;
+	}
+
+	/**
+	 * Set password
+	 *
+	 * @ORM\param string
+	 * @ORM\return void
+	 */
+	public function setPassword( $password )
+	{
+		$this->password = $password;
+	}
 
     /**
      * Get email
