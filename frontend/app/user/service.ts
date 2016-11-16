@@ -13,7 +13,7 @@ import { AuthenticationService } from '../auth/service';
 export class UserService {
 
     private headers = new Headers({'Content-Type': 'application/json'});
-    private usersUrl = 'localhost:2999/users';  // localhost:2999/users
+    private usersUrl = 'http://localhost:2999/users';
 
     constructor(
         private http: Http,
@@ -25,9 +25,9 @@ export class UserService {
         let options = new RequestOptions({ headers: headers });
         return this.http.get(this.usersUrl, options)
             // ...and calling .json() on the response to return data
-            .map((res:Response) => res.json().data)
+            .map((res:Response) => res.json())
             //...errors if any
-            .catch((error:any) => Observable.throw(error.message || 'Server error' ));
+            .catch((response:any) => { console.log( response.statusText ); /*Observable.throw(error.message || 'Server error')*/  });
     }
 
     /*getUsersSlow(): Observable<User[]> {
