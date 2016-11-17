@@ -19,7 +19,6 @@ export class AuthenticationService {
             .map((response: Response) => {
                 let json = response.json();
                 // login successful if there's a jwt token in the response
-                let token = response.json() && response.json().token;
                 if (json && json.token) {
                     // set token property
                     this.token = json.token;
@@ -34,10 +33,11 @@ export class AuthenticationService {
                     return false;
                 }
             })
-            .catch((response:any) => {
-                console.log( response.statusText );
-                // Observable.throw( response.statusText )
-            });
+            .catch((error:any) => Observable.throw(error.statusText || 'Server error' ));
+            /*.catch((err:any) => {
+                //console.log( err.statusText );
+                Observable.throw( err.statusText )
+            });*/
     }
 
     logout(): void {

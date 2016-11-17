@@ -1,5 +1,1 @@
 .idea
-backend/vendor/
-backend/logs/*
-!backend/logs/README.md
-backend/.env
