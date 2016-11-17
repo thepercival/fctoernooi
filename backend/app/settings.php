@@ -1,4 +1,8 @@
 <?php
+
+$dotenv = new \Dotenv\Dotenv( __DIR__ . '/../' );
+$dotenv->load();
+
 return [
     'settings' => [
         'displayErrorDetails' => true, // set to false in production
@@ -31,9 +35,11 @@ return [
                 'driver'   => 'pdo_mysql',
                 'host'     => 'localhost',
                 'dbname'   => 'fctoernooiv2',
-                'user'     => 'fctoernooi_dba',
-                'password' => 'ioonreotcf44',
+                'user'     => getenv('DB_USERNAME'),
+                'password' => getenv('DB_PASSWORD'),
             ]
-        ]
+        ],
+
+        'jwt_secret' => getenv('JWT_SECRET'),
     ],
 ];

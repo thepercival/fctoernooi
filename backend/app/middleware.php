@@ -13,12 +13,7 @@ $app->add( function ($request, $response, $next) {
 		->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Origin, Content-Type, Accept, Authorization')
 		->withHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS'));
 });
-/*
-$app->add(
-	new \Slim\Middleware\JwtAuthentication(
-		[
-		"secret" => "supersecretkeyyoushouldnotcommittogithub"
-		]
-	)
-);
-*/
+
+$app->add(new \Slim\Middleware\JwtAuthentication([
+    "secret" => $app->getContainer()->get('settings')['jwt_secret']
+]));
