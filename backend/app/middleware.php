@@ -15,5 +15,9 @@ $app->add( function ($request, $response, $next) {
 });
 
 $app->add(new \Slim\Middleware\JwtAuthentication([
+    "path" => ["/users"],
+    // "passthrough" => ["/auth/login", "/users" /*, "ping"*/],
+    "secure" => true,
+    "relaxed" => ["localhost"],
     "secret" => $app->getContainer()->get('settings')['jwt_secret']
 ]));
