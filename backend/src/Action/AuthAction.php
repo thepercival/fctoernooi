@@ -11,6 +11,7 @@ namespace App\Action;
 use Slim\ServerRequestInterface;
 use Doctrine\ORM\EntityManager;
 use \Firebase\JWT\JWT;
+use \Slim\Middleware\JwtAuthentication;
 
 final class AuthAction
 {
@@ -18,10 +19,12 @@ final class AuthAction
 	 * @var \Doctrine\ORM\EntityManager
 	 */
 	protected $entityManager = null;
+    protected $jwtauth = null;
 
-	public function __construct(EntityManager $entityManager)
+	public function __construct(EntityManager $entityManager, JwtAuthentication $jwtauth )
 	{
 		$this->entityManager = $entityManager;
+        $this->jwtauth = $jwtauth;
 	}
 
 	public function login($request, $response, $args)
@@ -52,10 +55,10 @@ final class AuthAction
                 "exp" => $future->getTimeStamp(),
                 "sub" => $email,
             ];
-            // get from settings
-            $secret = "supersecretkeyyoushouldnotcommittogithub";
 
-            $token = JWT::encode($payload, $secret, "HS256");
+            $secret = $this->jwtauth->getSecret();
+            $algorithm = $this->jwtauth->getAlgorithm();
+            $token = JWT::encode($payload, $secret, $algorithm );
 
             $data["status"] = "ok";
             $data["token"] = $token;

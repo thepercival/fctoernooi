@@ -31,9 +31,22 @@ $container['em'] = function ($c) {
     return \Doctrine\ORM\EntityManager::create($settings['doctrine']['connection'], $config);
 };
 
+// JWTAuthentication
+$container['jwtauth'] = function( $c ) {
+    $settings = $c->get('settings');
+    return new \Slim\Middleware\JwtAuthentication([
+        "path" => ["/users"],
+        // "passthrough" => ["/auth/login", "/users"],
+        "secure" => true,
+        "relaxed" => ["localhost"],
+        "secret" => $settings['jwt']['secret'],
+        "algorithm" => $settings['jwt']['algorithm']
+    ]);
+};
+
 // actions
 $container['App\Action\AuthAction'] = function ($c) {
-	return new App\Action\AuthAction( $c->get('em') );
+	return new App\Action\AuthAction( $c->get('em'), $c->get('jwtauth') );
 };
 $container['App\Action\UserAction'] = function ($c) {
     $userResource = new \App\Resource\UserResource($c->get('em'));

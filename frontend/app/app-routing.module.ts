@@ -4,12 +4,14 @@ import { DashboardComponent }   from './dashboard.component';
 import { CompetitionSeasonsComponent }      from './competitionseasons.component';
 import { CompetitionSeasonDetailComponent }  from './competitionseason-detail.component';
 import { LoginComponent }  from './user/login.component';
+import { UsersComponent }  from './user/users.component';
 import { AuthGuard }  from './auth/guard';
 const routes: Routes = [
     { path: 'dashboard',  component: DashboardComponent/*, canActivate: [AuthGuard]*/ },
-    { path: 'detail/:id', component: CompetitionSeasonDetailComponent, canActivate: [AuthGuard] },
+    { path: 'detail/:id', component: CompetitionSeasonDetailComponent },
     { path: 'competitionseasons', component: CompetitionSeasonsComponent/*, canActivate: [AuthGuard]*/ },
     { path: 'login', component: LoginComponent },
+    { path: 'users', component: UsersComponent, canActivate: [AuthGuard] },
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     // otherwise redirect to home
     { path: '**', redirectTo: '' }
