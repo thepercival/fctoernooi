@@ -13,7 +13,7 @@ import { AuthenticationService } from '../auth/service';
 export class UserService {
 
     private headers = new Headers({'Content-Type': 'application/json'});
-    private usersUrl = 'localhost:2999/users';  // localhost:2999/users
+    private usersUrl = 'http://localhost:2999/users';  // localhost:2999/users
 
     constructor(
         private http: Http,
@@ -21,13 +21,14 @@ export class UserService {
     }
 
     getUsers(): Observable<User[]> {
-        let headers = new Headers({ 'Authorization': 'Bearer ' + this.authenticationService.token });
+        let headers = new Headers({ 'Authorization': 'Bearer ' + this.authenticationService.token, 'Content-Type': 'application/json' });
+        // let options = new RequestOptions({ headers: headers });
         let options = new RequestOptions({ headers: headers });
         return this.http.get(this.usersUrl, options)
             // ...and calling .json() on the response to return data
-            .map((res:Response) => res.json().data)
+            .map((res:Response) => res.json())
             //...errors if any
-            .catch((error:any) => Observable.throw(error.message || 'Server error' ));
+            .catch( this.handleError );
     }
 
     /*getUsersSlow(): Observable<User[]> {
@@ -46,7 +47,7 @@ export class UserService {
         const url = `${this.usersUrl}/${id}`;
         return this.http.get(url)
         // ...and calling .json() on the response to return data
-            .map((res:Response) => res.json().data)
+            .map((res:Response) => res.json())
             //...errors if any
             .catch((error:any) => Observable.throw(error.message || 'Server error' ));
     }
@@ -56,7 +57,7 @@ export class UserService {
         return this.http
             .post(this.usersUrl, JSON.stringify({name: name, seasonname: seasonname, structure: '{}'}), {headers: this.headers})
             // ...and calling .json() on the response to return data
-            .map((res:Response) => res.json().data)
+            .map((res:Response) => res.json())
             //...errors if any
             .catch((error:any) => Observable.throw(error.message || 'Server error'));
     }
@@ -77,13 +78,28 @@ export class UserService {
         return this.http
             .delete(url, {headers: this.headers})
             // ...and calling .json() on the response to return data
-            .map((res:Response) => res.json().data)
+            .map((res:Response) => res.json())
             //...errors if any
             .catch((error:any) => Observable.throw(error.message || 'Server error'));
     }
 
-    /*private handleError(error: any): Promise<any> {
-        console.error('An error occurred', error); // for demo purposes only
-        return Promise.reject(error.message || error);
-    }*/
+    private handleError (error: Response | any) {
+        // In a real world app, we might use a remote logging infrastructure
+        let errMsg: string;
+        if (error instanceof Response) {
+            // const body = error.json() || '';
+            /*const err = body.error || JSON.stringify(body);
+            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+            */
+            const err = '';
+            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+        } else {
+            // errMsg = error.message ? error.message : error.toString();
+        }
+        console.log( error );
+
+        // console.error('testje');
+        return Observable.throw(errMsg);
+
+    }
 }

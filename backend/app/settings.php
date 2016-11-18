@@ -40,6 +40,9 @@ return [
             ]
         ],
 
-        'jwt_secret' => getenv('JWT_SECRET'),
+        'jwt' => [
+            'secret' => getenv('JWT_SECRET'),
+            'algorithm' => getenv('JWT_ALGORITHM'),
+        ]
     ],
 ];

@@ -21,6 +21,7 @@ import { AuthGuard } from './auth/guard';
 import { AuthenticationService } from './auth/service';
 import { UserService } from './user/service';
 import { LoginComponent }  from './user/login.component';
+import { UsersComponent }  from './user/users.component';
 
 @NgModule({
    imports:      [
@@ -36,7 +37,8 @@ import { LoginComponent }  from './user/login.component';
         CompetitionSeasonDetailComponent,
         CompetitionSeasonsComponent,
         CompetitionSeasonSearchComponent,
-        LoginComponent
+        LoginComponent,
+        UsersComponent,
     ],
     providers:    [
        CompetitionSeasonService,

@@ -30,7 +30,7 @@ export class CompetitionSeasonsComponent implements OnInit {
 
     onSelect(competitionseason: CompetitionSeason): void {
         this.selectedCompetitionSeason = competitionseason;
-        console.log( this.selectedCompetitionSeason );
+        // console.log( this.selectedCompetitionSeason );
     }
 
     // interfaces

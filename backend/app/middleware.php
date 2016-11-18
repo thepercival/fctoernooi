@@ -1,6 +1,17 @@
 <?php
 // Application middleware
 
+
+$app->add( $app->getContainer()->get('jwtauth') );
+
+$app->add(function($request, $response, $next) {
+    $token = $request->getQueryParams()["token"];
+    if (false === empty($token)) {
+        $request = $request->withHeader("Authorization", "Bearer {$token}");
+    }
+    return $next($request, $response);
+});
+
 /*
  * this application middleware shoul be  moved to the route-middleware, because that is where it belongs!
  * but the middleware does not work as routermiddleware
@@ -14,10 +25,3 @@ $app->add( function ($request, $response, $next) {
 		->withHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS'));
 });
 
-$app->add(new \Slim\Middleware\JwtAuthentication([
-    "path" => ["/users"],
-    // "passthrough" => ["/auth/login", "/users" /*, "ping"*/],
-    "secure" => true,
-    "relaxed" => ["localhost"],
-    "secret" => $app->getContainer()->get('settings')['jwt_secret']
-]));
