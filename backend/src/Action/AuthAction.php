@@ -10,6 +10,7 @@ namespace App\Action;
 
 use Slim\ServerRequestInterface;
 use Doctrine\ORM\EntityManager;
+use \Firebase\JWT\JWT;
 
 final class AuthAction
 {
@@ -40,8 +41,28 @@ final class AuthAction
 			if (!$user) {
 				throw new \Exception( "ongeldige email(".$email.") en wachtwoord(".$password.") combinatie");
 			}
-			// or return token
-			return $response->withJSON( array( "token" => "?" ) );
+
+			// return token
+            ////////////////////////////////////////////
+            $now = new \DateTime();
+            $future = new \DateTime("now +2 hours");
+
+            $payload = [
+                "iat" => $now->getTimeStamp(),
+                "exp" => $future->getTimeStamp(),
+                "sub" => $email,
+            ];
+            // get from settings
+            $secret = "supersecretkeyyoushouldnotcommittogithub";
+
+            $token = JWT::encode($payload, $secret, "HS256");
+
+            $data["status"] = "ok";
+            $data["token"] = $token;
+
+            return $response->withStatus(201)
+                ->withHeader("Content-Type", "application/json")
+                ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 		}
 		catch( \Exception $e ){
 			$sErrorMessage = $e->getMessage();

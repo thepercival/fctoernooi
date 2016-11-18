@@ -10,7 +10,7 @@
     "url": "https://github.com/thepercival/fctoernooi"
   },
   "scripts": {
-    "start": "tsc && concurrently \"tsc -w\" \"lite-server -c configs/my-bs-config.json\" ",
+    "start": "tsc && concurrently \"tsc -w\" \"lite-server -c configs/bs-config.json\" ",
     "lite": "lite-server",
     "tsc": "tsc",
     "tsc:w": "tsc -w"
