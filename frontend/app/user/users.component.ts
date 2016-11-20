@@ -30,7 +30,7 @@ export class UsersComponent implements OnInit {
 
     onSelect(user: User): void {
         this.selectedUser = user;
-        console.log( this.selectedUser );
+        //console.log( this.selectedUser );
     }
 
     // interfaces

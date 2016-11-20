@@ -42,7 +42,7 @@ class User
     protected $email;
 
     /**
-     * @ORM\ManyToMany(targetEntity="CompetitionSeason", inversedBy="users")
+     * @ORM\ManyToMany(targetEntity="CompetitionSeason", mappedBy="users")
      * @ORM\JoinTable(name="users_competitionseasons")
      */
     private $competitionseasons;
@@ -123,6 +123,16 @@ class User
     {
         $this->email = $email;
     }
+
+	/**
+	 * get CompetitionSeasons
+	 *
+	 * @ORM\return ArrayCollection
+	 */
+	public function getCompetitionSeasons()
+	{
+		return $this->competitionseasons;
+	}
 
     /**
      * Get array copy of object

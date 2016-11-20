@@ -1,22 +1,68 @@
 import { Component, OnInit } from '@angular/core';
-import { CompetitionSeason } from './competitionseason';
-import { CompetitionSeasonService } from './competition-season.service';
+import { CompetitionSeason } from '../competitionseason';
+import { CompetitionSeasonService } from '../competition-season.service';
 
 @Component({
     moduleId: module.id,
-    selector: 'dashboard',
-    templateUrl: 'dashboard.component.html',
-    styleUrls: [ 'dashboard.component.css' ]
+    selector: 'home',
+    templateUrl: 'component.html',
+    styleUrls: [ 'component.css' ]
 })
 
-export class DashboardComponent implements OnInit {
+export class HomeComponent implements OnInit {
 
+    public currentUser: string;
     competitionSeasons: CompetitionSeason[] = [];
+    selectedCompetitionSeason: CompetitionSeason = null;
+    public newIsCollapsed = true;
 
-    constructor(private competitionSeasonService: CompetitionSeasonService) { }
+    // constructor
+    constructor(
+        private competitionSeasonService: CompetitionSeasonService
+    ){}
 
+    // interfaces
     ngOnInit(): void {
-        this.competitionSeasonService.getCompetitionSeasons()
-            .forEach(competitionSeasons => this.competitionSeasons = competitionSeasons.slice(1, 3));
+        this.currentUser = localStorage.getItem('currentUser');
+        if ( this.currentUser )
+            this.currentUser = JSON.parse( this.currentUser );
+
+        this.getCompetitionSeasons();
+    }
+
+    // methods
+    getCompetitionSeasons(): void {
+        this.competitionSeasonService.getCompetitionSeasons().forEach( competitionseasons => this.competitionSeasons = competitionseasons);
+    }
+
+    onSelect(competitionseason: CompetitionSeason): void {
+        this.selectedCompetitionSeason = competitionseason;
+        // console.log( this.selectedCompetitionSeason );
+    }
+
+    add(name: string, seasonname: string): void {
+        name = name.trim();
+        if (!name) {
+            return;
+        }
+        seasonname = seasonname.trim();
+        if (!seasonname) {
+            return;
+        }
+        this.competitionSeasonService.create(name,seasonname)
+            .forEach(competitionseason => {
+                this.competitionSeasons.push(competitionseason);
+                this.selectedCompetitionSeason = null;
+            });
+    }
+
+
+    delete(competitionseason: CompetitionSeason): void {
+        this.competitionSeasonService
+            .delete(competitionseason.id)
+            .forEach(() => {
+                this.competitionSeasons = this.competitionSeasons.filter(h => h !== competitionseason);
+                if (this.selectedCompetitionSeason === competitionseason) { this.selectedCompetitionSeason = null; }
+            });
     }
 }

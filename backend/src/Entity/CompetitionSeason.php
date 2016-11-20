@@ -10,6 +10,7 @@ namespace App\Entity;
 
 use App\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -47,12 +48,13 @@ class CompetitionSeason
     protected $structure;
 
     /**
-     * @ORM\ManyToMany(targetEntity="User", mappedBy="competitionseasons")
-     */
+	 * @ORM\ManyToMany(targetEntity="User", inversedBy="competitionseasons")
+	 * @ORM\JoinTable(name="users_competitionseasons")
+	 */
     private $users;
 
     public function __construct() {
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     /**
@@ -127,6 +129,30 @@ class CompetitionSeason
     {
         $this->structure = $structure;
     }
+
+	/**
+	 * get Users
+	 *
+	 * @ORM\return ArrayCollection
+	 */
+	public function getUsers()
+	{
+		return $this->users;
+	}
+
+	/**
+	 * adds a User
+	 *
+	 * @ORM\return null
+	 */
+	public function addUser( User $user = null  )
+	{
+		if ( $user === null )
+			return;
+
+		$this->users->add( $user );
+		$user->getCompetitionSeasons()->add( $this );
+	}
 
     /**
      * Get array copy of object

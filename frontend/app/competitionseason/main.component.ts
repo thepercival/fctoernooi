@@ -2,17 +2,17 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params }   from '@angular/router';
 import { Location }                 from '@angular/common';
 
-import { CompetitionSeasonService } from './competition-season.service';
-import { CompetitionSeason } from './competitionseason';
+import { CompetitionSeasonService } from '../competition-season.service';
+import { CompetitionSeason } from '../competitionseason';
 
 @Component({
     moduleId: module.id,
-    selector: 'competitionseason-detail',
-    templateUrl: 'competitionseason-detail.component.html',
-    styleUrls: [ 'competitionseason-detail.component.css' ]
+    selector: 'competitionseason-main',
+    templateUrl: 'main.component.html',
+    styleUrls: [ 'main.component.css' ]
 })
 
-export class CompetitionSeasonDetailComponent implements OnInit{
+export class CompetitionSeasonMainComponent implements OnInit{
     @Input()
     object: CompetitionSeason;
 

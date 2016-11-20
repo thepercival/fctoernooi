@@ -62,10 +62,19 @@ class CompetitionSeasonResource extends AbstractResource
         $competitionseason->setSeasonName($seasonname);
         $competitionseason->setStructure($structure);
 
-        $this->entityManager->persist($competitionseason);
-        $this->entityManager->flush();
+	    if( array_key_exists( "userid", $arrProps) and is_numeric( $arrProps["userid"] ) )
+	    {
+		    $user = $this->entityManager->find('App\Entity\User', $arrProps["userid"] );
+		    if ( $user === null )
+			    throw new \Exception("bij de meegegeven gebruikersid ".$arrProps["userid"].", kan geen gebruiker worden gevonden", E_ERROR );
 
-        return $this->convertToArray($competitionseason);
+			$competitionseason->addUser( $user );
+	    }
+
+	    $this->entityManager->persist($competitionseason);
+	    $this->entityManager->flush();
+
+	    return $this->convertToArray($competitionseason);
     }
 
     public function put( $id, $arrProps )
@@ -78,7 +87,6 @@ class CompetitionSeasonResource extends AbstractResource
         // return valid status code or throw an exception
         // depends on the concrete implementation
 
-        /** @var CompetitionSeason $competitionseason */
         $competitionseason = $this->entityManager->find('App\Entity\CompetitionSeason', $id);
 	    if ( $competitionseason === null )
 		    throw new \Exception("het te wijzigen toernooi met id ".$id.", kan niet worden gevonden", E_ERROR );

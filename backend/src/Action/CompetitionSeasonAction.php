@@ -40,6 +40,7 @@ final class CompetitionSeasonAction
 	    $sErrorMessage = null;
 	    try{
 	        $competitionseason = $this->competitionseasonResource->post( array(
+	        	"userid"=> $request->getParam('userid'),
 		        "name"=> $request->getParam('name'),
 		        "seasonname"=> $request->getParam('seasonname'),
 		        "structure" => $request->getParam('structure') )

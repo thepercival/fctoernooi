@@ -36,8 +36,8 @@ export class CompetitionSeasonSearchComponent implements OnInit {
                 return Observable.of<CompetitionSeason[]>([]);
             });
     }
-    gotoDetail(competitionseason: CompetitionSeason): void {
-        let link = ['/detail', competitionseason.id];
+    gotoMain(competitionseason: CompetitionSeason): void {
+        let link = ['/main', competitionseason.id];
         this.router.navigate(link);
     }
 }
