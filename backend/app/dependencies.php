@@ -1,6 +1,11 @@
 <?php
 // DIC configuration
 
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+
 $container = $app->getContainer();
 
 // view renderer
@@ -31,6 +36,18 @@ $container['em'] = function ($c) {
     return \Doctrine\ORM\EntityManager::create($settings['doctrine']['connection'], $config);
 };
 
+// symfony serializer
+$container['serializer'] = function( $c ) {
+	$encoders = array( new JsonEncoder() );
+
+	$normalizer = new ObjectNormalizer();
+	$normalizer->setCircularReferenceHandler(function ($object) {
+		return $object->getId();
+	});
+	$normalizers = array( $normalizer );
+	return new Serializer($normalizers, $encoders);
+};
+
 // JWTAuthentication
 $container['jwtauth'] = function( $c ) {
     $settings = $c->get('settings');
@@ -46,13 +63,13 @@ $container['jwtauth'] = function( $c ) {
 
 // actions
 $container['App\Action\AuthAction'] = function ($c) {
-	return new App\Action\AuthAction( $c->get('em'), $c->get('jwtauth') );
+	return new App\Action\AuthAction( $c->get('em'), $c->get('jwtauth'), $c->get('serializer') );
 };
 $container['App\Action\UserAction'] = function ($c) {
     $userResource = new \App\Resource\UserResource($c->get('em'));
-    return new App\Action\UserAction($userResource);
+    return new App\Action\UserAction($userResource,$c->get('serializer'));
 };
 $container['App\Action\CompetitionSeasonAction'] = function ($c) {
 	$competitionSeasonResource = new \App\Resource\CompetitionSeasonResource($c->get('em'));
-    return new App\Action\CompetitionSeasonAction($competitionSeasonResource);
+    return new App\Action\CompetitionSeasonAction($competitionSeasonResource,$c->get('serializer'));
 };

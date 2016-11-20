@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http, Response, RequestOptions } from '@angular/http';
 import {Observable} from 'rxjs/Rx';
-
-// Import RxJs required methods
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-
 import { User } from './user';
 import { AuthenticationService } from '../auth/service';
 
@@ -13,15 +10,16 @@ import { AuthenticationService } from '../auth/service';
 export class UserService {
 
     private headers = new Headers({'Content-Type': 'application/json'});
-    private usersUrl = 'http://localhost:2999/users';  // localhost:2999/users
+    private usersUrl : string;
 
     constructor(
         private http: Http,
-        private authenticationService: AuthenticationService) {
+        private authService: AuthenticationService) {
+        this.usersUrl = authService.usersUrl;
     }
 
     getUsers(): Observable<User[]> {
-        let headers = new Headers({ 'Authorization': 'Bearer ' + this.authenticationService.token, 'Content-Type': 'application/json' });
+        let headers = new Headers({ 'Authorization': 'Bearer ' + this.authService.token, 'Content-Type': 'application/json' });
         // let options = new RequestOptions({ headers: headers });
         let options = new RequestOptions({ headers: headers });
         return this.http.get(this.usersUrl, options)
@@ -41,6 +39,11 @@ export class UserService {
             .then(() => );
         source.forEach( x => );
     }*/
+
+    ngOnInit() {
+        // reset login status
+        this.authService.logout();
+    }
 
     getUser(id: number): Observable<User> {
         // var x = this.getUsers().forEach(users => users.find(user => user.id === id));

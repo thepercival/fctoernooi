@@ -12,6 +12,7 @@ use Slim\ServerRequestInterface;
 use Doctrine\ORM\EntityManager;
 use \Firebase\JWT\JWT;
 use \Slim\Middleware\JwtAuthentication;
+use Symfony\Component\Serializer\Serializer;
 
 final class AuthAction
 {
@@ -20,11 +21,13 @@ final class AuthAction
 	 */
 	protected $entityManager = null;
     protected $jwtauth = null;
+	protected $serializer = null;
 
-	public function __construct(EntityManager $entityManager, JwtAuthentication $jwtauth )
+	public function __construct(EntityManager $entityManager, JwtAuthentication $jwtauth, Serializer $serializer )
 	{
 		$this->entityManager = $entityManager;
         $this->jwtauth = $jwtauth;
+		$this->serializer = $serializer;
 	}
 
 	public function login($request, $response, $args)
@@ -62,10 +65,13 @@ final class AuthAction
 
             $data["status"] = "ok";
             $data["token"] = $token;
+			$data["user"] = $user;
 
-            return $response->withStatus(201)
-                ->withHeader("Content-Type", "application/json")
-                ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+			return $response
+				->withStatus(201)
+				->withHeader('Content-Type', 'application/json;charset=utf-8')
+				->write($this->serializer->serialize( $data, 'json'));
+			;
 		}
 		catch( \Exception $e ){
 			$sErrorMessage = $e->getMessage();

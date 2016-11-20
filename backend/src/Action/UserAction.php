@@ -10,27 +10,36 @@ namespace App\Action;
 
 use App\Resource\UserResource;
 use Slim\ServerRequestInterface;
+use Symfony\Component\Serializer\Serializer;
 
 final class UserAction
 {
     private $userResource;
+	protected $serializer = null;
 
-    public function __construct(UserResource $userResource)
-    {
-        $this->userResource = $userResource;
-    }
+	public function __construct(UserResource $userResource, Serializer $serializer)
+	{
+		$this->userResource = $userResource;
+		$this->serializer = $serializer;
+	}
 
     public function fetch($request, $response, $args)
     {
         $users = $this->userResource->get();
-        return $response->withJSON($users);
+	    return $response
+		    ->withHeader('Content-Type', 'application/json;charset=utf-8')
+		    ->write($this->serializer->serialize( $users, 'json'));
+	    ;
     }
 
     public function fetchOne($request, $response, $args)
     {
         $user = $this->userResource->get($args['id']);
         if ($user) {
-            return $response->withJSON($user);
+	        return $response
+		        ->withHeader('Content-Type', 'application/json;charset=utf-8')
+		        ->write($this->serializer->serialize( $user, 'json'));
+	        ;
         }
         return $response->withStatus(404, 'geen gebruiker met het opgegeven id gevonden');
     }

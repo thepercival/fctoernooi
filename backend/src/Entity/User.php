@@ -10,12 +10,13 @@ namespace App\Entity;
 
 use App\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="users")
  */
-class User
+class User implements \JsonSerializable
 {
     /**
      * @var integer
@@ -42,13 +43,13 @@ class User
     protected $email;
 
     /**
-     * @ORM\ManyToMany(targetEntity="CompetitionSeason", mappedBy="users")
+     * @ORM\ManyToMany(targetEntity="CompetitionSeason", inversedBy="users")
      * @ORM\JoinTable(name="users_competitionseasons")
      */
     private $competitionseasons;
 
     public function __construct() {
-        $this->competitionseasons = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->competitionseasons = new ArrayCollection();
     }
 
     /**
@@ -81,16 +82,6 @@ class User
     {
         $this->name = $name;
     }
-
-	/**
-	 * Get password
-	 *
-	 * @ORM\return string
-	 */
-	public function getPassword()
-	{
-		return $this->password;
-	}
 
 	/**
 	 * Set password
@@ -134,13 +125,21 @@ class User
 		return $this->competitionseasons;
 	}
 
-    /**
-     * Get array copy of object
-     *
-     * @return array
-     */
-    public function getArrayCopy()
-    {
-        return get_object_vars($this);
-    }
+	/**
+	 * Get array copy of object
+	 *
+	 * @return array
+	 */
+	/*public function getArrayCopy()
+	{
+		return get_object_vars($this);
+	}*/
+
+	public function jsonSerialize() {
+		$arr = get_object_vars($this);
+		unset( $arr["password"] );
+		return $arr;
+
+		// return get_object_vars($this); // $this->getArrayCopy();
+	}
 }

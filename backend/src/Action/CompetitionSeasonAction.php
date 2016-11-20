@@ -10,27 +10,44 @@ namespace App\Action;
 
 use App\Resource\CompetitionSeasonResource;
 use Slim\ServerRequestInterface;
+use Slim\Http\Response;
+use Symfony\Component\Serializer\Serializer;
 
 final class CompetitionSeasonAction
 {
     private $competitionseasonResource;
+	protected $serializer = null;
 
-    public function __construct(CompetitionSeasonResource $competitionseasonResource)
+    public function __construct(CompetitionSeasonResource $competitionseasonResource, Serializer $serializer)
     {
         $this->competitionseasonResource = $competitionseasonResource;
+	    $this->serializer = $serializer;
     }
 
-    public function fetch($request, $response, $args)
+    public function fetch($request, Response $response, $args)
     {
-        $competitionseasons = $this->competitionseasonResource->get();
-        return $response->withJSON($competitionseasons);
+	    $competitionseasons = null;
+	    $userid = $request->getParam('userid');
+	    /*if( $userid !== null and  is_numeric( $userid ) )
+	        $competitionseasons = $this->competitionseasonResource->getBy( array( "userid" => $userid ) );
+	    else*/
+            $competitionseasons = $this->competitionseasonResource->get();
+
+	    return $response
+		    ->withHeader('Content-Type', 'application/json;charset=utf-8')
+		    ->write($this->serializer->serialize( $competitionseasons, 'json'));
+	    ;
     }
 
     public function fetchOne($request, $response, $args)
     {
 	    $competitionseason = $this->competitionseasonResource->get($args['id']);
-        if ($competitionseason) {
-            return $response->withJSON($competitionseason);
+
+	    if ($competitionseason) {
+		    return $response
+			    ->withHeader('Content-Type', 'application/json;charset=utf-8')
+			    ->write($this->serializer->serialize( $competitionseason, 'json'));
+			    ;
         }
         return $response->withStatus(404, 'geen gebruiker met het opgegeven id gevonden');
     }

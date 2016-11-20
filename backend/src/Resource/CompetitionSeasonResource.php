@@ -11,6 +11,7 @@ namespace App\Resource;
 use App\AbstractResource;
 use App\Entity\CompetitionSeason;
 
+
 /**
  * Class Resource
  * @package App
@@ -29,22 +30,33 @@ class CompetitionSeasonResource extends AbstractResource
             $competitionseasons = $this->entityManager->getRepository('App\Entity\CompetitionSeason')->findAll();
             $competitionseasons = array_map(
                 function ($competitionseason) {
-                    return $competitionseason->getArrayCopy();
+	                return $competitionseason;
                 },
                 $competitionseasons
             );
 
             return $competitionseasons;
         } else {
+	        /** @var \App\Entity\CompetitionSeason $competitionseason */
             $competitionseason = $this->entityManager->getRepository('App\Entity\CompetitionSeason')->findOneBy(
                 array('id' => $id)
             );
             if ($competitionseason) {
-                return $competitionseason->getArrayCopy();
+	            return $competitionseason;
             }
         }
         return null;
     }
+
+	/**
+	 * @param $id
+	 *
+	 * @return string
+	 */
+	public function getBy( $arrProps  )
+	{
+		return $this->entityManager->getRepository('App\Entity\CompetitionSeason')->findBy( $arrProps );
+	}
 
     public function post( $arrProps )
     {

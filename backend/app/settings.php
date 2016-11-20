@@ -37,7 +37,11 @@ return [
                 'dbname'   => 'fctoernooiv2',
                 'user'     => getenv('DB_USERNAME'),
                 'password' => getenv('DB_PASSWORD'),
-            ]
+            ],
+            'serializer' => array(
+	            'enabled' => true,
+            ),
+
         ],
 
         'jwt' => [

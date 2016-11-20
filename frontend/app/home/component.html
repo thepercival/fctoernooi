@@ -1,6 +1,6 @@
 
 
-<div *ngIf="currentUser" align="center">
+<div *ngIf="authService.user" align="center">
     <p>
         <button type="button" class="btn btn-outline-default" (click)="newIsCollapsed = !newIsCollapsed">organiseer nieuw toernooi</button>
     </p>
@@ -28,7 +28,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let competitionseason of competitionSeasons" class="competitionseason" [class.selected]="competitionseason === selectedCompetitionSeason" (click)="onSelect(competitionseason)">
+        <tr *ngFor="let competitionseason of authService.user.competitionSeasons" class="competitionseason" [class.selected]="competitionseason === selectedCompetitionSeason" (click)="onSelect(competitionseason)">
             <td>{{competitionseason.name}}</td><td>{{competitionseason.seasonname}}</td>
             <td>
                 <div ngbDropdown [up]="true" class="d-inline-block">
@@ -47,7 +47,7 @@
         </tbody>
     </table>
 </div>
-<div *ngIf="!currentUser" align="center">
+<div *ngIf="!authService.user" align="center">
     <button class="btn btn-default">organiseer demo toernooi</button>
     <hr>
     <div>

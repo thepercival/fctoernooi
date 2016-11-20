@@ -20,7 +20,5 @@ export class NavbarComponent {
         this.authenticationService.logout();
         this.router.navigate(['/']);
     }
-
-
 }
 

@@ -29,7 +29,7 @@ class UserResource extends AbstractResource
             $users = $this->entityManager->getRepository('App\Entity\User')->findAll();
             $users = array_map(
                 function ($user) {
-                    return $user->getArrayCopy();
+                    return $user;
                 },
                 $users
             );
@@ -40,7 +40,7 @@ class UserResource extends AbstractResource
                 array('id' => $id)
             );
             if ($user) {
-                return $user->getArrayCopy();
+                return $user;
             }
         }
         return null;

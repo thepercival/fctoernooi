@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CompetitionSeason } from '../competitionseason';
-import { CompetitionSeasonService } from '../competition-season.service';
+import { CompetitionSeason } from '../competitionseason/competitionseason';
+import { CompetitionSeasonService } from '../competitionseason/service';
+import { AuthenticationService } from '../auth/service';
 
 @Component({
     moduleId: module.id,
@@ -11,29 +12,31 @@ import { CompetitionSeasonService } from '../competition-season.service';
 
 export class HomeComponent implements OnInit {
 
-    public currentUser: string;
+    // auth service gebruiken
     competitionSeasons: CompetitionSeason[] = [];
     selectedCompetitionSeason: CompetitionSeason = null;
     public newIsCollapsed = true;
 
     // constructor
     constructor(
-        private competitionSeasonService: CompetitionSeasonService
+        private competitionSeasonService: CompetitionSeasonService,
+        private authService: AuthenticationService
     ){}
 
     // interfaces
     ngOnInit(): void {
-        this.currentUser = localStorage.getItem('currentUser');
-        if ( this.currentUser )
-            this.currentUser = JSON.parse( this.currentUser );
-
-        this.getCompetitionSeasons();
+        var currentUser = this.authService.user;
+        console.log( 'us' );
+        console.log( currentUser );
+        if ( currentUser )
+            this.competitionSeasons = currentUser.competitionSeasons;
     }
+
 
     // methods
-    getCompetitionSeasons(): void {
-        this.competitionSeasonService.getCompetitionSeasons().forEach( competitionseasons => this.competitionSeasons = competitionseasons);
-    }
+    // getCompetitionSeasons(): void {
+        // this.competitionSeasonService.getCompetitionSeasons().forEach( competitionseasons => this.competitionSeasons = competitionseasons);
+   //  }
 
     onSelect(competitionseason: CompetitionSeason): void {
         this.selectedCompetitionSeason = competitionseason;

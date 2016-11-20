@@ -16,7 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\Table(name="competitionseasons")
  */
-class CompetitionSeason
+class CompetitionSeason implements \JsonSerializable
 {
     /**
      * @var integer
@@ -48,7 +48,7 @@ class CompetitionSeason
     protected $structure;
 
     /**
-	 * @ORM\ManyToMany(targetEntity="User", inversedBy="competitionseasons")
+	 * @ORM\ManyToMany(targetEntity="User", mappedBy="competitionseasons", fetch="EAGER")
 	 * @ORM\JoinTable(name="users_competitionseasons")
 	 */
     private $users;
@@ -159,8 +159,25 @@ class CompetitionSeason
      *
      * @return array
      */
-    public function getArrayCopy()
+    /*public function getArrayCopy()
     {
-        return get_object_vars($this);
-    }
+	    return get_object_vars($this);
+    }*/
+
+	public function jsonSerialize() {
+
+		/*$
+		arr = get_object_vars($this);
+		foreach( $arr as $key => $s ){
+			var_dump( $key );
+			var_dump( get_class($s) );
+			if ( $s instanceof ArrayCollection )
+				var_dump( count( $s ) );
+		}
+		die();*/
+
+		get_object_vars($this); // $this->getArrayCopy();
+	}
+
+
 }

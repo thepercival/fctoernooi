@@ -2,8 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params }   from '@angular/router';
 import { Location }                 from '@angular/common';
 
-import { CompetitionSeasonService } from '../competition-season.service';
-import { CompetitionSeason } from '../competitionseason';
+import { CompetitionSeasonService } from './service';
+import { CompetitionSeason } from './competitionseason';
 
 @Component({
     moduleId: module.id,
