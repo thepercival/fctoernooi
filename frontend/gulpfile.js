@@ -91,7 +91,7 @@ gulp.task('ts:compile', function() {
 });
 
 gulp.task('ts:watch', function () {
-    gulp.watch(config.paths.src.ts + '/**/*.ts', ['ts:compile']);
+    gulp.watch( [ config.paths.src.ts + '/**/*.ts', '!' + config.paths.src.ts + '/**/*.d.ts'], ['ts:compile']);
 });
 
 gulp.task('webserver', function() {
