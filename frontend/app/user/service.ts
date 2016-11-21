@@ -55,10 +55,10 @@ export class UserService {
             .catch((error:any) => Observable.throw(error.message || 'Server error' ));
     }
 
-    create(name: string, seasonname: string): Observable<User> {
+    create(name: string, seasonName: string): Observable<User> {
 
         return this.http
-            .post(this.usersUrl, JSON.stringify({name: name, seasonname: seasonname, structure: '{}'}), {headers: this.headers})
+            .post(this.usersUrl, JSON.stringify({name: name, seasonName: seasonName, structure: '{}'}), {headers: this.headers})
             // ...and calling .json() on the response to return data
             .map((res:Response) => res.json())
             //...errors if any

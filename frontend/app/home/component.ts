@@ -25,13 +25,9 @@ export class HomeComponent implements OnInit {
 
     // interfaces
     ngOnInit(): void {
-        var currentUser = this.authService.user;
-        console.log( 'us' );
-        console.log( currentUser );
-        if ( currentUser )
-            this.competitionSeasons = currentUser.competitionSeasons;
+        if ( this.authService.user )
+            this.competitionSeasons = this.authService.user.competitionSeasons;
     }
-
 
     // methods
     // getCompetitionSeasons(): void {
@@ -43,16 +39,16 @@ export class HomeComponent implements OnInit {
         // console.log( this.selectedCompetitionSeason );
     }
 
-    add(name: string, seasonname: string): void {
+    add(name: string, seasonName: string): void {
         name = name.trim();
         if (!name) {
             return;
         }
-        seasonname = seasonname.trim();
-        if (!seasonname) {
+        seasonName = seasonName.trim();
+        if (!seasonName) {
             return;
         }
-        this.competitionSeasonService.create(name,seasonname)
+        this.competitionSeasonService.create(name,seasonName)
             .forEach(competitionseason => {
                 this.competitionSeasons.push(competitionseason);
                 this.selectedCompetitionSeason = null;

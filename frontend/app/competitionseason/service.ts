@@ -22,6 +22,7 @@ export class CompetitionSeasonService {
             .map((res:Response) => res.json())
             //...errors if any
             .catch((error:any) => Observable.throw(error.message || 'Server error' ));
+
     }
 
     /*getCompetitionSeasonsSlow(): Observable<CompetitionSeason[]> {
@@ -45,10 +46,10 @@ export class CompetitionSeasonService {
             .catch((error:any) => Observable.throw(error.message || 'Server error' ));
     }
 
-    create(name: string, seasonname: string): Observable<CompetitionSeason> {
+    create(name: string, seasonName: string): Observable<CompetitionSeason> {
 
         return this.http
-            .post(this.competitionseasonsUrl, JSON.stringify({name: name, seasonname: seasonname, structure: '{}'}), {headers: this.headers})
+            .post(this.competitionseasonsUrl, JSON.stringify({name: name, seasonName: seasonName, structure: '{}'}), {headers: this.headers})
             // ...and calling .json() on the response to return data
             .map((res:Response) => res.json())
             //...errors if any

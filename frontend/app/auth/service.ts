@@ -20,24 +20,17 @@ export class AuthenticationService {
         // this.initLoggedOnUser();
 
         if ( this.token && this.userid && !this.user ){
-            console.log( "auth.user starting initialization...");
+            console.log( "auth.user starting initialization for userid: "+this.userid+"...");
             this.getLoggedInUser( this.userid ).forEach(user => this.user = user);
             console.log( "auth.user initialized");
         }
     }
 
-    //initLoggedOnUser(): void {
-        /* dit wordt niet aangeroepen */
-        //if ( this.token && this.userid && !this.user ){
-          //  console.log( "auth.user is initialized");
-          //  this.getLoggedInUser( this.userid ).forEach(user => this.user = user);
-      // }
-   // }
-
     getLoggedInUser(id: number): Observable<User> {
         let headers = new Headers({ 'Authorization': 'Bearer ' + this.token, 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
         const url = `${this.usersUrl}/${id}`;
+
         return this.http.get(url, options)
         // ...and calling .json() on the response to return data
             .map((res:Response) => res.json())
@@ -66,7 +59,8 @@ export class AuthenticationService {
                     return false;
                 }
             })
-            .catch((error:any) => Observable.throw(error.statusText || 'Server error' ));
+            .catch(this.handleError);
+            // .catch((error:any) => Observable.throw( error.statusText || 'Server error' ) );
             /*.catch((err:any) => {
                 //console.log( err.statusText );
                 Observable.throw( err.statusText )
@@ -79,5 +73,12 @@ export class AuthenticationService {
         this.user = null;
         this.userid = null;
         localStorage.removeItem('user');
+    }
+
+    // this could also be a private method of the component class
+    handleError(error: any): Observable<any> {
+        console.error( error.statusText );
+        // throw an application level error
+        return Observable.throw( error.statusText );
     }
 }

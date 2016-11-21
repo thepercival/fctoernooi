@@ -77,7 +77,7 @@ gulp.task('compileBootstrap', function() {
 var tsProject = ts.createProject('tsconfig.json');
 
 gulp.task('ts:compile', function() {
-    var tsResult = gulp.src('app/**/*.ts') // or tsProject.src()
+    var tsResult = gulp.src( [ config.paths.src.ts + '/**/*.ts', '!' + config.paths.src.ts + '/**/*.d.ts'] ) // or tsProject.src()
         .pipe(tsProject())
         //.pipe(sourcemaps.init()) // This means sourcemaps will be generated
         ;

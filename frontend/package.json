@@ -7,7 +7,7 @@
   "url": "http://v2.fctoernooi.nl/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/thepercival/fctoernooi"
+    "url": "git+https://github.com/thepercival/fctoernooi.git"
   },
   "scripts": {
     "start": "tsc && concurrently \"tsc -w\" \"lite-server -c configs/bs-config.json\" ",
@@ -28,14 +28,16 @@
     "@ng-bootstrap/ng-bootstrap": "^1.0.0-alpha.11",
     "angular-in-memory-web-api": "~0.1.13",
     "core-js": "^2.4.1",
+    "font-awesome": "^4.7.0",
     "reflect-metadata": "^0.1.8",
     "rxjs": "5.0.0-beta.12",
     "systemjs": "0.19.39",
+    "typings": "^2.0.0",
     "zone.js": "^0.6.25"
   },
   "devDependencies": {
     "@types/core-js": "^0.9.34",
-    "@types/node": "^6.0.45",
+    "@types/node": "^6.0.48",
     "browser-sync": "^2.17.5",
     "concurrently": "^3.0.0",
     "del": "^2.2.2",
@@ -56,6 +58,22 @@
     "merge2": "^1.0.2",
     "ntypescript": "^1.201609302242.1",
     "typescript": "^2.0.10",
+    "typings": "^2.0.0",
     "wiredep": "^4.0.0"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/thepercival/fctoernooi/issues"
+  },
+  "homepage": "https://github.com/thepercival/fctoernooi#readme",
+  "main": "gulpfile.js",
+  "keywords": [
+    "toernooi",
+    "sport",
+    "plannen",
+    "wedstrijden",
+    "verwerken",
+    "tv",
+    "scherm"
+  ],
+  "author": "Coen Dunnink"
 }

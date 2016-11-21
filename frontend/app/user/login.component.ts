@@ -24,18 +24,19 @@ export class LoginComponent implements OnInit {
 
     login() {
         this.loading = true;
-        // console.log(this.model.username);
-        // return;
-        this.authenticationService.login(this.model.username, this.model.password)
-            .subscribe(result => {
-                if (result === true) {
-                    // login successful
-                    this.router.navigate(['/']);
-                } else {
-                    // login failed
-                    this.error = 'Username or password is incorrect';
-                    this.loading = false;
-                }
-            });
+        this.authenticationService.login(this.model.email, this.model.password)
+            .subscribe(
+                /* happy path */ p => this.router.navigate(['/']),
+                /* error path */ e => { this.error = e; this.loading = false; },
+                /* onComplete */ () => this.loading = false
+            );
+        /*.subscribe(result => {
+            if (result === true) {
+                // login successful
+                this.router.navigate(['/']);
+            } else {
+                this.error = 'gebruikersnaam of wachtwoord is niet correct';
+            }
+        });*/
     }
 }
