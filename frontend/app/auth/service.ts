@@ -1,11 +1,11 @@
-import { Injectable, OnInit } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import { User } from '../user/user';
 
 @Injectable()
-export class AuthenticationService implements OnInit{
+export class AuthenticationService {
     public token: string;
     private userid: number;
     private authUrl = 'http://localhost:2999/auth/login';
@@ -17,20 +17,28 @@ export class AuthenticationService implements OnInit{
         var user = JSON.parse(localStorage.getItem('user'));
         this.token = user && user.token;
         this.userid = user && user.id;
-    }
+        // this.initLoggedOnUser();
 
-    ngOnInit() {
-        /* dit wordt niet aangeroepen */
         if ( this.token && this.userid && !this.user ){
-            console.log('hoppa3');
+            console.log( "auth.user starting initialization...");
             this.getLoggedInUser( this.userid ).forEach(user => this.user = user);
+            console.log( "auth.user initialized");
         }
     }
 
+    //initLoggedOnUser(): void {
+        /* dit wordt niet aangeroepen */
+        //if ( this.token && this.userid && !this.user ){
+          //  console.log( "auth.user is initialized");
+          //  this.getLoggedInUser( this.userid ).forEach(user => this.user = user);
+      // }
+   // }
+
     getLoggedInUser(id: number): Observable<User> {
-        // var x = this.getUsers().forEach(users => users.find(user => user.id === id));
+        let headers = new Headers({ 'Authorization': 'Bearer ' + this.token, 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
         const url = `${this.usersUrl}/${id}`;
-        return this.http.get(url)
+        return this.http.get(url, options)
         // ...and calling .json() on the response to return data
             .map((res:Response) => res.json())
             //...errors if any
@@ -49,7 +57,6 @@ export class AuthenticationService implements OnInit{
                     // store username and jwt token in local storage to keep user logged in between page refreshes
                     localStorage.setItem('user', JSON.stringify({ id: json.user.id, token: json.token }));
                     this.user = json.user;
-                    console.log( 'as' );
                     console.log( this.user );
 
                     // return true to indicate successful login
