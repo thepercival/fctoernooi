@@ -26,17 +26,15 @@ import { UsersComponent }  from './user/users.component';
         FormsModule,
         HttpModule,
         // InMemoryWebApiModule.forRoot(InMemoryDataService),
-       NgbModule.forRoot(),
+        NgbModule.forRoot(),
         AppRoutingModule
     ],
     declarations: [
         AppComponent,
         NavbarComponent,
         HomeComponent,
-        CompetitionSeasonMainComponent,
-        CompetitionSeasonSearchComponent,
-        LoginComponent, LogoutComponent,
-        UsersComponent,
+        CompetitionSeasonMainComponent, CompetitionSeasonSearchComponent,
+        LoginComponent, LogoutComponent, UsersComponent
     ],
     providers:    [
         CompetitionSeasonService,
