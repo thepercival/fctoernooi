@@ -21,6 +21,7 @@ export class CompetitionSeasonMainComponent implements OnInit{
         private route: ActivatedRoute,
         private location: Location
     ) {}
+    
 
     ngOnInit(): void {
         this.route.params.forEach((params: Params) => {

@@ -3,7 +3,8 @@ import { Router }            from '@angular/router';
 import { Observable }        from 'rxjs/Observable';
 import { Subject }           from 'rxjs/Subject';
 import { CompetitionSeasonSearchService } from './competition-season-search.service';
-import { CompetitionSeason } from './competitionseason/competitionseason';
+import { CompetitionSeason } from '../competitionseason/competitionseason';
+
 @Component({
     moduleId: module.id,
     selector: 'competition-season-search',
@@ -11,6 +12,7 @@ import { CompetitionSeason } from './competitionseason/competitionseason';
     styleUrls: [ 'competition-season-search.component.css' ],
     providers: [CompetitionSeasonSearchService]
 })
+
 export class CompetitionSeasonSearchComponent implements OnInit {
     competitionseasons: Observable<CompetitionSeason[]>;
     private searchTerms = new Subject<string>();
@@ -21,6 +23,7 @@ export class CompetitionSeasonSearchComponent implements OnInit {
     search(term: string): void {
         this.searchTerms.next(term);
     }
+
     ngOnInit(): void {
         this.competitionseasons = this.searchTerms
             .debounceTime(300)        // wait for 300ms pause in events

@@ -30,13 +30,5 @@ export class LoginComponent implements OnInit {
                 /* error path */ e => { this.error = e; this.loading = false; },
                 /* onComplete */ () => this.loading = false
             );
-        /*.subscribe(result => {
-            if (result === true) {
-                // login successful
-                this.router.navigate(['/']);
-            } else {
-                this.error = 'gebruikersnaam of wachtwoord is niet correct';
-            }
-        });*/
     }
 }

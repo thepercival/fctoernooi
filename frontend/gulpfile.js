@@ -61,7 +61,7 @@ from npm package.json
   //      ..pipe(sourcemaps.write( "." ))
 
 
-gulp.task('compileBootstrap', function() {
+gulp.task('css:compile', function() {
     return gulp.src( config.paths.src.npm + '/bootstrap/scss/bootstrap.scss')
         .pipe(customizeBootstrap( config.paths.src.sass + '/*.scss'))
         .pipe(sass())

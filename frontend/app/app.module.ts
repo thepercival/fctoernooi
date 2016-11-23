@@ -12,7 +12,7 @@ import { NavbarComponent }   from './navbar/component';
 import { HomeComponent } from './home/component';
 import { CompetitionSeasonMainComponent } from './competitionseason/main.component';
 import { CompetitionSeasonService } from './competitionseason/service';
-import { CompetitionSeasonSearchComponent } from './competition-season-search.component';
+// import { CompetitionSeasonSearchComponent } from './competition-season-search.component';
 import { AuthGuard } from './auth/guard';
 import { AuthenticationService } from './auth/service';
 import { UserService } from './user/service';
@@ -20,6 +20,7 @@ import { RegisterComponent }  from './user/register.component';
 import { LoginComponent }  from './user/login.component';
 import { LogoutComponent }  from './user/logout.component';
 import { UsersComponent }  from './user/users.component';
+import { NgbdModalContent } from './competitionseason/newmodal/component';
 
 @NgModule({
    imports:      [
@@ -28,14 +29,18 @@ import { UsersComponent }  from './user/users.component';
         HttpModule,
         // InMemoryWebApiModule.forRoot(InMemoryDataService),
         NgbModule.forRoot(),
-        AppRoutingModule
+        AppRoutingModule,
     ],
     declarations: [
         AppComponent,
         NavbarComponent,
         HomeComponent,
-        CompetitionSeasonMainComponent, CompetitionSeasonSearchComponent,
-        RegisterComponent, LoginComponent, LogoutComponent, UsersComponent
+        CompetitionSeasonMainComponent, // CompetitionSeasonSearchComponent,
+        RegisterComponent, LoginComponent, LogoutComponent, UsersComponent,
+        NgbdModalContent
+    ],
+    entryComponents: [
+        NgbdModalContent
     ],
     providers:    [
         CompetitionSeasonService,
@@ -49,5 +54,6 @@ import { UsersComponent }  from './user/users.component';
 })
 
 export class AppModule { }
+
 
 
