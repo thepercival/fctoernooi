@@ -52,17 +52,16 @@ export class UserService {
         // ...and calling .json() on the response to return data
             .map((res:Response) => res.json())
             //...errors if any
-            .catch((error:any) => Observable.throw(error.message || 'Server error' ));
+            .catch(this.handleError);
     }
 
-    create(name: string, seasonName: string): Observable<User> {
-
+    create( newUser: User ): Observable<User> {
         return this.http
-            .post(this.usersUrl, JSON.stringify({name: name, seasonName: seasonName, structure: '{}'}), {headers: this.headers})
+            .post(this.usersUrl, JSON.stringify( newUser ), {headers: this.headers})
             // ...and calling .json() on the response to return data
             .map((res:Response) => res.json())
             //...errors if any
-            .catch((error:any) => Observable.throw(error.message || 'Server error'));
+            .catch(this.handleError);
     }
 
     update(user: User): Observable<User> {
@@ -73,7 +72,7 @@ export class UserService {
             // ...and calling .json() on the response to return data
             .map((res:Response) => res.json())
             //...errors if any
-            .catch((error:any) => Observable.throw(error.message || 'Server error'));
+            .catch(this.handleError);
     }
 
     delete(id: number): Observable<void> {
@@ -83,26 +82,13 @@ export class UserService {
             // ...and calling .json() on the response to return data
             .map((res:Response) => res.json())
             //...errors if any
-            .catch((error:any) => Observable.throw(error.message || 'Server error'));
+            .catch(this.handleError);
     }
 
-    private handleError (error: Response | any) {
-        // In a real world app, we might use a remote logging infrastructure
-        let errMsg: string;
-        if (error instanceof Response) {
-            // const body = error.json() || '';
-            /*const err = body.error || JSON.stringify(body);
-            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-            */
-            const err = '';
-            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-        } else {
-            // errMsg = error.message ? error.message : error.toString();
-        }
-        console.log( error );
-
-        // console.error('testje');
-        return Observable.throw(errMsg);
-
+    // this could also be a private method of the component class
+    handleError(error: any): Observable<any> {
+        console.error( error.statusText );
+        // throw an application level error
+        return Observable.throw( error.statusText );
     }
 }

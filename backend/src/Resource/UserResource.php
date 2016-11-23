@@ -49,17 +49,19 @@ class UserResource extends AbstractResource
     public function post( $arrProps )
     {
         $name = $arrProps['name'];
+        $password = $arrProps['password'];
         $email = $arrProps['email'];
 
-        // handle if $id is missing or $name or $email are valid etc.
-        // return valid status code or throw an exception
-        // depends on the concrete implementation
+        // check if name is unique
+        // check if password meets requirements
+        // check if email is unique
 
         /** @var User $user */
         $user = new User();
 
         $user->setEmail($email);
         $user->setName($name);
+        $user->setPassword($password);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

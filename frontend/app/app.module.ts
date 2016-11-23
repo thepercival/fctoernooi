@@ -16,6 +16,7 @@ import { CompetitionSeasonSearchComponent } from './competition-season-search.co
 import { AuthGuard } from './auth/guard';
 import { AuthenticationService } from './auth/service';
 import { UserService } from './user/service';
+import { RegisterComponent }  from './user/register.component';
 import { LoginComponent }  from './user/login.component';
 import { LogoutComponent }  from './user/logout.component';
 import { UsersComponent }  from './user/users.component';
@@ -34,7 +35,7 @@ import { UsersComponent }  from './user/users.component';
         NavbarComponent,
         HomeComponent,
         CompetitionSeasonMainComponent, CompetitionSeasonSearchComponent,
-        LoginComponent, LogoutComponent, UsersComponent
+        RegisterComponent, LoginComponent, LogoutComponent, UsersComponent
     ],
     providers:    [
         CompetitionSeasonService,

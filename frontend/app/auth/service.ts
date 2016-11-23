@@ -38,8 +38,8 @@ export class AuthenticationService {
             .catch((error:any) => Observable.throw(error.message || 'Server error' ));
     }
 
-    login(username, password): Observable<boolean> {
-        return this.http.post( this.authUrl, { email: username, password: password })
+    login(email, password): Observable<boolean> {
+        return this.http.post( this.authUrl, { email: email, password: password })
             .map((response: Response) => {
                 let json = response.json();
                 // login successful if there's a jwt token in the response

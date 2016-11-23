@@ -52,12 +52,18 @@ $container['serializer'] = function( $c ) {
 $container['jwtauth'] = function( $c ) {
     $settings = $c->get('settings');
     return new \Slim\Middleware\JwtAuthentication([
-        "path" => ["/users"],
-        // "passthrough" => ["/auth/login", "/users"],
         "secure" => true,
         "relaxed" => ["localhost"],
         "secret" => $settings['jwt']['secret'],
-        "algorithm" => $settings['jwt']['algorithm']
+        "algorithm" => $settings['jwt']['algorithm'],
+        "rules" => [
+            new \Slim\Middleware\JwtAuthentication\RequestPathRule([
+                "path" => "/users"
+            ]),
+            new \Slim\Middleware\JwtAuthentication\RequestMethodRule([
+                "passthrough" => ["OPTIONS","POST"]
+            ])
+        ]
     ]);
 };
 

@@ -1,6 +1,11 @@
 <div class="container">
-    <form class="form-signin" name="form" (ngSubmit)="f.form.valid && login() && false" #f="ngForm" novalidate>
-        <h2 class="form-signin-heading">inloggen</h2>
+
+</div> <!-- /container -->
+
+
+<div class="p-x-1 p-y-3 login">
+    <form class="card card-block mx-auto bg-faded" style="max-width: 25rem" name="form" (ngSubmit)="f.form.valid && login() && false" #f="ngForm" novalidate>
+        <legend class="m-b-1 text-xs-center">inloggen</legend>
         <label for="email" class="sr-only">emailaddres</label>
         <input type="email" id="email" name="email" class="form-control" placeholder="emailadres" [(ngModel)]="model.email" #email="ngModel" required autofocus>
         <label for="password" class="sr-only">wachtwoord</label>
@@ -10,11 +15,9 @@
                 <input type="checkbox" value="remember-me"> onthoudt mij
             </label>
         </div>
-        <div *ngIf="f.submitted && !email.valid" class="help-block">emailadres is verplicht</div>
-        <div *ngIf="f.submitted && !password.valid" class="help-block">wachtwoord is verplicht</div>
+        <div *ngIf="f.submitted && !email.valid" class="alert alert-danger">emailadres is verplicht</div>
+        <div *ngIf="f.submitted && !password.valid" class="alert alert-danger">wachtwoord is verplicht</div>
         <div *ngIf="error" class="alert alert-danger">{{error}}</div>
-        <button [disabled]="loading" class="btn btn-lg btn-primary btn-block" type="submit">inloggen <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></button>
+        <button [disabled]="loading" class="btn btn-lg btn-primary btn-block" type="submit">inloggen <i *ngIf="loading" class="fa fa-spinner fa-spin fa-fw"></i> </button>
     </form>
-</div> <!-- /container -->
-
-
+</div>

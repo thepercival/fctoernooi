@@ -18,7 +18,6 @@
             </div>
         </div>
         <hr>
-        <h2>mijn toernooien</h2>
         <h2 *ngIf="competitionSeasons.length > 0">mijn toernooien</h2>
         <div  *ngIf="competitionSeasons.length == 0" class="alert alert-info" role="alert">
             Je hebt nog geen toernooien georganiseerd
@@ -56,7 +55,7 @@
             <button class="btn btn-default">organiseer demo toernooi</button>
             <hr>
             <div>
-                <button class="btn btn-default">aanmelden</button>
+                <button class="btn btn-default" routerLink="/register" routerLinkActive="active">aanmelden</button>
             </div>
             <div class="card card-outline-info text-xs-center">
                 <div class="card-block">

@@ -48,8 +48,10 @@ final class UserAction
     {
         $sErrorMessage = null;
         try{
+
             $user = $this->userResource->post( array(
                     "name"=> $request->getParam('name'),
+                    "password"=> $request->getParam('password'),
                     "email" => $request->getParam('email') )
             );
             if (!$user)
