@@ -83,6 +83,16 @@ class User implements \JsonSerializable
         $this->name = $name;
     }
 
+    /**
+     * Get password
+     *
+     * @ORM\return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
 	/**
 	 * Set password
 	 *
@@ -125,21 +135,9 @@ class User implements \JsonSerializable
 		return $this->competitionseasons;
 	}
 
-	/**
-	 * Get array copy of object
-	 *
-	 * @return array
-	 */
-	/*public function getArrayCopy()
-	{
-		return get_object_vars($this);
-	}*/
-
 	public function jsonSerialize() {
 		$arr = get_object_vars($this);
 		unset( $arr["password"] );
 		return $arr;
-
-		// return get_object_vars($this); // $this->getArrayCopy();
 	}
 }

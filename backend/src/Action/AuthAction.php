@@ -38,13 +38,10 @@ final class AuthAction
 		$sErrorMessage = null;
 		try{
 			$user = $this->entityManager->getRepository('App\Entity\User')->findOneBy(
-				array(
-					'email' => $email,
-					'password' => $password,
-				)
+				array( 'email' => $email )
 			);
 
-			if (!$user) {
+            if (!$user or !password_verify( $password, $user->getPassword() ) ) {
 				throw new \Exception( "ongeldige email(".$email.") en wachtwoord(".$password.") combinatie");
 			}
 

@@ -61,7 +61,7 @@ class UserResource extends AbstractResource
 
         $user->setEmail($email);
         $user->setName($name);
-        $user->setPassword($password);
+        $user->setPassword( password_hash( $password, PASSWORD_DEFAULT) );
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

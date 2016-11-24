@@ -41,6 +41,7 @@ $container['serializer'] = function( $c ) {
 	$encoders = array( new JsonEncoder() );
 
 	$normalizer = new ObjectNormalizer();
+    $normalizer->setIgnoredAttributes(array('password'));
 	$normalizer->setCircularReferenceHandler(function ($object) {
 		return $object->getId();
 	});
