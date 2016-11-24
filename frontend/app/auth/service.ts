@@ -7,7 +7,7 @@ import { User } from '../user/user';
 @Injectable()
 export class AuthenticationService {
     public token: string;
-    private userid: number;
+    public userid: number;
     private authUrl = 'http://localhost:2999/auth/login';
     public usersUrl = 'http://localhost:2999/users';
     public user: User;

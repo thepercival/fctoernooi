@@ -2,21 +2,8 @@
 <div class="home">
     <div *ngIf="authService.user" align="center">
         <p>
-            <button type="button" class="btn btn-outline-default" (click)="newIsCollapsed = !newIsCollapsed">organiseer nieuw toernooi</button>
+            <button type="button" class="btn btn-outline-default" (click)="open()">organiseer nieuw toernooi</button>
         </p>
-        <div [ngbCollapse]="newIsCollapsed">
-            <div class="card">
-                <div class="card-block">
-
-                    <label>toernooinaam:</label> <input #competitionseasonName />
-                    <label>seizoensnaam:</label> <input #seasonName />
-                    <button (click)="add(competitionseasonName.value, seasonName.value); competitionseasonName.value='' ">
-                        toevoegen
-                    </button>
-
-                </div>
-            </div>
-        </div>
         <hr>
         <h2 *ngIf="competitionSeasons.length > 0">mijn toernooien</h2>
         <div  *ngIf="competitionSeasons.length == 0" class="alert alert-info" role="alert">

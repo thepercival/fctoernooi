@@ -46,7 +46,7 @@ export class CompetitionSeasonService {
             .catch((error:any) => Observable.throw(error.message || 'Server error' ));
     }
 
-    create(name: string, seasonName: string): Observable<CompetitionSeason> {
+    create(name: string, seasonName: string, nrofteams: number, userid: number): Observable<CompetitionSeason> {
 
         return this.http
             .post(this.competitionseasonsUrl, JSON.stringify({name: name, seasonName: seasonName, structure: '{}'}), {headers: this.headers})

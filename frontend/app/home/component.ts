@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CompetitionSeason } from '../competitionseason/competitionseason';
 import { CompetitionSeasonService } from '../competitionseason/service';
 import { AuthenticationService } from '../auth/service';
+import { NgbdModalContent } from '../competitionseason/newmodal/component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     moduleId: module.id,
@@ -15,12 +17,13 @@ export class HomeComponent implements OnInit {
     // auth service gebruiken
     competitionSeasons: CompetitionSeason[] = [];
     selectedCompetitionSeason: CompetitionSeason = null;
-    public newIsCollapsed = true;
+
 
     // constructor
     constructor(
         private competitionSeasonService: CompetitionSeasonService,
-        private authService: AuthenticationService
+        private authService: AuthenticationService,
+        private modalService: NgbModal
     ){}
 
     // interfaces
@@ -39,22 +42,10 @@ export class HomeComponent implements OnInit {
         // console.log( this.selectedCompetitionSeason );
     }
 
-    add(name: string, seasonName: string): void {
-        name = name.trim();
-        if (!name) {
-            return;
-        }
-        seasonName = seasonName.trim();
-        if (!seasonName) {
-            return;
-        }
-        this.competitionSeasonService.create(name,seasonName)
-            .forEach(competitionseason => {
-                this.competitionSeasons.push(competitionseason);
-                this.selectedCompetitionSeason = null;
-            });
+    open() {
+        const modalRef = this.modalService.open(NgbdModalContent, { backdrop : 'static' } );
+        // modalRef.componentInstance.name = 'World';
     }
-
 
     delete(competitionseason: CompetitionSeason): void {
         this.competitionSeasonService
