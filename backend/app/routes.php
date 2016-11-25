@@ -28,6 +28,7 @@ $app->group('', function () use ($app) {
 
 //$app->group('/auth', function () use ($app) {
 	$app->post('/auth/login', 'App\Action\AuthAction:login');
+    $app->post('/auth/activate', 'App\Action\AuthAction:activate');
 //});
 
 /*$app->get('/:resourceType(/(:id)(/))', function($resourceType, $id = null) {

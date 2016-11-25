@@ -43,6 +43,11 @@ class User implements \JsonSerializable
     protected $email;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $active;
+
+    /**
      * @ORM\ManyToMany(targetEntity="CompetitionSeason", inversedBy="users")
      * @ORM\JoinTable(name="users_competitionseasons")
      */
@@ -123,6 +128,27 @@ class User implements \JsonSerializable
     public function setEmail( $email )
     {
         $this->email = $email;
+    }
+
+    /**
+     * Get active
+     *
+     * @ORM\return boolean
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * Set active
+     *
+     * @ORM\param boolean
+     * @ORM\return void
+     */
+    public function setActive( $active )
+    {
+        $this->active = $active;
     }
 
 	/**

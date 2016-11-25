@@ -42,7 +42,7 @@ export class UserService {
 
     ngOnInit() {
         // reset login status
-        this.authService.logout();
+        // this.authService.logout();
     }
 
     getUser(id: number): Observable<User> {

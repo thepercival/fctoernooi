@@ -55,8 +55,8 @@ $container['jwtauth'] = function( $c ) {
     return new \Slim\Middleware\JwtAuthentication([
         "secure" => true,
         "relaxed" => ["localhost"],
-        "secret" => $settings['jwt']['secret'],
-        "algorithm" => $settings['jwt']['algorithm'],
+        "secret" => $settings['auth']['jwtsecret'],
+        "algorithm" => $settings['auth']['jwtalgorithm'],
         "rules" => [
             new \Slim\Middleware\JwtAuthentication\RequestPathRule([
                 "path" => "/users"
@@ -74,7 +74,7 @@ $container['App\Action\AuthAction'] = function ($c) {
 };
 $container['App\Action\UserAction'] = function ($c) {
     $userResource = new \App\Resource\UserResource($c->get('em'));
-    return new App\Action\UserAction($userResource,$c->get('serializer'));
+    return new App\Action\UserAction($userResource,$c->get('serializer'),$c->get('settings')['auth']);
 };
 $container['App\Action\CompetitionSeasonAction'] = function ($c) {
 	$competitionSeasonResource = new \App\Resource\CompetitionSeasonResource($c->get('em'));

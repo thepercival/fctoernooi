@@ -1,18 +1,19 @@
-import { Injectable } from '@angular/core';
 import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
+import { Injectable } from '@angular/core';
 import { User } from '../user/user';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthenticationService {
     public token: string;
     public userid: number;
-    private authUrl = 'http://localhost:2999/auth/login';
+    private authUrl = 'http://localhost:2999/auth/';
     public usersUrl = 'http://localhost:2999/users';
-    public user: User;
+    public user: User;  // is called from backend on first time
 
-    constructor(private http: Http) {
+    constructor(private http: Http, private router: Router) {
         // set token if saved in local storage
         var user = JSON.parse(localStorage.getItem('user'));
         this.token = user && user.token;
@@ -21,25 +22,42 @@ export class AuthenticationService {
 
         if ( this.token && this.userid && !this.user ){
             console.log( "auth.user starting initialization for userid: "+this.userid+"...");
-            this.getLoggedInUser( this.userid ).forEach(user => this.user = user);
+            this.getLoggedInUser( this.userid )
+                .subscribe(
+                    /* happy path */ user => this.user = user,
+                    /* error path */ e => {
+                        console.log('token expired');
+                        this.logout();
+                        this.router.navigate(['/']);
+                    },
+                    /* onComplete */ () => { console.log('user created from backend'); }
+                );
+
             console.log( "auth.user initialized");
         }
     }
 
+    // not through userservice because of recusrsive dependency
     getLoggedInUser(id: number): Observable<User> {
         let headers = new Headers({ 'Authorization': 'Bearer ' + this.token, 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
         const url = `${this.usersUrl}/${id}`;
 
         return this.http.get(url, options)
-        // ...and calling .json() on the response to return data
+            // ...and calling .json() on the response to return data
             .map((res:Response) => res.json())
             //...errors if any
-            .catch((error:any) => Observable.throw(error.message || 'Server error' ));
+            .catch(this.handleError);
+    }
+
+    activate( email: string, activationkey : string ): Observable<boolean> {
+        return this.http.post( this.authUrl + 'activate', { email: email, activationkey: activationkey })
+            .map((response: Response) => response.text() )
+            .catch(this.handleError);
     }
 
     login(email, password): Observable<boolean> {
-        return this.http.post( this.authUrl, { email: email, password: password })
+        return this.http.post( this.authUrl + 'login', { email: email, password: password })
             .map((response: Response) => {
                 let json = response.json();
                 // login successful if there's a jwt token in the response

@@ -5,7 +5,8 @@ $dotenv->load();
 
 return [
     'settings' => [
-        'displayErrorDetails' => true, // set to false in production
+        'environment' => getenv('ENVIRONMENT'),
+        'displayErrorDetails' => ( getenv('ENVIRONMENT') === "development" ),
         'addContentLengthHeader' => false, // Allow the web server to send the content-length header
 	    // 'determineRouteBeforeAppMiddleware' => true,
 
@@ -20,7 +21,6 @@ return [
             'path' => __DIR__ . '/../logs/app.log',
             'level' => \Monolog\Logger::DEBUG,
         ],
-
         // Doctrine settings
         'doctrine' => [
             'meta' => [
@@ -41,12 +41,19 @@ return [
             'serializer' => array(
 	            'enabled' => true,
             ),
-
         ],
-
-        'jwt' => [
-            'secret' => getenv('JWT_SECRET'),
-            'algorithm' => getenv('JWT_ALGORITHM'),
+        'auth' => [
+            'jwtsecret' => getenv('JWT_SECRET'),
+            'jwtalgorithm' => getenv('JWT_ALGORITHM'),
+            'activationsecret' => getenv('ACTIVATION_SECRET'),
+        ],
+        'www' => [
+            'url' => getenv('WWW_URL')
+        ],
+        'email' => [
+            'from' => "noreply@fctoernooi.nl",
+            'fromname' => "FCToernooi",
+            'smtpserver' => "mx-in-1.webreus.nl"
         ]
     ],
 ];

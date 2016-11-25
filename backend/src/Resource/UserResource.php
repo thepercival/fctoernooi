@@ -51,6 +51,7 @@ class UserResource extends AbstractResource
         $name = $arrProps['name'];
         $password = $arrProps['password'];
         $email = $arrProps['email'];
+        $active = $arrProps['active'];
 
         // check if name is unique
         // check if password meets requirements
@@ -62,6 +63,7 @@ class UserResource extends AbstractResource
         $user->setEmail($email);
         $user->setName($name);
         $user->setPassword( password_hash( $password, PASSWORD_DEFAULT) );
+        $user->setActive($active);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
