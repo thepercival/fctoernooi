@@ -11,7 +11,7 @@
         <input type="email" id="email" name="email" class="form-control" placeholder="emailadres" [(ngModel)]="model.email" #email="ngModel" required autofocus>
         <label for="password" class="sr-only">wachtwoord</label>
         <input type="password" id="password" name="password" class="form-control" placeholder="wachtwoord" [(ngModel)]="model.password" #password="ngModel" required>
-        <div class="checkbox">
+        <div class="checkbox" style="margin-top:10px;">
             <label>
                 <input type="checkbox" value="remember-me"> onthoudt mij
             </label>
@@ -20,5 +20,8 @@
         <div *ngIf="f.submitted && !password.valid" class="alert alert-danger">wachtwoord is verplicht</div>
         <div *ngIf="error" class="alert alert-danger">{{error}}</div>
         <button [disabled]="loading" class="btn btn-lg btn-primary btn-block" type="submit">inloggen <i *ngIf="loading" class="fa fa-spinner fa-spin fa-fw"></i> </button>
+        <div style="margin-top:15px;">
+            <a routerLink="/passwordreset">wachtwoord vergeten</a>
+        </div>
     </form>
 </div>

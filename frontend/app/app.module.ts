@@ -5,13 +5,10 @@ import { FormsModule }   from '@angular/forms';
 import { NgbModule }     from '@ng-bootstrap/ng-bootstrap';
 import { HttpModule }    from '@angular/http';
 import { AppRoutingModule }     from './app-routing.module';
-// import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
-// import { InMemoryDataService }  from './in-memory-data.service';
 import { NavbarComponent }   from './navbar/component';
 import { AppComponent }   from './app.component';
 import { CompetitionSeasonMainComponent } from './competitionseason/main.component';
 import { HomeComponent } from './home/component';
-// import { CompetitionSeasonSearchComponent } from './competition-season-search.component';
 import { CompetitionSeasonService } from './competitionseason/service';
 import { AuthenticationService } from './auth/service';
 import { AuthGuard } from './auth/guard';
@@ -22,6 +19,10 @@ import { LogoutComponent }  from './user/logout.component';
 import { LoginComponent }  from './user/login.component';
 import { UsersComponent }  from './user/users.component';
 import { NgbdModalContent } from './competitionseason/newmodal/component';
+import { PasswordResetComponent, PasswordChangeComponent }  from './user/password.component';
+// import { CompetitionSeasonSearchComponent } from './competition-season-search.component';
+// import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
+// import { InMemoryDataService }  from './in-memory-data.service';
 
 @NgModule({
    imports:      [
@@ -37,7 +38,7 @@ import { NgbdModalContent } from './competitionseason/newmodal/component';
         NavbarComponent,
         HomeComponent,
         CompetitionSeasonMainComponent, // CompetitionSeasonSearchComponent,
-        RegisterComponent, ActivateComponent, LoginComponent, LogoutComponent, UsersComponent,
+        RegisterComponent, ActivateComponent, LoginComponent, LogoutComponent, PasswordResetComponent, PasswordChangeComponent, UsersComponent,
         NgbdModalContent
     ],
     entryComponents: [

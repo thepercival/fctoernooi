@@ -121,4 +121,125 @@ final class AuthAction
 		}
 		return $response->withStatus(404, $sErrorMessage );
 	}
+
+	public function passwordreset( $request, $response, $args )
+	{
+		$email = $request->getParam('email');
+
+		$sErrorMessage = null;
+		try{
+			$user = $this->entityManager->getRepository('App\Entity\User')->findOneBy(
+				array( 'email' => $email )
+			);
+
+			if ( !$user ) {
+				throw new \Exception( "het emailadres is onbekend", E_ERROR );
+			}
+
+			if ( !$user->getActive() ) {
+				throw new \Exception( "activeer eerst je account met behulp van de link in je ontvangen email", E_ERROR );
+			}
+
+			if ( $this->settings["environment"] !== "development" ) {
+				$this->sentEmailPasswordChange( $user );
+			}
+
+			return $response
+				->withStatus(201)
+				->write( true )
+			;
+		}
+		catch( \Exception $e ){
+			$sErrorMessage = $e->getMessage();
+		}
+		return $response->withStatus(404, $sErrorMessage );
+	}
+
+	protected function sentEmailPasswordChange( $user )
+	{
+		$now = new \DateTime();
+		$future = ( new \DateTime("now" ) )->modify("+24 hours");
+
+		$payload = [
+			"iat" => $now->getTimeStamp(),
+			"exp" => $future->getTimeStamp(),
+			"sub" => $user->getEmail(),
+		];
+
+		$secret = $this->jwtauth->getSecret();
+		$algorithm = $this->jwtauth->getAlgorithm();
+		$token = JWT::encode($payload, $secret, $algorithm );
+
+		$sMessage =
+			"<div style=\"font-size:20px;\">FC Toernooi</div>"."<br>".
+			"<br>".
+			"Hallo ".$user->getName().","."<br>"."<br>".
+			'Klik op <a href="'.$this->settings["www"]["url"].'passwordchange?key='.$token.'&email='.urlencode( $user->getEmail() ).'">deze link</a> om je wachtwoord te wijzigen.<br>'."<br>".
+			'Je hebt 24 uur om je wachtwoord te wijzigen met deze link.<br>'."<br>".
+			"groeten van FC Toernooi"
+		;
+
+		$mail = new \PHPMailer;
+		$mail->isSMTP();
+		$mail->Host = $this->settings["email"]["smtpserver"];
+		$mail->setFrom( $this->settings["email"]["from"], $this->settings["email"]["fromname"] );
+		$mail->addAddress( $user->getEmail() );
+		$mail->addReplyTo( $this->settings["email"]["from"], $this->settings["email"]["fromname"] );
+		$mail->isHTML(true);
+		$mail->Subject = "FC Toernooi wachwoord-wijzigen";
+		$mail->Body    = $sMessage;
+		if(!$mail->send()) {
+			throw new \Exception("de wachwoord-wijzigen email kan niet worden verzonden");
+		}
+	}
+
+	public function passwordchange( $request, $response, $args )
+	{
+		$email = $request->getParam('email');
+		$token = $request->getParam('passwordchangetoken');
+		$password = $request->getParam('password');
+
+		$sErrorMessage = null;
+		try{
+			$user = $this->entityManager->getRepository('App\Entity\User')->findOneBy(
+				array( 'email' => $email )
+			);
+
+			if ( !$user ) {
+				throw new \Exception( "het emailadres is onbekend", E_ERROR );
+			}
+
+			if ( !$user->getActive() ) {
+				throw new \Exception( "activeer eerst je account met behulp van de link in je ontvangen email", E_ERROR );
+			}
+
+			$secret = $this->jwtauth->getSecret();
+			$algorithm = $this->jwtauth->getAlgorithm();
+
+			$payloadback = JWT::decode( $token, $secret, [$algorithm] );
+			$issuedDateTime = new \DateTime('@' . $payloadback->iat );
+			$expiredDateTime = new \DateTime('@' . $payloadback->exp );
+			// var_dump($dt->format('Y-m-d H:i:s'));
+
+			$now = new \DateTime();
+			if ( $now < $issuedDateTime or $now > $expiredDateTime )
+				throw new \Exception("de link uit de email is niet meer geldig", E_ERROR);
+
+			if ( $payloadback->sub != $email )
+				throw new \Exception("de link uit de email is niet geldig", E_ERROR);
+
+			$user->setPassword( password_hash( $password, PASSWORD_DEFAULT) );
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+
+			return $response
+				->withStatus(201)
+				->write( true )
+				;
+		}
+		catch( \Exception $e ){
+			$sErrorMessage = $e->getMessage();
+		}
+		return $response->withStatus(404, $sErrorMessage );
+	}
 }

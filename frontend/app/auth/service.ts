@@ -85,6 +85,26 @@ export class AuthenticationService {
             });*/
     }
 
+    passwordReset( email: string ): Observable<boolean> {
+        return this.http.post( this.authUrl + 'passwordreset', { email: email })
+            .map((response: Response) => {
+                let retVal = response.text()
+                // console.log( retVal );
+                return retVal;
+            } )
+            .catch(this.handleError);
+    }
+
+    passwordChange( email: string, password: string ): Observable<boolean> {
+        return this.http.post( this.authUrl + 'passwordchange', { email: email, password: password })
+            .map((response: Response) => {
+                let retVal = response.text()
+                // console.log( retVal );
+                return retVal;
+            } )
+            .catch(this.handleError);
+    }
+
     logout(): void {
         // clear token remove user from local storage to log user out
         this.token = null;

@@ -6,6 +6,7 @@ import { RegisterComponent }  from './user/register.component';
 import { ActivateComponent }  from './user/activate.component';
 import { LoginComponent }  from './user/login.component';
 import { LogoutComponent }  from './user/logout.component';
+import { PasswordResetComponent, PasswordChangeComponent }  from './user/password.component';
 import { UsersComponent }  from './user/users.component';
 import { AuthGuard }  from './auth/guard';
 const routes: Routes = [
@@ -15,6 +16,8 @@ const routes: Routes = [
     { path: 'activate', component: ActivateComponent },
     { path: 'login', component: LoginComponent },
     { path: 'logout', component: LogoutComponent },
+    { path: 'passwordreset', component: PasswordResetComponent },
+    { path: 'passwordchange', component: PasswordChangeComponent },
     { path: 'users', component: UsersComponent, canActivate: [AuthGuard] },
     { path: '', redirectTo: '/home', pathMatch: 'full' },
     // otherwise redirect to home
