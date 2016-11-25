@@ -4,13 +4,15 @@
 
 $app->add( $app->getContainer()->get('jwtauth') );
 
-$app->add(function($request, $response, $next) {
-    $token = $request->getQueryParams()["token"];
+/*$app->add(function($request, $response, $next) {
+	$arrQueryParams = $request->getQueryParams();
+    $token = array_key_exists("token", $arrQueryParams ) ? $arrQueryParams["token"] : null;
     if (false === empty($token)) {
         $request = $request->withHeader("Authorization", "Bearer {$token}");
     }
     return $next($request, $response);
-});
+});*/
+
 
 /*
  * this application middleware shoul be  moved to the route-middleware, because that is where it belongs!

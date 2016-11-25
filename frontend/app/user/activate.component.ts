@@ -1,10 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import {Subscription } from 'rxjs';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { UserService } from './service';
-import { User } from './user';
 import { AuthenticationService } from '../auth/service';
-// import { CompetitionSeasonService } from './competition-season.service';
 
 @Component({
     moduleId: module.id,
@@ -22,21 +20,24 @@ export class ActivateComponent implements OnInit, OnDestroy{
     constructor( private activatedRoute: ActivatedRoute, private router: Router, private userService : UserService, private authService : AuthenticationService ) { }
 
     ngOnInit() {
+
+        this.authService.logout();
         // subscribe to router event, params or queryParams
         this.loading = true;
         this.subscription = this.activatedRoute.queryParams.subscribe(
             (param: any) => {
                 let email = param['email'];
                 let activationKey = param['activationkey'];
-                console.log( 'activationKey: ' +  activationKey );
-                console.log( 'email: ' +  email );
 
                 this.authService.activate( email, activationKey )
                     .subscribe(
                         /* happy path */ retval => {
-                            // this.router.navigate(['/login'], { message : 'je account is geactiveerd, je kunt nu inloggen'});
-                            console.log( 'gebruiker is geactiveerd' );
-                            console.log( retval );
+                            let navigationExtras: NavigationExtras = {
+                                queryParams: { 'message': 'je account is geactiveerd, je kunt nu inloggen' }
+                            };
+                            this.router.navigate(['/login'], navigationExtras );
+                            // console.log( 'gebruiker is geactiveerd' );
+                            // console.log( retval );
                             // should redirect to loging with messagge
                         },
                         /* error path */ e => {

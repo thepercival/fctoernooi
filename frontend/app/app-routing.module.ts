@@ -19,7 +19,6 @@ const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
     // otherwise redirect to home
     { path: '**', redirectTo: '' }
-
 ];
 @NgModule({
     imports: [ RouterModule.forRoot(routes) ],

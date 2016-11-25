@@ -4,6 +4,7 @@
 
 
 <div class="p-x-1 p-y-3 login">
+    <div *ngIf="activationmessage" class="alert alert-success">{{activationmessage}}</div>
     <form class="card card-block mx-auto bg-faded" style="max-width: 25rem" name="form" (ngSubmit)="f.form.valid && login() && false" #f="ngForm" novalidate>
         <legend class="m-b-1 text-xs-center">inloggen</legend>
         <label for="email" class="sr-only">emailaddres</label>

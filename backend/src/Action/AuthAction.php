@@ -22,9 +22,11 @@ final class AuthAction
 	protected $entityManager = null;
     protected $jwtauth = null;
 	protected $serializer = null;
+	protected $settings = null;
 
-	public function __construct(EntityManager $entityManager, JwtAuthentication $jwtauth, Serializer $serializer )
+	public function __construct( $settings, EntityManager $entityManager, JwtAuthentication $jwtauth, Serializer $serializer )
 	{
+		$this->settings = $settings;
 		$this->entityManager = $entityManager;
         $this->jwtauth = $jwtauth;
 		$this->serializer = $serializer;
@@ -35,7 +37,7 @@ final class AuthAction
         $activationhashinput = $request->getParam('activationkey');
         $email = urldecode( $request->getParam('email') );
 
-        $sErrorMessage = null;
+	    $sErrorMessage = null;
         try{
             $user = $this->entityManager->getRepository('App\Entity\User')->findOneBy(
                 array( 'email' => $email )

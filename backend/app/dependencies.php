@@ -70,11 +70,11 @@ $container['jwtauth'] = function( $c ) {
 
 // actions
 $container['App\Action\AuthAction'] = function ($c) {
-	return new App\Action\AuthAction( $c->get('em'), $c->get('jwtauth'), $c->get('serializer') );
+	return new App\Action\AuthAction( $c->get('settings'), $c->get('em'), $c->get('jwtauth'), $c->get('serializer') );
 };
 $container['App\Action\UserAction'] = function ($c) {
     $userResource = new \App\Resource\UserResource($c->get('em'));
-    return new App\Action\UserAction($userResource,$c->get('serializer'),$c->get('settings')['auth']);
+    return new App\Action\UserAction($userResource,$c->get('serializer'),$c->get('settings'));
 };
 $container['App\Action\CompetitionSeasonAction'] = function ($c) {
 	$competitionSeasonResource = new \App\Resource\CompetitionSeasonResource($c->get('em'));

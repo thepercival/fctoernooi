@@ -61,9 +61,9 @@ final class UserAction
             if (!$user)
                 throw new \Exception( "de nieuwe gebruiker kan niet worden geretourneerd");
 
-            if ( $this->settings["environment"] !== "development" ) {
-                $this->sentEmailActivation( $user );
-            }
+	        if ( $this->settings["environment"] !== "development" ) {
+		        $this->sentEmailActivation( $user );
+	        }
 
             return $response->withJSON($user);
         }
@@ -111,6 +111,7 @@ final class UserAction
     protected function sentEmailActivation( $user )
     {
         $activatehash = hash ( "sha256", $user["email"] . $this->settings["auth"]["activationsecret"] );
+	    // echo $activatehash;
 
         $sMessage =
             "<div style=\"font-size:20px;\">FC Toernooi</div>"."<br>".

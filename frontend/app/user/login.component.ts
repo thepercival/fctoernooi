@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from '../auth/service';
-// import { CompetitionSeasonService } from './competition-season.service';
+import {Subscription } from 'rxjs';
 
 @Component({
     moduleId: module.id,
@@ -13,17 +13,22 @@ import { AuthenticationService } from '../auth/service';
 export class LoginComponent implements OnInit {
     model: any = {};
     loading = false;
+    private subscription: Subscription;
     error = '';
+    activationmessage = null;
 
-    constructor( private router: Router,private authenticationService: AuthenticationService) { }
+    constructor( private activatedRoute: ActivatedRoute, private router: Router,private authenticationService: AuthenticationService) { }
 
     ngOnInit() {
-        // reset login status
-        this.authenticationService.logout();
+        this.subscription = this.activatedRoute.queryParams.subscribe(
+            (param: any) => {
+                this.activationmessage = param['message'];
+            });
     }
 
     login() {
         this.loading = true;
+        this.activationmessage = null;
         this.authenticationService.login(this.model.email, this.model.password)
             .subscribe(
                 /* happy path */ p => this.router.navigate(['/']),
