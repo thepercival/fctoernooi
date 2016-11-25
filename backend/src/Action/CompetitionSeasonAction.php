@@ -59,7 +59,7 @@ final class CompetitionSeasonAction
 	        $competitionseason = $this->competitionseasonResource->post( array(
 	        	"userid"=> $request->getParam('userid'),
 		        "name"=> $request->getParam('name'),
-		        "seasonname"=> $request->getParam('seasonname'),
+		        "seasonname"=> $request->getParam('seasonName'),
 		        "structure" => $request->getParam('structure') )
             );
 		    if (!$competitionseason)

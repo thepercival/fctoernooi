@@ -49,7 +49,7 @@ export class CompetitionSeasonService {
     create(name: string, seasonName: string, nrofteams: number, userid: number): Observable<CompetitionSeason> {
 
         return this.http
-            .post(this.competitionseasonsUrl, JSON.stringify({name: name, seasonName: seasonName, structure: '{}'}), {headers: this.headers})
+            .post(this.competitionseasonsUrl, JSON.stringify({name: name, seasonName: seasonName, structure: '{}', userid: userid}), {headers: this.headers})
             // ...and calling .json() on the response to return data
             .map((res:Response) => res.json())
             //...errors if any

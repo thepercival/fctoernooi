@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { AuthenticationService } from '../auth/service';
 import {Subscription } from 'rxjs';
 
@@ -41,26 +41,43 @@ export class PasswordResetComponent {
     styleUrls: [ 'password.component.css' ]
 })
 
-export class PasswordChangeComponent {
+export class PasswordChangeComponent implements OnInit, OnDestroy{
+    private subscription: Subscription;
+    private email;
+    private key;
     model: any = {};
     loading = false;
     error = '';
     succeeded = false;
 
+    constructor( private activatedRoute: ActivatedRoute, private router: Router,private authService: AuthenticationService) { }
 
-    constructor( private router: Router,private authService: AuthenticationService) { }
+    ngOnInit() {
+
+        this.authService.logout();
+        // subscribe to router event, params or queryParams
+        this.subscription = this.activatedRoute.queryParams.subscribe(
+            (param: any) => {
+                this.email = param['email'];
+                this.key = param['key'];
+            });
+    }
+
+    ngOnDestroy() {
+        // prevent memory leak by unsubscribing
+        this.subscription.unsubscribe();
+    }
 
     passwordChange() {
         this.loading = true;
 
         // let backend send email
-        this.authService.passwordChange( this.model.email, this.model.password )
+        this.authService.passwordChange( this.email, this.model.password, this.key )
             .subscribe(
                 /* happy path */ res => {
-                    // res should be 1
                     this.succeeded = true;
                 },
-                /* error path */ e => { this.error = e; this.loading = false; },
+                /* error path */ e => { this.error = 'je wachtwoord is niet gewijzigd:' + e; this.loading = false; },
                 /* onComplete */ () => this.loading = false
             );
     }

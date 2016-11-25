@@ -196,7 +196,7 @@ final class AuthAction
 	public function passwordchange( $request, $response, $args )
 	{
 		$email = $request->getParam('email');
-		$token = $request->getParam('passwordchangetoken');
+		$token = $request->getParam('key');
 		$password = $request->getParam('password');
 
 		$sErrorMessage = null;

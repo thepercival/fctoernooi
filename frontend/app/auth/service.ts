@@ -95,10 +95,10 @@ export class AuthenticationService {
             .catch(this.handleError);
     }
 
-    passwordChange( email: string, password: string ): Observable<boolean> {
-        return this.http.post( this.authUrl + 'passwordchange', { email: email, password: password })
+    passwordChange( email: string, password: string, key: string ): Observable<boolean> {
+        return this.http.post( this.authUrl + 'passwordchange', { email: email, password: password, key: key })
             .map((response: Response) => {
-                let retVal = response.text()
+                let retVal = response.text();
                 // console.log( retVal );
                 return retVal;
             } )
