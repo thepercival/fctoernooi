@@ -53,9 +53,26 @@ class UserResource extends AbstractResource
         $email = $arrProps['email'];
         $active = $arrProps['active'];
 
-        // check if name is unique
-        // check if password meets requirements
-        // check if email is unique
+        if ( strlen( $name ) < 3 ) {
+            throw new Exception("de gebruikernaam moet minimaal uit drie karakters bestaan");
+        }
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new Exception("het emailadres is geen correct emailadres");
+        }
+        if ( strlen( $name ) < 3 ) {
+            throw new Exception("de gebruikernaam moet minimaal uit drie karakters bestaan");
+        }
+        $userTmp = $this->entityManager->getRepository('App\Entity\User')->findOneBy( array('name' => $name ) );
+        if ( $userTmp ) {
+            throw new Exception("de gebruikernaam is al in gebruik");
+        }
+        $userTmp = $this->entityManager->getRepository('App\Entity\User')->findOneBy( array('email' => $email ) );
+        if ( $userTmp ) {
+            throw new Exception("het emailadres is al in gebruik");
+        }
+        if ( strlen( $password ) < 8 ) {
+            throw new Exception("het wachtwoord moet minimaal uit acht karakters bestaan");
+        }
 
         /** @var User $user */
         $user = new User();
@@ -79,6 +96,7 @@ class UserResource extends AbstractResource
         // handle if $id is missing or $name or $email are valid etc.
         // return valid status code or throw an exception
         // depends on the concrete implementation
+        // check on unique name and emailadres
 
         /** @var User $user */
         $user = $this->entityManager->find('App\Entity\User', $id);
