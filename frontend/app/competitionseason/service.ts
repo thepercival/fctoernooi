@@ -1,20 +1,28 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http, Response, RequestOptions } from '@angular/http';
 import {Observable} from 'rxjs/Rx';
-
-// Import RxJs required methods
+import { AuthenticationService } from '../auth/service';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-
-import { CompetitionSeason } from './competitionseason';
+import { CompetitionSeason } from '../voetbal/competitionseason';
+import { VoetbalServiceInterface } from '../voetbal/service.interface';
 
 @Injectable()
-export class CompetitionSeasonService {
+export class CompetitionSeasonService implements VoetbalServiceInterface {
 
     private headers = new Headers({'Content-Type': 'application/json'});
     private competitionseasonsUrl = 'http://localhost:2999/competitionseasons';  // localhost:2999/competitionseasons
 
-    constructor(private http: Http) { }
+    constructor(private http: Http, private authService: AuthenticationService ) { }
+
+    // interface
+    getObjects(): Observable<CompetitionSeason[]> {
+        return this.getCompetitionSeasons();
+    }
+
+    getObject( id: number ): Observable<CompetitionSeason> {
+        return this.getCompetitionSeason(12);
+    }
 
     getCompetitionSeasons(): Observable<CompetitionSeason[]> {
         return this.http.get(this.competitionseasonsUrl, {headers: this.headers} )
@@ -46,7 +54,13 @@ export class CompetitionSeasonService {
             .catch((error:any) => Observable.throw(error.message || 'Server error' ));
     }
 
-    create(name: string, seasonName: string, nrofteams: number, userid: number): Observable<CompetitionSeason> {
+    createObject( properties: {} ): Observable<CompetitionSeason> {
+
+        let name: string = 'test';
+        let seasonName: string = 'testsn';
+        let nrofteams: number = 12;
+
+        let userid =  this.authService.userid;
 
         return this.http
             .post(this.competitionseasonsUrl, JSON.stringify({name: name, seasonName: seasonName, structure: '{}', userid: userid}), {headers: this.headers})

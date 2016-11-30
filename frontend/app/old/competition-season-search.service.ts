@@ -1,7 +1,7 @@
 import { Injectable }           from '@angular/core';
 import { Http, Response }       from '@angular/http';
 import { Observable }           from 'rxjs';
-import { CompetitionSeason }   from '../competitionseason/competitionseason';
+import { CompetitionSeason }   from '../voetbal/competitionseason';
 @Injectable()
 export class CompetitionSeasonSearchService {
     constructor(private http: Http) {}

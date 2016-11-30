@@ -24,18 +24,24 @@ export class RegisterComponent {
         var user = new User();
         user.name = this.model.name;
         user.password = this.model.name;
-        user.email = this.model.name;
+        user.email = this.model.email;
         this.userService.create( user )
             .subscribe(
                 /* happy path */ p => {
                     this.authService.login( user.email, user.password)
                         .subscribe(
                             /* happy path */ p => this.router.navigate(['/']),
-                            /* error path */ e => { this.error = e; this.loading = false; },
+                            /* error path */ e => {
+                                this.error = decodeURIComponent( e );
+                                this.loading = false;
+                            },
                             /* onComplete */ () => this.loading = false
                         );
                 },
-                /* error path */ e => { this.error = e; this.loading = false; },
+                /* error path */ e => {
+                    this.error = decodeURIComponent( e );
+                    this.loading = false;
+                },
                 /* onComplete */ () => this.loading = false
         );
     }

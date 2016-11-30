@@ -54,24 +54,24 @@ class UserResource extends AbstractResource
         $active = $arrProps['active'];
 
         if ( strlen( $name ) < 3 ) {
-            throw new Exception("de gebruikernaam moet minimaal uit drie karakters bestaan");
+            throw new \Exception("de gebruikersnaam moet minimaal uit drie karakters bestaan");
         }
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new Exception("het emailadres is geen correct emailadres");
+            throw new \Exception("het emailadres is geen correct emailadres");
         }
         if ( strlen( $name ) < 3 ) {
-            throw new Exception("de gebruikernaam moet minimaal uit drie karakters bestaan");
+            throw new \Exception("de gebruikersnaam moet minimaal uit drie karakters bestaan");
         }
         $userTmp = $this->entityManager->getRepository('App\Entity\User')->findOneBy( array('name' => $name ) );
         if ( $userTmp ) {
-            throw new Exception("de gebruikernaam is al in gebruik");
+            throw new \Exception("de gebruikersnaam is al in gebruik");
         }
         $userTmp = $this->entityManager->getRepository('App\Entity\User')->findOneBy( array('email' => $email ) );
         if ( $userTmp ) {
-            throw new Exception("het emailadres is al in gebruik");
+            throw new \Exception("het emailadres is al in gebruik");
         }
         if ( strlen( $password ) < 8 ) {
-            throw new Exception("het wachtwoord moet minimaal uit acht karakters bestaan");
+            throw new \Exception("het wachtwoord moet minimaal uit acht karakters bestaan");
         }
 
         /** @var User $user */

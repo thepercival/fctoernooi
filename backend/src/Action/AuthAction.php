@@ -174,7 +174,7 @@ final class AuthAction
 			"<div style=\"font-size:20px;\">FC Toernooi</div>"."<br>".
 			"<br>".
 			"Hallo ".$user->getName().","."<br>"."<br>".
-			'Klik op <a href="'.$this->settings["www"]["url"].'passwordchange?key='.$token.'&email='.urlencode( $user->getEmail() ).'">deze link</a> om je wachtwoord te wijzigen.<br>'."<br>".
+			'Klik op <a href="'.$this->settings["www"]["url"].'passwordchange?key='.$token.'&email='.rawurlencode( $user->getEmail() ).'">deze link</a> om je wachtwoord te wijzigen.<br>'."<br>".
 			'Je hebt 24 uur om je wachtwoord te wijzigen met deze link.<br>'."<br>".
 			"groeten van FC Toernooi"
 		;

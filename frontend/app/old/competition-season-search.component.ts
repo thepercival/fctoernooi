@@ -3,7 +3,7 @@ import { Router }            from '@angular/router';
 import { Observable }        from 'rxjs/Observable';
 import { Subject }           from 'rxjs/Subject';
 import { CompetitionSeasonSearchService } from './competition-season-search.service';
-import { CompetitionSeason } from '../competitionseason/competitionseason';
+import { CompetitionSeason } from '../voetbal/competitionseason';
 
 @Component({
     moduleId: module.id,

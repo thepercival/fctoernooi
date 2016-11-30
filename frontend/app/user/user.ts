@@ -1,4 +1,4 @@
-import {CompetitionSeason} from "../competitionseason/competitionseason";
+import {CompetitionSeason} from "../voetbal/competitionseason";
 export class User {
     id: number;
     name: string;

@@ -70,7 +70,7 @@ final class CompetitionSeasonAction
 	    catch( \Exception $e ){
 		    $sErrorMessage = $e->getMessage();
 	    }
-	    return $response->withStatus(404, 'geen toernooi toegevoegd : ' . urlencode( $sErrorMessage ) );
+	    return $response->withStatus(404, 'geen toernooi toegevoegd : ' . rawurlencode( $sErrorMessage ) );
     }
 
     public function edit( $request, $response, $args)
@@ -90,7 +90,7 @@ final class CompetitionSeasonAction
 	    catch( \Exception $e ){
 		    $sErrorMessage = $e->getMessage();
 	    }
-	    return $response->withStatus(404, 'het toernooi is niet bijgewerkt : ' . urlencode( $sErrorMessage ) );
+	    return $response->withStatus(404, 'het toernooi is niet bijgewerkt : ' . rawurlencode( $sErrorMessage ) );
     }
 
     public function remove( $request, $response, $args)

@@ -73,7 +73,7 @@ final class UserAction
                 $this->userResource->delete( $user["id"] );
             }
         }
-        return $response->withStatus(404, 'geen gebruiker toegevoegd : ' . urlencode( $sErrorMessage ) );
+        return $response->withStatus(404, rawurlencode( $sErrorMessage ) );
     }
 
     public function edit( $request, $response, $args)
@@ -92,7 +92,7 @@ final class UserAction
         catch( \Exception $e ){
             $sErrorMessage = $e->getMessage();
         }
-        return $response->withStatus(404, 'de gebruiker is niet bijgewerkt : ' . urlencode( $sErrorMessage ) );
+        return $response->withStatus(404, rawurlencode( $sErrorMessage ) );
     }
 
     public function remove( $request, $response, $args)
@@ -118,7 +118,7 @@ final class UserAction
             "<br>".
             "Hallo ".$user["name"].","."<br>"."<br>".
             "Bedankt voor het registreren bij FC Toernooi.<br>"."<br>".
-            'Klik op <a href="'.$this->settings["www"]["url"].'activate?activationkey='.$activatehash.'&email='.urlencode( $user["email"] ).'">deze link</a> om je emailadres te bevestigen en je account te activeren.<br>'."<br>".
+            'Klik op <a href="'.$this->settings["www"]["url"].'activate?activationkey='.$activatehash.'&email='.rawurlencode( $user["email"] ).'">deze link</a> om je emailadres te bevestigen en je account te activeren.<br>'."<br>".
             'Wensen, klachten of vragen kunt u met de <a href="https://github.com/thepercival/fctoernooi/issues">deze link</a> bewerkstellingen.<br>'."<br>".
             "Veel plezier met het gebruiken van FC Toernooi<br>"."<br>".
             "groeten van FC Toernooi"

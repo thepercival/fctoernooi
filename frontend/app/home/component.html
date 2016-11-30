@@ -2,7 +2,7 @@
 <div class="home">
     <div *ngIf="authService.user" align="center">
         <p>
-            <button type="button" class="btn btn-outline-default" (click)="open()">organiseer nieuw toernooi</button>
+            <button type="button" class="btn btn-outline-default" (click)="open( false )">organiseer nieuw toernooi</button>
         </p>
         <hr>
         <h2 *ngIf="competitionSeasons.length > 0">mijn toernooien</h2>
@@ -39,7 +39,7 @@
     </div>
     <div *ngIf="!authService.user" class="row">
         <div class="offset-xs-1 col-xs-10 offset-sm-3 col-sm-6" align="center">
-            <button class="btn btn-default">organiseer demo toernooi</button>
+            <button class="btn btn-default" (click)="open( true )">organiseer demo toernooi</button>
             <hr>
             <div>
                 <button class="btn btn-default" routerLink="/register" routerLinkActive="active">aanmelden</button>
@@ -53,8 +53,14 @@
             </div>
         </div>
     </div>
+    <div class="card card-outline-success text-xs-center">
+        <div class="card-block">
+            <blockquote class="card-blockquote">
+                <p>er zijn <strong>geen</strong> kosten verbonden aan het gebruik van deze website ( gratis )</p>
+            </blockquote>
+        </div>
+    </div>
 </div>
-
 
 <!--
 <div class="grid grid-pad">

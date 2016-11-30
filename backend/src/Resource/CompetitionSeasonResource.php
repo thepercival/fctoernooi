@@ -64,9 +64,12 @@ class CompetitionSeasonResource extends AbstractResource
         $seasonname = $arrProps['seasonname'];
         $structure = $arrProps['structure'];
 
-        // handle if $id is missing or $name or $email are valid etc.
-        // return valid status code or throw an exception
-        // depends on the concrete implementation
+        if ( strlen( $name ) < 2 )
+            throw new \Exception("de naam moet minimaal 2 karakters lang zijn", E_ERROR );
+        if ( strlen( $name ) > 25 )
+            throw new \Exception("de naam mag maximaal 25 karakters lang zijn", E_ERROR );
+        if ( strlen( $seasonname ) > 9 )
+            throw new \Exception("de seizoensnaam mag maximaal 9 karakters lang zijn", E_ERROR );
 
         /** @var CompetitionSeason $competitionseason */
         $competitionseason = new CompetitionSeason();

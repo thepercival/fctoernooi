@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CompetitionSeason } from '../competitionseason/competitionseason';
+import { CompetitionSeason } from '../voetbal/competitionseason';
 import { CompetitionSeasonService } from '../competitionseason/service';
 import { AuthenticationService } from '../auth/service';
 import { NgbdModalContent } from '../competitionseason/newmodal/component';
@@ -42,9 +42,9 @@ export class HomeComponent implements OnInit {
         // console.log( this.selectedCompetitionSeason );
     }
 
-    open() {
+    open( demo: boolean ) {
         const modalRef = this.modalService.open(NgbdModalContent, { backdrop : 'static' } );
-        // modalRef.componentInstance.name = 'World';
+        modalRef.componentInstance.demo = demo;
     }
 
     delete(competitionseason: CompetitionSeason): void {
