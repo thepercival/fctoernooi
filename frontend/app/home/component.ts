@@ -49,7 +49,7 @@ export class HomeComponent implements OnInit {
 
     delete(competitionseason: CompetitionSeason): void {
         this.competitionSeasonService
-            .delete(competitionseason.id)
+            .deleteObject(competitionseason.id)
             .forEach(() => {
                 this.competitionSeasons = this.competitionSeasons.filter(h => h !== competitionseason);
                 if (this.selectedCompetitionSeason === competitionseason) { this.selectedCompetitionSeason = null; }

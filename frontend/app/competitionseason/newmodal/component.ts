@@ -5,6 +5,7 @@
 import {Component, Input, OnInit, AfterViewInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
+import { CompetitionSeason } from '../../voetbal/competitionseason';
 import { CompetitionSeasonService } from '../service';
 import { CompetitionSeasonInMemoryService } from '../inmemory.service';
 import * as moment from 'moment/moment';
@@ -51,7 +52,10 @@ export class NgbdModalContent implements OnInit{
                 () => this.loading = false
             );*/
 
-        let props = { 'name' : this.model.name, 'seasonname' : this.model.seasonname, 'nrofteams' : this.model.nrofteams };
+        let competitionSeason = new CompetitionSeason();
+        competitionSeason.name = this.model.name;
+        competitionSeason.seasonname = this.model.seasonname;
+        // competitionSeason.nrofteams = this.model.nrofteams;
 //        this.competitionSeasonInMemoryService.createObject( props )
 //        .subscribe(
 //            /* happy path */ cs => {
@@ -63,7 +67,7 @@ export class NgbdModalContent implements OnInit{
 //            /* onComplete */ () => this.loading = false
 //        );
 
-        this.competitionSeasonInMemoryService.createObject( props )
+        this.competitionSeasonInMemoryService.createObject( competitionSeason )
             .forEach(competitionseason => console.log( competitionseason ) );
 
         return true;

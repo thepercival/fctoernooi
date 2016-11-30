@@ -7,49 +7,57 @@ import { VoetbalServiceInterface } from '../voetbal/service.interface';
 
 @Injectable()
 export class CompetitionSeasonInMemoryService implements InMemoryDbService, VoetbalServiceInterface {
+
+    private demoCompetitionSeason : CompetitionSeason;
+    private objects : CompetitionSeason[] = [];
+
     createDb() {
-        let competitionseasons = [
-            { id: 11, name: 'EK', seasonname: '2012/2013', structure:'{}' },
-            { id: 12, name: 'WK', seasonname: '2013/2014', structure:'{}' },
-            { id: 13, name: 'DK', seasonname: '2012/2013', structure:'{}' },
-            { id: 14, name: 'AK', seasonname: '2010/2011', structure:'{}' },
-            { id: 15, name: 'AW', seasonname: '2010/2011', structure:'{}' },
-            { id: 16, name: 'QW', seasonname: '2010/2011', structure:'{}' }
-        ];
-        return {competitionseasons};
+        if ( this.demoCompetitionSeason != null )
+            this.objects.push( this.demoCompetitionSeason );
+        return this.objects;
     }
 
     // interface
     getObjects(): Observable<CompetitionSeason[]> {
         return Rx.Observable.create( ( observer ) => {
-            let css = [];
-            var cs = new CompetitionSeason(); cs.name = 'asas'; cs.seasonName = 'asassn';
-            css.push();
-            return css;
+            return this.objects;
         });
     }
 
     getObject(id: number): Observable<CompetitionSeason> {
 
         return Rx.Observable.create( ( observer ) => {
-            var cs = new CompetitionSeason(); cs.name = 'asas'; cs.seasonName = 'asassn';
-            return cs;
+            return this.demoCompetitionSeason;
         });
     }
 
-    createObject( properties: {} ): Observable<CompetitionSeason> {
+    createObject( object: CompetitionSeason ): Observable<CompetitionSeason> {
         return Rx.Observable.create( ( observer ) => {
-            var competitionSeason = new CompetitionSeason();
-            competitionSeason.name = 'test';
-            competitionSeason.seasonName = 'testsn';
-            observer.next( competitionSeason );
+            this.demoCompetitionSeason = new CompetitionSeason();
+            this.demoCompetitionSeason.name = object.name;
+            this.demoCompetitionSeason.seasonname = object.seasonname;
+            observer.next( this.demoCompetitionSeason );
 
-            return () => new CompetitionSeason()
+            /*return () => this.demoCompetitionSeason*/
         });
+    }
 
-        // properties.nrofteams
-        // create teams and rounds by nrofteams
-        // competitionSeason.nrofteamsseasonName = seasonname;
-        // return competitionSeason;
+    updateObject( object: CompetitionSeason): Observable<CompetitionSeason> {
+
+        return Rx.Observable.create( ( observer ) => {
+            if ( this.demoCompetitionSeason == null )
+                this.demoCompetitionSeason = new CompetitionSeason();
+            this.demoCompetitionSeason.name = object.name;
+            this.demoCompetitionSeason.seasonname = object.seasonname;
+            observer.next( this.demoCompetitionSeason );
+            /*return () => this.demoCompetitionSeason*/
+        });
+    }
+
+    deleteObject(id: number): Observable<void> {
+        return Rx.Observable.create( ( observer ) => {
+            observer.next( null );
+            /*return () => null*/
+        });
     }
 }

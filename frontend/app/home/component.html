@@ -19,7 +19,7 @@
             </thead>
             <tbody>
             <tr *ngFor="let competitionseason of authService.user.competitionSeasons" class="competitionseason" [class.selected]="competitionseason === selectedCompetitionSeason" (click)="onSelect(competitionseason)">
-                <td>{{competitionseason.name}}</td><td>{{competitionseason.seasonName}}</td>
+                <td>{{competitionseason.name}}</td><td>{{competitionseason.seasonname}}</td>
                 <td>
                     <div ngbDropdown [up]="true" class="d-inline-block">
 

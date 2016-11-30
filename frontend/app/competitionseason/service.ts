@@ -17,34 +17,14 @@ export class CompetitionSeasonService implements VoetbalServiceInterface {
 
     // interface
     getObjects(): Observable<CompetitionSeason[]> {
-        return this.getCompetitionSeasons();
-    }
-
-    getObject( id: number ): Observable<CompetitionSeason> {
-        return this.getCompetitionSeason(12);
-    }
-
-    getCompetitionSeasons(): Observable<CompetitionSeason[]> {
         return this.http.get(this.competitionseasonsUrl, {headers: this.headers} )
-            // ...and calling .json() on the response to return data
+        // ...and calling .json() on the response to return data
             .map((res:Response) => res.json())
             //...errors if any
             .catch((error:any) => Observable.throw(error.message || 'Server error' ));
-
     }
 
-    /*getCompetitionSeasonsSlow(): Observable<CompetitionSeason[]> {
-
-        setTimeout( () => {
-            this.getCompetitionSeasons()
-        });
-        var source = new Observable<CompetitionSeason[]>(resolve =>
-            setTimeout(resolve, 2000)) // delay 2 seconds
-            .then(() => );
-        source.forEach( x => );
-    }*/
-
-    getCompetitionSeason(id: number): Observable<CompetitionSeason> {
+    getObject( id: number ): Observable<CompetitionSeason> {
         // var x = this.getCompetitionSeasons().forEach(competitionseasons => competitionseasons.find(competitionseason => competitionseason.id === id));
         const url = `${this.competitionseasonsUrl}/${id}`;
         return this.http.get(url)
@@ -54,34 +34,34 @@ export class CompetitionSeasonService implements VoetbalServiceInterface {
             .catch((error:any) => Observable.throw(error.message || 'Server error' ));
     }
 
-    createObject( properties: {} ): Observable<CompetitionSeason> {
+    createObject( object: CompetitionSeason ): Observable<CompetitionSeason> {
 
-        let name: string = 'test';
-        let seasonName: string = 'testsn';
-        let nrofteams: number = 12;
-
+        let name: string = object.name;
+        let seasonname: string = object.seasonname;
+        // let nrofteams: number = object.nrofteams;
         let userid =  this.authService.userid;
 
         return this.http
-            .post(this.competitionseasonsUrl, JSON.stringify({name: name, seasonName: seasonName, structure: '{}', userid: userid}), {headers: this.headers})
+            .post(this.competitionseasonsUrl, JSON.stringify({name: name, seasonname: seasonname, structure: '{}', userid: userid}), {headers: this.headers})
             // ...and calling .json() on the response to return data
             .map((res:Response) => res.json())
             //...errors if any
             .catch((error:any) => Observable.throw(error.message || 'Server error'));
     }
 
-    update(competitionseason: CompetitionSeason): Observable<CompetitionSeason> {
+    updateObject( object: CompetitionSeason): Observable<CompetitionSeason> {
 
-        const url = `${this.competitionseasonsUrl}/${competitionseason.id}`;
+        const url = `${this.competitionseasonsUrl}/${object.id}`;
         return this.http
-            .put(url, JSON.stringify(competitionseason), {headers: this.headers})
+            .put(url, JSON.stringify(object), {headers: this.headers})
             // ...and calling .json() on the response to return data
             .map((res:Response) => res.json())
             //...errors if any
             .catch((error:any) => Observable.throw(error.message || 'Server error'));
     }
 
-    delete(id: number): Observable<void> {
+
+    deleteObject(id: number): Observable<void> {
         const url = `${this.competitionseasonsUrl}/${id}`;
         return this.http
             .delete(url, {headers: this.headers})
