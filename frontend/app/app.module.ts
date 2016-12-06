@@ -23,6 +23,7 @@ import { LoginComponent }  from './user/login.component';
 import { UsersComponent }  from './user/users.component';
 import { NgbdModalContent } from './competitionseason/newmodal/component';
 import { PasswordResetComponent, PasswordChangeComponent }  from './user/password.component';
+import { GlobalEventsManager } from "./global-events-manager";
 // import { CompetitionSeasonSearchComponent } from './competition-season-search.component';
 // import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 // import { InMemoryDataService }  from './in-memory-data.service';
@@ -52,7 +53,8 @@ import { PasswordResetComponent, PasswordChangeComponent }  from './user/passwor
         CompetitionSeasonService, CompetitionSeasonInMemoryService,
         AuthGuard,
         AuthenticationService,
-        UserService
+        UserService,
+        GlobalEventsManager
     ],
     bootstrap:    [
         AppComponent

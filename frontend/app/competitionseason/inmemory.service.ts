@@ -27,18 +27,19 @@ export class CompetitionSeasonInMemoryService implements InMemoryDbService, Voet
     getObject(id: number): Observable<CompetitionSeason> {
 
         return Rx.Observable.create( ( observer ) => {
-            return this.demoCompetitionSeason;
+            observer.next( this.demoCompetitionSeason );
         });
     }
+
 
     createObject( object: CompetitionSeason ): Observable<CompetitionSeason> {
         return Rx.Observable.create( ( observer ) => {
             this.demoCompetitionSeason = new CompetitionSeason();
+            this.demoCompetitionSeason.id = 0;
             this.demoCompetitionSeason.name = object.name;
             this.demoCompetitionSeason.seasonname = object.seasonname;
+            this.objects.push( this.demoCompetitionSeason );
             observer.next( this.demoCompetitionSeason );
-
-            /*return () => this.demoCompetitionSeason*/
         });
     }
 

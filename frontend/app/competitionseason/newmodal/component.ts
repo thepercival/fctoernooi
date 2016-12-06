@@ -25,7 +25,7 @@ export class NgbdModalContent implements OnInit{
         public activeModal: NgbActiveModal,
         private router: Router,
         private competitionSeasonService: CompetitionSeasonService,
-        private competitionSeasonInMemoryService: CompetitionSeasonInMemoryService,
+        private competitionSeasonInMemoryService: CompetitionSeasonInMemoryService
     ) {}
 
     ngOnInit() {
@@ -42,33 +42,23 @@ export class NgbdModalContent implements OnInit{
         if (!this.model.seasonname) { return; }
 
         let service = this.demo ? this.competitionSeasonInMemoryService : this.competitionSeasonService;
-        // console.log( service ); return true;
-        /*service.getObject( 12 )
-            .subscribe(
-                cs => {
-                    let x = cs.name;
-                },
-                e => { this.error = e; this.loading = false; },
-                () => this.loading = false
-            );*/
 
         let competitionSeason = new CompetitionSeason();
         competitionSeason.name = this.model.name;
         competitionSeason.seasonname = this.model.seasonname;
         // competitionSeason.nrofteams = this.model.nrofteams;
-//        this.competitionSeasonInMemoryService.createObject( props )
-//        .subscribe(
-//            /* happy path */ cs => {
-//                console.log(123);
-//                console.log(cs);
-//                // this.router.navigate(['/toernooi-index']); // met id
-//            },
-//            /* error path */ e => { this.error = e; this.loading = false; },
-//            /* onComplete */ () => this.loading = false
-//        );
 
-        this.competitionSeasonInMemoryService.createObject( competitionSeason )
-            .forEach(competitionseason => console.log( competitionseason ) );
+        service.createObject( competitionSeason )
+        .subscribe(
+            /* happy path */ cs => {
+                this.activeModal.close();
+                this.router.navigate(['/toernooi-index', cs.id ]); // met id
+            },
+            /* error path */ e => { this.error = e; this.loading = false; },
+            /* onComplete */ () => this.loading = false
+        );
+        //service.createObject( competitionSeason )
+          //  .forEach(competitionseason => console.log( competitionseason ) );
 
         return true;
     }

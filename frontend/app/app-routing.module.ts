@@ -19,8 +19,8 @@ const routes: Routes = [
     { path: 'passwordreset', component: PasswordResetComponent },
     { path: 'passwordchange', component: PasswordChangeComponent },
     { path: 'users', component: UsersComponent, canActivate: [AuthGuard] },
-    { path: 'toernooi-index', component: CompetitionSeasonIndexComponent },
-    { path: 'toernooi-structuur', component: CompetitionSeasonStructureComponent },
+    { path: 'toernooi-index/:id', component: CompetitionSeasonIndexComponent, data: { inCompetitionSeason: true } },
+    { path: 'toernooi-structuur', component: CompetitionSeasonStructureComponent, data: { inCompetitionSeason: true } },
     { path: '', redirectTo: '/home', pathMatch: 'full' },
     // otherwise redirect to home
     { path: '**', redirectTo: '' }
