@@ -34,11 +34,11 @@ export class CompetitionSeasonService implements VoetbalServiceInterface {
             .catch((error:any) => Observable.throw(error.message || 'Server error' ));
     }
 
-    createObject( object: CompetitionSeason ): Observable<CompetitionSeason> {
+    createObject( object: any ): Observable<CompetitionSeason> {
 
         let name: string = object.name;
         let seasonname: string = object.seasonname;
-        // let nrofteams: number = object.nrofteams;
+        let nrofteams: number = object.nrofteams;
         let userid =  this.authService.userid;
 
         return this.http

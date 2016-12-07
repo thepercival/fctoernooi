@@ -7,7 +7,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { CompetitionSeason } from '../../voetbal/competitionseason';
 import { CompetitionSeasonService } from '../service';
-import { CompetitionSeasonInMemoryService } from '../inmemory.service';
+import { CompetitionSeasonInMemoryService } from '../service.inmemory';
 import * as moment from 'moment/moment';
 
 @Component({
@@ -43,12 +43,9 @@ export class NgbdModalContent implements OnInit{
 
         let service = this.demo ? this.competitionSeasonInMemoryService : this.competitionSeasonService;
 
-        let competitionSeason = new CompetitionSeason();
-        competitionSeason.name = this.model.name;
-        competitionSeason.seasonname = this.model.seasonname;
-        // competitionSeason.nrofteams = this.model.nrofteams;
+        let jsonCompetitionSeason = { name : this.model.name, seasonname : this.model.seasonname, nrofteams : this.model.nrofteams };
 
-        service.createObject( competitionSeason )
+        service.createObject( jsonCompetitionSeason )
         .subscribe(
             /* happy path */ cs => {
                 this.activeModal.close();

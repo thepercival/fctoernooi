@@ -20,7 +20,7 @@ const routes: Routes = [
     { path: 'passwordchange', component: PasswordChangeComponent },
     { path: 'users', component: UsersComponent, canActivate: [AuthGuard] },
     { path: 'toernooi-index/:id', component: CompetitionSeasonIndexComponent, data: { inCompetitionSeason: true } },
-    { path: 'toernooi-structuur', component: CompetitionSeasonStructureComponent, data: { inCompetitionSeason: true } },
+    { path: 'toernooi-structuur/:id', component: CompetitionSeasonStructureComponent, data: { inCompetitionSeason: true } },
     { path: '', redirectTo: '/home', pathMatch: 'full' },
     // otherwise redirect to home
     { path: '**', redirectTo: '' }

@@ -1,12 +1,21 @@
 <nav class="navbar navbar-light bg-faded">
     <a class="navbar-brand" routerLink="/home" routerLinkActive="active">{{title}}</a>
     <ul class="nav navbar-nav">
-        <li class="nav-item">
-            <a routerLink="/home" routerLinkActive="active">toernooien</a>
+        <li *ngIf="showCompetitionSeasonDetails" class="nav-item">
+            <a routerLink="/toernooi-index" routerLinkActive="active">deelnemers</a>
         </li>
+        <li *ngIf="showCompetitionSeasonDetails" class="nav-item">
+            <a routerLink="/toernooi-index" routerLinkActive="active">structuur</a>
+        </li>
+        <li *ngIf="showCompetitionSeasonDetails" class="nav-item">
+            <a routerLink="/toernooi-index" routerLinkActive="active">planning</a>
+        </li>
+
+        <!--
         <li class="nav-item">
             <a class="nav-link" routerLink="/users" routerLinkActive="active">gebruikers</a>
         </li>
+        -->
         <!--
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="http://example.com" id="supportedContentDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>

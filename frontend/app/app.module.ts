@@ -10,9 +10,11 @@ import { AppComponent }   from './app.component';
 import { FocusModule } from './_directives/focus.module';
 import { CompetitionSeasonIndexComponent } from './competitionseason/index.component';
 import { CompetitionSeasonStructureComponent } from './competitionseason/structure.component';
+import { CompetitionSeasonRoundComponent } from './competitionseason/round.component';
+import { CompetitionSeasonPouleComponent } from './competitionseason/poule.component';
 import { HomeComponent } from './home/component';
 import { CompetitionSeasonService } from './competitionseason/service';
-import { CompetitionSeasonInMemoryService } from './competitionseason/inmemory.service';
+import { CompetitionSeasonInMemoryService } from './competitionseason/service.inmemory';
 import { AuthenticationService } from './auth/service';
 import { AuthGuard } from './auth/guard';
 import { UserService } from './user/service';
@@ -43,6 +45,7 @@ import { GlobalEventsManager } from "./global-events-manager";
         NavbarComponent,
         HomeComponent,
         CompetitionSeasonIndexComponent, CompetitionSeasonStructureComponent,
+        CompetitionSeasonRoundComponent, CompetitionSeasonPouleComponent,
         RegisterComponent, ActivateComponent, LoginComponent, LogoutComponent, PasswordResetComponent, PasswordChangeComponent, UsersComponent,
         NgbdModalContent
     ],

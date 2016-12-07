@@ -3,7 +3,7 @@ import { ActivatedRoute, Params }   from '@angular/router';
 import { Location }                 from '@angular/common';
 
 import { CompetitionSeasonService } from './service';
-import { CompetitionSeasonInMemoryService } from './inmemory.service';
+import { CompetitionSeasonInMemoryService } from './service.inmemory';
 import { CompetitionSeason } from '../voetbal/competitionseason';
 
 import {GlobalEventsManager} from "./../global-events-manager";
@@ -35,9 +35,14 @@ export class CompetitionSeasonIndexComponent implements OnInit, OnDestroy{
             service.getObject( params['id'] )
                   .subscribe(
                     /* happy path */ cs => {
-                          console.log( cs );
                           this.competitionseason = cs;
-                    },
+                          if ( this.competitionseason == undefined )
+                              return;
+                          if ( this.competitionseason.rounds.length == 0 ) {
+                              this.competitionseason.addRound( this.competitionseason.participants.length, false );
+                          }
+                          console.log( this.competitionseason );
+                      },
                     /* error path */ e => {},
                     /* onComplete */ () => {}
                 );
