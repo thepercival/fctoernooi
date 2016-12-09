@@ -23,4 +23,11 @@ export class Poule implements VoetbalInterface {
         this.places.push( pouleplace );
         return pouleplace;
     };
+
+    removePlace(): void {
+
+        // check if place is not in a qualifyrule
+
+
+    };
 }

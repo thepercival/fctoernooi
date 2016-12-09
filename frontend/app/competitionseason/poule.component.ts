@@ -25,6 +25,10 @@ export class CompetitionSeasonPouleComponent {
         let poulePlace = this.poule.addPlace();
     }
 
+    isPoulePlaceRemovable(): boolean {
+        return true;
+    }
+
     removePoulePlace(): void {
         /*this.cbjectService.update(this.object)
          .forEach(() => this.goBack());*/
