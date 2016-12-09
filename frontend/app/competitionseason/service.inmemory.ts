@@ -40,7 +40,7 @@ export class CompetitionSeasonInMemoryService implements InMemoryDbService, Voet
             this.demoCompetitionSeason.name = object.name;
             this.demoCompetitionSeason.seasonname = object.seasonname;
 
-            for (var n = 1; n <= object.nrofteams ; n++)
+            for (var n = 1; n <= object.nrofparticipants ; n++)
             {
                 this.demoCompetitionSeason.participants.push( new Participant( "deelnemer " + n ) );
             }

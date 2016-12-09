@@ -17,12 +17,17 @@ export class CompetitionSeasonPouleComponent {
     @Input()
     poule: Poule;
 
-    constructor(
-
-    ) {}
-
+    constructor() {
+    }
 
 
+    addPoulePlace(): void {
+        let poulePlace = this.poule.addPlace();
+    }
 
+    removePoulePlace(): void {
+        /*this.cbjectService.update(this.object)
+         .forEach(() => this.goBack());*/
+    }
 }
 

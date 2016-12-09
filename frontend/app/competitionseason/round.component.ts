@@ -16,6 +16,8 @@ export class CompetitionSeasonRoundComponent {
     @Input()
     round: Round;
 
+    nrOfParticipantsToQualify: number = 0;
+
     constructor(
 
     ) {}

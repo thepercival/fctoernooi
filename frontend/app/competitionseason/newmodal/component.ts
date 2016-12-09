@@ -43,7 +43,7 @@ export class NgbdModalContent implements OnInit{
 
         let service = this.demo ? this.competitionSeasonInMemoryService : this.competitionSeasonService;
 
-        let jsonCompetitionSeason = { name : this.model.name, seasonname : this.model.seasonname, nrofteams : this.model.nrofteams };
+        let jsonCompetitionSeason = { name : this.model.name, seasonname : this.model.seasonname, nrofparticipants : this.model.nrofparticipants };
 
         service.createObject( jsonCompetitionSeason )
         .subscribe(

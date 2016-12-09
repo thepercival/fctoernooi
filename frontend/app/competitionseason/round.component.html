@@ -1,3 +1,9 @@
-ronde {{round.number}}
+<h3>ronde {{round.number}} <button>poule <i class="fa fa-minus"></i></button> <button>poule <i class="fa fa-plus"></i></button> </h3>
 
-<toernooi-poule *ngFor="let poule of round.poules" [poule]="poule"></toernooi-poule>
+<div class="card-group">
+    <toernooi-poule *ngFor="let poule of round.poules" [poule]="poule"></toernooi-poule>
+</div>
+
+<div class="card" style="margin-top: 20px;">
+    <div class="card-header">deelnemers door {{nrOfParticipantsToQualify}} <button><span class="fa fa-minus"></span></button><button><i class="fa fa-plus"></i></button></div>
+</div>

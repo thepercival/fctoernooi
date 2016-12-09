@@ -15,6 +15,7 @@ export class CompetitionSeason implements VoetbalInterface{
 
         // add poules
         let nrOfPoules = round.getDefaultNrOfPoules( nrOfTeams );
+        console.log( nrOfPoules );
         let nrOfExtraTeams = nrOfTeams % nrOfPoules;
         let nNrOfTeamsPerPoule = ( nrOfTeams - nrOfExtraTeams ) / nrOfPoules;
         for( var nI = 0 ; nI < nrOfPoules ; nI++ ){

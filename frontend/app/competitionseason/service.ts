@@ -38,7 +38,7 @@ export class CompetitionSeasonService implements VoetbalServiceInterface {
 
         let name: string = object.name;
         let seasonname: string = object.seasonname;
-        let nrofteams: number = object.nrofteams;
+        let nrofparticipants: number = object.nrofparticipants;
         let userid =  this.authService.userid;
 
         return this.http

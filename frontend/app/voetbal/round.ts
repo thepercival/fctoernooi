@@ -5,13 +5,14 @@
 import {VoetbalInterface} from './interface';
 import {CompetitionSeason} from './competitionseason';
 import {Poule} from './poule';
+import {QualifyRule} from './qualifyrule';
 
 export class Round implements VoetbalInterface{
     competitonSeason: CompetitionSeason;
     number: number;
     poules : Poule[] = [];
-    // fromqualifyrules : [],
-    // toqualifyrules : [],
+    fromQualifyRules : QualifyRule[] = [];
+    toQualifyRules : QualifyRule[] = [];
 
     constructor(
         competitonSeason: CompetitionSeason
@@ -46,8 +47,8 @@ export class Round implements VoetbalInterface{
 
     getDefaultNrOfPoules( nrOfTeams: number ) : number {
         let nNrOfPoules:number;
-        if ( this.number == 1 ) {
-            return 2; // knockout
+        if ( this.number > 1 ) {
+            return Math.floor( nrOfTeams / 2 ); // knockout
         }
 
         switch ( nrOfTeams )
