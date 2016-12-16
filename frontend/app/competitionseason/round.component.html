@@ -5,5 +5,8 @@
 </div>
 
 <div class="card" style="margin-top: 20px;">
-    <div class="card-header">deelnemers door {{nrOfParticipantsToQualify}} <button><span class="fa fa-minus"></span></button><button><i class="fa fa-plus"></i></button></div>
+    <div class="card-header">deelnemers door {{ round.next() ? round.next().getNrOfParticipants() : 0 }}
+        <button (click)="removePoulePlaceFromNextRound()" [disabled]="round.next() == null || round.next().getNrOfParticipants() <= round.getNrOfParticipants()"><span class="fa fa-minus"></span></button>
+        <button (click)="addPoulePlaceToNextRound()" [disabled]="round.next() != null && round.next().getNrOfParticipants() >= round.getNrOfParticipants()"><i class="fa fa-plus"></i></button>
+    </div>
 </div>

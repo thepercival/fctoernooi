@@ -9,7 +9,7 @@ import {QualifyRule} from './qualifyrule';
 
 export class Round implements VoetbalInterface{
     competitonSeason: CompetitionSeason;
-    number: number;
+    nr: number;
     poules : Poule[] = [];
     fromQualifyRules : QualifyRule[] = [];
     toQualifyRules : QualifyRule[] = [];
@@ -18,7 +18,7 @@ export class Round implements VoetbalInterface{
         competitonSeason: CompetitionSeason
     ) {
         this.competitonSeason = competitonSeason;
-        this.number = competitonSeason.rounds.length + 1;
+        this.nr = competitonSeason.rounds.length + 1;
     }
 
     addPoule( nrOfParticipants: number ): Poule {
@@ -47,7 +47,7 @@ export class Round implements VoetbalInterface{
 
     getDefaultNrOfPoules( nrOfTeams: number ) : number {
         let nNrOfPoules:number;
-        if ( this.number > 1 ) {
+        if ( this.nr > 1 ) {
             return Math.floor( nrOfTeams / 2 ); // knockout
         }
 
@@ -106,5 +106,19 @@ export class Round implements VoetbalInterface{
 
     getDefaultNrOfMutualGames() : number {
         return 1;
+    }
+
+    getNrOfParticipants(): number {
+        let nNrOfParticipants:number = 0;
+        this.poules.forEach( function ( poule ) {
+            nNrOfParticipants += poule.places.length;
+        });
+        return nNrOfParticipants;
+    }
+
+    next(): Round {
+        if ( this.toQualifyRules.length == 0 )
+            return null;
+        return this.toQualifyRules[0].toRound;
     }
 }

@@ -19,8 +19,4 @@ export class QualifyRule implements VoetbalInterface{
         this.fromRound = fromRound;
         this.toRound = toRound;
     }
-
-    getDefaultNrOfMutualGames() : number {
-        return 1;
-    }
 }

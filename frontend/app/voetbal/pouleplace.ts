@@ -10,8 +10,8 @@ export class PoulePlace implements VoetbalInterface {
     number: number;
     poule: Poule;
     participant: Participant = null;
-    fromqualifyrule = null;
-    toqualifyrule = null;
+    fromQualifyRule = null;
+    toQualifyRule = null;
 
     constructor(
         poule: Poule

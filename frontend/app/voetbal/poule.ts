@@ -22,6 +22,7 @@ export class Poule implements VoetbalInterface {
         let pouleplace = new PoulePlace( this );
         this.places.push( pouleplace );
         return pouleplace;
+
     };
 
     removePlace(): void {
