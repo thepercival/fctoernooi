@@ -26,6 +26,7 @@ export class UsersComponent implements OnInit {
     // methods
     getUsers(): void {
         this.userService.getUsers().forEach( users => this.users = users);
+
     }
 
     onSelect(user: User): void {

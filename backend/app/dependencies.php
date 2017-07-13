@@ -1,10 +1,8 @@
 <?php
 // DIC configuration
 
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use \JMS\Serializer\SerializerBuilder;
+use \Slim\Middleware\JwtAuthentication;
 
 $container = $app->getContainer();
 
@@ -25,58 +23,76 @@ $container['logger'] = function ($c) {
 
 // Doctrine
 $container['em'] = function ($c) {
-    $settings = $c->get('settings');
-    $config = \Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration(
-        $settings['doctrine']['meta']['entity_path'],
-        $settings['doctrine']['meta']['auto_generate_proxies'],
-        $settings['doctrine']['meta']['proxy_dir'],
-        $settings['doctrine']['meta']['cache'],
-        false
-    );
-    return \Doctrine\ORM\EntityManager::create($settings['doctrine']['connection'], $config);
+    $settings = $c->get('settings')['doctrine'];
+	class CustomYamlDriver extends Doctrine\ORM\Mapping\Driver\YamlDriver
+	{
+		protected function loadMappingFile($file)
+		{
+			return Symfony\Component\Yaml\Yaml::parse(file_get_contents($file), Symfony\Component\Yaml\Yaml::PARSE_CONSTANT);
+		}
+	}
+
+	$config = Doctrine\ORM\Tools\Setup::createConfiguration(
+		$settings['meta']['auto_generate_proxies'],
+		$settings['meta']['proxy_dir'],
+		$settings['meta']['cache']
+	);
+	$config->setMetadataDriverImpl( new CustomYamlDriver( $settings['meta']['entity_path'] ));
+
+	return Doctrine\ORM\EntityManager::create($settings['connection'], $config);
 };
 
 // symfony serializer
 $container['serializer'] = function( $c ) {
-	$encoders = array( new JsonEncoder() );
+    $settings = $c->get('settings');
 
-	$normalizer = new ObjectNormalizer();
-    $normalizer->setIgnoredAttributes(array('password'));
-	$normalizer->setCircularReferenceHandler(function ($object) {
-		return $object->getId();
-	});
-	$normalizers = array( $normalizer );
-	return new Serializer($normalizers, $encoders);
+    $serializer = SerializerBuilder::create()
+        ->setDebug($settings['displayErrorDetails'])
+        /*->setCacheDir($settings['serializer']['cache_dir'])*/;
+
+    foreach( $settings['serializer']['yml_dir'] as $ymlnamespace => $ymldir ){
+        $serializer->addMetadataDir($ymldir,$ymlnamespace);
+    }
+
+
+    return $serializer->build();
+};
+
+// symfony serializer
+$container['voetbal'] = function( $c ) {
+    $voetbalService = new Voetbal\Service($c->get('em'));
+
+    return $voetbalService;
 };
 
 // JWTAuthentication
 $container['jwtauth'] = function( $c ) {
     $settings = $c->get('settings');
-    return new \Slim\Middleware\JwtAuthentication([
+    return new JwtAuthentication([
         "secure" => true,
         "relaxed" => ["localhost"],
         "secret" => $settings['auth']['jwtsecret'],
-        "algorithm" => $settings['auth']['jwtalgorithm'],
+        // "algorithm" => $settings['auth']['jwtalgorithm'], default
         "rules" => [
-            new \Slim\Middleware\JwtAuthentication\RequestPathRule([
-                "path" => "/users"
-            ]),
-            new \Slim\Middleware\JwtAuthentication\RequestMethodRule([
-                "passthrough" => ["OPTIONS","POST"]
+            new JwtAuthentication\RequestPathRule([
+	            "path" => "/",
+	            "passthrough" => ["/auth/register", "/auth/login"]
+            ])	        ,
+            new JwtAuthentication\RequestMethodRule([
+                "passthrough" => ["OPTIONS"]
             ])
         ]
     ]);
 };
 
 // actions
-$container['App\Action\AuthAction'] = function ($c) {
-	return new App\Action\AuthAction( $c->get('settings'), $c->get('em'), $c->get('jwtauth'), $c->get('serializer') );
+$container['App\Action\Auth'] = function ($c) {
+	$em = $c->get('em');
+    $repos = new FCToernooiRepository\Auth\User($em,$em->getClassMetaData(FCToernooi\Auth\User::class));
+	return new App\Action\Auth($repos,$c->get('serializer'),$c->get('settings'));
 };
-$container['App\Action\UserAction'] = function ($c) {
-    $userResource = new \App\Resource\UserResource($c->get('em'));
-    return new App\Action\UserAction($userResource,$c->get('serializer'),$c->get('settings'));
-};
-$container['App\Action\CompetitionSeasonAction'] = function ($c) {
-	$competitionSeasonResource = new \App\Resource\CompetitionSeasonResource($c->get('em'));
-    return new App\Action\CompetitionSeasonAction($competitionSeasonResource,$c->get('serializer'));
+$container['App\Action\Auth\User'] = function ($c) {
+	$em = $c->get('em');
+    $repos = new FCToernooiRepository\Auth\User($em,$em->getClassMetaData(FCToernooi\Auth\User::class));
+	return new App\Action\Auth\User($repos,$c->get('serializer'),$c->get('settings'));
 };

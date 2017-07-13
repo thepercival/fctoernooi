@@ -8,11 +8,19 @@ return [
         'environment' => getenv('ENVIRONMENT'),
         'displayErrorDetails' => ( getenv('ENVIRONMENT') === "development" ),
         'addContentLengthHeader' => false, // Allow the web server to send the content-length header
-	    // 'determineRouteBeforeAppMiddleware' => true,
+	    'determineRouteBeforeAppMiddleware' => true,
 
         // Renderer settings
         'renderer' => [
             'template_path' => __DIR__ . '/../templates/',
+        ],
+        // Serializer(JMS)
+        'serializer' => [
+            'cache_dir' =>  __DIR__.'/../cache/serializer',
+            'yml_dir' => [
+                "Voetbal" =>__DIR__.'/../vendor/thepercival/voetbal/serialization/yml',
+                "FCToernooi" => __DIR__.'/../serialization/yml'
+            ]
         ],
 
         // Monolog settings
@@ -25,7 +33,8 @@ return [
         'doctrine' => [
             'meta' => [
                 'entity_path' => [
-                    'src/Entity'
+	                __DIR__ . '/../vendor/thepercival/voetbal/db/yml-mapping',
+	                __DIR__ . '/../db/yml-mapping'
                 ],
                 'auto_generate_proxies' => true,
                 'proxy_dir' =>  __DIR__.'/../cache/proxies',
@@ -33,8 +42,8 @@ return [
             ],
             'connection' => [
                 'driver'   => 'pdo_mysql',
-                'host'     => 'localhost',
-                'dbname'   => 'fctoernooiv2',
+                'host'     => getenv('DB_HOST'),
+                'dbname'   => getenv('DB_NAME'),
                 'user'     => getenv('DB_USERNAME'),
                 'password' => getenv('DB_PASSWORD'),
             ],
@@ -51,9 +60,8 @@ return [
             'url' => getenv('WWW_URL')
         ],
         'email' => [
-            'from' => "noreply@fctoernooi.nl",
-            'fromname' => "FCToernooi",
-            'smtpserver' => "mx-in-1.webreus.nl"
+            'from' => "coendunnink@gmail.com",
+            'fromname' => "FCToernooi"
         ]
     ],
 ];
