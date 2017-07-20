@@ -1,0 +1,23 @@
+FCToernooi\Auth\User:
+  type: entity
+  repositoryClass: FCToernooiRepository\Auth\User
+  table: users
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    name:
+      type: string
+      length : !php/const:FCToernooi\Auth\User\Name::MAX_LENGTH
+      unique: true
+      nullable: false
+    password:
+      type: string
+      length : !php/const:FCToernooi\Auth\User\Password::MAX_LENGTH_HASH
+      nullable: false
+    emailaddress:
+      type: string
+      length : !php/const:FCToernooi\Auth\User\Emailaddress::MAX_LENGTH
+      nullable: false
