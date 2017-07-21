@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import './rxjs-extensions';
+import { APP_INITIALIZER } from '@angular/core';
+import { AppConfig }  from './app.config';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule }   from '@angular/forms';
 import { NgbModule }     from '@ng-bootstrap/ng-bootstrap';
@@ -45,7 +47,9 @@ import { AdminComponent } from "./admin/component";
         AuthGuard,
         AuthenticationService,
         UserService,
-        GlobalEventsManager
+        GlobalEventsManager,
+        AppConfig,
+        { provide: APP_INITIALIZER, useFactory: (config: AppConfig) => () => config.load(), deps: [AppConfig], multi: true }
 
     ],
     bootstrap:    [

@@ -2,6 +2,7 @@ import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import { Injectable } from '@angular/core';
+import { AppConfig } from '../app.config';
 import { User } from '../user/user';
 import { Router } from '@angular/router';
 
@@ -9,11 +10,12 @@ import { Router } from '@angular/router';
 export class AuthenticationService {
     public token: string;
     public userid: number;
-    private url = 'http://localhost:2999/auth/';    
+    private url: string;
     public user: User;  // is called from backend on first time
     private headers = new Headers({'Content-Type': 'application/json'});
 
-    constructor(private http: Http, private router: Router) {
+    constructor(private config: AppConfig, private http: Http, private router: Router) {
+        this.url = this.config.getConfig('apiurl') + 'auth/';
         // set token if saved in local storage
         var user = JSON.parse(localStorage.getItem('user'));
         this.token = user && user.token;

@@ -3,6 +3,7 @@ import { Headers, Http, Response, RequestOptions } from '@angular/http';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import { AppConfig } from '../app.config';
 import { User } from './user';
 import { AuthenticationService } from '../auth/service';
 
@@ -13,9 +14,10 @@ export class UserService {
     private url : string;
 
     constructor(
+        private config: AppConfig,
         private http: Http,
         private authService: AuthenticationService) {
-        this.url = 'http://localhost:2999/auth/users';
+        this.url = this.config.getConfig('apiurl') + 'auth/users';
     }
 
     getUsers(): Observable<User[]> {
