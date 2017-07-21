@@ -37,9 +37,9 @@ class Service
 	 */
 	public function register( User\Name $name, $password, User\Emailaddress $emailaddress )
 	{
-		//if ( "coen" != $name ){
-		//	throw new \Exception("alleen de gebruikersnaam coen kan geregistreerd worden");
-		//}
+		if ( "coen" != $name ){
+			throw new \Exception("alleen de gebruikersnaam coen kan geregistreerd worden, expirimentele fase");
+		}
 		$userTmp = $this->repos->findOneBy( array('name' => $name ) );
 		if ( $userTmp ) {
 			throw new \Exception("de gebruikersnaam is al in gebruik",E_ERROR);
