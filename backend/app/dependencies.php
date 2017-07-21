@@ -58,7 +58,7 @@ $container['serializer'] = function( $c ) {
     return $serializer->build();
 };
 
-// symfony serializer
+// voetbalService
 $container['voetbal'] = function( $c ) {
     $voetbalService = new Voetbal\Service($c->get('em'));
 
@@ -70,7 +70,7 @@ $container['jwtauth'] = function( $c ) {
     $settings = $c->get('settings');
     return new JwtAuthentication([
         "secure" => true,
-        "relaxed" => ["localhost"],
+        // "relaxed" => ["localhost"],
         "secret" => $settings['auth']['jwtsecret'],
         // "algorithm" => $settings['auth']['jwtalgorithm'], default
         "rules" => [

@@ -1,7 +1,7 @@
 <?php
 // Application middleware
 
-// $app->add( $app->getContainer()->get('jwtauth') );
+$app->add( $app->getContainer()->get('jwtauth') );
 
 $app->add( function ($request, $response, $next) use ( $app ) {
 
