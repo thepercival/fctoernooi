@@ -13,7 +13,8 @@ export class NavComponent implements OnInit {
   // showCompetitionSeasonDetails: boolean = false;
 
   constructor(
-      private authService: AuthService/*,
+      private authService: AuthService/*
+      ,
       private globalEventsManager: GlobalEventsManager*/
   )
   {
@@ -24,6 +25,10 @@ export class NavComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  isLoggedIn() {
+    return this.authService.token;
   }
 
 }
