@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
   loading = false;
   // private subscription: Subscription;
   error = '';
-  activationmessage = null;
+  activationmessage: string = null;
 
   constructor( private activatedRoute: ActivatedRoute, private router: Router, private authService: AuthService) { }
 

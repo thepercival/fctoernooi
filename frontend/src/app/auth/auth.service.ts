@@ -68,7 +68,7 @@ export class AuthService {
         .catch(this.handleError);
   }
 
-  login(emailaddress, password): Observable<boolean> {
+  login(emailaddress: string, password: string): Observable<boolean> {
     return this.http.post( this.url + 'login', { emailaddress: emailaddress, password: password })
         .map((response: Response) => {
           let json = response.json();
