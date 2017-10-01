@@ -88,11 +88,11 @@ $container['jwtauth'] = function( $c ) {
 // actions
 $container['App\Action\Auth'] = function ($c) {
 	$em = $c->get('em');
-    $repos = new FCToernooiRepository\Auth\User($em,$em->getClassMetaData(FCToernooi\Auth\User::class));
+    $repos = new FCToernooi\Auth\User\Repository($em,$em->getClassMetaData(FCToernooi\Auth\User::class));
 	return new App\Action\Auth($repos,$c->get('serializer'),$c->get('settings'));
 };
 $container['App\Action\Auth\User'] = function ($c) {
 	$em = $c->get('em');
-    $repos = new FCToernooiRepository\Auth\User($em,$em->getClassMetaData(FCToernooi\Auth\User::class));
+    $repos = new FCToernooi\Auth\User\Repository($em,$em->getClassMetaData(FCToernooi\Auth\User::class));
 	return new App\Action\Auth\User($repos,$c->get('serializer'),$c->get('settings'));
 };

@@ -10,7 +10,7 @@ namespace App\Action\Auth;
 
 use Slim\ServerRequestInterface;
 use JMS\Serializer\Serializer;
-use FCToernooiRepository\Auth\User as UserRepository;
+use FCToernooi\Auth\User\Repository as UserRepository;
 use FCToernooi\Auth;
 
 final class User

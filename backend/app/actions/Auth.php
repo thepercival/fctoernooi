@@ -12,8 +12,8 @@ use Slim\ServerRequestInterface;
 use JMS\Serializer\Serializer;
 use FCToernooi\Auth\User;
 use \Firebase\JWT\JWT;
-use FCToernooiRepository\Auth\User as UserRepository;
-use \FCToernooi\Auth\Service as AuthService;
+use FCToernooi\Auth\User\Repository as UserRepository;
+use FCToernooi\Auth\Service as AuthService;
 use \Slim\Middleware\JwtAuthentication;
 
 final class Auth
@@ -80,7 +80,10 @@ final class Auth
 				array( 'emailaddress' => $emailaddress )
 			);
 
-			if (!$user or !password_verify( $password, $user->getPassword() ) ) {
+            // throw new \Exception( password_hash("cdk", PASSWORD_DEFAULT), E_ERROR );
+
+
+            if (!$user or !password_verify( $password, $user->getPassword() ) ) {
 				throw new \Exception( "ongeldige emailadres en wachtwoord combinatie");
 			}
 

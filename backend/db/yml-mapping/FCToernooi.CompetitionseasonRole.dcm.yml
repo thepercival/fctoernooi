@@ -1,0 +1,35 @@
+FCToernooi\CompetitionseasonRole:
+    type: entity
+    repositoryClass: FCToernooi\CompetitionseasonRole\Repository
+    table: competitionseasonroles
+    id:
+        id:
+            type: integer
+            nullable: false
+            id: true
+            column: id
+            generator:
+                strategy: AUTO
+    fields:
+        role:
+            type: integer
+            nullable: false
+            unique: false
+    manyToOne:
+        competitionseason:
+            targetEntity: Voetbal\CompetitionSeason
+            inversedBy: competitionseasonroles
+            joinColumn:
+              name: competitionseasonid
+              referencedColumnName: id
+              nullable: false
+        user:
+            targetEntity: FCToernooi\Auth\User
+            inversedBy: competitionseasonroles
+            joinColumn:
+              name: userid
+              referencedColumnName: id
+              nullable: false
+    uniqueConstraints:
+        main_u_idx:
+            columns: [ competitionseasonid, userid, role ]

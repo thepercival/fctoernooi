@@ -32,7 +32,6 @@
 	"autoload": {
 		"psr-4": {
 			"FCToernooi\\": "domain/",
-			"FCToernooiRepository\\": "db/repositories",
 			"App\\Action\\": "app/actions"
 		}
 	},

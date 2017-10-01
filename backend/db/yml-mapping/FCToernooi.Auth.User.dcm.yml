@@ -1,6 +1,6 @@
 FCToernooi\Auth\User:
   type: entity
-  repositoryClass: FCToernooiRepository\Auth\User
+  repositoryClass: FCToernooi\Auth\User\Repository
   table: users
   id:
     id:

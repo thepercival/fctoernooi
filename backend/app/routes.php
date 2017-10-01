@@ -14,3 +14,8 @@ $app->group('/auth', function () use ($app) {
 	$app->get('/users/{id}', 'App\Action\Auth\User:fetchOne');
 });
 
+$app->group('/competitionseasonroles', function () use ($app) {
+    $app->get('', 'App\Action\CompetitionseasonRole\User:fetch');
+    $app->get('/{id}', 'App\Action\CompetitionseasonRole:fetchOne');
+});
+
