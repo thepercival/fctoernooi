@@ -21,7 +21,7 @@ export class AuthenticationService {
         // this.initLoggedOnUser();
 
         if ( this.token && this.userid && !this.user ){
-            console.log( "auth.user starting initialization for userid: "+this.userid+"...");
+            console.log( 'auth.user starting initialization for userid: ' + this.userid + '...');
             this.getLoggedInUser( this.userid )
                 .subscribe(
                     /* happy path */ user => this.user = user,
@@ -33,7 +33,7 @@ export class AuthenticationService {
                     /* onComplete */ () => { console.log('user created from backend'); }
                 );
 
-            console.log( "auth.user initialized");
+            console.log( 'auth.user initialized');
         }
     }
 
