@@ -11,7 +11,7 @@ export class CompetitionSeasonNewComponent implements OnInit {
   model: any = {};
   loading = false;
   error = '';
-  sportnames: [string]= ['tafeltennis','darten'];
+  sportnames: [string]= ['tafeltennis', 'darten'];
   // message: string = null;
 
   constructor( private router: Router/*, private authService: AuthService*/ ) { }
