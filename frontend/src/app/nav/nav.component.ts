@@ -10,6 +10,7 @@ export class NavComponent implements OnInit {
 
   @Input()
   title: string;
+  navbarCollapsed: boolean = true;
   // showCompetitionSeasonDetails: boolean = false;
 
   constructor(

@@ -1,20 +1,31 @@
-<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
-  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+<nav class="navbar navbar-toggleable-md navbar-inverse bg-primary">
+  <a class="navbar-brand" [routerLink]="['/']">{{title}}</a>
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-label="Toggle navigation"
+          (click)="navbarCollapsed = !navbarCollapsed" [attr.aria-expanded]="!navbarCollapsed" style="cursor:pointer;"
+  >
     <span class="navbar-toggler-icon"></span>
   </button>
-  <a class="navbar-brand" routerLink="/home" routerLinkActive="active">{{title}}</a>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
-      <li *ngIf="isLoggedIn()" class="nav-item float-xs-right">
-        <a class="nav-link" routerLink="/admin/home" routerLinkActive="active" style="color:white;">admin</a>
-      </li>
-      <li *ngIf="!isLoggedIn()" class="nav-item float-xs-right">
-        <a class="nav-link bg-success" routerLink="/user/login" routerLinkActive="active" style="color:white;">inloggen</a>
-      </li>
-      <li *ngIf="isLoggedIn()" class="nav-item float-xs-right">
-        <a class="nav-link bg-success" routerLink="/user/logout" routerLinkActive="active" style="color:white;">uitloggen</a>
-      </li>
-    </ul>
+  <div class="container">
+    <div class="collapse navbar-collapse" [ngbCollapse]="navbarCollapsed" id="navbarResponsive">
+      <ul class="navbar-nav">
+        <li *ngIf="isLoggedIn()" class="nav-item">
+            <a class="nav-link" routerLink="/admin/home" routerLinkActive="active">admin</a>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav ml-auto">
+          <li *ngIf="isLoggedIn()" class="nav-item">
+              <a class="nav-link" routerLink="/toernooi/nieuw" routerLinkActive="active" style="color:white;">nieuw</a>
+          </li>
+        <li *ngIf="!isLoggedIn()" class="nav-item">
+            <a class="nav-link" routerLink="/user/login" routerLinkActive="active" style="color:white;">inloggen</a>
+        </li>
+        <li *ngIf="isLoggedIn()" class="nav-item">
+            <a class="nav-link" routerLink="/user/logout" routerLinkActive="active" style="color:white;">uitloggen</a>
+        </li>
+      </ul>
+
+    </div>
   </div>
 </nav>
-
+<div style="clear: both;"></div>

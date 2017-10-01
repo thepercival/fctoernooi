@@ -12,6 +12,7 @@ import { AdminModule } from './admin/admin.module';
 import { UserModule } from './user/user.module';
 import { AuthguardService } from './auth/authguard.service';
 import { AuthService } from './auth/auth.service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { AuthService } from './auth/auth.service';
     HttpModule,
     RoutingModule,
     UserModule,
-    AdminModule
+    AdminModule,
+    NgbModule.forRoot()
   ],
   providers: [
     AuthguardService,

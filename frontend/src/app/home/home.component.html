@@ -1,3 +1,21 @@
-<div style="margin-top:60px;">
-  wanneer niet ingelogd komen hier toernooien die bijna gaan beginnen!
+<div class="container-fluid home">
+  <div class="row justify-content-center">
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+      <div class="d-flex flex-row-reverse">
+        <button type="button" class="btn btn-primary" routerLink="/toernooi/nieuw" style="margin-top:2em; margin-bottom: 2em;">nieuw toernooi</button>
+      </div>
+      <table class="table">
+        <thead>
+
+        </thead>
+        <tbody>
+        <tr>
+          <td>toernoooi 1</td>
+          <td><span *ngIf="isLoggedIn()" class="fa fa-eye" aria-hidden="true">edit</span></td>
+          <td><button type="button" class="btn btn-xs btn-secondary"><i class="fa fa-eye"></i></button></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
