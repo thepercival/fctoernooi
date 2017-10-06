@@ -1,5 +1,5 @@
 /node_modules/
 /dist/**
-/app/**/*.js
-/app/**/*.js.map
-/app/**/*.d.ts
+/src/app/**/*.js
+/src/app/**/*.js.map
+/src/app/**/*.d.ts
