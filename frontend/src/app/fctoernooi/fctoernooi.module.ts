@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { CompetitionSeasonNewComponent } from './competitionseason/new.component';
+import { TournamentNewComponent  } from './tournament/new.component';
+import { TournamentRepository  } from './tournament/repository';
 
 import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
 
@@ -13,7 +14,10 @@ import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
     FctoernooiRoutingModule
   ],
   declarations: [
-    CompetitionSeasonNewComponent
+    TournamentNewComponent
+  ],
+  providers: [
+    TournamentRepository
   ]
 })
 export class FctoernooiModule { }
