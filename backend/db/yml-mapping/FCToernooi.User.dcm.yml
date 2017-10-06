@@ -10,14 +10,14 @@ FCToernooi\User:
   fields:
     name:
       type: string
-      length : !php/const:FCToernooi\User\Name::MAX_LENGTH
+      length : !php/const:FCToernooi\User::MAX_LENGTH_NAME
       unique: true
       nullable: false
     password:
       type: string
-      length : !php/const:FCToernooi\User\Password::MAX_LENGTH_HASH
+      length : !php/const:FCToernooi\User::MAX_LENGTH_HASH
       nullable: false
     emailaddress:
       type: string
-      length : !php/const:FCToernooi\User\Emailaddress::MAX_LENGTH
+      length : !php/const:FCToernooi\User::MAX_LENGTH_EMAIL
       nullable: false

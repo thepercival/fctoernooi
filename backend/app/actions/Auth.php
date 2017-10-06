@@ -97,7 +97,7 @@ final class Auth
 			$payload = [
 				"iat" => $now->getTimeStamp(),
 				"exp" => $future->getTimeStamp(),
-				"sub" => $emailaddress,
+				"sub" => $user->getId(),
 			];
 
 			$token = JWT::encode($payload, $this->settings['auth']['jwtsecret'] );

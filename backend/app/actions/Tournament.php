@@ -11,6 +11,7 @@ namespace App\Action;
 
 use Slim\ServerRequestInterface;
 use JMS\Serializer\Serializer;
+use FCToernooi\User\Repository as UserRepository;
 // use FCToernooi\Tournament;
 use \Firebase\JWT\JWT;
 use FCToernooi\Tournament\Service as TournamentService;
@@ -23,19 +24,26 @@ final class Tournament
      */
     private $service;
     /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+
+    /**
      * @var Serializer
      */
     protected $serializer;
     /**
      * @var array
      */
-    protected $settings;
+    protected $jwt;
 
-    public function __construct(TournamentService $tournamentService, Serializer $serializer, $settings )
+    public function __construct(TournamentService $tournamentService, UserRepository $userRepository, Serializer $serializer, \StdClass $jwt )
     {
         $this->service = $tournamentService;
+        $this->userRepository = $userRepository;
         $this->serializer = $serializer;
-        $this->settings = $settings;
+        $this->jwt = $jwt;
     }
 
     public function add( $request, $response, $args)
@@ -49,9 +57,16 @@ final class Tournament
         $equalNrOfGames = filter_var($request->getParam('equalnrofgames'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
         if ( $equalNrOfGames === null ){ return $response->withStatus(404, "evenveel-wedstrijden is ongeldig" ); }
 
+        $user = null;
+        if( $this->jwt->sub !== null ){
+            $user = $this->userRepository->find( $this->jwt->sub );
+        }
+        if ( $user === null ){ return $response->withStatus(404, "gebruiker kan niet gevonden worden" ); }
+
         $sErrorMessage = null;
         try {
             $tournament = $this->service->create(
+                $user,
                 $name,
                 $sportName,
                 $nrOfCompetitors,

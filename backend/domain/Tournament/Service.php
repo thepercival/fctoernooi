@@ -12,6 +12,14 @@
 
 namespace FCToernooi\Tournament;
 
+use FCToernooi\User as User;
+use Voetbal\Association;
+use Voetbal\Association\Repository as AssociationRepository;
+use Voetbal\Association\Service as AssociationService;
+use Voetbal\Competition;
+use Voetbal\Competition\Repository as CompetitionRepository;
+use Voetbal\Season;
+use Voetbal\Season\Repository as SeasonRepository;
 use Voetbal\CompetitionSeason;
 use Voetbal\CompetitionSeason\Repository as CompetitionSeasonRepository;
 use FCToernooi\CompetitionSeasonRole;
@@ -22,16 +30,47 @@ class Service
     /**
      * @var AssociationRepository
      */
-    protected $repos;
+    protected $associationRepos;
+
+    /**
+     * @var CompetitionRepository
+     */
+    protected $competitionRepos;
+
+    /**
+     * @var SeasonRepository
+     */
+    protected $seasonRepos;
+
+    /**
+     * @var CompetitionSeasonRepository
+     */
+    protected $competitionSeasonRepos;
+
+    /**
+     * @var CompetitionSeasonRoleRepository
+     */
+    protected $competitionSeasonRoleRepos;
 
     /**
      * Service constructor.
-     *
+     * @param AssociationRepository $associationRepos
+     * @param CompetitionRepository $competitionRepos
+     * @param SeasonRepository $seasonRepos
      * @param CompetitionSeasonRepository $competitionSeasonRepos
      * @param CompetitionSeasonRoleRepository $competitionSeasonRoleRepos
      */
-    public function __construct( competitionSeasonRepository $competitionSeasonRepos, CompetitionSeasonRoleRepository $competitionSeasonRoleRepos )
+    public function __construct(
+        AssociationRepository $associationRepos,
+        CompetitionRepository $competitionRepos,
+        SeasonRepository $seasonRepos,
+        CompetitionSeasonRepository $competitionSeasonRepos,
+        CompetitionSeasonRoleRepository $competitionSeasonRoleRepos
+    )
     {
+        $this->associationRepos = $associationRepos;
+        $this->competitionRepos = $competitionRepos;
+        $this->seasonRepos = $seasonRepos;
         $this->competitionSeasonRepos = $competitionSeasonRepos;
         $this->competitionSeasonRoleRepos = $competitionSeasonRoleRepos;
     }
@@ -44,14 +83,28 @@ class Service
      * @return bool
      * @throws \Exception
      */
-    public function create( $name, $sportName, $nrOfCompetitors, $equalNrOfGames )
+    public function create( User $user, $name, $sportName, $nrOfCompetitors, $equalNrOfGames )
     {
-        // create association
-        // check if ass with username exists
-        // if not create
+        // association, check als bestaat op basis van naam, zoniet, aak aan
+        $association = $this->associationRepos->findOneBy(
+            array( 'name' => $user->getName() )
+        );
+        if( $association === null ){
+            $assService = new AssociationService( $this->associationRepos );
+            $association = $assService->create( $user->getName() );
+        }
 
-        // create competition
-        // create season
+        // check competition, check als naam niet bestaat
+        $competition = $this->competitionRepos->findOneBy( array('name' => $name ) );
+        if ( $competition !== null ){
+            throw new \Exception("de competitienaam bestaat al", E_ERROR );
+        }
+        $compService = new CompetitionService( $this->competitionRepos );
+        $competition = $compService->create( $name );
+
+        // check season, per jaar een seizoen, als seizoen niet bestaat, dan aanmaken
+        doe dat dus..
+
         // create competitionseason
         // create competitionseasonroles
 
