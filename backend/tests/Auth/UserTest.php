@@ -8,7 +8,7 @@
 
 namespace FCToernooi\Tests\Auth;
 
-use \FCToernooi\Auth\User as User;
+use \FCToernooi\User as User;
 
 class UserTest extends \PHPUnit_Framework_TestCase
 {

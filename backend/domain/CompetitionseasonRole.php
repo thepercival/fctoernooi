@@ -10,7 +10,6 @@
 namespace FCToernooi;
 
 // use \Doctrine\Common\Collections\ArrayCollection;
-use \Auth\User as User;
 
 class CompetitionseasonRole
 {
@@ -20,7 +19,7 @@ class CompetitionseasonRole
     private $id;
 
     /**
-     * @var CompetitionSeason
+     * @var Competitionseason
      */
     private $competitionseason;
 

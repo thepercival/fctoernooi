@@ -8,7 +8,7 @@
 
 namespace FCToernooi\Auth;
 
-use FCToernooi\Auth\User\Repository as UserRepository;
+use FCToernooi\User\Repository as UserRepository;
 
 class Service
 {

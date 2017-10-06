@@ -10,9 +10,9 @@ namespace App\Action;
 
 use Slim\ServerRequestInterface;
 use JMS\Serializer\Serializer;
-use FCToernooi\Auth\User;
+use FCToernooi\User;
 use \Firebase\JWT\JWT;
-use FCToernooi\Auth\User\Repository as UserRepository;
+use FCToernooi\User\Repository as UserRepository;
 use FCToernooi\Auth\Service as AuthService;
 use \Slim\Middleware\JwtAuthentication;
 

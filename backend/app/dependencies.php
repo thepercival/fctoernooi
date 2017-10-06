@@ -88,11 +88,18 @@ $container['jwtauth'] = function( $c ) {
 // actions
 $container['App\Action\Auth'] = function ($c) {
 	$em = $c->get('em');
-    $repos = new FCToernooi\Auth\User\Repository($em,$em->getClassMetaData(FCToernooi\Auth\User::class));
+    $repos = new FCToernooi\User\Repository($em,$em->getClassMetaData(FCToernooi\User::class));
 	return new App\Action\Auth($repos,$c->get('serializer'),$c->get('settings'));
 };
-$container['App\Action\Auth\User'] = function ($c) {
+$container['App\Action\User'] = function ($c) {
 	$em = $c->get('em');
-    $repos = new FCToernooi\Auth\User\Repository($em,$em->getClassMetaData(FCToernooi\Auth\User::class));
-	return new App\Action\Auth\User($repos,$c->get('serializer'),$c->get('settings'));
+    $repos = new FCToernooi\User\Repository($em,$em->getClassMetaData(FCToernooi\User::class));
+	return new App\Action\User($repos,$c->get('serializer'),$c->get('settings'));
+};
+$container['App\Action\Tournament'] = function ($c) {
+    $em = $c->get('em');
+    $csRepos = new Voetbal\Competitionseason\Repository($em,$em->getClassMetaData(Voetbal\Competitionseason::class));
+    $csRoleRepos = new FCToernooi\CompetitionseasonRole\Repository($em,$em->getClassMetaData(FCToernooi\CompetitionseasonRole::class));
+    $tournamentService = new FCToernooi\Tournament\Service($csRepos,$csRoleRepos);
+    return new App\Action\Tournament($tournamentService,$c->get('serializer'),$c->get('settings'));
 };

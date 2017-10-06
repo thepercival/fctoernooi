@@ -24,7 +24,7 @@ FCToernooi\CompetitionseasonRole:
               referencedColumnName: id
               nullable: false
         user:
-            targetEntity: FCToernooi\Auth\User
+            targetEntity: FCToernooi\User
             inversedBy: competitionseasonroles
             joinColumn:
               name: userid
