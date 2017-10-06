@@ -12,7 +12,7 @@ import 'rxjs/add/operator/catch';
 // import { SeasonRepository } from '../season/repository';
 
 @Injectable()
-export class CompetitionSeasonRepository {
+export class TournamentRepository {
 
     private url : string;
     private http: Http;
