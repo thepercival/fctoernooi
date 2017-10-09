@@ -18,13 +18,13 @@ export class AuthService {
   constructor( private http: Http, private router: Router) {
     this.url = environment.apiurl + 'auth/';
     // set token if saved in local storage
-    var user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem('user'));
     this.token = user && user.token;
     this.userid = user && user.id;
     // this.initLoggedOnUser();
 
     if ( this.token && this.userid && !this.user ){
-      console.log( 'auth.user starting initialization for userid: '+this.userid+'...');
+      console.log( 'auth.user starting initialization for userid: ' + this.userid + '...');
       this.getLoggedInUser( this.userid )
           .subscribe(
               /* happy path */ user => this.user = user,
@@ -42,8 +42,8 @@ export class AuthService {
 
   // not through userservice because of recusrsive dependency
   getLoggedInUser(id: number): Observable<User> {
-    let headers = new Headers({ 'Authorization': 'Bearer ' + this.token, 'Content-Type': 'application/json' });
-    let options = new RequestOptions({ headers: headers });
+    const headers = new Headers({ 'Authorization': 'Bearer ' + this.token, 'Content-Type': 'application/json' });
+    const options = new RequestOptions({ headers: headers });
     const url = `${this.url + 'users'}/${id}`;
 
     return this.http.get(url, options)

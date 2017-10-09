@@ -6,7 +6,7 @@ import { Headers, Http, Response, RequestOptions } from '@angular/http';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-// import { CompetitionSeason } from '../competitionseason';
+import { Tournament } from '../tournament';
 // import { AssociationRepository } from '../association/repository';
 // import { CompetitionRepository } from '../competition/repository';
 // import { SeasonRepository } from '../season/repository';
@@ -14,42 +14,34 @@ import 'rxjs/add/operator/catch';
 @Injectable()
 export class TournamentRepository {
 
-    private url : string;
+    private url: string;
     private http: Http;
     // private objects: CompetitionSeason[];
 
-    constructor( http: Http//,
-                 // private associationRepository: AssociationRepository,
-                 // private competitionRepository: CompetitionRepository,
-                 // private seasonRepository: SeasonRepository
-    )
-    {
-        // this.http = http;
-        // this.url = "http://localhost:2999/voetbal/" + this.getUrlpostfix();
+    constructor( http: Http ) {
+        this.http = http;
+        this.url = 'http://localhost:2999/' + this.getUrlpostfix();
     }
 
-    // getUrlpostfix(): string
-    // {
-    //     return 'competitionseasons';
-    // }
-    //
-    // getToken(): string
-    // {
-    //     let user = JSON.parse( localStorage.getItem('user') );
-    //     if ( user != null && user.token != null ) {
-    //         return user.token;
-    //     }
-    //     return null;
-    // }
-    //
-    // getHeaders(): Headers
-    // {
-    //     let headers = new Headers({'Content-Type': 'application/json; charset=utf-8'});
-    //     if ( this.getToken() != null ) {
-    //         headers.append( 'Authorization', 'Bearer ' + this.getToken() );
-    //     }
-    //     return headers;
-    // }
+    getUrlpostfix(): string {
+        return 'tournaments';
+    }
+
+    getToken(): string {
+        const user = JSON.parse( localStorage.getItem('user') );
+        if ( user != null && user.token != null ) {
+            return user.token;
+        }
+        return null;
+    }
+
+    getHeaders(): Headers {
+        const headers = new Headers({'Content-Type': 'application/json; charset=utf-8'});
+        if ( this.getToken() != null ) {
+            headers.append( 'Authorization', 'Bearer ' + this.getToken() );
+        }
+        return headers;
+    }
     //
     // getObjects(): Observable<CompetitionSeason[]>
     // {
@@ -134,15 +126,13 @@ export class TournamentRepository {
     //     return json;
     // }
     //
-    // createObject( jsonObject: any ): Observable<CompetitionSeason>
-    // {
-    //     return this.http
-    //         .post(this.url, jsonObject, new RequestOptions({ headers: this.getHeaders() }))
-    //         // ...and calling .json() on the response to return data
-    //         .map((res) => this.jsonToObjectHelper(res.json()))
-    //         //...errors if any
-    //         .catch(this.handleError);
-    // }
+    createObject( jsonObject: any ): Observable<Tournament> {
+        return this.http
+            .post(this.url, jsonObject, new RequestOptions({ headers: this.getHeaders() }))
+            // ...and calling .json() on the response to return data
+            .map((res) => /*this.jsonToObjectHelper(res.json())*/console.log(res.json()) )
+            .catch(this.handleError);
+    }
     //
     // editObject( object: CompetitionSeason ): Observable<CompetitionSeason>
     // {

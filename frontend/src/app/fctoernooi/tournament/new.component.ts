@@ -41,9 +41,12 @@ export class TournamentNewComponent implements OnInit {
     // name, sportname, sportnameother, nrofcompetitors
     // spreek een fctoernooi specifieke api call aan om ook de competitionseasonroles te zetten
     // de rest kan uit voetbal backend gehaald worden!!!
-    this.tournamentRepository.create(this.model.name, sportName, this.model.password)
+
+    const json = { 'name': this.model.name, 'sportname': sportName, 'nrofcompetitors': this.model.nrofcompetitors };
+
+    this.tournamentRepository.createObject(json)
         .subscribe(
-            /* happy path */ p => this.router.navigate(['/admin']),
+            /* happy path */ p => this.router.navigate(['toernooi/home']),
             /* error path */ e => { this.error = e; this.loading = false; },
             /* onComplete */ () => this.loading = false
         );
