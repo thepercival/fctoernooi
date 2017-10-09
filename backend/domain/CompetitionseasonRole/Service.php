@@ -8,7 +8,8 @@
 
 namespace FCToernooi\CompetitionseasonRole;
 
-use Repository as CompetitionseasonRoleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use FCToernooi\CompetitionseasonRole\Repository as CompetitionseasonRoleRepository;
 use Voetbal\Competitionseason;
 use FCToernooi\CompetitionseasonRole as CompetitionseasonRole;
 use FCToernooi\User as User;
@@ -38,13 +39,15 @@ class Service
      * @return CompetitionseasonRole
      * @throws \Exception
      */
-    public function putRoles( CompetitionSeason $competitionseason, User $user, $roles )
+    public function set( CompetitionSeason $competitionseason, User $user, $roles )
     {
         // get roles
+        $rolesRet = new ArrayCollection();
 
         try {
 
             // flush roles
+            $this->flushRoles( $competitionseason, $user );
 
             // save roles
             for( $role = 1 ; $role < CompetitionseasonRole::ALL ; $role *= 2 ){
@@ -52,16 +55,16 @@ class Service
                     continue;
                 }
                 $competitionseasonRole = new CompetitionseasonRole( $competitionseason, $user );
-                $competitionseasonRole->putRole( $role );
+                $competitionseasonRole->setRole( $role );
                 $this->repos->save($competitionseasonRole);
+                $rolesRet->add($competitionseasonRole);
             }
         }
         catch( \Exception $e ){
             throw new \Exception(urlencode($e->getMessage()), E_ERROR );
         }
 
-        // return roles
-
+        return $rolesRet;
     }
 
     /**
@@ -69,6 +72,14 @@ class Service
      */
     protected function flushRoles( Competitionseason $competitionseason, User $user )
     {
-        $this->repos->remove($competitionseason);
+        $competitionseasonRoles = $this->repos->findBy(
+            array(
+                'competitionseason' => $competitionseason,
+                'user' => $user
+            )
+        );
+        foreach( $competitionseasonRoles as $competitionseasonRole ){
+            $this->repos->remove($competitionseasonRoles);
+        }
     }
 }

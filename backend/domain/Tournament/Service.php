@@ -14,126 +14,122 @@ namespace FCToernooi\Tournament;
 
 use FCToernooi\User as User;
 use Voetbal\Association;
-use Voetbal\Association\Repository as AssociationRepository;
-use Voetbal\Association\Service as AssociationService;
 use Voetbal\Competition;
-use Voetbal\Competition\Repository as CompetitionRepository;
-use Voetbal\Competition\Service as CompetitionService;
 use Voetbal\Season;
-use Voetbal\Season\Repository as SeasonRepository;
-use Voetbal\Season\Service as SeasonService;
-use Voetbal\CompetitionSeason;
-use Voetbal\CompetitionSeason\Repository as CompetitionSeasonRepository;
-use Voetbal\Competitionseason\Service as CompetitionseasonService;
-use FCToernooi\CompetitionSeasonRole;
-use FCToernooi\CompetitionSeasonRole\Repository as CompetitionSeasonRoleRepository;
+use Voetbal\Competitionseason;
+use FCToernooi\CompetitionseasonRole;
+use FCToernooi\CompetitionseasonRole\Repository as CompetitionseasonRoleRepository;
+use FCToernooi\CompetitionseasonRole\Service as CompetitionseasonRoleService;
 use League\Period\Period;
+use Doctrine\ORM\EntityManager as EntityManager;
 
 class Service
 {
-    /**
-     * @var AssociationRepository
-     */
-    protected $associationRepos;
 
     /**
-     * @var CompetitionRepository
+     * @var \Voetbal\Service
      */
-    protected $competitionRepos;
+    protected $voetbalService;
+
 
     /**
-     * @var SeasonRepository
+     * @var CompetitionseasonRoleRepository
      */
-    protected $seasonRepos;
+    protected $csRoleRepos;
 
     /**
-     * @var CompetitionseasonRepository
+     * @var EntityManager
      */
-    protected $competitionseasonRepos;
+    protected $em;
 
-    /**
-     * @var CompetitionSeasonRoleRepository
-     */
-    protected $competitionseasonRoleRepos;
+
 
     /**
      * Service constructor.
-     * @param AssociationRepository $associationRepos
-     * @param CompetitionRepository $competitionRepos
-     * @param SeasonRepository $seasonRepos
-     * @param CompetitionSeasonRepository $competitionseasonRepos
-     * @param CompetitionSeasonRoleRepository $competitionseasonRoleRepos
+     * @param \Voetbal\Service $voetbalService
+     * @param CompetitionseasonRoleRepository $csRoleRepos
+     * @param EntityManager $em
      */
     public function __construct(
-        AssociationRepository $associationRepos,
-        CompetitionRepository $competitionRepos,
-        SeasonRepository $seasonRepos,
-        CompetitionSeasonRepository $competitionseasonRepos,
-        CompetitionSeasonRoleRepository $competitionseasonRoleRepos
+        \Voetbal\Service $voetbalService,
+        CompetitionseasonRoleRepository $csRoleRepos,
+        EntityManager $em
     )
     {
-        $this->associationRepos = $associationRepos;
-        $this->competitionRepos = $competitionRepos;
-        $this->seasonRepos = $seasonRepos;
-        $this->competitionseasonRepos = $competitionseasonRepos;
-        $this->competitionseasonRoleRepos = $competitionseasonRoleRepos;
+        $this->voetbalService = $voetbalService;
+        $this->csRoleRepos = $csRoleRepos;
+        $this->em = $em;
     }
 
     /**
      * @param $name
      * @param $sportName
      * @param $nrOfCompetitors
-     * @param $equalNrOfGames
      * @return bool
      * @throws \Exception
      */
-    public function create( User $user, $name, $sportName, $nrOfCompetitors, $equalNrOfGames )
+    public function create( User $user, $name, $sportName, $nrOfCompetitors )
     {
-        // association, check als bestaat op basis van naam, zoniet, aak aan
-        $association = $this->associationRepos->findOneBy(
-            array( 'name' => $user->getName() )
-        );
-        if( $association === null ){
-            $assService = new AssociationService( $this->associationRepos );
-            $association = $assService->create( $user->getName() );
+        $this->em->getConnection()->beginTransaction();
+
+        try {
+            // association, check als bestaat op basis van naam, zoniet, aak aan
+            $associationRepos = $this->voetbalService->getRepository(Association::class);
+            $association = $associationRepos->findOneBy(
+                array( 'name' => $user->getName() )
+            );
+            if( $association === null ){
+                $assService = $this->voetbalService->getService( Association::class );
+                $association = $assService->create( $user->getName() );
+            }
+
+            // check competition, check als naam niet bestaat
+            $competitionRepos = $this->voetbalService->getRepository(Competition::class);
+            $competition = $competitionRepos->findOneBy( array('name' => $name ) );
+            if ( $competition !== null ){
+                throw new \Exception("de competitienaam bestaat al", E_ERROR );
+            }
+            $compService = $this->voetbalService->getService( Competition::class );
+            $competition = $compService->create( $name );
+
+            // check season, per jaar een seizoen, als seizoen niet bestaat, dan aanmaken
+            $year = date("Y");
+            $seasonRepos = $this->voetbalService->getRepository( Season::class );
+            $season = $seasonRepos->findOneBy(
+                array('name' => $year )
+            );
+            if( $season === null ){
+                $seasonService = $this->voetbalService->getService( Season::class );
+                $period = new Period( new \DateTime($year."-01-01"), new \DateTime($year."-12-31") );
+                $season = $seasonService->create( $year, $period );
+            }
+
+            // create competitionseason
+            $csRepos = $this->voetbalService->getRepository(Competitionseason::class);
+            $competitionseason = $csRepos->findOneBy(
+                array('competition' => $competition, 'season' => $season, 'association' => $association )
+            );
+            if ( $competitionseason !== null ){
+                throw new \Exception("het toernooi bestaat al", E_ERROR );
+            }
+            $csService = $this->voetbalService->getService(Competitionseason::class);
+            $competitionseason = $csService->create( $association, $competition, $season );
+            $competitionseason->setSport($sportName);
+            $csRepos->save($competitionseason);
+
+            $competitionseasonRoleService = new CompetitionseasonRoleService( $this->csRoleRepos );
+            $competitionseasonRoles = $competitionseasonRoleService->set( $competitionseason, $user, CompetitionseasonRole::ALL );
+
+            // create structure op basis van $nrOfCompetitors, $equalNrOfGames
+            $structureService = $this->voetbalService->getService(\Voetbal\Structure::class);
+            $structureService->create( $competitionseason, $nrOfCompetitors );
+
+            $this->em->getConnection()->commit();
+        } catch (\Exception $e) {
+            // Rollback the failed transaction attempt
+            $this->em->getConnection()->rollback();
+            throw $e;
         }
-
-        // check competition, check als naam niet bestaat
-        $competition = $this->competitionRepos->findOneBy( array('name' => $name ) );
-        if ( $competition !== null ){
-            throw new \Exception("de competitienaam bestaat al", E_ERROR );
-        }
-        $compService = new CompetitionService( $this->competitionRepos );
-
-        $competition = $compService->create( $name );
-
-        // check season, per jaar een seizoen, als seizoen niet bestaat, dan aanmaken
-        $year = date("Y");
-        $season = $this->seasonRepos->findOneBy(
-            array('name' => $year )
-        );
-        if( $season === null ){
-            $seasonService = new SeasonService( $this->seasonRepos );
-            $period = new Period( new \DateTime($year."-01-01"), new \DateTime($year."-12-31") );
-            $season = $seasonService->create( $year, $period );
-        }
-
-        // create competitionseason
-        $competitionseason = $this->competitionseasonRepos->findOneBy(
-            array('competition' => $competition, 'season' => $season, 'association' => $association )
-        );
-        if ( $competitionseason !== null ){
-            throw new \Exception("het toernooi bestaat al", E_ERROR );
-        }
-        $competitionseasonService = new CompetitionseasonService( $this->competitionseasonRepos );
-        $competitionseason = $competitionseasonService->create( $association, $competition, $season );
-        $competitionseason->setSport($sportName);
-        $this->competitionseasonRepos->save($competitionseason);
-
-        // create competitionseasonroles
-
-        // create structure op basis van $nrOfCompetitors, $equalNrOfGames
-        // zie basis settings in oude structuur
 
         return $competition; //$this->repos->save($association);
     }
@@ -166,4 +162,6 @@ class Service
     {
         $this->repos->remove($association);
     }
+
+
 }

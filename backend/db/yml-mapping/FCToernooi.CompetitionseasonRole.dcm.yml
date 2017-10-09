@@ -17,7 +17,7 @@ FCToernooi\CompetitionseasonRole:
             unique: false
     manyToOne:
         competitionseason:
-            targetEntity: Voetbal\CompetitionSeason
+            targetEntity: Voetbal\Competitionseason
             inversedBy: competitionseasonroles
             joinColumn:
               name: competitionseasonid

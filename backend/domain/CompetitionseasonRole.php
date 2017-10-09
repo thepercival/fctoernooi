@@ -9,6 +9,8 @@
 
 namespace FCToernooi;
 
+use Voetbal\Competitionseason;
+
 // use \Doctrine\Common\Collections\ArrayCollection;
 
 class CompetitionseasonRole

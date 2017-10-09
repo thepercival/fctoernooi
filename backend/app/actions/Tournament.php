@@ -12,10 +12,7 @@ namespace App\Action;
 use Slim\ServerRequestInterface;
 use JMS\Serializer\Serializer;
 use FCToernooi\User\Repository as UserRepository;
-// use FCToernooi\Tournament;
-use \Firebase\JWT\JWT;
 use FCToernooi\Tournament\Service as TournamentService;
-use \Slim\Middleware\JwtAuthentication;
 
 final class Tournament
 {
@@ -54,8 +51,8 @@ final class Tournament
         if ( !$sportName ){ return $response->withStatus(404, "de sportnaam is ongeldig of leeg" ); }
         $nrOfCompetitors = filter_var($request->getParam('nrofcompetitors'), FILTER_VALIDATE_INT);
         if ( $nrOfCompetitors === false ){ return $response->withStatus(404, "het aantal deelnemers is ongeldig" ); }
-        $equalNrOfGames = filter_var($request->getParam('equalnrofgames'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-        if ( $equalNrOfGames === null ){ return $response->withStatus(404, "evenveel-wedstrijden is ongeldig" ); }
+        // $equalNrOfGames = filter_var($request->getParam('equalnrofgames'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+        // if ( $equalNrOfGames === null ){ return $response->withStatus(404, "evenveel-wedstrijden is ongeldig" ); }
 
         $user = null;
         if( $this->jwt->sub !== null ){
@@ -69,8 +66,7 @@ final class Tournament
                 $user,
                 $name,
                 $sportName,
-                $nrOfCompetitors,
-                $equalNrOfGames
+                $nrOfCompetitors
             );
 
             return $response
@@ -80,7 +76,7 @@ final class Tournament
             ;
         }
         catch( \Exception $e ){
-            $sErrorMessage = $e->getMessage();
+            $sErrorMessage = urlencode($e->getMessage());
         }
         return $response->withStatus(404, $sErrorMessage );
     }

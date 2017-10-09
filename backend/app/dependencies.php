@@ -83,17 +83,12 @@ $container['App\Action\User'] = function ($c) {
 };
 $container['App\Action\Tournament'] = function ($c) {
     $em = $c->get('em');
-    $associationRepos = new Voetbal\Association\Repository($em,$em->getClassMetaData(Voetbal\Association::class));
-    $competitionRepos = new Voetbal\Competition\Repository($em,$em->getClassMetaData(Voetbal\Competition::class));
-    $seasonRepos = new Voetbal\Season\Repository($em,$em->getClassMetaData(Voetbal\Season::class));
-    $csRepos = new Voetbal\Competitionseason\Repository($em,$em->getClassMetaData(Voetbal\Competitionseason::class));
+    $voetbalService = $c->get('voetbal');
     $csRoleRepos = new FCToernooi\CompetitionseasonRole\Repository($em,$em->getClassMetaData(FCToernooi\CompetitionseasonRole::class));
     $tournamentService = new FCToernooi\Tournament\Service(
-        $associationRepos,
-        $competitionRepos,
-        $seasonRepos,
-        $csRepos,
-        $csRoleRepos
+        $voetbalService,
+        $csRoleRepos,
+        $em
     );
     $userRepository = new FCToernooi\User\Repository($em,$em->getClassMetaData(FCToernooi\User::class));
     return new App\Action\Tournament($tournamentService,$userRepository,$c->get('serializer'),$c->get('jwt'));
