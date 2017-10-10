@@ -16,10 +16,12 @@ $app->group('/auth', function () use ($app) {
 
 $app->group('/tournaments', function () use ($app) {
     $app->post('', 'App\Action\Tournament:add');
+    $app->get('', 'App\Action\Tournament:fetch');
+    $app->get('/{id}', 'App\Action\Tournament:fetchOne');
 });
 
-$app->group('/competitionseasonroles', function () use ($app) {
-    $app->get('', 'App\Action\CompetitionseasonRole\User:fetch');
-    $app->get('/{id}', 'App\Action\CompetitionseasonRole:fetchOne');
+$app->group('/tournamentroles', function () use ($app) {
+    $app->get('', 'App\Action\Tournament\Role\User:fetch');
+    $app->get('/{id}', 'App\Action\Tournament\Role:fetchOne');
 });
 

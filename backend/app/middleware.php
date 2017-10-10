@@ -15,7 +15,11 @@ $app->add(
             new JwtAuthentication\RequestPathRule([
                 "path" => "/",
                 "passthrough" => ["/auth/register", "/auth/login"]
-            ])	        ,
+            ]),
+            new JwtAuthentication\RequestMethodRule([
+                "path" => "/tournaments",
+                "passthrough" => ["GET"]
+            ]),
             new JwtAuthentication\RequestMethodRule([
                 "passthrough" => ["OPTIONS"]
             ])
@@ -25,8 +29,6 @@ $app->add(
         }
     ])
 );
-
-
 
 $app->add( function ($request, $response, $next) use ( $app ) {
 

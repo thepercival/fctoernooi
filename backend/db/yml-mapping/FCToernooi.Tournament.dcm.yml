@@ -1,0 +1,30 @@
+FCToernooi\Tournament:
+    type: entity
+    repositoryClass: FCToernooi\Tournament\Repository
+    table: tournaments
+    id:
+        id:
+            type: integer
+            nullable: false
+            id: true
+            column: id
+            generator:
+                strategy: AUTO
+    oneToMany:
+        roles:
+          targetEntity: FCToernooi\Tournament\Role
+          mappedBy: tournament
+    manyToOne:
+        competitionseason:
+            targetEntity: Voetbal\Competitionseason
+            inversedBy: tournaments
+            joinColumn:
+              name: competitionseasonid
+              referencedColumnName: id
+              nullable: false
+    uniqueConstraints:
+        main_u_idx:
+            columns: [ competitionseasonid ]
+
+
+

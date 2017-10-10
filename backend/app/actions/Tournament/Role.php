@@ -6,19 +6,19 @@
  * Time: 12:29
  */
 
-namespace App\Action;
+namespace App\Action\Tournament;
 
 use Slim\ServerRequestInterface;
 use JMS\Serializer\Serializer;
-use FCToernooi\CompetitionseasonRole\Repository as CompetitionseasonRoleRepository;
+use FCToernooi\Tournament\Role\Repository as TournamentRoleRepository;
 use FCToernooi\User as User;
 
-final class CompetitionseasonRole
+final class Role
 {
     /**
-     * @var CompetitionseasonRoleRepository
+     * @var TournamentRoleRepository
      */
-    private $competitionseasonRoleRepository;
+    private $tournamentRoleRepository;
     /**
      * @var Auth\Service
      */
@@ -32,9 +32,9 @@ final class CompetitionseasonRole
      */
     protected $settings;
 
-    public function __construct(CompetitionseasonRoleRepository $competitionseasonRoleRepository, Serializer $serializer, $settings )
+    public function __construct(TournamentRoleRepository $tournamentRoleRepository, Serializer $serializer, $settings )
     {
-        $this->competitionseasonRoleRepository = $competitionseasonRoleRepository;
+        $this->tournamentRoleRepository = $tournamentRoleRepository;
         // $this->authService = new Auth\Service($userRepository);
         $this->serializer = $serializer;
         $this->settings = $settings;
@@ -42,7 +42,7 @@ final class CompetitionseasonRole
 
     public function fetch($request, $response, $args)
     {
-        $users = $this->competitionseasonRoleRepository->findAll();
+        $users = $this->tournamentRoleRepository->findAll();
         return $response
             ->withHeader('Content-Type', 'application/json;charset=utf-8')
             ->write($this->serializer->serialize( $users, 'json'));
@@ -51,11 +51,11 @@ final class CompetitionseasonRole
 
     public function fetchOne($request, $response, $args)
     {
-        $competitionseasonRole = $this->competitionseasonRoleRepository->find($args['id']);
-        if ($competitionseasonRole) {
+        $tournamentRole = $this->tournamentRoleRepository->find($args['id']);
+        if ($tournamentRole) {
             return $response
                 ->withHeader('Content-Type', 'application/json;charset=utf-8')
-                ->write($this->serializer->serialize( $competitionseasonRole, 'json'));
+                ->write($this->serializer->serialize( $tournamentRole, 'json'));
             ;
         }
         return $response->withStatus(404, 'geen toernooirol met het opgegeven id gevonden');

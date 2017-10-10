@@ -17,9 +17,11 @@ use Voetbal\Association;
 use Voetbal\Competition;
 use Voetbal\Season;
 use Voetbal\Competitionseason;
-use FCToernooi\CompetitionseasonRole;
-use FCToernooi\CompetitionseasonRole\Repository as CompetitionseasonRoleRepository;
-use FCToernooi\CompetitionseasonRole\Service as CompetitionseasonRoleService;
+use FCToernooi\Tournament;
+use FCToernooi\Tournament\Repository as TournamentRepository;
+use FCToernooi\Tournament\Service as TournamentService;
+use FCToernooi\Tournament\Role\Repository as TournamentRoleRepository;
+use FCToernooi\Tournament\Role\Service as TournamentRoleService;
 use League\Period\Period;
 use Doctrine\ORM\EntityManager as EntityManager;
 
@@ -30,12 +32,14 @@ class Service
      * @var \Voetbal\Service
      */
     protected $voetbalService;
-
-
     /**
-     * @var CompetitionseasonRoleRepository
+     * @var TournamentRepository
      */
-    protected $csRoleRepos;
+    protected $tournamentRepos;
+    /**
+     * @var TournamentRoleRepository
+     */
+    protected $tournamentRoleRepos;
 
     /**
      * @var EntityManager
@@ -43,21 +47,22 @@ class Service
     protected $em;
 
 
-
     /**
      * Service constructor.
      * @param \Voetbal\Service $voetbalService
-     * @param CompetitionseasonRoleRepository $csRoleRepos
+     * @param TournamentRoleRepository $tournamentRoleRepos
      * @param EntityManager $em
      */
     public function __construct(
         \Voetbal\Service $voetbalService,
-        CompetitionseasonRoleRepository $csRoleRepos,
+        TournamentRepository $tournamentRepos,
+        TournamentRoleRepository $tournamentRoleRepos,
         EntityManager $em
     )
     {
         $this->voetbalService = $voetbalService;
-        $this->csRoleRepos = $csRoleRepos;
+        $this->tournamentRepos = $tournamentRepos;
+        $this->tournamentRoleRepos = $tournamentRoleRepos;
         $this->em = $em;
     }
 
@@ -117,8 +122,11 @@ class Service
             $competitionseason->setSport($sportName);
             $csRepos->save($competitionseason);
 
-            $competitionseasonRoleService = new CompetitionseasonRoleService( $this->csRoleRepos );
-            $competitionseasonRoles = $competitionseasonRoleService->set( $competitionseason, $user, CompetitionseasonRole::ALL );
+            $tournament = new Tournament( $competitionseason );
+            $this->tournamentRepos->save($tournament);
+
+            $tournamentRoleService = new TournamentRoleService( $this->tournamentRoleRepos );
+            $tournamentRoles = $tournamentRoleService->set( $tournament, $user, Role::ALL );
 
             // create structure op basis van $nrOfCompetitors, $equalNrOfGames
             $structureService = $this->voetbalService->getService(\Voetbal\Structure::class);

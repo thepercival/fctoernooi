@@ -6,7 +6,7 @@
  * Time: 12:10
  */
 
-namespace FCToernooi\CompetitionseasonRole;
+namespace FCToernooi\Tournament\Role;
 
 /**
  * Class Repository

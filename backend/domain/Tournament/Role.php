@@ -7,13 +7,14 @@
  */
 
 
-namespace FCToernooi;
+namespace FCToernooi\Tournament;
 
-use Voetbal\Competitionseason;
+use FCToernooi\Tournament;
+use FCToernooi\User;
 
 // use \Doctrine\Common\Collections\ArrayCollection;
 
-class CompetitionseasonRole
+class Role
 {
     /**
      * @var int
@@ -21,9 +22,9 @@ class CompetitionseasonRole
     private $id;
 
     /**
-     * @var Competitionseason
+     * @var Tournament
      */
-    private $competitionseason;
+    private $tournament;
 
     /**
      * @var User
@@ -41,9 +42,9 @@ class CompetitionseasonRole
     const GAMERESULTADMIN = 8;
     const ALL = 15;
 
-    public function __construct( Competitionseason $competitionseason, User $user )
+    public function __construct( Tournament $tournament, User $user )
     {
-        $this->competitionseason = $competitionseason;
+        $this->tournament = $tournament;
         $this->user = $user;
     }
 
@@ -66,19 +67,27 @@ class CompetitionseasonRole
     }
 
     /**
-     * @return Competitionseason
+     * @return Tournament
      */
-    public function getCompetitionSeason()
+    public function getTournament()
     {
-        return $this->competitionseason;
+        return $this->tournament;
     }
 
     /**
      * @param User $user
      */
-    public function getUser( User $user )
+    public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser( User $user )
+    {
+        $this->user = $user;
     }
 
     /**

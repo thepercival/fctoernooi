@@ -55,6 +55,14 @@ class User
 		return $this->id;
 	}
 
+    /**
+     * @param $id
+     */
+    public function setId( $id )
+    {
+        $this->id = $id;
+    }
+
 	/**
 	 * @return User\Name
 	 */
@@ -118,5 +126,25 @@ class User
             throw new \InvalidArgumentException( "het emailadres ".$emailaddress." is niet valide", E_ERROR );
         }
 	}
-	
+
+    /**
+     * @return TournamentRole[] | ArrayCollection
+     */
+//    public function getTournamentRoles()
+//    {
+//        return $this->tournamentRoles;
+//    }
+
+    /**
+     *
+     */
+//    public function getTournaments()
+//    {
+//        $tournaments = new ArrayCollection();
+//        foreach($this->tournamentRoles as $tournamentRoles) {
+//            $tournaments->add($tournamentRoles->getTournament());
+//        }
+//
+//        return $tournaments;
+//    }
 }

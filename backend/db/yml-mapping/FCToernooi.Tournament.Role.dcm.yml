@@ -1,7 +1,7 @@
-FCToernooi\CompetitionseasonRole:
+FCToernooi\Tournament\Role:
     type: entity
-    repositoryClass: FCToernooi\CompetitionseasonRole\Repository
-    table: competitionseasonroles
+    repositoryClass: FCToernooi\Tournament\Role\Repository
+    table: tournamentroles
     id:
         id:
             type: integer
@@ -16,20 +16,21 @@ FCToernooi\CompetitionseasonRole:
             nullable: false
             unique: false
     manyToOne:
-        competitionseason:
-            targetEntity: Voetbal\Competitionseason
-            inversedBy: competitionseasonroles
+        tournament:
+            targetEntity: FCToernooi\Tournament
+            inversedBy: roles
             joinColumn:
-              name: competitionseasonid
+              name: tournamentid
               referencedColumnName: id
               nullable: false
+              onDelete: CASCADE
         user:
             targetEntity: FCToernooi\User
-            inversedBy: competitionseasonroles
+#            inversedBy: tournamentroles
             joinColumn:
               name: userid
               referencedColumnName: id
               nullable: false
     uniqueConstraints:
         main_u_idx:
-            columns: [ competitionseasonid, userid, role ]
+            columns: [ tournamentid, userid, role ]

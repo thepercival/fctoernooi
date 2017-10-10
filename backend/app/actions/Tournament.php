@@ -9,10 +9,12 @@
 
 namespace App\Action;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Slim\ServerRequestInterface;
 use JMS\Serializer\Serializer;
 use FCToernooi\User\Repository as UserRepository;
 use FCToernooi\Tournament\Service as TournamentService;
+use FCToernooi\Tournament\Repository as TournamentRepository;
 
 final class Tournament
 {
@@ -20,11 +22,16 @@ final class Tournament
      * @var TournamentService
      */
     private $service;
+
+    /**
+     * @var TournamentRepos
+     */
+    private $tournamentRepository;
+
     /**
      * @var UserRepository
      */
     private $userRepository;
-
 
     /**
      * @var Serializer
@@ -35,12 +42,73 @@ final class Tournament
      */
     protected $jwt;
 
-    public function __construct(TournamentService $tournamentService, UserRepository $userRepository, Serializer $serializer, \StdClass $jwt )
+    public function __construct(TournamentService $tournamentService, TournamentRepository $tournamentRepos, UserRepository $userRepository, Serializer $serializer, \StdClass $jwt )
     {
         $this->service = $tournamentService;
+        $this->tournamentRepository = $tournamentRepos;
         $this->userRepository = $userRepository;
         $this->serializer = $serializer;
         $this->jwt = $jwt;
+    }
+
+    /**
+     * startdatetime, enddatetime, id, userid
+     *
+     * @param $request
+     * @param $response
+     * @param $args
+     * @return mixed
+     */
+    public function fetch($request, $response, $args)
+    {
+//        $userId = filter_var($request->getParam('userid'), FILTER_VALIDATE_INT);
+//        if ( $userId === false ){ return $response->withStatus(404, "het gebruikersid is niet gezet" ); }
+//
+//        $user = null;
+//        if( $this->jwt->sub !== null ){
+//            $user = $this->userRepository->find( $this->jwt->sub );
+//        }
+//        if ( $user === null || $userId !== $user->getId() ){ return $response->withStatus(404, "het gebruikersid komt niet overeen met de ingelogdde gebruiker" ); }
+//
+//        $competitionseasonRoles = $this->competitionseasonRoleRepository->findBy(
+//            array('user' => $user),
+//            null,
+//            20
+//        );
+//
+//        $tournaments = new ArrayCollection();
+//        foreach( $competitionseasonRoles as $competitionseasonRole ){
+//            if( $tournaments->find()
+//        }
+//        array_map( function( $competitionseasonRole ){
+//
+//        }, $competitionseasonRoles );
+//
+//        get competitionseasons
+//
+//
+//        return $response
+//            ->withHeader('Content-Type', 'application/json;charset=utf-8')
+//            ->write($this->serializer->serialize( $users, 'json'));
+//        ;
+//
+        $tournaments = $this->tournamentRepository->findAll();
+        return $response
+            ->withHeader('Content-Type', 'application/json;charset=utf-8')
+            ->write($this->serializer->serialize( $tournaments, 'json'));
+        ;
+    }
+
+    public function fetchOne($request, $response, $args)
+    {
+//        $competitionseasonRole = $this->competitionseasonRoleRepository->find($args['id']);
+//        if ($competitionseasonRole) {
+//            return $response
+//                ->withHeader('Content-Type', 'application/json;charset=utf-8')
+//                ->write($this->serializer->serialize( $competitionseasonRole, 'json'));
+//            ;
+//        }
+//        return $response->withStatus(404, 'geen toernooirol met het opgegeven id gevonden');
     }
 
     public function add( $request, $response, $args)
