@@ -9,10 +9,12 @@
 
         </thead>
         <tbody>
-        <tr>
-          <td>toernoooi 1</td>
+        <tr *ngFor="let tournament of tournaments">
+          <td>{{tournament.getCompetitionseason().getCompetition().getName()}}</td>
           <td><span *ngIf="isLoggedIn()" class="fa fa-eye" aria-hidden="true">edit</span></td>
-          <td><button type="button" class="btn btn-xs btn-secondary"><i class="fa fa-eye"></i></button></td>
+          <td>
+            <button type="button" [routerLink]="['/toernooi/home',{id: tournament.getId()}]" routerLinkActive="active" class="btn btn-xs btn-secondary"><i class="fa fa-eye"></i></button>
+          </td>
         </tr>
         </tbody>
       </table>

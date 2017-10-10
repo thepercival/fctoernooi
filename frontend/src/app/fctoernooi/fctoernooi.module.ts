@@ -6,6 +6,8 @@ import { TournamentNewComponent } from './tournament/new.component';
 import { TournamentHomeComponent } from './tournament/home.component';
 import { TournamentRepository } from './tournament/repository';
 
+import { TournamentRoleRepository } from './tournament/role/repository';
+
 import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
 
 @NgModule({
@@ -19,7 +21,8 @@ import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
     TournamentHomeComponent
   ],
   providers: [
-    TournamentRepository
+    TournamentRepository,
+    TournamentRoleRepository
   ]
 })
 export class FctoernooiModule { }

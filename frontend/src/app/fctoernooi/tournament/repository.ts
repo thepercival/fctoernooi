@@ -7,128 +7,104 @@ import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Tournament } from '../tournament';
-// import { AssociationRepository } from '../association/repository';
-// import { CompetitionRepository } from '../competition/repository';
-// import { SeasonRepository } from '../season/repository';
+import { CompetitionseasonRepository } from 'voetbaljs/competitionseason/repository';
+import { TournamentRoleRepository } from './role/repository';
+import { VoetbalRepository } from 'voetbaljs/repository';
 
 @Injectable()
-export class TournamentRepository {
+export class TournamentRepository extends VoetbalRepository{
 
     private url: string;
     private http: Http;
-    // private objects: CompetitionSeason[];
+    private csRepository: CompetitionseasonRepository;
+    private tournamentRoleRepository: TournamentRoleRepository;
+    private objects: Tournament[];
 
-    constructor( http: Http ) {
+    constructor( http: Http, csRepository: CompetitionseasonRepository, tournamentRoleRepository: TournamentRoleRepository ) {
+        super();
         this.http = http;
-        this.url = 'http://localhost:2999/' + this.getUrlpostfix();
+        this.csRepository = csRepository;
+        this.tournamentRoleRepository = tournamentRoleRepository;
+        this.url = super.getApiUrl() + this.getUrlpostfix();
     }
 
     getUrlpostfix(): string {
         return 'tournaments';
     }
 
-    getToken(): string {
-        const user = JSON.parse( localStorage.getItem('user') );
-        if ( user != null && user.token != null ) {
-            return user.token;
+    getObjects(): Observable<Tournament[]> {
+        if ( this.objects != null ) {
+            return Observable.create(observer => {
+                observer.next(this.objects);
+                observer.complete();
+            });
         }
-        return null;
+
+        // const date = new Date();
+        // date.setDate(date.getDate() - 1);
+        const myParams = new URLSearchParams();
+        // myParams.append('startdatetime', date.getTime());
+        // date.setDate(date.getDate() + 8);
+        // myParams.append('enddatetime', date.getTime());
+        const options = new RequestOptions( {
+                headers: super.getHeaders(),
+                params: myParams
+            }
+        );
+        return this.http.get(this.url, options )
+            .map((res) => {
+                console.log(res.json());
+                this.objects = this.jsonArrayToObject(res.json());
+                return this.objects;
+            })
+            .catch( this.handleError );
     }
 
-    getHeaders(): Headers {
-        const headers = new Headers({'Content-Type': 'application/json; charset=utf-8'});
-        if ( this.getToken() != null ) {
-            headers.append( 'Authorization', 'Bearer ' + this.getToken() );
+    jsonArrayToObject( jsonArray: any ): Tournament[] {
+        const tournaments: Tournament[] = [];
+        for (const json of jsonArray) {
+            const object = this.jsonToObjectHelper(json);
+            tournaments.push( object );
         }
-        return headers;
+        return tournaments;
     }
-    //
-    // getObjects(): Observable<CompetitionSeason[]>
-    // {
-    //     if ( this.objects != null ){
-    //         return Observable.create(observer => {
-    //             observer.next(this.objects);
-    //             observer.complete();
-    //         });
-    //     }
-    //
-    //     return this.http.get(this.url, new RequestOptions({ headers: this.getHeaders() }) )
-    //         .map((res) => {
-    //             let objects = this.jsonArrayToObject(res.json());
-    //             this.objects = objects;
-    //             return this.objects;
-    //         })
-    //         .catch( this.handleError );
-    // }
-    //
-    // jsonArrayToObject( jsonArray : any ): CompetitionSeason[]
-    // {
-    //     let competitionseasons: CompetitionSeason[] = [];
-    //     for (let json of jsonArray) {
-    //         let object = this.jsonToObjectHelper(json);
-    //         competitionseasons.push( object );
-    //     }
-    //     return competitionseasons;
-    // }
-    //
-    // getObject( id: number): Observable<CompetitionSeason>
-    // {
-    //     console.log('id',id);
-    //     let observable = Observable.create(observer => {
-    //         this.getObjects().subscribe(
-    //             /* happy path */ competitionseasons => {
-    //                 let competitionseason = competitionseasons.filter(
-    //                     competitionseasonsIt => competitionseasonsIt.getId() == id
-    //                 ).shift();
-    //                 observer.next(competitionseason);
-    //                 observer.complete();
-    //             },
-    //             /* error path */ e => { this.handleError(e) },
-    //             /* onComplete */ () => { }
-    //         );
-    //     });
-    //     return observable;
-    // }
-    //
-    // jsonToObjectHelper( json : any ): CompetitionSeason
-    // {
-    //     if ( this.objects != null ){
-    //         let foundObjects = this.objects.filter(
-    //             objectIt => objectIt.getId() == json.id
-    //         );
-    //         if ( foundObjects.length == 1) {
-    //             return foundObjects.shift();
-    //         }
-    //     }
-    //
-    //     let association = this.associationRepository.jsonToObjectHelper(json.association);
-    //     let competition = this.competitionRepository.jsonToObjectHelper(json.competition);
-    //     let season = this.seasonRepository.jsonToObjectHelper(json.season);
-    //
-    //     let competitionseason = new CompetitionSeason(association, competition, season);
-    //     competitionseason.setId(json.id);
-    //     competitionseason.setState(json.state);
-    //     competitionseason.setQualificationrule(json.qualificationrule);
-    //     competitionseason.setHasStructure(json.hasstructure);
-    //     return competitionseason;
-    // }
-    //
-    // objectToJsonHelper( object : CompetitionSeason ): any
-    // {
-    //     let json = {
-    //         "id":object.getId(),
-    //         "state":object.getState(),
-    //         "qualificationrule":object.getQualificationrule(),
-    //         "association":this.associationRepository.objectToJsonHelper(object.getAssociation()),
-    //         "competition":this.competitionRepository.objectToJsonHelper(object.getCompetition()),
-    //         "season":this.seasonRepository.objectToJsonHelper(object.getSeason())
-    //     };
-    //     return json;
-    // }
-    //
+
+    getObject( id: number): Observable<Tournament> {
+        return Observable.create(observer => {
+            this.getObjects().subscribe(
+                /* happy path */ tournaments => {
+                    const tournament = tournaments.find(
+                        tournamentIt => tournamentIt.getId() === id
+                    );
+                    observer.next(tournament);
+                    observer.complete();
+                },
+                /* error path */ e => { this.handleError(e); },
+                /* onComplete */ () => { }
+            );
+        });
+    }
+
+    jsonToObjectHelper( json: any ): Tournament {
+        const competitionseason = this.csRepository.jsonToObjectHelper(json.competitionseason);
+
+        const tournament = new Tournament(competitionseason);
+        const roles = this.tournamentRoleRepository.jsonArrayToObject(json.roles, tournament);
+        tournament.setRoles( roles );
+        tournament.setId( json.id );
+        return tournament;
+    }
+
+    objectToJsonHelper( object: Tournament ): any {
+        return {
+            'competitionseason': this.csRepository.objectToJsonHelper(object.getCompetitionseason()),
+            'roles': this.tournamentRoleRepository.objectsToJsonHelper(object.getRoles())
+        };
+    }
+
     createObject( jsonObject: any ): Observable<Tournament> {
         return this.http
-            .post(this.url, jsonObject, new RequestOptions({ headers: this.getHeaders() }))
+            .post(this.url, jsonObject, new RequestOptions({ headers: super.getHeaders() }))
             // ...and calling .json() on the response to return data
             .map((res) => /*this.jsonToObjectHelper(res.json())*/console.log(res.json()) )
             .catch(this.handleError);
@@ -139,7 +115,7 @@ export class TournamentRepository {
     //     let url = this.url + '/'+object.getId();
     //
     //     return this.http
-    //         .put(url, JSON.stringify( object ), { headers: this.getHeaders() })
+    //         .put(url, JSON.stringify( object ), { headers: super.getHeaders() })
     //         // ...and calling .json() on the response to return data
     //         .map((res) => { console.log(res.json()); return this.jsonToObjectHelper(res.json()); })
     //         //...errors if any
@@ -150,7 +126,7 @@ export class TournamentRepository {
     // {
     //     let url = this.url + '/'+object.getId();
     //     return this.http
-    //         .delete(url, new RequestOptions({ headers: this.getHeaders() }))
+    //         .delete(url, new RequestOptions({ headers: super.getHeaders() }))
     //         // ...and calling .json() on the response to return data
     //         .map((res:Response) => res)
     //         //...errors if any

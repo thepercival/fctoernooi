@@ -13,6 +13,12 @@ import { UserModule } from './user/user.module';
 import { AuthguardService } from './auth/authguard.service';
 import { AuthService } from './auth/auth.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TournamentRepository } from './fctoernooi/tournament/repository';
+import { TournamentRoleRepository } from './fctoernooi/tournament/role/repository';
+import { CompetitionseasonRepository } from 'voetbaljs/competitionseason/repository';
+import { AssociationRepository } from 'voetbaljs/association/repository';
+import { CompetitionRepository } from 'voetbaljs/competition/repository';
+import { SeasonRepository } from 'voetbaljs/season/repository';
 
 @NgModule({
   declarations: [
@@ -31,7 +37,13 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   ],
   providers: [
     AuthguardService,
-    AuthService
+    AuthService,
+    TournamentRepository,
+    TournamentRoleRepository,
+    CompetitionseasonRepository,
+    AssociationRepository,
+    CompetitionRepository,
+    SeasonRepository
   ],
   bootstrap: [AppComponent]
 })

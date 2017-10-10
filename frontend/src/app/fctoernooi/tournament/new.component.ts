@@ -46,7 +46,7 @@ export class TournamentNewComponent implements OnInit {
 
     this.tournamentRepository.createObject(json)
         .subscribe(
-            /* happy path */ p => this.router.navigate(['toernooi/home']),
+            /* happy path */ p => this.router.navigate(['/toernooi/home']),
             /* error path */ e => { this.error = e; this.loading = false; },
             /* onComplete */ () => this.loading = false
         );

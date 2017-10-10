@@ -3,16 +3,24 @@
  */
 
 import { Competitionseason } from 'voetbaljs/competitionseason';
-import { CompetitionseasonRole } from './competitionseasonrole';
+import { TournamentRole } from './tournament/role';
 
 export class Tournament {
+    protected id: number;
     protected competitionseason: Competitionseason;
-    protected competitionseasonRoles: [CompetitionseasonRole];
+    protected roles: TournamentRole[] = [];
 
     // constructor
-    constructor( competitionseason: Competitionseason, competitionseasonRoles: [CompetitionseasonRole] ) {
+    constructor( competitionseason: Competitionseason ) {
         this.setCompetitionseason(competitionseason);
-        this.setCompetitionseasonRoles(competitionseasonRoles);
+    }
+
+    getId(): number {
+        return this.id;
+    }
+
+    setId(id: number): void {
+        this.id = id;
     }
 
     getCompetitionseason(): Competitionseason {
@@ -23,11 +31,11 @@ export class Tournament {
         this.competitionseason = competitionseason;
     }
 
-    getCompetitionseasonRoles(): [CompetitionseasonRole] {
-        return this.competitionseasonRoles;
+    getRoles(): TournamentRole[] {
+        return this.roles;
     }
 
-    setCompetitionseasonRoles(competitionseasonRoles: [CompetitionseasonRole]): void {
-        this.competitionseasonRoles = competitionseasonRoles;
+    setRoles(roles: TournamentRole[]): void {
+        this.roles = roles;
     }
 }

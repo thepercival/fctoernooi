@@ -15,8 +15,10 @@ export class UserService {
 
   constructor(
       private http: Http,
-      private authService: AuthService) {
-    this.url = environment.apiurl + 'auth/users';
+      private authService: AuthService
+  ) {
+      console.log('apiurl', environment.apiurl);
+      this.url = environment.apiurl + 'users';
   }
 
   getUsers(): Observable<User[]> {
@@ -30,22 +32,7 @@ export class UserService {
         .catch( this.handleError );
   }
 
-  /*getUsersSlow(): Observable<User[]> {
 
-   setTimeout( () => {
-   this.getUsers()
-   });
-   var source = new Observable<User[]>(resolve =>
-   setTimeout(resolve, 2000)) // delay 2 seconds
-   .then(() => );
-   source.forEach( x => );
-   }*/
-
-
-  // ngOnInit() {
-    // reset login status
-    // this.authService.logout();
-  // }
 
   getUser(id: number): Observable<User> {
     // var x = this.getUsers().forEach(users => users.find(user => user.id === id));
@@ -66,26 +53,21 @@ export class UserService {
         .catch(this.handleError);
   }
 
-  /*update(user: User): Observable<User> {
+  jsonToObjectHelper( json: any ): User
+  {
+    const user = new User();
+    user.id = json.id;
+    user.name = json.name;
+    return user;
+  }
 
-   const url = `${this.url}/${user.id}`;
-   return this.http
-   .put(url, JSON.stringify(user), {headers: this.headers})
-   // ...and calling .json() on the response to return data
-   .map((res:Response) => res.json())
-   //...errors if any
-   .catch(this.handleError);
-   }
-
-   delete(id: number): Observable<void> {
-   const url = `${this.url}/${id}`;
-   return this.http
-   .delete(url, {headers: this.headers})
-   // ...and calling .json() on the response to return data
-   .map((res:Response) => res.json())
-   //...errors if any
-   .catch(this.handleError);
-   }*/
+  objectToJsonHelper( user: User ): any {
+    const json = {
+      'id': user.id,
+      'name': user.name
+    };
+    return json;
+  }
 
   // this could also be a private method of the component class
   handleError(error: any): Observable<any> {
