@@ -2,7 +2,7 @@
 
 // Routes
 //$app->any('/voetbal/external/{resourceType}[/{id}]', \Voetbal\Action\Slim\ExternalHandler::class );
-//$app->any('/voetbal/{resourceType}[/{id}]', \Voetbal\Action\Slim\Handler::class );
+$app->any('/voetbal/{resourceType}[/{id}]', \Voetbal\Action\Slim\Handler::class );
 
 $app->group('/auth', function () use ($app) {
 	$app->post('/register', 'App\Action\Auth:register');
