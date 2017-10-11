@@ -2,11 +2,16 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { TournamentNewComponent } from './tournament/new.component';
-import { TournamentHomeComponent } from './tournament/home.component';
+import { TournamentNewComponent } from './tournament/new/new.component';
+import { TournamentHomeComponent } from './tournament/home/home.component';
+import { TournamentStructureComponent } from './tournament/structure/structure.component';
 import { TournamentRepository } from './tournament/repository';
-
 import { TournamentRoleRepository } from './tournament/role/repository';
+import { RoundRepository } from 'voetbaljs/round/repository';
+import { PouleRepository } from 'voetbaljs/poule/repository';
+import { PoulePlaceRepository } from 'voetbaljs/pouleplace/repository';
+import { TeamRepository } from 'voetbaljs/team/repository';
+import { GameRepository } from 'voetbaljs/game/repository';
 
 import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
 
@@ -18,11 +23,17 @@ import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
   ],
   declarations: [
     TournamentNewComponent,
-    TournamentHomeComponent
+    TournamentHomeComponent,
+    TournamentStructureComponent
   ],
   providers: [
     TournamentRepository,
-    TournamentRoleRepository
+    TournamentRoleRepository,
+    RoundRepository,
+    PouleRepository,
+    PoulePlaceRepository,
+    TeamRepository,
+    GameRepository
   ]
 })
 export class FctoernooiModule { }

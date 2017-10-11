@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TournamentRepository } from './repository';
+import { TournamentRepository } from '../repository';
 import { Competition } from 'voetbaljs/competition';
 
 @Component({

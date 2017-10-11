@@ -1,0 +1,17 @@
+<div class="container-fluid">
+  <h1 align="center">
+    {{tournament?.getCompetitionseason().getCompetition().getName()}} structuur
+  </h1>
+  <div class="row">
+    <div *ngFor="let round of structureService?.getRounds()" class="card round text-center">
+      <div class="card-header">
+        <span [innerHTML]="structureService.getRoundName( round )"></span>
+      </div>
+      <div class="card-block">
+        <h4 class="card-title"></h4>
+        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+        <a href="#" class="btn btn-primary">Go somewhere</a>
+      </div>
+    </div>
+  </div>
+</div>

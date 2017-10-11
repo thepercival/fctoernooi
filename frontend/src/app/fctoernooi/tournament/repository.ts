@@ -70,7 +70,7 @@ export class TournamentRepository extends VoetbalRepository{
     }
 
     getObject( id: number): Observable<Tournament> {
-        return Observable.create(observer => {
+         return Observable.create(observer => {
             this.getObjects().subscribe(
                 /* happy path */ tournaments => {
                     const tournament = tournaments.find(
