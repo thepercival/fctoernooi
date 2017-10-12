@@ -28,6 +28,9 @@ class Tournament
      */
     private $roles;
 
+    const MINNROFCOMPETITORS = 2;
+    const MAXNROFCOMPETITORS = 64;
+
     public function __construct( Competitionseason $competitionseason )
     {
         $this->competitionseason = $competitionseason;

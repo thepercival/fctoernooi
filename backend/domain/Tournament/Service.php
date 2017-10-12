@@ -128,6 +128,12 @@ class Service
             $tournamentRoleService = new TournamentRoleService( $this->tournamentRoleRepos );
             $tournamentRoles = $tournamentRoleService->set( $tournament, $user, Role::ALL );
 
+            if ( $nrOfCompetitors < Tournament::MINNROFCOMPETITORS ){
+                throw new \Exception("het minimum aantal deelnemer is " . Tournament::MINNROFCOMPETITORS);
+            }
+            if ( $nrOfCompetitors > Tournament::MAXNROFCOMPETITORS ){
+                throw new \Exception("het minimum aantal deelnemer is " . Tournament::MAXNROFCOMPETITORS);
+            }
             // create structure op basis van $nrOfCompetitors, $equalNrOfGames
             $structureService = $this->voetbalService->getService(\Voetbal\Structure::class);
             $structureService->create( $competitionseason, $nrOfCompetitors );
