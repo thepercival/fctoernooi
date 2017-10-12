@@ -1,3 +1,16 @@
 .card.round{
     width:100%;
 }
+
+.card.round>.card-block{
+    background-color: black;
+
+}
+
+.list-group.list-group-poule{
+    align-items: flex-start;
+}
+
+.list-group-item-not-qualifying {
+    background-color: transparent;
+}

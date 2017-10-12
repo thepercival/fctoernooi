@@ -10,6 +10,9 @@ export class Tournament {
     protected competitionseason: Competitionseason;
     protected roles: TournamentRole[] = [];
 
+    static readonly MINNROFCOMPETITORS = 2;
+    static readonly MAXNROFCOMPETITORS = 64;
+
     // constructor
     constructor( competitionseason: Competitionseason ) {
         this.setCompetitionseason(competitionseason);

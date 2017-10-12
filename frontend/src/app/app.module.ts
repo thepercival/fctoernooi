@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { RoutingModule } from './app-routing.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
@@ -12,7 +13,6 @@ import { AdminModule } from './admin/admin.module';
 import { UserModule } from './user/user.module';
 import { AuthguardService } from './auth/authguard.service';
 import { AuthService } from './auth/auth.service';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentRepository } from './fctoernooi/tournament/repository';
 import { TournamentRoleRepository } from './fctoernooi/tournament/role/repository';
 import { CompetitionseasonRepository } from 'voetbaljs/competitionseason/repository';

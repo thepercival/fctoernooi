@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TournamentRepository } from '../repository';
 import { Competition } from 'voetbaljs/competition';
+import { Tournament } from '../../tournament';
 
 @Component({
   selector: 'app-tournament-new',
@@ -15,6 +16,8 @@ export class TournamentNewComponent implements OnInit {
   error = '';
   sportnames: [string]= ['tafeltennis', 'darten'];
   validations: any = {
+    'minnrofcompetitors' : Tournament.MINNROFCOMPETITORS,
+    'maxnrofcompetitors' : Tournament.MAXNROFCOMPETITORS,
     'minlengthname' : Competition.MIN_LENGTH_NAME,
     'maxlengthname' : Competition.MAX_LENGTH_NAME
   };

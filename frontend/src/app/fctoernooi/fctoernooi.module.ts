@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { TournamentNewComponent } from './tournament/new/new.component';
 import { TournamentHomeComponent } from './tournament/home/home.component';
@@ -19,7 +20,8 @@ import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
   imports: [
     CommonModule,
     FormsModule,
-    FctoernooiRoutingModule
+    FctoernooiRoutingModule,
+    NgbModule
   ],
   declarations: [
     TournamentNewComponent,

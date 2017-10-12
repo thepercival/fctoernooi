@@ -27,7 +27,7 @@
         </div>
         <div class="form-group">
           <label for="nrofcompetitors" class="col-form-label">aantal deelnemers</label>
-          <input type="number" class="form-control" id="nrofcompetitors" name="nrofcompetitors" [min]="3" [max]="32" placeholder="10" [(ngModel)]="model.nrofcompetitors" #nrofcompetitors="ngModel" required>
+          <input type="number" class="form-control" id="nrofcompetitors" name="nrofcompetitors" [min]="validations.minnrofcompetitors" [max]="validations.maxnrofcompetitors" placeholder="10" [(ngModel)]="model.nrofcompetitors" #nrofcompetitors="ngModel" required>
         </div>
         <div class="form-group">
           <div class="form-check">
@@ -36,8 +36,8 @@
             </label>
           </div>
         </div>
-        <div *ngIf="f.submitted && model.nrofcompetitors < 3" class="alert alert-danger">het minimum aantal deelnemers is 3</div>
-        <div *ngIf="f.submitted && model.nrofcompetitors > 64" class="alert alert-danger">het maximum aantal deelnemers is 64</div>
+        <div *ngIf="f.submitted && model.nrofcompetitors < validations.minnrofcompetitors" class="alert alert-danger">het minimum aantal deelnemers is {{validations.minnrofcompetitors}}</div>
+        <div *ngIf="f.submitted && model.nrofcompetitors > validations.maxnrofcompetitors" class="alert alert-danger">het maximum aantal deelnemers is {{validations.maxnrofcompetitors}}</div>
         <div *ngIf="error" class="alert alert-danger">{{error}}</div>
         <button type="submit" [disabled]="!f.form.valid || loading" class="btn btn-primary">maak toernooi <i *ngIf="loading" class="fa fa-spinner fa-spin fa-fw"></i></button>
       </form>
