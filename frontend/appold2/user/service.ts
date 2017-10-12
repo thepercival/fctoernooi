@@ -17,7 +17,7 @@ export class UserService {
         private config: AppConfig,
         private http: Http,
         private authService: AuthenticationService) {
-        this.url = this.config.getConfig('apiurl') + 'auth/users';
+        this.url = this.config.getConfig('apiurl') + 'users';
     }
 
     getUsers(): Observable<User[]> {
