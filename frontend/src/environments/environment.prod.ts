@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiurl: 'https://v2.fctoernooi.nl/'
+  apiurl: 'https://api.fctoernooi.nl/'
 };
