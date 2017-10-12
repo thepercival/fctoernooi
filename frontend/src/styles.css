@@ -2,7 +2,7 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
 @import "https://bootswatch.com/4-alpha/cyborg/bootstrap.min.css";
 @import "~font-awesome/css/font-awesome.css";
-@import "assets/flaticon/flaticon.css";
+@import "./assets/flaticon/flaticon.css";
 
 html {
     position: relative;
