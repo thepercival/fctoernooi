@@ -17,8 +17,7 @@ export class NavComponent implements OnInit {
       private authService: AuthService/*
       ,
       private globalEventsManager: GlobalEventsManager*/
-  )
-  {
+  ) {
     // this.globalEventsManager.showCompetitionSeasonDetailsInNavBar.subscribe((mode)=>{
     //   this.showCompetitionSeasonDetails = mode;
     //   console.log('in navbar show is ' + mode );
