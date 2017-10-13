@@ -6,6 +6,12 @@ import { Tournament } from '../tournament';
 import { User } from '../../user/user';
 
 export class TournamentRole {
+    static readonly ADMIN = 1;
+    static readonly STRUCTUREADMIN = 2;
+    static readonly PLANNER = 4;
+    static readonly GAMERESULTADMIN = 8;
+    static readonly ALL = 15;
+
     protected id: number;
     protected tournament: Tournament;
     protected user: User;

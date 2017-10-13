@@ -29,7 +29,7 @@ export class NavComponent implements OnInit {
   }
 
   isLoggedIn() {
-    return this.authService.token;
+    return this.authService.isLoggedIn();
   }
 
 }

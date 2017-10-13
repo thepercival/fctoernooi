@@ -1,8 +1,11 @@
 <div class="container-fluid home">
   <div class="row justify-content-center">
     <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+      <h1 align="center">
+        toernooien
+      </h1>
       <div class="d-flex flex-row-reverse">
-        <button type="button" class="btn btn-primary" routerLink="/toernooi/nieuw" style="margin-top:2em; margin-bottom: 2em;">nieuw toernooi</button>
+        <button *ngIf="isLoggedIn()" type="button" class="btn btn-primary" routerLink="/toernooi/nieuw" style="margin-top:2em; margin-bottom: 2em;">nieuw toernooi</button>
       </div>
       <table class="table">
         <thead>
@@ -11,8 +14,10 @@
         <tbody>
         <tr *ngFor="let tournament of tournaments">
           <td>{{tournament.getCompetitionseason().getCompetition().getName()}}</td>
-          <td><span *ngIf="isLoggedIn()" class="fa fa-eye" aria-hidden="true">edit</span></td>
-          <td>
+          <td style="text-align: right">
+            <button *ngIf="isLoggedIn() && hasPermission(tournament)" type="button" [routerLink]="['/toernooi/home',{id: tournament.getId()}]" routerLinkActive="active" class="btn btn-xs btn-secondary"><i class="fa fa-pencil"></i></button>
+          </td>
+          <td style="text-align: right">
             <button type="button" [routerLink]="['/toernooi/home',{id: tournament.getId()}]" routerLinkActive="active" class="btn btn-xs btn-secondary"><i class="fa fa-eye"></i></button>
           </td>
         </tr>

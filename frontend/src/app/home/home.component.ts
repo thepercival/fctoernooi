@@ -19,7 +19,17 @@ export class HomeComponent implements OnInit {
   }
 
   isLoggedIn() {
-    return this.authService.token;
+    return this.authService.isLoggedIn();
+  }
+
+  hasPermission(tournament: Tournament) {
+    const loggedInUserId = this.authService.getLoggedInUserId();
+    return tournament.getRoles().reduce(function(hasPermission, roleIt) {
+        if ( hasPermission ) {
+          return hasPermission;
+        }
+        return loggedInUserId === roleIt.getUser().getId() ;
+      }, false );
   }
 
 }

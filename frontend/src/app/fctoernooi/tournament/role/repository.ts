@@ -8,7 +8,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Tournament } from '../../tournament';
 import { TournamentRole } from '../role';
-import { UserService } from '../../../user/user.service';
+import { UserRepository } from '../../../user/repository';
 import { VoetbalRepository } from 'voetbaljs/repository';
 
 @Injectable()
@@ -16,13 +16,13 @@ export class TournamentRoleRepository extends VoetbalRepository {
 
     private url: string;
     private http: Http;
-    private userService: UserService;
+    private userRepos: UserRepository;
     private objects: Tournament[];
 
-    constructor( http: Http, userService: UserService ) {
+    constructor( http: Http, userRepos: UserRepository ) {
         super();
         this.http = http;
-        this.userService = userService;
+        this.userRepos = userRepos;
         this.url = super.getApiUrl() + this.getUrlpostfix();
     }
 
@@ -76,7 +76,7 @@ export class TournamentRoleRepository extends VoetbalRepository {
     // }
     //
     jsonToObjectHelper( json: any, tournament: Tournament ): TournamentRole {
-        const user = this.userService.jsonToObjectHelper(json.user);
+        const user = this.userRepos.jsonToObjectHelper(json.user);
 
         const tournamentRole = new TournamentRole(tournament, user, json.role);
         tournamentRole.setId( json.id );
@@ -95,7 +95,7 @@ export class TournamentRoleRepository extends VoetbalRepository {
     objectToJsonHelper( object: TournamentRole ): any {
         const json = {
             // 'tournament': this.tournamentRepository.objectToJsonHelper(object.getTournament()),
-            'user': this.userService.objectToJsonHelper(object.getUser()),
+            'user': this.userRepos.objectToJsonHelper(object.getUser()),
             'role': object.getRole()
         };
         return json;

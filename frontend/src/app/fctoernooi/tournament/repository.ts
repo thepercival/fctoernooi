@@ -12,7 +12,7 @@ import { TournamentRoleRepository } from './role/repository';
 import { VoetbalRepository } from 'voetbaljs/repository';
 
 @Injectable()
-export class TournamentRepository extends VoetbalRepository{
+export class TournamentRepository extends VoetbalRepository {
 
     private url: string;
     private http: Http;
@@ -106,7 +106,7 @@ export class TournamentRepository extends VoetbalRepository{
         return this.http
             .post(this.url, jsonObject, new RequestOptions({ headers: super.getHeaders() }))
             // ...and calling .json() on the response to return data
-            .map((res) => /*this.jsonToObjectHelper(res.json())*/console.log(res.json()) )
+            .map((res) => this.jsonToObjectHelper(res.json()) )
             .catch(this.handleError);
     }
     //

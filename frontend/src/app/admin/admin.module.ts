@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AdminRoutingModule } from './admin-routing.module';
 import { HomeComponent } from './home/home.component';
 import { UsersComponent } from './users/users.component';
-import { UserService } from '../user/user.service';
+import { UserRepository } from '../user/repository';
 
 @NgModule({
   imports: [
@@ -12,6 +12,6 @@ import { UserService } from '../user/user.service';
     AdminRoutingModule
   ],
   declarations: [HomeComponent, UsersComponent],
-  providers: [UserService]
+  providers: [UserRepository]
 })
 export class AdminModule { }

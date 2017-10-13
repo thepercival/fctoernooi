@@ -6,12 +6,12 @@ import { Competitionseason } from 'voetbaljs/competitionseason';
 import { TournamentRole } from './tournament/role';
 
 export class Tournament {
+    static readonly MINNROFCOMPETITORS = 2;
+    static readonly MAXNROFCOMPETITORS = 64;
+
     protected id: number;
     protected competitionseason: Competitionseason;
     protected roles: TournamentRole[] = [];
-
-    static readonly MINNROFCOMPETITORS = 2;
-    static readonly MAXNROFCOMPETITORS = 64;
 
     // constructor
     constructor( competitionseason: Competitionseason ) {

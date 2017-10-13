@@ -3,70 +3,47 @@ import { environment } from '../../environments/environment';
 import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
-import { User } from '../user/user';
 import { Router } from '@angular/router';
+import { UserRepository } from '../user/repository';
+import { User } from '../user/user';
 
 @Injectable()
 export class AuthService {
 
-  public token: string;
-  public userid: number;
+  private token: string;
+  private userId: number;
   private url: string;
-  public user: User;  // is called from backend on first time
   private headers = new Headers({'Content-Type': 'application/json'});
 
-  constructor( private http: Http, private router: Router) {
+  constructor( private http: Http, private router: Router, private userRepos: UserRepository) {
     this.url = environment.apiurl + 'auth/';
-    // set token if saved in local storage
-    const user = JSON.parse(localStorage.getItem('user'));
-    this.token = user && user.token;
-    this.userid = user && user.id;
-    // this.initLoggedOnUser();
-
-    if ( this.token && this.userid && !this.user ){
-      console.log( 'auth.user starting initialization for userid: ' + this.userid + '...');
-      this.getLoggedInUser( this.userid )
-          .subscribe(
-              /* happy path */ user => this.user = user,
-              /* error path */ e => {
-                console.log('token expired');
-                this.logout();
-                this.router.navigate(['/']);
-              },
-              /* onComplete */ () => { console.log('user created from backend'); }
-          );
-
-      console.log( 'auth.user initialized');
-    }
+    const jsonAuth = JSON.parse(localStorage.getItem('auth'));
+    this.token = jsonAuth ? jsonAuth.token : null;
+    this.userId = jsonAuth ? jsonAuth.userid : null;
   }
 
-  // not through userservice because of recusrsive dependency
-  getLoggedInUser(id: number): Observable<User> {
-    const headers = new Headers({ 'Authorization': 'Bearer ' + this.token, 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
-    const url = `${this.url + 'users'}/${id}`;
-
-    return this.http.get(url, options)
-    // ...and calling .json() on the response to return data
-        .map((res:Response) => res.json())
-        //...errors if any
-        .catch(this.handleError);
+  isLoggedIn(): boolean {
+    return this.token !== null;
   }
 
-  register( newUser: User ): Observable<User> {
-    return this.http
-        .post(this.url + 'register', JSON.stringify( newUser ), {headers: this.headers})
-        // ...and calling .json() on the response to return data
-        .map((res:Response) => res.json())
-        //...errors if any
-        .catch(this.handleError);
+  getLoggedInUserId(): number {
+    return this.userId;
   }
 
-  activate( email: string, activationkey : string ): Observable<boolean> {
-    return this.http.post( this.url + 'activate', { email: email, activationkey: activationkey })
-        .map((response: Response) => response.text() )
-        .catch(this.handleError);
-  }
+  // register( newUser: User ): Observable<User> {
+  //   return this.http
+  //       .post(this.url + 'register', JSON.stringify( newUser ), {headers: this.headers})
+  //       // ...and calling .json() on the response to return data
+  //       .map((res:Response) => res.json())
+  //       //...errors if any
+  //       .catch(this.handleError);
+  // }
+
+  // activate( email: string, activationkey : string ): Observable<boolean> {
+  //   return this.http.post( this.url + 'activate', { email: email, activationkey: activationkey })
+  //       .map((response: Response) => response.text() )
+  //       .catch(this.handleError);
+  // }
 
   login(emailaddress: string, password: string): Observable<boolean> {
     return this.http.post( this.url + 'login', { emailaddress: emailaddress, password: password })
@@ -74,17 +51,11 @@ export class AuthService {
           let json = response.json();
           // login successful if there's a jwt token in the response
           if (json && json.token && json.user ) {
-            // set token property
             this.token = json.token;
-            this.userid = json.user.id;
-            // store username and jwt token in local storage to keep user logged in between page refreshes
-            localStorage.setItem('user', JSON.stringify({ id: json.user.id, token: json.token }));
-            this.user = json.user;
-
-            // return true to indicate successful login
+            this.userId = json.user.id;
+            localStorage.setItem('auth', JSON.stringify({ userid: this.userId, token: json.token }));
             return true;
           } else {
-            // return false to indicate failed login
             return false;
           }
         })
@@ -96,32 +67,31 @@ export class AuthService {
      });*/
   }
 
-  passwordReset( email: string ): Observable<boolean> {
-    return this.http.post( this.url + 'passwordreset', { email: email })
-        .map((response: Response) => {
-          let retVal = response.text()
-          // console.log( retVal );
-          return retVal;
-        } )
-        .catch(this.handleError);
-  }
-
-  passwordChange( email: string, password: string, key: string ): Observable<boolean> {
-    return this.http.post( this.url + 'passwordchange', { email: email, password: password, key: key })
-        .map((response: Response) => {
-          let retVal = response.text();
-          // console.log( retVal );
-          return retVal;
-        } )
-        .catch(this.handleError);
-  }
+  // passwordReset( email: string ): Observable<boolean> {
+  //   return this.http.post( this.url + 'passwordreset', { email: email })
+  //       .map((response: Response) => {
+  //         let retVal = response.text()
+  //         // console.log( retVal );
+  //         return retVal;
+  //       } )
+  //       .catch(this.handleError);
+  // }
+  //
+  // passwordChange( email: string, password: string, key: string ): Observable<boolean> {
+  //   return this.http.post( this.url + 'passwordchange', { email: email, password: password, key: key })
+  //       .map((response: Response) => {
+  //         let retVal = response.text();
+  //         // console.log( retVal );
+  //         return retVal;
+  //       } )
+  //       .catch(this.handleError);
+  // }
 
   logout(): void {
     // clear token remove user from local storage to log user out
     this.token = null;
-    this.user = null;
-    this.userid = null;
-    localStorage.removeItem('user');
+    this.userId = null;
+    localStorage.removeItem('auth');
   }
 
   // this could also be a private method of the component class
