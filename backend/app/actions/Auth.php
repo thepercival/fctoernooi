@@ -104,7 +104,7 @@ final class Auth
 
 			$data["status"] = "ok";
 			$data["token"] = $token;
-			$data["user"] = $user;
+			$data["userid"] = $user->getId();
 
 			return $response
 				->withStatus(201)

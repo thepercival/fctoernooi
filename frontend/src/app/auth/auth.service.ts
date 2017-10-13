@@ -48,11 +48,11 @@ export class AuthService {
   login(emailaddress: string, password: string): Observable<boolean> {
     return this.http.post( this.url + 'login', { emailaddress: emailaddress, password: password })
         .map((response: Response) => {
-          let json = response.json();
+          const json = response.json();
           // login successful if there's a jwt token in the response
-          if (json && json.token && json.user ) {
+          if (json && json.token && json.userid ) {
             this.token = json.token;
-            this.userId = json.user.id;
+            this.userId = json.userid;
             localStorage.setItem('auth', JSON.stringify({ userid: this.userId, token: json.token }));
             return true;
           } else {
