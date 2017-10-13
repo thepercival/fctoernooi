@@ -1,11 +1,12 @@
 import { enableProdMode } from '@angular/core';
+import {platformBrowser} from '@angular/platform-browser';
 
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { AppModule } from './app/app.module';
+import {AppModuleNgFactory} from '../aot/src/app/app.module.ngfactory';
+
 import { environment } from './environments/environment';
 
 if (environment.production) {
   enableProdMode();
 }
-console.log('Running JIT compiled');
-platformBrowserDynamic().bootstrapModule(AppModule);
+console.log('Running AOT compiled');
+platformBrowser().bootstrapModuleFactory(AppModuleNgFactory);
