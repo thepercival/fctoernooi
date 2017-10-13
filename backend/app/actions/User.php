@@ -6,7 +6,7 @@
  * Time: 21:36
  */
 
-namespace App\Action\Auth;
+namespace App\Action;
 
 use Slim\ServerRequestInterface;
 use JMS\Serializer\Serializer;

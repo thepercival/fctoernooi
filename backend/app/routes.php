@@ -10,8 +10,11 @@ $app->group('/auth', function () use ($app) {
     /*$app->post('/auth/activate', 'App\Action\Auth:activate');
 	$app->put('/auth/passwordreset', 'App\Action\Auth:passwordreset');
 	$app->put('/auth/passwordchange', 'App\Action\Auth:passwordchange');*/
-	$app->get('/users', 'App\Action\User:fetch');
-	$app->get('/users/{id}', 'App\Action\User:fetchOne');
+});
+
+$app->group('/users', function () use ($app) {
+    $app->get('', 'App\Action\User:fetch');
+    $app->get('/{id}', 'App\Action\User:fetchOne');
 });
 
 $app->group('/tournaments', function () use ($app) {
