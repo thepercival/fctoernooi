@@ -7,6 +7,7 @@ import { TournamentRepository } from './repository';
 import { Tournament } from '../tournament';
 import { StructureService } from 'voetbaljs/structure/service';
 import { RoundRepository } from 'voetbaljs/round/repository';
+import { Round } from 'voetbaljs/round';
 
 export class TournamentComponent implements OnInit, OnDestroy {
 
@@ -16,7 +17,7 @@ export class TournamentComponent implements OnInit, OnDestroy {
     protected router: Router;
     protected tournamentRepository: TournamentRepository;
     protected roundRepository: RoundRepository;
-    protected structureService: StructureService;
+    public structureService: StructureService;
 
     constructor(
         route: ActivatedRoute,
@@ -34,12 +35,12 @@ export class TournamentComponent implements OnInit, OnDestroy {
         this.sub = this.route.params.subscribe(params => {
             this.tournamentRepository.getObject( +params['id'] )
                 .subscribe(
-                    /* happy path */ tournament => {
+                    /* happy path */ (tournament: Tournament) => {
                         this.tournament = tournament;
 
                         this.roundRepository.getObjects( tournament.getCompetitionseason() )
                             .subscribe(
-                                /* happy path */ rounds => {
+                                /* happy path */ (rounds: Round[] ) => {
                                     this.structureService = new StructureService( tournament.getCompetitionseason(), rounds );
                                 },
                                 /* error path */ e => {},

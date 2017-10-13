@@ -1,10 +1,10 @@
-import { FcttestPage } from './app.po';
+import { AppPage } from './app.po';
 
-describe('fcttest App', () => {
-  let page: FcttestPage;
+describe('fctoernooi App', () => {
+  let page: AppPage;
 
   beforeEach(() => {
-    page = new FcttestPage();
+    page = new AppPage();
   });
 
   it('should display welcome message', () => {

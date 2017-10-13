@@ -3,7 +3,7 @@
  */
 import { Injectable } from '@angular/core';
 import { Headers, Http, Response, RequestOptions } from '@angular/http';
-import {Observable} from 'rxjs/Rx';
+import { Observable, Observer } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Tournament } from '../tournament';
@@ -34,7 +34,7 @@ export class TournamentRepository extends VoetbalRepository{
 
     getObjects(): Observable<Tournament[]> {
         if ( this.objects != null ) {
-            return Observable.create(observer => {
+            return Observable.create( (observer: Observer<Tournament[]> ) => {
                 observer.next(this.objects);
                 observer.complete();
             });
@@ -70,7 +70,7 @@ export class TournamentRepository extends VoetbalRepository{
     }
 
     getObject( id: number): Observable<Tournament> {
-         return Observable.create(observer => {
+         return Observable.create( (observer: Observer<Tournament>) => {
             this.getObjects().subscribe(
                 /* happy path */ tournaments => {
                     const tournament = tournaments.find(

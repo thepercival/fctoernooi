@@ -9,9 +9,7 @@
       "outDir": "dist",
       "assets": [
         "assets",
-        "favicon/favicon.ico",
-        "service-worker.js",
-        "manifest.json"
+        "favicon.ico"
       ],
       "index": "index.html",
       "main": "main.ts",
@@ -26,7 +24,6 @@
       "scripts": [],
       "environmentSource": "environments/environment.ts",
       "environments": {
-        "source": "environments/environment.ts",
         "dev": "environments/environment.ts",
         "prod": "environments/environment.prod.ts"
       }

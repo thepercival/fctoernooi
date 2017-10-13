@@ -1,8 +1,0 @@
-<div class="card">
-    <div class="card-header">poule {{poule.number}}</div>
-    <div class="card-block">
-        <span *ngFor="let pouleplace of poule.places" class="bg-primary text-white"> {{pouleplace.number}}</span>
-        <button [disabled]="!isPoulePlaceRemovable()" (click)="removePoulePlace()"><span class="fa fa-minus"></span></button>
-        <button (click)="addPoulePlace()"><i class="fa fa-plus"></i></button>
-    </div>
-</div>
