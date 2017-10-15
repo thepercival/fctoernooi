@@ -6,7 +6,7 @@ import { TournamentComponent } from '../component';
 import { RoundRepository } from 'voetbaljs/round/repository';
 import { PoulePlace } from 'voetbaljs/pouleplace';
 import { Poule } from 'voetbaljs/poule';
-
+import { Round } from 'voetbaljs/round';
 
 @Component({
   selector: 'app-tournament-structure',
@@ -17,6 +17,18 @@ export class TournamentStructureComponent extends TournamentComponent {
 
   @Input()
   public alerts: any = {};
+  public someValue = 0;
+
+  someRange2config: any = {
+    behaviour: 'drag',
+    margin: 1,
+    range: {
+      min: 0,
+      max: 20
+    },
+    step: 1,
+    tooltips: [ true ]
+  };
 
   constructor(
       route: ActivatedRoute,
@@ -41,7 +53,7 @@ export class TournamentStructureComponent extends TournamentComponent {
     const lastPoule = poules[poules.length - 1];
     try {
       this.structureService.removePoule( lastPoule );
-    } catch(e) {
+    } catch (e) {
       return this.setAlert( 'firstround', 'danger', 'er moet minimaal 1 poule zijn' );
     }
   }
@@ -52,24 +64,24 @@ export class TournamentStructureComponent extends TournamentComponent {
     const places = round.getPoulePlaces();
     const nrOfPlacesNotEvenOld = places.length % poules.length;
     const placesPerPouleOld = ( places.length - nrOfPlacesNotEvenOld ) / poules.length;
-    const poule = new Poule( round );
+    const newPoule = new Poule( round );
     const nrOfPlacesNotEven = places.length % poules.length;
     let placesToAddToNewPoule = ( places.length - nrOfPlacesNotEven ) / poules.length;
 
-    if( placesPerPouleOld === 2 && nrOfPlacesNotEvenOld < 2 ){
+    if ( placesPerPouleOld === 2 && nrOfPlacesNotEvenOld < 2 ) {
       placesToAddToNewPoule = nrOfPlacesNotEvenOld;
     }
 
-    while( placesToAddToNewPoule > 0 ) {
+    while ( placesToAddToNewPoule > 0 ) {
       for (let i = poules.length - 2 ; i >= 0 ; i-- ) {
         const pouleIt = poules[i];
-        if( pouleIt.getNumber() > nrOfPlacesNotEvenOld && placesToAddToNewPoule < pouleIt.getNumber() ) {
+        if ( pouleIt.getNumber() > nrOfPlacesNotEvenOld && placesToAddToNewPoule < pouleIt.getNumber() ) {
           continue;
         }
-        const places = pouleIt.getPlaces();
-        const place = places[places.length - 1];
+        const placesIt = pouleIt.getPlaces();
+        const placeIt = placesIt[placesIt.length - 1];
         // console.log('moved place from poule ' + place.getPoule().getNumber());
-        round.movePoulePlace(place, poule, 1);
+        round.movePoulePlace(placeIt, newPoule, 1);
         placesToAddToNewPoule--;
         if ( placesToAddToNewPoule === 0 ) {
           break;
@@ -77,8 +89,8 @@ export class TournamentStructureComponent extends TournamentComponent {
       }
     }
 
-    while ( poule.getPlaces().length < 2 ) {
-      const poulePlace = new PoulePlace( poule );
+    while ( newPoule.getPlaces().length < 2 ) {
+      const poulePlace = new PoulePlace( newPoule );
     }
   }
 
@@ -117,7 +129,7 @@ export class TournamentStructureComponent extends TournamentComponent {
     const nrOfPlacesNotEven = places.length % poules.length;
 
     let pouleToAddTo = poules[0];
-    if ( nrOfPlacesNotEven > 0 ){
+    if ( nrOfPlacesNotEven > 0 ) {
       pouleToAddTo = poules.find( pouleIt => ( nrOfPlacesNotEven + 1 ) === pouleIt.getNumber() );
     }
 
@@ -135,5 +147,10 @@ export class TournamentStructureComponent extends TournamentComponent {
 
   public closeAlert( name: string) {
     this.alerts[name] = null;
+  }
+
+  public onSliderChange( event, fromRound: Round ) {
+      console.log(fromRound);
+      // this.structureService.addQualifier( fromRound );
   }
 }

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { TournamentNewComponent } from './tournament/new/new.component';
 import { TournamentHomeComponent } from './tournament/home/home.component';
@@ -14,6 +14,7 @@ import { PoulePlaceRepository } from 'voetbaljs/pouleplace/repository';
 import { TeamRepository } from 'voetbaljs/team/repository';
 import { GameRepository } from 'voetbaljs/game/repository';
 
+import { NouisliderComponent } from 'ng2-nouislider';
 import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
 
 @NgModule({
@@ -26,7 +27,8 @@ import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
   declarations: [
     TournamentNewComponent,
     TournamentHomeComponent,
-    TournamentStructureComponent
+    TournamentStructureComponent,
+    NouisliderComponent
   ],
   providers: [
     TournamentRepository,

@@ -14,3 +14,7 @@
 .list-group-item-not-qualifying {
     background-color: transparent;
 }
+
+.card.qualification{
+    width:100%;
+}
