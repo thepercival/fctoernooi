@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { TournamentNewComponent } from './tournament/new/new.component';
 import { TournamentHomeComponent } from './tournament/home/home.component';
-import { TournamentStructureComponent } from './tournament/structure/structure.component';
+import { TournamentStructureComponent } from './tournament/structure/main.component';
 
 const routes: Routes = [
   { path: 'nieuw',  component: TournamentNewComponent },

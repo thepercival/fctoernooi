@@ -41,7 +41,7 @@ export class TournamentComponent implements OnInit, OnDestroy {
                         this.roundRepository.getObjects( tournament.getCompetitionseason() )
                             .subscribe(
                                 /* happy path */ (rounds: Round[] ) => {
-                                    this.structureService = new StructureService( tournament.getCompetitionseason(), rounds );
+                                    this.structureService = new StructureService( tournament.getCompetitionseason(), rounds.shift() );
                                 },
                                 /* error path */ e => {},
                                 /* onComplete */ () => {}

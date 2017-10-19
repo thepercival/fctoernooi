@@ -2,9 +2,17 @@
     width:100%;
 }
 
-.card.round>.card-block{
-    background-color: black;
+app-tournament-structureround {
+    width: 100%;
+}
 
+.card-block{
+    background-color: black;
+}
+
+.qualifier{
+    flex-basis: 100%;
+    border: 0;
 }
 
 .list-group.list-group-poule{

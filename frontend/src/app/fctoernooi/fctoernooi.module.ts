@@ -6,16 +6,17 @@ import { NouisliderModule } from 'ng2-nouislider';
 
 import { TournamentNewComponent } from './tournament/new/new.component';
 import { TournamentHomeComponent } from './tournament/home/home.component';
-import { TournamentStructureComponent } from './tournament/structure/structure.component';
+import { TournamentStructureComponent } from './tournament/structure/main.component';
+import { TournamentStructureRoundComponent } from './tournament/structure/round.component';
 import { TournamentRepository } from './tournament/repository';
 import { TournamentRoleRepository } from './tournament/role/repository';
 import { RoundRepository } from 'voetbaljs/round/repository';
 import { PouleRepository } from 'voetbaljs/poule/repository';
 import { PoulePlaceRepository } from 'voetbaljs/pouleplace/repository';
+import { QualifyRuleRepository } from 'voetbaljs/qualifyrule/repository';
 import { TeamRepository } from 'voetbaljs/team/repository';
 import { GameRepository } from 'voetbaljs/game/repository';
 
-// import { NouisliderComponent } from 'ng2-nouislider/src/nouislider';
 import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
 
 @NgModule({
@@ -29,7 +30,8 @@ import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
   declarations: [
     TournamentNewComponent,
     TournamentHomeComponent,
-    TournamentStructureComponent
+    TournamentStructureComponent,
+    TournamentStructureRoundComponent
   ],
   providers: [
     TournamentRepository,
@@ -37,6 +39,7 @@ import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
     RoundRepository,
     PouleRepository,
     PoulePlaceRepository,
+    QualifyRuleRepository,
     TeamRepository,
     GameRepository
   ]

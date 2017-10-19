@@ -29,3 +29,13 @@
   text-align: center;
   white-space: nowrap;
 }
+
+nouislider.winners .#{$noUi-css-prefix}-handle{
+  background-color: #{$brand-success};
+  border: 1px solid #{$brand-success};
+}
+
+nouislider.losers .#{$noUi-css-prefix}-handle{
+  background-color: #{$brand-danger};
+  border: 1px solid #{$brand-danger};
+}
