@@ -15,14 +15,12 @@ import { VoetbalRepository } from 'voetbaljs/repository';
 export class TournamentRepository extends VoetbalRepository {
 
     private url: string;
-    private http: Http;
     private csRepository: CompetitionseasonRepository;
     private tournamentRoleRepository: TournamentRoleRepository;
     private objects: Tournament[];
 
-    constructor( http: Http, csRepository: CompetitionseasonRepository, tournamentRoleRepository: TournamentRoleRepository ) {
+    constructor( private http: Http, csRepository: CompetitionseasonRepository, tournamentRoleRepository: TournamentRoleRepository ) {
         super();
-        this.http = http;
         this.csRepository = csRepository;
         this.tournamentRoleRepository = tournamentRoleRepository;
         this.url = super.getApiUrl() + this.getUrlpostfix();
@@ -122,16 +120,13 @@ export class TournamentRepository extends VoetbalRepository {
     //         .catch(this.handleError);
     // }
     //
-    // removeObject( object: CompetitionSeason): Observable<void>
-    // {
-    //     let url = this.url + '/'+object.getId();
-    //     return this.http
-    //         .delete(url, new RequestOptions({ headers: super.getHeaders() }))
-    //         // ...and calling .json() on the response to return data
-    //         .map((res:Response) => res)
-    //         //...errors if any
-    //         .catch(this.handleError);
-    // }
+    removeObject( tournament: Tournament): Observable<boolean> {
+        const url = this.url + '/' + tournament.getId();
+        return this.http
+            .delete(url, new RequestOptions({ headers: super.getHeaders() }))
+            .map((res) => res )
+            .catch(this.handleError);
+    }
 
     // this could also be a private method of the component class
     handleError(res: Response): Observable<any> {

@@ -4,6 +4,7 @@
 
 import { Competitionseason } from 'voetbaljs/competitionseason';
 import { TournamentRole } from './tournament/role';
+import { User } from '../user/user';
 
 export class Tournament {
     static readonly MINNROFCOMPETITORS = 2;
@@ -40,5 +41,11 @@ export class Tournament {
 
     setRoles(roles: TournamentRole[]): void {
         this.roles = roles;
+    }
+
+    hasRole( userId: number, role: number ) {
+        return ( this.getRoles().find( function ( roleIt: TournamentRole ) {
+            return ( roleIt.getUser().getId() === userId && roleIt.getRole() === TournamentRole.ADMIN );
+        }) !== null );
     }
 }

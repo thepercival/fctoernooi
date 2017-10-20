@@ -11,7 +11,7 @@ import { Tournament } from '../../tournament';
 })
 export class TournamentNewComponent implements OnInit {
 
-  model: any = {};
+  model: any;
   loading = false;
   error = '';
   sportnames: [string]= ['tafeltennis', 'darten'];
@@ -23,7 +23,18 @@ export class TournamentNewComponent implements OnInit {
   };
   // message: string = null;
 
-  constructor( private router: Router, private tournamentRepository: TournamentRepository ) { }
+  constructor(
+    private router: Router,
+    private tournamentRepository: TournamentRepository ) {
+
+    const date = new Date();
+    date.setTime( date.getTime() + ( 60 * 10 * 1000 ) ); // 10 minutes
+
+    this.model = {
+        starttime: {hour: date.getHours(), minute: date.getMinutes() },
+        startdate: {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate()}
+      };
+  }
 
   ngOnInit() {
   }

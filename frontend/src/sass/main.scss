@@ -1,7 +1,12 @@
 html {
   position: relative;
 }
-
+h1 {
+  font-size: 3rem;
+}
+h2 {
+  font-size: 2rem;
+}
 app-root {
   display: flex;
   min-height: 100vh;

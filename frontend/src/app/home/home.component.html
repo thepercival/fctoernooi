@@ -14,8 +14,8 @@
         <tbody>
         <tr *ngFor="let tournament of tournaments">
           <td>{{tournament.getCompetitionseason().getCompetition().getName()}}</td>
-          <td style="text-align: right">
-            <button *ngIf="isLoggedIn() && hasPermission(tournament)" type="button" [routerLink]="['/toernooi/home',{id: tournament.getId()}]" routerLinkActive="active" class="btn btn-xs btn-secondary"><i class="fa fa-pencil"></i></button>
+          <td *ngIf="isLoggedIn() && hasPermission(tournament)"  style="text-align: right">
+            <button type="button" [routerLink]="['/toernooi/home',{id: tournament.getId()}]" routerLinkActive="active" class="btn btn-xs btn-secondary"><i class="fa fa-pencil"></i></button>
           </td>
           <td style="text-align: right">
             <button type="button" [routerLink]="['/toernooi/home',{id: tournament.getId()}]" routerLinkActive="active" class="btn btn-xs btn-secondary"><i class="fa fa-eye"></i></button>
