@@ -6,10 +6,6 @@
  * Time: 21:41
  */
 
-/*
- * this service should be a wrapper to create a competitionseason and competitionseasonroles!!!
- */
-
 namespace FCToernooi\Tournament;
 
 use FCToernooi\User as User;
@@ -19,7 +15,6 @@ use Voetbal\Season;
 use Voetbal\Competitionseason;
 use FCToernooi\Tournament;
 use FCToernooi\Tournament\Repository as TournamentRepository;
-use FCToernooi\Tournament\Service as TournamentService;
 use FCToernooi\Tournament\Role\Repository as TournamentRoleRepository;
 use FCToernooi\Tournament\Role\Service as TournamentRoleService;
 use League\Period\Period;
@@ -35,7 +30,7 @@ class Service
     /**
      * @var TournamentRepository
      */
-    protected $tournamentRepos;
+    protected $repos;
     /**
      * @var TournamentRoleRepository
      */
@@ -61,7 +56,7 @@ class Service
     )
     {
         $this->voetbalService = $voetbalService;
-        $this->tournamentRepos = $tournamentRepos;
+        $this->repos = $tournamentRepos;
         $this->tournamentRoleRepos = $tournamentRoleRepos;
         $this->em = $em;
     }
@@ -123,7 +118,7 @@ class Service
             $csRepos->save($competitionseason);
 
             $tournament = new Tournament( $competitionseason );
-            $this->tournamentRepos->save($tournament);
+            $this->repos->save($tournament);
 
             $tournamentRoleService = new TournamentRoleService( $this->tournamentRoleRepos );
             $tournamentRoles = $tournamentRoleService->set( $tournament, $user, Role::ALL );
@@ -170,12 +165,10 @@ class Service
 //    }
 
     /**
-     * @param Association $association
+     * @param Tournament $tournament
      */
-    public function remove( Association $association )
+    public function remove( Tournament $tournament )
     {
-        $this->repos->remove($association);
+        return $this->repos->remove( $tournament );
     }
-
-
 }

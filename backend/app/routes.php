@@ -21,6 +21,7 @@ $app->group('/tournaments', function () use ($app) {
     $app->post('', 'App\Action\Tournament:add');
     $app->get('', 'App\Action\Tournament:fetch');
     $app->get('/{id}', 'App\Action\Tournament:fetchOne');
+    $app->delete('/{id}', 'App\Action\Tournament:remove');
 });
 
 $app->group('/tournamentroles', function () use ($app) {

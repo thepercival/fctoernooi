@@ -6,7 +6,6 @@
  * Time: 11:40
  */
 
-
 namespace App\Action;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,6 +14,7 @@ use JMS\Serializer\Serializer;
 use FCToernooi\User\Repository as UserRepository;
 use FCToernooi\Tournament\Service as TournamentService;
 use FCToernooi\Tournament\Repository as TournamentRepository;
+use FCToernooi\Tournament\Role as TournamentRole;
 
 final class Tournament
 {
@@ -149,6 +149,37 @@ final class Tournament
         return $response->withStatus(404, $sErrorMessage );
     }
 
+    public function remove( $request, $response, $args)
+    {
+        $errorMessage = null;
+        try{
+            $tournament = $this->tournamentRepository->find( $args['id'] );
+            if ( $tournament === null ){
+                return $response->withStatus(404, "het te verwijderen toernooi kon niet gevonden worden" );
+            }
+
+            $user = null;
+            if( $this->jwt->sub !== null ){
+                $user = $this->userRepository->find( $this->jwt->sub );
+            }
+            if ( $user === null ){
+                return $response->withStatus(404, "de ingelogde gebruikers kon niet gevonden worden" );
+            }
+
+            if( !$tournament->hasRole( $user, TournamentRole::ADMIN ) ) {
+                return $response->withStatus(404, "je hebt geen rechten om het toernooi te verwijderen" );
+            }
+
+            $this->service->remove( $tournament );
+
+            return $response->withStatus(200);
+        }
+        catch( \Exception $e ){
+            $errorMessage = $e->getMessage();
+        }
+        return $response->withStatus(404, 'het toernooi is niet verwijdered : ' . $errorMessage );
+    }
+
     /*
         public function edit( $request, $response, $args)
         {
@@ -169,18 +200,7 @@ final class Tournament
             return $response->withStatus(404, rawurlencode( $sErrorMessage ) );
         }
 
-        public function remove( $request, $response, $args)
-        {
-            $sErrorMessage = null;
-            try{
-                $user = $this->userResource->delete( $args['id'] );
-                return $response;
-            }
-            catch( \Exception $e ){
-                $sErrorMessage = $e->getMessage();
-            }
-            return $response->withStatus(404, 'de gebruiker is niet verwijdered : ' . $sErrorMessage );
-        }
+
 
         protected function sentEmailActivation( $user )
         {
