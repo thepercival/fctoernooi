@@ -1,6 +1,6 @@
 <div *ngIf="tournament" class="container-fluid">
   <h1 align="center">
-    {{tournament.getCompetitionseason().getCompetition().getName()}}
+    {{tournament.getName()}}
   </h1>
   <div class="row d-flex justify-content-center">
     <div class="card pointer mt-3 mx-2">
@@ -39,4 +39,7 @@
         </div>
       </div>
     </div>
+    <p *ngIf="deleteAlert">
+      <ngb-alert [type]="'danger'" (close)="deleteAlert = null;">{{ deleteAlert }}</ngb-alert>
+    </p>
   </div>

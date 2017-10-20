@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { TournamentRepository } from '../fctoernooi/tournament/repository';
 import { Tournament } from '../fctoernooi/tournament';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -11,11 +12,24 @@ import { Tournament } from '../fctoernooi/tournament';
 export class HomeComponent implements OnInit {
 
   tournaments: Tournament[];
+  deleteAlert = null;
 
-  constructor( private authService: AuthService, private tournamentRepos: TournamentRepository ) { }
+  constructor(
+      private route: ActivatedRoute,
+      private authService: AuthService,
+      private tournamentRepos: TournamentRepository
+  ) {
+    console.log("construct start HomeComponent");
+    console.log("construct end HomeComponent");
+  }
 
   ngOnInit() {
     this.tournamentRepos.getObjects().forEach( tournaments => this.tournaments = tournaments);
+
+    this.route.queryParams.subscribe(params => {
+      console.log(params['deletealert']);
+      this.deleteAlert = params['deletealert'];
+    });
   }
 
   isLoggedIn() {

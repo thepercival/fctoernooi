@@ -48,4 +48,8 @@ export class Tournament {
             return ( roleIt.getUser().getId() === userId && roleIt.getRole() === TournamentRole.ADMIN );
         }) !== null );
     }
+
+    getName(): string {
+        return this.getCompetitionseason().getCompetition().getName();
+    }
 }

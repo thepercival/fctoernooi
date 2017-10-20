@@ -7,7 +7,7 @@ import { TournamentStructureComponent } from './tournament/structure/main.compon
 
 const routes: Routes = [
   { path: 'nieuw',  component: TournamentNewComponent },
-  { path: 'home',  component: TournamentHomeComponent },
+  { path: 'home/:id',  component: TournamentHomeComponent },
   // { path: 'competitors',  component: TournamentCompetitorsComponent },
   { path: 'structure',  component: TournamentStructureComponent }
   // { path: 'planning',  component: TournamentPlanningComponent },

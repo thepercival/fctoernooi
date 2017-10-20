@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { TournamentRepository } from '../repository';
 import { AuthService } from '../../../auth/auth.service';
 import { TournamentComponent } from '../component';
@@ -35,7 +35,10 @@ export class TournamentHomeComponent extends TournamentComponent {
             .subscribe(
                 /* happy path */ (deleted: boolean) => {
                     if( deleted ) {
-                        this.deleteAlert = 'redirect to home with message';
+                        const navigationExtras: NavigationExtras = {
+                            queryParams: { deletealert: 'het toernooi is verwijderd' }
+                        };
+                        this.router.navigate(['/home'], navigationExtras );
                     } else {
                         this.deleteAlert = 'het toernooi kon niet verwijderd worden';
                     }

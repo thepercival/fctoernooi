@@ -24,6 +24,7 @@ export class TournamentRepository extends VoetbalRepository {
         this.csRepository = csRepository;
         this.tournamentRoleRepository = tournamentRoleRepository;
         this.url = super.getApiUrl() + this.getUrlpostfix();
+        console.log("create TournamentRepository");
     }
 
     getUrlpostfix(): string {
@@ -33,6 +34,7 @@ export class TournamentRepository extends VoetbalRepository {
     getObjects(): Observable<Tournament[]> {
         if ( this.objects != null ) {
             return Observable.create( (observer: Observer<Tournament[]> ) => {
+                console.log("getObjects", this.objects);
                 observer.next(this.objects);
                 observer.complete();
             });
@@ -104,7 +106,11 @@ export class TournamentRepository extends VoetbalRepository {
         return this.http
             .post(this.url, jsonObject, new RequestOptions({ headers: super.getHeaders() }))
             // ...and calling .json() on the response to return data
-            .map((res) => this.jsonToObjectHelper(res.json()) )
+            .map((res) => {
+                const tournament = this.jsonToObjectHelper(res.json());
+                this.objects.push( tournament );
+                return tournament;
+            })
             .catch(this.handleError);
     }
     //
@@ -124,7 +130,15 @@ export class TournamentRepository extends VoetbalRepository {
         const url = this.url + '/' + tournament.getId();
         return this.http
             .delete(url, new RequestOptions({ headers: super.getHeaders() }))
-            .map((res) => res )
+            .map((res) => {
+                const index = this.objects.indexOf( tournament );
+                console.log(index);
+                if (index > -1) {
+                    this.objects.splice(index, 1);
+                }
+                console.log( this.objects );
+                return res;
+            } )
             .catch(this.handleError);
     }
 

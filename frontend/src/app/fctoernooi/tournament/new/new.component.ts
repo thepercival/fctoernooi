@@ -26,15 +26,16 @@ export class TournamentNewComponent implements OnInit {
   constructor(
     private router: Router,
     private tournamentRepository: TournamentRepository ) {
+      console.log("construct start TournamentNewComponent");
+      console.log("construct end TournamentNewComponent");
+      const date = new Date();
+      date.setTime( date.getTime() + ( 60 * 10 * 1000 ) ); // 10 minutes
 
-    const date = new Date();
-    date.setTime( date.getTime() + ( 60 * 10 * 1000 ) ); // 10 minutes
-
-    this.model = {
-        starttime: {hour: date.getHours(), minute: date.getMinutes() },
-        startdate: {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate()}
-      };
-  }
+      this.model = {
+          starttime: {hour: date.getHours(), minute: date.getMinutes() },
+          startdate: {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate()}
+        };
+    }
 
   ngOnInit() {
   }
@@ -60,7 +61,10 @@ export class TournamentNewComponent implements OnInit {
 
     this.tournamentRepository.createObject(json)
         .subscribe(
-            /* happy path */ p => this.router.navigate(['/toernooi/home']),
+            /* happy path */ tournament => {
+              console.log(tournament);
+              this.router.navigate(['/toernooi/home', tournament.getId()]);
+            },
             /* error path */ e => { this.error = e; this.loading = false; },
             /* onComplete */ () => this.loading = false
         );
