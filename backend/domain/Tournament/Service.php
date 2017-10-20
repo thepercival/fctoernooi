@@ -134,13 +134,15 @@ class Service
             $structureService->create( $competitionseason, $nrOfCompetitors );
 
             $this->em->getConnection()->commit();
+
+            return $tournament;
         } catch (\Exception $e) {
             // Rollback the failed transaction attempt
             $this->em->getConnection()->rollback();
             throw $e;
         }
 
-        return $competition; //$this->repos->save($association);
+        return null; //$this->repos->save($association);
     }
 
     /**
@@ -169,6 +171,7 @@ class Service
      */
     public function remove( Tournament $tournament )
     {
-        return $this->repos->remove( $tournament );
+        $competitionRepos = $this->voetbalService->getRepository(Competition::class);
+        return $competitionRepos->remove( $tournament->getCompetitionseason()->getCompetition() );
     }
 }

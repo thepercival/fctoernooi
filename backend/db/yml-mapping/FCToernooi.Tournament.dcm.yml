@@ -17,7 +17,6 @@ FCToernooi\Tournament:
     manyToOne:
         competitionseason:
             targetEntity: Voetbal\Competitionseason
-            inversedBy: tournaments
             joinColumn:
               name: competitionseasonid
               referencedColumnName: id
