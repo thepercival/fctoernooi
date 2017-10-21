@@ -24,7 +24,6 @@ export class TournamentRepository extends VoetbalRepository {
         this.csRepository = csRepository;
         this.tournamentRoleRepository = tournamentRoleRepository;
         this.url = super.getApiUrl() + this.getUrlpostfix();
-        console.log("create TournamentRepository");
     }
 
     getUrlpostfix(): string {
@@ -108,6 +107,7 @@ export class TournamentRepository extends VoetbalRepository {
             // ...and calling .json() on the response to return data
             .map((res) => {
                 const tournament = this.jsonToObjectHelper(res.json());
+                console.log(res.json());
                 this.objects.push( tournament );
                 return tournament;
             })

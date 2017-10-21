@@ -7,8 +7,8 @@
       <div class="d-flex flex-row-reverse">
         <button *ngIf="isLoggedIn()" type="button" class="btn btn-primary" routerLink="/toernooi/nieuw" style="margin-top:2em; margin-bottom: 2em;">nieuw toernooi</button>
       </div>
-      <p *ngIf="deleteAlert">
-        <ngb-alert [type]="'success'" (close)="deleteAlert = null;">{{ deleteAlert }}</ngb-alert>
+      <p *ngIf="alert">
+        <ngb-alert [type]="alert.type" (close)="alert = null;">{{ alert.message }}</ngb-alert>
       </p>
       <table class="table">
         <thead>
@@ -17,8 +17,8 @@
         <tbody>
         <tr *ngFor="let tournament of tournaments">
           <td>{{tournament.getCompetitionseason().getCompetition().getName()}}</td>
-          <td *ngIf="isLoggedIn() && hasPermission(tournament)"  style="text-align: right">
-            <button type="button" [routerLink]="['/toernooi/home', tournament.getId()]" routerLinkActive="active" class="btn btn-xs btn-secondary"><i class="fa fa-pencil"></i></button>
+          <td *ngIf="isLoggedIn()"  style="text-align: right">
+            <button *ngIf="hasPermission(tournament)" type="button" [routerLink]="['/toernooi/home', tournament.getId()]" routerLinkActive="active" class="btn btn-xs btn-secondary"><i class="fa fa-pencil"></i></button>
           </td>
           <td style="text-align: right">
             <button type="button" [routerLink]="['/toernooi/home', tournament.getId()]" routerLinkActive="active" class="btn btn-xs btn-secondary"><i class="fa fa-eye"></i></button>

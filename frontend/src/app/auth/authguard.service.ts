@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Router, CanActivate } from '@angular/router';
+import { Router, CanActivate, NavigationExtras } from '@angular/router';
 import { AuthService } from './auth.service';
+import { IAlert } from '../app.definitions';
 
 @Injectable()
 export class AuthguardService implements CanActivate {
@@ -12,9 +13,10 @@ export class AuthguardService implements CanActivate {
       // logged in so return true
       return true;
     }
-    console.log('this.authService.token is not set');
-    // not logged in so redirect to login page
-    this.router.navigate(['/login']);
+    const navigationExtras: NavigationExtras = {
+      queryParams: { type: 'warning', message: 'je bent niet ingelogd en teruggestuurd naar de homepagina' }
+    };
+    this.router.navigate(['/home'], navigationExtras );
     return false;
   }
 

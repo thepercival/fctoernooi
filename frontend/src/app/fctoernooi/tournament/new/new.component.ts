@@ -26,8 +26,6 @@ export class TournamentNewComponent implements OnInit {
   constructor(
     private router: Router,
     private tournamentRepository: TournamentRepository ) {
-      console.log("construct start TournamentNewComponent");
-      console.log("construct end TournamentNewComponent");
       const date = new Date();
       date.setTime( date.getTime() + ( 60 * 10 * 1000 ) ); // 10 minutes
 

@@ -1,10 +1,10 @@
 <div *ngIf="round" class="col">
   <div class="card round">
     <div class="card-header">
-      <span [innerHTML]="structureService.getRoundName( round )"></span>
+      <span *ngIf="round.getNumber() > 1" class="fa fa-info-circle icon-{{getClassPostfix( round.getWinnersOrLosers() )}}" title="{{getWinnersLosersDescription( round.getWinnersOrLosers() )}}ronde"></span> <span [innerHTML]="structureService.getRoundName( round )"></span>
     </div>
     <div class="card-block">
-      <div class="d-flex justify-content-around mb-3">
+      <div *ngIf="round.getNumber() == 1" class="d-flex justify-content-around mb-3">
         <div class="hidden-sm-up btn-group-vertical" role="group" aria-label="aantal poules">
           <button type="button" class="btn btn-outline-secondary">poules</button>
           <div class="btn-group" role="group" aria-label="aantal poules">
@@ -12,7 +12,7 @@
             <button type="button" class="btn btn-outline-secondary" (click)="addPoule(round)"><span class="fa fa-plus"></span></button>
           </div>
         </div>
-        <div *ngIf="round.getNumber() == 1" class="hidden-sm-up btn-group-vertical" role="group" aria-label="aantal poules">
+        <div class="hidden-sm-up btn-group-vertical" role="group" aria-label="aantal poules">
           <button type="button" class="btn btn-outline-secondary">deelnemers</button>
           <div class="btn-group" role="group" aria-label="aantal deelnemers">
             <button type="button" class="btn btn-outline-secondary" (click)="removePoulePlace(round)"><span class="fa fa-minus"></span></button>
@@ -24,10 +24,17 @@
           <button type="button" class="btn btn-outline-secondary">poules</button>
           <button type="button" class="btn btn-outline-secondary" (click)="addPoule(round)"><span class="fa fa-plus"></span></button>
         </div>
-        <div *ngIf="round.getNumber() == 1" class="hidden-xs-down btn-group" role="group" aria-label="aantal deelnemers">
+        <div class="hidden-xs-down btn-group" role="group" aria-label="aantal deelnemers">
           <button type="button" class="btn btn-outline-secondary" (click)="removePoulePlace(round)"><span class="fa fa-minus"></span></button>
           <button type="button" class="btn btn-outline-secondary">deelnemers</button>
           <button type="button" class="btn btn-outline-secondary" (click)="addPoulePlace(round)"><span class="fa fa-plus"></span></button>
+        </div>
+      </div>
+      <div *ngIf="round.getNumber() > 1" class="d-flex justify-content-around mb-3">
+        <div class="btn-group" role="group" aria-label="aantal poules">
+          <button *ngIf="round.getPoules().length > 1" type="button" class="btn btn-outline-secondary" (click)="removePoule(round)"><span class="fa fa-compress"></span></button>
+          <button type="button" class="btn btn-outline-secondary">verdeel</button>
+          <button *ngIf="( round.getPoulePlaces().length / ( round.getPoules().length + 1 ) ) >= 2" type="button" class="btn btn-outline-secondary" (click)="addPoule(round,false )"><span class="fa fa-expand"></span></button>
         </div>
       </div>
       <p *ngIf="alert">
@@ -36,7 +43,7 @@
       <div class="d-flex justify-content-around mb-3">
         <ul *ngFor="let poule of round.getPoules();" class="list-group list-group-poule">
           <li class="list-group-item">{{structureService.getPouleName( poule, false)}}</li>
-          <li *ngFor="let place of poule.getPlaces();" class="list-group-item list-group-item-{{getClassPostfix(place)}}">{{place.getNumber()}}</li>
+          <li *ngFor="let place of poule.getPlaces();" class="list-group-item list-group-item-{{getClassPostfixPoulePlace(place)}}">{{place.getNumber()}}</li>
         </ul>
       </div>
     </div>

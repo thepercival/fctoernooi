@@ -5,6 +5,7 @@ import { AuthService } from '../../../auth/auth.service';
 import { TournamentComponent } from '../component';
 import { RoundRepository } from 'voetbaljs/round/repository';
 import { TournamentRole } from '../role';
+import { IAlert } from '../../../app.definitions';
 
 @Component({
     selector: 'app-tournament-home',
@@ -34,9 +35,9 @@ export class TournamentHomeComponent extends TournamentComponent {
         this.tournamentRepository.removeObject( this.tournament )
             .subscribe(
                 /* happy path */ (deleted: boolean) => {
-                    if( deleted ) {
+                    if ( deleted ) {
                         const navigationExtras: NavigationExtras = {
-                            queryParams: { deletealert: 'het toernooi is verwijderd' }
+                            queryParams: { type: 'success', message: 'het toernooi is verwijderd' }
                         };
                         this.router.navigate(['/home'], navigationExtras );
                     } else {

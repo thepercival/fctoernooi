@@ -30,6 +30,15 @@
   white-space: nowrap;
 }
 
+
+span.icon-success {
+  color: #{$brand-success};
+}
+
+span.icon-danger {
+  color: #{$brand-danger};
+}
+
 nouislider.winners .#{$noUi-css-prefix}-handle{
   background-color: #{$brand-success};
   border: 1px solid #{$brand-success};

@@ -36,7 +36,7 @@ export class TournamentStructureRoundComponent {
   }
 
   getWinnersLosersDescription( winnersOrLosers: number ): string {
-    return winnersOrLosers === Round.WINNERS ? 'winnaars' : 'verliezers';
+    return winnersOrLosers === Round.WINNERS ? 'winnaars' : ( winnersOrLosers === Round.LOSERS ? 'verliezers' : '' );
   }
 
   getSliderValue( winnersOrLosers: number ): number {
@@ -49,16 +49,20 @@ export class TournamentStructureRoundComponent {
     return this.round.getPoulePlaces().length - this.getSliderValue( opposing );
   }
 
-  getClassPostfix( poulePlace: PoulePlace): string {
+  getClassPostfix( winnersOrLosers: number): string {
+    return winnersOrLosers === Round.WINNERS ? 'success' : ( winnersOrLosers === Round.LOSERS ? 'danger' : '');
+  }
+
+  getClassPostfixPoulePlace( poulePlace: PoulePlace): string {
     const rule = poulePlace.getToQualifyRule();
     if ( rule == null ) {
       return 'not-qualifying';
     }
-    const singleColor = rule.getWinnersOrLosers() === 1 ? 'success' : 'danger';
+    const singleColor = this.getClassPostfix( rule.getWinnersOrLosers() );
     return rule.getFromPoulePlaces().length === rule.getToPoulePlaces().length ? singleColor : 'warning';
   }
 
-  addPoule( round ): void {
+  addPoule( round, fillPouleToMinimum = true ): void {
     this.resetAlert();
     const poules = round.getPoules();
     const places = round.getPoulePlaces();
@@ -96,8 +100,10 @@ export class TournamentStructureRoundComponent {
       pouleIt = pouleIt.next();
     });
 
-    while ( newPoule.getPlaces().length < 2 ) {
-      const pouleTmp = new PoulePlace( newPoule );
+    if( fillPouleToMinimum === true ) {
+      while ( newPoule.getPlaces().length < 2 ) {
+        const pouleTmp = new PoulePlace( newPoule );
+      }
     }
 
     round.getChildRounds().forEach( function ( childRound ) {
