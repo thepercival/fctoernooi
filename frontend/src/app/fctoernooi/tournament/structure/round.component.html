@@ -30,7 +30,7 @@
           <button type="button" class="btn btn-outline-secondary" (click)="addPoulePlace(round)"><span class="fa fa-plus"></span></button>
         </div>
       </div>
-      <div *ngIf="round.getNumber() > 1" class="d-flex justify-content-around mb-3">
+      <div *ngIf="round.getNumber() > 1 && round.getPoulePlaces().length >= 4" class="d-flex justify-content-around mb-3">
         <div class="btn-group" role="group" aria-label="aantal poules">
           <button *ngIf="round.getPoules().length > 1" type="button" class="btn btn-outline-secondary" (click)="removePoule(round)"><span class="fa fa-compress"></span></button>
           <button type="button" class="btn btn-outline-secondary">verdeel</button>
@@ -52,7 +52,7 @@
     <!-- <div class="text-center mt-3" style="width:100%;"><h5 class="my-0"><i class="fa fa-arrow-circle-down"></i></h5></div> -->
     <div *ngFor="let winnersOrLosers of winnersAndLosers" class="col px-4">
       {{getWinnersLosersDescription( winnersOrLosers )}}
-      <nouislider class="horizontal-slider {{getWinnersLosersName( winnersOrLosers )}}" [config]="uiSliderConfig" [min]="0" [max]="getMaxSliderValue( winnersOrLosers )" (ngModel)="sliderValueDummy" [ngModel]="getSliderValue( winnersOrLosers )" (ngModelChange)="onSliderChange($event, round, winnersOrLosers)" style="margin-top: 16px;"></nouislider>
+      <nouislider class="horizontal-slider {{getWinnersLosersName( winnersOrLosers )}}" [config]="uiSliderConfig" [min]="0" [max]="this.round.getPoulePlaces().length" (ngModel)="sliderValueDummy" [ngModel]="round.getNrOfPlacesChildRound( winnersOrLosers )" (ngModelChange)="onSliderChange($event, winnersOrLosers)" style="margin-top: 16px;"></nouislider>
     </div>
   </div>
   <div class="row text-center">
