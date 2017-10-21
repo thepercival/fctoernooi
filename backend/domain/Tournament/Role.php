@@ -45,6 +45,7 @@ class Role
     public function __construct( Tournament $tournament, User $user )
     {
         $this->tournament = $tournament;
+        $this->tournament->getRoles()->add( $this );
         $this->user = $user;
     }
 

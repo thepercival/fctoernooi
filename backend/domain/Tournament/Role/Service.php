@@ -59,6 +59,7 @@ class Service
                 $this->repos->save($tournamentRole);
                 $rolesRet->add($tournamentRole);
             }
+
         }
         catch( \Exception $e ){
             throw new \Exception(urlencode($e->getMessage()), E_ERROR );
