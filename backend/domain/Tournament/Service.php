@@ -131,7 +131,8 @@ class Service
             }
             // create structure op basis van $nrOfCompetitors, $equalNrOfGames
             $structureService = $this->voetbalService->getService(\Voetbal\Structure::class);
-            $structureService->create( $competitionseason, $nrOfCompetitors );
+            $createTeams = false;
+            $structureService->create( $competitionseason, $nrOfCompetitors, $createTeams );
 
             $this->em->getConnection()->commit();
 
