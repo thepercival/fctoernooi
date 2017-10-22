@@ -2,29 +2,32 @@
   <h1 align="center">
     {{tournament.getName()}}
   </h1>
-  <div class="row d-flex justify-content-center">
-    <div class="card pointer mt-3 mx-2">
+  <div *ngIf="structureService" class="row d-flex justify-content-center">
+    <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/competitors', tournament.getId()]">
       <div class="card-block">
         <h5 class="card-title"><i class="fi flaticon-group"></i> deelnemers</h5>
-        <p class="card-text"><small class="text-muted">als alle teams zijn gevuld toon dan een check anders een rode x</small></p>
+        <p class="card-text" *ngIf="structureService.getFirstRound().getTeams().length > 0"><span class="fa fa-check-circle-o icon-success"></span> alle namen ingevuld</p>
+        <p class="card-text" *ngIf="structureService.getFirstRound().getTeams().length === 0"><span class="fa fa-times-circle icon-danger"></span> vul de namen in</p>
       </div>
     </div>
     <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/structure', tournament.getId()]">
       <div class="card-block">
         <h5 class="card-title"><i class="fi flaticon-002-three"></i> structuur</h5>
-        <p class="card-text"><small class="text-muted">niks te melden hierover</small></p>
+        <p class="card-text" *ngIf="tournament.getCompetitionseason().hasStructure()"><span class="fa fa-check-circle-o icon-success"></span> structuur aanwezig</p>
+        <p class="card-text" *ngIf="!tournament.getCompetitionseason().hasStructure()"><span class="fa fa-times-circle icon-danger"></span> geen structuur aanwezig</p>
       </div>
     </div>
     <div class="card pointer mt-3 mx-2">
       <div class="card-block">
         <h5 class="card-title"><i class="fi flaticon-010-programma"></i> planning</h5>
-        <p class="card-text"><small class="text-muted">toon als al planning is</small></p>
+        <p class="card-text" *ngIf="structureService.getFirstRound().getGames().length > 0"><span class="fa fa-check-circle-o icon-success"></span> wedstrijden ingepland</p>
+        <p class="card-text" *ngIf="structureService.getFirstRound().getGames().length === 0"><span class="fa fa-times-circle icon-danger"></span> plan wedstrijden in</p>
       </div>
     </div>
     <div class="card pointer mt-3 mx-2">
       <div class="card-block">
         <h5 class="card-title"><i class="fa fa-cogs"></i> instellingen</h5>
-        <p class="card-text"><small class="text-muted">toon als niet alles gevuld of zo</small></p>
+        <p class="card-text"><small class="text-muted">toon instellingen?</small></p>
       </div>
     </div>
     <div *ngIf="isAdmin()" class="card mt-3 mx-2">
@@ -43,3 +46,4 @@
       <ngb-alert [type]="'danger'" (close)="deleteAlert = null;">{{ deleteAlert }}</ngb-alert>
     </p>
   </div>
+</div>
