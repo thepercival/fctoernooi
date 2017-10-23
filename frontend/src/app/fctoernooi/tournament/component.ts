@@ -1,7 +1,7 @@
 /**
  * Created by coen on 11-10-17.
  */
-import { OnDestroy, OnInit} from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TournamentRepository } from './repository';
 import { Tournament } from '../tournament';
@@ -9,7 +9,7 @@ import { StructureService } from 'voetbaljs/structure/service';
 import { RoundRepository } from 'voetbaljs/round/repository';
 import { Round } from 'voetbaljs/round';
 
-export class TournamentComponent implements OnInit, OnDestroy {
+export class TournamentComponent implements OnDestroy {
 
     tournament: Tournament;
     protected sub: any;
@@ -31,21 +31,24 @@ export class TournamentComponent implements OnInit, OnDestroy {
         this.roundRepository = roundRepository;
     }
 
-    ngOnInit() {
+    myNgOnInit( callback: DataProcessCallBack = null ) {
         this.sub = this.route.params.subscribe(params => {
             this.tournamentRepository.getObject( +params['id'] )
                 .subscribe(
                     /* happy path */ (tournament: Tournament) => {
                         this.tournament = tournament;
 
-                        this.roundRepository.getObjects( tournament.getCompetitionseason() )
+                        this.roundRepository.getObject( tournament.getCompetitionseason() )
                             .subscribe(
-                                /* happy path */ (rounds: Round[] ) => {
+                                /* happy path */ (round: Round ) => {
                                     this.structureService = new StructureService(
                                         tournament.getCompetitionseason(),
-                                        rounds.shift(),
+                                        round,
                                         { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS }
                                     );
+                                    if ( callback !== null ) {
+                                        callback();
+                                    }
                                 },
                                 /* error path */ e => {},
                                 /* onComplete */ () => {}
@@ -61,3 +64,5 @@ export class TournamentComponent implements OnInit, OnDestroy {
         this.sub.unsubscribe();
     }
 }
+
+type DataProcessCallBack = () => void;

@@ -33,11 +33,12 @@ export class TournamentRepository extends VoetbalRepository {
     getObjects(): Observable<Tournament[]> {
         if ( this.objects != null ) {
             return Observable.create( (observer: Observer<Tournament[]> ) => {
-                console.log("getObjects", this.objects);
+                console.log('getTournamentsFromCache', this.objects);
                 observer.next(this.objects);
                 observer.complete();
             });
         }
+
 
         // const date = new Date();
         // date.setDate(date.getDate() - 1);

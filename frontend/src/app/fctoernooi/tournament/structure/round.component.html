@@ -15,7 +15,7 @@
         <div class="hidden-sm-up btn-group-vertical" role="group" aria-label="aantal poules">
           <button type="button" class="btn btn-outline-secondary">deelnemers</button>
           <div class="btn-group" role="group" aria-label="aantal deelnemers">
-            <button type="button" class="btn btn-outline-secondary" (click)="removePoulePlace(round)"><span class="fa fa-minus"></span></button>
+            <button *ngIf="canRemovePoulePlace(round)" type="button" class="btn btn-outline-secondary" (click)="removePoulePlace(round)"><span class="fa fa-minus"></span></button>
             <button type="button" class="btn btn-outline-secondary" (click)="addPoulePlace(round)"><span class="fa fa-plus"></span></button>
           </div>
         </div>
@@ -25,7 +25,7 @@
           <button type="button" class="btn btn-outline-secondary" (click)="addPoule(round)"><span class="fa fa-plus"></span></button>
         </div>
         <div class="hidden-xs-down btn-group" role="group" aria-label="aantal deelnemers">
-          <button type="button" class="btn btn-outline-secondary" (click)="removePoulePlace(round)"><span class="fa fa-minus"></span></button>
+          <button *ngIf="canRemovePoulePlace(round)" type="button" class="btn btn-outline-secondary" (click)="removePoulePlace(round)"><span class="fa fa-minus"></span></button>
           <button type="button" class="btn btn-outline-secondary">deelnemers</button>
           <button type="button" class="btn btn-outline-secondary" (click)="addPoulePlace(round)"><span class="fa fa-plus"></span></button>
         </div>

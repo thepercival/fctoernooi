@@ -1,6 +1,6 @@
 <div class="container-fluid">
-  <h1 align="center">
-    {{tournament?.getName()}} <small>structuur</small>
+  <h1 *ngIf="tournament" align="center">
+    <a [routerLink]="['/toernooi/home', tournament.getId()]">{{tournament.getName()}}</a> <small>structuur</small>
   </h1>
   <div class="row text-center">
     <app-tournament-structureround style="width: 100%;" [round]="structureService?.getFirstRound()" [structureService]="structureService"></app-tournament-structureround>

@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { RoutingModule } from './app-routing.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { DndModule } from 'ng2-dnd';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
@@ -22,7 +23,6 @@ import { AssociationRepository } from 'voetbaljs/association/repository';
 import { CompetitionRepository } from 'voetbaljs/competition/repository';
 import { SeasonRepository } from 'voetbaljs/season/repository';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,17 +36,18 @@ import { SeasonRepository } from 'voetbaljs/season/repository';
      RoutingModule,
      UserModule,
      AdminModule,
-     NgbModule.forRoot()
+     NgbModule.forRoot(),
+     DndModule.forRoot()
   ],
   providers: [
       AuthService,
       AuthguardService,
-    TournamentRepository,
-       TournamentRoleRepository,
-       CompetitionseasonRepository,
-       AssociationRepository,
-       CompetitionRepository,
-       SeasonRepository
+      TournamentRepository,
+      TournamentRoleRepository,
+      CompetitionseasonRepository,
+      AssociationRepository,
+      CompetitionRepository,
+      SeasonRepository
   ],
   bootstrap: [AppComponent]
 })

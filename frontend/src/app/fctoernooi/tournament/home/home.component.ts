@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { TournamentRepository } from '../repository';
 import { AuthService } from '../../../auth/auth.service';
@@ -12,7 +12,7 @@ import { IAlert } from '../../../app.definitions';
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css']
 })
-export class TournamentHomeComponent extends TournamentComponent {
+export class TournamentHomeComponent extends TournamentComponent implements OnInit {
 
     deleteAlert: string = null;
     showRemoveQuestion = false;
@@ -25,6 +25,10 @@ export class TournamentHomeComponent extends TournamentComponent {
         roundRepository: RoundRepository
     ) {
         super( route, router, tournamentRepository, roundRepository );
+    }
+
+    ngOnInit() {
+        super.myNgOnInit();
     }
 
     isAdmin(): boolean {

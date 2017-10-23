@@ -62,6 +62,14 @@ export class TournamentStructureRoundComponent {
     }
   }
 
+  canRemovePoulePlace(round: Round ){
+    let nrOfPoulePlaces = round.getPoulePlaces().length;
+    round.getChildRounds().forEach( function( childRound ) {
+      nrOfPoulePlaces -= childRound.getPoulePlaces().length;
+    });
+    return ( nrOfPoulePlaces > 0 );
+  }
+
   removePoulePlace( round ): void {
     this.resetAlert();
     try {
