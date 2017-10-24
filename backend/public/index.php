@@ -9,6 +9,9 @@ if (PHP_SAPI == 'cli-server') {
     }
 }
 
+// this line can move to php.settings if allwebsites use it
+date_default_timezone_set ( 'UTC' );
+
 require __DIR__ . '/../vendor/autoload.php';
 
 session_start();

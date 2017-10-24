@@ -115,12 +115,12 @@ final class Tournament
     {
         $name = filter_var($request->getParam('name'), FILTER_SANITIZE_STRING);
         if ( !$name ){ return $response->withStatus(404, "de naam is ongeldig of leeg" ); }
-        $sportName = filter_var($request->getParam('sportname'), FILTER_SANITIZE_STRING);
+        $sportName = filter_var(trim($request->getParam('sportname')), FILTER_SANITIZE_STRING);
         if ( !$sportName ){ return $response->withStatus(404, "de sportnaam is ongeldig of leeg" ); }
         $nrOfCompetitors = filter_var($request->getParam('nrofcompetitors'), FILTER_VALIDATE_INT);
         if ( $nrOfCompetitors === false ){ return $response->withStatus(404, "het aantal deelnemers is ongeldig" ); }
-        // $equalNrOfGames = filter_var($request->getParam('equalnrofgames'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-        // if ( $equalNrOfGames === null ){ return $response->withStatus(404, "evenveel-wedstrijden is ongeldig" ); }
+        $startDate = \DateTime::createFromFormat ( 'Y-m-d\TH:i:s.000\Z', $request->getParam('startdate') );
+        if ( $startDate === null ){ return $response->withStatus(404, "de startdatum is ongeldig" ); }
 
         $user = null;
         if( $this->jwt->sub !== null ){
@@ -134,7 +134,8 @@ final class Tournament
                 $user,
                 $name,
                 $sportName,
-                $nrOfCompetitors
+                $nrOfCompetitors,
+                $startDate
             );
 
             return $response

@@ -68,7 +68,7 @@ class Service
      * @return bool
      * @throws \Exception
      */
-    public function create( User $user, $name, $sportName, $nrOfCompetitors )
+    public function create( User $user, $name, $sportName, $nrOfCompetitors, \DateTime $startDate )
     {
         $this->em->getConnection()->beginTransaction();
 
@@ -118,6 +118,7 @@ class Service
             $csRepos->save($competitionseason);
 
             $tournament = new Tournament( $competitionseason );
+            $tournament->setStartDateTime( $startDate );
             $this->repos->save($tournament);
 
             $tournamentRoleService = new TournamentRoleService( $this->tournamentRoleRepos );
@@ -130,9 +131,23 @@ class Service
                 throw new \Exception("het minimum aantal deelnemer is " . Tournament::MAXNROFCOMPETITORS);
             }
             // create structure op basis van $nrOfCompetitors, $equalNrOfGames
+
+            //bepaal op basis van de sportnaam welke default options er ingesteld dienen te worden!!!!
+            // QualifyRule
+            // NrOfMainToWin
+            // NrOfSubToWin
+            // winPointsPerGame:
+            // winPointsExtraTime:
+            // hasExtraTime:
+            // nrOfMinutesPerGame:
+            // nrOfMinutesExtraTime:
+
+
             $structureService = $this->voetbalService->getService(\Voetbal\Structure::class);
-            $createTeams = false;
-            $structureService->create( $competitionseason, $nrOfCompetitors, $createTeams );
+            $firstRound = $structureService->create( $competitionseason, $nrOfCompetitors );
+
+            $planningService = $this->voetbalService->getService(\Voetbal\Planning::class);
+            $planningService->schedule( $firstRound, $tournament->getStartDateTime() );
 
             $this->em->getConnection()->commit();
 

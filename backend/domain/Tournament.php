@@ -24,12 +24,17 @@ class Tournament
     private $competitionseason;
 
     /**
+     * @var \DateTime
+     */
+    private $startDateTime;
+
+    /**
      * @var ArrayCollection
      */
     private $roles;
 
     const MINNROFCOMPETITORS = 2;
-    const MAXNROFCOMPETITORS = 64;
+    const MAXNROFCOMPETITORS = 32;
 
     public function __construct( Competitionseason $competitionseason )
     {
@@ -69,6 +74,22 @@ class Tournament
     public function setCompetitionseason( Competitionseason $competitionseason )
     {
         $this->competitionseason = $competitionseason;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getStartDateTime()
+    {
+        return $this->startDateTime;
+    }
+
+    /**
+     * @param \DateTime $datetime
+     */
+    public function setStartDateTime( \DateTime $datetime )
+    {
+        $this->startDateTime = $datetime;
     }
 
     /**
