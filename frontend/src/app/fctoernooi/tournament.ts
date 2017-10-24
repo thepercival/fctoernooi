@@ -8,10 +8,11 @@ import { User } from '../user/user';
 
 export class Tournament {
     static readonly MINNROFCOMPETITORS = 2;
-    static readonly MAXNROFCOMPETITORS = 64;
+    static readonly MAXNROFCOMPETITORS = 32;
 
     protected id: number;
     protected competitionseason: Competitionseason;
+    protected startDateTime: Date;
     protected roles: TournamentRole[] = [];
 
     // constructor
@@ -33,6 +34,14 @@ export class Tournament {
 
     setCompetitionseason(competitionseason: Competitionseason): void {
         this.competitionseason = competitionseason;
+    }
+
+    getStartDateTime(): Date {
+        return this.startDateTime;
+    }
+
+    setStartDateTime(dateTime: Date): void {
+        this.startDateTime = dateTime;
     }
 
     getRoles(): TournamentRole[] {

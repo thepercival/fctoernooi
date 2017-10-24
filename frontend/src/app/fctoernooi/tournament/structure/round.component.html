@@ -52,7 +52,7 @@
     <!-- <div class="text-center mt-3" style="width:100%;"><h5 class="my-0"><i class="fa fa-arrow-circle-down"></i></h5></div> -->
     <div *ngFor="let winnersOrLosers of winnersAndLosers" class="col px-4">
       {{getWinnersLosersDescription( winnersOrLosers )}}
-      <nouislider class="horizontal-slider {{getWinnersLosersName( winnersOrLosers )}}" [config]="uiSliderConfig" [min]="0" [max]="this.round.getPoulePlaces().length" (ngModel)="sliderValueDummy" [ngModel]="round.getNrOfPlacesChildRound( winnersOrLosers )" (ngModelChange)="onSliderChange($event, winnersOrLosers)" style="margin-top: 16px;"></nouislider>
+      <nouislider class="horizontal-slider {{getWinnersLosersName( winnersOrLosers )}}" [config]="uiSliderConfig" [min]="0" [max]="round.getPoulePlaces().length" [ngModel]="round.getNrOfPlacesChildRound( winnersOrLosers )" (ngModelChange)="onSliderChange($event, winnersOrLosers)" style="margin-top: 16px;"></nouislider>
     </div>
   </div>
   <div class="row text-center">

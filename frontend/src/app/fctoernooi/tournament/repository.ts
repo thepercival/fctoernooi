@@ -92,6 +92,7 @@ export class TournamentRepository extends VoetbalRepository {
         const roles = this.tournamentRoleRepository.jsonArrayToObject(json.roles, tournament);
         tournament.setRoles( roles );
         tournament.setId( json.id );
+        tournament.setStartDateTime( new Date( json.startDateTime ) );
         return tournament;
     }
 

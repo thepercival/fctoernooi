@@ -46,6 +46,15 @@ export class TournamentNewComponent implements OnInit {
 
     const sportName = this.model.sportname !== -1 ? this.model.sportname : this.model.sportnameother;
     console.log(this.model.name, sportName, this.model.nrofcompetitors, this.model.equalnrofgames === true );
+
+      const startdate = new Date(
+          this.model.startdate.year,
+          this.model.startdate.month - 1,
+          this.model.startdate.day,
+          this.model.starttime.hour,
+          this.model.starttime.minute
+      );
+
     // maak toernooi aan
     // bij lukken ga naar /toernooi/home/?id=x
     // anders toon foutmelding!!!
@@ -55,7 +64,12 @@ export class TournamentNewComponent implements OnInit {
     // spreek een fctoernooi specifieke api call aan om ook de competitionseasonroles te zetten
     // de rest kan uit voetbal backend gehaald worden!!!
 
-    const json = { 'name': this.model.name, 'sportname': sportName, 'nrofcompetitors': this.model.nrofcompetitors };
+    const json = {
+        'name': this.model.name,
+        'sportname': sportName,
+        'nrofcompetitors': this.model.nrofcompetitors,
+        'startdate': startdate.toISOString()
+    };
 
     this.tournamentRepository.createObject(json)
         .subscribe(
