@@ -1,0 +1,15 @@
+<div *ngIf="round" class="col">
+  <div class="card round">
+    <div class="card-header">
+      <span *ngIf="round.getNumber() > 1" class="fa fa-info-circle icon-{{getClassPostfix( round.getWinnersOrLosers() )}}" title="{{getWinnersLosersDescription( round.getWinnersOrLosers() )}}ronde"></span> <span [innerHTML]="structureService.getRoundName( round )"></span>
+    </div>
+    <div class="card-block">
+      <div *ngIf="round.getNumber() == 1" class="d-flex justify-content-around mb-3">
+        ronde 1 hoera
+      </div>
+    </div>
+  </div>
+  <div class="row text-center">
+      <app-tournament-planninground *ngFor="let childRound of round.getChildRounds()" [ngStyle]="{ 'width': (100/round.getChildRounds().length) + '%' }" [round]="childRound" [structureService]="structureService"></app-tournament-planninground>
+  </div>
+</div>

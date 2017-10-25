@@ -1,0 +1,28 @@
+.card.round{
+    width:100%;
+}
+
+app-tournament-planninground {
+    width: 100%;
+}
+
+.card-block{
+    background-color: black;
+}
+
+.qualifier{
+    flex-basis: 100%;
+    border: 0;
+}
+
+.list-group.list-group-poule{
+    align-items: flex-start;
+}
+
+.list-group-item-not-qualifying {
+    background-color: transparent;
+}
+
+.card.qualification{
+    width:100%;
+}

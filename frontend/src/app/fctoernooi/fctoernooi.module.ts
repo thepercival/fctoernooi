@@ -9,6 +9,8 @@ import { TournamentNewComponent } from './tournament/new/new.component';
 import { TournamentHomeComponent } from './tournament/home/home.component';
 import { TournamentStructureComponent } from './tournament/structure/main.component';
 import { TournamentStructureRoundComponent } from './tournament/structure/round.component';
+import { TournamentPlanningComponent } from './tournament/planning/main.component';
+import { TournamentPlanningRoundComponent } from './tournament/planning/round.component';
 import { TournamentCompetitorsComponent } from './tournament/competitors/competitors.component';
 import { TournamentRoleRepository } from './tournament/role/repository';
 import { RoundRepository } from 'voetbaljs/round/repository';
@@ -34,6 +36,8 @@ import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
     TournamentHomeComponent,
     TournamentStructureComponent,
     TournamentStructureRoundComponent,
+    TournamentPlanningComponent,
+    TournamentPlanningRoundComponent,
     TournamentCompetitorsComponent
   ],
   providers: [
