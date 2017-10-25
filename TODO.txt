@@ -10,10 +10,3 @@ wedstrijden:	1	je mag alleen wedstrijden aanpassen van een ronde, waarbij de chi
 		3	handmatig:	mag worden aangepast, als de wedstrijd nog niet gespeeld is  
 basisgegevens:	?
 
-
-wedstrijden genereren:
-	wel of geen startdatum ronde
-	hoelang duurt een wedstrijd dan
-	hoeveel minuten tussen een wedstrijd
-	hoeveel minuten tussen een ronde
-

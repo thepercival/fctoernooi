@@ -12,7 +12,7 @@ FCToernooi\Tournament:
                 strategy: AUTO
     fields:
         startDateTime:
-          type: datetime
+          type: datetime_immutable
           unique: false
           nullable: false
     oneToMany:
