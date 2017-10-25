@@ -24,7 +24,7 @@ class Tournament
     private $competitionseason;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      */
     private $startDateTime;
 
@@ -77,7 +77,7 @@ class Tournament
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public function getStartDateTime()
     {
@@ -85,9 +85,9 @@ class Tournament
     }
 
     /**
-     * @param \DateTime $datetime
+     * @param \DateTimeImmutable $datetime
      */
-    public function setStartDateTime( \DateTime $datetime )
+    public function setStartDateTime( \DateTimeImmutable $datetime )
     {
         $this->startDateTime = $datetime;
     }

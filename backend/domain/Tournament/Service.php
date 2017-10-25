@@ -68,7 +68,7 @@ class Service
      * @return bool
      * @throws \Exception
      */
-    public function create( User $user, $name, $sportName, $nrOfCompetitors, \DateTime $startDate )
+    public function create( User $user, $name, $sportName, $nrOfCompetitors, \DateTimeImmutable $startDate )
     {
         $this->em->getConnection()->beginTransaction();
 
@@ -130,18 +130,6 @@ class Service
             if ( $nrOfCompetitors > Tournament::MAXNROFCOMPETITORS ){
                 throw new \Exception("het minimum aantal deelnemer is " . Tournament::MAXNROFCOMPETITORS);
             }
-            // create structure op basis van $nrOfCompetitors, $equalNrOfGames
-
-            //bepaal op basis van de sportnaam welke default options er ingesteld dienen te worden!!!!
-            // QualifyRule
-            // NrOfMainToWin
-            // NrOfSubToWin
-            // winPointsPerGame:
-            // winPointsExtraTime:
-            // hasExtraTime:
-            // nrOfMinutesPerGame:
-            // nrOfMinutesExtraTime:
-
 
             $structureService = $this->voetbalService->getService(\Voetbal\Structure::class);
             $firstRound = $structureService->create( $competitionseason, $nrOfCompetitors );
