@@ -68,7 +68,7 @@ class Service
      * @return bool
      * @throws \Exception
      */
-    public function create( User $user, $name, $sportName, $nrOfCompetitors, \DateTimeImmutable $startDate )
+    public function create( User $user, $name, $sportName, $nrOfCompetitors, $nrOfFields, \DateTimeImmutable $startDate )
     {
         $this->em->getConnection()->beginTransaction();
 
@@ -115,6 +115,7 @@ class Service
             $csService = $this->voetbalService->getService(Competitionseason::class);
             $competitionseason = $csService->create( $association, $competition, $season );
             $competitionseason->setSport($sportName);
+            $competitionseason->setNrOfFields( $nrOfFields );
             $csRepos->save($competitionseason);
 
             $tournament = new Tournament( $competitionseason );

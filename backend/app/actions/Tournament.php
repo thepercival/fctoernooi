@@ -119,6 +119,8 @@ final class Tournament
         if ( !$sportName ){ return $response->withStatus(404, "de sportnaam is ongeldig of leeg" ); }
         $nrOfCompetitors = filter_var($request->getParam('nrofcompetitors'), FILTER_VALIDATE_INT);
         if ( $nrOfCompetitors === false ){ return $response->withStatus(404, "het aantal deelnemers is ongeldig" ); }
+        $nrOfFields = filter_var($request->getParam('nroffields'), FILTER_VALIDATE_INT);
+        if ( $nrOfFields === false ){ return $response->withStatus(404, "het aantal velden is ongeldig" ); }
         $startDate = \DateTimeImmutable::createFromFormat ( 'Y-m-d\TH:i:s.000\Z', $request->getParam('startdate') );
         if ( $startDate === null ){ return $response->withStatus(404, "de startdatum is ongeldig" ); }
 
@@ -135,6 +137,7 @@ final class Tournament
                 $name,
                 $sportName,
                 $nrOfCompetitors,
+                $nrOfFields,
                 $startDate
             );
 
