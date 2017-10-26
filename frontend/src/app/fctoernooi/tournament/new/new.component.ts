@@ -18,6 +18,8 @@ export class TournamentNewComponent implements OnInit {
   validations: any = {
     'minnrofcompetitors' : Tournament.MINNROFCOMPETITORS,
     'maxnrofcompetitors' : Tournament.MAXNROFCOMPETITORS,
+    'minnroffields' : 1,
+    'maxnroffields' : 16,
     'minlengthname' : Competition.MIN_LENGTH_NAME,
     'maxlengthname' : Competition.MAX_LENGTH_NAME
   };
@@ -31,7 +33,9 @@ export class TournamentNewComponent implements OnInit {
 
       this.model = {
           starttime: {hour: date.getHours(), minute: date.getMinutes() },
-          startdate: {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate()}
+          startdate: {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate()},
+          nrofcompetitors: 5,
+          nroffields: 1
         };
     }
 
@@ -55,19 +59,11 @@ export class TournamentNewComponent implements OnInit {
           this.model.starttime.minute
       );
 
-    // maak toernooi aan
-    // bij lukken ga naar /toernooi/home/?id=x
-    // anders toon foutmelding!!!
-
-    // wat moet ik wegschrijven? competitionseason/competitionseasonroles/structuur obv inputparams
-    // name, sportname, sportnameother, nrofcompetitors
-    // spreek een fctoernooi specifieke api call aan om ook de competitionseasonroles te zetten
-    // de rest kan uit voetbal backend gehaald worden!!!
-
     const json = {
         'name': this.model.name,
         'sportname': sportName,
         'nrofcompetitors': this.model.nrofcompetitors,
+        'nroffields': this.model.nroffields,
         'startdate': startdate.toISOString()
     };
 

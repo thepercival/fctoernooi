@@ -13,7 +13,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="form-group col-sm-6">
+          <div class="form-group col">
             <label for="sportname" class="col-form-label">sport</label>
             <select id="sportname" name="sportname" class="form-control" [(ngModel)]="model.sportname" #sport="ngModel" required>
               <option value="">kies..</option>
@@ -21,19 +21,23 @@
               <option value="-1">anders namelijk..</option>
             </select>
           </div>
-          <div class="form-group col-sm-6" *ngIf="model.sportname == -1">
+          <div class="form-group col" *ngIf="model.sportname == -1">
             <label for="sportnameother" class="col-form-label">sportnaam</label>
             <input type="text" class="form-control" id="sportnameother" name="sportnameother" [(ngModel)]="model.sportnameother" #sportnameother="ngModel" [required]='model.sportname == -1'>
           </div>
         </div>
         <div class="row">
-          <div class="form-group col-sm-6">
+          <div class="form-group col">
             <label for="nrofcompetitors" class="col-form-label">aantal deelnemers</label>
             <input type="number" class="form-control" id="nrofcompetitors" name="nrofcompetitors" [min]="validations.minnrofcompetitors" [max]="validations.maxnrofcompetitors" placeholder="10" [(ngModel)]="model.nrofcompetitors" #nrofcompetitors="ngModel" required>
           </div>
+          <div class="form-group col">
+            <label for="nroffieds" class="col-form-label">aantal velden</label>
+            <input type="number" class="form-control" id="nroffieds" name="nroffieds" [min]="validations.minnroffields" [max]="validations.maxnroffields" placeholder="1" [(ngModel)]="model.nroffields" #nroffields="ngModel" required>
+          </div>
         </div>
         <div class="row">
-          <div class="form-group col-sm-6">
+          <div class="form-group col">
             <label for="dp" class="col-form-label">startdatum</label>
             <div class="input-group">
               <input class="form-control" placeholder="yyyy-mm-dd" id="dp" name="dp" [(ngModel)]="model.startdate" ngbDatepicker #d="ngbDatepicker" required>
@@ -41,7 +45,7 @@
               </span>
             </div>
           </div>
-          <div class="form-group col-sm-6">
+          <div class="form-group col">
             <label for="starttime" class="col-form-label">starttijd</label>
             <ngb-timepicker id="starttime" name="starttime" [(ngModel)]="model.starttime" [spinners]="false" required></ngb-timepicker>
           </div>
@@ -49,6 +53,8 @@
 
         <div *ngIf="f.submitted && model.nrofcompetitors < validations.minnrofcompetitors" class="alert alert-danger">het minimum aantal deelnemers is {{validations.minnrofcompetitors}}</div>
         <div *ngIf="f.submitted && model.nrofcompetitors > validations.maxnrofcompetitors" class="alert alert-danger">het maximum aantal deelnemers is {{validations.maxnrofcompetitors}}</div>
+        <div *ngIf="f.submitted && model.nroffields < validations.minnroffields" class="alert alert-danger">het minimum aantal velden is {{validations.minnroffields}}</div>
+        <div *ngIf="f.submitted && model.nroffields > validations.maxnroffields" class="alert alert-danger">het maximum aantal velden is {{validations.maxnroffields}}</div>
         <div *ngIf="error" class="alert alert-danger">{{error}}</div>
         <button type="submit" [disabled]="!f.form.valid || loading" class="btn btn-primary">maak toernooi <i *ngIf="loading" class="fa fa-spinner fa-spin fa-fw"></i></button>
       </form>
