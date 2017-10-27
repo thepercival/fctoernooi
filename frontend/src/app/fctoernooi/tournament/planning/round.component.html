@@ -1,15 +1,31 @@
-<div *ngIf="round" class="col">
-  <div class="card round">
-    <div class="card-header">
-      <span *ngIf="round.getNumber() > 1" class="fa fa-info-circle icon-{{getClassPostfix( round.getWinnersOrLosers() )}}" title="{{getWinnersLosersDescription( round.getWinnersOrLosers() )}}ronde"></span> <span [innerHTML]="structureService.getRoundName( round )"></span>
-    </div>
-    <div class="card-block">
-      <div *ngIf="round.getNumber() == 1" class="d-flex justify-content-around mb-3">
-        ronde 1 hoera
-      </div>
-    </div>
-  </div>
-  <div class="row text-center">
-      <app-tournament-planninground *ngFor="let childRound of round.getChildRounds()" [ngStyle]="{ 'width': (100/round.getChildRounds().length) + '%' }" [round]="childRound" [structureService]="structureService"></app-tournament-planninground>
+<div *ngIf="round && round.getPoulePlaces().length > 1">
+  <h2>
+    <span *ngIf="round.getNumber() > 1" class="fa fa-info-circle icon-{{getClassPostfix( round.getWinnersOrLosers() )}}" title="{{getWinnersLosersDescription( round.getWinnersOrLosers() )}}ronde"></span> <span [innerHTML]="structureService.getRoundName( round )"></span>
+  </h2>
+  <div class="d-flex justify-content-around mb-3">
+    <table class="table">
+      <thead>
+        <tr>
+          <th *ngIf="round.getConfig().getNrOfMi > 1" title="starttijd"><i class="fa fa-clock-o"></i></th>
+          <th title="veld"><i class="fi flaticon-soccer-field"></i></th>
+          <th class="hidden-xs-down" title="poule"><i class="fa fa-list"></i></th>
+          <th>thuis</th>
+          <th class="hidden-xs-down" title="score"><i class="fi flaticon-scoreboard"></i></th>
+          <th>uit</th>
+          <th class="hidden-xs-down" title="scheidsrechter"><i class="fi flaticon-referee"></i></th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let poule of round.getPoules()">
+        <tr *ngFor="let game of poule.getGames()">
+          <td>{{game.getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit","hour12": false,"hour":"2-digit","minute":"2-digit"} ) }}</td>
+          <td>{{game.getFieldNumber()}}</td>
+          <td class="hidden-xs-down">{{structureService.getPouleName(poule)}}</td>
+          <td>{{structureService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</td>
+          <td class="hidden-xs-down"></td>
+          <td>{{structureService.getPoulePlaceName(game.getAwayPoulePlace(), true )}}</td>
+          <td class="hidden-xs-down"></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

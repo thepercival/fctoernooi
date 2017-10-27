@@ -36,7 +36,8 @@ export class TournamentStructureRoundComponent {
   }
 
   getWinnersLosersDescription( winnersOrLosers: number ): string {
-    return winnersOrLosers === Round.WINNERS ? 'winnaars' : ( winnersOrLosers === Round.LOSERS ? 'verliezers' : '' );
+    const description = this.structureService.getWinnersLosersDescription( winnersOrLosers );
+    return ( description !== '' ? description + 's' : description );
   }
 
   addPoule( round, fillPouleToMinimum = true ): void {

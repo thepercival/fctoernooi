@@ -19,13 +19,6 @@ export class TournamentPlanningRoundComponent {
   public winnersAndLosers: number[];
   public sliderValueDummy = 3;
 
-  uiSliderConfig: any = {
-    behaviour: 'drag',
-    margin: 1,
-    step: 1,
-    tooltips: [ true ]
-  };
-
   constructor() {
       this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
       this.resetAlert();
@@ -34,6 +27,7 @@ export class TournamentPlanningRoundComponent {
   getWinnersLosersName( winnersOrLosers: number ): string {
     return winnersOrLosers === Round.WINNERS ? 'winners' : 'losers';
   }
+
 
   getWinnersLosersDescription( winnersOrLosers: number ): string {
     return winnersOrLosers === Round.WINNERS ? 'winnaars' : ( winnersOrLosers === Round.LOSERS ? 'verliezers' : '' );

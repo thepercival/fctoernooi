@@ -48,7 +48,7 @@ export class TournamentNewComponent implements OnInit {
     }
     this.loading = true;
 
-    const sportName = this.model.sportname !== -1 ? this.model.sportname : this.model.sportnameother;
+    const sportName = this.model.sportname !== '-1' ? this.model.sportname : this.model.sportnameother;
     console.log(this.model.name, sportName, this.model.nrofcompetitors, this.model.equalnrofgames === true );
 
       const startdate = new Date(

@@ -1,8 +1,10 @@
-<div class="container-fluid">
-  <h1 *ngIf="tournament" align="center">
-    <a [routerLink]="['/toernooi/home', tournament.getId()]">{{tournament.getName()}}</a> <small>wedstrijden</small>
-  </h1>
-  <div class="row text-center">
-    <app-tournament-planninground style="width: 100%;" [round]="structureService?.getFirstRound()" [structureService]="structureService"></app-tournament-planninground>
+<div *ngIf="tournament && structureService" class="container-fluid px-0">
+  <div class="row justify-content-center no-gutters">
+    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
+      <h1>
+        <a [routerLink]="['/toernooi/home', tournament.getId()]">{{tournament.getName()}}</a> <small>wedstrijden</small>
+      </h1>
+      <app-tournament-planninground *ngFor="let round of structureService.getRounds()" [round]="round" [structureService]="structureService"></app-tournament-planninground>
+    </div>
   </div>
 </div>
