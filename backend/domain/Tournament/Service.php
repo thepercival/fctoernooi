@@ -13,6 +13,7 @@ use Voetbal\Association;
 use Voetbal\Competition;
 use Voetbal\Season;
 use Voetbal\Competitionseason;
+use Voetbal\Field;
 use FCToernooi\Tournament;
 use FCToernooi\Tournament\Repository as TournamentRepository;
 use FCToernooi\Tournament\Role\Repository as TournamentRoleRepository;
@@ -115,8 +116,12 @@ class Service
             $csService = $this->voetbalService->getService(Competitionseason::class);
             $competitionseason = $csService->create( $association, $competition, $season );
             $competitionseason->setSport($sportName);
-            $competitionseason->setNrOfFields( $nrOfFields );
             $csRepos->save($competitionseason);
+
+            $fieldRepos = $this->voetbalService->getRepository(Field::class);
+            for( $i = 1 ; $i <= $nrOfFields ; $i++ ) {
+                $fieldRepos->save( new Field( $competitionseason, $i, (string)$i ) );
+            }
 
             $tournament = new Tournament( $competitionseason );
             $tournament->setStartDateTime( $startDate );
