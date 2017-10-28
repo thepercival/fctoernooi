@@ -14,6 +14,8 @@ import { TournamentPlanningRoundComponent } from './tournament/planning/round.co
 import { TournamentCompetitorsComponent } from './tournament/competitors/competitors.component';
 import { TournamentRoleRepository } from './tournament/role/repository';
 import { RoundRepository } from 'voetbaljs/round/repository';
+import { RoundConfigRepository } from 'voetbaljs/round/config/repository';
+import { RoundScoreConfigRepository } from 'voetbaljs/round/scoreconfig/repository';
 import { PouleRepository } from 'voetbaljs/poule/repository';
 import { PoulePlaceRepository } from 'voetbaljs/pouleplace/repository';
 import { QualifyRuleRepository } from 'voetbaljs/qualifyrule/repository';
@@ -43,6 +45,8 @@ import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
   providers: [
     TournamentRoleRepository,
     RoundRepository,
+    RoundConfigRepository,
+    RoundScoreConfigRepository,
     PouleRepository,
     PoulePlaceRepository,
     QualifyRuleRepository,
