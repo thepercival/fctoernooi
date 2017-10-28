@@ -22,6 +22,8 @@ import { CompetitionseasonRepository } from 'voetbaljs/competitionseason/reposit
 import { AssociationRepository } from 'voetbaljs/association/repository';
 import { CompetitionRepository } from 'voetbaljs/competition/repository';
 import { SeasonRepository } from 'voetbaljs/season/repository';
+import { FieldRepository } from 'voetbaljs/field/repository';
+import { RefereeRepository } from 'voetbaljs/referee/repository';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,9 @@ import { SeasonRepository } from 'voetbaljs/season/repository';
       CompetitionseasonRepository,
       AssociationRepository,
       CompetitionRepository,
-      SeasonRepository
+      SeasonRepository,
+      FieldRepository,
+      RefereeRepository
   ],
   bootstrap: [AppComponent]
 })

@@ -18,7 +18,7 @@
       <tbody *ngFor="let poule of round.getPoules()">
         <tr *ngFor="let game of poule.getGames()">
           <td>{{game.getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit","hour12": false,"hour":"2-digit","minute":"2-digit"} ) }}</td>
-          <td>{{game.getFieldNumber()}}</td>
+          <td>{{game.getField().getName()}}</td>
           <td class="hidden-xs-down">{{structureService.getPouleName(poule)}}</td>
           <td>{{structureService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</td>
           <td class="hidden-xs-down"></td>
