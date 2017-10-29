@@ -38,6 +38,8 @@ export class TournamentComponent implements OnDestroy {
                     /* happy path */ (tournament: Tournament) => {
                         this.tournament = tournament;
 
+
+
                         this.roundRepository.getObject( tournament.getCompetitionseason() )
                             .subscribe(
                                 /* happy path */ (round: Round ) => {

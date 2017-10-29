@@ -13,69 +13,20 @@ import { QualifyRule } from 'voetbaljs/qualifyrule';
 })
 export class TournamentPlanningRoundComponent {
 
+  @Input() tournament: Tournament;
   @Input() round: Round;
   @Input() structureService: StructureService;
   public alert: any;
-  public winnersAndLosers: number[];
-  public sliderValueDummy = 3;
+  // public winnersAndLosers: number[];
 
   constructor() {
-      this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
+      // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
       this.resetAlert();
   }
 
-  getWinnersLosersName( winnersOrLosers: number ): string {
-    return winnersOrLosers === Round.WINNERS ? 'winners' : 'losers';
-  }
-
-
   getWinnersLosersDescription( winnersOrLosers: number ): string {
-    return winnersOrLosers === Round.WINNERS ? 'winnaars' : ( winnersOrLosers === Round.LOSERS ? 'verliezers' : '' );
-  }
-
-  addPoule( round, fillPouleToMinimum = true ): void {
-    this.resetAlert();
-    this.structureService.addPoule( round, fillPouleToMinimum );
-  }
-
-  removePoule( round ): void {
-    this.resetAlert();
-    try {
-      this.structureService.removePoule(round);
-    } catch (e) {
-      this.setAlert( 'danger', e.message );
-    }
-  }
-
-  addPoulePlace( round ): void {
-    this.resetAlert();
-    try {
-      this.structureService.addPoulePlace(round);
-    } catch (e) {
-      this.setAlert( 'danger', e.message );
-    }
-  }
-
-  canRemovePoulePlace(round: Round ){
-    let nrOfPoulePlaces = round.getPoulePlaces().length;
-    round.getChildRounds().forEach( function( childRound ) {
-      nrOfPoulePlaces -= childRound.getPoulePlaces().length;
-    });
-    return ( nrOfPoulePlaces > 0 );
-  }
-
-  removePoulePlace( round ): void {
-    this.resetAlert();
-    try {
-      this.structureService.removePoulePlace(round);
-    } catch (e) {
-      this.setAlert( 'danger', e.message );
-    }
-  }
-
-  getMaxSliderValue( winnersOrLosers: number ): number {
-    const opposing = this.structureService.getOpposing( winnersOrLosers );
-    return this.round.getPoulePlaces().length - this.round.getNrOfPlacesChildRound( opposing );
+    const description = this.structureService.getWinnersLosersDescription( winnersOrLosers );
+    return ( description !== '' ? description + 's' : description );
   }
 
   getClassPostfix( winnersOrLosers: number): string {
@@ -106,10 +57,6 @@ export class TournamentPlanningRoundComponent {
 
   public closeAlert( name: string) {
     this.alert = null;
-  }
-
-  public onSliderChange( nrOfChildPlacesNew: number, winnersOrLosers: number ) {
-    this.structureService.changeNrOfPlacesChildRound( nrOfChildPlacesNew, this.round, winnersOrLosers );
   }
 
 
