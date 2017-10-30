@@ -57,6 +57,7 @@ export class TournamentPlanningFieldsComponent implements OnInit {
         const fieldListItem: IFieldListItem = { field: field, editable: false };
         this.fieldsList.push( fieldListItem );
 
+        // hier wedstrijden generen en eventueel waarschuwingen tonen
     }
 
     removeField(fieldItem: IFieldListItem) {

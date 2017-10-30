@@ -2,6 +2,10 @@
     <div class="row justify-content-center">
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
             bij verwijderen of toevoegen van veld ook nieuwe planning genereren
+            dit tonen in status balk, eerst "wedstrijden genereren..."
+            dan "wedstrijden opslaan...."
+            dan "wedstrijden opgeslagen met een icon vinkje"
+            <i class="fa fa-spinner fa-spin"></i>
             <ul class="list-group">
                 <li *ngFor="let fieldItem of fieldsList;" class="list-group-item justify-content-between">
                     <button type="button" class="btn btn-sm" [disabled]="( !fieldItem.editable && disableEditButtons ) || ( fieldItem.editable && fieldItem.field.getName().length < validations.minlengthname )" (click)="saveedit(fieldItem);"><span class="fa fa-{{fieldItem.editable ? 'save' : 'pencil'}}"></span></button>
