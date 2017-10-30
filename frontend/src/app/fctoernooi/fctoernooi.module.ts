@@ -10,9 +10,13 @@ import { TournamentHomeComponent } from './tournament/home/home.component';
 import { TournamentStructureComponent } from './tournament/structure/main.component';
 import { TournamentStructureRoundComponent } from './tournament/structure/round.component';
 import { TournamentPlanningComponent } from './tournament/planning/main.component';
-import { TournamentPlanningRoundComponent } from './tournament/planning/round.component';
+import { TournamentPlanningViewComponent } from './tournament/planning/view/component';
 import { TournamentCompetitorsComponent } from './tournament/competitors/competitors.component';
-import { TournamentRoundSettingsComponent } from './tournament/planning/roundsettings.component';
+import { TournamentPlanningSettingsComponent } from './tournament/planning/settings/component';
+import { TournamentPlanningRefereesComponent } from './tournament/planning/referees/component';
+import { TournamentPlanningFieldsComponent } from './tournament/planning/fields/component';
+
+
 import { TournamentRoleRepository } from './tournament/role/repository';
 import { RoundRepository } from 'voetbaljs/round/repository';
 import { RoundConfigRepository } from 'voetbaljs/round/config/repository';
@@ -40,9 +44,11 @@ import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
     TournamentStructureComponent,
     TournamentStructureRoundComponent,
     TournamentPlanningComponent,
-    TournamentPlanningRoundComponent,
+    TournamentPlanningViewComponent,
     TournamentCompetitorsComponent,
-    TournamentRoundSettingsComponent
+    TournamentPlanningSettingsComponent,
+    TournamentPlanningRefereesComponent,
+    TournamentPlanningFieldsComponent
   ],
   providers: [
     TournamentRoleRepository,

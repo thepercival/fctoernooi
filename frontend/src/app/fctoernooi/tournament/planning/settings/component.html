@@ -1,0 +1,23 @@
+<div *ngIf="round && tournament && structureService" class="container-fluid px-0">
+    <div class="row justify-content-center no-gutters">
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
+            <h2>
+                <span *ngIf="round.getNumber() > 1" class="fa fa-info-circle icon-{{getClassPostfix( round.getWinnersOrLosers() )}}" title="{{getWinnersLosersDescription( round.getWinnersOrLosers() )}}ronde"></span> <span [innerHTML]="structureService.getRoundName( round )"></span>
+            </h2>
+            <ul>
+                <li>kwalificatieregel</li>
+                <li>aantal onderlinge duels</li>
+                <li>punten per overwinning</li>
+                <li>aantal minuten per wedstrijd</li>
+                <li>kan verlengen</li>
+                <li>punten per overwinning na verlenging</li>
+                <li>aantal minuten verlenging</li>
+            </ul>
+            <ul>score:
+                <li>naam</li>
+                <li>start</li>
+                <li>doel</li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -134,12 +134,9 @@ export class TournamentRepository extends VoetbalRepository {
             .delete(url, new RequestOptions({ headers: super.getHeaders() }))
             .map((res) => {
                 const index = this.objects.indexOf( tournament );
-                console.log(index);
                 if (index > -1) {
                     this.objects.splice(index, 1);
-                }
-                console.log( this.objects );
-                return res;
+                }return res;
             } )
             .catch(this.handleError);
     }

@@ -1,0 +1,17 @@
+.input-fieldname {
+    padding: 0.5rem 0.75rem;
+    max-width: 150px;
+}
+
+input.ng-valid[required],select.ng-valid[required] {
+    border-left: 5px solid #42A948; /* green */
+}
+
+input.ng-invalid, select.ng-invalid {
+    border-left: 5px solid #a94442; /* red */
+}
+
+.alert-small {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}

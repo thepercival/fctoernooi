@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Tournament } from '../../tournament';
+import { Tournament } from '../../../tournament';
 import { StructureService } from 'voetbaljs/structure/service';
 import { PoulePlace } from 'voetbaljs/pouleplace';
 import { Poule } from 'voetbaljs/poule';
@@ -7,11 +7,11 @@ import { Round } from 'voetbaljs/round';
 import { QualifyRule } from 'voetbaljs/qualifyrule';
 
 @Component({
-  selector: 'app-tournament-planninground',
-  templateUrl: './round.component.html',
-  styleUrls: ['./round.component.css']
+  selector: 'app-tournament-planning-view',
+  templateUrl: './component.html',
+  styleUrls: ['./component.css']
 })
-export class TournamentPlanningRoundComponent {
+export class TournamentPlanningViewComponent {
 
   @Input() tournament: Tournament;
   @Input() round: Round;
@@ -20,8 +20,8 @@ export class TournamentPlanningRoundComponent {
   // public winnersAndLosers: number[];
 
   constructor() {
-      // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
-      this.resetAlert();
+    // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
+    this.resetAlert();
   }
 
   getWinnersLosersDescription( winnersOrLosers: number ): string {

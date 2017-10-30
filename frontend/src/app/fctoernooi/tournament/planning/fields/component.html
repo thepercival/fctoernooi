@@ -1,0 +1,25 @@
+<div class="container-fluid mt-3">
+    <div class="row justify-content-center">
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+            bij verwijderen of toevoegen van veld ook nieuwe planning genereren
+            <ul class="list-group">
+                <li *ngFor="let fieldItem of fieldsList;" class="list-group-item justify-content-between">
+                    <button type="button" class="btn btn-sm" [disabled]="( !fieldItem.editable && disableEditButtons ) || ( fieldItem.editable && fieldItem.field.getName().length < validations.minlengthname )" (click)="saveedit(fieldItem);"><span class="fa fa-{{fieldItem.editable ? 'save' : 'pencil'}}"></span></button>
+                    <span>{{fieldItem.field.getNumber()}}</span>
+                    <span *ngIf="!fieldItem.editable && fieldItem.field != null">{{fieldItem.field.getName() }}</span>
+                    <span *ngIf="!fieldItem.editable && fieldItem.field == null" class="fa fa-times-circle icon-danger"></span>
+                    <input type="text" class="form-control input-fieldname" [minlength]="validations.minlengthname" [maxlength]="validations.maxlengthname" [ngModel]="fieldItem.field.getName()" (ngModelChange)="fieldItem.field.setName($event)" *ngIf="fieldItem.editable" required>
+                    <button type="button" class="btn btn-sm cdk" [disabled]="( !fieldItem.editable && disableEditButtons )" (click)="removeField(fieldItem);"><span class="fa fa-remove"></span></button>
+                </li>
+            </ul>
+            <div class="row mt-2">
+                <div class="col-3">
+                    <button type="button" class="btn btn-sm btn-default" style="margin-left: 1.25rem" (click)="addField()"><i class="fa fa-plus"></i></button>
+                </div>
+                <div class="col-9 alert-custom">
+                    <div role="alert" class="alert alert-info alert-small">staus...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
