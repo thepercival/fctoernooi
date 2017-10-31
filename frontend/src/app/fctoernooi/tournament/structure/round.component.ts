@@ -81,7 +81,7 @@ export class TournamentStructureRoundComponent {
   }
 
   getMaxSliderValue( winnersOrLosers: number ): number {
-    const opposing = this.structureService.getOpposing( winnersOrLosers );
+    const opposing = Round.getOpposing( winnersOrLosers );
     return this.round.getPoulePlaces().length - this.round.getNrOfPlacesChildRound( opposing );
   }
 
