@@ -4,7 +4,7 @@
       <!--<span *ngIf="round.getNumber() > 1" class="fa fa-info-circle icon-{{getClassPostfix( round.getWinnersOrLosers() )}}" title="{{getWinnersLosersDescription( round.getWinnersOrLosers() )}}ronde"></span> <span [innerHTML]="structureService.getRoundName( round )"></span>-->
     <!--</h2>-->
   <!--</div>-->
-  <div class="d-flex justify-content-around mb-3">
+  <div class="d-flex justify-content-around my-3">
     <table class="table">
       <thead>
       <tr>
@@ -17,11 +17,11 @@
         <th class="hidden-xs-down" title="scheidsrechter"><i class="fi flaticon-referee"></i></th>
       </tr>
       </thead>
-      <tbody *ngFor="let poule of round.getPoules()">
-      <tr *ngFor="let game of poule.getGames()">
+      <tbody >
+      <tr *ngFor="let game of round.getGamesByNumber()">
         <td>{{game.getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit","hour12": false,"hour":"2-digit","minute":"2-digit"} ) }}</td>
         <td>{{game.getField().getName()}}</td>
-        <td class="hidden-xs-down">{{structureService.getPouleName(poule)}}</td>
+        <td class="hidden-xs-down">{{structureService.getPouleName(game.getPoule())}}</td>
         <td>{{structureService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</td>
         <td class="hidden-xs-down"></td>
         <td>{{structureService.getPoulePlaceName(game.getAwayPoulePlace(), true )}}</td>

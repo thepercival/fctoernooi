@@ -33,7 +33,6 @@ export class TournamentRepository extends VoetbalRepository {
     getObjects(): Observable<Tournament[]> {
         if ( this.objects != null ) {
             return Observable.create( (observer: Observer<Tournament[]> ) => {
-                console.log('getTournamentsFromCache', this.objects);
                 observer.next(this.objects);
                 observer.complete();
             });
@@ -92,7 +91,6 @@ export class TournamentRepository extends VoetbalRepository {
         const roles = this.tournamentRoleRepository.jsonArrayToObject(json.roles, tournament);
         tournament.setRoles( roles );
         tournament.setId( json.id );
-        tournament.setStartDateTime( new Date( json.startDateTime ) );
         return tournament;
     }
 
@@ -109,7 +107,6 @@ export class TournamentRepository extends VoetbalRepository {
             // ...and calling .json() on the response to return data
             .map((res) => {
                 const tournament = this.jsonToObjectHelper(res.json());
-                console.log(res.json());
                 this.objects.push( tournament );
                 return tournament;
             })

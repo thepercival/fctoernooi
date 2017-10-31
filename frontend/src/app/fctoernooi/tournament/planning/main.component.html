@@ -22,7 +22,7 @@
         <ngb-tab>
           <ng-template ngbTabTitle><i class="fi flaticon-soccer-field" title="velden"></i> <span class="hidden-xs-down">velden</span></ng-template>
           <ng-template ngbTabContent ngbTabContentClass="pt-3">
-            <app-tournament-planning-fields [tournament]="tournament"></app-tournament-planning-fields>
+            <app-tournament-planning-fields [tournament]="tournament" [round]="structureService.getFirstRound()"></app-tournament-planning-fields>
           </ng-template>
         </ngb-tab>
         <ngb-tab>
