@@ -116,6 +116,7 @@ class Service
             $csService = $this->voetbalService->getService(Competitionseason::class);
             $competitionseason = $csService->create( $association, $competition, $season );
             $competitionseason->setSport($sportName);
+            $competitionseason->setStartDateTime( $startDate );
             $csRepos->save($competitionseason);
 
             $fieldRepos = $this->voetbalService->getRepository(Field::class);
@@ -124,7 +125,6 @@ class Service
             }
 
             $tournament = new Tournament( $competitionseason );
-            $tournament->setStartDateTime( $startDate );
             $this->repos->save($tournament);
 
             $tournamentRoleService = new TournamentRoleService( $this->tournamentRoleRepos );
@@ -141,7 +141,7 @@ class Service
             $firstRound = $structureService->create( $competitionseason, $nrOfCompetitors );
 
             $planningService = $this->voetbalService->getService(\Voetbal\Planning::class);
-            $planningService->schedule( $firstRound, $tournament->getStartDateTime() );
+            $planningService->schedule( $firstRound, $competitionseason->getStartDateTime() );
 
             $this->em->getConnection()->commit();
 

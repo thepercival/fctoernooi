@@ -10,11 +10,6 @@ FCToernooi\Tournament:
             column: id
             generator:
                 strategy: AUTO
-    fields:
-        startDateTime:
-          type: datetime_immutable
-          unique: false
-          nullable: false
     oneToMany:
         roles:
           targetEntity: FCToernooi\Tournament\Role

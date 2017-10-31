@@ -24,11 +24,6 @@ class Tournament
     private $competitionseason;
 
     /**
-     * @var \DateTimeImmutable
-     */
-    private $startDateTime;
-
-    /**
      * @var ArrayCollection
      */
     private $roles;
@@ -74,22 +69,6 @@ class Tournament
     public function setCompetitionseason( Competitionseason $competitionseason )
     {
         $this->competitionseason = $competitionseason;
-    }
-
-    /**
-     * @return \DateTimeImmutable
-     */
-    public function getStartDateTime()
-    {
-        return $this->startDateTime;
-    }
-
-    /**
-     * @param \DateTimeImmutable $datetime
-     */
-    public function setStartDateTime( \DateTimeImmutable $datetime )
-    {
-        $this->startDateTime = $datetime;
     }
 
     /**

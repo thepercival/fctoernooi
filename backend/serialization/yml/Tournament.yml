@@ -8,8 +8,5 @@ FCToernooi\Tournament:
       type: integer
     competitionseason:
       type: Voetbal\Competitionseason
-    startDateTime:
-      type: DateTimeImmutable
-      serialized_name: startDateTime
     roles:
       type: ArrayCollection<FCToernooi\Tournament\Role>
