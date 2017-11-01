@@ -1,9 +1,11 @@
 <div *ngIf="round && tournament && structureService" class="container-fluid px-0">
+    <div class="d-flex justify-content-between mt-3">
+        <h2>
+            <span *ngIf="round.getNumber() > 1" class="fa fa-info-circle icon-{{getClassPostfix( round.getWinnersOrLosers() )}}" title="{{getWinnersLosersDescription( round.getWinnersOrLosers() )}}ronde"></span> <span [innerHTML]="structureService.getRoundName( round )"></span>
+        </h2>
+    </div>
     <div class="row justify-content-center no-gutters">
         <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
-            <h2>
-                <span *ngIf="round.getNumber() > 1" class="fa fa-info-circle icon-{{getClassPostfix( round.getWinnersOrLosers() )}}" title="{{getWinnersLosersDescription( round.getWinnersOrLosers() )}}ronde"></span> <span [innerHTML]="structureService.getRoundName( round )"></span>
-            </h2>
             <ul>
                 <li>kwalificatieregel</li>
                 <li>aantal onderlinge duels</li>
@@ -18,6 +20,27 @@
                 <li>start</li>
                 <li>doel</li>
             </ul>
+            <form name="form" (ngSubmit)="false" #f="ngForm" novalidate>
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="nrofheadtoheadmatches" class="col-form-label">aantal onderlinge duels</label>
+                        <select [ngModel]="config.getNrofheadtoheadmatches()" (ngModelChange)="setNrofheadtoheadmatches($event)" id="nrofheadtoheadmatches" name="nrofheadtoheadmatches" class="form-control">
+                            <option *ngFor="let n of nrofheadtoheadmatches" [attr.value]="n">{{n}}</option>
+                        </select>
+
+                        <!--<input type="number" class="form-control" id="nrofheadtoheadmatches" name="nrofheadtoheadmatches" [min]="validations.minnrofheadtoheadmatches" [max]="validations.maxnrofheadtoheadmatches" [(ngModel)]="model.nrofheadtoheadmatches" #nrofheadtoheadmatches="ngModel" required>-->
+                    </div>
+                    <!--<div class="form-group col">-->
+                        <!--<label for="winpointspergame" class="col-form-label">punten per overwinning</label>-->
+                        <!--<input type="number" class="form-control" id="winpointspergame" name="winpointspergame" [min]="validations.minwinpointspergame" [max]="validations.maxwinpointspergame" [(ngModel)]="model.winpointspergame" #winpointspergame="ngModel" required>-->
+                    <!--</div>-->
+                </div>
+                <!--<div *ngIf="f.submitted && model.nrofcompetitors < validations.minnrofcompetitors" class="alert alert-danger">het minimum aantal deelnemers is {{validations.minnrofcompetitors}}</div>-->
+                <!--<div *ngIf="f.submitted && model.nrofcompetitors > validations.maxnrofcompetitors" class="alert alert-danger">het maximum aantal deelnemers is {{validations.maxnrofcompetitors}}</div>-->
+                <!--<div *ngIf="f.submitted && model.nroffields < validations.minnroffields" class="alert alert-danger">het minimum aantal velden is {{validations.minnroffields}}</div>-->
+                <!--<div *ngIf="f.submitted && model.nroffields > validations.maxnroffields" class="alert alert-danger">het maximum aantal velden is {{validations.maxnroffields}}</div>-->
+                <!--<div *ngIf="error" class="alert alert-danger">{{error}}</div>-->
+            </form>
         </div>
     </div>
 </div>
