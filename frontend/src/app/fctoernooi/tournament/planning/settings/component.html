@@ -1,4 +1,4 @@
-<div *ngIf="round && tournament && structureService" class="container-fluid px-0">
+<div *ngIf="round && config && tournament && structureService" class="container-fluid px-0">
     <div class="d-flex justify-content-between mt-3">
         <h2>
             <span *ngIf="round.getNumber() > 1" class="fa fa-info-circle icon-{{getClassPostfix( round.getWinnersOrLosers() )}}" title="{{getWinnersLosersDescription( round.getWinnersOrLosers() )}}ronde"></span> <span [innerHTML]="structureService.getRoundName( round )"></span>
@@ -24,8 +24,8 @@
                 <div class="row">
                     <div class="form-group col">
                         <label for="nrofheadtoheadmatches" class="col-form-label">aantal onderlinge duels</label>
-                        <select [ngModel]="config.getNrofheadtoheadmatches()" (ngModelChange)="setNrofheadtoheadmatches($event)" id="nrofheadtoheadmatches" name="nrofheadtoheadmatches" class="form-control">
-                            <option *ngFor="let n of nrofheadtoheadmatches" [attr.value]="n">{{n}}</option>
+                        <select [ngModel]="config.getNrOfHeadtoheadMatches()" (ngModelChange)="setNrOfHeadtoheadMatches($event)" id="nrOfHeadtoheadMatches" name="nrOfHeadtoheadMatches" class="form-control">
+                            <option *ngFor="let n of nrOfHeadtoheadMatches" [attr.value]="n">{{n}}</option>
                         </select>
 
                         <!--<input type="number" class="form-control" id="nrofheadtoheadmatches" name="nrofheadtoheadmatches" [min]="validations.minnrofheadtoheadmatches" [max]="validations.maxnrofheadtoheadmatches" [(ngModel)]="model.nrofheadtoheadmatches" #nrofheadtoheadmatches="ngModel" required>-->

@@ -16,12 +16,12 @@ export class TournamentPlanningSettingsComponent implements OnInit {
     @Input() round: Round;
     @Input() structureService: StructureService;
 
-    nrofheadtoheadmatches: number[] = [];
+    nrOfHeadtoheadMatches: number[] = [];
     config: RoundConfig;
     private planningService: PlanningService;
     validations: any = {
-        'minnrofheadtoheadmatches' : 1,
-        'maxnrofheadtoheadmatches' : 4,
+        'minNrOfHeadtoheadMatches' : 1,
+        'maxNrOfHeadtoheadMatches' : 4,
         'minwinpointspergame' : 1,
         'maxwinpointspergame' : 10
     };
@@ -31,8 +31,9 @@ export class TournamentPlanningSettingsComponent implements OnInit {
 
     ngOnInit() {
         this.config = this.round.getConfig();
-        for ( let i = this.validations.minnrofheadtoheadmatches ; i <= this.validations.maxnrofheadtoheadmatches ; i++ ) {
-            this.nrofheadtoheadmatches.push( i );
+        console.log(this.config);
+        for ( let i = this.validations.minNrOfHeadtoheadMatches ; i <= this.validations.maxNrOfHeadtoheadMatches ; i++ ) {
+            this.nrOfHeadtoheadMatches.push( i );
         }
         this.planningService = new PlanningService(
             this.tournament.getCompetitionseason().getStartDateTime()
@@ -49,12 +50,13 @@ export class TournamentPlanningSettingsComponent implements OnInit {
         return winnersOrLosers === Round.WINNERS ? 'success' : ( winnersOrLosers === Round.LOSERS ? 'danger' : '');
     }
 
-    setNrofheadtoheadmatches( nrofheadtoheadmatches ) {
-        if ( nrofheadtoheadmatches < this.validations.minnrofheadtoheadmatches
-            || nrofheadtoheadmatches > this.validations.maxnrofheadtoheadmatches ) {
+    setNrOfHeadtoheadMatches( nrOfHeadtoheadMatches ) {
+        if ( nrOfHeadtoheadMatches < this.validations.minNrOfHeadtoheadMatches
+            || nrOfHeadtoheadMatches > this.validations.maxNrOfHeadtoheadMatches ) {
             return;
         }
-        this.config.setNrofheadtoheadmatches( nrofheadtoheadmatches );
-        this.planningService.reschedule( this.round );
+        this.config.setNrOfHeadtoheadMatches( nrOfHeadtoheadMatches );
+        this.planningService.create( this.round );
+        // this.planningService.reschedule( this.round );
     }
 }
