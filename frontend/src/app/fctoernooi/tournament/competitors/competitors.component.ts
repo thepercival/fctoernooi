@@ -60,7 +60,7 @@ export class TournamentCompetitorsComponent extends TournamentComponent implemen
 
   saveedit( teamListItem: ITeamListItem ) {
     if( !teamListItem.editable && teamListItem.team == null ) {
-      teamListItem.team = new Team('naam');
+      teamListItem.team = new Team('');
       teamListItem.team.setAssociation(this.structureService.getCompetitionseason().getAssociation());
       teamListItem.pouleplace.setTeam( teamListItem.team );
     }

@@ -25,7 +25,7 @@
         <td>{{structureService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</td>
         <td class="hidden-xs-down"></td>
         <td>{{structureService.getPoulePlaceName(game.getAwayPoulePlace(), true )}}</td>
-        <td class="hidden-xs-down"></td>
+        <td class="hidden-xs-down">{{game.getReferee()?.getName()}}</td>
       </tr>
       </tbody>
     </table>
