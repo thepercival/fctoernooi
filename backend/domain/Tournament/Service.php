@@ -114,9 +114,8 @@ class Service
                 throw new \Exception("het toernooi bestaat al", E_ERROR );
             }
             $csService = $this->voetbalService->getService(Competitionseason::class);
-            $competitionseason = $csService->create( $association, $competition, $season );
+            $competitionseason = $csService->create( $association, $competition, $season, $startDate );
             $competitionseason->setSport($sportName);
-            $competitionseason->setStartDateTime( $startDate );
             $csRepos->save($competitionseason);
 
             $fieldRepos = $this->voetbalService->getRepository(Field::class);
