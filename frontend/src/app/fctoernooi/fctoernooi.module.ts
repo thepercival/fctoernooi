@@ -16,7 +16,6 @@ import { TournamentPlanningSettingsComponent } from './tournament/planning/setti
 import { TournamentPlanningRefereesComponent } from './tournament/planning/referees/component';
 import { TournamentPlanningFieldsComponent } from './tournament/planning/fields/component';
 
-
 import { TournamentRoleRepository } from './tournament/role/repository';
 import { RoundRepository } from 'voetbaljs/round/repository';
 import { RoundConfigRepository } from 'voetbaljs/round/config/repository';

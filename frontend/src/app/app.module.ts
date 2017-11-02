@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { RoutingModule } from './app-routing.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DndModule } from 'ng2-dnd';
@@ -33,13 +33,13 @@ import { RefereeRepository } from 'voetbaljs/referee/repository';
     HomeComponent
   ],
   imports: [
-    BrowserModule,
-     HttpModule,
-     RoutingModule,
-     UserModule,
-     AdminModule,
-     NgbModule.forRoot(),
-     DndModule.forRoot()
+      BrowserModule,
+      HttpClientModule,
+      RoutingModule,
+      UserModule,
+      AdminModule,
+      NgbModule.forRoot(),
+      DndModule.forRoot()
   ],
   providers: [
       AuthService,

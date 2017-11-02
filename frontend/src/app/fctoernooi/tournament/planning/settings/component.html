@@ -6,35 +6,51 @@
     </div>
     <div class="row justify-content-center no-gutters">
         <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
-            <ul>
-                <li>kwalificatieregel</li>
-                <li>aantal onderlinge duels</li>
-                <li>punten per overwinning</li>
-                <li>aantal minuten per wedstrijd</li>
-                <li>kan verlengen</li>
-                <li>punten per overwinning na verlenging</li>
-                <li>aantal minuten verlenging</li>
-            </ul>
-            <ul>score:
-                <li>naam</li>
-                <li>start</li>
-                <li>doel</li>
-            </ul>
             <form name="form" (ngSubmit)="false" #f="ngForm" novalidate>
-                <div class="row">
-                    <div class="form-group col">
-                        <label for="nrofheadtoheadmatches" class="col-form-label">aantal onderlinge duels</label>
+                <div class="form-group row">
+                    <label for="nrofheadtoheadmatches" class="col-8 col-sm-9 col-form-label">aantal onderlinge duels</label>
+                    <div class="col-4 col-sm-3">
                         <select [ngModel]="config.getNrOfHeadtoheadMatches()" (ngModelChange)="setNrOfHeadtoheadMatches($event)" id="nrOfHeadtoheadMatches" name="nrOfHeadtoheadMatches" class="form-control">
-                            <option *ngFor="let n of nrOfHeadtoheadMatches" [attr.value]="n">{{n}}</option>
+                            <option *ngFor="let n of ranges.nrOfHeadtoheadMatches" [attr.value]="n">{{n}}</option>
                         </select>
-
-                        <!--<input type="number" class="form-control" id="nrofheadtoheadmatches" name="nrofheadtoheadmatches" [min]="validations.minnrofheadtoheadmatches" [max]="validations.maxnrofheadtoheadmatches" [(ngModel)]="model.nrofheadtoheadmatches" #nrofheadtoheadmatches="ngModel" required>-->
-                    </div>
-                    <!--<div class="form-group col">-->
-                        <!--<label for="winpointspergame" class="col-form-label">punten per overwinning</label>-->
-                        <!--<input type="number" class="form-control" id="winpointspergame" name="winpointspergame" [min]="validations.minwinpointspergame" [max]="validations.maxwinpointspergame" [(ngModel)]="model.winpointspergame" #winpointspergame="ngModel" required>-->
-                    <!--</div>-->
+                    </div>                    
                 </div>
+                <div class="form-group row">
+                    <label for="winpoints" class="col-8 col-sm-9 col-form-label">punten bij overwinning</label>
+                    <div class="col-4 col-sm-3">
+                        <select [ngModel]="config.getWinPoints()" (ngModelChange)="setWinPoints($event)" id="winpoints" name="winpoints" class="form-control">
+                            <option *ngFor="let n of ranges.winPoints" [attr.value]="n">{{n}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="drawpoints" class="col-8 col-sm-9 col-form-label">punten bij gelijkspel</label>
+                    <div class="col-4 col-sm-3">
+                        <select [ngModel]="config.getDrawPoints()" (ngModelChange)="setDrawPoints($event)" id="drawpoints" name="drawpoints" class="form-control">
+                            <option *ngFor="let n of ranges.drawPoints" [attr.value]="n">{{n}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <ul>
+                    <li>kwalificatieregel</li>
+
+                    <li>aantal minuten per wedstrijd</li>
+                    <li>verlenging bij gelijkspel</li>uncheck
+                    <li>punten bij overwinning na verlenging</li>hide
+                    <li>punten bij gelijkspel na verlenging</li>hide
+                    <li>aantal minuten verlenging</li>hide
+                </ul>
+                <ul>score:
+                    <li>naam</li>
+                    <li>start</li>
+                    <li>doel</li>
+                </ul>
+
+                <!--<div class="form-group col">-->
+                <!--<label for="winpointspergame" class="col-form-label">punten per overwinning</label>-->
+                <!--<input type="number" class="form-control" id="winpointspergame" name="winpointspergame" [min]="validations.minwinpointspergame" [max]="validations.maxwinpointspergame" [(ngModel)]="model.winpointspergame" #winpointspergame="ngModel" required>-->
+                <!--</div>-->
                 <!--<div *ngIf="f.submitted && model.nrofcompetitors < validations.minnrofcompetitors" class="alert alert-danger">het minimum aantal deelnemers is {{validations.minnrofcompetitors}}</div>-->
                 <!--<div *ngIf="f.submitted && model.nrofcompetitors > validations.maxnrofcompetitors" class="alert alert-danger">het maximum aantal deelnemers is {{validations.maxnrofcompetitors}}</div>-->
                 <!--<div *ngIf="f.submitted && model.nroffields < validations.minnroffields" class="alert alert-danger">het minimum aantal velden is {{validations.minnroffields}}</div>-->

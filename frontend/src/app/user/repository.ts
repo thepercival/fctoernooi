@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http, Response, RequestOptions } from '@angular/http';
-import { Observable, Observer } from 'rxjs/Rx';
+import { Response } from '@angular/http';
+import { Observable } from 'rxjs/Rx';
+import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { User } from './user';
@@ -9,12 +10,10 @@ import { VoetbalRepository } from 'voetbaljs/repository';
 @Injectable()
 export class UserRepository extends VoetbalRepository {
 
-  private http: Http;
   private url: string;
 
-  constructor( http: Http ) {
+  constructor( private http: HttpClient ) {
     super();
-    this.http = http;
     this.url = super.getApiUrl() + this.getUrlpostfix();
   }
 
@@ -25,19 +24,13 @@ export class UserRepository extends VoetbalRepository {
   getObjects(): Observable<User[]> {
     // const date = new Date();
     // date.setDate(date.getDate() - 1);
-    const myParams = new URLSearchParams();
     // myParams.append('startdatetime', date.getTime());
     // date.setDate(date.getDate() + 8);
     // myParams.append('enddatetime', date.getTime());
-    const options = new RequestOptions( {
-          headers: super.getHeaders(),
-          params: myParams
-        }
-    );
-    return this.http.get(this.url, options )
+    return this.http.get(this.url, { headers: super.getHeaders() } )
         .map((res) => {
-          // console.log(res.json());
-          return this.jsonArrayToObject(res.json());
+          // console.log(res);
+          return this.jsonArrayToObject(res);
         })
         .catch( this.handleError );
   }
@@ -55,7 +48,7 @@ export class UserRepository extends VoetbalRepository {
       const url = `${this.url}/${id}`;
       return this.http.get(url)
           // ...and calling .json() on the response to return data
-          .map((res: Response) => this.jsonToObjectHelper(res.json() ) )
+          .map((res: Response) => this.jsonToObjectHelper(res ) )
           // ...errors if any
           .catch(this.handleError);
   }
@@ -69,9 +62,9 @@ export class UserRepository extends VoetbalRepository {
 
   createObject( jsonObject: any ): Observable<User> {
     return this.http
-        .post(this.url, jsonObject, new RequestOptions({ headers: super.getHeaders() }))
+        .post(this.url, jsonObject, { headers: super.getHeaders() })
         // ...and calling .json() on the response to return data
-        .map((res) => this.jsonToObjectHelper(res.json()) )
+        .map((res) => this.jsonToObjectHelper(res) )
         .catch(this.handleError);
   }
 

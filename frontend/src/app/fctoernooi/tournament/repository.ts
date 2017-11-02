@@ -2,10 +2,10 @@
  * Created by coen on 1-10-17.
  */
 import { Injectable } from '@angular/core';
-import { Headers, Http, Response, RequestOptions } from '@angular/http';
-import { Observable, Observer } from 'rxjs/Rx';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+import { Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
+import { Observer } from 'rxjs/Observer';
+import { Observable } from 'rxjs/Observable';
 import { Tournament } from '../tournament';
 import { CompetitionseasonRepository } from 'voetbaljs/competitionseason/repository';
 import { TournamentRoleRepository } from './role/repository';
@@ -19,7 +19,7 @@ export class TournamentRepository extends VoetbalRepository {
     private tournamentRoleRepository: TournamentRoleRepository;
     private objects: Tournament[];
 
-    constructor( private http: Http, csRepository: CompetitionseasonRepository, tournamentRoleRepository: TournamentRoleRepository ) {
+    constructor( private http: HttpClient, csRepository: CompetitionseasonRepository, tournamentRoleRepository: TournamentRoleRepository ) {
         super();
         this.csRepository = csRepository;
         this.tournamentRoleRepository = tournamentRoleRepository;
@@ -31,6 +31,9 @@ export class TournamentRepository extends VoetbalRepository {
     }
 
     getObjects(): Observable<Tournament[]> {
+
+
+
         if ( this.objects != null ) {
             return Observable.create( (observer: Observer<Tournament[]> ) => {
                 observer.next(this.objects);
@@ -39,21 +42,35 @@ export class TournamentRepository extends VoetbalRepository {
         }
 
 
+
         // const date = new Date();
         // date.setDate(date.getDate() - 1);
-        const myParams = new URLSearchParams();
+        // const myParams = new URLSearchParams();
         // myParams.append('startdatetime', date.getTime());
         // date.setDate(date.getDate() + 8);
         // myParams.append('enddatetime', date.getTime());
-        const options = new RequestOptions( {
-                headers: super.getHeaders(),
-                params: myParams
-            }
-        );
-        return this.http.get(this.url, options )
+        // const options = new RequestOptions( {
+         //       headers: super.getHeaders(),
+        //        params: myParams
+        //    }
+        // );
+//
+//         const observable = this.http.get<Tournament[]>(
+//             this.url,
+//             {
+//                 /*params: new HttpParams().set('id', '56784'),*/
+//                 headers: super.getHeaders()
+//             } );
+//
+//         observable.subscribe(res => {
+//             this.objects = this.jsonArrayToObject(res);
+//         });
+//         return observable;
+
+        return this.http.get(this.url, { headers: super.getHeaders() } )
             .map((res) => {
-                console.log(res.json());
-                this.objects = this.jsonArrayToObject(res.json());
+                console.log(res);
+                this.objects = this.jsonArrayToObject(res);
                 return this.objects;
             })
             .catch( this.handleError );
@@ -103,10 +120,10 @@ export class TournamentRepository extends VoetbalRepository {
 
     createObject( jsonObject: any ): Observable<Tournament> {
         return this.http
-            .post(this.url, jsonObject, new RequestOptions({ headers: super.getHeaders() }))
+            .post(this.url, jsonObject, { headers: super.getHeaders() })
             // ...and calling .json() on the response to return data
             .map((res) => {
-                const tournament = this.jsonToObjectHelper(res.json());
+                const tournament = this.jsonToObjectHelper(res);
                 this.objects.push( tournament );
                 return tournament;
             })
@@ -128,7 +145,7 @@ export class TournamentRepository extends VoetbalRepository {
     removeObject( tournament: Tournament): Observable<boolean> {
         const url = this.url + '/' + tournament.getId();
         return this.http
-            .delete(url, new RequestOptions({ headers: super.getHeaders() }))
+            .delete(url, { headers: super.getHeaders() })
             .map((res) => {
                 const index = this.objects.indexOf( tournament );
                 if (index > -1) {

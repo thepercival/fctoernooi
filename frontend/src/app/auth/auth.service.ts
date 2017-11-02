@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { Http, Headers, Response, RequestOptions } from '@angular/http';
-import {Observable} from 'rxjs/Rx';
+import { Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import { Router } from '@angular/router';
 import { UserRepository } from '../user/repository';
-import { User } from '../user/user';
 
 @Injectable()
 export class AuthService {
@@ -13,9 +13,8 @@ export class AuthService {
   private token: string;
   private userId: number;
   private url: string;
-  private headers = new Headers({'Content-Type': 'application/json'});
 
-  constructor( private http: Http, private router: Router, private userRepos: UserRepository) {
+  constructor( private http: HttpClient, private router: Router, private userRepos: UserRepository) {
     this.url = environment.apiurl + 'auth/';
     const jsonAuth = JSON.parse(localStorage.getItem('auth'));
     this.token = jsonAuth ? jsonAuth.token : null;
@@ -46,9 +45,9 @@ export class AuthService {
   // }
 
   login(emailaddress: string, password: string): Observable<boolean> {
-    return this.http.post( this.url + 'login', { emailaddress: emailaddress, password: password })
-        .map((response: Response) => {
-          const json = response.json();
+    return this.http.post<IAuthItem>( this.url + 'login', { emailaddress: emailaddress, password: password })
+        .map((res) => {
+          const json = res;
           // login successful if there's a jwt token in the response
           if (json && json.token && json.userid ) {
             this.token = json.token;
@@ -95,10 +94,14 @@ export class AuthService {
   }
 
   // this could also be a private method of the component class
-  handleError(error: Response): Observable<any> {
+  handleError(error): Observable<any> {
     console.error( error.statusText );
     // throw an application level error
     return Observable.throw( error.statusText );
   }
+}
 
+interface IAuthItem {
+  token: string;
+  userid: number;
 }

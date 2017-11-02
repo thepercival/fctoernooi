@@ -2,8 +2,9 @@
  * Created by coen on 10-10-17.
  */
 import { Injectable } from '@angular/core';
-import { Headers, Http, Response, RequestOptions } from '@angular/http';
-import {Observable} from 'rxjs/Rx';
+import { Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Tournament } from '../../tournament';
@@ -15,13 +16,11 @@ import { VoetbalRepository } from 'voetbaljs/repository';
 export class TournamentRoleRepository extends VoetbalRepository {
 
     private url: string;
-    private http: Http;
     private userRepos: UserRepository;
     private objects: Tournament[];
 
-    constructor( http: Http, userRepos: UserRepository ) {
+    constructor( private http: HttpClient, userRepos: UserRepository ) {
         super();
-        this.http = http;
         this.userRepos = userRepos;
         this.url = super.getApiUrl() + this.getUrlpostfix();
     }
