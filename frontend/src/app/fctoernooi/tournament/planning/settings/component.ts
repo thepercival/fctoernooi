@@ -40,8 +40,6 @@ export class TournamentPlanningSettingsComponent implements OnInit {
 
     ngOnInit() {
         this.config = this.round.getConfig();
-        this.enableTime = this.config.getMinutesPerGame() > 0;
-        console.log(this.config);
 
         this.initRanges();
 
@@ -175,17 +173,17 @@ export class TournamentPlanningSettingsComponent implements OnInit {
         this.planningService.reschedule( this.round );
     }
 
-    setScoreConfigStart( scoreConfig: RoundScoreConfig, scoreConfigStart ) {
-        if ( scoreConfigStart > 9999 || scoreConfigStart < 0 ) {
-            return;
-        }
-        scoreConfig.setStart( scoreConfigStart );
+    getDirectionDescription( scoreConfig ) {
+        return RoundScoreConfig.getDirectionDescription( scoreConfig.getDirection() );
     }
 
-    setScoreConfigGoal( scoreConfig: RoundScoreConfig, scoreConfigGoal ) {
-        if ( scoreConfigGoal > 9999 || scoreConfigGoal < 0 ) {
+    setScoreConfigMaximum( scoreConfig: RoundScoreConfig, scoreConfigMaximum ) {
+        if ( scoreConfigMaximum > 9999 || scoreConfigMaximum < 0 ) {
             return;
         }
-        scoreConfig.setGoal( scoreConfigGoal );
+        if ( scoreConfigMaximum === 0 && scoreConfig.getParent() != null ) {
+            this.setScoreConfigMaximum( scoreConfig.getParent(), 0 );
+        }
+        scoreConfig.setMaximum( scoreConfigMaximum );
     }
 }

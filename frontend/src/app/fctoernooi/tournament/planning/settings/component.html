@@ -60,7 +60,7 @@
             <div *ngIf="this.config.getHasExtension()" class="form-group row">
                 <label for="minutesPerGameExt" class="col-7 col-sm-8 offset-1 col-form-label">minuten</label>
                 <div class="col-4 col-sm-3">
-                    <input type="number" [minlength]="1" [maxlength]="2" min="validations.minMinutesPerGame" max="validations.maxMinutesPerGame" [ngModel]="config.getMinutesPerGameExt()" (ngModelChange)="setMinutesPerGameExt($event)" id="minutesPerGameExt" name="minutesPerGameExt" class="form-control" required />
+                    <input type="number" [maxlength]="2" min="validations.minMinutesPerGame" max="validations.maxMinutesPerGame" [ngModel]="config.getMinutesPerGameExt()" (ngModelChange)="setMinutesPerGameExt($event)" id="minutesPerGameExt" name="minutesPerGameExt" class="form-control" required />
                 </div>
             </div>
             <div class="form-group row">
@@ -74,26 +74,23 @@
             <div *ngIf="config.getEnableTime()" class="form-group row">
                 <label for="minutesPerGame" class="col-7 col-sm-8 offset-1 col-form-label">minuten per wedstrijd</label>
                 <div class="col-4 col-sm-3">
-                    <input type="number" [minlength]="1" [maxlength]="2" min="validations.minMinutesPerGame" max="validations.maxMinutesPerGame" [ngModel]="config.getMinutesPerGame()" (ngModelChange)="setMinutesPerGame($event)" id="minutesPerGame" name="minutesPerGame" class="form-control" required />
+                    <input type="number" [maxlength]="2" min="validations.minMinutesPerGame" max="validations.maxMinutesPerGame" [ngModel]="config.getMinutesPerGame()" (ngModelChange)="setMinutesPerGame($event)" id="minutesPerGame" name="minutesPerGame" class="form-control" required />
                 </div>
             </div>
             <div *ngIf="config.getEnableTime()" class="form-group row">
                 <label for="minutesinbetween" class="col-7 col-sm-8 offset-1 col-form-label">minuten tussen wedstrijden</label>
                 <div class="col-4 col-sm-3">
-                    <input type="number" [minlength]="1" [maxlength]="2" min="validations.minMinutesPerGame" max="validations.maxMinutesPerGame" [ngModel]="config.getMinutesInBetween()" (ngModelChange)="setMinutesInBetween($event)" id="minutesinbetween" name="minutesinbetween" class="form-control" [disabled]="!this.config.getMinutesPerGame()" required>
+                    <input type="number" [maxlength]="2" min="validations.minMinutesPerGame" max="validations.maxMinutesPerGame" [ngModel]="config.getMinutesInBetween()" (ngModelChange)="setMinutesInBetween($event)" id="minutesinbetween" name="minutesinbetween" class="form-control" required>
 
                 </div>
             </div>
+
             <div *ngFor="let scoreConfig of round.getScoreConfigs()" class="form-group row">
-                <label for="scoreStart" class="col-4 col-sm-6 col-form-label">{{scoreConfig.getName()}}(van/naar)</label>
+                <label for="scoreMaximum" class="col-8 col-sm-9 col-form-label">{{scoreConfig.getName()}}({{getDirectionDescription(scoreConfig)}})</label>
                 <div class="col-4 col-sm-3">
-                    <input type="number" [maxlength]="4" [ngModel]="scoreConfig.getStart()" (ngModelChange)="setScoreConfigStart(scoreConfig,$event)" id="scoreStart" name="scoreStart" class="form-control" required />
-                </div>
-                <div class="col-4 col-sm-3">
-                    <input type="number" [maxlength]="4" [ngModel]="scoreConfig.getGoal()" (ngModelChange)="setScoreConfigGoal(scoreConfig,$event)" id="scoreGoal" name="scoreGoal" class="form-control" required />
+                    <input type="number" [maxlength]="4" [ngModel]="scoreConfig.getMaximum()" (ngModelChange)="setScoreConfigMaximum(scoreConfig,$event)" id="scoreMaximum-{{scoreConfig.getId()}}" name="scoreMaximum-{{scoreConfig.getId()}}" class="form-control" [disabled]="scoreConfig.getChild()?.getMaximum() === 0" required />
                 </div>
             </div>
-
             <!--<div class="form-group col">-->
             <!--<label for="winpointspergame" class="col-form-label">punten per overwinning</label>-->
             <!--<input type="number" class="form-control" id="winpointspergame" name="winpointspergame" [min]="validations.minwinpointspergame" [max]="validations.maxwinpointspergame" [(ngModel)]="model.winpointspergame" #winpointspergame="ngModel" required>-->
