@@ -92,7 +92,7 @@ final class Auth
 			}*/
 
 			$now = new \DateTime();
-			$future = new \DateTime("now +2 hours");
+			$future = new \DateTime("now +24 hours");
 
 			$payload = [
 				"iat" => $now->getTimeStamp(),
