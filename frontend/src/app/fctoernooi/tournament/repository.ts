@@ -157,8 +157,12 @@ export class TournamentRepository extends VoetbalRepository {
 
     // this could also be a private method of the component class
     handleError(res: Response): Observable<any> {
+        let errortext = res.statusText;
+        if ( res.status === 401 ) {
+            errortext = 'je bent niet ingelogd';
+        }
         console.error( res );
         // throw an application level error
-        return Observable.throw( res.statusText );
+        return Observable.throw( errortext );
     }
 }
