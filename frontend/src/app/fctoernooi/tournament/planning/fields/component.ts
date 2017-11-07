@@ -37,10 +37,6 @@ export class TournamentPlanningFieldsComponent implements OnInit {
         );
     }
 
-    protected resetAlert(): void {
-        this.progressAlert = null;
-    }
-
     createFieldsList() {
         const fields = this.tournament.getCompetitionseason().getFields();
         this.fieldsList = [];
@@ -109,6 +105,10 @@ export class TournamentPlanningFieldsComponent implements OnInit {
 
     protected setAlert( message: string ) {
         this.progressAlert = { 'type': 'info', 'message': message };
+    }
+
+    protected resetAlert(): void {
+        this.progressAlert = null;
     }
 
     // public closeAlert( name: string) {

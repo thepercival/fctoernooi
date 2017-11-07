@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TournamentRepository } from '../repository';
 import { TournamentComponent } from '../component';
 import { RoundRepository } from 'voetbaljs/round/repository';
+import { IAlert } from '../../../app.definitions';
 
 @Component({
   selector: 'app-tournament-planning',
@@ -11,6 +12,8 @@ import { RoundRepository } from 'voetbaljs/round/repository';
 })
 export class TournamentPlanningComponent extends TournamentComponent implements OnInit {
 
+  settingsAlert: IAlert;
+
   constructor(
       route: ActivatedRoute,
       router: Router,
@@ -18,6 +21,7 @@ export class TournamentPlanningComponent extends TournamentComponent implements 
       roundRepository: RoundRepository
   ) {
       super( route, router, tournamentRepository, roundRepository );
+      this.settingsAlert = { 'type': 'info', 'message': 'wijzigingen worden ook verwerkt op volgende rondes' };
   }
 
   ngOnInit() {

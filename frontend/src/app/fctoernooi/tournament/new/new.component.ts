@@ -14,7 +14,7 @@ export class TournamentNewComponent implements OnInit {
   model: any;
   loading = false;
   error = '';
-  sportnames: [string]= ['tafeltennis', 'darten'];
+  sportnames: [string]= [ 'darten', 'tafeltennis', 'voetbal'];
   validations: any = {
     'minnrofcompetitors' : Tournament.MINNROFCOMPETITORS,
     'maxnrofcompetitors' : Tournament.MAXNROFCOMPETITORS,

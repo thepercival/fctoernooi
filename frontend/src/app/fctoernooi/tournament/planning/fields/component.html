@@ -1,7 +1,7 @@
 
 <div class="row justify-content-center mx-0" style="height:3rem;">
     <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6 mt-1">
-        <ngb-alert *ngIf="progressAlert" [type]="progressAlert.type" [dismissible]="false" (close)="alert = null;"><i class="fa fa-spinner fa-spin"></i> {{ progressAlert.message }}</ngb-alert>
+        <ngb-alert *ngIf="progressAlert" [type]="progressAlert.type" [dismissible]="false" (close)="progressAlert = null;"><i class="fa fa-spinner fa-spin"></i> {{ progressAlert.message }}</ngb-alert>
         <h2 *ngIf="!progressAlert" class="hidden-sm-up pt-2">velden</h2>
     </div>
 </div>

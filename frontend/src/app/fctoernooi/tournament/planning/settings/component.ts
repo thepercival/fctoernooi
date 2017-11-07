@@ -16,7 +16,6 @@ export class TournamentPlanningSettingsComponent implements OnInit {
     @Input() tournament: Tournament;
     @Input() round: Round;
     @Input() structureService: StructureService;
-
     enableTime: boolean;
     ranges: any = {};
     config: RoundConfig;
@@ -36,6 +35,7 @@ export class TournamentPlanningSettingsComponent implements OnInit {
     // })
 
     constructor() {
+
     }
 
     ngOnInit() {

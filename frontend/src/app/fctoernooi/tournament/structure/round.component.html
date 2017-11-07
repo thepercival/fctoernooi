@@ -9,7 +9,7 @@
           <button type="button" class="btn btn-outline-secondary">poules</button>
           <div class="btn-group" role="group" aria-label="aantal poules">
             <button type="button" class="btn btn-outline-secondary" (click)="removePoule(round)"><span class="fa fa-minus"></span></button>
-            <button type="button" class="btn btn-outline-secondary" (click)="addPoule(round)"><span class="fa fa-plus"></span></button>
+            <button *ngIf="round.getPoules().length < 8" type="button" class="btn btn-outline-secondary" (click)="addPoule(round)"><span class="fa fa-plus"></span></button>
           </div>
         </div>
         <div class="hidden-sm-up btn-group-vertical" role="group" aria-label="aantal poules">
@@ -27,21 +27,26 @@
         <div class="hidden-xs-down btn-group" role="group" aria-label="aantal deelnemers">
           <button *ngIf="canRemovePoulePlace(round)" type="button" class="btn btn-outline-secondary" (click)="removePoulePlace(round)"><span class="fa fa-minus"></span></button>
           <button type="button" class="btn btn-outline-secondary">deelnemers</button>
-          <button type="button" class="btn btn-outline-secondary" (click)="addPoulePlace(round)"><span class="fa fa-plus"></span></button>
+          <button  *ngIf="round.getPoules().length < 8" type="button" class="btn btn-outline-secondary" (click)="addPoulePlace(round)"><span class="fa fa-plus"></span></button>
         </div>
       </div>
-      <div *ngIf="round.getNumber() > 1 && round.getPoulePlaces().length >= 4" class="d-flex justify-content-around mb-3">
+      <div *ngIf="round.getNumber() === 2 && round.getPoulePlaces().length >= 4" class="hidden-xs-down mb-3 btn-group" role="group" aria-label="verdeel">
+        <button *ngIf="round.getPoules().length > 1" type="button" class="btn btn-outline-secondary" (click)="removePoule(round)"><span class="fa fa-compress"></span></button>
+        <button type="button" class="btn btn-outline-secondary">verdeel</button>
+        <button *ngIf="( round.getPoulePlaces().length / ( round.getPoules().length + 1 ) ) >= 2" type="button" class="btn btn-outline-secondary" (click)="addPoule(round,false )"><span class="fa fa-expand"></span></button>
+      </div>
+      <div *ngIf="round.getNumber() >= 2 && round.getPoulePlaces().length >= 4" [ngClass]="{ 'hidden-sm-up': ( round.getNumber() === 2 ) }" class="mb-3 btn-group-vertical" role="group" aria-label="verdeel">
+        <button type="button" class="btn btn-outline-secondary">verdeel</button>
         <div class="btn-group" role="group" aria-label="aantal poules">
           <button *ngIf="round.getPoules().length > 1" type="button" class="btn btn-outline-secondary" (click)="removePoule(round)"><span class="fa fa-compress"></span></button>
-          <button type="button" class="btn btn-outline-secondary">verdeel</button>
           <button *ngIf="( round.getPoulePlaces().length / ( round.getPoules().length + 1 ) ) >= 2" type="button" class="btn btn-outline-secondary" (click)="addPoule(round,false )"><span class="fa fa-expand"></span></button>
         </div>
       </div>
       <p *ngIf="alert">
         <ngb-alert [type]="alert.type" (close)="closeAlert()">{{ alert.message }}</ngb-alert>
       </p>
-      <div class="d-flex justify-content-around mb-3">
-        <ul *ngFor="let poule of round.getPoules();" class="list-group list-group-poule">
+      <div class="d-flex flex-wrap justify-content-around">
+        <ul *ngFor="let poule of round.getPoules();" class="list-group list-group-poule mb-3">
           <li class="list-group-item">{{structureService.getPouleName( poule, false)}}</li>
           <li *ngFor="let place of poule.getPlaces();" class="list-group-item list-group-item-{{getClassPostfixPoulePlace(place)}}">{{place.getNumber()}}</li>
         </ul>
@@ -56,8 +61,11 @@
     </div>
   </div>
   <div class="row text-center">
-      <app-tournament-structureround *ngFor="let childRound of round.getChildRounds()" [ngStyle]="{ 'width': (100/round.getChildRounds().length) + '%' }" [round]="childRound" [structureService]="structureService"></app-tournament-structureround>
+    <app-tournament-structureround *ngFor="let childRound of round.getChildRounds()" [ngStyle]="{ 'width': (100/round.getChildRounds().length) + '%' }" [round]="childRound" [structureService]="structureService"></app-tournament-structureround>
   </div>
+  <!--<div class="row text-center">-->
+      <!--<app-tournament-structureround *ngFor="let childRound of round.getChildRounds()" class="d-flex flex-wrap justify-content-around" [round]="childRound" [structureService]="structureService"></app-tournament-structureround>-->
+  <!--</div>-->
   <div class="card round" *ngIf="round.getPoulePlaces().length === 1">
     <div class="card-header">
       <span [innerHTML]="structureService.getRankedPlace(round)"></span><span>e plaats</span>

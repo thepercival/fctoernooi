@@ -8,6 +8,8 @@ import { Tournament } from '../tournament';
 import { StructureService } from 'voetbaljs/structure/service';
 import { RoundRepository } from 'voetbaljs/round/repository';
 import { Round } from 'voetbaljs/round';
+import { RoundScoreConfigRepository } from 'voetbaljs/round/scoreconfig/repository';
+import { RoundConfigRepository } from 'voetbaljs/round/config/repository';
 
 export class TournamentComponent implements OnDestroy {
 
@@ -46,6 +48,8 @@ export class TournamentComponent implements OnDestroy {
                                     this.structureService = new StructureService(
                                         tournament.getCompetitionseason(),
                                         round,
+                                        new RoundConfigRepository(),
+                                        new RoundScoreConfigRepository(),
                                         { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS }
                                     );
                                     if ( callback !== null ) {
