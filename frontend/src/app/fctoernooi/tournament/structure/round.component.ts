@@ -1,10 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { Tournament } from '../../tournament';
 import { StructureService } from 'voetbaljs/structure/service';
 import { PoulePlace } from 'voetbaljs/pouleplace';
-import { Poule } from 'voetbaljs/poule';
 import { Round } from 'voetbaljs/round';
-import { QualifyRule } from 'voetbaljs/qualifyrule';
+import { PlanningService } from 'voetbaljs/planning/service';
 
 @Component({
   selector: 'app-tournament-structureround',
@@ -29,6 +27,11 @@ export class TournamentStructureRoundComponent {
   constructor() {
       this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
       this.resetAlert();
+
+  }
+
+  private getPlanningService(): PlanningService {
+    return new PlanningService( this.structureService.getCompetitionseason().getStartDateTime() );
   }
 
   getWinnersLosersName( winnersOrLosers: number ): string {
@@ -43,12 +46,14 @@ export class TournamentStructureRoundComponent {
   addPoule( round, fillPouleToMinimum = true ): void {
     this.resetAlert();
     this.structureService.addPoule( round, fillPouleToMinimum );
+    this.getPlanningService().create( round );
   }
 
   removePoule( round ): void {
     this.resetAlert();
     try {
       this.structureService.removePoule(round);
+      this.getPlanningService().create( round );
     } catch (e) {
       this.setAlert( 'danger', e.message );
     }
@@ -58,6 +63,7 @@ export class TournamentStructureRoundComponent {
     this.resetAlert();
     try {
       this.structureService.addPoulePlace(round);
+      this.getPlanningService().create( round );
     } catch (e) {
       this.setAlert( 'danger', e.message );
     }
@@ -75,6 +81,7 @@ export class TournamentStructureRoundComponent {
     this.resetAlert();
     try {
       this.structureService.removePoulePlace(round);
+      this.getPlanningService().create( round );
     } catch (e) {
       this.setAlert( 'danger', e.message );
     }
@@ -117,6 +124,7 @@ export class TournamentStructureRoundComponent {
 
   public onSliderChange( nrOfChildPlacesNew: number, winnersOrLosers: number ) {
     this.structureService.changeNrOfPlacesChildRound( nrOfChildPlacesNew, this.round, winnersOrLosers );
+    this.getPlanningService().create( this.round );
   }
 
 }
