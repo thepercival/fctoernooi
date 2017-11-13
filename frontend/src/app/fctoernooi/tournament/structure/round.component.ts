@@ -63,7 +63,7 @@ export class TournamentStructureRoundComponent {
     }
   }
 
-  canRemovePoulePlace(round: Round ){
+  canRemovePoulePlace(round: Round ) {
     let nrOfPoulePlaces = round.getPoulePlaces().length;
     round.getChildRounds().forEach( function( childRound ) {
       nrOfPoulePlaces -= childRound.getPoulePlaces().length;
@@ -118,6 +118,5 @@ export class TournamentStructureRoundComponent {
   public onSliderChange( nrOfChildPlacesNew: number, winnersOrLosers: number ) {
     this.structureService.changeNrOfPlacesChildRound( nrOfChildPlacesNew, this.round, winnersOrLosers );
   }
-
 
 }

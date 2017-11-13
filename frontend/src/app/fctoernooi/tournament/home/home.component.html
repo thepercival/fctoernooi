@@ -27,14 +27,18 @@
     <div class="card pointer mt-3 mx-2">
       <div class="card-block">
         <h5 class="card-title"><i class="fa fa-cogs"></i> instellingen</h5>
-        <p class="card-text"><small class="text-muted">toon instellingen?</small></p>
+        <ul class="card-text">
+          <li>naam</li>
+          <li>startdatum</li>
+        </ul>
+
       </div>
     </div>
     <div *ngIf="isAdmin()" class="card mt-3 mx-2">
       <div class="card-block">
-        <h5 (click)="toggleRemoveQuestion( true )" class="card-title pointer"><i class="fa fa-remove"></i> verwijderen</h5>
+        <h5 (click)="toggleRemoveQuestion( true )" class="card-title pointer"><i class="fa fa-trash"></i> weggooien</h5>
         <div *ngIf="showRemoveQuestion" class="card-text">
-          <div>nu verwijderen?</div>
+          <div>nu weggooien?</div>
           <div class="d-flex justify-content-between">
             <button class="btn btn-secondary pointer" (click)="remove()">ja</button>
             <button class="btn btn-secondary pointer" (click)="toggleRemoveQuestion( false )">nee</button>

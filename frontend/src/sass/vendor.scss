@@ -4,6 +4,9 @@
 
 @import "./bootswatch/variables";
 @import "./bootswatch/bootswatch";
+.bg-dark {
+  border: 1px solid $gray;
+}
 
 @import "~bootstrap/scss/bootstrap";
 
