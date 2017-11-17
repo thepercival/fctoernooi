@@ -1,0 +1,71 @@
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TournamentRepository } from '../repository';
+import { Competition } from 'voetbaljs/competition';
+import { TournamentComponent } from '../component';
+import { RoundRepository } from 'voetbaljs/round/repository';
+
+@Component({
+  selector: 'app-tournament-edit',
+  templateUrl: './edit.component.html',
+  styleUrls: ['./edit.component.css']
+})
+export class TournamentEditComponent extends TournamentComponent implements OnInit {
+
+  model: any;
+  loading = false;
+  error = '';
+  validations: any = {
+    'minlengthname' : Competition.MIN_LENGTH_NAME,
+    'maxlengthname' : Competition.MAX_LENGTH_NAME
+  };
+
+    constructor(
+        route: ActivatedRoute,
+        router: Router,
+        tournamentRepository: TournamentRepository,
+        roundRepository: RoundRepository
+    ) {
+        super( route, router, tournamentRepository, roundRepository );
+        this.model = {
+            name: null
+        };
+    }
+
+    ngOnInit() {
+        super.myNgOnInit( () => this.initFields() );
+    }
+
+    initFields() {
+        const date = this.tournament.getCompetitionseason().getStartDateTime();
+        this.model = {
+            starttime: {hour: date.getHours(), minute: date.getMinutes() },
+            startdate: {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate()},
+            name: this.tournament.getCompetitionseason().getCompetition().getName()
+        };
+    }
+
+    edit() {
+      const startdate = new Date(
+          this.model.startdate.year,
+          this.model.startdate.month - 1,
+          this.model.startdate.day,
+          this.model.starttime.hour,
+          this.model.starttime.minute
+      );
+
+      this.loading = true;
+
+      this.tournament.getCompetitionseason().setStartDateTime( startdate );
+      this.tournament.getCompetitionseason().getCompetition().setName( this.model.name );
+
+      this.tournamentRepository.editObject( this.tournament )
+          .subscribe(
+            /* happy path */ retVal => {
+                // retVal
+            },
+            /* error path */ e => { this.error = e; this.loading = false; },
+            /* onComplete */ () => this.loading = false
+          );
+      }
+}

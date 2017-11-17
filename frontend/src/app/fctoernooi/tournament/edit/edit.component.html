@@ -1,0 +1,35 @@
+<div class="container-fluid home">
+  <div class="row justify-content-center">
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+      <h1 style="margin-top:1em;">
+        <span class="float-left">wijzig toernooi</span>
+      </h1>
+      <div style="clear: both"></div>
+      <form name="form" (ngSubmit)="edit() && false" #f="ngForm" novalidate>
+        <div class="row">
+          <div class="form-group col-sm-6">
+            <label for="name" class="col-form-label">naam</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="naam" [(ngModel)]="model.name" #name="ngModel" [minlength]="validations.minlengthname" [maxlength]="validations.maxlengthname" required autofocus>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col">
+            <label for="dp" class="col-form-label">startdatum</label>
+            <div class="input-group">
+              <input class="form-control" placeholder="yyyy-mm-dd" id="dp" name="dp" [(ngModel)]="model.startdate" ngbDatepicker #d="ngbDatepicker" required>
+              <span class="input-group-addon fi flaticon-schedule" (click)="d.toggle()" style="cursor: pointer;">
+              </span>
+            </div>
+          </div>
+          <div class="form-group col">
+            <label for="starttime" class="col-form-label">starttijd</label>
+            <ngb-timepicker id="starttime" name="starttime" [(ngModel)]="model.starttime" [spinners]="false" required></ngb-timepicker>
+          </div>
+        </div>
+
+        <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+        <button type="submit" [disabled]="!f.form.valid || loading" class="btn btn-primary">wijzig toernooi <i *ngIf="loading" class="fa fa-spinner fa-spin fa-fw"></i></button>
+      </form>
+    </div>
+  </div>
+</div>
