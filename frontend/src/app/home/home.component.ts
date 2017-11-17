@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit {
     this.tournamentRepos.getObjects().forEach( tournaments => this.tournaments = tournaments);
 
     this.route.queryParams.subscribe(params => {
-      if( params['type'] != null && params['message'] != null ){
+      if ( params['type'] != null && params['message'] != null ){
         this.alert = { type: params['type'], message: params['message'] };
       }
     });

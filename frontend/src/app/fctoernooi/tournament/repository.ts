@@ -31,7 +31,7 @@ export class TournamentRepository extends VoetbalRepository {
     }
 
     getObjects(): Observable<Tournament[]> {
-        if (this.objects != null) {
+        if (this.objects.length > 0) {
             return Observable.create((observer: Observer<Tournament[]>) => {
                 observer.next(this.objects);
                 observer.complete();
