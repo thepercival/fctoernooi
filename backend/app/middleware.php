@@ -8,7 +8,7 @@ $app->add(
     // $app->getContainer()->get('jwtauth')
     new JwtAuthentication([
         "secure" => true,
-        // "relaxed" => ["localhost"],
+        "relaxed" => ["localhost"],
         "secret" => $app->getContainer()->get('settings')['auth']['jwtsecret'],
         // "algorithm" => $app->getContainer()->get('settings')['auth']['jwtalgorithm'], default
         "rules" => [

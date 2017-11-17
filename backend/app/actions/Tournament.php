@@ -113,16 +113,43 @@ final class Tournament
 
     public function add( $request, $response, $args)
     {
-        $name = filter_var($request->getParam('name'), FILTER_SANITIZE_STRING);
-        if ( !$name ){ return $response->withStatus(404, "de naam is ongeldig of leeg" ); }
-        $sportName = filter_var(trim($request->getParam('sportname')), FILTER_SANITIZE_STRING);
-        if ( !$sportName ){ return $response->withStatus(404, "de sportnaam is ongeldig of leeg" ); }
-        $nrOfCompetitors = filter_var($request->getParam('nrofcompetitors'), FILTER_VALIDATE_INT);
-        if ( $nrOfCompetitors === false ){ return $response->withStatus(404, "het aantal deelnemers is ongeldig" ); }
-        $nrOfFields = filter_var($request->getParam('nroffields'), FILTER_VALIDATE_INT);
-        if ( $nrOfFields === false ){ return $response->withStatus(404, "het aantal velden is ongeldig" ); }
-        $startDate = \DateTimeImmutable::createFromFormat ( 'Y-m-d\TH:i:s.000\Z', $request->getParam('startdate') );
-        if ( $startDate === null ){ return $response->withStatus(404, "de startdatum is ongeldig" ); }
+        $arrObject = $request->getParsedBody();
+        // var_dump(123); die();
+//        var_dump($arrObject); die();
+//
+//        $cs = $this->serializer->deserialize( json_encode( $arrObject ), 'FCToernooi\Tournament', 'json');
+//        var_dump($tournament); die();
+
+
+        $tournament = $this->serializer->deserialize( json_encode($request->getParsedBody()), 'FCToernooi\Tournament', 'json');
+
+
+        // var_dump($tournament); die();
+//        return $response
+//            ->withStatus(201)
+//            ->withHeader('Content-Type', 'application/json;charset=utf-8')
+//            ->write($this->serializer->serialize( $tournament, 'json'));
+//        ;
+
+       // var_dump( $tournament ); die();
+//        $name = filter_var($request->getParam('name'), FILTER_SANITIZE_STRING);
+//        if ( !$name ){ return $response->withStatus(404, "de naam is ongeldig of leeg" ); }
+//        $sportName = filter_var(trim($request->getParam('sportname')), FILTER_SANITIZE_STRING);
+//        if ( !$sportName ){ return $response->withStatus(404, "de sportnaam is ongeldig of leeg" ); }
+//        $nrOfCompetitors = filter_var($request->getParam('nrofcompetitors'), FILTER_VALIDATE_INT);
+//        if ( $nrOfCompetitors === false ){ return $response->withStatus(404, "het aantal deelnemers is ongeldig" ); }
+//        $nrOfFields = filter_var($request->getParam('nroffields'), FILTER_VALIDATE_INT);
+//        if ( $nrOfFields === false ){ return $response->withStatus(404, "het aantal velden is ongeldig" ); }
+//        $startDate = \DateTimeImmutable::createFromFormat ( 'Y-m-d\TH:i:s.000\Z', $request->getParam('startdate') );
+//        if ( $startDate === null ){ return $response->withStatus(404, "de startdatum is ongeldig" ); }
+
+//        $round = 12;
+//        'name': this.model.name,
+//        'sportname': sportName,
+//
+//        'nroffields': this.model.nroffields,
+//        'startdate': startdate.toISOString()/*,
+//        'structure': firstRound*/
 
         $user = null;
         if( $this->jwt->sub !== null ){
@@ -130,16 +157,16 @@ final class Tournament
         }
         if ( $user === null ){ return $response->withStatus(404, "gebruiker kan niet gevonden worden" ); }
 
+//        $this->tournamentRepository->save( $tournament);
+//        return $response
+//            ->withStatus(201)
+//            ->withHeader('Content-Type', 'application/json;charset=utf-8')
+//            ->write($this->serializer->serialize( $tournament, 'json'));
+//        ;
+
         $sErrorMessage = null;
         try {
-            $tournament = $this->service->create(
-                $user,
-                $name,
-                $sportName,
-                $nrOfCompetitors,
-                $nrOfFields,
-                $startDate
-            );
+            $tournament = $this->service->createFromJSON( $tournament, $user );
 
             return $response
                 ->withStatus(201)
@@ -148,7 +175,7 @@ final class Tournament
             ;
         }
         catch( \Exception $e ){
-            $sErrorMessage = urlencode($e->getMessage());
+            $sErrorMessage = urlencode( $e->getMessage() );
         }
         return $response->withStatus(404, $sErrorMessage );
     }
@@ -158,6 +185,7 @@ final class Tournament
         $errorMessage = null;
         try{
             $tournament = $this->tournamentRepository->find( $args['id'] );
+
             if ( $tournament === null ){
                 return $response->withStatus(404, "het te verwijderen toernooi kon niet gevonden worden" );
             }
@@ -184,60 +212,67 @@ final class Tournament
         return $response->withStatus(404, 'het toernooi is niet verwijdered : ' . $errorMessage );
     }
 
-    /*
-        public function edit( $request, $response, $args)
-        {
-            $sErrorMessage = null;
-            try{
-                $user = $this->userResource->put( $args['id'], array(
-                        "name"=> $request->getParam('name'),
-                        "email" => $request->getParam('email') )
-                );
-                if (!$user)
-                    throw new \Exception( "de gewijzigde gebruiker kan niet worden geretouneerd");
+    public function edit( $request, $response, $args)
+    {
+        $name = filter_var($request->getParam('name'), FILTER_SANITIZE_STRING);
+        if ( !$name ){ return $response->withStatus(404, "de naam is ongeldig of leeg" ); }
+        $startDate = \DateTimeImmutable::createFromFormat ( 'Y-m-d\TH:i:s.000\Z', $request->getParam('startdate') );
+        if ( $startDate === null ){ return $response->withStatus(404, "de startdatum is ongeldig" ); }
 
-                return $response->withJSON($user);
+        $sErrorMessage = null;
+        try {
+            $tournament = $this->tournamentRepository->find( $args['id'] );
+            if ( $tournament === null ){
+                return $response->withStatus(404, "het te wijzigen toernooi kon niet gevonden worden" );
             }
-            catch( \Exception $e ){
-                $sErrorMessage = $e->getMessage();
-            }
-            return $response->withStatus(404, rawurlencode( $sErrorMessage ) );
-        }
 
-
-
-        protected function sentEmailActivation( $user )
-        {
-            $activatehash = hash ( "sha256", $user["email"] . $this->settings["auth"]["activationsecret"] );
-            // echo $activatehash;
-
-            $sMessage =
-                "<div style=\"font-size:20px;\">FC Toernooi</div>"."<br>".
-                "<br>".
-                "Hallo ".$user["name"].","."<br>"."<br>".
-                "Bedankt voor het registreren bij FC Toernooi.<br>"."<br>".
-                'Klik op <a href="'.$this->settings["www"]["url"].'activate?activationkey='.$activatehash.'&email='.rawurlencode( $user["email"] ).'">deze link</a> om je emailadres te bevestigen en je account te activeren.<br>'."<br>".
-                'Wensen, klachten of vragen kunt u met de <a href="https://github.com/thepercival/fctoernooi/issues">deze link</a> bewerkstellingen.<br>'."<br>".
-                "Veel plezier met het gebruiken van FC Toernooi<br>"."<br>".
-                "groeten van FC Toernooi"
+            $this->service->edit( $tournament, $name, $startDate );
+            return $response
+                ->withStatus(200)
+                ->withHeader('Content-Type', 'application/json;charset=utf-8')
+                ->write($this->serializer->serialize( true, 'json'));
             ;
-
-            $mail = new \PHPMailer;
-            $mail->isSMTP();
-            $mail->Host = $this->settings["email"]["smtpserver"];
-            $mail->setFrom( $this->settings["email"]["from"], $this->settings["email"]["fromname"] );
-            $mail->addAddress( $user["email"] );
-            $mail->addReplyTo( $this->settings["email"]["from"], $this->settings["email"]["fromname"] );
-            $mail->isHTML(true);
-            $mail->Subject = "FC Toernooi registratiegegevens";
-            $mail->Body    = $sMessage;
-            if(!$mail->send()) {
-                throw new \Exception("de activatie email kan niet worden verzonden");
-            }
         }
+        catch( \Exception $e ){
 
-        protected function forgetEmailForgetPassword()
-        {
+            $sErrorMessage = $e->getMessage();
+        }
+        return $response->withStatus(400,$sErrorMessage);
+    }
 
-        }*/
+    /*
+            protected function sentEmailActivation( $user )
+            {
+                $activatehash = hash ( "sha256", $user["email"] . $this->settings["auth"]["activationsecret"] );
+                // echo $activatehash;
+
+                $sMessage =
+                    "<div style=\"font-size:20px;\">FC Toernooi</div>"."<br>".
+                    "<br>".
+                    "Hallo ".$user["name"].","."<br>"."<br>".
+                    "Bedankt voor het registreren bij FC Toernooi.<br>"."<br>".
+                    'Klik op <a href="'.$this->settings["www"]["url"].'activate?activationkey='.$activatehash.'&email='.rawurlencode( $user["email"] ).'">deze link</a> om je emailadres te bevestigen en je account te activeren.<br>'."<br>".
+                    'Wensen, klachten of vragen kunt u met de <a href="https://github.com/thepercival/fctoernooi/issues">deze link</a> bewerkstellingen.<br>'."<br>".
+                    "Veel plezier met het gebruiken van FC Toernooi<br>"."<br>".
+                    "groeten van FC Toernooi"
+                ;
+
+                $mail = new \PHPMailer;
+                $mail->isSMTP();
+                $mail->Host = $this->settings["email"]["smtpserver"];
+                $mail->setFrom( $this->settings["email"]["from"], $this->settings["email"]["fromname"] );
+                $mail->addAddress( $user["email"] );
+                $mail->addReplyTo( $this->settings["email"]["from"], $this->settings["email"]["fromname"] );
+                $mail->isHTML(true);
+                $mail->Subject = "FC Toernooi registratiegegevens";
+                $mail->Body    = $sMessage;
+                if(!$mail->send()) {
+                    throw new \Exception("de activatie email kan niet worden verzonden");
+                }
+            }
+
+            protected function forgetEmailForgetPassword()
+            {
+
+            }*/
 }

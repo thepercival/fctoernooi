@@ -63,15 +63,15 @@ class Service
     }
 
     /**
-     * @param $name
-     * @param $sportName
-     * @param $nrOfCompetitors
-     * @return bool
+     * @param Tournament $tournament
+     * @param User $user
+     * @return Tournament|null
      * @throws \Exception
      */
-    public function create( User $user, $name, $sportName, $nrOfCompetitors, $nrOfFields, \DateTimeImmutable $startDate )
+    public function createFromJSON( Tournament $tournament, User $user )
     {
         $this->em->getConnection()->beginTransaction();
+        $competitionseason = $tournament->getCompetitionseason();
 
         try {
             // association, check als bestaat op basis van naam, zoniet, aak aan
@@ -86,12 +86,12 @@ class Service
 
             // check competition, check als naam niet bestaat
             $competitionRepos = $this->voetbalService->getRepository(Competition::class);
-            $competition = $competitionRepos->findOneBy( array('name' => $name ) );
+            $competition = $competitionRepos->findOneBy( array('name' => $competitionseason->getCompetition()->getName() ) );
             if ( $competition !== null ){
                 throw new \Exception("de competitienaam bestaat al", E_ERROR );
             }
-            $compService = $this->voetbalService->getService( Competition::class );
-            $competition = $compService->create( $name );
+            // $compService = $this->voetbalService->getService( Competition::class );
+            // $competition = $compService->create( $name );
 
             // check season, per jaar een seizoen, als seizoen niet bestaat, dan aanmaken
             $year = date("Y");
@@ -105,42 +105,52 @@ class Service
                 $season = $seasonService->create( $year, $period );
             }
 
+            // DO POST SERIALIZING!!
+            $competitionseason->setAssociation( $association );
+            $competitionseason->setSeason( $season );
+            foreach( $competitionseason->getFields() as $field ) {
+                $field->setCompetitionseason( $competitionseason );
+            }
+
+
+
             // create competitionseason
-            $csRepos = $this->voetbalService->getRepository(Competitionseason::class);
-            $competitionseason = $csRepos->findOneBy(
-                array('competition' => $competition, 'season' => $season, 'association' => $association )
-            );
-            if ( $competitionseason !== null ){
-                throw new \Exception("het toernooi bestaat al", E_ERROR );
-            }
+             $csRepos = $this->voetbalService->getRepository(Competitionseason::class);
+//            $competitionseason = $csRepos->findOneBy(
+//                array('competition' => $competition, 'season' => $season, 'association' => $association )
+//            );
+//            if ( $competitionseason !== null ){
+//                throw new \Exception("het toernooi bestaat al", E_ERROR );
+//            }
             $csService = $this->voetbalService->getService(Competitionseason::class);
-            $competitionseason = $csService->create( $association, $competition, $season, $startDate );
-            $competitionseason->setSport($sportName);
-            $csRepos->save($competitionseason);
+//            $competitionseason = $csService->create( $association, $competition, $season, $startDate );
+//            $competitionseason->setSport($sportName);
+            $csRepos->save($tournament->getCompetitionseason());
 
-            $fieldRepos = $this->voetbalService->getRepository(Field::class);
-            for( $i = 1 ; $i <= $nrOfFields ; $i++ ) {
-                $fieldRepos->save( new Field( $competitionseason, $i, (string)$i ) );
-            }
-
-            $tournament = new Tournament( $competitionseason );
+//            $fieldRepos = $this->voetbalService->getRepository(Field::class);
+//            for( $i = 1 ; $i <= $nrOfFields ; $i++ ) {
+//                $fieldRepos->save( new Field( $competitionseason, $i, (string)$i ) );
+//            }
+//
+//            $tournament = new Tournament( $competitionseason );
             $this->repos->save($tournament);
 
             $tournamentRoleService = new TournamentRoleService( $this->tournamentRoleRepos );
             $tournamentRoles = $tournamentRoleService->set( $tournament, $user, Role::ALL );
 
-            if ( $nrOfCompetitors < Tournament::MINNROFCOMPETITORS ){
-                throw new \Exception("het minimum aantal deelnemer is " . Tournament::MINNROFCOMPETITORS);
-            }
-            if ( $nrOfCompetitors > Tournament::MAXNROFCOMPETITORS ){
-                throw new \Exception("het minimum aantal deelnemer is " . Tournament::MAXNROFCOMPETITORS);
-            }
-
-            $structureService = $this->voetbalService->getService(\Voetbal\Structure::class);
-            $firstRound = $structureService->create( $competitionseason, $nrOfCompetitors );
-
-            $planningService = $this->voetbalService->getService(\Voetbal\Planning::class);
-            $planningService->schedule( $firstRound, $competitionseason->getStartDateTime() );
+//            $nrOfPlaces = $round->getPoulePlaces()->count();
+//            if ( $nrOfPlaces < Tournament::MINNROFCOMPETITORS ){
+//                throw new \Exception("het minimum aantal deelnemer is " . Tournament::MINNROFCOMPETITORS);
+//            }
+//            if ( $nrOfPlaces > Tournament::MAXNROFCOMPETITORS ){
+//                throw new \Exception("het minimum aantal deelnemer is " . Tournament::MAXNROFCOMPETITORS);
+//            }
+//
+//            $structureService = $this->voetbalService->getService(\Voetbal\Structure::class);
+//            $firstRound = $structureService->create( $competitionseason, $round );
+//
+//            $planningService = $this->voetbalService->getService(\Voetbal\Planning::class);
+//            $planningService->create( $firstRound, $competitionseason->getStartDateTime() );
 
             $this->em->getConnection()->commit();
 
@@ -155,25 +165,25 @@ class Service
     }
 
     /**
-     * @param Association $association
+     * @param Tournament $tournament
      * @param $name
-     * @param $description
-     * @param Association $parent
-     * @throws \Exception
+     * @param $startDateTime
+     * @return bool
      */
-//    public function edit( Association $association, $name, $description, Association $parent = null )
-//    {
-//        $associationWithSameName = $this->repos->findOneBy( array('name' => $name ) );
-//        if ( $associationWithSameName !== null and $associationWithSameName !== $association ){
-//            throw new \Exception("de bondsnaam ".$name." bestaat al", E_ERROR );
-//        }
-//
-//        $association->setName($name);
-//        $association->setDescription($description);
-//        $association->setParent($parent);
-//
-//        return $this->repos->save($association);
-//    }
+    public function edit( Tournament $tournament, $name, $startDateTime )
+    {
+        $competition = $tournament->getCompetitionseason()->getCompetition();
+        $competition->setName($name);
+        $competitionRepos = $this->voetbalService->getRepository(Competition::class);
+        $competitionRepos->save($competition);
+
+        $competitionseason = $tournament->getCompetitionseason();
+        $competitionseason->setStartDateTime($startDateTime);
+        $competitionseasonRepos = $this->voetbalService->getRepository(Competitionseason::class);
+        $competitionseasonRepos->save($competitionseason);
+
+        return true;
+    }
 
     /**
      * @param Tournament $tournament
