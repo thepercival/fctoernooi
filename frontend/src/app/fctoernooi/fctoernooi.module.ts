@@ -6,6 +6,7 @@ import { NouisliderModule } from 'ng2-nouislider';
 import { DndModule } from 'ng2-dnd';
 
 import { TournamentNewComponent } from './tournament/new/new.component';
+import { TournamentEditComponent } from './tournament/edit/edit.component';
 import { TournamentHomeComponent } from './tournament/home/home.component';
 import { TournamentStructureComponent } from './tournament/structure/main.component';
 import { TournamentStructureRoundComponent } from './tournament/structure/round.component';
@@ -17,6 +18,7 @@ import { TournamentPlanningRefereesComponent } from './tournament/planning/refer
 import { TournamentPlanningFieldsComponent } from './tournament/planning/fields/component';
 
 import { TournamentRoleRepository } from './tournament/role/repository';
+import { StructureRepository } from 'voetbaljs/structure/repository';
 import { RoundRepository } from 'voetbaljs/round/repository';
 import { RoundConfigRepository } from 'voetbaljs/round/config/repository';
 import { RoundScoreConfigRepository } from 'voetbaljs/round/scoreconfig/repository';
@@ -39,6 +41,7 @@ import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
   ],
   declarations: [
     TournamentNewComponent,
+    TournamentEditComponent,
     TournamentHomeComponent,
     TournamentStructureComponent,
     TournamentStructureRoundComponent,
@@ -51,6 +54,7 @@ import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
   ],
   providers: [
     TournamentRoleRepository,
+    StructureRepository,
     RoundRepository,
     RoundConfigRepository,
     RoundScoreConfigRepository,

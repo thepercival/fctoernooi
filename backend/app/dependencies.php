@@ -46,16 +46,28 @@ $container['em'] = function ($c) {
 $container['serializer'] = function( $c ) {
     $settings = $c->get('settings');
 
-    $serializer = SerializerBuilder::create()
+    $serializerBuilder = SerializerBuilder::create()
         ->setDebug($settings['displayErrorDetails'])
         /*->setCacheDir($settings['serializer']['cache_dir'])*/;
 
+    $serializerBuilder
+//        ->configureListeners(function(JMS\Serializer\EventDispatcher\EventDispatcher $dispatcher) {
+//            $dispatcher->addListener('serializer.pre_serialize',
+//                function(JMS\Serializer\EventDispatcher\PostSerializeEvent $event) {
+//                    // do something
+//
+//                }
+//            );
+//            // $dispatcher->addSubscriber(new MyEventSubscriber());
+//        })
+    ;
+
     foreach( $settings['serializer']['yml_dir'] as $ymlnamespace => $ymldir ){
-        $serializer->addMetadataDir($ymldir,$ymlnamespace);
+        $serializerBuilder->addMetadataDir($ymldir,$ymlnamespace);
     }
 
 
-    return $serializer->build();
+    return $serializerBuilder->build();
 };
 
 // voetbalService

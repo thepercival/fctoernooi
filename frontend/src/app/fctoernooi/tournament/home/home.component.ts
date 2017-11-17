@@ -3,7 +3,7 @@ import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { TournamentRepository } from '../repository';
 import { AuthService } from '../../../auth/auth.service';
 import { TournamentComponent } from '../component';
-import { RoundRepository } from 'voetbaljs/round/repository';
+import { StructureRepository } from 'voetbaljs/structure/repository';
 import { TournamentRole } from '../role';
 import { IAlert } from '../../../app.definitions';
 
@@ -22,9 +22,9 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
         router: Router,
         private authService: AuthService,
         tournamentRepository: TournamentRepository,
-        roundRepository: RoundRepository
+        structureRepository: StructureRepository
     ) {
-        super( route, router, tournamentRepository, roundRepository );
+        super(route, router, tournamentRepository, structureRepository );
     }
 
     ngOnInit() {

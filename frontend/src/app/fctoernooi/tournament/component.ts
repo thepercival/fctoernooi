@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TournamentRepository } from './repository';
 import { Tournament } from '../tournament';
 import { StructureService } from 'voetbaljs/structure/service';
-import { RoundRepository } from 'voetbaljs/round/repository';
+import { StructureRepository } from 'voetbaljs/structure/repository';
 import { Round } from 'voetbaljs/round';
 import { RoundScoreConfigRepository } from 'voetbaljs/round/scoreconfig/repository';
 import { RoundConfigRepository } from 'voetbaljs/round/config/repository';
@@ -18,50 +18,48 @@ export class TournamentComponent implements OnDestroy {
     protected route: ActivatedRoute;
     protected router: Router;
     protected tournamentRepository: TournamentRepository;
-    protected roundRepository: RoundRepository;
+    protected structureRepository: StructureRepository;
     public structureService: StructureService;
 
     constructor(
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
-        roundRepository: RoundRepository
+        structureRepository: StructureRepository
     ) {
         this.route = route;
         this.router = router;
         this.tournamentRepository = tournamentRepository;
-        this.roundRepository = roundRepository;
+        this.structureRepository = structureRepository;
     }
 
-    myNgOnInit( callback: DataProcessCallBack = null ) {
+    myNgOnInit(callback: DataProcessCallBack = null) {
         this.sub = this.route.params.subscribe(params => {
-            this.tournamentRepository.getObject( +params['id'] )
+            this.tournamentRepository.getObject(+params['id'])
                 .subscribe(
-                    /* happy path */ (tournament: Tournament) => {
-                        this.tournament = tournament;
+                    /* happy path */(tournament: Tournament) => {
+                    this.tournament = tournament;
 
 
 
-                        this.roundRepository.getObject( tournament.getCompetitionseason() )
-                            .subscribe(
-                                /* happy path */ (round: Round ) => {
-                                    this.structureService = new StructureService(
-                                        tournament.getCompetitionseason(),
-                                        round,
-                                        new RoundConfigRepository(),
-                                        new RoundScoreConfigRepository(),
-                                        { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS }
-                                    );
-                                    if ( callback !== null ) {
-                                        callback();
-                                    }
-                                },
-                                /* error path */ e => {},
-                                /* onComplete */ () => {}
+                    this.structureRepository.getObject(tournament.getCompetitionseason())
+                        .subscribe(
+                                /* happy path */(round: Round) => {
+                            this.structureService = new StructureService(
+                                tournament.getCompetitionseason(),
+                                { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
+                                round
                             );
-                    },
-                    /* error path */ e => {},
-                    /* onComplete */ () => {}
+                            if (callback !== null) {
+                                callback();
+                            }
+                        },
+                                /* error path */ e => { },
+                                /* onComplete */() => { }
+                        );
+                },
+                    /* error path */ e => { },
+                    /* onComplete */() => { }
                 );
         });
     }

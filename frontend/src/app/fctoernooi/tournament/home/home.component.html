@@ -24,14 +24,13 @@
         <p class="card-text" *ngIf="structureService.getFirstRound().getGames().length === 0"><span class="fa fa-times-circle icon-danger"></span> plan wedstrijden in</p>
       </div>
     </div>
-    <div class="card pointer mt-3 mx-2">
+    <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/edit', tournament.getId()]">
       <div class="card-block">
         <h5 class="card-title"><i class="fa fa-cogs"></i> instellingen</h5>
         <ul class="card-text">
           <li>naam</li>
           <li>startdatum</li>
         </ul>
-
       </div>
     </div>
     <div *ngIf="isAdmin()" class="card mt-3 mx-2">
