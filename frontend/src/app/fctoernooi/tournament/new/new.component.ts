@@ -9,6 +9,7 @@ import { Season } from 'voetbaljs/season';
 import { Association } from 'voetbaljs/association';
 import { Competitionseason } from 'voetbaljs/competitionseason';
 import { Field } from 'voetbaljs/field';
+import { PlanningService } from 'voetbaljs/planning/service';
 
 @Component({
   selector: 'app-tournament-new',
@@ -66,20 +67,23 @@ export class TournamentNewComponent implements OnInit {
       this.model.starttime.minute
     );
 
-    const association = new Association('username'); // dummy
-    const competition = new Competition(this.model.name);
-    const season = new Season('123'); // dummy
-    season.setStartdate(new Date());
-    season.setEnddate(new Date());
-    const competitionseason = new Competitionseason(association, competition, season);
-    competitionseason.setSport(sportName);
-    competitionseason.setStartDateTime(startdate);
-    for (let fieldNumber = 1; fieldNumber <= this.model.nroffields; fieldNumber++) {
-      const field = new Field(competitionseason, fieldNumber);
-      field.setName(String(fieldNumber));
-    }
+    let tournament = null;
+    {
+      const association = new Association('username'); // dummy
+      const competition = new Competition(this.model.name);
+      const season = new Season('123'); // dummy
+      season.setStartdate(new Date());
+      season.setEnddate(new Date());
+      const competitionseason = new Competitionseason(association, competition, season);
+      competitionseason.setSport(sportName);
+      competitionseason.setStartDateTime(startdate);
+      for (let fieldNumber = 1; fieldNumber <= this.model.nroffields; fieldNumber++) {
+        const field = new Field(competitionseason, fieldNumber);
+        field.setName(String(fieldNumber));
+      }
 
-    const tournament = new Tournament(competitionseason);
+      tournament = new Tournament(competitionseason);
+    }
 
     console.log(tournament);
 
@@ -90,12 +94,15 @@ export class TournamentNewComponent implements OnInit {
         console.log(tournamentOut);
 
         const structureService = new StructureService(
-          competitionseason,
+          tournamentOut.getCompetitionseason(),
           { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
           null, this.model.nrofcompetitors
         );
 
         console.log(structureService.getFirstRound());
+        const planningService = new PlanningService(startdate);
+        planningService.create(structureService.getFirstRound());
+
         this.structureRepository.createObject(structureService.getFirstRound(), tournamentOut.getCompetitionseason())
           .subscribe(
             /* happy path */ structure => {
@@ -107,8 +114,7 @@ export class TournamentNewComponent implements OnInit {
             /* onComplete */() => this.loading = false
           );
       },
-            /* error path */ e => { this.error = e; this.loading = false; },
-            /* onComplete */() => this.loading = false
+            /* error path */ e => { this.error = e; this.loading = false; }
       );
   }
 
