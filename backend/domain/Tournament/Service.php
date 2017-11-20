@@ -108,21 +108,19 @@ class Service
             // DO POST SERIALIZING!!
             $competitionseason->setAssociation( $association );
             $competitionseason->setSeason( $season );
-            foreach( $competitionseason->getFields() as $field ) {
-                $field->setCompetitionseason( $competitionseason );
-            }
-
-
 
             // create competitionseason
-             $csRepos = $this->voetbalService->getRepository(Competitionseason::class);
+            $csRepos = $this->voetbalService->getRepository(Competitionseason::class);
+
+            $csRepos->onPostSerialize( $competitionseason );
+
 //            $competitionseason = $csRepos->findOneBy(
 //                array('competition' => $competition, 'season' => $season, 'association' => $association )
 //            );
 //            if ( $competitionseason !== null ){
 //                throw new \Exception("het toernooi bestaat al", E_ERROR );
 //            }
-            $csService = $this->voetbalService->getService(Competitionseason::class);
+            // $csService = $this->voetbalService->getService(Competitionseason::class);
 //            $competitionseason = $csService->create( $association, $competition, $season, $startDate );
 //            $competitionseason->setSport($sportName);
             $csRepos->save($tournament->getCompetitionseason());
