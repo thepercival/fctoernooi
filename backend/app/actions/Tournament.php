@@ -113,56 +113,13 @@ final class Tournament
 
     public function add( $request, $response, $args)
     {
-        $arrObject = $request->getParsedBody();
-        // var_dump(123); die();
-//        var_dump($arrObject); die();
-//
-//        $cs = $this->serializer->deserialize( json_encode( $arrObject ), 'FCToernooi\Tournament', 'json');
-//        var_dump($tournament); die();
-
-
         $tournament = $this->serializer->deserialize( json_encode($request->getParsedBody()), 'FCToernooi\Tournament', 'json');
-
-
-        // var_dump($tournament); die();
-//        return $response
-//            ->withStatus(201)
-//            ->withHeader('Content-Type', 'application/json;charset=utf-8')
-//            ->write($this->serializer->serialize( $tournament, 'json'));
-//        ;
-
-       // var_dump( $tournament ); die();
-//        $name = filter_var($request->getParam('name'), FILTER_SANITIZE_STRING);
-//        if ( !$name ){ return $response->withStatus(404, "de naam is ongeldig of leeg" ); }
-//        $sportName = filter_var(trim($request->getParam('sportname')), FILTER_SANITIZE_STRING);
-//        if ( !$sportName ){ return $response->withStatus(404, "de sportnaam is ongeldig of leeg" ); }
-//        $nrOfCompetitors = filter_var($request->getParam('nrofcompetitors'), FILTER_VALIDATE_INT);
-//        if ( $nrOfCompetitors === false ){ return $response->withStatus(404, "het aantal deelnemers is ongeldig" ); }
-//        $nrOfFields = filter_var($request->getParam('nroffields'), FILTER_VALIDATE_INT);
-//        if ( $nrOfFields === false ){ return $response->withStatus(404, "het aantal velden is ongeldig" ); }
-//        $startDate = \DateTimeImmutable::createFromFormat ( 'Y-m-d\TH:i:s.000\Z', $request->getParam('startdate') );
-//        if ( $startDate === null ){ return $response->withStatus(404, "de startdatum is ongeldig" ); }
-
-//        $round = 12;
-//        'name': this.model.name,
-//        'sportname': sportName,
-//
-//        'nroffields': this.model.nroffields,
-//        'startdate': startdate.toISOString()/*,
-//        'structure': firstRound*/
 
         $user = null;
         if( $this->jwt->sub !== null ){
             $user = $this->userRepository->find( $this->jwt->sub );
         }
         if ( $user === null ){ return $response->withStatus(404, "gebruiker kan niet gevonden worden" ); }
-
-//        $this->tournamentRepository->save( $tournament);
-//        return $response
-//            ->withStatus(201)
-//            ->withHeader('Content-Type', 'application/json;charset=utf-8')
-//            ->write($this->serializer->serialize( $tournament, 'json'));
-//        ;
 
         $sErrorMessage = null;
         try {
@@ -214,30 +171,33 @@ final class Tournament
 
     public function edit( $request, $response, $args)
     {
-        $name = filter_var($request->getParam('name'), FILTER_SANITIZE_STRING);
-        if ( !$name ){ return $response->withStatus(404, "de naam is ongeldig of leeg" ); }
-        $startDate = \DateTimeImmutable::createFromFormat ( 'Y-m-d\TH:i:s.000\Z', $request->getParam('startdate') );
-        if ( $startDate === null ){ return $response->withStatus(404, "de startdatum is ongeldig" ); }
+        $tournament = $this->serializer->deserialize( json_encode($request->getParsedBody()), 'FCToernooi\Tournament', 'json');
+
+        $foundTournament = $this->tournamentRepository->find( $tournament->getId() );
+        if ( $foundTournament === null ){
+            return $response->withStatus(404, "het te wijzigen toernooi kon niet gevonden worden" );
+        }
+
+        $user = null;
+        if( $this->jwt->sub !== null ){
+            $user = $this->userRepository->find( $this->jwt->sub );
+        }
+        if ( $user === null ){ return $response->withStatus(404, "gebruiker kan niet gevonden worden" ); }
 
         $sErrorMessage = null;
         try {
-            $tournament = $this->tournamentRepository->find( $args['id'] );
-            if ( $tournament === null ){
-                return $response->withStatus(404, "het te wijzigen toernooi kon niet gevonden worden" );
-            }
+            $tournament = $this->service->editFromJSON( $tournament, $user );
 
-            $this->service->edit( $tournament, $name, $startDate );
             return $response
                 ->withStatus(200)
                 ->withHeader('Content-Type', 'application/json;charset=utf-8')
-                ->write($this->serializer->serialize( true, 'json'));
+                ->write($this->serializer->serialize( $tournament, 'json'));
             ;
         }
         catch( \Exception $e ){
-
             $sErrorMessage = $e->getMessage();
         }
-        return $response->withStatus(400,$sErrorMessage);
+        return $response->withStatus(400, $sErrorMessage )->write( $sErrorMessage );
     }
 
     /*

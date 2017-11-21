@@ -14,6 +14,7 @@ FCToernooi\Tournament:
         roles:
           targetEntity: FCToernooi\Tournament\Role
           mappedBy: tournament
+          cascade: [ persist, remove ]
     manyToOne:
         competitionseason:
             targetEntity: Voetbal\Competitionseason

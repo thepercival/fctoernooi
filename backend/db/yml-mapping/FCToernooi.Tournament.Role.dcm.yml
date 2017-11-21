@@ -31,6 +31,7 @@ FCToernooi\Tournament\Role:
               name: userid
               referencedColumnName: id
               nullable: false
+            cascade: [ persist ]
     uniqueConstraints:
         main_u_idx:
             columns: [ tournamentid, userid, role ]

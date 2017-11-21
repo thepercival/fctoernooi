@@ -112,7 +112,7 @@ class Service
             // create competitionseason
             $csRepos = $this->voetbalService->getRepository(Competitionseason::class);
 
-            $csRepos->onPostSerialize( $competitionseason );
+          //   $csRepos->onPostSerialize( $competitionseason );
 
 //            $competitionseason = $csRepos->findOneBy(
 //                array('competition' => $competition, 'season' => $season, 'association' => $association )
@@ -123,7 +123,7 @@ class Service
             // $csService = $this->voetbalService->getService(Competitionseason::class);
 //            $competitionseason = $csService->create( $association, $competition, $season, $startDate );
 //            $competitionseason->setSport($sportName);
-            $csRepos->save($tournament->getCompetitionseason());
+            $csRepos->saveFromJSON($tournament->getCompetitionseason());
 
 //            $fieldRepos = $this->voetbalService->getRepository(Field::class);
 //            for( $i = 1 ; $i <= $nrOfFields ; $i++ ) {
@@ -168,19 +168,27 @@ class Service
      * @param $startDateTime
      * @return bool
      */
-    public function edit( Tournament $tournament, $name, $startDateTime )
+    public function editFromJSON( Tournament $tournament, User $user )
     {
-        $competition = $tournament->getCompetitionseason()->getCompetition();
-        $competition->setName($name);
-        $competitionRepos = $this->voetbalService->getRepository(Competition::class);
-        $competitionRepos->save($competition);
+        $csRepos = $this->voetbalService->getRepository(Competitionseason::class);
 
         $competitionseason = $tournament->getCompetitionseason();
-        $competitionseason->setStartDateTime($startDateTime);
-        $competitionseasonRepos = $this->voetbalService->getRepository(Competitionseason::class);
-        $competitionseasonRepos->save($competitionseason);
+        $csRepos->onPostSerialize( $competitionseason );
+        $competitionseason = $csRepos->merge( $competitionseason );
+        $csRepos->save( $competitionseason );
+        $tournament->setCompetitionseason( $competitionseason );
 
-        return true;
+//        $competition = $tournament->getCompetitionseason()->getCompetition();
+//        $competition->setName($name);
+//        $competitionRepos = $this->voetbalService->getRepository(Competition::class);
+//        $competitionRepos->save($competition);
+//
+//        $competitionseason = $tournament->getCompetitionseason();
+//        $competitionseason->setStartDateTime($startDateTime);
+//        $competitionseasonRepos = $this->voetbalService->getRepository(Competitionseason::class);
+//        $competitionseasonRepos->save($competitionseason);
+
+        return $tournament;
     }
 
     /**
