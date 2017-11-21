@@ -107,6 +107,7 @@ export class TournamentRepository extends VoetbalRepository {
 
     objectToJsonHelper(object: Tournament): any {
         return {
+            'id': object.getId(),
             'competitionseason': this.csRepository.objectToJsonHelper(object.getCompetitionseason()),
             'roles': this.tournamentRoleRepository.objectsToJsonHelper(object.getRoles())
         };
@@ -125,20 +126,12 @@ export class TournamentRepository extends VoetbalRepository {
             .catch(this.handleError);
     }
 
-    editObject(tournament: Tournament): Observable<boolean> {
-        const json = {
-            name: tournament.getCompetitionseason().getCompetition().getName(),
-            startdate: tournament.getCompetitionseason().getStartDateTime()
-        };
-
-        return this.http.put(
-            this.url + '/' + tournament.getId(),
-            JSON.stringify(json),
-            { headers: super.getHeaders() }
-        )
-            // ...and calling .json() on the response to return data
-            // .map((res) => { console.log(res); return this.jsonToObjectHelper(res.json()); })
-            // ..errors if any
+    editObject(tournament: Tournament): Observable<Tournament> {
+        return this.http
+            .put(this.url + '/' + tournament.getId(), this.objectToJsonHelper(tournament), { headers: super.getHeaders() })
+            .map((res) => {
+                console.log(res); return this.jsonToObjectHelper(res);
+            })
             .catch(this.handleError);
     }
 

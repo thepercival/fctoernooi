@@ -4,6 +4,8 @@ import { TournamentRepository } from '../repository';
 import { Competition } from 'voetbaljs/competition';
 import { TournamentComponent } from '../component';
 import { StructureRepository } from 'voetbaljs/structure/repository';
+import { PlanningService } from 'voetbaljs/planning/service';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 
 @Component({
     selector: 'app-tournament-edit',
@@ -59,13 +61,24 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
         this.tournament.getCompetitionseason().setStartDateTime(startdate);
         this.tournament.getCompetitionseason().getCompetition().setName(this.model.name);
 
+        const round = this.structureService.getFirstRound();
+        const planningService = new PlanningService(startdate);
+        planningService.reschedule(round);
+
         this.tournamentRepository.editObject(this.tournament)
             .subscribe(
-            /* happy path */ retVal => {
-                // retVal
-            },
+            /* happy path */ tournamentRes => {
+                // setTimeout(3000);
+                this.structureRepository.editObject(round, round.getCompetitionseason())
+                    .subscribe(
+                        /* happy path */ roundRes => {
+                        this.router.navigate(['/toernooi/home', tournamentRes.getId()]);
+                    },
             /* error path */ e => { this.error = e; this.loading = false; },
             /* onComplete */() => this.loading = false
+                    );
+            },
+            /* error path */ e => { this.error = e; this.loading = false; }
             );
     }
 }

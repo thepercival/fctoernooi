@@ -93,6 +93,7 @@ export class TournamentRoleRepository extends VoetbalRepository {
 
     objectToJsonHelper( object: TournamentRole ): any {
         const json = {
+            'id': object.getId(),
             // 'tournament': this.tournamentRepository.objectToJsonHelper(object.getTournament()),
             'user': this.userRepos.objectToJsonHelper(object.getUser()),
             'role': object.getRole()

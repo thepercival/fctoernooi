@@ -72,8 +72,8 @@ export class TournamentNewComponent implements OnInit {
       const association = new Association('username'); // dummy
       const competition = new Competition(this.model.name);
       const season = new Season('123'); // dummy
-      season.setStartdate(new Date());
-      season.setEnddate(new Date());
+      season.setStartDateTime(new Date());
+      season.setEndDateTime(new Date());
       const competitionseason = new Competitionseason(association, competition, season);
       competitionseason.setSport(sportName);
       competitionseason.setStartDateTime(startdate);
