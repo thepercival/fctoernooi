@@ -1,7 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TournamentRepository } from '../repository';
 import { TournamentComponent } from '../component';
+import { Tournament } from '../../tournament';
+import { StructureService } from 'voetbaljs/structure/service';
+import { Round } from 'voetbaljs/round';
 import { StructureRepository } from 'voetbaljs/structure/repository';
 import { IAlert } from '../../../app.definitions';
 
@@ -10,7 +13,7 @@ import { IAlert } from '../../../app.definitions';
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.css']
 })
-export class TournamentPlanningComponent extends TournamentComponent implements OnInit {
+export class TournamentPlanningComponent extends TournamentComponent implements OnInit, OnChanges {
 
   settingsAlert: IAlert;
 
@@ -26,5 +29,17 @@ export class TournamentPlanningComponent extends TournamentComponent implements 
 
   ngOnInit() {
     super.myNgOnInit();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log('ngOnChanges', changes);
+  }
+
+  updateRound(newRound: Round) {
+    this.structureService = new StructureService(
+      this.tournament.getCompetitionseason(),
+      { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
+      newRound
+    );
   }
 }

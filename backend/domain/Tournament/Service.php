@@ -68,11 +68,11 @@ class Service
      * @return Tournament|null
      * @throws \Exception
      */
-    public function createFromJSON( Tournament $tournament, User $user )
+    public function createFromJSON( Tournament $p_tournament, User $user )
     {
         $this->em->getConnection()->beginTransaction();
-        $competitionseason = $tournament->getCompetitionseason();
-
+        $competitionseason = $p_tournament->getCompetitionseason();
+        $tournament = null;
         try {
             // association, check als bestaat op basis van naam, zoniet, aak aan
             $associationRepos = $this->voetbalService->getRepository(Association::class);
@@ -108,30 +108,10 @@ class Service
             // DO POST SERIALIZING!!
             $competitionseason->setAssociation( $association );
             $competitionseason->setSeason( $season );
-
-            // create competitionseason
             $csRepos = $this->voetbalService->getRepository(Competitionseason::class);
+            $csRepos->saveFromJSON($competitionseason);
 
-          //   $csRepos->onPostSerialize( $competitionseason );
-
-//            $competitionseason = $csRepos->findOneBy(
-//                array('competition' => $competition, 'season' => $season, 'association' => $association )
-//            );
-//            if ( $competitionseason !== null ){
-//                throw new \Exception("het toernooi bestaat al", E_ERROR );
-//            }
-            // $csService = $this->voetbalService->getService(Competitionseason::class);
-//            $competitionseason = $csService->create( $association, $competition, $season, $startDate );
-//            $competitionseason->setSport($sportName);
-            $csRepos->saveFromJSON($tournament->getCompetitionseason());
-
-//            $fieldRepos = $this->voetbalService->getRepository(Field::class);
-//            for( $i = 1 ; $i <= $nrOfFields ; $i++ ) {
-//                $fieldRepos->save( new Field( $competitionseason, $i, (string)$i ) );
-//            }
-//
-//            $tournament = new Tournament( $competitionseason );
-            $this->repos->save($tournament);
+            $tournament = $this->repos->save($p_tournament);
 
             $tournamentRoleService = new TournamentRoleService( $this->tournamentRoleRepos );
             $tournamentRoles = $tournamentRoleService->set( $tournament, $user, Role::ALL );
@@ -151,15 +131,12 @@ class Service
 //            $planningService->create( $firstRound, $competitionseason->getStartDateTime() );
 
             $this->em->getConnection()->commit();
-
-            return $tournament;
         } catch (\Exception $e) {
             // Rollback the failed transaction attempt
             $this->em->getConnection()->rollback();
             throw $e;
         }
-
-        return null; //$this->repos->save($association);
+        return $tournament;
     }
 
     /**
@@ -172,11 +149,13 @@ class Service
     {
         $csRepos = $this->voetbalService->getRepository(Competitionseason::class);
 
-        $competitionseason = $tournament->getCompetitionseason();
-        $csRepos->onPostSerialize( $competitionseason );
-        $competitionseason = $csRepos->merge( $competitionseason );
-        $csRepos->save( $competitionseason );
-        $tournament->setCompetitionseason( $competitionseason );
+        $csRepos->editFromJSON($tournament->getCompetitionseason());
+
+//        $competitionseason = $tournament->getCompetitionseason();
+//        $csRepos->onPostSerialize( $competitionseason );
+//        $competitionseason = $csRepos->merge( $competitionseason );
+//        $csRepos->save( $competitionseason );
+//        $tournament->setCompetitionseason( $competitionseason );
 
 //        $competition = $tournament->getCompetitionseason()->getCompetition();
 //        $competition->setName($name);

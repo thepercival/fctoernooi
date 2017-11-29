@@ -1,9 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { Tournament } from '../../../tournament';
 import { PlanningService } from 'voetbaljs/planning/service';
 import { Field } from 'voetbaljs/field';
 import { Round } from 'voetbaljs/round';
 import { IAlert } from '../../../../app.definitions';
+import { FieldRepository, IField } from 'voetbaljs/field/repository';
+import { StructureRepository } from 'voetbaljs/structure/repository';
 
 @Component({
     selector: 'app-tournament-planning-fields',
@@ -14,17 +16,21 @@ export class TournamentPlanningFieldsComponent implements OnInit {
 
     @Input() tournament: Tournament;
     @Input() round: Round;
-    public progressAlert: IAlert;
+    @Output() updateRound = new EventEmitter<Round>();
+    public alert: IAlert;
+    public processing = true;
     public disableEditButtons = false;
     private planningService: PlanningService;
     fieldsList: Array<IFieldListItem>;
 
     validations: any = {
-        'minlengthname' : Field.MIN_LENGTH_NAME,
-        'maxlengthname' : Field.MAX_LENGTH_NAME
+        'minlengthname': Field.MIN_LENGTH_NAME,
+        'maxlengthname': Field.MAX_LENGTH_NAME
     };
 
-    constructor() {
+    constructor(
+        private fieldRepository: FieldRepository,
+        private structureRepository: StructureRepository) {
         this.resetAlert();
     }
 
@@ -35,80 +41,132 @@ export class TournamentPlanningFieldsComponent implements OnInit {
         this.planningService = new PlanningService(
             this.tournament.getCompetitionseason().getStartDateTime()
         );
+
+        this.processing = false;
     }
+
 
     createFieldsList() {
         const fields = this.tournament.getCompetitionseason().getFields();
         this.fieldsList = [];
-        fields.forEach( function( fieldIt ) {
-            this.fieldsList.push( {
+        fields.forEach(function (fieldIt) {
+            this.fieldsList.push({
                 field: fieldIt,
                 editable: false
-            } );
-        }, this );
+            });
+        }, this);
     }
 
-    saveedit( fieldListItem: IFieldListItem ) {
+    saveedit(fieldListItem: IFieldListItem) {
+        if (fieldListItem.editable) {
+            this.editField(fieldListItem);
+        }
         fieldListItem.editable = !fieldListItem.editable;
         this.disableEditButtons = fieldListItem.editable;
     }
 
     addField() {
-        this.setAlert('velden opslaan');
+        this.setAlert('info', 'veld toevoegen..');
+        this.processing = true;
 
-        const number = this.fieldsList.length + 1;
-        const field = new Field( this.tournament.getCompetitionseason(), number );
-        field.setName( '' + number );
-        const fieldListItem: IFieldListItem = { field: field, editable: false };
-        this.fieldsList.push( fieldListItem );
+        const jsonField: IField = {
+            number: this.fieldsList.length + 1,
+            name: '' + (this.fieldsList.length + 1)
+        };
 
-        console.log('reschedule');
-        this.setAlert('wedstrijden plannen');
-        this.planningService.reschedule( this.round );
+        this.fieldRepository.createObject(jsonField, this.tournament.getCompetitionseason())
+            .subscribe(
+            /* happy path */ fieldRes => {
+                const fieldItem: IFieldListItem = { field: fieldRes, editable: false };
+                this.fieldsList.push(fieldItem);
+                this.planningService.reschedule(this.round);
+                // probleem is dat ronde wordt vervangen, terwijl ik het update.
+                // dit komt weer doordat het in de backend wordt vervangen en ook in de repository
+                // eigenlijk moet alles bijgewerkt worden voor de bijbehorde ronde.
+                // dit kan dus zijn:
+                // 1 onderliggende structuur(hier horen ook games bij)
+                // 2 onderliggende wedstrijden(ook van onderliggende ronden)
+                // 3 configuraties(ook van onderliggende ronden)
 
-        this.setAlert('wedstrijden opslaan');
-
-        if ( true ) { // saving is succesvol
-            // this.resetAlert();
-        }
+                this.structureRepository.editObject(this.round, this.round.getCompetitionseason())
+                    .subscribe(
+                        /* happy path */ roundRes => {
+                        this.round.setName('cdk');
+                        this.round = roundRes;
+                        this.updateRound.emit(roundRes);
+                        this.processing = false;
+                        this.setAlert('info', 'veld toegevoegd');
+                    },
+                /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+                /* onComplete */() => this.processing = false
+                    );
+            },
+            /* error path */ e => { this.setAlert('danger', e); },
+        );
     }
 
     removeField(fieldItem: IFieldListItem) {
-        this.setAlert('velden opslaan');
+        this.setAlert('info', 'veld verwijderen..');
+        this.processing = true;
 
-        const index = this.fieldsList.indexOf( fieldItem );
+        const index = this.fieldsList.indexOf(fieldItem);
         if (index > -1) {
             this.fieldsList.splice(index, 1);
         }
 
         const fields = this.tournament.getCompetitionseason().getFields();
-        fields.splice( 0, fields.length );
+        fields.splice(0, fields.length);
         let fieldNumber = 1;
-        this.fieldsList.forEach( (fieldListItem) => {
-            if ( fieldListItem.field.getName() === ( '' + ( fieldNumber + 1 ) ) ) {
-                fieldListItem.field.setName( '' + fieldNumber );
+        this.fieldsList.forEach((fieldListItem) => {
+            if (fieldListItem.field.getName() === ('' + (fieldNumber + 1))) {
+                fieldListItem.field.setName('' + fieldNumber);
             }
-            fieldListItem.field.setNumber( fieldNumber++ );
-            fields.push( fieldListItem.field );
+            fieldListItem.field.setNumber(fieldNumber++);
+            fields.push(fieldListItem.field);
         });
 
-        console.log('reschedule');
-        this.setAlert('wedstrijden plannen');
-        this.planningService.reschedule( this.round );
+        this.planningService.reschedule(this.round);
 
-        this.setAlert('wedstrijden opslaan');
-
-        if ( true ) { // saving is succesvol
-            // this.resetAlert();
-        }
+        this.fieldRepository.removeObject(fieldItem.field)
+            .subscribe(
+            /* happy path */ fieldRes => {
+                // setTimeout(3000);
+                this.structureRepository.editObject(this.round, this.round.getCompetitionseason())
+                    .subscribe(
+                        /* happy path */ roundRes => {
+                        this.round = roundRes;
+                        this.updateRound.emit(roundRes);
+                        this.processing = false;
+                        this.setAlert('info', 'veld verwijderd');
+                    },
+                /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+                /* onComplete */() => this.processing = false
+                    );
+            },
+            /* error path */ e => { this.setAlert('danger', 'X' + e); this.processing = false; },
+        );
     }
 
-    protected setAlert( message: string ) {
-        this.progressAlert = { 'type': 'info', 'message': message };
+    editField(fieldItem) {
+        this.setAlert('info', 'veldnaam wijzigen..');
+        this.processing = true;
+
+        this.fieldRepository.editObject(fieldItem.field, this.tournament.getCompetitionseason())
+            .subscribe(
+            /* happy path */ fieldRes => {
+                this.setAlert('info', 'veldnaam gewijzigd');
+            },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+            /* onComplete */() => { this.processing = false; }
+            );
+    }
+
+    protected setAlert(type: string, message: string) {
+        this.alert = { 'type': type, 'message': message };
     }
 
     protected resetAlert(): void {
-        this.progressAlert = null;
+        this.alert = null;
     }
 
     // public closeAlert( name: string) {

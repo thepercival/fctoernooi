@@ -113,16 +113,17 @@ final class Tournament
 
     public function add( $request, $response, $args)
     {
-        $tournament = $this->serializer->deserialize( json_encode($request->getParsedBody()), 'FCToernooi\Tournament', 'json');
-
-        $user = null;
-        if( $this->jwt->sub !== null ){
-            $user = $this->userRepository->find( $this->jwt->sub );
-        }
-        if ( $user === null ){ return $response->withStatus(404, "gebruiker kan niet gevonden worden" ); }
-
         $sErrorMessage = null;
         try {
+            /** @var \FCToernooi\Tournament $tournament */
+            $tournament = $this->serializer->deserialize( json_encode($request->getParsedBody()), 'FCToernooi\Tournament', 'json');
+
+            $user = null;
+            if( $this->jwt->sub !== null ){
+                $user = $this->userRepository->find( $this->jwt->sub );
+            }
+            if ( $user === null ){ return $response->withStatus(404, "gebruiker kan niet gevonden worden" ); }
+
             $tournament = $this->service->createFromJSON( $tournament, $user );
 
             return $response
@@ -141,6 +142,7 @@ final class Tournament
     {
         $errorMessage = null;
         try{
+            /** @var \FCToernooi\Tournament $tournament */
             $tournament = $this->tournamentRepository->find( $args['id'] );
 
             if ( $tournament === null ){
@@ -171,21 +173,21 @@ final class Tournament
 
     public function edit( $request, $response, $args)
     {
-        $tournament = $this->serializer->deserialize( json_encode($request->getParsedBody()), 'FCToernooi\Tournament', 'json');
-
-        $foundTournament = $this->tournamentRepository->find( $tournament->getId() );
-        if ( $foundTournament === null ){
-            return $response->withStatus(404, "het te wijzigen toernooi kon niet gevonden worden" );
-        }
-
-        $user = null;
-        if( $this->jwt->sub !== null ){
-            $user = $this->userRepository->find( $this->jwt->sub );
-        }
-        if ( $user === null ){ return $response->withStatus(404, "gebruiker kan niet gevonden worden" ); }
-
         $sErrorMessage = null;
         try {
+            $tournament = $this->serializer->deserialize( json_encode($request->getParsedBody()), 'FCToernooi\Tournament', 'json');
+
+            $foundTournament = $this->tournamentRepository->find( $tournament->getId() );
+            if ( $foundTournament === null ){
+                return $response->withStatus(404, "het te wijzigen toernooi kon niet gevonden worden" );
+            }
+
+            $user = null;
+            if( $this->jwt->sub !== null ){
+                $user = $this->userRepository->find( $this->jwt->sub );
+            }
+            if ( $user === null ){ return $response->withStatus(404, "gebruiker kan niet gevonden worden" ); }
+
             $tournament = $this->service->editFromJSON( $tournament, $user );
 
             return $response

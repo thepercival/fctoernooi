@@ -10,6 +10,7 @@ import { Tournament } from '../tournament';
 import { CompetitionseasonRepository } from 'voetbaljs/competitionseason/repository';
 import { TournamentRoleRepository } from './role/repository';
 import { VoetbalRepository } from 'voetbaljs/repository';
+import { PACKAGE_ROOT_URL } from '@angular/core/src/application_tokens';
 
 @Injectable()
 export class TournamentRepository extends VoetbalRepository {

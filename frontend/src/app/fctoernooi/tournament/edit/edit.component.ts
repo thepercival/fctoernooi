@@ -68,14 +68,15 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
         this.tournamentRepository.editObject(this.tournament)
             .subscribe(
             /* happy path */ tournamentRes => {
+                this.tournament = tournamentRes;
                 // setTimeout(3000);
                 this.structureRepository.editObject(round, round.getCompetitionseason())
                     .subscribe(
                         /* happy path */ roundRes => {
                         this.router.navigate(['/toernooi/home', tournamentRes.getId()]);
                     },
-            /* error path */ e => { this.error = e; this.loading = false; },
-            /* onComplete */() => this.loading = false
+                /* error path */ e => { this.error = e; this.loading = false; },
+                /* onComplete */() => this.loading = false
                     );
             },
             /* error path */ e => { this.error = e; this.loading = false; }
