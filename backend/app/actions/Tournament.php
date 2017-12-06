@@ -133,9 +133,9 @@ final class Tournament
             ;
         }
         catch( \Exception $e ){
-            $sErrorMessage = urlencode( $e->getMessage() );
+            $sErrorMessage = $e->getMessage();
         }
-        return $response->withStatus(404, $sErrorMessage );
+        return $response->withStatus(422 )->write( $sErrorMessage );
     }
 
     public function remove( $request, $response, $args)
