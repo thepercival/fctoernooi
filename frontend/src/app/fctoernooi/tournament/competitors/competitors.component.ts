@@ -9,7 +9,7 @@ import { TeamRepository, ITeam } from 'voetbaljs/team/repository';
 import { IAlert } from '../../../app.definitions';
 import { Association } from 'voetbaljs/association';
 import { PoulePlaceRepository } from 'voetbaljs/pouleplace/repository';
-import { forkJoin } from "rxjs/observable/forkJoin";
+import { forkJoin } from 'rxjs/observable/forkJoin';
 
 @Component({
   selector: 'app-tournament-competitors',
