@@ -7,21 +7,23 @@
           <small>deelnemers</small>
         </h1>
       </div>
-      <p *ngIf="infoAlert">
-        <ngb-alert [type]="'info'" (close)="infoAlert = false;">sleep items om indeling aan te passen</ngb-alert>
-      </p>
-      <ul class="list-group list-group-poule" dnd-sortable-container [sortableData]="teamsList">
-        <li *ngFor="let teamItem of teamsList; let i = index" dnd-sortable [sortableIndex]="i" (onDropSuccess)="updatePoulePlaces(i)"
+      <div class="d-flex justify-content-center">
+        <ngb-alert *ngIf="alert" [type]="alert.type" style="width:100%;" [dismissible]="true" (close)="alert = null;">
+          <i *ngIf="processing" class="fa fa-spinner fa-spin"></i> {{ alert.message }}</ngb-alert>
+      </div>
+      <ul class="list-group" dnd-sortable-container [sortableData]="teamsList">
+        <li *ngFor="let teamItem of teamsList; let i = index" dnd-sortable [sortableIndex]="i" (onDragStart)="startDragging(i)" (onDragEnd)="updatePoulePlaces(i)"
           class="list-group-item justify-content-between">
           <span>{{structureService.getPoulePlaceName( teamItem.pouleplace ) }}</span>
           <span *ngIf="!teamItem.editable && teamItem.team != null">{{teamItem.team.getName() }}</span>
           <span *ngIf="!teamItem.editable && teamItem.team == null" class="fa fa-times-circle icon-danger"></span>
           <input type="text" class="form-control input-teamname" [minlength]="validations.minlengthname" [maxlength]="validations.maxlengthname"
-            [ngModel]="teamItem.team.getName()" (ngModelChange)="teamItem.team.setName($event)" *ngIf="teamItem.editable" required>
+            [ngModel]="teamItem.team.getName()" (ngModelChange)="teamItem.team.setName($event)" *ngIf="!this.processing && teamItem.editable"
+            required>
           <span>
-            <button type="button" class="btn btn-sm" [disabled]="teamItem.editable && teamItem.team.getName().length < validations.minlengthname"
+            <button type="button" class="btn btn-sm" [disabled]="processing || (disableEditButtons && !teamItem.editable) || (teamItem.editable && teamItem.team.getName().length < validations.minlengthname)"
               (click)="saveedit(teamItem);">
-              <span class="fa fa-{{teamItem.editable ? 'save' : 'pencil'}}"></span>
+              <span class="fa fa-{{teamItem.editable ? 'save' : 'pencil' }}"></span>
             </button>
             <span class="fa fa-bars ml-2"></span>
           </span>

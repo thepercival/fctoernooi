@@ -98,7 +98,6 @@ export class TournamentRepository extends VoetbalRepository {
 
     jsonToObjectHelper(json: any): Tournament {
         const competitionseason = this.csRepository.jsonToObjectHelper(json.competitionseason);
-
         const tournament = new Tournament(competitionseason);
         const roles = this.tournamentRoleRepository.jsonArrayToObject(json.roles, tournament);
         tournament.setRoles(roles);

@@ -50,7 +50,7 @@
             <span class="hidden-xs-down">scheidsrechters</span>
           </ng-template>
           <ng-template ngbTabContent>
-            <app-tournament-planning-referees [tournament]="tournament" [round]="structureService.getFirstRound()"></app-tournament-planning-referees>
+            <app-tournament-planning-referees [tournament]="tournament" [round]="structureService.getFirstRound()" (updateRound)="updateRound($event)"></app-tournament-planning-referees>
           </ng-template>
         </ngb-tab>
       </ngb-tabset>

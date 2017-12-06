@@ -20,7 +20,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let fieldItem of fieldsList;">
+                <tr *ngFor="let fieldItem of fieldsList; let last = last;">
                     <td>
                         <span>{{fieldItem.field.getNumber()}}</span>
                     </td>
@@ -37,7 +37,7 @@
                         </button>
                     </td>
                     <td style="text-align: right;">
-                        <button type="button" class="btn btn-sm" [disabled]="processing || disableEditButtons" (click)="removeField(fieldItem);">
+                        <button *ngIf="last" type="button" class="btn btn-sm" [disabled]="processing || disableEditButtons" (click)="removeField(fieldItem);">
                             <span class="fa fa-remove"></span>
                         </button>
                     </td>

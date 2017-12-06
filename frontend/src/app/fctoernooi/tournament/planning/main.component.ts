@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TournamentRepository } from '../repository';
 import { TournamentComponent } from '../component';
@@ -13,7 +13,7 @@ import { IAlert } from '../../../app.definitions';
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.css']
 })
-export class TournamentPlanningComponent extends TournamentComponent implements OnInit, OnChanges {
+export class TournamentPlanningComponent extends TournamentComponent implements OnInit {
 
   settingsAlert: IAlert;
 
@@ -31,10 +31,6 @@ export class TournamentPlanningComponent extends TournamentComponent implements 
     super.myNgOnInit();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    console.log('ngOnChanges', changes);
-  }
-
   updateRound(newRound: Round) {
     this.structureService = new StructureService(
       this.tournament.getCompetitionseason(),
@@ -43,3 +39,4 @@ export class TournamentPlanningComponent extends TournamentComponent implements 
     );
   }
 }
+

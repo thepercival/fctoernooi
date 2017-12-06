@@ -1,30 +1,36 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { Tournament } from '../../../tournament';
 import { PlanningService } from 'voetbaljs/planning/service';
 import { Referee } from 'voetbaljs/referee';
 import { Round } from 'voetbaljs/round';
 import { IAlert } from '../../../../app.definitions';
+import { RefereeRepository, IReferee } from 'voetbaljs/referee/repository';
+import { StructureRepository } from 'voetbaljs/structure/repository';
 
 @Component({
     selector: 'app-tournament-planning-referees',
     templateUrl: './component.html',
-    styleUrls: ['./component.css']
+    styleUrls: ['./component.scss']
 })
 export class TournamentPlanningRefereesComponent implements OnInit {
 
     @Input() tournament: Tournament;
     @Input() round: Round;
-    public progressAlert: IAlert;
+    @Output() updateRound = new EventEmitter<Round>();
+    public alert: IAlert;
+    public processing = true;
     public disableEditButtons = false;
     private planningService: PlanningService;
     refereesList: Array<IRefereeListItem>;
 
     validations: any = {
-        'minlengthname' : Referee.MIN_LENGTH_NAME,
-        'maxlengthname' : Referee.MAX_LENGTH_NAME
+        'minlengthname': Referee.MIN_LENGTH_NAME,
+        'maxlengthname': Referee.MAX_LENGTH_NAME
     };
 
-    constructor() {
+    constructor(
+        private refereeRepository: RefereeRepository,
+        private structureRepository: StructureRepository) {
         this.resetAlert();
     }
 
@@ -35,81 +41,115 @@ export class TournamentPlanningRefereesComponent implements OnInit {
         this.planningService = new PlanningService(
             this.tournament.getCompetitionseason().getStartDateTime()
         );
+
+        this.processing = false;
     }
 
-    protected resetAlert(): void {
-        this.progressAlert = null;
-    }
 
     createRefereesList() {
         const referees = this.tournament.getCompetitionseason().getReferees();
         this.refereesList = [];
-        referees.forEach( function( refereeIt ) {
-            this.refereesList.push( {
+        referees.forEach(function (refereeIt) {
+            this.refereesList.push({
                 referee: refereeIt,
                 editable: false
-            } );
-        }, this );
+            });
+        }, this);
     }
 
-    saveedit( refereeListItem: IRefereeListItem ) {
+    saveedit(refereeListItem: IRefereeListItem) {
+        if (refereeListItem.editable) {
+            this.editReferee(refereeListItem);
+        }
         refereeListItem.editable = !refereeListItem.editable;
         this.disableEditButtons = refereeListItem.editable;
     }
 
     addReferee() {
-        this.setAlert('velden opslaan');
+        this.setAlert('info', 'scheidsrechter toevoegen..');
+        this.processing = true;
 
-        const number = this.refereesList.length + 1;
-        const referee = new Referee( this.tournament.getCompetitionseason(), number );
-        referee.setName( 's' + number );
-        const refereeListItem: IRefereeListItem = { referee: referee, editable: false };
-        this.refereesList.push( refereeListItem );
+        const jsonReferee: IReferee = {
+            number: this.refereesList.length + 1,
+            name: '' + (this.refereesList.length + 1)
+        };
 
-        console.log('reschedule');
-        this.setAlert('wedstrijden plannen');
-        this.planningService.reschedule( this.round );
+        this.refereeRepository.createObject(jsonReferee, this.tournament.getCompetitionseason())
+            .subscribe(
+            /* happy path */ refereeRes => {
+                const refereeItem: IRefereeListItem = { referee: refereeRes, editable: false };
+                this.refereesList.push(refereeItem);
+                this.planningService.reschedule(this.round);
 
-        this.setAlert('wedstrijden opslaan');
-
-        if ( true ) { // saving is succesvol
-            // this.resetAlert();
-        }
+                this.structureRepository.editObject(this.round, this.round.getCompetitionseason())
+                    .subscribe(
+                        /* happy path */ roundRes => {
+                        this.round.setName('cdk');
+                        this.round = roundRes;
+                        this.updateRound.emit(roundRes);
+                        this.processing = false;
+                        this.setAlert('info', 'scheidsrechter toegevoegd');
+                    },
+                /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+                /* onComplete */() => this.processing = false
+                    );
+            },
+            /* error path */ e => { this.setAlert('danger', e); },
+        );
     }
 
     removeReferee(refereeItem: IRefereeListItem) {
-        this.setAlert('velden opslaan');
+        this.setAlert('info', 'scheidsrechter verwijderen..');
+        this.processing = true;
 
-        const index = this.refereesList.indexOf( refereeItem );
-        if (index > -1) {
-            this.refereesList.splice(index, 1);
-        }
+        this.refereeRepository.removeObject(refereeItem.referee)
+            .subscribe(
+            /* happy path */ refereeRes => {
 
-        const referees = this.tournament.getCompetitionseason().getReferees();
-        referees.splice( 0, referees.length );
-        let refereeNumber = 1;
-        this.refereesList.forEach( (refereeListItem) => {
-            if ( refereeListItem.referee.getName() === ( '' + ( refereeNumber + 1 ) ) ) {
-                refereeListItem.referee.setName( '' + refereeNumber );
-            }
-            refereeListItem.referee.setNumber( refereeNumber++ );
-            referees.push( refereeListItem.referee );
-        });
+                const index = this.refereesList.indexOf(refereeItem);
+                if (index > -1) {
+                    this.refereesList.splice(index, 1);
+                }
 
-        console.log('reschedule');
+                this.planningService.reschedule(this.round);
 
-        this.setAlert('wedstrijden plannen');
-        this.planningService.reschedule( this.round );
-
-        this.setAlert('wedstrijden opslaan');
-
-        if ( true ) { // saving is succesvol
-            // this.resetAlert();
-        }
+                // setTimeout(3000);
+                this.structureRepository.editObject(this.round, this.round.getCompetitionseason())
+                    .subscribe(
+                        /* happy path */ roundRes => {
+                        this.round = roundRes;
+                        this.updateRound.emit(roundRes);
+                        this.processing = false;
+                        this.setAlert('info', 'veld verwijderd');
+                    },
+                /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+                /* onComplete */() => this.processing = false
+                    );
+            },
+            /* error path */ e => { this.setAlert('danger', 'X' + e); this.processing = false; },
+        );
     }
 
-    protected setAlert( message: string ) {
-        this.progressAlert = { 'type': 'info', 'message': message };
+    editReferee(refereeItem) {
+        this.setAlert('info', 'scheidsrechter wijzigen..');
+        this.processing = true;
+
+        this.refereeRepository.editObject(refereeItem.referee, this.tournament.getCompetitionseason())
+            .subscribe(
+            /* happy path */ refereeRes => {
+                this.setAlert('info', 'scheidsrechter gewijzigd');
+            },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+            /* onComplete */() => { this.processing = false; }
+            );
+    }
+
+    protected setAlert(type: string, message: string) {
+        this.alert = { 'type': type, 'message': message };
+    }
+
+    protected resetAlert(): void {
+        this.alert = null;
     }
 
     // public closeAlert( name: string) {

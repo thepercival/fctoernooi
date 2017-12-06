@@ -109,27 +109,17 @@ export class TournamentPlanningFieldsComponent implements OnInit {
         this.setAlert('info', 'veld verwijderen..');
         this.processing = true;
 
-        const index = this.fieldsList.indexOf(fieldItem);
-        if (index > -1) {
-            this.fieldsList.splice(index, 1);
-        }
-
-        const fields = this.tournament.getCompetitionseason().getFields();
-        fields.splice(0, fields.length);
-        let fieldNumber = 1;
-        this.fieldsList.forEach((fieldListItem) => {
-            if (fieldListItem.field.getName() === ('' + (fieldNumber + 1))) {
-                fieldListItem.field.setName('' + fieldNumber);
-            }
-            fieldListItem.field.setNumber(fieldNumber++);
-            fields.push(fieldListItem.field);
-        });
-
-        this.planningService.reschedule(this.round);
-
         this.fieldRepository.removeObject(fieldItem.field)
             .subscribe(
             /* happy path */ fieldRes => {
+
+                const index = this.fieldsList.indexOf(fieldItem);
+                if (index > -1) {
+                    this.fieldsList.splice(index, 1);
+                }
+
+                this.planningService.reschedule(this.round);
+
                 // setTimeout(3000);
                 this.structureRepository.editObject(this.round, this.round.getCompetitionseason())
                     .subscribe(
