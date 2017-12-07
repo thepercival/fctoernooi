@@ -167,6 +167,21 @@ export class TournamentCompetitorsComponent extends TournamentComponent implemen
     }
     return teamName;
   }
+
+  doesTeamNameExists(name: string, team: Team, association: Association): boolean {
+    const teamWithSameName = association.getTeamByName(name);
+    return (teamWithSameName != null && teamWithSameName !== team);
+  }
+
+  changeTeamName(name: string, teamItem: ITeamListItem) {
+    this.resetAlert();
+    const association = this.tournament.getCompetitionseason().getAssociation();
+    if (!this.doesTeamNameExists(name, teamItem.team, association)) {
+      teamItem.team.setName(name);
+    } else {
+      this.setAlert('danger', 'teamnaam bestaat al');
+    }
+  }
 }
 
 export interface ITeamListItem {
