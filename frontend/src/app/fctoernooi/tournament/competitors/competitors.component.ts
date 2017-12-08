@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TournamentRepository } from '../repository';
-import { TournamentComponent } from '../component';
-import { StructureRepository } from 'voetbaljs/structure/repository';
-import { PoulePlace } from 'voetbaljs/pouleplace';
-import { Team } from 'voetbaljs/team';
-import { TeamRepository, ITeam } from 'voetbaljs/team/repository';
-import { IAlert } from '../../../app.definitions';
-import { Association } from 'voetbaljs/association';
-import { PoulePlaceRepository } from 'voetbaljs/pouleplace/repository';
 import { forkJoin } from 'rxjs/observable/forkJoin';
+import { Association } from 'voetbaljs/association';
+import { PoulePlace } from 'voetbaljs/pouleplace';
+import { PoulePlaceRepository } from 'voetbaljs/pouleplace/repository';
+import { StructureRepository } from 'voetbaljs/structure/repository';
+import { Team } from 'voetbaljs/team';
+import { ITeam, TeamRepository } from 'voetbaljs/team/repository';
+
+import { IAlert } from '../../../app.definitions';
+import { TournamentComponent } from '../component';
+import { TournamentRepository } from '../repository';
 
 @Component({
   selector: 'app-tournament-competitors',

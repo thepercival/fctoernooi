@@ -1,11 +1,12 @@
-import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
-import { Tournament } from '../../../tournament';
-import { PlanningService } from 'voetbaljs/planning/service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Field } from 'voetbaljs/field';
-import { Round } from 'voetbaljs/round';
-import { IAlert } from '../../../../app.definitions';
 import { FieldRepository, IField } from 'voetbaljs/field/repository';
+import { PlanningService } from 'voetbaljs/planning/service';
+import { Round } from 'voetbaljs/round';
 import { StructureRepository } from 'voetbaljs/structure/repository';
+
+import { IAlert } from '../../../../app.definitions';
+import { Tournament } from '../../../tournament';
 
 @Component({
     selector: 'app-tournament-planning-fields',
