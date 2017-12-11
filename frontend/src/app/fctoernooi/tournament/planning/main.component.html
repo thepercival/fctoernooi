@@ -23,7 +23,7 @@
             <span class="hidden-xs-down">instellingen</span>
           </ng-template>
           <ng-template ngbTabContent>
-            <app-tournament-planning-settings [round]="structureService.getFirstRound()" [tournament]="tournament" [structureService]="structureService"
+            <app-tournament-planning-settings [tournament]="tournament" [structureService]="structureService"
               (updateRound)="updateRound($event)"></app-tournament-planning-settings>
           </ng-template>
         </ngb-tab>

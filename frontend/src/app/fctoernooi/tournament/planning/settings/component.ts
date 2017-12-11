@@ -1,15 +1,15 @@
-import { IAlert } from '../../../../app.definitions';
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { Association } from 'voetbaljs/association';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PlanningService } from 'voetbaljs/planning/service';
 import { Round } from 'voetbaljs/round';
 import { RoundConfig } from 'voetbaljs/round/config';
+import { IRoundConfig, RoundConfigRepository } from 'voetbaljs/round/config/repository';
 import { RoundScoreConfig } from 'voetbaljs/round/scoreconfig';
-import { StructureService } from 'voetbaljs/structure/service';
 import { StructureRepository } from 'voetbaljs/structure/repository';
-import { RoundConfigRepository, IRoundConfig } from 'voetbaljs/round/config/repository';
+import { StructureService } from 'voetbaljs/structure/service';
 
+import { IAlert } from '../../../../app.definitions';
 import { Tournament } from '../../../tournament';
+
 // import { modelGroupProvider } from '@angular/forms/src/directives/ng_model_group';
 
 @Component({
@@ -20,7 +20,6 @@ import { Tournament } from '../../../tournament';
 export class TournamentPlanningSettingsComponent implements OnInit {
 
     @Input() tournament: Tournament;
-    @Input() round: Round;
     @Input() structureService: StructureService;
     @Output() updateRound = new EventEmitter<Round>();
     selectedRound: Round;
@@ -49,10 +48,11 @@ export class TournamentPlanningSettingsComponent implements OnInit {
         private structureRepository: StructureRepository
     ) {
         this.processing = true;
+        this.setAlert('info', 'instellingen gelden ook voor volgende ronden');
     }
 
     ngOnInit() {
-        this.changeRound(this.round);
+        this.changeRound(this.structureService.getFirstRound());
         this.initRanges();
 
         this.planningService = new PlanningService(
@@ -77,11 +77,11 @@ export class TournamentPlanningSettingsComponent implements OnInit {
     }
 
     changeRound(round: Round) {
-        this.round = round;
         this.selectedRound = round;
         this.modelConfig = this.roundConfigRepository.objectToJsonHelper(this.selectedRound.getConfig());
         this.modelRecreate = false;
         this.modelReschedule = false;
+        this.isCollapsed = true;
     }
 
     getWinnersLosersDescription(winnersOrLosers: number): string {
@@ -219,12 +219,16 @@ export class TournamentPlanningSettingsComponent implements OnInit {
             this.planningService.reschedule(this.selectedRound);
         }
 
-        this.structureRepository.editObject(this.round, this.round.getCompetitionseason())
+        const firstRound = this.structureService.getFirstRound();
+        const directionsTmp = this.getWinnersLosers(firstRound, this.selectedRound);
+        this.structureRepository.editObject(firstRound, firstRound.getCompetitionseason())
             .subscribe(
                         /* happy path */ roundRes => {
                 this.setAlert('info', 'instellingen opgeslagen');
-                this.changeRound(roundRes);
                 this.updateRound.emit(roundRes);
+                const round = this.getRoundByWinnersLosers(roundRes, directionsTmp);
+                this.changeRound(round);
+
             },
                 /* error path */ e => { this.setAlert('danger', 'instellingen niet opgeslagen: ' + e); this.processing = false; },
                 /* onComplete */() => this.processing = false
@@ -248,6 +252,23 @@ export class TournamentPlanningSettingsComponent implements OnInit {
         roundConfig.getRound().getChildRounds().forEach((childRound) => {
             this.updateRoundConfig(childRound.getConfig(), modelToUpdateWith);
         });
+    }
+
+    protected getWinnersLosers(firstRound: Round, aChildRound: Round): number[] {
+        const winnersLosers: number[] = [];
+        while (aChildRound !== firstRound) {
+            winnersLosers.push(aChildRound.getWinnersOrLosers());
+            aChildRound = aChildRound.getParentRound();
+        }
+        return winnersLosers;
+    }
+
+    protected getRoundByWinnersLosers(firstRound: Round, winnersLosers: number[]): Round {
+        let round: Round = firstRound;
+        while (winnersLosers.length > 0) {
+            round = round.getChildRound(winnersLosers.pop());
+        }
+        return round;
     }
 
     protected setAlert(type: string, message: string) {

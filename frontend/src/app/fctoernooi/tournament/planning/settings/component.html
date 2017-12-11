@@ -7,7 +7,7 @@
         </div>
     </div>
 
-    <div class="row justify-content-center mx-0">
+    <div *ngIf="selectedRound.getParentRound() !== null || selectedRound.getChildRounds().length > 0" class="row justify-content-center mx-0">
         <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
             <p>
                 <button type="button" class="btn btn-outline-primary" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
@@ -18,9 +18,13 @@
                 </button>
             </p>
             <div id="collapseExample" [ngbCollapse]="isCollapsed">
-                <div class="card">
+                <div class="card mb-3">
                     <div class="card-body">
-                        You can collapse this card by clicking Toggle
+                        <div>selecteer een ronde:</div>
+                        <div class="row text-center">
+                            <app-selectable-rounds style="width: 100%;" [round]="structureService.getFirstRound()" [selectedRound]="selectedRound" (selectRound)="changeRound($event)"
+                                [structureService]="structureService"></app-selectable-rounds>
+                        </div>
                     </div>
                 </div>
             </div>

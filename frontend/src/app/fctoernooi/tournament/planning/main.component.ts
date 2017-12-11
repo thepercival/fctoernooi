@@ -1,12 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TournamentRepository } from '../repository';
-import { TournamentComponent } from '../component';
-import { Tournament } from '../../tournament';
-import { StructureService } from 'voetbaljs/structure/service';
 import { Round } from 'voetbaljs/round';
 import { StructureRepository } from 'voetbaljs/structure/repository';
+import { StructureService } from 'voetbaljs/structure/service';
+
 import { IAlert } from '../../../app.definitions';
+import { Tournament } from '../../tournament';
+import { TournamentComponent } from '../component';
+import { TournamentRepository } from '../repository';
 
 @Component({
   selector: 'app-tournament-planning',

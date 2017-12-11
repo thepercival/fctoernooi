@@ -1,11 +1,12 @@
-import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
-import { Tournament } from '../../../tournament';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PlanningService } from 'voetbaljs/planning/service';
 import { Referee } from 'voetbaljs/referee';
+import { IReferee, RefereeRepository } from 'voetbaljs/referee/repository';
 import { Round } from 'voetbaljs/round';
-import { IAlert } from '../../../../app.definitions';
-import { RefereeRepository, IReferee } from 'voetbaljs/referee/repository';
 import { StructureRepository } from 'voetbaljs/structure/repository';
+
+import { IAlert } from '../../../../app.definitions';
+import { Tournament } from '../../../tournament';
 
 @Component({
     selector: 'app-tournament-planning-referees',
@@ -36,12 +37,9 @@ export class TournamentPlanningRefereesComponent implements OnInit {
 
     ngOnInit() {
         this.createRefereesList();
-
-        console.log(this.tournament.getCompetitionseason().getStartDateTime());
         this.planningService = new PlanningService(
             this.tournament.getCompetitionseason().getStartDateTime()
         );
-
         this.processing = false;
     }
 

@@ -38,7 +38,6 @@ export class TournamentPlanningFieldsComponent implements OnInit {
     ngOnInit() {
         this.createFieldsList();
 
-        console.log(this.tournament.getCompetitionseason().getStartDateTime());
         this.planningService = new PlanningService(
             this.tournament.getCompetitionseason().getStartDateTime()
         );
