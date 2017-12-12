@@ -1,16 +1,15 @@
 /**
  * Created by coen on 1-10-17.
  */
-import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
 import { HttpClient } from '@angular/common/http';
-import { Observer } from 'rxjs/Observer';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Tournament } from '../tournament';
+import { Observer } from 'rxjs/Observer';
 import { CompetitionseasonRepository } from 'voetbaljs/competitionseason/repository';
-import { TournamentRoleRepository } from './role/repository';
 import { VoetbalRepository } from 'voetbaljs/repository';
-import { PACKAGE_ROOT_URL } from '@angular/core/src/application_tokens';
+
+import { Tournament } from '../tournament';
+import { TournamentRoleRepository } from './role/repository';
 
 @Injectable()
 export class TournamentRepository extends VoetbalRepository {
@@ -147,16 +146,5 @@ export class TournamentRepository extends VoetbalRepository {
                 return true;
             })
             .catch(this.handleError);
-    }
-
-    // this could also be a private method of the component class
-    handleError(res: Response): Observable<any> {
-        let errortext = res.statusText;
-        if (res.status === 401) {
-            errortext = 'je bent niet ingelogd';
-        }
-        console.error(res);
-        // throw an application level error
-        return Observable.throw(errortext);
     }
 }

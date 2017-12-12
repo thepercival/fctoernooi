@@ -61,7 +61,9 @@
     </div>
   </div>
   <div class="row text-center">
-    <app-tournament-structureround *ngFor="let childRound of round.getChildRounds()" [ngStyle]="{ 'width': (100/round.getChildRounds().length) + '%' }" [round]="childRound" [structureService]="structureService"></app-tournament-structureround>
+    <app-tournament-structureround *ngFor="let childRound of round.getChildRounds()" [ngStyle]="{ 'width': (100/round.getChildRounds().length) + '%' }" 
+    [round]="childRound" [structureService]="structureService"
+     (roundChanged)="roundChanged.emit()"></app-tournament-structureround>
   </div>
   <!--<div class="row text-center">-->
       <!--<app-tournament-structureround *ngFor="let childRound of round.getChildRounds()" class="d-flex flex-wrap justify-content-around" [round]="childRound" [structureService]="structureService"></app-tournament-structureround>-->

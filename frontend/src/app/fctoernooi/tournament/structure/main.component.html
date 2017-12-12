@@ -1,8 +1,15 @@
-<div class="container-fluid" >
+<div class="container-fluid">
   <h1 *ngIf="tournament" align="center">
-    <a [routerLink]="['/toernooi/home', tournament.getId()]">{{tournament.getName()}}</a> <small>structuur</small>
+    <a [routerLink]="['/toernooi/home', tournament.getId()]">{{tournament.getName()}}</a>
+    <small>structuur</small>
+    <button type="button" class="btn btn-{{!processed && !isChanged ? 'primary' : (processing ? 'warning' : (isChanged ? 'danger' : 'success') ) }}"
+      [disabled]="processing || !isChanged" (click)="saveStructure();">
+      <span class="fa fa-{{processing ? 'spinner fa-spin' : (isChanged || !processed ? 'save' : 'check') }}"></span>
+    </button>
   </h1>
+  <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="true" (close)="alert = null;">{{ alert.message }}</ngb-alert>
   <div class="row text-center">
-    <app-tournament-structureround style="width: 100%;" [round]="structureService?.getFirstRound()" [structureService]="structureService"></app-tournament-structureround>
+    <app-tournament-structureround style="width: 100%;" [round]="structureService?.getFirstRound()" [structureService]="structureService"
+      (roundChanged)="isChanged = true"></app-tournament-structureround>
   </div>
 </div>

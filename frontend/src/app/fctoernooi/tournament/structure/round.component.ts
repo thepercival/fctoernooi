@@ -1,8 +1,8 @@
-import { Component, Input } from '@angular/core';
-import { StructureService } from 'voetbaljs/structure/service';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { PlanningService } from 'voetbaljs/planning/service';
 import { PoulePlace } from 'voetbaljs/pouleplace';
 import { Round } from 'voetbaljs/round';
-import { PlanningService } from 'voetbaljs/planning/service';
+import { StructureService } from 'voetbaljs/structure/service';
 
 @Component({
   selector: 'app-tournament-structureround',
@@ -13,6 +13,7 @@ export class TournamentStructureRoundComponent {
 
   @Input() round: Round;
   @Input() structureService: StructureService;
+  @Output() roundChanged = new EventEmitter<Round>();
   public alert: any;
   public winnersAndLosers: number[];
   public sliderValueDummy = 3;
@@ -21,88 +22,92 @@ export class TournamentStructureRoundComponent {
     behaviour: 'drag',
     margin: 1,
     step: 1,
-    tooltips: [ true ]
+    tooltips: [true]
   };
 
   constructor() {
-      this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
-      this.resetAlert();
+    this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
+    this.resetAlert();
 
   }
 
   private getPlanningService(): PlanningService {
-    return new PlanningService( this.structureService.getCompetitionseason().getStartDateTime() );
+    return new PlanningService(this.structureService.getCompetitionseason().getStartDateTime());
   }
 
-  getWinnersLosersName( winnersOrLosers: number ): string {
+  getWinnersLosersName(winnersOrLosers: number): string {
     return winnersOrLosers === Round.WINNERS ? 'winners' : 'losers';
   }
 
-  getWinnersLosersDescription( winnersOrLosers: number ): string {
-    const description = this.structureService.getWinnersLosersDescription( winnersOrLosers );
-    return ( description !== '' ? description + 's' : description );
+  getWinnersLosersDescription(winnersOrLosers: number): string {
+    const description = this.structureService.getWinnersLosersDescription(winnersOrLosers);
+    return (description !== '' ? description + 's' : description);
   }
 
-  addPoule( round, fillPouleToMinimum = true ): void {
+  addPoule(round, fillPouleToMinimum = true): void {
     this.resetAlert();
-    this.structureService.addPoule( round, fillPouleToMinimum );
-    this.getPlanningService().create( round );
+    this.structureService.addPoule(round, fillPouleToMinimum);
+    this.getPlanningService().create(round);
+    this.roundChanged.emit();
   }
 
-  removePoule( round ): void {
+  removePoule(round): void {
     this.resetAlert();
     try {
       this.structureService.removePoule(round);
-      this.getPlanningService().create( round );
+      this.getPlanningService().create(round);
+      this.roundChanged.emit();
     } catch (e) {
-      this.setAlert( 'danger', e.message );
+      this.setAlert('danger', e.message);
     }
   }
 
-  addPoulePlace( round ): void {
+  addPoulePlace(round): void {
     this.resetAlert();
     try {
       this.structureService.addPoulePlace(round);
-      this.getPlanningService().create( round );
+      this.getPlanningService().create(round);
+      this.roundChanged.emit();
     } catch (e) {
-      this.setAlert( 'danger', e.message );
+      this.setAlert('danger', e.message);
     }
   }
 
-  canRemovePoulePlace(round: Round ) {
-    let nrOfPoulePlaces = round.getPoulePlaces().length;
-    round.getChildRounds().forEach( function( childRound ) {
-      nrOfPoulePlaces -= childRound.getPoulePlaces().length;
-    });
-    return ( nrOfPoulePlaces > 0 );
-  }
-
-  removePoulePlace( round ): void {
+  removePoulePlace(round): void {
     this.resetAlert();
     try {
       this.structureService.removePoulePlace(round);
-      this.getPlanningService().create( round );
+      this.getPlanningService().create(round);
+      this.roundChanged.emit();
     } catch (e) {
-      this.setAlert( 'danger', e.message );
+      this.setAlert('danger', e.message);
     }
   }
 
-  getMaxSliderValue( winnersOrLosers: number ): number {
-    const opposing = Round.getOpposing( winnersOrLosers );
-    return this.round.getPoulePlaces().length - this.round.getNrOfPlacesChildRound( opposing );
+  canRemovePoulePlace(round: Round) {
+    let nrOfPoulePlaces = round.getPoulePlaces().length;
+    round.getChildRounds().forEach(function (childRound) {
+      nrOfPoulePlaces -= childRound.getPoulePlaces().length;
+    });
+    return (nrOfPoulePlaces > 0);
   }
 
-  getClassPostfix( winnersOrLosers: number): string {
-    return winnersOrLosers === Round.WINNERS ? 'success' : ( winnersOrLosers === Round.LOSERS ? 'danger' : '');
+  getMaxSliderValue(winnersOrLosers: number): number {
+    const opposing = Round.getOpposing(winnersOrLosers);
+    return this.round.getPoulePlaces().length - this.round.getNrOfPlacesChildRound(opposing);
   }
 
-  getClassPostfixPoulePlace( poulePlace: PoulePlace): string {
+  getClassPostfix(winnersOrLosers: number): string {
+    return winnersOrLosers === Round.WINNERS ? 'success' : (winnersOrLosers === Round.LOSERS ? 'danger' : '');
+  }
+
+  getClassPostfixPoulePlace(poulePlace: PoulePlace): string {
     const rules = poulePlace.getToQualifyRules();
-    if ( rules.length === 2 ) {
+    if (rules.length === 2) {
       return 'warning';
-    } else if ( rules.length === 1 ) {
+    } else if (rules.length === 1) {
       const qualifyRule = rules[0];
-      const singleColor = this.getClassPostfix( qualifyRule.getWinnersOrLosers() );
+      const singleColor = this.getClassPostfix(qualifyRule.getWinnersOrLosers());
       return qualifyRule.getFromPoulePlaces().length === qualifyRule.getToPoulePlaces().length ? singleColor : 'warning';
     }
     return 'not-qualifying';
@@ -113,18 +118,19 @@ export class TournamentStructureRoundComponent {
     this.alert = null;
   }
 
-  protected setAlert( type: string, message: string ): boolean {
+  protected setAlert(type: string, message: string): boolean {
     this.alert = { 'type': type, 'message': message };
-    return ( type === 'success' );
+    return (type === 'success');
   }
 
-  public closeAlert( name: string) {
+  public closeAlert(name: string) {
     this.alert = null;
   }
 
-  public onSliderChange( nrOfChildPlacesNew: number, winnersOrLosers: number ) {
-    this.structureService.changeNrOfPlacesChildRound( nrOfChildPlacesNew, this.round, winnersOrLosers );
-    this.getPlanningService().create( this.round );
+  public onSliderChange(nrOfChildPlacesNew: number, winnersOrLosers: number) {
+    this.structureService.changeNrOfPlacesChildRound(nrOfChildPlacesNew, this.round, winnersOrLosers);
+    this.getPlanningService().create(this.round);
+    this.roundChanged.emit();
   }
 
 }

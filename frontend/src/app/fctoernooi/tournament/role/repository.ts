@@ -1,16 +1,16 @@
 /**
  * Created by coen on 10-10-17.
  */
-import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Rx';
-import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
+
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { VoetbalRepository } from 'voetbaljs/repository';
+
+import { UserRepository } from '../../../user/repository';
 import { Tournament } from '../../tournament';
 import { TournamentRole } from '../role';
-import { UserRepository } from '../../../user/repository';
-import { VoetbalRepository } from 'voetbaljs/repository';
 
 @Injectable()
 export class TournamentRoleRepository extends VoetbalRepository {
@@ -19,7 +19,7 @@ export class TournamentRoleRepository extends VoetbalRepository {
     private userRepos: UserRepository;
     private objects: Tournament[];
 
-    constructor( private http: HttpClient, userRepos: UserRepository ) {
+    constructor(private http: HttpClient, userRepos: UserRepository) {
         super();
         this.userRepos = userRepos;
         this.url = super.getApiUrl() + this.getUrlpostfix();
@@ -47,11 +47,11 @@ export class TournamentRoleRepository extends VoetbalRepository {
     //         .catch( this.handleError );
     // }
 
-    jsonArrayToObject( jsonArray: any, tournament: Tournament ): TournamentRole[] {
+    jsonArrayToObject(jsonArray: any, tournament: Tournament): TournamentRole[] {
         const tournamentRoles: TournamentRole[] = [];
         for (const json of jsonArray) {
             const object = this.jsonToObjectHelper(json, tournament);
-            tournamentRoles.push( object );
+            tournamentRoles.push(object);
         }
         return tournamentRoles;
     }
@@ -74,24 +74,24 @@ export class TournamentRoleRepository extends VoetbalRepository {
     //     return observable;
     // }
     //
-    jsonToObjectHelper( json: any, tournament: Tournament ): TournamentRole {
+    jsonToObjectHelper(json: any, tournament: Tournament): TournamentRole {
         const user = this.userRepos.jsonToObjectHelper(json.user);
 
         const tournamentRole = new TournamentRole(tournament, user, json.role);
-        tournamentRole.setId( json.id );
+        tournamentRole.setId(json.id);
         return tournamentRole;
     }
 
-    objectsToJsonHelper( objects: any[] ): any[] {
+    objectsToJsonHelper(objects: any[]): any[] {
         const jsonArray: any[] = [];
         for (const object of objects) {
             const json = this.objectToJsonHelper(object);
-            jsonArray.push( json );
+            jsonArray.push(json);
         }
         return jsonArray;
     }
 
-    objectToJsonHelper( object: TournamentRole ): any {
+    objectToJsonHelper(object: TournamentRole): any {
         const json = {
             'id': object.getId(),
             // 'tournament': this.tournamentRepository.objectToJsonHelper(object.getTournament()),
@@ -131,11 +131,4 @@ export class TournamentRoleRepository extends VoetbalRepository {
     //         //...errors if any
     //         .catch(this.handleError);
     // }
-
-    // this could also be a private method of the component class
-    handleError(res: Response): Observable<any> {
-        console.error( res );
-        // throw an application level error
-        return Observable.throw( res.statusText );
-    }
 }
