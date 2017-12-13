@@ -37,13 +37,14 @@
     }
 
     .flaticon-scoreboard:before { content: "\f100"; }
-    .flaticon-schedule:before { content: "\f101"; }
-    .flaticon-cup:before { content: "\f102"; }
-    .flaticon-soccer-field:before { content: "\f103"; }
-    .flaticon-group:before { content: "\f104"; }
-    .flaticon-structure:before { content: "\f105"; }
-    .flaticon-referee:before { content: "\f106"; }
-
+.flaticon-schedule:before { content: "\f101"; }
+.flaticon-cup:before { content: "\f102"; }
+.flaticon-soccer-field:before { content: "\f103"; }
+.flaticon-group:before { content: "\f104"; }
+.flaticon-structure:before { content: "\f105"; }
+.flaticon-referee:before { content: "\f106"; }
+.flaticon-favicon:before { content: "\f107"; }
+    
     $font-Flaticon-scoreboard: "\f100";
     $font-Flaticon-schedule: "\f101";
     $font-Flaticon-cup: "\f102";
@@ -51,3 +52,4 @@
     $font-Flaticon-group: "\f104";
     $font-Flaticon-structure: "\f105";
     $font-Flaticon-referee: "\f106";
+    $font-Flaticon-favicon: "\f107";

@@ -4,26 +4,59 @@
       <h1 align="center">
         toernooien
       </h1>
-      <div class="d-flex flex-row-reverse">
-        <button *ngIf="isLoggedIn()" type="button" class="btn btn-primary" routerLink="/toernooi/nieuw" style="margin-top:2em; margin-bottom: 2em;">nieuw toernooi</button>
+      <div class="d-flex justify-content-between">
+        <button *ngIf="isLoggedIn()" type="button" class="btn btn-sm-custom btn-outline-secondary" (click)="isCollapsed = !isCollapsed"
+          [attr.aria-expanded]="!isCollapsed" aria-controls="collapseFilter">
+          <i class="fa fa-filter"></i> filter</button>
+        <button *ngIf="isLoggedIn()" type="button" class="btn btn-sm-custom btn-outline-primary" routerLink="/toernooi/new">
+          <i class="fa fa-plus-circle"></i> toernooi</button>
       </div>
+      <div id="collapseFilter" class="container" [ngbCollapse]="isCollapsed">
+        <form (ngSubmit)="false" #f="ngForm" novalidate>
+          <div class="form-group row">
+            <label for="inputFilterMine" class="col-9 col-form-label">toon alleen mijn toernooien</label>
+            <div class="col-3">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox">
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputFilterDate" class="col-9 col-form-label">toon t/m {{getDateString(modelFilter.date)}}</label>
+            <input type="hidden" id="inputFilterDate" name="inputFilterDate" [(ngModel)]="modelFilter.date" ngbDatepicker #d="ngbDatepicker"
+              required>
+            <div class="col-3">
+              <button class="btn btn-sm btn-outline-secondary" (click)="d.toggle()" type="button">
+                <span class="fi flaticon-schedule"></span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+
       <p *ngIf="alert">
         <ngb-alert [type]="alert.type" (close)="alert = null;">{{ alert.message }}</ngb-alert>
       </p>
+
       <table class="table">
         <thead>
 
         </thead>
         <tbody>
-        <tr *ngFor="let tournament of tournaments">
-          <td>{{tournament.getCompetitionseason().getCompetition().getName()}}</td>
-          <td *ngIf="isLoggedIn()"  style="text-align: right">
-            <button *ngIf="hasPermission(tournament)" type="button" [routerLink]="['/toernooi/home', tournament.getId()]" routerLinkActive="active" class="btn btn-xs btn-secondary"><i class="fa fa-pencil"></i></button>
-          </td>
-          <td style="text-align: right">
-            <button type="button" [routerLink]="['/toernooi/home', tournament.getId()]" routerLinkActive="active" class="btn btn-xs btn-secondary"><i class="fa fa-eye"></i></button>
-          </td>
-        </tr>
+          <tr *ngFor="let tournament of tournaments">
+            <td class="toView" (click)="linkToView(tournament)">{{tournament.getCompetitionseason().getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit","hour12":
+              false,"hour":"2-digit","minute":"2-digit"} )}}</td>
+            <td class="toView" (click)="linkToView(tournament)">{{tournament.getCompetitionseason().getCompetition().getName()}}</td>
+            <td *ngIf="isLoggedIn()" style="text-align: right">
+              <button *ngIf="hasPermission(tournament)" type="button" [routerLink]="['/toernooi/home', tournament.getId()]" routerLinkActive="active"
+                class="btn btn-sm btn-outline-primary">
+                <i class="fa fa-pencil"></i>
+              </button>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>

@@ -13,7 +13,7 @@
                     <th>nr.</th>
                     <th colspan="2">naam</th>
                     <th style="text-align: right;">
-                        <button type="button" class="btn btn-sm btn-default" (click)="addField()" [disabled]="processing || disableEditButtons">
+                        <button type="button" class="btn btn-sm btn-outline-primary" (click)="addField()" [disabled]="processing || disableEditButtons">
                             <i class="fa fa-plus"></i>
                         </button>
                     </th>
@@ -31,13 +31,13 @@
                             required>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-sm" [disabled]="processing || ( !fieldItem.editable && disableEditButtons ) || ( fieldItem.editable && fieldItem.field.getName().length < validations.minlengthname )"
+                        <button type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || ( !fieldItem.editable && disableEditButtons ) || ( fieldItem.editable && fieldItem.field.getName().length < validations.minlengthname )"
                             (click)="saveedit(fieldItem);">
                             <span class="fa fa-{{fieldItem.editable ? 'save' : 'pencil' }}"></span>
                         </button>
                     </td>
                     <td style="text-align: right;">
-                        <button *ngIf="last" type="button" class="btn btn-sm" [disabled]="processing || disableEditButtons" (click)="removeField(fieldItem);">
+                        <button *ngIf="last" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || disableEditButtons" (click)="removeField(fieldItem);">
                             <span class="fa fa-remove"></span>
                         </button>
                     </td>

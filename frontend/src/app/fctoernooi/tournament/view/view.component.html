@@ -1,0 +1,13 @@
+<div *ngIf="tournament" class="container-fluid">
+  <h1 align="center">
+    {{tournament.getName()}}
+    <a [routerLink]="['/toernooi', tournament.getId()]">
+      <i class="fa fa-eye"></i>
+    </a>
+  </h1>
+  <div *ngIf="structureService" class="row d-flex justify-content-center">
+    view!!!
+    <div *ngIf="isAdmin()" class="card mt-3 mx-2">
+      i am the admin!!!
+    </div>
+  </div>

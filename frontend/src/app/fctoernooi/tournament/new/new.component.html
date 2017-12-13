@@ -9,7 +9,8 @@
         <div class="row">
           <div class="form-group col-sm-6">
             <label for="name" class="col-form-label">naam</label>
-            <input type="text" class="form-control" id="name" name="name" placeholder="naam" [(ngModel)]="model.name" #name="ngModel" [minlength]="validations.minlengthname" [maxlength]="validations.maxlengthname" required autofocus>
+            <input type="text" class="form-control" id="name" name="name" placeholder="naam" [(ngModel)]="model.name" #name="ngModel"
+              [minlength]="validations.minlengthname" [maxlength]="validations.maxlengthname" required autofocus>
           </div>
         </div>
         <div class="row">
@@ -23,24 +24,29 @@
           </div>
           <div class="form-group col" *ngIf="model.sportname == -1">
             <label for="sportnameother" class="col-form-label">sportnaam</label>
-            <input type="text" class="form-control" id="sportnameother" name="sportnameother" [(ngModel)]="model.sportnameother" #sportnameother="ngModel" [required]='model.sportname == -1'>
+            <input type="text" class="form-control" id="sportnameother" name="sportnameother" [(ngModel)]="model.sportnameother" #sportnameother="ngModel"
+              [required]='model.sportname == -1'>
           </div>
         </div>
         <div class="row">
           <div class="form-group col">
             <label for="nrofcompetitors" class="col-form-label">aantal deelnemers</label>
-            <input type="number" class="form-control" id="nrofcompetitors" name="nrofcompetitors" [min]="validations.minnrofcompetitors" [max]="validations.maxnrofcompetitors" placeholder="10" [(ngModel)]="model.nrofcompetitors" #nrofcompetitors="ngModel" required>
+            <input type="number" class="form-control" id="nrofcompetitors" name="nrofcompetitors" [min]="validations.minnrofcompetitors"
+              [max]="validations.maxnrofcompetitors" placeholder="10" [(ngModel)]="model.nrofcompetitors" #nrofcompetitors="ngModel"
+              required>
           </div>
           <div class="form-group col">
             <label for="nroffieds" class="col-form-label">aantal velden</label>
-            <input type="number" class="form-control" id="nroffieds" name="nroffieds" [min]="validations.minnroffields" [max]="validations.maxnroffields" placeholder="1" [(ngModel)]="model.nroffields" #nroffields="ngModel" required>
+            <input type="number" class="form-control" id="nroffieds" name="nroffieds" [min]="validations.minnroffields" [max]="validations.maxnroffields"
+              placeholder="1" [(ngModel)]="model.nroffields" #nroffields="ngModel" required>
           </div>
         </div>
         <div class="row">
           <div class="form-group col">
             <label for="dp" class="col-form-label">startdatum</label>
             <div class="input-group">
-              <input class="form-control" placeholder="yyyy-mm-dd" id="dp" name="dp" [(ngModel)]="model.startdate" ngbDatepicker #d="ngbDatepicker" required>
+              <input class="form-control" placeholder="yyyy-mm-dd" id="dp" name="dp" [(ngModel)]="model.startdate" ngbDatepicker #d="ngbDatepicker"
+                required>
               <span class="input-group-addon fi flaticon-schedule" (click)="d.toggle()" style="cursor: pointer;">
               </span>
             </div>
@@ -56,7 +62,9 @@
         <div *ngIf="f.submitted && model.nroffields < validations.minnroffields" class="alert alert-danger">het minimum aantal velden is {{validations.minnroffields}}</div>
         <div *ngIf="f.submitted && model.nroffields > validations.maxnroffields" class="alert alert-danger">het maximum aantal velden is {{validations.maxnroffields}}</div>
         <div *ngIf="error" class="alert alert-danger">{{error}}</div>
-        <button type="submit" [disabled]="!f.form.valid || loading" class="btn btn-primary">maak toernooi <i *ngIf="loading" class="fa fa-spinner fa-spin fa-fw"></i></button>
+        <button type="submit" [disabled]="!f.form.valid || loading" class="btn btn-outline-primary">maak toernooi
+          <i *ngIf="loading" class="fa fa-spinner fa-spin fa-fw"></i>
+        </button>
       </form>
     </div>
   </div>

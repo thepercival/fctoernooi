@@ -13,7 +13,7 @@
                     <th>nr.</th>
                     <th colspan="2">naam</th>
                     <th style="text-align: right;">
-                        <button type="button" class="btn btn-sm btn-default" (click)="addReferee()" [disabled]="processing || disableEditButtons">
+                        <button type="button" class="btn btn-sm btn-outline-primary" (click)="addReferee()" [disabled]="processing || disableEditButtons">
                             <i class="fa fa-plus"></i>
                         </button>
                     </th>
@@ -31,13 +31,13 @@
                             required>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-sm" [disabled]="processing || ( !refereeItem.editable && disableEditButtons ) || ( refereeItem.editable && refereeItem.referee.getName().length < validations.minlengthname )"
+                        <button type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || ( !refereeItem.editable && disableEditButtons ) || ( refereeItem.editable && refereeItem.referee.getName().length < validations.minlengthname )"
                             (click)="saveedit(refereeItem);">
                             <span class="fa fa-{{refereeItem.editable ? 'save' : 'pencil' }}"></span>
                         </button>
                     </td>
                     <td style="text-align: right;">
-                        <button *ngIf="last" type="button" class="btn btn-sm" [disabled]="processing || disableEditButtons" (click)="removeReferee(refereeItem);">
+                        <button *ngIf="last" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || disableEditButtons" (click)="removeReferee(refereeItem);">
                             <span class="fa fa-remove"></span>
                         </button>
                     </td>

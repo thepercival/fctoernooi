@@ -1,10 +1,18 @@
 <div *ngIf="tournament && structureService" class="container-fluid px-0">
   <div class="row justify-content-around no-gutters">
     <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
-      <div class="d-flex justify-content-between">
-        <h1>
-          <a [routerLink]="['/toernooi/home', tournament.getId()]">{{tournament.getName()}}</a> planning
+      <div class="mb-4">
+        <h1 *ngIf="tournament">
+          {{tournament.getName()}}
+          <a [routerLink]="['/toernooi/home', tournament.getId()]">
+            <i class="fa fa-home"></i>
+          </a>
         </h1>
+      </div>
+      <div>
+        <h2>
+          <i class="fi flaticon-schedule"></i> planning
+        </h2>
       </div>
       <ngb-tabset class="nav-justified">
         <ngb-tab>
@@ -23,8 +31,7 @@
             <span class="hidden-xs-down">instellingen</span>
           </ng-template>
           <ng-template ngbTabContent>
-            <app-tournament-planning-settings [tournament]="tournament" [structureService]="structureService"
-              (updateRound)="updateRound($event)"></app-tournament-planning-settings>
+            <app-tournament-planning-settings [tournament]="tournament" [structureService]="structureService" (updateRound)="updateRound($event)"></app-tournament-planning-settings>
           </ng-template>
         </ngb-tab>
         <ngb-tab>
