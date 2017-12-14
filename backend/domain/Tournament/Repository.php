@@ -21,6 +21,29 @@ class Repository extends \Voetbal\Repository
         return $this->_em->merge( $tournament );
     }
 
+    public function findByPeriod(
+        \DateTimeImmutable $startDateTime = null,
+        \DateTimeImmutable $endDateTime = null
+    )
+    {
+        $query = $this->createQueryBuilder('t')
+            ->join("t.competitionseason","cs");
 
+        if( $startDateTime !== null ) {
+            $query = $query
+                ->where('cs.startDateTime >= :date')
+                ->setParameter('date', $startDateTime);
+        }
+
+            // ->andWhere('s.begindatum is null or lidm.einddatum >= :date');
+
+        if( $endDateTime !== null ) {
+            $query = $query
+                ->where('cs.startDateTime <= :date')
+                ->setParameter('date', $endDateTime);
+        }
+
+        return $query->getQuery()->getResult();
+    }
 
 }

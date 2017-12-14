@@ -11,7 +11,6 @@ namespace App\Action\Tournament;
 use Slim\ServerRequestInterface;
 use JMS\Serializer\Serializer;
 use FCToernooi\Tournament\Role\Repository as TournamentRoleRepository;
-use FCToernooi\User as User;
 
 final class Role
 {
@@ -19,10 +18,6 @@ final class Role
      * @var TournamentRoleRepository
      */
     private $tournamentRoleRepository;
-    /**
-     * @var Auth\Service
-     */
-    // private $authService;
     /**
      * @var Serializer
      */

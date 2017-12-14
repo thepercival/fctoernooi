@@ -26,7 +26,7 @@ final class Tournament
     /**
      * @var TournamentRepos
      */
-    private $tournamentRepository;
+    private $repos;
 
     /**
      * @var UserRepository
@@ -42,10 +42,10 @@ final class Tournament
      */
     protected $jwt;
 
-    public function __construct(TournamentService $tournamentService, TournamentRepository $tournamentRepos, UserRepository $userRepository, Serializer $serializer, \StdClass $jwt )
+    public function __construct(TournamentService $service, TournamentRepository $repos, UserRepository $userRepository, Serializer $serializer, \StdClass $jwt )
     {
-        $this->service = $tournamentService;
-        $this->tournamentRepository = $tournamentRepos;
+        $this->service = $service;
+        $this->repos = $repos;
         $this->userRepository = $userRepository;
         $this->serializer = $serializer;
         $this->jwt = $jwt;
@@ -61,54 +61,44 @@ final class Tournament
      */
     public function fetch($request, $response, $args)
     {
-//        $userId = filter_var($request->getParam('userid'), FILTER_VALIDATE_INT);
-//        if ( $userId === false ){ return $response->withStatus(404, "het gebruikersid is niet gezet" ); }
-//
-//        $user = null;
-//        if( $this->jwt->sub !== null ){
-//            $user = $this->userRepository->find( $this->jwt->sub );
-//        }
-//        if ( $user === null || $userId !== $user->getId() ){ return $response->withStatus(404, "het gebruikersid komt niet overeen met de ingelogdde gebruiker" ); }
-//
-//        $competitionseasonRoles = $this->competitionseasonRoleRepository->findBy(
-//            array('user' => $user),
-//            null,
-//            20
-//        );
-//
-//        $tournaments = new ArrayCollection();
-//        foreach( $competitionseasonRoles as $competitionseasonRole ){
-//            if( $tournaments->find()
-//        }
-//        array_map( function( $competitionseasonRole ){
-//
-//        }, $competitionseasonRoles );
-//
-//        get competitionseasons
-//
-//
-//        return $response
-//            ->withHeader('Content-Type', 'application/json;charset=utf-8')
-//            ->write($this->serializer->serialize( $users, 'json'));
-//        ;
-//
-        $tournaments = $this->tournamentRepository->findAll();
-        return $response
-            ->withHeader('Content-Type', 'application/json;charset=utf-8')
-            ->write($this->serializer->serialize( $tournaments, 'json'));
-        ;
+        $sErrorMessage = null;
+        try {
+            $startDateTime = \DateTimeImmutable::createFromFormat ( 'Y-m-d\TH:i:s.u\Z', $request->getParam('startDateTime') );
+            if ( $startDateTime === false ){ $startDateTime = null; }
+            $endDateTime = \DateTimeImmutable::createFromFormat ( 'Y-m-d\TH:i:s.u\Z', $request->getParam('endDateTime') );
+            if ( $endDateTime === false ){ $endDateTime = null; }
+
+            $tournaments = $this->repos->findByPeriod(
+                $startDateTime, $endDateTime
+            );
+            return $response
+                ->withHeader('Content-Type', 'application/json;charset=utf-8')
+                ->write($this->serializer->serialize( $tournaments, 'json'));
+            ;
+        }
+        catch( \Exception $e ){
+            $sErrorMessage = $e->getMessage();
+        }
+        return $response->withStatus(422)->write( $sErrorMessage);
     }
 
     public function fetchOne($request, $response, $args)
     {
-//        $competitionseasonRole = $this->competitionseasonRoleRepository->find($args['id']);
-//        if ($competitionseasonRole) {
-//            return $response
-//                ->withHeader('Content-Type', 'application/json;charset=utf-8')
-//                ->write($this->serializer->serialize( $competitionseasonRole, 'json'));
-//            ;
-//        }
-//        return $response->withStatus(404, 'geen toernooirol met het opgegeven id gevonden');
+        $sErrorMessage = null;
+        try {
+            $tournament = $this->repos->find($args['id']);
+            if (!$tournament) {
+                throw new \Exception("geen toernooi met het opgegeven id gevonden", E_ERROR);
+            }
+            return $response
+                ->withHeader('Content-Type', 'application/json;charset=utf-8')
+                ->write($this->serializer->serialize( $tournament, 'json'));
+            ;
+        }
+        catch( \Exception $e ){
+            $sErrorMessage = $e->getMessage();
+        }
+        return $response->withStatus(422)->write( $sErrorMessage);
     }
 
     public function add( $request, $response, $args)
@@ -143,7 +133,7 @@ final class Tournament
         $errorMessage = null;
         try{
             /** @var \FCToernooi\Tournament $tournament */
-            $tournament = $this->tournamentRepository->find( $args['id'] );
+            $tournament = $this->repos->find( $args['id'] );
 
             if ( $tournament === null ){
                 return $response->withStatus(404, "het te verwijderen toernooi kon niet gevonden worden" );
@@ -177,7 +167,7 @@ final class Tournament
         try {
             $tournament = $this->serializer->deserialize( json_encode($request->getParsedBody()), 'FCToernooi\Tournament', 'json');
 
-            $foundTournament = $this->tournamentRepository->find( $tournament->getId() );
+            $foundTournament = $this->repos->find( $tournament->getId() );
             if ( $foundTournament === null ){
                 return $response->withStatus(404, "het te wijzigen toernooi kon niet gevonden worden" );
             }
