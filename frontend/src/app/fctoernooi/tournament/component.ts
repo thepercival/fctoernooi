@@ -3,13 +3,12 @@
  */
 import { OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TournamentRepository } from './repository';
-import { Tournament } from '../tournament';
-import { StructureService } from 'voetbaljs/structure/service';
-import { StructureRepository } from 'voetbaljs/structure/repository';
 import { Round } from 'voetbaljs/round';
-import { RoundScoreConfigRepository } from 'voetbaljs/round/scoreconfig/repository';
-import { RoundConfigRepository } from 'voetbaljs/round/config/repository';
+import { StructureRepository } from 'voetbaljs/structure/repository';
+import { StructureService } from 'voetbaljs/structure/service';
+
+import { Tournament } from '../tournament';
+import { TournamentRepository } from './repository';
 
 export class TournamentComponent implements OnDestroy {
 

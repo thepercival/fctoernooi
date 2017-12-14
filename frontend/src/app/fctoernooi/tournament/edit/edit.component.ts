@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TournamentRepository } from '../repository';
 import { Competition } from 'voetbaljs/competition';
-import { TournamentComponent } from '../component';
-import { StructureRepository } from 'voetbaljs/structure/repository';
 import { PlanningService } from 'voetbaljs/planning/service';
-import { forkJoin } from 'rxjs/observable/forkJoin';
+import { StructureRepository } from 'voetbaljs/structure/repository';
+
+import { TournamentComponent } from '../component';
+import { TournamentRepository } from '../repository';
 
 @Component({
     selector: 'app-tournament-edit',
@@ -17,6 +17,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
     model: any;
     loading = false;
     error = '';
+
     validations: any = {
         'minlengthname': Competition.MIN_LENGTH_NAME,
         'maxlengthname': Competition.MAX_LENGTH_NAME

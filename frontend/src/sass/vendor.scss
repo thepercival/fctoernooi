@@ -3,12 +3,16 @@
 @import './mixins';
 
 @import "./bootswatch/variables";
+
+$btn-secondary-border:           #fff;
 @import "./bootswatch/bootswatch";
 .bg-dark {
   border: 1px solid $gray;
 }
-
 @import "~bootstrap/scss/bootstrap";
+.btn-outline-secondary:hover {
+  background-color: lighten($gray, 10%);
+}
 
 @import "./nouislider/scss/nouislider";
 @import './variables';

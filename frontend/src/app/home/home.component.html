@@ -5,15 +5,15 @@
         toernooien
       </h1>
       <div class="d-flex justify-content-between">
-        <button *ngIf="isLoggedIn()" type="button" class="btn btn-sm-custom btn-outline-secondary" (click)="isCollapsed = !isCollapsed"
-          [attr.aria-expanded]="!isCollapsed" aria-controls="collapseFilter">
+        <button type="button" class="btn btn-sm-custom btn-outline-secondary" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
+          aria-controls="collapseFilter">
           <i class="fa fa-filter"></i> filter</button>
         <button *ngIf="isLoggedIn()" type="button" class="btn btn-sm-custom btn-outline-primary" routerLink="/toernooi/new">
           <i class="fa fa-plus-circle"></i> toernooi</button>
       </div>
       <div id="collapseFilter" class="container" [ngbCollapse]="isCollapsed">
         <form (ngSubmit)="false" #f="ngForm" novalidate>
-          <div class="form-group row">
+          <div *ngIf="isLoggedIn()" class="form-group row">
             <label for="inputFilterMine" class="col-9 col-form-label">toon alleen mijn toernooien</label>
             <div class="col-3">
               <div class="form-check">
@@ -24,9 +24,9 @@
             </div>
           </div>
           <div class="form-group row">
-            <label for="inputFilterDate" class="col-9 col-form-label">toon t/m {{getDateString(modelFilter.date)}}</label>
-            <input type="hidden" id="inputFilterDate" name="inputFilterDate" [(ngModel)]="modelFilter.date" ngbDatepicker #d="ngbDatepicker"
-              required>
+            <label for="inputFilterDate" class="col-9 col-form-label">toon t/m {{getDateString(modelFilter.endDate)}}</label>
+            <input type="hidden" id="inputFilterDate" name="inputFilterDate" [ngModel]="modelFilter.endDate" (ngModelChange)="changeFilterDate($event)"
+              ngbDatepicker #d="ngbDatepicker" [minDate]="minEndDate" [maxDate]="maxEndDate" required>
             <div class="col-3">
               <button class="btn btn-sm btn-outline-secondary" (click)="d.toggle()" type="button">
                 <span class="fi flaticon-schedule"></span>
@@ -35,16 +35,13 @@
           </div>
         </form>
       </div>
-
-
       <p *ngIf="alert">
         <ngb-alert [type]="alert.type" (close)="alert = null;">{{ alert.message }}</ngb-alert>
       </p>
-
-      <table class="table">
-        <thead>
-
-        </thead>
+      <h1 *ngIf="loading" align="center">
+        <i class="fa fa-spinner fa-spin fa-fw"></i>
+      </h1>
+      <table *ngIf="!loading" class="table">
         <tbody>
           <tr *ngFor="let tournament of tournaments">
             <td class="toView" (click)="linkToView(tournament)">{{tournament.getCompetitionseason().getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit","hour12":

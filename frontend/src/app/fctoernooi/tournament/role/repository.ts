@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { VoetbalRepository } from 'voetbaljs/repository';
 
-import { UserRepository } from '../../../user/repository';
+import { IUser, UserRepository } from '../../../user/repository';
 import { Tournament } from '../../tournament';
 import { TournamentRole } from '../role';
 
@@ -131,4 +131,10 @@ export class TournamentRoleRepository extends VoetbalRepository {
     //         //...errors if any
     //         .catch(this.handleError);
     // }
+}
+
+export interface ITournamentRole {
+    id?: number;
+    user: IUser;
+    role: string;
 }
