@@ -165,6 +165,7 @@ final class Tournament
     {
         $sErrorMessage = null;
         try {
+            /** @var \FCToernooi\Tournament $tournament */
             $tournament = $this->serializer->deserialize( json_encode($request->getParsedBody()), 'FCToernooi\Tournament', 'json');
 
             $foundTournament = $this->repos->find( $tournament->getId() );

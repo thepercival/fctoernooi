@@ -17,6 +17,7 @@ import { TeamRepository } from 'voetbaljs/team/repository';
 import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
 import { TournamentCompetitorsComponent } from './tournament/competitors/competitors.component';
 import { TournamentEditComponent } from './tournament/edit/edit.component';
+import { TournamentGameEditComponent } from './tournament/game/edit.component';
 import { TournamentHomeComponent } from './tournament/home/home.component';
 import { TournamentNewComponent } from './tournament/new/new.component';
 import { TournamentPlanningFieldsComponent } from './tournament/planning/fields/component';
@@ -52,7 +53,8 @@ import { TournamentViewComponent } from './tournament/view/view.component';
     TournamentPlanningRefereesComponent,
     TournamentPlanningFieldsComponent,
     TournamentPlanningSelectableRoundsComponent,
-    TournamentViewComponent
+    TournamentViewComponent,
+    TournamentGameEditComponent
   ],
   providers: [
     TournamentRoleRepository,

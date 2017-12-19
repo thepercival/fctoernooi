@@ -39,8 +39,6 @@ export class TournamentComponent implements OnDestroy {
                     /* happy path */(tournament: Tournament) => {
                     this.tournament = tournament;
 
-
-
                     this.structureRepository.getObject(tournament.getCompetitionseason())
                         .subscribe(
                                 /* happy path */(round: Round) => {

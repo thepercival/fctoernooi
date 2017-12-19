@@ -4,22 +4,23 @@
       <div class="mb-4">
         <h1 *ngIf="tournament">
           {{tournament.getName()}}
-          <button [routerLink]="['/toernooi/home', tournament.getId()]" type="button" class="btn btn-outline-secondary btn-sm">
+          <button [routerLink]="returnUrl" type="button" class="btn btn-outline-secondary btn-sm">
             <i class="fa fa-level-up fa-rotate-270"></i>
           </button>
         </h1>
       </div>
       <div>
         <h2>
-          <i class="fa fa-cogs"></i> instellingen
+          <i class="fa fa-cogs"></i> thuisteam - uitteam
         </h2>
       </div>
       <form name="form" (ngSubmit)="edit() && false" #f="ngForm" novalidate>
         <div class="row">
           <div class="form-group col-sm-6">
-            <label for="name" class="col-form-label">naam</label>
-            <input type="text" class="form-control" id="name" name="name" placeholder="naam" [(ngModel)]="model.name" #name="ngModel"
-              [minlength]="validations.minlengthname" [maxlength]="validations.maxlengthname" required autofocus>
+            <label for="played" class="col-form-label">gespeeld</label>
+            <label class="form-check-label">
+              <input [ngModel]="model.played" (ngModelChange)="setPlayed($event)" id="played" name="played" class="form-check-input" type="checkbox">
+            </label>
           </div>
         </div>
         <div class="row">
@@ -37,7 +38,14 @@
             <ngb-timepicker id="starttime" name="starttime" [(ngModel)]="model.starttime" [spinners]="false" required></ngb-timepicker>
           </div>
         </div>
-
+        <div class="row">
+          <div class="form-group col">
+            <label for="result" class="col-form-label">uitslag</label>
+            <div class="input-group">
+              uit- thuis ( punten/legs/etc)
+            </div>
+          </div>
+        </div>
         <div *ngIf="error" class="alert alert-danger">{{error}}</div>
         <button type="submit" [disabled]="!f.form.valid || loading" class="btn btn-outline-primary">wijzig toernooi
           <i *ngIf="loading" class="fa fa-spinner fa-spin fa-fw"></i>

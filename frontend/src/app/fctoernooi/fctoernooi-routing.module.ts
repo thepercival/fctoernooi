@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthguardService } from '../auth/authguard.service';
 import { TournamentCompetitorsComponent } from './tournament/competitors/competitors.component';
 import { TournamentEditComponent } from './tournament/edit/edit.component';
+import { TournamentGameEditComponent } from './tournament/game/edit.component';
 import { TournamentHomeComponent } from './tournament/home/home.component';
 import { TournamentNewComponent } from './tournament/new/new.component';
 import { TournamentPlanningComponent } from './tournament/planning/main.component';
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'competitors/:id', component: TournamentCompetitorsComponent, canActivate: [AuthguardService] },
   { path: 'structure/:id', component: TournamentStructureComponent, canActivate: [AuthguardService] },
   { path: 'planning/:id', component: TournamentPlanningComponent, canActivate: [AuthguardService] },
+  { path: 'gameedit/:id/:gameId', component: TournamentGameEditComponent, canActivate: [AuthguardService] },
   // { path: 'settings',  component: TournamentSettingsComponent }
 ];
 

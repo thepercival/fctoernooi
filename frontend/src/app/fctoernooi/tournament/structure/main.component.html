@@ -2,9 +2,9 @@
   <div class="mb-4">
     <h1 *ngIf="tournament">
       {{tournament.getName()}}
-      <a [routerLink]="['/toernooi/home', tournament.getId()]">
-        <i class="fa fa-home"></i>
-      </a>
+      <button type="button" [routerLink]="['/toernooi/home', tournament.getId()]" class="btn btn-outline-secondary btn-sm">
+        <i class="fa fa-level-up fa-rotate-270"></i>
+      </button>
     </h1>
   </div>
   <div>

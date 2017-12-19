@@ -18,7 +18,7 @@
       </tr>
       </thead>
       <tbody >
-      <tr *ngFor="let game of round.getGamesByNumber()">
+      <tr *ngFor="let game of round.getGamesByNumber()" class="toGameEdit" (click)="linkToGameEdit(tournament,game)">
         <td *ngIf="round.getConfig().getEnableTime()">{{game.getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit","hour12": false,"hour":"2-digit","minute":"2-digit"} ) }}</td>
         <td>{{game.getField().getName()}}</td>
         <td class="hidden-xs-down">{{structureService.getPouleName(game.getPoule())}}</td>
