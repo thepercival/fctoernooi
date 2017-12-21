@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit {
 
   modelFilter: any;
   tournaments: Tournament[];
-  alert: IAlert = null;
+  alert: IAlert;
   isCollapsed = true;
   loading = false;
   minEndDate: NgbDateStruct;
@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
     this.getTournaments();
 
     this.route.queryParams.subscribe(params => {
-      if (params['type'] != null && params['message'] != null) {
+      if (params.type !== undefined && params.message !== undefined) {
         this.alert = { type: params['type'], message: params['message'] };
       }
     });
@@ -96,7 +96,7 @@ export class HomeComponent implements OnInit {
     return date ? date.toLocaleString('en', {
       month: 'short',
       day: '2-digit'
-    }) : null;
+    }) : undefined;
   }
 
   isLoggedIn() {

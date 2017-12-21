@@ -31,7 +31,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
     ) {
         super(route, router, tournamentRepository, structureRepository);
         this.model = {
-            name: null
+            name: undefined
         };
     }
 

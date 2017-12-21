@@ -93,10 +93,10 @@ export class TournamentCompetitorsComponent extends TournamentComponent implemen
   }
 
   saveedit(teamListItem: ITeamListItem) {
-    if (!teamListItem.editable && teamListItem.team == null) {
+    if (!teamListItem.editable && teamListItem.team === undefined) {
       this.addTeam(teamListItem);
       console.log('insert db');
-    } else if (teamListItem.editable && teamListItem.team != null) {
+    } else if (teamListItem.editable && teamListItem.team !== undefined) {
       console.log('update db');
       this.updateTeam(teamListItem);
     }
@@ -157,13 +157,13 @@ export class TournamentCompetitorsComponent extends TournamentComponent implemen
   }
 
   protected resetAlert(): void {
-    this.alert = null;
+    this.alert = undefined;
   }
 
   protected createDefaultTeamName(association: Association): string {
     let counter = 1;
     let teamName = 'tm' + counter;
-    while (association.getTeamByName(teamName) != null) {
+    while (association.getTeamByName(teamName) !== undefined) {
       teamName = 'tm' + (++counter);
     }
     return teamName;
@@ -171,7 +171,7 @@ export class TournamentCompetitorsComponent extends TournamentComponent implemen
 
   doesTeamNameExists(name: string, team: Team, association: Association): boolean {
     const teamWithSameName = association.getTeamByName(name);
-    return (teamWithSameName != null && teamWithSameName !== team);
+    return (teamWithSameName !== undefined && teamWithSameName !== team);
   }
 
   changeTeamName(name: string, teamItem: ITeamListItem) {

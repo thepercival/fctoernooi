@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
 import { Router } from '@angular/router';
+
 import { UserRepository } from '../../user/repository';
 import { User } from '../../user/user';
 
@@ -11,7 +11,7 @@ import { User } from '../../user/user';
 })
 export class UsersComponent implements OnInit {
 
-  selectedUser: User = null;
+  selectedUser: User;
   users: User[];
 
   constructor(

@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
+import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Router } from '@angular/router';
 import { Game } from 'voetbaljs/game';
+import { PlanningService } from 'voetbaljs/planning/service';
 import { PoulePlace } from 'voetbaljs/pouleplace';
 import { Round } from 'voetbaljs/round';
 import { StructureService } from 'voetbaljs/structure/service';
@@ -12,17 +14,22 @@ import { Tournament } from '../../../tournament';
   templateUrl: './component.html',
   styleUrls: ['./component.css']
 })
-export class TournamentPlanningViewComponent {
+export class TournamentPlanningViewComponent implements OnInit {
 
   @Input() tournament: Tournament;
   @Input() round: Round;
   @Input() structureService: StructureService;
-  public alert: any;
+  alert: any;
+  planningService: PlanningService;
   // public winnersAndLosers: number[];
 
   constructor(private router: Router) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
     this.resetAlert();
+  }
+
+  ngOnInit() {
+    this.planningService = new PlanningService(this.tournament.getCompetitionseason().getStartDateTime());
   }
 
   getWinnersLosersDescription(winnersOrLosers: number): string {
@@ -53,9 +60,8 @@ export class TournamentPlanningViewComponent {
     );
   }
 
-
   protected resetAlert(): void {
-    this.alert = null;
+    this.alert = undefined;
   }
 
   protected setAlert(type: string, message: string): boolean {
@@ -64,8 +70,6 @@ export class TournamentPlanningViewComponent {
   }
 
   public closeAlert(name: string) {
-    this.alert = null;
+    this.alert = undefined;
   }
-
-
 }

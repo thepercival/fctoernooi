@@ -147,11 +147,11 @@ export class TournamentPlanningRefereesComponent implements OnInit {
     }
 
     protected resetAlert(): void {
-        this.alert = null;
+        this.alert = undefined;
     }
 
     // public closeAlert( name: string) {
-    //     this.progressAlert = null;
+    //     this.progressAlert = undefined;
     // }
 }
 

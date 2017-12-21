@@ -1,10 +1,10 @@
 /**
  * Created by coen on 9-10-17.
  */
-
 import { Competitionseason } from 'voetbaljs/competitionseason';
+
 import { TournamentRole } from './tournament/role';
-import { User } from '../user/user';
+
 
 export class Tournament {
     static readonly MINNROFCOMPETITORS = 2;
@@ -46,7 +46,7 @@ export class Tournament {
     hasRole( userId: number, role: number ) {
         return ( this.getRoles().find( function ( roleIt: TournamentRole ) {
             return ( roleIt.getUser().getId() === userId && roleIt.getRole() === TournamentRole.ADMIN );
-        }) !== null );
+        }) !== undefined );
     }
 
     getName(): string {

@@ -61,6 +61,6 @@ export class TournamentStructureComponent extends TournamentComponent implements
   }
 
   protected resetAlert(): void {
-    this.alert = null;
+    this.alert = undefined;
   }
 }

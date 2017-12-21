@@ -17,7 +17,7 @@
     </h2>
 
   </div>
-  <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="true" (close)="alert = null;">{{ alert.message }}</ngb-alert>
+  <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="true" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
   <div class="row text-center">
     <app-tournament-structureround style="width: 100%;" [round]="structureService?.getFirstRound()" [structureService]="structureService"
       (roundChanged)="isChanged = true"></app-tournament-structureround>

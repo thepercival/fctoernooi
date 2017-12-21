@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
-import { TournamentRepository } from '../repository';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { StructureRepository } from 'voetbaljs/structure/repository';
+
 import { AuthService } from '../../../auth/auth.service';
 import { TournamentComponent } from '../component';
-import { StructureRepository } from 'voetbaljs/structure/repository';
+import { TournamentRepository } from '../repository';
 import { TournamentRole } from '../role';
-import { IAlert } from '../../../app.definitions';
 
 @Component({
     selector: 'app-tournament-home',
@@ -14,7 +14,7 @@ import { IAlert } from '../../../app.definitions';
 })
 export class TournamentHomeComponent extends TournamentComponent implements OnInit {
 
-    deleteAlert: string = null;
+    deleteAlert: string;
     showRemoveQuestion = false;
 
     constructor(

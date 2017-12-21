@@ -15,15 +15,15 @@
         </h2>
       </div>
       <div class="d-flex justify-content-center">
-        <ngb-alert *ngIf="alert" [type]="alert.type" style="width:100%;" [dismissible]="true" (close)="alert = null;">
+        <ngb-alert *ngIf="alert" [type]="alert.type" style="width:100%;" [dismissible]="true" (close)="alert = undefined;">
           <i *ngIf="processing" class="fa fa-spinner fa-spin"></i> {{ alert.message }}</ngb-alert>
       </div>
       <ul class="list-group" dnd-sortable-container [sortableData]="teamsList">
         <li *ngFor="let teamItem of teamsList; let i = index" dnd-sortable [sortableIndex]="i" (onDragStart)="startDragging(i)" (onDragEnd)="updatePoulePlaces(i)"
           class="list-group-item justify-content-between">
           <span>{{structureService.getPoulePlaceName( teamItem.pouleplace ) }}</span>
-          <span *ngIf="!teamItem.editable && teamItem.team != null">{{teamItem.team.getName() }}</span>
-          <span *ngIf="!teamItem.editable && teamItem.team == null" class="fa fa-times-circle icon-danger"></span>
+          <span *ngIf="!teamItem.editable && teamItem.team !== undefined">{{teamItem.team.getName() }}</span>
+          <span *ngIf="!teamItem.editable && teamItem.team === undefined" class="fa fa-times-circle icon-danger"></span>
           <input type="text" class="form-control input-teamname" [minlength]="validations.minlengthname" [maxlength]="validations.maxlengthname"
             [ngModel]="teamItem.team.getName()" (ngModelChange)="changeTeamName($event,teamItem)" *ngIf="!this.processing && teamItem.editable"
             required>

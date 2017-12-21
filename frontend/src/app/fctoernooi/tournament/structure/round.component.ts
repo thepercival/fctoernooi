@@ -115,7 +115,7 @@ export class TournamentStructureRoundComponent {
 
 
   protected resetAlert(): void {
-    this.alert = null;
+    this.alert = undefined;
   }
 
   protected setAlert(type: string, message: string): boolean {
@@ -124,7 +124,7 @@ export class TournamentStructureRoundComponent {
   }
 
   public closeAlert(name: string) {
-    this.alert = null;
+    this.alert = undefined;
   }
 
   public onSliderChange(nrOfChildPlacesNew: number, winnersOrLosers: number) {

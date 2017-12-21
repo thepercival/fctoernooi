@@ -1,6 +1,6 @@
 <div class="row justify-content-center mx-0" style="min-height:4.5rem;">
     <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6 mt-1">
-        <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="true" (close)="alert = null;">
+        <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="true" (close)="alert = undefined;">
             <i *ngIf="processing" class="fa fa-spinner fa-spin"></i> {{ alert.message }}</ngb-alert>
         <h2 *ngIf="!alert" class="hidden-sm-up pt-2">velden</h2>
     </div>
@@ -25,7 +25,7 @@
                         <span>{{fieldItem.field.getNumber()}}</span>
                     </td>
                     <td>
-                        <span *ngIf="!fieldItem.editable && fieldItem.field != null">{{fieldItem.field.getName() }}</span>
+                        <span *ngIf="!fieldItem.editable && fieldItem.field !== undefined">{{fieldItem.field.getName() }}</span>
                         <input type="text" class="form-control input-fieldname" [minlength]="validations.minlengthname" [maxlength]="validations.maxlengthname"
                             [ngModel]="fieldItem.field.getName()" (ngModelChange)="fieldItem.field.setName($event)" *ngIf="fieldItem.editable"
                             required>

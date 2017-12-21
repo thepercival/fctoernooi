@@ -1,14 +1,14 @@
 <div *ngIf="selectedRound && modelConfig && tournament && structureService" class="container-fluid px-0">
     <div class="row justify-content-center mx-0" style="min-height:4.5rem;">
         <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 mt-1">
-            <ngb-alert *ngIf="alert" [type]="alert.type" style="width:100%;" [dismissible]="true" (close)="alert = null;">
+            <ngb-alert *ngIf="alert" [type]="alert.type" style="width:100%;" [dismissible]="true" (close)="alert = undefined;">
                 <i *ngIf="processing" class="fa fa-spinner fa-spin"></i> {{ alert.message }}</ngb-alert>
             <h2 *ngIf="!alert" class="hidden-sm-up pt-2">instellingen</h2>
         </div>
     </div>
 
     <form name="form" (ngSubmit)="saveConfig() && false" #f="ngForm" novalidate>
-        <div *ngIf="selectedRound.getParentRound() !== null || selectedRound.getChildRounds().length > 0" class="row justify-content-center mx-0">
+        <div *ngIf="selectedRound.getParentRound() !== undefined || selectedRound.getChildRounds().length > 0" class="row justify-content-center mx-0">
             <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
                 <p class="d-flex justify-content-between">
                     <button type="submit" [disabled]="!f.form.valid || processing" class="btn btn-outline-primary">instellingen opslaan
@@ -122,12 +122,16 @@
                         <input type="number" [maxlength]="2" min="validations.minMinutesPerGame" max="validations.maxMinutesPerGame" [ngModel]="modelConfig.minutesInBetween"
                             (ngModelChange)="setMinutesInBetween($event)" id="minutesinbetween" name="minutesinbetween" class="form-control"
                             required>
-
                     </div>
                 </div>
 
                 <div *ngFor="let scoreConfig of selectedRound.getScoreConfigs()" class="form-group row">
-                    <label for="scoreMaximum" class="col-8 col-sm-9 col-form-label">{{scoreConfig.getName()}}({{getDirectionDescription(scoreConfig)}})</label>
+                    <label for="scoreMaximum" class="col-8 col-sm-9 col-form-label">{{scoreConfig.getName()}}({{getDirectionDescription(scoreConfig)}})
+                        <span class="badge badge-pill badge-info" placement="top" ngbPopover="de eenheid waarmee je de uitslag van een wedstrijd registreert is x"
+                            style="padding-top:8px; padding-bottom:5px;">
+                            <i class="fa fa-pencil-square-o"></i>
+                        </span>
+                    </label>
                     <div class="col-4 col-sm-3">
                         <input type="number" [maxlength]="4" [ngModel]="scoreConfig.getMaximum()" (ngModelChange)="setScoreConfigMaximum(scoreConfig,$event)"
                             id="scoreMaximum-{{scoreConfig.getId()}}" name="scoreMaximum-{{scoreConfig.getId()}}" class="form-control"

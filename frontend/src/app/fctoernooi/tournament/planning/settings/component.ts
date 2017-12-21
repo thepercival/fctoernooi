@@ -202,7 +202,7 @@ export class TournamentPlanningSettingsComponent implements OnInit {
         if (scoreConfigMaximum > 9999 || scoreConfigMaximum < 0) {
             return;
         }
-        if (scoreConfigMaximum === 0 && scoreConfig.getParent() != null) {
+        if (scoreConfigMaximum === 0 && scoreConfig.getParent() !== undefined) {
             this.setScoreConfigMaximum(scoreConfig.getParent(), 0);
         }
         scoreConfig.setMaximum(scoreConfigMaximum);
@@ -271,11 +271,16 @@ export class TournamentPlanningSettingsComponent implements OnInit {
         return round;
     }
 
+    // wanneer je gaat plannen obv tijd dan root - scoreconfig disabelen
+    //     <span class = "badge badge-pill badge-info" > Info < /span>
+    // bepaal wat de huidige registreer scoreconfig is
+    // dit is dus de node dichtsbij de root die niet 0 is!
+    
     protected setAlert(type: string, message: string) {
         this.alert = { 'type': type, 'message': message };
     }
 
     protected resetAlert(): void {
-        this.alert = null;
+        this.alert = undefined;
     }
 }

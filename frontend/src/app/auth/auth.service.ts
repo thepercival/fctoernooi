@@ -18,12 +18,12 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router, private userRepos: UserRepository) {
     this.url = environment.apiurl + 'auth/';
     const jsonAuth = JSON.parse(localStorage.getItem('auth'));
-    this.token = jsonAuth ? jsonAuth.token : null;
-    this.userId = jsonAuth ? jsonAuth.userid : null;
+    this.token = jsonAuth ? jsonAuth.token : undefined;
+    this.userId = jsonAuth ? jsonAuth.userid : undefined;
   }
 
   isLoggedIn(): boolean {
-    return this.token !== null;
+    return this.token !== undefined;
   }
 
   getLoggedInUserId(): number {
@@ -89,8 +89,8 @@ export class AuthService {
 
   logout(): void {
     // clear token remove user from local storage to log user out
-    this.token = null;
-    this.userId = null;
+    this.token = undefined;
+    this.userId = undefined;
     localStorage.removeItem('auth');
   }
 

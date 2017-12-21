@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+
 import { AuthService } from '../../auth/auth.service';
+
 // import {Subscription } from 'rxjs';
 
 @Component({
@@ -14,9 +16,9 @@ export class LoginComponent implements OnInit {
   loading = false;
   // private subscription: Subscription;
   error = '';
-  activationmessage: string = null;
+  activationmessage: string;
 
-  constructor( private activatedRoute: ActivatedRoute, private router: Router, private authService: AuthService) { }
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private authService: AuthService) { }
 
   ngOnInit() {
     // this.subscription = this.activatedRoute.queryParams.subscribe(
@@ -27,13 +29,13 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.loading = true;
-    this.activationmessage = null;
+    this.activationmessage = undefined;
     this.authService.login(this.model.emailaddress, this.model.password)
-        .subscribe(
+      .subscribe(
             /* happy path */ p => this.router.navigate(['/admin']),
             /* error path */ e => { this.error = e; this.loading = false; },
-            /* onComplete */ () => this.loading = false
-        );
+            /* onComplete */() => this.loading = false
+      );
   }
 
 }

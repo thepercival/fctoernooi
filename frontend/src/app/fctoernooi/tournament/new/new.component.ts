@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TournamentRepository } from '../repository';
-import { Tournament } from '../../tournament';
-import { StructureRepository } from 'voetbaljs/structure/repository';
-import { Competition } from 'voetbaljs/competition';
-import { StructureService } from 'voetbaljs/structure/service';
-import { Season } from 'voetbaljs/season';
 import { Association } from 'voetbaljs/association';
+import { Competition } from 'voetbaljs/competition';
 import { Competitionseason } from 'voetbaljs/competitionseason';
 import { Field } from 'voetbaljs/field';
 import { PlanningService } from 'voetbaljs/planning/service';
+import { Season } from 'voetbaljs/season';
+import { StructureRepository } from 'voetbaljs/structure/repository';
+import { StructureService } from 'voetbaljs/structure/service';
+
+import { Tournament } from '../../tournament';
+import { TournamentRepository } from '../repository';
 
 @Component({
   selector: 'app-tournament-new',
@@ -30,7 +31,7 @@ export class TournamentNewComponent implements OnInit {
     'minlengthname': Competition.MIN_LENGTH_NAME,
     'maxlengthname': Competition.MAX_LENGTH_NAME
   };
-  // message: string = null;
+  // message: string;
 
   constructor(
     private router: Router,
@@ -67,7 +68,7 @@ export class TournamentNewComponent implements OnInit {
       this.model.starttime.minute
     );
 
-    let tournament = null;
+    let tournament;
     {
       const association = new Association('username'); // dummy
       const competition = new Competition(this.model.name);
@@ -96,7 +97,7 @@ export class TournamentNewComponent implements OnInit {
         const structureService = new StructureService(
           tournamentOut.getCompetitionseason(),
           { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
-          null, this.model.nrofcompetitors
+          undefined, this.model.nrofcompetitors
         );
 
         console.log(structureService.getFirstRound());

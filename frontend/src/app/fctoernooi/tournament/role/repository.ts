@@ -31,7 +31,7 @@ export class TournamentRoleRepository extends VoetbalRepository {
 
     // getObjects(): Observable<Tournament[]>
     // {
-    //     if ( this.objects != null ){
+    //     if ( this.objects !== undefined ){
     //         return Observable.create(observer => {
     //             observer.next(this.objects);
     //             observer.complete();

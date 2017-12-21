@@ -34,7 +34,7 @@ export class TournamentPlanningSelectableRoundsComponent {
     } else if (this.round.getWinnersOrLosers() === Round.LOSERS) {
       return 'text-danger';
     }
-    return null;
+    return undefined;
   }
 
   selectRounFnc(round) {

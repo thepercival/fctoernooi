@@ -36,7 +36,7 @@
         </form>
       </div>
       <p *ngIf="alert">
-        <ngb-alert [type]="alert.type" (close)="alert = null;">{{ alert.message }}</ngb-alert>
+        <ngb-alert [type]="alert.type" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
       </p>
       <h1 *ngIf="loading" align="center">
         <i class="fa fa-spinner fa-spin fa-fw"></i>

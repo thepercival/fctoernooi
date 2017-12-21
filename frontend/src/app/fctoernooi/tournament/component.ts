@@ -32,7 +32,7 @@ export class TournamentComponent implements OnDestroy {
         this.structureRepository = structureRepository;
     }
 
-    myNgOnInit(callback: DataProcessCallBack = null) {
+    myNgOnInit(callback?: DataProcessCallBack) {
         this.sub = this.route.params.subscribe(params => {
             this.tournamentRepository.getObject(+params['id'])
                 .subscribe(
@@ -47,7 +47,7 @@ export class TournamentComponent implements OnDestroy {
                                 { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
                                 round
                             );
-                            if (callback !== null) {
+                            if (callback !== undefined) {
                                 callback();
                             }
                         },
