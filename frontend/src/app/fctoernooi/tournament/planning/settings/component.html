@@ -127,7 +127,8 @@
 
                 <div *ngFor="let scoreConfig of selectedRound.getScoreConfigs()" class="form-group row">
                     <label for="scoreMaximum" class="col-8 col-sm-9 col-form-label">{{scoreConfig.getName()}}({{getDirectionDescription(scoreConfig)}})
-                        <span class="badge badge-pill badge-info" placement="top" ngbPopover="de eenheid waarmee je de uitslag van een wedstrijd registreert is x"
+                        <span *ngIf="selectedRound.getInputScoreConfig() === scoreConfig" class="badge badge-pill badge-info" placement="right"
+                            ngbPopover="de eenheid waarmee je de uitslag van een wedstrijd registreert is {{scoreConfig.getName()}}"
                             style="padding-top:8px; padding-bottom:5px;">
                             <i class="fa fa-pencil-square-o"></i>
                         </span>
@@ -135,7 +136,8 @@
                     <div class="col-4 col-sm-3">
                         <input type="number" [maxlength]="4" [ngModel]="scoreConfig.getMaximum()" (ngModelChange)="setScoreConfigMaximum(scoreConfig,$event)"
                             id="scoreMaximum-{{scoreConfig.getId()}}" name="scoreMaximum-{{scoreConfig.getId()}}" class="form-control"
-                            [disabled]="scoreConfig.getChild()?.getMaximum() === 0" required />
+                            [disabled]="scoreConfig.getChild()?.getMaximum() === 0 || modelConfig.enableTime && scoreConfig.getParent() === undefined"
+                            required />
                     </div>
                 </div>
 

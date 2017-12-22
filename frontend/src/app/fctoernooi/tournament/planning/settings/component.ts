@@ -271,11 +271,6 @@ export class TournamentPlanningSettingsComponent implements OnInit {
         return round;
     }
 
-    // wanneer je gaat plannen obv tijd dan root - scoreconfig disabelen
-    //     <span class = "badge badge-pill badge-info" > Info < /span>
-    // bepaal wat de huidige registreer scoreconfig is
-    // dit is dus de node dichtsbij de root die niet 0 is!
-    
     protected setAlert(type: string, message: string) {
         this.alert = { 'type': type, 'message': message };
     }

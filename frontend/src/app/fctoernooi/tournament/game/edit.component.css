@@ -10,6 +10,11 @@ input.ng-invalid, select.ng-invalid {
     width: 150px;
 }
 
+.team-splitter {
+  padding: 0;
+  text-align: center;
+}
+
 .custom-checkbox {
   min-height: 1rem;
   padding-left: 0;

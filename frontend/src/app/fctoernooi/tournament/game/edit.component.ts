@@ -72,17 +72,15 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         this.planningService = new PlanningService(this.tournament.getCompetitionseason().getStartDateTime());
     }
 
-    getScoreConfigForInput(game: Game) {
-        // this.game.getScores()
-        // bepaal de parent en hier kan 1 score van worden ingevuld!! 
-    }
-
     setHome(home) {
-        // if (drawPoints < this.validations.minDrawPoints
-        //     || drawPoints > this.validations.maxDrawPoints) {
-        //     return;
-        // }
-        // check here againt scoreConfig
+        const scoreConfig = this.game.getRound().getInputScoreConfig();
+        if (home < 0 || (this.game.getRound().getConfig().getEnableTime() === false && home > scoreConfig.getMaximum())) {
+            return;
+        }
+        console.log(this.model.home, this.model.away, home);
+        if (this.model.home === 0 && this.model.away === 0 && home > 0) {
+            this.setPlayed(true);
+        }
         this.model.home = home;
     }
 
@@ -97,6 +95,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
 
     setPlayed(played: boolean) {
         // set model to played and do some checks before
+        this.model.played = played;
     }
 
     save() {
