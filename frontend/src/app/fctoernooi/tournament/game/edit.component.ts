@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Competition } from 'voetbaljs/competition';
 import { Game } from 'voetbaljs/game';
+import { GameRepository } from 'voetbaljs/game/repository';
+import { GameScore } from 'voetbaljs/game/score';
 import { PlanningService } from 'voetbaljs/planning/service';
 import { StructureRepository } from 'voetbaljs/structure/repository';
 
@@ -31,7 +33,8 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
-        structureRepository: StructureRepository
+        structureRepository: StructureRepository,
+        private gameRepository: GameRepository
     ) {
         super(route, router, tournamentRepository, structureRepository);
         this.model = {
@@ -55,17 +58,19 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         });
     }
 
+
     setGame(gameId: number) {
         this.game = this.structureService.getGameById(gameId, this.structureService.getFirstRound());
         const date = this.game.getStartDateTime();
+        const gameScore = this.game.getScores()[0];
         // bepaal scoreconfig
         this.model = {
-            home: 0,
-            away: 0,
+            home: gameScore ? gameScore.getHome() : 0,
+            away: gameScore ? gameScore.getAway() : 0,
             played: this.game.getState() === Game.STATE_PLAYED
         };
         if (date !== undefined) {
-            console.log(date);
+            // console.log(date);
             this.model.startdate = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
             this.model.starttime = { hour: date.getHours(), minute: date.getMinutes() };
         }
@@ -77,7 +82,6 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         if (home < 0 || (this.game.getRound().getConfig().getEnableTime() === false && home > scoreConfig.getMaximum())) {
             return;
         }
-        console.log(this.model.home, this.model.away, home);
         if (this.model.home === 0 && this.model.away === 0 && home > 0) {
             this.setPlayed(true);
         }
@@ -85,11 +89,13 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     setAway(away) {
-        // if (drawPoints < this.validations.minDrawPoints
-        //     || drawPoints > this.validations.maxDrawPoints) {
-        //     return;
-        // }
-        // check here againt scoreConfig
+        const scoreConfig = this.game.getRound().getInputScoreConfig();
+        if (away < 0 || (this.game.getRound().getConfig().getEnableTime() === false && away > scoreConfig.getMaximum())) {
+            return;
+        }
+        if (this.model.away === 0 && this.model.home === 0 && away > 0) {
+            this.setPlayed(true);
+        }
         this.model.away = away;
     }
 
@@ -99,38 +105,46 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     save() {
-        const startdate = new Date(
-            this.model.startdate.year,
-            this.model.startdate.month - 1,
-            this.model.startdate.day,
-            this.model.starttime.hour,
-            this.model.starttime.minute
-        );
+        let gameScore = this.game.getScores()[0];
+        if (!gameScore) {
+            gameScore = new GameScore(this.game);
+        }
+        gameScore.setHome(this.model.home);
+        gameScore.setAway(this.model.away);
+        const state = this.model.played === true ? Game.STATE_PLAYED : Game.STATE_CREATED;
+        this.game.setState(state);
+        if (this.planningService.canCalculateStartDateTime(this.game.getPoule().getRound())) {
+            const startdate = new Date(
+                this.model.startdate.year,
+                this.model.startdate.month - 1,
+                this.model.startdate.day,
+                this.model.starttime.hour,
+                this.model.starttime.minute
+            );
+            this.game.setStartDateTime(startdate);
+        }
 
-        // this.loading = true;
+        this.loading = true;
 
-        // this.tournament.getCompetitionseason().setStartDateTime(startdate);
-        // this.tournament.getCompetitionseason().getCompetition().setName(this.model.name);
+        this.gameRepository.editObject(this.game, this.game.getPoule())
+            .subscribe(
+            /* happy path */ gameRes => {
+                this.game = gameRes;
 
-        // const round = this.structureService.getFirstRound();
-        // const planningService = new PlanningService(startdate);
-        // planningService.reschedule(round);
+                // if poule played, determine also team for next round
 
-        // this.tournamentRepository.editObject(this.tournament)
-        //     .subscribe(
-        //     /* happy path */ tournamentRes => {
-        //         this.tournament = tournamentRes;
-        //         // setTimeout(3000);
-        //         this.structureRepository.editObject(round, round.getCompetitionseason())
-        //             .subscribe(
-        //                 /* happy path */ roundRes => {
-        //                 this.router.navigate(['/toernooi/home', tournamentRes.getId()]);
-        //             },
-        //         /* error path */ e => { this.error = e; this.loading = false; },
-        //         /* onComplete */() => this.loading = false
-        //             );
-        //     },
-        //     /* error path */ e => { this.error = e; this.loading = false; }
-        //     );
+                // setTimeout(3000);
+                // this.structureRepository.editObject(round, round.getCompetitionseason())
+                //     .subscribe(
+                //         /* happy path */ roundRes => {
+                //         this.router.navigate(['/toernooi/home', tournamentRes.getId()]);
+                //     },
+                // /* error path */ e => { this.error = e; this.loading = false; },
+                // /* onComplete */() => this.loading = false
+                //     );
+            },
+            /* error path */ e => { this.error = e; this.loading = false; },
+            /* onComplete */() => this.loading = false
+            );
     }
 }

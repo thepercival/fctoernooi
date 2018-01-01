@@ -21,6 +21,7 @@ export class TournamentPlanningViewComponent implements OnInit {
   @Input() structureService: StructureService;
   alert: any;
   planningService: PlanningService;
+  GameStatePlayed = Game.STATE_PLAYED;
   // public winnersAndLosers: number[];
 
   constructor(private router: Router) {
@@ -51,6 +52,18 @@ export class TournamentPlanningViewComponent implements OnInit {
       return qualifyRule.getFromPoulePlaces().length === qualifyRule.getToPoulePlaces().length ? singleColor : 'warning';
     }
     return 'not-qualifying';
+  }
+
+  getScore(game: Game): string {
+    const sScore = ' - ';
+    if (game.getState() !== Game.STATE_PLAYED) {
+      return sScore;
+    }
+    return game.getScores()[0].getHome() + sScore + game.getScores()[0].getAway();
+  }
+
+  isPlayed(game: Game): boolean {
+    return game.getState() === Game.STATE_PLAYED;
   }
 
   linkToGameEdit(tournament: Tournament, game: Game) {

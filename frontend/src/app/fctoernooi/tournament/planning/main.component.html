@@ -18,17 +18,17 @@
         <ngb-tab>
           <ng-template ngbTabTitle>
             <i class="fa fa-eye" title="bekijken"></i>
-            <span class="hidden-xs-down">bekijken</span>
+            <span class="d-none d-sm-block">bekijken</span>
           </ng-template>
           <ng-template ngbTabContent>
-            <app-tournament-planning-view *ngFor="let round of structureService.getRounds(structureService.getFirstRound())" [tournament]="tournament" [round]="round"
-              [structureService]="structureService"></app-tournament-planning-view>
+            <app-tournament-planning-view *ngFor="let round of structureService.getRounds(structureService.getFirstRound())" [tournament]="tournament"
+              [round]="round" [structureService]="structureService"></app-tournament-planning-view>
           </ng-template>
         </ngb-tab>
         <ngb-tab>
           <ng-template ngbTabTitle>
             <i class="fa fa-cogs" title="instellingen"></i>
-            <span class="hidden-xs-down">instellingen</span>
+            <span class="d-none d-sm-block">instellingen</span>
           </ng-template>
           <ng-template ngbTabContent>
             <app-tournament-planning-settings [tournament]="tournament" [structureService]="structureService" (updateRound)="updateRound($event)"></app-tournament-planning-settings>
@@ -37,7 +37,7 @@
         <ngb-tab>
           <ng-template ngbTabTitle>
             <i class="fi flaticon-soccer-field" title="velden"></i>
-            <span class="hidden-xs-down">velden</span>
+            <span class="d-none d-sm-block">velden</span>
           </ng-template>
           <ng-template ngbTabContent ngbTabContentClass="pt-3">
             <app-tournament-planning-fields [tournament]="tournament" [round]="structureService.getFirstRound()" (updateRound)="updateRound($event)"></app-tournament-planning-fields>
@@ -46,7 +46,7 @@
         <ngb-tab>
           <ng-template ngbTabTitle>
             <i class="fi flaticon-referee" title="scheidsrechter"></i>
-            <span class="hidden-xs-down">scheidsrechters</span>
+            <span class="d-none d-sm-block">scheidsrechters</span>
           </ng-template>
           <ng-template ngbTabContent>
             <app-tournament-planning-referees [tournament]="tournament" [round]="structureService.getFirstRound()" (updateRound)="updateRound($event)"></app-tournament-planning-referees>

@@ -2,7 +2,7 @@
     <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6 mt-1">
         <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="true" (close)="alert = undefined;">
             <i *ngIf="processing" class="fa fa-spinner fa-spin"></i> {{ alert.message }}</ngb-alert>
-        <h2 *ngIf="!alert" class="hidden-sm-up pt-2">scheidsrechters</h2>
+        <h2 *ngIf="!alert" class="d-sm-none pt-2">scheidsrechters</h2>
     </div>
 </div>
 <div class="row justify-content-center mx-0">

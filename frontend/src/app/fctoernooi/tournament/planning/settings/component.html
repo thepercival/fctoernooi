@@ -3,7 +3,7 @@
         <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 mt-1">
             <ngb-alert *ngIf="alert" [type]="alert.type" style="width:100%;" [dismissible]="true" (close)="alert = undefined;">
                 <i *ngIf="processing" class="fa fa-spinner fa-spin"></i> {{ alert.message }}</ngb-alert>
-            <h2 *ngIf="!alert" class="hidden-sm-up pt-2">instellingen</h2>
+            <h2 *ngIf="!alert" class="d-sm-none pt-2">instellingen</h2>
         </div>
     </div>
 
@@ -127,8 +127,7 @@
 
                 <div *ngFor="let scoreConfig of selectedRound.getScoreConfigs()" class="form-group row">
                     <label for="scoreMaximum" class="col-8 col-sm-9 col-form-label">{{scoreConfig.getName()}}({{getDirectionDescription(scoreConfig)}})
-                        <span *ngIf="selectedRound.getInputScoreConfig() === scoreConfig" class="badge badge-pill badge-info" placement="right"
-                            ngbPopover="de eenheid waarmee je de uitslag van een wedstrijd registreert is {{scoreConfig.getName()}}"
+                        <span *ngIf="selectedRound.getInputScoreConfig() === scoreConfig" class="badge badge-pill badge-info" placement="right" ngbPopover="de eenheid waarmee je de uitslag van een wedstrijd registreert is {{scoreConfig.getName()}}"
                             style="padding-top:8px; padding-bottom:5px;">
                             <i class="fa fa-pencil-square-o"></i>
                         </span>
@@ -136,8 +135,7 @@
                     <div class="col-4 col-sm-3">
                         <input type="number" [maxlength]="4" [ngModel]="scoreConfig.getMaximum()" (ngModelChange)="setScoreConfigMaximum(scoreConfig,$event)"
                             id="scoreMaximum-{{scoreConfig.getId()}}" name="scoreMaximum-{{scoreConfig.getId()}}" class="form-control"
-                            [disabled]="scoreConfig.getChild()?.getMaximum() === 0 || modelConfig.enableTime && scoreConfig.getParent() === undefined"
-                            required />
+                            [disabled]="isScoreConfigReadOnly(scoreConfig)" required />
                     </div>
                 </div>
 

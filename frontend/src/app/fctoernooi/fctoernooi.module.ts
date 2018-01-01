@@ -5,6 +5,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DndModule } from 'ng2-dnd';
 import { NouisliderModule } from 'ng2-nouislider';
 import { GameRepository } from 'voetbaljs/game/repository';
+import { GameScoreRepository } from 'voetbaljs/game/score/repository';
 import { PouleRepository } from 'voetbaljs/poule/repository';
 import { PoulePlaceRepository } from 'voetbaljs/pouleplace/repository';
 import { QualifyRuleRepository } from 'voetbaljs/qualifyrule/repository';
@@ -66,7 +67,8 @@ import { TournamentViewComponent } from './tournament/view/view.component';
     PoulePlaceRepository,
     QualifyRuleRepository,
     TeamRepository,
-    GameRepository
+    GameRepository,
+    GameScoreRepository
   ]
 })
 export class FctoernooiModule { }

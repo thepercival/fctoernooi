@@ -15,15 +15,15 @@
           <th title="veld">
             <i class="fi flaticon-soccer-field"></i>
           </th>
-          <th class="hidden-xs-down" title="poule">
+          <th title="poule">
             <i class="fa fa-list"></i>
           </th>
           <th>thuis</th>
-          <th class="hidden-xs-down" title="score">
+          <th title="score">
             <i class="fi flaticon-scoreboard"></i>
           </th>
           <th>uit</th>
-          <th [ngClass]="{ 'hidden-xs-down': round.getConfig().getEnableTime()}" title="scheidsrechter">
+          <th class="d-none d-sm-table-cell" title="scheidsrechter">
             <i class="fi flaticon-referee"></i>
           </th>
         </tr>
@@ -33,11 +33,14 @@
           <td *ngIf="planningService.canCalculateStartDateTime(round)">{{game.getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit","hour12": false,"hour":"2-digit","minute":"2-digit"}
             ) }}</td>
           <td>{{game.getField().getName()}}</td>
-          <td class="hidden-xs-down">{{structureService.getPouleName(game.getPoule())}}</td>
+          <td>{{structureService.getPouleName(game.getPoule())}}</td>
           <td>{{structureService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</td>
-          <td class="hidden-xs-down"></td>
+          <td>
+            <span class="d-none d-sm-block">{{getScore(game)}}</span>
+            <span *ngIf="game.getState() === GameStatePlayed" class="fa fa-check d-sm-none"></span>
+          </td>
           <td>{{structureService.getPoulePlaceName(game.getAwayPoulePlace(), true )}}</td>
-          <td [ngClass]="{ 'hidden-xs-down': round.getConfig().getEnableTime()}">{{game.getReferee()?.getName()}}</td>
+          <td class="d-none d-sm-table-cell">{{game.getReferee()?.getName()}}</td>
         </tr>
       </tbody>
     </table>

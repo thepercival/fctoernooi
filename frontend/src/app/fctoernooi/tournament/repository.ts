@@ -77,7 +77,7 @@ export class TournamentRepository extends VoetbalRepository {
         return this.http
             .post(this.url, this.objectToJsonHelper(tournament), { headers: super.getHeaders() })
             // ...and calling .json() on the response to return data
-            .map((res) => {
+            .map((res: ITournament) => {
                 const tournamentIn = this.jsonToObjectHelper(res);
                 this.cache.push(tournamentIn);
                 return tournamentIn;
@@ -88,7 +88,7 @@ export class TournamentRepository extends VoetbalRepository {
     editObject(tournament: Tournament): Observable<Tournament> {
         return this.http
             .put(this.url + '/' + tournament.getId(), this.objectToJsonHelper(tournament), { headers: super.getHeaders() })
-            .map((res) => {
+            .map((res: ITournament) => {
                 console.log(res); return this.jsonToObjectHelper(res);
             })
             .catch(this.handleError);
@@ -108,7 +108,7 @@ export class TournamentRepository extends VoetbalRepository {
             .catch(this.handleError);
     }
 
-    jsonArrayToObject(jsonArray: any): Tournament[] {
+    jsonArrayToObject(jsonArray: ITournament[]): Tournament[] {
         const tournaments: Tournament[] = [];
         for (const json of jsonArray) {
             const object = this.jsonToObjectHelper(json);
@@ -117,7 +117,7 @@ export class TournamentRepository extends VoetbalRepository {
         return tournaments;
     }
 
-    jsonToObjectHelper(json: any): Tournament {
+    jsonToObjectHelper(json: ITournament): Tournament {
         const competitionseason = this.csRepository.jsonToObjectHelper(json.competitionseason);
         const tournament = new Tournament(competitionseason);
         const roles = this.tournamentRoleRepository.jsonArrayToObject(json.roles, tournament);

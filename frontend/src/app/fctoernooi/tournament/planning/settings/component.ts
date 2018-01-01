@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Game } from 'voetbaljs/game';
 import { PlanningService } from 'voetbaljs/planning/service';
 import { Round } from 'voetbaljs/round';
 import { RoundConfig } from 'voetbaljs/round/config';
@@ -206,6 +207,20 @@ export class TournamentPlanningSettingsComponent implements OnInit {
             this.setScoreConfigMaximum(scoreConfig.getParent(), 0);
         }
         scoreConfig.setMaximum(scoreConfigMaximum);
+    }
+
+    isScoreConfigReadOnly(scoreConfig: RoundScoreConfig) {
+        if (scoreConfig.getChild() !== undefined && scoreConfig.getChild().getMaximum() === 0) {
+            return true;
+        }
+        if (this.modelConfig.enableTime && scoreConfig.getParent() === undefined) {
+            return true;
+        }
+        if (this.selectedRound.getGamesWithState(Game.STATE_PLAYED).length > 0) {
+            return true;
+        }
+
+        return false;
     }
 
     saveConfig() {
