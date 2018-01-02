@@ -59,7 +59,7 @@ export class TournamentPlanningViewComponent implements OnInit {
     if (game.getState() !== Game.STATE_PLAYED) {
       return sScore;
     }
-    return game.getScores()[0].getHome() + sScore + game.getScores()[0].getAway();
+    return game.getFinalScore().getHome() + sScore + game.getFinalScore().getAway();
   }
 
   isPlayed(game: Game): boolean {

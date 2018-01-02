@@ -62,7 +62,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     setGame(gameId: number) {
         this.game = this.structureService.getGameById(gameId, this.structureService.getFirstRound());
         const date = this.game.getStartDateTime();
-        const gameScore = this.game.getScores()[0];
+        const gameScore = this.game.getFinalScore();
         // bepaal scoreconfig
         this.model = {
             home: gameScore ? gameScore.getHome() : 0,
@@ -105,7 +105,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     save() {
-        let gameScore = this.game.getScores()[0];
+        let gameScore = this.game.getFinalScore();
         if (!gameScore) {
             gameScore = new GameScore(this.game);
         }

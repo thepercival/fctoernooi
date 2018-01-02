@@ -58,7 +58,6 @@ export class TournamentNewComponent implements OnInit {
     this.loading = true;
 
     const sportName = this.model.sportname !== '-1' ? this.model.sportname : this.model.sportnameother;
-    console.log(this.model.name, sportName, this.model.nrofcompetitors);
 
     const startdate = new Date(
       this.model.startdate.year,
@@ -86,29 +85,23 @@ export class TournamentNewComponent implements OnInit {
       tournament = new Tournament(competitionseason);
     }
 
-    console.log(tournament);
-
     this.tournamentRepository.createObject(tournament)
       .subscribe(
             /* happy path */ tournamentOut => {
         // setTimeout(3000);
-        console.log(tournamentOut);
-
         const structureService = new StructureService(
           tournamentOut.getCompetitionseason(),
           { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
           undefined, this.model.nrofcompetitors
         );
 
-        console.log(structureService.getFirstRound());
         const planningService = new PlanningService(startdate);
         planningService.create(structureService.getFirstRound());
 
         this.structureRepository.createObject(structureService.getFirstRound(), tournamentOut.getCompetitionseason())
           .subscribe(
             /* happy path */ structure => {
-            console.log(structure);
-
+            // console.log(structure);
             this.router.navigate(['/toernooi/home', tournamentOut.getId()]);
           },
             /* error path */ e => { this.error = e; this.loading = false; },

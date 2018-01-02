@@ -101,7 +101,7 @@ class Service
             );
             if( $season === null ){
                 $seasonService = $this->voetbalService->getService( Season::class );
-                $period = new Period( new \DateTime($year."-01-01"), new \DateTime($year."-12-31") );
+                $period = new Period( new \DateTimeImmutable($year."-01-01"), new \DateTimeImmutable($year."-12-31") );
                 $season = $seasonService->create( $year, $period );
             }
 
