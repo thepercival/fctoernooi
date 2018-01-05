@@ -5,7 +5,7 @@
       <span [innerHTML]="structureService.getRoundName( round )"></span>
     </div>
     <div class="card-block">
-      <div *ngIf="round.getNumber() == 1" class="d-flex justify-content-around mb-3">
+      <div *ngIf="round.getNumber() === 1" class="d-flex justify-content-around mb-3">
         <div class="d-sm-none btn-group-vertical" role="group" aria-label="aantal poules">
           <button type="button" class="btn btn-outline-secondary">poules</button>
           <div class="btn-group" role="group" aria-label="aantal poules">
@@ -28,7 +28,7 @@
             </button>
           </div>
         </div>
-        <div class="d-sm-none btn-group" role="group" aria-label="aantal poules">
+        <div class="d-none d-sm-inline-flex btn-group" role="group" aria-label="aantal poules">
           <button type="button" class="btn btn-outline-secondary" (click)="removePoule(round)">
             <span class="fa fa-minus"></span>
           </button>
@@ -37,7 +37,7 @@
             <span class="fa fa-plus"></span>
           </button>
         </div>
-        <div class="d-sm-none btn-group" role="group" aria-label="aantal deelnemers">
+        <div class="d-none d-sm-inline-flex btn-group" role="group" aria-label="aantal deelnemers">
           <button *ngIf="canRemovePoulePlace(round)" type="button" class="btn btn-outline-secondary" (click)="removePoulePlace(round)">
             <span class="fa fa-minus"></span>
           </button>
@@ -47,8 +47,8 @@
           </button>
         </div>
       </div>
-      <div *ngIf="round.getNumber() === 2 && round.getPoulePlaces().length >= 4" class="d-none d-sm-block mb-3 btn-group" role="group"
-        aria-label="verdeel">
+      <div *ngIf="round.getNumber() === 2 && round.getPoulePlaces().length >= 4" class="d-none d-sm-inline-flex mb-3 btn-group"
+        role="group" aria-label="verdeel">
         <button *ngIf="round.getPoules().length > 1" type="button" class="btn btn-outline-secondary" (click)="removePoule(round)">
           <span class="fa fa-compress"></span>
         </button>
