@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 import { Competition } from 'voetbaljs/competition';
 import { Game } from 'voetbaljs/game';
 import { GameRepository } from 'voetbaljs/game/repository';
@@ -158,22 +159,23 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
                     });
                 });
                 this.loading = false;
-                // const reposUpdates = [];
-                // newQualifiers.forEach((newQualifier) => {
-                //     const poulePlace = newQualifier.poulePlace;
-                //     poulePlace.setTeam(newQualifier.team);
-                //     reposUpdates.push(this.poulePlaceRepository.editObject(poulePlace, poulePlace.getPoule()));
-                // });
 
-                // forkJoin(reposUpdates).subscribe(results => {
-                //     // this.setAlert('info', 'volgorde gewijzigd');
-                //     this.loading = false;
-                // },
-                //     err => {
-                //         // this.setAlert('danger', 'volgorde niet gewijzigd: ' + err);
-                //         this.loading = false;
-                //     }
-                // );
+                const reposUpdates = [];
+                newQualifiers.forEach((newQualifier) => {
+                    const poulePlace = newQualifier.poulePlace;
+                    poulePlace.setTeam(newQualifier.team);
+                    reposUpdates.push(this.poulePlaceRepository.editObject(poulePlace, poulePlace.getPoule()));
+                });
+
+                forkJoin(reposUpdates).subscribe(results => {
+                    console.log('qualifier gewijzigd');
+                    this.loading = false;
+                },
+                    err => {
+                        console.log('qualifier niet gewijzigd');
+                        this.loading = false;
+                    }
+                );
 
                 // setTimeout(3000);
                 // this.structureRepository.editObject(round, round.getCompetitionseason())
