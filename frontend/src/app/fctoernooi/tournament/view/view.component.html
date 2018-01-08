@@ -1,4 +1,25 @@
-<div *ngIf="tournament" class="container-fluid">
+<div *ngIf="tournament && structureService" class="container-fluid px-0">
+  <div class="row justify-content-around no-gutters">
+    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
+      <div class="mb-4">
+        <h1 *ngIf="tournament">
+          {{tournament.getName()}}
+        </h1>
+      </div>
+      <div>
+        <h2>
+          <button [routerLink]="['/toernooi/home', tournament.getId()]" type="button" class="btn btn-outline-secondary btn-sm">
+            <i class="fa fa-filter"></i> filter
+          </button>
+        </h2>
+      </div>
+    </div>
+    <app-tournament-planning-view *ngFor="let round of structureService.getRounds(structureService.getFirstRound())" [tournament]="tournament"
+      [round]="round" [structureService]="structureService"></app-tournament-planning-view>
+  </div>
+</div>
+
+<!-- <div *ngIf="tournament" class="container-fluid">
   <h1 align="center">
     {{tournament.getName()}}
     <a [routerLink]="['/toernooi', tournament.getId()]">
@@ -10,4 +31,4 @@
     <div *ngIf="isAdmin()" class="card mt-3 mx-2">
       i am the admin!!!
     </div>
-  </div>
+  </div> -->

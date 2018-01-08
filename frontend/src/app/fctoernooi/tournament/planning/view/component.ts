@@ -3,6 +3,7 @@ import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Router } from '@angular/router';
 import { Game } from 'voetbaljs/game';
 import { PlanningService } from 'voetbaljs/planning/service';
+import { Poule } from 'voetbaljs/poule';
 import { PoulePlace } from 'voetbaljs/pouleplace';
 import { Round } from 'voetbaljs/round';
 import { StructureService } from 'voetbaljs/structure/service';
@@ -22,6 +23,7 @@ export class TournamentPlanningViewComponent implements OnInit {
   alert: any;
   planningService: PlanningService;
   GameStatePlayed = Game.STATE_PLAYED;
+  selectedPouleForRanking;
   // public winnersAndLosers: number[];
 
   constructor(private router: Router) {
@@ -71,6 +73,11 @@ export class TournamentPlanningViewComponent implements OnInit {
       ['/toernooi/gameedit', tournament.getId(), game.getId()],
       { queryParams: { returnAction: '/toernooi/planning', returnParams: tournament.getId() } }
     );
+  }
+
+  showRanking(poule: Poule) {
+    this.selectedPouleForRanking = poule;
+    return false;
   }
 
   protected resetAlert(): void {
