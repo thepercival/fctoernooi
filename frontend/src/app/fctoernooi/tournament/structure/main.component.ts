@@ -65,8 +65,4 @@ export class TournamentStructureComponent extends TournamentComponent implements
   protected resetAlert(): void {
     this.alert = undefined;
   }
-
-  started(round: Round): boolean {
-    return round.getState() > Game.STATE_CREATED;
-  }
 }
