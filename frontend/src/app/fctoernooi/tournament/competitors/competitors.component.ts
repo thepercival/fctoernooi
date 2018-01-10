@@ -38,7 +38,6 @@ export class TournamentCompetitorsComponent extends TournamentComponent implemen
     private poulePlaceRepository: PoulePlaceRepository
   ) {
     super(route, router, tournamentRepository, sructureRepository);
-    this.setAlert('info', 'sleep items om indeling aan te passen');
   }
 
   ngOnInit() {
@@ -56,6 +55,10 @@ export class TournamentCompetitorsComponent extends TournamentComponent implemen
         editable: false
       });
     }, this);
+
+    if (!round.isStarted()) {
+      this.setAlert('info', 'sleep items om indeling aan te passen');
+    }
   }
 
   startDragging(i) {

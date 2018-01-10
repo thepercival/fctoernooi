@@ -37,12 +37,13 @@ export class TournamentPlanningFieldsComponent implements OnInit {
 
     ngOnInit() {
         this.createFieldsList();
-
         this.planningService = new PlanningService(
             this.tournament.getCompetitionseason().getStartDateTime()
         );
-
         this.processing = false;
+        if (this.round.isStarted()) {
+            this.setAlert('warning', 'het toernooi is al begonnen, je kunt niet meer wijzigen');
+        }
     }
 
 

@@ -5,7 +5,7 @@
       <span [innerHTML]="structureService.getRoundName( round )"></span>
     </div>
     <div class="card-block">
-      <div *ngIf="round.getNumber() === 1" class="d-flex justify-content-around mb-3">
+      <div *ngIf="round.getNumber() === 1 && !round.isStarted()" class="d-flex justify-content-around mb-3">
         <div class="d-sm-none btn-group-vertical" role="group" aria-label="aantal poules">
           <button type="button" class="btn btn-outline-secondary">poules</button>
           <div class="btn-group" role="group" aria-label="aantal poules">
@@ -47,7 +47,7 @@
           </button>
         </div>
       </div>
-      <div *ngIf="round.getNumber() === 2 && round.getPoulePlaces().length >= 4" class="d-none d-sm-inline-flex mb-3 btn-group"
+      <div *ngIf="round.getNumber() === 2 && round.getPoulePlaces().length >= 4 && !round.isStarted()" class="d-none d-sm-inline-flex mb-3 btn-group"
         role="group" aria-label="verdeel">
         <button *ngIf="round.getPoules().length > 1" type="button" class="btn btn-outline-secondary" (click)="removePoule(round)">
           <span class="fa fa-compress"></span>
@@ -58,7 +58,7 @@
           <span class="fa fa-expand"></span>
         </button>
       </div>
-      <div *ngIf="round.getNumber() >= 2 && round.getPoulePlaces().length >= 4" [ngClass]="{ 'd-sm-none': ( round.getNumber() === 2 ) }"
+      <div *ngIf="round.getNumber() >= 2 && round.getPoulePlaces().length >= 4 && !round.isStarted()" [ngClass]="{ 'd-sm-none': ( round.getNumber() === 2 ) }"
         class="mb-3 btn-group-vertical" role="group" aria-label="verdeel">
         <button type="button" class="btn btn-outline-secondary">verdeel</button>
         <div class="btn-group" role="group" aria-label="aantal poules">
@@ -71,6 +71,9 @@
           </button>
         </div>
       </div>
+      <p *ngIf="round.isStarted()">
+        <ngb-alert [dismissible]="false" type="warning">de ronde is begonnen, je kunt niet meer wijzigen</ngb-alert>
+      </p>
       <p *ngIf="alert">
         <ngb-alert [type]="alert.type" (close)="closeAlert()">{{ alert.message }}</ngb-alert>
       </p>
@@ -88,7 +91,7 @@
       {{getWinnersLosersDescription( winnersOrLosers )}}
       <nouislider class="horizontal-slider {{getWinnersLosersName( winnersOrLosers )}}" [config]="uiSliderConfig" [min]="0" [max]="round.getPoulePlaces().length"
         [ngModel]="round.getNrOfPlacesChildRound( winnersOrLosers )" (ngModelChange)="onSliderChange($event, winnersOrLosers)"
-        style="margin-top: 16px;"></nouislider>
+        style="margin-top: 16px;" [disabled]="round.isStarted()"></nouislider>
     </div>
   </div>
   <div class="row text-center">

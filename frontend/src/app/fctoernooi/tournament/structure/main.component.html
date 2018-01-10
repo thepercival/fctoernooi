@@ -10,7 +10,7 @@
   <div>
     <h2>
       <i class="fi flaticon-structure"></i> structuur
-      <button type="button" class="btn btn-outline-{{!processed && !isChanged ? 'primary' : (processing ? 'warning' : (isChanged ? 'danger' : 'success') ) }}"
+      <button *ngIf="!structureService.getFirstRound().isStarted()" type="button" class="btn btn-outline-{{!processed && !isChanged ? 'primary' : (processing ? 'warning' : (isChanged ? 'danger' : 'success') ) }}"
         [disabled]="processing || !isChanged" (click)="saveStructure();">
         <span class="fa fa-{{processing ? 'spinner fa-spin' : (isChanged || !processed ? 'save' : 'check') }}"></span>
       </button>

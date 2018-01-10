@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Game } from 'voetbaljs/game';
 import { PlanningService } from 'voetbaljs/planning/service';
 import { Round } from 'voetbaljs/round';
 import { RoundConfig } from 'voetbaljs/round/config';
@@ -83,6 +82,10 @@ export class TournamentPlanningSettingsComponent implements OnInit {
         this.modelRecreate = false;
         this.modelReschedule = false;
         this.isCollapsed = true;
+        if (this.structureService.getFirstRound().isStarted()) {
+            this.setAlert('warning', 'het toernooi is al begonnen, je kunt niet meer wijzigen');
+        }
+
     }
 
     getWinnersLosersDescription(winnersOrLosers: number): string {
@@ -216,7 +219,7 @@ export class TournamentPlanningSettingsComponent implements OnInit {
         if (this.modelConfig.enableTime && scoreConfig.getParent() === undefined) {
             return true;
         }
-        if (this.selectedRound.getGamesWithState(Game.STATE_PLAYED).length > 0) {
+        if (this.selectedRound.isStarted()) {
             return true;
         }
 

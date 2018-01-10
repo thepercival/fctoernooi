@@ -28,7 +28,6 @@ export class TournamentStructureRoundComponent {
   constructor() {
     this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
     this.resetAlert();
-
   }
 
   private getPlanningService(): PlanningService {
@@ -112,7 +111,6 @@ export class TournamentStructureRoundComponent {
     }
     return 'not-qualifying';
   }
-
 
   protected resetAlert(): void {
     this.alert = undefined;

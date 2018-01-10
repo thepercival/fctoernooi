@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Game } from 'voetbaljs/game';
+import { Round } from 'voetbaljs/round';
 import { StructureRepository } from 'voetbaljs/structure/repository';
 import { StructureService } from 'voetbaljs/structure/service';
 
@@ -62,5 +64,9 @@ export class TournamentStructureComponent extends TournamentComponent implements
 
   protected resetAlert(): void {
     this.alert = undefined;
+  }
+
+  started(round: Round): boolean {
+    return round.getState() > Game.STATE_CREATED;
   }
 }

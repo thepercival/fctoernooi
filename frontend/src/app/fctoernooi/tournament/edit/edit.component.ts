@@ -4,6 +4,7 @@ import { Competition } from 'voetbaljs/competition';
 import { PlanningService } from 'voetbaljs/planning/service';
 import { StructureRepository } from 'voetbaljs/structure/repository';
 
+import { IAlert } from '../../../app.definitions';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
 
@@ -17,6 +18,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
     model: any;
     loading = false;
     error = '';
+    alert: IAlert;
 
     validations: any = {
         'minlengthname': Competition.MIN_LENGTH_NAME,
@@ -48,8 +50,23 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
         };
     }
 
+    shouldReschedule(startDateTime: Date): boolean {
+        if (startDateTime.getTime() === this.tournament.getCompetitionseason().getStartDateTime().getTime()) {
+            return false;
+        }
+        // console.log(startDateTime, this.tournament.getCompetitionseason().getStartDateTime());
+        if (this.structureService.getFirstRound().isStarted()) {
+            throw new Error('de startdatum mag niet veranderen omdat het toernooi al is begonnen');
+        }
+        return true;
+    }
+
+    protected setAlert(type: string, message: string) {
+        this.alert = { 'type': type, 'message': message };
+    }
+
     edit() {
-        const startdate = new Date(
+        const startDateTime = new Date(
             this.model.startdate.year,
             this.model.startdate.month - 1,
             this.model.startdate.day,
@@ -58,29 +75,37 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
         );
 
         this.loading = true;
-
-        this.tournament.getCompetitionseason().setStartDateTime(startdate);
-        this.tournament.getCompetitionseason().getCompetition().setName(this.model.name);
-
         const round = this.structureService.getFirstRound();
-        const planningService = new PlanningService(startdate);
-        planningService.reschedule(round);
+        try {
+            this.tournament.getCompetitionseason().getCompetition().setName(this.model.name);
+            const reschedule = this.shouldReschedule(startDateTime);
+            if (reschedule === true) {
+                this.tournament.getCompetitionseason().setStartDateTime(startDateTime);
+                const planningService = new PlanningService(startDateTime);
+                planningService.reschedule(round);
+            }
 
-        this.tournamentRepository.editObject(this.tournament)
-            .subscribe(
-            /* happy path */ tournamentRes => {
-                this.tournament = tournamentRes;
-                // setTimeout(3000);
-                this.structureRepository.editObject(round, round.getCompetitionseason())
-                    .subscribe(
-                        /* happy path */ roundRes => {
-                        this.router.navigate(['/toernooi/home', tournamentRes.getId()]);
-                    },
+            this.tournamentRepository.editObject(this.tournament)
+                .subscribe(
+                /* happy path */ tournamentRes => {
+                    this.tournament = tournamentRes;
+                    // setTimeout(3000);
+                    if (reschedule === true) {
+                        this.structureRepository.editObject(round, round.getCompetitionseason())
+                            .subscribe(
+                            /* happy path */ roundRes => {
+                                this.router.navigate(['/toernooi/home', tournamentRes.getId()]);
+                            },
+                    /* error path */ e => { this.error = e; this.loading = false; },
+                    /* onComplete */() => this.loading = false);
+                    }
+
+                },
                 /* error path */ e => { this.error = e; this.loading = false; },
                 /* onComplete */() => this.loading = false
-                    );
-            },
-            /* error path */ e => { this.error = e; this.loading = false; }
-            );
+                );
+        } catch (e) {
+            this.setAlert('danger', e.message);
+        }
     }
 }

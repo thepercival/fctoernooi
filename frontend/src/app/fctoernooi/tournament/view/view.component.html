@@ -13,10 +13,11 @@
           </button>
         </h2>
       </div>
+      <app-tournament-planning-view *ngFor="let round of structureService.getRounds(structureService.getFirstRound())" [tournament]="tournament"
+        [round]="round" [structureService]="structureService"></app-tournament-planning-view>
     </div>
-    <app-tournament-planning-view *ngFor="let round of structureService.getRounds(structureService.getFirstRound())" [tournament]="tournament"
-      [round]="round" [structureService]="structureService"></app-tournament-planning-view>
   </div>
+
 </div>
 
 <!-- <div *ngIf="tournament" class="container-fluid">

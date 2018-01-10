@@ -141,7 +141,6 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         }
 
         this.loading = true;
-
         this.gameRepository.editObject(this.game, this.game.getPoule())
             .subscribe(
             /* happy path */ gameRes => {
@@ -158,6 +157,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
                         newQualifiers.push(newQualifier);
                     });
                 });
+
                 this.loading = false;
 
                 const reposUpdates = [];

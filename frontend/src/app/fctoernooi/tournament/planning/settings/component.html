@@ -11,7 +11,7 @@
         <div *ngIf="selectedRound.getParentRound() !== undefined || selectedRound.getChildRounds().length > 0" class="row justify-content-center mx-0">
             <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
                 <p class="d-flex justify-content-between">
-                    <button type="submit" [disabled]="!f.form.valid || processing" class="btn btn-outline-primary">instellingen opslaan
+                    <button *ngIf="!structureService.getFirstRound().isStarted()" type="submit" [disabled]="!f.form.valid || processing" class="btn btn-outline-primary">instellingen opslaan
                         <i *ngIf="processing" class="fa fa-spinner fa-spin fa-fw"></i>
                     </button>
                     <button type="button" class="btn btn-outline-primary" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
