@@ -1,0 +1,29 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import './mixins';
+
+@import "./bootswatch/variables";
+
+@import "~bootstrap/scss/bootstrap";
+
+$popover-border-color:                $info;
+$btn-secondary-border:           #fff;
+@import "./bootswatch/bootswatch";
+
+// .bg-dark {
+//   border: 1px solid $gray-500;
+// }
+
+.btn-outline-secondary:hover {
+  background-color: lighten($gray-500, 10%);
+}
+
+@import "./nouislider/scss/nouislider";
+@import './variables';
+
+// $fa-font-path: "/node_modules/font-awesome/fonts";
+$fa-font-path:        "//netdna.bootstrapcdn.com/font-awesome/4.7.0/fonts" !default;
+@import "~font-awesome/scss/font-awesome";
+
+$flaticon-font-path: "/assets/flaticon";
+@import "./flaticon/flaticon";

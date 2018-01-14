@@ -1,0 +1,32 @@
+.card.round{
+    width:100%;
+}
+
+.card.round>.card-body{
+    padding-bottom:0;
+}
+
+app-tournament-structureround {
+    width: 100%;
+}
+
+.card-body{
+    background-color: black;
+}
+
+.qualifier{
+    flex-basis: 100%;
+    border: 0;
+}
+
+.list-group.list-group-poule{
+    align-items: center;
+}
+
+.bg-not-qualifying {
+    background-color: transparent;
+}
+
+.card.qualification{
+    width:100%;
+}
