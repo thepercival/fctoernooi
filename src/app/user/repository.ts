@@ -4,7 +4,7 @@ import 'rxjs/add/operator/map';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SportRepository } from 'ngx-sport';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 
 import { User } from './user';
 
@@ -23,7 +23,7 @@ export class UserRepository extends SportRepository {
   }
 
   getObjects(): Observable<User[]> {
-    return this.http.get(this.url, { headers: super.getHeaders() })
+    return this.http.get<Array<IUser>>(this.url, { headers: super.getHeaders() })
       .map((res: IUser[]) => {
         return this.jsonArrayToObject(res);
       })
@@ -33,16 +33,13 @@ export class UserRepository extends SportRepository {
   getObject(id: number): Observable<User> {
     const url = `${this.url}/${id}`;
     return this.http.get(url)
-      // ...and calling .json() on the response to return data
       .map((res: IUser) => this.jsonToObjectHelper(res))
-      // ...errors if any
       .catch(this.handleError);
   }
 
   createObject(jsonObject: any): Observable<User> {
     return this.http
       .post(this.url, jsonObject, { headers: super.getHeaders() })
-      // ...and calling .json() on the response to return data
       .map((res: IUser) => this.jsonToObjectHelper(res))
       .catch(this.handleError);
   }

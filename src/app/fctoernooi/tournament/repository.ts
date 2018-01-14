@@ -72,10 +72,8 @@ export class TournamentRepository extends SportRepository {
     }
 
     createObject(tournament: Tournament): Observable<Tournament> {
-        console.log(this.objectToJsonHelper(tournament));
         return this.http
             .post(this.url, this.objectToJsonHelper(tournament), { headers: super.getHeaders() })
-            // ...and calling .json() on the response to return data
             .map((res: ITournament) => {
                 const tournamentIn = this.jsonToObjectHelper(res);
                 this.cache.push(tournamentIn);
@@ -96,7 +94,7 @@ export class TournamentRepository extends SportRepository {
     removeObject(tournament: Tournament): Observable<boolean> {
         const url = this.url + '/' + tournament.getId();
         return this.http
-            .delete(url, { headers: super.getHeaders(), responseType: 'text' })
+            .delete(url, { headers: super.getHeaders() })
             .map((res) => {
                 const index = this.cache.indexOf(tournament);
                 if (index > -1) {
