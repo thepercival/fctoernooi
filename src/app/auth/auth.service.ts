@@ -3,7 +3,7 @@ import 'rxjs/add/operator/map';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 
 import { environment } from '../../environments/environment';
 import { UserRepository } from '../user/repository';
