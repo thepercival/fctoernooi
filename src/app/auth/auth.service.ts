@@ -1,8 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators/map';
+import { catchError } from 'rxjs/operators/catchError';
+import 'rxjs/add/observable/throw';
 
 import { environment } from '../../environments/environment';
 import { UserRepository } from '../user/repository';
@@ -57,7 +59,8 @@ export class AuthService {
         } else {
           return false;
         }
-      })
+      }),
+      catchError( this.handleError )
     );
   }
 
@@ -88,11 +91,15 @@ export class AuthService {
     localStorage.removeItem('auth');
   }
 
-  // this could also be a private method of the component class
-  handleError(error): Observable<any> {
-    console.error(error.statusText);
-    // throw an application level error
-    return Observable.throw(error.statusText);
+  handleError(error: HttpErrorResponse): Observable<any> {
+    let errortext = 'onbekende fout';
+    if (typeof error.error === 'string') {
+        errortext = error.error;
+    }
+    if (error.status === 401) {
+        errortext = 'je bent niet ingelogd';
+    }
+    return Observable.throw(errortext);
   }
 }
 

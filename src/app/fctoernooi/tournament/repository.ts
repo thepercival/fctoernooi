@@ -48,7 +48,8 @@ export class TournamentRepository extends SportRepository {
                     const tournamentsRes = this.jsonArrayToObject(jsonTournaments);
                     this.cache = tournamentsRes;
                     return tournamentsRes;
-                })
+                }),
+                catchError( super.handleError )
             );
 
     }
@@ -70,20 +71,19 @@ export class TournamentRepository extends SportRepository {
                 const tournamentRes = this.jsonToObjectHelper(jsonTournament);
                 this.cache.push(tournamentRes);
                 return tournamentRes;
-            })/*,
-            catchError(this.handleError)*/
+            }),
+            catchError(super.handleError)
         );
     }
 
     createObject(tournament: Tournament): Observable<Tournament> {
-        return this.http
-            .post(this.url, this.objectToJsonHelper(tournament), { headers: super.getHeaders() }).pipe(
+        return this.http.post(this.url, this.objectToJsonHelper(tournament), { headers: super.getHeaders() }).pipe(
             map((res: ITournament) => {
                 const tournamentIn = this.jsonToObjectHelper(res);
                 this.cache.push(tournamentIn);
                 return tournamentIn;
             }),
-            catchError(this.handleError)
+            catchError( super.handleError )
         );
     }
 
@@ -93,7 +93,7 @@ export class TournamentRepository extends SportRepository {
             map((res: ITournament) => {
                 console.log(res); return this.jsonToObjectHelper(res);
             }),
-            catchError(this.handleError)
+            catchError( super.handleError )
         );
     }
 
@@ -107,7 +107,7 @@ export class TournamentRepository extends SportRepository {
                     }
                     return true;
                 }),
-                catchError(this.handleError)
+                catchError( super.handleError )
             );
     }
 

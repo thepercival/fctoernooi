@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit {
           return 0;
         });
       },
-                /* error path */ e => { this.alert = { type: 'danger', message: e.message }; this.loading = false; },
+                /* error path */ e => { this.alert = { type: 'danger', message: e }; this.loading = false; },
                 /* onComplete */() => this.loading = false
       );
   }
