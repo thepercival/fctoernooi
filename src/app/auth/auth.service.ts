@@ -1,9 +1,8 @@
-import 'rxjs/add/operator/map';
-
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
 
 import { environment } from '../../environments/environment';
 import { UserRepository } from '../user/repository';
@@ -46,8 +45,8 @@ export class AuthService {
   // }
 
   login(emailaddress: string, password: string): Observable<boolean> {
-    return this.http.post<IAuthItem>(this.url + 'login', { emailaddress: emailaddress, password: password })
-      .map((res) => {
+    return this.http.post<IAuthItem>(this.url + 'login', { emailaddress: emailaddress, password: password }).pipe(
+      map((res) => {
         const json = res;
         // login successful if there's a jwt token in the response
         if (json && json.token && json.userid) {
@@ -59,12 +58,7 @@ export class AuthService {
           return false;
         }
       })
-      .catch(this.handleError);
-    // .catch((error:any) => Observable.throw( error.statusText || 'Server error' ) );
-    /*.catch((err:any) => {
-     //console.log( err.statusText );
-     Observable.throw( err.statusText )
-     });*/
+    );
   }
 
   // passwordReset( email: string ): Observable<boolean> {

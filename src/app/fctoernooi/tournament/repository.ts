@@ -6,6 +6,8 @@ import { Injectable } from '@angular/core';
 import { CompetitionseasonRepository, ICompetitionseason, SportRepository } from 'ngx-sport';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
+import { map } from 'rxjs/operators/map';
+import { catchError } from 'rxjs/operators/catchError';
 
 import { Tournament } from '../tournament';
 import { ITournamentRole, TournamentRoleRepository } from './role/repository';
@@ -41,13 +43,14 @@ export class TournamentRepository extends SportRepository {
             params: httpParams
         };
 
-        return this.http.get<ITournament[]>(this.url, options)
-            .map((jsonTournaments: ITournament[]) => {
-                const tournamentsRes = this.jsonArrayToObject(jsonTournaments);
-                this.cache = tournamentsRes;
-                return tournamentsRes;
-            })
-            .catch(this.handleError);
+        return this.http.get<ITournament[]>(this.url, options).pipe(
+                map((jsonTournaments: ITournament[]) => {
+                    const tournamentsRes = this.jsonArrayToObject(jsonTournaments);
+                    this.cache = tournamentsRes;
+                    return tournamentsRes;
+                })
+            );
+
     }
 
     getObject(id: number): Observable<Tournament> {
@@ -62,47 +65,50 @@ export class TournamentRepository extends SportRepository {
         }
 
         const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
-        return this.http.get<ITournament>(this.url + '/' + id, { headers: headers })
-            .map((jsonTournament: ITournament) => {
+        return this.http.get<ITournament>(this.url + '/' + id, { headers: headers }).pipe(
+            map((jsonTournament: ITournament) => {
                 const tournamentRes = this.jsonToObjectHelper(jsonTournament);
                 this.cache.push(tournamentRes);
                 return tournamentRes;
-            })
-            .catch(this.handleError);
+            })/*,
+            catchError(this.handleError)*/
+        );
     }
 
     createObject(tournament: Tournament): Observable<Tournament> {
         return this.http
-            .post(this.url, this.objectToJsonHelper(tournament), { headers: super.getHeaders() })
-            .map((res: ITournament) => {
+            .post(this.url, this.objectToJsonHelper(tournament), { headers: super.getHeaders() }).pipe(
+            map((res: ITournament) => {
                 const tournamentIn = this.jsonToObjectHelper(res);
                 this.cache.push(tournamentIn);
                 return tournamentIn;
-            })
-            .catch(this.handleError);
+            }),
+            catchError(this.handleError)
+        );
     }
 
     editObject(tournament: Tournament): Observable<Tournament> {
-        return this.http
-            .put(this.url + '/' + tournament.getId(), this.objectToJsonHelper(tournament), { headers: super.getHeaders() })
-            .map((res: ITournament) => {
+        const url = this.url + '/' + tournament.getId();
+        return this.http.put( url, this.objectToJsonHelper(tournament), { headers: super.getHeaders() }).pipe(
+            map((res: ITournament) => {
                 console.log(res); return this.jsonToObjectHelper(res);
-            })
-            .catch(this.handleError);
+            }),
+            catchError(this.handleError)
+        );
     }
 
     removeObject(tournament: Tournament): Observable<boolean> {
         const url = this.url + '/' + tournament.getId();
-        return this.http
-            .delete(url, { headers: super.getHeaders() })
-            .map((res) => {
-                const index = this.cache.indexOf(tournament);
-                if (index > -1) {
-                    this.cache.splice(index, 1);
-                }
-                return true;
-            })
-            .catch(this.handleError);
+        return this.http.delete(url, { headers: super.getHeaders() }).pipe(
+                map((res) => {
+                    const index = this.cache.indexOf(tournament);
+                    if (index > -1) {
+                        this.cache.splice(index, 1);
+                    }
+                    return true;
+                }),
+                catchError(this.handleError)
+            );
     }
 
     jsonArrayToObject(jsonArray: ITournament[]): Tournament[] {

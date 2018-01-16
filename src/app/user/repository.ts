@@ -1,10 +1,8 @@
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SportRepository } from 'ngx-sport';
 import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
 
 import { User } from './user';
 
@@ -23,25 +21,25 @@ export class UserRepository extends SportRepository {
   }
 
   getObjects(): Observable<User[]> {
-    return this.http.get<Array<IUser>>(this.url, { headers: super.getHeaders() })
-      .map((res: IUser[]) => {
+    return this.http.get<Array<IUser>>(this.url, { headers: super.getHeaders() }).pipe(
+      map((res: IUser[]) => {
         return this.jsonArrayToObject(res);
       })
-      .catch(this.handleError);
+    );
   }
 
   getObject(id: number): Observable<User> {
     const url = `${this.url}/${id}`;
-    return this.http.get(url)
-      .map((res: IUser) => this.jsonToObjectHelper(res))
-      .catch(this.handleError);
+    return this.http.get(url).pipe(
+      map((res: IUser) => this.jsonToObjectHelper(res))
+    );
   }
 
   createObject(jsonObject: any): Observable<User> {
     return this.http
-      .post(this.url, jsonObject, { headers: super.getHeaders() })
-      .map((res: IUser) => this.jsonToObjectHelper(res))
-      .catch(this.handleError);
+      .post(this.url, jsonObject, { headers: super.getHeaders() }).pipe(
+        map((res: IUser) => this.jsonToObjectHelper(res))
+      );
   }
 
   jsonArrayToObject(jsonArray: IUser[]): User[] {
