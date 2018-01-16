@@ -1,32 +1,30 @@
-<div class="navbar navbar-toggleable-sm navbar-dark bg-dark">
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
   <a class="navbar-brand" [routerLink]="['/']">
     <i class="fi flaticon-favicon"></i> {{title}}</a>
-  <button class="navbar-toggler  text-white" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive"
-    aria-label="Toggle navigation" (click)="navbarCollapsed = !navbarCollapsed" [attr.aria-expanded]="!navbarCollapsed" style="cursor:pointer;">
+  <button class="navbar-toggler navbar-toggler-right text-white" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+    aria-controls="navbarResponsive" aria-label="Toggle navigation" (click)="navbarCollapsed = !navbarCollapsed" [attr.aria-expanded]="!navbarCollapsed"
+    style="cursor:pointer;">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="container">
-    <div class="collapse navbar-collapse" [ngbCollapse]="navbarCollapsed" id="navbarResponsive">
-      <ul class="navbar-nav">
-        <li *ngIf="isLoggedIn()" class="nav-item">
-          <a class="nav-link" routerLink="/admin/home" routerLinkActive="active" (click)="navbarCollapsed = !navbarCollapsed">admin</a>
-        </li>
-      </ul>
+  <div class="collapse navbar-collapse" [ngbCollapse]="navbarCollapsed" id="navbarResponsive">
+    <ul class="navbar-nav">
+      <li *ngIf="isLoggedIn()" class="nav-item">
+        <a class="nav-link" routerLink="/admin/home" routerLinkActive="active" (click)="navbarCollapsed = !navbarCollapsed">admin</a>
+      </li>
+    </ul>
 
-      <ul class="nav navbar-nav ml-auto">
-        <li *ngIf="isLoggedIn()" class="nav-item">
-          <a class="nav-link text-white" routerLink="/toernooi/nieuw" routerLinkActive="active" (click)="navbarCollapsed = !navbarCollapsed">nieuw</a>
-        </li>
-        <li *ngIf="!isLoggedIn()" class="nav-item">
-          <a class="nav-link text-white" routerLink="/user/login" routerLinkActive="active" (click)="navbarCollapsed=!navbarCollapsed ">inloggen</a>
-        </li>
-        <li *ngIf="isLoggedIn()" class="nav-item ">
-          <a class="nav-link text-white" routerLink="/user/logout " routerLinkActive="active " (click)="navbarCollapsed=! navbarCollapsed
-            ">uitloggen</a>
-        </li>
-      </ul>
+    <ul class="nav navbar-nav ml-auto">
+      <li *ngIf="isLoggedIn()" class="nav-item">
+        <a class="nav-link text-white" routerLink="/toernooi/new" routerLinkActive="active" (click)="navbarCollapsed = !navbarCollapsed">nieuw</a>
+      </li>
+      <li *ngIf="!isLoggedIn()" class="nav-item">
+        <a class="nav-link text-white" routerLink="/user/login" routerLinkActive="active" (click)="navbarCollapsed=!navbarCollapsed ">inloggen</a>
+      </li>
+      <li *ngIf="isLoggedIn()" class="nav-item ">
+        <a class="nav-link text-white" routerLink="/user/logout" routerLinkActive="active" (click)="navbarCollapsed=!navbarCollapsed">uitloggen</a>
+      </li>
+    </ul>
 
-    </div>
   </div>
-</div>
+</nav>
 <div style="clear: both; "></div>
