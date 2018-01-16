@@ -3,8 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../auth/auth.service';
 
-// import {Subscription } from 'rxjs';
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -16,7 +14,7 @@ export class LoginComponent implements OnInit {
   loading = false;
   // private subscription: Subscription;
   error = '';
-  activationmessage: string;
+  // activationmessage: string;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private authService: AuthService) { }
 
@@ -29,10 +27,10 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.loading = true;
-    this.activationmessage = undefined;
+    // this.activationmessage = undefined;
     this.authService.login(this.model.emailaddress, this.model.password)
       .subscribe(
-            /* happy path */ p => this.router.navigate(['/admin']),
+            /* happy path */ p => this.router.navigate(['/home']),
             /* error path */ e => { this.error = e; this.loading = false; },
             /* onComplete */() => this.loading = false
       );

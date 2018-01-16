@@ -64,14 +64,14 @@ export class UserRepository extends SportRepository {
   objectToJsonHelper(user: User): IUser {
     return {
       id: user.getId(),
-      name: user.getName(),
-      emailaddress: user.getEmailaddress()
+      emailaddress: user.getEmailaddress(),
+      name: user.getName()
     };
   }
 }
 
 export interface IUser {
   id?: number;
-  name: string;
   emailaddress: string;
+  name?: string;
 }
