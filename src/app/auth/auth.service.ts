@@ -1,15 +1,15 @@
-import { SportRepository } from 'ngx-sport';
-import { User } from '../user/user';
+import 'rxjs/add/observable/throw';
+
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { SportRepository } from 'ngx-sport';
 import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators/map';
 import { catchError } from 'rxjs/operators/catchError';
-import 'rxjs/add/observable/throw';
+import { map } from 'rxjs/operators/map';
 
-import { environment } from '../../environments/environment';
-import { IUser, UserRepository } from '../user/repository';
+import { UserRepository } from '../user/repository';
+import { User } from '../user/user';
 
 @Injectable()
 export class AuthService extends SportRepository {
@@ -28,7 +28,7 @@ export class AuthService extends SportRepository {
   }
 
   getUrlpostfix(): string {
-      return 'auth';
+    return 'auth';
   }
 
   isLoggedIn(): boolean {
@@ -39,11 +39,11 @@ export class AuthService extends SportRepository {
     return this.authItem.userid;
   }
 
-  register( newUser: any ): Observable<User> {
-    return this.http.post(this.url + '/register', newUser, {headers: super.getHeaders()}).pipe(
+  register(newUser: any): Observable<User> {
+    return this.http.post(this.url + '/register', newUser, { headers: super.getHeaders() }).pipe(
       map((res: any) => {
         const authItem: IAuthItem = { token: res.token, userid: res.user.id };
-        this.setAuthItem( authItem);
+        this.setAuthItem(authItem);
         const user = this.userRepos.jsonToObjectHelper(res.user);
         return user;
       }),
@@ -62,12 +62,12 @@ export class AuthService extends SportRepository {
       map((res) => {
         if (res && res.token && res.userid) {
           const authItem: IAuthItem = { token: res.token, userid: res.userid };
-          return this.setAuthItem( authItem);
+          return this.setAuthItem(authItem);
         } else {
           return false;
         }
       }),
-      catchError( this.handleError )
+      catchError(this.handleError)
     );
   }
 
@@ -77,25 +77,28 @@ export class AuthService extends SportRepository {
     return true;
   }
 
-  // passwordReset( email: string ): Observable<boolean> {
-  //   return this.http.post( this.url + '/passwordreset', { email: email })
-  //       .map((response: Response) => {
-  //         let retVal = response.text()
-  //         // console.log( retVal );
-  //         return retVal;
-  //       } )
-  //       .catch(this.handleError);
-  // }
-  //
-  // passwordChange( email: string, password: string, key: string ): Observable<boolean> {
-  //   return this.http.post( this.url + '/passwordchange', { email: email, password: password, key: key })
-  //       .map((response: Response) => {
-  //         let retVal = response.text();
-  //         // console.log( retVal );
-  //         return retVal;
-  //       } )
-  //       .catch(this.handleError);
-  // }
+  passwordReset(email: string): Observable<boolean> {
+    return this.http.post(this.url + '/passwordreset', { emailaddress: email }).pipe(
+      map((res: any) => {
+        return res.retval;
+      }),
+      catchError(this.handleError)
+    );
+  }
+
+  passwordChange(emailaddress: string, password: string, code: string): Observable<boolean> {
+    return this.http.post(this.url + '/passwordchange', { emailaddress: emailaddress, password: password, code: code }).pipe(
+      map((res: any) => {
+        if (res && res.token && res.userid) {
+          const authItem: IAuthItem = { token: res.token, userid: res.userid };
+          return this.setAuthItem(authItem);
+        } else {
+          return false;
+        }
+      }),
+      catchError(this.handleError)
+    );
+  }
 
   logout(): void {
     // clear token remove user from local storage to log user out
@@ -107,10 +110,10 @@ export class AuthService extends SportRepository {
     let errortext = 'onbekende fout';
     console.error(error);
     if (typeof error.error === 'string') {
-        errortext = error.error;
+      errortext = error.error;
     }
     if (error.status === 401) {
-        errortext = 'je bent niet ingelogd';
+      errortext = 'je bent niet ingelogd';
     }
     return Observable.throw(errortext);
   }
