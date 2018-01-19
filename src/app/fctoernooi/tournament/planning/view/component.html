@@ -1,8 +1,9 @@
 <div *ngIf="tournament && round && round.getPoulePlaces().length > 1">
   <div class="d-flex justify-content-between mt-3">
     <h2>
-      <span *ngIf="round.getNumber() > 1" class="fa fa-info-circle icon-{{getClassPostfix( round.getWinnersOrLosers() )}}" title="{{getWinnersLosersDescription( round.getWinnersOrLosers() )}}ronde"></span>
       <span [innerHTML]="structureService.getRoundName( round )"></span>
+      <i *ngFor="let winnersOrLosers of structureService.getWinnersLosersPosition( round )" 
+      [title]="structureService.getWinnersLosersDescription( round.getWinnersOrLosers() )" class="fa fa-circle text-{{getClassPostfix(round.getWinnersOrLosers())}}"></i>
     </h2>
   </div>
   <div class="d-flex justify-content-around">
@@ -53,9 +54,9 @@
   </div>
 </div>
 <ng-template #popRanking>
-  <div *ngIf="selectedPouleForRanking" class="card border-light">
+  <div *ngIf="selectedPouleForRanking" class="card">
     <div class="card-header" style="margin-top: -8px;">stand {{structureService.getPouleName(selectedPouleForRanking, true)}}</div>
-    <div class="card-body">
+    <div class="card-body p-0">
       <div class="card-text">
         <table>
           <thead>

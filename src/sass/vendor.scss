@@ -3,10 +3,8 @@
 @import './mixins';
 
 @import "./bootswatch/variables";
-
+$popover-border-color:                #fff;
 @import "~bootstrap/scss/bootstrap";
-
-$popover-border-color:                $info;
 $btn-secondary-border:           #fff;
 @import "./bootswatch/bootswatch";
 

@@ -1,8 +1,9 @@
 <div *ngIf="round" class="col">
-  <div class="card round" *ngIf="round.getPoulePlaces().length > 1">
+  <div class="card round" *ngIf="round.getPoulePlaces().length > 2">
     <div class="card-header">
-      <span *ngIf="round.getNumber() > 1" class="fa fa-info-circle icon-{{getClassPostfix( round.getWinnersOrLosers() )}}" title="{{getWinnersLosersDescription( round.getWinnersOrLosers() )}}ronde"></span>
       <span [innerHTML]="structureService.getRoundName( round )"></span>
+      <i *ngFor="let winnersOrLosers of structureService.getWinnersLosersPosition( round )" 
+      [title]="structureService.getWinnersLosersDescription( winnersOrLosers )" class="fa fa-circle text-{{getClassPostfix(winnersOrLosers)}}"></i>
     </div>
     <div class="card-body">
       <div *ngIf="round.getNumber() === 1 && !round.isStarted()" class="d-flex justify-content-around mb-3">
@@ -79,19 +80,19 @@
       </p>
       <div class="d-flex flex-wrap justify-content-around">
         <ul *ngFor="let poule of round.getPoules();" class="list-group list-group-poule mb-3">
-          <li class="list-group-item">{{structureService.getPouleName( poule, false)}}</li>
-          <li *ngFor="let place of poule.getPlaces();" class="list-group-item {{getClassesForPoulePlace(place)}}">{{place.getNumber()}}</li>
+          <li class="list-group-item px-2 px-sm-3">{{structureService.getPouleName( poule, false)}}</li>
+          <li *ngFor="let place of poule.getPlaces();" class="list-group-item px-2 px-sm-3 {{getClassesForPoulePlace(place)}}">{{structureService.getPoulePlaceName( place, false)}}</li>
         </ul>
       </div>
     </div>
   </div>
-  <div class="qualifier" *ngIf="round.getPoulePlaces().length > 1" class="row text-center mt-3">
+  <div class="qualifier" *ngIf="round.getPoulePlaces().length > 2" class="row text-center mt-3">
     <!-- <div class="text-center mt-3" style="width:100%;"><h5 class="my-0"><i class="fa fa-arrow-circle-down"></i></h5></div> -->
     <div *ngFor="let winnersOrLosers of winnersAndLosers" class="col px-4">
       {{getWinnersLosersDescription( winnersOrLosers )}}
       <nouislider class="horizontal-slider {{getWinnersLosersName( winnersOrLosers )}}" [config]="uiSliderConfig" [min]="0" [max]="round.getPoulePlaces().length"
         [ngModel]="round.getNrOfPlacesChildRound( winnersOrLosers )" (ngModelChange)="onSliderChange($event, winnersOrLosers)"
-        style="margin-top: 16px;" [disabled]="round.isStarted()"></nouislider>
+        style="margin-top:16px;" [disabled]="round.isStarted()"></nouislider>
     </div>
   </div>
   <div class="row text-center">
@@ -101,10 +102,10 @@
   <!--<div class="row text-center">-->
   <!--<app-tournament-structureround *ngFor="let childRound of round.getChildRounds()" class="d-flex flex-wrap justify-content-around" [round]="childRound" [structureService]="structureService"></app-tournament-structureround>-->
   <!--</div>-->
-  <div class="card round" *ngIf="round.getPoulePlaces().length === 1">
-    <div class="card-header">
-      <span [innerHTML]="structureService.getRankedPlace(round)"></span>
-      <span>e plaats</span>
+  
+  <div class="card round" *ngIf="round.getPoulePlaces().length === 2">
+    <div class="card-header" style="padding-left: 0.5rem; padding-right: 0.5rem;">
+      <span [innerHTML]="structureService.getRoundName(round)"></span>
     </div>
   </div>
 </div>

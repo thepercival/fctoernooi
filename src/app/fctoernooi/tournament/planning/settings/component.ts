@@ -50,6 +50,7 @@ export class TournamentPlanningSettingsComponent implements OnInit {
         private roundConfigRepository: RoundConfigRepository,
         private structureRepository: StructureRepository
     ) {
+        debugger;
         this.processing = true;
         this.setAlert('info', 'instellingen gelden ook voor volgende ronden');
     }

@@ -22,7 +22,6 @@ export class TournamentPlanningViewComponent implements OnInit {
   selectedPouleForRanking;
   private openPopovers: NgbPopover[] = [];
   ranking: Ranking;
-  // public winnersAndLosers: number[];
 
   constructor(private router: Router) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];

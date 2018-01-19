@@ -1,7 +1,15 @@
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+<nav class="navbar navbar-dark bg-dark">
   <a class="navbar-brand" [routerLink]="['/']">
     <i class="fi flaticon-favicon"></i> {{title}}</a>
-  <button class="navbar-toggler navbar-toggler-right text-white" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+
+    <button *ngIf="!isLoggedIn()" routerLink="/user/login" routerLinkActive="active" class="btn btn-outline-secondary" type="button" style="cursor:pointer;">
+      <i class="fa fa-sign-in"></i> inloggen
+    </button>
+    <button *ngIf="isLoggedIn()" routerLink="/user/logout" routerLinkActive="active" class="btn btn-outline-secondary" type="button" style="cursor:pointer;">
+      <i class="fa fa-sign-out"></i> uitloggen
+    </button>
+
+  <!-- <button class="navbar-toggler navbar-toggler-right text-white" type="button" data-toggle="collapse" data-target="#navbarResponsive"
     aria-controls="navbarResponsive" aria-label="Toggle navigation" (click)="navbarCollapsed = !navbarCollapsed" [attr.aria-expanded]="!navbarCollapsed"
     style="cursor:pointer;">
     <span class="navbar-toggler-icon"></span>
@@ -14,9 +22,6 @@
     </ul>
 
     <ul class="nav navbar-nav ml-auto">
-      <li *ngIf="isLoggedIn()" class="nav-item">
-        <a class="nav-link text-white" routerLink="/toernooi/new" routerLinkActive="active" (click)="navbarCollapsed = !navbarCollapsed">nieuw</a>
-      </li>
       <li *ngIf="!isLoggedIn()" class="nav-item">
         <a class="nav-link text-white" routerLink="/user/login" routerLinkActive="active" (click)="navbarCollapsed=!navbarCollapsed ">inloggen</a>
       </li>
@@ -24,7 +29,6 @@
         <a class="nav-link text-white" routerLink="/user/logout" routerLinkActive="active" (click)="navbarCollapsed=!navbarCollapsed">uitloggen</a>
       </li>
     </ul>
-
-  </div>
+  </div> -->
 </nav>
 <div style="clear: both; "></div>
