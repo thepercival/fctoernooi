@@ -14,7 +14,7 @@ import { Tournament } from '../../../tournament';
 export class TournamentPlanningViewComponent implements OnInit {
 
   @Input() tournament: Tournament;
-  @Input() round: Round;
+  @Input() roundNumber: number;
   @Input() structureService: StructureService;
   alert: any;
   planningService: PlanningService;
@@ -22,6 +22,7 @@ export class TournamentPlanningViewComponent implements OnInit {
   selectedPouleForRanking;
   private openPopovers: NgbPopover[] = [];
   ranking: Ranking;
+  roundsByNumber: Round[];
 
   constructor(private router: Router) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
@@ -31,11 +32,17 @@ export class TournamentPlanningViewComponent implements OnInit {
 
   ngOnInit() {
     this.planningService = new PlanningService(this.tournament.getCompetitionseason().getStartDateTime());
+    const x = this.structureService.getRoundsByNumber(this.structureService.getFirstRound());
+    this.roundsByNumber = x[this.roundNumber];
   }
 
   getWinnersLosersDescription(winnersOrLosers: number): string {
     const description = this.structureService.getWinnersLosersDescription(winnersOrLosers);
     return (description !== '' ? description + 's' : description);
+  }
+
+  haveMultiplePoulePlaces(roundsByNumber: Round[]) {
+    return roundsByNumber.some(round => round.getPoulePlaces().length > 1);
   }
 
   getClassPostfix(winnersOrLosers: number): string {
@@ -104,4 +111,5 @@ export class TournamentPlanningViewComponent implements OnInit {
   public closeAlert(name: string) {
     this.alert = undefined;
   }
+
 }

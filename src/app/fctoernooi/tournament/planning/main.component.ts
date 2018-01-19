@@ -37,5 +37,9 @@ export class TournamentPlanningComponent extends TournamentComponent implements 
       newRound
     );
   }
+
+  getRoundNumbers() {
+    return Array(this.structureService.getNrOfRoundsToGo(this.structureService.getFirstRound())).fill(0).map((e, i) => i + 1);
+  }
 }
 

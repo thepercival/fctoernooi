@@ -21,8 +21,8 @@
             <span class="d-none d-sm-block">bekijken</span>
           </ng-template>
           <ng-template ngbTabContent>
-            <app-tournament-planning-view *ngFor="let round of structureService.getRounds(structureService.getFirstRound())" [tournament]="tournament"
-              [round]="round" [structureService]="structureService"></app-tournament-planning-view>
+            <app-tournament-planning-view *ngFor="let roundNumber of getRoundNumbers()" [tournament]="tournament" [roundNumber]="roundNumber"
+              [structureService]="structureService"></app-tournament-planning-view>
           </ng-template>
         </ngb-tab>
         <ngb-tab>

@@ -14,7 +14,7 @@
         </h2>
       </div>
       <app-tournament-planning-view *ngFor="let round of structureService.getRounds(structureService.getFirstRound())" [tournament]="tournament"
-        [round]="round" [structureService]="structureService"></app-tournament-planning-view>
+        [roundNumber]="round.getNumber()" [structureService]="structureService"></app-tournament-planning-view>
     </div>
   </div>
 
