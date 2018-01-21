@@ -1,3 +1,41 @@
+// @import './mixins';
+
+@import "./bootswatch/variables";
+$popover-border-color:                #fff;
+@import "~bootstrap/scss/bootstrap";
+$btn-secondary-border:           #fff;
+
+// @import './variables';
+
+@import "./bootswatch/bootswatch";
+
+// .bg-dark {
+//   border: 1px solid $gray-500;
+// }
+
+.btn-outline-secondary:hover {
+  background-color: lighten($gray-500, 10%);
+}
+
+
+@import "./nouislider/scss/nouislider";
+@import "./nouislider";
+
+// $fa-font-path: "/node_modules/font-awesome/fonts";
+$fa-font-path:        "//netdna.bootstrapcdn.com/font-awesome/4.7.0/fonts" !default;
+@import "~font-awesome/scss/font-awesome";
+
+$flaticon-font-path: "/assets/flaticon";
+@import "./flaticon/flaticon";
+
+span.icon-success {
+  color: #{$success};
+}
+
+span.icon-danger {
+  color: #{$danger};
+}
+
 html {
   position: relative;
 }
@@ -20,10 +58,19 @@ footer {
   flex: 1 0 auto;
 }
 
-.noUi-connect{
-  background-color: #77b300;
+/* ng-bootstrap datepicker */
+.custom-day {
+    text-align: center;
+    padding: 0.185rem 0.25rem;
+    display: inline-block;
+    height: 2rem;
+    width: 2rem;
 }
-
-.noUi-handle:before, .noUi-handle:after{
-  display: none;
+.custom-day.selected {
+    background-color:#{$success};
+    color: white;
+}
+.custom-day:hover {
+    background-color: #{$info}; /* rgb(2, 117, 216); */
+    color: white;
 }

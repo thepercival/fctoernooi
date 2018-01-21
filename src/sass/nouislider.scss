@@ -1,5 +1,11 @@
 /* noUiSlider */
+.noUi-connect{
+  background-color: #77b300;
+}
 
+.noUi-handle:before, .noUi-handle:after{
+  display: none;
+}
 
 .#{$noUi-css-prefix}-horizontal .#{$noUi-css-prefix}-handle {
   width: 20px;
@@ -28,15 +34,6 @@
   padding: 5px;
   text-align: center;
   white-space: nowrap;
-}
-
-
-span.icon-success {
-  color: #{$success};
-}
-
-span.icon-danger {
-  color: #{$danger};
 }
 
 nouislider.winners .#{$noUi-css-prefix}-handle{

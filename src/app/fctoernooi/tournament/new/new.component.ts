@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-    Association,
-    Competition,
-    Competitionseason,
-    Field,
-    PlanningService,
-    Season,
-    StructureRepository,
-    StructureService,
+  Association,
+  Competition,
+  Competitionseason,
+  Field,
+  PlanningService,
+  Season,
+  StructureRepository,
+  StructureService,
 } from 'ngx-sport';
 
 import { Tournament } from '../../tournament';
 import { TournamentRepository } from '../repository';
-
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-tournament-new',
@@ -114,5 +114,10 @@ export class TournamentNewComponent implements OnInit {
             /* error path */ e => { this.error = e; this.loading = false; }
       );
   }
+
+  equals(one: NgbDateStruct, two: NgbDateStruct) {
+    return one && two && two.year === one.year && two.month === one.month && two.day === one.day;
+  }
+  isSelected = date => this.equals(date, this.model.startdate);
 
 }

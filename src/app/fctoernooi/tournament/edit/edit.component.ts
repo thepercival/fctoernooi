@@ -5,6 +5,7 @@ import { Competition, PlanningService, StructureRepository } from 'ngx-sport';
 import { IAlert } from '../../../app.definitions';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-tournament-edit',
@@ -106,4 +107,9 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
             this.setAlert('danger', e.message);
         }
     }
+
+    equals(one: NgbDateStruct, two: NgbDateStruct) {
+        return one && two && two.year === one.year && two.month === one.month && two.day === one.day;
+    }
+    isSelected = date => this.equals(date, this.model.startdate);
 }

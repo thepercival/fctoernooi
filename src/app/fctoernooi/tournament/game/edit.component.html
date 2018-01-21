@@ -54,7 +54,7 @@
           <div class="col-9">
             <div class="input-group input-group-date">
               <input class="form-control fc-date" placeholder="yyyy-mm-dd" id="dp" name="dp" [(ngModel)]="model.startdate" ngbDatepicker
-                #d="ngbDatepicker" required>
+                #d="ngbDatepicker" required [dayTemplate]="t">
               <div class="input-group-append">
                 <span class="input-group-text" (click)="d.toggle()" style="cursor: pointer;">
                   <i class="fi flaticon-schedule text-white"></i>
@@ -79,3 +79,10 @@
     </div>
   </div>
 </div>
+
+<ng-template #t let-date="date" let-focused="focused">
+  <span class="custom-day" [class.focused]="focused" [class.selected]="isSelected(date)" (mouseenter)="hoveredDate = date"
+    (mouseleave)="hoveredDate = null">
+    {{ date.day }}
+  </span>
+</ng-template>

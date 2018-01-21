@@ -5,3 +5,7 @@ input.ng-valid[required],select.ng-valid[required] {
 input.ng-invalid, select.ng-invalid {
     border-left: 5px solid #a94442; /* red */
 }
+
+.input-group-date {
+    width: 170px;
+}
