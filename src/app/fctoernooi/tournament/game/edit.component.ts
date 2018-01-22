@@ -65,7 +65,6 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         });
     }
 
-
     setGame(gameId: number) {
         this.game = this.structureService.getGameById(gameId, this.structureService.getFirstRound());
         const date = this.game.getStartDateTime();
@@ -81,7 +80,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             this.model.startdate = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
             this.model.starttime = { hour: date.getHours(), minute: date.getMinutes() };
         }
-        this.planningService = new PlanningService(this.tournament.getCompetitionseason().getStartDateTime());
+        this.planningService = new PlanningService(this.structureService);
     }
 
     setHome(home) {
@@ -132,7 +131,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         gameScore.setExtraTime(false);
         const state = this.model.played === true ? Game.STATE_PLAYED : Game.STATE_CREATED;
         this.game.setState(state);
-        if (this.planningService.canCalculateStartDateTime(this.game.getPoule().getRound())) {
+        if (this.planningService.canCalculateStartDateTime(this.game.getRound().getNumber())) {
             const startdate = new Date(
                 this.model.startdate.year,
                 this.model.startdate.month - 1,

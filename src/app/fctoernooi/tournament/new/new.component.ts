@@ -98,8 +98,8 @@ export class TournamentNewComponent implements OnInit {
           undefined, this.model.nrofcompetitors
         );
 
-        const planningService = new PlanningService(startdate);
-        planningService.create(structureService.getFirstRound());
+        const planningService = new PlanningService(structureService);
+        planningService.create(structureService.getFirstRound().getNumber());
 
         this.structureRepository.createObject(structureService.getFirstRound(), tournamentOut.getCompetitionseason())
           .subscribe(

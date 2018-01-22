@@ -11,7 +11,6 @@ import {
 } from 'ngx-sport';
 
 import { IAlert } from '../../../../app.definitions';
-import { Tournament } from '../../../tournament';
 
 // import { modelGroupProvider } from '@angular/forms/src/directives/ng_model_group';
 
@@ -22,7 +21,6 @@ import { Tournament } from '../../../tournament';
 })
 export class TournamentPlanningSettingsComponent implements OnInit {
 
-    @Input() tournament: Tournament;
     @Input() structureService: StructureService;
     @Output() updateRound = new EventEmitter<Round>();
     enableTime: boolean;
@@ -53,17 +51,14 @@ export class TournamentPlanningSettingsComponent implements OnInit {
     ) {
         // debugger;
         this.processing = true;
-        this.setAlert('info', 'instellingen gelden ook voor volgende ronden');
     }
 
     ngOnInit() {
         this.allRoundsByNumber = this.structureService.getAllRoundsByNumber();
-        this.changeRoundNumber( this.allRoundsByNumber[this.structureService.getFirstRound().getNumber()]);
+        this.changeRoundNumber(this.structureService.getFirstRound().getNumber());
         this.initRanges();
 
-        this.planningService = new PlanningService(
-            this.tournament.getCompetitionseason().getStartDateTime()
-        );
+        this.planningService = new PlanningService(this.structureService);
         this.processing = false;
     }
 
@@ -82,20 +77,19 @@ export class TournamentPlanningSettingsComponent implements OnInit {
         }
     }
 
-    changeRoundNumber(roundNumber) {
+    changeRoundNumber(roundNumber: number) {
         this.selectedRoundNumber = roundNumber;
         this.modelConfig = this.roundConfigRepository.objectToJsonHelper(
-            this.getFirstRoundOfRoundNumber( this.selectedRoundNumber ).getConfig() );
+            this.getFirstRoundOfRoundNumber(this.selectedRoundNumber).getConfig());
         this.modelRecreate = false;
         this.modelReschedule = false;
         this.isCollapsed = true;
         if (this.structureService.getFirstRound().isStarted()) {
             this.setAlert('warning', 'het toernooi is al begonnen, je kunt niet meer wijzigen');
         }
-
     }
 
-    getFirstRoundOfRoundNumber( roundNumber): Round {
+    getFirstRoundOfRoundNumber(roundNumber): Round {
         return this.allRoundsByNumber[this.selectedRoundNumber][0];
     }
 
@@ -231,33 +225,40 @@ export class TournamentPlanningSettingsComponent implements OnInit {
             return true;
         }
 
-        if (this.planningService.isRoundNumberStarted( this.all ) {
+        if (this.planningService.isStarted(this.selectedRoundNumber)) {
             return true;
         }
 
         return false;
     }
 
+    getSelectRoundNumberButtonClassPostfix(roundNumber: number) {
+        if (roundNumber >= this.selectedRoundNumber) {
+            return 'primary';
+        }
+        return 'secondary';
+    }
+
     saveConfig() {
         this.setAlert('info', 'instellingen opslaan..');
         this.processing = true;
 
-        this.updateRoundConfig(this.selectedRound.getConfig(), this.modelConfig);
+        this.updateRoundConfig(this.selectedRoundNumber, this.modelConfig);
         if (this.modelRecreate === true) {
-            this.planningService.create(this.selectedRound);
+            this.planningService.create(this.selectedRoundNumber);
         } else if (this.modelReschedule) {
-            this.planningService.reschedule(this.selectedRound);
+            this.planningService.reschedule(this.selectedRoundNumber);
         }
 
         const firstRound = this.structureService.getFirstRound();
-        const directionsTmp = this.getWinnersLosers(firstRound, this.selectedRound);
+        // const directionsTmp = this.getWinnersLosers(firstRound, this.selectedRound);
         this.structureRepository.editObject(firstRound, firstRound.getCompetitionseason())
             .subscribe(
-                        /* happy path */ roundRes => {
+                        /* happy path */ firstRoundRes => {
+                console.log('should update structureService???????');
                 this.setAlert('info', 'instellingen opgeslagen');
-                this.updateRound.emit(roundRes);
-                const round = this.getRoundByWinnersLosers(roundRes, directionsTmp);
-                this.changeRound(round);
+                this.updateRound.emit(firstRoundRes);
+                // this.changeRoundNumber(round);
 
             },
                 /* error path */ e => { this.setAlert('danger', 'instellingen niet opgeslagen: ' + e); this.processing = false; },
@@ -265,41 +266,43 @@ export class TournamentPlanningSettingsComponent implements OnInit {
             );
     }
 
-    protected updateRoundConfig(roundConfig: RoundConfig, modelToUpdateWith: IRoundConfig) {
-
-        roundConfig.setQualifyRule(modelToUpdateWith.qualifyRule);
-        roundConfig.setNrOfHeadtoheadMatches(modelToUpdateWith.nrOfHeadtoheadMatches);
-        roundConfig.setWinPoints(modelToUpdateWith.winPoints);
-        roundConfig.setDrawPoints(modelToUpdateWith.drawPoints);
-        roundConfig.setHasExtension(modelToUpdateWith.hasExtension);
-        roundConfig.setWinPointsExt(modelToUpdateWith.winPointsExt);
-        roundConfig.setDrawPointsExt(modelToUpdateWith.drawPointsExt);
-        roundConfig.setMinutesPerGameExt(modelToUpdateWith.minutesPerGameExt);
-        roundConfig.setEnableTime(modelToUpdateWith.enableTime);
-        roundConfig.setMinutesPerGame(modelToUpdateWith.minutesPerGame);
-        roundConfig.setMinutesInBetween(modelToUpdateWith.minutesInBetween);
-
-        roundConfig.getRound().getChildRounds().forEach((childRound) => {
-            this.updateRoundConfig(childRound.getConfig(), modelToUpdateWith);
+    protected updateRoundConfig(roundNumber: number, modelToUpdateWith: IRoundConfig) {
+        const rounds = this.allRoundsByNumber[roundNumber];
+        rounds.forEach(round => {
+            round.getConfig().setQualifyRule(modelToUpdateWith.qualifyRule);
+            round.getConfig().setNrOfHeadtoheadMatches(modelToUpdateWith.nrOfHeadtoheadMatches);
+            round.getConfig().setWinPoints(modelToUpdateWith.winPoints);
+            round.getConfig().setDrawPoints(modelToUpdateWith.drawPoints);
+            round.getConfig().setHasExtension(modelToUpdateWith.hasExtension);
+            round.getConfig().setWinPointsExt(modelToUpdateWith.winPointsExt);
+            round.getConfig().setDrawPointsExt(modelToUpdateWith.drawPointsExt);
+            round.getConfig().setMinutesPerGameExt(modelToUpdateWith.minutesPerGameExt);
+            round.getConfig().setEnableTime(modelToUpdateWith.enableTime);
+            round.getConfig().setMinutesPerGame(modelToUpdateWith.minutesPerGame);
+            round.getConfig().setMinutesInBetween(modelToUpdateWith.minutesInBetween);
         });
+        if (rounds[roundNumber + 1] !== undefined) {
+            this.updateRoundConfig(roundNumber + 1, modelToUpdateWith);
+        }
     }
 
-    protected getWinnersLosers(firstRound: Round, aChildRound: Round): number[] {
-        const winnersLosers: number[] = [];
-        while (aChildRound !== firstRound) {
-            winnersLosers.push(aChildRound.getWinnersOrLosers());
-            aChildRound = aChildRound.getParentRound();
-        }
-        return winnersLosers;
-    }
+    // dit is idem als get position
+    // protected getWinnersLosers(firstRound: Round, aChildRound: Round): number[] {
+    //     const winnersLosers: number[] = [];
+    //     while (aChildRound !== firstRound) {
+    //         winnersLosers.push(aChildRound.getWinnersOrLosers());
+    //         aChildRound = aChildRound.getParentRound();
+    //     }
+    //     return winnersLosers;
+    // }
 
-    protected getRoundByWinnersLosers(firstRound: Round, winnersLosers: number[]): Round {
-        let round: Round = firstRound;
-        while (winnersLosers.length > 0) {
-            round = round.getChildRound(winnersLosers.pop());
-        }
-        return round;
-    }
+    // protected getRoundByWinnersLosers(firstRound: Round, winnersLosers: number[]): Round {
+    //     let round: Round = firstRound;
+    //     while (winnersLosers.length > 0) {
+    //         round = round.getChildRound(winnersLosers.pop());
+    //     }
+    //     return round;
+    // }
 
     protected setAlert(type: string, message: string) {
         this.alert = { 'type': type, 'message': message };

@@ -80,8 +80,8 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
             const reschedule = this.shouldReschedule(startDateTime);
             if (reschedule === true) {
                 this.tournament.getCompetitionseason().setStartDateTime(startDateTime);
-                const planningService = new PlanningService(startDateTime);
-                planningService.reschedule(round);
+                const planningService = new PlanningService(this.structureService);
+                planningService.reschedule(round.getNumber());
             }
 
             this.tournamentRepository.editObject(this.tournament)

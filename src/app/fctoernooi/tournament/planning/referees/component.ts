@@ -1,8 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IReferee, PlanningService, Referee, RefereeRepository, Round, StructureRepository } from 'ngx-sport';
-
+import { IReferee, PlanningService, Referee, RefereeRepository, Round, StructureRepository, StructureService } from 'ngx-sport';
 import { IAlert } from '../../../../app.definitions';
-import { Tournament } from '../../../tournament';
 
 @Component({
     selector: 'app-tournament-planning-referees',
@@ -11,8 +9,7 @@ import { Tournament } from '../../../tournament';
 })
 export class TournamentPlanningRefereesComponent implements OnInit {
 
-    @Input() tournament: Tournament;
-    @Input() round: Round;
+    @Input() structureService: StructureService;
     @Output() updateRound = new EventEmitter<Round>();
     public alert: IAlert;
     public processing = true;
@@ -33,18 +30,19 @@ export class TournamentPlanningRefereesComponent implements OnInit {
 
     ngOnInit() {
         this.createRefereesList();
-        this.planningService = new PlanningService(
-            this.tournament.getCompetitionseason().getStartDateTime()
-        );
+        this.planningService = new PlanningService(this.structureService);
         this.processing = false;
-        if (this.round.isStarted()) {
+        if (this.isStarted()) {
             this.setAlert('warning', 'het toernooi is al begonnen, je kunt niet meer wijzigen');
         }
     }
 
+    isStarted() {
+        return this.structureService.getFirstRound().isStarted();
+    }
 
     createRefereesList() {
-        const referees = this.tournament.getCompetitionseason().getReferees();
+        const referees = this.structureService.getCompetitionseason().getReferees();
         this.refereesList = [];
         referees.forEach(function (refereeIt) {
             this.refereesList.push({
@@ -71,18 +69,19 @@ export class TournamentPlanningRefereesComponent implements OnInit {
             name: '' + (this.refereesList.length + 1)
         };
 
-        this.refereeRepository.createObject(jsonReferee, this.tournament.getCompetitionseason())
+        this.refereeRepository.createObject(jsonReferee, this.structureService.getCompetitionseason())
             .subscribe(
             /* happy path */ refereeRes => {
                 const refereeItem: IRefereeListItem = { referee: refereeRes, editable: false };
                 this.refereesList.push(refereeItem);
-                this.planningService.reschedule(this.round);
+                const firstRound = this.structureService.getFirstRound();
+                this.planningService.reschedule(firstRound.getNumber());
 
-                this.structureRepository.editObject(this.round, this.round.getCompetitionseason())
+                this.structureRepository.editObject(firstRound, this.structureService.getCompetitionseason())
                     .subscribe(
                         /* happy path */ roundRes => {
-                        this.round.setName('cdk');
-                        this.round = roundRes;
+                        console.log('should update structureService???????');
+                        // this.round = roundRes;
                         this.updateRound.emit(roundRes);
                         this.processing = false;
                         this.setAlert('info', 'scheidsrechter toegevoegd');
@@ -107,14 +106,14 @@ export class TournamentPlanningRefereesComponent implements OnInit {
                 if (index > -1) {
                     this.refereesList.splice(index, 1);
                 }
-
-                this.planningService.reschedule(this.round);
-
+                const firstRound = this.structureService.getFirstRound();
+                this.planningService.reschedule(firstRound.getNumber());
                 // setTimeout(3000);
-                this.structureRepository.editObject(this.round, this.round.getCompetitionseason())
+                this.structureRepository.editObject(firstRound, this.structureService.getCompetitionseason())
                     .subscribe(
                         /* happy path */ roundRes => {
-                        this.round = roundRes;
+                        console.log('should update structureService???????');
+                        // this.round = roundRes;
                         this.updateRound.emit(roundRes);
                         this.processing = false;
                         this.setAlert('info', 'veld verwijderd');
@@ -131,7 +130,7 @@ export class TournamentPlanningRefereesComponent implements OnInit {
         this.setAlert('info', 'scheidsrechter wijzigen..');
         this.processing = true;
 
-        this.refereeRepository.editObject(refereeItem.referee, this.tournament.getCompetitionseason())
+        this.refereeRepository.editObject(refereeItem.referee, this.structureService.getCompetitionseason())
             .subscribe(
             /* happy path */ refereeRes => {
                 this.setAlert('info', 'scheidsrechter gewijzigd');

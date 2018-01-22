@@ -1,8 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Field, FieldRepository, IField, PlanningService, Round, StructureRepository } from 'ngx-sport';
-
+import { Field, FieldRepository, IField, PlanningService, Round, StructureRepository, StructureService } from 'ngx-sport';
 import { IAlert } from '../../../../app.definitions';
-import { Tournament } from '../../../tournament';
 
 @Component({
     selector: 'app-tournament-planning-fields',
@@ -11,8 +9,7 @@ import { Tournament } from '../../../tournament';
 })
 export class TournamentPlanningFieldsComponent implements OnInit {
 
-    @Input() tournament: Tournament;
-    @Input() round: Round;
+    @Input() structureService: StructureService;
     @Output() updateRound = new EventEmitter<Round>();
     public alert: IAlert;
     public processing = true;
@@ -33,18 +30,19 @@ export class TournamentPlanningFieldsComponent implements OnInit {
 
     ngOnInit() {
         this.createFieldsList();
-        this.planningService = new PlanningService(
-            this.tournament.getCompetitionseason().getStartDateTime()
-        );
+        this.planningService = new PlanningService(this.structureService);
         this.processing = false;
-        if (this.round.isStarted()) {
+        if (this.isStarted()) {
             this.setAlert('warning', 'het toernooi is al begonnen, je kunt niet meer wijzigen');
         }
     }
 
+    isStarted() {
+        return this.structureService.getFirstRound().isStarted();
+    }
 
     createFieldsList() {
-        const fields = this.tournament.getCompetitionseason().getFields();
+        const fields = this.structureService.getCompetitionseason().getFields();
         this.fieldsList = [];
         fields.forEach(function (fieldIt) {
             this.fieldsList.push({
@@ -71,12 +69,13 @@ export class TournamentPlanningFieldsComponent implements OnInit {
             name: '' + (this.fieldsList.length + 1)
         };
 
-        this.fieldRepository.createObject(jsonField, this.tournament.getCompetitionseason())
+        this.fieldRepository.createObject(jsonField, this.structureService.getCompetitionseason())
             .subscribe(
             /* happy path */ fieldRes => {
                 const fieldItem: IFieldListItem = { field: fieldRes, editable: false };
                 this.fieldsList.push(fieldItem);
-                this.planningService.reschedule(this.round);
+                const firstRound = this.structureService.getFirstRound();
+                this.planningService.reschedule(firstRound.getNumber());
                 // probleem is dat ronde wordt vervangen, terwijl ik het update.
                 // dit komt weer doordat het in de backend wordt vervangen en ook in de repository
                 // eigenlijk moet alles bijgewerkt worden voor de bijbehorde ronde.
@@ -85,11 +84,10 @@ export class TournamentPlanningFieldsComponent implements OnInit {
                 // 2 onderliggende wedstrijden(ook van onderliggende ronden)
                 // 3 configuraties(ook van onderliggende ronden)
 
-                this.structureRepository.editObject(this.round, this.round.getCompetitionseason())
+                this.structureRepository.editObject(firstRound, this.structureService.getCompetitionseason())
                     .subscribe(
                         /* happy path */ roundRes => {
-                        this.round.setName('cdk');
-                        this.round = roundRes;
+                        // this.round.setName('cdk');
                         this.updateRound.emit(roundRes);
                         this.processing = false;
                         this.setAlert('info', 'veld toegevoegd');
@@ -114,14 +112,14 @@ export class TournamentPlanningFieldsComponent implements OnInit {
                 if (index > -1) {
                     this.fieldsList.splice(index, 1);
                 }
-
-                this.planningService.reschedule(this.round);
+                const firstRound = this.structureService.getFirstRound();
+                this.planningService.reschedule(firstRound.getNumber());
 
                 // setTimeout(3000);
-                this.structureRepository.editObject(this.round, this.round.getCompetitionseason())
+                this.structureRepository.editObject(firstRound, this.structureService.getCompetitionseason())
                     .subscribe(
                         /* happy path */ roundRes => {
-                        this.round = roundRes;
+                        console.log('should update structureService???????');
                         this.updateRound.emit(roundRes);
                         this.processing = false;
                         this.setAlert('info', 'veld verwijderd');
@@ -138,7 +136,7 @@ export class TournamentPlanningFieldsComponent implements OnInit {
         this.setAlert('info', 'veldnaam wijzigen..');
         this.processing = true;
 
-        this.fieldRepository.editObject(fieldItem.field, this.tournament.getCompetitionseason())
+        this.fieldRepository.editObject(fieldItem.field, this.structureService.getCompetitionseason())
             .subscribe(
             /* happy path */ fieldRes => {
                 this.setAlert('info', 'veldnaam gewijzigd');

@@ -28,7 +28,7 @@ export class TournamentStructureRoundComponent {
   }
 
   private getPlanningService(): PlanningService {
-    return new PlanningService(this.structureService.getCompetitionseason().getStartDateTime());
+    return new PlanningService(this.structureService);
   }
 
   getWinnersLosersName(winnersOrLosers: number): string {
@@ -125,7 +125,7 @@ export class TournamentStructureRoundComponent {
 
   public onSliderChange(nrOfChildPlacesNew: number, winnersOrLosers: number) {
     this.structureService.changeNrOfPlacesChildRound(nrOfChildPlacesNew, this.round, winnersOrLosers);
-    this.getPlanningService().create(this.round);
+    this.getPlanningService().create(this.round.getNumber());
     this.roundChanged.emit();
   }
 

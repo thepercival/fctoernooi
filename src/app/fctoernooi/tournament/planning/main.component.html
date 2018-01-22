@@ -21,7 +21,7 @@
             <span class="d-none d-sm-block">bekijken</span>
           </ng-template>
           <ng-template ngbTabContent>
-            <app-tournament-planning-view *ngFor="let roundNumber of getRoundNumbers()" [tournament]="tournament" [roundNumber]="roundNumber"
+            <app-tournament-planning-view *ngFor="let roundNumber of structureService.getRoundNumbers()" [tournament]="tournament" [roundNumber]="roundNumber"
               [structureService]="structureService"></app-tournament-planning-view>
           </ng-template>
         </ngb-tab>
@@ -31,7 +31,7 @@
             <span class="d-none d-sm-block">instellingen</span>
           </ng-template>
           <ng-template ngbTabContent>
-            <app-tournament-planning-settings [tournament]="tournament" [structureService]="structureService" (updateRound)="updateRound($event)"></app-tournament-planning-settings>
+            <app-tournament-planning-settings [structureService]="structureService" (updateRound)="updateRound($event)"></app-tournament-planning-settings>
           </ng-template>
         </ngb-tab>
         <ngb-tab>
@@ -40,7 +40,7 @@
             <span class="d-none d-sm-block">velden</span>
           </ng-template>
           <ng-template ngbTabContent ngbTabContentClass="pt-3">
-            <app-tournament-planning-fields [tournament]="tournament" [round]="structureService.getFirstRound()" (updateRound)="updateRound($event)"></app-tournament-planning-fields>
+            <app-tournament-planning-fields [structureService]="structureService" (updateRound)="updateRound($event)"></app-tournament-planning-fields>
           </ng-template>
         </ngb-tab>
         <ngb-tab>
@@ -49,7 +49,7 @@
             <span class="d-none d-sm-block">scheidsrechters</span>
           </ng-template>
           <ng-template ngbTabContent>
-            <app-tournament-planning-referees [tournament]="tournament" [round]="structureService.getFirstRound()" (updateRound)="updateRound($event)"></app-tournament-planning-referees>
+            <app-tournament-planning-referees [structureService]="structureService" (updateRound)="updateRound($event)"></app-tournament-planning-referees>
           </ng-template>
         </ngb-tab>
       </ngb-tabset>

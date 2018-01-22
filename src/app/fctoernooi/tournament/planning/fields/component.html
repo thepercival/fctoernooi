@@ -13,7 +13,7 @@
                     <th>nr.</th>
                     <th colspan="2">naam</th>
                     <th style="text-align: right;">
-                        <button *ngIf="!round.isStarted()" type="button" class="btn btn-sm btn-outline-primary" (click)="addField()" [disabled]="processing || disableEditButtons">
+                        <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" (click)="addField()" [disabled]="processing || disableEditButtons">
                             <i class="fa fa-plus"></i>
                         </button>
                     </th>
@@ -31,13 +31,13 @@
                             required>
                     </td>
                     <td>
-                        <button *ngIf="!round.isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || ( !fieldItem.editable && disableEditButtons ) || ( fieldItem.editable && fieldItem.field.getName().length < validations.minlengthname )"
+                        <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || ( !fieldItem.editable && disableEditButtons ) || ( fieldItem.editable && fieldItem.field.getName().length < validations.minlengthname )"
                             (click)="saveedit(fieldItem);">
                             <span class="fa fa-{{fieldItem.editable ? 'save' : 'pencil' }}"></span>
                         </button>
                     </td>
                     <td style="text-align: right;">
-                        <button *ngIf="last && !round.isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || disableEditButtons"
+                        <button *ngIf="last && !isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || disableEditButtons"
                             (click)="removeField(fieldItem);">
                             <span class="fa fa-remove"></span>
                         </button>

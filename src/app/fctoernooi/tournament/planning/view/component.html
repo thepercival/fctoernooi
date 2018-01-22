@@ -41,7 +41,7 @@
                 <span>{{structureService.getPouleName(game.getPoule())}}</span>
               </a>
             </td>
-            <td *ngIf="planningService.canCalculateStartDateTime(round)" class="toGameEdit" (click)="linkToGameEdit(tournament,game)">{{game.getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit","hour12": false,"hour":"2-digit","minute":"2-digit"}
+            <td *ngIf="planningService.canCalculateStartDateTime(round.getNumber())" class="toGameEdit" (click)="linkToGameEdit(tournament,game)">{{game.getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit","hour12": false,"hour":"2-digit","minute":"2-digit"}
               ) }}</td>
             <td (click)="linkToGameEdit(tournament,game)" class="toGameEdit">{{game.getField().getName()}}</td>
             <td (click)="linkToGameEdit(tournament,game)" class="toGameEdit">{{structureService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</td>

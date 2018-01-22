@@ -5,16 +5,16 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DndModule } from 'ng2-dnd';
 import { NouisliderModule } from 'ng2-nouislider';
 import {
-    GameRepository,
-    GameScoreRepository,
-    PoulePlaceRepository,
-    PouleRepository,
-    QualifyRuleRepository,
-    RoundConfigRepository,
-    RoundRepository,
-    RoundScoreConfigRepository,
-    StructureRepository,
-    TeamRepository,
+  GameRepository,
+  GameScoreRepository,
+  PoulePlaceRepository,
+  PouleRepository,
+  QualifyRuleRepository,
+  RoundConfigRepository,
+  RoundRepository,
+  RoundScoreConfigRepository,
+  StructureRepository,
+  TeamRepository,
 } from 'ngx-sport';
 
 import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
@@ -27,7 +27,6 @@ import { TournamentPlanningFieldsComponent } from './tournament/planning/fields/
 import { TournamentPlanningComponent } from './tournament/planning/main.component';
 import { TournamentPlanningRefereesComponent } from './tournament/planning/referees/component';
 import { TournamentPlanningSettingsComponent } from './tournament/planning/settings/component';
-import { TournamentPlanningSelectableRoundsComponent } from './tournament/planning/settings/selectable.rounds.component';
 import { TournamentPlanningViewComponent } from './tournament/planning/view/component';
 import { TournamentRoleRepository } from './tournament/role/repository';
 import { TournamentStructureComponent } from './tournament/structure/main.component';
@@ -56,7 +55,6 @@ import { TournamentViewComponent } from './tournament/view/view.component';
     TournamentPlanningSettingsComponent,
     TournamentPlanningRefereesComponent,
     TournamentPlanningFieldsComponent,
-    TournamentPlanningSelectableRoundsComponent,
     TournamentViewComponent,
     TournamentGameEditComponent
   ],
