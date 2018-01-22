@@ -32,8 +32,8 @@ export class TournamentPlanningViewComponent implements OnInit {
 
   ngOnInit() {
     this.planningService = new PlanningService(this.tournament.getCompetitionseason().getStartDateTime());
-    const x = this.structureService.getRoundsByNumber(this.structureService.getFirstRound());
-    this.roundsByNumber = x[this.roundNumber];
+    const allRoundsByNumber = this.structureService.getAllRoundsByNumber();
+    this.roundsByNumber = allRoundsByNumber[this.roundNumber];
   }
 
   getWinnersLosersDescription(winnersOrLosers: number): string {

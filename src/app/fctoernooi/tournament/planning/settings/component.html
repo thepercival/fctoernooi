@@ -26,7 +26,7 @@
                         <div class="card-body">
                             <div>selecteer een ronde:</div>
                             <div class="row text-center">
-                                <app-selectable-rounds style="width: 100%;" [round]="structureService.getFirstRound()" [selectedRound]="selectedRound" (selectRound)="changeRound($event)"
+                                <app-selectable-rounds style="width: 100%;" [round]="structureService.getFirstRound()" [selectedRoundNumber]="selectedRound" (selectRound)="changeRound($event)"
                                     [structureService]="structureService"></app-selectable-rounds>
                             </div>
                         </div>

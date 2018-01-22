@@ -25,9 +25,10 @@ export class TournamentPlanningSettingsComponent implements OnInit {
     @Input() tournament: Tournament;
     @Input() structureService: StructureService;
     @Output() updateRound = new EventEmitter<Round>();
-    selectedRound: Round;
     enableTime: boolean;
     ranges: any = {};
+    allRoundsByNumber: any;
+    selectedRoundNumber: number;
     isCollapsed = true;
     alert: IAlert;
     modelConfig: IRoundConfig;
@@ -50,13 +51,14 @@ export class TournamentPlanningSettingsComponent implements OnInit {
         private roundConfigRepository: RoundConfigRepository,
         private structureRepository: StructureRepository
     ) {
-        debugger;
+        // debugger;
         this.processing = true;
         this.setAlert('info', 'instellingen gelden ook voor volgende ronden');
     }
 
     ngOnInit() {
-        this.changeRound(this.structureService.getFirstRound());
+        this.allRoundsByNumber = this.structureService.getAllRoundsByNumber();
+        this.changeRoundNumber( this.allRoundsByNumber[this.structureService.getFirstRound().getNumber()]);
         this.initRanges();
 
         this.planningService = new PlanningService(
@@ -80,9 +82,10 @@ export class TournamentPlanningSettingsComponent implements OnInit {
         }
     }
 
-    changeRound(round: Round) {
-        this.selectedRound = round;
-        this.modelConfig = this.roundConfigRepository.objectToJsonHelper(this.selectedRound.getConfig());
+    changeRoundNumber(roundNumber) {
+        this.selectedRoundNumber = roundNumber;
+        this.modelConfig = this.roundConfigRepository.objectToJsonHelper(
+            this.getFirstRoundOfRoundNumber( this.selectedRoundNumber ).getConfig() );
         this.modelRecreate = false;
         this.modelReschedule = false;
         this.isCollapsed = true;
@@ -90,6 +93,10 @@ export class TournamentPlanningSettingsComponent implements OnInit {
             this.setAlert('warning', 'het toernooi is al begonnen, je kunt niet meer wijzigen');
         }
 
+    }
+
+    getFirstRoundOfRoundNumber( roundNumber): Round {
+        return this.allRoundsByNumber[this.selectedRoundNumber][0];
     }
 
     getWinnersLosersDescription(winnersOrLosers: number): string {
@@ -223,7 +230,8 @@ export class TournamentPlanningSettingsComponent implements OnInit {
         if (this.modelConfig.enableTime && scoreConfig.getParent() === undefined) {
             return true;
         }
-        if (this.selectedRound.isStarted()) {
+
+        if (this.planningService.isRoundNumberStarted( this.all ) {
             return true;
         }
 
