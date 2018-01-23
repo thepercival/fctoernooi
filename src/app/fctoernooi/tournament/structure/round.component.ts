@@ -43,7 +43,7 @@ export class TournamentStructureRoundComponent {
   addPoule(round, fillPouleToMinimum = true): void {
     this.resetAlert();
     this.structureService.addPoule(round, fillPouleToMinimum);
-    this.getPlanningService().create(round);
+    this.getPlanningService().create(round.getNumber());
     this.roundChanged.emit();
   }
 
@@ -51,7 +51,7 @@ export class TournamentStructureRoundComponent {
     this.resetAlert();
     try {
       this.structureService.removePoule(round);
-      this.getPlanningService().create(round);
+      this.getPlanningService().create(round.getNumber());
       this.roundChanged.emit();
     } catch (e) {
       this.setAlert('danger', e.message);
@@ -62,7 +62,7 @@ export class TournamentStructureRoundComponent {
     this.resetAlert();
     try {
       this.structureService.addPoulePlace(round);
-      this.getPlanningService().create(round);
+      this.getPlanningService().create(round.getNumber());
       this.roundChanged.emit();
     } catch (e) {
       this.setAlert('danger', e.message);
@@ -73,7 +73,7 @@ export class TournamentStructureRoundComponent {
     this.resetAlert();
     try {
       this.structureService.removePoulePlace(round);
-      this.getPlanningService().create(round);
+      this.getPlanningService().create(round.getNumber());
       this.roundChanged.emit();
     } catch (e) {
       this.setAlert('danger', e.message);

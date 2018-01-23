@@ -30,6 +30,7 @@ export class TournamentPlanningViewComponent implements OnInit {
     this.ranking = new Ranking(Ranking.RULESSET_WC);
   }
 
+
   ngOnInit() {
     this.planningService = new PlanningService(this.structureService);
     const allRoundsByNumber = this.structureService.getAllRoundsByNumber();
@@ -81,15 +82,22 @@ export class TournamentPlanningViewComponent implements OnInit {
   }
 
   showRanking(popOver: NgbPopover, poule: Poule) {
+    const popOverClosed = this.openPopovers.find(openPopover => openPopover === popOver) === undefined;
     this.openPopovers.forEach(openPopover => openPopover.close());
-    const open = (!this.openPopovers.find(openPopover => openPopover === popOver));
     this.openPopovers = [];
     this.selectedPouleForRanking = poule;
-    if (open === true) {
+    if (popOverClosed === true) {
       popOver.open();
       this.openPopovers.push(popOver);
     }
     return false;
+  }
+
+  getGamesHelper(): Game[] {
+    const games: Game[] = [];
+    const gamesByNumber = this.planningService.getGamesByNumber(this.roundNumber);
+    gamesByNumber.forEach(gamesIt => gamesIt.forEach(game => games.push(game)));
+    return games;
   }
 
   getPoulePlacesByRank(poule: Poule): PoulePlace[][] {

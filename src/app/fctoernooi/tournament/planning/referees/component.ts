@@ -14,7 +14,6 @@ export class TournamentPlanningRefereesComponent implements OnInit {
     public alert: IAlert;
     public processing = true;
     public disableEditButtons = false;
-    private planningService: PlanningService;
     refereesList: Array<IRefereeListItem>;
 
     validations: any = {
@@ -30,7 +29,6 @@ export class TournamentPlanningRefereesComponent implements OnInit {
 
     ngOnInit() {
         this.createRefereesList();
-        this.planningService = new PlanningService(this.structureService);
         this.processing = false;
         if (this.isStarted()) {
             this.setAlert('warning', 'het toernooi is al begonnen, je kunt niet meer wijzigen');
@@ -75,7 +73,8 @@ export class TournamentPlanningRefereesComponent implements OnInit {
                 const refereeItem: IRefereeListItem = { referee: refereeRes, editable: false };
                 this.refereesList.push(refereeItem);
                 const firstRound = this.structureService.getFirstRound();
-                this.planningService.reschedule(firstRound.getNumber());
+                const planningService = new PlanningService(this.structureService);
+                planningService.reschedule(firstRound.getNumber());
 
                 this.structureRepository.editObject(firstRound, this.structureService.getCompetitionseason())
                     .subscribe(
@@ -107,7 +106,8 @@ export class TournamentPlanningRefereesComponent implements OnInit {
                     this.refereesList.splice(index, 1);
                 }
                 const firstRound = this.structureService.getFirstRound();
-                this.planningService.reschedule(firstRound.getNumber());
+                const planningService = new PlanningService(this.structureService);
+                planningService.reschedule(firstRound.getNumber());
                 // setTimeout(3000);
                 this.structureRepository.editObject(firstRound, this.structureService.getCompetitionseason())
                     .subscribe(
@@ -116,7 +116,7 @@ export class TournamentPlanningRefereesComponent implements OnInit {
                         // this.round = roundRes;
                         this.updateRound.emit(roundRes);
                         this.processing = false;
-                        this.setAlert('info', 'veld verwijderd');
+                        this.setAlert('info', 'scheidsrechter verwijderd');
                     },
                 /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
                 /* onComplete */() => this.processing = false

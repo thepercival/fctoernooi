@@ -13,8 +13,8 @@
           </button>
         </h2>
       </div>
-      <app-tournament-planning-view *ngFor="let round of structureService.getRounds(structureService.getFirstRound())" [tournament]="tournament"
-        [roundNumber]="round.getNumber()" [structureService]="structureService"></app-tournament-planning-view>
+      <app-tournament-planning-view *ngFor="let roundNumber of structureService.getRoundNumbers()" [tournament]="tournament" [roundNumber]="roundNumber"
+        [structureService]="structureService"></app-tournament-planning-view>
     </div>
   </div>
 

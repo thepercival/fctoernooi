@@ -108,7 +108,7 @@ export class TournamentPlanningSettingsComponent implements OnInit {
             return;
         }
         this.modelConfig.nrOfHeadtoheadMatches = nrOfHeadtoheadMatches;
-        this.modelRecreate = true; // this.planningService.create( this.selectedRound );
+        this.modelRecreate = true; // this.planningService.create( this.selectedRoundNumber );
     }
 
     setWinPoints(winPoints) {
@@ -133,7 +133,7 @@ export class TournamentPlanningSettingsComponent implements OnInit {
             return;
         }
         this.modelConfig.hasExtension = hasExtension;
-        this.modelReschedule = true;  // this.planningService.reschedule(this.selectedRound);
+        this.modelReschedule = true;  // this.planningService.reschedule(this.selectedRoundNumber);
     }
 
     setWinPointsExt(winPointsExt) {
@@ -191,7 +191,7 @@ export class TournamentPlanningSettingsComponent implements OnInit {
         }
         this.modelConfig.minutesInBetween = minutesInBetween;
         if (this.modelConfig.enableTime) {
-            this.modelReschedule = true; // this.planningService.reschedule( this.selectedRound );
+            this.modelReschedule = true; // this.planningService.reschedule( this.selectedRoundNumber );
         }
     }
 
@@ -200,7 +200,7 @@ export class TournamentPlanningSettingsComponent implements OnInit {
             return;
         }
         this.modelConfig.enableTime = enableTime;
-        this.modelReschedule = true; // this.planningService.reschedule( this.selectedRound );
+        this.modelReschedule = true; // this.planningService.reschedule( this.selectedRoundNumber );
     }
 
     getDirectionDescription(scoreConfig) {
