@@ -5,13 +5,13 @@
         toernooien
       </h1>
       <div class="d-flex justify-content-between">
-        <button type="button" class="btn btn-sm-custom btn-outline-secondary" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
+        <!-- <button type="button" class="btn btn-sm-custom btn-outline-secondary" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
           aria-controls="collapseFilter">
-          <i class="fa fa-filter"></i> filter</button>
+          <i class="fa fa-filter"></i> filter</button> -->
         <button *ngIf="isLoggedIn()" type="button" class="btn btn-sm-custom btn-outline-primary" routerLink="/toernooi/new">
           <i class="fa fa-plus-circle"></i> toernooi</button>
       </div>
-      <div id="collapseFilter" class="container" [ngbCollapse]="isCollapsed">
+      <!-- <div id="collapseFilter" class="container" [ngbCollapse]="isCollapsed">
         <form (ngSubmit)="false" #f="ngForm" novalidate>
           <div *ngIf="isLoggedIn()" class="form-group row">
             <label for="inputFilterMine" class="col-9 col-form-label">toon alleen mijn toernooien</label>
@@ -34,7 +34,7 @@
             </div>
           </div>
         </form>
-      </div>
+      </div> -->
       <p *ngIf="alert">
         <ngb-alert [type]="alert.type" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
       </p>

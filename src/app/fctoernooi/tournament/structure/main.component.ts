@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { cloneDeep } from 'lodash';
 import { StructureRepository, StructureService } from 'ngx-sport';
 
 import { IAlert } from '../../../app.definitions';
@@ -29,16 +30,26 @@ export class TournamentStructureComponent extends TournamentComponent implements
   }
 
   ngOnInit() {
-    super.myNgOnInit();
+    super.myNgOnInit(() => this.setDeepCopy());
+  }
+
+  setDeepCopy() {
+    const deepCopyOfFirstRound = cloneDeep(this.structureService.getFirstRound());
+
+    this.structureService = new StructureService(
+      this.tournament.getCompetitionseason(),
+      { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
+      deepCopyOfFirstRound
+    );
   }
 
   saveStructure() {
     this.processing = true;
 
     const firstRound = this.structureService.getFirstRound();
-    this.structureRepository.editObject(firstRound, firstRound.getCompetitionseason())
+    this.structureRepository.editObject(firstRound, this.tournament.getCompetitionseason())
       .subscribe(
-                        /* happy path */ roundRes => {
+          /* happy path */ roundRes => {
         this.structureService = new StructureService(
           this.tournament.getCompetitionseason(),
           { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
@@ -50,8 +61,8 @@ export class TournamentStructureComponent extends TournamentComponent implements
         this.processing = false;
 
       },
-              /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-              /* onComplete */() => this.processing = false
+        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+        /* onComplete */() => this.processing = false
       );
   }
 

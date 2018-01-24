@@ -64,9 +64,9 @@ export class HomeComponent implements OnInit {
   initFilterFields() {
 
     const startDateTime = new Date();
-    startDateTime.setDate(startDateTime.getDate() - 2); // - 2 dagen
+    startDateTime.setDate(startDateTime.getDate() - 7); // - 2 dagen
     const endDateTime = new Date();
-    endDateTime.setDate(endDateTime.getDate() + 7); // + 7 dagen
+    endDateTime.setDate(endDateTime.getDate() + 184); // + 7 dagen
 
     this.modelFilter = {
       startDate: { year: startDateTime.getFullYear(), month: startDateTime.getMonth() + 1, day: startDateTime.getDate() },
@@ -74,8 +74,8 @@ export class HomeComponent implements OnInit {
       mine: false
     };
 
-    startDateTime.setDate(startDateTime.getDate() + 1); // + 1 dagen
-    endDateTime.setDate(endDateTime.getDate() + 100); // + 100 dagen
+    // startDateTime.setDate(startDateTime.getDate() + 1); // + 1 dagen
+    // endDateTime.setDate(endDateTime.getDate() + 100); // + 100 dagen
 
     this.minEndDate = { year: startDateTime.getFullYear(), month: startDateTime.getMonth() + 1, day: startDateTime.getDate() };
     this.maxEndDate = { year: endDateTime.getFullYear(), month: endDateTime.getMonth() + 1, day: endDateTime.getDate() };
