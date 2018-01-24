@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PlanningService, PoulePlace, Round, StructureService } from 'ngx-sport';
+import { QualifyService, PlanningService, PoulePlace, Round, StructureService } from 'ngx-sport';
 
 @Component({
   selector: 'app-tournament-structureround',
@@ -43,6 +43,11 @@ export class TournamentStructureRoundComponent {
   addPoule(round, fillPouleToMinimum = true): void {
     this.resetAlert();
     this.structureService.addPoule(round, fillPouleToMinimum);
+    if (round.getNumber() > 1) {
+      const qualifyService = new QualifyService(round);
+      qualifyService.removeObjectsForParentRound();
+      qualifyService.createObjectsForParentRound();
+    }
     this.getPlanningService().create(round.getNumber());
     this.roundChanged.emit();
   }
@@ -62,6 +67,12 @@ export class TournamentStructureRoundComponent {
     this.resetAlert();
     try {
       this.structureService.addPoulePlace(round);
+      if (round.getNumber() > 1) {
+        const qualifyService = new QualifyService(round);
+        qualifyService.removeObjectsForParentRound();
+        qualifyService.createObjectsForParentRound();
+      }
+
       this.getPlanningService().create(round.getNumber());
       this.roundChanged.emit();
     } catch (e) {
