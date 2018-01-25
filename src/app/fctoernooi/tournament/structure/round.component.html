@@ -1,7 +1,9 @@
 <div *ngIf="round" class="col {{round.getNumber() === 1 ? 'px-0' : 'px-1'}}">
   <div class="card round" *ngIf="round.getPoulePlaces().length > 2">
     <div class="card-header px-1">
-      <span [innerHTML]="structureService.getRoundName( round )"></span>
+      <span [innerHTML]="structureService.getRoundName( round )">
+
+      </span>
       <i *ngFor="let winnersOrLosers of structureService.getWinnersLosersPosition( round )" [title]="structureService.getWinnersLosersDescription( winnersOrLosers )"
         class="fa fa-circle text-{{getClassPostfix(winnersOrLosers)}}"></i>
     </div>

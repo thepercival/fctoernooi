@@ -17,7 +17,7 @@
             <i class="fa fa-list"></i>
           </th>
           <th *ngIf="roundsByNumber[0]?.getConfig().getEnableTime()" title="starttijd">
-            <i class="fa fa-clock-o"></i>
+            {{planningService.calculateStartDateTime(roundNumber).toLocaleString("en", {"month":"short","day":"2-digit"})}}
           </th>
           <th title="veld">
             <i class="fi flaticon-soccer-field"></i>
@@ -35,14 +35,15 @@
       <tbody>
         <tr *ngFor="let game of getGamesHelper()">
           <td>
-            <span *ngIf="!game.getRound().needsRanking()" class="toGameEdit" (click)="linkToGameEdit(tournament,game)">{{structureService.getPouleName(game.getPoule())}}</span>
+            <span *ngIf="!game.getPoule().needsRanking()" class="toGameEdit" (click)="linkToGameEdit(tournament,game)">{{structureService.getPouleName(game.getPoule())}}</span>
             <a *ngIf="game.getPoule().needsRanking()" href="#" placement="right" [ngbPopover]="popRanking" triggers="manual" #p="ngbPopover"
               (click)="showRanking( p, game.getPoule() )">
               <span>{{structureService.getPouleName(game.getPoule())}}</span>
             </a>
           </td>
-          <td *ngIf="planningService.canCalculateStartDateTime(roundNumber)" class="toGameEdit" (click)="linkToGameEdit(tournament,game)">{{game.getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit","hour12": false,"hour":"2-digit","minute":"2-digit"}
-            ) }}</td>
+          <td *ngIf="planningService.canCalculateStartDateTime(roundNumber)" class="toGameEdit" (click)="linkToGameEdit(tournament,game)">
+            {{game.getStartDateTime().toLocaleString("en", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}
+          </td>
           <td (click)="linkToGameEdit(tournament,game)" class="toGameEdit">{{game.getField().getName()}}</td>
           <td (click)="linkToGameEdit(tournament,game)" class="toGameEdit">{{structureService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</td>
           <td (click)="linkToGameEdit(tournament,game)" class="toGameEdit">
@@ -76,7 +77,7 @@
             <ng-template ngFor let-poulePlaces [ngForOf]="getPoulePlacesByRank(selectedPouleForRanking)" let-i="index">
               <tr *ngFor="let poulePlace of poulePlaces">
                 <td>{{i+1}}</td>
-                <td>{{structureService.getPoulePlaceName(poulePlace)}}</td>
+                <td>{{structureService.getPoulePlaceName(poulePlace, true)}}</td>
                 <td>{{ranking.getNrOfGamesWithState(poulePlace, poulePlace.getGames())}}</td>
                 <td>{{ranking.getPoints(poulePlace, poulePlace.getGames())}}</td>
                 <td>{{ranking.getGoalDifference(poulePlace, poulePlace.getGames())}}</td>
