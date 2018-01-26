@@ -10,35 +10,31 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>nr.</th>
-                    <th colspan="2">naam</th>
+                    <th></th>
+                    <th>initialen</th>
+                    <th class="d-none d-sm-table-cell">naam</th>
                     <th style="text-align: right;">
-                        <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" (click)="addReferee()" [disabled]="processing || disableEditButtons">
+                        <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" (click)="addReferee()" [disabled]="processing">
                             <i class="fa fa-plus"></i>
                         </button>
                     </th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let refereeItem of refereesList; let last = last;">
+                <tr *ngFor="let referee of referees; let last = last;">
                     <td>
-                        <span>{{refereeItem.referee.getNumber()}}</span>
-                    </td>
-                    <td>
-                        <span *ngIf="!refereeItem.editable && refereeItem.referee !== undefined">{{refereeItem.referee.getName() }}</span>
-                        <input type="text" class="form-control input-refereename" [minlength]="validations.minlengthname" [maxlength]="validations.maxlengthname"
-                            [ngModel]="refereeItem.referee.getName()" (ngModelChange)="refereeItem.referee.setName($event)" *ngIf="refereeItem.editable"
-                            required>
-                    </td>
-                    <td>
-                        <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || ( !refereeItem.editable && disableEditButtons ) || ( refereeItem.editable && refereeItem.referee.getName().length < validations.minlengthname )"
-                            (click)="saveedit(refereeItem);">
-                            <span class="fa fa-{{refereeItem.editable ? 'save' : 'pencil' }}"></span>
+                        <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing" (click)="editReferee(referee)">
+                            <span class="fa fa-pencil"></span>
                         </button>
                     </td>
+                    <td>
+                        <span>{{referee.getInitials()}}</span>
+                    </td>
+                    <td class="d-none d-sm-table-cell">
+                        <span>{{referee.getName()}}</span>
+                    </td>
                     <td style="text-align: right;">
-                        <button *ngIf="last && !isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || disableEditButtons"
-                            (click)="removeReferee(refereeItem);">
+                        <button *ngIf="last && !isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing" (click)="removeReferee(referee);">
                             <span class="fa fa-remove"></span>
                         </button>
                     </td>

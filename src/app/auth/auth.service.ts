@@ -111,6 +111,8 @@ export class AuthService extends SportRepository {
     console.error(error);
     if (typeof error.error === 'string') {
       errortext = error.error;
+    } else if (error.statusText !== undefined) {
+      errortext = error.statusText;
     }
     if (error.status === 401) {
       errortext = 'je bent niet ingelogd';

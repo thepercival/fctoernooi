@@ -58,6 +58,14 @@ footer {
   flex: 1 0 auto;
 }
 
+input.is-valid, textarea.is-valid {
+    border-left: 5px solid #{$success};
+}
+
+input.is-invalid, textarea.is-invalid {
+    border-left: 5px solid #{$danger};
+}
+
 /* ng-bootstrap datepicker */
 .custom-day {
     text-align: center;

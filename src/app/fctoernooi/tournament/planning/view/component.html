@@ -51,7 +51,7 @@
             <span *ngIf="game.getState() === GameStatePlayed" class="fa fa-check d-sm-none"></span>
           </td>
           <td (click)="linkToGameEdit(tournament,game)" class="toGameEdit">{{structureService.getPoulePlaceName(game.getAwayPoulePlace(), true )}}</td>
-          <td (click)="linkToGameEdit(tournament,game)" class="d-none d-sm-table-cell toGameEdit">{{game.getReferee()?.getName()}}</td>
+          <td (click)="linkToGameEdit(tournament,game)" class="d-none d-sm-table-cell toGameEdit">{{game.getReferee()?.getInitials()}}</td>
         </tr>
       </tbody>
     </table>

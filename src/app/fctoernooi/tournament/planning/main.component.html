@@ -14,8 +14,8 @@
           <i class="fi flaticon-schedule"></i> planning
         </h2>
       </div>
-      <ngb-tabset class="nav-justified">
-        <ngb-tab>
+      <ngb-tabset class="nav-justified" [activeId]="initalTabId">
+        <ngb-tab id="tab-view">
           <ng-template ngbTabTitle>
             <i class="fa fa-eye" title="bekijken"></i>
             <span class="d-none d-sm-block">bekijken</span>
@@ -25,7 +25,7 @@
               [structureService]="structureService"></app-tournament-planning-view>
           </ng-template>
         </ngb-tab>
-        <ngb-tab>
+        <ngb-tab id="tab-settings">
           <ng-template ngbTabTitle>
             <i class="fa fa-cogs" title="instellingen"></i>
             <span class="d-none d-sm-block">instellingen</span>
@@ -34,7 +34,7 @@
             <app-tournament-planning-settings [structureService]="structureService" (updateRound)="updateRound($event)"></app-tournament-planning-settings>
           </ng-template>
         </ngb-tab>
-        <ngb-tab>
+        <ngb-tab id="tab-fields">
           <ng-template ngbTabTitle>
             <i class="fi flaticon-soccer-field" title="velden"></i>
             <span class="d-none d-sm-block">velden</span>
@@ -43,13 +43,13 @@
             <app-tournament-planning-fields [structureService]="structureService" (updateRound)="updateRound($event)"></app-tournament-planning-fields>
           </ng-template>
         </ngb-tab>
-        <ngb-tab>
+        <ngb-tab id="tab-referees">
           <ng-template ngbTabTitle>
             <i class="fi flaticon-referee" title="scheidsrechter"></i>
             <span class="d-none d-sm-block">scheidsrechters</span>
           </ng-template>
           <ng-template ngbTabContent>
-            <app-tournament-planning-referees [structureService]="structureService" (updateRound)="updateRound($event)"></app-tournament-planning-referees>
+            <app-tournament-planning-referees [tournament]="tournament" [structureService]="structureService" (updateRound)="updateRound($event)"></app-tournament-planning-referees>
           </ng-template>
         </ngb-tab>
       </ngb-tabset>

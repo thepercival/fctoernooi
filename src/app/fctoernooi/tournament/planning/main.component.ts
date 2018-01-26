@@ -14,6 +14,7 @@ import { TournamentRepository } from '../repository';
 })
 export class TournamentPlanningComponent extends TournamentComponent implements OnInit {
 
+  initalTabId: string;
   settingsAlert: IAlert;
 
   constructor(
@@ -28,6 +29,13 @@ export class TournamentPlanningComponent extends TournamentComponent implements 
 
   ngOnInit() {
     super.myNgOnInit();
+
+    this.initalTabId = 'tab-fields';
+    this.route.queryParamMap.subscribe(params => {
+      if (params.get('tabid') !== undefined) {
+        this.initalTabId = params.get('tabid');
+      }
+    });
   }
 
   updateRound(newRound: Round) {

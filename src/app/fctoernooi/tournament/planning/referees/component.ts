@@ -1,5 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IReferee, PlanningService, Referee, RefereeRepository, Round, StructureRepository, StructureService } from 'ngx-sport';
+import { Router } from '@angular/router';
+import { PlanningService, Referee, RefereeRepository, Round, StructureRepository, StructureService } from 'ngx-sport';
+
+import { Tournament } from '../..';
 import { IAlert } from '../../../../app.definitions';
 
 @Component({
@@ -9,12 +12,12 @@ import { IAlert } from '../../../../app.definitions';
 })
 export class TournamentPlanningRefereesComponent implements OnInit {
 
+    @Input() tournament: Tournament;
     @Input() structureService: StructureService;
     @Output() updateRound = new EventEmitter<Round>();
     public alert: IAlert;
     public processing = true;
-    public disableEditButtons = false;
-    refereesList: Array<IRefereeListItem>;
+    referees: Referee[];
 
     validations: any = {
         'minlengthname': Referee.MIN_LENGTH_NAME,
@@ -22,6 +25,7 @@ export class TournamentPlanningRefereesComponent implements OnInit {
     };
 
     constructor(
+        private router: Router,
         private refereeRepository: RefereeRepository,
         private structureRepository: StructureRepository) {
         this.resetAlert();
@@ -40,80 +44,49 @@ export class TournamentPlanningRefereesComponent implements OnInit {
     }
 
     createRefereesList() {
-        const referees = this.structureService.getCompetitionseason().getReferees();
-        this.refereesList = [];
-        referees.forEach(function (refereeIt) {
-            this.refereesList.push({
-                referee: refereeIt,
-                editable: false
-            });
-        }, this);
-    }
-
-    saveedit(refereeListItem: IRefereeListItem) {
-        if (refereeListItem.editable) {
-            this.editReferee(refereeListItem);
-        }
-        refereeListItem.editable = !refereeListItem.editable;
-        this.disableEditButtons = refereeListItem.editable;
+        this.referees = this.structureService.getCompetitionseason().getReferees();
     }
 
     addReferee() {
-        this.setAlert('info', 'scheidsrechter toevoegen..');
-        this.processing = true;
+        this.linkToEdit(this.tournament);
+    }
 
-        const jsonReferee: IReferee = {
-            number: this.refereesList.length + 1,
-            name: '' + (this.refereesList.length + 1)
-        };
+    editReferee(referee: Referee) {
+        this.linkToEdit(this.tournament, referee);
+    }
 
-        this.refereeRepository.createObject(jsonReferee, this.structureService.getCompetitionseason())
-            .subscribe(
-            /* happy path */ refereeRes => {
-                const refereeItem: IRefereeListItem = { referee: refereeRes, editable: false };
-                this.refereesList.push(refereeItem);
-                const firstRound = this.structureService.getFirstRound();
-                const planningService = new PlanningService(this.structureService);
-                planningService.reschedule(firstRound.getNumber());
-
-                this.structureRepository.editObject(firstRound, this.structureService.getCompetitionseason())
-                    .subscribe(
-                        /* happy path */ roundRes => {
-                        console.log('should update structureService???????');
-                        // this.round = roundRes;
-                        this.updateRound.emit(roundRes);
-                        this.processing = false;
-                        this.setAlert('info', 'scheidsrechter toegevoegd');
-                    },
-                /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                /* onComplete */() => this.processing = false
-                    );
-            },
-            /* error path */ e => { this.setAlert('danger', e); },
+    linkToEdit(tournament: Tournament, referee?: Referee) {
+        this.router.navigate(
+            ['/toernooi/refereeedit', tournament.getId(), referee ? referee.getId() : 0],
+            {
+                queryParams: {
+                    returnAction: '/toernooi/planning',
+                    returnParam: tournament.getId(),
+                    returnQueryParamKey: 'tabid',
+                    returnQueryParamValue: 'tab-referees'
+                }
+            }
         );
     }
 
-    removeReferee(refereeItem: IRefereeListItem) {
+    removeReferee(referee: Referee) {
         this.setAlert('info', 'scheidsrechter verwijderen..');
         this.processing = true;
 
-        this.refereeRepository.removeObject(refereeItem.referee)
+        this.refereeRepository.removeObject(referee)
             .subscribe(
             /* happy path */ refereeRes => {
 
-                const index = this.refereesList.indexOf(refereeItem);
+                const index = this.referees.indexOf(referee);
                 if (index > -1) {
-                    this.refereesList.splice(index, 1);
+                    this.referees.splice(index, 1);
                 }
                 const firstRound = this.structureService.getFirstRound();
                 const planningService = new PlanningService(this.structureService);
                 planningService.reschedule(firstRound.getNumber());
-                // setTimeout(3000);
                 this.structureRepository.editObject(firstRound, this.structureService.getCompetitionseason())
                     .subscribe(
                         /* happy path */ roundRes => {
-                        console.log('should update structureService???????');
-                        // this.round = roundRes;
                         this.updateRound.emit(roundRes);
                         this.processing = false;
                         this.setAlert('info', 'scheidsrechter verwijderd');
@@ -124,20 +97,6 @@ export class TournamentPlanningRefereesComponent implements OnInit {
             },
             /* error path */ e => { this.setAlert('danger', 'X' + e); this.processing = false; },
         );
-    }
-
-    editReferee(refereeItem) {
-        this.setAlert('info', 'scheidsrechter wijzigen..');
-        this.processing = true;
-
-        this.refereeRepository.editObject(refereeItem.referee, this.structureService.getCompetitionseason())
-            .subscribe(
-            /* happy path */ refereeRes => {
-                this.setAlert('info', 'scheidsrechter gewijzigd');
-            },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => { this.processing = false; }
-            );
     }
 
     protected setAlert(type: string, message: string) {
@@ -151,9 +110,4 @@ export class TournamentPlanningRefereesComponent implements OnInit {
     // public closeAlert( name: string) {
     //     this.progressAlert = undefined;
     // }
-}
-
-export interface IRefereeListItem {
-    referee: Referee;
-    editable: boolean;
 }
