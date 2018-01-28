@@ -10,8 +10,9 @@
         <table class="table">
             <thead>
                 <tr>
+                    <th></th>
                     <th>nr.</th>
-                    <th colspan="2">naam</th>
+                    <th>naam</th>
                     <th style="text-align: right;">
                         <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" (click)="addField()" [disabled]="processing || disableEditButtons">
                             <i class="fa fa-plus"></i>
@@ -22,6 +23,12 @@
             <tbody>
                 <tr *ngFor="let fieldItem of fieldsList; let last = last;">
                     <td>
+                        <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || ( !fieldItem.editable && disableEditButtons ) || ( fieldItem.editable && fieldItem.field.getName().length < validations.minlengthname )"
+                            (click)="saveedit(fieldItem);">
+                            <span class="fa fa-{{fieldItem.editable ? 'save' : 'pencil' }}"></span>
+                        </button>
+                    </td>
+                    <td>
                         <span>{{fieldItem.field.getNumber()}}</span>
                     </td>
                     <td>
@@ -29,12 +36,6 @@
                         <input type="text" class="form-control input-fieldname" [minlength]="validations.minlengthname" [maxlength]="validations.maxlengthname"
                             [ngModel]="fieldItem.field.getName()" (ngModelChange)="fieldItem.field.setName($event)" *ngIf="fieldItem.editable"
                             required>
-                    </td>
-                    <td>
-                        <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || ( !fieldItem.editable && disableEditButtons ) || ( fieldItem.editable && fieldItem.field.getName().length < validations.minlengthname )"
-                            (click)="saveedit(fieldItem);">
-                            <span class="fa fa-{{fieldItem.editable ? 'save' : 'pencil' }}"></span>
-                        </button>
                     </td>
                     <td style="text-align: right;">
                         <button *ngIf="last && !isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || disableEditButtons"

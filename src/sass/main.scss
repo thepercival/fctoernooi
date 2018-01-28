@@ -13,6 +13,10 @@ $btn-secondary-border:           #fff;
 //   border: 1px solid $gray-500;
 // }
 
+.table th {
+  border-top-width: 0px;
+}
+
 .btn-outline-secondary:hover {
   background-color: lighten($gray-500, 10%);
 }

@@ -1,18 +1,18 @@
+import { TournamentRepository } from '../repository';
+import { TournamentComponent } from '../component';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IReferee, PlanningService, Referee, RefereeRepository, StructureRepository } from 'ngx-sport';
+import { ITeam, PoulePlace, PoulePlaceRepository, StructureRepository, Team, TeamRepository } from 'ngx-sport';
 
 import { IAlert } from '../../../app.definitions';
-import { TournamentComponent } from '../component';
-import { TournamentRepository } from '../repository';
 
 @Component({
-    selector: 'app-tournament-referee-edit',
+    selector: 'app-tournament-competitor-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css']
 })
-export class TournamentRefereeEditComponent extends TournamentComponent implements OnInit {
+export class TournamentCompetitorEditComponent extends TournamentComponent implements OnInit {
     loading = false;
     returnUrl: string;
     returnUrlParam: number;
@@ -21,31 +21,28 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
     public alert: IAlert;
     public processing = true;
     customForm: FormGroup;
-    refereeId: number;
+    poulePlace: PoulePlace;
 
-    validations: RefValidations = {
-        minlengthinitials: Referee.MIN_LENGTH_INITIALS,
-        maxlengthinitials: Referee.MAX_LENGTH_INITIALS,
-        maxlengthname: Referee.MAX_LENGTH_NAME,
-        maxlengthinfo: Referee.MAX_LENGTH_INFO
+    validations: TeamValidations = {
+        minlengthname: Team.MIN_LENGTH_NAME,
+        maxlengthname: Team.MAX_LENGTH_NAME,
+        maxlengthinfo: Team.MAX_LENGTH_INFO
     };
 
     constructor(
-        private refereeRepository: RefereeRepository,
+        private teamRepository: TeamRepository,
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
+        private poulePlaceRepository: PoulePlaceRepository,
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
         this.customForm = fb.group({
-            initials: ['', Validators.compose([
-                Validators.required,
-                Validators.minLength(this.validations.minlengthinitials),
-                Validators.maxLength(this.validations.maxlengthinitials)
-            ])],
             name: ['', Validators.compose([
+                Validators.required,
+                Validators.minLength(this.validations.minlengthname),
                 Validators.maxLength(this.validations.maxlengthname)
             ])],
             info: ['', Validators.compose([
@@ -62,7 +59,7 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
 
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
-            super.myNgOnInit(() => this.postInit(+params.refereeId));
+            super.myNgOnInit(() => this.postInit(+params.poulePlaceId));
         });
         this.route.queryParamMap.subscribe(params => {
             this.returnUrl = params.get('returnAction');
@@ -72,22 +69,21 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         });
     }
 
-    private postInit(id: number) {
-        if (id === undefined || id < 1) {
+    private postInit(poulePlaceId: number) {
+        if (poulePlaceId === undefined || poulePlaceId < 1) {
             return;
         }
-        const referee = this.structureService.getCompetitionseason().getRefereeById(id);
-        if (referee === undefined) {
+        const poulePlaces = this.structureService.getFirstRound().getPoulePlaces();
+        this.poulePlace = poulePlaces.find(poulePlace => poulePlaceId === poulePlace.getId());
+        if (this.poulePlace === undefined) {
             return;
         }
-        this.refereeId = id;
-        this.customForm.controls.initials.setValue(referee.getInitials());
-        this.customForm.controls.name.setValue(referee.getName());
-        this.customForm.controls.info.setValue(referee.getInfo());
+        this.customForm.controls.name.setValue(this.poulePlace.getTeam() ? this.poulePlace.getTeam().getName() : undefined);
+        this.customForm.controls.info.setValue(this.poulePlace.getTeam() ? this.poulePlace.getTeam().getInfo() : undefined);
     }
 
     save() {
-        if (this.refereeId > 0) {
+        if (this.poulePlace.getTeam() !== undefined) {
             this.edit();
         } else {
             this.add();
@@ -97,64 +93,60 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
     add() {
         this.processing = true;
 
-        const initials = this.customForm.controls.initials.value;
         const name = this.customForm.controls.name.value;
         const info = this.customForm.controls.info.value;
 
-        if (this.isInitialsDuplicate(this.customForm.controls.initials.value)) {
-            this.setAlert('danger', 'de initialen bestaan al voor dit toernooi');
+        if (this.isNameDuplicate(this.customForm.controls.name.value)) {
+            this.setAlert('danger', 'de naam bestaat al voor dit toernooi');
             this.processing = false;
             return;
         }
-        const ref: IReferee = {
-            initials: initials,
+        const team: ITeam = {
             name: name ? name : undefined,
             info: info ? info : undefined
         };
-        this.refereeRepository.createObject(ref, this.structureService.getCompetitionseason())
+        const association = this.tournament.getCompetitionseason().getAssociation();
+
+        this.teamRepository.createObject(team, association)
             .subscribe(
-            /* happy path */ refereeRes => {
-
-                const firstRound = this.structureService.getFirstRound();
-                const planningService = new PlanningService(this.structureService);
-                planningService.reschedule(firstRound.getNumber());
-
-                this.structureRepository.editObject(firstRound, this.structureService.getCompetitionseason())
+            /* happy path */ teamRes => {
+                this.poulePlace.setTeam(teamRes);
+                this.poulePlaceRepository.editObject(this.poulePlace, this.poulePlace.getPoule())
                     .subscribe(
-                        /* happy path */ roundRes => {
+                  /* happy path */ poulePlaceRes => {
                         this.navigateBack();
                     },
-                /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                /* onComplete */() => this.processing = false
+                  /* error path */ e => { this.setAlert('danger', e); },
+                  /* onComplete */() => this.processing = false
                     );
             },
             /* error path */ e => { this.setAlert('danger', e); },
         );
+
+
     }
 
     edit() {
         this.processing = true;
 
-        if (this.isInitialsDuplicate(this.customForm.controls.initials.value, this.refereeId)) {
-            this.setAlert('danger', 'de initialen bestaan al voor dit toernooi');
+        if (this.isNameDuplicate(this.customForm.controls.name.value, this.poulePlace.getTeam().getId())) {
+            this.setAlert('danger', 'de naam bestaat al voor dit toernooi');
             this.processing = false;
             return;
         }
-        const initials = this.customForm.controls.initials.value;
         const name = this.customForm.controls.name.value;
         const info = this.customForm.controls.info.value;
 
-        const referee = this.structureService.getCompetitionseason().getRefereeById(this.refereeId);
-        referee.setInitials(initials);
-        referee.setName(name ? name : undefined);
-        referee.setInfo(info ? info : undefined);
-        this.refereeRepository.editObject(referee, this.structureService.getCompetitionseason())
+        const team = this.poulePlace.getTeam();
+        team.setName(name);
+        team.setInfo(info ? info : undefined);
+        this.teamRepository.editObject(team, team.getAssociation())
             .subscribe(
-            /* happy path */ refereeRes => {
+            /* happy path */ teamRes => {
                 this.navigateBack();
             },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => { this.processing = false; }
+            /* error path */ e => { this.setAlert('danger', e); },
+            /* onComplete */() => this.processing = false
             );
     }
 
@@ -172,11 +164,11 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         this.router.navigate(this.getForwarUrl(), { queryParams: this.getForwarUrlQueryParams() });
     }
 
-    isInitialsDuplicate(initials: string, refereeId?: number): boolean {
-        console.log(initials);
-        const referees = this.structureService.getCompetitionseason().getReferees();
-        return referees.find(refereeIt => {
-            return (initials === refereeIt.getInitials() && (refereeId === undefined || refereeIt.getId() === undefined));
+    isNameDuplicate(name: string, teamId?: number): boolean {
+        const poulePlaces = this.structureService.getFirstRound().getPoulePlaces();
+        return poulePlaces.find(poulePlaceIt => {
+            const teamName = poulePlaceIt.getTeam() ? poulePlaceIt.getTeam().getName() : undefined;
+            return (name === teamName && (teamId === undefined || poulePlaceIt.getTeam().getId() === undefined));
         }) !== undefined;
     }
 
@@ -205,9 +197,8 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
     }
 }
 
-export interface RefValidations {
-    minlengthinitials: number;
-    maxlengthinitials: number;
+export interface TeamValidations {
+    minlengthname: number;
     maxlengthname: number;
     maxlengthinfo: number;
 }

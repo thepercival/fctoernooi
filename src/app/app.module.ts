@@ -3,14 +3,13 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { DndModule } from 'ng2-dnd';
 import {
-    AssociationRepository,
-    CompetitionRepository,
-    CompetitionseasonRepository,
-    FieldRepository,
-    RefereeRepository,
-    SeasonRepository,
+  AssociationRepository,
+  CompetitionRepository,
+  CompetitionseasonRepository,
+  FieldRepository,
+  RefereeRepository,
+  SeasonRepository,
 } from 'ngx-sport';
 
 import { AdminModule } from './admin/admin.module';
@@ -38,10 +37,8 @@ import { UserModule } from './user/user.module';
     RoutingModule,
     FormsModule,
     UserModule,
-    AdminModule/*,
-    SportModule*/,
-    NgbModule.forRoot(),
-    DndModule.forRoot()
+    AdminModule,
+    NgbModule.forRoot()
   ],
   providers: [
     AuthService,

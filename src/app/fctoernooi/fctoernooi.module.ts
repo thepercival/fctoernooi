@@ -2,23 +2,23 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { DndModule } from 'ng2-dnd';
 import { NouisliderModule } from 'ng2-nouislider';
 import {
-    GameRepository,
-    GameScoreRepository,
-    PoulePlaceRepository,
-    PouleRepository,
-    QualifyRuleRepository,
-    RoundConfigRepository,
-    RoundRepository,
-    RoundScoreConfigRepository,
-    StructureRepository,
-    TeamRepository,
+  GameRepository,
+  GameScoreRepository,
+  PoulePlaceRepository,
+  PouleRepository,
+  QualifyRuleRepository,
+  RoundConfigRepository,
+  RoundRepository,
+  RoundScoreConfigRepository,
+  StructureRepository,
+  TeamRepository,
 } from 'ngx-sport';
 
 import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
-import { TournamentCompetitorsComponent } from './tournament/competitors/competitors.component';
+import { TournamentCompetitorListComponent } from './tournament/competitor/list.component';
+import { TournamentCompetitorEditComponent } from './tournament/competitor/edit.component';
 import { TournamentEditComponent } from './tournament/edit/edit.component';
 import { TournamentGameEditComponent } from './tournament/game/edit.component';
 import { TournamentHomeComponent } from './tournament/home/home.component';
@@ -41,9 +41,7 @@ import { TournamentViewComponent } from './tournament/view/view.component';
     FctoernooiRoutingModule,
     NgbModule,
     NouisliderModule,
-    DndModule,
-    ReactiveFormsModule/*,
-    SportModule*/
+    ReactiveFormsModule
   ],
   declarations: [
     TournamentNewComponent,
@@ -53,7 +51,8 @@ import { TournamentViewComponent } from './tournament/view/view.component';
     TournamentStructureRoundComponent,
     TournamentPlanningComponent,
     TournamentPlanningViewComponent,
-    TournamentCompetitorsComponent,
+    TournamentCompetitorListComponent,
+    TournamentCompetitorEditComponent,
     TournamentPlanningSettingsComponent,
     TournamentPlanningRefereesComponent,
     TournamentPlanningFieldsComponent,
