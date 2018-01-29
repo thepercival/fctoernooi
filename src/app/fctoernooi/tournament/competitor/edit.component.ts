@@ -16,8 +16,8 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
     loading = false;
     returnUrl: string;
     returnUrlParam: number;
-    returnUrlQueryParamKey: string;
-    returnUrlQueryParamValue: string;
+    // returnUrlQueryParamKey: string;
+    // returnUrlQueryParamValue: string;
     public alert: IAlert;
     public processing = true;
     customForm: FormGroup;
@@ -64,8 +64,8 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
         this.route.queryParamMap.subscribe(params => {
             this.returnUrl = params.get('returnAction');
             this.returnUrlParam = +params.get('returnParam');
-            this.returnUrlQueryParamKey = params.get('returnQueryParamKey');
-            this.returnUrlQueryParamValue = params.get('returnQueryParamValue');
+            // this.returnUrlQueryParamKey = params.get('returnQueryParamKey');
+            // this.returnUrlQueryParamValue = params.get('returnQueryParamValue');
         });
     }
 
@@ -154,14 +154,14 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
         return [this.returnUrl, this.returnUrlParam];
     }
 
-    private getForwarUrlQueryParams(): {} {
-        const queryParams = {};
-        queryParams[this.returnUrlQueryParamKey] = this.returnUrlQueryParamValue;
-        return queryParams;
-    }
+    // private getForwarUrlQueryParams(): {} {
+    //     const queryParams = {};
+    //     queryParams[this.returnUrlQueryParamKey] = this.returnUrlQueryParamValue;
+    //     return queryParams;
+    // }
 
     navigateBack() {
-        this.router.navigate(this.getForwarUrl(), { queryParams: this.getForwarUrlQueryParams() });
+        this.router.navigate(this.getForwarUrl()/*, { queryParams: this.getForwarUrlQueryParams() }*/);
     }
 
     isNameDuplicate(name: string, teamId?: number): boolean {
