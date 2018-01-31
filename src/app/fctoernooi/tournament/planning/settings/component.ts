@@ -3,7 +3,6 @@ import {
     IRoundConfig,
     PlanningService,
     Round,
-    RoundConfig,
     RoundConfigRepository,
     RoundScoreConfig,
     StructureRepository,
@@ -281,7 +280,7 @@ export class TournamentPlanningSettingsComponent implements OnInit {
             round.getConfig().setMinutesPerGame(modelToUpdateWith.minutesPerGame);
             round.getConfig().setMinutesInBetween(modelToUpdateWith.minutesInBetween);
         });
-        if (rounds[roundNumber + 1] !== undefined) {
+        if (this.allRoundsByNumber[roundNumber + 1] !== undefined) {
             this.updateRoundConfig(roundNumber + 1, modelToUpdateWith);
         }
     }
