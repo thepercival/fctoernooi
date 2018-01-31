@@ -27,8 +27,11 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     planningService: PlanningService;
     model: any;
     loading = false;
-    error = '';
-    returnUrl = [];
+    error;
+    returnUrl: string;
+    returnUrlParam: number;
+    returnUrlQueryParamKey: string;
+    returnUrlQueryParamValue: string;
 
     validations: any = {
         'minlengthname': Competition.MIN_LENGTH_NAME,
@@ -47,6 +50,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         this.model = {
             home: 0,
             away: 0,
+            extratime: false,
             played: false,
             startdate: undefined,
             starttime: undefined
@@ -60,8 +64,10 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         });
 
         this.route.queryParamMap.subscribe(params => {
-            this.returnUrl.push(params.get('returnAction'));
-            this.returnUrl.push(+params.get('returnParams'));
+            this.returnUrl = params.get('returnAction');
+            this.returnUrlParam = +params.get('returnParam');
+            this.returnUrlQueryParamKey = params.get('returnQueryParamKey');
+            this.returnUrlQueryParamValue = params.get('returnQueryParamValue');
         });
     }
 
@@ -69,14 +75,15 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         this.game = this.structureService.getGameById(gameId, this.structureService.getFirstRound());
         const date = this.game.getStartDateTime();
         const gameScore = this.game.getFinalScore();
+        console.log(gameScore);
         // bepaal scoreconfig
         this.model = {
             home: gameScore ? gameScore.getHome() : 0,
             away: gameScore ? gameScore.getAway() : 0,
+            extratime: gameScore ? gameScore.getExtraTime() : false,
             played: this.game.getState() === Game.STATE_PLAYED
         };
         if (date !== undefined) {
-            // console.log(date);
             this.model.startdate = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
             this.model.starttime = { hour: date.getHours(), minute: date.getMinutes() };
         }
@@ -114,8 +121,28 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     setPlayed(played: boolean) {
-        // set model to played and do some checks before d
+        if (this.model.played === true && played === false) {
+            this.model.extratime = false;
+            this.setHome(0);
+            this.setAway(0);
+        }
         this.model.played = played;
+    }
+
+    private getForwarUrl() {
+        return [this.returnUrl, this.returnUrlParam];
+    }
+
+    private getForwarUrlQueryParams(): {} {
+        const queryParams = {};
+        if (this.returnUrlQueryParamKey !== undefined) {
+            queryParams[this.returnUrlQueryParamKey] = this.returnUrlQueryParamValue;
+        }
+        return queryParams;
+    }
+
+    navigateBack() {
+        this.router.navigate(this.getForwarUrl(), { queryParams: this.getForwarUrlQueryParams() });
     }
 
     save() {
@@ -124,11 +151,9 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             gameScore = new GameScore(this.game);
         }
         const checkQualifiers = this.model.played && (gameScore.getHome() !== this.model.home || gameScore.getAway() !== this.model.away);
-        console.log(checkQualifiers);
-        console.log(this.model.played, gameScore.getHome(), this.model.home, gameScore.getAway(), this.model.away);
         gameScore.setHome(this.model.home);
         gameScore.setAway(this.model.away);
-        gameScore.setExtraTime(false);
+        gameScore.setExtraTime(this.model.extratime);
         const state = this.model.played === true ? Game.STATE_PLAYED : Game.STATE_CREATED;
         this.game.setState(state);
         if (this.planningService.canCalculateStartDateTime(this.game.getRound().getNumber())) {
@@ -147,11 +172,12 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             .subscribe(
             /* happy path */ gameRes => {
                 this.game = gameRes;
-
                 if (checkQualifiers === false) {
                     this.loading = false;
+                    this.navigateBack();
                     return;
                 }
+
                 const newQualifiers: INewQualifier[] = [];
                 this.game.getRound().getChildRounds().forEach(childRound => {
                     const qualService = new QualifyService(childRound);
@@ -160,34 +186,25 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
                     });
                 });
 
-                this.loading = false;
+                if (newQualifiers.length > 0) {
+                    const reposUpdates = [];
+                    newQualifiers.forEach((newQualifier) => {
+                        const poulePlace = newQualifier.poulePlace;
+                        poulePlace.setTeam(newQualifier.team);
+                        reposUpdates.push(this.poulePlaceRepository.editObject(poulePlace, poulePlace.getPoule()));
+                    });
 
-                const reposUpdates = [];
-                newQualifiers.forEach((newQualifier) => {
-                    const poulePlace = newQualifier.poulePlace;
-                    poulePlace.setTeam(newQualifier.team);
-                    reposUpdates.push(this.poulePlaceRepository.editObject(poulePlace, poulePlace.getPoule()));
-                });
-
-                forkJoin(reposUpdates).subscribe(results => {
-                    console.log('qualifier gewijzigd');
-                    this.loading = false;
-                },
-                    err => {
-                        console.log('qualifier niet gewijzigd');
+                    forkJoin(reposUpdates).subscribe(results => {
+                        this.navigateBack();
                         this.loading = false;
-                    }
-                );
-
-                // setTimeout(3000);
-                // this.structureRepository.editObject(round, round.getCompetitionseason())
-                //     .subscribe(
-                //         /* happy path */ roundRes => {
-                //         this.router.navigate(['/toernooi/home', tournamentRes.getId()]);
-                //     },
-                // /* error path */ e => { this.error = e; this.loading = false; },
-                // /* onComplete */() => this.loading = false
-                //     );
+                    },
+                        err => {
+                            this.loading = false;
+                        }
+                    );
+                    return;
+                }
+                this.navigateBack();
             },
             /* error path */ e => { this.error = e; this.loading = false; },
             /* onComplete */() => { if (checkQualifiers === false) { this.loading = false; } }

@@ -3,6 +3,7 @@
   <form class="card card-body mx-auto bg-faded form-login" style="max-width: 25rem" name="form" (ngSubmit)="f.form.valid && login() && false"
     #f="ngForm" novalidate>
     <legend class="m-b-1 text-xs-center">inloggen</legend>
+    <div *ngIf="info" class="alert alert-info">{{info}}</div>
     <label for="emailaddress" class="sr-only">emailaddres</label>
     <input type="email" id="emailaddress" name="emailaddress" class="form-control" placeholder="emailadres" [(ngModel)]="model.emailaddress"
       #emailaddress="ngModel" required autofocus>

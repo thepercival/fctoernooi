@@ -22,7 +22,7 @@
           </ng-template>
           <ng-template ngbTabContent>
             <app-tournament-planning-view *ngFor="let roundNumber of structureService.getRoundNumbers()" [tournament]="tournament" [roundNumber]="roundNumber"
-              [structureService]="structureService"></app-tournament-planning-view>
+              [structureService]="structureService" [parentReturnAction]="'/toernooi/planning'"></app-tournament-planning-view>
           </ng-template>
         </ngb-tab>
         <ngb-tab id="tab-settings">

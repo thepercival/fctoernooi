@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../auth/auth.service';
@@ -8,32 +9,37 @@ import { AuthService } from '../../auth/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
   model: any = {};
   loading = false;
-  // private subscription: Subscription;
-  error = '';
+  protected sub: Subscription;
+  error: string;
+  info: string;
   // activationmessage: string;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private authService: AuthService) { }
 
   ngOnInit() {
-    // this.subscription = this.activatedRoute.queryParams.subscribe(
-    //     (param: any) => {
-    //       this.activationmessage = param['message'];
-    //     });
+    this.sub = this.activatedRoute.queryParams.subscribe(
+      (param: any) => {
+        this.info = param['message'];
+      });
   }
 
   login() {
     this.loading = true;
-    // this.activationmessage = undefined;
+    this.info = undefined;
     this.authService.login(this.model.emailaddress, this.model.password)
       .subscribe(
             /* happy path */ p => this.router.navigate(['/home']),
             /* error path */ e => { this.error = e; this.loading = false; },
             /* onComplete */() => this.loading = false
       );
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
 }

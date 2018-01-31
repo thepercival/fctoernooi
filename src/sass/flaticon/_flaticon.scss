@@ -1,9 +1,9 @@
-    /*
-    Flaticon icon font: Flaticon
-    Creation date: 11/10/2017 20:11
-    */
+/*
+Flaticon icon font: Flaticon
+Creation date: 11/10/2017 20:11
+*/
 
-    @font-face {
+@font-face {
   font-family: "Flaticon";
   src: url("#{$flaticon-font-path}/Flaticon.eot");
   src: url("#{$flaticon-font-path}/Flaticon.eot?#iefix") format("embedded-opentype"),
@@ -21,8 +21,8 @@
   }
 }
 
-    .fi:before{
-        display: inline-block;
+.fi:before{
+  display: inline-block;
   font-family: "Flaticon";
   font-style: normal;
   font-weight: normal;
@@ -34,9 +34,9 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-smoothing: antialiased;
-    }
+}
 
-    .flaticon-scoreboard:before { content: "\f100"; }
+.flaticon-scoreboard:before { content: "\f100"; }
 .flaticon-schedule:before { content: "\f101"; }
 .flaticon-cup:before { content: "\f102"; }
 .flaticon-soccer-field:before { content: "\f103"; }
@@ -44,12 +44,24 @@
 .flaticon-structure:before { content: "\f105"; }
 .flaticon-referee:before { content: "\f106"; }
 .flaticon-favicon:before { content: "\f107"; }
+.flaticon-darts:before { content: "\f108"; }
+.flaticon-tabletennis:before { content: "\f109"; }
+.flaticon-tennis:before { content: "\f10a"; }
+.flaticon-volleyball:before { content: "\f10b"; }
+.flaticon-badminton:before { content: "\f10c"; }
+.flaticon-hockey:before { content: "\f10d"; }
     
-    $font-Flaticon-scoreboard: "\f100";
-    $font-Flaticon-schedule: "\f101";
-    $font-Flaticon-cup: "\f102";
-    $font-Flaticon-soccer-field: "\f103";
-    $font-Flaticon-group: "\f104";
-    $font-Flaticon-structure: "\f105";
-    $font-Flaticon-referee: "\f106";
-    $font-Flaticon-favicon: "\f107";
+$font-Flaticon-scoreboard: "\f100";
+$font-Flaticon-schedule: "\f101";
+$font-Flaticon-cup: "\f102";
+$font-Flaticon-soccer-field: "\f103";
+$font-Flaticon-group: "\f104";
+$font-Flaticon-structure: "\f105";
+$font-Flaticon-referee: "\f106";
+$font-Flaticon-favicon: "\f107";
+$font-Flaticon-darts: "\f108";
+$font-Flaticon-tabletennis: "\f109";
+$font-Flaticon-tennis: "\f10a";
+$font-Flaticon-volleyball: "\f10b";
+$font-Flaticon-badminton: "\f10c";
+$font-Flaticon-hockey: "\f10d";

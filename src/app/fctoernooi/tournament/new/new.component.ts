@@ -7,6 +7,7 @@ import {
   Field,
   PlanningService,
   Season,
+  SportConfig,
   StructureRepository,
   StructureService,
 } from 'ngx-sport';
@@ -25,7 +26,7 @@ export class TournamentNewComponent implements OnInit {
   model: any;
   loading = false;
   error = '';
-  sportnames: [string] = ['darten', 'tafeltennis', 'voetbal'];
+  sportnames: string[];
   validations: any = {
     'minnrofcompetitors': Tournament.MINNROFCOMPETITORS,
     'maxnrofcompetitors': Tournament.MAXNROFCOMPETITORS,
@@ -42,7 +43,7 @@ export class TournamentNewComponent implements OnInit {
     private structureRepository: StructureRepository) {
     const date = new Date();
     date.setTime(date.getTime() + (60 * 10 * 1000)); // 10 minutes
-
+    this.sportnames = SportConfig.getSports();
     this.model = {
       starttime: { hour: date.getHours(), minute: date.getMinutes() },
       startdate: { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() },

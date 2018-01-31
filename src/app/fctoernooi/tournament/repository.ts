@@ -1,6 +1,7 @@
 /**
  * Created by coen on 1-10-17.
  */
+import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CompetitionseasonRepository, ICompetitionseason, SportRepository } from 'ngx-sport';
@@ -20,8 +21,12 @@ export class TournamentRepository extends SportRepository {
     private tournamentRoleRepository: TournamentRoleRepository;
     private cache: Tournament[] = [];
 
-    constructor(private http: HttpClient, csRepository: CompetitionseasonRepository, tournamentRoleRepository: TournamentRoleRepository) {
-        super();
+    constructor(
+        private http: HttpClient,
+        csRepository: CompetitionseasonRepository,
+        tournamentRoleRepository: TournamentRoleRepository,
+        router: Router) {
+        super(router);
         this.csRepository = csRepository;
         this.tournamentRoleRepository = tournamentRoleRepository;
         this.url = super.getApiUrl() + this.getUrlpostfix();
@@ -44,13 +49,13 @@ export class TournamentRepository extends SportRepository {
         };
 
         return this.http.get<ITournament[]>(this.url, options).pipe(
-                map((jsonTournaments: ITournament[]) => {
-                    const tournamentsRes = this.jsonArrayToObject(jsonTournaments);
-                    this.cache = tournamentsRes;
-                    return tournamentsRes;
-                }),
-                catchError( super.handleError )
-            );
+            map((jsonTournaments: ITournament[]) => {
+                const tournamentsRes = this.jsonArrayToObject(jsonTournaments);
+                this.cache = tournamentsRes;
+                return tournamentsRes;
+            }),
+            catchError((err) => this.handleError(err))
+        );
 
     }
 
@@ -72,7 +77,7 @@ export class TournamentRepository extends SportRepository {
                 this.cache.push(tournamentRes);
                 return tournamentRes;
             }),
-            catchError(super.handleError)
+            catchError((err) => this.handleError(err))
         );
     }
 
@@ -83,32 +88,32 @@ export class TournamentRepository extends SportRepository {
                 this.cache.push(tournamentIn);
                 return tournamentIn;
             }),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
     editObject(tournament: Tournament): Observable<Tournament> {
         const url = this.url + '/' + tournament.getId();
-        return this.http.put( url, this.objectToJsonHelper(tournament), { headers: super.getHeaders() }).pipe(
+        return this.http.put(url, this.objectToJsonHelper(tournament), { headers: super.getHeaders() }).pipe(
             map((res: ITournament) => {
                 console.log(res); return this.jsonToObjectHelper(res);
             }),
-            catchError( super.handleError )
+            catchError((err) => this.handleError(err))
         );
     }
 
     removeObject(tournament: Tournament): Observable<boolean> {
         const url = this.url + '/' + tournament.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
-                map((res) => {
-                    const index = this.cache.indexOf(tournament);
-                    if (index > -1) {
-                        this.cache.splice(index, 1);
-                    }
-                    return true;
-                }),
-                catchError( super.handleError )
-            );
+            map((res) => {
+                const index = this.cache.indexOf(tournament);
+                if (index > -1) {
+                    this.cache.splice(index, 1);
+                }
+                return true;
+            }),
+            catchError((err) => this.handleError(err))
+        );
     }
 
     jsonArrayToObject(jsonArray: ITournament[]): Tournament[] {

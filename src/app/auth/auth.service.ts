@@ -17,8 +17,8 @@ export class AuthService extends SportRepository {
   private authItem: IAuthItem;
   private url: string;
 
-  constructor(private http: HttpClient, private router: Router, private userRepos: UserRepository) {
-    super();
+  constructor(private http: HttpClient, router: Router, private userRepos: UserRepository) {
+    super(router);
     const jsonAuth = JSON.parse(localStorage.getItem('auth'));
     this.authItem = {
       token: jsonAuth ? jsonAuth.token : undefined,
@@ -36,7 +36,7 @@ export class AuthService extends SportRepository {
   }
 
   getLoggedInUserId(): number {
-    return this.authItem.userid;
+    return this.authItem ? this.authItem.userid : undefined;
   }
 
   register(newUser: any): Observable<User> {
@@ -47,7 +47,7 @@ export class AuthService extends SportRepository {
         const user = this.userRepos.jsonToObjectHelper(res.user);
         return user;
       }),
-      catchError(this.handleError)
+      catchError((err) => this.handleError(err))
     );
   }
 
@@ -67,7 +67,7 @@ export class AuthService extends SportRepository {
           return false;
         }
       }),
-      catchError(this.handleError)
+      catchError((err) => this.handleError(err))
     );
   }
 
@@ -82,7 +82,7 @@ export class AuthService extends SportRepository {
       map((res: any) => {
         return res.retval;
       }),
-      catchError(this.handleError)
+      catchError((err) => this.handleError(err))
     );
   }
 
@@ -96,7 +96,7 @@ export class AuthService extends SportRepository {
           return false;
         }
       }),
-      catchError(this.handleError)
+      catchError((err) => this.handleError(err))
     );
   }
 
@@ -115,7 +115,7 @@ export class AuthService extends SportRepository {
       errortext = error.statusText;
     }
     if (error.status === 401) {
-      errortext = 'je bent niet ingelogd';
+      this.router.navigate(['/user/login']);
     }
     return Observable.throw(errortext);
   }

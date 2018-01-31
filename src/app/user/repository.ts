@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SportRepository } from 'ngx-sport';
@@ -12,8 +13,8 @@ export class UserRepository extends SportRepository {
 
   private url: string;
 
-  constructor(private http: HttpClient) {
-    super();
+  constructor(private http: HttpClient, router: Router) {
+    super(router);
     this.url = super.getApiUrl() + this.getUrlpostfix();
   }
 
@@ -26,7 +27,7 @@ export class UserRepository extends SportRepository {
       map((res: IUser[]) => {
         return this.jsonArrayToObject(res);
       }),
-      catchError( super.handleError )
+      catchError((err) => this.handleError(err))
     );
   }
 
@@ -34,15 +35,15 @@ export class UserRepository extends SportRepository {
     const url = `${this.url}/${id}`;
     return this.http.get(url).pipe(
       map((res: IUser) => this.jsonToObjectHelper(res)),
-      catchError( super.handleError )
+      catchError((err) => this.handleError(err))
     );
   }
 
   createObject(jsonObject: any): Observable<User> {
     return this.http.post(this.url, jsonObject, { headers: super.getHeaders() }).pipe(
-        map((res: IUser) => this.jsonToObjectHelper(res)),
-        catchError( super.handleError )
-      );
+      map((res: IUser) => this.jsonToObjectHelper(res)),
+      catchError((err) => this.handleError(err))
+    );
   }
 
   jsonArrayToObject(jsonArray: IUser[]): User[] {

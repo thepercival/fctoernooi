@@ -13,9 +13,11 @@ import { TournamentRefereeEditComponent } from './tournament/referee/edit.compon
 import { TournamentCompetitorEditComponent } from './tournament/competitor/edit.component';
 import { TournamentStructureComponent } from './tournament/structure/main.component';
 import { TournamentViewComponent } from './tournament/view/view.component';
+import { TournamentViewTvComponent } from './tournament/view/tv.component';
 
 const routes: Routes = [
   { path: 'view/:id', component: TournamentViewComponent },
+  { path: 'viewtv/:id', component: TournamentViewTvComponent },
   { path: 'new', component: TournamentNewComponent },
   { path: 'edit/:id', component: TournamentEditComponent },
   { path: 'home/:id', component: TournamentHomeComponent, canActivate: [AuthguardService] },

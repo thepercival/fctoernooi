@@ -10,11 +10,11 @@ import { TournamentRole } from '../role';
 import { GlobalEventsManager } from '../../../common/eventmanager';
 
 @Component({
-    selector: 'app-tournament-view',
-    templateUrl: './view.component.html',
-    styleUrls: ['./view.component.css']
+    selector: 'app-tournament-view-tv',
+    templateUrl: './tv.component.html',
+    styleUrls: ['./tv.component.css']
 })
-export class TournamentViewComponent extends TournamentComponent implements OnInit, OnDestroy {
+export class TournamentViewTvComponent extends TournamentComponent implements OnInit, OnDestroy {
 
     constructor(
         route: ActivatedRoute,
@@ -32,7 +32,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     }
 
     initTVViewLink() {
-        const link: NavBarTournamentTVViewLink = { showTVIcon: true, tournamentId: this.tournament.getId(), link: '/toernooi/viewtv' };
+        const link: NavBarTournamentTVViewLink = { showTVIcon: false, tournamentId: this.tournament.getId(), link: '/toernooi/view' };
         this.globalEventsManager.toggleTVIconInNavBar.emit(link);
     }
 

@@ -33,6 +33,7 @@ import { TournamentRoleRepository } from './tournament/role/repository';
 import { TournamentStructureComponent } from './tournament/structure/main.component';
 import { TournamentStructureRoundComponent } from './tournament/structure/round.component';
 import { TournamentViewComponent } from './tournament/view/view.component';
+import { TournamentViewTvComponent } from './tournament/view/tv.component';
 
 @NgModule({
   imports: [
@@ -57,6 +58,7 @@ import { TournamentViewComponent } from './tournament/view/view.component';
     TournamentPlanningRefereesComponent,
     TournamentPlanningFieldsComponent,
     TournamentViewComponent,
+    TournamentViewTvComponent,
     TournamentGameEditComponent,
     TournamentRefereeEditComponent
   ],

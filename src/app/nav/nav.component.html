@@ -2,12 +2,22 @@
   <a class="navbar-brand" [routerLink]="['/']">
     <i class="fi flaticon-favicon"></i> {{title}}</a>
 
-    <button *ngIf="!isLoggedIn()" routerLink="/user/login" routerLinkActive="active" class="btn btn-outline-secondary" type="button" style="cursor:pointer;">
-      <i class="fa fa-sign-in"></i> inloggen
-    </button>
-    <button *ngIf="isLoggedIn()" routerLink="/user/logout" routerLinkActive="active" class="btn btn-outline-secondary" type="button" style="cursor:pointer;">
-      <i class="fa fa-sign-out"></i> uitloggen
-    </button>
+  <button *ngIf="tournamentViewTVLink.showTVIcon !== undefined" [routerLink]="[tournamentViewTVLink.link, tournamentViewTVLink.tournamentId]"
+    routerLinkActive="active" class="btn btn-outline-secondary" type="button" style="cursor:pointer;">
+    <i class="fa fa-{{ tournamentViewTVLink.showTVIcon === true ? 'television' : 'level-up fa-rotate-270'}}"></i>
+    <span class="d-none d-sm-inline">{{ tournamentViewTVLink.showTVIcon === true ? 'tvscherm' : 'terug'}}</span>
+  </button>
+
+  <button *ngIf="!isLoggedIn()" routerLink="/user/login" routerLinkActive="active" class="btn btn-outline-secondary" type="button"
+    style="cursor:pointer;">
+    <i class="fa fa-sign-in"></i>
+    <span class="d-none d-sm-inline">inloggen</span>
+  </button>
+  <button *ngIf="isLoggedIn()" routerLink="/user/logout" routerLinkActive="active" class="btn btn-outline-secondary" type="button"
+    style="cursor:pointer;">
+    <i class="fa fa-sign-out"></i>
+    <span class="d-none d-sm-inline">uitloggen</span>
+  </button>
 
   <!-- <button class="navbar-toggler navbar-toggler-right text-white" type="button" data-toggle="collapse" data-target="#navbarResponsive"
     aria-controls="navbarResponsive" aria-label="Toggle navigation" (click)="navbarCollapsed = !navbarCollapsed" [attr.aria-expanded]="!navbarCollapsed"

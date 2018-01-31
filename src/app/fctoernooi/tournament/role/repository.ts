@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SportRepository } from 'ngx-sport';
@@ -16,8 +17,8 @@ export class TournamentRoleRepository extends SportRepository {
     private userRepos: UserRepository;
     private objects: Tournament[];
 
-    constructor(private http: HttpClient, userRepos: UserRepository) {
-        super();
+    constructor(private http: HttpClient, userRepos: UserRepository, router: Router) {
+        super(router);
         this.userRepos = userRepos;
         this.url = super.getApiUrl() + this.getUrlpostfix();
     }

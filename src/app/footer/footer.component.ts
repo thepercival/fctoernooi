@@ -1,4 +1,7 @@
+import { NavBarTournamentTVViewLink } from '../nav/nav.component';
 import { Component, OnInit } from '@angular/core';
+
+import { GlobalEventsManager } from '../common/eventmanager';
 
 @Component({
   selector: 'app-footer',
@@ -7,7 +10,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FooterComponent implements OnInit {
 
-  constructor() { }
+  tournamentViewTVLink: NavBarTournamentTVViewLink = {};
+
+  constructor(private globalEventsManager: GlobalEventsManager) {
+    this.globalEventsManager.toggleTVIconInNavBar.subscribe((tournamentViewTVLink: NavBarTournamentTVViewLink) => {
+      this.tournamentViewTVLink = tournamentViewTVLink;
+    });
+  }
 
   ngOnInit() {
   }

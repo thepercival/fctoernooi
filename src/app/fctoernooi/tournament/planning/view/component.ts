@@ -1,3 +1,5 @@
+import { AuthService } from '../../../../auth/auth.service';
+import { TournamentRole } from '../../role';
 import { Component, Input } from '@angular/core';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Router } from '@angular/router';
@@ -16,6 +18,7 @@ export class TournamentPlanningViewComponent implements OnInit {
   @Input() tournament: Tournament;
   @Input() roundNumber: number;
   @Input() structureService: StructureService;
+  @Input() parentReturnAction: string;
   alert: any;
   planningService: PlanningService;
   GameStatePlayed = Game.STATE_PLAYED;
@@ -23,18 +26,20 @@ export class TournamentPlanningViewComponent implements OnInit {
   private openPopovers: NgbPopover[] = [];
   ranking: Ranking;
   roundsByNumber: Round[];
+  userIsGameResultAdmin: boolean;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private authService: AuthService) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
     this.resetAlert();
     this.ranking = new Ranking(Ranking.RULESSET_WC);
   }
 
-
   ngOnInit() {
     this.planningService = new PlanningService(this.structureService);
     const allRoundsByNumber = this.structureService.getAllRoundsByNumber();
     this.roundsByNumber = allRoundsByNumber[this.roundNumber];
+    this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), TournamentRole.GAMERESULTADMIN);
+    console.log(this.parentReturnAction);
   }
 
   getWinnersLosersDescription(winnersOrLosers: number): string {
@@ -75,9 +80,17 @@ export class TournamentPlanningViewComponent implements OnInit {
   }
 
   linkToGameEdit(tournament: Tournament, game: Game) {
+    if (this.userIsGameResultAdmin !== true) {
+      return;
+    }
     this.router.navigate(
       ['/toernooi/gameedit', tournament.getId(), game.getId()],
-      { queryParams: { returnAction: '/toernooi/planning', returnParams: tournament.getId() } }
+      {
+        queryParams: {
+          returnAction: this.parentReturnAction,
+          returnParam: tournament.getId()
+        }
+      }
     );
   }
 
@@ -101,9 +114,7 @@ export class TournamentPlanningViewComponent implements OnInit {
   }
 
   getPoulePlacesByRank(poule: Poule): PoulePlace[][] {
-    const pp = this.ranking.getPoulePlacesByRank(poule.getPlaces(), poule.getGames());
-    console.log(pp);
-    return pp;
+    return this.ranking.getPoulePlacesByRank(poule.getPlaces(), poule.getGames());
   }
 
   protected resetAlert(): void {

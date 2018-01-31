@@ -6,6 +6,8 @@
           {{tournament.getName()}}
         </h1>
       </div>
+
+      schrijf hier logica uit wat te tonen voor tv-scherm
       <!-- <div>
         <h2>
           <button [routerLink]="['/toernooi/home', tournament.getId()]" type="button" class="btn btn-outline-secondary btn-sm">
@@ -13,8 +15,8 @@
           </button>
         </h2>
       </div> -->
-      <app-tournament-planning-view *ngFor="let roundNumber of structureService.getRoundNumbers()" [tournament]="tournament" [roundNumber]="roundNumber"
-        [structureService]="structureService" [parentReturnAction]="'/toernooi/view'"></app-tournament-planning-view>
+      <!-- <app-tournament-planning-view *ngFor="let roundNumber of structureService.getRoundNumbers()" [tournament]="tournament" [roundNumber]="roundNumber"
+        [structureService]="structureService" [parentReturnAction]="'/toernooi/view'"></app-tournament-planning-view> -->
     </div>
   </div>
 
