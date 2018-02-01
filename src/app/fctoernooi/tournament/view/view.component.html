@@ -6,30 +6,8 @@
           {{tournament.getName()}}
         </h1>
       </div>
-      <!-- <div>
-        <h2>
-          <button [routerLink]="['/toernooi/home', tournament.getId()]" type="button" class="btn btn-outline-secondary btn-sm">
-            <i class="fa fa-filter"></i> filter
-          </button>
-        </h2>
-      </div> -->
       <app-tournament-planning-view *ngFor="let roundNumber of structureService.getRoundNumbers()" [tournament]="tournament" [roundNumber]="roundNumber"
-        [structureService]="structureService" [parentReturnAction]="'/toernooi/view'"></app-tournament-planning-view>
+        [structureService]="structureService" [planningService]="planningService" [parentReturnAction]="'/toernooi/view'"></app-tournament-planning-view>
     </div>
   </div>
-
 </div>
-
-<!-- <div *ngIf="tournament" class="container-fluid">
-  <h1 align="center">
-    {{tournament.getName()}}
-    <a [routerLink]="['/toernooi', tournament.getId()]">
-      <i class="fa fa-eye"></i>
-    </a>
-  </h1>
-  <div *ngIf="structureService" class="row d-flex justify-content-center">
-    view!!!
-    <div *ngIf="isAdmin()" class="card mt-3 mx-2">
-      i am the admin!!!
-    </div>
-  </div> -->

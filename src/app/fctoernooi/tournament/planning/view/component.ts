@@ -1,26 +1,26 @@
-import { AuthService } from '../../../../auth/auth.service';
-import { TournamentRole } from '../../role';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap/popover/popover';
 import { Game, PlanningService, Poule, PoulePlace, Ranking, Round, StructureService } from 'ngx-sport';
 
+import { AuthService } from '../../../../auth/auth.service';
 import { Tournament } from '../../../tournament';
+import { TournamentRole } from '../../role';
 
 @Component({
   selector: 'app-tournament-planning-view',
   templateUrl: './component.html',
   styleUrls: ['./component.css']
 })
-export class TournamentPlanningViewComponent implements OnInit {
+export class TournamentPlanningViewComponent implements OnInit, OnChanges {
 
   @Input() tournament: Tournament;
   @Input() roundNumber: number;
   @Input() structureService: StructureService;
+  @Input() planningService: PlanningService;
   @Input() parentReturnAction: string;
   alert: any;
-  planningService: PlanningService;
   GameStatePlayed = Game.STATE_PLAYED;
   selectedPouleForRanking;
   private openPopovers: NgbPopover[] = [];
@@ -35,11 +35,13 @@ export class TournamentPlanningViewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.planningService = new PlanningService(this.structureService);
-    const allRoundsByNumber = this.structureService.getAllRoundsByNumber();
-    this.roundsByNumber = allRoundsByNumber[this.roundNumber];
     this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), TournamentRole.GAMERESULTADMIN);
-    console.log(this.parentReturnAction);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.structureService !== undefined) {
+      this.roundsByNumber = this.planningService.getRoundsByNumber(this.roundNumber);
+    }
   }
 
   getWinnersLosersDescription(winnersOrLosers: number): string {
@@ -92,6 +94,10 @@ export class TournamentPlanningViewComponent implements OnInit {
         }
       }
     );
+  }
+
+  hasReferees() {
+    return this.tournament.getCompetitionseason().getReferees().length > 0;
   }
 
   showRanking(popOver: NgbPopover, poule: Poule) {

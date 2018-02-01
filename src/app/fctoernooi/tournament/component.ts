@@ -1,17 +1,18 @@
-/**
- * Created by coen on 11-10-17.
- */
 import { OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Round, StructureRepository, StructureService } from 'ngx-sport';
+import { Subscription } from 'rxjs/Subscription';
 
 import { Tournament } from '../tournament';
 import { TournamentRepository } from './repository';
 
+/**
+ * Created by coen on 11-10-17.
+ */
 export class TournamentComponent implements OnDestroy {
 
     tournament: Tournament;
-    protected sub: any;
+    protected sub: Subscription;
     protected route: ActivatedRoute;
     protected router: Router;
     protected tournamentRepository: TournamentRepository;
@@ -32,31 +33,35 @@ export class TournamentComponent implements OnDestroy {
 
     myNgOnInit(callback?: DataProcessCallBack) {
         this.sub = this.route.params.subscribe(params => {
-            this.tournamentRepository.getObject(+params['id'])
-                .subscribe(
-                    /* happy path */(tournament: Tournament) => {
-                    this.tournament = tournament;
+            this.setData(+params['id'], callback);
+        });
+    }
 
-                    this.structureRepository.getObject(tournament.getCompetitionseason())
-                        .subscribe(
+    setData(tournamentId: number, callback?: DataProcessCallBack) {
+        this.tournamentRepository.getObject(tournamentId)
+            .subscribe(
+                    /* happy path */(tournament: Tournament) => {
+                this.tournament = tournament;
+
+                this.structureRepository.getObject(tournament.getCompetitionseason())
+                    .subscribe(
                                 /* happy path */(round: Round) => {
-                            this.structureService = new StructureService(
-                                tournament.getCompetitionseason(),
-                                { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
-                                round
-                            );
-                            if (callback !== undefined) {
-                                callback();
-                            }
-                        },
+                        this.structureService = new StructureService(
+                            tournament.getCompetitionseason(),
+                            { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
+                            round
+                        );
+                        if (callback !== undefined) {
+                            callback();
+                        }
+                    },
                                 /* error path */ e => { },
                                 /* onComplete */() => { }
-                        );
-                },
+                    );
+            },
                     /* error path */ e => { },
                     /* onComplete */() => { }
-                );
-        });
+            );
     }
 
     ngOnDestroy() {

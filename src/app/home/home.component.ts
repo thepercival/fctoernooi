@@ -1,7 +1,8 @@
-import { SportConfig } from 'ngx-sport';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-struct';
+import { SportConfig } from 'ngx-sport';
+import { timer } from 'rxjs/observable/timer';
 
 import { IAlert } from '../app.definitions';
 import { AuthService } from '../auth/auth.service';
@@ -33,7 +34,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getTournaments();
+    timer(0, 20000).subscribe(number => this.getTournaments());
 
     this.route.queryParams.subscribe(params => {
       if (params.type !== undefined && params.message !== undefined) {

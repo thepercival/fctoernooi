@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Round, StructureRepository, StructureService } from 'ngx-sport';
+import { PlanningService, Round, StructureRepository, StructureService } from 'ngx-sport';
 
 import { IAlert } from '../../../app.definitions';
 import { Tournament } from '../../tournament';
@@ -16,6 +16,7 @@ export class TournamentPlanningComponent extends TournamentComponent implements 
 
   initalTabId: string;
   settingsAlert: IAlert;
+  planningService: PlanningService;
 
   constructor(
     route: ActivatedRoute,
@@ -28,7 +29,7 @@ export class TournamentPlanningComponent extends TournamentComponent implements 
   }
 
   ngOnInit() {
-    super.myNgOnInit();
+    super.myNgOnInit(() => this.setPlanningService());
 
     this.initalTabId = 'tab-fields';
     this.route.queryParamMap.subscribe(params => {
@@ -38,12 +39,17 @@ export class TournamentPlanningComponent extends TournamentComponent implements 
     });
   }
 
+  setPlanningService() {
+    this.planningService = new PlanningService(this.structureService);
+  }
+
   updateRound(newRound: Round) {
     this.structureService = new StructureService(
       this.tournament.getCompetitionseason(),
       { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
       newRound
     );
+    this.setPlanningService();
   }
 }
 
