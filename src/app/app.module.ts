@@ -1,4 +1,3 @@
-import { GlobalEventsManager } from './common/eventmanager';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +17,8 @@ import { RoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthService } from './auth/auth.service';
 import { AuthguardService } from './auth/authguard.service';
+import { GlobalEventsManager } from './common/eventmanager';
+import { IconManager } from './common/iconmanager';
 import { TournamentRepository } from './fctoernooi/tournament/repository';
 import { TournamentRoleRepository } from './fctoernooi/tournament/role/repository';
 import { FooterComponent } from './footer/footer.component';
@@ -52,7 +53,8 @@ import { UserModule } from './user/user.module';
     SeasonRepository,
     FieldRepository,
     RefereeRepository,
-    GlobalEventsManager
+    GlobalEventsManager,
+    IconManager
   ],
   bootstrap: [AppComponent]
 })

@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { AuthService } from '../../../auth/auth.service';
 import { GlobalEventsManager } from '../../../common/eventmanager';
+import { IconManager } from '../../../common/iconmanager';
 import { NavBarTournamentTVViewLink } from '../../../nav/nav.component';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
@@ -19,8 +20,9 @@ import { TournamentRole } from '../role';
 export class TournamentViewTvComponent extends TournamentComponent implements OnInit, OnDestroy {
 
     private timerSubscription: Subscription;
-    private ranking: Ranking;
+    ranking: Ranking;
     private planningService: PlanningService;
+    screenDef: ScreenDefinition;
 
     constructor(
         route: ActivatedRoute,
@@ -28,37 +30,45 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         private authService: AuthService,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
-        private globalEventsManager: GlobalEventsManager
+        private globalEventsManager: GlobalEventsManager,
+        private iconManager: IconManager
     ) {
         super(route, router, tournamentRepository, structureRepository);
         this.ranking = new Ranking(Ranking.RULESSET_WC);
     }
 
     ngOnInit() {
-        super.myNgOnInit(() => this.initTVViewLink());
+        super.myNgOnInit(() => this.postSetDataEventInit());
+    }
 
-        doe een oneindige cycle van:
-        1 data ophalen
-        2 schermdefinities zetten
-        3 door schermdefinities lopen
+    postSetDataEventInit() {
+        this.postSetDataEvent();
+        this.showScreens(false);
+    }
 
+    postSetDataEvent() {
+        const link: NavBarTournamentTVViewLink = { showTVIcon: false, tournamentId: this.tournament.getId(), link: '/toernooi/view' };
+        this.globalEventsManager.toggleTVIconInNavBar.emit(link);
+        this.planningService = new PlanningService(this.structureService);
+    }
+
+    showScreens(getData: boolean) {
+        if (getData === true) {
+            this.setData(this.tournament.getId(), () => this.postSetDataEvent());
+        }
+        const screenDefs = this.getScreenDefinitions();
+        this.screenDef = screenDefs.shift();
 
         this.timerSubscription = timer(10000, 10000).subscribe(number => {
-            // this.setData(this.tournament.getId());
-            // this.planningService = new PlanningService(this.structureService);
-            getScreenDefinitions()
+            this.screenDef = screenDefs.shift();
+            if (this.screenDef === undefined) {
+                this.timerSubscription.unsubscribe();
+                this.showScreens(true);
+            }
         });
-
-
-
-
-
-        // na iteratie weer even setdata doen!!
     }
 
     getScreenDefinitions(): ScreenDefinition[] {
-        // mySprite instanceof Sprite;
-
         const lastPlayedRoundNumber = this.getLastPlayedRoundNumber();
         const nextRoundNumber = lastPlayedRoundNumber + 1;
         const stateNextRoundNumber = this.getStateRoundNumber(nextRoundNumber);
@@ -93,10 +103,14 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
 
         const rankingScreenDefs = this.getScreenDefinitionsForRanking(roundNumber, true);
         const scheduledGamesScreenDef = this.getScreenDefinitionForSchedule(roundNumber);
+        screenDefs.push(scheduledGamesScreenDef);
         rankingScreenDefs.forEach(rankingScreenDef => {
             screenDefs.push(scheduledGamesScreenDef);
             screenDefs.push(rankingScreenDef);
         });
+        if (screenDefs.length === 0) {
+            screenDefs.push(scheduledGamesScreenDef);
+        }
         return screenDefs;
     }
 
@@ -107,14 +121,14 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         const allRoundsByNumber = this.structureService.getAllRoundsByNumber();
         const roundsByNumber = allRoundsByNumber[roundNumber];
 
-        const games: Game[] = [];
+        let games: Game[] = [];
         const gamesByNumber = this.planningService.getGamesByNumber(roundNumber);
         gamesByNumber.forEach(gamesIt => gamesIt.forEach(game => games.push(game)));
 
-        games.filter(game => {
+        games = games.filter(game => {
             return game.getState() !== Game.STATE_PLAYED;
         });
-        return new ScheduledGamesScreenDefinition(games.slice(0, 8));
+        return new ScheduledGamesScreenDefinition(roundNumber, games.slice(0, 8));
     }
 
     /**
@@ -134,12 +148,12 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
                     pouleTmp = poule;
                     return;
                 }
-                screenDefs.push(new RankingScreenDefinition(pouleTmp, poule));
+                screenDefs.push(new RankingScreenDefinition(roundNumber, pouleTmp, poule));
                 pouleTmp = undefined;
             });
         });
         if (pouleTmp !== undefined) {
-            screenDefs.push(new RankingScreenDefinition(pouleTmp));
+            screenDefs.push(new RankingScreenDefinition(roundNumber, pouleTmp));
         }
         return screenDefs;
     }
@@ -174,12 +188,6 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         return Game.STATE_INPLAY;
     }
 
-
-    initTVViewLink() {
-        const link: NavBarTournamentTVViewLink = { showTVIcon: false, tournamentId: this.tournament.getId(), link: '/toernooi/view' };
-        this.globalEventsManager.toggleTVIconInNavBar.emit(link);
-    }
-
     ngOnDestroy() {
         this.globalEventsManager.toggleTVIconInNavBar.emit({});
         this.timerSubscription.unsubscribe();
@@ -188,18 +196,46 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
     isAdmin(): boolean {
         return this.tournament.hasRole(this.authService.getLoggedInUserId(), TournamentRole.ADMIN);
     }
+
+    isRankingScreenDef(): boolean {
+        return this.screenDef instanceof RankingScreenDefinition;
+    }
+
+    isScheduledGamesScreenDef(): boolean {
+        return this.screenDef instanceof ScheduledGamesScreenDefinition;
+    }
+
+    hasReferees() {
+        return this.tournament.getCompetitionseason().getReferees().length > 0;
+    }
+
+    getScore(game: Game): string {
+        const sScore = ' - ';
+        if (game.getState() !== Game.STATE_PLAYED) {
+            return sScore;
+        }
+        return game.getFinalScore().getHome() + sScore + game.getFinalScore().getAway();
+    }
+
+    getPoulePlacesByRank(poule: Poule): PoulePlace[][] {
+        return this.ranking.getPoulePlacesByRank(poule.getPlaces(), poule.getGames());
+    }
 }
 
 export class ScreenDefinition {
+    roundNumber: number;
 
+    constructor(roundNumber: number) {
+        this.roundNumber = roundNumber;
+    }
 }
 
 export class RankingScreenDefinition extends ScreenDefinition {
     private pouleOne: Poule;
     private pouleTwo: Poule;
 
-    constructor(pouleOne: Poule, pouleTwo?: Poule) {
-        super();
+    constructor(roundNumber: number, pouleOne: Poule, pouleTwo?: Poule) {
+        super(roundNumber);
         this.pouleOne = pouleOne;
         this.pouleTwo = pouleTwo;
     }
@@ -211,25 +247,37 @@ export class RankingScreenDefinition extends ScreenDefinition {
         }
         return poules;
     }
+
+    getDescription() {
+        return 'stand';
+    }
 }
 
 export class ScheduledGamesScreenDefinition extends ScreenDefinition {
     private scheduledGames: Game[]; // max 8
 
-    constructor(scheduledGames) {
-        super();
+    constructor(roundNumber: number, scheduledGames) {
+        super(roundNumber);
         this.scheduledGames = scheduledGames;
     }
 
     getScheduledGames(): Game[] {
         return this.scheduledGames;
     }
+
+    getDescription() {
+        return 'programma';
+    }
 }
 
 export class PlayedGamesScreenDefinition extends ScreenDefinition {
     playedGames: Game[]; // max 8
 
-    constructor() {
-        super();
+    constructor(roundNumber: number, ) {
+        super(roundNumber);
+    }
+
+    getDescription() {
+        return 'uitslagen';
     }
 }

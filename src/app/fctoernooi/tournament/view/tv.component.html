@@ -1,28 +1,81 @@
 <div *ngIf="tournament && structureService" class="container-fluid px-0">
-  <div class="row justify-content-around no-gutters">
-    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
-      <div class="mb-4">
-        <h1 *ngIf="tournament">
-          {{tournament.getName()}}
-        </h1>
-      </div>
-      <!-- // wedstrijden tonen(max 8) // gesorteerd op gameroundnumber -->
+  <div class="mb-4">
+    <h1 *ngIf="tournament">
+      <i class="{{iconManager.getIconClass(tournament.getCompetitionseason().getSport())}}"></i>
+      <span>{{tournament.getName()}}</span>
+      <span>{{screenDef ? ' - ' + screenDef.getDescription() : undefined }}</span>
+    </h1>
+  </div>
+  <div *ngIf="isScheduledGamesScreenDef()">
+    <table class="table tv-screen">
+      <thead>
+        <tr>
+          <th title="poule">
+            <i class="fa fa-list"></i>
+          </th>
+          <th *ngIf="planningService.getRoundsByNumber(0)?.getConfig().getEnableTime()" title="starttijd">
+            {{planningService.calculateStartDateTime(screenDef.roundNumber).toLocaleString("en", {"month":"short","day":"2-digit"})}}
+          </th>
+          <th title="veld">
+            <i class="fi flaticon-soccer-field"></i>
+          </th>
+          <th class="text-right">thuis</th>
+          <th></th>
+          <th class="text-left">uit</th>
+          <th *ngIf="hasReferees()" class="" title="scheidsrechter">
+            <i class="fi flaticon-referee"></i>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let game of screenDef.getScheduledGames()">
+          <td>
+            <span>{{structureService.getPouleName(game.getPoule())}}</span>
+          </td>
+          <td *ngIf="planningService.canCalculateStartDateTime(screenDef.roundNumber)">
+            {{game.getStartDateTime().toLocaleString("en", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}
+          </td>
+          <td>{{game.getField().getName()}}</td>
+          <td class="text-right">{{structureService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</td>
+          <td class="text-center"> - </td>
+          <td class="text-left">{{structureService.getPoulePlaceName(game.getAwayPoulePlace(), true )}}</td>
+          <td *ngIf="hasReferees()">{{game.getReferee()?.getInitials()}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-      <!-- // kijken als er ranking nodig is en er al een team 2 wedstrijden heeft gespeeld, zoja toon poulestand(max eerste 8), //
-      anders 7 en dan .. (2 poules tegelijk) -->
-
-
-      <!-- <div>
-        <h2>
-          <button [routerLink]="['/toernooi/home', tournament.getId()]" type="button" class="btn btn-outline-secondary btn-sm">
-            <i class="fa fa-filter"></i> filter
-          </button>
-        </h2>
-      </div> -->
-      <!-- <app-tournament-planning-view *ngFor="let roundNumber of structureService.getRoundNumbers()" [tournament]="tournament" [roundNumber]="roundNumber"
-        [structureService]="structureService" [parentReturnAction]="'/toernooi/view'"></app-tournament-planning-view> -->
+  <div *ngIf="isRankingScreenDef()" class="row justify-content-around no-gutters">
+    <div *ngFor="let poule of screenDef.getPoules()" class="col">
+      <table class="table tv-screen">
+        <thead>
+          <tr>
+            <th>pl</th>
+            <th>deelnemer</th>
+            <th class="text-right">g</th>
+            <th class="text-right">pnt</th>
+            <th class="text-center">&Delta;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-template ngFor let-poulePlaces [ngForOf]="getPoulePlacesByRank(poule)" let-i="index">
+            <tr *ngFor="let poulePlace of poulePlaces">
+              <td>{{i+1}}</td>
+              <td>{{structureService.getPoulePlaceName(poulePlace, true)}}</td>
+              <td class="text-right">{{ranking.getNrOfGamesWithState(poulePlace, poulePlace.getGames())}}</td>
+              <td class="text-right">{{ranking.getPoints(poulePlace, poulePlace.getGames())}}</td>
+              <td class="text-center">{{ranking.getGoalDifference(poulePlace, poulePlace.getGames())}}</td>
+            </tr>
+          </ng-template>
+        </tbody>
+      </table>
     </div>
   </div>
+  <!-- // wedstrijden tonen(max 8) // gesorteerd op gameroundnumber -->
+
+  <!-- // kijken als er ranking nodig is en er al een team 2 wedstrijden heeft gespeeld, zoja toon poulestand(max eerste 8), //
+      anders 7 en dan .. (2 poules tegelijk) -->
+
 
 </div>
 

@@ -47,7 +47,7 @@
             <td class="toView" (click)="linkToView(tournament)">{{tournament.getCompetitionseason().getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit","hour12":
               false,"hour":"2-digit","minute":"2-digit"} )}}</td>
             <td class="d-none d-sm-table-cell toView" (click)="linkToView(tournament)">
-              <i class="{{getIconClass(tournament.getCompetitionseason().getSport())}}"></i>
+              <i class="{{iconManager.getIconClass(tournament.getCompetitionseason().getSport())}}"></i>
             </td>
             <td class="toView" (click)="linkToView(tournament)">{{tournament.getCompetitionseason().getCompetition().getName()}}</td>
             <td *ngIf="isLoggedIn()" style="text-align: right">

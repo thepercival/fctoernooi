@@ -16,9 +16,10 @@ import {
   TeamRepository,
 } from 'ngx-sport';
 
+import { IconManager } from '../common/iconmanager';
 import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
-import { TournamentCompetitorListComponent } from './tournament/competitor/list.component';
 import { TournamentCompetitorEditComponent } from './tournament/competitor/edit.component';
+import { TournamentCompetitorListComponent } from './tournament/competitor/list.component';
 import { TournamentEditComponent } from './tournament/edit/edit.component';
 import { TournamentGameEditComponent } from './tournament/game/edit.component';
 import { TournamentHomeComponent } from './tournament/home/home.component';
@@ -32,8 +33,8 @@ import { TournamentRefereeEditComponent } from './tournament/referee/edit.compon
 import { TournamentRoleRepository } from './tournament/role/repository';
 import { TournamentStructureComponent } from './tournament/structure/main.component';
 import { TournamentStructureRoundComponent } from './tournament/structure/round.component';
-import { TournamentViewComponent } from './tournament/view/view.component';
 import { TournamentViewTvComponent } from './tournament/view/tv.component';
+import { TournamentViewComponent } from './tournament/view/view.component';
 
 @NgModule({
   imports: [
@@ -73,7 +74,8 @@ import { TournamentViewTvComponent } from './tournament/view/tv.component';
     QualifyRuleRepository,
     TeamRepository,
     GameRepository,
-    GameScoreRepository
+    GameScoreRepository,
+    IconManager
   ]
 })
 export class FctoernooiModule { }

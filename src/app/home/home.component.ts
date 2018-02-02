@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-struct';
-import { SportConfig } from 'ngx-sport';
 import { timer } from 'rxjs/observable/timer';
 
 import { IAlert } from '../app.definitions';
 import { AuthService } from '../auth/auth.service';
+import { IconManager } from '../common/iconmanager';
 import { Tournament } from '../fctoernooi/tournament';
 import { TournamentRepository } from '../fctoernooi/tournament/repository';
 
@@ -28,7 +28,8 @@ export class HomeComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private tournamentRepos: TournamentRepository
+    private tournamentRepos: TournamentRepository,
+    private iconManager: IconManager
   ) {
     this.initFilterFields();
   }
@@ -124,24 +125,5 @@ export class HomeComponent implements OnInit {
     this.modelFilter.endDate = date;
     this.isCollapsed = true;
     this.getTournaments();
-  }
-
-  getIconClass(sportName: string): string {
-    if (sportName === SportConfig.Football) {
-      return 'fa fa-futbol-o';
-    } else if (sportName === SportConfig.Darts) {
-      return 'fi flaticon-darts';
-    } else if (sportName === SportConfig.TableTennis) {
-      return 'fi flaticon-tabletennis';
-    } else if (sportName === SportConfig.Tennis) {
-      return 'fi flaticon-tennis';
-    } else if (sportName === SportConfig.Volleyball) {
-      return 'fi flaticon-volleyball';
-    } else if (sportName === SportConfig.Badminton) {
-      return 'fi flaticon-badminton';
-    } else if (sportName === SportConfig.Hockey) {
-      return 'fi flaticon-hockey';
-    }
-    return undefined;
   }
 }
