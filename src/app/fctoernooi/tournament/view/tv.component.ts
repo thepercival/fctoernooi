@@ -78,7 +78,7 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         if (lastPlayedRoundNumber === 0) { // voor het begin
             // programma volgende ronde
         } else if (stateNextRoundNumber === Game.STATE_CREATED) { // tussen twee ronden in
-            // alleen poules van afgelopen ronde tonen als die er zijn 
+            // alleen poules van afgelopen ronde tonen als die er zijn
             roundNumberForRanking = lastPlayedRoundNumber;
             // en programma volgende ronde.
         } else if (stateNextRoundNumber === Game.STATE_INPLAY) { // tijdens een ronde

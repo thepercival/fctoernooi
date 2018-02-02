@@ -13,7 +13,7 @@
           <th title="poule">
             <i class="fa fa-list"></i>
           </th>
-          <th *ngIf="planningService.getRoundsByNumber(0)?.getConfig().getEnableTime()" title="starttijd">
+          <th *ngIf="planningService.getRoundsByNumber(screenDef.roundNumber)[0]?.getConfig().getEnableTime()" title="starttijd">
             {{planningService.calculateStartDateTime(screenDef.roundNumber).toLocaleString("en", {"month":"short","day":"2-digit"})}}
           </th>
           <th title="veld">
@@ -32,7 +32,7 @@
           <td>
             <span>{{structureService.getPouleName(game.getPoule())}}</span>
           </td>
-          <td *ngIf="planningService.canCalculateStartDateTime(screenDef.roundNumber)">
+          <td *ngIf="planningService.getRoundsByNumber(screenDef.roundNumber)[0]?.getConfig().getEnableTime() && planningService.canCalculateStartDateTime(screenDef.roundNumber)">
             {{game.getStartDateTime().toLocaleString("en", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}
           </td>
           <td>{{game.getField().getName()}}</td>
