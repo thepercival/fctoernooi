@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbTabChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 import { PlanningService, Round, StructureRepository, StructureService } from 'ngx-sport';
 
 import { IAlert } from '../../../app.definitions';
@@ -17,6 +18,7 @@ export class TournamentPlanningComponent extends TournamentComponent implements 
   initalTabId: string;
   settingsAlert: IAlert;
   planningService: PlanningService;
+  showPrintBtn: boolean;
 
   constructor(
     route: ActivatedRoute,
@@ -31,10 +33,12 @@ export class TournamentPlanningComponent extends TournamentComponent implements 
   ngOnInit() {
     super.myNgOnInit(() => this.setPlanningService());
 
-    this.initalTabId = 'tab-fields';
+    this.initalTabId = 'tab-view';
+    this.showPrintBtn = true;
     this.route.queryParamMap.subscribe(params => {
-      if (params.get('tabid') !== undefined) {
+      if (params.get('tabid') !== null) {
         this.initalTabId = params.get('tabid');
+        this.showPrintBtn = (this.initalTabId === 'tab-view');
       }
     });
   }
@@ -50,6 +54,15 @@ export class TournamentPlanningComponent extends TournamentComponent implements 
       newRound
     );
     this.setPlanningService();
+  }
+
+  public beforeChange($event: NgbTabChangeEvent) {
+    this.showPrintBtn = ($event.nextId === 'tab-view');
+  }
+
+  printPdf() {
+    const url = this.tournamentRepository.getUrl() + '/pdf/' + this.tournament.getId();
+    const newWindow = window.open(url);
   }
 }
 

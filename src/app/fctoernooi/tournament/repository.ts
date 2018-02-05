@@ -1,14 +1,14 @@
 /**
  * Created by coen on 1-10-17.
  */
-import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { CompetitionseasonRepository, ICompetitionseason, SportRepository } from 'ngx-sport';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
-import { map } from 'rxjs/operators/map';
 import { catchError } from 'rxjs/operators/catchError';
+import { map } from 'rxjs/operators/map';
 
 import { Tournament } from '../tournament';
 import { ITournamentRole, TournamentRoleRepository } from './role/repository';
@@ -34,6 +34,10 @@ export class TournamentRepository extends SportRepository {
 
     getUrlpostfix(): string {
         return 'tournaments';
+    }
+
+    getUrl(): string {
+        return this.url;
     }
 
     getObjects(startDateTime: Date, endDateTime: Date): Observable<Tournament[]> {
