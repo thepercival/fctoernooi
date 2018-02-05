@@ -26,13 +26,13 @@
     "font-awesome": "^4.7.0",
     "lodash": "^4.17.4",
     "ng2-nouislider": "^1.7.7",
-    "ngx-sport": "0.0.15",
+    "ngx-sport": "0.0.16",
     "nouislider": "^10.1.0",
     "rxjs": "^5.5.2",
     "zone.js": "^0.8.14"
   },
   "devDependencies": {
-    "@angular/cli": "1.6.3",
+    "@angular/cli": "^1.6.7",
     "@angular/compiler-cli": "^5.0.0",
     "@angular/language-service": "^5.0.0",
     "@types/jasmine": "~2.5.53",
