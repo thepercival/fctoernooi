@@ -16,7 +16,7 @@
           <th title="poule">
             <i class="fa fa-list"></i>
           </th>
-          <th *ngIf="roundsByNumber[0]?.getConfig().getEnableTime()" title="starttijd">
+          <th *ngIf="planningService.canCalculateStartDateTime(roundNumber)" title="starttijd">
             {{planningService.calculateStartDateTime(roundNumber).toLocaleString("en", {"month":"short","day":"2-digit"})}}
           </th>
           <th title="veld">

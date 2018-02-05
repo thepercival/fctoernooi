@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import {
     Competition,
     Game,
@@ -13,7 +14,7 @@ import {
     StructureRepository,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs/observable/forkJoin';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
 
@@ -75,7 +76,6 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         this.game = this.structureService.getGameById(gameId, this.structureService.getFirstRound());
         const date = this.game.getStartDateTime();
         const gameScore = this.game.getFinalScore();
-        console.log(gameScore);
         // bepaal scoreconfig
         this.model = {
             home: gameScore ? gameScore.getHome() : 0,

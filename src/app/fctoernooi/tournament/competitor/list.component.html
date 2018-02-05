@@ -14,9 +14,6 @@
           <i class="fi flaticon-group"></i> deelnemers
         </h2>
       </div>
-
-
-
       <div class="d-flex justify-content-center">
         <ngb-alert *ngIf="alert" [type]="alert.type" style="width:100%;" [dismissible]="true" (close)="alert = undefined;">
           <i *ngIf="processing" class="fa fa-spinner fa-spin"></i> {{ alert.message }}</ngb-alert>
@@ -38,8 +35,7 @@
         <tbody>
           <tr *ngFor="let poulePlace of poulePlaces">
             <td>
-              <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || poulePlaceToSwap !== undefined"
-                (click)="editPoulePlace(poulePlace)">
+              <button type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || poulePlaceToSwap !== undefined" (click)="editPoulePlace(poulePlace)">
                 <span class="fa fa-pencil"></span>
               </button>
             </td>
