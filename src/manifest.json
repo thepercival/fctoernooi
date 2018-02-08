@@ -1,0 +1,22 @@
+{
+    "name": "FCToernooi",
+    "short_name": "FCToernooi",
+    "theme_color": "#060606",
+    "background_color": "#060606",
+    "start_url": "/",
+    "display": "standalone",
+    "orientation": "portrait",
+    "description": "met FCToernooi kun je snel en makkelijk een toernooi opzetten. Er is ook een live scorebord aanwezig.",
+    "icons": [
+        {
+            "src": "/assets/favicon/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/assets/favicon/android-chrome-256x256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        }
+    ]
+}
