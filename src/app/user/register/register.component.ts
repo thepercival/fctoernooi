@@ -41,7 +41,6 @@ export class RegisterComponent implements OnInit {
       .subscribe(
             /* happy path */ p => {
         this.registered = true;
-        console.log(123);
       },
             /* error path */ e => { this.error = e; this.loading = false; },
             /* onComplete */() => this.loading = false

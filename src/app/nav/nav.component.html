@@ -8,15 +8,15 @@
     <span class="d-none d-sm-inline">{{ tournamentViewTVLink.showTVIcon === true ? 'tvscherm' : 'terug'}}</span>
   </button>
 
-  <button *ngIf="!isLoggedIn()" routerLink="/user/login" routerLinkActive="active" class="btn btn-outline-secondary" type="button"
-    style="cursor:pointer;">
+  <button *ngIf="!isLoggedIn()" routerLink="/user/login" routerLinkActive="active" class="btn btn-outline-secondary" role="button"
+    style="cursor:pointer;" aria-label="inloggen">
     <i class="fa fa-sign-in"></i>
     <span class="d-none d-sm-inline">inloggen</span>
   </button>
-  <button *ngIf="isLoggedIn()" routerLink="/user/logout" routerLinkActive="active" class="btn btn-outline-secondary" type="button"
+  <button *ngIf="isLoggedIn()" routerLink="/user/logout" routerLinkActive="active" class="btn btn-outline-secondary" role="button"
     style="cursor:pointer;">
     <i class="fa fa-sign-out"></i>
-    <span class="d-none d-sm-inline">uitloggen</span>
+    <span class="d-none d-sm-inline" aria-label="uitloggen">uitloggen</span>
   </button>
 
   <!-- <button class="navbar-toggler navbar-toggler-right text-white" type="button" data-toggle="collapse" data-target="#navbarResponsive"
