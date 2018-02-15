@@ -35,7 +35,7 @@
           </div>
           <div class="col-9">
             <textarea class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.info.invalid, 'is-valid': customForm.controls.info.valid }"
-              name="info" id="info" [formControl]="customForm.controls.info" maxlength="{{validations.maxlengthname}}" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
+              name="info" id="info" [formControl]="customForm.controls.info" maxlength="{{validations.maxlengthinfo}}" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>
         <ngb-alert *ngIf="alert" [type]="alert.type" style="width:100%;" [dismissible]="true" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
