@@ -1,11 +1,19 @@
-import { TournamentRepository } from '../repository';
-import { TournamentComponent } from '../component';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ITeam, PoulePlace, PoulePlaceRepository, StructureRepository, Team, TeamRepository } from 'ngx-sport';
+import {
+    AssociationRepository,
+    ITeam,
+    PoulePlace,
+    PoulePlaceRepository,
+    StructureRepository,
+    Team,
+    TeamRepository,
+} from 'ngx-sport';
 
 import { IAlert } from '../../../app.definitions';
+import { TournamentComponent } from '../component';
+import { TournamentRepository } from '../repository';
 
 @Component({
     selector: 'app-tournament-competitor-edit',
@@ -31,6 +39,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
 
     constructor(
         private teamRepository: TeamRepository,
+        private associationRepository: AssociationRepository,
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
@@ -101,13 +110,14 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
             this.processing = false;
             return;
         }
-        const team: ITeam = {
-            name: name ? name : undefined,
-            info: info ? info : undefined
-        };
         const association = this.tournament.getCompetitionseason().getAssociation();
+        const team: ITeam = {
+            name: name,
+            info: info ? info : undefined,
+            association: this.associationRepository.objectToJsonHelper(association)
+        };
 
-        this.teamRepository.createObject(team, association)
+        this.teamRepository.createObject(team)
             .subscribe(
             /* happy path */ teamRes => {
                 this.poulePlace.setTeam(teamRes);
@@ -122,8 +132,6 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
             },
             /* error path */ e => { this.setAlert('danger', e); },
         );
-
-
     }
 
     edit() {
@@ -140,7 +148,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
         const team = this.poulePlace.getTeam();
         team.setName(name);
         team.setInfo(info ? info : undefined);
-        this.teamRepository.editObject(team, team.getAssociation())
+        this.teamRepository.editObject(team)
             .subscribe(
             /* happy path */ teamRes => {
                 this.navigateBack();

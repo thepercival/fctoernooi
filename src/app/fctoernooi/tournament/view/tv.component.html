@@ -1,7 +1,7 @@
 <div *ngIf="tournament && structureService" class="container-fluid px-0">
   <div class="mb-4">
     <h1 *ngIf="tournament">
-      <i class="{{iconManager.getIconClass(tournament.getCompetitionseason().getSport())}}"></i>
+      <i class="{{iconManager.getIconClass(tournament.getCompetitionseason().getCompetition().getSport())}}"></i>
       <span>{{tournament.getName()}}</span>
       <span>{{screenDef ? ' - ' + screenDef.getDescription() : undefined }}</span>
     </h1>

@@ -173,7 +173,6 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
     }
 
     isInitialsDuplicate(initials: string, refereeId?: number): boolean {
-        console.log(initials);
         const referees = this.structureService.getCompetitionseason().getReferees();
         return referees.find(refereeIt => {
             return (initials === refereeIt.getInitials() && (refereeId === undefined || refereeIt.getId() === undefined));

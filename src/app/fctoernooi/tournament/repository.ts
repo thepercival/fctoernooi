@@ -19,7 +19,7 @@ export class TournamentRepository extends SportRepository {
     private url: string;
     private csRepository: CompetitionseasonRepository;
     private tournamentRoleRepository: TournamentRoleRepository;
-    private cache: Tournament[] = [];
+    private ownCache: Tournament[] = [];
 
     constructor(
         private http: HttpClient,
@@ -42,7 +42,7 @@ export class TournamentRepository extends SportRepository {
 
     getObjects(startDateTime: Date, endDateTime: Date): Observable<Tournament[]> {
 
-        this.cache = [];
+        this.ownCache = [];
 
         let httpParams = new HttpParams();
         httpParams = httpParams.set('startDateTime', startDateTime.toISOString());
@@ -55,7 +55,7 @@ export class TournamentRepository extends SportRepository {
         return this.http.get<ITournament[]>(this.url, options).pipe(
             map((jsonTournaments: ITournament[]) => {
                 const tournamentsRes = this.jsonArrayToObject(jsonTournaments);
-                this.cache = tournamentsRes;
+                this.ownCache = tournamentsRes;
                 return tournamentsRes;
             }),
             catchError((err) => this.handleError(err))
@@ -64,7 +64,7 @@ export class TournamentRepository extends SportRepository {
     }
 
     getObject(id: number): Observable<Tournament> {
-        const tournament = this.cache.find(
+        const tournament = this.ownCache.find(
             tournamentIt => tournamentIt.getId() === id
         );
         if (tournament) {
@@ -78,7 +78,7 @@ export class TournamentRepository extends SportRepository {
         return this.http.get<ITournament>(this.url + '/' + id, { headers: headers }).pipe(
             map((jsonTournament: ITournament) => {
                 const tournamentRes = this.jsonToObjectHelper(jsonTournament);
-                this.cache.push(tournamentRes);
+                this.ownCache.push(tournamentRes);
                 return tournamentRes;
             }),
             catchError((err) => this.handleError(err))
@@ -89,7 +89,7 @@ export class TournamentRepository extends SportRepository {
         return this.http.post(this.url, this.objectToJsonHelper(tournament), { headers: super.getHeaders() }).pipe(
             map((res: ITournament) => {
                 const tournamentIn = this.jsonToObjectHelper(res);
-                this.cache.push(tournamentIn);
+                this.ownCache.push(tournamentIn);
                 return tournamentIn;
             }),
             catchError((err) => this.handleError(err))
@@ -110,9 +110,9 @@ export class TournamentRepository extends SportRepository {
         const url = this.url + '/' + tournament.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
             map((res) => {
-                const index = this.cache.indexOf(tournament);
+                const index = this.ownCache.indexOf(tournament);
                 if (index > -1) {
-                    this.cache.splice(index, 1);
+                    this.ownCache.splice(index, 1);
                 }
                 return true;
             }),

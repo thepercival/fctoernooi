@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import {
   Association,
   Competition,
@@ -14,7 +15,6 @@ import {
 
 import { Tournament } from '../../tournament';
 import { TournamentRepository } from '../repository';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-tournament-new',
@@ -75,11 +75,11 @@ export class TournamentNewComponent implements OnInit {
     {
       const association = new Association('username'); // dummy
       const competition = new Competition(this.model.name);
+      competition.setSport(sportName);
       const season = new Season('123'); // dummy
       season.setStartDateTime(new Date());
       season.setEndDateTime(new Date());
       const competitionseason = new Competitionseason(association, competition, season);
-      competitionseason.setSport(sportName);
       competitionseason.setStartDateTime(startdate);
       for (let fieldNumber = 1; fieldNumber <= this.model.nroffields; fieldNumber++) {
         const field = new Field(competitionseason, fieldNumber);

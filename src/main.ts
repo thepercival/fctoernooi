@@ -10,6 +10,7 @@ if (environment.production) {
 }
 
 SportConfig.apiurl = environment.apiurl;
+SportConfig.useExternal = environment.useExternal;
 
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.log(err));
