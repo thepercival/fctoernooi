@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { QualifyService, PlanningService, PoulePlace, Round, StructureService } from 'ngx-sport';
+import { PlanningService, PoulePlace, QualifyService, Round, StructureService } from 'ngx-sport';
 
 @Component({
   selector: 'app-tournament-structureround',
@@ -140,4 +140,20 @@ export class TournamentStructureRoundComponent {
     this.roundChanged.emit();
   }
 
+  toggleQualifyOrder(round: Round) {
+    this.resetAlert();
+    if (round.getNumber() !== 2) {
+      return;
+    }
+    round.setQualifyOrder(this.qualifyOrderIsHorizontal(round) ? Round.ORDER_VERTICAL : Round.ORDER_HORIZONTAL);
+    const qualifyService = new QualifyService(round);
+    qualifyService.removeObjectsForParentRound();
+    qualifyService.createObjectsForParentRound();
+    this.getPlanningService().create(round.getNumber());
+    this.roundChanged.emit();
+  }
+
+  qualifyOrderIsHorizontal(round: Round) {
+    return round.getQualifyOrder() === Round.ORDER_HORIZONTAL;
+  }
 }

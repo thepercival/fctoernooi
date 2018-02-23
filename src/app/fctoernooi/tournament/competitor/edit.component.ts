@@ -113,11 +113,10 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
         const association = this.tournament.getCompetitionseason().getAssociation();
         const team: ITeam = {
             name: name,
-            info: info ? info : undefined,
-            association: this.associationRepository.objectToJsonHelper(association)
+            info: info ? info : undefined
         };
 
-        this.teamRepository.createObject(team)
+        this.teamRepository.createObject(team, association)
             .subscribe(
             /* happy path */ teamRes => {
                 this.poulePlace.setTeam(teamRes);

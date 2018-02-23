@@ -50,12 +50,15 @@
           </button>
         </div>
       </div>
+      <div *ngIf="round.getNumber() === 2 && round.getPoulePlaces().length >= 4 && !round.isStarted()">verdeling</div>
       <div *ngIf="round.getNumber() === 2 && round.getPoulePlaces().length >= 4 && !round.isStarted()" class="d-none d-sm-inline-flex mb-3 btn-group"
         role="group" aria-label="verdeel">
         <button *ngIf="round.getPoules().length > 1" type="button" class="btn btn-outline-secondary" (click)="removePoule(round)">
           <span class="fa fa-compress"></span>
         </button>
-        <button *ngIf="structureService.getNrOfSiblingRounds(round) < 2" type="button" class="btn btn-outline-secondary">verdeel</button>
+        <button *ngIf="round.getPoules().length >= 2" type="button" class="btn btn-outline-secondary" (click)="toggleQualifyOrder(round)">
+          <span class="fa fa-arrows-{{ qualifyOrderIsHorizontal(round) ? 'v' : 'h'}}"></span>
+        </button>
         <button *ngIf="( round.getPoulePlaces().length / ( round.getPoules().length + 1 ) ) >= 2" type="button" class="btn btn-outline-secondary"
           (click)="addPoule(round,false )">
           <span class="fa fa-expand"></span>
