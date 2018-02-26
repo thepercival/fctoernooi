@@ -1,21 +1,25 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Field, FieldRepository, IField, PlanningService, Round, StructureRepository, StructureService } from 'ngx-sport';
-import { IAlert } from '../../../../app.definitions';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Field, FieldRepository, IField, PlanningService, StructureRepository, StructureService } from 'ngx-sport';
+
+import { IAlert } from '../../../app.definitions';
+import { Tournament } from '../../tournament';
+import { TournamentComponent } from '../component';
+import { TournamentRepository } from '../repository';
 
 @Component({
-    selector: 'app-tournament-planning-fields',
-    templateUrl: './component.html',
-    styleUrls: ['./component.scss']
+    selector: 'app-tournament-fields',
+    templateUrl: './list.component.html',
+    styleUrls: ['./list.component.scss']
 })
-export class TournamentPlanningFieldsComponent implements OnInit {
+export class FieldListComponent extends TournamentComponent implements OnInit {
 
-    @Input() structureService: StructureService;
-    @Output() updateRound = new EventEmitter<Round>();
-    public alert: IAlert;
-    public processing = true;
     public disableEditButtons = false;
     private planningService: PlanningService;
     fieldsList: Array<IFieldListItem>;
+    infoAlert = true;
+    alert: IAlert;
+    processing = true;
 
     validations: any = {
         'minlengthname': Field.MIN_LENGTH_NAME,
@@ -23,18 +27,30 @@ export class TournamentPlanningFieldsComponent implements OnInit {
     };
 
     constructor(
-        private fieldRepository: FieldRepository,
-        private structureRepository: StructureRepository) {
-        this.resetAlert();
+        route: ActivatedRoute,
+        router: Router,
+        tournamentRepository: TournamentRepository,
+        sructureRepository: StructureRepository,
+        private fieldRepository: FieldRepository
+    ) {
+        super(route, router, tournamentRepository, sructureRepository);
     }
 
     ngOnInit() {
+        super.myNgOnInit(() => this.initFields());
+    }
+
+    initFields() {
         this.createFieldsList();
-        this.planningService = new PlanningService(this.structureService);
+        this.setPlanningService();
         this.processing = false;
         if (this.isStarted()) {
             this.setAlert('warning', 'het toernooi is al begonnen, je kunt niet meer wijzigen');
         }
+    }
+
+    setPlanningService() {
+        this.planningService = new PlanningService(this.structureService);
     }
 
     isStarted() {
@@ -87,8 +103,13 @@ export class TournamentPlanningFieldsComponent implements OnInit {
                 this.structureRepository.editObject(firstRound, this.structureService.getCompetitionseason())
                     .subscribe(
                         /* happy path */ roundRes => {
-                        // this.round.setName('cdk');
-                        this.updateRound.emit(roundRes);
+                        this.structureService = new StructureService(
+                            this.tournament.getCompetitionseason(),
+                            { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
+                            roundRes
+                        );
+                        this.setPlanningService();
+
                         this.processing = false;
                         this.setAlert('info', 'veld toegevoegd');
                     },
@@ -99,6 +120,7 @@ export class TournamentPlanningFieldsComponent implements OnInit {
             /* error path */ e => { this.setAlert('danger', e); },
         );
     }
+
 
     removeField(fieldItem: IFieldListItem) {
         this.setAlert('info', 'veld verwijderen..');
@@ -119,8 +141,12 @@ export class TournamentPlanningFieldsComponent implements OnInit {
                 this.structureRepository.editObject(firstRound, this.structureService.getCompetitionseason())
                     .subscribe(
                         /* happy path */ roundRes => {
-                        console.log('should update structureService???????');
-                        this.updateRound.emit(roundRes);
+                        this.structureService = new StructureService(
+                            this.tournament.getCompetitionseason(),
+                            { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
+                            roundRes
+                        );
+                        this.setPlanningService();
                         this.processing = false;
                         this.setAlert('info', 'veld verwijderd');
                     },

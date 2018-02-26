@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap/popover/popover';
@@ -11,7 +11,7 @@ import { TournamentRole } from '../../role';
 @Component({
   selector: 'app-tournament-planning-view',
   templateUrl: './component.html',
-  styleUrls: ['./component.css']
+  styleUrls: ['./component.scss']
 })
 export class TournamentPlanningViewComponent implements OnInit, OnChanges {
 
@@ -20,9 +20,11 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges {
   @Input() structureService: StructureService;
   @Input() planningService: PlanningService;
   @Input() parentReturnAction: string;
+  @Output() popOverIsOpen = new EventEmitter<boolean>();
   alert: any;
   GameStatePlayed = Game.STATE_PLAYED;
   selectedPouleForRanking;
+
   private openPopovers: NgbPopover[] = [];
   ranking: Ranking;
   roundsByNumber: Round[];
@@ -109,12 +111,13 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges {
       popOver.open();
       this.openPopovers.push(popOver);
     }
+    this.popOverIsOpen.emit(popOverClosed);
     return false;
   }
 
   getGamesHelper(): Game[] {
     const games: Game[] = [];
-    const gamesByNumber = this.planningService.getGamesByNumber(this.roundNumber);
+    const gamesByNumber = this.planningService.getGamesByNumber(this.roundNumber, Game.ORDER_RESOURCEBATCH);
     gamesByNumber.forEach(gamesIt => gamesIt.forEach(game => games.push(game)));
     return games;
   }
@@ -137,4 +140,9 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges {
     this.alert = undefined;
   }
 
+  getGoalDifference(poulePlace: PoulePlace, games: Game[]) {
+    const nrOfGoalsScored = this.ranking.getNrOfGoalsScored(poulePlace, games);
+    const nrOfGoalsReceived = this.ranking.getNrOfGoalsReceived(poulePlace, games);
+    return (nrOfGoalsScored - nrOfGoalsReceived) + ' ( ' + nrOfGoalsScored + ' - ' + nrOfGoalsReceived + ' )';
+  }
 }

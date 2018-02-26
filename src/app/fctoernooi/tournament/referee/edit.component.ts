@@ -135,6 +135,7 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
     edit() {
         this.processing = true;
 
+
         if (this.isInitialsDuplicate(this.customForm.controls.initials.value, this.refereeId)) {
             this.setAlert('danger', 'de initialen bestaan al voor dit toernooi');
             this.processing = false;

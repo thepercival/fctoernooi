@@ -1,8 +1,11 @@
 .card{
-    width:220px;
+    width:200px;
+}
+
+.card-body {
+    padding: 1rem;
 }
 
 .pointer{
     cursor:pointer;
 }
-

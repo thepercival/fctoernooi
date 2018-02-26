@@ -26,7 +26,7 @@
           <span class="fa fa-times-circle icon-danger"></span> vul de namen in</p>
       </div>
     </div>
-    <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/planning', tournament.getId()]">
+    <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/games', tournament.getId()]">
       <div class="card-body">
         <h5 class="card-title">
           <i class="fi flaticon-schedule"></i> wedstrijden</h5>
@@ -36,16 +36,34 @@
           <span class="fa fa-times-circle icon-danger"></span> plan wedstrijden in</p>
       </div>
     </div>
-    <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/edit', tournament.getId()]">
+    <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/referees', tournament.getId()]">
+      <div class="card-body">
+        <h5 class="card-title">
+          <i class="fi flaticon-referee"></i> scheidsen</h5>
+        <p class="card-text">
+          {{tournament.getCompetitionseason().getReferees().length}} scheidsrechters</p>
+      </div>
+    </div>
+    <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/fields', tournament.getId()]">
+      <div class="card-body">
+        <h5 class="card-title">
+          <i class="fi flaticon-soccer-field"></i> velden</h5>
+        <p class="card-text">
+          {{tournament.getCompetitionseason().getFields().length}} velden</p>
+      </div>
+    </div>
+    <div class="card mt-3 mx-2">
       <div class="card-body">
         <h5 class="card-title">
           <i class="fa fa-cogs"></i> instellingen</h5>
-        <ul class="card-text">
-          <li>naam</li>
-          <li>startdatum</li>
-        </ul>
+        <div class="d-flex justify-content-between">
+          <button class="btn btn-secondary pointer" [routerLink]="['/toernooi/edit', tournament.getId()]">basis</button>
+          <button class="btn btn-secondary pointer" [routerLink]="['/toernooi/roundssettings', tournament.getId()]">rondes</button>
+        </div>
       </div>
     </div>
+  </div>
+  <div *ngIf="structureService" class="row d-flex justify-content-center mt-3">
     <div *ngIf="isAdmin()" class="card mt-3 mx-2">
       <div class="card-body">
         <h5 (click)="toggleRemoveQuestion( true )" class="card-title pointer">

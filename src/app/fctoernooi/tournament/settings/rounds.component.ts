@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
     IRoundConfig,
     PlanningService,
@@ -6,22 +7,20 @@ import {
     RoundConfigRepository,
     RoundScoreConfig,
     StructureRepository,
-    StructureService,
 } from 'ngx-sport';
 
-import { IAlert } from '../../../../app.definitions';
-
-// import { modelGroupProvider } from '@angular/forms/src/directives/ng_model_group';
+import { IAlert } from '../../../app.definitions';
+import { TournamentComponent } from '../component';
+import { TournamentRepository } from '../repository';
 
 @Component({
-    selector: 'app-tournament-planning-settings',
-    templateUrl: './component.html',
-    styleUrls: ['./component.css']
+    selector: 'app-rounds-settings',
+    templateUrl: './rounds.component.html',
+    styleUrls: ['./rounds.component.css']
 })
-export class TournamentPlanningSettingsComponent implements OnInit {
+export class RoundsSettingsComponent extends TournamentComponent implements OnInit {
 
-    @Input() structureService: StructureService;
-    @Output() updateRound = new EventEmitter<Round>();
+    processing = true;
     enableTime: boolean;
     ranges: any = {};
     allRoundsByNumber: any;
@@ -31,7 +30,6 @@ export class TournamentPlanningSettingsComponent implements OnInit {
     modelConfig: IRoundConfig;
     modelRecreate: boolean;
     modelReschedule: boolean;
-    processing: boolean;
     private planningService: PlanningService;
     validations: any = {
         minNrOfHeadtoheadMatches: 1,
@@ -45,14 +43,20 @@ export class TournamentPlanningSettingsComponent implements OnInit {
     };
 
     constructor(
+        route: ActivatedRoute,
+        router: Router,
+        tournamentRepository: TournamentRepository,
+        sructureRepository: StructureRepository,
         private roundConfigRepository: RoundConfigRepository,
-        private structureRepository: StructureRepository
     ) {
-        // debugger;
-        this.processing = true;
+        super(route, router, tournamentRepository, sructureRepository);
     }
 
     ngOnInit() {
+        super.myNgOnInit(() => this.initConfigs());
+    }
+
+    initConfigs() {
         this.allRoundsByNumber = this.structureService.getAllRoundsByNumber();
         this.changeRoundNumber(this.structureService.getFirstRound().getNumber());
         this.initRanges();
@@ -60,7 +64,7 @@ export class TournamentPlanningSettingsComponent implements OnInit {
         this.planningService = new PlanningService(this.structureService);
         this.processing = false;
     }
-
+    //
     private initRanges() {
         this.ranges.nrOfHeadtoheadMatches = [];
         for (let i = this.validations.minNrOfHeadtoheadMatches; i <= this.validations.maxNrOfHeadtoheadMatches; i++) {
@@ -254,9 +258,7 @@ export class TournamentPlanningSettingsComponent implements OnInit {
         this.structureRepository.editObject(firstRound, firstRound.getCompetitionseason())
             .subscribe(
                         /* happy path */ firstRoundRes => {
-                console.log('should update structureService???????');
                 this.setAlert('info', 'instellingen opgeslagen');
-                this.updateRound.emit(firstRoundRes);
                 // this.changeRoundNumber(round);
 
             },

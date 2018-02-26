@@ -20,6 +20,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     private tvViewLinkSet = false;
     private planningService: PlanningService;
     private timerSubscription: Subscription;
+    private noRefresh = false;
 
     constructor(
         route: ActivatedRoute,
@@ -36,9 +37,16 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
         super.myNgOnInit(() => this.initTVViewLink());
 
         this.timerSubscription = timer(10000, 10000).subscribe(number => {
-            this.setData(this.tournament.getId());
-            this.planningService = new PlanningService(this.structureService);
+            if (this.noRefresh !== true) {
+                this.setData(this.tournament.getId());
+                this.planningService = new PlanningService(this.structureService);
+            }
         });
+    }
+
+    setNoRefresh(toggle) {
+        console.log(toggle);
+        this.noRefresh = toggle;
     }
 
     initTVViewLink() {

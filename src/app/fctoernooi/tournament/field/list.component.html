@@ -1,0 +1,62 @@
+<div class="container-fluid">
+    <div *ngIf="structureService" class="row justify-content-center">
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+            <div class="mb-4">
+                <h1 *ngIf="tournament">
+                    {{tournament.getName()}}
+                    <button type="button" [routerLink]="['/toernooi/home', tournament.getId()]" class="btn btn-outline-secondary btn-sm">
+                        <i class="fa fa-level-up fa-rotate-270"></i>
+                    </button>
+                </h1>
+            </div>
+            <div>
+                <h2>
+                    <i class="fi flaticon-field"></i> velden
+                </h2>
+            </div>
+            <div class="d-flex justify-content-center">
+                <ngb-alert *ngIf="alert" [type]="alert.type" style="width:100%;" [dismissible]="true" (close)="alert = undefined;">
+                    <i *ngIf="processing" class="fa fa-spinner fa-spin"></i> {{ alert.message }}</ngb-alert>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>nr.</th>
+                        <th>naam</th>
+                        <th style="text-align: right;">
+                            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" (click)="addField()" [disabled]="processing || disableEditButtons">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let fieldItem of fieldsList; let last = last;">
+                        <td>
+                            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || ( !fieldItem.editable && disableEditButtons ) || ( fieldItem.editable && fieldItem.field.getName().length < validations.minlengthname )"
+                                (click)="saveedit(fieldItem);">
+                                <span class="fa fa-{{fieldItem.editable ? 'save' : 'pencil' }}"></span>
+                            </button>
+                        </td>
+                        <td>
+                            <span>{{fieldItem.field.getNumber()}}</span>
+                        </td>
+                        <td>
+                            <span *ngIf="!fieldItem.editable && fieldItem.field !== undefined">{{fieldItem.field.getName() }}</span>
+                            <input type="text" class="form-control input-fieldname" [minlength]="validations.minlengthname" [maxlength]="validations.maxlengthname"
+                                [ngModel]="fieldItem.field.getName()" (ngModelChange)="fieldItem.field.setName($event)" *ngIf="fieldItem.editable"
+                                required>
+                        </td>
+                        <td style="text-align: right;">
+                            <button *ngIf="last && !isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || disableEditButtons"
+                                (click)="removeField(fieldItem);">
+                                <span class="fa fa-remove"></span>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

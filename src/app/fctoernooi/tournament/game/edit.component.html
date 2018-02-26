@@ -83,6 +83,10 @@
           </div>
         </div>
         <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+        <div *ngIf="errorHomeAwayScore" class="alert alert-danger">
+          {{errorHomeAwayScore}}, ga naar
+          <a [routerLink]="['/toernooi/roundssettings', tournament.getId()]" href="#"> ronde - instellingen</a> om dit aan te passen
+        </div>
         <button type="submit" [disabled]="!f.form.valid || loading" class="btn btn-outline-primary">wijzig wedstrijd
           <i *ngIf="loading" class="fa fa-spinner fa-spin fa-fw"></i>
         </button>

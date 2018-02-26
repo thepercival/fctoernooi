@@ -19,18 +19,18 @@ import {
 import { IconManager } from '../common/iconmanager';
 import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
 import { TournamentCompetitorEditComponent } from './tournament/competitor/edit.component';
-import { TournamentCompetitorListComponent } from './tournament/competitor/list.component';
+import { CompetitorListComponent } from './tournament/competitor/list.component';
 import { TournamentEditComponent } from './tournament/edit/edit.component';
+import { FieldListComponent } from './tournament/field/list.component';
 import { TournamentGameEditComponent } from './tournament/game/edit.component';
+import { GameListComponent } from './tournament/game/list.component';
 import { TournamentHomeComponent } from './tournament/home/home.component';
 import { TournamentNewComponent } from './tournament/new/new.component';
-import { TournamentPlanningFieldsComponent } from './tournament/planning/fields/component';
-import { TournamentPlanningComponent } from './tournament/planning/main.component';
-import { TournamentPlanningRefereesComponent } from './tournament/planning/referees/component';
-import { TournamentPlanningSettingsComponent } from './tournament/planning/settings/component';
 import { TournamentPlanningViewComponent } from './tournament/planning/view/component';
 import { TournamentRefereeEditComponent } from './tournament/referee/edit.component';
+import { RefereeListComponent } from './tournament/referee/list.component';
 import { TournamentRoleRepository } from './tournament/role/repository';
+import { RoundsSettingsComponent } from './tournament/settings/rounds.component';
 import { TournamentStructureComponent } from './tournament/structure/main.component';
 import { TournamentStructureRoundComponent } from './tournament/structure/round.component';
 import { TournamentViewTvComponent } from './tournament/view/tv.component';
@@ -51,13 +51,13 @@ import { TournamentViewComponent } from './tournament/view/view.component';
     TournamentHomeComponent,
     TournamentStructureComponent,
     TournamentStructureRoundComponent,
-    TournamentPlanningComponent,
+    GameListComponent,
     TournamentPlanningViewComponent,
-    TournamentCompetitorListComponent,
+    CompetitorListComponent,
+    RefereeListComponent,
     TournamentCompetitorEditComponent,
-    TournamentPlanningSettingsComponent,
-    TournamentPlanningRefereesComponent,
-    TournamentPlanningFieldsComponent,
+    RoundsSettingsComponent,
+    FieldListComponent,
     TournamentViewComponent,
     TournamentViewTvComponent,
     TournamentGameEditComponent,

@@ -1,7 +1,7 @@
-import { Observable } from 'rxjs/Observable';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Association, ITeam, PoulePlace, PoulePlaceRepository, StructureRepository, Team, TeamRepository } from 'ngx-sport';
+import { PoulePlace, PoulePlaceRepository, StructureRepository, TeamRepository } from 'ngx-sport';
+import { Observable } from 'rxjs/Observable';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 
 import { IAlert } from '../../../app.definitions';
@@ -14,7 +14,7 @@ import { TournamentRepository } from '../repository';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css']
 })
-export class TournamentCompetitorListComponent extends TournamentComponent implements OnInit {
+export class CompetitorListComponent extends TournamentComponent implements OnInit {
   poulePlaces: PoulePlace[];
   infoAlert = true;
   alert: IAlert;

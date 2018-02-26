@@ -29,6 +29,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     model: any;
     loading = false;
     error;
+    errorHomeAwayScore;
     returnUrl: string;
     returnUrlParam: number;
     returnUrlQueryParamKey: string;
@@ -94,7 +95,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         this.error = undefined;
         const scoreConfig = this.game.getRound().getInputScoreConfig();
         if (!this.validScore(home, scoreConfig)) {
-            this.error = 'thuisscore moet tussen 0 en ' + scoreConfig.getMaximum();
+            this.errorHomeAwayScore = 'thuisscore moet tussen 0 en ' + scoreConfig.getMaximum() + ' liggen';
             return;
         }
         if (this.model.home === 0 && this.model.away === 0 && home > 0) {
@@ -107,7 +108,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         this.error = undefined;
         const scoreConfig = this.game.getRound().getInputScoreConfig();
         if (!this.validScore(away, scoreConfig)) {
-            this.error = 'uitscore moet tussen 0 en ' + scoreConfig.getMaximum();
+            this.errorHomeAwayScore = 'uitscore moet tussen 0 en ' + scoreConfig.getMaximum() + ' liggen';
             return;
         }
         if (this.model.away === 0 && this.model.home === 0 && away > 0) {

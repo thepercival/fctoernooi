@@ -122,7 +122,7 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         const roundsByNumber = allRoundsByNumber[roundNumber];
 
         let games: Game[] = [];
-        const gamesByNumber = this.planningService.getGamesByNumber(roundNumber);
+        const gamesByNumber = this.planningService.getGamesByNumber(roundNumber, Game.ORDER_RESOURCEBATCH);
         gamesByNumber.forEach(gamesIt => gamesIt.forEach(game => games.push(game)));
 
         games = games.filter(game => {

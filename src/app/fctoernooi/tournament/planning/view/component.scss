@@ -1,9 +1,19 @@
+// @import "~bootstrap/scss/bootstrap";
+
 .card.round{
     width:100%;
 }
 
 app-tournament-planninground {
     width: 100%;
+}
+
+td.pouleplace {
+    word-break:break-all;
+}
+
+td.score, td.goaldiff {
+    white-space: nowrap;
 }
 
 .card-body{
@@ -32,8 +42,10 @@ app-tournament-planninground {
     cursor: pointer;
 }
 
-/* @media (max-width: 575.99px) {
-    .state-played {
-        color: green;
-    }
-} */
+
+// @include media-breakpoint-up(sm) {
+//   .some-class {
+//     display: block;
+//   }
+// }
+

@@ -3,17 +3,20 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AuthguardService } from '../auth/authguard.service';
-import { TournamentCompetitorListComponent } from './tournament/competitor/list.component';
+import { TournamentCompetitorEditComponent } from './tournament/competitor/edit.component';
+import { CompetitorListComponent } from './tournament/competitor/list.component';
 import { TournamentEditComponent } from './tournament/edit/edit.component';
+import { FieldListComponent } from './tournament/field/list.component';
 import { TournamentGameEditComponent } from './tournament/game/edit.component';
+import { GameListComponent } from './tournament/game/list.component';
 import { TournamentHomeComponent } from './tournament/home/home.component';
 import { TournamentNewComponent } from './tournament/new/new.component';
-import { TournamentPlanningComponent } from './tournament/planning/main.component';
 import { TournamentRefereeEditComponent } from './tournament/referee/edit.component';
-import { TournamentCompetitorEditComponent } from './tournament/competitor/edit.component';
+import { RefereeListComponent } from './tournament/referee/list.component';
+import { RoundsSettingsComponent } from './tournament/settings/rounds.component';
 import { TournamentStructureComponent } from './tournament/structure/main.component';
-import { TournamentViewComponent } from './tournament/view/view.component';
 import { TournamentViewTvComponent } from './tournament/view/tv.component';
+import { TournamentViewComponent } from './tournament/view/view.component';
 
 const routes: Routes = [
   { path: 'view/:id', component: TournamentViewComponent },
@@ -21,10 +24,13 @@ const routes: Routes = [
   { path: 'new', component: TournamentNewComponent },
   { path: 'edit/:id', component: TournamentEditComponent },
   { path: 'home/:id', component: TournamentHomeComponent, canActivate: [AuthguardService] },
-  { path: 'competitors/:id', component: TournamentCompetitorListComponent, canActivate: [AuthguardService] },
+  { path: 'competitors/:id', component: CompetitorListComponent, canActivate: [AuthguardService] },
   { path: 'structure/:id', component: TournamentStructureComponent, canActivate: [AuthguardService] },
-  { path: 'planning/:id', component: TournamentPlanningComponent, canActivate: [AuthguardService] },
+  { path: 'games/:id', component: GameListComponent, canActivate: [AuthguardService] },
   { path: 'gameedit/:id/:gameId', component: TournamentGameEditComponent, canActivate: [AuthguardService] },
+  { path: 'roundssettings/:id', component: RoundsSettingsComponent, canActivate: [AuthguardService] },
+  { path: 'fields/:id', component: FieldListComponent, canActivate: [AuthguardService] },
+  { path: 'referees/:id', component: RefereeListComponent, canActivate: [AuthguardService] },
   { path: 'refereeedit/:id/:refereeId', component: TournamentRefereeEditComponent, canActivate: [AuthguardService] },
   { path: 'competitoredit/:id/:poulePlaceId', component: TournamentCompetitorEditComponent, canActivate: [AuthguardService] },
   // { path: 'settings',  component: TournamentSettingsComponent }
