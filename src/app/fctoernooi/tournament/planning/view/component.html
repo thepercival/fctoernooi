@@ -19,7 +19,7 @@
           <th *ngIf="planningService.canCalculateStartDateTime(roundNumber)" title="starttijd">
             {{planningService.calculateStartDateTime(roundNumber).toLocaleString("en", {"month":"short","day":"2-digit"})}}
           </th>
-          <th title="veld">
+          <th *ngIf="hasFields()" title="veld">
             <i class="fi flaticon-soccer-field"></i>
           </th>
           <th>thuis</th>
@@ -27,7 +27,7 @@
             <i class="fi flaticon-scoreboard"></i>
           </th>
           <th>uit</th>
-          <th *ngIf="hasReferees()" class="" title="scheidsrechter">
+          <th *ngIf="hasReferees()" class="d-none d-sm-table-cell" title="scheidsrechter">
             <i class="fi flaticon-referee"></i>
           </th>
         </tr>
@@ -44,13 +44,13 @@
           <td *ngIf="planningService.canCalculateStartDateTime(roundNumber)" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }" (click)="linkToGameEdit(tournament,game)">
             {{game.getStartDateTime().toLocaleString("en", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}
           </td>
-          <td (click)="linkToGameEdit(tournament,game)" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">{{game.getField().getName()}}</td>
+          <td *ngIf="hasFields()" (click)="linkToGameEdit(tournament,game)" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">{{game.getField()?.getName()}}</td>
           <td (click)="linkToGameEdit(tournament,game)" class="pouleplace" [ngClass]="{'toGameEdit': userIsGameResultAdmin }">{{structureService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</td>
           <td (click)="linkToGameEdit(tournament,game)" class="score" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
             <span>{{getScore(game)}}</span>
           </td>
           <td (click)="linkToGameEdit(tournament,game)" class="pouleplace" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">{{structureService.getPoulePlaceName(game.getAwayPoulePlace(), true )}}</td>
-          <td *ngIf="hasReferees()" (click)="linkToGameEdit(tournament,game)" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">{{game.getReferee()?.getInitials()}}</td>
+          <td *ngIf="hasReferees()" class="d-none d-sm-table-cell" (click)="linkToGameEdit(tournament,game)" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">{{game.getReferee()?.getInitials()}}</td>
         </tr>
       </tbody>
     </table>

@@ -98,6 +98,10 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges {
     );
   }
 
+  hasFields() {
+    return this.tournament.getCompetitionseason().getFields().length > 0;
+  }
+
   hasReferees() {
     return this.tournament.getCompetitionseason().getReferees().length > 0;
   }

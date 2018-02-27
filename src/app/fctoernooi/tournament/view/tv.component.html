@@ -1,10 +1,15 @@
 <div *ngIf="tournament && structureService" class="container-fluid px-0">
-  <div class="mb-4">
+  <div class="d-flex justify-content-between">
     <h1 *ngIf="tournament">
-      <i class="{{iconManager.getIconClass(tournament.getCompetitionseason().getCompetition().getSport())}}"></i>
-      <span>{{tournament.getName()}}</span>
+      <i class="smaller {{iconManager.getIconClass(tournament.getCompetitionseason().getCompetition().getSport())}}"></i>
+      <span class="smaller">{{tournament.getName()}}</span>
       <span>{{screenDef ? ' - ' + screenDef.getDescription() : undefined }}</span>
     </h1>
+    <button [routerLink]="['/toernooi/view', tournament.getId()]" routerLinkActive="active" class="btn btn-outline-secondary"
+      type="button" style="cursor:pointer;">
+      <i class="fa fa-level-up fa-rotate-270"></i>
+      <span>terug</span>
+    </button>
   </div>
   <div *ngIf="isScheduledGamesScreenDef()">
     <table class="table tv-screen">
@@ -16,7 +21,7 @@
           <th *ngIf="planningService.getRoundsByNumber(screenDef.roundNumber)[0]?.getConfig().getEnableTime()" title="starttijd">
             {{planningService.calculateStartDateTime(screenDef.roundNumber).toLocaleString("en", {"month":"short","day":"2-digit"})}}
           </th>
-          <th title="veld">
+          <th *ngIf="hasFields()" title="veld">
             <i class="fi flaticon-soccer-field"></i>
           </th>
           <th class="text-right">thuis</th>
@@ -35,7 +40,7 @@
           <td *ngIf="planningService.getRoundsByNumber(screenDef.roundNumber)[0]?.getConfig().getEnableTime() && planningService.canCalculateStartDateTime(screenDef.roundNumber)">
             {{game.getStartDateTime().toLocaleString("en", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}
           </td>
-          <td>{{game.getField().getName()}}</td>
+          <td *ngIf="hasReferees()">{{game.getField()?.getName()}}</td>
           <td class="text-right">{{structureService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</td>
           <td class="text-center"> - </td>
           <td class="text-left">{{structureService.getPoulePlaceName(game.getAwayPoulePlace(), true )}}</td>

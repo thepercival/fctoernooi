@@ -205,6 +205,10 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         return this.screenDef instanceof ScheduledGamesScreenDefinition;
     }
 
+    hasFields() {
+        return this.tournament.getCompetitionseason().getFields().length > 0;
+    }
+
     hasReferees() {
         return this.tournament.getCompetitionseason().getReferees().length > 0;
     }

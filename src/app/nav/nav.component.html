@@ -1,11 +1,11 @@
-<nav class="navbar navbar-dark bg-dark">
+<nav *ngIf="tournamentViewTVLink.showTVIcon !== false" class="navbar navbar-dark bg-dark">
   <a class="navbar-brand" [routerLink]="['/']">
     <i class="fi flaticon-favicon"></i> {{title}}</a>
 
-  <button *ngIf="tournamentViewTVLink.showTVIcon !== undefined" [routerLink]="[tournamentViewTVLink.link, tournamentViewTVLink.tournamentId]"
+  <button *ngIf="tournamentViewTVLink.showTVIcon === true" [routerLink]="[tournamentViewTVLink.link, tournamentViewTVLink.tournamentId]"
     routerLinkActive="active" class="btn btn-outline-secondary" type="button" style="cursor:pointer;">
-    <i class="fa fa-{{ tournamentViewTVLink.showTVIcon === true ? 'television' : 'level-up fa-rotate-270'}}"></i>
-    <span class="d-none d-sm-inline">{{ tournamentViewTVLink.showTVIcon === true ? 'tvscherm' : 'terug'}}</span>
+    <i class="fa fa-television"></i>
+    <span class="d-none d-sm-inline">tvscherm</span>
   </button>
 
   <button *ngIf="!isLoggedIn()" routerLink="/user/login" routerLinkActive="active" class="btn btn-outline-secondary" role="button"

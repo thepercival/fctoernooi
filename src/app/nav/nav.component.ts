@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+
 import { AuthService } from '../auth/auth.service';
 import { GlobalEventsManager } from '../common/eventmanager';
 
