@@ -15,7 +15,7 @@ import { TournamentRole } from '../role';
 @Component({
     selector: 'app-tournament-view-tv',
     templateUrl: './tv.component.html',
-    styleUrls: ['./tv.component.css']
+    styleUrls: ['./tv.component.scss']
 })
 export class TournamentViewTvComponent extends TournamentComponent implements OnInit, OnDestroy {
 
@@ -73,6 +73,7 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         const nextRoundNumber = lastPlayedRoundNumber + 1;
         const stateNextRoundNumber = this.getStateRoundNumber(nextRoundNumber);
         let roundNumberForScheduleAndRanking = nextRoundNumber;
+        let noSchedule = false;
         let roundNumberForRanking;
 
         if (lastPlayedRoundNumber === 0) { // voor het begin
@@ -100,15 +101,17 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
      */
     getScreenDefinitionsForScheduleAndRanking(roundNumber: number): ScreenDefinition[] {
         const screenDefs: ScreenDefinition[] = [];
+        const games: Game[] = this.getScheduledGamesForRoundNumber(roundNumber);
 
         const rankingScreenDefs = this.getScreenDefinitionsForRanking(roundNumber, true);
-        const scheduledGamesScreenDef = this.getScreenDefinitionForSchedule(roundNumber);
-        screenDefs.push(scheduledGamesScreenDef);
+        const scheduledGamesScreenDef = new ScheduledGamesScreenDefinition(roundNumber, games);
         rankingScreenDefs.forEach(rankingScreenDef => {
-            screenDefs.push(scheduledGamesScreenDef);
+            if (games.length > 0) {
+                screenDefs.push(scheduledGamesScreenDef);
+            }
             screenDefs.push(rankingScreenDef);
         });
-        if (screenDefs.length === 0) {
+        if (screenDefs.length === 0 && games.length > 0) {
             screenDefs.push(scheduledGamesScreenDef);
         }
         return screenDefs;
@@ -117,18 +120,13 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
     /**
      * show next 8 games
      */
-    getScreenDefinitionForSchedule(roundNumber: number): ScreenDefinition {
+    getScheduledGamesForRoundNumber(roundNumber: number): Game[] {
         const allRoundsByNumber = this.structureService.getAllRoundsByNumber();
         const roundsByNumber = allRoundsByNumber[roundNumber];
-
-        let games: Game[] = [];
+        const games: Game[] = [];
         const gamesByNumber = this.planningService.getGamesByNumber(roundNumber, Game.ORDER_RESOURCEBATCH);
         gamesByNumber.forEach(gamesIt => gamesIt.forEach(game => games.push(game)));
-
-        games = games.filter(game => {
-            return game.getState() !== Game.STATE_PLAYED;
-        });
-        return new ScheduledGamesScreenDefinition(roundNumber, games.slice(0, 8));
+        return games.filter(game => game.getState() !== Game.STATE_PLAYED);
     }
 
     /**
@@ -224,6 +222,12 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
     getPoulePlacesByRank(poule: Poule): PoulePlace[][] {
         return this.ranking.getPoulePlacesByRank(poule.getPlaces(), poule.getGames());
     }
+
+    getGoalDifference(poulePlace: PoulePlace, games: Game[]) {
+        const nrOfGoalsScored = this.ranking.getNrOfGoalsScored(poulePlace, games);
+        const nrOfGoalsReceived = this.ranking.getNrOfGoalsReceived(poulePlace, games);
+        return (nrOfGoalsScored - nrOfGoalsReceived) + ' ( ' + nrOfGoalsScored + ' - ' + nrOfGoalsReceived + ' )';
+    }
 }
 
 export class ScreenDefinition {
@@ -242,6 +246,14 @@ export class RankingScreenDefinition extends ScreenDefinition {
         super(roundNumber);
         this.pouleOne = pouleOne;
         this.pouleTwo = pouleTwo;
+    }
+
+    getFirstPoule(): Poule {
+        return this.pouleOne;
+    }
+
+    getLastPoule(): Poule {
+        return this.pouleTwo;
     }
 
     getPoules(): Poule[] {

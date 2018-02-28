@@ -13,7 +13,7 @@
     <table class="table">
       <thead>
         <tr>
-          <th title="poule">
+          <th class="text-center" title="poule">
             <i class="fa fa-list"></i>
           </th>
           <th *ngIf="planningService.canCalculateStartDateTime(roundNumber)" title="starttijd">
@@ -22,8 +22,8 @@
           <th *ngIf="hasFields()" title="veld">
             <i class="fi flaticon-soccer-field"></i>
           </th>
-          <th>thuis</th>
-          <th title="score">
+          <th class="text-right">thuis</th>
+          <th class="text-center" title="score">
             <i class="fi flaticon-scoreboard"></i>
           </th>
           <th>uit</th>
@@ -34,7 +34,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let game of getGamesHelper()">
-          <td>
+          <td class="text-center">
             <span *ngIf="!game.getPoule().needsRanking()" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }" (click)="linkToGameEdit(tournament,game)">{{structureService.getPouleName(game.getPoule())}}</span>
             <button type="button" class="btn btn-sm btn-outline-secondary" *ngIf="game.getPoule().needsRanking()" placement="right" [ngbPopover]="popRanking"
               triggers="manual" #p="ngbPopover" (click)="showRanking( p, game.getPoule() )">
@@ -45,8 +45,8 @@
             {{game.getStartDateTime().toLocaleString("en", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}
           </td>
           <td *ngIf="hasFields()" (click)="linkToGameEdit(tournament,game)" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">{{game.getField()?.getName()}}</td>
-          <td (click)="linkToGameEdit(tournament,game)" class="pouleplace" [ngClass]="{'toGameEdit': userIsGameResultAdmin }">{{structureService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</td>
-          <td (click)="linkToGameEdit(tournament,game)" class="score" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
+          <td (click)="linkToGameEdit(tournament,game)" class="pouleplace text-right" [ngClass]="{'toGameEdit': userIsGameResultAdmin }">{{structureService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</td>
+          <td (click)="linkToGameEdit(tournament,game)" class="score text-center" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
             <span>{{getScore(game)}}</span>
           </td>
           <td (click)="linkToGameEdit(tournament,game)" class="pouleplace" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">{{structureService.getPoulePlaceName(game.getAwayPoulePlace(), true )}}</td>

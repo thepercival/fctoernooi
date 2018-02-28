@@ -8,10 +8,21 @@
 h1 > span.smaller {
     font-size: 80%;
 }
+h1 > small {
+    font-size: 60%;
+}
 h1 > i.smaller {
     font-size: 80%;
 }
 .tv-screen {
     font-size: 24px;
+}
+
+td.pouleplace {
+    word-break:break-all;
+}
+
+td.score, td.goaldiff {
+    white-space: nowrap;
 }
 
