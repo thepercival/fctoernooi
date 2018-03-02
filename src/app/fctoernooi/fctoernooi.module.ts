@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap/alert/alert.module';
+import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap/collapse/collapse.module';
+import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
+import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap/popover/popover.module';
+import { NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap/timepicker/timepicker.module';
 import { NouisliderModule } from 'ng2-nouislider';
 import {
   GameRepository,
@@ -41,7 +45,7 @@ import { TournamentViewComponent } from './tournament/view/view.component';
     CommonModule,
     FormsModule,
     FctoernooiRoutingModule,
-    NgbModule,
+    NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule,
     NouisliderModule,
     ReactiveFormsModule
   ],
@@ -75,7 +79,7 @@ import { TournamentViewComponent } from './tournament/view/view.component';
     TeamRepository,
     GameRepository,
     GameScoreRepository,
-    IconManager
+    IconManager,
   ]
 })
 export class FctoernooiModule { }

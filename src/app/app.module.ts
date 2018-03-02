@@ -2,7 +2,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap/alert/alert.module';
+import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap/collapse/collapse.module';
+import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
+import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap/popover/popover.module';
+import { NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap/timepicker/timepicker.module';
 import {
   AssociationRepository,
   CompetitionRepository,
@@ -40,7 +44,8 @@ import { UserModule } from './user/user.module';
     FormsModule,
     UserModule,
     AdminModule,
-    NgbModule.forRoot()
+    NgbDatepickerModule.forRoot(), NgbTimepickerModule.forRoot(), NgbAlertModule.forRoot(),
+    NgbPopoverModule.forRoot(), NgbCollapseModule.forRoot(),
   ],
   providers: [
     AuthService,

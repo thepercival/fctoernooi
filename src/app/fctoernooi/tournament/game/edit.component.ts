@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
 import {
-    Competition,
-    Game,
-    GameRepository,
-    GameScore,
-    INewQualifier,
-    PlanningService,
-    PoulePlaceRepository,
-    QualifyService,
-    RoundScoreConfig,
-    StructureRepository,
+  Competition,
+  Game,
+  GameRepository,
+  GameScore,
+  INewQualifier,
+  PlanningService,
+  PoulePlaceRepository,
+  QualifyService,
+  RoundScoreConfig,
+  StructureRepository,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 

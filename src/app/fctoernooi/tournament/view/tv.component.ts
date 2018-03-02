@@ -73,7 +73,6 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         const nextRoundNumber = lastPlayedRoundNumber + 1;
         const stateNextRoundNumber = this.getStateRoundNumber(nextRoundNumber);
         let roundNumberForScheduleAndRanking = nextRoundNumber;
-        let noSchedule = false;
         let roundNumberForRanking;
 
         if (lastPlayedRoundNumber === 0) { // voor het begin
