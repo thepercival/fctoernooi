@@ -36,7 +36,7 @@ export class GameListComponent extends TournamentComponent implements OnInit {
 
   // updateRound(newRound: Round) {
   //   this.structureService = new StructureService(
-  //     this.tournament.getCompetitionseason(),
+  //     this.tournament.getCompetition(),
   //     { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
   //     newRound
   //   );

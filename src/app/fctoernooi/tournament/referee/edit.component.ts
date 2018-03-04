@@ -76,7 +76,7 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         if (id === undefined || id < 1) {
             return;
         }
-        const referee = this.structureService.getCompetitionseason().getRefereeById(id);
+        const referee = this.structureService.getCompetition().getRefereeById(id);
         if (referee === undefined) {
             return;
         }
@@ -111,7 +111,7 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
             name: name ? name : undefined,
             info: info ? info : undefined
         };
-        this.refereeRepository.createObject(ref, this.structureService.getCompetitionseason())
+        this.refereeRepository.createObject(ref, this.structureService.getCompetition())
             .subscribe(
             /* happy path */ refereeRes => {
 
@@ -119,7 +119,7 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
                 const planningService = new PlanningService(this.structureService);
                 planningService.reschedule(firstRound.getNumber());
 
-                this.structureRepository.editObject(firstRound, this.structureService.getCompetitionseason())
+                this.structureRepository.editObject(firstRound, this.structureService.getCompetition())
                     .subscribe(
                         /* happy path */ roundRes => {
                         this.navigateBack();
@@ -145,11 +145,11 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         const name = this.customForm.controls.name.value;
         const info = this.customForm.controls.info.value;
 
-        const referee = this.structureService.getCompetitionseason().getRefereeById(this.refereeId);
+        const referee = this.structureService.getCompetition().getRefereeById(this.refereeId);
         referee.setInitials(initials);
         referee.setName(name ? name : undefined);
         referee.setInfo(info ? info : undefined);
-        this.refereeRepository.editObject(referee, this.structureService.getCompetitionseason())
+        this.refereeRepository.editObject(referee, this.structureService.getCompetition())
             .subscribe(
             /* happy path */ refereeRes => {
                 this.navigateBack();
@@ -174,7 +174,7 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
     }
 
     isInitialsDuplicate(initials: string, refereeId?: number): boolean {
-        const referees = this.structureService.getCompetitionseason().getReferees();
+        const referees = this.structureService.getCompetition().getReferees();
         return referees.find(refereeIt => {
             return (initials === refereeIt.getInitials() && (refereeId === undefined || refereeIt.getId() === undefined));
         }) !== undefined;

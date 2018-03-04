@@ -110,7 +110,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
             this.processing = false;
             return;
         }
-        const association = this.tournament.getCompetitionseason().getAssociation();
+        const association = this.tournament.getCompetition().getLeague().getAssociation();
         const team: ITeam = {
             name: name,
             info: info ? info : undefined

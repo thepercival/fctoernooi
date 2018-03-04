@@ -1,22 +1,22 @@
-/**
- * Created by coen on 9-10-17.
- */
-import { Competitionseason } from 'ngx-sport';
+import { Competition } from 'ngx-sport';
 
 import { TournamentRole } from './tournament/role';
 
+/**
+ * Created by coen on 9-10-17.
+ */
 
 export class Tournament {
     static readonly MINNROFCOMPETITORS = 2;
     static readonly MAXNROFCOMPETITORS = 32;
 
     protected id: number;
-    protected competitionseason: Competitionseason;
+    protected competition: Competition;
     protected roles: TournamentRole[] = [];
 
     // constructor
-    constructor(competitionseason: Competitionseason) {
-        this.setCompetitionseason(competitionseason);
+    constructor(competition: Competition) {
+        this.setCompetition(competition);
     }
 
     getId(): number {
@@ -27,12 +27,12 @@ export class Tournament {
         this.id = id;
     }
 
-    getCompetitionseason(): Competitionseason {
-        return this.competitionseason;
+    getCompetition(): Competition {
+        return this.competition;
     }
 
-    setCompetitionseason(competitionseason: Competitionseason): void {
-        this.competitionseason = competitionseason;
+    setCompetition(competition: Competition): void {
+        this.competition = competition;
     }
 
     getRoles(): TournamentRole[] {
@@ -50,6 +50,6 @@ export class Tournament {
     }
 
     getName(): string {
-        return this.getCompetitionseason().getCompetition().getName();
+        return this.getCompetition().getLeague().getName();
     }
 }

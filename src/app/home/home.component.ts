@@ -52,10 +52,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       .subscribe(
                         /* happy path */ tournamentsRes => {
         this.tournaments = tournamentsRes.sort((t1, t2) => {
-          if (t1.getCompetitionseason().getStartDateTime() < t2.getCompetitionseason().getStartDateTime()) {
+          if (t1.getCompetition().getStartDateTime() < t2.getCompetition().getStartDateTime()) {
             return 1;
           }
-          if (t1.getCompetitionseason().getStartDateTime() > t2.getCompetitionseason().getStartDateTime()) {
+          if (t1.getCompetition().getStartDateTime() > t2.getCompetition().getStartDateTime()) {
             return -1;
           }
           return 0;

@@ -54,13 +54,13 @@ export class TournamentRoleRepository extends SportRepository {
         return tournamentRoles;
     }
 
-    // getObject( competitionSeason: CompetitionSeason): Observable<Tournament>
+    // getObject( competition: Competition): Observable<Tournament>
     // {
     //     let observable = Observable.create(observer => {
     //         this.getObjects().subscribe(
     //             /* happy path */ tournaments => {
     //                 const tournament = tournaments.find(
-    //                     tournamentIt => tournamentIt.getCompetitionseason().getId() === competitionSeason.getId()
+    //                     tournamentIt => tournamentIt.getCompetition().getId() === competition.getId()
     //                 );
     //                 observer.next(tournament);
     //                 observer.complete();
@@ -107,7 +107,7 @@ export class TournamentRoleRepository extends SportRepository {
     //         .catch(this.handleError);
     // }
     //
-    // editObject( object: CompetitionSeason ): Observable<CompetitionSeason>
+    // editObject( object: Competition ): Observable<Competition>
     // {
     //     let url = this.url + '/'+object.getId();
     //
@@ -119,7 +119,7 @@ export class TournamentRoleRepository extends SportRepository {
     //         .catch(this.handleError);
     // }
     //
-    // removeObject( object: CompetitionSeason): Observable<void>
+    // removeObject( object: Competition): Observable<void>
     // {
     //     let url = this.url + '/'+object.getId();
     //     return this.http

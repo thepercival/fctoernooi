@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
 import {
-  Competition,
+  League,
   Game,
   GameRepository,
   GameScore,
@@ -36,8 +36,8 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     returnUrlQueryParamValue: string;
 
     validations: any = {
-        'minlengthname': Competition.MIN_LENGTH_NAME,
-        'maxlengthname': Competition.MAX_LENGTH_NAME
+        'minlengthname': League.MIN_LENGTH_NAME,
+        'maxlengthname': League.MAX_LENGTH_NAME
     };
 
     constructor(

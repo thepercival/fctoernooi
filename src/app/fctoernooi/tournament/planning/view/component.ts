@@ -99,11 +99,11 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges {
   }
 
   hasFields() {
-    return this.tournament.getCompetitionseason().getFields().length > 0;
+    return this.tournament.getCompetition().getFields().length > 0;
   }
 
   hasReferees() {
-    return this.tournament.getCompetitionseason().getReferees().length > 0;
+    return this.tournament.getCompetition().getReferees().length > 0;
   }
 
   showRanking(popOver: NgbPopover, poule: Poule) {

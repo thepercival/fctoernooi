@@ -57,7 +57,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   }
 
   createRefereesList() {
-    this.referees = this.structureService.getCompetitionseason().getReferees();
+    this.referees = this.structureService.getCompetition().getReferees();
   }
 
   addReferee() {
@@ -95,11 +95,11 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
         const firstRound = this.structureService.getFirstRound();
         const planningService = new PlanningService(this.structureService);
         planningService.reschedule(firstRound.getNumber());
-        this.structureRepository.editObject(firstRound, this.structureService.getCompetitionseason())
+        this.structureRepository.editObject(firstRound, this.structureService.getCompetition())
           .subscribe(
                 /* happy path */ roundRes => {
             this.structureService = new StructureService(
-              this.tournament.getCompetitionseason(),
+              this.tournament.getCompetition(),
               { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
               roundRes
             );

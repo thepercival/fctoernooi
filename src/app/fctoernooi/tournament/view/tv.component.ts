@@ -203,11 +203,11 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
     }
 
     hasFields() {
-        return this.tournament.getCompetitionseason().getFields().length > 0;
+        return this.tournament.getCompetition().getFields().length > 0;
     }
 
     hasReferees() {
-        return this.tournament.getCompetitionseason().getReferees().length > 0;
+        return this.tournament.getCompetition().getReferees().length > 0;
     }
 
     getScore(game: Game): string {

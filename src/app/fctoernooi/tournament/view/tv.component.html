@@ -1,7 +1,7 @@
 <div *ngIf="tournament && structureService" class="container-fluid px-0">
   <div class="d-flex justify-content-between align-items-center">
     <h1 *ngIf="tournament">
-      <i class="smaller {{iconManager.getIconClass(tournament.getCompetitionseason().getCompetition().getSport())}}"></i>
+      <i class="smaller {{iconManager.getIconClass(tournament.getCompetition().getLeague().getSport())}}"></i>
       <span class="smaller">{{tournament.getName()}}</span>
       <small *ngIf="screenDef">
         <span> - {{ screenDef.getDescription() }}</span>

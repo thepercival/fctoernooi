@@ -1,10 +1,7 @@
-/**
- * Created by coen on 1-10-17.
- */
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { CompetitionseasonRepository, ICompetitionseason, SportRepository } from 'ngx-sport';
+import { CompetitionRepository, ICompetition, SportRepository } from 'ngx-sport';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { catchError } from 'rxjs/operators/catchError';
@@ -13,17 +10,20 @@ import { map } from 'rxjs/operators/map';
 import { Tournament } from '../tournament';
 import { ITournamentRole, TournamentRoleRepository } from './role/repository';
 
+/**
+ * Created by coen on 1-10-17.
+ */
 @Injectable()
 export class TournamentRepository extends SportRepository {
 
     private url: string;
-    private csRepository: CompetitionseasonRepository;
+    private csRepository: CompetitionRepository;
     private tournamentRoleRepository: TournamentRoleRepository;
     private ownCache: Tournament[] = [];
 
     constructor(
         private http: HttpClient,
-        csRepository: CompetitionseasonRepository,
+        csRepository: CompetitionRepository,
         tournamentRoleRepository: TournamentRoleRepository,
         router: Router) {
         super(router);
@@ -130,8 +130,8 @@ export class TournamentRepository extends SportRepository {
     }
 
     jsonToObjectHelper(json: ITournament): Tournament {
-        const competitionseason = this.csRepository.jsonToObjectHelper(json.competitionseason);
-        const tournament = new Tournament(competitionseason);
+        const competition = this.csRepository.jsonToObjectHelper(json.competition);
+        const tournament = new Tournament(competition);
         const roles = this.tournamentRoleRepository.jsonArrayToObject(json.roles, tournament);
         tournament.setRoles(roles);
         tournament.setId(json.id);
@@ -141,7 +141,7 @@ export class TournamentRepository extends SportRepository {
     objectToJsonHelper(object: Tournament): ITournament {
         return {
             id: object.getId(),
-            competitionseason: this.csRepository.objectToJsonHelper(object.getCompetitionseason()),
+            competition: this.csRepository.objectToJsonHelper(object.getCompetition()),
             roles: this.tournamentRoleRepository.objectsToJsonHelper(object.getRoles())
         };
     }
@@ -149,6 +149,6 @@ export class TournamentRepository extends SportRepository {
 
 export interface ITournament {
     id?: number;
-    competitionseason: ICompetitionseason;
+    competition: ICompetition;
     roles: ITournamentRole[];
 }

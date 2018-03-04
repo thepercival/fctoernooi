@@ -255,7 +255,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
 
         const firstRound = this.structureService.getFirstRound();
         // const directionsTmp = this.getWinnersLosers(firstRound, this.selectedRound);
-        this.structureRepository.editObject(firstRound, firstRound.getCompetitionseason())
+        this.structureRepository.editObject(firstRound, firstRound.getCompetition())
             .subscribe(
                         /* happy path */ firstRoundRes => {
                 this.setAlert('info', 'instellingen opgeslagen');

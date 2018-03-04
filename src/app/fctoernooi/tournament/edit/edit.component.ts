@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
-import { Competition, PlanningService, StructureRepository } from 'ngx-sport';
+import { League, PlanningService, StructureRepository } from 'ngx-sport';
 
 import { IAlert } from '../../../app.definitions';
 import { TournamentComponent } from '../component';
@@ -20,8 +20,8 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
     alert: IAlert;
 
     validations: any = {
-        'minlengthname': Competition.MIN_LENGTH_NAME,
-        'maxlengthname': Competition.MAX_LENGTH_NAME
+        'minlengthname': League.MIN_LENGTH_NAME,
+        'maxlengthname': League.MAX_LENGTH_NAME
     };
 
     constructor(
@@ -41,19 +41,19 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
     }
 
     initFields() {
-        const date = this.tournament.getCompetitionseason().getStartDateTime();
+        const date = this.tournament.getCompetition().getStartDateTime();
         this.model = {
             starttime: { hour: date.getHours(), minute: date.getMinutes() },
             startdate: { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() },
-            name: this.tournament.getCompetitionseason().getCompetition().getName()
+            name: this.tournament.getCompetition().getLeague().getName()
         };
     }
 
     shouldReschedule(startDateTime: Date): boolean {
-        if (startDateTime.getTime() === this.tournament.getCompetitionseason().getStartDateTime().getTime()) {
+        if (startDateTime.getTime() === this.tournament.getCompetition().getStartDateTime().getTime()) {
             return false;
         }
-        // console.log(startDateTime, this.tournament.getCompetitionseason().getStartDateTime());
+        // console.log(startDateTime, this.tournament.getCompetition().getStartDateTime());
         if (this.structureService.getFirstRound().isStarted()) {
             throw new Error('de startdatum mag niet veranderen omdat het toernooi al is begonnen');
         }
@@ -76,10 +76,10 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
         this.loading = true;
         const round = this.structureService.getFirstRound();
         try {
-            this.tournament.getCompetitionseason().getCompetition().setName(this.model.name);
+            this.tournament.getCompetition().getLeague().setName(this.model.name);
             const reschedule = this.shouldReschedule(startDateTime);
             if (reschedule === true) {
-                this.tournament.getCompetitionseason().setStartDateTime(startDateTime);
+                this.tournament.getCompetition().setStartDateTime(startDateTime);
                 const planningService = new PlanningService(this.structureService);
                 planningService.reschedule(round.getNumber());
             }
@@ -90,7 +90,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
                     this.tournament = tournamentRes;
                     // setTimeout(3000);
                     if (reschedule === true) {
-                        this.structureRepository.editObject(round, round.getCompetitionseason())
+                        this.structureRepository.editObject(round, round.getCompetition())
                             .subscribe(
                             /* happy path */ roundRes => {
                                 this.router.navigate(['/toernooi/home', tournamentRes.getId()]);

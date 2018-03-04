@@ -9,8 +9,8 @@ import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap/popover/popover.mod
 import { NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap/timepicker/timepicker.module';
 import {
   AssociationRepository,
+  LeagueRepository,
   CompetitionRepository,
-  CompetitionseasonRepository,
   FieldRepository,
   RefereeRepository,
   SeasonRepository,
@@ -52,9 +52,9 @@ import { UserModule } from './user/user.module';
     AuthguardService,
     TournamentRepository,
     TournamentRoleRepository,
-    CompetitionseasonRepository,
-    AssociationRepository,
     CompetitionRepository,
+    AssociationRepository,
+    LeagueRepository,
     SeasonRepository,
     FieldRepository,
     RefereeRepository,

@@ -58,7 +58,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
     }
 
     createFieldsList() {
-        const fields = this.structureService.getCompetitionseason().getFields();
+        const fields = this.structureService.getCompetition().getFields();
         this.fieldsList = [];
         fields.forEach(function (fieldIt) {
             this.fieldsList.push({
@@ -85,7 +85,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
             name: '' + (this.fieldsList.length + 1)
         };
 
-        this.fieldRepository.createObject(jsonField, this.structureService.getCompetitionseason())
+        this.fieldRepository.createObject(jsonField, this.structureService.getCompetition())
             .subscribe(
             /* happy path */ fieldRes => {
                 const fieldItem: IFieldListItem = { field: fieldRes, editable: false };
@@ -100,11 +100,11 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
                 // 2 onderliggende wedstrijden(ook van onderliggende ronden)
                 // 3 configuraties(ook van onderliggende ronden)
 
-                this.structureRepository.editObject(firstRound, this.structureService.getCompetitionseason())
+                this.structureRepository.editObject(firstRound, this.structureService.getCompetition())
                     .subscribe(
                         /* happy path */ roundRes => {
                         this.structureService = new StructureService(
-                            this.tournament.getCompetitionseason(),
+                            this.tournament.getCompetition(),
                             { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
                             roundRes
                         );
@@ -138,11 +138,11 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
                 this.planningService.reschedule(firstRound.getNumber());
 
                 // setTimeout(3000);
-                this.structureRepository.editObject(firstRound, this.structureService.getCompetitionseason())
+                this.structureRepository.editObject(firstRound, this.structureService.getCompetition())
                     .subscribe(
                         /* happy path */ roundRes => {
                         this.structureService = new StructureService(
-                            this.tournament.getCompetitionseason(),
+                            this.tournament.getCompetition(),
                             { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
                             roundRes
                         );
@@ -162,7 +162,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
         this.setAlert('info', 'veldnaam wijzigen..');
         this.processing = true;
 
-        this.fieldRepository.editObject(fieldItem.field, this.structureService.getCompetitionseason())
+        this.fieldRepository.editObject(fieldItem.field, this.structureService.getCompetition())
             .subscribe(
             /* happy path */ fieldRes => {
                 this.setAlert('info', 'veldnaam gewijzigd');

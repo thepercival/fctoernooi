@@ -4,8 +4,8 @@ import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.
 import {
   Association,
   Competition,
-  Competitionseason,
   Field,
+  League,
   PlanningService,
   Season,
   SportConfig,
@@ -32,8 +32,8 @@ export class TournamentNewComponent implements OnInit {
     'maxnrofcompetitors': Tournament.MAXNROFCOMPETITORS,
     'minnroffields': 1,
     'maxnroffields': 16,
-    'minlengthname': Competition.MIN_LENGTH_NAME,
-    'maxlengthname': Competition.MAX_LENGTH_NAME
+    'minlengthname': League.MIN_LENGTH_NAME,
+    'maxlengthname': League.MAX_LENGTH_NAME
   };
   // message: string;
 
@@ -74,19 +74,20 @@ export class TournamentNewComponent implements OnInit {
     let tournament;
     {
       const association = new Association('username'); // dummy
-      const competition = new Competition(this.model.name);
-      competition.setSport(sportName);
+      const league = new League(this.model.name);
+      league.setAssociation(association);
+      league.setSport(sportName);
       const season = new Season('123'); // dummy
       season.setStartDateTime(new Date());
       season.setEndDateTime(new Date());
-      const competitionseason = new Competitionseason(association, competition, season);
-      competitionseason.setStartDateTime(startdate);
+      const competition = new Competition(league, season);
+      competition.setStartDateTime(startdate);
       for (let fieldNumber = 1; fieldNumber <= this.model.nroffields; fieldNumber++) {
-        const field = new Field(competitionseason, fieldNumber);
+        const field = new Field(competition, fieldNumber);
         field.setName(String(fieldNumber));
       }
 
-      tournament = new Tournament(competitionseason);
+      tournament = new Tournament(competition);
     }
 
     this.tournamentRepository.createObject(tournament)
@@ -94,7 +95,7 @@ export class TournamentNewComponent implements OnInit {
             /* happy path */ tournamentOut => {
         // setTimeout(3000);
         const structureService = new StructureService(
-          tournamentOut.getCompetitionseason(),
+          tournamentOut.getCompetition(),
           { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
           undefined, this.model.nrofcompetitors
         );
@@ -102,7 +103,7 @@ export class TournamentNewComponent implements OnInit {
         const planningService = new PlanningService(structureService);
         planningService.create(structureService.getFirstRound().getNumber());
 
-        this.structureRepository.createObject(structureService.getFirstRound(), tournamentOut.getCompetitionseason())
+        this.structureRepository.createObject(structureService.getFirstRound(), tournamentOut.getCompetition())
           .subscribe(
             /* happy path */ structure => {
             // console.log(structure);

@@ -39,14 +39,14 @@ export class TournamentStructureComponent extends TournamentComponent implements
     this.originalTeams = firstRound.getTeams();
     const deepCopyOfFirstRound = cloneDeep(firstRound);
     return new StructureService(
-      this.tournament.getCompetitionseason(),
+      this.tournament.getCompetition(),
       { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
       deepCopyOfFirstRound
     );
   }
 
   processUnusedTeams(firstRound: Round) {
-    const unusedTeams = this.teamRepository.getUnusedTeams(this.tournament.getCompetitionseason());
+    const unusedTeams = this.teamRepository.getUnusedTeams(this.tournament.getCompetition());
     const oldTeams = this.originalTeams;
     const newTeams = firstRound.getTeams();
 
@@ -83,7 +83,7 @@ export class TournamentStructureComponent extends TournamentComponent implements
 
     const firstRound = this.structureService.getFirstRound();
     this.processUnusedTeams(firstRound);
-    this.structureRepository.editObject(firstRound, this.tournament.getCompetitionseason())
+    this.structureRepository.editObject(firstRound, this.tournament.getCompetition())
       .subscribe(
           /* happy path */ roundRes => {
         this.structureService = this.createStructureService(roundRes);
