@@ -119,16 +119,16 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
         this.teamRepository.createObject(team, association)
             .subscribe(
             /* happy path */ teamRes => {
-                this.poulePlace.setTeam(teamRes);
-                this.poulePlaceRepository.editObject(this.poulePlace, this.poulePlace.getPoule())
-                    .subscribe(
+                    this.poulePlace.setTeam(teamRes);
+                    this.poulePlaceRepository.editObject(this.poulePlace, this.poulePlace.getPoule())
+                        .subscribe(
                   /* happy path */ poulePlaceRes => {
-                        this.navigateBack();
-                    },
+                                this.navigateBack();
+                            },
                   /* error path */ e => { this.setAlert('danger', e); },
                   /* onComplete */() => this.processing = false
-                    );
-            },
+                        );
+                },
             /* error path */ e => { this.setAlert('danger', e); },
         );
     }
@@ -141,19 +141,36 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
             this.processing = false;
             return;
         }
+
+        let team = this.poulePlace.getTeam();
         const name = this.customForm.controls.name.value;
         const info = this.customForm.controls.info.value;
 
-        const team = this.poulePlace.getTeam();
+        /* if team in other tournament from same user, than use that team */
+        this.teamRepository.getObjects(team.getAssociation(), name)
+            .subscribe(
+            /* happy path */ teams => {
+                    if (teams.length > 0 && teams[0] !== team) {
+                        team = teams[0];
+                        this.poulePlace.setTeam(team);
+                    } else {
+                        this.editReal(team, name, info);
+                    }
+                },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+            /* onComplete */() => this.processing = false
+            );
+    }
+
+    editReal(team: Team, name?: string, info?: string) {
         team.setName(name);
         team.setInfo(info ? info : undefined);
         this.teamRepository.editObject(team)
             .subscribe(
-            /* happy path */ teamRes => {
-                this.navigateBack();
-            },
-            /* error path */ e => { this.setAlert('danger', e); },
-            /* onComplete */() => this.processing = false
+                    /* happy path */ teamRes => {
+                    this.navigateBack();
+                },
+                /* error path */ e => { this.setAlert('danger', e); }
             );
     }
 

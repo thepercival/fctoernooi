@@ -2,16 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
 import {
-  League,
-  Game,
-  GameRepository,
-  GameScore,
-  INewQualifier,
-  PlanningService,
-  PoulePlaceRepository,
-  QualifyService,
-  RoundScoreConfig,
-  StructureRepository,
+    Game,
+    GameRepository,
+    GameScore,
+    INewQualifier,
+    League,
+    PlanningService,
+    PoulePlaceRepository,
+    QualifyService,
+    RoundScoreConfig,
+    StructureRepository,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 
@@ -81,7 +81,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         this.model = {
             home: gameScore ? gameScore.getHome() : 0,
             away: gameScore ? gameScore.getAway() : 0,
-            extratime: gameScore ? gameScore.getExtraTime() : false,
+            extratime: gameScore ? gameScore.getMoment() === Game.MOMENT_EXTRATIME : false,
             played: this.game.getState() === Game.STATE_PLAYED
         };
         if (date !== undefined) {
@@ -154,7 +154,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         const checkQualifiers = this.model.played && (gameScore.getHome() !== this.model.home || gameScore.getAway() !== this.model.away);
         gameScore.setHome(this.model.home);
         gameScore.setAway(this.model.away);
-        gameScore.setExtraTime(this.model.extratime);
+        gameScore.setMoment(this.model.extratime === true ? Game.MOMENT_EXTRATIME : Game.MOMENT_FULLTIME);
         const state = this.model.played === true ? Game.STATE_PLAYED : Game.STATE_CREATED;
         this.game.setState(state);
         if (this.planningService.canCalculateStartDateTime(this.game.getRound().getNumber())) {
@@ -172,41 +172,41 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         this.gameRepository.editObject(this.game, this.game.getPoule())
             .subscribe(
             /* happy path */ gameRes => {
-                this.game = gameRes;
-                if (checkQualifiers === false) {
-                    this.loading = false;
-                    this.navigateBack();
-                    return;
-                }
-
-                const newQualifiers: INewQualifier[] = [];
-                this.game.getRound().getChildRounds().forEach(childRound => {
-                    const qualService = new QualifyService(childRound);
-                    qualService.getNewQualifiers(this.game.getPoule()).forEach((newQualifier) => {
-                        newQualifiers.push(newQualifier);
-                    });
-                });
-
-                if (newQualifiers.length > 0) {
-                    const reposUpdates = [];
-                    newQualifiers.forEach((newQualifier) => {
-                        const poulePlace = newQualifier.poulePlace;
-                        poulePlace.setTeam(newQualifier.team);
-                        reposUpdates.push(this.poulePlaceRepository.editObject(poulePlace, poulePlace.getPoule()));
-                    });
-
-                    forkJoin(reposUpdates).subscribe(results => {
-                        this.navigateBack();
+                    this.game = gameRes;
+                    if (checkQualifiers === false) {
                         this.loading = false;
-                    },
-                        err => {
+                        this.navigateBack();
+                        return;
+                    }
+
+                    const newQualifiers: INewQualifier[] = [];
+                    this.game.getRound().getChildRounds().forEach(childRound => {
+                        const qualService = new QualifyService(childRound);
+                        qualService.getNewQualifiers(this.game.getPoule()).forEach((newQualifier) => {
+                            newQualifiers.push(newQualifier);
+                        });
+                    });
+
+                    if (newQualifiers.length > 0) {
+                        const reposUpdates = [];
+                        newQualifiers.forEach((newQualifier) => {
+                            const poulePlace = newQualifier.poulePlace;
+                            poulePlace.setTeam(newQualifier.team);
+                            reposUpdates.push(this.poulePlaceRepository.editObject(poulePlace, poulePlace.getPoule()));
+                        });
+
+                        forkJoin(reposUpdates).subscribe(results => {
+                            this.navigateBack();
                             this.loading = false;
-                        }
-                    );
-                    return;
-                }
-                this.navigateBack();
-            },
+                        },
+                            err => {
+                                this.loading = false;
+                            }
+                        );
+                        return;
+                    }
+                    this.navigateBack();
+                },
             /* error path */ e => { this.error = e; this.loading = false; },
             /* onComplete */() => { if (checkQualifiers === false) { this.loading = false; } }
             );
@@ -217,3 +217,4 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
     isSelected = date => this.equals(date, this.model.startdate);
 }
+

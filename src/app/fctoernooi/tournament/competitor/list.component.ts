@@ -50,7 +50,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   atLeastTwoPoulePlaceHaveTeam() {
-    return this.poulePlaces.filter(poulePlace => poulePlace.getTeam() !== undefined).length;
+    return this.poulePlaces.filter(poulePlace => poulePlace.getTeam() !== undefined).length >= 2;
   }
 
   editPoulePlace(poulePlace: PoulePlace) {

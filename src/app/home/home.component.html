@@ -8,7 +8,7 @@
         <!-- <button type="button" class="btn btn-sm-custom btn-outline-secondary" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
           aria-controls="collapseFilter">
           <i class="fa fa-filter"></i> filter</button> -->
-        <button *ngIf="isLoggedIn()" type="button" class="btn btn-sm-custom btn-outline-primary" routerLink="/toernooi/new">
+        <button type="button" class="btn btn-sm-custom btn-outline-primary" [routerLink]="['/toernooi/new']">
           <i class="fa fa-plus-circle"></i> toernooi</button>
       </div>
       <!-- <div id="collapseFilter" class="container" [ngbCollapse]="isCollapsed">

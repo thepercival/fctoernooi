@@ -13,6 +13,7 @@ import {
   StructureService,
 } from 'ngx-sport';
 
+import { AuthService } from '../../../auth/auth.service';
 import { Tournament } from '../../tournament';
 import { TournamentRepository } from '../repository';
 
@@ -39,6 +40,7 @@ export class TournamentNewComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private authService: AuthService,
     private tournamentRepository: TournamentRepository,
     private structureRepository: StructureRepository) {
     const date = new Date();
@@ -93,28 +95,32 @@ export class TournamentNewComponent implements OnInit {
     this.tournamentRepository.createObject(tournament)
       .subscribe(
             /* happy path */ tournamentOut => {
-        // setTimeout(3000);
-        const structureService = new StructureService(
-          tournamentOut.getCompetition(),
-          { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
-          undefined, this.model.nrofcompetitors
-        );
+          // setTimeout(3000);
+          const structureService = new StructureService(
+            tournamentOut.getCompetition(),
+            { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
+            undefined, this.model.nrofcompetitors
+          );
 
-        const planningService = new PlanningService(structureService);
-        planningService.create(structureService.getFirstRound().getNumber());
+          const planningService = new PlanningService(structureService);
+          planningService.create(structureService.getFirstRound().getNumber());
 
-        this.structureRepository.createObject(structureService.getFirstRound(), tournamentOut.getCompetition())
-          .subscribe(
+          this.structureRepository.createObject(structureService.getFirstRound(), tournamentOut.getCompetition())
+            .subscribe(
             /* happy path */ structure => {
-            // console.log(structure);
-            this.router.navigate(['/toernooi/home', tournamentOut.getId()]);
-          },
+                // console.log(structure);
+                this.router.navigate(['/toernooi/home', tournamentOut.getId()]);
+              },
             /* error path */ e => { this.error = e; this.loading = false; },
             /* onComplete */() => this.loading = false
-          );
-      },
+            );
+        },
             /* error path */ e => { this.error = e; this.loading = false; }
       );
+  }
+
+  isLoggedIn() {
+    return this.authService.isLoggedIn();
   }
 
   equals(one: NgbDateStruct, two: NgbDateStruct) {

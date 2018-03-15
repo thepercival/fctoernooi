@@ -8,7 +8,18 @@
         </button>
       </h1>
       <div style="clear: both"></div>
-      <form name="form" (ngSubmit)="create() && false" #f="ngForm" novalidate>
+      <div *ngIf="!isLoggedIn()">
+        <blockquote class="blockquote my-5">
+          <p>Registreer je of log in om een toernooi aan te maken.</p>
+        </blockquote>
+        <div class="d-flex justify-content-around">
+          <button type="button" class="btn btn-sm-custom btn-outline-primary" [routerLink]="['/user/register']">
+            <i class="fa fa-user-circle"></i> registreer</button>
+          <button type="button" class="btn btn-sm-custom btn-outline-primary" [routerLink]="['/user/login']">
+            <i class="fa fa-sign-in"></i> inloggen</button>
+        </div>
+      </div>
+      <form *ngIf="isLoggedIn()" name="form" (ngSubmit)="create() && false" #f="ngForm" novalidate>
         <div class="row">
           <div class="form-group col-sm-12 col-md-8">
             <label for="name" class="col-form-label">naam</label>
