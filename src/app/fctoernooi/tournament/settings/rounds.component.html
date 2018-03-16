@@ -24,7 +24,7 @@
                             </button>
                             <button type="button" class="btn btn-outline-primary" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
                                 aria-controls="collapseExample">
-                                <span [innerHTML]="structureService.getRoundsName( selectedRoundNumber, allRoundsByNumber[selectedRoundNumber] )"></span>
+                                <span [innerHTML]="nameService.getRoundsName( selectedRoundNumber, allRoundsByNumber[selectedRoundNumber] )"></span>
                                 <!-- <span *ngIf="selectedRound.getNumber() > 1" class="fa fa-info-circle icon-{{getClassPostfix( selectedRound.getWinnersOrLosers() )}}"
                             title="{{getWinnersLosersDescription( selectedRound.getWinnersOrLosers() )}}ronde"></span> -->
                             </button>
@@ -40,7 +40,7 @@
                                         <div class="col">
                                             <div class="btn-group-vertical">
                                                 <button type="button" class="btn btn-outline-{{getSelectRoundNumberButtonClassPostfix(roundNumber)}}" *ngFor="let roundNumber of structureService.getRoundNumbers()"
-                                                    (click)="changeRoundNumber(roundNumber)" [innerHTML]="structureService.getRoundsName(roundNumber, allRoundsByNumber[roundNumber])">
+                                                    (click)="changeRoundNumber(roundNumber)" [innerHTML]="nameService.getRoundsName(roundNumber, allRoundsByNumber[roundNumber])">
                                                 </button>
                                             </div>
                                         </div>

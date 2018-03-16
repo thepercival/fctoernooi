@@ -11,6 +11,7 @@ import {
     PoulePlaceRepository,
     QualifyService,
     RoundScoreConfig,
+    StructureNameService,
     StructureRepository,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs/observable/forkJoin';
@@ -46,7 +47,8 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private gameRepository: GameRepository,
-        private poulePlaceRepository: PoulePlaceRepository
+        private poulePlaceRepository: PoulePlaceRepository,
+        public nameService: StructureNameService
     ) {
         super(route, router, tournamentRepository, structureRepository);
         this.model = {

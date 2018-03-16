@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Game, PlanningService, Poule, PoulePlace, Ranking, StructureRepository } from 'ngx-sport';
+import { Game, PlanningService, Poule, PoulePlace, Ranking, StructureNameService, StructureRepository } from 'ngx-sport';
 import { timer } from 'rxjs/observable/timer';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -31,7 +31,8 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private globalEventsManager: GlobalEventsManager,
-        private iconManager: IconManager
+        private iconManager: IconManager,
+        public nameService: StructureNameService
     ) {
         super(route, router, tournamentRepository, structureRepository);
         this.ranking = new Ranking(Ranking.RULESSET_WC);

@@ -9,11 +9,12 @@ import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap/popover/popover.mod
 import { NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap/timepicker/timepicker.module';
 import {
   AssociationRepository,
-  LeagueRepository,
   CompetitionRepository,
   FieldRepository,
+  LeagueRepository,
   RefereeRepository,
   SeasonRepository,
+  StructureNameService,
 } from 'ngx-sport';
 
 import { AdminModule } from './admin/admin.module';
@@ -59,7 +60,8 @@ import { UserModule } from './user/user.module';
     FieldRepository,
     RefereeRepository,
     GlobalEventsManager,
-    IconManager
+    IconManager,
+    StructureNameService
   ],
   bootstrap: [AppComponent]
 })

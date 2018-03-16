@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    IRoundConfig,
-    PlanningService,
-    Round,
-    RoundConfigRepository,
-    RoundScoreConfig,
-    StructureRepository,
+  IRoundConfig,
+  PlanningService,
+  Round,
+  RoundConfigRepository,
+  RoundScoreConfig,
+  StructureNameService,
+  StructureRepository,
 } from 'ngx-sport';
 
 import { IAlert } from '../../../app.definitions';
@@ -48,6 +49,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         tournamentRepository: TournamentRepository,
         sructureRepository: StructureRepository,
         private roundConfigRepository: RoundConfigRepository,
+        public nameService: StructureNameService
     ) {
         super(route, router, tournamentRepository, sructureRepository);
     }
@@ -97,7 +99,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     }
 
     getWinnersLosersDescription(winnersOrLosers: number): string {
-        const description = this.structureService.getWinnersLosersDescription(winnersOrLosers);
+        const description = Round.getWinnersLosersDescription(winnersOrLosers);
         return (description !== '' ? description + 's' : description);
     }
 
@@ -258,10 +260,10 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         this.structureRepository.editObject(firstRound, firstRound.getCompetition())
             .subscribe(
                         /* happy path */ firstRoundRes => {
-                this.setAlert('info', 'instellingen opgeslagen');
-                // this.changeRoundNumber(round);
+                    this.setAlert('info', 'instellingen opgeslagen');
+                    // this.changeRoundNumber(round);
 
-            },
+                },
                 /* error path */ e => { this.setAlert('danger', 'instellingen niet opgeslagen: ' + e); this.processing = false; },
                 /* onComplete */() => this.processing = false
             );

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PoulePlace, PoulePlaceRepository, StructureRepository, TeamRepository } from 'ngx-sport';
+import { PoulePlace, PoulePlaceRepository, StructureNameService, StructureRepository, TeamRepository } from 'ngx-sport';
 import { Observable } from 'rxjs/Observable';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 
@@ -27,7 +27,8 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     private teamRepository: TeamRepository,
-    private poulePlaceRepository: PoulePlaceRepository
+    private poulePlaceRepository: PoulePlaceRepository,
+    public nameService: StructureNameService
   ) {
     super(route, router, tournamentRepository, sructureRepository);
   }

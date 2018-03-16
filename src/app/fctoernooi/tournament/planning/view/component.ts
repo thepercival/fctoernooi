@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap/popover/popover';
-import { Game, PlanningService, Poule, PoulePlace, Ranking, Round, StructureService } from 'ngx-sport';
+import { Game, PlanningService, Poule, PoulePlace, Ranking, Round, StructureNameService, StructureService } from 'ngx-sport';
 
 import { AuthService } from '../../../../auth/auth.service';
 import { Tournament } from '../../../tournament';
@@ -30,7 +30,10 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges {
   roundsByNumber: Round[];
   userIsGameResultAdmin: boolean;
 
-  constructor(private router: Router, private authService: AuthService) {
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    public nameService: StructureNameService) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
     this.resetAlert();
     this.ranking = new Ranking(Ranking.RULESSET_WC);
@@ -47,7 +50,7 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges {
   }
 
   getWinnersLosersDescription(winnersOrLosers: number): string {
-    const description = this.structureService.getWinnersLosersDescription(winnersOrLosers);
+    const description = Round.getWinnersLosersDescription(winnersOrLosers);
     return (description !== '' ? description + 's' : description);
   }
 

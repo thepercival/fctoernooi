@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PlanningService, PoulePlace, QualifyService, Round, StructureService } from 'ngx-sport';
+import { PlanningService, PoulePlace, QualifyService, Round, StructureNameService, StructureService } from 'ngx-sport';
 
 @Component({
   selector: 'app-tournament-structureround',
@@ -22,7 +22,7 @@ export class TournamentStructureRoundComponent {
     tooltips: [true]
   };
 
-  constructor() {
+  constructor(public nameService: StructureNameService) {
     this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
     this.resetAlert();
   }
@@ -36,7 +36,7 @@ export class TournamentStructureRoundComponent {
   }
 
   getWinnersLosersDescription(winnersOrLosers: number): string {
-    const description = this.structureService.getWinnersLosersDescription(winnersOrLosers);
+    const description = Round.getWinnersLosersDescription(winnersOrLosers);
     return (description !== '' ? description + 's' : description);
   }
 
@@ -51,6 +51,7 @@ export class TournamentStructureRoundComponent {
     this.getPlanningService().create(round.getNumber());
     this.roundChanged.emit();
   }
+
 
   removePoule(round): void {
     this.resetAlert();

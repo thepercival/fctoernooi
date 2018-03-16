@@ -5,7 +5,7 @@
       <span class="smaller">{{tournament.getName()}}</span>
       <small *ngIf="screenDef">
         <span> - {{ screenDef.getDescription() }}</span>
-        <span [innerHTML]="structureService.getRoundsName( screenDef.roundNumber, planningService.getRoundsByNumber(screenDef.roundNumber) )"></span>
+        <span [innerHTML]="nameService.getRoundsName( screenDef.roundNumber, planningService.getRoundsByNumber(screenDef.roundNumber) )"></span>
       </small>
     </h1>
     <button [routerLink]="['/toernooi/view', tournament.getId()]" routerLinkActive="active" class="btn btn-outline-secondary"
@@ -39,15 +39,15 @@
       <tbody>
         <tr *ngFor="let game of screenDef.getScheduledGames()">
           <td>
-            <span>{{structureService.getPouleName(game.getPoule())}}</span>
+            <span>{{nameService.getPouleName(game.getPoule())}}</span>
           </td>
           <td *ngIf="planningService.getRoundsByNumber(screenDef.roundNumber)[0]?.getConfig().getEnableTime() && planningService.canCalculateStartDateTime(screenDef.roundNumber)">
             {{game.getStartDateTime().toLocaleString("en", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}
           </td>
           <td *ngIf="hasFields()">{{game.getField()?.getName()}}</td>
-          <td class="text-right">{{structureService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</td>
+          <td class="text-right">{{nameService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</td>
           <td class="text-center"> - </td>
-          <td class="text-left">{{structureService.getPoulePlaceName(game.getAwayPoulePlace(), true )}}</td>
+          <td class="text-left">{{nameService.getPoulePlaceName(game.getAwayPoulePlace(), true )}}</td>
           <td *ngIf="hasReferees()">{{game.getReferee()?.getInitials()}}</td>
         </tr>
       </tbody>
@@ -59,7 +59,7 @@
       <thead>
         <tr>
           <th>pl</th>
-          <th class="text-primary">{{structureService.getPouleName(poule, true)}}</th>
+          <th class="text-primary">{{nameService.getPouleName(poule, true)}}</th>
           <th class="text-right">g</th>
           <th class="text-right">pnt</th>
           <th class="text-center">&Delta;</th>
@@ -69,7 +69,7 @@
         <ng-template ngFor let-poulePlaces [ngForOf]="getPoulePlacesByRank(poule)" let-i="index">
           <tr *ngFor="let poulePlace of poulePlaces">
             <td>{{i+1}}</td>
-            <td class="pouleplace">{{structureService.getPoulePlaceName(poulePlace, true)}}</td>
+            <td class="pouleplace">{{nameService.getPoulePlaceName(poulePlace, true)}}</td>
             <td class="text-right">{{ranking.getNrOfGamesWithState(poulePlace, poulePlace.getGames())}}</td>
             <td class="text-right">{{ranking.getPoints(poulePlace, poulePlace.getGames())}}</td>
             <td class="goaldiff text-center">{{getGoalDifference(poulePlace, poulePlace.getGames())}}</td>

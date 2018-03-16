@@ -1,7 +1,7 @@
 <div *ngIf="round" class="col {{round.getNumber() === 1 ? 'px-0' : 'px-1'}}">
   <div class="card round" *ngIf="round.getPoulePlaces().length > 2">
     <div class="card-header px-1">
-      <span [innerHTML]="structureService.getRoundName( round )">
+      <span [innerHTML]="nameService.getRoundName( round )">
 
       </span>
       <i *ngFor="let winnersOrLosers of structureService.getWinnersLosersPosition( round )" [title]="structureService.getWinnersLosersDescription( winnersOrLosers )"
@@ -82,8 +82,8 @@
       </p>
       <div class="d-flex flex-wrap justify-content-around">
         <ul *ngFor="let poule of round.getPoules();" class="list-group list-group-poule mb-3">
-          <li class="list-group-item px-2 px-sm-3">{{structureService.getPouleName( poule, false)}}</li>
-          <li *ngFor="let place of poule.getPlaces();" class="list-group-item px-2 px-sm-3 {{getClassesForPoulePlace(place)}}">{{structureService.getPoulePlaceName( place, false)}}</li>
+          <li class="list-group-item px-2 px-sm-3">{{nameService.getPouleName( poule, false)}}</li>
+          <li *ngFor="let place of poule.getPlaces();" class="list-group-item px-2 px-sm-3 {{getClassesForPoulePlace(place)}}">{{nameService.getPoulePlaceName( place, false)}}</li>
         </ul>
       </div>
     </div>
@@ -107,7 +107,7 @@
 
   <div class="card round" *ngIf="round.getPoulePlaces().length === 2">
     <div class="card-header" style="padding-left: 0.5rem; padding-right: 0.5rem;">
-      <span [innerHTML]="structureService.getRoundName(round)"></span>
+      <span [innerHTML]="nameService.getRoundName(round)"></span>
     </div>
   </div>
 </div>

@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    Association,
     AssociationRepository,
     ITeam,
     PoulePlace,
     PoulePlaceRepository,
+    StructureNameService,
     StructureRepository,
     Team,
     TeamRepository,
@@ -46,6 +46,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private poulePlaceRepository: PoulePlaceRepository,
+        public nameService: StructureNameService,
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
@@ -117,32 +118,14 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
             info: info ? info : undefined
         };
 
-        /* if team in other tournament from same user, than use that team */
-        this.teamRepository.getObjects(association, name)
-            .subscribe(
-            /* happy path */ teams => {
-                    if (teams.length > 0) {
-                        this.assignTeam(this.poulePlace, teams[0]);
-                    } else {
-                        this.addReal(team, association);
-                    }
-                },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => this.processing = false
-            );
-
-
-
-    }
-
-    addReal(team: ITeam, association: Association) {
         this.teamRepository.createObject(team, association)
             .subscribe(
             /* happy path */ teamRes => {
                     this.assignTeam(this.poulePlace, teamRes);
                 },
-            /* error path */ e => { this.setAlert('danger', e); },
-        );
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+            /* onComplete */() => this.processing = false
+            );
     }
 
     assignTeam(poulePlace: PoulePlace, team: Team) {
@@ -169,22 +152,6 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
         const name = this.customForm.controls.name.value;
         const info = this.customForm.controls.info.value;
 
-        /* if team in other tournament from same user, than use that team */
-        this.teamRepository.getObjects(team.getAssociation(), name)
-            .subscribe(
-            /* happy path */ teams => {
-                    if (teams.length > 0 && teams[0] !== team) {
-                        this.assignTeam(this.poulePlace, teams[0]);
-                    } else {
-                        this.editReal(team, name, info);
-                    }
-                },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => this.processing = false
-            );
-    }
-
-    editReal(team: Team, name?: string, info?: string) {
         team.setName(name);
         team.setInfo(info ? info : undefined);
         this.teamRepository.editObject(team)
@@ -192,7 +159,8 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
                     /* happy path */ teamRes => {
                     this.navigateBack();
                 },
-                /* error path */ e => { this.setAlert('danger', e); }
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+            /* onComplete */() => this.processing = false
             );
     }
 

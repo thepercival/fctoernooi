@@ -10,6 +10,7 @@ import { NouisliderModule } from 'ng2-nouislider';
 import {
   GameRepository,
   GameScoreRepository,
+  PlanningRepository,
   PoulePlaceRepository,
   PouleRepository,
   QualifyRuleRepository,
@@ -79,6 +80,7 @@ import { TournamentViewComponent } from './tournament/view/view.component';
     TeamRepository,
     GameRepository,
     GameScoreRepository,
+    PlanningRepository,
     IconManager,
   ]
 })

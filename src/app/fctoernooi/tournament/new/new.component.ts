@@ -6,6 +6,7 @@ import {
   Competition,
   Field,
   League,
+  PlanningRepository,
   PlanningService,
   Season,
   SportConfig,
@@ -17,13 +18,13 @@ import { AuthService } from '../../../auth/auth.service';
 import { Tournament } from '../../tournament';
 import { TournamentRepository } from '../repository';
 
+
 @Component({
   selector: 'app-tournament-new',
   templateUrl: './new.component.html',
   styleUrls: ['./new.component.css']
 })
 export class TournamentNewComponent implements OnInit {
-
   model: any;
   loading = false;
   error = '';
@@ -42,7 +43,9 @@ export class TournamentNewComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private tournamentRepository: TournamentRepository,
-    private structureRepository: StructureRepository) {
+    private structureRepository: StructureRepository,
+    private planningRepository: PlanningRepository
+  ) {
     const date = new Date();
     date.setTime(date.getTime() + (60 * 10 * 1000)); // 10 minutes
     this.sportnames = SportConfig.getSports();
@@ -96,26 +99,37 @@ export class TournamentNewComponent implements OnInit {
       .subscribe(
             /* happy path */ tournamentOut => {
           // setTimeout(3000);
-          const structureService = new StructureService(
+          let structureService = new StructureService(
             tournamentOut.getCompetition(),
             { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
             undefined, this.model.nrofcompetitors
           );
 
-          const planningService = new PlanningService(structureService);
-          planningService.create(structureService.getFirstRound().getNumber());
-
           this.structureRepository.createObject(structureService.getFirstRound(), tournamentOut.getCompetition())
             .subscribe(
-            /* happy path */ structure => {
-                // console.log(structure);
-                this.router.navigate(['/toernooi/home', tournamentOut.getId()]);
+            /* happy path */ firstRound => {
+                structureService = new StructureService(
+                  tournamentOut.getCompetition(),
+                  { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
+                  firstRound
+                );
+
+                const planningService = new PlanningService(structureService);
+                planningService.create(structureService.getFirstRound().getNumber());
+
+                this.planningRepository.createObject(structureService.getFirstRound())
+                  .subscribe(
+                    /* happy path */ games => {
+                      this.router.navigate(['/toernooi/home', tournamentOut.getId()]);
+                    },
+                  /* error path */ e => { this.error = e; this.loading = false; }
+                  );
               },
-            /* error path */ e => { this.error = e; this.loading = false; },
-            /* onComplete */() => this.loading = false
+            /* error path */ e => { this.error = e; this.loading = false; }
             );
         },
-            /* error path */ e => { this.error = e; this.loading = false; }
+            /* error path */ e => { this.error = e; this.loading = false; },
+                  /* onComplete */() => this.loading = false
       );
   }
 
