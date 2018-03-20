@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IReferee, PlanningService, Referee, RefereeRepository, StructureRepository } from 'ngx-sport';
+import { IReferee, PlanningRepository, PlanningService, Referee, RefereeRepository, StructureRepository } from 'ngx-sport';
 
 import { IAlert } from '../../../app.definitions';
 import { TournamentComponent } from '../component';
@@ -36,6 +36,7 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
+        private planningRepository: PlanningRepository,
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
@@ -115,19 +116,19 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
             .subscribe(
             /* happy path */ refereeRes => {
 
-                const firstRound = this.structureService.getFirstRound();
-                const planningService = new PlanningService(this.structureService);
-                planningService.reschedule(firstRound.getNumber());
-
-                this.structureRepository.editObject(firstRound, this.structureService.getCompetition())
-                    .subscribe(
-                        /* happy path */ roundRes => {
-                        this.navigateBack();
-                    },
-                /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                /* onComplete */() => this.processing = false
-                    );
-            },
+                    const firstRound = this.structureService.getFirstRound();
+                    const planningService = new PlanningService(this.structureService);
+                    planningService.reschedule(firstRound.getNumber());
+                    this.planningRepository.editObject([firstRound])
+                        .subscribe(
+                    /* happy path */ gamesdRes => {
+                                this.processing = false;
+                                this.navigateBack();
+                            },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+            /* onComplete */() => this.processing = false
+                        );
+                },
             /* error path */ e => { this.setAlert('danger', e); },
         );
     }
@@ -152,8 +153,8 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         this.refereeRepository.editObject(referee, this.structureService.getCompetition())
             .subscribe(
             /* happy path */ refereeRes => {
-                this.navigateBack();
-            },
+                    this.navigateBack();
+                },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
             /* onComplete */() => { this.processing = false; }
             );

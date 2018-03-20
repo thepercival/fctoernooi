@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Field, FieldRepository, IField, PlanningService, StructureRepository, StructureService } from 'ngx-sport';
+import { Field, FieldRepository, IField, PlanningRepository, PlanningService, StructureRepository } from 'ngx-sport';
 
 import { IAlert } from '../../../app.definitions';
-import { Tournament } from '../../tournament';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
 
@@ -31,7 +30,8 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
         router: Router,
         tournamentRepository: TournamentRepository,
         sructureRepository: StructureRepository,
-        private fieldRepository: FieldRepository
+        private fieldRepository: FieldRepository,
+        private planningRepository: PlanningRepository
     ) {
         super(route, router, tournamentRepository, sructureRepository);
     }
@@ -42,15 +42,11 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
 
     initFields() {
         this.createFieldsList();
-        this.setPlanningService();
+        this.planningService = new PlanningService(this.structureService);
         this.processing = false;
         if (this.isStarted()) {
             this.setAlert('warning', 'het toernooi is al begonnen, je kunt niet meer wijzigen');
         }
-    }
-
-    setPlanningService() {
-        this.planningService = new PlanningService(this.structureService);
     }
 
     isStarted() {
@@ -88,39 +84,24 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
         this.fieldRepository.createObject(jsonField, this.structureService.getCompetition())
             .subscribe(
             /* happy path */ fieldRes => {
-                const fieldItem: IFieldListItem = { field: fieldRes, editable: false };
-                this.fieldsList.push(fieldItem);
-                const firstRound = this.structureService.getFirstRound();
-                this.planningService.reschedule(firstRound.getNumber());
-                // probleem is dat ronde wordt vervangen, terwijl ik het update.
-                // dit komt weer doordat het in de backend wordt vervangen en ook in de repository
-                // eigenlijk moet alles bijgewerkt worden voor de bijbehorde ronde.
-                // dit kan dus zijn:
-                // 1 onderliggende structuur(hier horen ook games bij)
-                // 2 onderliggende wedstrijden(ook van onderliggende ronden)
-                // 3 configuraties(ook van onderliggende ronden)
-
-                this.structureRepository.editObject(firstRound, this.structureService.getCompetition())
-                    .subscribe(
-                        /* happy path */ roundRes => {
-                        this.structureService = new StructureService(
-                            this.tournament.getCompetition(),
-                            { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
-                            roundRes
-                        );
-                        this.setPlanningService();
-
-                        this.processing = false;
-                        this.setAlert('info', 'veld toegevoegd');
-                    },
+                    const fieldItem: IFieldListItem = { field: fieldRes, editable: false };
+                    this.fieldsList.push(fieldItem);
+                    const firstRound = this.structureService.getFirstRound();
+                    this.planningService.reschedule(firstRound.getNumber());
+                    this.planningRepository.editObject([firstRound])
+                        .subscribe(
+                        /* happy path */ gamesdRes => {
+                                this.processing = false;
+                                this.setAlert('info', 'veld toegevoegd');
+                            },
                 /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
                 /* onComplete */() => this.processing = false
-                    );
-            },
+                        );
+                },
             /* error path */ e => { this.setAlert('danger', e); },
+
         );
     }
-
 
     removeField(fieldItem: IFieldListItem) {
         this.setAlert('info', 'veld verwijderen..');
@@ -130,30 +111,23 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
             .subscribe(
             /* happy path */ fieldRes => {
 
-                const index = this.fieldsList.indexOf(fieldItem);
-                if (index > -1) {
-                    this.fieldsList.splice(index, 1);
-                }
-                const firstRound = this.structureService.getFirstRound();
-                this.planningService.reschedule(firstRound.getNumber());
-
-                // setTimeout(3000);
-                this.structureRepository.editObject(firstRound, this.structureService.getCompetition())
-                    .subscribe(
-                        /* happy path */ roundRes => {
-                        this.structureService = new StructureService(
-                            this.tournament.getCompetition(),
-                            { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
-                            roundRes
-                        );
-                        this.setPlanningService();
-                        this.processing = false;
-                        this.setAlert('info', 'veld verwijderd');
-                    },
+                    const index = this.fieldsList.indexOf(fieldItem);
+                    if (index > -1) {
+                        this.fieldsList.splice(index, 1);
+                    }
+                    const firstRound = this.structureService.getFirstRound();
+                    this.planningService.reschedule(firstRound.getNumber());
+                    // setTimeout(3000);
+                    this.planningRepository.editObject([firstRound])
+                        .subscribe(
+                        /* happy path */ gamesdRes => {
+                                this.processing = false;
+                                this.setAlert('info', 'veld verwijderd');
+                            },
                 /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
                 /* onComplete */() => this.processing = false
-                    );
-            },
+                        );
+                },
             /* error path */ e => { this.setAlert('danger', 'X' + e); this.processing = false; },
         );
     }
@@ -165,8 +139,8 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
         this.fieldRepository.editObject(fieldItem.field, this.structureService.getCompetition())
             .subscribe(
             /* happy path */ fieldRes => {
-                this.setAlert('info', 'veldnaam gewijzigd');
-            },
+                    this.setAlert('info', 'veldnaam gewijzigd');
+                },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
             /* onComplete */() => { this.processing = false; }
             );

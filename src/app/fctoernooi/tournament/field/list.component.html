@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <div *ngIf="structureService" class="row justify-content-center">
+    <div *ngIf="tournament" class="row justify-content-center">
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
             <div class="mb-4">
                 <h1 *ngIf="tournament">
@@ -18,7 +18,7 @@
                 <ngb-alert *ngIf="alert" [type]="alert.type" style="width:100%;" [dismissible]="true" (close)="alert = undefined;">
                     <i *ngIf="processing" class="fa fa-spinner fa-spin"></i> {{ alert.message }}</ngb-alert>
             </div>
-            <table class="table">
+            <table *ngIf="fieldsList" class="table">
                 <thead>
                     <tr>
                         <th></th>

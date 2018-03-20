@@ -95,11 +95,11 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
 
     setHome(home) {
         this.error = undefined;
-        const scoreConfig = this.game.getRound().getInputScoreConfig();
-        if (!this.validScore(home, scoreConfig)) {
-            this.errorHomeAwayScore = 'thuisscore moet tussen 0 en ' + scoreConfig.getMaximum() + ' liggen';
-            return;
-        }
+        // const scoreConfig = this.game.getRound().getInputScoreConfig();
+        // if (!this.validScore(home, scoreConfig)) {
+        //     this.errorHomeAwayScore = 'thuisscore moet tussen 0 en ' + scoreConfig.getMaximum() + ' liggen';
+        //     return;
+        // }
         if (this.model.home === 0 && this.model.away === 0 && home > 0) {
             this.setPlayed(true);
         }
@@ -108,11 +108,11 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
 
     setAway(away) {
         this.error = undefined;
-        const scoreConfig = this.game.getRound().getInputScoreConfig();
-        if (!this.validScore(away, scoreConfig)) {
-            this.errorHomeAwayScore = 'uitscore moet tussen 0 en ' + scoreConfig.getMaximum() + ' liggen';
-            return;
-        }
+        // const scoreConfig = this.game.getRound().getInputScoreConfig();
+        // if (!this.validScore(away, scoreConfig)) {
+        //     this.errorHomeAwayScore = 'uitscore moet tussen 0 en ' + scoreConfig.getMaximum() + ' liggen';
+        //     return;
+        // }
         if (this.model.away === 0 && this.model.home === 0 && away > 0) {
             this.setPlayed(true);
         }

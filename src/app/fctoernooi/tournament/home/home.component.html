@@ -23,7 +23,7 @@
         <p class="card-text" *ngIf="structureService.getFirstRound().getTeams().length === structureService.getFirstRound().getPoulePlaces().length">
           <span class="fa fa-check-circle-o icon-success"></span> alle namen ingevuld</p>
         <p class="card-text" *ngIf="structureService.getFirstRound().getTeams().length < structureService.getFirstRound().getPoulePlaces().length">
-          <span class="fa fa-times-circle icon-danger"></span> vul de namen in</p>
+          <span class="fa fa-times-circle icon-danger"></span> vul de namen in ({{structureService.getFirstRound().getTeams().length}}/{{structureService.getFirstRound().getPoulePlaces().length}})</p>
       </div>
     </div>
     <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/games', tournament.getId()]">

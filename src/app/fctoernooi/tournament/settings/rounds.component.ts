@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  IRoundConfig,
-  PlanningService,
-  Round,
-  RoundConfigRepository,
-  RoundScoreConfig,
-  StructureNameService,
-  StructureRepository,
+    IRoundConfig,
+    PlanningRepository,
+    PlanningService,
+    Round,
+    RoundConfigRepository,
+    RoundScoreConfig,
+    StructureNameService,
+    StructureRepository,
 } from 'ngx-sport';
 
 import { IAlert } from '../../../app.definitions';
@@ -29,9 +31,10 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     isCollapsed = true;
     alert: IAlert;
     modelConfig: IRoundConfig;
+    modelScoreConfig: RoundScoreConfig;
     modelRecreate: boolean;
     modelReschedule: boolean;
-    private planningService: PlanningService;
+    customForm: FormGroup;
     validations: any = {
         minNrOfHeadtoheadMatches: 1,
         maxNrOfHeadtoheadMatches: 4,
@@ -42,6 +45,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         minMinutesPerGame: 0,
         maxMinutesPerGame: 60,
     };
+    planningService: PlanningService;
 
     constructor(
         route: ActivatedRoute,
@@ -49,7 +53,8 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         tournamentRepository: TournamentRepository,
         sructureRepository: StructureRepository,
         private roundConfigRepository: RoundConfigRepository,
-        public nameService: StructureNameService
+        public nameService: StructureNameService,
+        private planningRepository: PlanningRepository
     ) {
         super(route, router, tournamentRepository, sructureRepository);
     }
@@ -62,11 +67,10 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         this.allRoundsByNumber = this.structureService.getAllRoundsByNumber();
         this.changeRoundNumber(this.structureService.getFirstRound().getNumber());
         this.initRanges();
-
         this.planningService = new PlanningService(this.structureService);
         this.processing = false;
     }
-    //
+
     private initRanges() {
         this.ranges.nrOfHeadtoheadMatches = [];
         for (let i = this.validations.minNrOfHeadtoheadMatches; i <= this.validations.maxNrOfHeadtoheadMatches; i++) {
@@ -229,11 +233,9 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         if (this.modelConfig.enableTime && scoreConfig.getParent() === undefined) {
             return true;
         }
-
         if (this.planningService.isStarted(this.selectedRoundNumber)) {
             return true;
         }
-
         return false;
     }
 
@@ -244,25 +246,52 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         return 'secondary';
     }
 
+    getInputScoreConfig(): RoundScoreConfig {
+        const round = this.getFirstRoundOfRoundNumber(this.selectedRoundNumber);
+        let scoreConfig: RoundScoreConfig = round.getScoreConfig().getRoot();
+        while (scoreConfig && scoreConfig.getMaximum() === 0) {
+            scoreConfig = scoreConfig.getChild();
+        }
+        return scoreConfig;
+    }
+
     saveConfig() {
         this.setAlert('info', 'instellingen opslaan..');
         this.processing = true;
 
-        this.updateRoundConfig(this.selectedRoundNumber, this.modelConfig);
-        if (this.modelRecreate === true) {
-            this.planningService.create(this.selectedRoundNumber);
-        } else if (this.modelReschedule) {
-            this.planningService.reschedule(this.selectedRoundNumber);
-        }
+        // do work here, check if values are stored in tmp, so that
+        // when cancel is pressed, nothing happens
+        // write to roundscoreconfig and roundconfig with roundnumber
 
-        const firstRound = this.structureService.getFirstRound();
-        // const directionsTmp = this.getWinnersLosers(firstRound, this.selectedRound);
-        this.structureRepository.editObject(firstRound, firstRound.getCompetition())
+        // this.updateRoundConfig(this.selectedRoundNumber, this.modelConfig);
+
+        // save all configs((score and normal)saveconffigs) for rounds from roundNumber this.selectedRoundNumber
+        // do multiple http calls with forkjoin and than do beneath!!
+
+        // const rounds = this.planningService.getRoundsByNumber(this.selectedRoundNumber);
+
+        // forkJoin(reposUpdates).subscribe(results => {
+        //     if (this.modelRecreate === true) {
+        //         this.planningService.create(this.selectedRoundNumber);
+        //         this.planningSync(rounds);
+        //     } else if (this.modelReschedule) {
+        //         this.planningService.reschedule(this.selectedRoundNumber);
+        //         this.planningSync(rounds);
+        //     }
+        // },
+        //     err => {
+        //         this.setAlert('danger', 'instellingen niet opgeslagen: ' + err);
+        //         this.processing = false;
+        //     }
+        // );
+
+    }
+
+    protected planningSync(rounds: Round[]) {
+        return this.planningRepository.editObject(rounds)
             .subscribe(
-                        /* happy path */ firstRoundRes => {
+                    /* happy path */ gamesRes => {
                     this.setAlert('info', 'instellingen opgeslagen');
-                    // this.changeRoundNumber(round);
-
                 },
                 /* error path */ e => { this.setAlert('danger', 'instellingen niet opgeslagen: ' + e); this.processing = false; },
                 /* onComplete */() => this.processing = false
@@ -306,6 +335,10 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     //     }
     //     return round;
     // }
+
+    getDirectionClass(scoreConfig: RoundScoreConfig) {
+        return scoreConfig.getDirection() === RoundScoreConfig.UPWARDS ? 'naar' : 'vanaf';
+    }
 
     protected setAlert(type: string, message: string) {
         this.alert = { 'type': type, 'message': message };

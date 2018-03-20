@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlanningService, Referee, RefereeRepository, StructureRepository, StructureService } from 'ngx-sport';
+import { PlanningRepository, PlanningService, Referee, RefereeRepository, StructureRepository } from 'ngx-sport';
 
 import { IAlert } from '../../../app.definitions';
 import { Tournament } from '../../tournament';
@@ -30,7 +30,8 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     router: Router,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
-    private refereeRepository: RefereeRepository
+    private refereeRepository: RefereeRepository,
+    private planningRepository: PlanningRepository
   ) {
     super(route, router, tournamentRepository, sructureRepository);
   }
@@ -41,15 +42,11 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
 
   initReferees() {
     this.createRefereesList();
-    this.setPlanningService();
+    this.planningService = new PlanningService(this.structureService);
     this.processing = false;
     if (this.isStarted()) {
       this.setAlert('warning', 'het toernooi is al begonnen, je kunt niet meer wijzigen');
     }
-  }
-
-  setPlanningService() {
-    this.planningService = new PlanningService(this.structureService);
   }
 
   isStarted() {
@@ -88,29 +85,22 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
       .subscribe(
             /* happy path */ refereeRes => {
 
-        const index = this.referees.indexOf(referee);
-        if (index > -1) {
-          this.referees.splice(index, 1);
-        }
-        const firstRound = this.structureService.getFirstRound();
-        const planningService = new PlanningService(this.structureService);
-        planningService.reschedule(firstRound.getNumber());
-        this.structureRepository.editObject(firstRound, this.structureService.getCompetition())
-          .subscribe(
-                /* happy path */ roundRes => {
-            this.structureService = new StructureService(
-              this.tournament.getCompetition(),
-              { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
-              roundRes
+          const index = this.referees.indexOf(referee);
+          if (index > -1) {
+            this.referees.splice(index, 1);
+          }
+          const firstRound = this.structureService.getFirstRound();
+          this.planningService.reschedule(firstRound.getNumber());
+          this.planningRepository.editObject([firstRound])
+            .subscribe(
+                    /* happy path */ gamesdRes => {
+                this.processing = false;
+                this.setAlert('info', 'scheidsrechter verwijderd');
+              },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+            /* onComplete */() => this.processing = false
             );
-            this.setPlanningService();
-            this.processing = false;
-            this.setAlert('info', 'scheidsrechter verwijderd');
-          },
-                /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                /* onComplete */() => this.processing = false
-          );
-      },
+        },
             /* error path */ e => { this.setAlert('danger', 'X' + e); this.processing = false; },
     );
   }

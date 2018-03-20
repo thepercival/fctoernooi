@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
-import { League, PlanningService, StructureRepository } from 'ngx-sport';
+import { League, PlanningRepository, PlanningService, StructureRepository } from 'ngx-sport';
 
 import { IAlert } from '../../../app.definitions';
 import { TournamentComponent } from '../component';
@@ -28,7 +28,8 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
-        structureRepository: StructureRepository
+        structureRepository: StructureRepository,
+        private planningRepository: PlanningRepository
     ) {
         super(route, router, tournamentRepository, structureRepository);
         this.model = {
@@ -87,19 +88,16 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
             this.tournamentRepository.editObject(this.tournament)
                 .subscribe(
                 /* happy path */ tournamentRes => {
-                    this.tournament = tournamentRes;
-                    // setTimeout(3000);
-                    if (reschedule === true) {
-                        this.structureRepository.editObject(round, round.getCompetition())
-                            .subscribe(
-                            /* happy path */ roundRes => {
-                                this.router.navigate(['/toernooi/home', tournamentRes.getId()]);
-                            },
-                    /* error path */ e => { this.error = e; this.loading = false; },
-                    /* onComplete */() => this.loading = false);
-                    }
-
-                },
+                        this.tournament = tournamentRes;
+                        if (reschedule === true) {
+                            this.planningRepository.editObject([round]).subscribe(
+                                /* happy path */ gamesRes => {
+                                    this.router.navigate(['/toernooi/home', tournamentRes.getId()]);
+                                },
+                               /* error path */ e => { this.error = e; this.loading = false; }
+                            );
+                        }
+                    },
                 /* error path */ e => { this.error = e; this.loading = false; },
                 /* onComplete */() => this.loading = false
                 );
