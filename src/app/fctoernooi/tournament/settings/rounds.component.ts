@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { cloneDeep } from 'lodash';
 import {
-    IRoundConfig,
     PlanningRepository,
     PlanningService,
     Round,
+    RoundConfig,
     RoundConfigRepository,
-    RoundScoreConfig,
+    RoundConfigScore,
     StructureNameService,
     StructureRepository,
 } from 'ngx-sport';
@@ -30,8 +31,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     selectedRoundNumber: number;
     isCollapsed = true;
     alert: IAlert;
-    modelConfig: IRoundConfig;
-    modelScoreConfig: RoundScoreConfig;
+    modelConfig: RoundConfig;
     modelRecreate: boolean;
     modelReschedule: boolean;
     customForm: FormGroup;
@@ -88,8 +88,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
 
     changeRoundNumber(roundNumber: number) {
         this.selectedRoundNumber = roundNumber;
-        this.modelConfig = this.roundConfigRepository.objectToJsonHelper(
-            this.getFirstRoundOfRoundNumber(this.selectedRoundNumber).getConfig());
+        this.modelConfig = cloneDeep(this.getFirstRoundOfRoundNumber(this.selectedRoundNumber).getConfig());
         this.modelRecreate = false;
         this.modelReschedule = false;
         this.isCollapsed = true;
@@ -102,11 +101,6 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         return this.allRoundsByNumber[this.selectedRoundNumber][0];
     }
 
-    getWinnersLosersDescription(winnersOrLosers: number): string {
-        const description = Round.getWinnersLosersDescription(winnersOrLosers);
-        return (description !== '' ? description + 's' : description);
-    }
-
     getClassPostfix(winnersOrLosers: number): string {
         return winnersOrLosers === Round.WINNERS ? 'success' : (winnersOrLosers === Round.LOSERS ? 'danger' : '');
     }
@@ -116,7 +110,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             || nrOfHeadtoheadMatches > this.validations.maxNrOfHeadtoheadMatches) {
             return;
         }
-        this.modelConfig.nrOfHeadtoheadMatches = nrOfHeadtoheadMatches;
+        this.modelConfig.setNrOfHeadtoheadMatches(nrOfHeadtoheadMatches);
         this.modelRecreate = true; // this.planningService.create( this.selectedRoundNumber );
     }
 
@@ -125,7 +119,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             || winPoints > this.validations.maxWinPoints) {
             return;
         }
-        this.modelConfig.winPoints = winPoints;
+        this.modelConfig.setWinPoints(winPoints);
     }
 
 
@@ -134,14 +128,14 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             || drawPoints > this.validations.maxDrawPoints) {
             return;
         }
-        this.modelConfig.drawPoints = drawPoints;
+        this.modelConfig.setDrawPoints(drawPoints);
     }
 
     setHasExtension(hasExtension) {
         if (hasExtension !== true && hasExtension !== false) {
             return;
         }
-        this.modelConfig.hasExtension = hasExtension;
+        this.modelConfig.setHasExtension(hasExtension);
         this.modelReschedule = true;  // this.planningService.reschedule(this.selectedRoundNumber);
     }
 
@@ -150,7 +144,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             || winPointsExt > this.validations.maxWinPoints) {
             return;
         }
-        this.modelConfig.winPointsExt = winPointsExt;
+        this.modelConfig.setWinPointsExt(winPointsExt);
     }
 
     setDrawPointsExt(drawPointsExt) {
@@ -158,7 +152,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             || drawPointsExt > this.validations.maxDrawPoints) {
             return;
         }
-        this.modelConfig.drawPointsExt = drawPointsExt;
+        this.modelConfig.setDrawPointsExt(drawPointsExt);
     }
 
     setMinutesPerGameExt(minutesPerGameExt) {
@@ -167,11 +161,11 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         } else if (minutesPerGameExt > this.validations.maxMinutesPerGame) {
             minutesPerGameExt = this.validations.maxMinutesPerGame;
         }
-        if (minutesPerGameExt === this.modelConfig.minutesPerGame) {
+        if (minutesPerGameExt === this.modelConfig.getMinutesPerGame()) {
             return;
         }
-        this.modelConfig.minutesPerGameExt = minutesPerGameExt;
-        if (this.modelConfig.enableTime) {
+        this.modelConfig.setMinutesPerGameExt(minutesPerGameExt);
+        if (this.modelConfig.getEnableTime()) {
             this.modelReschedule = true;
         }
     }
@@ -182,11 +176,11 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         } else if (minutesPerGame > this.validations.maxMinutesPerGame) {
             minutesPerGame = this.validations.maxMinutesPerGame;
         }
-        if (minutesPerGame === this.modelConfig.minutesPerGame) {
+        if (minutesPerGame === this.modelConfig.getMinutesPerGame()) {
             return;
         }
-        this.modelConfig.minutesPerGame = minutesPerGame;
-        if (this.modelConfig.enableTime) {
+        this.modelConfig.setMinutesPerGame(minutesPerGame);
+        if (this.modelConfig.getEnableTime()) {
             this.modelReschedule = true;
         }
     }
@@ -194,12 +188,12 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     setMinutesInBetween(minutesInBetween) {
         if (minutesInBetween < this.validations.minMinutesPerGame
             || minutesInBetween > this.validations.maxMinutesPerGame) {
-            const avg = Math.floor(this.modelConfig.minutesPerGame / 2);
-            this.modelConfig.minutesInBetween = avg;
+            const avg = Math.floor(this.modelConfig.getMinutesPerGame() / 2);
+            this.modelConfig.setMinutesInBetween(avg);
             return;
         }
-        this.modelConfig.minutesInBetween = minutesInBetween;
-        if (this.modelConfig.enableTime) {
+        this.modelConfig.setMinutesInBetween(minutesInBetween);
+        if (this.modelConfig.getEnableTime()) {
             this.modelReschedule = true; // this.planningService.reschedule( this.selectedRoundNumber );
         }
     }
@@ -208,15 +202,15 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         if (enableTime !== true && enableTime !== false) {
             return;
         }
-        this.modelConfig.enableTime = enableTime;
+        this.modelConfig.setEnableTime(enableTime);
         this.modelReschedule = true; // this.planningService.reschedule( this.selectedRoundNumber );
     }
 
     getDirectionDescription(scoreConfig) {
-        return RoundScoreConfig.getDirectionDescription(scoreConfig.getDirection());
+        return RoundConfigScore.getDirectionDescription(scoreConfig.getDirection());
     }
 
-    setScoreConfigMaximum(scoreConfig: RoundScoreConfig, scoreConfigMaximum) {
+    setScoreConfigMaximum(scoreConfig: RoundConfigScore, scoreConfigMaximum) {
         if (scoreConfigMaximum > 9999 || scoreConfigMaximum < 0) {
             return;
         }
@@ -226,11 +220,11 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         scoreConfig.setMaximum(scoreConfigMaximum);
     }
 
-    isScoreConfigReadOnly(scoreConfig: RoundScoreConfig) {
+    isScoreConfigReadOnly(scoreConfig: RoundConfigScore) {
         if (scoreConfig.getChild() !== undefined && scoreConfig.getChild().getMaximum() === 0) {
             return true;
         }
-        if (this.modelConfig.enableTime && scoreConfig.getParent() === undefined) {
+        if (this.modelConfig.getEnableTime() && scoreConfig.getParent() === undefined) {
             return true;
         }
         if (this.planningService.isStarted(this.selectedRoundNumber)) {
@@ -246,11 +240,14 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         return 'secondary';
     }
 
-    getInputScoreConfig(): RoundScoreConfig {
+    getInputScoreConfig(): RoundConfigScore {
         const round = this.getFirstRoundOfRoundNumber(this.selectedRoundNumber);
-        let scoreConfig: RoundScoreConfig = round.getScoreConfig().getRoot();
+        let scoreConfig: RoundConfigScore = round.getConfig().getScore().getRoot();
         while (scoreConfig && scoreConfig.getMaximum() === 0) {
             scoreConfig = scoreConfig.getChild();
+        }
+        if (scoreConfig === undefined) {
+            scoreConfig = round.getConfig().getScore().getRoot();
         }
         return scoreConfig;
     }
@@ -259,62 +256,72 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         this.setAlert('info', 'instellingen opslaan..');
         this.processing = true;
 
-        // do work here, check if values are stored in tmp, so that
-        // when cancel is pressed, nothing happens
-        // write to roundscoreconfig and roundconfig with roundnumber
-
-        // this.updateRoundConfig(this.selectedRoundNumber, this.modelConfig);
-
-        // save all configs((score and normal)saveconffigs) for rounds from roundNumber this.selectedRoundNumber
-        // do multiple http calls with forkjoin and than do beneath!!
-
-        // const rounds = this.planningService.getRoundsByNumber(this.selectedRoundNumber);
-
-        // forkJoin(reposUpdates).subscribe(results => {
-        //     if (this.modelRecreate === true) {
-        //         this.planningService.create(this.selectedRoundNumber);
-        //         this.planningSync(rounds);
-        //     } else if (this.modelReschedule) {
-        //         this.planningService.reschedule(this.selectedRoundNumber);
-        //         this.planningSync(rounds);
-        //     }
-        // },
-        //     err => {
-        //         this.setAlert('danger', 'instellingen niet opgeslagen: ' + err);
-        //         this.processing = false;
-        //     }
-        // );
-
-    }
-
-    protected planningSync(rounds: Round[]) {
-        return this.planningRepository.editObject(rounds)
+        const jsonConfig = this.roundConfigRepository.objectToJsonHelper(this.modelConfig);
+        const rounds = this.allRoundsByNumber[this.selectedRoundNumber];
+        return this.roundConfigRepository.editObject(this.structureService.getCompetition(), this.selectedRoundNumber, jsonConfig)
             .subscribe(
-                    /* happy path */ gamesRes => {
-                    this.setAlert('info', 'instellingen opgeslagen');
+                /* happy path */ res => {
+                    this.updateRoundConfig(this.selectedRoundNumber, this.modelConfig);
+                    if (this.modelRecreate === true) {
+                        this.planningService.create(this.selectedRoundNumber);
+                        this.planningRepository.createObject(rounds)
+                            .subscribe(
+                                /* happy path */ gamesRes => {
+                                    this.setAlert('info', 'instellingen opgeslagen');
+                                },
+                                /* error path */ e => {
+                                    this.setAlert('danger', 'instellingen niet opgeslagen: ' + e); this.processing = false;
+                                },
+                                /* onComplete */() => this.processing = false
+                            );
+                    } else if (this.modelReschedule) {
+                        this.planningService.reschedule(this.selectedRoundNumber);
+                        this.planningRepository.editObject(rounds)
+                            .subscribe(
+                                /* happy path */ gamesRes => {
+                                    this.setAlert('info', 'instellingen opgeslagen');
+                                },
+                                /* error path */ e => {
+                                    this.setAlert('danger', 'instellingen niet opgeslagen: ' + e); this.processing = false;
+                                },
+                                    /* onComplete */() => this.processing = false
+                            );
+                    } else {
+                        this.processing = false;
+                        this.setAlert('info', 'instellingen opgeslagen');
+                    }
                 },
-                /* error path */ e => { this.setAlert('danger', 'instellingen niet opgeslagen: ' + e); this.processing = false; },
-                /* onComplete */() => this.processing = false
+                /* error path */ e => { this.setAlert('danger', 'instellingen niet opgeslagen: ' + e); this.processing = false; } // ,
+                // /* onComplete */() => /*this.processing = false*/
             );
+
     }
 
-    protected updateRoundConfig(roundNumber: number, modelToUpdateWith: IRoundConfig) {
+    protected updateRoundConfig(roundNumber: number, modelToUpdateWith: RoundConfig) {
         const rounds = this.allRoundsByNumber[roundNumber];
         rounds.forEach(round => {
-            round.getConfig().setQualifyRule(modelToUpdateWith.qualifyRule);
-            round.getConfig().setNrOfHeadtoheadMatches(modelToUpdateWith.nrOfHeadtoheadMatches);
-            round.getConfig().setWinPoints(modelToUpdateWith.winPoints);
-            round.getConfig().setDrawPoints(modelToUpdateWith.drawPoints);
-            round.getConfig().setHasExtension(modelToUpdateWith.hasExtension);
-            round.getConfig().setWinPointsExt(modelToUpdateWith.winPointsExt);
-            round.getConfig().setDrawPointsExt(modelToUpdateWith.drawPointsExt);
-            round.getConfig().setMinutesPerGameExt(modelToUpdateWith.minutesPerGameExt);
-            round.getConfig().setEnableTime(modelToUpdateWith.enableTime);
-            round.getConfig().setMinutesPerGame(modelToUpdateWith.minutesPerGame);
-            round.getConfig().setMinutesInBetween(modelToUpdateWith.minutesInBetween);
+            round.getConfig().setQualifyRule(modelToUpdateWith.getQualifyRule());
+            round.getConfig().setNrOfHeadtoheadMatches(modelToUpdateWith.getNrOfHeadtoheadMatches());
+            round.getConfig().setWinPoints(modelToUpdateWith.getWinPoints());
+            round.getConfig().setDrawPoints(modelToUpdateWith.getDrawPoints());
+            round.getConfig().setHasExtension(modelToUpdateWith.getHasExtension());
+            round.getConfig().setWinPointsExt(modelToUpdateWith.getWinPointsExt());
+            round.getConfig().setDrawPointsExt(modelToUpdateWith.getDrawPointsExt());
+            round.getConfig().setMinutesPerGameExt(modelToUpdateWith.getMinutesPerGameExt());
+            round.getConfig().setEnableTime(modelToUpdateWith.getEnableTime());
+            round.getConfig().setMinutesPerGame(modelToUpdateWith.getMinutesPerGame());
+            round.getConfig().setMinutesInBetween(modelToUpdateWith.getMinutesInBetween());
+            this.updateRoundConfigScore(round.getConfig().getScore(), modelToUpdateWith.getScore());
         });
         if (this.allRoundsByNumber[roundNumber + 1] !== undefined) {
             this.updateRoundConfig(roundNumber + 1, modelToUpdateWith);
+        }
+    }
+
+    protected updateRoundConfigScore(roundConfigScore: RoundConfigScore, modelToUpdateWith: RoundConfigScore) {
+        roundConfigScore.setMaximum(modelToUpdateWith.getMaximum());
+        if (roundConfigScore.getParent() && modelToUpdateWith.getParent()) {
+            this.updateRoundConfigScore(roundConfigScore.getParent(), modelToUpdateWith.getParent());
         }
     }
 
@@ -336,8 +343,8 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     //     return round;
     // }
 
-    getDirectionClass(scoreConfig: RoundScoreConfig) {
-        return scoreConfig.getDirection() === RoundScoreConfig.UPWARDS ? 'naar' : 'vanaf';
+    getDirectionClass(scoreConfig: RoundConfigScore) {
+        return scoreConfig.getDirection() === RoundConfigScore.UPWARDS ? 'naar' : 'vanaf';
     }
 
     protected setAlert(type: string, message: string) {

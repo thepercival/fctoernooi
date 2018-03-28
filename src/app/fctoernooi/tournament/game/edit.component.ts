@@ -10,7 +10,7 @@ import {
     PlanningService,
     PoulePlaceRepository,
     QualifyService,
-    RoundScoreConfig,
+    RoundConfigScore,
     StructureNameService,
     StructureRepository,
 } from 'ngx-sport';
@@ -119,7 +119,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         this.model.away = away;
     }
 
-    validScore(score, scoreConfig: RoundScoreConfig) {
+    validScore(score, scoreConfig: RoundConfigScore) {
         return !(score < 0 || (this.game.getRound().getConfig().getEnableTime() === false && score > scoreConfig.getMaximum()));
     }
 

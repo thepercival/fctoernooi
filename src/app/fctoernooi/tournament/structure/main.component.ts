@@ -1,7 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { cloneDeep } from 'lodash';
-import { Round, StructureRepository, StructureService, Team, TeamRepository } from 'ngx-sport';
+import {
+  PlanningRepository,
+  PlanningService,
+  Round,
+  StructureRepository,
+  StructureService,
+  Team,
+  TeamRepository,
+} from 'ngx-sport';
 
 import { IAlert } from '../../../app.definitions';
 import { Tournament } from '../../tournament';
@@ -15,7 +23,7 @@ import { TournamentRepository } from '../repository';
 })
 export class TournamentStructureComponent extends TournamentComponent implements OnInit {
 
-  processing = false;
+  processing = true;
   processed = false;
   isChanged = false;
   alert: IAlert;
@@ -26,22 +34,34 @@ export class TournamentStructureComponent extends TournamentComponent implements
     router: Router,
     tournamentRepository: TournamentRepository,
     structureRepository: StructureRepository,
+    private planningRepository: PlanningRepository,
     private teamRepository: TeamRepository
   ) {
     super(route, router, tournamentRepository, structureRepository);
   }
 
   ngOnInit() {
-    super.myNgOnInit(() => this.createStructureService(this.structureService.getFirstRound()));
+    super.myNgOnInit(() => {
+      this.structureService = this.createStructureServiceCopy(this.structureService.getFirstRound());
+      this.processing = false;
+    });
   }
 
-  createStructureService(firstRound: Round): StructureService {
+  createStructureServiceCopy(firstRound: Round): StructureService {
     this.originalTeams = firstRound.getTeams();
     const deepCopyOfFirstRound = cloneDeep(firstRound);
     return new StructureService(
       this.tournament.getCompetition(),
       { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
       deepCopyOfFirstRound
+    );
+  }
+
+  createStructureService(firstRound: Round): StructureService {
+    return new StructureService(
+      this.tournament.getCompetition(),
+      { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
+      firstRound
     );
   }
 
@@ -86,16 +106,26 @@ export class TournamentStructureComponent extends TournamentComponent implements
     this.structureRepository.editObject(firstRound, this.tournament.getCompetition())
       .subscribe(
           /* happy path */ roundRes => {
-        this.structureService = this.createStructureService(roundRes);
+          this.structureService = this.createStructureService(roundRes);
+          const planningService = new PlanningService(this.structureService);
+          planningService.create(roundRes.getNumber());
 
-        // prob send to childs again?
-        this.isChanged = false;
-        this.processed = true;
-        this.processing = false;
+          this.planningRepository.createObject([roundRes])
+            .subscribe(
+                    /* happy path */ games => {
+                console.log(roundRes);
+                this.structureService = this.createStructureServiceCopy(roundRes);
 
-      },
-        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-        /* onComplete */() => this.processing = false
+                // prob send to childs again?
+                this.isChanged = false;
+                this.processed = true;
+                this.processing = false;
+              },
+                  /* error path */ e => { this.setAlert('danger', e); },
+                  /* onComplete */() => this.processing = false
+            );
+        },
+        /* error path */ e => { this.setAlert('danger', e); }
       );
   }
 

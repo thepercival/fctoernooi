@@ -4,7 +4,7 @@
       <span [innerHTML]="nameService.getRoundName( round )">
 
       </span>
-      <i *ngFor="let winnersOrLosers of structureService.getWinnersLosersPosition( round )" [title]="structureService.getWinnersLosersDescription( winnersOrLosers )"
+      <i *ngFor="let winnersOrLosers of structureService.getWinnersLosersPosition( round )" [title]="getWinnersLosersDescription( winnersOrLosers )"
         class="fa fa-circle text-{{getClassPostfix(winnersOrLosers)}}"></i>
     </div>
     <div class="card-body px-1">

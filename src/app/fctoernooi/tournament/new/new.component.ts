@@ -8,6 +8,7 @@ import {
   League,
   PlanningRepository,
   PlanningService,
+  RoundRepository,
   Season,
   SportConfig,
   StructureRepository,
@@ -43,6 +44,7 @@ export class TournamentNewComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private tournamentRepository: TournamentRepository,
+    private roundRepository: RoundRepository,
     private structureRepository: StructureRepository,
     private planningRepository: PlanningRepository
   ) {
@@ -104,8 +106,8 @@ export class TournamentNewComponent implements OnInit {
             { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
             undefined, this.model.nrofcompetitors
           );
-
-          this.structureRepository.createObject(structureService.getFirstRound(), tournamentOut.getCompetition())
+          const jsonRound = this.roundRepository.objectToJsonHelper(structureService.getFirstRound());
+          this.structureRepository.createObject(jsonRound, tournamentOut.getCompetition())
             .subscribe(
             /* happy path */ firstRound => {
                 structureService = new StructureService(
@@ -113,10 +115,8 @@ export class TournamentNewComponent implements OnInit {
                   { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
                   firstRound
                 );
-
                 const planningService = new PlanningService(structureService);
                 planningService.create(structureService.getFirstRound().getNumber());
-
                 this.planningRepository.createObject([structureService.getFirstRound()])
                   .subscribe(
                     /* happy path */ games => {

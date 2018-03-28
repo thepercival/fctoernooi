@@ -76,7 +76,7 @@
             <ng-template ngFor let-poulePlaces [ngForOf]="getPoulePlacesByRank(selectedPouleForRanking)" let-i="index">
               <tr *ngFor="let poulePlace of poulePlaces">
                 <td class="text-right">{{i+1}}</td>
-                <td class="pouleplace">{{structureService.getPoulePlaceName(poulePlace, true)}}</td>
+                <td class="pouleplace">{{nameService.getPoulePlaceName(poulePlace, true)}}</td>
                 <td class="text-right">{{ranking.getNrOfGamesWithState(poulePlace, poulePlace.getGames())}}</td>
                 <td class="text-right">{{ranking.getPoints(poulePlace, poulePlace.getGames())}}</td>
                 <td class="goaldiff">{{getGoalDifference(poulePlace, poulePlace.getGames())}}</td>

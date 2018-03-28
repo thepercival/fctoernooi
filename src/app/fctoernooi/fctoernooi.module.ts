@@ -15,8 +15,8 @@ import {
   PouleRepository,
   QualifyRuleRepository,
   RoundConfigRepository,
+  RoundConfigScoreRepository,
   RoundRepository,
-  RoundScoreConfigRepository,
   StructureRepository,
   TeamRepository,
 } from 'ngx-sport';
@@ -73,7 +73,7 @@ import { TournamentViewComponent } from './tournament/view/view.component';
     StructureRepository,
     RoundRepository,
     RoundConfigRepository,
-    RoundScoreConfigRepository,
+    RoundConfigScoreRepository,
     PouleRepository,
     PoulePlaceRepository,
     QualifyRuleRepository,

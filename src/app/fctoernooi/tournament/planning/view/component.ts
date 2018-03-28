@@ -49,11 +49,6 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges {
     }
   }
 
-  getWinnersLosersDescription(winnersOrLosers: number): string {
-    const description = Round.getWinnersLosersDescription(winnersOrLosers);
-    return (description !== '' ? description + 's' : description);
-  }
-
   haveMultiplePoulePlaces(roundsByNumber: Round[]) {
     return roundsByNumber.some(round => round.getPoulePlaces().length > 1);
   }
