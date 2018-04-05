@@ -81,7 +81,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     this.setAlert('info', 'scheidsrechter verwijderen..');
     this.processing = true;
 
-    this.refereeRepository.removeObject(referee)
+    this.refereeRepository.removeObject(referee, this.structureService.getCompetition())
       .subscribe(
             /* happy path */ refereeRes => {
 

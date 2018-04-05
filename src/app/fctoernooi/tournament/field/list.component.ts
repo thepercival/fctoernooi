@@ -98,7 +98,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
                 /* onComplete */() => this.processing = false
                         );
                 },
-            /* error path */ e => { this.setAlert('danger', e); },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
 
         );
     }
@@ -107,7 +107,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
         this.setAlert('info', 'veld verwijderen..');
         this.processing = true;
 
-        this.fieldRepository.removeObject(fieldItem.field)
+        this.fieldRepository.removeObject(fieldItem.field, this.structureService.getCompetition())
             .subscribe(
             /* happy path */ fieldRes => {
 
@@ -120,7 +120,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
                     // setTimeout(3000);
                     this.planningRepository.editObject([firstRound])
                         .subscribe(
-                        /* happy path */ gamesdRes => {
+                        /* happy path */ gamesRes => {
                                 this.processing = false;
                                 this.setAlert('info', 'veld verwijderd');
                             },
