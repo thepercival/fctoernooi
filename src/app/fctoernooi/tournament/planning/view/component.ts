@@ -69,6 +69,13 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges {
     return 'not-qualifying';
   }
 
+  getPoulePlaceClass(poulePlace: PoulePlace): string {
+    if (poulePlace.getTeam() === undefined || poulePlace.getTeam().getAbbreviation() === undefined) {
+      return '';
+    }
+    return 'd-none d-sm-inline';
+  }
+
   getScore(game: Game): string {
     const sScore = ' - ';
     if (game.getState() !== Game.STATE_PLAYED) {

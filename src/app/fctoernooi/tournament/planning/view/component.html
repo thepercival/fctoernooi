@@ -45,11 +45,19 @@
             {{game.getStartDateTime().toLocaleString("en", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}
           </td>
           <td *ngIf="hasFields()" (click)="linkToGameEdit(tournament,game)" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">{{game.getField()?.getName()}}</td>
-          <td (click)="linkToGameEdit(tournament,game)" class="pouleplace text-right" [ngClass]="{'toGameEdit': userIsGameResultAdmin }">{{nameService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</td>
+          <td (click)="linkToGameEdit(tournament,game)" class="pouleplace text-right" [ngClass]="{'toGameEdit': userIsGameResultAdmin }">
+            <span class="{{getPoulePlaceClass(game.getHomePoulePlace())}}">{{nameService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</span>
+            <span *ngIf="game.getHomePoulePlace().getTeam() && game.getHomePoulePlace().getTeam().getAbbreviation()" class="d-inline d-sm-none">{{game.getHomePoulePlace().getTeam().getAbbreviation()}}</span>
+            <img *ngIf="game.getHomePoulePlace().getTeam() && game.getHomePoulePlace().getTeam().getImageUrl()" height="16px" src="{{game.getHomePoulePlace().getTeam().getImageUrl()}}">
+          </td>
           <td (click)="linkToGameEdit(tournament,game)" class="score text-center" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
             <span>{{getScore(game)}}</span>
           </td>
-          <td (click)="linkToGameEdit(tournament,game)" class="pouleplace" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">{{nameService.getPoulePlaceName(game.getAwayPoulePlace(), true )}}</td>
+          <td (click)="linkToGameEdit(tournament,game)" class="pouleplace" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
+            <img *ngIf="game.getAwayPoulePlace().getTeam() && game.getAwayPoulePlace().getTeam().getImageUrl()" height="16px" src="{{game.getAwayPoulePlace().getTeam().getImageUrl()}}">
+            <span class="{{getPoulePlaceClass(game.getAwayPoulePlace())}}">{{nameService.getPoulePlaceName(game.getAwayPoulePlace(), true )}}</span>
+            <span *ngIf="game.getAwayPoulePlace().getTeam() && game.getAwayPoulePlace().getTeam().getAbbreviation()" class="d-inline d-sm-none">{{game.getAwayPoulePlace().getTeam().getAbbreviation()}}</span>
+          </td>
           <td *ngIf="hasReferees()" class="d-none d-sm-table-cell" (click)="linkToGameEdit(tournament,game)" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">{{game.getReferee()?.getInitials()}}</td>
         </tr>
       </tbody>

@@ -33,7 +33,7 @@ export class TournamentNewComponent implements OnInit {
   validations: any = {
     'minnrofcompetitors': Tournament.MINNROFCOMPETITORS,
     'maxnrofcompetitors': Tournament.MAXNROFCOMPETITORS,
-    'minnroffields': 1,
+    'minnroffields': 0,
     'maxnroffields': 16,
     'minlengthname': League.MIN_LENGTH_NAME,
     'maxlengthname': League.MAX_LENGTH_NAME
