@@ -27,6 +27,10 @@ export class TournamentStructureRoundComponent {
     this.resetAlert();
   }
 
+  get CustomQualifyOrder(): number {
+    return Round.ORDER_CUSTOM;
+  }
+
   // private getPlanningService(): PlanningService {
   //   return new PlanningService(this.structureService);
   // }
