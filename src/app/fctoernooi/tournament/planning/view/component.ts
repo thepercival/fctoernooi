@@ -24,6 +24,7 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges {
   alert: any;
   GameStatePlayed = Game.STATE_PLAYED;
   selectedPouleForRanking;
+  sameDay = true;
 
   private openPopovers: NgbPopover[] = [];
   ranking: Ranking;
@@ -128,7 +129,23 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges {
     const games: Game[] = [];
     const gamesByNumber = this.planningService.getGamesByNumber(this.roundNumber, Game.ORDER_RESOURCEBATCH);
     gamesByNumber.forEach(gamesIt => gamesIt.forEach(game => games.push(game)));
+    this.sameDay = this.isSameDay(games[0], games[games.length - 1]);
     return games;
+  }
+
+  onSameDay() {
+    return this.sameDay;
+  }
+
+  protected isSameDay(gameOne: Game, gameTwo: Game): boolean {
+    const dateOne: Date = gameOne.getStartDateTime();
+    const dateTwo: Date = gameTwo.getStartDateTime();
+    if (dateOne === undefined && dateTwo === undefined) {
+      return true;
+    }
+    return (dateOne.getDate() === dateTwo.getDate()
+      && dateOne.getMonth() === dateTwo.getMonth()
+      && dateOne.getFullYear() === dateTwo.getFullYear());
   }
 
   getPoulePlacesByRank(poule: Poule): PoulePlace[][] {

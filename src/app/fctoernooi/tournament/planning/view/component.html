@@ -17,7 +17,8 @@
             <i class="fa fa-list"></i>
           </th>
           <th *ngIf="planningService.canCalculateStartDateTime(roundNumber)" title="starttijd">
-            {{planningService.calculateStartDateTime(roundNumber).toLocaleString("en", {"month":"short","day":"2-digit"})}}
+            <span *ngIf="onSameDay()">{{planningService.calculateStartDateTime(roundNumber).toLocaleString("en", {"month":"short","day":"2-digit"})}}</span>
+            <span *ngIf="!onSameDay()">starttijd</span>
           </th>
           <th *ngIf="hasFields()" title="veld">
             <i class="fi flaticon-soccer-field"></i>
@@ -42,7 +43,8 @@
             </button>
           </td>
           <td *ngIf="planningService.canCalculateStartDateTime(roundNumber)" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }" (click)="linkToGameEdit(tournament,game)">
-            {{game.getStartDateTime().toLocaleString("en", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}
+            <span *ngIf="!onSameDay()">{{game.getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit"})}}</span>
+            <span>{{game.getStartDateTime().toLocaleString("en", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}</span>
           </td>
           <td *ngIf="hasFields()" (click)="linkToGameEdit(tournament,game)" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">{{game.getField()?.getName()}}</td>
           <td (click)="linkToGameEdit(tournament,game)" class="pouleplace text-right" [ngClass]="{'toGameEdit': userIsGameResultAdmin }">
