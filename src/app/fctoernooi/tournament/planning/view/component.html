@@ -50,13 +50,13 @@
           <td (click)="linkToGameEdit(tournament,game)" class="pouleplace text-right" [ngClass]="{'toGameEdit': userIsGameResultAdmin }">
             <span class="{{getPoulePlaceClass(game.getHomePoulePlace())}}">{{nameService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</span>
             <span *ngIf="game.getHomePoulePlace().getTeam() && game.getHomePoulePlace().getTeam().getAbbreviation()" class="d-inline d-sm-none">{{game.getHomePoulePlace().getTeam().getAbbreviation()}}</span>
-            <img *ngIf="game.getHomePoulePlace().getTeam() && game.getHomePoulePlace().getTeam().getImageUrl()" height="16px" src="{{game.getHomePoulePlace().getTeam().getImageUrl()}}">
+            <span *ngIf="game.getHomePoulePlace().getTeam() && game.getHomePoulePlace().getTeam().getAbbreviation()" class="flag-16 flag-{{game.getHomePoulePlace().getTeam().getAbbreviation()}}-16"></span>
           </td>
           <td (click)="linkToGameEdit(tournament,game)" class="score text-center" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
             <span>{{getScore(game)}}</span>
           </td>
           <td (click)="linkToGameEdit(tournament,game)" class="pouleplace" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
-            <img *ngIf="game.getAwayPoulePlace().getTeam() && game.getAwayPoulePlace().getTeam().getImageUrl()" height="16px" src="{{game.getAwayPoulePlace().getTeam().getImageUrl()}}">
+            <span *ngIf="game.getHomePoulePlace().getTeam() && game.getAwayPoulePlace().getTeam().getAbbreviation()" class="flag-16 flag-{{game.getAwayPoulePlace().getTeam().getAbbreviation()}}-16"></span>
             <span class="{{getPoulePlaceClass(game.getAwayPoulePlace())}}">{{nameService.getPoulePlaceName(game.getAwayPoulePlace(), true )}}</span>
             <span *ngIf="game.getAwayPoulePlace().getTeam() && game.getAwayPoulePlace().getTeam().getAbbreviation()" class="d-inline d-sm-none">{{game.getAwayPoulePlace().getTeam().getAbbreviation()}}</span>
           </td>
