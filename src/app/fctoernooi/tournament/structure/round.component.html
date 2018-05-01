@@ -2,7 +2,6 @@
   <div class="card round" *ngIf="round.getPoulePlaces().length > 2">
     <div class="card-header px-1">
       <span [innerHTML]="nameService.getRoundName( round )">
-
       </span>
       <i *ngFor="let winnersOrLosers of structureService.getWinnersLosersPosition( round )" [title]="getWinnersLosersDescription( winnersOrLosers )"
         class="fa fa-circle text-{{getClassPostfix(winnersOrLosers)}}"></i>
@@ -100,7 +99,7 @@
   </div>
   <div class="row text-center no-gutters">
     <app-tournament-structureround *ngFor="let childRound of round.getChildRounds()" [ngStyle]="{ 'width': (100/round.getChildRounds().length) + '%' }"
-      [round]="childRound" [structureService]="structureService" (roundChanged)="roundChanged.emit()"></app-tournament-structureround>
+      [round]="childRound" [structureService]="structureService" (roundChanged)="roundChanged.emit($event)"></app-tournament-structureround>
   </div>
   <!--<div class="row text-center">-->
   <!--<app-tournament-structureround *ngFor="let childRound of round.getChildRounds()" class="d-flex flex-wrap justify-content-around" [round]="childRound" [structureService]="structureService"></app-tournament-structureround>-->

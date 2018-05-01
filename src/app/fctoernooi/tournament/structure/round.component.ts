@@ -10,7 +10,7 @@ export class TournamentStructureRoundComponent {
 
   @Input() round: Round;
   @Input() structureService: StructureService;
-  @Output() roundChanged = new EventEmitter<Round>();
+  @Output() roundChanged = new EventEmitter<number>();
   public alert: any;
   public winnersAndLosers: number[];
   public sliderValueDummy = 3;
@@ -52,7 +52,7 @@ export class TournamentStructureRoundComponent {
       qualifyService.createObjectsForParentRound();
     }
     // this.getPlanningService().create(round.getNumber());
-    this.roundChanged.emit();
+    this.roundChanged.emit(round.getNumber());
   }
 
 
@@ -61,7 +61,7 @@ export class TournamentStructureRoundComponent {
     try {
       this.structureService.removePoule(round);
       // this.getPlanningService().create(round.getNumber());
-      this.roundChanged.emit();
+      this.roundChanged.emit(round.getNumber());
     } catch (e) {
       this.setAlert('danger', e.message);
     }
@@ -77,7 +77,7 @@ export class TournamentStructureRoundComponent {
         qualifyService.createObjectsForParentRound();
       }
       // this.getPlanningService().create(round.getNumber());
-      this.roundChanged.emit();
+      this.roundChanged.emit(round.getNumber());
     } catch (e) {
       this.setAlert('danger', e.message);
     }
@@ -88,7 +88,7 @@ export class TournamentStructureRoundComponent {
     try {
       this.structureService.removePoulePlace(round);
       // this.getPlanningService().create(round.getNumber());
-      this.roundChanged.emit();
+      this.roundChanged.emit(round.getNumber());
     } catch (e) {
       this.setAlert('danger', e.message);
     }
@@ -140,7 +140,7 @@ export class TournamentStructureRoundComponent {
   public onSliderChange(nrOfChildPlacesNew: number, winnersOrLosers: number) {
     this.structureService.changeNrOfPlacesChildRound(nrOfChildPlacesNew, this.round, winnersOrLosers);
     // this.getPlanningService().create(this.round.getNumber());
-    this.roundChanged.emit();
+    this.roundChanged.emit(this.round.getNumber() + 1);
   }
 
   toggleQualifyOrder(round: Round) {
@@ -153,7 +153,7 @@ export class TournamentStructureRoundComponent {
     qualifyService.removeObjectsForParentRound();
     qualifyService.createObjectsForParentRound();
     // this.getPlanningService().create(round.getNumber());
-    this.roundChanged.emit();
+    this.roundChanged.emit(round.getNumber());
   }
 
   qualifyOrderIsHorizontal(round: Round) {

@@ -10,15 +10,15 @@
   <div>
     <h2>
       <i class="fi flaticon-structure"></i> structuur
-      <button *ngIf="!structureService?.getFirstRound().isStarted()" type="button" class="btn btn-outline-{{!processed && !isChanged ? 'primary' : (processing ? 'warning' : (isChanged ? 'danger' : 'success') ) }}"
-        [disabled]="processing || !isChanged" (click)="saveStructure();">
-        <span class="fa fa-{{processing ? 'spinner fa-spin' : (isChanged || !processed ? 'save' : 'check') }}"></span>
+      <button *ngIf="!structureService?.getFirstRound().isStarted()" type="button" class="btn btn-outline-{{!processed && !changedRoundNumber ? 'primary' : (processing ? 'warning' : (isChanged ? 'danger' : 'success') ) }}"
+        [disabled]="processing || !changedRoundNumber" (click)="saveStructure();">
+        <span class="fa fa-{{processing ? 'spinner fa-spin' : (changedRoundNumber || !processed ? 'save' : 'check') }}"></span>
       </button>
     </h2>
   </div>
   <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="true" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
   <div *ngIf="!processing" class="row text-center">
     <app-tournament-structureround style="width: 100%;" [round]="structureService?.getFirstRound()" [structureService]="structureService"
-      (roundChanged)="isChanged = true"></app-tournament-structureround>
+      (roundChanged)="setChangedRoundNumber($event)"></app-tournament-structureround>
   </div>
 </div>

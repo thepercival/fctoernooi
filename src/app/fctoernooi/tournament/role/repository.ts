@@ -103,7 +103,7 @@ export class TournamentRoleRepository extends SportRepository {
     //     return this.http
     //         .post(this.url, jsonObject, new RequestOptions({ headers: this.getHeaders() }))
     //         // ...and calling .json() on the response to return data
-    //         .map((res) => /*this.jsonToObjectHelper(res.json())*/console.log(res.json()) )
+    //         .map((res) => /*this.jsonToObjectHelper(res.json())*/ )
     //         .catch(this.handleError);
     // }
     //
@@ -114,7 +114,7 @@ export class TournamentRoleRepository extends SportRepository {
     //     return this.http
     //         .put(url, JSON.stringify( object ), { headers: this.getHeaders() })
     //         // ...and calling .json() on the response to return data
-    //         .map((res) => { console.log(res.json()); return this.jsonToObjectHelper(res.json()); })
+    //         .map((res) => { return this.jsonToObjectHelper(res.json()); })
     //         //...errors if any
     //         .catch(this.handleError);
     // }

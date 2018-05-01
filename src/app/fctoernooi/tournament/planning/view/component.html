@@ -13,8 +13,11 @@
     <table class="table">
       <thead>
         <tr>
-          <th class="text-center" title="poule">
+          <th *ngIf="aRoundNeedsRanking(roundsByNumber)" class="text-center" title="poule">
             <i class="fa fa-list"></i>
+          </th>
+          <th *ngIf="!aRoundNeedsRanking(roundsByNumber)" class="text-center" title="wedstrijd">
+            <span>vs</span>
           </th>
           <th *ngIf="planningService.canCalculateStartDateTime(roundNumber)" title="starttijd">
             <span *ngIf="onSameDay()">{{planningService.calculateStartDateTime(roundNumber).toLocaleString("en", {"month":"short","day":"2-digit"})}}</span>
@@ -56,7 +59,7 @@
             <span>{{getScore(game)}}</span>
           </td>
           <td (click)="linkToGameEdit(tournament,game)" class="pouleplace" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
-            <span *ngIf="game.getHomePoulePlace().getTeam() && game.getAwayPoulePlace().getTeam().getAbbreviation()" class="flag-16 flag-{{game.getAwayPoulePlace().getTeam().getAbbreviation()}}-16"></span>
+            <span *ngIf="game.getAwayPoulePlace().getTeam() && game.getAwayPoulePlace().getTeam().getAbbreviation()" class="flag-16 flag-{{game.getAwayPoulePlace().getTeam().getAbbreviation()}}-16"></span>
             <span class="{{getPoulePlaceClass(game.getAwayPoulePlace())}}">{{nameService.getPoulePlaceName(game.getAwayPoulePlace(), true )}}</span>
             <span *ngIf="game.getAwayPoulePlace().getTeam() && game.getAwayPoulePlace().getTeam().getAbbreviation()" class="d-inline d-sm-none">{{game.getAwayPoulePlace().getTeam().getAbbreviation()}}</span>
           </td>
@@ -85,7 +88,10 @@
           <tbody>
             <ng-template ngFor let-poulePlaces [ngForOf]="getPoulePlacesByRank(selectedPouleForRanking)" let-i="index">
               <tr *ngFor="let poulePlace of poulePlaces">
-                <td class="text-right">{{i+1}}</td>
+                <td class="rankingnr text-right">
+                  <i class="{{getQualificationClass(poulePlace)}}"></i>
+                  <span>{{i+1}}</span>
+                </td>
                 <td class="pouleplace">{{nameService.getPoulePlaceName(poulePlace, true)}}</td>
                 <td class="text-right">{{ranking.getNrOfGamesWithState(poulePlace, poulePlace.getGames())}}</td>
                 <td class="text-right">{{ranking.getPoints(poulePlace, poulePlace.getGames())}}</td>

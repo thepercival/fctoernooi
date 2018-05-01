@@ -45,7 +45,6 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     }
 
     setNoRefresh(toggle) {
-        console.log(toggle);
         this.noRefresh = toggle;
     }
 

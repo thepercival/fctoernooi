@@ -58,16 +58,16 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges {
     return winnersOrLosers === Round.WINNERS ? 'success' : (winnersOrLosers === Round.LOSERS ? 'danger' : '');
   }
 
-  getClassPostfixPoulePlace(poulePlace: PoulePlace): string {
+  getQualificationClass(poulePlace: PoulePlace): string {
     const rules = poulePlace.getToQualifyRules();
     if (rules.length === 2) {
-      return 'warning';
+      return 'fa fa-circle  text-warning';
     } else if (rules.length === 1) {
       const qualifyRule = rules[0];
       const singleColor = this.getClassPostfix(qualifyRule.getWinnersOrLosers());
-      return qualifyRule.getFromPoulePlaces().length === qualifyRule.getToPoulePlaces().length ? singleColor : 'warning';
+      return 'fa fa-circle text-' + (qualifyRule.isMultiple() ? 'warning' : singleColor);
     }
-    return 'not-qualifying';
+    return '';
   }
 
   getPoulePlaceClass(poulePlace: PoulePlace): string {
@@ -135,6 +135,10 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges {
 
   onSameDay() {
     return this.sameDay;
+  }
+
+  aRoundNeedsRanking(roundsByNumber: Round[]): boolean {
+    return roundsByNumber.some(round => round.needsRanking());
   }
 
   protected isSameDay(gameOne: Game, gameTwo: Game): boolean {

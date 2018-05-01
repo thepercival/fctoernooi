@@ -25,21 +25,11 @@ export class UsersComponent implements OnInit {
 
   onSelect(user: User): void {
     this.selectedUser = user;
-    // console.log( this.selectedUser );
   }
 
   // interfaces
   ngOnInit(): void {
-    // try {
-
     this.getUsers();
-
-    // }
-    // catch ( error ) {
-    //  console.log( error );
-    // }
-    // console.log( this.users );
-    // console.log( 123 );
   }
 
 }

@@ -100,7 +100,7 @@ export class TournamentRepository extends SportRepository {
         const url = this.url + '/' + tournament.getId();
         return this.http.put(url, this.objectToJsonHelper(tournament), { headers: super.getHeaders() }).pipe(
             map((res: ITournament) => {
-                console.log(res); return this.jsonToObjectHelper(res);
+                return this.jsonToObjectHelper(res);
             }),
             catchError((err) => this.handleError(err))
         );

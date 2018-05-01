@@ -27,7 +27,6 @@ export class PasswordchangeComponent implements OnInit {
   ngOnInit() {
     this.route.queryParamMap.subscribe(params => {
       this.emailaddress = params.get('emailaddress');
-      console.log(this.emailaddress);
     });
   }
 

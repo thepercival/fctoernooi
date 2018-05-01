@@ -54,7 +54,6 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
         if (startDateTime.getTime() === this.tournament.getCompetition().getStartDateTime().getTime()) {
             return false;
         }
-        // console.log(startDateTime, this.tournament.getCompetition().getStartDateTime());
         if (this.structureService.getFirstRound().isStarted()) {
             throw new Error('de startdatum mag niet veranderen omdat het toernooi al is begonnen');
         }

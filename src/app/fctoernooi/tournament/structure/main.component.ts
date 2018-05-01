@@ -25,7 +25,7 @@ export class TournamentStructureComponent extends TournamentComponent implements
 
   processing = true;
   processed = false;
-  isChanged = false;
+  changedRoundNumber;
   alert: IAlert;
   originalTeams: Team[];
 
@@ -98,11 +98,16 @@ export class TournamentStructureComponent extends TournamentComponent implements
     });
   }
 
+  setChangedRoundNumber(changedRoundNumber) {
+    this.changedRoundNumber = changedRoundNumber;
+  }
+
   saveStructure() {
     this.processing = true;
 
     const firstRound = this.structureService.getFirstRound();
     this.processUnusedTeams(firstRound);
+
     this.structureRepository.editObject(firstRound, this.tournament.getCompetition())
       .subscribe(
           /* happy path */ roundRes => {
@@ -110,23 +115,29 @@ export class TournamentStructureComponent extends TournamentComponent implements
           const planningService = new PlanningService(this.structureService);
           planningService.create(roundRes.getNumber());
 
-          this.planningRepository.createObject([roundRes])
+          const changedRoundsForPlanning: Round[] = planningService.getRoundsByNumber(this.changedRoundNumber);
+          if (changedRoundsForPlanning === undefined) {
+            this.completeSave(roundRes);
+            return;
+          }
+          this.planningRepository.createObject(changedRoundsForPlanning)
             .subscribe(
                     /* happy path */ games => {
-                console.log(roundRes);
-                this.structureService = this.createStructureServiceCopy(roundRes);
-
-                // prob send to childs again?
-                this.isChanged = false;
-                this.processed = true;
-                this.processing = false;
+                this.completeSave(roundRes);
               },
-                  /* error path */ e => { this.setAlert('danger', e); },
+                  /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
                   /* onComplete */() => this.processing = false
             );
         },
-        /* error path */ e => { this.setAlert('danger', e); }
+        /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
       );
+  }
+
+  completeSave(round: Round) {
+    this.structureService = this.createStructureServiceCopy(round);
+    this.changedRoundNumber = undefined;
+    this.processed = true;
+    this.processing = false;
   }
 
   protected setAlert(type: string, message: string) {
