@@ -13,4 +13,4 @@ SportConfig.apiurl = environment.apiurl;
 SportConfig.useExternal = environment.useExternal;
 
 platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => );
+  .catch(err => console.log(err));
