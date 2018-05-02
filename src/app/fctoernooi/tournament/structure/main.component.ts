@@ -117,7 +117,6 @@ export class TournamentStructureComponent extends TournamentComponent implements
           this.structureService = this.createStructureService(roundRes);
           const planningService = new PlanningService(this.structureService);
           planningService.create(roundRes.getNumber());
-          console.log(this.changedRoundNumber);
           const changedRoundsForPlanning: Round[] = planningService.getRoundsByNumber(this.changedRoundNumber);
           if (changedRoundsForPlanning === undefined) {
             this.completeSave(roundRes);

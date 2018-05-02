@@ -2,10 +2,10 @@
   <div class="d-flex justify-content-between mt-3">
     <h2>
       <span [innerHTML]="nameService.getRoundsName( roundNumber, roundsByNumber )"></span>
-      <ng-template *ngIf="nameService.roundsHaveSameName( roundsByNumber )">
-        <!-- <i *ngFor="let winnersOrLosers of structureService.getWinnersLosersPosition( round )" [title]="structureService.getWinnersLosersDescription( round.getWinnersOrLosers() )"
-          class="fa fa-circle text-{{getClassPostfix(round.getWinnersOrLosers())}}"></i> -->
-      </ng-template>
+      <!-- <ng-template *ngIf="nameService.roundsHaveSameName( roundsByNumber )">
+        <i *ngFor="let winnersOrLosers of structureService.getWinnersLosersPosition( round )" [title]="structureService.getWinnersLosersDescription( round.getWinnersOrLosers() )"
+          class="fa fa-circle text-{{getClassPostfix(round.getWinnersOrLosers())}}"></i>
+      </ng-template> -->
     </h2>
   </div>
 
