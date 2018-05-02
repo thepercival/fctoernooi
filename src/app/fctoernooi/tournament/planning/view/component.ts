@@ -129,7 +129,7 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges {
     const games: Game[] = [];
     const gamesByNumber = this.planningService.getGamesByNumber(this.roundNumber, Game.ORDER_RESOURCEBATCH);
     gamesByNumber.forEach(gamesIt => gamesIt.forEach(game => games.push(game)));
-    this.sameDay = this.isSameDay(games[0], games[games.length - 1]);
+    this.sameDay = games.length > 1 ? this.isSameDay(games[0], games[games.length - 1]) : true;
     return games;
   }
 
