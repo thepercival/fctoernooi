@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap/popover/popover';
+import { ScrollToService } from 'ng2-scroll-to-el';
 import { Game, PlanningService, Poule, PoulePlace, Ranking, Round, StructureNameService, StructureService } from 'ngx-sport';
 
 import { AuthService } from '../../../../auth/auth.service';
@@ -13,13 +14,14 @@ import { TournamentRole } from '../../role';
   templateUrl: './component.html',
   styleUrls: ['./component.scss']
 })
-export class TournamentPlanningViewComponent implements OnInit, OnChanges {
+export class TournamentPlanningViewComponent implements OnInit, OnChanges, AfterViewInit {
 
   @Input() tournament: Tournament;
   @Input() roundNumber: number;
   @Input() structureService: StructureService;
   @Input() planningService: PlanningService;
   @Input() parentReturnAction: string;
+  @Input() scroll: boolean;
   @Output() popOverIsOpen = new EventEmitter<boolean>();
   alert: any;
   GameStatePlayed = Game.STATE_PLAYED;
@@ -34,6 +36,7 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges {
   constructor(
     private router: Router,
     private authService: AuthService,
+    private scrollService: ScrollToService,
     public nameService: StructureNameService) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
     this.resetAlert();
@@ -42,6 +45,12 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), TournamentRole.GAMERESULTADMIN);
+  }
+
+  ngAfterViewInit() {
+    if (this.scroll) {
+      this.scrollService.scrollTo('#header-roundnumber-' + this.roundNumber);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {

@@ -1,6 +1,6 @@
 <div *ngIf="tournament && haveMultiplePoulePlaces(roundsByNumber)">
   <div class="d-flex justify-content-between mt-3">
-    <h2>
+    <h2 id="header-roundnumber-{{roundNumber}}">
       <span [innerHTML]="nameService.getRoundsName( roundNumber, roundsByNumber )"></span>
       <!-- <ng-template *ngIf="nameService.roundsHaveSameName( roundsByNumber )">
         <i *ngFor="let winnersOrLosers of structureService.getWinnersLosersPosition( round )" [title]="structureService.getWinnersLosersDescription( round.getWinnersOrLosers() )"

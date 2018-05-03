@@ -21,6 +21,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     private planningService: PlanningService;
     private timerSubscription: Subscription;
     private noRefresh = false;
+    scrollToRoundNumber;
 
     constructor(
         route: ActivatedRoute,
@@ -35,6 +36,10 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
 
     ngOnInit() {
         super.myNgOnInit(() => this.initTVViewLink());
+
+        this.route.queryParamMap.subscribe(params => {
+            this.scrollToRoundNumber = +params.get('scrollToRoundNumber');
+        });
 
         this.timerSubscription = timer(10000, 10000).subscribe(number => {
             if (this.noRefresh !== true) {
