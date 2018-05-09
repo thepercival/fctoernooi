@@ -1,11 +1,14 @@
-<div *ngIf="tournament" class="container-fluid">
-  <h1 align="center">
+<div class="container-fluid">
+  <h1 *ngIf="tournament" align="center">
     {{tournament.getName()}}
-    <a [routerLink]="['/toernooi/view', tournament.getId()]">
+    <a *ngIf="!processing" [routerLink]="['/toernooi/view', tournament.getId()]">
       <i class="fa fa-eye"></i>
     </a>
   </h1>
-  <div *ngIf="structureService" class="row d-flex justify-content-center">
+  <h2 *ngIf="processing" align="center">
+    <i class="fa fa-spinner fa-spin fa-fw"></i>
+  </h2>
+  <div *ngIf="!processing" class="row d-flex justify-content-center">
     <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/structure', tournament.getId()]">
       <div class="card-body">
         <h5 class="card-title">
@@ -63,8 +66,8 @@
       </div>
     </div>
   </div>
-  <div *ngIf="structureService" class="row d-flex justify-content-center mt-3">
-    <div *ngIf="isAdmin()" class="card mt-3 mx-2">
+  <div class="row d-flex justify-content-center mt-3">
+    <div *ngIf="!processing && isAdmin()" class="card mt-3 mx-2">
       <div class="card-body">
         <h5 (click)="toggleRemoveQuestion( true )" class="card-title pointer">
           <i class="fa fa-trash"></i> weggooien</h5>
@@ -77,8 +80,7 @@
         </div>
       </div>
     </div>
-    <p *ngIf="deleteAlert">
-      <ngb-alert [type]="'danger'" (close)="deleteAlert = undefined;">{{ deleteAlert }}</ngb-alert>
-    </p>
+    <ngb-alert *ngIf="alertRemove" [type]="alertRemove.type" [dismissible]="true" (close)="alertRemove = undefined;">
+      {{ alertRemove.message }}</ngb-alert>
   </div>
 </div>

@@ -1,0 +1,46 @@
+<div class="container-fluid">
+  <div *ngIf="structureService" class="row justify-content-center">
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+      <div class="mb-4">
+        <h1 *ngIf="tournament">
+          {{tournament.getName()}}
+          <button type="button" [routerLink]="['/toernooi/view', tournament.getId()]" class="btn btn-outline-secondary btn-sm">
+            <i class="fa fa-level-up fa-rotate-270"></i>
+          </button>
+        </h1>
+      </div>
+      <div>
+        <h2>
+          <i class="fa fa-filter"></i> kies 1 of meerdere teams
+        </h2>
+      </div>
+      <div class="d-flex justify-content-center">
+        <ngb-alert *ngIf="alert" [type]="alert.type" style="width:100%;" [dismissible]="true" (close)="alert = undefined;">
+          <i *ngIf="processing" class="fa fa-spinner fa-spin"></i> {{ alert.message }}</ngb-alert>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>plek</th>
+            <th>naam</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let poulePlace of poulePlaces">
+            <td>
+              <span>{{nameService.getPoulePlaceName(poulePlace, false)}}</span>
+            </td>
+            <td>
+              <span *ngIf="poulePlace.getTeam()">{{poulePlace.getTeam().getName()}}</span>
+            </td>
+            <td style="text-align: right;">
+              <i *ngIf="poulePlace.getTeam()" class="fa fa-2x fa-{{inFavoriteTeamIds(poulePlace.getTeam()) ? 'check-' : ''}}square-o text-primary"
+                style="cursor: pointer" (click)="toggleFavoriteTeams(poulePlace.getTeam())"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

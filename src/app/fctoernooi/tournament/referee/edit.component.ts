@@ -13,7 +13,6 @@ import { TournamentRepository } from '../repository';
     styleUrls: ['./edit.component.css']
 })
 export class TournamentRefereeEditComponent extends TournamentComponent implements OnInit {
-    loading = false;
     returnUrl: string;
     returnUrlParam: number;
     returnUrlQueryParamKey: string;
@@ -75,16 +74,19 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
 
     private postInit(id: number) {
         if (id === undefined || id < 1) {
+            this.processing = false;
             return;
         }
         const referee = this.structureService.getCompetition().getRefereeById(id);
         if (referee === undefined) {
+            this.processing = false;
             return;
         }
         this.refereeId = id;
         this.customForm.controls.initials.setValue(referee.getInitials());
         this.customForm.controls.name.setValue(referee.getName());
         this.customForm.controls.info.setValue(referee.getInfo());
+        this.processing = false;
     }
 
     save() {
@@ -129,13 +131,12 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
             /* onComplete */() => this.processing = false
                         );
                 },
-            /* error path */ e => { this.setAlert('danger', e); },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
         );
     }
 
     edit() {
         this.processing = true;
-
 
         if (this.isInitialsDuplicate(this.customForm.controls.initials.value, this.refereeId)) {
             this.setAlert('danger', 'de initialen bestaan al voor dit toernooi');

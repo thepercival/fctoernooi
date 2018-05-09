@@ -58,7 +58,7 @@
     <table *ngIf="poule" class="table tv-screen">
       <thead>
         <tr>
-          <th>pl</th>
+          <th class="text-right">pl</th>
           <th class="text-primary">{{nameService.getPouleName(poule, true)}}</th>
           <th class="text-right">g</th>
           <th class="text-right">pnt</th>
@@ -68,7 +68,10 @@
       <tbody>
         <ng-template ngFor let-poulePlaces [ngForOf]="getPoulePlacesByRank(poule)" let-i="index">
           <tr *ngFor="let poulePlace of poulePlaces">
-            <td>{{i+1}}</td>
+            <td class="text-right">
+              <i class="{{getQualificationClass(poule, i+1)}}"></i>
+              <span>{{i+1}}</span>
+            </td>
             <td class="pouleplace">{{nameService.getPoulePlaceName(poulePlace, true)}}</td>
             <td class="text-right">{{ranking.getNrOfGamesWithState(poulePlace, poulePlace.getGames())}}</td>
             <td class="text-right">{{ranking.getPoints(poulePlace, poulePlace.getGames())}}</td>

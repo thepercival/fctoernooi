@@ -4,7 +4,7 @@
             <div class="mb-4">
                 <h1 *ngIf="tournament">
                     {{tournament.getName()}}
-                    <button [routerLink]="['/toernooi/home', tournament.getId()]" type="button" class="btn btn-outline-secondary btn-sm">
+                    <button *ngIf="!processing" [routerLink]="['/toernooi/home', tournament.getId()]" type="button" class="btn btn-outline-secondary btn-sm">
                         <i class="fa fa-level-up fa-rotate-270"></i>
                     </button>
                 </h1>
@@ -13,13 +13,16 @@
                 <h2>
                     <i class="fa fa-cogs"></i> ronde-instellingen
                 </h2>
+                <h2 *ngIf="processing" align="center">
+                    <i class="fa fa-spinner fa-spin fa-fw"></i>
+                </h2>
             </div>
             <ngb-alert *ngIf="alert" [type]="alert.type" style="width:100%;" [dismissible]="true" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
             <form *ngIf="!processing" name="form" (ngSubmit)="saveConfig() && false" #f="ngForm" novalidate>
                 <div *ngIf="selectedRoundNumber > 0 || allRoundsByNumber[2] !== undefined" class="row justify-content-center mx-0">
                     <div class="col">
                         <p class="d-flex justify-content-between">
-                            <button *ngIf="!structureService.getFirstRound().isStarted()" type="submit" [disabled]="!f.form.valid || processing" class="btn btn-outline-primary">instellingen opslaan
+                            <button type="submit" [disabled]="!f.form.valid || processing || planningService.isStarted(selectedRoundNumber)" class="btn btn-outline-primary">instellingen opslaan
                                 <i *ngIf="processing" class="fa fa-spinner fa-spin fa-fw"></i>
                             </button>
                             <button type="button" class="btn btn-outline-primary" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"

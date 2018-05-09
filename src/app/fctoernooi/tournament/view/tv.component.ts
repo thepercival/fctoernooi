@@ -1,6 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Game, PlanningService, Poule, PoulePlace, Ranking, StructureNameService, StructureRepository } from 'ngx-sport';
+import {
+    Game,
+    PlanningService,
+    Poule,
+    PoulePlace,
+    Ranking,
+    Round,
+    StructureNameService,
+    StructureRepository,
+} from 'ngx-sport';
 import { timer } from 'rxjs/observable/timer';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -227,6 +236,23 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         const nrOfGoalsScored = this.ranking.getNrOfGoalsScored(poulePlace, games);
         const nrOfGoalsReceived = this.ranking.getNrOfGoalsReceived(poulePlace, games);
         return (nrOfGoalsScored - nrOfGoalsReceived) + ' ( ' + nrOfGoalsScored + ' - ' + nrOfGoalsReceived + ' )';
+    }
+
+    getClassPostfix(winnersOrLosers: number): string {
+        return winnersOrLosers === Round.WINNERS ? 'success' : (winnersOrLosers === Round.LOSERS ? 'danger' : '');
+    }
+
+    getQualificationClass(poule: Poule, poulePlaceNumber: number): string {
+        const poulePlace: PoulePlace = poule.getPlace(poulePlaceNumber);
+        const rules = poulePlace.getToQualifyRules();
+        if (rules.length === 2) {
+            return 'fa fa-circle  text-warning';
+        } else if (rules.length === 1) {
+            const qualifyRule = rules[0];
+            const singleColor = this.getClassPostfix(qualifyRule.getWinnersOrLosers());
+            return 'fa fa-circle text-' + (qualifyRule.isMultiple() ? 'warning' : singleColor);
+        }
+        return '';
     }
 }
 

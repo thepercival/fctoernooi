@@ -7,6 +7,7 @@ import { TournamentCompetitorEditComponent } from './tournament/competitor/edit.
 import { CompetitorListComponent } from './tournament/competitor/list.component';
 import { TournamentEditComponent } from './tournament/edit/edit.component';
 import { FieldListComponent } from './tournament/field/list.component';
+import { TournamentFilterComponent } from './tournament/filter/filter.component';
 import { TournamentGameEditComponent } from './tournament/game/edit.component';
 import { GameListComponent } from './tournament/game/list.component';
 import { TournamentHomeComponent } from './tournament/home/home.component';
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'viewtv/:id', component: TournamentViewTvComponent },
   { path: 'new', component: TournamentNewComponent },
   { path: 'edit/:id', component: TournamentEditComponent },
+  { path: 'filter/:id', component: TournamentFilterComponent },
   { path: 'home/:id', component: TournamentHomeComponent, canActivate: [AuthguardService] },
   { path: 'competitors/:id', component: CompetitorListComponent, canActivate: [AuthguardService] },
   { path: 'structure/:id', component: TournamentStructureComponent, canActivate: [AuthguardService] },
@@ -32,8 +34,7 @@ const routes: Routes = [
   { path: 'fields/:id', component: FieldListComponent, canActivate: [AuthguardService] },
   { path: 'referees/:id', component: RefereeListComponent, canActivate: [AuthguardService] },
   { path: 'refereeedit/:id/:refereeId', component: TournamentRefereeEditComponent, canActivate: [AuthguardService] },
-  { path: 'competitoredit/:id/:poulePlaceId', component: TournamentCompetitorEditComponent, canActivate: [AuthguardService] },
-  // { path: 'settings',  component: TournamentSettingsComponent }
+  { path: 'competitoredit/:id/:poulePlaceId', component: TournamentCompetitorEditComponent, canActivate: [AuthguardService] }
 ];
 
 @NgModule({

@@ -4,7 +4,7 @@
       <div class="mb-4">
         <h1 *ngIf="tournament">
           {{tournament.getName()}}
-          <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary btn-sm">
+          <button *ngIf="!processing" (click)="navigateBack()" type="button" class="btn btn-outline-secondary btn-sm">
             <i class="fa fa-level-up fa-rotate-270"></i>
           </button>
         </h1>
@@ -13,8 +13,11 @@
         <h2>
           <i class="fi flaticon-referee"></i> scheidsrechter
         </h2>
+        <h2 *ngIf="processing" align="center">
+          <i class="fa fa-spinner fa-spin fa-fw"></i>
+        </h2>
       </div>
-      <form name="form" (ngSubmit)="save() && false" [formGroup]="customForm" novalidate>
+      <form *ngIf="!processing" name="form" (ngSubmit)="save() && false" [formGroup]="customForm" novalidate>
         <div class="form-group row">
           <div class="col-3">
             <label for="initials" class="col-form-label">initialen</label>
@@ -41,7 +44,7 @@
           </div>
           <div class="col-9">
             <textarea class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.info.invalid, 'is-valid': customForm.controls.info.valid }"
-              name="info" id="info" [formControl]="customForm.controls.info" maxlength="{{validations.maxlengthname}}" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
+              name="info" id="info" [formControl]="customForm.controls.info" maxlength="{{validations.maxlengthinfo}}" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>
         <ngb-alert *ngIf="alert" [type]="alert.type" style="width:100%;" [dismissible]="true" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
@@ -50,7 +53,6 @@
             <button [disabled]="customForm.invalid" type="submit" class="btn btn-outline-primary">
               <i class="fi flaticon-referee" title="scheidsrechter"></i>
               <span>{{refereeId > 0 ? 'wijzigen' : 'toevoegen'}}</span>
-              <i *ngIf="loading" class="fa fa-spinner fa-spin fa-fw"></i>
             </button>
           </div>
         </div>

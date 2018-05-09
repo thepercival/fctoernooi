@@ -3,7 +3,17 @@ import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap/popover/popover';
 import { ScrollToService } from 'ng2-scroll-to-el';
-import { Game, PlanningService, Poule, PoulePlace, Ranking, Round, StructureNameService, StructureService } from 'ngx-sport';
+import {
+  Game,
+  PlanningService,
+  Poule,
+  PoulePlace,
+  Ranking,
+  Round,
+  StructureNameService,
+  StructureService,
+  Team,
+} from 'ngx-sport';
 
 import { AuthService } from '../../../../auth/auth.service';
 import { Tournament } from '../../../tournament';
@@ -21,6 +31,7 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
   @Input() structureService: StructureService;
   @Input() planningService: PlanningService;
   @Input() parentReturnAction: string;
+  @Input() favTeamIds: number[];
   @Input() scroll: boolean;
   @Output() popOverIsOpen = new EventEmitter<boolean>();
   alert: any;
@@ -67,7 +78,8 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
     return winnersOrLosers === Round.WINNERS ? 'success' : (winnersOrLosers === Round.LOSERS ? 'danger' : '');
   }
 
-  getQualificationClass(poulePlace: PoulePlace): string {
+  getQualificationClass(poule: Poule, poulePlaceNumber: number): string {
+    const poulePlace: PoulePlace = poule.getPlace(poulePlaceNumber);
     const rules = poulePlace.getToQualifyRules();
     if (rules.length === 2) {
       return 'fa fa-circle  text-warning';
@@ -96,6 +108,25 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
 
   isPlayed(game: Game): boolean {
     return game.getState() === Game.STATE_PLAYED;
+  }
+
+  filterClass(): string {
+    const hasFilter = this.favTeamIds !== undefined && this.favTeamIds.length > 0;
+    return hasFilter ? 'primary' : 'secondary';
+  }
+
+  filterFavTeamIds(game: Game): boolean {
+    if (this.favTeamIds === undefined || this.favTeamIds.length === 0) {
+      return true;
+    }
+    if (game.getHomePoulePlace().getTeam() === undefined && game.getAwayPoulePlace().getTeam() === undefined) {
+      return true;
+    }
+    return (this.isTeamFav(game.getHomePoulePlace().getTeam()) || this.isTeamFav(game.getAwayPoulePlace().getTeam()));
+  }
+
+  isTeamFav(team: Team): boolean {
+    return (team && this.favTeamIds && (this.favTeamIds.find(favTeamId => favTeamId === team.getId())) !== undefined);
   }
 
   linkToGameEdit(tournament: Tournament, game: Game) {

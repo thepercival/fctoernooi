@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { StructureRepository } from 'ngx-sport';
 
+import { IAlert } from '../../../app.definitions';
 import { AuthService } from '../../../auth/auth.service';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
@@ -14,8 +15,9 @@ import { TournamentRole } from '../role';
 })
 export class TournamentHomeComponent extends TournamentComponent implements OnInit {
 
-    deleteAlert: string;
+    alertRemove: IAlert;
     showRemoveQuestion = false;
+    processing = true;
 
     constructor(
         route: ActivatedRoute,
@@ -28,7 +30,11 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
     }
 
     ngOnInit() {
-        super.myNgOnInit();
+        super.myNgOnInit(() => this.postNgOnInit());
+    }
+
+    postNgOnInit() {
+        this.processing = false;
     }
 
     isAdmin(): boolean {
@@ -36,27 +42,39 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
     }
 
     remove() {
+        this.setRemoveAlert('info', 'het toernooi wordt verwijderd');
+        this.processing = true;
         this.tournamentRepository.removeObject(this.tournament)
             .subscribe(
                 /* happy path */(deleted: boolean) => {
-                if (deleted) {
-                    const navigationExtras: NavigationExtras = {
-                        queryParams: { type: 'success', message: 'het toernooi is verwijderd' }
-                    };
-                    this.router.navigate(['/home'], navigationExtras);
-                } else {
-                    this.deleteAlert = 'het toernooi kon niet verwijderd worden';
-                }
-                // redirect to home with message
-            },
+                    if (deleted) {
+                        const navigationExtras: NavigationExtras = {
+                            queryParams: { type: 'success', message: 'het toernooi is verwijderd' }
+                        };
+                        this.router.navigate(['/home'], navigationExtras);
+                    } else {
+                        this.setRemoveAlert('danger', 'het toernooi kon niet verwijderd worden');
+                        this.processing = false;
+                    }
+                    // redirect to home with message
+                },
                 /* error path */ e => {
-                this.deleteAlert = 'het toernooi kon niet verwijderd worden';
-            },
-                /* onComplete */() => { }
+                    this.setRemoveAlert('danger', 'het toernooi kon niet verwijderd worden');
+                    this.processing = false;
+                },
+                /* onComplete */() => { this.processing = false; }
             );
     }
 
     toggleRemoveQuestion(showRemoveQuastion: boolean) {
         this.showRemoveQuestion = showRemoveQuastion;
+    }
+
+    protected setRemoveAlert(type: string, message: string) {
+        this.alertRemove = { 'type': type, 'message': message };
+    }
+
+    protected resetRemoveAlert(): void {
+        this.alertRemove = undefined;
     }
 }

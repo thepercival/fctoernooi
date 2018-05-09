@@ -4,12 +4,17 @@
       <div class="mb-4">
         <h1 *ngIf="tournament">
           {{tournament.getName()}}
-          <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary btn-sm">
+          <button *ngIf="!processing" (click)="navigateBack()" type="button" class="btn btn-outline-secondary btn-sm">
             <i class="fa fa-level-up fa-rotate-270"></i>
           </button>
         </h1>
+        <h2 *ngIf="processing" align="center">
+          <i class="fa fa-spinner fa-spin fa-fw"></i>
+        </h2>
       </div>
-      <form *ngIf="game" name="form" (ngSubmit)="save() && false" #f="ngForm" novalidate>
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="true" (close)="alert = undefined;">
+        {{ alert.message }}</ngb-alert>
+      <form *ngIf="!processing" name="form" (ngSubmit)="save() && false" #f="ngForm" novalidate>
         <div class="form-group row">
           <div class="col-3">
             <label for="hometeam" class="col-form-label">teams</label>
@@ -36,7 +41,7 @@
               style="max-width: 100px;">
           </div>
         </div>
-        <div class="form-group row">
+        <div *ngIf="!(game.getRound().getConfig().getEnableTime() && !game.getRound().getConfig().getHasExtension())" class="form-group row">
           <div class="col-3">
             <label for="extratime" class="col-form-label">na verlenging</label>
           </div>
@@ -87,9 +92,7 @@
           {{errorHomeAwayScore}}, ga naar
           <a [routerLink]="['/toernooi/roundssettings', tournament.getId()]" href="#"> ronde - instellingen</a> om dit aan te passen
         </div>
-        <button type="submit" [disabled]="!f.form.valid || loading" class="btn btn-outline-primary">wijzig wedstrijd
-          <i *ngIf="loading" class="fa fa-spinner fa-spin fa-fw"></i>
-        </button>
+        <button type="submit" [disabled]="!f.form.valid || processing" class="btn btn-outline-primary">wijzig wedstrijd</button>
       </form>
     </div>
   </div>

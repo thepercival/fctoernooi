@@ -9,17 +9,17 @@ import { NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap/timepicker/timep
 import { NouisliderModule } from 'ng2-nouislider';
 import { ScrollToModule } from 'ng2-scroll-to-el';
 import {
-  GameRepository,
-  GameScoreRepository,
-  PlanningRepository,
-  PoulePlaceRepository,
-  PouleRepository,
-  QualifyRuleRepository,
-  RoundConfigRepository,
-  RoundConfigScoreRepository,
-  RoundRepository,
-  StructureRepository,
-  TeamRepository,
+    GameRepository,
+    GameScoreRepository,
+    PlanningRepository,
+    PoulePlaceRepository,
+    PouleRepository,
+    QualifyRuleRepository,
+    RoundConfigRepository,
+    RoundConfigScoreRepository,
+    RoundRepository,
+    StructureRepository,
+    TeamRepository,
 } from 'ngx-sport';
 
 import { IconManager } from '../common/iconmanager';
@@ -28,6 +28,7 @@ import { TournamentCompetitorEditComponent } from './tournament/competitor/edit.
 import { CompetitorListComponent } from './tournament/competitor/list.component';
 import { TournamentEditComponent } from './tournament/edit/edit.component';
 import { FieldListComponent } from './tournament/field/list.component';
+import { TournamentFilterComponent } from './tournament/filter/filter.component';
 import { TournamentGameEditComponent } from './tournament/game/edit.component';
 import { GameListComponent } from './tournament/game/list.component';
 import { TournamentHomeComponent } from './tournament/home/home.component';
@@ -68,7 +69,8 @@ import { TournamentViewComponent } from './tournament/view/view.component';
     TournamentViewComponent,
     TournamentViewTvComponent,
     TournamentGameEditComponent,
-    TournamentRefereeEditComponent
+    TournamentRefereeEditComponent,
+    TournamentFilterComponent
   ],
   providers: [
     TournamentRoleRepository,

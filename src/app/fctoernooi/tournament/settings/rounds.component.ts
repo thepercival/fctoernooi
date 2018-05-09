@@ -57,18 +57,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         private planningRepository: PlanningRepository
     ) {
         super(route, router, tournamentRepository, sructureRepository);
-    }
-
-    ngOnInit() {
-        super.myNgOnInit(() => this.initConfigs());
-    }
-
-    initConfigs() {
-        this.allRoundsByNumber = this.structureService.getAllRoundsByNumber();
-        this.changeRoundNumber(this.structureService.getFirstRound().getNumber());
         this.initRanges();
-        this.planningService = new PlanningService(this.structureService);
-        this.processing = false;
     }
 
     private initRanges() {
@@ -86,14 +75,26 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         }
     }
 
+    ngOnInit() {
+        super.myNgOnInit(() => this.initConfigs());
+    }
+
+    initConfigs() {
+        this.allRoundsByNumber = this.structureService.getAllRoundsByNumber();
+        this.planningService = new PlanningService(this.structureService);
+        this.changeRoundNumber(this.structureService.getFirstRound().getNumber());
+        this.processing = false;
+    }
+
     changeRoundNumber(roundNumber: number) {
         this.selectedRoundNumber = roundNumber;
         this.modelConfig = cloneDeep(this.getFirstRoundOfRoundNumber(this.selectedRoundNumber).getConfig());
         this.modelRecreate = false;
         this.modelReschedule = false;
         this.isCollapsed = true;
-        if (this.structureService.getFirstRound().isStarted()) {
-            this.setAlert('warning', 'het toernooi is al begonnen, je kunt niet meer wijzigen');
+        this.resetAlert();
+        if (this.planningService.isStarted(this.selectedRoundNumber)) {
+            this.setAlert('info', 'deze ronde is al begonnen, kies een andere ronde');
         }
     }
 

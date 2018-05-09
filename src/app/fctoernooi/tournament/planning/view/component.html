@@ -2,11 +2,16 @@
   <div class="d-flex justify-content-between mt-3">
     <h2 id="header-roundnumber-{{roundNumber}}">
       <span [innerHTML]="nameService.getRoundsName( roundNumber, roundsByNumber )"></span>
+
       <!-- <ng-template *ngIf="nameService.roundsHaveSameName( roundsByNumber )">
         <i *ngFor="let winnersOrLosers of structureService.getWinnersLosersPosition( round )" [title]="structureService.getWinnersLosersDescription( round.getWinnersOrLosers() )"
           class="fa fa-circle text-{{getClassPostfix(round.getWinnersOrLosers())}}"></i>
       </ng-template> -->
     </h2>
+    <button type="button" class="btn btn-sm btn-outline-{{filterClass()}} mr-2" *ngIf="favTeamIds" [routerLink]="['/toernooi/filter', tournament.getId()]">
+      <i class="fa fa-filter"></i>
+      <span>filter</span>
+    </button>
   </div>
 
   <div class="d-flex justify-content-around">
@@ -37,34 +42,36 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let game of getGamesHelper()">
-          <td class="text-center">
-            <span *ngIf="!game.getPoule().needsRanking()" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }" (click)="linkToGameEdit(tournament,game)">{{nameService.getPouleName(game.getPoule())}}</span>
-            <button type="button" class="btn btn-sm btn-outline-secondary" *ngIf="game.getPoule().needsRanking()" placement="right" [ngbPopover]="popRanking"
-              triggers="manual" #p="ngbPopover" (click)="showRanking( p, game.getPoule() )">
-              <span>{{nameService.getPouleName(game.getPoule())}}</span>
-            </button>
-          </td>
-          <td *ngIf="planningService.canCalculateStartDateTime(roundNumber)" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }" (click)="linkToGameEdit(tournament,game)">
-            <span *ngIf="!onSameDay()">{{game.getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit"})}}</span>
-            <span>{{game.getStartDateTime().toLocaleString("en", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}</span>
-          </td>
-          <td *ngIf="hasFields()" (click)="linkToGameEdit(tournament,game)" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">{{game.getField()?.getName()}}</td>
-          <td (click)="linkToGameEdit(tournament,game)" class="pouleplace text-right" [ngClass]="{'toGameEdit': userIsGameResultAdmin }">
-            <span class="{{getPoulePlaceClass(game.getHomePoulePlace())}}">{{nameService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</span>
-            <span *ngIf="game.getHomePoulePlace().getTeam() && game.getHomePoulePlace().getTeam().getAbbreviation()" class="d-inline d-sm-none">{{game.getHomePoulePlace().getTeam().getAbbreviation()}}</span>
-            <span *ngIf="game.getHomePoulePlace().getTeam() && game.getHomePoulePlace().getTeam().getAbbreviation()" class="flag-16 flag-{{game.getHomePoulePlace().getTeam().getAbbreviation()}}-16"></span>
-          </td>
-          <td (click)="linkToGameEdit(tournament,game)" class="score text-center" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
-            <span>{{getScore(game)}}</span>
-          </td>
-          <td (click)="linkToGameEdit(tournament,game)" class="pouleplace" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
-            <span *ngIf="game.getAwayPoulePlace().getTeam() && game.getAwayPoulePlace().getTeam().getAbbreviation()" class="flag-16 flag-{{game.getAwayPoulePlace().getTeam().getAbbreviation()}}-16"></span>
-            <span class="{{getPoulePlaceClass(game.getAwayPoulePlace())}}">{{nameService.getPoulePlaceName(game.getAwayPoulePlace(), true )}}</span>
-            <span *ngIf="game.getAwayPoulePlace().getTeam() && game.getAwayPoulePlace().getTeam().getAbbreviation()" class="d-inline d-sm-none">{{game.getAwayPoulePlace().getTeam().getAbbreviation()}}</span>
-          </td>
-          <td *ngIf="hasReferees()" class="d-none d-sm-table-cell" (click)="linkToGameEdit(tournament,game)" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">{{game.getReferee()?.getInitials()}}</td>
-        </tr>
+        <ng-template ngFor let-game [ngForOf]="getGamesHelper()">
+          <tr *ngIf="filterFavTeamIds(game)">
+            <td class="text-center">
+              <span *ngIf="!game.getPoule().needsRanking()" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }" (click)="linkToGameEdit(tournament,game)">{{nameService.getPouleName(game.getPoule())}}</span>
+              <button type="button" class="btn btn-sm btn-outline-secondary" *ngIf="game.getPoule().needsRanking()" placement="right" [ngbPopover]="popRanking"
+                triggers="manual" #p="ngbPopover" (click)="showRanking( p, game.getPoule() )">
+                <span>{{nameService.getPouleName(game.getPoule())}}</span>
+              </button>
+            </td>
+            <td *ngIf="planningService.canCalculateStartDateTime(roundNumber)" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }" (click)="linkToGameEdit(tournament,game)">
+              <span *ngIf="!onSameDay()">{{game.getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit"})}}</span>
+              <span>{{game.getStartDateTime().toLocaleString("en", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}</span>
+            </td>
+            <td *ngIf="hasFields()" (click)="linkToGameEdit(tournament,game)" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">{{game.getField()?.getName()}}</td>
+            <td (click)="linkToGameEdit(tournament,game)" class="pouleplace text-right" [ngClass]="{'toGameEdit': userIsGameResultAdmin, 'text-primary': isTeamFav(game.getHomePoulePlace().getTeam()) }">
+              <span class="{{getPoulePlaceClass(game.getHomePoulePlace())}}">{{nameService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</span>
+              <span *ngIf="game.getHomePoulePlace().getTeam() && game.getHomePoulePlace().getTeam().getAbbreviation()" class="d-inline d-sm-none">{{game.getHomePoulePlace().getTeam().getAbbreviation()}}</span>
+              <span *ngIf="game.getHomePoulePlace().getTeam() && game.getHomePoulePlace().getTeam().getAbbreviation()" class="flag-16 flag-{{game.getHomePoulePlace().getTeam().getAbbreviation()}}-16"></span>
+            </td>
+            <td (click)="linkToGameEdit(tournament,game)" class="score text-center" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
+              <span>{{getScore(game)}}</span>
+            </td>
+            <td (click)="linkToGameEdit(tournament,game)" class="pouleplace" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin, 'text-primary': isTeamFav(game.getAwayPoulePlace().getTeam()) }">
+              <span *ngIf="game.getAwayPoulePlace().getTeam() && game.getAwayPoulePlace().getTeam().getAbbreviation()" class="flag-16 flag-{{game.getAwayPoulePlace().getTeam().getAbbreviation()}}-16"></span>
+              <span class="{{getPoulePlaceClass(game.getAwayPoulePlace())}}">{{nameService.getPoulePlaceName(game.getAwayPoulePlace(), true )}}</span>
+              <span *ngIf="game.getAwayPoulePlace().getTeam() && game.getAwayPoulePlace().getTeam().getAbbreviation()" class="d-inline d-sm-none">{{game.getAwayPoulePlace().getTeam().getAbbreviation()}}</span>
+            </td>
+            <td *ngIf="hasReferees()" class="d-none d-sm-table-cell" (click)="linkToGameEdit(tournament,game)" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">{{game.getReferee()?.getInitials()}}</td>
+          </tr>
+        </ng-template>
       </tbody>
     </table>
   </div>
@@ -89,10 +96,10 @@
             <ng-template ngFor let-poulePlaces [ngForOf]="getPoulePlacesByRank(selectedPouleForRanking)" let-i="index">
               <tr *ngFor="let poulePlace of poulePlaces">
                 <td class="rankingnr text-right">
-                  <i class="{{getQualificationClass(poulePlace)}}"></i>
+                  <i class="{{getQualificationClass(selectedPouleForRanking, i+1)}}"></i>
                   <span>{{i+1}}</span>
                 </td>
-                <td class="pouleplace">{{nameService.getPoulePlaceName(poulePlace, true)}}</td>
+                <td class="pouleplace" [ngClass]="{ 'text-primary': isTeamFav(poulePlace.getTeam()) }">{{nameService.getPoulePlaceName(poulePlace, true)}}</td>
                 <td class="text-right">{{ranking.getNrOfGamesWithState(poulePlace, poulePlace.getGames())}}</td>
                 <td class="text-right">{{ranking.getPoints(poulePlace, poulePlace.getGames())}}</td>
                 <td class="goaldiff">{{getGoalDifference(poulePlace, poulePlace.getGames())}}</td>

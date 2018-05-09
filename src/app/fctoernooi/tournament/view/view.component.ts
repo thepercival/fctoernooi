@@ -21,6 +21,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     private planningService: PlanningService;
     private timerSubscription: Subscription;
     private noRefresh = false;
+    private favTeamIds: number[];
     scrollToRoundNumber;
 
     constructor(
@@ -73,5 +74,24 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
 
     isAdmin(): boolean {
         return this.tournament.hasRole(this.authService.getLoggedInUserId(), TournamentRole.ADMIN);
+    }
+
+    getFavTeamIdsFromLocalStorage(): number[] {
+        if (this.favTeamIds === undefined) {
+            this.favTeamIds = this.getFavTeamIdsFromLocalStorageHelper();
+        }
+        return this.favTeamIds;
+    }
+
+    protected getFavTeamIdsFromLocalStorageHelper(): number[] {
+        const favTeamsAsString = localStorage.getItem('favoriteteams');
+        if (favTeamsAsString === null) {
+            return [];
+        }
+        const favTeams: {} = JSON.parse(favTeamsAsString);
+        if (favTeams[this.tournament.getId()] === undefined) {
+            return [];
+        }
+        return favTeams[this.tournament.getId()];
     }
 }

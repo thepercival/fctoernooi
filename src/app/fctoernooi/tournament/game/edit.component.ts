@@ -13,9 +13,11 @@ import {
     RoundConfigScore,
     StructureNameService,
     StructureRepository,
+    Team,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 
+import { IAlert } from '../../../app.definitions';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
 
@@ -28,9 +30,10 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     game: Game;
     planningService: PlanningService;
     model: any;
-    loading = false;
+    processing = true;
     error;
     errorHomeAwayScore;
+    alert: IAlert;
     returnUrl: string;
     returnUrlParam: number;
     returnUrlQueryParamKey: string;
@@ -91,6 +94,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             this.model.starttime = { hour: date.getHours(), minute: date.getMinutes() };
         }
         this.planningService = new PlanningService(this.structureService);
+        this.processing = false;
     }
 
     setHome(home) {
@@ -152,15 +156,19 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     save() {
+        this.processing = true;
+        this.setAlert('info', 'de wedstrijd wordt opgeslagen');
         let gameScore = this.game.getFinalScore();
         if (!gameScore) {
             gameScore = new GameScore(this.game);
         }
-        const checkQualifiers = this.model.played && (gameScore.getHome() !== this.model.home || gameScore.getAway() !== this.model.away);
+        const state = this.model.played === true ? Game.STATE_PLAYED : Game.STATE_CREATED;
+        let checkQualifiers = this.game.getState() !== state;
+        checkQualifiers = checkQualifiers || gameScore.getHome() !== this.model.home || gameScore.getAway() !== this.model.away;
         gameScore.setHome(this.model.home);
         gameScore.setAway(this.model.away);
         gameScore.setMoment(this.model.extratime === true ? Game.MOMENT_EXTRATIME : Game.MOMENT_FULLTIME);
-        const state = this.model.played === true ? Game.STATE_PLAYED : Game.STATE_CREATED;
+
         this.game.setState(state);
         if (this.planningService.canCalculateStartDateTime(this.game.getRound().getNumber())) {
             const startdate = new Date(
@@ -173,17 +181,23 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             this.game.setStartDateTime(startdate);
         }
 
-        this.loading = true;
         this.gameRepository.editObject(this.game, this.game.getPoule())
             .subscribe(
             /* happy path */ gameRes => {
                     this.game = gameRes;
                     if (checkQualifiers === false) {
-                        this.loading = false;
+                        this.processing = false;
                         this.navigateBack();
                         return;
                     }
-
+                    const currentQualifiedTeams: Team[] = [];
+                    this.game.getRound().getChildRounds().forEach(childRound => {
+                        childRound.getPoulePlaces().forEach(poulePlace => {
+                            if (poulePlace.getTeam() !== undefined) {
+                                currentQualifiedTeams.push(poulePlace.getTeam());
+                            }
+                        });
+                    });
                     const newQualifiers: INewQualifier[] = [];
                     this.game.getRound().getChildRounds().forEach(childRound => {
                         const qualService = new QualifyService(childRound);
@@ -191,8 +205,8 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
                             newQualifiers.push(newQualifier);
                         });
                     });
-
-                    if (newQualifiers.length > 0) {
+                    const newQualifiedTeams: Team[] = newQualifiers.map(qualifier => qualifier.team);
+                    if (this.qualifiersHaveChanged(currentQualifiedTeams, newQualifiedTeams)) {
                         const reposUpdates = [];
                         newQualifiers.forEach((newQualifier) => {
                             const poulePlace = newQualifier.poulePlace;
@@ -202,19 +216,40 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
 
                         forkJoin(reposUpdates).subscribe(results => {
                             this.navigateBack();
-                            this.loading = false;
+                            this.processing = false;
                         },
                             err => {
-                                this.loading = false;
+                                this.processing = false;
+                                this.setAlert('info', 'de wedstrijd is niet opgeslagen:' + err);
                             }
                         );
-                        return;
+                    } else {
+                        this.navigateBack();
                     }
-                    this.navigateBack();
                 },
-            /* error path */ e => { this.error = e; this.loading = false; },
-            /* onComplete */() => { if (checkQualifiers === false) { this.loading = false; } }
+            /* error path */ e => { this.setAlert('danger', 'de wedstrijd kan niet worden opgeslagen' + e); this.processing = false; },
+            /* onComplete */() => {
+                    if (checkQualifiers === false) {
+                        this.processing = false;
+                        this.setAlert('success', 'de wedstrijd is opgeslagen');
+                    }
+                }
             );
+    }
+
+    protected qualifiersHaveChanged(currentTeams: Team[], newTeams: Team[]): boolean {
+        if (currentTeams.length !== newTeams.length) {
+            return true;
+        }
+        return currentTeams.some(currentTeam => newTeams.find(newTeam => newTeam === currentTeam) === undefined);
+    }
+
+    protected setAlert(type: string, message: string) {
+        this.alert = { 'type': type, 'message': message };
+    }
+
+    protected resetAlert(): void {
+        this.alert = undefined;
     }
 
     equals(one: NgbDateStruct, two: NgbDateStruct) {
