@@ -15,6 +15,7 @@ import {
   StructureService,
 } from 'ngx-sport';
 
+import { IAlert } from '../../../app.definitions';
 import { AuthService } from '../../../auth/auth.service';
 import { Tournament } from '../../tournament';
 import { TournamentRepository } from '../repository';
@@ -27,8 +28,8 @@ import { TournamentRepository } from '../repository';
 })
 export class TournamentNewComponent implements OnInit {
   model: any;
-  loading = false;
-  error = '';
+  processing = true;
+  alert: IAlert;
   sportnames: string[];
   validations: any = {
     'minnrofcompetitors': Tournament.MINNROFCOMPETITORS,
@@ -60,13 +61,15 @@ export class TournamentNewComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.processing = false;
   }
 
   create() {
     if (this.model.nrofcompetitors < 3 || this.model.nrofcompetitors > 64) {
       return;
     }
-    this.loading = true;
+    this.processing = true;
+    this.setAlert('info', 'het toernooi wordt aangemaakt');
 
     const sportName = this.model.sportname !== '-1' ? this.model.sportname : this.model.sportnameother;
 
@@ -93,13 +96,12 @@ export class TournamentNewComponent implements OnInit {
         const field = new Field(competition, fieldNumber);
         field.setName(String(fieldNumber));
       }
-
       tournament = new Tournament(competition);
     }
 
     this.tournamentRepository.createObject(tournament)
       .subscribe(
-            /* happy path */ tournamentOut => {
+        /* happy path */ tournamentOut => {
           // setTimeout(3000);
           let structureService = new StructureService(
             tournamentOut.getCompetition(),
@@ -122,15 +124,28 @@ export class TournamentNewComponent implements OnInit {
                     /* happy path */ games => {
                       this.router.navigate(['/toernooi/home', tournamentOut.getId()]);
                     },
-                  /* error path */ e => { this.error = e; this.loading = false; }
+                  /* error path */ e => {
+                      this.setAlert('danger', 'de toernooi-planning kon niet worden aangemaakt: ' + e);
+                      this.processing = false;
+                    }
                   );
               },
-            /* error path */ e => { this.error = e; this.loading = false; }
+            /* error path */ e => {
+                this.setAlert('danger', 'de toernooi-structuur kon niet worden aangemaakt: ' + e);
+                this.processing = false;
+              }
             );
         },
-            /* error path */ e => { this.error = e; this.loading = false; },
-                  /* onComplete */() => this.loading = false
+            /* error path */ e => { this.setAlert('danger', 'het toernooi kon niet worden aangemaakt: ' + e); this.processing = false; }
       );
+  }
+
+  protected setAlert(type: string, message: string) {
+    this.alert = { 'type': type, 'message': message };
+  }
+
+  protected resetAlert(): void {
+    this.alert = undefined;
   }
 
   isLoggedIn() {

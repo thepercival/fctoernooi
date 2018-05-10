@@ -1,13 +1,14 @@
 <div class="container-fluid home">
   <div class="row justify-content-center">
     <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
-      <h1 style="margin-top:1em;">
-        <span class="float-left">nieuw toernooi</span>&nbsp;
-        <button [routerLink]="['']" type="button" class="btn btn-outline-secondary btn-sm">
-          <i class="fa fa-level-up fa-rotate-270"></i>
-        </button>
-      </h1>
-      <div style="clear: both"></div>
+      <div class="mb-4">
+        <h1>
+          nieuw toernooi
+          <button *ngIf="!processing" [routerLink]="['']" type="button" class="btn btn-outline-secondary btn-sm">
+            <i class="fa fa-level-up fa-rotate-270"></i>
+          </button>
+        </h1>
+      </div>
       <div *ngIf="!isLoggedIn()">
         <blockquote class="blockquote my-5">
           <p>Registreer je of log in om een toernooi aan te maken.</p>
@@ -19,7 +20,14 @@
             <i class="fa fa-sign-in"></i> inloggen</button>
         </div>
       </div>
-      <form *ngIf="isLoggedIn()" name="form" (ngSubmit)="create() && false" #f="ngForm" novalidate>
+      <div>
+        <h2 *ngIf="processing" align="center">
+          <i class="fa fa-spinner fa-spin fa-fw"></i>
+        </h2>
+      </div>
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="true" (close)="alert = undefined;">
+        {{ alert.message }}</ngb-alert>
+      <form *ngIf="!processing && isLoggedIn()" name="form" (ngSubmit)="create() && false" #f="ngForm" novalidate>
         <div class="row">
           <div class="form-group col-sm-12 col-md-8">
             <label for="name" class="col-form-label">naam</label>
@@ -78,10 +86,7 @@
         <div *ngIf="f.submitted && model.nrofcompetitors > validations.maxnrofcompetitors" class="alert alert-danger">het maximum aantal deelnemers is {{validations.maxnrofcompetitors}}</div>
         <div *ngIf="f.submitted && model.nroffields < validations.minnroffields" class="alert alert-danger">het minimum aantal velden is {{validations.minnroffields}}</div>
         <div *ngIf="f.submitted && model.nroffields > validations.maxnroffields" class="alert alert-danger">het maximum aantal velden is {{validations.maxnroffields}}</div>
-        <div *ngIf="error" class="alert alert-danger">{{error}}</div>
-        <button type="submit" [disabled]="!f.form.valid || loading" class="btn btn-outline-primary">maak toernooi
-          <i *ngIf="loading" class="fa fa-spinner fa-spin fa-fw"></i>
-        </button>
+        <button type="submit" [disabled]="!f.form.valid || processing" class="btn btn-outline-primary">maak toernooi</button>
       </form>
     </div>
   </div>

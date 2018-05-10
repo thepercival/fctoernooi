@@ -8,12 +8,12 @@ import {
     INewQualifier,
     League,
     PlanningService,
+    PoulePlace,
     PoulePlaceRepository,
     QualifyService,
     RoundConfigScore,
     StructureNameService,
     StructureRepository,
-    Team,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 
@@ -162,12 +162,16 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         if (!gameScore) {
             gameScore = new GameScore(this.game);
         }
+        const moment = this.model.extratime === true ? Game.MOMENT_EXTRATIME : Game.MOMENT_FULLTIME;
         const state = this.model.played === true ? Game.STATE_PLAYED : Game.STATE_CREATED;
-        let checkQualifiers = this.game.getState() !== state;
-        checkQualifiers = checkQualifiers || gameScore.getHome() !== this.model.home || gameScore.getAway() !== this.model.away;
+        const stateChanged = this.game.getState() !== state;
+        let scoreChanged = gameScore.getHome() !== this.model.home || gameScore.getAway() !== this.model.away;
+        scoreChanged = scoreChanged || gameScore.getMoment() !== moment;
+        const oldPouleState = this.game.getPoule().getState();
+        const oldRoundState = this.game.getRound().getState();
         gameScore.setHome(this.model.home);
         gameScore.setAway(this.model.away);
-        gameScore.setMoment(this.model.extratime === true ? Game.MOMENT_EXTRATIME : Game.MOMENT_FULLTIME);
+        gameScore.setMoment(moment);
 
         this.game.setState(state);
         if (this.planningService.canCalculateStartDateTime(this.game.getRound().getNumber())) {
@@ -185,33 +189,33 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             .subscribe(
             /* happy path */ gameRes => {
                     this.game = gameRes;
-                    if (checkQualifiers === false) {
+                    if (!stateChanged && !scoreChanged) {
                         this.processing = false;
+                        this.setAlert('success', 'de wedstrijd is opgeslagen');
                         this.navigateBack();
                         return;
                     }
-                    const currentQualifiedTeams: Team[] = [];
+
+                    const currentQualifiedPoulePlaces: PoulePlace[] = [];
                     this.game.getRound().getChildRounds().forEach(childRound => {
                         childRound.getPoulePlaces().forEach(poulePlace => {
-                            if (poulePlace.getTeam() !== undefined) {
-                                currentQualifiedTeams.push(poulePlace.getTeam());
-                            }
+                            currentQualifiedPoulePlaces.push(poulePlace);
                         });
                     });
                     const newQualifiers: INewQualifier[] = [];
                     this.game.getRound().getChildRounds().forEach(childRound => {
                         const qualService = new QualifyService(childRound);
-                        qualService.getNewQualifiers(this.game.getPoule()).forEach((newQualifier) => {
+                        const qualifyRuleParts = qualService.getRulePartsToProcess(this.game.getPoule(), oldPouleState, oldRoundState);
+                        qualService.getNewQualifiers(qualifyRuleParts).forEach((newQualifier) => {
                             newQualifiers.push(newQualifier);
                         });
                     });
-                    const newQualifiedTeams: Team[] = newQualifiers.map(qualifier => qualifier.team);
-                    if (this.qualifiersHaveChanged(currentQualifiedTeams, newQualifiedTeams)) {
+                    const changedPoulePlaces = this.setTeams(newQualifiers, currentQualifiedPoulePlaces);
+                    console.log(changedPoulePlaces);
+                    if (changedPoulePlaces.length > 0) {
                         const reposUpdates = [];
-                        newQualifiers.forEach((newQualifier) => {
-                            const poulePlace = newQualifier.poulePlace;
-                            poulePlace.setTeam(newQualifier.team);
-                            reposUpdates.push(this.poulePlaceRepository.editObject(poulePlace, poulePlace.getPoule()));
+                        changedPoulePlaces.forEach((changedPoulePlace) => {
+                            reposUpdates.push(this.poulePlaceRepository.editObject(changedPoulePlace, changedPoulePlace.getPoule()));
                         });
 
                         forkJoin(reposUpdates).subscribe(results => {
@@ -228,20 +232,25 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
                     }
                 },
             /* error path */ e => { this.setAlert('danger', 'de wedstrijd kan niet worden opgeslagen' + e); this.processing = false; },
-            /* onComplete */() => {
-                    if (checkQualifiers === false) {
-                        this.processing = false;
-                        this.setAlert('success', 'de wedstrijd is opgeslagen');
-                    }
-                }
-            );
+            // /* onComplete */() => {
+            //     if (!stateChanged && !scoreChanged) {
+            //             this.processing = false;
+            //             this.setAlert('success', 'de wedstrijd is opgeslagen');
+            //         }
+            //     }
+        );
     }
 
-    protected qualifiersHaveChanged(currentTeams: Team[], newTeams: Team[]): boolean {
-        if (currentTeams.length !== newTeams.length) {
-            return true;
-        }
-        return currentTeams.some(currentTeam => newTeams.find(newTeam => newTeam === currentTeam) === undefined);
+    protected setTeams(newQualifiers: INewQualifier[], poulePlaces: PoulePlace[]): PoulePlace[] {
+        const changedPoulePlaces: PoulePlace[] = [];
+        newQualifiers.forEach(newQualifier => {
+            const poulePlace = poulePlaces.find(poulePlaceIt => newQualifier.poulePlace === poulePlaceIt);
+            if (poulePlace.getTeam() !== newQualifier.team) {
+                poulePlace.setTeam(newQualifier.team);
+                changedPoulePlaces.push(poulePlace);
+            }
+        });
+        return changedPoulePlaces;
     }
 
     protected setAlert(type: string, message: string) {
