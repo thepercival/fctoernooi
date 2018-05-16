@@ -9,6 +9,7 @@ import {
     RoundConfig,
     RoundConfigRepository,
     RoundConfigScore,
+    RoundConfigService,
     StructureNameService,
     StructureRepository,
 } from 'ngx-sport';
@@ -46,6 +47,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         maxMinutesPerGame: 60,
     };
     planningService: PlanningService;
+    private roundConfigService: RoundConfigService;
 
     constructor(
         route: ActivatedRoute,
@@ -58,6 +60,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     ) {
         super(route, router, tournamentRepository, sructureRepository);
         this.initRanges();
+        this.roundConfigService = new RoundConfigService();
     }
 
     private initRanges() {
@@ -202,6 +205,14 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     setEnableTime(enableTime) {
         if (enableTime !== true && enableTime !== false) {
             return;
+        }
+        if (this.modelConfig.getEnableTime() === false && enableTime === true) {
+            if (this.modelConfig.getMinutesPerGame() === 0) {
+                this.modelConfig.setMinutesPerGame(this.roundConfigService.getDefaultMinutesPerGame());
+            }
+            if (this.modelConfig.getMinutesInBetween() === 0) {
+                this.modelConfig.setMinutesInBetween(this.roundConfigService.getDefaultMinutesInBetween());
+            }
         }
         this.modelConfig.setEnableTime(enableTime);
         this.modelReschedule = true; // this.planningService.reschedule( this.selectedRoundNumber );

@@ -78,8 +78,13 @@
 </div>
 
 <ng-template #popRanking>
-  <div *ngIf="selectedPouleForRanking" class="card">
-    <div class="card-header" style="margin-top: -8px;">stand {{nameService.getPouleName(selectedPouleForRanking, true)}}</div>
+  <div *ngIf="selectedPouleForRanking" class="card border-0">
+    <div class="card-header d-flex justify-content-between px-0 pt-2 pb-1" style="margin-top: -8px;">
+      <span>stand {{nameService.getPouleName(selectedPouleForRanking, true)}}</span>
+      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="hideRanking()">
+        x
+      </button>
+    </div>
     <div class="card-body p-0">
       <div class="card-text">
         <table>
@@ -93,16 +98,16 @@
             </tr>
           </thead>
           <tbody>
-            <ng-template ngFor let-poulePlaces [ngForOf]="getPoulePlacesByRank(selectedPouleForRanking)" let-i="index">
-              <tr *ngFor="let poulePlace of poulePlaces">
+            <ng-template ngFor let-rankingItem [ngForOf]="getRankingItems(selectedPouleForRanking)">
+              <tr>
                 <td class="rankingnr text-right">
-                  <i class="{{getQualificationClass(selectedPouleForRanking, i+1)}}"></i>
-                  <span>{{i+1}}</span>
+                  <i class="{{getQualificationClass(selectedPouleForRanking, rankingItem.getRank())}}"></i>
+                  <span>{{rankingItem.getRank()}}</span>
                 </td>
-                <td class="pouleplace" [ngClass]="{ 'text-primary': isTeamFav(poulePlace.getTeam()) }">{{nameService.getPoulePlaceName(poulePlace, true)}}</td>
-                <td class="text-right">{{ranking.getNrOfGamesWithState(poulePlace, poulePlace.getGames())}}</td>
-                <td class="text-right">{{ranking.getPoints(poulePlace, poulePlace.getGames())}}</td>
-                <td class="goaldiff">{{getGoalDifference(poulePlace, poulePlace.getGames())}}</td>
+                <td class="pouleplace" [ngClass]="{ 'text-primary': isTeamFav(rankingItem.getPoulePlace().getTeam()) }">{{nameService.getPoulePlaceName(rankingItem.getPoulePlace(), true)}}</td>
+                <td class="text-right">{{ranking.getNrOfGamesWithState(rankingItem.getPoulePlace(), rankingItem.getPoulePlace().getGames())}}</td>
+                <td class="text-right">{{ranking.getPoints(rankingItem.getPoulePlace(), rankingItem.getPoulePlace().getGames())}}</td>
+                <td class="goaldiff">{{getGoalDifference(rankingItem.getPoulePlace(), rankingItem.getPoulePlace().getGames())}}</td>
               </tr>
             </ng-template>
           </tbody>

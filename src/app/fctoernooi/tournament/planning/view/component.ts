@@ -9,6 +9,7 @@ import {
   Poule,
   PoulePlace,
   Ranking,
+  RankingItem,
   Round,
   StructureNameService,
   StructureService,
@@ -165,6 +166,11 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
     return false;
   }
 
+  hideRanking() {
+    this.openPopovers.forEach(openPopover => openPopover.close());
+    this.openPopovers = [];
+  }
+
   getGamesHelper(): Game[] {
     const games: Game[] = [];
     const gamesByNumber = this.planningService.getGamesByNumber(this.roundNumber, Game.ORDER_RESOURCEBATCH);
@@ -192,8 +198,8 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
       && dateOne.getFullYear() === dateTwo.getFullYear());
   }
 
-  getPoulePlacesByRank(poule: Poule): PoulePlace[][] {
-    return this.ranking.getPoulePlacesByRank(poule.getPlaces(), poule.getGames());
+  getRankingItems(poule: Poule): RankingItem[] {
+    return this.ranking.getItems(poule.getPlaces(), poule.getGames());
   }
 
   protected resetAlert(): void {

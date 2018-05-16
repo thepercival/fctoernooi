@@ -4,6 +4,9 @@
       <div class="mb-4">
         <h1 *ngIf="tournament">
           {{tournament.getName()}}
+          <button [routerLink]="['']" type="button" class="btn btn-outline-secondary btn-sm">
+            <i class="fa fa-level-up fa-rotate-270"></i>
+          </button>
         </h1>
       </div>
       <app-tournament-planning-view *ngFor="let roundNumber of structureService.getRoundNumbers()" [tournament]="tournament" [roundNumber]="roundNumber"

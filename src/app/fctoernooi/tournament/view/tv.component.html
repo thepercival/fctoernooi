@@ -5,7 +5,7 @@
       <span class="smaller">{{tournament.getName()}}</span>
       <small *ngIf="screenDef">
         <span> - {{ screenDef.getDescription() }}</span>
-        <span [innerHTML]="nameService.getRoundsName( screenDef.roundNumber, planningService.getRoundsByNumber(screenDef.roundNumber) )"></span>
+        <span *ngIf="!isEndRankingScreenDef()" [innerHTML]="nameService.getRoundsName( screenDef.roundNumber, planningService.getRoundsByNumber(screenDef.roundNumber) )"></span>
       </small>
     </h1>
     <button [routerLink]="['/toernooi/view', tournament.getId()]" routerLinkActive="active" class="btn btn-outline-secondary"
@@ -15,45 +15,49 @@
     </button>
   </div>
   <!-- start schedule screen -->
-  <div *ngIf="isScheduledGamesScreenDef()" class="d-flex flex-row">
+  <div *ngIf="isGamesScreenDef()" class="d-flex flex-row">
     <table class="table tv-screen">
       <thead>
         <tr>
           <th title="poule">
             <i class="fa fa-list"></i>
           </th>
-          <th *ngIf="planningService.getRoundsByNumber(screenDef.roundNumber)[0]?.getConfig().getEnableTime()" title="starttijd">
+          <th *ngIf="isScheduled() && planningService.getRoundsByNumber(screenDef.roundNumber)[0]?.getConfig().getEnableTime()" title="starttijd">
             {{planningService.calculateStartDateTime(screenDef.roundNumber).toLocaleString("en", {"month":"short","day":"2-digit"})}}
           </th>
-          <th *ngIf="hasFields()" title="veld">
+          <th *ngIf="isScheduled() && hasFields()" title="veld">
             <i class="fi flaticon-soccer-field"></i>
           </th>
           <th class="text-right">thuis</th>
-          <th class="text-center"> - </th>
+          <th class="text-center">
+            <i class="fi flaticon-scoreboard"></i>
+          </th>
           <th class="text-left">uit</th>
-          <th *ngIf="hasReferees()" class="" title="scheidsrechter">
+          <th *ngIf="isScheduled() && hasReferees()" class="" title="scheidsrechter">
             <i class="fi flaticon-referee"></i>
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let game of screenDef.getScheduledGames()">
+        <tr *ngFor="let game of screenDef.getGames()">
           <td>
             <span>{{nameService.getPouleName(game.getPoule())}}</span>
           </td>
-          <td *ngIf="planningService.getRoundsByNumber(screenDef.roundNumber)[0]?.getConfig().getEnableTime() && planningService.canCalculateStartDateTime(screenDef.roundNumber)">
+          <td *ngIf="isScheduled() && planningService.getRoundsByNumber(screenDef.roundNumber)[0]?.getConfig().getEnableTime() && planningService.canCalculateStartDateTime(screenDef.roundNumber)">
             {{game.getStartDateTime().toLocaleString("en", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}
           </td>
-          <td *ngIf="hasFields()">{{game.getField()?.getName()}}</td>
+          <td *ngIf="isScheduled() && hasFields()">{{game.getField()?.getName()}}</td>
           <td class="text-right">{{nameService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</td>
-          <td class="text-center"> - </td>
+          <td class="text-center">
+            <span>{{getScore(game)}}</span>
+          </td>
           <td class="text-left">{{nameService.getPoulePlaceName(game.getAwayPoulePlace(), true )}}</td>
-          <td *ngIf="hasReferees()">{{game.getReferee()?.getInitials()}}</td>
+          <td *ngIf="isScheduled() && hasReferees()">{{game.getReferee()?.getInitials()}}</td>
         </tr>
       </tbody>
     </table>
   </div>
-  <!-- start ranking screen -->
+  <!-- start poule ranking screen -->
   <ng-template #pouleRanking let-poule>
     <table *ngIf="poule" class="table tv-screen">
       <thead>
@@ -66,23 +70,23 @@
         </tr>
       </thead>
       <tbody>
-        <ng-template ngFor let-poulePlaces [ngForOf]="getPoulePlacesByRank(poule)" let-i="index">
-          <tr *ngFor="let poulePlace of poulePlaces">
+        <ng-template ngFor let-rankingItem [ngForOf]="getRankingItems(poule)">
+          <tr>
             <td class="text-right">
-              <i class="{{getQualificationClass(poule, i+1)}}"></i>
-              <span>{{i+1}}</span>
+              <i class="{{getQualificationClass(poule, rankingItem.getRank())}}"></i>
+              <span>{{rankingItem.getRank()}}</span>
             </td>
-            <td class="pouleplace">{{nameService.getPoulePlaceName(poulePlace, true)}}</td>
-            <td class="text-right">{{ranking.getNrOfGamesWithState(poulePlace, poulePlace.getGames())}}</td>
-            <td class="text-right">{{ranking.getPoints(poulePlace, poulePlace.getGames())}}</td>
-            <td class="goaldiff text-center">{{getGoalDifference(poulePlace, poulePlace.getGames())}}</td>
+            <td class="pouleplace">{{nameService.getPoulePlaceName(rankingItem.getPoulePlace(), true)}}</td>
+            <td class="text-right">{{ranking.getNrOfGamesWithState(rankingItem.getPoulePlace(), rankingItem.getPoulePlace().getGames())}}</td>
+            <td class="text-right">{{ranking.getPoints(rankingItem.getPoulePlace(), rankingItem.getPoulePlace().getGames())}}</td>
+            <td class="goaldiff text-center">{{getGoalDifference(rankingItem.getPoulePlace(), rankingItem.getPoulePlace().getGames())}}</td>
           </tr>
         </ng-template>
       </tbody>
     </table>
   </ng-template>
 
-  <div *ngIf="isRankingScreenDef()" class="row no-gutters">
+  <div *ngIf="isPoulesRankingScreenDef()" class="row no-gutters">
     <div class="col-5">
       <ng-container *ngTemplateOutlet="pouleRanking;context:{$implicit: screenDef.getFirstPoule()}">
       </ng-container>
@@ -92,5 +96,39 @@
       <ng-container *ngTemplateOutlet="pouleRanking;context:{$implicit: screenDef.getLastPoule()}">
       </ng-container>
     </div>
+  </div>
+
+  <!-- start endranking screen -->
+  <ng-template #endRanking let-rankingItems>
+    <table class="table tv-screen">
+      <thead>
+        <tr>
+          <th class="text-right">pl</th>
+          <th>team</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-template ngFor let-rankingItem [ngForOf]="rankingItems">
+          <tr>
+            <td class="text-right">
+              <span>{{rankingItem.getRank()}}</span>
+            </td>
+            <td class="pouleplace">{{nameService.getPoulePlaceName(rankingItem.getPoulePlace(), true)}}</td>
+          </tr>
+        </ng-template>
+      </tbody>
+    </table>
+  </ng-template>
+
+  <div *ngIf="isEndRankingScreenDef()" class="row no-gutters">
+    <div class="col-12">
+      <ng-container *ngTemplateOutlet="endRanking;context:{$implicit: screenDef.getItems()}">
+      </ng-container>
+    </div>
+    <!-- <div class="col-2"></div>
+    <div class="col-5">
+      <ng-container *ngTemplateOutlet="endRanking;context:{$implicit: screenDef.getLastPoule()}">
+      </ng-container>
+    </div> -->
   </div>
 </div>

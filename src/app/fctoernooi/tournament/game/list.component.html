@@ -18,7 +18,8 @@
         </button>
       </div>
       <app-tournament-planning-view *ngFor="let roundNumber of structureService.getRoundNumbers()" [tournament]="tournament" [roundNumber]="roundNumber"
-        [structureService]="structureService" [planningService]="planningService" [parentReturnAction]="'/toernooi/games'"></app-tournament-planning-view>
+        [structureService]="structureService" [planningService]="planningService" [scroll]="roundNumber === scrollToRoundNumber"
+        [parentReturnAction]="'/toernooi/games'"></app-tournament-planning-view>
     </div>
   </div>
 </div>

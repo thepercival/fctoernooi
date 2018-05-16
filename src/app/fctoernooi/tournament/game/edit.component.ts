@@ -211,7 +211,6 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
                         });
                     });
                     const changedPoulePlaces = this.setTeams(newQualifiers, currentQualifiedPoulePlaces);
-                    console.log(changedPoulePlaces);
                     if (changedPoulePlaces.length > 0) {
                         const reposUpdates = [];
                         changedPoulePlaces.forEach((changedPoulePlace) => {
