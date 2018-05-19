@@ -172,9 +172,7 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
   }
 
   getGamesHelper(): Game[] {
-    const games: Game[] = [];
-    const gamesByNumber = this.planningService.getGamesByNumber(this.roundNumber, Game.ORDER_RESOURCEBATCH);
-    gamesByNumber.forEach(gamesIt => gamesIt.forEach(game => games.push(game)));
+    const games: Game[] = this.planningService.getGamesForRoundNumber(this.roundNumber, Game.ORDER_RESOURCEBATCH);
     this.sameDay = games.length > 1 ? this.isSameDay(games[0], games[games.length - 1]) : true;
     return games;
   }

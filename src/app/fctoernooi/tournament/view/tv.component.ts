@@ -143,9 +143,7 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
      */
     getScheduledGamesForRoundNumber(roundNumber: number): Game[] {
         const roundsByNumber = this.getRoundsByNumber(roundNumber);
-        let games: Game[] = [];
-        const gamesByNumber = this.planningService.getGamesByNumber(roundNumber, Game.ORDER_RESOURCEBATCH);
-        gamesByNumber.forEach(gamesIt => gamesIt.forEach(game => games.push(game)));
+        let games: Game[] = this.planningService.getGamesForRoundNumber(roundNumber, Game.ORDER_RESOURCEBATCH);
         games = games.filter(game => game.getState() !== Game.STATE_PLAYED);
         if (games.length > this.maxLines) {
             return games.splice(0, this.maxLines);
