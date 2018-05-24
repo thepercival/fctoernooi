@@ -22,7 +22,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     private timerSubscription: Subscription;
     private noRefresh = false;
     private favTeamIds: number[];
-    scrollToRoundNumber;
+    scrollToGameId: number;
 
     constructor(
         route: ActivatedRoute,
@@ -39,7 +39,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
         super.myNgOnInit(() => this.initTVViewLink());
 
         this.route.queryParamMap.subscribe(params => {
-            this.scrollToRoundNumber = +params.get('scrollToRoundNumber');
+            this.scrollToGameId = +params.get('scrollToGameId');
         });
 
         this.timerSubscription = timer(10000, 10000).subscribe(number => {

@@ -9,17 +9,17 @@ import { NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap/timepicker/timep
 import { NouisliderModule } from 'ng2-nouislider';
 import { ScrollToModule } from 'ng2-scroll-to-el';
 import {
-    GameRepository,
-    GameScoreRepository,
-    PlanningRepository,
-    PoulePlaceRepository,
-    PouleRepository,
-    QualifyRuleRepository,
-    RoundConfigRepository,
-    RoundConfigScoreRepository,
-    RoundRepository,
-    StructureRepository,
-    TeamRepository,
+  GameRepository,
+  GameScoreRepository,
+  PlanningRepository,
+  PoulePlaceRepository,
+  PouleRepository,
+  QualifyRuleRepository,
+  RoundConfigRepository,
+  RoundConfigScoreRepository,
+  RoundRepository,
+  StructureRepository,
+  TeamRepository,
 } from 'ngx-sport';
 
 import { IconManager } from '../common/iconmanager';
@@ -38,6 +38,8 @@ import { TournamentRefereeEditComponent } from './tournament/referee/edit.compon
 import { RefereeListComponent } from './tournament/referee/list.component';
 import { TournamentRoleRepository } from './tournament/role/repository';
 import { RoundsSettingsComponent } from './tournament/settings/rounds.component';
+import { TournamentSponsorEditComponent } from './tournament/sponsor/edit.component';
+import { SponsorListComponent } from './tournament/sponsor/list.component';
 import { TournamentStructureComponent } from './tournament/structure/main.component';
 import { TournamentStructureRoundComponent } from './tournament/structure/round.component';
 import { TournamentViewTvComponent } from './tournament/view/tv.component';
@@ -63,6 +65,7 @@ import { TournamentViewComponent } from './tournament/view/view.component';
     TournamentPlanningViewComponent,
     CompetitorListComponent,
     RefereeListComponent,
+    SponsorListComponent,
     TournamentCompetitorEditComponent,
     RoundsSettingsComponent,
     FieldListComponent,
@@ -70,6 +73,7 @@ import { TournamentViewComponent } from './tournament/view/view.component';
     TournamentViewTvComponent,
     TournamentGameEditComponent,
     TournamentRefereeEditComponent,
+    TournamentSponsorEditComponent,
     TournamentFilterComponent
   ],
   providers: [

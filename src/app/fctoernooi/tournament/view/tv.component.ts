@@ -21,6 +21,7 @@ import { NavBarTournamentTVViewLink } from '../../../nav/nav.component';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
 import { TournamentRole } from '../role';
+import { Sponsor } from '../sponsor';
 
 @Component({
     selector: 'app-tournament-view-tv',
@@ -51,35 +52,29 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
     }
 
     ngOnInit() {
-        super.myNgOnInit(() => this.postSetDataEventInit());
+        super.myNgOnInit(() => this.processScreens());
     }
 
-    postSetDataEventInit() {
-        this.postSetDataEvent();
-        this.showScreens(false);
-    }
-
-    postSetDataEvent() {
+    processScreens() {
         const link: NavBarTournamentTVViewLink = { showTVIcon: false, tournamentId: this.tournament.getId(), link: '/toernooi/view' };
         this.globalEventsManager.toggleTVIconInNavBar.emit(link);
         this.planningService = new PlanningService(this.structureService);
         this.allRoundsByNumber = this.structureService.getAllRoundsByNumber();
-    }
-
-    showScreens(getData: boolean) {
-        if (getData === true) {
-            this.setData(this.tournament.getId(), () => this.postSetDataEvent());
-        }
         const screenDefs = this.getScreenDefinitions();
-        this.screenDef = screenDefs.shift();
-
-        this.timerSubscription = timer(10000, 10000).subscribe(number => {
+        if (screenDefs.length === 0) {
+            return;
+        }
+        this.timerSubscription = timer(0, 10000).subscribe(number => {
             this.screenDef = screenDefs.shift();
             if (this.screenDef === undefined) {
                 this.timerSubscription.unsubscribe();
-                this.showScreens(true);
+                this.getDataAndProcessScreens();
             }
         });
+    }
+
+    getDataAndProcessScreens() {
+        this.setData(this.tournament.getId(), () => this.processScreens());
     }
 
     getRoundsByNumber(roundNumber: number): Round[] {
@@ -113,8 +108,23 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         if (previousPlayedRoundNumber !== undefined) {
             screenDefs = screenDefs.concat(this.getScreenDefinitionsForResultsAndRanking(previousPlayedRoundNumber));
         }
+        if (this.tournament.getSponsors().length > 0) {
+            screenDefs = screenDefs.concat(this.getScreenDefinitionsForSponsors(previousPlayedRoundNumber));
+        }
 
         return screenDefs;
+    }
+
+    getFontSizePercentage(nrOfSponsors: number) {
+        const fontSizePerc = (8 / nrOfSponsors) * 100;
+        if (fontSizePerc > 150) {
+            return 150;
+        }
+        return fontSizePerc;
+    }
+
+    aSponsorHasUrl(sponsors: Sponsor[]): boolean {
+        return sponsors.some(sponsor => sponsor.getUrl() !== undefined && sponsor.getUrl().length > 0);
     }
 
     /**
@@ -210,11 +220,21 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         return screenDefs;
     }
 
+    getScreenDefinitionsForSponsors(roundNumber: number): ScreenDefinition[] {
+        const screenDefs: ScreenDefinition[] = [];
+        const sponsors = this.tournament.getSponsors().slice();
+        while (sponsors.length > 0) {
+            screenDefs.push(new SponsorScreenDefinition(roundNumber, sponsors.splice(0, this.maxLines)));
+        }
+        return screenDefs;
+    }
+
     getScreenDefinitionsForEndRanking(roundNumber: number): ScreenDefinition[] {
         const screenDefs: ScreenDefinition[] = [];
         const rankingItems = this.getEndRankingItems(this.structureService.getFirstRound());
-        // while (poulePlaces.length > 0) { split in maxLines
-        screenDefs.push(new EndRankingScreenDefinition(roundNumber, rankingItems));
+        while (rankingItems.length > 0) {
+            screenDefs.push(new EndRankingScreenDefinition(roundNumber, rankingItems.splice(0, this.maxLines)));
+        }
         return screenDefs;
     }
 
@@ -302,6 +322,10 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
 
     isGamesScreenDef(): boolean {
         return this.screenDef instanceof GamesScreenDefinition;
+    }
+
+    isSponsorScreenDef(): boolean {
+        return this.screenDef instanceof SponsorScreenDefinition;
     }
 
     isScheduled(): boolean {
@@ -456,5 +480,22 @@ export class PlayedGamesScreenDefinition extends GamesScreenDefinition implement
 
     getDescription() {
         return 'uitslagen';
+    }
+}
+
+export class SponsorScreenDefinition extends ScreenDefinition {
+    private sponsors: Sponsor[]; // max 8
+
+    constructor(roundNumber: number, sponsors: Sponsor[]) {
+        super(roundNumber);
+        this.sponsors = sponsors;
+    }
+
+    getDescription() {
+        return 'sponsoren';
+    }
+
+    getSponsors() {
+        return this.sponsors;
     }
 }

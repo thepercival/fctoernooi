@@ -1,6 +1,6 @@
-import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { SportRepository } from 'ngx-sport';
 
 import { IUser, UserRepository } from '../../../user/repository';
@@ -24,7 +24,7 @@ export class TournamentRoleRepository extends SportRepository {
     }
 
     getUrlpostfix(): string {
-        return 'tournamentroles';
+        return 'roles';
     }
 
     // getObjects(): Observable<Tournament[]>
@@ -45,11 +45,10 @@ export class TournamentRoleRepository extends SportRepository {
     //         .catch( this.handleError );
     // }
 
-    jsonArrayToObject(jsonArray: any, tournament: Tournament): TournamentRole[] {
+    jsonArrayToObject(jsonArray: ITournamentRole[], tournament: Tournament): TournamentRole[] {
         const tournamentRoles: TournamentRole[] = [];
         for (const json of jsonArray) {
-            const object = this.jsonToObjectHelper(json, tournament);
-            tournamentRoles.push(object);
+            tournamentRoles.push(this.jsonToObjectHelper(json, tournament));
         }
         return tournamentRoles;
     }
@@ -72,29 +71,27 @@ export class TournamentRoleRepository extends SportRepository {
     //     return observable;
     // }
     //
-    jsonToObjectHelper(json: any, tournament: Tournament): TournamentRole {
+    jsonToObjectHelper(json: ITournamentRole, tournament: Tournament): TournamentRole {
         const user = this.userRepos.jsonToObjectHelper(json.user);
 
-        const tournamentRole = new TournamentRole(tournament, user, json.role);
+        const tournamentRole = new TournamentRole(tournament, user, json.value);
         tournamentRole.setId(json.id);
         return tournamentRole;
     }
 
-    objectsToJsonHelper(objects: any[]): any[] {
-        const jsonArray: any[] = [];
-        for (const object of objects) {
-            const json = this.objectToJsonHelper(object);
-            jsonArray.push(json);
+    objectsToJsonArray(roles: TournamentRole[]): any[] {
+        const jsonArray: ITournamentRole[] = [];
+        for (const role of roles) {
+            jsonArray.push(this.objectToJsonHelper(role));
         }
         return jsonArray;
     }
 
-    objectToJsonHelper(object: TournamentRole): any {
-        const json = {
-            'id': object.getId(),
-            // 'tournament': this.tournamentRepository.objectToJsonHelper(object.getTournament()),
-            'user': this.userRepos.objectToJsonHelper(object.getUser()),
-            'role': object.getRole()
+    objectToJsonHelper(role: TournamentRole): any {
+        const json: ITournamentRole = {
+            id: role.getId(),
+            user: this.userRepos.objectToJsonHelper(role.getUser()),
+            value: role.getValue()
         };
         return json;
     }
@@ -134,5 +131,5 @@ export class TournamentRoleRepository extends SportRepository {
 export interface ITournamentRole {
     id?: number;
     user: IUser;
-    role: string;
+    value: number;
 }

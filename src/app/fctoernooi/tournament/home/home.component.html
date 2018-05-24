@@ -43,16 +43,14 @@
       <div class="card-body">
         <h5 class="card-title">
           <i class="fi flaticon-referee"></i> scheidsen</h5>
-        <p class="card-text">
-          {{tournament.getCompetition().getReferees().length}} scheidsrechters</p>
+        <p class="card-text">{{getNrOfRefereesDescription()}}</p>
       </div>
     </div>
     <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/fields', tournament.getId()]">
       <div class="card-body">
         <h5 class="card-title">
           <i class="fi flaticon-soccer-field"></i> velden</h5>
-        <p class="card-text">
-          {{tournament.getCompetition().getFields().length}} velden</p>
+        <p class="card-text">{{getNrOfFieldsDescription()}}</p>
       </div>
     </div>
     <div class="card mt-3 mx-2">
@@ -63,6 +61,13 @@
           <button class="btn btn-secondary pointer" [routerLink]="['/toernooi/edit', tournament.getId()]">basis</button>
           <button class="btn btn-secondary pointer" [routerLink]="['/toernooi/roundssettings', tournament.getId()]">rondes</button>
         </div>
+      </div>
+    </div>
+    <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/sponsors', tournament.getId()]">
+      <div class="card-body">
+        <h5 class="card-title">
+          <i class="fa fa-money"></i> sponsoren</h5>
+        <p class="card-text">{{getNrOfSponsorsDescription()}}</p>
       </div>
     </div>
   </div>

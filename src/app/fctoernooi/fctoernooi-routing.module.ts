@@ -15,6 +15,8 @@ import { TournamentNewComponent } from './tournament/new/new.component';
 import { TournamentRefereeEditComponent } from './tournament/referee/edit.component';
 import { RefereeListComponent } from './tournament/referee/list.component';
 import { RoundsSettingsComponent } from './tournament/settings/rounds.component';
+import { TournamentSponsorEditComponent } from './tournament/sponsor/edit.component';
+import { SponsorListComponent } from './tournament/sponsor/list.component';
 import { TournamentStructureComponent } from './tournament/structure/main.component';
 import { TournamentViewTvComponent } from './tournament/view/tv.component';
 import { TournamentViewComponent } from './tournament/view/view.component';
@@ -34,6 +36,8 @@ const routes: Routes = [
   { path: 'fields/:id', component: FieldListComponent, canActivate: [AuthguardService] },
   { path: 'referees/:id', component: RefereeListComponent, canActivate: [AuthguardService] },
   { path: 'refereeedit/:id/:refereeId', component: TournamentRefereeEditComponent, canActivate: [AuthguardService] },
+  { path: 'sponsors/:id', component: SponsorListComponent, canActivate: [AuthguardService] },
+  { path: 'sponsoredit/:id/:sponsorId', component: TournamentSponsorEditComponent, canActivate: [AuthguardService] },
   { path: 'competitoredit/:id/:poulePlaceId', component: TournamentCompetitorEditComponent, canActivate: [AuthguardService] }
 ];
 

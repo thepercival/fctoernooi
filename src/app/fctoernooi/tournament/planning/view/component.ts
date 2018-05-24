@@ -33,7 +33,7 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
   @Input() planningService: PlanningService;
   @Input() parentReturnAction: string;
   @Input() favTeamIds: number[];
-  @Input() scroll: boolean;
+  @Input() scrollToGameId: number;
   @Output() popOverIsOpen = new EventEmitter<boolean>();
   alert: any;
   GameStatePlayed = Game.STATE_PLAYED;
@@ -60,8 +60,8 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
   }
 
   ngAfterViewInit() {
-    if (this.scroll) {
-      this.scrollService.scrollTo('#header-roundnumber-' + this.roundNumber);
+    if (this.scrollToGameId) {
+      this.scrollService.scrollTo('#game-scrollposition-' + this.scrollToGameId);
     }
   }
 

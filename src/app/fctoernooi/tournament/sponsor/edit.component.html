@@ -1,0 +1,53 @@
+<div class="container-fluid home">
+  <div class="row justify-content-center">
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+      <div class="mb-4">
+        <h1 *ngIf="tournament">
+          {{tournament.getName()}}
+          <button *ngIf="!processing" (click)="navigateBack()" type="button" class="btn btn-outline-secondary btn-sm">
+            <i class="fa fa-level-up fa-rotate-270"></i>
+          </button>
+        </h1>
+      </div>
+      <div>
+        <h2>
+          <i class="fa fa-money"></i> sponsor
+        </h2>
+        <h2 *ngIf="processing" align="center">
+          <i class="fa fa-spinner fa-spin fa-fw"></i>
+        </h2>
+      </div>
+      <form *ngIf="!processing" name="form" (ngSubmit)="save() && false" [formGroup]="customForm" novalidate>
+        <div class="form-group row">
+          <div class="col-3">
+            <label for="name" class="col-form-label">naam</label>
+          </div>
+          <div class="col-9">
+            <input class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.name.invalid, 'is-valid': customForm.controls.name.valid }"
+              type="text" name="name" id="name" [formControl]="customForm.controls.name" maxlength="{{validations.maxlengthname}}"
+              placeholder="max. {{validations.maxlengthname}} karakters" autofocus>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-3">
+            <label for="name" class="col-form-label">url</label>
+          </div>
+          <div class="col-9">
+            <input class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.url.invalid, 'is-valid': customForm.controls.url.valid }"
+              type="text" name="url" id="url" [formControl]="customForm.controls.url" maxlength="{{validations.maxlengthurl}}"
+              placeholder="max. {{validations.maxlengthurl}} karakters">
+          </div>
+        </div>
+        <ngb-alert *ngIf="alert" [type]="alert.type" style="width:100%;" [dismissible]="true" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
+        <div class="form-group row justify-content-end">
+          <div class="col-9">
+            <button [disabled]="customForm.invalid" type="submit" class="btn btn-outline-primary">
+              <i class="fi flaticon-sponsor" title="sponsor"></i>
+              <span>{{sponsorId > 0 ? 'wijzigen' : 'toevoegen'}}</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

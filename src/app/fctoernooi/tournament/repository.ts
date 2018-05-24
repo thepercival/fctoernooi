@@ -9,6 +9,7 @@ import { map } from 'rxjs/operators/map';
 
 import { Tournament } from '../tournament';
 import { ITournamentRole, TournamentRoleRepository } from './role/repository';
+import { ISponsor, SponsorRepository } from './sponsor/repository';
 
 /**
  * Created by coen on 1-10-17.
@@ -18,13 +19,13 @@ export class TournamentRepository extends SportRepository {
 
     private url: string;
     private csRepository: CompetitionRepository;
-    private tournamentRoleRepository: TournamentRoleRepository;
     private ownCache: Tournament[] = [];
 
     constructor(
         private http: HttpClient,
         csRepository: CompetitionRepository,
-        tournamentRoleRepository: TournamentRoleRepository,
+        private tournamentRoleRepository: TournamentRoleRepository,
+        private sponsorRepository: SponsorRepository,
         router: Router) {
         super(router);
         this.csRepository = csRepository;
@@ -133,16 +134,18 @@ export class TournamentRepository extends SportRepository {
         const competition = this.csRepository.jsonToObjectHelper(json.competition);
         const tournament = new Tournament(competition);
         const roles = this.tournamentRoleRepository.jsonArrayToObject(json.roles, tournament);
+        this.sponsorRepository.jsonArrayToObject(json.sponsors, tournament);
         tournament.setRoles(roles);
         tournament.setId(json.id);
         return tournament;
     }
 
-    objectToJsonHelper(object: Tournament): ITournament {
+    objectToJsonHelper(tournament: Tournament): ITournament {
         return {
-            id: object.getId(),
-            competition: this.csRepository.objectToJsonHelper(object.getCompetition()),
-            roles: this.tournamentRoleRepository.objectsToJsonHelper(object.getRoles())
+            id: tournament.getId(),
+            competition: this.csRepository.objectToJsonHelper(tournament.getCompetition()),
+            roles: this.tournamentRoleRepository.objectsToJsonArray(tournament.getRoles()),
+            sponsors: this.sponsorRepository.objectsToJsonArray(tournament.getSponsors()),
         };
     }
 }
@@ -151,4 +154,5 @@ export interface ITournament {
     id?: number;
     competition: ICompetition;
     roles: ITournamentRole[];
+    sponsors: ISponsor[];
 }

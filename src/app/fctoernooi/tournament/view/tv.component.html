@@ -1,12 +1,15 @@
 <div *ngIf="tournament && structureService" class="container-fluid px-0">
-  <div class="d-flex justify-content-between align-items-center">
+  <div class="d-flex justify-content-between align-items-center mb-5">
     <h1 *ngIf="tournament">
       <i class="smaller {{iconManager.getIconClass(tournament.getCompetition().getLeague().getSport())}}"></i>
       <span class="smaller">{{tournament.getName()}}</span>
       <small *ngIf="screenDef">
         <span> - {{ screenDef.getDescription() }}</span>
-        <span *ngIf="!isEndRankingScreenDef()" [innerHTML]="nameService.getRoundsName( screenDef.roundNumber, planningService.getRoundsByNumber(screenDef.roundNumber) )"></span>
+        <span *ngIf="!isEndRankingScreenDef() && !isSponsorScreenDef" [innerHTML]="nameService.getRoundsName( screenDef.roundNumber, planningService.getRoundsByNumber(screenDef.roundNumber) )"></span>
       </small>
+    </h1>
+    <h1>
+      <span class="smaller text-secondary">https://www.fctoernooi.nl/toernooi/view/{{tournament.getId()}}</span>
     </h1>
     <button [routerLink]="['/toernooi/view', tournament.getId()]" routerLinkActive="active" class="btn btn-outline-secondary"
       type="button" style="cursor:pointer;">
@@ -131,4 +134,20 @@
       </ng-container>
     </div> -->
   </div>
-</div>
+
+  <div *ngIf="isSponsorScreenDef()">
+    <table class="table tv-screen">
+      <tbody>
+        <tr *ngFor="let sponsor of screenDef.getSponsors(); let first = first;" [ngStyle]="{ 'font-size': (getFontSizePercentage(screenDef.getSponsors().length)) + '%' }">
+          <td [ngClass]="{ 'firstrow': first, 'text-right': aSponsorHasUrl(screenDef.getSponsors()), 'text-center': !aSponsorHasUrl(screenDef.getSponsors()) }">
+            <span>{{sponsor.getName()}}</span>
+          </td>
+          <td *ngIf="aSponsorHasUrl(screenDef.getSponsors())" [ngClass]="{ 'firstrow': first }">
+            <span *ngIf="sponsor.getUrl() !== undefined && sponsor.getUrl().length > 0" class="pl-5">
+              {{sponsor.getUrl()}}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

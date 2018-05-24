@@ -26,6 +26,7 @@ import { GlobalEventsManager } from './common/eventmanager';
 import { IconManager } from './common/iconmanager';
 import { TournamentRepository } from './fctoernooi/tournament/repository';
 import { TournamentRoleRepository } from './fctoernooi/tournament/role/repository';
+import { SponsorRepository } from './fctoernooi/tournament/sponsor/repository';
 import { FooterComponent } from './footer/footer.component';
 import { HomeComponent } from './home/home.component';
 import { NavComponent } from './nav/nav.component';
@@ -57,6 +58,7 @@ import { UserModule } from './user/user.module';
     AssociationRepository,
     LeagueRepository,
     SeasonRepository,
+    SponsorRepository,
     FieldRepository,
     RefereeRepository,
     GlobalEventsManager,

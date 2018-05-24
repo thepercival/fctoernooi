@@ -84,7 +84,6 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     this.refereeRepository.removeObject(referee, this.structureService.getCompetition())
       .subscribe(
             /* happy path */ refereeRes => {
-
           const index = this.referees.indexOf(referee);
           if (index > -1) {
             this.referees.splice(index, 1);
@@ -101,7 +100,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
             /* onComplete */() => this.processing = false
             );
         },
-            /* error path */ e => { this.setAlert('danger', 'X' + e); this.processing = false; },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
     );
   }
 

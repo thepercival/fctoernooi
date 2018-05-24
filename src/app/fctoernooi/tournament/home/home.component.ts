@@ -37,6 +37,36 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
         this.processing = false;
     }
 
+    getNrOfFieldsDescription() {
+        const nrOfFields = this.tournament.getCompetition().getFields().length;
+        if (nrOfFields === 0) {
+            return 'geen velden';
+        } else if (nrOfFields === 1) {
+            return '1 veld';
+        }
+        return nrOfFields + ' velden';
+    }
+
+    getNrOfRefereesDescription() {
+        const nrOfReferees = this.tournament.getCompetition().getReferees().length;
+        if (nrOfReferees === 0) {
+            return 'geen scheidsrechters';
+        } else if (nrOfReferees === 1) {
+            return '1 scheidsrechter';
+        }
+        return nrOfReferees + ' scheidsrechters';
+    }
+
+    getNrOfSponsorsDescription() {
+        const nrOfSponsors = this.tournament.getSponsors().length;
+        if (nrOfSponsors === 0) {
+            return 'geen sponsors';
+        } else if (nrOfSponsors === 1) {
+            return '1 sponsor';
+        }
+        return nrOfSponsors + ' sponsors';
+    }
+
     isAdmin(): boolean {
         return this.tournament.hasRole(this.authService.getLoggedInUserId(), TournamentRole.ADMIN);
     }

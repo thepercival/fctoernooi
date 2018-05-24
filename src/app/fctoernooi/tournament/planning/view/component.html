@@ -1,6 +1,6 @@
 <div *ngIf="tournament && haveMultiplePoulePlaces(roundsByNumber)">
   <div class="d-flex justify-content-between mt-3">
-    <h2 id="header-roundnumber-{{roundNumber}}">
+    <h2>
       <span [innerHTML]="nameService.getRoundsName( roundNumber, roundsByNumber )"></span>
 
       <!-- <ng-template *ngIf="nameService.roundsHaveSameName( roundsByNumber )">
@@ -43,7 +43,7 @@
       </thead>
       <tbody>
         <ng-template ngFor let-game [ngForOf]="getGamesHelper()">
-          <tr *ngIf="filterFavTeamIds(game)">
+          <tr *ngIf="filterFavTeamIds(game)" id="game-scrollposition-{{game.getId()}}">
             <td class="text-center">
               <span *ngIf="!game.getPoule().needsRanking()" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }" (click)="linkToGameEdit(tournament,game)">{{nameService.getPouleName(game.getPoule())}}</span>
               <button type="button" class="btn btn-sm btn-outline-secondary" *ngIf="game.getPoule().needsRanking()" placement="right" [ngbPopover]="popRanking"

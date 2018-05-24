@@ -1,9 +1,9 @@
+import { User } from '../../user/user';
+import { Tournament } from '../tournament';
+
 /**
  * Created by coen on 9-10-17.
  */
-
-import { Tournament } from '../tournament';
-import { User } from '../../user/user';
 
 export class TournamentRole {
     static readonly ADMIN = 1;
@@ -15,13 +15,13 @@ export class TournamentRole {
     protected id: number;
     protected tournament: Tournament;
     protected user: User;
-    protected role: number;
+    protected value: number;
 
     // constructor
-    constructor( tournament: Tournament, user: User, role: number ) {
+    constructor(tournament: Tournament, user: User, value: number) {
         this.setTournament(tournament);
         this.setUser(user);
-        this.setRole(role);
+        this.setValue(value);
     }
 
     getId(): number {
@@ -48,11 +48,11 @@ export class TournamentRole {
         this.user = user;
     }
 
-    getRole(): number {
-        return this.role;
+    getValue(): number {
+        return this.value;
     }
 
-    setRole(role: number): void {
-        this.role = role;
+    setValue(value: number): void {
+        this.value = value;
     }
 }

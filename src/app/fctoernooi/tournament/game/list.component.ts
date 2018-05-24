@@ -15,7 +15,7 @@ export class GameListComponent extends TournamentComponent implements OnInit {
   planningService: PlanningService;
   showPrintBtn: boolean;
   noRefresh = false;
-  scrollToRoundNumber;
+  scrollToGameId: number;
 
   constructor(
     route: ActivatedRoute,
@@ -28,7 +28,7 @@ export class GameListComponent extends TournamentComponent implements OnInit {
 
   ngOnInit() {
     this.route.queryParamMap.subscribe(params => {
-      this.scrollToRoundNumber = +params.get('scrollToRoundNumber');
+      this.scrollToGameId = +params.get('scrollToGameId');
     });
     super.myNgOnInit(() => this.setPlanningService());
     this.showPrintBtn = true;

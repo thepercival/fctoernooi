@@ -11,41 +11,43 @@
       </div>
       <div>
         <h2>
-          <i class="fi flaticon-referee"></i> scheidsrechters
+          <i class="fa fa-money"></i> sponsoren
         </h2>
       </div>
       <div class="d-flex justify-content-center">
-        <ngb-alert *ngIf="alert" [type]="alert.type" style="width:100%;" [dismissible]="true" (close)="alert = undefined;">
-          <i *ngIf="processing" class="fa fa-spinner fa-spin"></i> {{ alert.message }}</ngb-alert>
+        <h2 *ngIf="processing" align="center">
+          <i class="fa fa-spinner fa-spin fa-fw"></i>
+        </h2>
       </div>
-      <table class="table">
+      <ngb-alert *ngIf="alert" [type]="alert.type" style="width:100%;" [dismissible]="true" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
+      <table *ngIf="!processing" class="table">
         <thead>
           <tr>
             <th></th>
-            <th>initialen</th>
-            <th class="d-none d-sm-table-cell">naam</th>
+            <th>name</th>
+            <th class="d-none d-sm-table-cell">url</th>
             <th style="text-align: right;">
-              <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" (click)="addReferee()" [disabled]="processing">
+              <button type="button" class="btn btn-sm btn-outline-primary" (click)="addSponsor()">
                 <i class="fa fa-plus"></i>
               </button>
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let referee of referees; let last = last;">
+          <tr *ngFor="let sponsor of sponsors; let last = last;">
             <td>
-              <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing" (click)="editReferee(referee)">
+              <button type="button" class="btn btn-sm btn-outline-primary" (click)="editSponsor(sponsor)">
                 <span class="fa fa-pencil"></span>
               </button>
             </td>
             <td>
-              <span>{{referee.getInitials()}}</span>
+              <span>{{sponsor.getName()}}</span>
             </td>
             <td class="d-none d-sm-table-cell">
-              <span>{{referee.getName()}}</span>
+              <span>{{sponsor.getUrl()}}</span>
             </td>
             <td style="text-align: right;">
-              <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing" (click)="removeReferee(referee);">
+              <button type="button" class="btn btn-sm btn-outline-primary" (click)="removeSponsor(sponsor);">
                 <span class="fa fa-remove"></span>
               </button>
             </td>

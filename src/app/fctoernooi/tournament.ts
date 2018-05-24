@@ -1,6 +1,7 @@
 import { Competition } from 'ngx-sport';
 
 import { TournamentRole } from './tournament/role';
+import { Sponsor } from './tournament/sponsor';
 
 /**
  * Created by coen on 9-10-17.
@@ -13,6 +14,7 @@ export class Tournament {
     protected id: number;
     protected competition: Competition;
     protected roles: TournamentRole[] = [];
+    protected sponsors: Sponsor[] = [];
 
     // constructor
     constructor(competition: Competition) {
@@ -43,13 +45,21 @@ export class Tournament {
         this.roles = roles;
     }
 
-    hasRole(userId: number, role: number) {
+    hasRole(userId: number, roleValue: number) {
         return (this.getRoles().find(function (roleIt: TournamentRole) {
-            return (roleIt.getUser().getId() === userId && roleIt.getRole() === TournamentRole.ADMIN);
+            return (roleIt.getUser().getId() === userId && roleIt.getValue() === roleValue);
         }) !== undefined);
     }
 
     getName(): string {
         return this.getCompetition().getLeague().getName();
+    }
+
+    getSponsors(): Sponsor[] {
+        return this.sponsors;
+    }
+
+    setSponsors(sponsors: Sponsor[]): void {
+        this.sponsors = sponsors;
     }
 }
