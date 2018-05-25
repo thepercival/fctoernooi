@@ -1,10 +1,9 @@
-import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { SportRepository } from 'ngx-sport';
-import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators/map';
-import { catchError } from 'rxjs/operators/catchError';
+import { Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 import { User } from './user';
 
@@ -23,7 +22,7 @@ export class UserRepository extends SportRepository {
   }
 
   getObjects(): Observable<User[]> {
-    return this.http.get<Array<IUser>>(this.url, { headers: super.getHeaders() }).pipe(
+    return this.http.get<Array<IUser>>(this.url, this.getOptions()).pipe(
       map((res: IUser[]) => {
         return this.jsonArrayToObject(res);
       }),
@@ -40,10 +39,18 @@ export class UserRepository extends SportRepository {
   }
 
   createObject(jsonObject: any): Observable<User> {
-    return this.http.post(this.url, jsonObject, { headers: super.getHeaders() }).pipe(
+    return this.http.post(this.url, jsonObject, this.getOptions()).pipe(
       map((res: IUser) => this.jsonToObjectHelper(res)),
       catchError((err) => this.handleError(err))
     );
+  }
+
+  protected getOptions(): { headers: HttpHeaders; params: HttpParams } {
+    const httpParams = new HttpParams();
+    return {
+      headers: super.getHeaders(),
+      params: httpParams
+    };
   }
 
   jsonArrayToObject(jsonArray: IUser[]): User[] {

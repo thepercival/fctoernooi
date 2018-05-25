@@ -1,12 +1,12 @@
-import 'rxjs/add/observable/throw';
+
+import {throwError as observableThrowError,  Observable } from 'rxjs';
+
 
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { SportRepository } from 'ngx-sport';
-import { Observable } from 'rxjs/Observable';
-import { catchError } from 'rxjs/operators/catchError';
-import { map } from 'rxjs/operators/map';
+import { catchError ,  map } from 'rxjs/operators';
 
 import { UserRepository } from '../user/repository';
 import { User } from '../user/user';
@@ -117,7 +117,7 @@ export class AuthService extends SportRepository {
     if (error.status === 401) {
       this.router.navigate(['/user/login']);
     }
-    return Observable.throw(errortext);
+    return observableThrowError(errortext);
   }
 }
 

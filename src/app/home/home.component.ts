@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-struct';
-import { timer } from 'rxjs/observable/timer';
-import { Subscription } from 'rxjs/Subscription';
+import { timer ,  Subscription } from 'rxjs';
 
 import { IAlert } from '../app.definitions';
 import { AuthService } from '../auth/auth.service';

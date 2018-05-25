@@ -2,9 +2,8 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { SportRepository } from 'ngx-sport';
-import { Observable } from 'rxjs/Observable';
-import { catchError } from 'rxjs/operators/catchError';
-import { map } from 'rxjs/operators/map';
+import { Observable } from 'rxjs';
+import { catchError ,  map } from 'rxjs/operators';
 
 import { Tournament } from '../../tournament';
 import { Sponsor } from '../sponsor';

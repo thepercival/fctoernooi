@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PoulePlace, PoulePlaceRepository, StructureNameService, StructureRepository, TeamRepository } from 'ngx-sport';
-import { Observable } from 'rxjs/Observable';
-import { forkJoin } from 'rxjs/observable/forkJoin';
+import { Observable ,  forkJoin } from 'rxjs';
 
 import { IAlert } from '../../../app.definitions';
 import { Tournament } from '../../tournament';

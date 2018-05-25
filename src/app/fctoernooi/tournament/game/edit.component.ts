@@ -15,7 +15,7 @@ import {
     StructureNameService,
     StructureRepository,
 } from 'ngx-sport';
-import { forkJoin } from 'rxjs/observable/forkJoin';
+import { forkJoin } from 'rxjs';
 
 import { IAlert } from '../../../app.definitions';
 import { TournamentComponent } from '../component';

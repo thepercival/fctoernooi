@@ -1,7 +1,7 @@
 import { OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Round, StructureRepository, StructureService } from 'ngx-sport';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import { Tournament } from '../tournament';
 import { TournamentRepository } from './repository';

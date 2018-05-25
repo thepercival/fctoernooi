@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlanningService, StructureRepository } from 'ngx-sport';
-import { timer } from 'rxjs/observable/timer';
-import { Subscription } from 'rxjs/Subscription';
+import { timer ,  Subscription } from 'rxjs';
 
 import { AuthService } from '../../../auth/auth.service';
 import { GlobalEventsManager } from '../../../common/eventmanager';
