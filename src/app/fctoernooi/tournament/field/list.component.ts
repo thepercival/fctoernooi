@@ -67,13 +67,15 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
     saveedit(fieldListItem: IFieldListItem) {
         if (fieldListItem.editable) {
             this.editField(fieldListItem);
+        } else {
+            this.resetAlert();
         }
         fieldListItem.editable = !fieldListItem.editable;
         this.disableEditButtons = fieldListItem.editable;
     }
 
     addField() {
-        this.setAlert('info', 'veld toevoegen..');
+        this.setAlert('info', 'het veld wordt toegevoegd');
         this.processing = true;
 
         const jsonField: IField = {
@@ -104,7 +106,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
     }
 
     removeField(fieldItem: IFieldListItem) {
-        this.setAlert('info', 'veld verwijderen..');
+        this.setAlert('info', 'het veld wordt verwijderd');
         this.processing = true;
 
         this.fieldRepository.removeObject(fieldItem.field, this.structureService.getCompetition())
@@ -133,13 +135,13 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
     }
 
     editField(fieldItem) {
-        this.setAlert('info', 'veldnaam wijzigen..');
+        this.setAlert('info', 'de veldnaam wordt gewijzigd');
         this.processing = true;
 
         this.fieldRepository.editObject(fieldItem.field, this.structureService.getCompetition())
             .subscribe(
             /* happy path */ fieldRes => {
-                    this.setAlert('info', 'veldnaam gewijzigd');
+                    this.setAlert('info', 'de veldnaam is gewijzigd');
                 },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
             /* onComplete */() => { this.processing = false; }

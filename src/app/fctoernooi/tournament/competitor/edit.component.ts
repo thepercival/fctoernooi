@@ -22,13 +22,12 @@ import { TournamentRepository } from '../repository';
     styleUrls: ['./edit.component.css']
 })
 export class TournamentCompetitorEditComponent extends TournamentComponent implements OnInit {
-    loading = false;
+    processing = true;
     returnUrl: string;
     returnUrlParam: number;
     // returnUrlQueryParamKey: string;
     // returnUrlQueryParamValue: string;
     public alert: IAlert;
-    public processing = true;
     customForm: FormGroup;
     poulePlace: PoulePlace;
 
@@ -82,18 +81,23 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
 
     private postInit(poulePlaceId: number) {
         if (poulePlaceId === undefined || poulePlaceId < 1) {
+            this.processing = false;
             return;
         }
         const poulePlaces = this.structureService.getFirstRound().getPoulePlaces();
         this.poulePlace = poulePlaces.find(poulePlace => poulePlaceId === poulePlace.getId());
         if (this.poulePlace === undefined) {
+            this.processing = false;
             return;
         }
         this.customForm.controls.name.setValue(this.poulePlace.getTeam() ? this.poulePlace.getTeam().getName() : undefined);
         this.customForm.controls.info.setValue(this.poulePlace.getTeam() ? this.poulePlace.getTeam().getInfo() : undefined);
+        this.processing = false;
     }
 
     save() {
+        this.processing = true;
+        this.setAlert('info', 'de deelnemer wordt opgeslagen');
         if (this.poulePlace.getTeam() !== undefined) {
             this.edit();
         } else {
@@ -102,8 +106,6 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
     }
 
     add() {
-        this.processing = true;
-
         const name = this.customForm.controls.name.value;
         const info = this.customForm.controls.info.value;
 
@@ -123,8 +125,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
             /* happy path */ teamRes => {
                     this.assignTeam(this.poulePlace, teamRes);
                 },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => this.processing = false
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
             );
     }
 
@@ -135,13 +136,11 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
                   /* happy path */ poulePlaceRes => {
                     this.navigateBack();
                 },
-                  /* error path */ e => { this.setAlert('danger', e); }
+                  /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
             );
     }
 
     edit() {
-        this.processing = true;
-
         if (this.isNameDuplicate(this.customForm.controls.name.value, this.poulePlace.getTeam().getId())) {
             this.setAlert('danger', 'de naam bestaat al voor dit toernooi');
             this.processing = false;
@@ -185,14 +184,6 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
             return (name === teamName && (teamId === undefined || poulePlaceIt.getTeam().getId() === undefined));
         }) !== undefined;
     }
-
-    // setInitials(initials) {
-    //     this.error = undefined;
-    //     if (initials.length < this.validations.minlengthinitials || initials.length > this.validations.maxlengthinfo) {
-    //         return;
-    //     }
-    //     this.model.initials = initials;
-    // }
 
     // setName(name) {
     //     this.error = undefined;

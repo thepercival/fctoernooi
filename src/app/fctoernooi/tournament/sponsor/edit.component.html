@@ -17,6 +17,7 @@
           <i class="fa fa-spinner fa-spin fa-fw"></i>
         </h2>
       </div>
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
       <form *ngIf="!processing" name="form" (ngSubmit)="save() && false" [formGroup]="customForm" novalidate>
         <div class="form-group row">
           <div class="col-3">
@@ -38,7 +39,6 @@
               placeholder="max. {{validations.maxlengthurl}} karakters">
           </div>
         </div>
-        <ngb-alert *ngIf="alert" [type]="alert.type" style="width:100%;" [dismissible]="true" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
         <div class="form-group row justify-content-end">
           <div class="col-9">
             <button [disabled]="customForm.invalid" type="submit" class="btn btn-outline-primary">

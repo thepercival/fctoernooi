@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PoulePlace, PoulePlaceRepository, StructureNameService, StructureRepository, TeamRepository } from 'ngx-sport';
-import { Observable ,  forkJoin } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 
 import { IAlert } from '../../../app.definitions';
 import { Tournament } from '../../tournament';
@@ -15,9 +15,8 @@ import { TournamentRepository } from '../repository';
 })
 export class CompetitorListComponent extends TournamentComponent implements OnInit {
   poulePlaces: PoulePlace[];
-  infoAlert = true;
   alert: IAlert;
-  processing = false;
+  processing = true;
   poulePlaceToSwap: PoulePlace;
 
   constructor(
@@ -39,6 +38,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   initPoulePlaces() {
     const round = this.structureService.getFirstRound();
     this.poulePlaces = round.getPoulePlaces();
+    this.processing = false;
   }
 
   isStarted() {
@@ -70,15 +70,18 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   swapTwo(poulePlaceToSwap: PoulePlace) {
+    this.resetAlert();
     if (this.poulePlaceToSwap === undefined) {
       this.poulePlaceToSwap = poulePlaceToSwap;
+      this.setAlert('info', 'selecteer tweede deelnemer om volgorde te wijzigen');
       return;
     }
     if (this.poulePlaceToSwap === poulePlaceToSwap) {
       this.poulePlaceToSwap = undefined;
       return;
     }
-
+    this.processing = true;
+    this.setAlert('info', 'volgorde wordt gewijzigd');
     const teamTmp = this.poulePlaceToSwap.getTeam();
     this.poulePlaceToSwap.setTeam(poulePlaceToSwap.getTeam());
     poulePlaceToSwap.setTeam(teamTmp);
@@ -91,6 +94,8 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   swapAll() {
+    this.processing = true;
+    this.setAlert('info', 'volgorde wordt willekeurig gewijzigd');
     const poulePlacesCopy = this.poulePlaces.slice();
     const teams = this.structureService.getFirstRound().getTeams();
     while (teams.length > 0) {
@@ -105,7 +110,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
 
   protected swapHelper(reposUpdates: Observable<PoulePlace>[]) {
     forkJoin(reposUpdates).subscribe(results => {
-      this.setAlert('info', 'volgorde teams gewijzigd');
+      this.setAlert('info', 'volgorde gewijzigd');
       this.poulePlaceToSwap = undefined;
       this.processing = false;
     },

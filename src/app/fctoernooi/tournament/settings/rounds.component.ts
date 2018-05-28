@@ -265,7 +265,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     }
 
     saveConfig() {
-        this.setAlert('info', 'instellingen opslaan..');
+        this.setAlert('info', 'instellingen worden opgeslagen');
         this.processing = true;
 
         const jsonConfig = this.roundConfigRepository.objectToJsonHelper(this.modelConfig);

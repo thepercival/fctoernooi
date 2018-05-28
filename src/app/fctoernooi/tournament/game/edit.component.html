@@ -12,7 +12,7 @@
           <i class="fa fa-spinner fa-spin fa-fw"></i>
         </h2>
       </div>
-      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="true" (close)="alert = undefined;">
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">
         {{ alert.message }}</ngb-alert>
       <form *ngIf="!processing" name="form" (ngSubmit)="save() && false" #f="ngForm" novalidate>
         <div class="form-group row">

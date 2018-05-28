@@ -30,6 +30,7 @@ export class TournamentNewComponent implements OnInit {
   model: any;
   processing = true;
   alert: IAlert;
+  minDateStruct: NgbDateStruct;
   sportnames: string[];
   validations: any = {
     'minnrofcompetitors': Tournament.MINNROFCOMPETITORS,
@@ -51,6 +52,8 @@ export class TournamentNewComponent implements OnInit {
   ) {
     const date = new Date();
     date.setTime(date.getTime() + (60 * 10 * 1000)); // 10 minutes
+    this.minDateStruct = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
+
     this.sportnames = SportConfig.getSports();
     this.model = {
       starttime: { hour: date.getHours(), minute: date.getMinutes() },

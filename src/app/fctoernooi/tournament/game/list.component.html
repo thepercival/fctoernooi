@@ -1,4 +1,4 @@
-<div *ngIf="tournament && structureService" class="container-fluid px-0">
+<div class="container-fluid px-0">
   <div class="row justify-content-around no-gutters">
     <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
       <div class="mb-4">
@@ -17,8 +17,15 @@
           <span class="fa fa-print"></span>
         </button>
       </div>
-      <app-tournament-planning-view *ngFor="let roundNumber of structureService.getRoundNumbers()" [tournament]="tournament" [roundNumber]="roundNumber"
-        [structureService]="structureService" [planningService]="planningService" [scrollToGameId]="scrollToGameId" [parentReturnAction]="'/toernooi/games'"></app-tournament-planning-view>
+      <div>
+        <h2 *ngIf="processing" align="center">
+          <i class="fa fa-spinner fa-spin fa-fw"></i>
+        </h2>
+      </div>
+      <div *ngIf="!processing">
+        <app-tournament-planning-view *ngFor="let roundNumber of structureService.getRoundNumbers()" [tournament]="tournament" [roundNumber]="roundNumber"
+          [structureService]="structureService" [planningService]="planningService" [scrollToGameId]="scrollToGameId" [parentReturnAction]="'/toernooi/games'"></app-tournament-planning-view>
+      </div>
     </div>
   </div>
 </div>

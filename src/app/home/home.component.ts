@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-struct';
-import { timer ,  Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 
 import { IAlert } from '../app.definitions';
 import { AuthService } from '../auth/auth.service';
@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   tournaments: Tournament[];
   alert: IAlert;
   isCollapsed = true;
-  loading = false;
+  processing = true;
   private timerSubscription: Subscription;
   minEndDate: NgbDateStruct;
   maxEndDate: NgbDateStruct;
@@ -46,23 +46,28 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   getTournaments() {
-    this.loading = true;
+    this.processing = true;
     this.tournamentRepos.getObjects(this.getDate(this.modelFilter.startDate), this.getDate(this.modelFilter.endDate))
       .subscribe(
                         /* happy path */ tournamentsRes => {
-        this.tournaments = tournamentsRes.sort((t1, t2) => {
-          if (t1.getCompetition().getStartDateTime() < t2.getCompetition().getStartDateTime()) {
-            return 1;
-          }
-          if (t1.getCompetition().getStartDateTime() > t2.getCompetition().getStartDateTime()) {
-            return -1;
-          }
-          return 0;
-        });
-      },
-                /* error path */ e => { this.alert = { type: 'danger', message: e }; this.loading = false; },
-                /* onComplete */() => this.loading = false
+          this.tournaments = tournamentsRes.sort((t1, t2) => {
+            if (t1.getCompetition().getStartDateTime() < t2.getCompetition().getStartDateTime()) {
+              return 1;
+            }
+            if (t1.getCompetition().getStartDateTime() > t2.getCompetition().getStartDateTime()) {
+              return -1;
+            }
+            return 0;
+          });
+          this.processing = false;
+        },
+        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+        /* onComplete */() => this.processing = false
       );
+  }
+
+  protected setAlert(type: string, message: string) {
+    this.alert = { 'type': type, 'message': message };
   }
 
   initFilterFields() {
@@ -128,6 +133,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.timerSubscription.unsubscribe();
+    if (this.timerSubscription !== undefined) {
+      this.timerSubscription.unsubscribe();
+    }
   }
 }

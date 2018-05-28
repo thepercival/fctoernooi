@@ -1,8 +1,8 @@
 <div class="container-fluid home">
-  <div *ngIf="poulePlace" class="row justify-content-center">
+  <div class="row justify-content-center">
     <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
       <div class="mb-4">
-        <h1 *ngIf="tournament">
+        <h1 *ngIf="!processing">
           {{tournament.getName()}}
           <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary btn-sm">
             <i class="fa fa-level-up fa-rotate-270"></i>
@@ -13,8 +13,12 @@
         <h2>
           <i class="fi flaticon-group"></i> deelnemer
         </h2>
+        <h2 *ngIf="processing" align="center">
+          <i class="fa fa-spinner fa-spin fa-fw"></i>
+        </h2>
       </div>
-      <form name="form" (ngSubmit)="save() && false" [formGroup]="customForm" novalidate>
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
+      <form *ngIf="!processing" name="form" (ngSubmit)="save() && false" [formGroup]="customForm" novalidate>
         <div class="form-group row">
           <div class="col-3">
             <label for="place" class="col-form-label">plek</label>
@@ -42,12 +46,10 @@
               name="info" id="info" [formControl]="customForm.controls.info" maxlength="{{validations.maxlengthinfo}}" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>
-        <ngb-alert *ngIf="alert" [type]="alert.type" style="width:100%;" [dismissible]="true" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
         <div class="form-group row justify-content-end">
           <div class="col-9">
             <button [disabled]="customForm.invalid" type="submit" class="btn btn-outline-primary">
               <i class="fi flaticon-group"></i> deelnemer opslaan
-              <i *ngIf="loading" class="fa fa-spinner fa-spin fa-fw"></i>
             </button>
           </div>
         </div>

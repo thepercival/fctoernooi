@@ -22,9 +22,7 @@ import { TournamentRepository } from '../repository';
   styleUrls: ['./main.component.css']
 })
 export class TournamentStructureComponent extends TournamentComponent implements OnInit {
-
   processing = true;
-  processed = false;
   changedRoundNumber;
   alert: IAlert;
   originalTeams: Team[];
@@ -103,10 +101,12 @@ export class TournamentStructureComponent extends TournamentComponent implements
       return;
     }
     this.changedRoundNumber = changedRoundNumber;
+    this.resetAlert();
   }
 
   saveStructure() {
     this.processing = true;
+    this.setAlert('info', 'wijzigingen worden opgeslagen');
 
     const firstRound = this.structureService.getFirstRound();
     this.processUnusedTeams(firstRound);
@@ -138,8 +138,8 @@ export class TournamentStructureComponent extends TournamentComponent implements
   completeSave(round: Round) {
     this.structureService = this.createStructureServiceCopy(round);
     this.changedRoundNumber = undefined;
-    this.processed = true;
     this.processing = false;
+    this.setAlert('info', 'wijzigingen opgeslagen');
   }
 
   protected setAlert(type: string, message: string) {

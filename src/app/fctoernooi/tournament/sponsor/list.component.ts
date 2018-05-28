@@ -71,7 +71,7 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
   }
 
   removeSponsor(sponsor: Sponsor) {
-    this.setAlert('info', 'sponsor verwijderen..');
+    this.setAlert('info', 'de sponsor wordt verwijderd');
     this.processing = true;
 
     this.sponsorRepository.removeObject(sponsor, this.tournament)
@@ -83,7 +83,7 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
           }
         },
         /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-        /* onComplete */() => { this.resetAlert(); this.processing = false; }
+        /* onComplete */() => { this.setAlert('info', 'de sponsor is verwijderd'); this.processing = false; }
       );
   }
 

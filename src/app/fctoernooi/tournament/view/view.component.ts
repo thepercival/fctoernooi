@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlanningService, StructureRepository } from 'ngx-sport';
-import { timer ,  Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 
 import { AuthService } from '../../../auth/auth.service';
 import { GlobalEventsManager } from '../../../common/eventmanager';
@@ -22,6 +22,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     private noRefresh = false;
     private favTeamIds: number[];
     scrollToGameId: number;
+    processing = true;
 
     constructor(
         route: ActivatedRoute,
@@ -41,9 +42,10 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
             this.scrollToGameId = +params.get('scrollToGameId');
         });
 
-        this.timerSubscription = timer(10000, 10000).subscribe(number => {
+        this.timerSubscription = timer(10000, 20000).subscribe(number => {
             if (this.noRefresh !== true) {
-                this.setData(this.tournament.getId());
+                this.processing = true;
+                this.setData(this.tournament.getId(), () => this.processing = false);
                 this.planningService = new PlanningService(this.structureService);
             }
         });
@@ -62,6 +64,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
         this.tvViewLinkSet = true;
 
         this.planningService = new PlanningService(this.structureService);
+        this.processing = false;
     }
 
     ngOnDestroy() {

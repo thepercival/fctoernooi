@@ -1,10 +1,13 @@
-<div class="container-fluid home">
-  <div class="row justify-content-center">
+<div class="">
+  <div class="row justify-content-center no-gutter">
     <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
       <h1 align="center">
         toernooien
       </h1>
-      <div class="d-flex justify-content-between">
+      <h2 *ngIf="processing" align="center">
+        <i class="fa fa-spinner fa-spin fa-fw"></i>
+      </h2>
+      <div *ngIf="!processing" class="d-flex justify-content-between">
         <!-- <button type="button" class="btn btn-sm-custom btn-outline-secondary" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
           aria-controls="collapseFilter">
           <i class="fa fa-filter"></i> filter</button> -->
@@ -35,13 +38,8 @@
           </div>
         </form>
       </div> -->
-      <p *ngIf="alert">
-        <ngb-alert [type]="alert.type" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
-      </p>
-      <h1 *ngIf="loading" align="center">
-        <i class="fa fa-spinner fa-spin fa-fw"></i>
-      </h1>
-      <table *ngIf="!loading" class="table">
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
+      <table *ngIf="!processing" class="table">
         <tbody>
           <tr *ngFor="let tournament of tournaments">
             <td class="toView" (click)="linkToView(tournament)">{{tournament.getCompetition().getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit","hour12":

@@ -8,15 +8,22 @@
     </h1>
   </div>
   <div>
-    <h2>
-      <i class="fi flaticon-structure"></i> structuur
-      <button *ngIf="!structureService?.getFirstRound().isStarted()" type="button" class="btn btn-outline-{{!processed && !changedRoundNumber ? 'primary' : (processing ? 'warning' : (isChanged ? 'danger' : 'success') ) }}"
-        [disabled]="processing || !changedRoundNumber" (click)="saveStructure();">
-        <span class="fa fa-{{processing ? 'spinner fa-spin' : (changedRoundNumber || !processed ? 'save' : 'check') }}"></span>
+    <div class="d-flex justify-content-between mb-1">
+      <h2>
+        <i class="fi flaticon-structure"></i> structuur
+      </h2>
+      <button *ngIf="!processing && !structureService?.getFirstRound().isStarted()" role="button" [disabled]="!changedRoundNumber"
+        (click)="saveStructure()" class="btn btn-outline-primary">
+        <span class="fa fa-save"></span> opslaan
       </button>
-    </h2>
+    </div>
+    <div>
+      <h2 *ngIf="processing" align="center">
+        <i class="fa fa-spinner fa-spin fa-fw"></i>
+      </h2>
+    </div>
   </div>
-  <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="true" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
+  <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
   <div *ngIf="!processing" class="row text-center">
     <app-tournament-structureround style="width: 100%;" [round]="structureService?.getFirstRound()" [structureService]="structureService"
       (roundChanged)="setChangedRoundNumber($event)"></app-tournament-structureround>

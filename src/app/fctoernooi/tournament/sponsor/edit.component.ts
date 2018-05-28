@@ -87,6 +87,8 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
     }
 
     save() {
+        this.processing = true;
+        this.setAlert('info', 'de sponsor wordt opgeslagen');
         if (this.sponsorId > 0) {
             this.edit();
         } else {
@@ -95,8 +97,6 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
     }
 
     add() {
-        this.processing = true;
-
         const name = this.customForm.controls.name.value;
         const url = this.customForm.controls.url.value;
 
@@ -116,8 +116,6 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
     }
 
     edit() {
-        this.processing = true;
-
         const name = this.customForm.controls.name.value;
         const url = this.customForm.controls.url.value;
 

@@ -25,7 +25,7 @@
           <i class="fa fa-spinner fa-spin fa-fw"></i>
         </h2>
       </div>
-      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="true" (close)="alert = undefined;">
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">
         {{ alert.message }}</ngb-alert>
       <form *ngIf="!processing && isLoggedIn()" name="form" (ngSubmit)="create() && false" #f="ngForm" novalidate>
         <div class="row">
@@ -68,7 +68,7 @@
             <label for="dp" class="col-form-label">startdatum</label>
             <div class="input-group input-group-date">
               <input class="form-control" placeholder="yyyy-mm-dd" id="dp" name="dp" [(ngModel)]="model.startdate" ngbDatepicker #d="ngbDatepicker"
-                required [dayTemplate]="t">
+                required [dayTemplate]="t" [minDate]="minDateStruct">
               <div class="input-group-append">
                 <span class="input-group-text" (click)="d.toggle()" style="cursor: pointer;">
                   <i class="fi flaticon-schedule text-white"></i>
@@ -92,8 +92,8 @@
   </div>
 </div>
 
-<ng-template #t let-date="date" let-focused="focused">
-  <span class="custom-day" [class.focused]="focused" [class.selected]="isSelected(date)" (mouseenter)="hoveredDate = date"
+<ng-template #t let-date="date" let-focused="focused" let-disabled="disabled">
+  <span class="custom-day" [class.focused]="focused" [class.selected]="isSelected(date)" [class.text-muted]="disabled" (mouseenter)="hoveredDate = date"
     (mouseleave)="hoveredDate = null">
     {{ date.day }}
   </span>

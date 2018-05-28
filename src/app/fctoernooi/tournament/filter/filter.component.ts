@@ -15,7 +15,6 @@ export class TournamentFilterComponent extends TournamentComponent implements On
     poulePlaces: PoulePlace[];
     infoAlert = true;
     alert: IAlert;
-    processing = false;
     poulePlaceToSwap: PoulePlace;
 
     constructor(
@@ -26,6 +25,7 @@ export class TournamentFilterComponent extends TournamentComponent implements On
         public nameService: StructureNameService
     ) {
         super(route, router, tournamentRepository, sructureRepository);
+        this.resetAlert();
     }
 
     ngOnInit() {
@@ -47,6 +47,7 @@ export class TournamentFilterComponent extends TournamentComponent implements On
     }
 
     toggleFavoriteTeams(team: Team) {
+        this.setAlert('info', 'het filter is bijgewerkt');
         const favTeams = this.getFavTeamsFromLocalStorage();
         if (favTeams[this.tournament.getId()] === undefined) {
             favTeams[this.tournament.getId()] = [];
@@ -69,13 +70,13 @@ export class TournamentFilterComponent extends TournamentComponent implements On
         return JSON.parse(favTeams);
     }
 
-    protected getFavTeamIdFromLocalStorage() {
+    /*protected getFavTeamIdFromLocalStorage() {
         const favTeams = localStorage.getItem('favoriteteams');
         if (favTeams === null) {
             return [];
         }
         return JSON.parse(favTeams);
-    }
+    }*/
 
     protected setAlert(type: string, message: string) {
         this.alert = { 'type': type, 'message': message };

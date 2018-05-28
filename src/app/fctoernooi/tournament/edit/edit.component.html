@@ -13,9 +13,12 @@
         <h2>
           <i class="fa fa-cogs"></i> basis-instellingen
         </h2>
+        <h2 *ngIf="processing" align="center">
+          <i class="fa fa-spinner fa-spin fa-fw"></i>
+        </h2>
       </div>
-      <ngb-alert *ngIf="alert" [type]="alert.type" style="width:100%;" [dismissible]="true" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
-      <form name="form" (ngSubmit)="edit() && false" #f="ngForm" novalidate>
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
+      <form *ngIf="!processing" name="form" (ngSubmit)="edit() && false" #f="ngForm" novalidate>
         <div class="row">
           <div class="form-group col-sm-6">
             <label for="name" class="col-form-label">naam</label>
@@ -41,11 +44,7 @@
             <ngb-timepicker id="starttime" name="starttime" [(ngModel)]="model.starttime" [spinners]="false" required></ngb-timepicker>
           </div>
         </div>
-
-        <div *ngIf="error" class="alert alert-danger">{{error}}</div>
-        <button type="submit" [disabled]="!f.form.valid || loading" class="btn btn-outline-primary">wijzig toernooi
-          <i *ngIf="loading" class="fa fa-spinner fa-spin fa-fw"></i>
-        </button>
+        <button type="submit" [disabled]="!f.form.valid" class="btn btn-outline-primary">wijzig toernooi</button>
       </form>
     </div>
   </div>

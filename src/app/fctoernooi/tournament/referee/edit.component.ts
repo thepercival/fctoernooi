@@ -99,7 +99,7 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
 
     add() {
         this.processing = true;
-
+        this.setAlert('info', 'de scheidsrechter wordt toegevoegd');
         const initials = this.customForm.controls.initials.value;
         const name = this.customForm.controls.name.value;
         const info = this.customForm.controls.info.value;
@@ -137,7 +137,7 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
 
     edit() {
         this.processing = true;
-
+        this.setAlert('info', 'de scheidsrechter wordt gewijzigd');
         if (this.isInitialsDuplicate(this.customForm.controls.initials.value, this.refereeId)) {
             this.setAlert('danger', 'de initialen bestaan al voor dit toernooi');
             this.processing = false;

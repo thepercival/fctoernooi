@@ -13,9 +13,8 @@ import { TournamentRepository } from '../repository';
     styleUrls: ['./edit.component.css']
 })
 export class TournamentEditComponent extends TournamentComponent implements OnInit {
-
     model: any;
-    loading = false;
+    processing = true;
     error = '';
     alert: IAlert;
 
@@ -48,6 +47,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
             startdate: { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() },
             name: this.tournament.getCompetition().getLeague().getName()
         };
+        this.processing = false;
     }
 
     shouldReschedule(startDateTime: Date): boolean {
@@ -65,6 +65,8 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
     }
 
     edit() {
+        this.processing = true;
+        this.setAlert('info', 'het toernooi wordt opgeslagen');
         const startDateTime = new Date(
             this.model.startdate.year,
             this.model.startdate.month - 1,
@@ -73,7 +75,6 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
             this.model.starttime.minute
         );
 
-        this.loading = true;
         const round = this.structureService.getFirstRound();
         try {
             this.tournament.getCompetition().getLeague().setName(this.model.name);
@@ -93,15 +94,21 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
                                 /* happy path */ gamesRes => {
                                     this.router.navigate(['/toernooi/home', tournamentRes.getId()]);
                                 },
-                               /* error path */ e => { this.error = e; this.loading = false; }
+                               /* error path */ e => {
+                                    this.setAlert('danger', 'de planning is niet opgeslagen: ' + e);
+                                    this.processing = false;
+                                }
                             );
+                        } else {
+                            this.router.navigate(['/toernooi/home', tournamentRes.getId()]);
                         }
                     },
-                /* error path */ e => { this.error = e; this.loading = false; },
-                /* onComplete */() => this.loading = false
+                /* error path */ e => { this.setAlert('danger', 'het toernooi is niet opgeslagen: ' + e); this.processing = false; },
+                /* onComplete */() => this.processing = false
                 );
         } catch (e) {
             this.setAlert('danger', e.message);
+            this.processing = false;
         }
     }
 

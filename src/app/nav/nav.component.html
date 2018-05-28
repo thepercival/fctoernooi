@@ -5,7 +5,7 @@
   <button *ngIf="tournamentViewTVLink.showTVIcon === true" [routerLink]="[tournamentViewTVLink.link, tournamentViewTVLink.tournamentId]"
     routerLinkActive="active" class="btn btn-outline-secondary" type="button" style="cursor:pointer;">
     <i class="fa fa-television"></i>
-    <span class="d-none d-sm-inline">tvscherm</span>
+    <span class="d-none d-sm-inline">scorebord</span>
   </button>
 
   <button *ngIf="!isLoggedIn()" routerLink="/user/login" routerLinkActive="active" class="btn btn-outline-secondary" role="button"

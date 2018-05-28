@@ -16,6 +16,7 @@ export class GameListComponent extends TournamentComponent implements OnInit {
   showPrintBtn: boolean;
   noRefresh = false;
   scrollToGameId: number;
+  processing = true;
 
   constructor(
     route: ActivatedRoute,
@@ -36,6 +37,7 @@ export class GameListComponent extends TournamentComponent implements OnInit {
 
   setPlanningService() {
     this.planningService = new PlanningService(this.structureService);
+    this.processing = false;
   }
 
   // updateRound(newRound: Round) {
