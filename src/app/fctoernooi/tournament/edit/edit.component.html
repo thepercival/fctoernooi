@@ -18,20 +18,26 @@
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing" name="form" (ngSubmit)="edit() && false" #f="ngForm" novalidate>
-        <div class="row">
-          <div class="form-group col-sm-6">
+      <form *ngIf="!processing" name="form" (ngSubmit)="edit() && false" [formGroup]="customForm" novalidate>
+        <div class="form-group row">
+          <div class="col-3">
             <label for="name" class="col-form-label">naam</label>
-            <input type="text" class="form-control" id="name" name="name" placeholder="naam" [(ngModel)]="model.name" #name="ngModel"
-              [minlength]="validations.minlengthname" [maxlength]="validations.maxlengthname" required autofocus>
+          </div>
+          <div class="col-9">
+            <input class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.name.invalid, 'is-valid': customForm.controls.name.valid }"
+              type="text" name="name" id="name" [formControl]="customForm.controls.name" maxlength="{{validations.maxlengthname}}"
+              placeholder="max. {{validations.maxlengthname}} karakters" autofocus>
           </div>
         </div>
-        <div *ngIf="!structureService?.getFirstRound().isStarted()" class="row">
-          <div class="form-group col">
+        <div *ngIf="!structureService?.getFirstRound().isStarted()" class="form-group row">
+          <div class="col-3">
             <label for="dp" class="col-form-label">startdatum</label>
+          </div>
+          <div class="col-9">
             <div class="input-group input-group-date">
-              <input class="form-control" placeholder="yyyy-mm-dd" id="dp" name="dp" [(ngModel)]="model.startdate" ngbDatepicker #d="ngbDatepicker"
-                required [dayTemplate]="t">
+              <input class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.date.invalid, 'is-valid': customForm.controls.date.valid }"
+                placeholder="yyyy-mm-dd" id="dp" name="dp" [formControl]="customForm.controls.date" ngbDatepicker #d="ngbDatepicker"
+                required [dayTemplate]="t" [minDate]="minDateStruct">
               <div class="input-group-append">
                 <span class="input-group-text" (click)="d.toggle()" style="cursor: pointer;">
                   <i class="fi flaticon-schedule text-white"></i>
@@ -39,19 +45,29 @@
               </div>
             </div>
           </div>
-          <div class="form-group col">
+        </div>
+        <div *ngIf="!structureService?.getFirstRound().isStarted()" class="form-group row">
+          <div class="col-3">
             <label for="starttime" class="col-form-label">starttijd</label>
-            <ngb-timepicker id="starttime" name="starttime" [(ngModel)]="model.starttime" [spinners]="false" required></ngb-timepicker>
+          </div>
+          <div class="col-9">
+            <ngb-timepicker id="starttime" name="starttime" [formControl]="customForm.controls.time" [spinners]="false" required></ngb-timepicker>
           </div>
         </div>
-        <button type="submit" [disabled]="!f.form.valid" class="btn btn-outline-primary">wijzig toernooi</button>
+        <div class="form-group row justify-content-end">
+          <div class="col-9">
+            <button [disabled]="customForm.invalid" type="submit" class="btn btn-outline-primary">
+              opslaan
+            </button>
+          </div>
+        </div>
       </form>
     </div>
   </div>
 </div>
 
-<ng-template #t let-date="date" let-focused="focused">
-  <span class="custom-day" [class.focused]="focused" [class.selected]="isSelected(date)" (mouseenter)="hoveredDate = date"
+<ng-template #t let-date="date" let-focused="focused" let-disabled="disabled">
+  <span class="custom-day" [class.focused]="focused" [class.selected]="isSelected(date)" [class.text-muted]="disabled" (mouseenter)="hoveredDate = date"
     (mouseleave)="hoveredDate = null">
     {{ date.day }}
   </span>

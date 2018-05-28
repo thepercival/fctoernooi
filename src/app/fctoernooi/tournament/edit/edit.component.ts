@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
 import { League, PlanningRepository, PlanningService, StructureRepository } from 'ngx-sport';
@@ -13,10 +14,10 @@ import { TournamentRepository } from '../repository';
     styleUrls: ['./edit.component.css']
 })
 export class TournamentEditComponent extends TournamentComponent implements OnInit {
-    model: any;
     processing = true;
-    error = '';
+    customForm: FormGroup;
     alert: IAlert;
+    minDateStruct: NgbDateStruct;
 
     validations: any = {
         'minlengthname': League.MIN_LENGTH_NAME,
@@ -28,12 +29,24 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
-        private planningRepository: PlanningRepository
+        private planningRepository: PlanningRepository,
+        fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
-        this.model = {
-            name: undefined
-        };
+        this.customForm = fb.group({
+            name: ['', Validators.compose([
+                Validators.required,
+                Validators.minLength(this.validations.minlengthname),
+                Validators.maxLength(this.validations.maxlengthname)
+            ])],
+            date: ['', Validators.compose([
+            ])],
+            time: ['', Validators.compose([
+
+            ])]
+        });
+        const date = new Date();
+        this.minDateStruct = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
     }
 
     ngOnInit() {
@@ -42,11 +55,11 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
 
     initFields() {
         const date = this.tournament.getCompetition().getStartDateTime();
-        this.model = {
-            starttime: { hour: date.getHours(), minute: date.getMinutes() },
-            startdate: { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() },
-            name: this.tournament.getCompetition().getLeague().getName()
-        };
+
+        this.customForm.controls.name.setValue(this.tournament.getCompetition().getLeague().getName());
+        this.customForm.controls.date.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
+        this.customForm.controls.time.setValue({ hour: date.getHours(), minute: date.getMinutes() });
+
         this.processing = false;
     }
 
@@ -55,7 +68,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
             return false;
         }
         if (this.structureService.getFirstRound().isStarted()) {
-            throw new Error('de startdatum mag niet veranderen omdat het toernooi al is begonnen');
+            this.setAlert('info', 'de startdatum mag niet veranderen omdat het toernooi al is begonnen');
         }
         return true;
     }
@@ -67,17 +80,20 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
     edit() {
         this.processing = true;
         this.setAlert('info', 'het toernooi wordt opgeslagen');
+
+        const name = this.customForm.controls.name.value;
+
         const startDateTime = new Date(
-            this.model.startdate.year,
-            this.model.startdate.month - 1,
-            this.model.startdate.day,
-            this.model.starttime.hour,
-            this.model.starttime.minute
+            this.customForm.controls.date.value.year,
+            this.customForm.controls.date.value.month - 1,
+            this.customForm.controls.date.value.day,
+            this.customForm.controls.time.value.hour,
+            this.customForm.controls.time.value.minute
         );
 
         const round = this.structureService.getFirstRound();
         try {
-            this.tournament.getCompetition().getLeague().setName(this.model.name);
+            this.tournament.getCompetition().getLeague().setName(this.customForm.controls.name.value);
             const reschedule = this.shouldReschedule(startDateTime);
             if (reschedule === true) {
                 this.tournament.getCompetition().setStartDateTime(startDateTime);
@@ -103,8 +119,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
                             this.router.navigate(['/toernooi/home', tournamentRes.getId()]);
                         }
                     },
-                /* error path */ e => { this.setAlert('danger', 'het toernooi is niet opgeslagen: ' + e); this.processing = false; },
-                /* onComplete */() => this.processing = false
+                /* error path */ e => { this.setAlert('danger', 'het toernooi is niet opgeslagen: ' + e); this.processing = false; }
                 );
         } catch (e) {
             this.setAlert('danger', e.message);
@@ -115,5 +130,5 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
     equals(one: NgbDateStruct, two: NgbDateStruct) {
         return one && two && two.year === one.year && two.month === one.month && two.day === one.day;
     }
-    isSelected = date => this.equals(date, this.model.startdate);
+    isSelected = date => this.equals(date, this.customForm.controls.date.value);
 }

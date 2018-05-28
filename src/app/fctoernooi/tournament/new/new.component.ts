@@ -51,7 +51,6 @@ export class TournamentNewComponent implements OnInit {
     private planningRepository: PlanningRepository
   ) {
     const date = new Date();
-    date.setTime(date.getTime() + (60 * 10 * 1000)); // 10 minutes
     this.minDateStruct = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
 
     this.sportnames = SportConfig.getSports();
