@@ -220,14 +220,14 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
                         },
                             err => {
                                 this.processing = false;
-                                this.setAlert('info', 'de wedstrijd is niet opgeslagen:' + err);
+                                this.setAlert('info', 'de wedstrijd is niet opgeslagen: ' + err);
                             }
                         );
                     } else {
                         this.navigateBack();
                     }
                 },
-            /* error path */ e => { this.setAlert('danger', 'de wedstrijd kan niet worden opgeslagen' + e); this.processing = false; },
+            /* error path */ e => { this.setAlert('danger', 'de wedstrijd kan niet worden opgeslagen: ' + e); this.processing = false; },
             // /* onComplete */() => {
             //     if (!stateChanged && !scoreChanged) {
             //             this.processing = false;

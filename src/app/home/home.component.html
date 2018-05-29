@@ -1,20 +1,21 @@
-<div>
-  <div class="row justify-content-center no-gutters">
-    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
-      <h1 align="center">
-        toernooien
-      </h1>
-      <h2 *ngIf="processing" align="center">
-        <i class="fa fa-spinner fa-spin fa-fw"></i>
-      </h2>
-      <div *ngIf="!processing" class="d-flex justify-content-between">
-        <!-- <button type="button" class="btn btn-sm-custom btn-outline-secondary" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
+<div class="row justify-content-center no-gutters">
+  <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+    <h1 align="center">
+      toernooien
+    </h1>
+    <p class="text-info">Met FCToernooi kun je snel en makkelijk een toernooi opzetten. Er is ook een live scorebord aanwezig. Het is gratis en
+      zonder reclame!</p>
+    <h2 *ngIf="processing" align="center">
+      <i class="fa fa-spinner fa-spin fa-fw"></i>
+    </h2>
+    <div *ngIf="!processing" class="d-flex justify-content-between">
+      <!-- <button type="button" class="btn btn-sm-custom btn-outline-secondary" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
           aria-controls="collapseFilter">
           <i class="fa fa-filter"></i> filter</button> -->
-        <button type="button" class="btn btn-sm-custom btn-outline-primary" [routerLink]="['/toernooi/new']">
-          <i class="fa fa-plus-circle"></i> toernooi</button>
-      </div>
-      <!-- <div id="collapseFilter" class="container" [ngbCollapse]="isCollapsed">
+      <button type="button" class="btn btn-sm-custom btn-outline-primary" [routerLink]="['/toernooi/new']">
+        <i class="fa fa-plus-circle"></i> toernooi</button>
+    </div>
+    <!-- <div id="collapseFilter" class="container" [ngbCollapse]="isCollapsed">
         <form (ngSubmit)="false" #f="ngForm" novalidate>
           <div *ngIf="isLoggedIn()" class="form-group row">
             <label for="inputFilterMine" class="col-9 col-form-label">toon alleen mijn toernooien</label>
@@ -38,25 +39,24 @@
           </div>
         </form>
       </div> -->
-      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
-      <table *ngIf="!processing" class="table">
-        <tbody>
-          <tr *ngFor="let tournament of tournaments">
-            <td class="toView" (click)="linkToView(tournament)">{{tournament.getCompetition().getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit","hour12":
-              false,"hour":"2-digit","minute":"2-digit"} )}}</td>
-            <td class="d-none d-sm-table-cell toView" (click)="linkToView(tournament)">
-              <i class="{{iconManager.getIconClass(tournament.getCompetition().getLeague().getSport())}}"></i>
-            </td>
-            <td class="toView" (click)="linkToView(tournament)">{{tournament.getCompetition().getLeague().getName()}}</td>
-            <td *ngIf="isLoggedIn()" style="text-align: right">
-              <button *ngIf="hasPermission(tournament)" type="button" [routerLink]="['/toernooi/home', tournament.getId()]" routerLinkActive="active"
-                class="btn btn-sm btn-outline-primary">
-                <i class="fa fa-pencil"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
+    <table *ngIf="!processing" class="table">
+      <tbody>
+        <tr *ngFor="let tournament of tournaments">
+          <td class="toView" (click)="linkToView(tournament)">{{tournament.getCompetition().getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit","hour12":
+            false,"hour":"2-digit","minute":"2-digit"} )}}</td>
+          <td class="d-none d-sm-table-cell toView" (click)="linkToView(tournament)">
+            <i class="{{iconManager.getIconClass(tournament.getCompetition().getLeague().getSport())}}"></i>
+          </td>
+          <td class="toView" (click)="linkToView(tournament)">{{tournament.getCompetition().getLeague().getName()}}</td>
+          <td *ngIf="isLoggedIn()" style="text-align: right">
+            <button *ngIf="hasPermission(tournament)" type="button" [routerLink]="['/toernooi/home', tournament.getId()]" routerLinkActive="active"
+              class="btn btn-sm btn-outline-primary">
+              <i class="fa fa-pencil"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

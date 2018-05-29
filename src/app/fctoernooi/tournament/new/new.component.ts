@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
 import {
@@ -27,18 +28,19 @@ import { TournamentRepository } from '../repository';
   styleUrls: ['./new.component.css']
 })
 export class TournamentNewComponent implements OnInit {
-  model: any;
+  customForm: FormGroup;
   processing = true;
   alert: IAlert;
   minDateStruct: NgbDateStruct;
   sportnames: string[];
   validations: any = {
-    'minnrofcompetitors': Tournament.MINNROFCOMPETITORS,
-    'maxnrofcompetitors': Tournament.MAXNROFCOMPETITORS,
-    'minnroffields': 0,
-    'maxnroffields': 16,
-    'minlengthname': League.MIN_LENGTH_NAME,
-    'maxlengthname': League.MAX_LENGTH_NAME
+    minnroffields: 0,
+    maxnroffields: Tournament.MAXNROFCOMPETITORS / 2,
+    minnrofcompetitors: Tournament.MINNROFCOMPETITORS,
+    maxnrofcompetitors: Tournament.MAXNROFCOMPETITORS,
+    minlengthname: League.MIN_LENGTH_NAME,
+    maxlengthname: League.MAX_LENGTH_NAME,
+    maxlengthsportname: League.MAX_LENGTH_SPORT
   };
   // message: string;
 
@@ -48,53 +50,90 @@ export class TournamentNewComponent implements OnInit {
     private tournamentRepository: TournamentRepository,
     private roundRepository: RoundRepository,
     private structureRepository: StructureRepository,
-    private planningRepository: PlanningRepository
+    private planningRepository: PlanningRepository,
+    fb: FormBuilder
   ) {
     const date = new Date();
     this.minDateStruct = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
 
     this.sportnames = SportConfig.getSports();
-    this.model = {
-      starttime: { hour: date.getHours(), minute: date.getMinutes() },
-      startdate: { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() },
-      nrofcompetitors: 5,
-      nroffields: 1
-    };
+
+    this.customForm = fb.group({
+      name: ['', Validators.compose([
+        Validators.required,
+        Validators.minLength(this.validations.minlengthname),
+        Validators.maxLength(this.validations.maxlengthname)
+      ])],
+      sportName: ['', Validators.compose([
+        Validators.required
+      ])],
+      sportNameOther: ['', Validators.compose([
+        Validators.minLength(0),
+        Validators.maxLength(this.validations.maxlengthsportname)
+      ])],
+      nrofcompetitors: ['', Validators.compose([
+        Validators.required,
+        Validators.min(this.validations.minnrofcompetitors),
+        Validators.max(this.validations.maxnnrofcompetitors)
+      ])],
+      nroffields: ['', Validators.compose([
+        Validators.required,
+        Validators.min(0),
+        Validators.max(this.validations.maxnroffields)
+      ])],
+      date: ['', Validators.compose([
+      ])],
+      time: ['', Validators.compose([
+      ])]
+    });
   }
 
   ngOnInit() {
+    const date = new Date();
+    if (date.getHours() < 23) {
+      const nrOfMinutesTillQuarter = date.getMinutes() % 15;
+      date.setTime(date.getTime() + ((15 + (15 - nrOfMinutesTillQuarter)) * 60 * 1000));
+    }
+    this.customForm.controls.date.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
+    this.customForm.controls.time.setValue({ hour: date.getHours(), minute: date.getMinutes() });
+    this.customForm.controls.nrofcompetitors.setValue(5);
+    this.customForm.controls.nroffields.setValue(1);
     this.processing = false;
   }
 
   create() {
-    if (this.model.nrofcompetitors < 3 || this.model.nrofcompetitors > 64) {
-      return;
-    }
+
     this.processing = true;
     this.setAlert('info', 'het toernooi wordt aangemaakt');
 
-    const sportName = this.model.sportname !== '-1' ? this.model.sportname : this.model.sportnameother;
+    const name = this.customForm.controls.name.value;
+    let sportName = this.customForm.controls.sportName.value;
+    if (sportName === '-1') {
+      sportName = this.customForm.controls.sportNameOther.value;
+    }
+    const nrofcompetitors = this.customForm.controls.nrofcompetitors.value;
+    const nroffields = this.customForm.controls.nroffields.value;
 
-    const startdate = new Date(
-      this.model.startdate.year,
-      this.model.startdate.month - 1,
-      this.model.startdate.day,
-      this.model.starttime.hour,
-      this.model.starttime.minute
+    const startDateTime = new Date(
+      this.customForm.controls.date.value.year,
+      this.customForm.controls.date.value.month - 1,
+      this.customForm.controls.date.value.day,
+      this.customForm.controls.time.value.hour,
+      this.customForm.controls.time.value.minute
     );
 
     let tournament;
     {
       const association = new Association('username'); // dummy
-      const league = new League(this.model.name);
+      const league = new League(name);
       league.setAssociation(association);
       league.setSport(sportName);
       const season = new Season('123'); // dummy
       season.setStartDateTime(new Date());
       season.setEndDateTime(new Date());
       const competition = new Competition(league, season);
-      competition.setStartDateTime(startdate);
-      for (let fieldNumber = 1; fieldNumber <= this.model.nroffields; fieldNumber++) {
+      competition.setStartDateTime(startDateTime);
+      for (let fieldNumber = 1; fieldNumber <= nroffields; fieldNumber++) {
         const field = new Field(competition, fieldNumber);
         field.setName(String(fieldNumber));
       }
@@ -108,7 +147,7 @@ export class TournamentNewComponent implements OnInit {
           let structureService = new StructureService(
             tournamentOut.getCompetition(),
             { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
-            undefined, this.model.nrofcompetitors
+            undefined, nrofcompetitors
           );
           const jsonRound = this.roundRepository.objectToJsonHelper(structureService.getFirstRound());
           this.structureRepository.createObject(jsonRound, tournamentOut.getCompetition())
@@ -157,6 +196,6 @@ export class TournamentNewComponent implements OnInit {
   equals(one: NgbDateStruct, two: NgbDateStruct) {
     return one && two && two.year === one.year && two.month === one.month && two.day === one.day;
   }
-  isSelected = date => this.equals(date, this.model.startdate);
+  isSelected = date => this.equals(date, this.customForm.controls.date.value);
 
 }

@@ -1,7 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-struct';
-import { Subscription, timer } from 'rxjs';
 
 import { IAlert } from '../app.definitions';
 import { AuthService } from '../auth/auth.service';
@@ -14,14 +13,13 @@ import { TournamentRepository } from '../fctoernooi/tournament/repository';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit {
 
   modelFilter: any;
   tournaments: Tournament[];
   alert: IAlert;
   isCollapsed = true;
   processing = true;
-  private timerSubscription: Subscription;
   minEndDate: NgbDateStruct;
   maxEndDate: NgbDateStruct;
 
@@ -36,7 +34,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.timerSubscription = timer(0, 20000).subscribe(number => this.getTournaments());
+    this.setTournaments();
 
     this.route.queryParams.subscribe(params => {
       if (params.type !== undefined && params.message !== undefined) {
@@ -45,7 +43,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
-  getTournaments() {
+  setTournaments() {
     this.processing = true;
     this.tournamentRepos.getObjects(this.getDate(this.modelFilter.startDate), this.getDate(this.modelFilter.endDate))
       .subscribe(
@@ -129,12 +127,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   changeFilterDate(date: NgbDateStruct) {
     this.modelFilter.endDate = date;
     this.isCollapsed = true;
-    this.getTournaments();
-  }
-
-  ngOnDestroy() {
-    if (this.timerSubscription !== undefined) {
-      this.timerSubscription.unsubscribe();
-    }
+    this.setTournaments();
   }
 }
