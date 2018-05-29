@@ -11,7 +11,7 @@ import {
     StructureNameService,
     StructureRepository,
 } from 'ngx-sport';
-import { timer ,  Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 
 import { AuthService } from '../../../auth/auth.service';
 import { GlobalEventsManager } from '../../../common/eventmanager';
@@ -134,7 +134,8 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         const games: Game[] = this.getScheduledGamesForRoundNumber(roundNumber);
 
         const rankingScreenDefs = this.getScreenDefinitionsForRanking(roundNumber, this.getPoulesForRanking(roundNumber));
-        const scheduledGamesScreenDef = new ScheduledGamesScreenDefinition(roundNumber, games);
+        const roundsDescription = this.nameService.getRoundsName(roundNumber, this.allRoundsByNumber[roundNumber]);
+        const scheduledGamesScreenDef = new ScheduledGamesScreenDefinition(roundNumber, games, roundsDescription);
         rankingScreenDefs.forEach(rankingScreenDef => {
             if (games.length > 0) {
                 screenDefs.push(scheduledGamesScreenDef);
@@ -214,7 +215,8 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         // loop door de poules die wedstrijden moeten tonen( deze poules eerst samenvoegen)
         const games: Game[] = this.getResultsForRoundPoules(poulesForResults);
         if (games.length > 0) {
-            screenDefs.push(new PlayedGamesScreenDefinition(roundNumber, games));
+            const roundsDescription = this.nameService.getRoundsName(roundNumber, this.allRoundsByNumber[roundNumber]);
+            screenDefs.push(new PlayedGamesScreenDefinition(roundNumber, games, roundsDescription));
         }
         return screenDefs;
     }
@@ -453,8 +455,12 @@ export interface IGamesScreenDefinition {
 }
 
 export class ScheduledGamesScreenDefinition extends GamesScreenDefinition implements IGamesScreenDefinition {
-    constructor(roundNumber: number, scheduledGames: Game[]) {
+
+    private description: string;
+
+    constructor(roundNumber: number, scheduledGames: Game[], roundsDescription: string) {
         super(roundNumber, scheduledGames);
+        this.description = 'programma - ' + roundsDescription;
     }
 
     isScheduled(): boolean {
@@ -462,15 +468,17 @@ export class ScheduledGamesScreenDefinition extends GamesScreenDefinition implem
     }
 
     getDescription() {
-        return 'programma';
+        return this.description;
     }
 }
 
 export class PlayedGamesScreenDefinition extends GamesScreenDefinition implements IGamesScreenDefinition {
-    playedGames: Game[]; // max 8
+    playedGames: Game[];
+    private description: string;
 
-    constructor(roundNumber: number, playedGames: Game[]) {
+    constructor(roundNumber: number, playedGames: Game[], roundsDescription: string) {
         super(roundNumber, playedGames);
+        this.description = 'uitslagen - ' + roundsDescription;
     }
 
     isScheduled(): boolean {
@@ -478,7 +486,7 @@ export class PlayedGamesScreenDefinition extends GamesScreenDefinition implement
     }
 
     getDescription() {
-        return 'uitslagen';
+        return this.description;
     }
 }
 

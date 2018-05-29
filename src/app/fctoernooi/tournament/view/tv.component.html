@@ -4,12 +4,15 @@
       <i class="smaller {{iconManager.getIconClass(tournament.getCompetition().getLeague().getSport())}}"></i>
       <span class="smaller">{{tournament.getName()}}</span>
       <small *ngIf="screenDef">
-        <span> - {{ screenDef.getDescription() }}</span>
+        -
+        <span [innerHTML]="screenDef.getDescription()"></span>
         <span *ngIf="!isEndRankingScreenDef() && !isSponsorScreenDef" [innerHTML]="nameService.getRoundsName( screenDef.roundNumber, planningService.getRoundsByNumber(screenDef.roundNumber) )"></span>
       </small>
     </h1>
     <h1>
-      <span class="smaller text-secondary">https://www.fctoernooi.nl/toernooi/view/{{tournament.getId()}}</span>
+      <small>
+        <span class="smaller text-secondary">https://www.fctoernooi.nl/toernooi/view/{{tournament.getId()}}</span>
+      </small>
     </h1>
     <button [routerLink]="['/toernooi/view', tournament.getId()]" routerLinkActive="active" class="btn btn-outline-secondary"
       type="button" style="cursor:pointer;">

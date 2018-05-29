@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { IAlert } from '../../app.definitions';
 import { AuthService } from '../../auth/auth.service';
+import { PasswordValidation } from '../password-validation';
+import { User } from '../user';
 
 @Component({
   selector: 'app-passwordchange',
@@ -11,27 +14,60 @@ import { AuthService } from '../../auth/auth.service';
 })
 export class PasswordchangeComponent implements OnInit {
 
-  model: any = {};
-  loading = false;
-  error = '';
   alert: IAlert;
   passwordChanged = false;
+  processing = true;
+  customForm: FormGroup;
+
+  validations: any = {
+    minlengthcode: 100000,
+    maxlengthcode: 999999,
+    minlengthpassword: User.MIN_LENGTH_PASSWORD,
+    maxlengthpassword: User.MAX_LENGTH_PASSWORD
+  };
   private emailaddress;
 
   constructor(
     private route: ActivatedRoute,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    fb: FormBuilder
+  ) {
+    this.customForm = fb.group({
+      code: ['', Validators.compose([
+        Validators.required,
+        Validators.min(this.validations.minlengthcode),
+        Validators.max(this.validations.maxlengthcode)
+      ])],
+      password: ['', Validators.compose([
+        Validators.required,
+        Validators.minLength(this.validations.minlengthpassword),
+        Validators.maxLength(this.validations.maxlengthpassword)
+      ])],
+      passwordRepeat: ['', Validators.compose([
+        Validators.required,
+        Validators.minLength(this.validations.minlengthpassword),
+        Validators.maxLength(this.validations.maxlengthpassword)
+      ])],
+    }, {
+        validator: PasswordValidation.MatchPassword // your validation method
+      });
+  }
 
   ngOnInit() {
     this.route.queryParamMap.subscribe(params => {
       this.emailaddress = params.get('emailaddress');
     });
+    this.processing = false;
   }
 
   protected setAlert(type: string, message: string) {
     this.alert = { 'type': type, 'message': message };
+  }
+
+  protected resetAlert() {
+    this.alert = undefined;
   }
 
   isLoggedIn() {
@@ -39,21 +75,24 @@ export class PasswordchangeComponent implements OnInit {
   }
 
   changePassword() {
-    if (this.model.password !== this.model.passwordrepeat) {
-      this.error = 'de wachtwoorden zijn niet gelijk';
-      return false;
-    }
-    this.loading = true;
+    this.processing = true;
+    this.setAlert('info', 'het wachtwoord wordt gewijzigd');
+
+    const code = this.customForm.controls.code.value;
+    const password = this.customForm.controls.password.value;
+
     // this.activationmessage = undefined;
-    this.authService.passwordChange(this.emailaddress, this.model.password, this.model.code)
+    this.authService.passwordChange(this.emailaddress, password, code)
       .subscribe(
             /* happy path */ p => {
-        // should get same as when logged in!!
-        this.passwordChanged = true;
-      },
-            /* error path */ e => { this.error = e; this.loading = false; },
-            /* onComplete */() => this.loading = false
+          this.passwordChanged = true;
+          this.resetAlert();
+        },
+            /* error path */ e => {
+          this.setAlert('danger', 'het wijzigen van het wachtwoord is niet gelukt: ' + e);
+          this.processing = false;
+        },
+            /* onComplete */() => this.processing = false
       );
   }
-
 }
