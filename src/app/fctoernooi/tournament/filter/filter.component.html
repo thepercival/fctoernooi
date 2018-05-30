@@ -11,14 +11,14 @@
       </div>
       <div>
         <h2>
-          <i class="fa fa-filter"></i> filter 1 of meerdere teams
+          <i class="fa fa-filter"></i> filter deelnemers
         </h2>
       </div>
       <div class="d-flex justify-content-center">
         <ngb-alert *ngIf="alert" [type]="alert.type" style="width:100%;" [dismissible]="false" (close)="alert = undefined;">
           {{ alert.message }}</ngb-alert>
       </div>
-      <table class="table">
+      <table *ngIf="!processing && hasTeams()" class="table">
         <thead>
           <tr>
             <th>plek</th>

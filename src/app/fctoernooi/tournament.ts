@@ -9,7 +9,7 @@ import { Sponsor } from './tournament/sponsor';
 
 export class Tournament {
     static readonly MINNROFCOMPETITORS = 2;
-    static readonly MAXNROFCOMPETITORS = 32;
+    static readonly MAXNROFCOMPETITORS = 36;
 
     protected id: number;
     protected competition: Competition;

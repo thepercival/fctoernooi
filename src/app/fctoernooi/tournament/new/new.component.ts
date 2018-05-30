@@ -74,7 +74,7 @@ export class TournamentNewComponent implements OnInit {
       nrofcompetitors: ['', Validators.compose([
         Validators.required,
         Validators.min(this.validations.minnrofcompetitors),
-        Validators.max(this.validations.maxnnrofcompetitors)
+        Validators.max(this.validations.maxnrofcompetitors)
       ])],
       nroffields: ['', Validators.compose([
         Validators.required,

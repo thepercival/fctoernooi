@@ -13,9 +13,9 @@ import { TournamentRepository } from '../repository';
 })
 export class TournamentFilterComponent extends TournamentComponent implements OnInit {
     poulePlaces: PoulePlace[];
-    infoAlert = true;
     alert: IAlert;
     poulePlaceToSwap: PoulePlace;
+    processing = true;
 
     constructor(
         route: ActivatedRoute,
@@ -35,6 +35,14 @@ export class TournamentFilterComponent extends TournamentComponent implements On
     initPoulePlaces() {
         const round = this.structureService.getFirstRound();
         this.poulePlaces = round.getPoulePlaces();
+        if (this.hasTeams() === false) {
+            this.setAlert('info', 'er zijn nog geen deelnemers ingevuld, je kunt daarom nog geen filter instellen');
+        }
+        this.processing = false;
+    }
+
+    hasTeams() {
+        return this.poulePlaces.some(poulePlace => poulePlace.getTeam() !== undefined);
     }
 
     inFavoriteTeamIds(team: Team): boolean {

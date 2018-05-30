@@ -52,7 +52,7 @@
               </button>
             </td>
             <td *ngIf="planningService.canCalculateStartDateTime(roundNumber)" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }" (click)="linkToGameEdit(tournament,game)">
-              <span *ngIf="!onSameDay()">{{game.getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit"})}}</span>
+              <span *ngIf="!onSameDay()">{{game.getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit"})}} </span>
               <span>{{game.getStartDateTime().toLocaleString("en", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}</span>
             </td>
             <td *ngIf="hasFields()" (click)="linkToGameEdit(tournament,game)" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">{{game.getField()?.getName()}}</td>
