@@ -27,7 +27,7 @@
     "lodash": "^4.17.10",
     "ng2-nouislider": "^1.7.11",
     "ng2-scroll-to-el": "^1.2.1",
-    "ngx-sport": "0.0.31",
+    "ngx-sport": "0.0.33",
     "nouislider": "^10.1.0",
     "rxjs": "^6.2.0",
     "zone.js": "^0.8.26"

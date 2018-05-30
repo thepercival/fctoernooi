@@ -104,12 +104,12 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         } else {
             screenDefs = screenDefs.concat(this.getScreenDefinitionsForEndRanking(previousPlayedRoundNumber));
         }
-        if (previousPlayedRoundNumber !== undefined) {
-            screenDefs = screenDefs.concat(this.getScreenDefinitionsForResultsAndRanking(previousPlayedRoundNumber));
-        }
-        if (this.tournament.getSponsors().length > 0) {
-            screenDefs = screenDefs.concat(this.getScreenDefinitionsForSponsors(previousPlayedRoundNumber));
-        }
+        // if (previousPlayedRoundNumber !== undefined) {
+        //     screenDefs = screenDefs.concat(this.getScreenDefinitionsForResultsAndRanking(previousPlayedRoundNumber));
+        // }
+        // if (this.tournament.getSponsors().length > 0) {
+        //     screenDefs = screenDefs.concat(this.getScreenDefinitionsForSponsors(previousPlayedRoundNumber));
+        // }
 
         return screenDefs;
     }
@@ -255,13 +255,70 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
 
     getEndRankingItemsHelper(round: Round): RankingItem[] {
         let rankingItems: RankingItem[] = [];
-        const poulePlacesPerNumber = round.getPoulePlacesPerNumber(Round.WINNERS);
-        poulePlacesPerNumber.forEach(poulePlaces => {
-            const deadPoulePlaces = poulePlaces.filter(poulePlace => poulePlace.getToQualifyRules().length === 0);
+
+        const poulePlacesToProcess: PoulePlace[] = [];
+        {
+            const poulePlacesPerNumber = round.getPoulePlacesPerNumber(Round.WINNERS);
+            poulePlacesPerNumber.forEach(poulePlaces => {
+                const rankingService = new Ranking(Ranking.RULESSET_WC);
+                const winnerToQualifyRule = poulePlaces[0].getToQualifyRule(Round.WINNERS);
+                if (winnerToQualifyRule === undefined) {
+                    rankingItems = rankingItems.concat(rankingService.getItemsForRound(round, poulePlaces));
+                    return;
+                }
+                if (winnerToQualifyRule.isMultiple() === false) {
+                    return;
+                }
+                // multiple
+                const rankingItemsTmp = rankingService.getItemsForRound(round, poulePlaces);
+                rankingItemsTmp.splice(0, winnerToQualifyRule.getToPoulePlaces().length);
+                const loserToQualifyRule = poulePlaces[poulePlaces.length - 1].getToQualifyRule(Round.LOSERS);
+                if (loserToQualifyRule === undefined) {
+                    rankingItems = rankingItems.concat(rankingItemsTmp);
+                } else {
+                    rankingItemsTmp.forEach(rankingItemTmp => poulePlacesToProcess.push(rankingItemTmp.getPoulePlace()));
+                }
+            });
+        }
+
+        // check for LOSERS MULTIPLE
+        const poulePlacesPerNumberLosers = round.getPoulePlacesPerNumber(Round.LOSERS);
+        poulePlacesPerNumberLosers.forEach(poulePlaces => {
+            const loserToQualifyRule = poulePlaces[0].getToQualifyRule(Round.LOSERS);
+            if (loserToQualifyRule === undefined || loserToQualifyRule.isMultiple() === false) {
+                return;
+            }
+            if (loserToQualifyRule.isMultiple() === false) {
+                poulePlaces.forEach(poulePlace => {
+                    const index = poulePlacesToProcess.indexOf(poulePlace);
+                    if (index > -1) {
+                        poulePlacesToProcess.splice(index, 1);
+                    }
+                });
+            }
+            // multiple
             const rankingService = new Ranking(Ranking.RULESSET_WC);
-            rankingItems = rankingItems.concat(rankingService.getItemsForRound(round, deadPoulePlaces));
+            const rankingItemsTmp = rankingService.getItemsForRound(round, poulePlaces);
+            rankingItemsTmp.reverse();
+            const qualifiedRankingItemsTmp = rankingItemsTmp.splice(0, loserToQualifyRule.getToPoulePlaces().length);
+            qualifiedRankingItemsTmp.forEach(qualifiedRankingItemTmp => {
+                const index = poulePlacesToProcess.indexOf(qualifiedRankingItemTmp.getPoulePlace());
+                if (index > -1) {
+                    poulePlacesToProcess.splice(index, 1);
+                }
+            });
+            rankingItemsTmp.forEach(rankingItemTmp => {
+                if (poulePlacesToProcess.find(
+                    poulePlaceToProcess => poulePlaceToProcess === rankingItemTmp.getPoulePlace()
+                ) === undefined
+                ) {
+                    poulePlacesToProcess.push(rankingItemTmp.getPoulePlace());
+                }
+            });
         });
-        return rankingItems;
+
+        const rankingServiceTmp = new Ranking(Ranking.RULESSET_WC);
+        return rankingItems.concat(rankingServiceTmp.getItemsForRound(round, poulePlacesToProcess));
     }
 
     getResultsForRoundPoules(poulesForResults: Poule[]): Game[] {
