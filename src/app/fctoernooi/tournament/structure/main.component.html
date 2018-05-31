@@ -14,12 +14,12 @@
       </h2>
       <button *ngIf="!processing && !structureService?.getFirstRound().isStarted()" role="button" [disabled]="!changedRoundNumber"
         (click)="saveStructure()" class="btn btn-outline-primary">
-        <fa-icon [icon]="['fas', 'save']"> </fa-icon> opslaan
+        <fa-icon [icon]="['fas', 'save']"></fa-icon> opslaan
       </button>
     </div>
     <div>
       <h2 *ngIf="processing" align="center">
-        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"> </fa-icon>
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
     </div>
   </div>

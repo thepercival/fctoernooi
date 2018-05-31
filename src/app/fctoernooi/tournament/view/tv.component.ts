@@ -420,17 +420,17 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         return winnersOrLosers === Round.WINNERS ? 'success' : (winnersOrLosers === Round.LOSERS ? 'danger' : '');
     }
 
-    getQualificationClass(poule: Poule, poulePlaceNumber: number): string {
+    getQualificationClass(poule: Poule, poulePlaceNumber: number): {} {
         const poulePlace: PoulePlace = poule.getPlace(poulePlaceNumber);
         const rules = poulePlace.getToQualifyRules();
         if (rules.length === 2) {
-            return 'fa fa-circle  text-warning';
+            return { icon: 'circle', text: 'text-warning' };
         } else if (rules.length === 1) {
             const qualifyRule = rules[0];
             const singleColor = this.getClassPostfix(qualifyRule.getWinnersOrLosers());
-            return 'fa fa-circle text-' + (qualifyRule.isMultiple() ? 'warning' : singleColor);
+            return { icon: 'circle', text: 'text-' + (qualifyRule.isMultiple() ? 'warning' : singleColor) };
         }
-        return '';
+        return { icon: undefined, text: '' };
     }
 }
 

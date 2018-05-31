@@ -10,10 +10,10 @@
         </div>
         <div>
             <h2>
-                <i class="fa fa-cogs"></i> ronde-instellingen
+                <fa-icon [icon]="['fas', 'cogs']"></fa-icon> ronde-instellingen
             </h2>
             <h2 *ngIf="processing" align="center">
-                <fa-icon [icon]="['fas', 'spinner']" [spin]="true"> </fa-icon>
+                <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
             </h2>
         </div>
         <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
@@ -173,7 +173,7 @@
 
                     <div>
                         <div *ngIf="getInputScoreConfig()" class="alert">De puntentelling wordt bijgehouden in {{getInputScoreConfig().getName()}} (
-                            <span class="fa fa-check-circle-o fa-lg"></span> )</div>
+                            <fa-icon [icon]="['fas', 'check-circle']"></fa-icon> )</div>
                         <div *ngIf="!getInputScoreConfig()" class="alert alert-danger">Zorg dat je een actieve eenheid hebt voor de puntentelling</div>
                     </div>
 

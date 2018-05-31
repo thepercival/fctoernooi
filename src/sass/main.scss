@@ -22,24 +22,11 @@ hr {
   background-color: lighten($gray-500, 10%);
 }
 
-
 @import "./nouislider/scss/nouislider";
 @import "./nouislider";
 
-// $fa-font-path: "/node_modules/font-awesome/fonts";
-// $fa-font-path:        "//netdna.bootstrapcdn.com/font-awesome/4.7.0/fonts" !default;
-// @import "~font-awesome/scss/font-awesome";
-
 $flaticon-font-path: "/assets/flaticon";
 @import "./flaticon/flaticon";
-
-span.icon-success {
-  color: #{$success};
-}
-
-span.icon-danger {
-  color: #{$danger};
-}
 
 html {
   position: relative;

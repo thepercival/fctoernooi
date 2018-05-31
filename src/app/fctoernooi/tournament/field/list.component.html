@@ -14,7 +14,7 @@
                     <i class="fi flaticon-field"></i> velden
                 </h2>
                 <h2 *ngIf="processing" align="center">
-                    <fa-icon [icon]="['fas', 'spinner']" [spin]="true"> </fa-icon>
+                    <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
                 </h2>
             </div>
             <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">
@@ -27,7 +27,7 @@
                         <th>naam</th>
                         <th style="text-align: right;">
                             <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" (click)="addField()" [disabled]="processing || disableEditButtons">
-                                <i class="fa fa-plus"></i>
+                                <fa-icon [icon]="['fas', 'plus']"></fa-icon>
                             </button>
                         </th>
                     </tr>
@@ -52,7 +52,7 @@
                         <td style="text-align: right;">
                             <button *ngIf="last && !isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || disableEditButtons"
                                 (click)="removeField(fieldItem);">
-                                <span class="fa fa-remove"></span>
+                                <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
                             </button>
                         </td>
                     </tr>

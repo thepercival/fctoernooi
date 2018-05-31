@@ -14,7 +14,7 @@
           <i class="fi flaticon-referee"></i> scheidsrechters
         </h2>
         <h2 *ngIf="processing" align="center">
-          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"> </fa-icon>
+          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">
@@ -28,7 +28,7 @@
             <th class="d-none d-sm-table-cell">naam</th>
             <th style="text-align: right;">
               <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" (click)="addReferee()" [disabled]="processing">
-                <i class="fa fa-plus"></i>
+                <fa-icon [icon]="['fas', 'plus']"></fa-icon>
               </button>
             </th>
           </tr>
@@ -48,7 +48,7 @@
             </td>
             <td style="text-align: right;">
               <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing" (click)="removeReferee(referee);">
-                <span class="fa fa-remove"></span>
+                <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
               </button>
             </td>
           </tr>

@@ -11,10 +11,10 @@
       </div>
       <div>
         <h2>
-          <i class="fa fa-cogs"></i> basis-instellingen
+          <fa-icon [icon]="['fas', 'cogs']"></fa-icon> basis-instellingen
         </h2>
         <h2 *ngIf="processing" align="center">
-          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"> </fa-icon>
+          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>

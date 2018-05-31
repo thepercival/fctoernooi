@@ -2,10 +2,9 @@
   <div class="d-flex justify-content-between mt-3">
     <h2>
       <span [innerHTML]="nameService.getRoundsName( roundNumber, roundsByNumber )"></span>
-
       <!-- <ng-template *ngIf="nameService.roundsHaveSameName( roundsByNumber )">
-        <i *ngFor="let winnersOrLosers of structureService.getWinnersLosersPosition( round )" [title]="structureService.getWinnersLosersDescription( round.getWinnersOrLosers() )"
-          class="fa fa-circle text-{{getClassPostfix(round.getWinnersOrLosers())}}"></i>
+        <fa-icon [icon]="['fas', 'circle']" *ngFor="let winnersOrLosers of structureService.getWinnersLosersPosition( round )" [title]="structureService.getWinnersLosersDescription(
+              round.getWinnersOrLosers() )" class="text-{{getClassPostfix(round.getWinnersOrLosers())}}"></fa-icon>
       </ng-template> -->
     </h2>
     <button type="button" class="btn btn-sm btn-outline-{{filterClass()}} mr-2" *ngIf="favTeamIds" [routerLink]="['/toernooi/filter', tournament.getId()]">
@@ -19,7 +18,7 @@
       <thead>
         <tr>
           <th *ngIf="aRoundNeedsRanking(roundsByNumber)" class="text-center" title="poule">
-            <i class="fa fa-list"></i>
+            <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
           </th>
           <th *ngIf="!aRoundNeedsRanking(roundsByNumber)" class="text-center" title="wedstrijd">
             <span>vs</span>
@@ -101,7 +100,8 @@
             <ng-template ngFor let-rankingItem [ngForOf]="getRankingItems(selectedPouleForRanking)">
               <tr>
                 <td class="rankingnr text-right">
-                  <i class="{{getQualificationClass(selectedPouleForRanking, rankingItem.getRank())}}"></i>
+                  <ng-container *ngTemplateOutlet="qualclass;context:{$implicit: getQualificationClass(selectedPouleForRanking, rankingItem.getRank())}">
+                  </ng-container>
                   <span>{{rankingItem.getRank()}}</span>
                 </td>
                 <td class="pouleplace" [ngClass]="{ 'text-primary': isTeamFav(rankingItem.getPoulePlace().getTeam()) }">{{nameService.getPoulePlaceName(rankingItem.getPoulePlace(), true)}}</td>
@@ -115,4 +115,8 @@
       </div>
     </div>
   </div>
+</ng-template>
+
+<ng-template #qualclass let-qualclass>
+  <fa-icon *ngIf="qualclass.icon !== undefined" [icon]="['fas', qualclass.icon]" class="{{qualclass.text}}"></fa-icon>
 </ng-template>

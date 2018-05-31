@@ -1,11 +1,10 @@
 <div *ngIf="round" class="col {{round.getNumber() === 1 ? 'px-0' : 'px-1'}}">
   <div class="card round" *ngIf="round.getPoulePlaces().length > 2">
     <div class="card-header px-1">
-      <span [innerHTML]="nameService.getRoundName( round )">
-      </span>
-      <i *ngFor="let winnersOrLosers of structureService.getWinnersLosersPosition( round )" [title]="getWinnersLosersDescription( winnersOrLosers )"
-        class="fa fa-circle text-{{getClassPostfix(winnersOrLosers)}}"></i>
-
+      <span [innerHTML]="nameService.getRoundName( round )"></span>
+      &nbsp;
+      <fa-icon [icon]="['fas', 'circle']" *ngFor="let winnersOrLosers of structureService.getWinnersLosersPosition( round )" [title]="getWinnersLosersDescription(
+      winnersOrLosers )" class="text-{{getClassPostfix(winnersOrLosers)}}"></fa-icon>
     </div>
     <div class="card-body px-1">
       <div *ngIf="round.getNumber() === 1 && !round.isStarted()" class="d-flex justify-content-around mb-3">
@@ -16,7 +15,7 @@
               <span class="fa fa-minus"></span>
             </button>
             <button *ngIf="round.getPoules().length < 8" type="button" class="btn btn-outline-secondary" (click)="addPoule(round)">
-              <span class="fa fa-plus"></span>
+              <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button>
           </div>
         </div>
@@ -27,7 +26,7 @@
               <span class="fa fa-minus"></span>
             </button>
             <button type="button" class="btn btn-outline-secondary" (click)="addPoulePlace(round)">
-              <span class="fa fa-plus"></span>
+              <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button>
           </div>
         </div>
@@ -37,7 +36,7 @@
           </button>
           <button type="button" class="btn btn-outline-secondary">poules</button>
           <button type="button" class="btn btn-outline-secondary" (click)="addPoule(round)">
-            <span class="fa fa-plus"></span>
+            <fa-icon [icon]="['fas', 'plus']"></fa-icon>
           </button>
         </div>
         <div class="d-none d-sm-inline-flex btn-group" role="group" aria-label="aantal deelnemers">
@@ -46,7 +45,7 @@
           </button>
           <button type="button" class="btn btn-outline-secondary">deelnemers</button>
           <button *ngIf="round.getPoules().length < 8" type="button" class="btn btn-outline-secondary" (click)="addPoulePlace(round)">
-            <span class="fa fa-plus"></span>
+            <fa-icon [icon]="['fas', 'plus']"></fa-icon>
           </button>
         </div>
       </div>

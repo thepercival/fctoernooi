@@ -9,10 +9,13 @@ import {
   faFilter,
   faLevelUpAlt,
   faPencilAlt,
+  faPlus,
+  faPlusCircle,
   faSave,
   faSignInAlt,
   faSignOutAlt,
   faSpinner,
+  faTv,
   faUserCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap/alert/alert.module';
@@ -46,7 +49,7 @@ import { HomeComponent } from './home/home.component';
 import { NavComponent } from './nav/nav.component';
 import { UserModule } from './user/user.module';
 
-library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave, faSignInAlt, faSignOutAlt);
+library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave, faSignInAlt, faSignOutAlt, faPlusCircle, faPlus, faTv);
 
 @NgModule({
   declarations: [

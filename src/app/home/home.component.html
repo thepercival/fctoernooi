@@ -6,14 +6,14 @@
     <p class="text-info">Met FCToernooi kun je snel en makkelijk een toernooi opzetten. Er is ook een live scorebord aanwezig. Het is gratis en
       zonder reclame!</p>
     <h2 *ngIf="processing" align="center">
-      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"> </fa-icon>
+      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
     <div *ngIf="!processing" class="d-flex justify-content-between">
       <!-- <button type="button" class="btn btn-sm-custom btn-outline-secondary" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
           aria-controls="collapseFilter">
           <fa-icon [icon]="['fas', 'filter']"></fa-icon> filter</button> -->
       <button type="button" class="btn btn-sm-custom btn-outline-primary" [routerLink]="['/toernooi/new']">
-        <i class="fa fa-plus-circle"></i> toernooi</button>
+        <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon> toernooi</button>
     </div>
     <!-- <div id="collapseFilter" class="container" [ngbCollapse]="isCollapsed">
         <form (ngSubmit)="false" #f="ngForm" novalidate>
