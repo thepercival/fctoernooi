@@ -36,17 +36,23 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     }
 
     ngOnInit() {
-        super.myNgOnInit(() => this.initTVViewLink());
+        super.myNgOnInit(() => {
+            this.initTVViewLink();
+            this.planningService = new PlanningService(this.structureService);
+            this.processing = false;
+        });
 
         this.route.queryParamMap.subscribe(params => {
             this.scrollToGameId = +params.get('scrollToGameId');
         });
 
-        this.timerSubscription = timer(10000, 20000).subscribe(number => {
+        this.timerSubscription = timer(30000, 30000).subscribe(number => {
             if (this.noRefresh !== true) {
                 this.processing = true;
-                this.setData(this.tournament.getId(), () => this.processing = false);
-                this.planningService = new PlanningService(this.structureService);
+                this.setData(this.tournament.getId(), () => {
+                    this.planningService = new PlanningService(this.structureService);
+                    this.processing = false;
+                });
             }
         });
     }
@@ -62,9 +68,6 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
         const link: NavBarTournamentTVViewLink = { showTVIcon: true, tournamentId: this.tournament.getId(), link: '/toernooi/viewtv' };
         this.globalEventsManager.toggleTVIconInNavBar.emit(link);
         this.tvViewLinkSet = true;
-
-        this.planningService = new PlanningService(this.structureService);
-        this.processing = false;
     }
 
     ngOnDestroy() {
