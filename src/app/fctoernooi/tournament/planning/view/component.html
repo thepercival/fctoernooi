@@ -9,7 +9,7 @@
       </ng-template> -->
     </h2>
     <button type="button" class="btn btn-sm btn-outline-{{filterClass()}} mr-2" *ngIf="favTeamIds" [routerLink]="['/toernooi/filter', tournament.getId()]">
-      <i class="fa fa-filter"></i>
+      <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       <span>filter</span>
     </button>
   </div>

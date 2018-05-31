@@ -5,7 +5,7 @@
         <h1>
           nieuw toernooi
           <button *ngIf="!processing" [routerLink]="['']" type="button" class="btn btn-outline-secondary btn-sm">
-            <i class="fa fa-level-up fa-rotate-270"></i>
+            <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
           </button>
         </h1>
       </div>
@@ -15,14 +15,14 @@
         </blockquote>
         <div class="d-flex justify-content-around">
           <button type="button" class="btn btn-sm-custom btn-outline-primary" [routerLink]="['/user/register']">
-            <i class="fa fa-user-circle"></i> registreer</button>
+            <fa-icon [icon]="['fas', 'user-circle']"></fa-icon> registreer</button>
           <button type="button" class="btn btn-sm-custom btn-outline-primary" [routerLink]="['/user/login']">
-            <i class="fa fa-sign-in"></i> inloggen</button>
+            <fa-icon [icon]="['fas', 'sign-in-alt']"></fa-icon> inloggen</button>
         </div>
       </div>
       <div>
         <h2 *ngIf="processing" align="center">
-          <i class="fa fa-spinner fa-spin fa-fw"></i>
+          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">

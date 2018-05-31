@@ -1,46 +1,44 @@
-<div class="">
-  <div *ngIf="structureService" class="row justify-content-center no-gutters">
-    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
-      <div class="mb-4">
-        <h1 *ngIf="tournament">
-          {{tournament.getName()}}
-          <button type="button" [routerLink]="['/toernooi/view', tournament.getId()]" class="btn btn-outline-secondary btn-sm">
-            <i class="fa fa-level-up fa-rotate-270"></i>
-          </button>
-        </h1>
-      </div>
-      <div>
-        <h2>
-          <i class="fa fa-filter"></i> filter deelnemers
-        </h2>
-      </div>
-      <div class="d-flex justify-content-center">
-        <ngb-alert *ngIf="alert" [type]="alert.type" style="width:100%;" [dismissible]="false" (close)="alert = undefined;">
-          {{ alert.message }}</ngb-alert>
-      </div>
-      <table *ngIf="!processing && hasTeams()" class="table">
-        <thead>
-          <tr>
-            <th>plek</th>
-            <th>naam</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let poulePlace of poulePlaces">
-            <td>
-              <span>{{nameService.getPoulePlaceName(poulePlace, false)}}</span>
-            </td>
-            <td>
-              <span *ngIf="poulePlace.getTeam()">{{poulePlace.getTeam().getName()}}</span>
-            </td>
-            <td style="text-align: right;">
-              <i *ngIf="poulePlace.getTeam()" class="fa fa-2x fa-{{inFavoriteTeamIds(poulePlace.getTeam()) ? 'check-' : ''}}square-o text-primary"
-                style="cursor: pointer" (click)="toggleFavoriteTeams(poulePlace.getTeam())"></i>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+<div class="row justify-content-center no-gutters">
+  <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+    <div class="mb-4">
+      <h1 *ngIf="tournament">
+        {{tournament.getName()}}
+        <button type="button" [routerLink]="['/toernooi/view', tournament.getId()]" class="btn btn-outline-secondary btn-sm">
+          <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+        </button>
+      </h1>
     </div>
+    <div>
+      <h2>
+        <fa-icon [icon]="['fas', 'filter']"></fa-icon>
+      </h2>
+    </div>
+    <div class="d-flex justify-content-center">
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">
+        {{ alert.message }}</ngb-alert>
+    </div>
+    <table *ngIf="!processing && hasTeams()" class="table">
+      <thead>
+        <tr>
+          <th>plek</th>
+          <th>naam</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let poulePlace of poulePlaces">
+          <td>
+            <span>{{nameService.getPoulePlaceName(poulePlace, false)}}</span>
+          </td>
+          <td>
+            <span *ngIf="poulePlace.getTeam()">{{poulePlace.getTeam().getName()}}</span>
+          </td>
+          <td style="text-align: right;">
+            <i *ngIf="poulePlace.getTeam()" class="fa fa-2x fa-{{inFavoriteTeamIds(poulePlace.getTeam()) ? 'check-' : ''}}square-o text-primary"
+              style="cursor: pointer" (click)="toggleFavoriteTeams(poulePlace.getTeam())"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

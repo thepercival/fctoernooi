@@ -1,53 +1,50 @@
-<div class="">
-    <div class="row justify-content-center no-gutters">
-        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
-            <div class="mb-4">
-                <h1 *ngIf="tournament">
-                    {{tournament.getName()}}
-                    <button *ngIf="!processing" [routerLink]="['/toernooi/home', tournament.getId()]" type="button" class="btn btn-outline-secondary btn-sm">
-                        <i class="fa fa-level-up fa-rotate-270"></i>
-                    </button>
-                </h1>
-            </div>
-            <div>
-                <h2>
-                    <i class="fa fa-cogs"></i> ronde-instellingen
-                </h2>
-                <h2 *ngIf="processing" align="center">
-                    <i class="fa fa-spinner fa-spin fa-fw"></i>
-                </h2>
-            </div>
-            <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
-            <form *ngIf="!processing" name="form" (ngSubmit)="saveConfig() && false" #f="ngForm" novalidate>
-                <div *ngIf="selectedRoundNumber > 0 || allRoundsByNumber[2] !== undefined" class="row justify-content-center mx-0">
-                    <div class="col">
-                        <p class="d-flex justify-content-between">
-                            <button type="submit" [disabled]="!f.form.valid || processing || planningService.isStarted(selectedRoundNumber)" class="btn btn-outline-primary">instellingen opslaan
-                                <i *ngIf="processing" class="fa fa-spinner fa-spin fa-fw"></i>
-                            </button>
-                            <button type="button" class="btn btn-outline-primary" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
-                                aria-controls="collapseExample">
-                                <span [innerHTML]="nameService.getRoundsName( selectedRoundNumber, allRoundsByNumber[selectedRoundNumber] )"></span>
-                                <!-- <span *ngIf="selectedRound.getNumber() > 1" class="fa fa-info-circle icon-{{getClassPostfix( selectedRound.getWinnersOrLosers() )}}"
+<div class="row justify-content-center no-gutters">
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+        <div class="mb-4">
+            <h1 *ngIf="tournament">
+                {{tournament.getName()}}
+                <button *ngIf="!processing" [routerLink]="['/toernooi/home', tournament.getId()]" type="button" class="btn btn-outline-secondary btn-sm">
+                    <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+                </button>
+            </h1>
+        </div>
+        <div>
+            <h2>
+                <i class="fa fa-cogs"></i> ronde-instellingen
+            </h2>
+            <h2 *ngIf="processing" align="center">
+                <fa-icon [icon]="['fas', 'spinner']" [spin]="true"> </fa-icon>
+            </h2>
+        </div>
+        <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
+        <form *ngIf="!processing" name="form" (ngSubmit)="saveConfig() && false" #f="ngForm" novalidate>
+            <div *ngIf="selectedRoundNumber > 0 || allRoundsByNumber[2] !== undefined" class="row justify-content-center mx-0">
+                <div class="col">
+                    <p class="d-flex justify-content-between">
+                        <button type="submit" [disabled]="!f.form.valid || processing || planningService.isStarted(selectedRoundNumber)" class="btn btn-outline-primary">instellingen opslaan
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
+                            aria-controls="collapseExample">
+                            <span [innerHTML]="nameService.getRoundsName( selectedRoundNumber, allRoundsByNumber[selectedRoundNumber] )"></span>
+                            <!-- <span *ngIf="selectedRound.getNumber() > 1" class="fa fa-info-circle icon-{{getClassPostfix( selectedRound.getWinnersOrLosers() )}}"
                             title="{{getWinnersLosersDescription( selectedRound.getWinnersOrLosers() )}}ronde"></span> -->
-                            </button>
-                        </p>
-                        <div id="collapseExample" [ngbCollapse]="isCollapsed">
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <ngb-alert type="info" style="width:100%;" [dismissible]="false">instellingen gelden ook voor volgende ronden</ngb-alert>
-                                    <div class="row">
-                                        <div class="col">
-                                            <span>selecteer een ronde:</span>
-                                        </div>
-                                        <div class="col">
-                                            <div class="btn-group-vertical">
-                                                <ng-template ngFor let-roundNumber [ngForOf]="structureService.getRoundNumbers()">
-                                                    <button *ngIf="planningService.hasGames(roundNumber)" type="button" class="btn btn-outline-{{getSelectRoundNumberButtonClassPostfix(roundNumber)}}"
-                                                        (click)="changeRoundNumber(roundNumber)" [innerHTML]="nameService.getRoundsName(roundNumber, allRoundsByNumber[roundNumber])">
-                                                    </button>
-                                                </ng-template>
-                                            </div>
+                        </button>
+                    </p>
+                    <div id="collapseExample" [ngbCollapse]="isCollapsed">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <ngb-alert type="info" style="width:100%;" [dismissible]="false">instellingen gelden ook voor volgende ronden</ngb-alert>
+                                <div class="row">
+                                    <div class="col">
+                                        <span>selecteer een ronde:</span>
+                                    </div>
+                                    <div class="col">
+                                        <div class="btn-group-vertical">
+                                            <ng-template ngFor let-roundNumber [ngForOf]="structureService.getRoundNumbers()">
+                                                <button *ngIf="planningService.hasGames(roundNumber)" type="button" class="btn btn-outline-{{getSelectRoundNumberButtonClassPostfix(roundNumber)}}"
+                                                    (click)="changeRoundNumber(roundNumber)" [innerHTML]="nameService.getRoundsName(roundNumber, allRoundsByNumber[roundNumber])">
+                                                </button>
+                                            </ng-template>
                                         </div>
                                     </div>
                                 </div>
@@ -55,142 +52,142 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="error" class="alert alert-danger">{{error}}</div>
-                <div class="row justify-content-center mx-0">
-                    <div class="col">
-                        <div class="form-group row">
-                            <label for="nrofheadtoheadmatches" class="col-8 col-form-label">aantal onderlinge duels</label>
-                            <div class="col-4">
-                                <select [ngModel]="modelConfig.getNrOfHeadtoheadMatches()" (ngModelChange)="setNrOfHeadtoheadMatches($event)" id="nrOfHeadtoheadMatches"
-                                    name="nrOfHeadtoheadMatches" class="form-control" required>
-                                    <option *ngFor="let n of ranges.nrOfHeadtoheadMatches" [attr.value]="n">{{n}}</option>
-                                </select>
-                            </div>
+            </div>
+            <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+            <div class="row justify-content-center mx-0">
+                <div class="col">
+                    <div class="form-group row">
+                        <label for="nrofheadtoheadmatches" class="col-8 col-form-label">aantal onderlinge duels</label>
+                        <div class="col-4">
+                            <select [ngModel]="modelConfig.getNrOfHeadtoheadMatches()" (ngModelChange)="setNrOfHeadtoheadMatches($event)" id="nrOfHeadtoheadMatches"
+                                name="nrOfHeadtoheadMatches" class="form-control" required>
+                                <option *ngFor="let n of ranges.nrOfHeadtoheadMatches" [attr.value]="n">{{n}}</option>
+                            </select>
                         </div>
-                        <div class="form-group row">
-                            <label for="winpoints" class="col-8 col-form-label">punten bij overwinning</label>
-                            <div class="col-4">
-                                <select [ngModel]="modelConfig.getWinPoints()" (ngModelChange)="setWinPoints($event)" id="winpoints" name="winpoints" class="form-control"
-                                    required>
-                                    <option *ngFor="let n of ranges.winPoints" [attr.value]="n">{{n}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="drawpoints" class="col-8 col-form-label">punten bij gelijkspel</label>
-                            <div class="col-4">
-                                <select [ngModel]="modelConfig.getDrawPoints()" (ngModelChange)="setDrawPoints($event)" id="drawpoints" name="drawpoints"
-                                    class="form-control" required>
-                                    <option *ngFor="let n of ranges.drawPoints" [attr.value]="n">{{n}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="hasExtension" class="col-8 col-form-label">verlenging bij gelijkspel</label>
-                            <div class="form-check col-4">
-                                <label class="custom-control custom-checkbox col-form-label">
-                                    <input type="checkbox" class="custom-control-input form-check-input" id="hasExtension" name="hasExtension" [ngModel]="modelConfig.getHasExtension()"
-                                        (ngModelChange)="setHasExtension($event)">
-                                    <span class="custom-control-indicator"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div *ngIf="modelConfig.getHasExtension()" class="form-group row">
-                            <label for="winpointsext" class="col-8 col-form-label">punten bij overwinning</label>
-                            <div class="col-4">
-                                <select [ngModel]="modelConfig.getWinPointsExt()" (ngModelChange)="setWinPointsExt($event)" id="winpointsext" name="winpointsext"
-                                    class="form-control" required>
-                                    <option *ngFor="let n of ranges.winPoints" [attr.value]="n">{{n}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div *ngIf="modelConfig.getHasExtension()" class="form-group row">
-                            <label for="drawpointsext" class="col-8 col-form-label">punten bij gelijkspel</label>
-                            <div class="col-4">
-                                <select [ngModel]="modelConfig.getDrawPointsExt()" (ngModelChange)="setDrawPointsExt($event)" id="drawpointsext" name="drawpointsext"
-                                    class="form-control" required>
-                                    <option *ngFor="let n of ranges.drawPoints" [attr.value]="n">{{n}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div *ngIf="modelConfig.getHasExtension()" class="form-group row">
-                            <label for="minutesPerGameExt" class="col-8 col-form-label">minuten</label>
-                            <div class="col-4">
-                                <input type="number" [maxlength]="2" min="validations.minMinutesPerGame" max="validations.maxMinutesPerGame" [ngModel]="modelConfig.getMinutesPerGameExt()"
-                                    (ngModelChange)="setMinutesPerGameExt($event)" id="minutesPerGameExt" name="minutesPerGameExt"
-                                    class="form-control" required />
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="enableTime" class="col-8 col-form-label">plannen o.b.v. tijd</label>
-                            <div class="form-check col-4">
-                                <label class="custom-control custom-checkbox col-form-label">
-                                    <input type="checkbox" class="custom-control-input form-check-input" id="enableTime" name="enableTime" [ngModel]="modelConfig.getEnableTime()"
-                                        (ngModelChange)="setEnableTime($event)">
-                                    <span class="custom-control-indicator"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div *ngIf="modelConfig.getEnableTime()" class="form-group row">
-                            <label for="minutesPerGame" class="col-8 col-form-label">minuten per wedstrijd</label>
-                            <div class="col-4">
-                                <input type="number" [maxlength]="2" min="validations.minMinutesPerGame" max="validations.maxMinutesPerGame" [ngModel]="modelConfig.getMinutesPerGame()"
-                                    (ngModelChange)="setMinutesPerGame($event)" id="minutesPerGame" name="minutesPerGame" class="form-control"
-                                    required />
-                            </div>
-                        </div>
-                        <div *ngIf="modelConfig.getEnableTime()" class="form-group row">
-                            <label for="minutesinbetween" class="col-8 col-form-label">minuten tussen wedstrijden</label>
-                            <div class="col-4">
-                                <input type="number" [maxlength]="2" min="validations.minMinutesPerGame" max="validations.maxMinutesPerGame" [ngModel]="modelConfig.getMinutesInBetween()"
-                                    (ngModelChange)="setMinutesInBetween($event)" id="minutesinbetween" name="minutesinbetween"
-                                    class="form-control" required>
-                            </div>
-                        </div>
-
-                        <hr/>
-
-                        <ng-template #recursiveList let-scoreConfig>
-                            <div class="form-group row">
-                                <div class="col-4">
-                                    <label class="col-form-label">{{scoreConfig.getName()}}</label>
-                                </div>
-                                <div class="col-2 text-center">
-                                    <label class="col-form-label">
-                                        <span class="fa fa-{{scoreConfig.isInput() ? 'check-' : '' }}circle-o fa-lg"></span>
-                                    </label>
-                                </div>
-                                <label for="scoreMaximum-{{scoreConfig.getId()}}" class="col-2 col-form-label text-right">{{getDirectionClass(scoreConfig)}}</label>
-                                <div class="col-4">
-                                    <input type="number" [maxlength]="4" [ngModel]="scoreConfig.getMaximum()" (ngModelChange)="setScoreConfigMaximum(scoreConfig,$event)"
-                                        id="scoreMaximum-{{scoreConfig.getId()}}" name="scoreMaximum-{{scoreConfig.getId()}}"
-                                        class="form-control" [disabled]="isScoreConfigReadOnly(scoreConfig)" required />
-                                </div>
-                            </div>
-                            <ng-container *ngIf="scoreConfig.getChild()">
-                                <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: scoreConfig.getChild() }"></ng-container>
-                            </ng-container>
-                        </ng-template>
-                        <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: modelConfig.getScore().getRoot() }"></ng-container>
-
-                        <div>
-                            <div *ngIf="getInputScoreConfig()" class="alert">De puntentelling wordt bijgehouden in {{getInputScoreConfig().getName()}} (
-                                <span class="fa fa-check-circle-o fa-lg"></span> )</div>
-                            <div *ngIf="!getInputScoreConfig()" class="alert alert-danger">Zorg dat je een actieve eenheid hebt voor de puntentelling</div>
-                        </div>
-
-                        <!--<div class="form-group col">-->
-                        <!--<label for="winpointspergame" class="col-form-label">punten per overwinning</label>-->
-                        <!--<input type="number" class="form-control" id="winpointspergame" name="winpointspergame" [min]="validations.minwinpointspergame" [max]="validations.maxwinpointspergame" [(ngModel)]="model.winpointspergame" #winpointspergame="ngModel" required>-->
-                        <!--</div>-->
-                        <!--<div *ngIf="f.submitted && model.nrofcompetitors < validations.minnrofcompetitors" class="alert alert-danger">het minimum aantal deelnemers is {{validations.minnrofcompetitors}}</div>-->
-                        <!--<div *ngIf="f.submitted && model.nrofcompetitors > validations.maxnrofcompetitors" class="alert alert-danger">het maximum aantal deelnemers is {{validations.maxnrofcompetitors}}</div>-->
-                        <!--<div *ngIf="f.submitted && model.nroffields < validations.minnroffields" class="alert alert-danger">het minimum aantal velden is {{validations.minnroffields}}</div>-->
-                        <!--<div *ngIf="f.submitted && model.nroffields > validations.maxnroffields" class="alert alert-danger">het maximum aantal velden is {{validations.maxnroffields}}</div>-->
-                        <!--<div *ngIf="error" class="alert alert-danger">{{error}}</div>-->
                     </div>
+                    <div class="form-group row">
+                        <label for="winpoints" class="col-8 col-form-label">punten bij overwinning</label>
+                        <div class="col-4">
+                            <select [ngModel]="modelConfig.getWinPoints()" (ngModelChange)="setWinPoints($event)" id="winpoints" name="winpoints" class="form-control"
+                                required>
+                                <option *ngFor="let n of ranges.winPoints" [attr.value]="n">{{n}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="drawpoints" class="col-8 col-form-label">punten bij gelijkspel</label>
+                        <div class="col-4">
+                            <select [ngModel]="modelConfig.getDrawPoints()" (ngModelChange)="setDrawPoints($event)" id="drawpoints" name="drawpoints"
+                                class="form-control" required>
+                                <option *ngFor="let n of ranges.drawPoints" [attr.value]="n">{{n}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="hasExtension" class="col-8 col-form-label">verlenging bij gelijkspel</label>
+                        <div class="form-check col-4">
+                            <label class="custom-control custom-checkbox col-form-label">
+                                <input type="checkbox" class="custom-control-input form-check-input" id="hasExtension" name="hasExtension" [ngModel]="modelConfig.getHasExtension()"
+                                    (ngModelChange)="setHasExtension($event)">
+                                <span class="custom-control-indicator"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div *ngIf="modelConfig.getHasExtension()" class="form-group row">
+                        <label for="winpointsext" class="col-8 col-form-label">punten bij overwinning</label>
+                        <div class="col-4">
+                            <select [ngModel]="modelConfig.getWinPointsExt()" (ngModelChange)="setWinPointsExt($event)" id="winpointsext" name="winpointsext"
+                                class="form-control" required>
+                                <option *ngFor="let n of ranges.winPoints" [attr.value]="n">{{n}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div *ngIf="modelConfig.getHasExtension()" class="form-group row">
+                        <label for="drawpointsext" class="col-8 col-form-label">punten bij gelijkspel</label>
+                        <div class="col-4">
+                            <select [ngModel]="modelConfig.getDrawPointsExt()" (ngModelChange)="setDrawPointsExt($event)" id="drawpointsext" name="drawpointsext"
+                                class="form-control" required>
+                                <option *ngFor="let n of ranges.drawPoints" [attr.value]="n">{{n}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div *ngIf="modelConfig.getHasExtension()" class="form-group row">
+                        <label for="minutesPerGameExt" class="col-8 col-form-label">minuten</label>
+                        <div class="col-4">
+                            <input type="number" [maxlength]="2" min="validations.minMinutesPerGame" max="validations.maxMinutesPerGame" [ngModel]="modelConfig.getMinutesPerGameExt()"
+                                (ngModelChange)="setMinutesPerGameExt($event)" id="minutesPerGameExt" name="minutesPerGameExt"
+                                class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="enableTime" class="col-8 col-form-label">plannen o.b.v. tijd</label>
+                        <div class="form-check col-4">
+                            <label class="custom-control custom-checkbox col-form-label">
+                                <input type="checkbox" class="custom-control-input form-check-input" id="enableTime" name="enableTime" [ngModel]="modelConfig.getEnableTime()"
+                                    (ngModelChange)="setEnableTime($event)">
+                                <span class="custom-control-indicator"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div *ngIf="modelConfig.getEnableTime()" class="form-group row">
+                        <label for="minutesPerGame" class="col-8 col-form-label">minuten per wedstrijd</label>
+                        <div class="col-4">
+                            <input type="number" [maxlength]="2" min="validations.minMinutesPerGame" max="validations.maxMinutesPerGame" [ngModel]="modelConfig.getMinutesPerGame()"
+                                (ngModelChange)="setMinutesPerGame($event)" id="minutesPerGame" name="minutesPerGame" class="form-control"
+                                required />
+                        </div>
+                    </div>
+                    <div *ngIf="modelConfig.getEnableTime()" class="form-group row">
+                        <label for="minutesinbetween" class="col-8 col-form-label">minuten tussen wedstrijden</label>
+                        <div class="col-4">
+                            <input type="number" [maxlength]="2" min="validations.minMinutesPerGame" max="validations.maxMinutesPerGame" [ngModel]="modelConfig.getMinutesInBetween()"
+                                (ngModelChange)="setMinutesInBetween($event)" id="minutesinbetween" name="minutesinbetween" class="form-control"
+                                required>
+                        </div>
+                    </div>
+
+                    <hr/>
+
+                    <ng-template #recursiveList let-scoreConfig>
+                        <div class="form-group row">
+                            <div class="col-4">
+                                <label class="col-form-label">{{scoreConfig.getName()}}</label>
+                            </div>
+                            <div class="col-2 text-center">
+                                <label class="col-form-label">
+                                    <span class="fa fa-{{scoreConfig.isInput() ? 'check-' : '' }}circle-o fa-lg"></span>
+                                </label>
+                            </div>
+                            <label for="scoreMaximum-{{scoreConfig.getId()}}" class="col-2 col-form-label text-right">{{getDirectionClass(scoreConfig)}}</label>
+                            <div class="col-4">
+                                <input type="number" [maxlength]="4" [ngModel]="scoreConfig.getMaximum()" (ngModelChange)="setScoreConfigMaximum(scoreConfig,$event)"
+                                    id="scoreMaximum-{{scoreConfig.getId()}}" name="scoreMaximum-{{scoreConfig.getId()}}" class="form-control"
+                                    [disabled]="isScoreConfigReadOnly(scoreConfig)" required />
+                            </div>
+                        </div>
+                        <ng-container *ngIf="scoreConfig.getChild()">
+                            <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: scoreConfig.getChild() }"></ng-container>
+                        </ng-container>
+                    </ng-template>
+                    <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: modelConfig.getScore().getRoot() }"></ng-container>
+
+                    <div>
+                        <div *ngIf="getInputScoreConfig()" class="alert">De puntentelling wordt bijgehouden in {{getInputScoreConfig().getName()}} (
+                            <span class="fa fa-check-circle-o fa-lg"></span> )</div>
+                        <div *ngIf="!getInputScoreConfig()" class="alert alert-danger">Zorg dat je een actieve eenheid hebt voor de puntentelling</div>
+                    </div>
+
+                    <!--<div class="form-group col">-->
+                    <!--<label for="winpointspergame" class="col-form-label">punten per overwinning</label>-->
+                    <!--<input type="number" class="form-control" id="winpointspergame" name="winpointspergame" [min]="validations.minwinpointspergame" [max]="validations.maxwinpointspergame" [(ngModel)]="model.winpointspergame" #winpointspergame="ngModel" required>-->
+                    <!--</div>-->
+                    <!--<div *ngIf="f.submitted && model.nrofcompetitors < validations.minnrofcompetitors" class="alert alert-danger">het minimum aantal deelnemers is {{validations.minnrofcompetitors}}</div>-->
+                    <!--<div *ngIf="f.submitted && model.nrofcompetitors > validations.maxnrofcompetitors" class="alert alert-danger">het maximum aantal deelnemers is {{validations.maxnrofcompetitors}}</div>-->
+                    <!--<div *ngIf="f.submitted && model.nroffields < validations.minnroffields" class="alert alert-danger">het minimum aantal velden is {{validations.minnroffields}}</div>-->
+                    <!--<div *ngIf="f.submitted && model.nroffields > validations.maxnroffields" class="alert alert-danger">het maximum aantal velden is {{validations.maxnroffields}}</div>-->
+                    <!--<div *ngIf="error" class="alert alert-danger">{{error}}</div>-->
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </div>

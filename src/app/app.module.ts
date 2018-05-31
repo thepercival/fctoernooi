@@ -2,6 +2,19 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import {
+  faFilter,
+  faLevelUpAlt,
+  faPencilAlt,
+  faSave,
+  faSignInAlt,
+  faSignOutAlt,
+  faSpinner,
+  faUserCircle,
+} from '@fortawesome/free-solid-svg-icons';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap/alert/alert.module';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap/collapse/collapse.module';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
@@ -17,6 +30,7 @@ import {
   StructureNameService,
 } from 'ngx-sport';
 
+import { environment } from '../environments/environment';
 import { AdminModule } from './admin/admin.module';
 import { RoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -31,6 +45,8 @@ import { FooterComponent } from './footer/footer.component';
 import { HomeComponent } from './home/home.component';
 import { NavComponent } from './nav/nav.component';
 import { UserModule } from './user/user.module';
+
+library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave, faSignInAlt, faSignOutAlt);
 
 @NgModule({
   declarations: [
@@ -48,6 +64,8 @@ import { UserModule } from './user/user.module';
     AdminModule,
     NgbDatepickerModule.forRoot(), NgbTimepickerModule.forRoot(), NgbAlertModule.forRoot(),
     NgbPopoverModule.forRoot(), NgbCollapseModule.forRoot(),
+    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
+    FontAwesomeModule
   ],
   providers: [
     AuthService,

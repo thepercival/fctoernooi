@@ -6,12 +6,12 @@
     <p class="text-info">Met FCToernooi kun je snel en makkelijk een toernooi opzetten. Er is ook een live scorebord aanwezig. Het is gratis en
       zonder reclame!</p>
     <h2 *ngIf="processing" align="center">
-      <i class="fa fa-spinner fa-spin fa-fw"></i>
+      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"> </fa-icon>
     </h2>
     <div *ngIf="!processing" class="d-flex justify-content-between">
       <!-- <button type="button" class="btn btn-sm-custom btn-outline-secondary" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
           aria-controls="collapseFilter">
-          <i class="fa fa-filter"></i> filter</button> -->
+          <fa-icon [icon]="['fas', 'filter']"></fa-icon> filter</button> -->
       <button type="button" class="btn btn-sm-custom btn-outline-primary" [routerLink]="['/toernooi/new']">
         <i class="fa fa-plus-circle"></i> toernooi</button>
     </div>
@@ -52,7 +52,7 @@
           <td *ngIf="isLoggedIn()" style="text-align: right">
             <button *ngIf="hasPermission(tournament)" type="button" [routerLink]="['/toernooi/home', tournament.getId()]" routerLinkActive="active"
               class="btn btn-sm btn-outline-primary">
-              <i class="fa fa-pencil"></i>
+              <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
             </button>
           </td>
         </tr>

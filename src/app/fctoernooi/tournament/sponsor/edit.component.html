@@ -5,16 +5,16 @@
         <h1 *ngIf="tournament">
           {{tournament.getName()}}
           <button *ngIf="!processing" (click)="navigateBack()" type="button" class="btn btn-outline-secondary btn-sm">
-            <i class="fa fa-level-up fa-rotate-270"></i>
+            <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
           </button>
         </h1>
       </div>
       <div>
         <h2>
-          <i class="fa fa-money"></i> sponsor
+          <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon> sponsor
         </h2>
         <h2 *ngIf="processing" align="center">
-          <i class="fa fa-spinner fa-spin fa-fw"></i>
+          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"> </fa-icon>
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>

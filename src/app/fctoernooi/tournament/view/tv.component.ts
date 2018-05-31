@@ -11,7 +11,7 @@ import {
     StructureNameService,
     StructureRepository,
 } from 'ngx-sport';
-import { Subscription, timer } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { AuthService } from '../../../auth/auth.service';
 import { GlobalEventsManager } from '../../../common/eventmanager';
@@ -63,13 +63,13 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         if (screenDefs.length === 0) {
             return;
         }
-        this.timerSubscription = timer(0, 10000).subscribe(number => {
-            this.screenDef = screenDefs.shift();
-            if (this.screenDef === undefined) {
-                this.timerSubscription.unsubscribe();
-                this.getDataAndProcessScreens();
-            }
-        });
+        // this.timerSubscription = timer(0, 10000).subscribe(number => {
+        //     this.screenDef = screenDefs.shift();
+        //     if (this.screenDef === undefined) {
+        //         this.timerSubscription.unsubscribe();
+        //         this.getDataAndProcessScreens();
+        //     }
+        // });
     }
 
     getDataAndProcessScreens() {

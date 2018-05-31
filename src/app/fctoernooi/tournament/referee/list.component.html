@@ -5,7 +5,7 @@
         <h1 *ngIf="tournament">
           {{tournament.getName()}}
           <button type="button" [routerLink]="['/toernooi/home', tournament.getId()]" class="btn btn-outline-secondary btn-sm">
-            <i class="fa fa-level-up fa-rotate-270"></i>
+            <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
           </button>
         </h1>
       </div>
@@ -14,7 +14,7 @@
           <i class="fi flaticon-referee"></i> scheidsrechters
         </h2>
         <h2 *ngIf="processing" align="center">
-          <i class="fa fa-spinner fa-spin fa-fw"></i>
+          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"> </fa-icon>
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">
@@ -37,7 +37,7 @@
           <tr *ngFor="let referee of referees; let last = last;">
             <td>
               <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing" (click)="editReferee(referee)">
-                <span class="fa fa-pencil"></span>
+                <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
               </button>
             </td>
             <td>

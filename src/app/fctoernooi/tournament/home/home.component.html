@@ -2,11 +2,11 @@
   <h1 *ngIf="tournament" align="center">
     {{tournament.getName()}}
     <button [routerLink]="['']" type="button" class="btn btn-outline-secondary btn-sm">
-      <i class="fa fa-level-up fa-rotate-270"></i>
+      <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
     </button>
   </h1>
   <h2 *ngIf="processing" align="center">
-    <i class="fa fa-spinner fa-spin fa-fw"></i>
+    <fa-icon [icon]="['fas', 'spinner']" [spin]="true"> </fa-icon>
   </h2>
   <div *ngIf="!processing" class="row d-flex justify-content-center">
     <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/structure', tournament.getId()]">
@@ -66,7 +66,7 @@
     <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/sponsors', tournament.getId()]">
       <div class="card-body">
         <h5 class="card-title">
-          <i class="fa fa-money"></i> sponsoren</h5>
+          <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon> sponsoren</h5>
         <p class="card-text">{{getNrOfSponsorsDescription()}}</p>
       </div>
     </div>
