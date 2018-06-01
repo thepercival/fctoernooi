@@ -67,15 +67,17 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         }
         this.timerSubscription = timer(0, 10000).subscribe(number => {
             this.screenDef = screenDefs.shift();
+            this.processing = false;
             if (this.screenDef === undefined) {
                 this.timerSubscription.unsubscribe();
+                this.processing = true;
                 this.getDataAndProcessScreens();
             }
         });
     }
 
     getDataAndProcessScreens() {
-        this.setData(this.tournament.getId(), () => { this.processScreens(); this.processing = false; });
+        this.setData(this.tournament.getId(), () => { this.processScreens(); });
     }
 
     getRoundsByNumber(roundNumber: number): Round[] {
