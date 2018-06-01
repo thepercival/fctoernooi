@@ -46,7 +46,8 @@
           <td class="toView" (click)="linkToView(tournament)">{{tournament.getCompetition().getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit","hour12":
             false,"hour":"2-digit","minute":"2-digit"} )}}</td>
           <td class="d-none d-sm-table-cell toView" (click)="linkToView(tournament)">
-            <i class="{{iconManager.getIconClass(tournament.getCompetition().getLeague().getSport())}}"></i>
+            <i *ngIf="iconManager.getIconType(tournament.getCompetition().getLeague().getSport()) === 'fi'" class="{{iconManager.getIconClass(tournament.getCompetition().getLeague().getSport())}}"></i>
+            <fa-icon *ngIf="iconManager.getIconType(tournament.getCompetition().getLeague().getSport()) === 'fa'" [icon]="['fas', iconManager.getIconClass(tournament.getCompetition().getLeague().getSport())]"></fa-icon>
           </td>
           <td class="toView" (click)="linkToView(tournament)">{{tournament.getCompetition().getLeague().getName()}}</td>
           <td *ngIf="isLoggedIn()" style="text-align: right">

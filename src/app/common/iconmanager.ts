@@ -5,7 +5,7 @@ import { SportConfig } from 'ngx-sport';
 export class IconManager {
     getIconClass(sportName: string): string {
         if (sportName === SportConfig.Football) {
-            return 'fa fa-futbol-o';
+            return 'futbol';
         } else if (sportName === SportConfig.Darts) {
             return 'fi flaticon-darts';
         } else if (sportName === SportConfig.TableTennis) {
@@ -20,5 +20,12 @@ export class IconManager {
             return 'fi flaticon-hockey';
         }
         return undefined;
+    }
+
+    getIconType(sportName: string): string {
+        if (sportName === SportConfig.Football) {
+            return 'fa';
+        }
+        return 'fi';
     }
 }

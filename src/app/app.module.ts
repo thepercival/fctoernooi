@@ -7,6 +7,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
   faFilter,
+  faFutbol,
   faLevelUpAlt,
   faPencilAlt,
   faPlus,
@@ -49,7 +50,8 @@ import { HomeComponent } from './home/home.component';
 import { NavComponent } from './nav/nav.component';
 import { UserModule } from './user/user.module';
 
-library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave, faSignInAlt, faSignOutAlt, faPlusCircle, faPlus, faTv);
+library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave,
+  faSignInAlt, faSignOutAlt, faPlusCircle, faPlus, faTv, faFutbol);
 
 @NgModule({
   declarations: [

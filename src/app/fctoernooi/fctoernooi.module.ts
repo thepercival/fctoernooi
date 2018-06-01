@@ -3,12 +3,21 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCheckSquare, faSquare } from '@fortawesome/free-regular-svg-icons';
 import {
+  faArrowsAltH,
+  faArrowsAltV,
   faCheckCircle,
   faCircle,
   faCogs,
+  faCompress,
+  faExpand,
   faListUl,
+  faMinus,
   faMoneyBillAlt,
+  faPrint,
+  faRandom,
+  faSort,
   faTimesCircle,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
@@ -33,6 +42,7 @@ import {
   TeamRepository,
 } from 'ngx-sport';
 
+import { EscapeHtmlPipe } from '../common/escapehtmlpipe';
 import { IconManager } from '../common/iconmanager';
 import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
 import { TournamentCompetitorEditComponent } from './tournament/competitor/edit.component';
@@ -56,7 +66,11 @@ import { TournamentStructureRoundComponent } from './tournament/structure/round.
 import { TournamentViewTvComponent } from './tournament/view/tv.component';
 import { TournamentViewComponent } from './tournament/view/view.component';
 
-library.add(faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs);
+library.add(
+  faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus,
+  faExpand, faCompress, faPrint, faSort, faRandom, faSquare, faCheckSquare, faArrowsAltH,
+  faArrowsAltV
+);
 
 @NgModule({
   imports: [
@@ -88,7 +102,8 @@ library.add(faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, 
     TournamentGameEditComponent,
     TournamentRefereeEditComponent,
     TournamentSponsorEditComponent,
-    TournamentFilterComponent
+    TournamentFilterComponent,
+    EscapeHtmlPipe
   ],
   providers: [
     TournamentRoleRepository,

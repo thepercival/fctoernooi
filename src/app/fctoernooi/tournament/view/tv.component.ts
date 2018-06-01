@@ -363,7 +363,9 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
 
     ngOnDestroy() {
         this.globalEventsManager.toggleTVIconInNavBar.emit({});
-        this.timerSubscription.unsubscribe();
+        if (this.timerSubscription !== undefined) {
+            this.timerSubscription.unsubscribe();
+        }
     }
 
     isAdmin(): boolean {

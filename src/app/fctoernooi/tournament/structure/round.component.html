@@ -1,7 +1,7 @@
 <div *ngIf="round" class="col {{round.getNumber() === 1 ? 'px-0' : 'px-1'}}">
   <div class="card round" *ngIf="round.getPoulePlaces().length > 2">
     <div class="card-header px-1">
-      <span [innerHTML]="nameService.getRoundName( round )"></span>
+      <span [innerHTML]="nameService.getRoundName( round ) | keepHtml"></span>
       &nbsp;
       <fa-icon [icon]="['fas', 'circle']" *ngFor="let winnersOrLosers of structureService.getWinnersLosersPosition( round )" [title]="getWinnersLosersDescription(
       winnersOrLosers )" class="text-{{getClassPostfix(winnersOrLosers)}}"></fa-icon>
@@ -12,7 +12,7 @@
           <button type="button" class="btn btn-outline-secondary">poules</button>
           <div class="btn-group" role="group" aria-label="aantal poules">
             <button type="button" class="btn btn-outline-secondary" (click)="removePoule(round)">
-              <span class="fa fa-minus"></span>
+              <fa-icon [icon]="['fas', 'minus']"></fa-icon>
             </button>
             <button *ngIf="round.getPoules().length < 8" type="button" class="btn btn-outline-secondary" (click)="addPoule(round)">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
@@ -23,7 +23,7 @@
           <button type="button" class="btn btn-outline-secondary">deelnemers</button>
           <div class="btn-group" role="group" aria-label="aantal deelnemers">
             <button *ngIf="canRemovePoulePlace(round)" type="button" class="btn btn-outline-secondary" (click)="removePoulePlace(round)">
-              <span class="fa fa-minus"></span>
+              <fa-icon [icon]="['fas', 'minus']"></fa-icon>
             </button>
             <button type="button" class="btn btn-outline-secondary" (click)="addPoulePlace(round)">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
@@ -32,7 +32,7 @@
         </div>
         <div class="d-none d-sm-inline-flex btn-group" role="group" aria-label="aantal poules">
           <button type="button" class="btn btn-outline-secondary" (click)="removePoule(round)">
-            <span class="fa fa-minus"></span>
+            <fa-icon [icon]="['fas', 'minus']"></fa-icon>
           </button>
           <button type="button" class="btn btn-outline-secondary">poules</button>
           <button type="button" class="btn btn-outline-secondary" (click)="addPoule(round)">
@@ -41,10 +41,10 @@
         </div>
         <div class="d-none d-sm-inline-flex btn-group" role="group" aria-label="aantal deelnemers">
           <button *ngIf="canRemovePoulePlace(round)" type="button" class="btn btn-outline-secondary" (click)="removePoulePlace(round)">
-            <span class="fa fa-minus"></span>
+            <fa-icon [icon]="['fas', 'minus']"></fa-icon>
           </button>
           <button type="button" class="btn btn-outline-secondary">deelnemers</button>
-          <button *ngIf="round.getPoules().length < 8" type="button" class="btn btn-outline-secondary" (click)="addPoulePlace(round)">
+          <button type="button" class="btn btn-outline-secondary" (click)="addPoulePlace(round)">
             <fa-icon [icon]="['fas', 'plus']"></fa-icon>
           </button>
         </div>
@@ -53,25 +53,25 @@
       <div *ngIf="round.getNumber() === 2 && round.getPoulePlaces().length >= 4 && !round.isStarted()" class="d-none d-sm-inline-flex mb-3 btn-group"
         role="group" aria-label="verdeel">
         <button *ngIf="round.getPoules().length > 1" type="button" class="btn btn-outline-secondary" (click)="removePoule(round)">
-          <span class="fa fa-compress"></span>
+          <fa-icon [icon]="['fas', 'compress']"></fa-icon>
         </button>
         <button *ngIf="round.getQualifyOrder() < CustomQualifyOrder && round.getPoules().length >= 2" type="button" class="btn btn-outline-secondary"
           (click)="toggleQualifyOrder(round)">
-          <span class="fa fa-arrows-{{ qualifyOrderIsHorizontal(round) ? 'v' : 'h'}}"></span>
+          <fa-icon [icon]="['fas', 'arrows-alt-' + (qualifyOrderIsHorizontal(round) ? 'v' : 'h') ]"></fa-icon>
         </button>
         <button *ngIf="( round.getPoulePlaces().length / ( round.getPoules().length + 1 ) ) >= 2" type="button" class="btn btn-outline-secondary"
           (click)="addPoule(round,false )">
-          <span class="fa fa-expand"></span>
+          <fa-icon [icon]="['fas', 'expand']"></fa-icon>
         </button>
       </div>
       <div *ngIf="round.getNumber() >= 2 && round.getPoulePlaces().length >= 4 && !round.isStarted()" [ngClass]="{ 'd-sm-none': ( round.getNumber() === 2 ) }"
         class="mb-3 btn-group{{ structureService.getNrOfSiblingRounds(round) >= 3 ?'-vertical' : '' }}" role="group" aria-label="verdeel">
         <button *ngIf="round.getPoules().length > 1" type="button" class="btn btn-outline-secondary" (click)="removePoule(round)">
-          <span class="fa fa-compress"></span>
+          <fa-icon [icon]="['fas', 'compress']"></fa-icon>
         </button>
         <button *ngIf="( round.getPoulePlaces().length / ( round.getPoules().length + 1 ) ) >= 2" type="button" class="btn btn-outline-secondary"
           (click)="addPoule(round,false )">
-          <span class="fa fa-expand"></span>
+          <fa-icon [icon]="['fas', 'expand']"></fa-icon>
         </button>
       </div>
       <p *ngIf="round.isStarted()">
@@ -89,7 +89,6 @@
     </div>
   </div>
   <div class="qualifier" *ngIf="round.getPoulePlaces().length > 2" class="row text-center no-gutters">
-    <!-- <div class="text-center mt-3" style="width:100%;"><h5 class="my-0"><i class="fa fa-arrow-circle-down"></i></h5></div> -->
     <div *ngFor="let winnersOrLosers of winnersAndLosers" class="col px-3">
       {{getWinnersLosersDescription( winnersOrLosers )}}
       <nouislider class="horizontal-slider {{getWinnersLosersName( winnersOrLosers )}}" [config]="uiSliderConfig" [min]="0" [max]="round.getPoulePlaces().length"
@@ -107,7 +106,7 @@
 
   <div class="card round" *ngIf="round.getPoulePlaces().length === 2">
     <div class="card-header" style="padding-left: 0.5rem; padding-right: 0.5rem;">
-      <span [innerHTML]="nameService.getRoundName(round)"></span>
+      <span [innerHTML]="nameService.getRoundName(round) | keepHtml"></span>
     </div>
   </div>
 </div>

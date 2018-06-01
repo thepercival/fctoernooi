@@ -25,9 +25,10 @@
                         </button>
                         <button type="button" class="btn btn-outline-primary" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
                             aria-controls="collapseExample">
-                            <span [innerHTML]="nameService.getRoundsName( selectedRoundNumber, allRoundsByNumber[selectedRoundNumber] )"></span>
-                            <!-- <span *ngIf="selectedRound.getNumber() > 1" class="fa fa-info-circle icon-{{getClassPostfix( selectedRound.getWinnersOrLosers() )}}"
-                            title="{{getWinnersLosersDescription( selectedRound.getWinnersOrLosers() )}}ronde"></span> -->
+                            <span [innerHTML]="nameService.getRoundsName( selectedRoundNumber, allRoundsByNumber[selectedRoundNumber] ) | keepHtml"></span>
+                            <!-- <fa-icon *ngIf="selectedRound.getNumber() > 1" [icon]="['fas', 'info-circle']" 
+                                 class="text-{{getClassPostfix( selectedRound.getWinnersOrLosers() )}}"
+                                 title="{{getWinnersLosersDescription( selectedRound.getWinnersOrLosers() )}}ronde"></fa-icon> -->
                         </button>
                     </p>
                     <div id="collapseExample" [ngbCollapse]="isCollapsed">
@@ -42,7 +43,7 @@
                                         <div class="btn-group-vertical">
                                             <ng-template ngFor let-roundNumber [ngForOf]="structureService.getRoundNumbers()">
                                                 <button *ngIf="planningService.hasGames(roundNumber)" type="button" class="btn btn-outline-{{getSelectRoundNumberButtonClassPostfix(roundNumber)}}"
-                                                    (click)="changeRoundNumber(roundNumber)" [innerHTML]="nameService.getRoundsName(roundNumber, allRoundsByNumber[roundNumber])">
+                                                    (click)="changeRoundNumber(roundNumber)" [innerHTML]="nameService.getRoundsName(roundNumber, allRoundsByNumber[roundNumber]) | keepHtml">
                                                 </button>
                                             </ng-template>
                                         </div>
@@ -155,7 +156,7 @@
                             </div>
                             <div class="col-2 text-center">
                                 <label class="col-form-label">
-                                    <span class="fa fa-{{scoreConfig.isInput() ? 'check-' : '' }}circle-o fa-lg"></span>
+                                    <fa-icon [icon]="['fas', (scoreConfig.isInput() ? 'check-' : '') + 'circle']" size="lg"></fa-icon>
                                 </label>
                             </div>
                             <label for="scoreMaximum-{{scoreConfig.getId()}}" class="col-2 col-form-label text-right">{{getDirectionClass(scoreConfig)}}</label>

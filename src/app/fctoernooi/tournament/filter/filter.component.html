@@ -34,8 +34,8 @@
             <span *ngIf="poulePlace.getTeam()">{{poulePlace.getTeam().getName()}}</span>
           </td>
           <td style="text-align: right;">
-            <i *ngIf="poulePlace.getTeam()" class="fa fa-2x fa-{{inFavoriteTeamIds(poulePlace.getTeam()) ? 'check-' : ''}}square-o text-primary"
-              style="cursor: pointer" (click)="toggleFavoriteTeams(poulePlace.getTeam())"></i>
+            <fa-icon *ngIf="poulePlace.getTeam()" class="text-primary" style="cursor: pointer" (click)="toggleFavoriteTeams(poulePlace.getTeam())"
+              [icon]="['far', (inFavoriteTeamIds(poulePlace.getTeam()) ? 'check-' : '') + 'square']" size="2x"></fa-icon>
           </td>
         </tr>
       </tbody>
