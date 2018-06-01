@@ -16,7 +16,6 @@ export class GameListComponent extends TournamentComponent implements OnInit {
   showPrintBtn: boolean;
   noRefresh = false;
   scrollToGameId: number;
-  processing = true;
 
   constructor(
     route: ActivatedRoute,

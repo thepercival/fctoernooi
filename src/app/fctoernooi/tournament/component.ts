@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Round, StructureRepository, StructureService } from 'ngx-sport';
 import { Subscription } from 'rxjs';
 
+import { IAlert } from '../../app.definitions';
 import { Tournament } from '../tournament';
 import { TournamentRepository } from './repository';
 
@@ -11,13 +12,15 @@ import { TournamentRepository } from './repository';
  */
 export class TournamentComponent implements OnDestroy {
 
-    tournament: Tournament;
+    public tournament: Tournament;
     protected sub: Subscription;
     protected route: ActivatedRoute;
     protected router: Router;
     protected tournamentRepository: TournamentRepository;
     protected structureRepository: StructureRepository;
     public structureService: StructureService;
+    public alert: IAlert;
+    public processing = true;
 
     constructor(
         route: ActivatedRoute,
@@ -41,31 +44,39 @@ export class TournamentComponent implements OnDestroy {
         this.tournamentRepository.getObject(tournamentId)
             .subscribe(
                     /* happy path */(tournament: Tournament) => {
-                this.tournament = tournament;
+                    this.tournament = tournament;
 
-                this.structureRepository.getObject(tournament.getCompetition())
-                    .subscribe(
+                    this.structureRepository.getObject(tournament.getCompetition())
+                        .subscribe(
                                 /* happy path */(round: Round) => {
-                        this.structureService = new StructureService(
-                            tournament.getCompetition(),
-                            { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
-                            round
-                        );
-                        if (callback !== undefined) {
-                            callback();
-                        }
-                    },
-                                /* error path */ e => { },
+                                this.structureService = new StructureService(
+                                    tournament.getCompetition(),
+                                    { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
+                                    round
+                                );
+                                if (callback !== undefined) {
+                                    callback();
+                                }
+                            },
+                                /* error path */ e => { this.setAlert('danger', e); },
                                 /* onComplete */() => { }
-                    );
-            },
-                    /* error path */ e => { },
+                        );
+                },
+                    /* error path */ e => { this.setAlert('danger', e); },
                     /* onComplete */() => { }
             );
     }
 
     ngOnDestroy() {
         this.sub.unsubscribe();
+    }
+
+    protected setAlert(type: string, message: string) {
+        this.alert = { 'type': type, 'message': message };
+    }
+
+    protected resetAlert(): void {
+        this.alert = undefined;
     }
 }
 

@@ -133,10 +133,6 @@ export class TournamentStructureRoundComponent {
     return (type === 'success');
   }
 
-  public closeAlert(name: string) {
-    this.alert = undefined;
-  }
-
   public onSliderChange(nrOfChildPlacesNew: number, winnersOrLosers: number) {
     this.structureService.changeNrOfPlacesChildRound(nrOfChildPlacesNew, this.round, winnersOrLosers);
     // this.getPlanningService().create(this.round.getNumber());

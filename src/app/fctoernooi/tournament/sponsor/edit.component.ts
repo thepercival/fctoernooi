@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlanningRepository, StructureRepository } from 'ngx-sport';
 
-import { IAlert } from '../../../app.definitions';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
 import { Sponsor } from '../sponsor';
@@ -19,8 +18,6 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
     returnUrlParam: number;
     returnUrlQueryParamKey: string;
     returnUrlQueryParamValue: string;
-    public alert: IAlert;
-    public processing = true;
     customForm: FormGroup;
     sponsorId: number;
 
@@ -144,14 +141,6 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
 
     navigateBack() {
         this.router.navigate(this.getForwarUrl(), { queryParams: this.getForwarUrlQueryParams() });
-    }
-
-    protected setAlert(type: string, message: string) {
-        this.alert = { 'type': type, 'message': message };
-    }
-
-    protected resetAlert(): void {
-        this.alert = undefined;
     }
 }
 

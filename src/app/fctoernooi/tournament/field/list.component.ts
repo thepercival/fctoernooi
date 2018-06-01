@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Field, FieldRepository, IField, PlanningRepository, PlanningService, StructureRepository } from 'ngx-sport';
 
-import { IAlert } from '../../../app.definitions';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
 
@@ -16,9 +15,6 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
     public disableEditButtons = false;
     private planningService: PlanningService;
     fieldsList: Array<IFieldListItem>;
-    infoAlert = true;
-    alert: IAlert;
-    processing = true;
 
     validations: any = {
         'minlengthname': Field.MIN_LENGTH_NAME,
@@ -147,18 +143,6 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
             /* onComplete */() => { this.processing = false; }
             );
     }
-
-    protected setAlert(type: string, message: string) {
-        this.alert = { 'type': type, 'message': message };
-    }
-
-    protected resetAlert(): void {
-        this.alert = undefined;
-    }
-
-    // public closeAlert( name: string) {
-    //     this.progressAlert = undefined;
-    // }
 }
 
 export interface IFieldListItem {

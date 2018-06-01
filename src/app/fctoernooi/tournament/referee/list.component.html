@@ -1,59 +1,56 @@
-<div>
-  <div class="row justify-content-center no-gutters">
-    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
-      <div class="mb-4">
-        <h1 *ngIf="tournament">
-          {{tournament.getName()}}
-          <button type="button" [routerLink]="['/toernooi/home', tournament.getId()]" class="btn btn-outline-secondary btn-sm">
-            <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
-          </button>
-        </h1>
-      </div>
-      <div>
-        <h2>
-          <i class="fi flaticon-referee"></i> scheidsrechters
-        </h2>
-        <h2 *ngIf="processing" align="center">
-          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-        </h2>
-      </div>
-      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">
-        {{ alert.message }}</ngb-alert>
-
-      <table *ngIf="!processing" class="table">
-        <thead>
-          <tr>
-            <th></th>
-            <th>initialen</th>
-            <th class="d-none d-sm-table-cell">naam</th>
-            <th style="text-align: right;">
-              <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" (click)="addReferee()" [disabled]="processing">
-                <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-              </button>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let referee of referees; let last = last;">
-            <td>
-              <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing" (click)="editReferee(referee)">
-                <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
-              </button>
-            </td>
-            <td>
-              <span>{{referee.getInitials()}}</span>
-            </td>
-            <td class="d-none d-sm-table-cell">
-              <span>{{referee.getName()}}</span>
-            </td>
-            <td style="text-align: right;">
-              <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing" (click)="removeReferee(referee);">
-                <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+<div class="row justify-content-center no-gutters">
+  <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+    <div class="mb-4">
+      <h1 *ngIf="tournament">
+        {{tournament.getName()}}
+        <button type="button" [routerLink]="['/toernooi/home', tournament.getId()]" class="btn btn-outline-secondary btn-sm">
+          <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+        </button>
+      </h1>
     </div>
+    <div>
+      <h2>
+        <i class="fi flaticon-referee"></i> scheidsrechters
+      </h2>
+      <h2 *ngIf="processing" align="center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
+    </div>
+    <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+
+    <table *ngIf="!processing" class="table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>initialen</th>
+          <th class="d-none d-sm-table-cell">naam</th>
+          <th style="text-align: right;">
+            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" (click)="addReferee()" [disabled]="processing">
+              <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let referee of referees; let last = last;">
+          <td>
+            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing" (click)="editReferee(referee)">
+              <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+            </button>
+          </td>
+          <td>
+            <span>{{referee.getInitials()}}</span>
+          </td>
+          <td class="d-none d-sm-table-cell">
+            <span>{{referee.getName()}}</span>
+          </td>
+          <td style="text-align: right;">
+            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing" (click)="removeReferee(referee);">
+              <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

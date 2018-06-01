@@ -78,7 +78,7 @@
         <ngb-alert [dismissible]="false" type="warning">de ronde is begonnen, je kunt niet meer wijzigen</ngb-alert>
       </p>
       <p *ngIf="alert">
-        <ngb-alert [type]="alert.type" (close)="closeAlert()">{{ alert.message }}</ngb-alert>
+        <ngb-alert [dismissible]="false" [type]="alert.type">{{ alert.message }}</ngb-alert>
       </p>
       <div class="d-flex flex-wrap justify-content-around">
         <ul *ngFor="let poule of round.getPoules();" class="list-group list-group-poule mb-3">

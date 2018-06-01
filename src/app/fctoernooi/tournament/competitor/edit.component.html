@@ -17,7 +17,7 @@
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
       </div>
-      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <form *ngIf="!processing" name="form" (ngSubmit)="save() && false" [formGroup]="customForm" novalidate>
         <div class="form-group row">
           <div class="col-3">

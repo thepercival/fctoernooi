@@ -204,14 +204,9 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
     this.alert = undefined;
   }
 
-
   protected setAlert(type: string, message: string): boolean {
     this.alert = { 'type': type, 'message': message };
     return (type === 'success');
-  }
-
-  public closeAlert(name: string) {
-    this.alert = undefined;
   }
 
   getGoalDifference(poulePlace: PoulePlace, games: Game[]) {

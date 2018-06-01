@@ -28,8 +28,8 @@
     {
       "name": "api-freshness",
       "urls": [
-        "http://localhost:2999/tournaments",
-        "http://localhost:2999/voetbal/structures"
+        "https://api.fctoernooi.nl/tournaments",
+        "https://api.fctoernooi.nl/voetbal/structures"
       ],
       "cacheConfig": {
         "maxSize": 100,

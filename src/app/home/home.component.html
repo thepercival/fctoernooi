@@ -39,7 +39,7 @@
           </div>
         </form>
       </div> -->
-    <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
+    <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
     <table *ngIf="!processing" class="table">
       <tbody>
         <tr *ngFor="let tournament of tournaments">

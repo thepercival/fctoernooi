@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IReferee, PlanningRepository, PlanningService, Referee, RefereeRepository, StructureRepository } from 'ngx-sport';
 
-import { IAlert } from '../../../app.definitions';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
 
@@ -17,8 +16,6 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
     returnUrlParam: number;
     returnUrlQueryParamKey: string;
     returnUrlQueryParamValue: string;
-    public alert: IAlert;
-    public processing = true;
     customForm: FormGroup;
     refereeId: number;
 
@@ -180,30 +177,6 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         return referees.find(refereeIt => {
             return (initials === refereeIt.getInitials() && (refereeId === undefined || refereeIt.getId() === undefined));
         }) !== undefined;
-    }
-
-    // setInitials(initials) {
-    //     this.error = undefined;
-    //     if (initials.length < this.validations.minlengthinitials || initials.length > this.validations.maxlengthinfo) {
-    //         return;
-    //     }
-    //     this.model.initials = initials;
-    // }
-
-    // setName(name) {
-    //     this.error = undefined;
-    //     if (name.length < this.validations.minlengthinitials || name.length > this.validations.maxlengthinfo) {
-    //         return;
-    //     }
-    //     this.model.name = name;
-    // }
-
-    protected setAlert(type: string, message: string) {
-        this.alert = { 'type': type, 'message': message };
-    }
-
-    protected resetAlert(): void {
-        this.alert = undefined;
     }
 }
 

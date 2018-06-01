@@ -14,7 +14,6 @@ import {
     StructureRepository,
 } from 'ngx-sport';
 
-import { IAlert } from '../../../app.definitions';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
 
@@ -25,13 +24,11 @@ import { TournamentRepository } from '../repository';
 })
 export class RoundsSettingsComponent extends TournamentComponent implements OnInit {
 
-    processing = true;
     enableTime: boolean;
     ranges: any = {};
     allRoundsByNumber: any;
     selectedRoundNumber: number;
     isCollapsed = true;
-    alert: IAlert;
     modelConfig: RoundConfig;
     modelRecreate: boolean;
     modelReschedule: boolean;
@@ -357,13 +354,5 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
 
     getDirectionClass(scoreConfig: RoundConfigScore) {
         return scoreConfig.getDirection() === RoundConfigScore.UPWARDS ? 'naar' : 'vanaf';
-    }
-
-    protected setAlert(type: string, message: string) {
-        this.alert = { 'type': type, 'message': message };
-    }
-
-    protected resetAlert(): void {
-        this.alert = undefined;
     }
 }

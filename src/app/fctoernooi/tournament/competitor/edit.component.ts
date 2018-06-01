@@ -12,7 +12,6 @@ import {
     TeamRepository,
 } from 'ngx-sport';
 
-import { IAlert } from '../../../app.definitions';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
 
@@ -22,12 +21,10 @@ import { TournamentRepository } from '../repository';
     styleUrls: ['./edit.component.css']
 })
 export class TournamentCompetitorEditComponent extends TournamentComponent implements OnInit {
-    processing = true;
     returnUrl: string;
     returnUrlParam: number;
     // returnUrlQueryParamKey: string;
     // returnUrlQueryParamValue: string;
-    public alert: IAlert;
     customForm: FormGroup;
     poulePlace: PoulePlace;
 
@@ -192,14 +189,6 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
     //     }
     //     this.model.name = name;
     // }
-
-    protected setAlert(type: string, message: string) {
-        this.alert = { 'type': type, 'message': message };
-    }
-
-    protected resetAlert(): void {
-        this.alert = undefined;
-    }
 }
 
 export interface TeamValidations {

@@ -14,10 +14,7 @@ import { TournamentRepository } from '../repository';
   styles: ['./list.component.scss']
 })
 export class RefereeListComponent extends TournamentComponent implements OnInit {
-  infoAlert = true;
   private planningService: PlanningService;
-  alert: IAlert;
-  processing = true;
   referees: Referee[];
 
   validations: any = {
@@ -103,14 +100,4 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
     );
   }
-
-  protected setAlert(type: string, message: string) {
-    this.alert = { 'type': type, 'message': message };
-  }
-
-  protected resetAlert(): void {
-    this.alert = undefined;
-  }
-
-
 }

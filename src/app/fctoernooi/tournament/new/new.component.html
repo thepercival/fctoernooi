@@ -25,7 +25,7 @@
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
       </div>
-      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">
         {{ alert.message }}</ngb-alert>
       <form *ngIf="!processing && isLoggedIn()" name="form" (ngSubmit)="create() && false" [formGroup]="customForm" novalidate>
         <div class="form-group row">

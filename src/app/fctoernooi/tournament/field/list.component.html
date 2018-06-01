@@ -17,8 +17,7 @@
                     <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
                 </h2>
             </div>
-            <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">
-                {{ alert.message }}</ngb-alert>
+            <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
             <table *ngIf="!processing" class="table">
                 <thead>
                     <tr>

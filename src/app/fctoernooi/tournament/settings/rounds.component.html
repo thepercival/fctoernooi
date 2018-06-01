@@ -16,7 +16,7 @@
                 <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
             </h2>
         </div>
-        <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
+        <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
         <form *ngIf="!processing" name="form" (ngSubmit)="saveConfig() && false" #f="ngForm" novalidate>
             <div *ngIf="selectedRoundNumber > 0 || allRoundsByNumber[2] !== undefined" class="row justify-content-center mx-0">
                 <div class="col">

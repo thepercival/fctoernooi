@@ -23,7 +23,7 @@
       </h2>
     </div>
   </div>
-  <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">{{ alert.message }}</ngb-alert>
+  <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
   <div *ngIf="!processing" class="row text-center">
     <app-tournament-structureround style="width: 100%;" [round]="structureService?.getFirstRound()" [structureService]="structureService"
       (roundChanged)="setChangedRoundNumber($event)"></app-tournament-structureround>

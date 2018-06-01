@@ -11,7 +11,6 @@ import {
   TeamRepository,
 } from 'ngx-sport';
 
-import { IAlert } from '../../../app.definitions';
 import { Tournament } from '../../tournament';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
@@ -22,9 +21,7 @@ import { TournamentRepository } from '../repository';
   styleUrls: ['./main.component.css']
 })
 export class TournamentStructureComponent extends TournamentComponent implements OnInit {
-  processing = true;
   changedRoundNumber;
-  alert: IAlert;
   originalTeams: Team[];
 
   constructor(
@@ -140,13 +137,5 @@ export class TournamentStructureComponent extends TournamentComponent implements
     this.changedRoundNumber = undefined;
     this.processing = false;
     this.setAlert('info', 'wijzigingen opgeslagen');
-  }
-
-  protected setAlert(type: string, message: string) {
-    this.alert = { 'type': type, 'message': message };
-  }
-
-  protected resetAlert(): void {
-    this.alert = undefined;
   }
 }

@@ -11,7 +11,7 @@ import {
     StructureNameService,
     StructureRepository,
 } from 'ngx-sport';
-import { Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 
 import { AuthService } from '../../../auth/auth.service';
 import { GlobalEventsManager } from '../../../common/eventmanager';
@@ -61,19 +61,21 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         this.allRoundsByNumber = this.structureService.getAllRoundsByNumber();
         const screenDefs = this.getScreenDefinitions();
         if (screenDefs.length === 0) {
+            this.setAlert('info', 'op dit moment zijn er geen schermen om weer te geven');
+            this.processing = false;
             return;
         }
-        // this.timerSubscription = timer(0, 10000).subscribe(number => {
-        //     this.screenDef = screenDefs.shift();
-        //     if (this.screenDef === undefined) {
-        //         this.timerSubscription.unsubscribe();
-        //         this.getDataAndProcessScreens();
-        //     }
-        // });
+        this.timerSubscription = timer(0, 10000).subscribe(number => {
+            this.screenDef = screenDefs.shift();
+            if (this.screenDef === undefined) {
+                this.timerSubscription.unsubscribe();
+                this.getDataAndProcessScreens();
+            }
+        });
     }
 
     getDataAndProcessScreens() {
-        this.setData(this.tournament.getId(), () => this.processScreens());
+        this.setData(this.tournament.getId(), () => { this.processScreens(); this.processing = false; });
     }
 
     getRoundsByNumber(roundNumber: number): Round[] {
@@ -104,12 +106,12 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         } else {
             screenDefs = screenDefs.concat(this.getScreenDefinitionsForEndRanking(previousPlayedRoundNumber));
         }
-        // if (previousPlayedRoundNumber !== undefined) {
-        //     screenDefs = screenDefs.concat(this.getScreenDefinitionsForResultsAndRanking(previousPlayedRoundNumber));
-        // }
-        // if (this.tournament.getSponsors().length > 0) {
-        //     screenDefs = screenDefs.concat(this.getScreenDefinitionsForSponsors(previousPlayedRoundNumber));
-        // }
+        if (previousPlayedRoundNumber !== undefined) {
+            screenDefs = screenDefs.concat(this.getScreenDefinitionsForResultsAndRanking(previousPlayedRoundNumber));
+        }
+        if (this.tournament.getSponsors().length > 0) {
+            screenDefs = screenDefs.concat(this.getScreenDefinitionsForSponsors(previousPlayedRoundNumber));
+        }
 
         return screenDefs;
     }

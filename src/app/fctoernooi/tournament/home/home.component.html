@@ -85,7 +85,6 @@
         </div>
       </div>
     </div>
-    <ngb-alert *ngIf="alertRemove" [type]="alertRemove.type" [dismissible]="false" (close)="alertRemove = undefined;">
-      {{ alertRemove.message }}</ngb-alert>
+    <ngb-alert *ngIf="alertRemove" [type]="alertRemove.type" [dismissible]="false">{{ alertRemove.message }}</ngb-alert>
   </div>
 </div>

@@ -14,8 +14,7 @@
       </h2>
     </div>
     <div class="d-flex justify-content-center">
-      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false" (close)="alert = undefined;">
-        {{ alert.message }}</ngb-alert>
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
     </div>
     <table *ngIf="!processing && hasTeams()" class="table">
       <thead>

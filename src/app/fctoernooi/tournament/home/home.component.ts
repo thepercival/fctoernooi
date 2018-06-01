@@ -17,7 +17,6 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
 
     alertRemove: IAlert;
     showRemoveQuestion = false;
-    processing = true;
 
     constructor(
         route: ActivatedRoute,

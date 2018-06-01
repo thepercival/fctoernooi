@@ -16,7 +16,6 @@ import { TournamentRepository } from '../repository';
 export class CompetitorListComponent extends TournamentComponent implements OnInit {
   poulePlaces: PoulePlace[];
   alert: IAlert;
-  processing = true;
   poulePlaceToSwap: PoulePlace;
 
   constructor(
@@ -120,13 +119,5 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
         this.processing = false;
       }
     );
-  }
-
-  protected setAlert(type: string, message: string) {
-    this.alert = { 'type': type, 'message': message };
-  }
-
-  protected resetAlert(): void {
-    this.alert = undefined;
   }
 }

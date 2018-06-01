@@ -17,7 +17,6 @@ import {
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
 
-import { IAlert } from '../../../app.definitions';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
 
@@ -30,10 +29,8 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     game: Game;
     planningService: PlanningService;
     model: any;
-    processing = true;
     error;
     errorHomeAwayScore;
-    alert: IAlert;
     returnUrl: string;
     returnUrlParam: number;
     returnUrlQueryParamKey: string;
@@ -247,14 +244,6 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             }
         });
         return changedPoulePlaces;
-    }
-
-    protected setAlert(type: string, message: string) {
-        this.alert = { 'type': type, 'message': message };
-    }
-
-    protected resetAlert(): void {
-        this.alert = undefined;
     }
 
     equals(one: NgbDateStruct, two: NgbDateStruct) {

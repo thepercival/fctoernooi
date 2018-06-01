@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
 import { League, PlanningRepository, PlanningService, StructureRepository } from 'ngx-sport';
 
-import { IAlert } from '../../../app.definitions';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
 
@@ -14,9 +13,7 @@ import { TournamentRepository } from '../repository';
     styleUrls: ['./edit.component.css']
 })
 export class TournamentEditComponent extends TournamentComponent implements OnInit {
-    processing = true;
     customForm: FormGroup;
-    alert: IAlert;
     minDateStruct: NgbDateStruct;
 
     validations: any = {
@@ -71,10 +68,6 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
             this.setAlert('info', 'de startdatum mag niet veranderen omdat het toernooi al is begonnen');
         }
         return true;
-    }
-
-    protected setAlert(type: string, message: string) {
-        this.alert = { 'type': type, 'message': message };
     }
 
     edit() {

@@ -15,6 +15,7 @@
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
       </div>
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <div *ngIf="!processing">
         <app-tournament-planning-view *ngFor="let roundNumber of structureService.getRoundNumbers()" [tournament]="tournament" [roundNumber]="roundNumber"
           [structureService]="structureService" [planningService]="planningService" [scrollToGameId]="scrollToGameId" [parentReturnAction]="'/toernooi/view'"

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PoulePlace, StructureNameService, StructureRepository, Team } from 'ngx-sport';
 
-import { IAlert } from '../../../app.definitions';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
 
@@ -13,9 +12,7 @@ import { TournamentRepository } from '../repository';
 })
 export class TournamentFilterComponent extends TournamentComponent implements OnInit {
     poulePlaces: PoulePlace[];
-    alert: IAlert;
     poulePlaceToSwap: PoulePlace;
-    processing = true;
 
     constructor(
         route: ActivatedRoute,
@@ -76,21 +73,5 @@ export class TournamentFilterComponent extends TournamentComponent implements On
             return {};
         }
         return JSON.parse(favTeams);
-    }
-
-    /*protected getFavTeamIdFromLocalStorage() {
-        const favTeams = localStorage.getItem('favoriteteams');
-        if (favTeams === null) {
-            return [];
-        }
-        return JSON.parse(favTeams);
-    }*/
-
-    protected setAlert(type: string, message: string) {
-        this.alert = { 'type': type, 'message': message };
-    }
-
-    protected resetAlert(): void {
-        this.alert = undefined;
     }
 }

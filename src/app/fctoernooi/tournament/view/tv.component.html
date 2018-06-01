@@ -1,4 +1,4 @@
-<div *ngIf="tournament && structureService" class="container-fluid px-0">
+<div class="container-fluid px-0">
   <div class="d-flex justify-content-between align-items-center mb-5">
     <h1 *ngIf="tournament">
       <small>
@@ -12,17 +12,23 @@
         <span *ngIf="!isEndRankingScreenDef() && !isSponsorScreenDef" [innerHTML]="nameService.getRoundsName( screenDef.roundNumber, planningService.getRoundsByNumber(screenDef.roundNumber) ) | keepHtml"></span>
       </small>
     </h1>
-    <h1>
+    <h1 *ngIf="tournament">
       <small>
         <span class="smaller text-secondary">https://www.fctoernooi.nl/toernooi/view/{{tournament.getId()}}</span>
       </small>
     </h1>
-    <button [routerLink]="['/toernooi/view', tournament.getId()]" routerLinkActive="active" class="btn btn-outline-secondary"
+    <button *ngIf="tournament" [routerLink]="['/toernooi/view', tournament.getId()]" routerLinkActive="active" class="btn btn-outline-secondary"
       type="button" style="cursor:pointer;">
       <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
       <span> terug</span>
     </button>
   </div>
+  <div>
+    <h2 *ngIf="processing" align="center">
+      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    </h2>
+  </div>
+  <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
   <!-- start schedule screen -->
   <div *ngIf="isGamesScreenDef()" class="d-flex flex-row">
     <table class="table tv-screen">

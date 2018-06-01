@@ -16,9 +16,6 @@ import { SponsorRepository } from '../sponsor/repository';
   styles: ['./list.component.scss']
 })
 export class SponsorListComponent extends TournamentComponent implements OnInit {
-  infoAlert = true;
-  alert: IAlert;
-  processing = true;
   sponsors: Sponsor[];
 
   validations: any = {
@@ -85,13 +82,5 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
         /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
         /* onComplete */() => { this.setAlert('info', 'de sponsor is verwijderd'); this.processing = false; }
       );
-  }
-
-  protected setAlert(type: string, message: string) {
-    this.alert = { 'type': type, 'message': message };
-  }
-
-  protected resetAlert(): void {
-    this.alert = undefined;
   }
 }
