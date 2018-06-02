@@ -10,18 +10,16 @@
     </div>
     <div>
       <h2>
-        <fa-icon [icon]="['fas', 'filter']"></fa-icon>
+        <fa-icon [icon]="['fas', 'filter']"></fa-icon> filter een deelnemer
       </h2>
     </div>
-    <div class="d-flex justify-content-center">
-      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-    </div>
+    <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
     <table *ngIf="!processing && hasTeams()" class="table">
       <thead>
         <tr>
           <th>plek</th>
           <th>naam</th>
-          <th></th>
+          <th colspan=2></th>
         </tr>
       </thead>
       <tbody>
@@ -31,6 +29,12 @@
           </td>
           <td>
             <span *ngIf="poulePlace.getTeam()">{{poulePlace.getTeam().getName()}}</span>
+          </td>
+          <td>
+            <span *ngIf="inToggledTeams(poulePlace.getTeam())">
+              <fa-icon class="text-success" [icon]="['fas', 'save']" size="2x"></fa-icon>
+              <fa-icon class="text-success" [icon]="['fas', 'check-circle']" size="2x"></fa-icon>
+            </span>
           </td>
           <td style="text-align: right;">
             <fa-icon *ngIf="poulePlace.getTeam()" class="text-primary" style="cursor: pointer" (click)="toggleFavoriteTeams(poulePlace.getTeam())"

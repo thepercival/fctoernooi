@@ -13,6 +13,7 @@ import { TournamentRepository } from '../repository';
 export class TournamentFilterComponent extends TournamentComponent implements OnInit {
     poulePlaces: PoulePlace[];
     poulePlaceToSwap: PoulePlace;
+    private toggledTeams: Team[] = [];
 
     constructor(
         route: ActivatedRoute,
@@ -52,7 +53,9 @@ export class TournamentFilterComponent extends TournamentComponent implements On
     }
 
     toggleFavoriteTeams(team: Team) {
-        this.setAlert('info', 'het filter is bijgewerkt');
+        this.processing = true;
+        this.setAlert('info', 'het filter wordt bijgewerkt');
+        this.toggledTeams.push(team);
         const favTeams = this.getFavTeamsFromLocalStorage();
         if (favTeams[this.tournament.getId()] === undefined) {
             favTeams[this.tournament.getId()] = [];
@@ -65,6 +68,12 @@ export class TournamentFilterComponent extends TournamentComponent implements On
             favTeamIds.splice(index, 1);
         }
         localStorage.setItem('favoriteteams', JSON.stringify(favTeams));
+        this.processing = false;
+        this.resetAlert();
+    }
+
+    inToggledTeams(team: Team): boolean {
+        return this.toggledTeams.some(toggledTeam => toggledTeam === team);
     }
 
     protected getFavTeamsFromLocalStorage(): any {
