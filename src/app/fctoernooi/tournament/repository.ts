@@ -1,9 +1,9 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { CompetitionRepository, ICompetition, SportRepository } from 'ngx-sport';
-import { Observable ,  Observer } from 'rxjs';
-import { catchError ,  map } from 'rxjs/operators';
+import { Observable, Observer } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 import { Tournament } from '../tournament';
 import { ITournamentRole, TournamentRoleRepository } from './role/repository';
@@ -47,7 +47,7 @@ export class TournamentRepository extends SportRepository {
         httpParams = httpParams.set('startDateTime', startDateTime.toISOString());
         httpParams = httpParams.set('endDateTime', endDateTime.toISOString());
         const options = {
-            headers: new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' }),
+            headers: super.getHeaders(),
             params: httpParams
         };
 
@@ -59,7 +59,6 @@ export class TournamentRepository extends SportRepository {
             }),
             catchError((err) => this.handleError(err))
         );
-
     }
 
     getObject(id: number): Observable<Tournament> {
@@ -72,9 +71,7 @@ export class TournamentRepository extends SportRepository {
                 observer.complete();
             });
         }
-
-        const headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
-        return this.http.get<ITournament>(this.url + '/' + id, { headers: headers }).pipe(
+        return this.http.get<ITournament>(this.url + '/' + id, { headers: super.getHeaders() }).pipe(
             map((jsonTournament: ITournament) => {
                 const tournamentRes = this.jsonToObjectHelper(jsonTournament);
                 this.ownCache.push(tournamentRes);

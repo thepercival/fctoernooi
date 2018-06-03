@@ -114,7 +114,7 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
   hasEditPermissions(game: Game): boolean {
     const loggedInUserId = this.authService.getLoggedInUserId();
     // game, this.tournament, loggedInUserId ? hasPermissions?
-    return !true;
+    return true;
   }
 
   filterClass(): string {

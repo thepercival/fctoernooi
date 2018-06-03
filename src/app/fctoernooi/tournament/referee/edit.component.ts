@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IReferee, PlanningRepository, PlanningService, Referee, RefereeRepository, StructureRepository } from 'ngx-sport';
 
+import { User } from '../../../user/user';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
 
@@ -23,7 +24,9 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         minlengthinitials: Referee.MIN_LENGTH_INITIALS,
         maxlengthinitials: Referee.MAX_LENGTH_INITIALS,
         maxlengthname: Referee.MAX_LENGTH_NAME,
-        maxlengthinfo: Referee.MAX_LENGTH_INFO
+        maxlengthinfo: Referee.MAX_LENGTH_INFO,
+        minlengthemailaddress: User.MIN_LENGTH_EMAIL,
+        maxlengthemailaddress: User.MAX_LENGTH_EMAIL,
     };
 
     constructor(
@@ -35,6 +38,8 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         private planningRepository: PlanningRepository,
         fb: FormBuilder
     ) {
+        // EditPermissions, EmailAddresses
+        // andere groep moet dan zijn getEditPermission, wanneer ingelogd, bij gewone view
         super(route, router, tournamentRepository, structureRepository);
         this.customForm = fb.group({
             initials: ['', Validators.compose([
@@ -44,6 +49,10 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
             ])],
             name: ['', Validators.compose([
                 Validators.maxLength(this.validations.maxlengthname)
+            ])],
+            emailaddress: ['', Validators.compose([
+                Validators.minLength(this.validations.minlengthemailaddress),
+                Validators.maxLength(this.validations.maxlengthemailaddress)
             ])],
             info: ['', Validators.compose([
                 Validators.maxLength(this.validations.maxlengthinfo)
@@ -82,6 +91,7 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         this.refereeId = id;
         this.customForm.controls.initials.setValue(referee.getInitials());
         this.customForm.controls.name.setValue(referee.getName());
+        this.customForm.controls.emailaddress.setValue(referee.getEmailaddress());
         this.customForm.controls.info.setValue(referee.getInfo());
         this.processing = false;
     }
@@ -99,6 +109,7 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         this.setAlert('info', 'de scheidsrechter wordt toegevoegd');
         const initials = this.customForm.controls.initials.value;
         const name = this.customForm.controls.name.value;
+        const emailaddress = this.customForm.controls.emailaddress.value;
         const info = this.customForm.controls.info.value;
 
         if (this.isInitialsDuplicate(this.customForm.controls.initials.value)) {
@@ -109,6 +120,7 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         const ref: IReferee = {
             initials: initials,
             name: name ? name : undefined,
+            emailaddress: emailaddress ? emailaddress : undefined,
             info: info ? info : undefined
         };
         this.refereeRepository.createObject(ref, this.structureService.getCompetition())
@@ -142,11 +154,13 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         }
         const initials = this.customForm.controls.initials.value;
         const name = this.customForm.controls.name.value;
+        const emailaddress = this.customForm.controls.emailaddress.value;
         const info = this.customForm.controls.info.value;
 
         const referee = this.structureService.getCompetition().getRefereeById(this.refereeId);
         referee.setInitials(initials);
         referee.setName(name ? name : undefined);
+        referee.setEmailaddress(emailaddress ? emailaddress : undefined);
         referee.setInfo(info ? info : undefined);
         this.refereeRepository.editObject(referee, this.structureService.getCompetition())
             .subscribe(
@@ -185,4 +199,6 @@ export interface RefValidations {
     maxlengthinitials: number;
     maxlengthname: number;
     maxlengthinfo: number;
+    minlengthemailaddress: number;
+    maxlengthemailaddress: number;
 }

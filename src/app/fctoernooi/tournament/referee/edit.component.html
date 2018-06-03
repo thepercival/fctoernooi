@@ -40,6 +40,19 @@
           </div>
         </div>
         <div class="form-group row">
+          <div class="col-3 d-flex justify-content-between">
+            <label for="emailaddress" class="col-form-label">email</label>
+            <button type="button" class="btn btn-sm btn-outline-info" container="body" placement="right" ngbPopover="De gebruiker met dit emailadres kan de stand van de wedstrijden, waarvoor hij/zij is aangesteld, wijzigen">
+              <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
+            </button>
+          </div>
+          <div class="col-9">
+            <input class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.emailaddress.invalid, 'is-valid': customForm.controls.emailaddress.valid }"
+              type="text" name="emailaddress" id="emailaddress" [formControl]="customForm.controls.emailaddress" maxlength="{{validations.maxlengthemailaddress}}"
+              placeholder="max. {{validations.maxlengthemailaddress}} karakters">
+          </div>
+        </div>
+        <div class="form-group row">
           <div class="col-3">
             <label for="info" class="col-form-label">info</label>
           </div>
