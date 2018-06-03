@@ -111,6 +111,12 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
     return game.getState() === Game.STATE_PLAYED;
   }
 
+  hasEditPermissions(game: Game): boolean {
+    const loggedInUserId = this.authService.getLoggedInUserId();
+    // game, this.tournament, loggedInUserId ? hasPermissions?
+    return !true;
+  }
+
   filterClass(): string {
     const hasFilter = this.favTeamIds !== undefined && this.favTeamIds.length > 0;
     return hasFilter ? 'primary' : 'secondary';
@@ -131,9 +137,6 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
   }
 
   linkToGameEdit(tournament: Tournament, game: Game) {
-    if (this.userIsGameResultAdmin !== true) {
-      return;
-    }
     this.router.navigate(
       ['/toernooi/gameedit', tournament.getId(), game.getId()],
       {

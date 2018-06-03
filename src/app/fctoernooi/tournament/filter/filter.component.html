@@ -10,38 +10,91 @@
     </div>
     <div>
       <h2>
-        <fa-icon [icon]="['fas', 'filter']"></fa-icon> filter een deelnemer
+        <fa-icon [icon]="['fas', 'filter']"></fa-icon> filter instellen
       </h2>
     </div>
     <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-    <table *ngIf="!processing && hasTeams()" class="table">
-      <thead>
-        <tr>
-          <th>plek</th>
-          <th>naam</th>
-          <th colspan=2></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let poulePlace of poulePlaces">
-          <td>
-            <span>{{nameService.getPoulePlaceName(poulePlace, false)}}</span>
-          </td>
-          <td>
-            <span *ngIf="poulePlace.getTeam()">{{poulePlace.getTeam().getName()}}</span>
-          </td>
-          <td>
-            <span *ngIf="inToggledTeams(poulePlace.getTeam())">
-              <fa-icon class="text-success" [icon]="['fas', 'save']" size="2x"></fa-icon>
-              <fa-icon class="text-success" [icon]="['fas', 'check-circle']" size="2x"></fa-icon>
-            </span>
-          </td>
-          <td style="text-align: right;">
-            <fa-icon *ngIf="poulePlace.getTeam()" class="text-primary" style="cursor: pointer" (click)="toggleFavoriteTeams(poulePlace.getTeam())"
-              [icon]="['far', (inFavoriteTeamIds(poulePlace.getTeam()) ? 'check-' : '') + 'square']" size="2x"></fa-icon>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <p *ngIf="userIsGameResultAdmin && hasTeams() && hasReferees()" class="d-flex justify-content-between">
+      <button [disabled]="processing" (click)="scrollTo('team-part')" class="btn btn-outline-secondary">
+        <i class="fi flaticon-group"></i> deelnemers
+        <span *ngIf="hasFavoriteTeams()" class="badge badge-primary badge-pill">{{getNrOfFavoriteTeams()}}</span>
+      </button>
+      <button [disabled]="processing" (click)="scrollTo('referee-part')" class="btn btn-outline-secondary">
+        <i class="fi flaticon-referee"></i>
+        <span class="d-none d-sm-inline"> scheidsrechters </span>
+        <span class="d-sm-none"> scheidsen </span>
+        <span *ngIf="hasFavoriteReferees()" class="badge badge-primary badge-pill">{{getNrOfFavoriteReferees()}}</span>
+      </button>
+    </p>
+    <div *ngIf="!processing && hasTeams()" id="team-part">
+      <h2>
+        <i class="fi flaticon-group"></i> deelnemers
+        <span *ngIf="hasFavoriteTeams()" class="badge badge-primary badge-pill">{{getNrOfFavoriteTeams()}}</span>
+      </h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>plek</th>
+            <th>naam</th>
+            <th colspan=2></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let poulePlace of poulePlaces">
+            <td>
+              <span>{{nameService.getPoulePlaceName(poulePlace, false)}}</span>
+            </td>
+            <td class="pouleplace">
+              <span *ngIf="poulePlace.getTeam()">{{poulePlace.getTeam().getName()}}</span>
+            </td>
+            <td>
+              <span *ngIf="toggledItem === poulePlace.getTeam()" style="font-size: 15%">
+                <fa-icon *ngIf="this.toggledItemProgress < 10" class="text-info" [icon]="['fas', 'save']" size="{{5 + (toggledItemProgress/2)}}x"></fa-icon>
+                <fa-icon *ngIf="this.toggledItemProgress === 10" class="text-success" [icon]="['fas', 'check-circle']" size="10x"></fa-icon>
+              </span>
+            </td>
+            <td style="text-align: right;">
+              <fa-icon *ngIf="poulePlace.getTeam()" class="text-primary" style="cursor: pointer" (click)="toggleFavoriteTeams(poulePlace.getTeam())"
+                [icon]="['far', (inFavoriteTeamIds(poulePlace.getTeam()) ? 'check-' : '') + 'square']" size="2x"></fa-icon>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="!processing && hasReferees()" id="referee-part">
+      <h2>
+        <i class="fi flaticon-referee"></i> scheidsrechters
+      </h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>
+              <fa-icon [icon]="['fas', 'user-tag']"></fa-icon>
+            </th>
+            <th>naam</th>
+            <th colspan=2></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let referee of tournament.getCompetition().getReferees()">
+            <td>
+              <span>{{referee.getInitials()}}</span>
+            </td>
+            <td>
+              <span>{{referee.getName()}}</span>
+            </td>
+            <td>
+              <span *ngIf="toggledItem === referee" style="font-size: 15%">
+                <fa-icon *ngIf="this.toggledItemProgress < 10" class="text-info" [icon]="['fas', 'save']" size="{{5 + (toggledItemProgress/2)}}x"></fa-icon>
+                <fa-icon *ngIf="this.toggledItemProgress === 10" class="text-success" [icon]="['fas', 'check-circle']" size="10x"></fa-icon>
+              </span>
+            </td>
+            <td style="text-align: right;">
+              <fa-icon class="text-primary" style="cursor: pointer" (click)="toggleFavoriteReferees(referee)" [icon]="['far', (inFavoriteRefereeIds(referee) ? 'check-' : '') + 'square']"
+                size="2x"></fa-icon>
+            </td>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
