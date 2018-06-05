@@ -27,7 +27,7 @@
   <div class="collapse navbar-collapse" [ngbCollapse]="navbarCollapsed" id="navbarResponsive">
     <ul class="navbar-nav">
       <li *ngIf="isLoggedIn()" class="nav-item">
-        <a class="nav-link" routerLink="/admin/home" routerLinkActive="active" (click)="navbarCollapsed = !navbarCollapsed">admin</a>
+        <a class="nav-link" routerLink="/admin" routerLinkActive="active" (click)="navbarCollapsed = !navbarCollapsed">admin</a>
       </li>
     </ul>
 

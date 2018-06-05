@@ -3,7 +3,7 @@
         <div class="mb-4">
             <h1 *ngIf="tournament">
                 {{tournament.getName()}}
-                <button *ngIf="!processing" [routerLink]="['/toernooi/home', tournament.getId()]" type="button" class="btn btn-outline-secondary btn-sm">
+                <button *ngIf="!processing" [routerLink]="['/toernooi', tournament.getId()]" type="button" class="btn btn-outline-secondary btn-sm">
                     <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
                 </button>
             </h1>

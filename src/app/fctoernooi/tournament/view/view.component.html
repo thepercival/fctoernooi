@@ -18,8 +18,8 @@
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <div *ngIf="!processing">
         <app-tournament-planning-view *ngFor="let roundNumber of structureService.getRoundNumbers()" [tournament]="tournament" [roundNumber]="roundNumber"
-          [structureService]="structureService" [planningService]="planningService" [scrollToGameId]="scrollToGameId" [parentReturnAction]="'/toernooi/view'"
-          [favTeamIds]="getFavTeamIdsFromLocalStorage()" (popOverIsOpen)="setNoRefresh($event)"></app-tournament-planning-view>
+          [structureService]="structureService" [planningService]="planningService" [userRefereeId]="userRefereeId" [scrollToGameId]="scrollToGameId"
+          [parentReturnAction]="'/toernooi/view'" [favTeamIds]="getFavTeamIdsFromLocalStorage()" (popOverIsOpen)="setNoRefresh($event)"></app-tournament-planning-view>
       </div>
     </div>
   </div>

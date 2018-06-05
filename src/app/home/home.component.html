@@ -42,16 +42,17 @@
     <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
     <table *ngIf="!processing" class="table">
       <tbody>
-        <tr *ngFor="let tournament of tournaments">
-          <td class="toView" (click)="linkToView(tournament)">{{tournament.getCompetition().getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit","hour12":
-            false,"hour":"2-digit","minute":"2-digit"} )}}</td>
-          <td class="d-none d-sm-table-cell toView" (click)="linkToView(tournament)">
-            <i *ngIf="iconManager.getIconType(tournament.getCompetition().getLeague().getSport()) === 'fi'" class="{{iconManager.getIconClass(tournament.getCompetition().getLeague().getSport())}}"></i>
-            <fa-icon *ngIf="iconManager.getIconType(tournament.getCompetition().getLeague().getSport()) === 'fa'" [icon]="['fas', iconManager.getIconClass(tournament.getCompetition().getLeague().getSport())]"></fa-icon>
+        <tr *ngFor="let shell of tournamentShells">
+          <td class="toView" (click)="linkToView(shell)">{{shell.startDateTime.toLocaleString("en", {"month":"short","day":"2-digit","hour12": false,"hour":"2-digit","minute":"2-digit"}
+            )}}
           </td>
-          <td class="toView" (click)="linkToView(tournament)">{{tournament.getCompetition().getLeague().getName()}}</td>
+          <td class="d-none d-sm-table-cell toView" (click)="linkToView(shell)">
+            <i *ngIf="iconManager.getIconType(shell.sport) === 'fi'" class="{{iconManager.getIconClass(shell.sport)}}"></i>
+            <fa-icon *ngIf="iconManager.getIconType(shell.sport) === 'fa'" [icon]="['fas', iconManager.getIconClass(shell.sport)]"></fa-icon>
+          </td>
+          <td class="toView" (click)="linkToView(shell)">{{shell.name}}</td>
           <td *ngIf="isLoggedIn()" style="text-align: right">
-            <button *ngIf="hasPermission(tournament)" type="button" [routerLink]="['/toernooi/home', tournament.getId()]" routerLinkActive="active"
+            <button *ngIf="shell.hasEditPermissions" type="button" [routerLink]="['/toernooi', shell.tournamentId]" routerLinkActive="active"
               class="btn btn-sm btn-outline-primary">
               <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
             </button>

@@ -80,7 +80,7 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
                         const navigationExtras: NavigationExtras = {
                             queryParams: { type: 'success', message: 'het toernooi is verwijderd' }
                         };
-                        this.router.navigate(['/home'], navigationExtras);
+                        this.router.navigate(['/'], navigationExtras);
                     } else {
                         this.setRemoveAlert('danger', 'het toernooi kon niet verwijderd worden');
                         this.processing = false;

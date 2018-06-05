@@ -123,23 +123,25 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
             emailaddress: emailaddress ? emailaddress : undefined,
             info: info ? info : undefined
         };
-        this.refereeRepository.createObject(ref, this.structureService.getCompetition())
-            .subscribe(
+        this.refereeRepository.createObject(ref, this.structureService.getCompetition()).subscribe(
             /* happy path */ refereeRes => {
-
-                    const firstRound = this.structureService.getFirstRound();
-                    const planningService = new PlanningService(this.structureService);
-                    planningService.reschedule(firstRound.getNumber());
-                    this.planningRepository.editObject([firstRound])
-                        .subscribe(
-                    /* happy path */ gamesdRes => {
+                const firstRound = this.structureService.getFirstRound();
+                const planningService = new PlanningService(this.structureService);
+                planningService.reschedule(firstRound.getNumber());
+                this.planningRepository.editObject([firstRound]).subscribe(
+                /* happy path */ gamesRes => {
+                        this.tournamentRepository.syncRefereeRoles(this.tournament).subscribe(
+                        /* happy path */ allRolesRes => {
                                 this.processing = false;
                                 this.navigateBack();
                             },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => this.processing = false
+                        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+                        /* onComplete */() => this.processing = false
                         );
-                },
+                    },
+                /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+                );
+            },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
         );
     }
@@ -160,12 +162,23 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         const referee = this.structureService.getCompetition().getRefereeById(this.refereeId);
         referee.setInitials(initials);
         referee.setName(name ? name : undefined);
+        const emailaddressChanged = emailaddress !== referee.getEmailaddress();
         referee.setEmailaddress(emailaddress ? emailaddress : undefined);
         referee.setInfo(info ? info : undefined);
         this.refereeRepository.editObject(referee, this.structureService.getCompetition())
             .subscribe(
             /* happy path */ refereeRes => {
-                    this.navigateBack();
+                    if (!emailaddressChanged) {
+                        this.navigateBack();
+                        return;
+                    }
+                    this.tournamentRepository.syncRefereeRoles(this.tournament).subscribe(
+                        /* happy path */ allRolesRes => {
+                            this.navigateBack();
+                        },
+                        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+                        /* onComplete */() => this.processing = false
+                    );
                 },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
             /* onComplete */() => { this.processing = false; }

@@ -29,7 +29,9 @@ import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap/datepicker/datep
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap/popover/popover.module';
 import { NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap/timepicker/timepicker.module';
 import { NouisliderModule } from 'ng2-nouislider';
-import { ScrollToModule } from 'ng2-scroll-to-el';
+import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
+
+
 import {
   GameRepository,
   GameScoreRepository,

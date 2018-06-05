@@ -5,8 +5,7 @@ import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-st
 import { IAlert } from '../app.definitions';
 import { AuthService } from '../auth/auth.service';
 import { IconManager } from '../common/iconmanager';
-import { Tournament } from '../fctoernooi/tournament';
-import { TournamentRepository } from '../fctoernooi/tournament/repository';
+import { TournamentRepository, TournamentShell } from '../fctoernooi/tournament/repository';
 
 @Component({
   selector: 'app-home',
@@ -16,7 +15,7 @@ import { TournamentRepository } from '../fctoernooi/tournament/repository';
 export class HomeComponent implements OnInit {
 
   modelFilter: any;
-  tournaments: Tournament[];
+  tournamentShells: TournamentShell[];
   alert: IAlert;
   isCollapsed = true;
   processing = true;
@@ -34,7 +33,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.setTournaments();
+    this.setTournamentShells();
 
     this.route.queryParams.subscribe(params => {
       if (params.type !== undefined && params.message !== undefined) {
@@ -43,19 +42,13 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  setTournaments() {
+  setTournamentShells() {
     this.processing = true;
-    this.tournamentRepos.getObjects(this.getDate(this.modelFilter.startDate), this.getDate(this.modelFilter.endDate))
+    this.tournamentRepos.getShells(this.getDate(this.modelFilter.startDate), this.getDate(this.modelFilter.endDate))
       .subscribe(
-                        /* happy path */ tournamentsRes => {
-          this.tournaments = tournamentsRes.sort((t1, t2) => {
-            if (t1.getCompetition().getStartDateTime() < t2.getCompetition().getStartDateTime()) {
-              return 1;
-            }
-            if (t1.getCompetition().getStartDateTime() > t2.getCompetition().getStartDateTime()) {
-              return -1;
-            }
-            return 0;
+          /* happy path */ tournamentShellsRes => {
+          this.tournamentShells = tournamentShellsRes.sort((ts1, ts2) => {
+            return (ts1.startDateTime < ts2.startDateTime ? 1 : -1);
           });
           this.processing = false;
         },
@@ -110,23 +103,13 @@ export class HomeComponent implements OnInit {
     return this.authService.isLoggedIn();
   }
 
-  hasPermission(tournament: Tournament) {
-    const loggedInUserId = this.authService.getLoggedInUserId();
-    return tournament.getRoles().reduce(function (hasPermission, roleIt) {
-      if (hasPermission) {
-        return hasPermission;
-      }
-      return loggedInUserId === roleIt.getUser().getId();
-    }, false);
-  }
-
-  linkToView(tournament: Tournament) {
-    this.router.navigate(['/toernooi/view', tournament.getId()]);
+  linkToView(shell: TournamentShell) {
+    this.router.navigate(['/toernooi/view', shell.tournamentId]);
   }
 
   changeFilterDate(date: NgbDateStruct) {
     this.modelFilter.endDate = date;
     this.isCollapsed = true;
-    this.setTournaments();
+    this.setTournamentShells();
   }
 }

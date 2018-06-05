@@ -2,7 +2,7 @@ import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, Simpl
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap/popover/popover';
-import { ScrollToService } from 'ng2-scroll-to-el';
+import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import {
   Game,
   PlanningService,
@@ -34,6 +34,7 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
   @Input() parentReturnAction: string;
   @Input() favTeamIds: number[];
   @Input() scrollToGameId: number;
+  @Input() userRefereeId: number;
   @Output() popOverIsOpen = new EventEmitter<boolean>();
   alert: any;
   GameStatePlayed = Game.STATE_PLAYED;
@@ -61,7 +62,9 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
 
   ngAfterViewInit() {
     if (this.scrollToGameId) {
-      this.scrollService.scrollTo('#game-scrollposition-' + this.scrollToGameId);
+      this.scrollService.scrollTo({
+        target: '#game-scrollposition-' + this.scrollToGameId
+      });
     }
   }
 
@@ -113,8 +116,18 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
 
   hasEditPermissions(game: Game): boolean {
     const loggedInUserId = this.authService.getLoggedInUserId();
-    // game, this.tournament, loggedInUserId ? hasPermissions?
-    return true;
+    if (this.tournament.hasRole(loggedInUserId, TournamentRole.ADMIN + TournamentRole.GAMERESULTADMIN)) {
+      return true;
+    }
+    if (game.getReferee() === undefined) {
+      return false;
+    }
+    if (this.userRefereeId !== undefined
+      && this.tournament.hasRole(loggedInUserId, TournamentRole.REFEREE)
+      && this.userRefereeId === game.getReferee().getId()) {
+      return true;
+    }
+    return false;
   }
 
   filterClass(): string {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ScrollToService } from 'ng2-scroll-to-el';
+import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import { PoulePlace, Referee, StructureNameService, StructureRepository, Team } from 'ngx-sport';
 import { interval, range, zip } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -53,7 +53,9 @@ export class TournamentFilterComponent extends TournamentComponent implements On
     }
 
     scrollTo(divId: string) {
-        this.scrollService.scrollTo('#' + divId);
+        this.scrollService.scrollTo({
+            target: '#' + divId
+        });
     }
 
     hasTeams() {

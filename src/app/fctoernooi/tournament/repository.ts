@@ -1,11 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { CompetitionRepository, ICompetition, SportRepository } from 'ngx-sport';
-import { Observable, Observer } from 'rxjs';
+import { CompetitionRepository, ICompetition, SportConfig, SportRepository } from 'ngx-sport';
+import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { Tournament } from '../tournament';
+import { TournamentRole } from './role';
 import { ITournamentRole, TournamentRoleRepository } from './role/repository';
 import { ISponsor, SponsorRepository } from './sponsor/repository';
 
@@ -17,7 +18,6 @@ export class TournamentRepository extends SportRepository {
 
     private url: string;
     private csRepository: CompetitionRepository;
-    private ownCache: Tournament[] = [];
 
     constructor(
         private http: HttpClient,
@@ -39,10 +39,8 @@ export class TournamentRepository extends SportRepository {
         return this.url;
     }
 
-    getObjects(startDateTime: Date, endDateTime: Date): Observable<Tournament[]> {
-
-        this.ownCache = [];
-
+    getShells(startDateTime: Date, endDateTime: Date): Observable<TournamentShell[]> {
+        const postUrl = SportConfig.getToken() === undefined ? 'public' : '';
         let httpParams = new HttpParams();
         httpParams = httpParams.set('startDateTime', startDateTime.toISOString());
         httpParams = httpParams.set('endDateTime', endDateTime.toISOString());
@@ -51,43 +49,33 @@ export class TournamentRepository extends SportRepository {
             params: httpParams
         };
 
-        return this.http.get<ITournament[]>(this.url, options).pipe(
-            map((jsonTournaments: ITournament[]) => {
-                const tournamentsRes = this.jsonArrayToObject(jsonTournaments);
-                this.ownCache = tournamentsRes;
-                return tournamentsRes;
-            }),
+        return this.http.get<TournamentShell[]>(this.url + postUrl, options).pipe(
+            map((jsonShells: TournamentShell[]) => this.jsonArrayToShell(jsonShells)),
             catchError((err) => this.handleError(err))
         );
     }
 
     getObject(id: number): Observable<Tournament> {
-        const tournament = this.ownCache.find(
-            tournamentIt => tournamentIt.getId() === id
+        const postUrl = SportConfig.getToken() === undefined ? 'public' : '';
+        return this.http.get<ITournament>(this.url + postUrl + '/' + id, { headers: super.getHeaders() }).pipe(
+            map((jsonTournament: ITournament) => this.jsonToObjectHelper(jsonTournament)),
+            catchError((err) => this.handleError(err))
         );
-        if (tournament) {
-            return Observable.create((observer: Observer<Tournament>) => {
-                observer.next(tournament);
-                observer.complete();
-            });
+    }
+
+    getUserRefereeId(tournament: Tournament): Observable<number> {
+        if (SportConfig.getToken() === undefined) {
+            return of(0);
         }
-        return this.http.get<ITournament>(this.url + '/' + id, { headers: super.getHeaders() }).pipe(
-            map((jsonTournament: ITournament) => {
-                const tournamentRes = this.jsonToObjectHelper(jsonTournament);
-                this.ownCache.push(tournamentRes);
-                return tournamentRes;
-            }),
+        return this.http.get<ITournament>(this.url + '/userrefereeid/' + tournament.getId(), { headers: super.getHeaders() }).pipe(
+            // map((userRefereeId: number) => userRefereeId),
             catchError((err) => this.handleError(err))
         );
     }
 
     createObject(tournament: Tournament): Observable<Tournament> {
         return this.http.post(this.url, this.objectToJsonHelper(tournament), { headers: super.getHeaders() }).pipe(
-            map((res: ITournament) => {
-                const tournamentIn = this.jsonToObjectHelper(res);
-                this.ownCache.push(tournamentIn);
-                return tournamentIn;
-            }),
+            map((res: ITournament) => this.jsonToObjectHelper(res)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -105,13 +93,15 @@ export class TournamentRepository extends SportRepository {
     removeObject(tournament: Tournament): Observable<boolean> {
         const url = this.url + '/' + tournament.getId();
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
-            map((res) => {
-                const index = this.ownCache.indexOf(tournament);
-                if (index > -1) {
-                    this.ownCache.splice(index, 1);
-                }
-                return true;
-            }),
+            map((res) => true),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+    syncRefereeRoles(tournament: Tournament): Observable<TournamentRole[]> {
+        const url = this.url + '/syncrefereeroles/' + tournament.getId();
+        return this.http.post(url, null, { headers: super.getHeaders() }).pipe(
+            map((roles: ITournamentRole[]) => this.tournamentRoleRepository.jsonArrayToObject(roles, tournament)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -128,7 +118,7 @@ export class TournamentRepository extends SportRepository {
     jsonToObjectHelper(json: ITournament): Tournament {
         const competition = this.csRepository.jsonToObjectHelper(json.competition);
         const tournament = new Tournament(competition);
-        const roles = this.tournamentRoleRepository.jsonArrayToObject(json.roles, tournament);
+        const roles = this.tournamentRoleRepository.jsonArrayToObject(json.roles ? json.roles : [], tournament);
         this.sponsorRepository.jsonArrayToObject(json.sponsors, tournament);
         tournament.setRoles(roles);
         tournament.setId(json.id);
@@ -143,6 +133,13 @@ export class TournamentRepository extends SportRepository {
             sponsors: this.sponsorRepository.objectsToJsonArray(tournament.getSponsors()),
         };
     }
+
+    jsonArrayToShell(jsonArray: TournamentShell[]): TournamentShell[] {
+        for (const json of jsonArray) {
+            json.startDateTime = new Date(json.startDateTime);
+        }
+        return jsonArray;
+    }
 }
 
 export interface ITournament {
@@ -150,4 +147,12 @@ export interface ITournament {
     competition: ICompetition;
     roles: ITournamentRole[];
     sponsors: ISponsor[];
+}
+
+export interface TournamentShell {
+    tournamentId: number;
+    sport: string;
+    name: string;
+    startDateTime: Date;
+    editPermissions: boolean;
 }

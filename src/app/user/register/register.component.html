@@ -15,11 +15,11 @@
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <div *ngIf="!processing && isLoggedIn() && registered" class="card card-body mx-auto bg-faded form-register mt-3">
         <legend class="m-b-1 text-xs-center">bedankt voor het registreren!</legend>
-        <a role="button" class="btn btn-outline-secondary" routerLink="/home">ga verder</a>
+        <a role="button" class="btn btn-outline-secondary" routerLink="/">ga verder</a>
       </div>
       <div *ngIf="!processing && isLoggedIn() && !registered" class="card card-body mx-auto bg-faded form-register mt-3">
         <legend class="m-b-1 text-xs-center">je bent al ingelogd</legend>
-        <a role="button" class="btn btn-outline-secondary" routerLink="/home">ga terug</a>
+        <a role="button" class="btn btn-outline-secondary" routerLink="/">ga terug</a>
       </div>
 
       <form *ngIf="!processing && !isLoggedIn() && !registered" name="form" (ngSubmit)="register() && false" [formGroup]="customForm"

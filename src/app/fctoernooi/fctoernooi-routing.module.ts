@@ -27,7 +27,7 @@ const routes: Routes = [
   { path: 'new', component: TournamentNewComponent },
   { path: 'edit/:id', component: TournamentEditComponent },
   { path: 'filter/:id', component: TournamentFilterComponent },
-  { path: 'home/:id', component: TournamentHomeComponent, canActivate: [AuthguardService] },
+  { path: ':id', component: TournamentHomeComponent, canActivate: [AuthguardService] },
   { path: 'competitors/:id', component: CompetitorListComponent, canActivate: [AuthguardService] },
   { path: 'structure/:id', component: TournamentStructureComponent, canActivate: [AuthguardService] },
   { path: 'games/:id', component: GameListComponent, canActivate: [AuthguardService] },

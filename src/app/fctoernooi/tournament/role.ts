@@ -10,7 +10,8 @@ export class TournamentRole {
     static readonly STRUCTUREADMIN = 2;
     static readonly PLANNER = 4;
     static readonly GAMERESULTADMIN = 8;
-    static readonly ALL = 15;
+    static readonly REFEREE = 16;
+    static readonly ALL = 31;
 
     protected id: number;
     protected tournament: Tournament;

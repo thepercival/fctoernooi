@@ -101,7 +101,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
                         if (reschedule === true) {
                             this.planningRepository.editObject([round]).subscribe(
                                 /* happy path */ gamesRes => {
-                                    this.router.navigate(['/toernooi/home', tournamentRes.getId()]);
+                                    this.router.navigate(['/toernooi', tournamentRes.getId()]);
                                 },
                                /* error path */ e => {
                                     this.setAlert('danger', 'de planning is niet opgeslagen: ' + e);
@@ -109,7 +109,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
                                 }
                             );
                         } else {
-                            this.router.navigate(['/toernooi/home', tournamentRes.getId()]);
+                            this.router.navigate(['/toernooi', tournamentRes.getId()]);
                         }
                     },
                 /* error path */ e => { this.setAlert('danger', 'het toernooi is niet opgeslagen: ' + e); this.processing = false; }

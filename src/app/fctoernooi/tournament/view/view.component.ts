@@ -8,7 +8,6 @@ import { GlobalEventsManager } from '../../../common/eventmanager';
 import { NavBarTournamentTVViewLink } from '../../../nav/nav.component';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
-import { TournamentRole } from '../role';
 
 @Component({
     selector: 'app-tournament-view',
@@ -22,6 +21,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     private noRefresh = false;
     private favTeamIds: number[];
     scrollToGameId: number;
+    userRefereeId: number;
 
     constructor(
         route: ActivatedRoute,
@@ -39,6 +39,12 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
             this.initTVViewLink();
             this.planningService = new PlanningService(this.structureService);
             this.processing = false;
+            this.tournamentRepository.getUserRefereeId(this.tournament).subscribe(
+                /* happy path */ userRefereeIdRes => {
+                    this.userRefereeId = userRefereeIdRes;
+                },
+                /* error path */ e => { this.setAlert('danger', e); }
+            );
         });
 
         this.route.queryParamMap.subscribe(params => {
@@ -74,10 +80,6 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
         if (this.timerSubscription !== undefined) {
             this.timerSubscription.unsubscribe();
         }
-    }
-
-    isAdmin(): boolean {
-        return this.tournament.hasRole(this.authService.getLoggedInUserId(), TournamentRole.ADMIN);
     }
 
     getFavTeamIdsFromLocalStorage(): number[] {

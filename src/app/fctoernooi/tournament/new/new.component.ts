@@ -163,7 +163,7 @@ export class TournamentNewComponent implements OnInit {
                 this.planningRepository.createObject([structureService.getFirstRound()])
                   .subscribe(
                     /* happy path */ games => {
-                      this.router.navigate(['/toernooi/home', tournamentOut.getId()]);
+                      this.router.navigate(['/toernooi', tournamentOut.getId()]);
                     },
                   /* error path */ e => {
                       this.setAlert('danger', 'de toernooi-planning kon niet worden aangemaakt: ' + e);
