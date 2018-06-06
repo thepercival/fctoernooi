@@ -24,7 +24,7 @@
                         <th></th>
                         <th>nr.</th>
                         <th>naam</th>
-                        <th style="text-align: right;">
+                        <th class="text-right">
                             <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" (click)="addField()" [disabled]="processing || disableEditButtons">
                                 <fa-icon [icon]="['fas', 'plus']"></fa-icon>
                             </button>
@@ -48,7 +48,7 @@
                                 [ngModel]="fieldItem.field.getName()" (ngModelChange)="fieldItem.field.setName($event)" *ngIf="fieldItem.editable"
                                 required>
                         </td>
-                        <td style="text-align: right;">
+                        <td class="text-right">
                             <button *ngIf="last && !isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || disableEditButtons"
                                 (click)="removeField(fieldItem);">
                                 <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>

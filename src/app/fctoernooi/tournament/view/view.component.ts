@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlanningService, StructureRepository } from 'ngx-sport';
-import { Subscription, timer } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { AuthService } from '../../../auth/auth.service';
 import { GlobalEventsManager } from '../../../common/eventmanager';
@@ -51,15 +51,15 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
             this.scrollToGameId = +params.get('scrollToGameId');
         });
 
-        this.timerSubscription = timer(30000, 30000).subscribe(number => {
-            if (this.noRefresh !== true) {
-                this.processing = true;
-                this.setData(this.tournament.getId(), () => {
-                    this.planningService = new PlanningService(this.structureService);
-                    this.processing = false;
-                });
-            }
-        });
+        // this.timerSubscription = timer(30000, 30000).subscribe(number => {
+        //     if (this.noRefresh !== true) {
+        //         this.processing = true;
+        //         this.setData(this.tournament.getId(), () => {
+        //             this.planningService = new PlanningService(this.structureService);
+        //             this.processing = false;
+        //         });
+        //     }
+        // });
     }
 
     setNoRefresh(toggle) {

@@ -43,6 +43,12 @@
     <table *ngIf="!processing" class="table">
       <tbody>
         <tr *ngFor="let shell of tournamentShells">
+          <td *ngIf="isLoggedIn()" class="text-right">
+            <button *ngIf="shell.hasEditPermissions" type="button" [routerLink]="['/toernooi', shell.tournamentId]" routerLinkActive="active"
+              class="btn btn-sm btn-outline-primary">
+              <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+            </button>
+          </td>
           <td class="toView" (click)="linkToView(shell)">{{shell.startDateTime.toLocaleString("en", {"month":"short","day":"2-digit","hour12": false,"hour":"2-digit","minute":"2-digit"}
             )}}
           </td>
@@ -51,12 +57,6 @@
             <fa-icon *ngIf="iconManager.getIconType(shell.sport) === 'fa'" [icon]="['fas', iconManager.getIconClass(shell.sport)]"></fa-icon>
           </td>
           <td class="toView" (click)="linkToView(shell)">{{shell.name}}</td>
-          <td *ngIf="isLoggedIn()" style="text-align: right">
-            <button *ngIf="shell.hasEditPermissions" type="button" [routerLink]="['/toernooi', shell.tournamentId]" routerLinkActive="active"
-              class="btn btn-sm btn-outline-primary">
-              <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
-            </button>
-          </td>
         </tr>
       </tbody>
     </table>

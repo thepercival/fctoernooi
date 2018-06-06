@@ -25,7 +25,7 @@
             <th></th>
             <th>plek</th>
             <th>naam</th>
-            <th style="text-align: center;">
+            <th class="text-center">
               <button *ngIf="!isStarted() && allPoulePlaceHaveTeam()" type="button" class="btn btn-sm btn-outline-primary" (click)="swapAll()"
                 [disabled]="processing || poulePlaceToSwap !== undefined" title="willekeurige volgorde">
                 <fa-icon [icon]="['fas', 'random']"></fa-icon>
@@ -47,8 +47,8 @@
             <td *ngIf="poulePlace.getTeam()">
               <span>{{poulePlace.getTeam().getName()}}</span>
             </td>
-            <td *ngIf="poulePlace.getTeam()" style="text-align: center;">
-              <fa-icon *ngIf="!isStarted() && atLeastTwoPoulePlaceHaveTeam()" class="text-primary" style="cursor: pointer" (click)="swapTwo(poulePlace)"
+            <td *ngIf="poulePlace.getTeam()" class="text-center">
+              <fa-icon *ngIf="!isStarted() && atLeastTwoPoulePlaceHaveTeam()" class="text-primary pointer" (click)="swapTwo(poulePlace)"
                 [icon]="['far', (poulePlaceToSwap === poulePlace ? 'check-' : '') + 'square']" size="2x"></fa-icon>
             </td>
             <td colspan=2 *ngIf="!poulePlace.getTeam()">

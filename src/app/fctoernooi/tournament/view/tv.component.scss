@@ -19,7 +19,7 @@ h1 > i.smaller {
 }
 
 td.pouleplace {
-    word-break:break-all;
+    overflow-wrap: break-word;
 }
 
 td.score, td.goaldiff {

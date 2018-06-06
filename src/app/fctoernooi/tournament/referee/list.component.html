@@ -24,7 +24,7 @@
           <th></th>
           <th>initialen</th>
           <th class="d-none d-sm-table-cell">naam</th>
-          <th style="text-align: right;">
+          <th class="text-right">
             <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" (click)="addReferee()" [disabled]="processing">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button>
@@ -44,7 +44,7 @@
           <td class="d-none d-sm-table-cell">
             <span>{{referee.getName()}}</span>
           </td>
-          <td style="text-align: right;">
+          <td class="text-right">
             <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing" (click)="removeReferee(referee);">
               <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
             </button>

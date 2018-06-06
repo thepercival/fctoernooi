@@ -14,3 +14,7 @@ input.ng-invalid, select.ng-invalid {
   padding: 0;
   text-align: center;
 }
+
+input.max-width-100 {
+    max-width: 100px;
+}

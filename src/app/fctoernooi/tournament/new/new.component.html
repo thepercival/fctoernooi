@@ -111,7 +111,7 @@
               <input class="form-control" placeholder="yyyy-mm-dd" id="dp" name="dp" [(ngModel)]="model.startdate" ngbDatepicker #d="ngbDatepicker"
                 required [dayTemplate]="t" [minDate]="minDateStruct">
               <div class="input-group-append">
-                <span class="input-group-text" (click)="d.toggle()" style="cursor: pointer;">
+                <span class="input-group-text pointer" (click)="d.toggle()">
                   <i class="fi flaticon-schedule text-white"></i>
                 </span>
               </div>
@@ -139,7 +139,7 @@
                 placeholder="yyyy-mm-dd" id="dp" name="dp" [formControl]="customForm.controls.date" ngbDatepicker #d="ngbDatepicker"
                 required [dayTemplate]="t" [minDate]="minDateStruct">
               <div class="input-group-append">
-                <span class="input-group-text" (click)="d.toggle()" style="cursor: pointer;">
+                <span class="input-group-text pointer" (click)="d.toggle()">
                   <i class="fi flaticon-schedule text-white"></i>
                 </span>
               </div>

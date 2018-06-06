@@ -31,13 +31,13 @@
             <label for="homeresult" class="col-form-label">{{game.getScoreConfig().getName()}}</label>
           </div>
           <div class="col-4">
-            <input [ngModel]="model.home" (ngModelChange)="setHome($event)" class="form-control" type="number" name="homeresult" id="homeresult"
-              style="max-width: 100px;">
+            <input [ngModel]="model.home" (ngModelChange)="setHome($event)" class="form-control max-width-100" type="number" name="homeresult"
+              id="homeresult">
           </div>
           <div class="col-1 team-splitter">-</div>
           <div class="col-4">
-            <input [ngModel]="model.away" (ngModelChange)="setAway($event)" class="form-control" type="number" name="awayresult" id="awayresult"
-              style="max-width: 100px;">
+            <input [ngModel]="model.away" (ngModelChange)="setAway($event)" class="form-control max-width-100" type="number" name="awayresult"
+              id="awayresult">
           </div>
         </div>
         <div *ngIf="!(game.getRound().getConfig().getEnableTime() && !game.getRound().getConfig().getHasExtension())" class="form-group row">
@@ -71,7 +71,7 @@
               <input class="form-control fc-date" placeholder="yyyy-mm-dd" id="dp" name="dp" [(ngModel)]="model.startdate" ngbDatepicker
                 #d="ngbDatepicker" required [dayTemplate]="t">
               <div class="input-group-append">
-                <span class="input-group-text" (click)="d.toggle()" style="cursor: pointer;">
+                <span class="input-group-text pointer" (click)="d.toggle()">
                   <i class="fi flaticon-schedule text-white"></i>
                 </span>
               </div>
@@ -91,7 +91,12 @@
           {{errorHomeAwayScore}}, ga naar
           <a [routerLink]="['/toernooi/roundssettings', tournament.getId()]" href="#"> ronde - instellingen</a> om dit aan te passen
         </div>
-        <button type="submit" [disabled]="!f.form.valid || processing" class="btn btn-outline-primary">wijzig wedstrijd</button>
+        <div class="form-group row justify-content-end">
+          <div class="col-9">
+            <button type="submit" [disabled]="!f.form.valid || processing" class="btn btn-outline-primary">wijzig wedstrijd</button>
+          </div>
+        </div>
+
       </form>
     </div>
   </div>

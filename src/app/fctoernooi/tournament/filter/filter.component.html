@@ -48,14 +48,14 @@
               <span *ngIf="poulePlace.getTeam()">{{poulePlace.getTeam().getName()}}</span>
             </td>
             <td>
-              <span *ngIf="toggledItem === poulePlace.getTeam()" style="font-size: 15%">
+              <span *ngIf="toggledItem === poulePlace.getTeam()" class="smallfont">
                 <fa-icon *ngIf="this.toggledItemProgress < 10" class="text-info" [icon]="['fas', 'save']" size="{{5 + (toggledItemProgress/2)}}x"></fa-icon>
                 <fa-icon *ngIf="this.toggledItemProgress === 10" class="text-success" [icon]="['fas', 'check-circle']" size="10x"></fa-icon>
               </span>
             </td>
-            <td style="text-align: right;">
-              <fa-icon *ngIf="poulePlace.getTeam()" class="text-primary" style="cursor: pointer" (click)="toggleFavoriteTeams(poulePlace.getTeam())"
-                [icon]="['far', (inFavoriteTeamIds(poulePlace.getTeam()) ? 'check-' : '') + 'square']" size="2x"></fa-icon>
+            <td class="text-right">
+              <fa-icon *ngIf="poulePlace.getTeam()" class="text-primary pointer" (click)="toggleFavoriteTeams(poulePlace.getTeam())" [icon]="['far', (inFavoriteTeamIds(poulePlace.getTeam()) ? 'check-' : '') + 'square']"
+                size="2x"></fa-icon>
             </td>
           </tr>
         </tbody>
@@ -84,13 +84,13 @@
               <span>{{referee.getName()}}</span>
             </td>
             <td>
-              <span *ngIf="toggledItem === referee" style="font-size: 15%">
+              <span *ngIf="toggledItem === referee" class="smallfont">
                 <fa-icon *ngIf="this.toggledItemProgress < 10" class="text-info" [icon]="['fas', 'save']" size="{{5 + (toggledItemProgress/2)}}x"></fa-icon>
                 <fa-icon *ngIf="this.toggledItemProgress === 10" class="text-success" [icon]="['fas', 'check-circle']" size="10x"></fa-icon>
               </span>
             </td>
-            <td style="text-align: right;">
-              <fa-icon class="text-primary" style="cursor: pointer" (click)="toggleFavoriteReferees(referee)" [icon]="['far', (inFavoriteRefereeIds(referee) ? 'check-' : '') + 'square']"
+            <td class="text-right">
+              <fa-icon class="text-primary pointer" (click)="toggleFavoriteReferees(referee)" [icon]="['far', (inFavoriteRefereeIds(referee) ? 'check-' : '') + 'square']"
                 size="2x"></fa-icon>
             </td>
         </tbody>

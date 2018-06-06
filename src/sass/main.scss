@@ -75,6 +75,14 @@ input.is-invalid, textarea.is-invalid {
     color: white;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
+ngb-alert {
+  width:100%;
+}
+
 /* bootstrap checkbox */
 .custom-checkbox .custom-control-indicator {
   content: "";
