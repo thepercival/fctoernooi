@@ -62,7 +62,7 @@
             </label>
           </div>
         </div>
-        <div *ngIf="planningService.canCalculateStartDateTime(game.getRound().getNumber())" class="form-group row">
+        <div *ngIf="planningService.canCalculateStartDateTime(game.getRound().getNumber()) && hasAllEditPermissions()" class="form-group row">
           <div class="col-3">
             <label for="dp" class="col-form-label">startdatum</label>
           </div>
@@ -78,7 +78,7 @@
             </div>
           </div>
         </div>
-        <div *ngIf="planningService.canCalculateStartDateTime(game.getRound().getNumber())" class="form-group row">
+        <div *ngIf="planningService.canCalculateStartDateTime(game.getRound().getNumber()) && hasAllEditPermissions()" class="form-group row">
           <div class="col-3">
             <label for="starttime" class="col-form-label">starttijd</label>
           </div>

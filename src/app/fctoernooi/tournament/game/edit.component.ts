@@ -1,3 +1,4 @@
+import { AuthService } from '../../../auth/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
@@ -17,6 +18,7 @@ import {
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
 
+import { TournamentRole } from '../role';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
 
@@ -35,6 +37,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     returnUrlParam: number;
     returnUrlQueryParamKey: string;
     returnUrlQueryParamValue: string;
+    userRefereeId: number;
 
     validations: any = {
         'minlengthname': League.MIN_LENGTH_NAME,
@@ -44,6 +47,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     constructor(
         route: ActivatedRoute,
         router: Router,
+        private authService: AuthService,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private gameRepository: GameRepository,
@@ -64,7 +68,15 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     ngOnInit() {
 
         this.sub = this.route.params.subscribe(params => {
-            super.myNgOnInit(() => this.setGame(+params.gameId));
+            super.myNgOnInit(() => {
+                this.setGame(+params.gameId);
+                this.tournamentRepository.getUserRefereeId(this.tournament).subscribe(
+                /* happy path */ userRefereeIdRes => {
+                        this.userRefereeId = userRefereeIdRes;
+                    },
+                /* error path */ e => { this.setAlert('danger', e); }
+                );
+            });
         });
 
         this.route.queryParamMap.subscribe(params => {
@@ -73,6 +85,14 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             this.returnUrlQueryParamKey = params.get('returnQueryParamKey');
             this.returnUrlQueryParamValue = params.get('returnQueryParamValue');
         });
+    }
+
+    hasAllEditPermissions() {
+        const loggedInUserId = this.authService.getLoggedInUserId();
+        if (this.tournament.hasRole(loggedInUserId, TournamentRole.GAMERESULTADMIN)) {
+            return true;
+        }
+        return false;
     }
 
     setGame(gameId: number) {
