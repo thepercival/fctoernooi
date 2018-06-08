@@ -99,6 +99,18 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
         this.showRemoveQuestion = showRemoveQuastion;
     }
 
+    isManualMessageReadOnDevice() {
+        let manualMessageReadOnDevice = localStorage.getItem('manualmessageread');
+        if (manualMessageReadOnDevice === null) {
+            manualMessageReadOnDevice = 'false';
+        }
+        return JSON.parse(manualMessageReadOnDevice);
+    }
+
+    manualMessageReadOnDevice() {
+        localStorage.setItem('manualmessageread', JSON.stringify(true));
+    }
+
     protected setRemoveAlert(type: string, message: string) {
         this.alertRemove = { 'type': type, 'message': message };
     }
