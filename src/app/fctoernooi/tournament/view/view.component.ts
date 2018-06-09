@@ -39,7 +39,6 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
         super.myNgOnInit(() => {
             this.initTVViewLink();
             this.planningService = new PlanningService(this.structureService);
-            // this.removeOldFavIds();
             this.processing = false;
             this.tournamentRepository.getUserRefereeId(this.tournament).subscribe(
                 /* happy path */ userRefereeIdRes => {

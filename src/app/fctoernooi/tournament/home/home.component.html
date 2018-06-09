@@ -13,11 +13,11 @@
     <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/structure', tournament.getId()]">
       <div class="card-body">
         <h5 class="card-title">
-          <i class="fi flaticon-structure"></i> structuur</h5>
+          <i class="fi flaticon-structure"></i> indeling</h5>
         <p class="card-text" *ngIf="structureService.getFirstRound() !== undefined">
-          <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> structuur aanwezig</p>
+          <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> indeling aanwezig</p>
         <p class="card-text" *ngIf="structureService.getFirstRound() === undefined">
-          <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> geen structuur aanwezig</p>
+          <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> geen indeling aanwezig</p>
       </div>
     </div>
     <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/competitors', tournament.getId()]">

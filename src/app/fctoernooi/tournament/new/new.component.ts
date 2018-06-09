@@ -172,7 +172,7 @@ export class TournamentNewComponent implements OnInit {
                   );
               },
             /* error path */ e => {
-                this.setAlert('danger', 'de toernooi-structuur kon niet worden aangemaakt: ' + e);
+                this.setAlert('danger', 'de toernooi-indeling kon niet worden aangemaakt: ' + e);
                 this.processing = false;
               }
             );

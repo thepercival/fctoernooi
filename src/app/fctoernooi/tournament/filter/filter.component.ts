@@ -39,9 +39,21 @@ export class TournamentFilterComponent extends TournamentComponent implements On
         super.myNgOnInit(() => {
             this.initPoulePlaces();
             this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), TournamentRole.GAMERESULTADMIN);
+            this.removeOldFavIds();
             this.processing = false;
+        });
+    }
+
+    removeOldFavIds() {
+        const referees = this.tournament.getCompetition().getReferees();
+        const favRefereeIds = this.getFavRefereeIdsFromLocalStorage();
+        if (favRefereeIds[this.tournament.getId()] === undefined) {
+            return;
         }
-        );
+        favRefereeIds[this.tournament.getId()] = favRefereeIds[this.tournament.getId()].filter(refereeId => {
+            return (referees.find(referee => referee.getId() === refereeId) !== undefined);
+        });
+        localStorage.setItem('favoritereferees', JSON.stringify(favRefereeIds));
     }
 
     initPoulePlaces() {
@@ -125,7 +137,7 @@ export class TournamentFilterComponent extends TournamentComponent implements On
     }
 
     inFavoriteRefereeIds(referee: Referee): boolean {
-        const favReferees = this.getFavRefereesFromLocalStorage();
+        const favReferees = this.getFavRefereeIdsFromLocalStorage();
         const favRefereeIds: number[] = favReferees[this.tournament.getId()];
         if (favRefereeIds === undefined) {
             return false;
@@ -136,7 +148,7 @@ export class TournamentFilterComponent extends TournamentComponent implements On
     toggleFavoriteReferees(referee: Referee) {
         this.startProgressing(referee);
 
-        const favReferees = this.getFavRefereesFromLocalStorage();
+        const favReferees = this.getFavRefereeIdsFromLocalStorage();
         if (favReferees[this.tournament.getId()] === undefined) {
             favReferees[this.tournament.getId()] = [];
         }
@@ -150,7 +162,7 @@ export class TournamentFilterComponent extends TournamentComponent implements On
         localStorage.setItem('favoritereferees', JSON.stringify(favReferees));
     }
 
-    protected getFavRefereesFromLocalStorage(): any {
+    protected getFavRefereeIdsFromLocalStorage(): any {
         const favReferees = localStorage.getItem('favoritereferees');
         if (favReferees === null) {
             return {};
@@ -163,7 +175,7 @@ export class TournamentFilterComponent extends TournamentComponent implements On
     }
 
     getNrOfFavoriteReferees(): number {
-        const favReferees = this.getFavRefereesFromLocalStorage();
+        const favReferees = this.getFavRefereeIdsFromLocalStorage();
         if (favReferees[this.tournament.getId()] === undefined) {
             return 0;
         }

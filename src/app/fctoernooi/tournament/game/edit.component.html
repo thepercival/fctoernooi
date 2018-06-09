@@ -45,7 +45,7 @@
             <label for="extratime" class="col-form-label">na verlenging</label>
           </div>
           <div class="col-9">
-            <label class="custom-control custom-checkbox">
+            <label class="custom-control custom-checkbox pl-0">
               <input type="checkbox" class="custom-control-input" id="extratime" name="extratime" [(ngModel)]="model.extratime">
               <span class="custom-control-indicator"></span>
             </label>
@@ -56,13 +56,13 @@
             <label for="played" class="col-form-label">gespeeld</label>
           </div>
           <div class="col-9">
-            <label class="custom-control custom-checkbox">
+            <label class="custom-control custom-checkbox pl-0">
               <input type="checkbox" class="custom-control-input" id="played" name="played" [ngModel]="model.played" (ngModelChange)="setPlayed($event)">
               <span class="custom-control-indicator"></span>
             </label>
           </div>
         </div>
-        <div *ngIf="planningService.canCalculateStartDateTime(game.getRound().getNumber()) && hasAllEditPermissions()" class="form-group row">
+        <!-- <div *ngIf="planningService.canCalculateStartDateTime(game.getRound().getNumber()) && hasAllEditPermissions()" class="form-group row">
           <div class="col-3">
             <label for="dp" class="col-form-label">startdatum</label>
           </div>
@@ -90,7 +90,7 @@
         <div *ngIf="errorHomeAwayScore" class="alert alert-danger">
           {{errorHomeAwayScore}}, ga naar
           <a [routerLink]="['/toernooi/roundssettings', tournament.getId()]" href="#"> ronde - instellingen</a> om dit aan te passen
-        </div>
+        </div> -->
         <div class="form-group row justify-content-end">
           <div class="col-9">
             <button type="submit" [disabled]="!f.form.valid || processing" class="btn btn-outline-primary">wijzig wedstrijd</button>

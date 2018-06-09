@@ -10,7 +10,7 @@
   <div>
     <div class="d-flex justify-content-between mb-1">
       <h2>
-        <i class="fi flaticon-structure"></i> structuur
+        <i class="fi flaticon-structure"></i> indeling
       </h2>
       <button *ngIf="!processing && !structureService?.getFirstRound().isStarted()" role="button" [disabled]="!changedRoundNumber"
         (click)="saveStructure()" class="btn btn-outline-primary">
