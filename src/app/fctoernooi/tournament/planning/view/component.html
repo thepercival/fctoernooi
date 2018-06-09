@@ -52,7 +52,7 @@
       </thead>
       <tbody>
         <ng-template ngFor let-game [ngForOf]="getGamesHelper()">
-          <tr *ngIf="filterFavTeamIds(game)" id="game-scrollposition-{{game.getId()}}">
+          <tr *ngIf="!hasFavIds() || hasGameFavIds(game)" id="game-scrollposition-{{game.getId()}}">
             <td class="text-center pl-1">
               <span *ngIf="!game.getPoule().needsRanking()">{{nameService.getPouleName(game.getPoule())}}</span>
               <button type="button" class="btn btn-sm btn-outline-secondary" *ngIf="game.getPoule().needsRanking()" placement="right" [ngbPopover]="popRanking"
@@ -85,7 +85,7 @@
               <span class="{{getPoulePlaceClass(game.getAwayPoulePlace())}}">{{nameService.getPoulePlaceName(game.getAwayPoulePlace(), true )}}</span>
               <span *ngIf="game.getAwayPoulePlace().getTeam() && game.getAwayPoulePlace().getTeam().getAbbreviation()" class="d-inline d-sm-none">{{game.getAwayPoulePlace().getTeam().getAbbreviation()}}</span>
             </td>
-            <td *ngIf="hasReferees()" class="d-none d-sm-table-cell">{{game.getReferee()?.getInitials()}}</td>
+            <td *ngIf="hasReferees()" class="d-none d-sm-table-cell" [ngClass]="{'text-primary': isRefereeFav(game.getReferee()) }">{{game.getReferee()?.getInitials()}}</td>
           </tr>
         </ng-template>
       </tbody>

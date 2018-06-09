@@ -20,6 +20,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     private timerSubscription: Subscription;
     private noRefresh = false;
     private favTeamIds: number[];
+    private favRefereeIds: number[];
     scrollToGameId: number;
     userRefereeId: number;
 
@@ -38,6 +39,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
         super.myNgOnInit(() => {
             this.initTVViewLink();
             this.planningService = new PlanningService(this.structureService);
+            // this.removeOldFavIds();
             this.processing = false;
             this.tournamentRepository.getUserRefereeId(this.tournament).subscribe(
                 /* happy path */ userRefereeIdRes => {
@@ -100,4 +102,26 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
         }
         return favTeams[this.tournament.getId()];
     }
+
+
+    getFavRefereeIdsFromLocalStorage(): number[] {
+        if (this.favRefereeIds === undefined) {
+            this.favRefereeIds = this.getFavRefereeIdsFromLocalStorageHelper();
+        }
+        return this.favRefereeIds;
+    }
+
+    protected getFavRefereeIdsFromLocalStorageHelper(): number[] {
+        const favRefereesAsString = localStorage.getItem('favoritereferees');
+        if (favRefereesAsString === null) {
+            return [];
+        }
+        const favReferees: {} = JSON.parse(favRefereesAsString);
+        if (favReferees[this.tournament.getId()] === undefined) {
+            return [];
+        }
+        return favReferees[this.tournament.getId()];
+    }
+
+
 }

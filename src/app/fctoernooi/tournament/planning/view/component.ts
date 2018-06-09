@@ -10,6 +10,7 @@ import {
   PoulePlace,
   Ranking,
   RankingItem,
+  Referee,
   Round,
   StructureNameService,
   StructureService,
@@ -33,6 +34,7 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
   @Input() planningService: PlanningService;
   @Input() parentReturnAction: string;
   @Input() favTeamIds: number[];
+  @Input() favRefereeIds: number[];
   @Input() scrollToGameId: number;
   @Input() userRefereeId: number;
   @Output() popOverIsOpen = new EventEmitter<boolean>();
@@ -131,22 +133,55 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
   }
 
   filterClass(): string {
-    const hasFilter = this.favTeamIds !== undefined && this.favTeamIds.length > 0;
+    const hasFilter = (this.favTeamIds !== undefined && this.favTeamIds.length > 0)
+      || (this.favRefereeIds !== undefined && this.favRefereeIds.length > 0 && this.hasReferees());
     return hasFilter ? 'primary' : 'secondary';
   }
 
-  filterFavTeamIds(game: Game): boolean {
-    if (this.favTeamIds === undefined || this.favTeamIds.length === 0) {
-      return true;
-    }
-    if (game.getHomePoulePlace().getTeam() === undefined && game.getAwayPoulePlace().getTeam() === undefined) {
-      return true;
-    }
+  hasFavIds(): boolean {
+    return this.hasFavTeamIds() || this.hasFavRefereeIds();
+  }
+
+  hasFavTeamIds(): boolean {
+    return this.favTeamIds !== undefined && (this.favTeamIds.length > 0);
+  }
+
+  hasFavRefereeIds(): boolean {
+    return this.favRefereeIds !== undefined && (this.favRefereeIds.length > 0);
+  }
+
+  hasGameFavIds(game: Game): boolean {
+    const x = this.hasGameFavTeamIds(game)
+      || ((game.getReferee() === undefined && this.hasGameTeams(game) && !this.hasFavTeamIds()) || this.isRefereeFav(game.getReferee()));
+    console.log('hasGameFavTeamIds', this.hasGameFavTeamIds(game));
+    console.log('hasGameFavRefereeId', game.getReferee() === undefined || this.isRefereeFav(game.getReferee()));
+    console.log('hasGameFavIds', x);
+    return x;
+  }
+
+  hasGameTeams(game: Game): boolean {
+    return game.getHomePoulePlace().getTeam() !== undefined && game.getAwayPoulePlace().getTeam() !== undefined;
+  }
+
+  hasGameFavTeamIds(game: Game): boolean {
     return (this.isTeamFav(game.getHomePoulePlace().getTeam()) || this.isTeamFav(game.getAwayPoulePlace().getTeam()));
   }
 
   isTeamFav(team: Team): boolean {
-    return (team && this.favTeamIds && (this.favTeamIds.find(favTeamId => favTeamId === team.getId())) !== undefined);
+    // console.log('isTeamFav', team && this.favTeamIds && this.favTeamIds.some(favTeamId => favTeamId === team.getId()));
+    return team && this.favTeamIds && this.favTeamIds.some(favTeamId => favTeamId === team.getId());
+  }
+
+  hasGameReferee(game: Game): boolean {
+    return game.getReferee() !== undefined;
+  }
+
+  hasGameFavRefereeId(game: Game): boolean {
+    return (this.isRefereeFav(game.getReferee()));
+  }
+
+  isRefereeFav(referee: Referee): boolean {
+    return referee && this.favRefereeIds && this.favRefereeIds.some(favRefereeId => favRefereeId === referee.getId());
   }
 
   linkToGameEdit(tournament: Tournament, game: Game) {

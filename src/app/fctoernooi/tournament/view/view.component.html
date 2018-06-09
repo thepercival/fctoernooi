@@ -19,7 +19,8 @@
       <div *ngIf="!processing">
         <app-tournament-planning-view *ngFor="let roundNumber of structureService.getRoundNumbers()" [tournament]="tournament" [roundNumber]="roundNumber"
           [structureService]="structureService" [planningService]="planningService" [userRefereeId]="userRefereeId" [scrollToGameId]="scrollToGameId"
-          [parentReturnAction]="'/toernooi/view'" [favTeamIds]="getFavTeamIdsFromLocalStorage()" (popOverIsOpen)="setNoRefresh($event)"></app-tournament-planning-view>
+          [parentReturnAction]="'/toernooi/view'" [favTeamIds]="getFavTeamIdsFromLocalStorage()" [favRefereeIds]="getFavRefereeIdsFromLocalStorage()"
+          (popOverIsOpen)="setNoRefresh($event)"></app-tournament-planning-view>
       </div>
     </div>
   </div>
