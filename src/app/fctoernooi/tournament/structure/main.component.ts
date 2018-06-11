@@ -14,6 +14,7 @@ import {
 import { Tournament } from '../../tournament';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
+import { TournamentService } from '../service';
 
 @Component({
   selector: 'app-tournament-structure',
@@ -113,7 +114,8 @@ export class TournamentStructureComponent extends TournamentComponent implements
           /* happy path */ roundRes => {
           this.structureService = this.createStructureService(roundRes);
           const planningService = new PlanningService(this.structureService);
-          planningService.create(roundRes.getNumber());
+          const tournamentService = new TournamentService(this.tournament);
+          tournamentService.create(planningService, roundRes.getNumber());
           const changedRoundsForPlanning: Round[] = planningService.getRoundsByNumber(this.changedRoundNumber);
           if (changedRoundsForPlanning === undefined) {
             this.completeSave(roundRes);
@@ -136,6 +138,6 @@ export class TournamentStructureComponent extends TournamentComponent implements
     this.structureService = this.createStructureServiceCopy(round);
     this.changedRoundNumber = undefined;
     this.processing = false;
-    this.setAlert('info', 'wijzigingen opgeslagen');
+    this.setAlert('success', 'de wijzigingen zijn opgeslagen');
   }
 }

@@ -16,6 +16,7 @@ import {
 
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
+import { TournamentService } from '../service';
 
 @Component({
     selector: 'app-rounds-settings',
@@ -28,7 +29,6 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     ranges: any = {};
     allRoundsByNumber: any;
     selectedRoundNumber: number;
-    isCollapsed = true;
     modelConfig: RoundConfig;
     modelRecreate: boolean;
     modelReschedule: boolean;
@@ -91,8 +91,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         this.modelConfig = cloneDeep(this.getFirstRoundOfRoundNumber(this.selectedRoundNumber).getConfig());
         this.modelRecreate = false;
         this.modelReschedule = false;
-        this.isCollapsed = true;
-        this.resetAlert();
+        this.setAlert('info', 'instellingen gelden ook voor volgende ronden');
         if (this.planningService.isStarted(this.selectedRoundNumber)) {
             this.setAlert('info', 'deze ronde is al begonnen, kies een andere ronde');
         }
@@ -137,7 +136,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             return;
         }
         this.modelConfig.setHasExtension(hasExtension);
-        this.modelReschedule = true;  // this.planningService.reschedule(this.selectedRoundNumber);
+        this.modelReschedule = true;  // this.tournament.reschedule(new PlanningService(this.structureService), this.selectedRoundNumber);
     }
 
     setWinPointsExt(winPointsExt) {
@@ -186,16 +185,25 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         }
     }
 
-    setMinutesInBetween(minutesInBetween) {
-        if (minutesInBetween < this.validations.minMinutesPerGame
-            || minutesInBetween > this.validations.maxMinutesPerGame) {
+    setMinutesBetweenGames(minutesBetweenGames) {
+        if (minutesBetweenGames < this.validations.minMinutesPerGame
+            || minutesBetweenGames > this.validations.maxMinutesPerGame) {
             const avg = Math.floor(this.modelConfig.getMinutesPerGame() / 2);
-            this.modelConfig.setMinutesInBetween(avg);
+            this.modelConfig.setMinutesBetweenGames(avg);
             return;
         }
+        this.modelConfig.setMinutesBetweenGames(minutesBetweenGames);
+        if (this.modelConfig.getEnableTime()) {
+            this.modelReschedule = true;
+            // this.tournament.reschedule(new PlanningService(this.structureService), this.selectedRoundNumber);
+        }
+    }
+
+    setMinutesInBetween(minutesInBetween) {
         this.modelConfig.setMinutesInBetween(minutesInBetween);
         if (this.modelConfig.getEnableTime()) {
-            this.modelReschedule = true; // this.planningService.reschedule( this.selectedRoundNumber );
+            this.modelReschedule = true;
+            // this.tournament.reschedule(new PlanningService(this.structureService), this.selectedRoundNumber);
         }
     }
 
@@ -212,7 +220,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             }
         }
         this.modelConfig.setEnableTime(enableTime);
-        this.modelReschedule = true; // this.planningService.reschedule( this.selectedRoundNumber );
+        this.modelReschedule = true; // this.tournament.reschedule(new PlanningService(this.structureService), this.selectedRoundNumber);
     }
 
     getDirectionDescription(scoreConfig) {
@@ -271,36 +279,40 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             .subscribe(
                 /* happy path */ res => {
                     this.updateRoundConfig(this.selectedRoundNumber, this.modelConfig);
+                    const tournamentService = new TournamentService(this.tournament);
                     if (this.modelRecreate === true) {
-                        this.planningService.create(this.selectedRoundNumber);
+                        tournamentService.create(this.planningService, this.selectedRoundNumber);
                         this.planningRepository.createObject(rounds)
                             .subscribe(
                                 /* happy path */ gamesRes => {
-                                    this.setAlert('info', 'instellingen opgeslagen');
+                                    this.setAlert('success', 'de instellingen zijn opgeslagen');
                                 },
                                 /* error path */ e => {
-                                    this.setAlert('danger', 'instellingen niet opgeslagen: ' + e); this.processing = false;
+                                    this.setAlert('danger', 'de instellingen zijn niet opgeslagen: ' + e); this.processing = false;
                                 },
                                 /* onComplete */() => this.processing = false
                             );
                     } else if (this.modelReschedule) {
-                        this.planningService.reschedule(this.selectedRoundNumber);
+                        tournamentService.reschedule(this.planningService, this.selectedRoundNumber);
                         this.planningRepository.editObject(rounds)
                             .subscribe(
                                 /* happy path */ gamesRes => {
-                                    this.setAlert('info', 'instellingen opgeslagen');
+                                    this.setAlert('success', 'de instellingen zijn opgeslagen');
                                 },
                                 /* error path */ e => {
-                                    this.setAlert('danger', 'instellingen niet opgeslagen: ' + e); this.processing = false;
+                                    this.setAlert('danger', 'de instellingen zijn niet opgeslagen: ' + e); this.processing = false;
                                 },
                                     /* onComplete */() => this.processing = false
                             );
                     } else {
                         this.processing = false;
-                        this.setAlert('info', 'instellingen opgeslagen');
+                        this.setAlert('success', 'de instellingen zijn opgeslagen');
                     }
                 },
-                /* error path */ e => { this.setAlert('danger', 'instellingen niet opgeslagen: ' + e); this.processing = false; } // ,
+                /* error path */ e => {
+                    this.setAlert('danger', 'de instellingen zijn niet opgeslagen: ' + e);
+                    this.processing = false;
+                } // ,
                 // /* onComplete */() => /*this.processing = false*/
             );
 
@@ -319,6 +331,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             round.getConfig().setMinutesPerGameExt(modelToUpdateWith.getMinutesPerGameExt());
             round.getConfig().setEnableTime(modelToUpdateWith.getEnableTime());
             round.getConfig().setMinutesPerGame(modelToUpdateWith.getMinutesPerGame());
+            round.getConfig().setMinutesBetweenGames(modelToUpdateWith.getMinutesBetweenGames());
             round.getConfig().setMinutesInBetween(modelToUpdateWith.getMinutesInBetween());
             this.updateRoundConfigScore(round.getConfig().getScore(), modelToUpdateWith.getScore());
         });

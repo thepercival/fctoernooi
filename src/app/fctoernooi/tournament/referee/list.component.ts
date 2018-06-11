@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlanningRepository, PlanningService, Referee, RefereeRepository, StructureRepository } from 'ngx-sport';
 
-import { IAlert } from '../../../app.definitions';
 import { Tournament } from '../../tournament';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
-
+import { TournamentService } from '../service';
 
 @Component({
   selector: 'app-tournament-referee',
@@ -86,12 +85,13 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
             this.referees.splice(index, 1);
           }
           const firstRound = this.structureService.getFirstRound();
-          this.planningService.reschedule(firstRound.getNumber());
+          const tournamentService = new TournamentService(this.tournament);
+          tournamentService.reschedule(this.planningService, firstRound.getNumber());
           this.planningRepository.editObject([firstRound])
             .subscribe(
                     /* happy path */ gamesdRes => {
                 this.processing = false;
-                this.setAlert('info', 'scheidsrechter verwijderd');
+                this.setAlert('success', 'de scheidsrechter is verwijderd');
               },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
             /* onComplete */() => this.processing = false

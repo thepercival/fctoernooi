@@ -24,7 +24,8 @@
       </div>
       <div *ngIf="!processing">
         <app-tournament-planning-view *ngFor="let roundNumber of structureService.getRoundNumbers()" [tournament]="tournament" [roundNumber]="roundNumber"
-          [structureService]="structureService" [planningService]="planningService" [scrollToGameId]="scrollToGameId" [parentReturnAction]="'/toernooi/games'"></app-tournament-planning-view>
+          [structureService]="structureService" [canEditSettings]="userIsPlannerOrStructureAdmin" [planningService]="planningService"
+          [scrollToGameId]="scrollToGameId" [parentReturnAction]="'/toernooi/games'"></app-tournament-planning-view>
       </div>
     </div>
   </div>

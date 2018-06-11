@@ -1,3 +1,4 @@
+import { $$rxSubscriber } from 'rxjs/internal/symbol/rxSubscriber';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -6,6 +7,7 @@ import { IReferee, PlanningRepository, PlanningService, Referee, RefereeReposito
 import { User } from '../../../user/user';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
+import { TournamentService } from '../service';
 
 @Component({
     selector: 'app-tournament-referee-edit',
@@ -126,8 +128,8 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         this.refereeRepository.createObject(ref, this.structureService.getCompetition()).subscribe(
             /* happy path */ refereeRes => {
                 const firstRound = this.structureService.getFirstRound();
-                const planningService = new PlanningService(this.structureService);
-                planningService.reschedule(firstRound.getNumber());
+                const tournamentService = new TournamentService(this.tournament);
+                tournamentService.reschedule(new PlanningService(this.structureService), firstRound.getNumber());
                 this.planningRepository.editObject([firstRound]).subscribe(
                 /* happy path */ gamesRes => {
                         this.tournamentRepository.syncRefereeRoles(this.tournament).subscribe(

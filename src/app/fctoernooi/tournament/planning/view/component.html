@@ -7,9 +7,12 @@
               round.getWinnersOrLosers() )" class="text-{{getClassPostfix(round.getWinnersOrLosers())}}"></fa-icon>
       </ng-template> -->
     </h2>
-    <button type="button" class="btn btn-sm btn-outline-{{filterClass()}} mr-2" *ngIf="favTeamIds" [routerLink]="['/toernooi/filter', tournament.getId()]">
+    <button type="button" class="btn btn-sm btn-outline-{{filterClass()}} mr-2" *ngIf="!canEditSettings && favTeamIds" [routerLink]="['/toernooi/filter', tournament.getId()]">
       <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       <span>filter</span>
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-primary mr-0" *ngIf="canEditSettings" [routerLink]="['/toernooi/roundssettings', tournament.getId()]">
+      <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellingen
     </button>
   </div>
 
@@ -33,11 +36,13 @@
           <th *ngIf="!aRoundNeedsRanking(roundsByNumber)" class="text-center" title="wedstrijd">
             <span>vs</span>
           </th>
-          <th *ngIf="planningService.canCalculateStartDateTime(roundNumber)" title="starttijd">
-            <span *ngIf="onSameDay()">{{planningService.calculateStartDateTime(roundNumber).toLocaleString("en", {"month":"short","day":"2-digit"})}}</span>
-            <span *ngIf="!onSameDay()">starttijd</span>
+
+          <th *ngIf="planningService.canCalculateStartDateTime(roundNumber)" class="pointer text-info" container="body" title="start"
+            placement="right" [ngbPopover]="getGameTimeTooltipDescription()">
+            <span *ngIf="!onSameDay()">{{planningService.calculateStartDateTime(roundNumber).toLocaleString("en", {"month":"short","day":"2-digit"})}}</span>
+            <span *ngIf="onSameDay()">start</span>
           </th>
-          <th *ngIf="hasFields()" title="veld">
+          <th *ngIf="hasFields()" class="text-right" title="veld">
             <i class="fi flaticon-soccer-field"></i>
           </th>
           <th class="text-right">thuis</th>
@@ -51,7 +56,20 @@
         </tr>
       </thead>
       <tbody>
+        <!-- <ng-container *ngTemplateOutlet="qualclass;context:{$implicit: myVar}">
+        </ng-container> -->
+
         <ng-template ngFor let-game [ngForOf]="getGamesHelper()">
+          <tr *ngIf="isBreakInBetween(game)" class="table-info">
+            <td *ngIf="aRoundNeedsRanking(roundsByNumber)"></td>
+            <td *ngIf="!aRoundNeedsRanking(roundsByNumber)"></td>
+            <td *ngIf="planningService.canCalculateStartDateTime(roundNumber)"></td>
+            <td *ngIf="hasFields()"></td>
+            <td class="width-25 text-right">PAUZE</td>
+            <td></td>
+            <td class="width-25"></td>
+            <td *ngIf="hasReferees()" class="d-none d-sm-table-cell"></td>
+          </tr>
           <tr *ngIf="!hasFavIds() || hasGameFavIds(game)" id="game-scrollposition-{{game.getId()}}">
             <td class="text-center pl-1">
               <span *ngIf="!game.getPoule().needsRanking()">{{nameService.getPouleName(game.getPoule())}}</span>
@@ -67,7 +85,7 @@
               <span *ngIf="!onSameDay()">{{game.getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit"})}} </span>
               <span>{{game.getStartDateTime().toLocaleString("en", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}</span>
             </td>
-            <td *ngIf="hasFields()">{{game.getField()?.getName()}}</td>
+            <td *ngIf="hasFields()" class="text-right">{{game.getField()?.getName()}}</td>
             <td class="pouleplace text-right" [ngClass]="{'text-primary': isTeamFav(game.getHomePoulePlace().getTeam()) }">
               <span class="{{getPoulePlaceClass(game.getHomePoulePlace())}}">{{nameService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</span>
               <span *ngIf="game.getHomePoulePlace().getTeam() && game.getHomePoulePlace().getTeam().getAbbreviation()" class="d-inline d-sm-none">{{game.getHomePoulePlace().getTeam().getAbbreviation()}}</span>

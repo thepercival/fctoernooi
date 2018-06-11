@@ -3,57 +3,21 @@
         <div class="mb-4">
             <h1 *ngIf="tournament">
                 {{tournament.getName()}}
-                <button *ngIf="!processing" [routerLink]="['/toernooi', tournament.getId()]" type="button" class="btn btn-outline-secondary btn-sm">
+                <button *ngIf="!processing" [routerLink]="['/toernooi/games', tournament.getId()]" type="button" class="btn btn-outline-secondary btn-sm">
                     <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
                 </button>
             </h1>
         </div>
-        <div>
-            <h2>
-                <fa-icon [icon]="['fas', 'cogs']"></fa-icon> ronde-instellingen
-            </h2>
-            <h2 *ngIf="processing" align="center">
-                <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-            </h2>
-        </div>
+
+        <h2 *ngIf="!processing">
+            <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellingen
+            <span [innerHTML]="nameService.getRoundsName( selectedRoundNumber, allRoundsByNumber[selectedRoundNumber] ) | keepHtml"></span>
+        </h2>
+        <h2 *ngIf="processing" align="center">
+            <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+        </h2>
         <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
         <form *ngIf="!processing" name="form" (ngSubmit)="saveConfig() && false" #f="ngForm" novalidate>
-            <div *ngIf="selectedRoundNumber > 0 || allRoundsByNumber[2] !== undefined" class="row justify-content-center mx-0">
-                <div class="col">
-                    <p class="d-flex justify-content-between">
-                        <button type="submit" [disabled]="!f.form.valid || processing || planningService.isStarted(selectedRoundNumber)" class="btn btn-outline-primary">instellingen opslaan
-                        </button>
-                        <button type="button" class="btn btn-outline-primary" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
-                            aria-controls="collapseExample">
-                            <span [innerHTML]="nameService.getRoundsName( selectedRoundNumber, allRoundsByNumber[selectedRoundNumber] ) | keepHtml"></span>
-                            <!-- <fa-icon *ngIf="selectedRound.getNumber() > 1" [icon]="['fas', 'info-circle']" 
-                                 class="text-{{getClassPostfix( selectedRound.getWinnersOrLosers() )}}"
-                                 title="{{getWinnersLosersDescription( selectedRound.getWinnersOrLosers() )}}ronde"></fa-icon> -->
-                        </button>
-                    </p>
-                    <div id="collapseExample" [ngbCollapse]="isCollapsed">
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <ngb-alert type="info" [dismissible]="false">instellingen gelden ook voor volgende ronden</ngb-alert>
-                                <div class="row">
-                                    <div class="col">
-                                        <span>selecteer een ronde:</span>
-                                    </div>
-                                    <div class="col">
-                                        <div class="btn-group-vertical">
-                                            <ng-template ngFor let-roundNumber [ngForOf]="structureService.getRoundNumbers()">
-                                                <button *ngIf="planningService.hasGames(roundNumber)" type="button" class="btn btn-outline-{{getSelectRoundNumberButtonClassPostfix(roundNumber)}}"
-                                                    (click)="changeRoundNumber(roundNumber)" [innerHTML]="nameService.getRoundsName(roundNumber, allRoundsByNumber[roundNumber]) | keepHtml">
-                                                </button>
-                                            </ng-template>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div *ngIf="error" class="alert alert-danger">{{error}}</div>
             <div class="row justify-content-center mx-0">
                 <div class="col">
@@ -121,7 +85,9 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="enableTime" class="col-8 col-form-label">plannen o.b.v. tijd</label>
+                        <label for="enableTime" class="col-8 col-form-label">
+                            <h5>plannen o.b.v. tijd</h5>
+                        </label>
                         <div class="form-check col-4">
                             <label class="custom-control custom-checkbox col-form-label pl-0">
                                 <input type="checkbox" class="custom-control-input form-check-input" id="enableTime" name="enableTime" [ngModel]="modelConfig.getEnableTime()"
@@ -139,13 +105,23 @@
                         </div>
                     </div>
                     <div *ngIf="modelConfig.getEnableTime()" class="form-group row">
-                        <label for="minutesinbetween" class="col-8 col-form-label">minuten tussen wedstrijden</label>
+                        <label for="minutesBetweenGames" class="col-8 col-form-label">minuten tussen wedstrijden</label>
                         <div class="col-4">
-                            <input type="number" [maxlength]="2" min="validations.minMinutesPerGame" max="validations.maxMinutesPerGame" [ngModel]="modelConfig.getMinutesInBetween()"
-                                (ngModelChange)="setMinutesInBetween($event)" id="minutesinbetween" name="minutesinbetween" class="form-control"
-                                required>
+                            <input type="number" [maxlength]="2" min="validations.minMinutesPerGame" max="validations.maxMinutesPerGame" [ngModel]="modelConfig.getMinutesBetweenGames()"
+                                (ngModelChange)="setMinutesBetweenGames($event)" id="minutesBetweenGames" name="minutesBetweenGames"
+                                class="form-control" required>
                         </div>
                     </div>
+                    <div *ngIf="modelConfig.getEnableTime()" class="form-group row">
+                        <label for="minutesinbetween" class="col-8 col-form-label">minuten tussen ronden</label>
+                        <div class="col-4">
+                            <input type="number" [maxlength]="3" [ngModel]="modelConfig.getMinutesInBetween()" (ngModelChange)="setMinutesInBetween($event)"
+                                id="minutesinbetween" name="minutesinbetween" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" [disabled]="!f.form.valid || processing || planningService.isStarted(selectedRoundNumber)" class="btn btn-outline-primary">instellingen opslaan
+                    </button>
 
                     <hr/>
 

@@ -11,7 +11,7 @@
       </div>
       <div>
         <h2>
-          <fa-icon [icon]="['fas', 'cogs']"></fa-icon> basis-instellingen
+          basisinfo
         </h2>
         <h2 *ngIf="processing" align="center">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
@@ -52,6 +52,40 @@
           </div>
           <div class="col-9">
             <ngb-timepicker id="starttime" name="starttime" [formControl]="customForm.controls.time" [spinners]="false" required></ngb-timepicker>
+          </div>
+        </div>
+        <div *ngIf="!structureService?.getFirstRound().isStarted() && isTimeEnabled() " class="form-group row">
+          <div class="col-3">
+            <label for="togglebreak" class="col-form-label">pauze</label>
+          </div>
+          <div class="col-9">
+            <label class="custom-control custom-checkbox pointer col-form-label pl-0">
+              <input type="checkbox" class="custom-control-input form-check-input" [formControl]="customForm.controls.togglebreak" (ngModelChange)="toggleBreak($event,0)">
+              <span class="custom-control-indicator"></span>
+            </label>
+          </div>
+        </div>
+        <div *ngIf="!structureService?.getFirstRound().isStarted() && customForm.controls.togglebreak.value === true" class="form-group row">
+          <div class="col-3">
+            <label for="breaktime" class="col-form-label">pausetijd</label>
+          </div>
+          <div class="col-9">
+            <ngb-timepicker id="breaktime" name="breaktime" [formControl]="customForm.controls.breaktime" [spinners]="false"></ngb-timepicker>
+          </div>
+        </div>
+        <div *ngIf="!structureService?.getFirstRound().isStarted() && customForm.controls.togglebreak.value" class="form-group row">
+          <div class="col-3">
+            <label for="breakduration" class="col-form-label">pauseduur</label>
+          </div>
+          <div class="col-6 col-sm-5 ">
+            <div class="input-group">
+              <input type="number" class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.breakduration.invalid, 'is-valid': customForm.controls.breakduration.valid}"
+                id="breakduration" name="breakduration" [formControl]="customForm.controls.breakduration" [min]="validations.minbreakduration"
+                [max]="validations.maxbreakduration">
+              <div class="input-group-append">
+                <span class="input-group-text text-white">min.</span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="form-group row justify-content-end">

@@ -122,6 +122,10 @@ export class TournamentRepository extends SportRepository {
         this.sponsorRepository.jsonArrayToObject(json.sponsors, tournament);
         tournament.setRoles(roles);
         tournament.setId(json.id);
+        if (json.breakStartDateTime !== undefined) {
+            tournament.setBreakStartDateTime(new Date(json.breakStartDateTime));
+        }
+        tournament.setBreakDuration(json.breakDuration);
         return tournament;
     }
 
@@ -131,6 +135,8 @@ export class TournamentRepository extends SportRepository {
             competition: this.csRepository.objectToJsonHelper(tournament.getCompetition()),
             roles: this.tournamentRoleRepository.objectsToJsonArray(tournament.getRoles()),
             sponsors: this.sponsorRepository.objectsToJsonArray(tournament.getSponsors()),
+            breakStartDateTime: tournament.getBreakStartDateTime() ? tournament.getBreakStartDateTime().toISOString() : undefined,
+            breakDuration: tournament.getBreakDuration(),
         };
     }
 
@@ -145,6 +151,8 @@ export class TournamentRepository extends SportRepository {
 export interface ITournament {
     id?: number;
     competition: ICompetition;
+    breakStartDateTime?: string;
+    breakDuration?: number;
     roles: ITournamentRole[];
     sponsors: ISponsor[];
 }

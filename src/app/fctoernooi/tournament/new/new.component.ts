@@ -20,6 +20,7 @@ import { IAlert } from '../../../app.definitions';
 import { AuthService } from '../../../auth/auth.service';
 import { Tournament } from '../../tournament';
 import { TournamentRepository } from '../repository';
+import { TournamentService } from '../service';
 
 
 @Component({
@@ -159,7 +160,8 @@ export class TournamentNewComponent implements OnInit {
                   firstRound
                 );
                 const planningService = new PlanningService(structureService);
-                planningService.create(structureService.getFirstRound().getNumber());
+                const tournamentService = new TournamentService(tournamentOut);
+                tournamentService.create(planningService, structureService.getFirstRound().getNumber());
                 this.planningRepository.createObject([structureService.getFirstRound()])
                   .subscribe(
                     /* happy path */ games => {

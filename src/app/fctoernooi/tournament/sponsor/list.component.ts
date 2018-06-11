@@ -80,7 +80,7 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
           }
         },
         /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-        /* onComplete */() => { this.setAlert('info', 'de sponsor is verwijderd'); this.processing = false; }
+        /* onComplete */() => { this.setAlert('success', 'de sponsor is verwijderd'); this.processing = false; }
       );
   }
 }

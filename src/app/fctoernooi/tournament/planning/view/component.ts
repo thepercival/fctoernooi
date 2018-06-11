@@ -37,11 +37,13 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
   @Input() favRefereeIds: number[];
   @Input() scrollToGameId: number;
   @Input() userRefereeId: number;
+  @Input() canEditSettings: boolean;
   @Output() popOverIsOpen = new EventEmitter<boolean>();
   alert: any;
   GameStatePlayed = Game.STATE_PLAYED;
   selectedPouleForRanking;
   sameDay = true;
+  previousGameStartDateTime: Date;
 
   private openPopovers: NgbPopover[] = [];
   ranking: Ranking;
@@ -79,6 +81,17 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
   haveMultiplePoulePlaces(roundsByNumber: Round[]) {
     return roundsByNumber.some(round => round.getPoulePlaces().length > 1);
   }
+
+  getGameTimeTooltipDescription() {
+    const cfg = this.roundsByNumber[0].getConfig();
+    let descr = 'De wedstrijden duren ' + cfg.getMinutesPerGame() + ' minuten. ';
+    if (cfg.getHasExtension()) {
+      descr += 'De eventuele verlenging duurt ' + cfg.getMinutesPerGameExt() + ' minuten.';
+    }
+    descr += 'Er zit ' + cfg.getMinutesInBetween() + ' minuten tussen de wedstrijden.';
+    return descr;
+  }
+
 
   getClassPostfix(winnersOrLosers: number): string {
     return winnersOrLosers === Round.WINNERS ? 'success' : (winnersOrLosers === Round.LOSERS ? 'danger' : '');
@@ -153,10 +166,21 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
   hasGameFavIds(game: Game): boolean {
     const x = this.hasGameFavTeamIds(game)
       || ((game.getReferee() === undefined && this.hasGameTeams(game) && !this.hasFavTeamIds()) || this.isRefereeFav(game.getReferee()));
-    console.log('hasGameFavTeamIds', this.hasGameFavTeamIds(game));
-    console.log('hasGameFavRefereeId', game.getReferee() === undefined || this.isRefereeFav(game.getReferee()));
-    console.log('hasGameFavIds', x);
     return x;
+  }
+
+  isBreakInBetween(game: Game) {
+    if (this.previousGameStartDateTime === undefined) {
+      if (game.getStartDateTime() !== undefined) {
+        this.previousGameStartDateTime = new Date(game.getStartDateTime().getTime());
+      }
+      return false;
+    }
+    const cfg = this.roundsByNumber[0].getConfig();
+    const newStartDateTime = new Date(this.previousGameStartDateTime.getTime());
+    newStartDateTime.setMinutes(newStartDateTime.getMinutes() + cfg.getMaximalNrOfMinutesPerGame() + cfg.getMinutesBetweenGames());
+    this.previousGameStartDateTime = new Date(game.getStartDateTime().getTime());
+    return newStartDateTime < game.getStartDateTime();
   }
 
   hasGameTeams(game: Game): boolean {

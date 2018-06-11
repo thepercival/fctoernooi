@@ -1,4 +1,4 @@
-import { Competition } from 'ngx-sport';
+import { Competition, PlanningService } from 'ngx-sport';
 
 import { TournamentRole } from './tournament/role';
 import { Sponsor } from './tournament/sponsor';
@@ -15,6 +15,8 @@ export class Tournament {
     protected competition: Competition;
     protected roles: TournamentRole[] = [];
     protected sponsors: Sponsor[] = [];
+    protected breakStartDateTime: Date;
+    protected breakDuration: number;
 
     // constructor
     constructor(competition: Competition) {
@@ -61,5 +63,25 @@ export class Tournament {
 
     setSponsors(sponsors: Sponsor[]): void {
         this.sponsors = sponsors;
+    }
+
+    getBreakStartDateTime(): Date {
+        return this.breakStartDateTime;
+    }
+
+    setBreakStartDateTime(breakStartDateTime: Date): void {
+        this.breakStartDateTime = breakStartDateTime;
+    }
+
+    getBreakDuration(): number {
+        return this.breakDuration;
+    }
+
+    setBreakDuration(breakDuration: number): void {
+        this.breakDuration = breakDuration;
+    }
+
+    hasBreak(): boolean {
+        return this.breakStartDateTime !== undefined;
     }
 }
