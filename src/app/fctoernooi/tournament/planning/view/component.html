@@ -60,7 +60,7 @@
         </ng-container> -->
 
         <ng-template ngFor let-game [ngForOf]="getGamesHelper()">
-          <tr *ngIf="isBreakInBetween(game)" class="table-info">
+          <tr *ngIf="tournament.hasBreak() && isBreakInBetween(game)" class="table-info">
             <td *ngIf="aRoundNeedsRanking(roundsByNumber)"></td>
             <td *ngIf="!aRoundNeedsRanking(roundsByNumber)"></td>
             <td *ngIf="planningService.canCalculateStartDateTime(roundNumber)"></td>

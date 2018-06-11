@@ -146,6 +146,10 @@ export class TournamentRepository extends SportRepository {
         }
         return jsonArray;
     }
+
+    getPdfUrl(tournament: Tournament): string {
+        return this.getUrl() + 'public/pdf/' + tournament.getId();
+    }
 }
 
 export interface ITournament {

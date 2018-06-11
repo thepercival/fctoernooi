@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlanningService, StructureRepository } from 'ngx-sport';
+
 import { AuthService } from '../../../auth/auth.service';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
@@ -59,8 +60,7 @@ export class GameListComponent extends TournamentComponent implements OnInit {
   // }
 
   printPdf() {
-    const url = this.tournamentRepository.getUrl() + '/pdf/' + this.tournament.getId();
-    const newWindow = window.open(url);
+    const newWindow = window.open(this.tournamentRepository.getPdfUrl(this.tournament));
   }
 }
 
