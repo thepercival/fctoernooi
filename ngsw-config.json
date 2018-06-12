@@ -24,6 +24,7 @@
       }
     }
   ],
+  "version": 2,
   "dataGroups": [
     {
       "name": "api-freshness",
