@@ -1,89 +1,94 @@
 <div class="container-fluid">
-  <h1 *ngIf="tournament" align="center">
-    {{tournament.getName()}}
-    <button [routerLink]="['']" type="button" class="btn btn-outline-secondary btn-sm">
-      <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
-    </button>
-  </h1>
-  <h2 *ngIf="processing" align="center">
-    <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-  </h2>
-  <ngb-alert *ngIf="!isManualMessageReadOnDevice()" type="info" [dismissible]="true" (close)="manualMessageReadOnDevice()">gedetaileerde informatie kun je vinden onderaan de pagina via de handleiding-link</ngb-alert>
-  <div *ngIf="!processing" class="row d-flex justify-content-center">
-    <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/structure', tournament.getId()]">
-      <div class="card-body">
-        <h5 class="card-title">
-          <i class="fi flaticon-structure"></i> indeling</h5>
-        <p class="card-text" *ngIf="structureService.getFirstRound() !== undefined">
-          <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> indeling aanwezig</p>
-        <p class="card-text" *ngIf="structureService.getFirstRound() === undefined">
-          <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> geen indeling aanwezig</p>
-      </div>
-    </div>
-    <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/competitors', tournament.getId()]">
-      <div class="card-body">
-        <h5 class="card-title">
-          <i class="fi flaticon-group"></i> deelnemers</h5>
-        <p class="card-text" *ngIf="structureService.getFirstRound().getTeams().length === structureService.getFirstRound().getPoulePlaces().length">
-          <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> alle namen ingevuld</p>
-        <p class="card-text" *ngIf="structureService.getFirstRound().getTeams().length < structureService.getFirstRound().getPoulePlaces().length">
-          <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> vul de namen in ({{structureService.getFirstRound().getTeams().length}}/{{structureService.getFirstRound().getPoulePlaces().length}})</p>
-      </div>
-    </div>
-    <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/games', tournament.getId()]">
-      <div class="card-body">
-        <h5 class="card-title">
-          <i class="fi flaticon-schedule"></i> wedstrijden</h5>
-        <p class="card-text" *ngIf="structureService.getFirstRound().getGames().length > 0">
-          <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> wedstrijden ingepland</p>
-        <p class="card-text" *ngIf="structureService.getFirstRound().getGames().length === 0">
-          <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> plan wedstrijden in</p>
-      </div>
-    </div>
-    <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/referees', tournament.getId()]">
-      <div class="card-body">
-        <h5 class="card-title">
-          <i class="fi flaticon-referee"></i> scheidsen</h5>
-        <p class="card-text">{{getNrOfRefereesDescription()}}</p>
-      </div>
-    </div>
-    <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/fields', tournament.getId()]">
-      <div class="card-body">
-        <h5 class="card-title">
-          <i class="fi flaticon-soccer-field"></i> velden</h5>
-        <p class="card-text">{{getNrOfFieldsDescription()}}</p>
-      </div>
-    </div>
-    <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/edit', tournament.getId()]">
-      <div class="card-body">
-        <h5 class="card-title">
-          <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon> basisinfo</h5>
-        <p class="card-text">start is {{tournament.getCompetition().getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit","hour12":
-          false,"hour":"2-digit","minute":"2-digit"})}}</p>
-      </div>
-    </div>
-    <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/sponsors', tournament.getId()]">
-      <div class="card-body">
-        <h5 class="card-title">
-          <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon> sponsoren</h5>
-        <p class="card-text">{{getNrOfSponsorsDescription()}}</p>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="row d-flex justify-content-center mt-3">
-  <div *ngIf="!processing && isAdmin()" class="card mt-3 mx-2">
-    <div class="card-body">
-      <h5 (click)="toggleRemoveQuestion( true )" class="card-title pointer">
-        <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon> weggooien</h5>
-      <div *ngIf="showRemoveQuestion" class="card-text">
-        <div>nu weggooien?</div>
-        <div class="d-flex justify-content-between">
-          <button class="btn btn-secondary pointer" (click)="remove()">ja</button>
-          <button class="btn btn-secondary pointer" (click)="toggleRemoveQuestion( false )">nee</button>
+  <div class="row justify-content-center">
+    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
+      <h1 *ngIf="tournament" align="center">
+        {{tournament.getName()}}
+        <button [routerLink]="['']" type="button" class="btn btn-outline-secondary btn-sm">
+          <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+        </button>
+      </h1>
+      <h2 *ngIf="processing" align="center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
+      <ngb-alert *ngIf="!isManualMessageReadOnDevice()" type="info" [dismissible]="true" (close)="manualMessageReadOnDevice()">gedetaileerde informatie kun je vinden onderaan de pagina via de handleiding-link</ngb-alert>
+      <div *ngIf="!processing" class="row d-flex justify-content-center">
+        <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/structure', tournament.getId()]">
+          <div class="card-body">
+            <h5 class="card-title">
+              <i class="fi flaticon-structure"></i> indeling</h5>
+            <p class="card-text" *ngIf="structureService.getFirstRound() !== undefined">
+              <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> indeling aanwezig</p>
+            <p class="card-text" *ngIf="structureService.getFirstRound() === undefined">
+              <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> geen indeling aanwezig</p>
+          </div>
+        </div>
+        <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/competitors', tournament.getId()]">
+          <div class="card-body">
+            <h5 class="card-title">
+              <i class="fi flaticon-group"></i> deelnemers</h5>
+            <p class="card-text" *ngIf="structureService.getFirstRound().getTeams().length === structureService.getFirstRound().getPoulePlaces().length">
+              <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> alle namen ingevuld</p>
+            <p class="card-text" *ngIf="structureService.getFirstRound().getTeams().length < structureService.getFirstRound().getPoulePlaces().length">
+              <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> vul de namen in ({{structureService.getFirstRound().getTeams().length}}/{{structureService.getFirstRound().getPoulePlaces().length}})</p>
+          </div>
+        </div>
+        <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/games', tournament.getId()]">
+          <div class="card-body">
+            <h5 class="card-title">
+              <i class="fi flaticon-schedule"></i> wedstrijden</h5>
+            <p class="card-text" *ngIf="structureService.getFirstRound().getGames().length > 0">
+              <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> wedstrijden ingepland</p>
+            <p class="card-text" *ngIf="structureService.getFirstRound().getGames().length === 0">
+              <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> plan wedstrijden in</p>
+          </div>
+        </div>
+        <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/referees', tournament.getId()]">
+          <div class="card-body">
+            <h5 class="card-title">
+              <i class="fi flaticon-referee"></i> scheidsen</h5>
+            <p class="card-text">{{getNrOfRefereesDescription()}}</p>
+          </div>
+        </div>
+        <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/fields', tournament.getId()]">
+          <div class="card-body">
+            <h5 class="card-title">
+              <i class="fi flaticon-soccer-field"></i> velden</h5>
+            <p class="card-text">{{getNrOfFieldsDescription()}}</p>
+          </div>
+        </div>
+        <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/edit', tournament.getId()]">
+          <div class="card-body">
+            <h5 class="card-title">
+              <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon> basisinfo</h5>
+            <p class="card-text">start is {{tournament.getCompetition().getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit","hour12":
+              false,"hour":"2-digit","minute":"2-digit"})}}
+            </p>
+          </div>
+        </div>
+        <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/sponsors', tournament.getId()]">
+          <div class="card-body">
+            <h5 class="card-title">
+              <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon> sponsoren</h5>
+            <p class="card-text">{{getNrOfSponsorsDescription()}}</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <ngb-alert *ngIf="alertRemove" [type]="alertRemove.type" [dismissible]="false">{{ alertRemove.message }}</ngb-alert>
+  <div class="row d-flex justify-content-center mt-3">
+    <div *ngIf="!processing && isAdmin()" class="card mt-3 mx-2">
+      <div class="card-body">
+        <h5 (click)="toggleRemoveQuestion( true )" class="card-title pointer">
+          <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon> weggooien</h5>
+        <div *ngIf="showRemoveQuestion" class="card-text">
+          <div>nu weggooien?</div>
+          <div class="d-flex justify-content-between">
+            <button class="btn btn-secondary pointer" (click)="remove()">ja</button>
+            <button class="btn btn-secondary pointer" (click)="toggleRemoveQuestion( false )">nee</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ngb-alert *ngIf="alertRemove" [type]="alertRemove.type" [dismissible]="false">{{ alertRemove.message }}</ngb-alert>
+  </div>
 </div>

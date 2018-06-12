@@ -95,7 +95,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
         return this.structureService.getFirstRound().getConfig().getEnableTime();
     }
 
-    toggleBreak(breakX: boolean, p_breakDuration: number, breakDateTime: Date = undefined) {
+    toggleBreak(breakX: boolean, p_breakDuration: number, breakDateTime?: Date) {
         let breakTime;
         let breakDuration = 0;
 
