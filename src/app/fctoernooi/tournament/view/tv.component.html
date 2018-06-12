@@ -38,7 +38,7 @@
             <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
           </th>
           <th *ngIf="isScheduled() && planningService.getRoundsByNumber(screenDef.roundNumber)[0]?.getConfig().getEnableTime()" title="starttijd">
-            {{planningService.calculateStartDateTime(screenDef.roundNumber).toLocaleString("en", {"month":"short","day":"2-digit"})}}
+            {{planningService.calculateStartDateTime(screenDef.roundNumber).toLocaleString("nl", {"month":"short","day":"2-digit"})}}
           </th>
           <th *ngIf="isScheduled() && hasFields()" title="veld">
             <i class="fi flaticon-soccer-field"></i>
@@ -59,7 +59,7 @@
             <span>{{nameService.getPouleName(game.getPoule())}}</span>
           </td>
           <td *ngIf="isScheduled() && planningService.getRoundsByNumber(screenDef.roundNumber)[0]?.getConfig().getEnableTime() && planningService.canCalculateStartDateTime(screenDef.roundNumber)">
-            {{game.getStartDateTime().toLocaleString("en", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}
+            {{game.getStartDateTime().toLocaleString("nl", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}
           </td>
           <td *ngIf="isScheduled() && hasFields()">{{game.getField()?.getName()}}</td>
           <td class="text-right">{{nameService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</td>

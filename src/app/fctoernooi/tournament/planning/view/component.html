@@ -39,7 +39,7 @@
 
           <th *ngIf="planningService.canCalculateStartDateTime(roundNumber)" class="pointer text-info" container="body" title="start"
             placement="right" [ngbPopover]="getGameTimeTooltipDescription()">
-            <span *ngIf="!onSameDay()">{{planningService.calculateStartDateTime(roundNumber).toLocaleString("en", {"month":"short","day":"2-digit"})}}</span>
+            <span *ngIf="!onSameDay()">{{planningService.calculateStartDateTime(roundNumber).toLocaleString("nl", {"month":"short","day":"2-digit"})}}</span>
             <span *ngIf="onSameDay()">start</span>
           </th>
           <th *ngIf="hasFields()" class="text-right" title="veld">
@@ -82,8 +82,8 @@
               {{game.getRoundNumber()}}, {{game.getSubNumber()}}
             </td> -->
             <td *ngIf="planningService.canCalculateStartDateTime(roundNumber)">
-              <span *ngIf="!onSameDay()">{{game.getStartDateTime().toLocaleString("en", {"month":"short","day":"2-digit"})}} </span>
-              <span>{{game.getStartDateTime().toLocaleString("en", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}</span>
+              <span *ngIf="!onSameDay()">{{game.getStartDateTime().toLocaleString("nl", {"month":"short","day":"2-digit"})}} </span>
+              <span>{{game.getStartDateTime().toLocaleString("nl", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}</span>
             </td>
             <td *ngIf="hasFields()" class="text-right">{{game.getField()?.getName()}}</td>
             <td class="pouleplace text-right" [ngClass]="{'text-primary': isTeamFav(game.getHomePoulePlace().getTeam()) }">
