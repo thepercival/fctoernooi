@@ -67,7 +67,8 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
   ngAfterViewInit() {
     if (this.scrollToGameId) {
       this.scrollService.scrollTo({
-        target: '#game-scrollposition-' + this.scrollToGameId
+        target: 'game-scrollposition-' + this.scrollToGameId,
+        duration: 200
       });
     }
   }

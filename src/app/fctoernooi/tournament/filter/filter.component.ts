@@ -66,7 +66,8 @@ export class TournamentFilterComponent extends TournamentComponent implements On
 
     scrollTo(divId: string) {
         this.scrollService.scrollTo({
-            target: '#' + divId
+            target: divId,
+            duration: 200
         });
     }
 
