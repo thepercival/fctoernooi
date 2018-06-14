@@ -49,14 +49,14 @@
           </button>
         </div>
       </div>
-      <div *ngIf="round.getNumber() === 2 && round.getPoulePlaces().length >= 4 && !round.isStarted()">verdeling</div>
-      <div *ngIf="round.getNumber() === 2 && round.getPoulePlaces().length >= 4 && !round.isStarted()" class="d-none d-sm-inline-flex mb-3 btn-group"
-        role="group" aria-label="verdeel">
+      <div *ngIf="( round.getNumber() === 2 || round.getNumber() === 3 ) && round.getPoulePlaces().length >= 4 && !round.isStarted()">verdeling</div>
+      <div *ngIf="( round.getNumber() === 2 || round.getNumber() === 3 ) && round.getPoulePlaces().length >= 4 && !round.isStarted()"
+        class="d-none d-sm-inline-flex mb-3 btn-group" role="group" aria-label="verdeel">
         <button *ngIf="round.getPoules().length > 1" type="button" class="btn btn-outline-secondary" (click)="removePoule(round)">
           <fa-icon [icon]="['fas', 'compress']"></fa-icon>
         </button>
-        <button *ngIf="round.getQualifyOrder() < CustomQualifyOrder && round.getPoules().length >= 2" type="button" class="btn btn-outline-secondary"
-          (click)="toggleQualifyOrder(round)">
+        <button *ngIf="round.getQualifyOrder() < CustomQualifyOrder && round.getPoules().length >= 2 && structureService.getNrOfSiblingRounds(round) === 0"
+          type="button" class="btn btn-outline-secondary" (click)="toggleQualifyOrder(round)">
           <fa-icon [icon]="['fas', 'arrows-alt-' + (qualifyOrderIsHorizontal(round) ? 'v' : 'h') ]"></fa-icon>
         </button>
         <button *ngIf="( round.getPoulePlaces().length / ( round.getPoules().length + 1 ) ) >= 2" type="button" class="btn btn-outline-secondary"
@@ -64,7 +64,7 @@
           <fa-icon [icon]="['fas', 'expand']"></fa-icon>
         </button>
       </div>
-      <div *ngIf="round.getNumber() >= 2 && round.getPoulePlaces().length >= 4 && !round.isStarted()" [ngClass]="{ 'd-sm-none': ( round.getNumber() === 2 ) }"
+      <div *ngIf="round.getNumber() >= 2 && round.getPoulePlaces().length >= 4 && !round.isStarted()" [ngClass]="{ 'd-sm-none': ( round.getNumber() === 2 || round.getNumber() === 3 ) }"
         class="mb-3 btn-group{{ structureService.getNrOfSiblingRounds(round) >= 3 ?'-vertical' : '' }}" role="group" aria-label="verdeel">
         <button *ngIf="round.getPoules().length > 1" type="button" class="btn btn-outline-secondary" (click)="removePoule(round)">
           <fa-icon [icon]="['fas', 'compress']"></fa-icon>

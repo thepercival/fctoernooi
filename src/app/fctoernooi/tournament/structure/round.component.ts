@@ -141,7 +141,7 @@ export class TournamentStructureRoundComponent {
 
   toggleQualifyOrder(round: Round) {
     this.resetAlert();
-    if (round.getNumber() !== 2) {
+    if (!(round.getNumber() === 2 || round.getNumber() === 3)) {
       return;
     }
     round.setQualifyOrder(this.qualifyOrderIsHorizontal(round) ? Round.ORDER_VERTICAL : Round.ORDER_HORIZONTAL);

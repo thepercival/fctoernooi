@@ -264,8 +264,16 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
 
         const poulePlacesToProcess: PoulePlace[] = [];
         {
-            const poulePlacesPerNumber = round.getPoulePlacesPerNumber(Round.WINNERS);
-            poulePlacesPerNumber.forEach(poulePlaces => {
+            let poulePlacesPer;
+            if (round.getQualifyOrder() === Round.ORDER_HORIZONTAL) {
+                poulePlacesPer = round.getPoulePlacesPerNumber(Round.WINNERS);
+            } else {
+                poulePlacesPer = [];
+                round.getPoules().forEach(poule => {
+                    poulePlacesPer.push(poule.getPlaces());
+                });
+            }
+            poulePlacesPer.forEach(poulePlaces => {
                 const rankingService = new Ranking(Ranking.RULESSET_WC);
                 const winnerToQualifyRule = poulePlaces[0].getToQualifyRule(Round.WINNERS);
                 if (winnerToQualifyRule === undefined) {

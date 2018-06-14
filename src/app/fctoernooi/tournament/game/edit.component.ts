@@ -1,4 +1,3 @@
-import { AuthService } from '../../../auth/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
@@ -18,9 +17,10 @@ import {
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
 
-import { TournamentRole } from '../role';
+import { AuthService } from '../../../auth/auth.service';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
+import { TournamentRole } from '../role';
 
 @Component({
     selector: 'app-tournament-game-edit',
@@ -121,7 +121,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         //     this.errorHomeAwayScore = 'thuisscore moet tussen 0 en ' + scoreConfig.getMaximum() + ' liggen';
         //     return;
         // }
-        if (this.model.home === 0 && this.model.away === 0 && home > 0) {
+        if ((this.model.home === 0 || this.model.home === null) && this.model.away === 0 && home > 0) {
             this.setPlayed(true);
         }
         this.model.home = home;
@@ -134,7 +134,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         //     this.errorHomeAwayScore = 'uitscore moet tussen 0 en ' + scoreConfig.getMaximum() + ' liggen';
         //     return;
         // }
-        if (this.model.away === 0 && this.model.home === 0 && away > 0) {
+        if ((this.model.away === 0 || this.model.away === null) && this.model.home === 0 && away > 0) {
             this.setPlayed(true);
         }
         this.model.away = away;
