@@ -158,7 +158,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     private getForwarUrlQueryParams(): {} {
-        const queryParams = { scrollToGameId: this.game.getId() };
+        const queryParams = { scrollToGameId: this.game.getId(), scrollToRoundNumber: this.game.getRound().getNumber() };
         if (this.returnUrlQueryParamKey !== undefined) {
             queryParams[this.returnUrlQueryParamKey] = this.returnUrlQueryParamValue;
         }
@@ -219,8 +219,8 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
                     const newQualifiers: INewQualifier[] = [];
                     this.game.getRound().getChildRounds().forEach(childRound => {
                         const qualService = new QualifyService(childRound);
-                        const qualifyRuleParts = qualService.getRulePartsToProcess(this.game.getPoule(), oldPouleState, oldRoundState);
-                        qualService.getNewQualifiers(qualifyRuleParts).forEach((newQualifier) => {
+                        const qualifyRules = qualService.getRulesToProcess(this.game.getPoule(), oldPouleState, oldRoundState);
+                        qualService.getNewQualifiers(qualifyRules).forEach((newQualifier) => {
                             newQualifiers.push(newQualifier);
                         });
                     });

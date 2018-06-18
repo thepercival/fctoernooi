@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import { PlanningService, StructureRepository } from 'ngx-sport';
 
 import { AuthService } from '../../../auth/auth.service';
@@ -17,7 +18,7 @@ export class GameListComponent extends TournamentComponent implements OnInit {
   planningService: PlanningService;
   showPrintBtn: boolean;
   noRefresh = false;
-  scrollToGameId: number;
+  scrollTo: any = {};
   userIsPlannerOrStructureAdmin: boolean;
 
   constructor(
@@ -25,16 +26,20 @@ export class GameListComponent extends TournamentComponent implements OnInit {
     router: Router,
     tournamentRepository: TournamentRepository,
     structureRepository: StructureRepository,
-    private authService: AuthService
+    private authService: AuthService,
+    private scrollService: ScrollToService
   ) {
     super(route, router, tournamentRepository, structureRepository);
   }
 
   ngOnInit() {
     this.route.queryParamMap.subscribe(params => {
-      this.scrollToGameId = +params.get('scrollToGameId');
+      this.scrollTo.gameId = +params.get('scrollToGameId');
+      this.scrollTo.roundNumber = +params.get('scrollToRoundNumber');
     });
-    super.myNgOnInit(() => this.setPlanningService());
+    super.myNgOnInit(() => {
+      this.setPlanningService();
+    });
     this.showPrintBtn = true;
   }
 

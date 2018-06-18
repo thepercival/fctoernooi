@@ -21,7 +21,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     private noRefresh = false;
     private favTeamIds: number[];
     private favRefereeIds: number[];
-    scrollToGameId: number;
+    scrollTo: any = {};
     userRefereeId: number;
 
     constructor(
@@ -49,7 +49,8 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
         });
 
         this.route.queryParamMap.subscribe(params => {
-            this.scrollToGameId = +params.get('scrollToGameId');
+            this.scrollTo.gameId = +params.get('scrollToGameId');
+            this.scrollTo.roundNumber = +params.get('scrollToRoundNumber');
         });
 
         this.timerSubscription = timer(30000, 30000).subscribe(number => {
