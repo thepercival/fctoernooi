@@ -28,10 +28,8 @@ import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap/collapse/collapse.
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap/popover/popover.module';
 import { NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap/timepicker/timepicker.module';
-import { NouisliderModule } from 'ng2-nouislider';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
-
-
+import { NouisliderModule } from 'ng2-nouislider';
 import {
   GameRepository,
   GameScoreRepository,
@@ -59,6 +57,7 @@ import { GameListComponent } from './tournament/game/list.component';
 import { TournamentHomeComponent } from './tournament/home/home.component';
 import { TournamentNewComponent } from './tournament/new/new.component';
 import { TournamentPlanningViewComponent } from './tournament/planning/view/component';
+import { TournamentRankingViewComponent } from './tournament/ranking/view/component';
 import { TournamentRefereeEditComponent } from './tournament/referee/edit.component';
 import { RefereeListComponent } from './tournament/referee/list.component';
 import { TournamentRoleRepository } from './tournament/role/repository';
@@ -69,6 +68,7 @@ import { TournamentStructureComponent } from './tournament/structure/main.compon
 import { TournamentStructureRoundComponent } from './tournament/structure/round.component';
 import { TournamentViewTvComponent } from './tournament/view/tv.component';
 import { TournamentViewComponent } from './tournament/view/view.component';
+
 
 library.add(
   faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus,
@@ -95,6 +95,7 @@ library.add(
     TournamentStructureRoundComponent,
     GameListComponent,
     TournamentPlanningViewComponent,
+    TournamentRankingViewComponent,
     CompetitorListComponent,
     RefereeListComponent,
     SponsorListComponent,
