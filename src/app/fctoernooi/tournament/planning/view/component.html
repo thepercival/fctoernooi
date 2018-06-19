@@ -3,7 +3,8 @@
     <h2>
       <span [innerHTML]="nameService.getRoundsName( roundNumber, roundsByNumber ) | keepHtml"></span>
       <!-- <ng-template *ngIf="nameService.roundsHaveSameName( roundsByNumber )">
-        <fa-icon [icon]="['fas', 'circle']" *ngFor="let winnersOrLosers of structureService.getWinnersLosersPosition( round )" [title]="structureService.getWinnersLosersDescription(
+        <fa-icon [icon]="['fas', 'circle']" *ngFor="let winnersOrLosers of structureService.getWinnersLosersPosition( round )" 
+        [title]="structureService.getWinnersLosersDescription(
               round.getWinnersOrLosers() )" class="text-{{getClassPostfix(round.getWinnersOrLosers())}}"></fa-icon>
       </ng-template> -->
     </h2>
@@ -30,13 +31,13 @@
       </colgroup>
       <thead>
         <tr>
-          <th *ngIf="aRoundNeedsRanking(roundsByNumber)" class="text-center pl-1" title="poule">
+          <th *ngIf="aRoundNeedsRanking(roundsByNumber)" class="text-center pl-1 text-info pointer" title="poule" container="body"
+            placement="right" [ngbPopover]="popRules" triggers="manual" #p="ngbPopover" (click)="toggleRulesPopover( p )">
             <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
           </th>
           <th *ngIf="!aRoundNeedsRanking(roundsByNumber)" class="text-center" title="wedstrijd">
             <span>vs</span>
           </th>
-
           <th *ngIf="planningService.canCalculateStartDateTime(roundNumber)" class="pointer text-info" container="body" title="start"
             placement="right" [ngbPopover]="getGameTimeTooltipDescription()">
             <span *ngIf="!onSameDay()">{{planningService.calculateStartDateTime(roundNumber).toLocaleString("nl", {"month":"short","day":"2-digit"})}}</span>
@@ -61,8 +62,7 @@
 
         <ng-template ngFor let-game [ngForOf]="getGamesHelper()">
           <tr *ngIf="tournament.hasBreak() && isBreakInBetween(game)" class="table-info">
-            <td *ngIf="aRoundNeedsRanking(roundsByNumber)"></td>
-            <td *ngIf="!aRoundNeedsRanking(roundsByNumber)"></td>
+            <td></td>
             <td *ngIf="planningService.canCalculateStartDateTime(roundNumber)"></td>
             <td *ngIf="hasFields()"></td>
             <td class="width-25 text-right">PAUZE</td>
@@ -71,16 +71,17 @@
             <td *ngIf="hasReferees()" class="d-none d-sm-table-cell"></td>
           </tr>
           <tr *ngIf="!hasFavIds() || hasGameFavIds(game)" id="game-scrollposition-{{game.getId()}}">
-            <td class="text-center pl-1">
-              <span *ngIf="!game.getPoule().needsRanking()">{{nameService.getPouleName(game.getPoule())}}</span>
-              <button type="button" class="btn btn-sm btn-outline-secondary" *ngIf="game.getPoule().needsRanking()" placement="right" [ngbPopover]="popRanking"
-                triggers="manual" #p="ngbPopover" (click)="showRanking( p, game.getPoule() )">
-                <span>{{nameService.getPouleName(game.getPoule())}}</span>
-              </button>
+            <td *ngIf="!pouleHasPopover(game)" class="text-center pl-1">
+              <span>{{nameService.getPouleName(game.getPoule())}}</span>
             </td>
-            <!-- <td class="text-center">
-              {{game.getRoundNumber()}}, {{game.getSubNumber()}}
-            </td> -->
+            <td *ngIf="pouleHasPopover(game) && game.getPoule().needsRanking()" class="text-center pl-1 pointer" container="body" placement="right"
+              [ngbPopover]="popRanking" triggers="manual" #p="ngbPopover" (click)="showRanking( p, game.getPoule() )">
+              <span class="text-info">{{nameService.getPouleName(game.getPoule())}}</span>
+            </td>
+            <td *ngIf="pouleHasPopover(game) && !game.getPoule().needsRanking()" class="text-center pl-1 pointer" title="wedstrijd" container="body"
+              placement="right" [ngbPopover]="getGameQualificationDescription(game)">
+              <span class="text-info">{{nameService.getPouleName(game.getPoule())}}</span>
+            </td>
             <td *ngIf="planningService.canCalculateStartDateTime(roundNumber)">
               <span *ngIf="!onSameDay()">{{game.getStartDateTime().toLocaleString("nl", {"month":"short","day":"2-digit"})}} </span>
               <span>{{game.getStartDateTime().toLocaleString("nl", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}</span>
@@ -163,4 +164,22 @@
 
 <ng-template #qualclass let-qualclass>
   <fa-icon *ngIf="qualclass.icon !== undefined" [icon]="['fas', qualclass.icon]" class="{{qualclass.text}}"></fa-icon>
+</ng-template>
+
+<ng-template #popRules>
+  <div class="card border-0">
+    <div class="card-header d-flex justify-content-between px-0 pt-2 pb-1" style="margin-top: -8px;">
+      <span>regelvolgorde</span>
+      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="toggleRulesPopover()">
+        x
+      </button>
+    </div>
+    <div class="card-body p-0">
+      <div class="card-text">
+        <ol class="pl-3 pt-2">
+          <li *ngFor="let ruleDescription of ranking.getRuleDescriptions()">{{ruleDescription}}</li>
+        </ol>
+      </div>
+    </div>
+  </div>
 </ng-template>

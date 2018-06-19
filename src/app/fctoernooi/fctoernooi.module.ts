@@ -57,7 +57,7 @@ import { GameListComponent } from './tournament/game/list.component';
 import { TournamentHomeComponent } from './tournament/home/home.component';
 import { TournamentNewComponent } from './tournament/new/new.component';
 import { TournamentPlanningViewComponent } from './tournament/planning/view/component';
-import { TournamentRankingViewComponent } from './tournament/ranking/view/component';
+import { TournamentEndRankingViewComponent } from './tournament/ranking/end/component';
 import { TournamentRefereeEditComponent } from './tournament/referee/edit.component';
 import { RefereeListComponent } from './tournament/referee/list.component';
 import { TournamentRoleRepository } from './tournament/role/repository';
@@ -95,7 +95,7 @@ library.add(
     TournamentStructureRoundComponent,
     GameListComponent,
     TournamentPlanningViewComponent,
-    TournamentRankingViewComponent,
+    TournamentEndRankingViewComponent,
     CompetitorListComponent,
     RefereeListComponent,
     SponsorListComponent,

@@ -26,7 +26,7 @@
         <app-tournament-planning-view *ngFor="let roundNumber of structureService.getRoundNumbers()" [tournament]="tournament" [roundNumber]="roundNumber"
           [structureService]="structureService" [canEditSettings]="userIsPlannerOrStructureAdmin" [planningService]="planningService"
           [scrollToGameId]="scrollTo.roundNumber === roundNumber ? scrollTo.gameId : undefined" [parentReturnAction]="'/toernooi/games'"></app-tournament-planning-view>
-        <app-tournament-ranking-view [tournament]="tournament" [structureService]="structureService"></app-tournament-ranking-view>
+        <app-tournament-endranking-view [firstRound]="structureService.getFirstRound()"></app-tournament-endranking-view>
       </div>
     </div>
   </div>

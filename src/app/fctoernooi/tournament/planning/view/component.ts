@@ -46,6 +46,7 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
   previousGameStartDateTime: Date;
 
   private openPopovers: NgbPopover[] = [];
+  private rulesPopover: NgbPopover;
   ranking: Ranking;
   roundsByNumber: Round[];
   userIsGameResultAdmin: boolean;
@@ -289,5 +290,27 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
     const nrOfGoalsScored = this.ranking.getNrOfGoalsScored(poulePlace, games);
     const nrOfGoalsReceived = this.ranking.getNrOfGoalsReceived(poulePlace, games);
     return (nrOfGoalsScored - nrOfGoalsReceived) + ' ( ' + nrOfGoalsScored + ' - ' + nrOfGoalsReceived + ' )';
+  }
+
+  toggleRulesPopover(popOver?: NgbPopover) {
+    if (popOver === undefined || this.rulesPopover !== undefined) {
+      this.rulesPopover.close();
+      this.rulesPopover = undefined;
+    } else {
+      this.rulesPopover = popOver;
+      this.rulesPopover.open();
+    }
+  }
+
+  pouleHasPopover(game: Game): boolean {
+    return game.getPoule().needsRanking() ||
+      (game.getRound().getParent() !== undefined &&
+        (game.getHomePoulePlace().getTeam() !== undefined || game.getAwayPoulePlace().getTeam() !== undefined)
+      );
+  }
+
+  getGameQualificationDescription(game: Game) {
+    return this.nameService.getPoulePlaceName(game.getHomePoulePlace()) + ' - ' +
+      this.nameService.getPoulePlaceName(game.getAwayPoulePlace());
   }
 }

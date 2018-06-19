@@ -1,0 +1,19 @@
+<h2 *ngIf="scorebord === false">eindstand</h2>
+<div class="d-flex justify-content-around">
+  <table class="table">
+    <thead>
+      <tr>
+        <th class="text-right">pl</th>
+        <th>team</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let rankingItem of getRankingItems()">
+        <td class="text-right">
+          <span>{{rankingItem.getRank()}}</span>
+        </td>
+        <td class="pouleplace">{{getRankingItemName(rankingItem)}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

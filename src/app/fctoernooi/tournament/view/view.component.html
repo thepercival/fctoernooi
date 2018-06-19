@@ -21,7 +21,7 @@
           [structureService]="structureService" [planningService]="planningService" [userRefereeId]="userRefereeId" [scrollToGameId]="scrollTo.roundNumber === roundNumber ? scrollTo.gameId : undefined"
           [parentReturnAction]="'/toernooi/view'" [favTeamIds]="getFavTeamIdsFromLocalStorage()" [favRefereeIds]="getFavRefereeIdsFromLocalStorage()"
           (popOverIsOpen)="setNoRefresh($event)"></app-tournament-planning-view>
-        <app-tournament-ranking-view [tournament]="tournament" [structureService]="structureService"></app-tournament-ranking-view>
+        <app-tournament-endranking-view [firstRound]="structureService.getFirstRound()"></app-tournament-endranking-view>
       </div>
     </div>
   </div>

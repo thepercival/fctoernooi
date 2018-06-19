@@ -53,15 +53,15 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
             this.scrollTo.roundNumber = +params.get('scrollToRoundNumber');
         });
 
-        this.timerSubscription = timer(30000, 30000).subscribe(number => {
-            if (this.noRefresh !== true) {
-                this.processing = true;
-                this.setData(this.tournament.getId(), () => {
-                    this.planningService = new PlanningService(this.structureService);
-                    this.processing = false;
-                });
-            }
-        });
+        // this.timerSubscription = timer(30000, 30000).subscribe(number => {
+        //     if (this.noRefresh !== true) {
+        //         this.processing = true;
+        //         this.setData(this.tournament.getId(), () => {
+        //             this.planningService = new PlanningService(this.structureService);
+        //             this.processing = false;
+        //         });
+        //     }
+        // });
     }
 
     setNoRefresh(toggle) {

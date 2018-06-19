@@ -49,14 +49,14 @@
               <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
             </button>
           </td>
-          <td class="toView" (click)="linkToView(shell)">{{shell.startDateTime.toLocaleString("nl", {"month":"short","day":"2-digit","hour12": false,"hour":"2-digit","minute":"2-digit"}
+          <td class="pointer" (click)="linkToView(shell)">{{shell.startDateTime.toLocaleString("nl", {"month":"short","day":"2-digit","hour12": false,"hour":"2-digit","minute":"2-digit"}
             )}}
           </td>
-          <td class="d-none d-sm-table-cell toView" (click)="linkToView(shell)">
+          <td class="d-none d-sm-table-cell pointer" (click)="linkToView(shell)">
             <i *ngIf="iconManager.getIconType(shell.sport) === 'fi'" class="{{iconManager.getIconClass(shell.sport)}}"></i>
             <fa-icon *ngIf="iconManager.getIconType(shell.sport) === 'fa'" [icon]="['fas', iconManager.getIconClass(shell.sport)]"></fa-icon>
           </td>
-          <td class="toView" (click)="linkToView(shell)">{{shell.name}}</td>
+          <td class="pointer" (click)="linkToView(shell)">{{shell.name}}</td>
         </tr>
       </tbody>
     </table>

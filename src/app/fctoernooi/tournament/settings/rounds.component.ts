@@ -352,7 +352,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     //     const winnersLosers: number[] = [];
     //     while (aChildRound !== firstRound) {
     //         winnersLosers.push(aChildRound.getWinnersOrLosers());
-    //         aChildRound = aChildRound.getParentRound();
+    //         aChildRound = aChildRound.getParent();
     //     }
     //     return winnersLosers;
     // }

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
+    EndRanking,
     Game,
     PlanningService,
     Poule,
@@ -199,15 +200,16 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         const screenDefs: ScreenDefinition[] = [];
         const twoPoules: Poule[] = [];
         const poulesForRanking = this.getPoulesForRanking(roundNumber);
+        const roundsDescription = this.nameService.getRoundsName(roundNumber, this.allRoundsByNumber[roundNumber]);
         poulesForRanking.forEach(poule => {
             twoPoules.push(poule);
             if (twoPoules.length < 2) {
                 return;
             }
-            screenDefs.push(new PoulesRankingScreenDefinition(roundNumber, twoPoules.shift(), twoPoules.shift()));
+            screenDefs.push(new PoulesRankingScreenDefinition(roundNumber, twoPoules.shift(), twoPoules.shift(), roundsDescription));
         });
         if (twoPoules.length === 1) {
-            screenDefs.push(new PoulesRankingScreenDefinition(roundNumber, twoPoules.shift()));
+            screenDefs.push(new PoulesRankingScreenDefinition(roundNumber, twoPoules.shift(), undefined, roundsDescription));
         }
         return screenDefs;
     }
@@ -238,101 +240,12 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
 
     getScreenDefinitionsForEndRanking(roundNumber: number): ScreenDefinition[] {
         const screenDefs: ScreenDefinition[] = [];
-        const rankingItems = this.getEndRankingItems(this.structureService.getFirstRound());
+        const endRankingService = new EndRanking(Ranking.RULESSET_WC);
+        const rankingItems = endRankingService.getItems(this.structureService.getFirstRound());
         while (rankingItems.length > 0) {
             screenDefs.push(new EndRankingScreenDefinition(roundNumber, rankingItems.splice(0, this.maxLines)));
         }
         return screenDefs;
-    }
-
-    getEndRankingItems(round: Round, rankingItems: RankingItem[] = []): RankingItem[] {
-        if (round === undefined) {
-            return [];
-        }
-        this.getEndRankingItems(round.getChildRound(Round.WINNERS), rankingItems);
-        if (round.getNrOfPlacesChildRounds() < round.getPoulePlaces().length) {
-            this.getEndRankingItemsHelper(round).forEach(rankingItem => {
-                rankingItems.push(new RankingItem(rankingItems.length + 1, rankingItem.getPoulePlace()));
-            });
-        }
-        this.getEndRankingItems(round.getChildRound(Round.LOSERS), rankingItems);
-        return rankingItems;
-    }
-
-    getEndRankingItemsHelper(round: Round): RankingItem[] {
-        let rankingItems: RankingItem[] = [];
-
-        const poulePlacesToProcess: PoulePlace[] = [];
-        {
-            let poulePlacesPer;
-            if (round.getQualifyOrder() === Round.ORDER_HORIZONTAL) {
-                poulePlacesPer = round.getPoulePlacesPerNumber(Round.WINNERS);
-            } else {
-                poulePlacesPer = [];
-                round.getPoules().forEach(poule => {
-                    poulePlacesPer.push(poule.getPlaces());
-                });
-            }
-            poulePlacesPer.forEach(poulePlaces => {
-                const rankingService = new Ranking(Ranking.RULESSET_WC);
-                const winnerToQualifyRule = poulePlaces[0].getToQualifyRule(Round.WINNERS);
-                if (winnerToQualifyRule === undefined) {
-                    rankingItems = rankingItems.concat(rankingService.getItemsForRound(round, poulePlaces));
-                    return;
-                }
-                if (winnerToQualifyRule.isMultiple() === false) {
-                    return;
-                }
-                // multiple
-                const rankingItemsTmp = rankingService.getItemsForRound(round, poulePlaces);
-                rankingItemsTmp.splice(0, winnerToQualifyRule.getToPoulePlaces().length);
-                const loserToQualifyRule = poulePlaces[poulePlaces.length - 1].getToQualifyRule(Round.LOSERS);
-                if (loserToQualifyRule === undefined) {
-                    rankingItems = rankingItems.concat(rankingItemsTmp);
-                } else {
-                    rankingItemsTmp.forEach(rankingItemTmp => poulePlacesToProcess.push(rankingItemTmp.getPoulePlace()));
-                }
-            });
-        }
-
-        // check for LOSERS MULTIPLE
-        const poulePlacesPerNumberLosers = round.getPoulePlacesPerNumber(Round.LOSERS);
-        poulePlacesPerNumberLosers.forEach(poulePlaces => {
-            const loserToQualifyRule = poulePlaces[0].getToQualifyRule(Round.LOSERS);
-            if (loserToQualifyRule === undefined || loserToQualifyRule.isMultiple() === false) {
-                return;
-            }
-            if (loserToQualifyRule.isMultiple() === false) {
-                poulePlaces.forEach(poulePlace => {
-                    const index = poulePlacesToProcess.indexOf(poulePlace);
-                    if (index > -1) {
-                        poulePlacesToProcess.splice(index, 1);
-                    }
-                });
-            }
-            // multiple
-            const rankingService = new Ranking(Ranking.RULESSET_WC);
-            const rankingItemsTmp = rankingService.getItemsForRound(round, poulePlaces);
-            rankingItemsTmp.reverse();
-            const qualifiedRankingItemsTmp = rankingItemsTmp.splice(0, loserToQualifyRule.getToPoulePlaces().length);
-            qualifiedRankingItemsTmp.forEach(qualifiedRankingItemTmp => {
-                const index = poulePlacesToProcess.indexOf(qualifiedRankingItemTmp.getPoulePlace());
-                if (index > -1) {
-                    poulePlacesToProcess.splice(index, 1);
-                }
-            });
-            rankingItemsTmp.forEach(rankingItemTmp => {
-                if (poulePlacesToProcess.find(
-                    poulePlaceToProcess => poulePlaceToProcess === rankingItemTmp.getPoulePlace()
-                ) === undefined
-                ) {
-                    poulePlacesToProcess.push(rankingItemTmp.getPoulePlace());
-                }
-            });
-        });
-
-        const rankingServiceTmp = new Ranking(Ranking.RULESSET_WC);
-        return rankingItems.concat(rankingServiceTmp.getItemsForRound(round, poulePlacesToProcess));
     }
 
     getResultsForRoundPoules(poulesForResults: Poule[]): Game[] {
@@ -461,11 +374,13 @@ export class ScreenDefinition {
 export class PoulesRankingScreenDefinition extends ScreenDefinition {
     private pouleOne: Poule;
     private pouleTwo: Poule;
+    private description: string;
 
-    constructor(roundNumber: number, pouleOne: Poule, pouleTwo?: Poule) {
+    constructor(roundNumber: number, pouleOne: Poule, pouleTwo: Poule, roundsDescription: string) {
         super(roundNumber);
         this.pouleOne = pouleOne;
         this.pouleTwo = pouleTwo;
+        this.description = 'stand - ' + roundsDescription;
     }
 
     getFirstPoule(): Poule {
@@ -485,7 +400,7 @@ export class PoulesRankingScreenDefinition extends ScreenDefinition {
     }
 
     getDescription() {
-        return 'stand';
+        return this.description;
     }
 }
 
@@ -508,6 +423,7 @@ export class EndRankingScreenDefinition extends ScreenDefinition {
 
 export class GamesScreenDefinition extends ScreenDefinition {
     private games: Game[]; // max 8
+    protected description: string;
 
     constructor(roundNumber: number, games: Game[]) {
         super(roundNumber);
@@ -519,7 +435,7 @@ export class GamesScreenDefinition extends ScreenDefinition {
     }
 
     getDescription() {
-        return 'programma';
+        return this.description;
     }
 }
 
@@ -529,8 +445,6 @@ export interface IGamesScreenDefinition {
 
 export class ScheduledGamesScreenDefinition extends GamesScreenDefinition implements IGamesScreenDefinition {
 
-    private description: string;
-
     constructor(roundNumber: number, scheduledGames: Game[], roundsDescription: string) {
         super(roundNumber, scheduledGames);
         this.description = 'programma - ' + roundsDescription;
@@ -539,15 +453,10 @@ export class ScheduledGamesScreenDefinition extends GamesScreenDefinition implem
     isScheduled(): boolean {
         return true;
     }
-
-    getDescription() {
-        return this.description;
-    }
 }
 
 export class PlayedGamesScreenDefinition extends GamesScreenDefinition implements IGamesScreenDefinition {
     playedGames: Game[];
-    private description: string;
 
     constructor(roundNumber: number, playedGames: Game[], roundsDescription: string) {
         super(roundNumber, playedGames);
@@ -557,11 +466,8 @@ export class PlayedGamesScreenDefinition extends GamesScreenDefinition implement
     isScheduled(): boolean {
         return false;
     }
-
-    getDescription() {
-        return this.description;
-    }
 }
+
 
 export class SponsorScreenDefinition extends ScreenDefinition {
     private sponsors: Sponsor[]; // max 8
