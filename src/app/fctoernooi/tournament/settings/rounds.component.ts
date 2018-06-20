@@ -217,6 +217,9 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             if (this.modelConfig.getMinutesPerGame() === 0) {
                 this.modelConfig.setMinutesPerGame(this.roundConfigService.getDefaultMinutesPerGame());
             }
+            if (this.modelConfig.getMinutesBetweenGames() === 0) {
+                this.modelConfig.setMinutesBetweenGames(this.roundConfigService.getDefaultMinutesBetweenGames());
+            }
             if (this.modelConfig.getMinutesInBetween() === 0) {
                 this.modelConfig.setMinutesInBetween(this.roundConfigService.getDefaultMinutesInBetween());
             }
