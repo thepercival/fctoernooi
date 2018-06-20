@@ -4,17 +4,17 @@ import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap/popover/popover';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import {
-  Game,
-  PlanningService,
-  Poule,
-  PoulePlace,
-  Ranking,
-  RankingItem,
-  Referee,
-  Round,
-  StructureNameService,
-  StructureService,
-  Team,
+    Game,
+    PlanningService,
+    Poule,
+    PoulePlace,
+    Ranking,
+    RankingItem,
+    Referee,
+    Round,
+    StructureNameService,
+    StructureService,
+    Team,
 } from 'ngx-sport';
 
 import { AuthService } from '../../../../auth/auth.service';
@@ -90,7 +90,7 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
     if (cfg.getHasExtension()) {
       descr += 'De eventuele verlenging duurt ' + cfg.getMinutesPerGameExt() + ' minuten.';
     }
-    descr += 'Er zit ' + cfg.getMinutesInBetween() + ' minuten tussen de wedstrijden.';
+    descr += 'Er zit ' + cfg.getMinutesBetweenGames() + ' minuten tussen de wedstrijden.';
     return descr;
   }
 
