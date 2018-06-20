@@ -56,7 +56,7 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
     // }
 
     ngOnInit() {
-        this.sub = this.route.params.subscribe(params => {
+        this.route.params.subscribe(params => {
             super.myNgOnInit(() => this.postInit(+params.sponsorId));
         });
         this.route.queryParamMap.subscribe(params => {

@@ -69,7 +69,7 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
     // }
 
     ngOnInit() {
-        this.sub = this.route.params.subscribe(params => {
+        this.route.params.subscribe(params => {
             super.myNgOnInit(() => this.postInit(+params.refereeId));
         });
         this.route.queryParamMap.subscribe(params => {

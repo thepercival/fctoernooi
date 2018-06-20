@@ -28,7 +28,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     enableTime: boolean;
     ranges: any = {};
     allRoundsByNumber: any;
-    selectedRoundNumber: number;
+    roundNumber: number;
     modelConfig: RoundConfig;
     modelRecreate: boolean;
     modelReschedule: boolean;
@@ -76,29 +76,31 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     }
 
     ngOnInit() {
-        super.myNgOnInit(() => this.initConfigs());
+        this.route.params.subscribe(params => {
+            super.myNgOnInit(() => this.initConfigs(+params.roundNumber));
+        });
     }
 
-    initConfigs() {
+    initConfigs(roundNumber: number) {
         this.allRoundsByNumber = this.structureService.getAllRoundsByNumber();
         this.planningService = new PlanningService(this.structureService);
-        this.changeRoundNumber(this.structureService.getFirstRound().getNumber());
+        this.changeRoundNumber(roundNumber);
         this.processing = false;
     }
 
     changeRoundNumber(roundNumber: number) {
-        this.selectedRoundNumber = roundNumber;
-        this.modelConfig = cloneDeep(this.getFirstRoundOfRoundNumber(this.selectedRoundNumber).getConfig());
+        this.roundNumber = roundNumber;
+        this.modelConfig = cloneDeep(this.getFirstRoundOfRoundNumber(this.roundNumber).getConfig());
         this.modelRecreate = false;
         this.modelReschedule = false;
         this.setAlert('info', 'instellingen gelden ook voor volgende ronden');
-        if (this.planningService.isStarted(this.selectedRoundNumber)) {
+        if (this.planningService.isStarted(this.roundNumber)) {
             this.setAlert('info', 'deze ronde is al begonnen, kies een andere ronde');
         }
     }
 
     getFirstRoundOfRoundNumber(roundNumber): Round {
-        return this.allRoundsByNumber[this.selectedRoundNumber][0];
+        return this.allRoundsByNumber[this.roundNumber][0];
     }
 
     getClassPostfix(winnersOrLosers: number): string {
@@ -111,7 +113,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             return;
         }
         this.modelConfig.setNrOfHeadtoheadMatches(nrOfHeadtoheadMatches);
-        this.modelRecreate = true; // this.planningService.create( this.selectedRoundNumber );
+        this.modelRecreate = true; // this.planningService.create( this.roundNumber );
     }
 
     setWinPoints(winPoints) {
@@ -136,7 +138,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             return;
         }
         this.modelConfig.setHasExtension(hasExtension);
-        this.modelReschedule = true;  // this.tournament.reschedule(new PlanningService(this.structureService), this.selectedRoundNumber);
+        this.modelReschedule = true;  // this.tournament.reschedule(new PlanningService(this.structureService), this.roundNumber);
     }
 
     setWinPointsExt(winPointsExt) {
@@ -195,7 +197,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         this.modelConfig.setMinutesBetweenGames(minutesBetweenGames);
         if (this.modelConfig.getEnableTime()) {
             this.modelReschedule = true;
-            // this.tournament.reschedule(new PlanningService(this.structureService), this.selectedRoundNumber);
+            // this.tournament.reschedule(new PlanningService(this.structureService), this.roundNumber);
         }
     }
 
@@ -203,7 +205,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         this.modelConfig.setMinutesInBetween(minutesInBetween);
         if (this.modelConfig.getEnableTime()) {
             this.modelReschedule = true;
-            // this.tournament.reschedule(new PlanningService(this.structureService), this.selectedRoundNumber);
+            // this.tournament.reschedule(new PlanningService(this.structureService), this.roundNumber);
         }
     }
 
@@ -220,7 +222,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             }
         }
         this.modelConfig.setEnableTime(enableTime);
-        this.modelReschedule = true; // this.tournament.reschedule(new PlanningService(this.structureService), this.selectedRoundNumber);
+        this.modelReschedule = true; // this.tournament.reschedule(new PlanningService(this.structureService), this.roundNumber);
     }
 
     getDirectionDescription(scoreConfig) {
@@ -244,21 +246,21 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         if (this.modelConfig.getEnableTime() && scoreConfig.getParent() === undefined) {
             return true;
         }
-        if (this.planningService.isStarted(this.selectedRoundNumber)) {
+        if (this.planningService.isStarted(this.roundNumber)) {
             return true;
         }
         return false;
     }
 
     getSelectRoundNumberButtonClassPostfix(roundNumber: number) {
-        if (roundNumber >= this.selectedRoundNumber) {
+        if (roundNumber >= this.roundNumber) {
             return 'primary';
         }
         return 'secondary';
     }
 
     getInputScoreConfig(): RoundConfigScore {
-        const round = this.getFirstRoundOfRoundNumber(this.selectedRoundNumber);
+        const round = this.getFirstRoundOfRoundNumber(this.roundNumber);
         let scoreConfig: RoundConfigScore = round.getConfig().getScore().getRoot();
         while (scoreConfig && scoreConfig.getMaximum() === 0) {
             scoreConfig = scoreConfig.getChild();
@@ -274,14 +276,14 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         this.processing = true;
 
         const jsonConfig = this.roundConfigRepository.objectToJsonHelper(this.modelConfig);
-        const rounds = this.allRoundsByNumber[this.selectedRoundNumber];
-        return this.roundConfigRepository.editObject(this.structureService.getCompetition(), this.selectedRoundNumber, jsonConfig)
+        const rounds = this.allRoundsByNumber[this.roundNumber];
+        return this.roundConfigRepository.editObject(this.structureService.getCompetition(), this.roundNumber, jsonConfig)
             .subscribe(
                 /* happy path */ res => {
-                    this.updateRoundConfig(this.selectedRoundNumber, this.modelConfig);
+                    this.updateRoundConfig(this.roundNumber, this.modelConfig);
                     const tournamentService = new TournamentService(this.tournament);
                     if (this.modelRecreate === true) {
-                        tournamentService.create(this.planningService, this.selectedRoundNumber);
+                        tournamentService.create(this.planningService, this.roundNumber);
                         this.planningRepository.createObject(rounds)
                             .subscribe(
                                 /* happy path */ gamesRes => {
@@ -293,7 +295,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
                                 /* onComplete */() => this.processing = false
                             );
                     } else if (this.modelReschedule) {
-                        tournamentService.reschedule(this.planningService, this.selectedRoundNumber);
+                        tournamentService.reschedule(this.planningService, this.roundNumber);
                         this.planningRepository.editObject(rounds)
                             .subscribe(
                                 /* happy path */ gamesRes => {

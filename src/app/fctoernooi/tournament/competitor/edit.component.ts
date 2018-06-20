@@ -65,7 +65,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
     // }
 
     ngOnInit() {
-        this.sub = this.route.params.subscribe(params => {
+        this.route.params.subscribe(params => {
             super.myNgOnInit(() => this.postInit(+params.poulePlaceId));
         });
         this.route.queryParamMap.subscribe(params => {

@@ -1,7 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 
 import { IAlert } from '../../app.definitions';
 import { AuthService } from '../../auth/auth.service';
@@ -12,7 +11,7 @@ import { User } from '../user';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
 
   alert: IAlert;
   registered = false;
@@ -25,9 +24,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     minlengthpassword: User.MIN_LENGTH_PASSWORD,
     maxlengthpassword: User.MAX_LENGTH_PASSWORD
   };
-
-  protected sub: Subscription;
-  // activationmessage: string;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -55,7 +51,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sub = this.activatedRoute.queryParams.subscribe(
+    this.activatedRoute.queryParams.subscribe(
       (param: any) => {
         if (param.message !== undefined) {
           this.setAlert('info', param.message);
@@ -91,11 +87,4 @@ export class LoginComponent implements OnInit, OnDestroy {
             /* onComplete */() => this.processing = false
       );
   }
-
-  ngOnDestroy() {
-    if (this.sub !== undefined) {
-      this.sub.unsubscribe();
-    }
-  }
-
 }

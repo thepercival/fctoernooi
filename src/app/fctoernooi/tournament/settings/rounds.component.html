@@ -11,7 +11,7 @@
 
         <h2 *ngIf="!processing">
             <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellingen
-            <span [innerHTML]="nameService.getRoundsName( selectedRoundNumber, allRoundsByNumber[selectedRoundNumber] ) | keepHtml"></span>
+            <span [innerHTML]="nameService.getRoundsName( roundNumber, allRoundsByNumber[roundNumber] ) | keepHtml"></span>
         </h2>
         <h2 *ngIf="processing" align="center">
             <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
@@ -120,7 +120,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" [disabled]="!f.form.valid || processing || planningService.isStarted(selectedRoundNumber)" class="btn btn-outline-primary">instellingen opslaan
+                    <button type="submit" [disabled]="!f.form.valid || processing || planningService.isStarted(roundNumber)" class="btn btn-outline-primary">instellingen opslaan
                     </button>
 
                     <hr/>

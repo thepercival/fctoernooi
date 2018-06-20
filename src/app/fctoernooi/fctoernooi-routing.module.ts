@@ -32,7 +32,7 @@ const routes: Routes = [
   { path: 'structure/:id', component: TournamentStructureComponent, canActivate: [AuthguardService] },
   { path: 'games/:id', component: GameListComponent, canActivate: [AuthguardService] },
   { path: 'gameedit/:id/:gameId', component: TournamentGameEditComponent, canActivate: [AuthguardService] },
-  { path: 'roundssettings/:id', component: RoundsSettingsComponent, canActivate: [AuthguardService] },
+  { path: 'roundssettings/:id/:roundNumber', component: RoundsSettingsComponent, canActivate: [AuthguardService] },
   { path: 'fields/:id', component: FieldListComponent, canActivate: [AuthguardService] },
   { path: 'referees/:id', component: RefereeListComponent, canActivate: [AuthguardService] },
   { path: 'refereeedit/:id/:refereeId', component: TournamentRefereeEditComponent, canActivate: [AuthguardService] },

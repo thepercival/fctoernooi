@@ -1,7 +1,5 @@
-import { OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Round, StructureRepository, StructureService } from 'ngx-sport';
-import { Subscription } from 'rxjs';
 
 import { IAlert } from '../../app.definitions';
 import { Tournament } from '../tournament';
@@ -10,10 +8,9 @@ import { TournamentRepository } from './repository';
 /**
  * Created by coen on 11-10-17.
  */
-export class TournamentComponent implements OnDestroy {
+export class TournamentComponent {
 
     public tournament: Tournament;
-    protected sub: Subscription;
     protected route: ActivatedRoute;
     protected router: Router;
     protected tournamentRepository: TournamentRepository;
@@ -35,7 +32,7 @@ export class TournamentComponent implements OnDestroy {
     }
 
     myNgOnInit(callback?: DataProcessCallBack) {
-        this.sub = this.route.params.subscribe(params => {
+        this.route.params.subscribe(params => {
             this.setData(+params['id'], callback);
         });
     }
@@ -65,10 +62,6 @@ export class TournamentComponent implements OnDestroy {
                     /* error path */ e => { this.setAlert('danger', e); },
                     /* onComplete */() => { }
             );
-    }
-
-    ngOnDestroy() {
-        this.sub.unsubscribe();
     }
 
     protected setAlert(type: string, message: string) {

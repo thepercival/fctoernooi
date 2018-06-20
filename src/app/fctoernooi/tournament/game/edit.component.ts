@@ -66,8 +66,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     ngOnInit() {
-
-        this.sub = this.route.params.subscribe(params => {
+        this.route.params.subscribe(params => {
             super.myNgOnInit(() => {
                 this.setGame(+params.gameId);
                 this.tournamentRepository.getUserRefereeId(this.tournament).subscribe(
