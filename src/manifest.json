@@ -1,6 +1,7 @@
 {
   "name": "FCToernooi",
   "short_name": "FCToernooi",
+  "description": "met FCToernooi kun je snel en makkelijk een toernooi opzetten. Er is ook een live scorebord aanwezig.",
   "theme_color": "#060606",
   "background_color": "#060606",
   "display": "standalone",
