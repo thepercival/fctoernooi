@@ -55,7 +55,7 @@
         <button *ngIf="round.getPoules().length > 1" type="button" class="btn btn-outline-secondary" (click)="removePoule(round)">
           <fa-icon [icon]="['fas', 'compress']"></fa-icon>
         </button>
-        <button *ngIf="round.getQualifyOrder() < CustomQualifyOrder && round.getPoules().length >= 2 && structureService.getNrOfSiblingRounds(round) === 0"
+        <button *ngIf="round.getQualifyOrder() < CustomQualifyOrder && round.getPoules().length >= 2 && structureService.getNrOfSiblingRounds(round) <= 1"
           type="button" class="btn btn-outline-secondary" (click)="toggleQualifyOrder(round)">
           <fa-icon [icon]="['fas', 'arrows-alt-' + (qualifyOrderIsHorizontal(round) ? 'v' : 'h') ]"></fa-icon>
         </button>
