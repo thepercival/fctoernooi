@@ -1,4 +1,4 @@
-<div *ngIf="tournament && haveMultiplePoulePlaces(roundsByNumber)">
+<div *ngIf="tournament && haveMultiplePoulePlaces(roundsByNumber)" id="scroll-roundnumber-{{roundNumber}}">
   <div class="d-flex justify-content-between mt-3">
     <h2>
       <span [innerHTML]="nameService.getRoundsName( roundNumber, roundsByNumber ) | keepHtml"></span>
@@ -70,7 +70,7 @@
             <td class="width-25"></td>
             <td *ngIf="hasReferees()" class="d-none d-sm-table-cell"></td>
           </tr>
-          <tr *ngIf="!hasFavIds() || hasGameFavIds(game)" id="game-scrollposition-{{game.getId()}}">
+          <tr *ngIf="!hasFavIds() || hasGameFavIds(game)" id="scroll-game-{{game.getId()}}">
             <td *ngIf="!pouleHasPopover(game)" class="text-center pl-1">
               <span>{{nameService.getPouleName(game.getPoule())}}</span>
             </td>

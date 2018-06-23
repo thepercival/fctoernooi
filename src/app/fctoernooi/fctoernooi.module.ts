@@ -14,6 +14,7 @@ import {
   faExpand,
   faInfoCircle,
   faListUl,
+  faMedal,
   faMinus,
   faMoneyBillAlt,
   faPrint,
@@ -73,7 +74,7 @@ import { TournamentViewComponent } from './tournament/view/view.component';
 library.add(
   faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus,
   faExpand, faCompress, faPrint, faSort, faRandom, faSquare, faCheckSquare, faArrowsAltH,
-  faArrowsAltV, faUserTag, faInfoCircle
+  faArrowsAltV, faUserTag, faInfoCircle, faMedal
 );
 
 @NgModule({

@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import { PoulePlace, PoulePlaceRepository, StructureNameService, StructureRepository, TeamRepository } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
 
@@ -13,10 +14,11 @@ import { TournamentRepository } from '../repository';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css']
 })
-export class CompetitorListComponent extends TournamentComponent implements OnInit {
+export class CompetitorListComponent extends TournamentComponent implements OnInit, AfterViewChecked {
   poulePlaces: PoulePlace[];
   alert: IAlert;
   poulePlaceToSwap: PoulePlace;
+  scrollToId: number;
 
   constructor(
     route: ActivatedRoute,
@@ -25,19 +27,35 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     sructureRepository: StructureRepository,
     private teamRepository: TeamRepository,
     private poulePlaceRepository: PoulePlaceRepository,
-    public nameService: StructureNameService
+    public nameService: StructureNameService,
+    private scrollService: ScrollToService,
   ) {
     super(route, router, tournamentRepository, sructureRepository);
   }
 
   ngOnInit() {
-    super.myNgOnInit(() => this.initPoulePlaces());
+    super.myNgOnInit(() => {
+      this.initPoulePlaces();
+    });
+    this.route.queryParamMap.subscribe(params => {
+      this.scrollToId = +params.get('scrollToId');
+    });
   }
 
   initPoulePlaces() {
     const round = this.structureService.getFirstRound();
     this.poulePlaces = round.getPoulePlaces();
     this.processing = false;
+  }
+
+  ngAfterViewChecked() {
+    if (this.processing === false && this.scrollToId !== undefined) {
+      this.scrollService.scrollTo({
+        target: 'scroll-pouleplace-' + this.scrollToId,
+        duration: 200
+      });
+      this.scrollToId = undefined;
+    }
   }
 
   isStarted() {

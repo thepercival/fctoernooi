@@ -120,13 +120,13 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
         this.teamRepository.createObject(team, association)
             .subscribe(
             /* happy path */ teamRes => {
-                    this.assignTeam(this.poulePlace, teamRes);
+                    this.assignTeam(teamRes);
                 },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
             );
     }
 
-    assignTeam(poulePlace: PoulePlace, team: Team) {
+    assignTeam(team: Team) {
         this.poulePlace.setTeam(team);
         this.poulePlaceRepository.editObject(this.poulePlace, this.poulePlace.getPoule())
             .subscribe(
@@ -164,14 +164,16 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
         return [this.returnUrl, this.returnUrlParam];
     }
 
-    // private getForwarUrlQueryParams(): {} {
-    //     const queryParams = {};
-    //     queryParams[this.returnUrlQueryParamKey] = this.returnUrlQueryParamValue;
-    //     return queryParams;
-    // }
-
+    private getForwarUrlQueryParams(): {} {
+        const queryParams = { scrollToId: this.poulePlace.getId() };
+        // if (this.returnUrlQueryParamKey !== undefined) {
+        //     queryParams[this.returnUrlQueryParamKey] = this.returnUrlQueryParamValue;
+        // }
+        return queryParams;
+    }
+    
     navigateBack() {
-        this.router.navigate(this.getForwarUrl()/*, { queryParams: this.getForwarUrlQueryParams() }*/);
+        this.router.navigate(this.getForwarUrl(), { queryParams: this.getForwarUrlQueryParams() });
     }
 
     isNameDuplicate(name: string, teamId?: number): boolean {
@@ -181,6 +183,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
             return (name === teamName && (teamId === undefined || poulePlaceIt.getTeam().getId() === undefined));
         }) !== undefined;
     }
+
 
     // setName(name) {
     //     this.error = undefined;

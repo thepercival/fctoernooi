@@ -21,10 +21,22 @@ export class TournamentEndRankingViewComponent {
     return this.endRankingService.getItems(this.firstRound);
   }
 
+  isUnknown(rankingItem: RankingItem): boolean {
+    return (rankingItem.isSpecified() === false || rankingItem.getPoulePlace().getTeam() === undefined);
+  }
+
   getRankingItemName(rankingItem: RankingItem): string {
-    if (rankingItem.isSpecified() === false || rankingItem.getPoulePlace().getTeam() === undefined) {
+    if (this.isUnknown(rankingItem)) {
       return 'nog onbekend';
     }
     return this.nameService.getPoulePlaceName(rankingItem.getPoulePlace(), true);
+  }
+
+  hasMedal(rank: number): boolean {
+    return (rank === 1 || rank === 2 || rank === 3);
+  }
+
+  getMedalColor(rank: number): string {
+    return 'text-' + (rank === 1 ? 'gold' : (rank === 2 ? 'silver' : 'bronze'));
   }
 }

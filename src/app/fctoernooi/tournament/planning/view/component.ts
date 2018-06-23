@@ -4,17 +4,17 @@ import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap/popover/popover';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import {
-    Game,
-    PlanningService,
-    Poule,
-    PoulePlace,
-    Ranking,
-    RankingItem,
-    Referee,
-    Round,
-    StructureNameService,
-    StructureService,
-    Team,
+  Game,
+  PlanningService,
+  Poule,
+  PoulePlace,
+  Ranking,
+  RankingItem,
+  Referee,
+  Round,
+  StructureNameService,
+  StructureService,
+  Team,
 } from 'ngx-sport';
 
 import { AuthService } from '../../../../auth/auth.service';
@@ -68,7 +68,7 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
   ngAfterViewInit() {
     if (this.scrollToGameId) {
       this.scrollService.scrollTo({
-        target: 'game-scrollposition-' + this.scrollToGameId,
+        target: 'scroll-' + (this.roundNumber > 1 ? 'roundnumber-' + this.roundNumber : 'game-' + this.scrollToGameId),
         duration: 200
       });
     }
