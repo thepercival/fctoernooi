@@ -46,6 +46,11 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     planningService: PlanningService;
     private roundConfigService: RoundConfigService;
 
+    returnUrl: string;
+    returnUrlParam: number;
+    returnUrlQueryParamKey: string;
+    returnUrlQueryParamValue: string;
+
     constructor(
         route: ActivatedRoute,
         router: Router,
@@ -78,6 +83,12 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     ngOnInit() {
         this.route.params.subscribe(params => {
             super.myNgOnInit(() => this.initConfigs(+params.roundNumber));
+        });
+        this.route.queryParamMap.subscribe(params => {
+            this.returnUrl = params.get('returnAction');
+            this.returnUrlParam = +params.get('returnParam');
+            this.returnUrlQueryParamKey = params.get('returnQueryParamKey');
+            this.returnUrlQueryParamValue = params.get('returnQueryParamValue');
         });
     }
 
@@ -262,18 +273,6 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         return 'secondary';
     }
 
-    getInputScoreConfig(): RoundConfigScore {
-        const round = this.getFirstRoundOfRoundNumber(this.roundNumber);
-        let scoreConfig: RoundConfigScore = round.getConfig().getScore().getRoot();
-        while (scoreConfig && scoreConfig.getMaximum() === 0) {
-            scoreConfig = scoreConfig.getChild();
-        }
-        if (scoreConfig === undefined) {
-            scoreConfig = round.getConfig().getScore().getRoot();
-        }
-        return scoreConfig;
-    }
-
     saveConfig() {
         this.setAlert('info', 'instellingen worden opgeslagen');
         this.processing = true;
@@ -372,5 +371,21 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
 
     getDirectionClass(scoreConfig: RoundConfigScore) {
         return scoreConfig.getDirection() === RoundConfigScore.UPWARDS ? 'naar' : 'vanaf';
+    }
+
+    private getForwarUrl() {
+        return [this.returnUrl, this.returnUrlParam];
+    }
+
+    private getForwarUrlQueryParams(): {} {
+        const queryParams = {};
+        if (this.returnUrlQueryParamKey !== undefined) {
+            queryParams[this.returnUrlQueryParamKey] = this.returnUrlQueryParamValue;
+        }
+        return queryParams;
+    }
+
+    navigateBack() {
+        this.router.navigate(this.getForwarUrl(), { queryParams: this.getForwarUrlQueryParams() });
     }
 }

@@ -3,7 +3,7 @@
         <div class="mb-4">
             <h1 *ngIf="tournament">
                 {{tournament.getName()}}
-                <button *ngIf="!processing" [routerLink]="['/toernooi/games', tournament.getId()]" type="button" class="btn btn-outline-secondary btn-sm">
+                <button *ngIf="!processing" (click)="navigateBack()" type="button" class="btn btn-outline-secondary btn-sm">
                     <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
                 </button>
             </h1>
@@ -21,6 +21,13 @@
             <div *ngIf="error" class="alert alert-danger">{{error}}</div>
             <div class="row justify-content-center mx-0">
                 <div class="col">
+                    <div class="form-group row">
+                        <label for="" class="col-8 col-form-label">
+                            <h5>wedstrijd</h5>
+                        </label>
+                        <div class="col-4">
+                        </div>
+                    </div>
                     <div class="form-group row">
                         <label for="nrofheadtoheadmatches" class="col-8 col-form-label">aantal onderlinge duels</label>
                         <div class="col-4">
@@ -84,6 +91,30 @@
                                 class="form-control" required />
                         </div>
                     </div>
+                    <hr/>
+
+                    <ng-template #recursiveList let-scoreConfig>
+                        <div class="form-group row">
+                            <div class="col-6">
+                                <label class="col-form-label">{{scoreConfig.getName()}}</label>
+                            </div>
+                            <label for="scoreMaximum-{{scoreConfig.getId()}}" class="col-2 col-form-label text-right">{{getDirectionClass(scoreConfig)}}</label>
+                            <div class="col-4">
+                                <input type="number" [maxlength]="4" [ngModel]="scoreConfig.getMaximum()" (ngModelChange)="setScoreConfigMaximum(scoreConfig,$event)"
+                                    id="scoreMaximum-{{scoreConfig.getId()}}" name="scoreMaximum-{{scoreConfig.getId()}}" class="form-control"
+                                    [disabled]="isScoreConfigReadOnly(scoreConfig)" required />
+                            </div>
+                        </div>
+                        <ng-container *ngIf="scoreConfig.getChild()">
+                            <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: scoreConfig.getChild() }"></ng-container>
+                        </ng-container>
+                    </ng-template>
+                    <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: modelConfig.getScore().getRoot() }"></ng-container>
+
+                    <div *ngIf="modelConfig.getInputScore() !== modelConfig.getCalculateScore()" class="text-info">De invoer vindt plaats o.b.v. {{modelConfig.getInputScore().getName()}}. De berekening vindt plaats o.b.v.
+                        {{modelConfig.getCalculateScore().getName()}}
+                    </div>
+
                     <div class="form-group row">
                         <label for="enableTime" class="col-8 col-form-label">
                             <h5>plannen o.b.v. tijd</h5>
@@ -123,37 +154,6 @@
                     <button type="submit" [disabled]="!f.form.valid || processing || planningService.isStarted(roundNumber)" class="btn btn-outline-primary">instellingen opslaan
                     </button>
 
-                    <hr/>
-
-                    <ng-template #recursiveList let-scoreConfig>
-                        <div class="form-group row">
-                            <div class="col-4">
-                                <label class="col-form-label">{{scoreConfig.getName()}}</label>
-                            </div>
-                            <div class="col-2 text-center">
-                                <label class="col-form-label">
-                                    <fa-icon [icon]="['fas', (scoreConfig.isInput() ? 'check-' : '') + 'circle']" size="lg"></fa-icon>
-                                </label>
-                            </div>
-                            <label for="scoreMaximum-{{scoreConfig.getId()}}" class="col-2 col-form-label text-right">{{getDirectionClass(scoreConfig)}}</label>
-                            <div class="col-4">
-                                <input type="number" [maxlength]="4" [ngModel]="scoreConfig.getMaximum()" (ngModelChange)="setScoreConfigMaximum(scoreConfig,$event)"
-                                    id="scoreMaximum-{{scoreConfig.getId()}}" name="scoreMaximum-{{scoreConfig.getId()}}" class="form-control"
-                                    [disabled]="isScoreConfigReadOnly(scoreConfig)" required />
-                            </div>
-                        </div>
-                        <ng-container *ngIf="scoreConfig.getChild()">
-                            <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: scoreConfig.getChild() }"></ng-container>
-                        </ng-container>
-                    </ng-template>
-                    <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: modelConfig.getScore().getRoot() }"></ng-container>
-
-                    <div>
-                        <div *ngIf="getInputScoreConfig()" class="alert">De puntentelling wordt bijgehouden in {{getInputScoreConfig().getName()}} (
-                            <fa-icon [icon]="['fas', 'check-circle']"></fa-icon> )</div>
-                        <div *ngIf="!getInputScoreConfig()" class="alert alert-danger">Zorg dat je een actieve eenheid hebt voor de puntentelling</div>
-                    </div>
-
                     <!--<div class="form-group col">-->
                     <!--<label for="winpointspergame" class="col-form-label">punten per overwinning</label>-->
                     <!--<input type="number" class="form-control" id="winpointspergame" name="winpointspergame" [min]="validations.minwinpointspergame" [max]="validations.maxwinpointspergame" [(ngModel)]="model.winpointspergame" #winpointspergame="ngModel" required>-->
@@ -166,5 +166,6 @@
                 </div>
             </div>
         </form>
+
     </div>
 </div>

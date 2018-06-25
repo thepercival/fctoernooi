@@ -12,7 +12,7 @@
       <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       <span>filter</span>
     </button>
-    <button type="button" class="btn btn-sm btn-outline-primary mr-0" *ngIf="canEditSettings" [routerLink]="['/toernooi/roundssettings', tournament.getId(), roundNumber]">
+    <button type="button" class="btn btn-sm btn-outline-primary mr-0" *ngIf="canEditSettings" (click)="linkToRoundSettings(roundNumber)">
       <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellingen
     </button>
   </div>
@@ -93,7 +93,7 @@
               <span *ngIf="game.getHomePoulePlace().getTeam() && game.getHomePoulePlace().getTeam().getAbbreviation()" class="flag-16 flag-{{game.getHomePoulePlace().getTeam().getAbbreviation()}}-16"></span>
             </td>
             <td class="score text-center" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
-              <button *ngIf="hasEditPermissions(game)" class="btn btn-sm btn-outline-primary" (click)="linkToGameEdit(tournament,game)">
+              <button *ngIf="hasEditPermissions(game)" class="btn btn-sm btn-outline-primary" (click)="linkToGameEdit(game)">
                 <fa-icon *ngIf="!isPlayed(game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
                 <span *ngIf="isPlayed(game)">{{getScore(game)}}</span>
               </button>

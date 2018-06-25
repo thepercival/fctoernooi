@@ -11,7 +11,7 @@
       </div>
       <div>
         <h2>
-          basisinfo
+          <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellingen
         </h2>
         <h2 *ngIf="processing" align="center">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
@@ -96,13 +96,23 @@
           </div>
         </div>
       </form>
+      <div *ngIf="!processing">
+        <h2>
+          <fa-icon [icon]="['fas', 'cogs']"></fa-icon> ronde-instellingen
+        </h2>
+        <div *ngFor="let roundNumber of structureService.getRoundNumbers()" class="row justify-content-end">
+          <div class="col-9">
+            <button type="button" class="btn btn-outline-secondary mb-3" (click)="linkToRoundSettings(roundNumber)">
+              <span [innerHTML]="nameService.getRoundsName( roundNumber, planningService.getRoundsByNumber(roundNumber) ) | keepHtml"></span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-<ng-template #t let-date="date" let-focused="focused" let-disabled="disabled">
-  <span class="custom-day" [class.focused]="focused" [class.selected]="isSelected(date)" [class.text-muted]="disabled" (mouseenter)="hoveredDate = date"
-    (mouseleave)="hoveredDate = null">
-    {{ date.day }}
-  </span>
-</ng-template>
+    <ng-template #t let-date="date" let-focused="focused" let-disabled="disabled">
+      <span class="custom-day" [class.focused]="focused" [class.selected]="isSelected(date)" [class.text-muted]="disabled" (mouseenter)="hoveredDate = date"
+        (mouseleave)="hoveredDate = null">
+        {{ date.day }}
+      </span>
+    </ng-template>

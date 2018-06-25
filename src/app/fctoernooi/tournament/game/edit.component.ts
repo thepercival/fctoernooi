@@ -2,18 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
 import {
-    Game,
-    GameRepository,
-    GameScore,
-    INewQualifier,
-    League,
-    PlanningService,
-    PoulePlace,
-    PoulePlaceRepository,
-    QualifyService,
-    RoundConfigScore,
-    StructureNameService,
-    StructureRepository,
+  Game,
+  GameRepository,
+  GameScore,
+  INewQualifier,
+  League,
+  PlanningService,
+  PoulePlace,
+  PoulePlaceRepository,
+  QualifyService,
+  RoundConfigScore,
+  StructureNameService,
+  StructureRepository,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
 
@@ -187,16 +187,16 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         gameScore.setMoment(moment);
 
         this.game.setState(state);
-        if (this.planningService.canCalculateStartDateTime(this.game.getRound().getNumber())) {
-            const startdate = new Date(
-                this.model.startdate.year,
-                this.model.startdate.month - 1,
-                this.model.startdate.day,
-                this.model.starttime.hour,
-                this.model.starttime.minute
-            );
-            this.game.setStartDateTime(startdate);
-        }
+        // if (this.planningService.canCalculateStartDateTime(this.game.getRound().getNumber())) {
+        //     const startdate = new Date(
+        //         this.model.startdate.year,
+        //         this.model.startdate.month - 1,
+        //         this.model.startdate.day,
+        //         this.model.starttime.hour,
+        //         this.model.starttime.minute
+        //     );
+        //     this.game.setStartDateTime(startdate);
+        // }
 
         this.gameRepository.editObject(this.game, this.game.getPoule())
             .subscribe(

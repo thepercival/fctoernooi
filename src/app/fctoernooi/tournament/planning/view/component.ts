@@ -210,13 +210,25 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
     return referee && this.favRefereeIds && this.favRefereeIds.some(favRefereeId => favRefereeId === referee.getId());
   }
 
-  linkToGameEdit(tournament: Tournament, game: Game) {
+  linkToGameEdit(game: Game) {
     this.router.navigate(
-      ['/toernooi/gameedit', tournament.getId(), game.getId()],
+      ['/toernooi/gameedit', this.tournament.getId(), game.getId()],
       {
         queryParams: {
           returnAction: this.parentReturnAction,
-          returnParam: tournament.getId()
+          returnParam: this.tournament.getId()
+        }
+      }
+    );
+  }
+
+  linkToRoundSettings(roundNumber: number) {
+    this.router.navigate(
+      ['/toernooi/roundssettings', this.tournament.getId(), roundNumber],
+      {
+        queryParams: {
+          returnAction: this.parentReturnAction,
+          returnParam: this.tournament.getId()
         }
       }
     );

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
-import { League, PlanningRepository, PlanningService, StructureRepository } from 'ngx-sport';
+import { League, PlanningRepository, PlanningService, StructureNameService, StructureRepository } from 'ngx-sport';
 
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
@@ -16,6 +16,7 @@ import { TournamentService } from '../service';
 export class TournamentEditComponent extends TournamentComponent implements OnInit {
     customForm: FormGroup;
     minDateStruct: NgbDateStruct;
+    public planningService: PlanningService;
 
     validations: any = {
         minlengthname: League.MIN_LENGTH_NAME,
@@ -30,6 +31,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private planningRepository: PlanningRepository,
+        public nameService: StructureNameService,
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
@@ -72,6 +74,8 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
 
         this.customForm.controls.togglebreak.setValue(this.tournament.hasBreak());
         this.toggleBreak(this.tournament.hasBreak(), this.tournament.getBreakDuration(), this.tournament.getBreakStartDateTime());
+
+        this.planningService = new PlanningService(this.structureService);
 
         this.processing = false;
     }
@@ -185,4 +189,16 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
         return one && two && two.year === one.year && two.month === one.month && two.day === one.day;
     }
     isSelected = date => this.equals(date, this.customForm.controls.date.value);
+
+    linkToRoundSettings(roundNumber: number) {
+        this.router.navigate(
+            ['/toernooi/roundssettings', this.tournament.getId(), roundNumber],
+            {
+                queryParams: {
+                    returnAction: '/toernooi/edit',
+                    returnParam: this.tournament.getId()
+                }
+            }
+        );
+    }
 }
