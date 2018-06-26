@@ -58,6 +58,10 @@ input.is-invalid, textarea.is-invalid {
     border-left: 5px solid #{$danger};
 }
 
+input.is-warning {
+    border-left: 5px solid #{$warning};
+}
+
 /* ng-bootstrap datepicker */
 .custom-day {
     text-align: center;

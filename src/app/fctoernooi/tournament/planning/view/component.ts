@@ -44,6 +44,7 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
   selectedPouleForRanking;
   sameDay = true;
   previousGameStartDateTime: Date;
+  showDifferenceDetail: boolean;
 
   private openPopovers: NgbPopover[] = [];
   private rulesPopover: NgbPopover;
@@ -249,6 +250,7 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
     this.selectedPouleForRanking = poule;
     if (popOverClosed === true) {
       popOver.open();
+      this.showDifferenceDetail = false;
       this.openPopovers.push(popOver);
     }
     this.popOverIsOpen.emit(popOverClosed);
@@ -298,10 +300,25 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
     return (type === 'success');
   }
 
-  getGoalDifference(poulePlace: PoulePlace, games: Game[]) {
-    const nrOfGoalsScored = this.ranking.getNrOfGoalsScored(poulePlace, games);
-    const nrOfGoalsReceived = this.ranking.getNrOfGoalsReceived(poulePlace, games);
-    return (nrOfGoalsScored - nrOfGoalsReceived) + ' ( ' + nrOfGoalsScored + ' - ' + nrOfGoalsReceived + ' )';
+  getUnitDifference(poulePlace: PoulePlace, games: Game[]) {
+    const nrOfUnitsScored = this.ranking.getNrOfUnitsScored(poulePlace, games);
+    const nrOfUnitsReceived = this.ranking.getNrOfUnitsReceived(poulePlace, games);
+    const delta = nrOfUnitsScored - nrOfUnitsReceived;
+    return (delta > 0 ? '+' : (delta < 0 ? '-' : '')) + delta;
+  }
+
+
+
+  getDifferenceDetail(poulePlace: PoulePlace, games: Game[], sub: boolean) {
+    const nrOfUnitsScored = this.ranking.getNrOfUnitsScored(poulePlace, games, sub);
+    const nrOfUnitsReceived = this.ranking.getNrOfUnitsReceived(poulePlace, games, sub);
+    const delta = nrOfUnitsScored - nrOfUnitsReceived;
+    return '( ' + nrOfUnitsScored + ' - ' + nrOfUnitsReceived + ' )';
+  }
+
+  hasMultipleScoreConfigs() {
+    return this.selectedPouleForRanking.getRound().getConfig().getCalculateScore()
+      !== this.selectedPouleForRanking.getRound().getConfig().getInputScore();
   }
 
   toggleRulesPopover(popOver?: NgbPopover) {

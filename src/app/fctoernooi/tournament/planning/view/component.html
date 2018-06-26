@@ -136,7 +136,7 @@
               <th class="pouleplace pl-0">deelnemer</th>
               <th class="text-right pl-0" title="gespeeld">g</th>
               <th class="text-right pl-0" title="punten">p</th>
-              <th class="text-center pl-0" title="doelsaldo">&Delta;</th>
+              <th class="text-center text-info pl-0 pointer" (click)="showDifferenceDetail = true" title="doelsaldo">&Delta;</th>
             </tr>
           </thead>
           <tbody>
@@ -152,7 +152,11 @@
                 </td>
                 <td class="text-right pl-0">{{ranking.getNrOfGamesWithState(rankingItem.getPoulePlace(), rankingItem.getPoulePlace().getGames())}}</td>
                 <td class="text-right pl-0">{{ranking.getPoints(rankingItem.getPoulePlace(), rankingItem.getPoulePlace().getGames())}}</td>
-                <td class="goaldiff pl-0">{{getGoalDifference(rankingItem.getPoulePlace(), rankingItem.getPoulePlace().getGames())}}</td>
+                <td class="text-center unitdiff pl-0">
+                  <div>{{getUnitDifference(rankingItem.getPoulePlace(), rankingItem.getPoulePlace().getGames())}}</div>
+                  <div *ngIf="showDifferenceDetail">{{getDifferenceDetail(rankingItem.getPoulePlace(), rankingItem.getPoulePlace().getGames(),false)}}</div>
+                  <div *ngIf="showDifferenceDetail && hasMultipleScoreConfigs()">{{getDifferenceDetail(rankingItem.getPoulePlace(), rankingItem.getPoulePlace().getGames(),true)}}</div>
+                </td>
               </tr>
             </ng-template>
           </tbody>

@@ -36,18 +36,49 @@
             <h2>{{nameService.getPoulePlaceName(game.getAwayPoulePlace(), true)}}</h2>
           </div>
         </div>
-        <div class="form-group row">
+        <div *ngIf="hasMultipleScoreConfigs()" class="form-group row">
           <div class="col-3">
-            <label for="homeresult" class="col-form-label">{{game.getScoreConfig().getName()}}</label>
+            <label class="col-form-label">{{game.getRound().getConfig().getCalculateScore().getName()}}</label>
           </div>
           <div class="col-4">
-            <input [ngModel]="model.home" (ngModelChange)="setHome($event)" class="form-control max-width-100" type="number" name="homeresult"
-              id="homeresult">
+            <input [formControl]="calculateScoreControl.home" class="form-control max-width-100" type="number">
           </div>
           <div class="col-1 team-splitter">-</div>
           <div class="col-4">
-            <input [ngModel]="model.away" (ngModelChange)="setAway($event)" class="form-control max-width-100" type="number" name="awayresult"
-              id="awayresult">
+            <input [formControl]="calculateScoreControl.away" class="form-control max-width-100" type="number">
+          </div>
+        </div>
+
+        <div *ngFor="let scoreControl of scoreControls; let i = index; let last = last" class="form-group row">
+          <div class="col-3">
+            <label class="col-form-label">{{game.getRound().getConfig().getScore().getName()}} {{game.getRound().getConfig().getCalculateScore().getNameSingle()}}
+              {{i+1}}
+            </label>
+          </div>
+          <div class="col-4">
+            <input [formControl]="scoreControl.home" (ngModelChange)="setHome(scoreControl, scoreControl.home.value, $event)" class="form-control max-width-100"
+              [ngClass]="{ 'is-invalid': !isScoreValid(scoreControl.getScore()), 'is-valid': isScoreValid(scoreControl.getScore()) && !isScoreEqual(scoreControl.getScore()), 'is-warning': isScoreValid(scoreControl.getScore()) && isScoreEqual(scoreControl.getScore()) }"
+              type="number">
+          </div>
+          <div *ngIf="!last" class="col-1 team-splitter">-</div>
+          <div *ngIf="last" class="col-1 team-splitter">
+            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="removeScoreControl(scoreControl)">
+              <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+            </button>
+          </div>
+          <div class="col-4">
+            <input [formControl]="scoreControl.away" (ngModelChange)="setAway(scoreControl,$event)" [ngClass]="{ 'is-invalid': !isScoreValid(scoreControl.getScore()), 'is-valid': isScoreValid(scoreControl.getScore()) &&
+            !isScoreEqual(scoreControl.getScore()), 'is-warning': isScoreValid(scoreControl.getScore()) && isScoreEqual(scoreControl.getScore())
+            }" class="form-control max-width-100" type="number">
+          </div>
+        </div>
+        <div *ngIf="hasMultipleScoreConfigs()" class="form-group row">
+          <div class="col-3">
+          </div>
+          <div class="col-9">
+            <button type="button" class="btn btn-outline-secondary" [disabled]="aScoreIsInvalid()" (click)="addScoreControl(0,0)">
+              <span>voeg {{game.getRound().getConfig().getCalculateScore().getNameSingle()}} toe</span>
+            </button>
           </div>
         </div>
         <div *ngIf="game.getRound().getConfig().getHasExtension()" class="form-group row">
@@ -56,7 +87,7 @@
           </div>
           <div class="col-9">
             <label class="custom-control custom-checkbox col-form-label pl-0">
-              <input type="checkbox" class="custom-control-input" id="extratime" name="extratime" [(ngModel)]="model.extratime">
+              <input type="checkbox" class="custom-control-input form-check-input" [formControl]="customForm.controls.extratime">
               <span class="custom-control-indicator"></span>
             </label>
           </div>
@@ -67,7 +98,7 @@
           </div>
           <div class="col-9">
             <label class="custom-control custom-checkbox col-form-label pl-0">
-              <input type="checkbox" class="custom-control-input" id="played" name="played" [ngModel]="model.played" (ngModelChange)="setPlayed($event)">
+              <input type="checkbox" class="custom-control-input form-check-input" [formControl]="customForm.controls.played" (ngModelChange)="setPlayed($event)">
               <span class="custom-control-indicator"></span>
             </label>
           </div>

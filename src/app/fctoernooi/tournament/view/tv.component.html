@@ -94,7 +94,7 @@
             <td class="pouleplace">{{nameService.getPoulePlaceName(rankingItem.getPoulePlace(), true)}}</td>
             <td class="text-right">{{ranking.getNrOfGamesWithState(rankingItem.getPoulePlace(), rankingItem.getPoulePlace().getGames())}}</td>
             <td class="text-right">{{ranking.getPoints(rankingItem.getPoulePlace(), rankingItem.getPoulePlace().getGames())}}</td>
-            <td class="goaldiff text-center">{{getGoalDifference(rankingItem.getPoulePlace(), rankingItem.getPoulePlace().getGames())}}</td>
+            <td class="unitdiff text-center">{{getUnitDifference(rankingItem.getPoulePlace(), rankingItem.getPoulePlace().getGames())}}</td>
           </tr>
         </ng-template>
       </tbody>

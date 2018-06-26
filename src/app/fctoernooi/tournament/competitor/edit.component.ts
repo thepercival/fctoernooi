@@ -171,7 +171,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
         // }
         return queryParams;
     }
-    
+
     navigateBack() {
         this.router.navigate(this.getForwarUrl(), { queryParams: this.getForwarUrlQueryParams() });
     }

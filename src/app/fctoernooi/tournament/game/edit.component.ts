@@ -1,19 +1,18 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
 import {
-  Game,
-  GameRepository,
-  GameScore,
-  INewQualifier,
-  League,
-  PlanningService,
-  PoulePlace,
-  PoulePlaceRepository,
-  QualifyService,
-  RoundConfigScore,
-  StructureNameService,
-  StructureRepository,
+    Game,
+    GameRepository,
+    GameScore,
+    GameScoreHomeAway,
+    INewQualifier,
+    PlanningService,
+    PoulePlace,
+    PoulePlaceRepository,
+    QualifyService,
+    StructureNameService,
+    StructureRepository,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
 
@@ -30,19 +29,15 @@ import { TournamentRole } from '../role';
 export class TournamentGameEditComponent extends TournamentComponent implements OnInit {
     game: Game;
     planningService: PlanningService;
-    model: any;
-    error;
-    errorHomeAwayScore;
+    customForm: FormGroup;
+    scoreControls: HomeAwayFormControl[] = [];
+    calculateScoreControl: HomeAwayFormControl;
     returnUrl: string;
     returnUrlParam: number;
     returnUrlQueryParamKey: string;
     returnUrlQueryParamValue: string;
     userRefereeId: number;
-
-    validations: any = {
-        'minlengthname': League.MIN_LENGTH_NAME,
-        'maxlengthname': League.MAX_LENGTH_NAME
-    };
+    private enablePlayedAtFirstChange;
 
     constructor(
         route: ActivatedRoute,
@@ -52,17 +47,14 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         structureRepository: StructureRepository,
         private gameRepository: GameRepository,
         private poulePlaceRepository: PoulePlaceRepository,
-        public nameService: StructureNameService
+        public nameService: StructureNameService,
+        fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
-        this.model = {
-            home: 0,
-            away: 0,
-            extratime: false,
-            played: false,
-            startdate: undefined,
-            starttime: undefined
-        };
+        this.customForm = fb.group({
+            played: [''],
+            extratime: ['']
+        });
     }
 
     ngOnInit() {
@@ -94,99 +86,141 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         return false;
     }
 
+    aScoreIsInvalid() {
+        return this.scoreControls.some(scoreControl => !this.isScoreValid(scoreControl.getScore()));
+    }
+
+    isScoreValid(score: GameScoreHomeAway): boolean {
+        return score.getHome() >= 0 && score.getAway() >= 0;
+    }
+
+    isScoreEqual(score: GameScoreHomeAway): boolean {
+        return score.getHome() === score.getAway() && this.hasMultipleScoreConfigs();
+    }
+
+    // validScore(score, scoreConfig: RoundConfigScore) {
+    //     return !(score < 0 || (this.game.getRound().getConfig().getEnableTime() === false && score > scoreConfig.getMaximum()));
+    // }
+
     setGame(gameId: number) {
         this.game = this.structureService.getGameById(gameId, this.structureService.getFirstRound());
-        const date = this.game.getStartDateTime();
-        const gameScore = this.game.getFinalScore();
-        // bepaal scoreconfig
-        this.model = {
-            home: gameScore ? gameScore.getHome() : 0,
-            away: gameScore ? gameScore.getAway() : 0,
-            extratime: gameScore ? gameScore.getMoment() === Game.MOMENT_EXTRATIME : false,
-            played: this.game.getState() === Game.STATE_PLAYED
-        };
-        if (date !== undefined) {
-            this.model.startdate = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
-            this.model.starttime = { hour: date.getHours(), minute: date.getMinutes() };
+        // const date = this.game.getStartDateTime();
+
+        this.customForm.controls.played.setValue(this.game.getState() === Game.STATE_PLAYED);
+        this.customForm.controls.extratime.setValue(this.game.getScoresMoment() === Game.MOMENT_EXTRATIME);
+        if (this.hasMultipleScoreConfigs()) {
+            this.calculateScoreControl = new HomeAwayFormControl(0, 0, true);
         }
+
+        this.initScores(this.game);
+        this.updateCalculateScoreControl();
+
+        this.enablePlayedAtFirstChange = this.game.getScores().length === 0 && this.game.getState() !== Game.STATE_PLAYED;
+
+        // if (date !== undefined) {
+        //     this.model.startdate = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
+        //     this.model.starttime = { hour: date.getHours(), minute: date.getMinutes() };
+        // }
         this.planningService = new PlanningService(this.structureService);
         this.processing = false;
     }
 
-    setHome(home) {
-        this.error = undefined;
-        // const scoreConfig = this.game.getScoreConfig();
-        // if (!this.validScore(home, scoreConfig)) {
-        //     this.errorHomeAwayScore = 'thuisscore moet tussen 0 en ' + scoreConfig.getMaximum() + ' liggen';
-        //     return;
-        // }
-        if ((this.model.home === 0 || this.model.home === null) && this.model.away === 0 && home > 0) {
-            this.setPlayed(true);
+    protected initScores(game?: Game) {
+        this.scoreControls = [];
+        if (game !== undefined) {
+            game.getScores().forEach(score => {
+                this.addScoreControl(score.getHome(), score.getAway());
+            });
         }
-        this.model.home = home;
+        if (this.scoreControls.length === 0) {
+            this.scoreControls.push(new HomeAwayFormControl(0, 0));
+        }
     }
 
-    setAway(away) {
-        this.error = undefined;
-        // const scoreConfig = this.game.getScoreConfig();
-        // if (!this.validScore(away, scoreConfig)) {
-        //     this.errorHomeAwayScore = 'uitscore moet tussen 0 en ' + scoreConfig.getMaximum() + ' liggen';
-        //     return;
-        // }
-        if ((this.model.away === 0 || this.model.away === null) && this.model.home === 0 && away > 0) {
-            this.setPlayed(true);
+    protected updateCalculateScoreControl() {
+        if (!this.hasMultipleScoreConfigs()) {
+            return;
         }
-        this.model.away = away;
+        this.calculateScoreControl.home.setValue(0);
+        this.calculateScoreControl.away.setValue(0);
+        this.scoreControls.forEach(scoreControl => {
+            if (this.isScoreValid(scoreControl.getScore()) === false) {
+                return;
+            }
+            if (scoreControl.home.value > scoreControl.away.value) {
+                this.calculateScoreControl.home.setValue(this.calculateScoreControl.home.value + 1);
+            } else if (scoreControl.home.value < scoreControl.away.value) {
+                this.calculateScoreControl.away.setValue(this.calculateScoreControl.away.value + 1);
+            }
+        });
     }
 
-    validScore(score, scoreConfig: RoundConfigScore) {
-        return !(score < 0 || (this.game.getRound().getConfig().getEnableTime() === false && score > scoreConfig.getMaximum()));
+    setHome(scoreControl: HomeAwayFormControl, oldHome, home) {
+        if (this.isScoreValid(scoreControl.getScore()) && this.enablePlayedAtFirstChange === true) {
+            this.customForm.controls.played.setValue(true);
+        }
+        this.updateCalculateScoreControl();
+    }
+
+    setAway(scoreControl: HomeAwayFormControl, away) {
+        if (this.isScoreValid(scoreControl.getScore()) && this.enablePlayedAtFirstChange === true) {
+            this.customForm.controls.played.setValue(true);
+        }
+        this.updateCalculateScoreControl();
+    }
+
+    hasMultipleScoreConfigs() {
+        return this.game.getRound().getConfig().getCalculateScore() !== this.game.getRound().getConfig().getInputScore();
+    }
+
+    addScoreControl(home: number, away: number) {
+        this.scoreControls.push(new HomeAwayFormControl(home, away));
+    }
+
+    removeScoreControl(scoreControl: HomeAwayFormControl) {
+        const index = this.scoreControls.indexOf(scoreControl);
+        if (index >= 0) {
+            this.scoreControls.splice(index, 1);
+            this.updateCalculateScoreControl();
+        }
     }
 
     setPlayed(played: boolean) {
-        if (this.model.played === true && played === false) {
-            this.model.extratime = false;
-            this.setHome(0);
-            this.setAway(0);
+        if (played === false) {
+            this.customForm.controls.extratime.setValue(false);
+            this.initScores();
         }
-        this.model.played = played;
-    }
-
-    private getForwarUrl() {
-        return [this.returnUrl, this.returnUrlParam];
-    }
-
-    private getForwarUrlQueryParams(): {} {
-        const queryParams = { scrollToGameId: this.game.getId(), scrollToRoundNumber: this.game.getRound().getNumber() };
-        if (this.returnUrlQueryParamKey !== undefined) {
-            queryParams[this.returnUrlQueryParamKey] = this.returnUrlQueryParamValue;
-        }
-        return queryParams;
-    }
-
-    navigateBack() {
-        this.router.navigate(this.getForwarUrl(), { queryParams: this.getForwarUrlQueryParams() });
     }
 
     save() {
         this.processing = true;
         this.setAlert('info', 'de wedstrijd wordt opgeslagen');
-        let gameScore = this.game.getFinalScore();
-        if (!gameScore) {
-            gameScore = new GameScore(this.game);
-        }
-        const moment = this.model.extratime === true ? Game.MOMENT_EXTRATIME : Game.MOMENT_FULLTIME;
-        const state = this.model.played === true ? Game.STATE_PLAYED : Game.STATE_CREATED;
+        // let gameScore = this.game.getFinalScore();
+        // if (!gameScore) {
+        //     gameScore = new GameScore(this.game, this.model.home, this.model.away);
+        // }
+        const moment = this.customForm.controls.extratime.value === true ? Game.MOMENT_EXTRATIME : Game.MOMENT_FULLTIME;
+        const state = this.customForm.controls.played.value === true ? Game.STATE_PLAYED : Game.STATE_CREATED;
         const stateChanged = this.game.getState() !== state;
-        let scoreChanged = gameScore.getHome() !== this.model.home || gameScore.getAway() !== this.model.away;
-        scoreChanged = scoreChanged || gameScore.getMoment() !== moment;
+        let scoreChanged = this.hasScoreChanges(this.game.getScores(), this.scoreControls);
+        scoreChanged = scoreChanged || this.game.getScoresMoment() !== moment;
         const oldPouleState = this.game.getPoule().getState();
         const oldRoundState = this.game.getRound().getState();
-        gameScore.setHome(this.model.home);
-        gameScore.setAway(this.model.away);
-        gameScore.setMoment(moment);
 
+
+        this.game.setScoresMoment(moment);
         this.game.setState(state);
+        if (scoreChanged) {
+            const scores = this.game.getScores();
+            while (scores.length > 0) {
+                scores.pop();
+            }
+            let counter = 0;
+            this.scoreControls.forEach(scoreControl => {
+                const scoreHomeAway = scoreControl.getScore();
+                const newGameScore = new GameScore(this.game, scoreHomeAway.getHome(), scoreHomeAway.getAway(), ++counter);
+            });
+        }
         // if (this.planningService.canCalculateStartDateTime(this.game.getRound().getNumber())) {
         //     const startdate = new Date(
         //         this.model.startdate.year,
@@ -253,6 +287,19 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         );
     }
 
+    protected hasScoreChanges(originalGameScores: GameScoreHomeAway[], homeAwayControls: HomeAwayFormControl[]): boolean {
+        if (originalGameScores.length !== homeAwayControls.length || originalGameScores.length === 0) {
+            return true;
+        }
+        return homeAwayControls.some(homeAwayControl => {
+            const newHomeAwayScore = homeAwayControl.getScore();
+            return originalGameScores.find(originalGameScore => {
+                return originalGameScore.getHome() === newHomeAwayScore.getHome()
+                    && originalGameScore.getAway() === newHomeAwayScore.getAway();
+            }) !== undefined;
+        });
+    }
+
     protected setTeams(newQualifiers: INewQualifier[], poulePlaces: PoulePlace[]): PoulePlace[] {
         const changedPoulePlaces: PoulePlace[] = [];
         newQualifiers.forEach(newQualifier => {
@@ -265,9 +312,42 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         return changedPoulePlaces;
     }
 
-    equals(one: NgbDateStruct, two: NgbDateStruct) {
-        return one && two && two.year === one.year && two.month === one.month && two.day === one.day;
+    private getForwarUrl() {
+        return [this.returnUrl, this.returnUrlParam];
     }
-    isSelected = date => this.equals(date, this.model.startdate);
+
+    private getForwarUrlQueryParams(): {} {
+        const queryParams = { scrollToGameId: this.game.getId(), scrollToRoundNumber: this.game.getRound().getNumber() };
+        if (this.returnUrlQueryParamKey !== undefined) {
+            queryParams[this.returnUrlQueryParamKey] = this.returnUrlQueryParamValue;
+        }
+        return queryParams;
+    }
+
+    navigateBack() {
+        this.router.navigate(this.getForwarUrl(), { queryParams: this.getForwarUrlQueryParams() });
+    }
+
+    // equals(one: NgbDateStruct, two: NgbDateStruct) {
+    //     return one && two && two.year === one.year && two.month === one.month && two.day === one.day;
+    // }
+    // isSelected = date => this.equals(date, this.model.startdate);
 }
 
+class HomeAwayFormControl {
+    home: FormControl;
+    away: FormControl;
+
+    constructor(
+        home: number,
+        away: number,
+        disabled?: boolean
+    ) {
+        this.home = new FormControl({ value: home, disabled: disabled === true });
+        this.away = new FormControl({ value: away, disabled: disabled === true });
+    }
+
+    getScore(): GameScoreHomeAway {
+        return new GameScoreHomeAway(this.home.value, this.away.value);
+    }
+}

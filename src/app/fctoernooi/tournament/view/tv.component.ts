@@ -339,10 +339,10 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         return this.ranking.getItems(poule.getPlaces(), poule.getGames());
     }
 
-    getGoalDifference(poulePlace: PoulePlace, games: Game[]) {
-        const nrOfGoalsScored = this.ranking.getNrOfGoalsScored(poulePlace, games);
-        const nrOfGoalsReceived = this.ranking.getNrOfGoalsReceived(poulePlace, games);
-        return (nrOfGoalsScored - nrOfGoalsReceived) + ' ( ' + nrOfGoalsScored + ' - ' + nrOfGoalsReceived + ' )';
+    getUnitDifference(poulePlace: PoulePlace, games: Game[]) {
+        const nrOfUnitsScored = this.ranking.getNrOfUnitsScored(poulePlace, games);
+        const nrOfUnitsReceived = this.ranking.getNrOfUnitsReceived(poulePlace, games);
+        return (nrOfUnitsScored - nrOfUnitsReceived) + ' ( ' + nrOfUnitsScored + ' - ' + nrOfUnitsReceived + ' )';
     }
 
     getClassPostfix(winnersOrLosers: number): string {
