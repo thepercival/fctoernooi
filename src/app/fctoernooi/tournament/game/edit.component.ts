@@ -11,6 +11,7 @@ import {
     PoulePlace,
     PoulePlaceRepository,
     QualifyService,
+    RoundConfigScore,
     StructureNameService,
     StructureRepository,
 } from 'ngx-sport';
@@ -86,6 +87,24 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         return false;
     }
 
+    getCalculateScoreDescription() {
+        const scoreConfig = this.game.getRound().getConfig().getCalculateScore();
+        let description = '';
+        if (scoreConfig.getDirection() === RoundConfigScore.UPWARDS && scoreConfig.getMaximum() > 0) {
+            description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
+        }
+        return description + scoreConfig.getName();
+    }
+
+    getInputScoreDescription() {
+        const scoreConfig = this.game.getRound().getConfig().getInputScore();
+        let description = '';
+        if (scoreConfig.getDirection() === RoundConfigScore.UPWARDS && scoreConfig.getMaximum() > 0) {
+            description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
+        }
+        return description + scoreConfig.getName();
+    }
+
     aScoreIsInvalid() {
         return this.scoreControls.some(scoreControl => !this.isScoreValid(scoreControl.getScore()));
     }
@@ -95,12 +114,39 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     isScoreEqual(score: GameScoreHomeAway): boolean {
-        return score.getHome() === score.getAway() && this.hasMultipleScoreConfigs();
+        return score.getHome() === score.getAway() && this.calculateAndInputScoreDiffers();
     }
 
-    // validScore(score, scoreConfig: RoundConfigScore) {
-    //     return !(score < 0 || (this.game.getRound().getConfig().getEnableTime() === false && score > scoreConfig.getMaximum()));
-    // }
+    getCalculateClass() {
+        const scoreConfig = this.game.getRound().getConfig().getCalculateScore();
+        if (scoreConfig.getDirection() !== RoundConfigScore.UPWARDS || scoreConfig.getMaximum() === 0) {
+            return 'is-valid';
+        }
+        const score = this.calculateScoreControl.getScore();
+        if ((score.getHome() === scoreConfig.getMaximum() && score.getAway() < score.getHome())
+            || (score.getAway() === scoreConfig.getMaximum() && score.getHome() < score.getAway())
+        ) {
+            return 'is-valid';
+        }
+        return 'is-warning';
+    }
+
+    getInputClass(inputScoreControl: HomeAwayFormControl) {
+        const score = inputScoreControl.getScore();
+        if (this.isScoreValid(score) !== true) {
+            return 'is-invalid';
+        }
+        const scoreConfig = this.game.getRound().getConfig().getInputScore();
+        if (scoreConfig.getDirection() !== RoundConfigScore.UPWARDS || scoreConfig.getMaximum() === 0) {
+            return 'is-valid';
+        }
+        if ((score.getHome() === scoreConfig.getMaximum() && score.getAway() < score.getHome())
+            || (score.getAway() === scoreConfig.getMaximum() && score.getHome() < score.getAway())
+        ) {
+            return 'is-valid';
+        }
+        return 'is-warning';
+    }
 
     setGame(gameId: number) {
         this.game = this.structureService.getGameById(gameId, this.structureService.getFirstRound());
@@ -108,7 +154,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
 
         this.customForm.controls.played.setValue(this.game.getState() === Game.STATE_PLAYED);
         this.customForm.controls.extratime.setValue(this.game.getScoresMoment() === Game.MOMENT_EXTRATIME);
-        if (this.hasMultipleScoreConfigs()) {
+        if (this.calculateAndInputScoreDiffers()) {
             this.calculateScoreControl = new HomeAwayFormControl(0, 0, true);
         }
 
@@ -138,7 +184,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     protected updateCalculateScoreControl() {
-        if (!this.hasMultipleScoreConfigs()) {
+        if (!this.calculateAndInputScoreDiffers()) {
             return;
         }
         this.calculateScoreControl.home.setValue(0);
@@ -155,7 +201,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         });
     }
 
-    setHome(scoreControl: HomeAwayFormControl, oldHome, home) {
+    setHome(scoreControl: HomeAwayFormControl, home) {
         if (this.isScoreValid(scoreControl.getScore()) && this.enablePlayedAtFirstChange === true) {
             this.customForm.controls.played.setValue(true);
         }
@@ -169,7 +215,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         this.updateCalculateScoreControl();
     }
 
-    hasMultipleScoreConfigs() {
+    calculateAndInputScoreDiffers() {
         return this.game.getRound().getConfig().getCalculateScore() !== this.game.getRound().getConfig().getInputScore();
     }
 
@@ -189,6 +235,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         if (played === false) {
             this.customForm.controls.extratime.setValue(false);
             this.initScores();
+            this.updateCalculateScoreControl();
         }
     }
 
@@ -291,13 +338,22 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         if (originalGameScores.length !== homeAwayControls.length || originalGameScores.length === 0) {
             return true;
         }
-        return homeAwayControls.some(homeAwayControl => {
+        const originalGameScoresTmp = originalGameScores.slice();
+        homeAwayControls.forEach(homeAwayControl => {
             const newHomeAwayScore = homeAwayControl.getScore();
-            return originalGameScores.find(originalGameScore => {
+            const originalGameScoreTmp = originalGameScoresTmp.find(originalGameScore => {
                 return originalGameScore.getHome() === newHomeAwayScore.getHome()
                     && originalGameScore.getAway() === newHomeAwayScore.getAway();
-            }) !== undefined;
+            });
+            if (originalGameScoreTmp === undefined) {
+                return;
+            }
+            const index = originalGameScoresTmp.indexOf(originalGameScoreTmp);
+            if (index > -1) {
+                originalGameScoresTmp.splice(index, 1);
+            }
         });
+        return originalGameScoresTmp.length > 0;
     }
 
     protected setTeams(newQualifiers: INewQualifier[], poulePlaces: PoulePlace[]): PoulePlace[] {

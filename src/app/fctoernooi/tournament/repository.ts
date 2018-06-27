@@ -39,20 +39,27 @@ export class TournamentRepository extends SportRepository {
         return this.url;
     }
 
-    getShells(startDateTime: Date, endDateTime: Date): Observable<TournamentShell[]> {
+    getShells(filter: TournamentShellFilter): Observable<TournamentShell[]> {
         const postUrl = SportConfig.getToken() === undefined ? 'public' : '';
-        let httpParams = new HttpParams();
-        httpParams = httpParams.set('startDateTime', startDateTime.toISOString());
-        httpParams = httpParams.set('endDateTime', endDateTime.toISOString());
         const options = {
             headers: super.getHeaders(),
-            params: httpParams
+            params: this.getHttpParams(filter)
         };
-
         return this.http.get<TournamentShell[]>(this.url + postUrl, options).pipe(
             map((jsonShells: TournamentShell[]) => this.jsonArrayToShell(jsonShells)),
             catchError((err) => this.handleError(err))
         );
+    }
+
+    getHttpParams(filter: TournamentShellFilter): HttpParams {
+        let httpParams = new HttpParams();
+        if (filter.minDate !== undefined) {
+            httpParams = httpParams.set('minDate', filter.minDate.toISOString());
+        }
+        if (filter.maxDate !== undefined) {
+            httpParams = httpParams.set('maxDate', filter.minDate.toISOString());
+        }
+        return httpParams;
     }
 
     getObject(id: number): Observable<Tournament> {
@@ -167,4 +174,9 @@ export interface TournamentShell {
     name: string;
     startDateTime: Date;
     editPermissions: boolean;
+}
+
+export interface TournamentShellFilter {
+    minDate?: Date;
+    maxDate?: Date;
 }

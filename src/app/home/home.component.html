@@ -9,13 +9,63 @@
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
     <div *ngIf="!processing" class="d-flex justify-content-between">
-      <!-- <button type="button" class="btn btn-sm-custom btn-outline-secondary" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
-          aria-controls="collapseFilter">
-          <fa-icon [icon]="['fas', 'filter']"></fa-icon> filter</button> -->
       <button type="button" class="btn btn-sm-custom btn-outline-primary" [routerLink]="['/toernooi/new']">
         <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon> toernooi</button>
     </div>
-    <!-- <div id="collapseFilter" class="container" [ngbCollapse]="isCollapsed">
+    <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+    <table *ngIf="!processing" class="table">
+      <tbody>
+        <tr *ngFor="let shell of tournamentShells">
+          <td *ngIf="isLoggedIn()" class="text-right">
+            <button *ngIf="shell.hasEditPermissions" type="button" [routerLink]="['/toernooi', shell.tournamentId]" routerLinkActive="active"
+              class="btn btn-sm btn-outline-primary">
+              <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+            </button>
+          </td>
+          <td class="pointer" (click)="linkToView(shell)">{{shell.startDateTime.toLocaleString("nl", {"month":"short","day":"2-digit","hour12": false,"hour":"2-digit","minute":"2-digit"}
+            )}}
+          </td>
+          <td class="d-none d-sm-table-cell pointer" (click)="linkToView(shell)">
+            <i *ngIf="iconManager.getIconType(shell.sport) === 'fi'" class="{{iconManager.getIconClass(shell.sport)}}"></i>
+            <fa-icon *ngIf="iconManager.getIconType(shell.sport) === 'fa'" [icon]="['fas', iconManager.getIconClass(shell.sport)]"></fa-icon>
+          </td>
+          <td class="pointer" (click)="linkToView(shell)">{{shell.name}}</td>
+        </tr>
+      </tbody>
+      <tbody class="mt-4">
+        <tr>
+          <td>s</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="searchShells">
+        <tr *ngFor="let shell of searchShells">
+          <td *ngIf="isLoggedIn()" class="text-right">
+            <button *ngIf="shell.hasEditPermissions" type="button" [routerLink]="['/toernooi', shell.tournamentId]" routerLinkActive="active"
+              class="btn btn-sm btn-outline-primary">
+              <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+            </button>
+          </td>
+          <td class="pointer" (click)="linkToView(shell)">{{shell.startDateTime.toLocaleString("nl", {"month":"short","day":"2-digit","hour12": false,"hour":"2-digit","minute":"2-digit"}
+            )}}
+          </td>
+          <td class="d-none d-sm-table-cell pointer" (click)="linkToView(shell)">
+            <i *ngIf="iconManager.getIconType(shell.sport) === 'fi'" class="{{iconManager.getIconClass(shell.sport)}}"></i>
+            <fa-icon *ngIf="iconManager.getIconType(shell.sport) === 'fa'" [icon]="['fas', iconManager.getIconClass(shell.sport)]"></fa-icon>
+          </td>
+          <td class="pointer" (click)="linkToView(shell)">{{shell.name}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- <button type="button" class="btn btn-sm-custom btn-outline-secondary" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
+              aria-controls="collapseFilter">
+              <fa-icon [icon]="['fas', 'filter']"></fa-icon> filter</button> -->
+<!-- <div id="collapseFilter" class="container" [ngbCollapse]="isCollapsed">
         <form (ngSubmit)="false" #f="ngForm" novalidate>
           <div *ngIf="isLoggedIn()" class="form-group row">
             <label for="inputFilterMine" class="col-9 col-form-label">toon alleen mijn toernooien</label>
@@ -39,26 +89,3 @@
           </div>
         </form>
       </div> -->
-    <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-    <table *ngIf="!processing" class="table">
-      <tbody>
-        <tr *ngFor="let shell of tournamentShells">
-          <td *ngIf="isLoggedIn()" class="text-right">
-            <button *ngIf="shell.hasEditPermissions" type="button" [routerLink]="['/toernooi', shell.tournamentId]" routerLinkActive="active"
-              class="btn btn-sm btn-outline-primary">
-              <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
-            </button>
-          </td>
-          <td class="pointer" (click)="linkToView(shell)">{{shell.startDateTime.toLocaleString("nl", {"month":"short","day":"2-digit","hour12": false,"hour":"2-digit","minute":"2-digit"}
-            )}}
-          </td>
-          <td class="d-none d-sm-table-cell pointer" (click)="linkToView(shell)">
-            <i *ngIf="iconManager.getIconType(shell.sport) === 'fi'" class="{{iconManager.getIconClass(shell.sport)}}"></i>
-            <fa-icon *ngIf="iconManager.getIconType(shell.sport) === 'fa'" [icon]="['fas', iconManager.getIconClass(shell.sport)]"></fa-icon>
-          </td>
-          <td class="pointer" (click)="linkToView(shell)">{{shell.name}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
