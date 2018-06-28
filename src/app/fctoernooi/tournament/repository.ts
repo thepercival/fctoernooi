@@ -39,8 +39,8 @@ export class TournamentRepository extends SportRepository {
         return this.url;
     }
 
-    getShells(filter: TournamentShellFilter): Observable<TournamentShell[]> {
-        const postUrl = SportConfig.getToken() === undefined ? 'public' : '';
+    getShells(filter?: TournamentShellFilter): Observable<TournamentShell[]> {
+        const postUrl = ((SportConfig.getToken() === undefined) ? 'public' : '');
         const options = {
             headers: super.getHeaders(),
             params: this.getHttpParams(filter)
@@ -51,13 +51,22 @@ export class TournamentRepository extends SportRepository {
         );
     }
 
-    getHttpParams(filter: TournamentShellFilter): HttpParams {
+    getHttpParams(filter?: TournamentShellFilter): HttpParams {
         let httpParams = new HttpParams();
+        if (filter === undefined) {
+            return httpParams;
+        }
+        if (filter.withRoles !== undefined) {
+            httpParams = httpParams.set('withRoles', filter.withRoles ? 'true' : 'false');
+        }
         if (filter.minDate !== undefined) {
             httpParams = httpParams.set('minDate', filter.minDate.toISOString());
         }
         if (filter.maxDate !== undefined) {
-            httpParams = httpParams.set('maxDate', filter.minDate.toISOString());
+            httpParams = httpParams.set('maxDate', filter.maxDate.toISOString());
+        }
+        if (filter.name !== undefined) {
+            httpParams = httpParams.set('name', filter.name);
         }
         return httpParams;
     }
@@ -179,4 +188,6 @@ export interface TournamentShell {
 export interface TournamentShellFilter {
     minDate?: Date;
     maxDate?: Date;
+    name?: string;
+    withRoles?: boolean;
 }

@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IAlert } from '../app.definitions';
 import { AuthService } from '../auth/auth.service';
 import { IconManager } from '../common/iconmanager';
-import { TournamentRepository, TournamentShell } from '../fctoernooi/tournament/repository';
+import { TournamentRepository, TournamentShell, TournamentShellFilter } from '../fctoernooi/tournament/repository';
 
 @Component({
   selector: 'app-home',
@@ -12,14 +12,15 @@ import { TournamentRepository, TournamentShell } from '../fctoernooi/tournament/
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-
-  // modelFilter: any;
   tournamentShells: TournamentShell[];
   searchShells: TournamentShell[];
   alert: IAlert;
-  // isCollapsed = true;
   processing = true;
   borderDate: Date;
+  borderDays = 14;
+  searchFilter: TournamentShellFilter;
+  processingSearch = false;
+  private hasSearched = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -29,7 +30,8 @@ export class HomeComponent implements OnInit {
     private iconManager: IconManager
   ) {
     this.borderDate = new Date();
-    this.borderDate.setDate(this.borderDate.getDate() - 14);
+    this.borderDate.setDate(this.borderDate.getDate() - this.borderDays);
+    this.searchFilter = { maxDate: this.borderDate, name: undefined };
   }
 
   ngOnInit() {
@@ -44,41 +46,37 @@ export class HomeComponent implements OnInit {
 
   setTournamentShells() {
     this.processing = true;
+    this.tournamentShells = [];
+
     this.tournamentRepos.getShells({ minDate: this.borderDate })
       .subscribe(
           /* happy path */ tournamentShellsRes => {
-          this.tournamentShells = tournamentShellsRes.sort((ts1, ts2) => {
-            return (ts1.startDateTime < ts2.startDateTime ? 1 : -1);
-          });
-          this.searchShells = this.tournamentShells;
-          this.processing = false;
+          this.tournamentShells = tournamentShellsRes;
+          this.tournamentRepos.getShells({ withRoles: true })
+            .subscribe(
+                /* happy path */ myTournamentShellsRes => {
+                myTournamentShellsRes.forEach(myShell => {
+                  if (this.tournamentShells.find(tournamentShell => tournamentShell.tournamentId === myShell.tournamentId)
+                    === undefined) {
+                    this.tournamentShells.push(myShell);
+                  }
+                });
+                this.tournamentShells = tournamentShellsRes.sort((ts1, ts2) => {
+                  return (ts1.startDateTime < ts2.startDateTime ? 1 : -1);
+                });
+              },
+                /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+                /* onComplete */() => this.processing = false
+            );
         },
-        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-        /* onComplete */() => this.processing = false
+        /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
       );
   }
+
 
   protected setAlert(type: string, message: string) {
     this.alert = { 'type': type, 'message': message };
   }
-
-  // getDate(dateStruct: NgbDateStruct): Date {
-  //   return new Date(
-  //     dateStruct.year,
-  //     dateStruct.month - 1,
-  //     dateStruct.day
-  //   );
-  // }
-
-  // getDateString(dateStruct: NgbDateStruct) {
-
-  //   const date = this.getDate(dateStruct);
-
-  //   return date ? date.toLocaleString('en', {
-  //     month: 'short',
-  //     day: '2-digit'
-  //   }) : undefined;
-  // }
 
   isLoggedIn() {
     return this.authService.isLoggedIn();
@@ -88,8 +86,18 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/toernooi/view', shell.tournamentId]);
   }
 
-  // changeFilterDate(date: NgbDateStruct) {
-  //   this.isCollapsed = true;
-  //   this.setTournamentShells();
-  // }
+  searchOlderShells() {
+    this.processingSearch = true;
+    this.hasSearched = true;
+    this.tournamentRepos.getShells(this.searchFilter)
+      .subscribe(
+          /* happy path */ tournamentShellsRes => {
+          this.searchShells = tournamentShellsRes.sort((ts1, ts2) => {
+            return (ts1.startDateTime < ts2.startDateTime ? 1 : -1);
+          });
+        },
+        /* error path */ e => { this.setAlert('danger', e); this.processingSearch = false; },
+        /* onComplete */() => this.processingSearch = false
+      );
+  }
 }

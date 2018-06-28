@@ -24,14 +24,15 @@
       }
     }
   ],
-  "version": 2,
   "dataGroups": [
     {
       "name": "api-freshness",
       "urls": [
         "https://api.fctoernooi.nl/tournaments",
+        "https://api.fctoernooi.nl/tournamentspublic",
         "https://api.fctoernooi.nl/voetbal/structures"
       ],
+      "version": 3,
       "cacheConfig": {
         "maxSize": 100,
         "maxAge": "3d",
@@ -44,6 +45,7 @@
       "urls": [
         ""
       ],
+      "version": 3,
       "cacheConfig": {
         "maxSize": 100,
         "maxAge": "3d",

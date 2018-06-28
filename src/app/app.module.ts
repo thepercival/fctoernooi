@@ -13,11 +13,13 @@ import {
   faPlus,
   faPlusCircle,
   faSave,
+  faSearch,
   faSignInAlt,
   faSignOutAlt,
   faSpinner,
   faTv,
   faUserCircle,
+  faTableTennis
 } from '@fortawesome/free-solid-svg-icons';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap/alert/alert.module';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap/collapse/collapse.module';
@@ -51,7 +53,7 @@ import { NavComponent } from './nav/nav.component';
 import { UserModule } from './user/user.module';
 
 library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave,
-  faSignInAlt, faSignOutAlt, faPlusCircle, faPlus, faTv, faFutbol);
+  faSignInAlt, faSignOutAlt, faPlusCircle, faPlus, faTv, faFutbol, faTableTennis, faSearch);
 
 @NgModule({
   declarations: [
