@@ -125,7 +125,11 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
     if (game.getState() !== Game.STATE_PLAYED) {
       return sScore;
     }
-    return game.getFinalScore().getHome() + sScore + game.getFinalScore().getAway();
+    const finalScore = game.getFinalScore();
+    if (finalScore === undefined) {
+      return sScore;
+    }
+    return finalScore.getHome() + sScore + finalScore.getAway();
   }
 
   isPlayed(game: Game): boolean {

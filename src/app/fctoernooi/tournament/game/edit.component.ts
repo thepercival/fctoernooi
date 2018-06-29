@@ -242,10 +242,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     save() {
         this.processing = true;
         this.setAlert('info', 'de wedstrijd wordt opgeslagen');
-        // let gameScore = this.game.getFinalScore();
-        // if (!gameScore) {
-        //     gameScore = new GameScore(this.game, this.model.home, this.model.away);
-        // }
+
         const moment = this.customForm.controls.extratime.value === true ? Game.MOMENT_EXTRATIME : Game.MOMENT_FULLTIME;
         const state = this.customForm.controls.played.value === true ? Game.STATE_PLAYED : Game.STATE_CREATED;
         const stateChanged = this.game.getState() !== state;

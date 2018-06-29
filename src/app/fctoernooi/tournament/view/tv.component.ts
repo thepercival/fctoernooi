@@ -1,16 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    EndRanking,
-    Game,
-    PlanningService,
-    Poule,
-    PoulePlace,
-    Ranking,
-    RankingItem,
-    Round,
-    StructureNameService,
-    StructureRepository,
+  EndRanking,
+  Game,
+  PlanningService,
+  Poule,
+  PoulePlace,
+  Ranking,
+  RankingItem,
+  Round,
+  StructureNameService,
+  StructureRepository,
 } from 'ngx-sport';
 import { Subscription, timer } from 'rxjs';
 
@@ -332,7 +332,11 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         if (game.getState() !== Game.STATE_PLAYED) {
             return sScore;
         }
-        return game.getFinalScore().getHome() + sScore + game.getFinalScore().getAway();
+        const finalScore = game.getFinalScore();
+        if (finalScore === undefined) {
+            return sScore;
+        }
+        return finalScore.getHome() + sScore + finalScore.getAway();
     }
 
     getRankingItems(poule: Poule): RankingItem[] {

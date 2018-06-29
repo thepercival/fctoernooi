@@ -52,22 +52,26 @@ export class HomeComponent implements OnInit {
       .subscribe(
           /* happy path */ tournamentShellsRes => {
           this.tournamentShells = tournamentShellsRes;
-          this.tournamentRepos.getShells({ withRoles: true })
-            .subscribe(
+          if (this.authService.isLoggedIn()) {
+            this.tournamentRepos.getShells({ withRoles: true })
+              .subscribe(
                 /* happy path */ myTournamentShellsRes => {
-                myTournamentShellsRes.forEach(myShell => {
-                  if (this.tournamentShells.find(tournamentShell => tournamentShell.tournamentId === myShell.tournamentId)
-                    === undefined) {
-                    this.tournamentShells.push(myShell);
-                  }
-                });
-                this.tournamentShells = tournamentShellsRes.sort((ts1, ts2) => {
-                  return (ts1.startDateTime < ts2.startDateTime ? 1 : -1);
-                });
-              },
+                  myTournamentShellsRes.forEach(myShell => {
+                    if (this.tournamentShells.find(tournamentShell => tournamentShell.tournamentId === myShell.tournamentId)
+                      === undefined) {
+                      this.tournamentShells.push(myShell);
+                    }
+                  });
+                  this.tournamentShells = tournamentShellsRes.sort((ts1, ts2) => {
+                    return (ts1.startDateTime < ts2.startDateTime ? 1 : -1);
+                  });
+                },
                 /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
                 /* onComplete */() => this.processing = false
-            );
+              );
+          } else {
+            this.processing = false;
+          }
         },
         /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
       );

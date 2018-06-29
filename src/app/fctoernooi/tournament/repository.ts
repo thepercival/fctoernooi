@@ -56,7 +56,7 @@ export class TournamentRepository extends SportRepository {
         if (filter === undefined) {
             return httpParams;
         }
-        if (filter.withRoles !== undefined) {
+        if (filter.withRoles !== undefined && SportConfig.getToken() !== undefined) {
             httpParams = httpParams.set('withRoles', filter.withRoles ? 'true' : 'false');
         }
         if (filter.minDate !== undefined) {
