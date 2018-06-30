@@ -99,6 +99,10 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         this.processing = false;
     }
 
+    canChangeMinutesAfter(roundNumber: number): boolean {
+        return this.allRoundsByNumber[roundNumber + 1] !== undefined && this.planningService.hasGames(roundNumber + 1);
+    }
+
     changeRoundNumber(roundNumber: number) {
         this.roundNumber = roundNumber;
         this.modelConfig = cloneDeep(this.getFirstRoundOfRoundNumber(this.roundNumber).getConfig());
@@ -212,8 +216,8 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         }
     }
 
-    setMinutesInBetween(minutesInBetween) {
-        this.modelConfig.setMinutesInBetween(minutesInBetween);
+    setMinutesAfter(minutesAfter) {
+        this.modelConfig.setMinutesAfter(minutesAfter);
         if (this.modelConfig.getEnableTime()) {
             this.modelReschedule = true;
             // this.tournament.reschedule(new PlanningService(this.structureService), this.roundNumber);
@@ -231,8 +235,8 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             if (this.modelConfig.getMinutesBetweenGames() === 0) {
                 this.modelConfig.setMinutesBetweenGames(this.roundConfigService.getDefaultMinutesBetweenGames());
             }
-            if (this.modelConfig.getMinutesInBetween() === 0) {
-                this.modelConfig.setMinutesInBetween(this.roundConfigService.getDefaultMinutesInBetween());
+            if (this.modelConfig.getMinutesAfter() === 0) {
+                this.modelConfig.setMinutesAfter(this.roundConfigService.getDefaultMinutesAfter());
             }
         }
         this.modelConfig.setEnableTime(enableTime);
@@ -336,7 +340,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             round.getConfig().setEnableTime(modelToUpdateWith.getEnableTime());
             round.getConfig().setMinutesPerGame(modelToUpdateWith.getMinutesPerGame());
             round.getConfig().setMinutesBetweenGames(modelToUpdateWith.getMinutesBetweenGames());
-            round.getConfig().setMinutesInBetween(modelToUpdateWith.getMinutesInBetween());
+            round.getConfig().setMinutesAfter(modelToUpdateWith.getMinutesAfter());
             this.updateRoundConfigScore(round.getConfig().getScore(), modelToUpdateWith.getScore());
         });
         if (this.allRoundsByNumber[roundNumber + 1] !== undefined) {

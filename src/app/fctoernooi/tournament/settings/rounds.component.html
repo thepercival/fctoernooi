@@ -143,11 +143,11 @@
                                 class="form-control" required>
                         </div>
                     </div>
-                    <div *ngIf="modelConfig.getEnableTime()" class="form-group row">
-                        <label for="minutesinbetween" class="col-8 col-form-label">minuten voor de ronde</label>
+                    <div *ngIf="modelConfig.getEnableTime() && canChangeMinutesAfter(roundNumber)" class="form-group row">
+                        <label for="minutesafter" class="col-8 col-form-label">minuten pauze na de ronde</label>
                         <div class="col-4">
-                            <input type="number" [maxlength]="3" [ngModel]="modelConfig.getMinutesInBetween()" (ngModelChange)="setMinutesInBetween($event)"
-                                id="minutesinbetween" name="minutesinbetween" class="form-control" required>
+                            <input type="number" [maxlength]="3" [ngModel]="modelConfig.getMinutesAfter()" (ngModelChange)="setMinutesAfter($event)"
+                                id="minutesafter" name="minutesafter" class="form-control" required>
                         </div>
                     </div>
 
