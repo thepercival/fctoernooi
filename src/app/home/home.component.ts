@@ -70,6 +70,9 @@ export class HomeComponent implements OnInit {
                 /* onComplete */() => this.processing = false
               );
           } else {
+            this.tournamentShells = tournamentShellsRes.sort((ts1, ts2) => {
+              return (ts1.startDateTime < ts2.startDateTime ? 1 : -1);
+            });
             this.processing = false;
           }
         },
