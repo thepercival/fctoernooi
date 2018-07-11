@@ -9,7 +9,12 @@
           </button>
         </h1>
       </div>
-      <p class="text-info">Elke minuut worden de uitslagen op deze pagina automatisch bijgewerkt.</p>
+      <div class="d-flex justify-content-between">
+        <p class="text-info">
+          Elke minuut worden de uitslagen op deze pagina automatisch bijgewerkt.
+        </p>
+        <app-progress [value]="progress"></app-progress>
+      </div>
       <div>
         <h2 *ngIf="processing" align="center">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>

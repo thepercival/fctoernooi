@@ -79,6 +79,17 @@ input.is-warning {
     color: white;
 }
 
+.progress {
+  background-color:#{$body-bg};
+}
+
+.progress__value {
+  stroke: #{$info};
+}
+.progress__meter {
+  stroke: #{$body-bg};
+}
+
 .pointer {
   cursor: pointer;
 }

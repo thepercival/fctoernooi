@@ -1,0 +1,9 @@
+<div class="progress" [style.height.px]="length">
+    <svg class="progress__svg" [attr.width.px]="length" [attr.height.px]="length">
+        <circle class="progress__meter" [attr.cx]="length / 2" [attr.cy]="length / 2" [attr.r]="radius" [style.strokeWidth]="strokeWidth"
+        />
+        <circle class="progress__value" [style.strokeDasharray]="circumference" [style.strokeDashoffset]="dashoffset" [attr.cx]="length / 2"
+            [attr.cy]="length / 2" [attr.r]="radius" [style.strokeWidth]="strokeWidth" />
+    </svg>
+    <div *ngIf="value" class="progress__value-text text-info">{{getSeconds()}}S</div>
+</div>

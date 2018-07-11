@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlanningService, StructureRepository } from 'ngx-sport';
-import { Subscription, timer } from 'rxjs';
+import { interval, range, Subscription, zip } from 'rxjs';
 
 import { AuthService } from '../../../auth/auth.service';
 import { GlobalEventsManager } from '../../../common/eventmanager';
@@ -12,17 +12,18 @@ import { TournamentRepository } from '../repository';
 @Component({
     selector: 'app-tournament-view',
     templateUrl: './view.component.html',
-    styleUrls: ['./view.component.css']
+    styleUrls: ['./view.component.scss']
 })
 export class TournamentViewComponent extends TournamentComponent implements OnInit, OnDestroy {
     private tvViewLinkSet = false;
     private planningService: PlanningService;
     private timerSubscription: Subscription;
-    private noRefresh = false;
+    private refreshAtCountDown = true;
     private favTeamIds: number[];
     private favRefereeIds: number[];
     scrollTo: any = {};
     userRefereeId: number;
+    progress: number;
 
     constructor(
         route: ActivatedRoute,
@@ -53,19 +54,27 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
             this.scrollTo.roundNumber = +params.get('scrollToRoundNumber');
         });
 
-        this.timerSubscription = timer(60000, 60000).subscribe(number => {
-            if (this.noRefresh !== true) {
-                this.processing = true;
-                this.setData(this.tournament.getId(), () => {
-                    this.planningService = new PlanningService(this.structureService);
-                    this.processing = false;
-                });
-            }
-        });
+        this.countDown();
     }
 
-    setNoRefresh(toggle) {
-        this.noRefresh = toggle;
+    countDown() {
+        const progress = range(1, 60).pipe();
+        zip(interval(1000), progress)
+            .subscribe(fromTo => {
+                this.progress = fromTo[1];
+                if (this.progress === 60) {
+                    if (this.refreshAtCountDown === true) {
+                        this.setData(this.tournament.getId(), () => {
+                            this.planningService = new PlanningService(this.structureService);
+                        });
+                    }
+                    this.countDown();
+                }
+            });
+    }
+
+    setNoRefresh(refresh) {
+        this.refreshAtCountDown = refresh;
     }
 
     initTVViewLink() {

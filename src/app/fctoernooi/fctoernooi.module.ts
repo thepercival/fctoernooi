@@ -56,6 +56,7 @@ import { TournamentFilterComponent } from './tournament/filter/filter.component'
 import { TournamentGameEditComponent } from './tournament/game/edit.component';
 import { GameListComponent } from './tournament/game/list.component';
 import { TournamentHomeComponent } from './tournament/home/home.component';
+import { ProgressComponent } from './tournament/home/progress.component';
 import { TournamentNewComponent } from './tournament/new/new.component';
 import { TournamentPlanningViewComponent } from './tournament/planning/view/component';
 import { TournamentEndRankingViewComponent } from './tournament/ranking/end/component';
@@ -109,6 +110,7 @@ library.add(
     TournamentRefereeEditComponent,
     TournamentSponsorEditComponent,
     TournamentFilterComponent,
+    ProgressComponent,
     EscapeHtmlPipe
   ],
   providers: [
