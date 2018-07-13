@@ -9,8 +9,8 @@
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
     <div *ngIf="!processing" class="d-flex justify-content-between">
-      <button type="button" class="btn btn-sm-custom btn-outline-primary" [routerLink]="['/toernooi/new']">
-        <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon> toernooi</button>
+      <button type="button" class="btn btn-outline-primary mb-3" [routerLink]="['/toernooi/new']">
+        <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon> toernooi opzetten</button>
     </div>
     <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
     <table *ngIf="!processing" class="table">
