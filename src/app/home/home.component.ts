@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
   alert: IAlert;
   processing = true;
   borderDate: Date;
-  borderDays = 14;
+  borderDays = 28;
   searchFilter: TournamentShellFilter;
   processingSearch = false;
   private hasSearched = false;
