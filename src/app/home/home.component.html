@@ -9,7 +9,7 @@
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
     <div *ngIf="!processing" class="d-flex justify-content-between">
-      <button type="button" class="btn btn-outline-primary mb-3" [routerLink]="['/toernooi/new']">
+      <button name="btn-create-tournament" type="button" class="btn btn-outline-primary mb-3" [routerLink]="['/toernooi/new']">
         <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon> toernooi opzetten</button>
     </div>
     <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
@@ -18,7 +18,7 @@
         <tr *ngFor="let shell of tournamentShells">
           <td *ngIf="isLoggedIn()" class="text-right">
             <button *ngIf="shell.hasEditPermissions" type="button" [routerLink]="['/toernooi', shell.tournamentId]" routerLinkActive="active"
-              class="btn btn-sm btn-outline-primary">
+              class="btn btn-sm btn-outline-primary" name="btn-change-tournament">
               <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
             </button>
           </td>
@@ -43,7 +43,8 @@
       </h2>
       <div class="row mb-2" *ngIf="!processingSearch">
         <div class="col-2 col-sm-4 text-right">
-          <button type="button" class="btn btn-outline-primary" [disabled]="!(searchFilter.name && searchFilter.name.length > 2)" (click)="searchOlderShells()">
+          <button type="button" name="btn-search-tournaments" class="btn btn-outline-primary" [disabled]="!(searchFilter.name && searchFilter.name.length > 2)"
+            (click)="searchOlderShells()">
             <fa-icon [icon]="['fas', 'search']"></fa-icon>
           </button>
         </div>
@@ -61,7 +62,7 @@
           <tr *ngFor="let shell of searchShells">
             <td *ngIf="isLoggedIn()" class="text-right">
               <button *ngIf="shell.hasEditPermissions" type="button" [routerLink]="['/toernooi', shell.tournamentId]" routerLinkActive="active"
-                class="btn btn-sm btn-outline-primary">
+                class="btn btn-sm btn-outline-primary" name="btn-change-tournament">
                 <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
               </button>
             </td>
