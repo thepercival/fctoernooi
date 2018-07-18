@@ -27,6 +27,7 @@ import {
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap/alert/alert.module';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap/collapse/collapse.module';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap/modal/modal.module';
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap/popover/popover.module';
 import { NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap/timepicker/timepicker.module';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
@@ -66,11 +67,11 @@ import { TournamentRoleRepository } from './tournament/role/repository';
 import { RoundsSettingsComponent } from './tournament/settings/rounds.component';
 import { TournamentSponsorEditComponent } from './tournament/sponsor/edit.component';
 import { SponsorListComponent } from './tournament/sponsor/list.component';
+import { TournamentStructureHelpModalComponent } from './tournament/structure/helpmodal.component';
 import { TournamentStructureComponent } from './tournament/structure/main.component';
 import { TournamentStructureRoundComponent } from './tournament/structure/round.component';
 import { TournamentViewTvComponent } from './tournament/view/tv.component';
 import { TournamentViewComponent } from './tournament/view/view.component';
-
 
 library.add(
   faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus,
@@ -83,7 +84,7 @@ library.add(
     CommonModule,
     FormsModule,
     FctoernooiRoutingModule,
-    NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule,
+    NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule.forRoot(),
     NouisliderModule,
     ReactiveFormsModule,
     ScrollToModule.forRoot(),
@@ -110,9 +111,11 @@ library.add(
     TournamentRefereeEditComponent,
     TournamentSponsorEditComponent,
     TournamentFilterComponent,
+    TournamentStructureHelpModalComponent,
     ProgressComponent,
     EscapeHtmlPipe
   ],
+  entryComponents: [TournamentStructureHelpModalComponent],
   providers: [
     TournamentRoleRepository,
     StructureRepository,

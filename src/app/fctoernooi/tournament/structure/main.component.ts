@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { cloneDeep } from 'lodash';
 import {
   PlanningRepository,
@@ -15,6 +16,7 @@ import { Tournament } from '../../tournament';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
 import { TournamentService } from '../service';
+import { TournamentStructureHelpModalComponent } from './helpmodal.component';
 
 @Component({
   selector: 'app-tournament-structure',
@@ -25,13 +27,21 @@ export class TournamentStructureComponent extends TournamentComponent implements
   changedRoundNumber;
   originalTeams: Team[];
 
+  uiSliderConfigExample: any = {
+    behaviour: 'drag',
+    margin: 1,
+    step: 1,
+    start: 1
+  };
+
   constructor(
     route: ActivatedRoute,
     router: Router,
     tournamentRepository: TournamentRepository,
     structureRepository: StructureRepository,
     private planningRepository: PlanningRepository,
-    private teamRepository: TeamRepository
+    private teamRepository: TeamRepository,
+    private modalService: NgbModal
   ) {
     super(route, router, tournamentRepository, structureRepository);
   }
@@ -40,6 +50,10 @@ export class TournamentStructureComponent extends TournamentComponent implements
     super.myNgOnInit(() => {
       this.structureService = this.createStructureServiceCopy(this.structureService.getFirstRound());
       this.processing = false;
+      console.log(this.isHelpModalShownOnDevice());
+      if (this.isHelpModalShownOnDevice() === false) {
+        this.openHelp();
+      }
     });
   }
 
@@ -139,5 +153,25 @@ export class TournamentStructureComponent extends TournamentComponent implements
     this.changedRoundNumber = undefined;
     this.processing = false;
     this.setAlert('success', 'de wijzigingen zijn opgeslagen');
+  }
+
+  isHelpModalShownOnDevice() {
+    let helpModalShownOnDevice = localStorage.getItem('helpmodalshown');
+    if (helpModalShownOnDevice === null) {
+      helpModalShownOnDevice = 'false';
+    }
+    return JSON.parse(helpModalShownOnDevice);
+  }
+
+  helpModalShownOnDevice() {
+    localStorage.setItem('helpmodalshown', JSON.stringify(true));
+  }
+
+  openHelp() {
+    this.modalService.open(TournamentStructureHelpModalComponent).result.then((result) => {
+      this.helpModalShownOnDevice();
+    }, (reason) => {
+      this.helpModalShownOnDevice();
+    });
   }
 }
