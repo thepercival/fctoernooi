@@ -90,6 +90,7 @@ export class HomeComponent implements OnInit {
   }
 
   linkToView(shell: TournamentShell) {
+    this.processing = true;
     this.router.navigate(['/toernooi/view', shell.tournamentId]);
   }
 

@@ -1,13 +1,10 @@
 @import './mixins';
 
 @import "./bootswatch/variables";
+$secondary:     $gray-500;
 $popover-border-color:                #fff;
 $popover-max-width:                 300px;
 @import "~bootstrap/scss/bootstrap";
-$btn-secondary-border:           #fff;
-
-// @import './variables';
-
 @import "./bootswatch/bootswatch";
 
 hr {
@@ -16,10 +13,6 @@ hr {
 
 .table th {
   border-top-width: 0px;
-}
-
-.btn-outline-secondary:hover {
-  background-color: lighten($gray-500, 10%);
 }
 
 @import "./nouislider/scss/nouislider";
@@ -113,6 +106,7 @@ ngb-alert {
   vertical-align: middle;
   margin: 0 0;
   box-shadow: none; 
+  cursor: pointer;
 }
 
 .custom-checkbox .custom-control-indicator:after {

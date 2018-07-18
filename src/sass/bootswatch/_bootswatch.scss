@@ -1,4 +1,4 @@
-// Cyborg 4.0.0
+// Cyborg 4.1.2
 // Bootswatch
 
 
@@ -113,8 +113,7 @@ table {
 
 // Forms =======================================================================
 
-legend,
-.input-group-addon {
+legend {
   color: #fff;
 }
 
@@ -170,6 +169,14 @@ legend,
       background-color: $value;
     }
   }
+
+  &-light {
+    &,
+    & a,
+    & .alert-link {
+      color: $body-bg;
+    }
+  }
 }
 
 .badge {
@@ -212,7 +219,7 @@ legend,
 .card,
 .list-group-item {
   h1, h2, h3, h4, h5, h6 {
-    color: #fff;
+    color: inherit;
   }
 }
 

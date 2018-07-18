@@ -111,17 +111,16 @@ export class TournamentStructureRoundComponent {
     return winnersOrLosers === Round.WINNERS ? 'success' : (winnersOrLosers === Round.LOSERS ? 'danger' : '');
   }
 
-  getClassesForPoulePlace(poulePlace: PoulePlace): string {
+  getClassForPoulePlace(poulePlace: PoulePlace): string {
     const rules = poulePlace.getToQualifyRules();
     if (rules.length === 2) {
       return 'bg-warning text-white';
     } else if (rules.length === 1) {
       const qualifyRule = rules[0];
       const singleColor = this.getClassPostfix(qualifyRule.getWinnersOrLosers());
-      const bgClass = 'bg-' + (qualifyRule.getFromPoulePlaces().length === qualifyRule.getToPoulePlaces().length ? singleColor : 'warning');
-      return bgClass + ' ' + 'text-white';
+      return 'text-' + (qualifyRule.getFromPoulePlaces().length === qualifyRule.getToPoulePlaces().length ? singleColor : 'warning');
     }
-    return 'bg-not-qualifying';
+    return '';
   }
 
   protected resetAlert(): void {
