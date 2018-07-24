@@ -114,7 +114,7 @@ export class TournamentStructureRoundComponent {
   getClassForPoulePlace(poulePlace: PoulePlace): string {
     const rules = poulePlace.getToQualifyRules();
     if (rules.length === 2) {
-      return 'bg-warning text-white';
+      return 'text-warning';
     } else if (rules.length === 1) {
       const qualifyRule = rules[0];
       const singleColor = this.getClassPostfix(qualifyRule.getWinnersOrLosers());

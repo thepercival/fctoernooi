@@ -34,14 +34,14 @@
       </tbody>
     </table>
 
-    <div *ngIf="!processing">
+    <div *ngIf="!processing container">
       <h2 align="center">
         toernooien ouder dan {{borderDays}} dagen
       </h2>
       <h2 *ngIf="processingSearch" align="center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
-      <div class="row mb-2" *ngIf="!processingSearch">
+      <div class="row mb-2 no-gutters" *ngIf="!processingSearch">
         <div class="col-2 col-sm-4 text-right">
           <button type="button" name="btn-search-tournaments" class="btn btn-outline-primary" [disabled]="!(searchFilter.name && searchFilter.name.length > 2)"
             (click)="searchOlderShells()">
@@ -49,7 +49,7 @@
           </button>
         </div>
         <div class="col-10 col-sm-8">
-          <input type="text" class="form-control form-control-search-name" [(ngModel)]="searchFilter.name" placeholder="naam (min. 3 kar.)">
+          <input type="text" class="form-control form-control-search-name ml-3" [(ngModel)]="searchFilter.name" placeholder="naam (min. 3 kar.)">
         </div>
       </div>
       <table *ngIf="!processingSearch && searchShells" class="table mt-3">
@@ -69,7 +69,7 @@
             <td class="pointer" (click)="linkToView(shell)">{{shell.startDateTime.toLocaleString("nl", {"month":"short","day":"2-digit","hour12": false,"hour":"2-digit","minute":"2-digit"}
               )}}
             </td>
-            <td class="pointer" (click)="linkToView(shell)">
+            <td class="d-none d-sm-table-cell pointer" (click)="linkToView(shell)">
               <i *ngIf="iconManager.getIconType(shell.sport) === 'fi'" class="{{iconManager.getIconClass(shell.sport)}}"></i>
               <fa-icon *ngIf="iconManager.getIconType(shell.sport) === 'fa'" [icon]="['fas', iconManager.getIconClass(shell.sport)]"></fa-icon>
             </td>
