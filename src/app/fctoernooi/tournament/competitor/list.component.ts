@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import { PoulePlace, PoulePlaceRepository, StructureNameService, StructureRepository, TeamRepository } from 'ngx-sport';
@@ -15,6 +15,9 @@ import { TournamentRepository } from '../repository';
   styleUrls: ['./list.component.css']
 })
 export class CompetitorListComponent extends TournamentComponent implements OnInit, AfterViewChecked {
+
+  @ViewChild('tablecomp') private elementRef: ElementRef;
+
   poulePlaces: PoulePlace[];
   alert: IAlert;
   poulePlaceToSwap: PoulePlace;
@@ -55,6 +58,20 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
         duration: 200
       });
       this.scrollToId = undefined;
+      // this.elementRef.nativeElement.focus();
+      // console.log(this.elementRef.nativeElement);
+      // // console.log();
+      // const nodeList = this.elementRef.nativeElement.querySelectorAll('tr');
+      // let focusOnNext = false;
+      // nodeList.forEach(tr => {
+      //   if (focusOnNext) {
+      //     tr..items
+      //   }
+      //   if (tr.id === this.scrollToId) {
+      //     focusOnNext = true;
+      //   }
+      // });
+      // this.elementRef.nativeElement.forEach(tr => console.log(tr));
     }
   }
 

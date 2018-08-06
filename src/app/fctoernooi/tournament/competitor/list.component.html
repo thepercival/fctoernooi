@@ -18,43 +18,47 @@
     </div>
     <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">
       {{ alert.message }}</ngb-alert>
-    <table *ngIf="!processing" class="table">
-      <thead>
-        <tr>
-          <th></th>
-          <th>plek</th>
-          <th>naam</th>
-          <th class="text-center">
-            <button *ngIf="!isStarted() && allPoulePlaceHaveTeam()" type="button" class="btn btn-sm btn-outline-primary" (click)="swapAll()"
-              [disabled]="processing || poulePlaceToSwap !== undefined" title="willekeurige volgorde">
-              <fa-icon [icon]="['fas', 'random']"></fa-icon>
-            </button>
-            <fa-icon *ngIf="!isStarted() && !allPoulePlaceHaveTeam()" title="volgorder omwisselen" [icon]="['fas', 'sort']"></fa-icon>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let poulePlace of poulePlaces">
-          <td id="scroll-pouleplace-{{poulePlace.getId()}}">
-            <button type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || poulePlaceToSwap !== undefined" (click)="editPoulePlace(poulePlace)">
-              <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
-            </button>
-          </td>
-          <td>
-            <span>{{nameService.getPoulePlaceName(poulePlace, false)}}</span>
-          </td>
-          <td *ngIf="poulePlace.getTeam()">
-            <span>{{poulePlace.getTeam().getName()}}</span>
-          </td>
-          <td *ngIf="poulePlace.getTeam()" class="text-center">
-            <fa-icon *ngIf="!isStarted() && atLeastTwoPoulePlaceHaveTeam()" class="text-primary pointer" (click)="swapTwo(poulePlace)"
-              [icon]="['far', (poulePlaceToSwap === poulePlace ? 'check-' : '') + 'square']" size="2x"></fa-icon>
-          </td>
-          <td colspan=2 *ngIf="!poulePlace.getTeam()">
-            <span class="badge badge-danger">vul een naam in</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <form>
+      <table *ngIf="!processing" class="table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>plek</th>
+            <th>naam</th>
+            <th class="text-center">
+              <button *ngIf="!isStarted() && allPoulePlaceHaveTeam()" type="button" class="btn btn-sm btn-outline-primary" (click)="swapAll()"
+                [disabled]="processing || poulePlaceToSwap !== undefined" title="willekeurige volgorde">
+                <fa-icon [icon]="['fas', 'random']"></fa-icon>
+              </button>
+              <fa-icon *ngIf="!isStarted() && !allPoulePlaceHaveTeam()" title="volgorder omwisselen" [icon]="['fas', 'sort']"></fa-icon>
+            </th>
+          </tr>
+        </thead>
+        <tbody #tablecomp>
+          <tr *ngFor="let poulePlace of poulePlaces; let index=index">
+            <td id="scroll-pouleplace-{{poulePlace.getId()}}">
+              <button [attr.tabindex]="index + 1" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || poulePlaceToSwap !== undefined"
+                (click)="editPoulePlace(poulePlace)">
+                <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+              </button>
+            </td>
+            <td>
+              <span>{{nameService.getPoulePlaceName(poulePlace, false)}}</span>
+            </td>
+            <td *ngIf="poulePlace.getTeam()">
+              <span>{{poulePlace.getTeam().getName()}}</span>
+            </td>
+            <td *ngIf="poulePlace.getTeam()" class="text-center">
+              <fa-icon *ngIf="!isStarted() && atLeastTwoPoulePlaceHaveTeam()" class="text-primary pointer" (click)="swapTwo(poulePlace)"
+                [icon]="['far', (poulePlaceToSwap === poulePlace ? 'check-' : '') + 'square']" size="2x"></fa-icon>
+            </td>
+            <td colspan=2 *ngIf="!poulePlace.getTeam()">
+              <span class="badge badge-danger">vul een naam in</span>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </form>
   </div>
 </div>
