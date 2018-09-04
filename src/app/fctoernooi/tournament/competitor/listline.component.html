@@ -1,6 +1,5 @@
 <td id="scroll-pouleplace-{{poulePlace.getId()}}">
-  <button #btnEdit type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || poulePlaceToSwap !== undefined"
-    (click)="edit()">
+  <button #btnEdit type="button" class="btn btn-sm btn-outline-primary" [disabled]="poulePlaceToSwap !== undefined" (click)="edit()">
     <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
   </button>
 </td>

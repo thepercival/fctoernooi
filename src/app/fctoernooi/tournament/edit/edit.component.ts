@@ -105,7 +105,6 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
 
         if (breakX === true) {
             const date = this.tournament.getCompetition().getStartDateTime();
-            console.log(date);
             if (breakDateTime === undefined) {
                 breakDateTime = new Date(date.getTime());
                 breakDateTime.setHours(date.getHours() + 2);
