@@ -51,6 +51,7 @@ import { IconManager } from '../common/iconmanager';
 import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
 import { TournamentCompetitorEditComponent } from './tournament/competitor/edit.component';
 import { CompetitorListComponent } from './tournament/competitor/list.component';
+import { CompetitorListLineComponent } from './tournament/competitor/listline.component';
 import { TournamentEditComponent } from './tournament/edit/edit.component';
 import { FieldListComponent } from './tournament/field/list.component';
 import { TournamentFilterComponent } from './tournament/filter/filter.component';
@@ -100,6 +101,7 @@ library.add(
     TournamentPlanningViewComponent,
     TournamentEndRankingViewComponent,
     CompetitorListComponent,
+    CompetitorListLineComponent,
     RefereeListComponent,
     SponsorListComponent,
     TournamentCompetitorEditComponent,

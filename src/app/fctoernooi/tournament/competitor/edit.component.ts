@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -20,13 +20,16 @@ import { TournamentRepository } from '../repository';
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css']
 })
-export class TournamentCompetitorEditComponent extends TournamentComponent implements OnInit {
+export class TournamentCompetitorEditComponent extends TournamentComponent implements OnInit, AfterViewChecked {
     returnUrl: string;
     returnUrlParam: number;
     // returnUrlQueryParamKey: string;
     // returnUrlQueryParamValue: string;
     customForm: FormGroup;
     poulePlace: PoulePlace;
+    private focused = false;
+
+    @ViewChild('inputname') private elementRef: ElementRef;
 
     validations: TeamValidations = {
         minlengthname: Team.MIN_LENGTH_NAME,
@@ -90,6 +93,13 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
         this.customForm.controls.name.setValue(this.poulePlace.getTeam() ? this.poulePlace.getTeam().getName() : undefined);
         this.customForm.controls.info.setValue(this.poulePlace.getTeam() ? this.poulePlace.getTeam().getInfo() : undefined);
         this.processing = false;
+    }
+
+    ngAfterViewChecked() {
+        if (this.poulePlace !== undefined && this.poulePlace.getTeam() === undefined && this.focused === false) {
+            this.focused = true;
+            this.elementRef.nativeElement.focus();
+        }
     }
 
     save() {

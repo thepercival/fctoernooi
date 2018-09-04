@@ -1,12 +1,4 @@
-.input-teamname {
-    padding: 0.5rem 0.75rem;
-    max-width: 150px;
-}
-
-input.ng-valid[required],select.ng-valid[required] {
-    border-left: 5px solid #42A948; /* green */
-}
-
-input.ng-invalid, select.ng-invalid {
-    border-left: 5px solid #a94442; /* red */
+app-tournament-competitor-line {
+    display:table-row; 
+    box-sizing:inherit;
 }

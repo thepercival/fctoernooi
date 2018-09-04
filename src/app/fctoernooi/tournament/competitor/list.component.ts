@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import { PoulePlace, PoulePlaceRepository, StructureNameService, StructureRepository, TeamRepository } from 'ngx-sport';
@@ -16,12 +16,12 @@ import { TournamentRepository } from '../repository';
 })
 export class CompetitorListComponent extends TournamentComponent implements OnInit, AfterViewChecked {
 
-  @ViewChild('tablecomp') private elementRef: ElementRef;
-
   poulePlaces: PoulePlace[];
   alert: IAlert;
   poulePlaceToSwap: PoulePlace;
   scrollToId: number;
+  focusId: number;
+  showSwap: boolean;
 
   constructor(
     route: ActivatedRoute,
@@ -47,7 +47,13 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
 
   initPoulePlaces() {
     const round = this.structureService.getFirstRound();
+    round.getPoulePlaces().forEach(poulePlace => {
+      if (poulePlace.getTeam() === undefined && this.focusId === undefined) {
+        this.focusId = poulePlace.getId();
+      }
+    });
     this.poulePlaces = round.getPoulePlaces();
+    this.showSwap = !this.isStarted() && this.atLeastTwoPoulePlaceHaveTeam();
     this.processing = false;
   }
 
@@ -58,20 +64,6 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
         duration: 200
       });
       this.scrollToId = undefined;
-      // this.elementRef.nativeElement.focus();
-      // console.log(this.elementRef.nativeElement);
-      // // console.log();
-      // const nodeList = this.elementRef.nativeElement.querySelectorAll('tr');
-      // let focusOnNext = false;
-      // nodeList.forEach(tr => {
-      //   if (focusOnNext) {
-      //     tr..items
-      //   }
-      //   if (tr.id === this.scrollToId) {
-      //     focusOnNext = true;
-      //   }
-      // });
-      // this.elementRef.nativeElement.forEach(tr => console.log(tr));
     }
   }
 

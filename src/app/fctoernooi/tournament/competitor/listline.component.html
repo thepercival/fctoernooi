@@ -1,0 +1,19 @@
+<td id="scroll-pouleplace-{{poulePlace.getId()}}">
+  <button #btnEdit [attr.tabindex]="index + 1" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || poulePlaceToSwap !== undefined"
+    (click)="edit()">
+    <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+  </button>
+</td>
+<td>
+  <span>{{nameService.getPoulePlaceName(poulePlace, false)}}</span>
+</td>
+<td *ngIf="poulePlace.getTeam()">
+  <span>{{poulePlace.getTeam().getName()}}</span>
+</td>
+<td *ngIf="poulePlace.getTeam()" class="text-center">
+  <fa-icon *ngIf="showSwap" class="text-primary pointer" (click)="swapTwo()" [icon]="['far', (poulePlaceToSwap === poulePlace ? 'check-' : '') + 'square']"
+    size="2x"></fa-icon>
+</td>
+<td colspan=2 *ngIf="!poulePlace.getTeam()">
+  <span class="badge badge-danger">vul een naam in</span>
+</td>
