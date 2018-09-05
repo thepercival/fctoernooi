@@ -6,9 +6,12 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
+  faCopyright,
+  faEnvelope,
   faFilter,
   faFutbol,
   faLevelUpAlt,
+  faMobileAlt,
   faPencilAlt,
   faPlus,
   faPlusCircle,
@@ -17,10 +20,13 @@ import {
   faSignInAlt,
   faSignOutAlt,
   faSpinner,
+  faTableTennis,
   faTv,
-  faUserCircle,
-  faTableTennis
+  faUserCircle
 } from '@fortawesome/free-solid-svg-icons';
+import {
+  faTwitter
+} from '@fortawesome/free-brands-svg-icons';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap/alert/alert.module';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap/collapse/collapse.module';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
@@ -53,7 +59,8 @@ import { NavComponent } from './nav/nav.component';
 import { UserModule } from './user/user.module';
 
 library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave,
-  faSignInAlt, faSignOutAlt, faPlusCircle, faPlus, faTv, faFutbol, faTableTennis, faSearch);
+  faSignInAlt, faSignOutAlt, faPlusCircle, faPlus, faTv, faFutbol, faTableTennis, faSearch,
+  faMobileAlt, faEnvelope, faTwitter, faCopyright);
 
 @NgModule({
   declarations: [
