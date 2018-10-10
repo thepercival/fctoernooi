@@ -50,7 +50,6 @@ export class TournamentStructureComponent extends TournamentComponent implements
     super.myNgOnInit(() => {
       this.structureService = this.createStructureServiceCopy(this.structureService.getFirstRound());
       this.processing = false;
-      console.log(this.isHelpModalShownOnDevice());
       if (this.isHelpModalShownOnDevice() === false) {
         this.openHelp();
       }

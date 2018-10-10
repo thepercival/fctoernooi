@@ -12,7 +12,6 @@ export class TournamentStructureRoundComponent {
   @Input() structureService: StructureService;
   @Output() roundChanged = new EventEmitter<number>();
   public alert: any;
-  public winnersAndLosers: number[];
   public sliderValueDummy = 3;
 
   uiSliderConfig: any = {
@@ -23,8 +22,15 @@ export class TournamentStructureRoundComponent {
   };
 
   constructor(public nameService: StructureNameService) {
-    this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
     this.resetAlert();
+  }
+
+  get RoundWINNERS(): number {
+    return Round.WINNERS;
+  }
+
+  get RoundLOSERS(): number {
+    return Round.LOSERS;
   }
 
   get CustomQualifyOrder(): number {

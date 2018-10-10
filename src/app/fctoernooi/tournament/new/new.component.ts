@@ -6,6 +6,7 @@ import {
   Association,
   Competition,
   Field,
+  IRoundStructure,
   League,
   PlanningRepository,
   PlanningService,
@@ -189,6 +190,21 @@ export class TournamentNewComponent implements OnInit {
 
   protected resetAlert(): void {
     this.alert = undefined;
+  }
+
+  getStructureDescription() {
+
+    const nrOfCompetitors = this.customForm.controls.nrofcompetitors.value;
+
+    let roundStructure: IRoundStructure;
+    if (nrOfCompetitors !== undefined && StructureService.DEFAULTS[nrOfCompetitors] !== undefined) {
+      roundStructure = StructureService.DEFAULTS[nrOfCompetitors];
+    }
+    if (roundStructure === undefined) {
+      return '';
+    }
+    const sPouleDescr = roundStructure.nrofpoules > 1 ? 'poules' : 'poule';
+    return roundStructure.nrofpoules + ' ' + sPouleDescr;
   }
 
   isLoggedIn() {

@@ -24,7 +24,12 @@ import { TournamentService } from '../service';
     styleUrls: ['./rounds.component.css']
 })
 export class RoundsSettingsComponent extends TournamentComponent implements OnInit {
-
+    category: number;
+    categories: IRoundConfigCategories = {
+        qualification: 1,
+        gameunits: 2,
+        planning: 3,
+    };
     enableTime: boolean;
     ranges: any = {};
     allRoundsByNumber: any;
@@ -105,12 +110,26 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
 
     changeRoundNumber(roundNumber: number) {
         this.roundNumber = roundNumber;
+        this.category = undefined;
         this.modelConfig = cloneDeep(this.getFirstRoundOfRoundNumber(this.roundNumber).getConfig());
+        this.toggleExtension(true);
         this.modelRecreate = false;
         this.modelReschedule = false;
         this.setAlert('info', 'instellingen gelden ook voor volgende ronden');
         if (this.planningService.isStarted(this.roundNumber)) {
             this.setAlert('info', 'deze ronde is al begonnen, kies een andere ronde');
+        }
+    }
+
+    toggleExtension(fromHasExtension: boolean) {
+        if( fromHasExtension === true ) {
+            if (this.modelConfig.getHasExtension() === false) {
+                this.modelConfig.setMinutesPerGameExt(0);
+            } else if (this.modelConfig.getMinutesPerGameExt() === 0) {
+                this.modelConfig.setMinutesPerGameExt(this.roundConfigService.getDefaultMinutesPerGameExt());
+            }
+        } else {
+           this.modelConfig.setHasExtension( this.modelConfig.getMinutesPerGameExt() > 0 );
         }
     }
 
@@ -153,6 +172,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             return;
         }
         this.modelConfig.setHasExtension(hasExtension);
+        this.toggleExtension(true);
         this.modelReschedule = true;  // this.tournament.reschedule(new PlanningService(this.structureService), this.roundNumber);
     }
 
@@ -182,6 +202,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             return;
         }
         this.modelConfig.setMinutesPerGameExt(minutesPerGameExt);
+        this.toggleExtension(false);
         if (this.modelConfig.getEnableTime()) {
             this.modelReschedule = true;
         }
@@ -392,4 +413,10 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     navigateBack() {
         this.router.navigate(this.getForwarUrl(), { queryParams: this.getForwarUrlQueryParams() });
     }
+}
+
+interface IRoundConfigCategories {
+    qualification: number;
+    gameunits: number;
+    planning: number;
 }

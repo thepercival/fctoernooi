@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
+import { faProductHunt } from '@fortawesome/free-brands-svg-icons';
 import { faCheckSquare, faSquare } from '@fortawesome/free-regular-svg-icons';
 import {
   faArrowsAltH,
@@ -77,7 +78,7 @@ import { TournamentViewComponent } from './tournament/view/view.component';
 library.add(
   faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus,
   faExpand, faCompress, faPrint, faSort, faRandom, faSquare, faCheckSquare, faArrowsAltH,
-  faArrowsAltV, faUserTag, faInfoCircle, faMedal
+  faArrowsAltV, faUserTag, faInfoCircle, faMedal, faProductHunt
 );
 
 @NgModule({

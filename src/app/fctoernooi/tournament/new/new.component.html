@@ -4,7 +4,8 @@
       <div class="mb-4">
         <h1>
           nieuw toernooi
-          <button *ngIf="!processing" [routerLink]="['']" type="button" class="btn btn-outline-secondary btn-sm" tabindex="9">
+          <button *ngIf="!processing" [routerLink]="['']" type="button" class="btn btn-outline-secondary btn-sm"
+            tabindex="9">
             <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
           </button>
         </h1>
@@ -15,9 +16,11 @@
         </blockquote>
         <div class="d-flex justify-content-around">
           <button type="button" class="btn btn-outline-primary" [routerLink]="['/user/register']">
-            <fa-icon [icon]="['fas', 'user-circle']"></fa-icon> registreer</button>
+            <fa-icon [icon]="['fas', 'user-circle']"></fa-icon> registreer
+          </button>
           <button type="button" class="btn btn-outline-primary" [routerLink]="['/user/login']">
-            <fa-icon [icon]="['fas', 'sign-in-alt']"></fa-icon> inloggen</button>
+            <fa-icon [icon]="['fas', 'sign-in-alt']"></fa-icon> inloggen
+          </button>
         </div>
       </div>
       <div>
@@ -27,7 +30,8 @@
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">
         {{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing && isLoggedIn()" name="form" (ngSubmit)="create() && false" [formGroup]="customForm" novalidate>
+      <form *ngIf="!processing && isLoggedIn()" name="form" (ngSubmit)="create() && false" [formGroup]="customForm"
+        novalidate>
         <div class="form-group row">
           <div class="col-3">
             <label for="name" class="col-form-label">naam</label>
@@ -57,8 +61,8 @@
           </div>
           <div class="col-9">
             <input class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.sportNameOther.invalid, 'is-valid': customForm.controls.sportNameOther.valid }"
-              type="text" name="sportNameOther" id="sportNameOther" [formControl]="customForm.controls.sportNameOther" maxlength="{{validations.maxlengthsportname}}"
-              placeholder="max. {{validations.maxlengthsportname}} karakters">
+              type="text" name="sportNameOther" id="sportNameOther" [formControl]="customForm.controls.sportNameOther"
+              maxlength="{{validations.maxlengthsportname}}" placeholder="max. {{validations.maxlengthsportname}} karakters">
           </div>
         </div>
         <div class="form-group row">
@@ -69,6 +73,7 @@
             <input type="number" class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.nrofcompetitors.invalid, 'is-valid': customForm.controls.nrofcompetitors.valid}"
               id="nrofcompetitors" name="nrofcompetitors" [formControl]="customForm.controls.nrofcompetitors" [min]="validations.minnrofcompetitors"
               [max]="validations.maxnrofcompetitors" required>
+            <label *ngIf="getStructureDescription()" class="text-info mb-0"><span class="font-weight-bold">{{getStructureDescription()}}</span>, pas dit aan onder "<span class="font-weight-bold">Indeling</span>" in het beheerscherm</label>
           </div>
         </div>
         <div class="form-group row">
@@ -151,7 +156,8 @@
             <label for="starttime" class="col-form-label">starttijd</label>
           </div>
           <div class="col-9">
-            <ngb-timepicker id="starttime" name="starttime" [formControl]="customForm.controls.time" [spinners]="false" required></ngb-timepicker>
+            <ngb-timepicker id="starttime" name="starttime" [formControl]="customForm.controls.time" [spinners]="false"
+              required></ngb-timepicker>
           </div>
         </div>
         <div class="form-group row justify-content-end">
@@ -167,8 +173,8 @@
 </div>
 
 <ng-template #t let-date="date" let-focused="focused" let-disabled="disabled">
-  <span class="custom-day" [class.focused]="focused" [class.selected]="isSelected(date)" [class.text-muted]="disabled" (mouseenter)="hoveredDate = date"
-    (mouseleave)="hoveredDate = null">
+  <span class="custom-day" [class.focused]="focused" [class.selected]="isSelected(date)" [class.text-muted]="disabled"
+    (mouseenter)="hoveredDate = date" (mouseleave)="hoveredDate = null">
     {{ date.day }}
   </span>
 </ng-template>

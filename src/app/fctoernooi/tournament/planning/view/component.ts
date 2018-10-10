@@ -89,7 +89,7 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
     const cfg = this.roundsByNumber[0].getConfig();
     let descr = 'De wedstrijden duren ' + cfg.getMinutesPerGame() + ' minuten. ';
     if (cfg.getHasExtension()) {
-      descr += 'De eventuele verlenging duurt ' + cfg.getMinutesPerGameExt() + ' minuten.';
+      descr += 'De eventuele verlenging duurt ' + cfg.getMinutesPerGameExt() + ' minuten. ';
     }
     descr += 'Er zit ' + cfg.getMinutesBetweenGames() + ' minuten tussen de wedstrijden.';
     return descr;

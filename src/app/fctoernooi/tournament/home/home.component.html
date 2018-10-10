@@ -1,25 +1,28 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
-      <h1 *ngIf="tournament" align="center">
+      <h1 *ngIf="tournament" class="text-center">
         {{tournament.getName()}}
         <button [routerLink]="['']" type="button" class="btn btn-outline-secondary btn-sm">
           <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
         </button>
       </h1>
-      <h2 *ngIf="processing" align="center">
+      <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
-      <ngb-alert *ngIf="!isManualMessageReadOnDevice()" type="info" [dismissible]="true" (close)="manualMessageReadOnDevice()">gedetaileerde informatie kun je vinden onderaan de pagina via de handleiding-link</ngb-alert>
+      <ngb-alert *ngIf="!isManualMessageReadOnDevice()" type="info" [dismissible]="true" (close)="manualMessageReadOnDevice()">gedetaileerde
+        informatie kun je vinden onderaan de pagina via de handleiding-link</ngb-alert>
       <div *ngIf="!processing" class="row d-flex justify-content-center">
         <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/structure', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
               <i class="fi flaticon-structure"></i> indeling</h5>
             <p class="card-text" *ngIf="structureService.getFirstRound() !== undefined">
-              <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> indeling aanwezig</p>
+              <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> indeling aanwezig
+            </p>
             <p class="card-text" *ngIf="structureService.getFirstRound() === undefined">
-              <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> geen indeling aanwezig</p>
+              <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> geen indeling aanwezig
+            </p>
           </div>
         </div>
         <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/competitors', tournament.getId()]">
@@ -27,9 +30,12 @@
             <h5 class="card-title">
               <i class="fi flaticon-group"></i> deelnemers</h5>
             <p class="card-text" *ngIf="structureService.getFirstRound().getTeams().length === structureService.getFirstRound().getPoulePlaces().length">
-              <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> alle namen ingevuld</p>
+              <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> alle namen ingevuld
+            </p>
             <p class="card-text" *ngIf="structureService.getFirstRound().getTeams().length < structureService.getFirstRound().getPoulePlaces().length">
-              <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> vul de namen in ({{structureService.getFirstRound().getTeams().length}}/{{structureService.getFirstRound().getPoulePlaces().length}})</p>
+              <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> vul de namen in
+              ({{structureService.getFirstRound().getTeams().length}}/{{structureService.getFirstRound().getPoulePlaces().length}})
+            </p>
           </div>
         </div>
         <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/games', tournament.getId()]">
@@ -37,9 +43,11 @@
             <h5 class="card-title">
               <i class="fi flaticon-schedule"></i> wedstrijden</h5>
             <p class="card-text" *ngIf="structureService.getFirstRound().getGames().length > 0">
-              <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> wedstrijden ingepland</p>
+              <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> wedstrijden ingepland
+            </p>
             <p class="card-text" *ngIf="structureService.getFirstRound().getGames().length === 0">
-              <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> plan wedstrijden in</p>
+              <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> plan wedstrijden in
+            </p>
           </div>
         </div>
         <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/referees', tournament.getId()]">
@@ -59,8 +67,10 @@
         <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/edit', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellingen</h5>
-            <p class="card-text">start is {{tournament.getCompetition().getStartDateTime().toLocaleString("nl", {"month":"short","day":"2-digit","hour12":
+              <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellingen
+            </h5>
+            <p class="card-text">start is {{tournament.getCompetition().getStartDateTime().toLocaleString("nl",
+              {"month":"short","day":"2-digit","hour12":
               false,"hour":"2-digit","minute":"2-digit"})}}
             </p>
           </div>
@@ -68,7 +78,8 @@
         <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/sponsors', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon> sponsoren</h5>
+              <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon> sponsoren
+            </h5>
             <p class="card-text">{{getNrOfSponsorsDescription()}}</p>
           </div>
         </div>
@@ -79,7 +90,8 @@
     <div *ngIf="!processing && isAdmin()" class="card mt-3 mx-2">
       <div class="card-body">
         <h5 (click)="toggleRemoveQuestion( true )" class="card-title pointer">
-          <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon> weggooien</h5>
+          <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon> weggooien
+        </h5>
         <div *ngIf="showRemoveQuestion" class="card-text">
           <div>nu weggooien?</div>
           <div class="d-flex justify-content-between">
