@@ -122,14 +122,14 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     }
 
     toggleExtension(fromHasExtension: boolean) {
-        if( fromHasExtension === true ) {
+        if (fromHasExtension === true) {
             if (this.modelConfig.getHasExtension() === false) {
                 this.modelConfig.setMinutesPerGameExt(0);
             } else if (this.modelConfig.getMinutesPerGameExt() === 0) {
                 this.modelConfig.setMinutesPerGameExt(this.roundConfigService.getDefaultMinutesPerGameExt());
             }
         } else {
-           this.modelConfig.setHasExtension( this.modelConfig.getMinutesPerGameExt() > 0 );
+            this.modelConfig.setHasExtension(this.modelConfig.getMinutesPerGameExt() > 0);
         }
     }
 
