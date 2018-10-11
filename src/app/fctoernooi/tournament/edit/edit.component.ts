@@ -16,7 +16,8 @@ import { TournamentService } from '../service';
 export class TournamentEditComponent extends TournamentComponent implements OnInit {
     customForm: FormGroup;
     minDateStruct: NgbDateStruct;
-    public planningService: PlanningService;
+    processing = true;
+    planningService: PlanningService;
 
     validations: any = {
         minlengthname: League.MIN_LENGTH_NAME,
@@ -57,8 +58,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
             ])],
 
         });
-        const date = new Date();
-        this.minDateStruct = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
+
     }
 
     ngOnInit() {
@@ -67,6 +67,10 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
 
     initFields() {
         const date = this.tournament.getCompetition().getStartDateTime();
+
+        const now = new Date();
+        const minDate = date > now ? now : date;
+        this.minDateStruct = { year: minDate.getFullYear(), month: minDate.getMonth() + 1, day: minDate.getDate() };
 
         this.customForm.controls.name.setValue(this.tournament.getCompetition().getLeague().getName());
         this.customForm.controls.date.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });

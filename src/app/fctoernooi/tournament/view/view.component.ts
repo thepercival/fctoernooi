@@ -7,6 +7,7 @@ import { AuthService } from '../../../auth/auth.service';
 import { GlobalEventsManager } from '../../../common/eventmanager';
 import { NavBarTournamentTVViewLink } from '../../../nav/nav.component';
 import { TournamentComponent } from '../component';
+import { IPlanningScrollTo } from '../planning/view/component';
 import { TournamentRepository } from '../repository';
 
 @Component({
@@ -21,7 +22,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     private refreshAtCountDown = true;
     private favTeamIds: number[];
     private favRefereeIds: number[];
-    scrollTo: any = {};
+    scrollTo: IPlanningScrollTo = {};
     userRefereeId: number;
     progress: number;
 
@@ -48,12 +49,10 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
                 /* error path */ e => { this.setAlert('danger', e); }
             );
         });
-
         this.route.queryParamMap.subscribe(params => {
-            this.scrollTo.gameId = +params.get('scrollToGameId');
             this.scrollTo.roundNumber = +params.get('scrollToRoundNumber');
+            this.scrollTo.gameId = +params.get('scrollToGameId');
         });
-
         this.countDown();
     }
 

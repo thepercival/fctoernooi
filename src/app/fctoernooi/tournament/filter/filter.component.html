@@ -3,7 +3,7 @@
     <div class="mb-4">
       <h1 *ngIf="tournament">
         {{tournament.getName()}}
-        <button type="button" [routerLink]="['/toernooi/view', tournament.getId()]" class="btn btn-outline-secondary btn-sm">
+        <button type="button" (click)="navigateBack()" class="btn btn-outline-secondary btn-sm">
           <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
         </button>
       </h1>
@@ -50,12 +50,13 @@
             <td>
               <span *ngIf="toggledItem === poulePlace.getTeam()" class="smallfont">
                 <fa-icon *ngIf="this.toggledItemProgress < 10" class="text-info" [icon]="['fas', 'save']" size="{{5 + (toggledItemProgress/2)}}x"></fa-icon>
-                <fa-icon *ngIf="this.toggledItemProgress === 10" class="text-success" [icon]="['fas', 'check-circle']" size="10x"></fa-icon>
+                <fa-icon *ngIf="this.toggledItemProgress === 10" class="text-success" [icon]="['fas', 'check-circle']"
+                  size="10x"></fa-icon>
               </span>
             </td>
             <td class="text-right">
-              <fa-icon *ngIf="poulePlace.getTeam()" class="text-primary pointer" (click)="toggleFavoriteTeams(poulePlace.getTeam())" [icon]="['far', (inFavoriteTeamIds(poulePlace.getTeam()) ? 'check-' : '') + 'square']"
-                size="2x"></fa-icon>
+              <fa-icon *ngIf="poulePlace.getTeam()" class="text-primary pointer" (click)="toggleFavoriteTeams(poulePlace.getTeam())"
+                [icon]="['far', (inFavoriteTeamIds(poulePlace.getTeam()) ? 'check-' : '') + 'square']" size="2x"></fa-icon>
             </td>
           </tr>
         </tbody>
@@ -86,7 +87,8 @@
             <td>
               <span *ngIf="toggledItem === referee" class="smallfont">
                 <fa-icon *ngIf="this.toggledItemProgress < 10" class="text-info" [icon]="['fas', 'save']" size="{{5 + (toggledItemProgress/2)}}x"></fa-icon>
-                <fa-icon *ngIf="this.toggledItemProgress === 10" class="text-success" [icon]="['fas', 'check-circle']" size="10x"></fa-icon>
+                <fa-icon *ngIf="this.toggledItemProgress === 10" class="text-success" [icon]="['fas', 'check-circle']"
+                  size="10x"></fa-icon>
               </span>
             </td>
             <td class="text-right">

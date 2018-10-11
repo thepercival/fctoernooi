@@ -22,6 +22,9 @@ export class TournamentFilterComponent extends TournamentComponent implements On
     toggledItemProgress = 0;
     userIsGameResultAdmin: boolean;
 
+    returnUrlQueryParamKey: string;
+    returnUrlQueryParamValue: string;
+
     constructor(
         route: ActivatedRoute,
         router: Router,
@@ -41,6 +44,10 @@ export class TournamentFilterComponent extends TournamentComponent implements On
             this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), TournamentRole.GAMERESULTADMIN);
             this.removeOldFavIds();
             this.processing = false;
+        });
+        this.route.queryParamMap.subscribe(params => {
+            this.returnUrlQueryParamKey = params.get('returnQueryParamKey');
+            this.returnUrlQueryParamValue = params.get('returnQueryParamValue');
         });
     }
 
@@ -181,5 +188,22 @@ export class TournamentFilterComponent extends TournamentComponent implements On
             return 0;
         }
         return favReferees[this.tournament.getId()].length;
+    }
+
+    private getForwarUrl() {
+        return ['/toernooi/view', this.tournament.getId()];
+    }
+
+    private getForwarUrlQueryParams(): {} {
+        const queryParams = {};
+        if (this.returnUrlQueryParamKey !== undefined) {
+            queryParams[this.returnUrlQueryParamKey] = this.returnUrlQueryParamValue;
+        }
+        return queryParams;
+
+    }
+
+    navigateBack() {
+        this.router.navigate(this.getForwarUrl(), { queryParams: this.getForwarUrlQueryParams() });
     }
 }

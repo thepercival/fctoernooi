@@ -408,6 +408,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             queryParams[this.returnUrlQueryParamKey] = this.returnUrlQueryParamValue;
         }
         return queryParams;
+
     }
 
     navigateBack() {

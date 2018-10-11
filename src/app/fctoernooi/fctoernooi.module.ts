@@ -25,12 +25,8 @@ import {
   faTrashAlt,
   faUserTag,
 } from '@fortawesome/free-solid-svg-icons';
-import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap/alert/alert.module';
-import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap/collapse/collapse.module';
-import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
-import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap/modal/modal.module';
-import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap/popover/popover.module';
-import { NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap/timepicker/timepicker.module';
+import { NgbAlertModule, NgbCollapseModule, NgbDatepickerModule, NgbModalModule,
+  NgbPopoverModule, NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 import { NouisliderModule } from 'ng2-nouislider';
 import {

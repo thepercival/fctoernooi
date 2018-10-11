@@ -35,7 +35,7 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
   @Input() parentReturnAction: string;
   @Input() favTeamIds: number[];
   @Input() favRefereeIds: number[];
-  @Input() scrollToGameId: number;
+  @Input() scrollTo: IPlanningScrollTo;
   @Input() userRefereeId: number;
   @Input() canEditSettings: boolean;
   @Output() popOverIsOpen = new EventEmitter<boolean>();
@@ -67,9 +67,9 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
   }
 
   ngAfterViewInit() {
-    if (this.scrollToGameId) {
+    if (this.scrollTo.roundNumber === this.roundNumber) {
       this.scrollService.scrollTo({
-        target: 'scroll-' + (this.roundNumber > 1 ? 'roundnumber-' + this.roundNumber : 'game-' + this.scrollToGameId),
+        target: 'scroll-' + (this.scrollTo.roundNumber > 1 ? 'roundnumber-' + this.scrollTo.roundNumber : 'game-' + this.scrollTo.gameId),
         duration: 200
       });
     }
@@ -233,7 +233,21 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
       {
         queryParams: {
           returnAction: this.parentReturnAction,
-          returnParam: this.tournament.getId()
+          returnParam: this.tournament.getId(),
+          returnQueryParamKey: 'scrollToRoundNumber',
+          returnQueryParamValue: roundNumber
+        }
+      }
+    );
+  }
+
+  linkToFilterSettings(roundNumber: number) {
+    this.router.navigate(
+      ['/toernooi/filter', this.tournament.getId()],
+      {
+        queryParams: {
+          returnQueryParamKey: 'scrollToRoundNumber',
+          returnQueryParamValue: roundNumber
         }
       }
     );
@@ -346,4 +360,9 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
     return this.nameService.getPoulePlaceName(game.getHomePoulePlace()) + ' - ' +
       this.nameService.getPoulePlaceName(game.getAwayPoulePlace());
   }
+}
+
+export interface IPlanningScrollTo {
+  roundNumber?: number;
+  gameId?: number;
 }

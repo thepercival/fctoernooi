@@ -13,7 +13,7 @@
         <h2>
           <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellingen
         </h2>
-        <h2 *ngIf="processing" align="center">
+        <h2 *ngIf="processing" class="text-center">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
       </div>
@@ -29,7 +29,7 @@
               placeholder="max. {{validations.maxlengthname}} karakters" autofocus>
           </div>
         </div>
-        <div *ngIf="!structureService?.getFirstRound().isStarted()" class="form-group row">
+        <div *ngIf="!structureService.getFirstRound().isStarted()" class="form-group row">
           <div class="col-3">
             <label for="dp" class="col-form-label">startdatum</label>
           </div>
@@ -46,21 +46,23 @@
             </div>
           </div>
         </div>
-        <div *ngIf="!structureService?.getFirstRound().isStarted()" class="form-group row">
+        <div *ngIf="!structureService.getFirstRound().isStarted()" class="form-group row">
           <div class="col-3">
             <label for="starttime" class="col-form-label">starttijd</label>
           </div>
           <div class="col-9">
-            <ngb-timepicker id="starttime" name="starttime" [formControl]="customForm.controls.time" [spinners]="false" required></ngb-timepicker>
+            <ngb-timepicker id="starttime" name="starttime" [formControl]="customForm.controls.time" [spinners]="false"
+              required></ngb-timepicker>
           </div>
         </div>
-        <div *ngIf="!structureService?.getFirstRound().isStarted() && isTimeEnabled() " class="form-group row">
+        <div *ngIf="!structureService.getFirstRound().isStarted() && isTimeEnabled() " class="form-group row">
           <div class="col-3">
             <label for="togglebreak" class="col-form-label">pauze</label>
           </div>
           <div class="col-2 col-md-1 pr-0">
             <label class="custom-control custom-checkbox pointer col-form-label pl-0">
-              <input type="checkbox" class="custom-control-input form-check-input" [formControl]="customForm.controls.togglebreak" (ngModelChange)="toggleBreak($event,0)">
+              <input type="checkbox" class="custom-control-input form-check-input" [formControl]="customForm.controls.togglebreak"
+                (ngModelChange)="toggleBreak($event,0)">
               <span class="custom-control-indicator"></span>
             </label>
           </div>
@@ -68,7 +70,8 @@
             <label class="col-form-label">( tijdens een ronde )</label>
           </div>
         </div>
-        <div *ngIf="!structureService?.getFirstRound().isStarted() && customForm.controls.togglebreak.value === true" class="form-group row">
+        <div *ngIf="!structureService.getFirstRound().isStarted() && customForm.controls.togglebreak.value === true"
+          class="form-group row">
           <div class="col-3">
             <label for="breaktime" class="col-form-label">pausetijd</label>
           </div>
@@ -76,7 +79,7 @@
             <ngb-timepicker id="breaktime" name="breaktime" [formControl]="customForm.controls.breaktime" [spinners]="false"></ngb-timepicker>
           </div>
         </div>
-        <div *ngIf="!structureService?.getFirstRound().isStarted() && customForm.controls.togglebreak.value" class="form-group row">
+        <div *ngIf="!structureService.getFirstRound().isStarted() && customForm.controls.togglebreak.value" class="form-group row">
           <div class="col-3">
             <label for="breakduration" class="col-form-label">pauseduur</label>
           </div>
@@ -114,8 +117,8 @@
     </div>
 
     <ng-template #t let-date="date" let-focused="focused" let-disabled="disabled">
-      <span class="custom-day" [class.focused]="focused" [class.selected]="isSelected(date)" [class.text-muted]="disabled" (mouseenter)="hoveredDate = date"
-        (mouseleave)="hoveredDate = null">
+      <span class="custom-day" [class.focused]="focused" [class.selected]="isSelected(date)" [class.text-muted]="disabled"
+        (mouseenter)="hoveredDate = date" (mouseleave)="hoveredDate = null">
         {{ date.day }}
       </span>
     </ng-template>

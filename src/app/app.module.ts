@@ -5,6 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
+import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import {
   faCopyright,
   faEnvelope,
@@ -22,16 +23,15 @@ import {
   faSpinner,
   faTableTennis,
   faTv,
-  faUserCircle
+  faUserCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import {
-  faTwitter
-} from '@fortawesome/free-brands-svg-icons';
-import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap/alert/alert.module';
-import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap/collapse/collapse.module';
-import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
-import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap/popover/popover.module';
-import { NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap/timepicker/timepicker.module';
+  NgbAlertModule,
+  NgbCollapseModule,
+  NgbDatepickerModule,
+  NgbPopoverModule,
+  NgbTimepickerModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import {
   AssociationRepository,
   CompetitionRepository,
@@ -76,8 +76,7 @@ library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave
     FormsModule,
     UserModule,
     AdminModule,
-    NgbDatepickerModule.forRoot(), NgbTimepickerModule.forRoot(), NgbAlertModule.forRoot(),
-    NgbPopoverModule.forRoot(), NgbCollapseModule.forRoot(),
+    NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule,
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
     FontAwesomeModule
   ],
