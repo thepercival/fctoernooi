@@ -14,10 +14,12 @@ import { TournamentRepository, TournamentShell, TournamentShellFilter } from '..
 export class HomeComponent implements OnInit {
   tournamentShells: TournamentShell[];
   searchShells: TournamentShell[];
+  showingFuture = false;
   alert: IAlert;
   processing = true;
-  borderDate: Date;
-  borderDays = 28;
+  pastDate: Date;
+  pastDays = 28;
+  futureDate: Date;
   searchFilter: TournamentShellFilter;
   processingSearch = false;
   private hasSearched = false;
@@ -29,13 +31,15 @@ export class HomeComponent implements OnInit {
     private tournamentRepos: TournamentRepository,
     private iconManager: IconManager
   ) {
-    this.borderDate = new Date();
-    this.borderDate.setDate(this.borderDate.getDate() - this.borderDays);
-    this.searchFilter = { maxDate: this.borderDate, name: undefined };
+    this.pastDate = new Date();
+    this.pastDate.setDate(this.pastDate.getDate() - this.pastDays);
+    this.futureDate = new Date();
+    this.futureDate.setDate(this.futureDate.getDate() + 30);
+    this.searchFilter = { maxDate: this.pastDate, name: undefined };
   }
 
   ngOnInit() {
-    this.setTournamentShells();
+    this.setTournamentShells(this.futureDate);
 
     this.route.queryParams.subscribe(params => {
       if (params.type !== undefined && params.message !== undefined) {
@@ -44,11 +48,11 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  setTournamentShells() {
+  setTournamentShells(futureDate) {
     this.processing = true;
     this.tournamentShells = [];
 
-    this.tournamentRepos.getShells({ minDate: this.borderDate })
+    this.tournamentRepos.getShells({ minDate: this.pastDate, maxDate: futureDate })
       .subscribe(
           /* happy path */ tournamentShellsRes => {
           this.tournamentShells = tournamentShellsRes;
@@ -67,19 +71,19 @@ export class HomeComponent implements OnInit {
                   });
                 },
                 /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                /* onComplete */() => this.processing = false
+                /* onComplete */() => { this.processing = false; this.showingFuture = (futureDate === undefined); }
               );
           } else {
             this.tournamentShells = tournamentShellsRes.sort((ts1, ts2) => {
               return (ts1.startDateTime < ts2.startDateTime ? 1 : -1);
             });
+            this.showingFuture = (futureDate === undefined);
             this.processing = false;
           }
         },
         /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
       );
   }
-
 
   protected setAlert(type: string, message: string) {
     this.alert = { 'type': type, 'message': message };
@@ -92,6 +96,15 @@ export class HomeComponent implements OnInit {
   linkToView(shell: TournamentShell) {
     this.processing = true;
     this.router.navigate(['/toernooi/view', shell.tournamentId]);
+  }
+
+  showFuture() {
+    this.setTournamentShells(undefined);
+  }
+
+  getFutureTextRowspan(xs: boolean) {
+    const rowSpan = this.isLoggedIn() ? 4 : 3;
+    return xs ? rowSpan - 1 : rowSpan;
   }
 
   searchOlderShells() {

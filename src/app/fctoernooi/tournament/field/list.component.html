@@ -13,7 +13,7 @@
                 <h2>
                     <i class="fi flaticon-field"></i> velden
                 </h2>
-                <h2 *ngIf="processing" align="center">
+                <h2 *ngIf="processing" class="text-center">
                     <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
                 </h2>
             </div>
@@ -25,7 +25,8 @@
                         <th>nr.</th>
                         <th>naam</th>
                         <th class="text-right">
-                            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" (click)="addField()" [disabled]="processing || disableEditButtons">
+                            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" (click)="addField()"
+                                [disabled]="processing || disableEditButtons">
                                 <fa-icon [icon]="['fas', 'plus']"></fa-icon>
                             </button>
                         </th>
@@ -34,7 +35,8 @@
                 <tbody>
                     <tr *ngFor="let fieldItem of fieldsList; let last = last;">
                         <td>
-                            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || ( !fieldItem.editable && disableEditButtons ) || ( fieldItem.editable && fieldItem.field.getName().length < validations.minlengthname )"
+                            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary"
+                                [disabled]="processing || ( !fieldItem.editable && disableEditButtons ) || ( fieldItem.editable && fieldItem.field.getName().length < validations.minlengthname )"
                                 (click)="saveedit(fieldItem);">
                                 <fa-icon [icon]="['fas', fieldItem.editable ? 'save' : 'pencil-alt' ]"></fa-icon>
                             </button>
@@ -43,14 +45,15 @@
                             <span>{{fieldItem.field.getNumber()}}</span>
                         </td>
                         <td>
-                            <span *ngIf="!fieldItem.editable && fieldItem.field !== undefined">{{fieldItem.field.getName() }}</span>
-                            <input type="text" class="form-control input-fieldname" [minlength]="validations.minlengthname" [maxlength]="validations.maxlengthname"
-                                [ngModel]="fieldItem.field.getName()" (ngModelChange)="fieldItem.field.setName($event)" *ngIf="fieldItem.editable"
-                                required>
+                            <span *ngIf="!fieldItem.editable && fieldItem.field !== undefined">{{fieldItem.field.getName()
+                                }}</span>
+                            <input type="text" class="form-control input-fieldname" [minlength]="validations.minlengthname"
+                                [maxlength]="validations.maxlengthname" [ngModel]="fieldItem.field.getName()"
+                                (ngModelChange)="fieldItem.field.setName($event)" *ngIf="fieldItem.editable" required>
                         </td>
                         <td class="text-right">
-                            <button *ngIf="last && !isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing || disableEditButtons"
-                                (click)="removeField(fieldItem);">
+                            <button *ngIf="last && !isStarted()" type="button" class="btn btn-sm btn-outline-primary"
+                                [disabled]="processing || disableEditButtons" (click)="removeField(fieldItem);">
                                 <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
                             </button>
                         </td>

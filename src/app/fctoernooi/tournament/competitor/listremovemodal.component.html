@@ -1,0 +1,59 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">item verwijderen</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('close')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="container-fluid">
+        <div *ngIf="hasMinimumNrOfTeamsPerPoule() || hasNoDropouts()" class="row">
+            <div *ngIf="hasNoDropouts() && !hasMinimumNrOfTeamsPerPoule()" class="">
+                <ngb-alert [type]="'warning'" [dismissible]="false">Alle deelnemers gaan door naar de volgende ronde.
+                    Om
+                    een pouleplek te kunnen verwijderen, moet de
+                    "Indeling" aangepast worden.</ngb-alert>
+                <ngb-alert *ngIf="allPoulePlacesHaveCompetitor()" [type]="'info'" [dismissible]="false">Wanneer je een
+                    pouleplek bij de indeling verwijderd,
+                    wordt de laatste
+                    pouleplek verwijderd. Verplaats daarom eventueel eerst de te verwijderen deelnemer naar de laatste
+                    pouleplek m.b.v. de vinkjes en de
+                    vierkantjes. </ngb-alert>
+            </div>
+            <div *ngIf="!hasNoDropouts() && hasMinimumNrOfTeamsPerPoule()" class="">
+                <ngb-alert [type]="'warning'" [dismissible]="false">Het minimaal aantal deelnemers aan een poule is 2.
+                    Om een deelnemer te kunnen verwijderen, moet de "Indeling" aangepast worden.</ngb-alert>
+            </div>
+        </div>
+        <div *ngIf="!hasMinimumNrOfTeamsPerPoule() && !hasNoDropouts()" class="row">
+            <ngb-alert [type]="'info'" [dismissible]="false">Bij het verwijderen van de pouleplek worden de indeling en
+                de wedstrijden automatisch aangepast.</ngb-alert>
+        </div>
+    </div>
+</div>
+<div *ngIf="hasMinimumNrOfTeamsPerPoule() || hasNoDropouts()" class="modal-footer justify-content-around">
+    <div class="modal-footer ">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" (click)="activeModal.close('to-structure')">naar
+            <i class="fi flaticon-structure"></i> indeling</button>
+        <button *ngIf="poulePlace.getTeam() !== undefined" type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+            (click)="activeModal.close('remove-competitor')">
+            <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon> <span> deelnemer</span>
+            <span class="d-none d-sm-inline"> verwijderen</span>
+        </button>
+        <button *ngIf="poulePlace.getTeam() === undefined" type="button" class="btn btn-secondary" data-dismiss="modal"
+            (click)="activeModal.close('close')">sluiten</button>
+    </div>
+</div>
+
+<div *ngIf="!hasMinimumNrOfTeamsPerPoule() && !hasNoDropouts()" class="modal-footer justify-content-around">
+    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" (click)="activeModal.close('remove-pouleplace')">
+        <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon><span> pouleplek</span>
+        <span class="d-none d-sm-inline"> verwijderen</span>
+    </button>
+    <button *ngIf="poulePlace.getTeam() !== undefined" type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+        (click)="activeModal.close('remove-competitor')">
+        <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon> <span> deelnemer</span>
+        <span class="d-none d-sm-inline"> verwijderen</span>
+    </button>
+    <button *ngIf="poulePlace.getTeam() === undefined" type="button" class="btn btn-secondary" data-dismiss="modal"
+        (click)="activeModal.close('close')">sluiten</button>
+</div>

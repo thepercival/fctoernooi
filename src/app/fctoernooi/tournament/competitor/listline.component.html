@@ -1,5 +1,6 @@
 <td id="scroll-pouleplace-{{poulePlace.getId()}}">
-  <button #btnEdit type="button" class="btn btn-sm btn-outline-primary" [disabled]="poulePlaceToSwap !== undefined" (click)="edit()">
+  <button #btnEdit type="button" class="btn btn-sm btn-outline-primary" [disabled]="poulePlaceToSwap !== undefined"
+    (click)="edit()">
     <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
   </button>
 </td>
@@ -16,3 +17,6 @@
 <td colspan=2 *ngIf="!poulePlace.getTeam()">
   <span class="badge badge-danger">vul een naam in</span>
 </td>
+<td *ngIf="!isStarted" class="text-right"><button type="button" class="btn btn-sm btn-outline-primary" (click)="remove()">
+    <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+  </button></td>

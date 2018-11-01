@@ -12,9 +12,11 @@ export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
   @Input() poulePlace: PoulePlace;
   @Input() nameService: StructureNameService;
   @Input() focus: boolean;
+  @Input() isStarted: boolean;
   @Input() showSwap: boolean;
   @Output() editPressed = new EventEmitter<PoulePlace>();
   @Output() swapPressed = new EventEmitter<PoulePlace>();
+  @Output() removePressed = new EventEmitter<PoulePlace>();
 
   @ViewChild('btnEdit') private elementRef: ElementRef;
 
@@ -27,6 +29,10 @@ export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
 
   edit() {
     this.editPressed.emit(this.poulePlace);
+  }
+
+  remove() {
+    this.removePressed.emit(this.poulePlace);
   }
 
   swapTwo() {

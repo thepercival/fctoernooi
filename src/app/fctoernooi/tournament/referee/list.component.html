@@ -12,7 +12,7 @@
       <h2>
         <i class="fi flaticon-referee"></i> scheidsrechters
       </h2>
-      <h2 *ngIf="processing" align="center">
+      <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
     </div>
@@ -25,7 +25,8 @@
           <th>initialen</th>
           <th class="d-none d-sm-table-cell">naam</th>
           <th class="text-right">
-            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" (click)="addReferee()" [disabled]="processing">
+            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" (click)="addReferee()"
+              [disabled]="processing">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button>
           </th>
@@ -34,7 +35,8 @@
       <tbody>
         <tr *ngFor="let referee of referees; let last = last;">
           <td>
-            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing" (click)="editReferee(referee)">
+            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing"
+              (click)="editReferee(referee)">
               <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
             </button>
           </td>
@@ -45,7 +47,8 @@
             <span>{{referee.getName()}}</span>
           </td>
           <td class="text-right">
-            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing" (click)="removeReferee(referee);">
+            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing"
+              (click)="removeReferee(referee);">
               <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
             </button>
           </td>

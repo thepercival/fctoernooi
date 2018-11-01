@@ -19,16 +19,16 @@
         <app-progress [value]="progress"></app-progress>
       </div>
       <div>
-        <h2 *ngIf="processing" align="center">
+        <h2 *ngIf="processing" class="text-center">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <div *ngIf="!processing">
-        <app-tournament-planning-view *ngFor="let roundNumber of structureService.getRoundNumbers()" [tournament]="tournament" [roundNumber]="roundNumber"
-          [structureService]="structureService" [planningService]="planningService" [userRefereeId]="userRefereeId" [scrollTo]="scrollTo"
-          [parentReturnAction]="'/toernooi/view'" [favTeamIds]="getFavTeamIdsFromLocalStorage()" [favRefereeIds]="getFavRefereeIdsFromLocalStorage()"
-          (popOverIsOpen)="setNoRefresh($event)"></app-tournament-planning-view>
+        <app-tournament-planning-view *ngFor="let roundNumber of structureService.getRoundNumbers()" [tournament]="tournament"
+          [roundNumber]="roundNumber" [structureService]="structureService" [planningService]="planningService"
+          [userRefereeId]="userRefereeId" [scrollTo]="scrollTo" [parentReturnAction]="'/toernooi/view'" [favTeamIds]="getFavTeamIdsFromLocalStorage()"
+          [favRefereeIds]="getFavRefereeIdsFromLocalStorage()" (popOverIsOpen)="setNoRefresh($event)"></app-tournament-planning-view>
         <app-tournament-endranking-view [firstRound]="structureService.getFirstRound()"></app-tournament-endranking-view>
       </div>
     </div>

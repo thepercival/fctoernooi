@@ -9,6 +9,7 @@ import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import {
   faCopyright,
   faEnvelope,
+  faEye,
   faFilter,
   faFutbol,
   faLevelUpAlt,
@@ -60,7 +61,7 @@ import { UserModule } from './user/user.module';
 
 library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave,
   faSignInAlt, faSignOutAlt, faPlusCircle, faPlus, faTv, faFutbol, faTableTennis, faSearch,
-  faMobileAlt, faEnvelope, faTwitter, faCopyright);
+  faMobileAlt, faEnvelope, faTwitter, faCopyright, faEye);
 
 @NgModule({
   declarations: [

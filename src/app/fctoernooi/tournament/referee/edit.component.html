@@ -13,7 +13,7 @@
         <h2>
           <i class="fi flaticon-referee"></i> scheidsrechter
         </h2>
-        <h2 *ngIf="processing" align="center">
+        <h2 *ngIf="processing" class="text-center">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
       </div>
@@ -42,15 +42,16 @@
         <div class="form-group row">
           <div class="col-3 d-flex justify-content-between">
             <label for="emailaddress" container="body" placement="right" ngbPopover="De gebruiker met dit emailadres kan de stand van de wedstrijden, waarvoor
-            hij/zij is aangesteld, wijzigen" class="col-form-label pointer">email
+            hij/zij is aangesteld, wijzigen"
+              class="col-form-label pointer">email
               <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
             </label>
 
           </div>
           <div class="col-9">
             <input class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.emailaddress.invalid, 'is-valid': customForm.controls.emailaddress.valid }"
-              type="text" name="emailaddress" id="emailaddress" [formControl]="customForm.controls.emailaddress" maxlength="{{validations.maxlengthemailaddress}}"
-              placeholder="max. {{validations.maxlengthemailaddress}} karakters">
+              type="text" name="emailaddress" id="emailaddress" [formControl]="customForm.controls.emailaddress"
+              maxlength="{{validations.maxlengthemailaddress}}" placeholder="max. {{validations.maxlengthemailaddress}} karakters">
           </div>
         </div>
         <div class="form-group row">
@@ -59,7 +60,8 @@
           </div>
           <div class="col-9">
             <textarea class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.info.invalid, 'is-valid': customForm.controls.info.valid }"
-              name="info" id="info" [formControl]="customForm.controls.info" maxlength="{{validations.maxlengthinfo}}" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
+              name="info" id="info" [formControl]="customForm.controls.info" maxlength="{{validations.maxlengthinfo}}"
+              placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>
         <div class="form-group row justify-content-end">

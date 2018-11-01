@@ -23,7 +23,7 @@
     </button>
   </div>
   <div>
-    <h2 *ngIf="processing" align="center">
+    <h2 *ngIf="processing" class="text-center">
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
   </div>
@@ -36,8 +36,10 @@
           <th title="poule">
             <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
           </th>
-          <th *ngIf="isScheduled() && planningService.getRoundsByNumber(screenDef.roundNumber)[0]?.getConfig().getEnableTime()" title="starttijd">
-            {{planningService.calculateStartDateTime(screenDef.roundNumber).toLocaleString("nl", {"month":"short","day":"2-digit"})}}
+          <th *ngIf="isScheduled() && planningService.getRoundsByNumber(screenDef.roundNumber)[0]?.getConfig().getEnableTime()"
+            title="starttijd">
+            {{planningService.calculateStartDateTime(screenDef.roundNumber).toLocaleString("nl",
+            {"month":"short","day":"2-digit"})}}
           </th>
           <th *ngIf="isScheduled() && hasFields()" title="veld">
             <i class="fi flaticon-soccer-field"></i>
@@ -92,9 +94,12 @@
               <span>{{rankingItem.getRank()}}</span>
             </td>
             <td class="pouleplace">{{nameService.getPoulePlaceName(rankingItem.getPoulePlace(), true)}}</td>
-            <td class="text-right">{{ranking.getNrOfGamesWithState(rankingItem.getPoulePlace(), rankingItem.getPoulePlace().getGames())}}</td>
-            <td class="text-right">{{ranking.getPoints(rankingItem.getPoulePlace(), rankingItem.getPoulePlace().getGames())}}</td>
-            <td class="unitdiff text-center">{{getUnitDifference(rankingItem.getPoulePlace(), rankingItem.getPoulePlace().getGames())}}</td>
+            <td class="text-right">{{ranking.getNrOfGamesWithState(rankingItem.getPoulePlace(),
+              rankingItem.getPoulePlace().getGames())}}</td>
+            <td class="text-right">{{ranking.getPoints(rankingItem.getPoulePlace(),
+              rankingItem.getPoulePlace().getGames())}}</td>
+            <td class="unitdiff text-center">{{getUnitDifference(rankingItem.getPoulePlace(),
+              rankingItem.getPoulePlace().getGames())}}</td>
           </tr>
         </ng-template>
       </tbody>

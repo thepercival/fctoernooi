@@ -13,7 +13,7 @@
         <h2>
           <i class="fi flaticon-group"></i> deelnemer
         </h2>
-        <h2 *ngIf="processing" align="center">
+        <h2 *ngIf="processing" class="text-center">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
       </div>
@@ -43,7 +43,8 @@
           </div>
           <div class="col-9">
             <textarea class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.info.invalid, 'is-valid': customForm.controls.info.valid }"
-              name="info" id="info" [formControl]="customForm.controls.info" maxlength="{{validations.maxlengthinfo}}" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
+              name="info" id="info" [formControl]="customForm.controls.info" maxlength="{{validations.maxlengthinfo}}"
+              placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>
         <div class="form-group row justify-content-end">

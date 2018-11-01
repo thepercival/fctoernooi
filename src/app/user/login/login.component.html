@@ -9,19 +9,21 @@
           </button>
         </h1>
       </div>
-      <h2 *ngIf="processing" align="center">
+      <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing && !isLoggedIn()" name="form" (ngSubmit)="login() && false" [formGroup]="customForm" novalidate>
+      <form *ngIf="!processing && !isLoggedIn()" name="form" (ngSubmit)="login() && false" [formGroup]="customForm"
+        novalidate>
         <div class="form-group row">
           <div class="col-3">
             <label for="emailaddress" class="col-form-label">emailadres</label>
           </div>
           <div class="col-9">
             <input class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.emailaddress.invalid, 'is-valid': customForm.controls.emailaddress.valid }"
-              type="text" name="emailaddress" id="emailaddress" [formControl]="customForm.controls.emailaddress" maxlength="{{validations.maxlengthemailaddress}}"
-              placeholder="max. {{validations.maxlengthemailaddress}} karakters" autofocus>
+              type="text" name="emailaddress" id="emailaddress" [formControl]="customForm.controls.emailaddress"
+              maxlength="{{validations.maxlengthemailaddress}}" placeholder="max. {{validations.maxlengthemailaddress}} karakters"
+              autofocus>
           </div>
         </div>
         <div class="form-group row">

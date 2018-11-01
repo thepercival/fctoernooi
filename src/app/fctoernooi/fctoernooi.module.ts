@@ -25,8 +25,14 @@ import {
   faTrashAlt,
   faUserTag,
 } from '@fortawesome/free-solid-svg-icons';
-import { NgbAlertModule, NgbCollapseModule, NgbDatepickerModule, NgbModalModule,
-  NgbPopoverModule, NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbAlertModule,
+  NgbCollapseModule,
+  NgbDatepickerModule,
+  NgbModalModule,
+  NgbPopoverModule,
+  NgbTimepickerModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 import { NouisliderModule } from 'ng2-nouislider';
 import {
@@ -49,6 +55,7 @@ import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
 import { TournamentCompetitorEditComponent } from './tournament/competitor/edit.component';
 import { CompetitorListComponent } from './tournament/competitor/list.component';
 import { CompetitorListLineComponent } from './tournament/competitor/listline.component';
+import { TournamentListRemoveModalComponent } from './tournament/competitor/listremovemodal.component';
 import { TournamentEditComponent } from './tournament/edit/edit.component';
 import { FieldListComponent } from './tournament/field/list.component';
 import { TournamentFilterComponent } from './tournament/filter/filter.component';
@@ -111,10 +118,11 @@ library.add(
     TournamentSponsorEditComponent,
     TournamentFilterComponent,
     TournamentStructureHelpModalComponent,
+    TournamentListRemoveModalComponent,
     ProgressComponent,
     EscapeHtmlPipe
   ],
-  entryComponents: [TournamentStructureHelpModalComponent],
+  entryComponents: [TournamentStructureHelpModalComponent, TournamentListRemoveModalComponent],
   providers: [
     TournamentRoleRepository,
     StructureRepository,
