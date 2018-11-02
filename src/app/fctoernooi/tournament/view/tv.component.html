@@ -57,7 +57,7 @@
       <tbody>
         <tr *ngFor="let game of screenDef.getGames()">
           <td>
-            <span>{{nameService.getPouleName(game.getPoule())}}</span>
+            <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
           </td>
           <td *ngIf="isScheduled() && planningService.getRoundsByNumber(screenDef.roundNumber)[0]?.getConfig().getEnableTime() && planningService.canCalculateStartDateTime(screenDef.roundNumber)">
             {{game.getStartDateTime().toLocaleString("nl", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}

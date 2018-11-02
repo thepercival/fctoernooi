@@ -1,16 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  EndRanking,
-  Game,
-  PlanningService,
-  Poule,
-  PoulePlace,
-  Ranking,
-  RankingItem,
-  Round,
-  StructureNameService,
-  StructureRepository,
+    EndRanking,
+    Game,
+    PlanningService,
+    Poule,
+    PoulePlace,
+    Ranking,
+    RankingItem,
+    Round,
+    StructureNameService,
+    StructureRepository,
 } from 'ngx-sport';
 import { Subscription, timer } from 'rxjs';
 
@@ -32,8 +32,8 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
 
     private timerSubscription: Subscription;
     ranking: Ranking;
-    private planningService: PlanningService;
-    screenDef: ScreenDefinition;
+    public planningService: PlanningService;
+    screenDef: any;
     private allRoundsByNumber: any;
     private maxLines = 8;
 
@@ -44,7 +44,7 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private globalEventsManager: GlobalEventsManager,
-        private iconManager: IconManager,
+        public iconManager: IconManager,
         public nameService: StructureNameService
     ) {
         super(route, router, tournamentRepository, structureRepository);

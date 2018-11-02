@@ -13,8 +13,7 @@
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing && !isLoggedIn()" name="form" (ngSubmit)="login() && false" [formGroup]="customForm"
-        novalidate>
+      <form *ngIf="!processing && !isLoggedIn()" name="form" (ngSubmit)="login()" [formGroup]="customForm" novalidate>
         <div class="form-group row">
           <div class="col-3">
             <label for="emailaddress" class="col-form-label">emailadres</label>

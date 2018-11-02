@@ -74,7 +74,7 @@ export class PasswordchangeComponent implements OnInit {
     return this.authService.isLoggedIn();
   }
 
-  changePassword() {
+  changePassword(): boolean {
     this.processing = true;
     this.setAlert('info', 'het wachtwoord wordt gewijzigd');
 
@@ -94,5 +94,6 @@ export class PasswordchangeComponent implements OnInit {
         },
             /* onComplete */() => this.processing = false
       );
+    return false;
   }
 }

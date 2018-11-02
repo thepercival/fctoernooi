@@ -71,7 +71,7 @@ export class LoginComponent implements OnInit {
     this.alert = undefined;
   }
 
-  login() {
+  login(): boolean {
     this.processing = true;
     this.setAlert('info', 'je wordt ingelogd');
 
@@ -86,5 +86,6 @@ export class LoginComponent implements OnInit {
             /* error path */ e => { this.setAlert('danger', 'het inloggen is niet gelukt: ' + e); this.processing = false; },
             /* onComplete */() => this.processing = false
       );
+    return false;
   }
 }

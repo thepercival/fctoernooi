@@ -103,7 +103,7 @@ export class TournamentNewComponent implements OnInit {
     this.processing = false;
   }
 
-  create() {
+  create(): boolean {
 
     this.processing = true;
     this.setAlert('info', 'het toernooi wordt aangemaakt');
@@ -182,6 +182,7 @@ export class TournamentNewComponent implements OnInit {
         },
             /* error path */ e => { this.setAlert('danger', 'het toernooi kon niet worden aangemaakt: ' + e); this.processing = false; }
       );
+    return false;
   }
 
   protected setAlert(type: string, message: string) {

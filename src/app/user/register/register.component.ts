@@ -69,7 +69,7 @@ export class RegisterComponent implements OnInit {
     return this.authService.isLoggedIn();
   }
 
-  register() {
+  register(): boolean {
     this.processing = true;
     this.setAlert('info', 'de registratie wordt opgeslagen');
 
@@ -86,6 +86,7 @@ export class RegisterComponent implements OnInit {
             /* error path */ e => { this.setAlert('danger', 'het registreren is niet gelukt: ' + e); this.processing = false; },
             /* onComplete */() => this.processing = false
       );
+    return false;
   }
 }
 

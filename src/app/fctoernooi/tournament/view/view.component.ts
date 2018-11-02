@@ -17,7 +17,7 @@ import { TournamentRepository } from '../repository';
 })
 export class TournamentViewComponent extends TournamentComponent implements OnInit, OnDestroy {
     private tvViewLinkSet = false;
-    private planningService: PlanningService;
+    public planningService: PlanningService;
     private timerSubscription: Subscription;
     private refreshAtCountDown = true;
     private favTeamIds: number[];

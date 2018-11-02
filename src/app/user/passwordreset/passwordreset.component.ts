@@ -54,7 +54,7 @@ export class PasswordresetComponent implements OnInit {
     return this.authService.isLoggedIn();
   }
 
-  sendCode() {
+  sendCode(): boolean {
     this.processing = true;
     this.setAlert('info', 'de code wordt verstuurd');
 
@@ -70,6 +70,7 @@ export class PasswordresetComponent implements OnInit {
             /* error path */ e => { this.setAlert('danger', 'het verzenden van de code is niet gelukt: ' + e); this.processing = false; },
             /* onComplete */() => this.processing = false
       );
+    return false;
   }
 
 }

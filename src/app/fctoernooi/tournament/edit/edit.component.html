@@ -18,7 +18,7 @@
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing" name="form" (ngSubmit)="edit() && false" [formGroup]="customForm" novalidate>
+      <form *ngIf="!processing" name="form" (ngSubmit)="edit()" [formGroup]="customForm" novalidate>
         <div class="form-group row">
           <div class="col-3">
             <label for="name" class="col-form-label">naam</label>
@@ -117,8 +117,7 @@
     </div>
 
     <ng-template #t let-date="date" let-focused="focused" let-disabled="disabled">
-      <span class="custom-day" [class.focused]="focused" [class.selected]="isSelected(date)" [class.text-muted]="disabled"
-        (mouseenter)="hoveredDate = date" (mouseleave)="hoveredDate = null">
+      <span class="custom-day" [class.focused]="focused" [class.selected]="isSelected(date)" [class.text-muted]="disabled">
         {{ date.day }}
       </span>
     </ng-template>

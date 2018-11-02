@@ -1,4 +1,3 @@
-import { $$rxSubscriber } from 'rxjs/internal/symbol/rxSubscriber';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -98,12 +97,13 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         this.processing = false;
     }
 
-    save() {
+    save(): boolean {
         if (this.refereeId > 0) {
             this.edit();
         } else {
             this.add();
         }
+        return false;
     }
 
     add() {

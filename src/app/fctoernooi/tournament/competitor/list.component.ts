@@ -164,7 +164,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     );
   }
 
-  addPoulePlace(round): void {
+  addPoulePlace(): void {
     this.processing = true;
     this.setAlert('info', 'er wordt een pouleplek toegevoegd');
     try {

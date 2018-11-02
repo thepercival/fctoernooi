@@ -121,7 +121,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
         this.customForm.controls.breakduration.setValue(breakDuration);
     }
 
-    edit() {
+    edit(): boolean {
         this.processing = true;
         this.setAlert('info', 'het toernooi wordt opgeslagen');
 
@@ -186,6 +186,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
             this.setAlert('danger', e.message);
             this.processing = false;
         }
+        return false;
     }
 
     equals(one: NgbDateStruct, two: NgbDateStruct) {

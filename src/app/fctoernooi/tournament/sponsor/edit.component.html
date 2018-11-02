@@ -18,7 +18,7 @@
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing" name="form" (ngSubmit)="save() && false" [formGroup]="customForm" novalidate>
+      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="customForm" novalidate>
         <div class="form-group row">
           <div class="col-3">
             <label for="name" class="col-form-label">naam</label>

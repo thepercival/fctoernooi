@@ -74,15 +74,15 @@
           </tr>
           <tr *ngIf="!hasFavIds() || hasGameFavIds(game)" id="scroll-game-{{game.getId()}}">
             <td *ngIf="!pouleHasPopover(game)" class="text-center pl-1">
-              <span>{{nameService.getPouleName(game.getPoule())}}</span>
+              <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
             </td>
             <td *ngIf="pouleHasPopover(game) && game.getPoule().needsRanking()" class="text-center pl-1 pointer"
               container="body" placement="right" [ngbPopover]="popRanking" triggers="manual" #p="ngbPopover" (click)="showRanking( p, game.getPoule() )">
-              <span class="text-info">{{nameService.getPouleName(game.getPoule())}}</span>
+              <span class="text-info">{{nameService.getPouleName(game.getPoule(), false)}}</span>
             </td>
             <td *ngIf="pouleHasPopover(game) && !game.getPoule().needsRanking()" class="text-center pl-1 pointer" title="wedstrijd"
               container="body" placement="right" [ngbPopover]="getGameQualificationDescription(game)">
-              <span class="text-info">{{nameService.getPouleName(game.getPoule())}}</span>
+              <span class="text-info">{{nameService.getPouleName(game.getPoule(), false)}}</span>
             </td>
             <td *ngIf="planningService.canCalculateStartDateTime(roundNumber)">
               <span *ngIf="!onSameDay()">{{game.getStartDateTime().toLocaleString("nl",

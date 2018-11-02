@@ -83,7 +83,7 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
         this.processing = false;
     }
 
-    save() {
+    save(): boolean {
         this.processing = true;
         this.setAlert('info', 'de sponsor wordt opgeslagen');
         if (this.sponsorId > 0) {
@@ -91,6 +91,7 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
         } else {
             this.add();
         }
+        return false;
     }
 
     add() {

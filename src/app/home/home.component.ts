@@ -22,14 +22,14 @@ export class HomeComponent implements OnInit {
   futureDate: Date;
   searchFilter: TournamentShellFilter;
   processingSearch = false;
-  private hasSearched = false;
+  hasSearched = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
     private tournamentRepos: TournamentRepository,
-    private iconManager: IconManager
+    public iconManager: IconManager
   ) {
     this.pastDate = new Date();
     this.pastDate.setDate(this.pastDate.getDate() - this.pastDays);

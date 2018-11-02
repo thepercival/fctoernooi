@@ -239,7 +239,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         }
     }
 
-    save() {
+    save(): boolean {
         this.processing = true;
         this.setAlert('info', 'de wedstrijd wordt opgeslagen');
         if (this.game.getState() === Game.STATE_PLAYED && this.scoreControls.length === 0) {
@@ -282,56 +282,57 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         this.gameRepository.editObject(this.game, this.game.getPoule())
             .subscribe(
                 /* happy path */ gameRes => {
-                this.game = gameRes;
-                if (!stateChanged && !scoreChanged) {
-                    this.processing = false;
-                    this.setAlert('success', 'de wedstrijd is opgeslagen');
-                    this.navigateBack();
-                    return;
-                }
-
-                const currentQualifiedPoulePlaces: PoulePlace[] = [];
-                this.game.getRound().getChildRounds().forEach(childRound => {
-                    childRound.getPoulePlaces().forEach(poulePlace => {
-                        currentQualifiedPoulePlaces.push(poulePlace);
-                    });
-                });
-                const newQualifiers: INewQualifier[] = [];
-                this.game.getRound().getChildRounds().forEach(childRound => {
-                    const qualService = new QualifyService(childRound);
-                    const qualifyRules = qualService.getRulesToProcess(this.game.getPoule(), oldPouleState, oldRoundState);
-                    qualService.getNewQualifiers(qualifyRules).forEach((newQualifier) => {
-                        newQualifiers.push(newQualifier);
-                    });
-                });
-                const changedPoulePlaces = this.setTeams(newQualifiers, currentQualifiedPoulePlaces);
-                if (changedPoulePlaces.length > 0) {
-                    const reposUpdates = [];
-                    changedPoulePlaces.forEach((changedPoulePlace) => {
-                        reposUpdates.push(this.poulePlaceRepository.editObject(changedPoulePlace, changedPoulePlace.getPoule()));
-                    });
-
-                    forkJoin(reposUpdates).subscribe(results => {
-                        this.navigateBack();
+                    this.game = gameRes;
+                    if (!stateChanged && !scoreChanged) {
                         this.processing = false;
-                    },
-                        err => {
+                        this.setAlert('success', 'de wedstrijd is opgeslagen');
+                        this.navigateBack();
+                        return;
+                    }
+
+                    const currentQualifiedPoulePlaces: PoulePlace[] = [];
+                    this.game.getRound().getChildRounds().forEach(childRound => {
+                        childRound.getPoulePlaces().forEach(poulePlace => {
+                            currentQualifiedPoulePlaces.push(poulePlace);
+                        });
+                    });
+                    const newQualifiers: INewQualifier[] = [];
+                    this.game.getRound().getChildRounds().forEach(childRound => {
+                        const qualService = new QualifyService(childRound);
+                        const qualifyRules = qualService.getRulesToProcess(this.game.getPoule(), oldPouleState, oldRoundState);
+                        qualService.getNewQualifiers(qualifyRules).forEach((newQualifier) => {
+                            newQualifiers.push(newQualifier);
+                        });
+                    });
+                    const changedPoulePlaces = this.setTeams(newQualifiers, currentQualifiedPoulePlaces);
+                    if (changedPoulePlaces.length > 0) {
+                        const reposUpdates = [];
+                        changedPoulePlaces.forEach((changedPoulePlace) => {
+                            reposUpdates.push(this.poulePlaceRepository.editObject(changedPoulePlace, changedPoulePlace.getPoule()));
+                        });
+
+                        forkJoin(reposUpdates).subscribe(results => {
+                            this.navigateBack();
                             this.processing = false;
-                            this.setAlert('info', 'de wedstrijd is niet opgeslagen: ' + err);
-                        }
-                    );
-                } else {
-                    this.navigateBack();
-                }
-            },
+                        },
+                            err => {
+                                this.processing = false;
+                                this.setAlert('info', 'de wedstrijd is niet opgeslagen: ' + err);
+                            }
+                        );
+                    } else {
+                        this.navigateBack();
+                    }
+                },
              /* error path */ e => { this.setAlert('danger', 'de wedstrijd kan niet worden opgeslagen: ' + e); this.processing = false; },
-            // /* onComplete */() => {
-            //     if (!stateChanged && !scoreChanged) {
-            //             this.processing = false;
-            //             this.setAlert('success', 'de wedstrijd is opgeslagen');
-            //         }
-            //     }
-        );
+                // /* onComplete */() => {
+                //     if (!stateChanged && !scoreChanged) {
+                //             this.processing = false;
+                //             this.setAlert('success', 'de wedstrijd is opgeslagen');
+                //         }
+                //     }
+            );
+        return false;
     }
 
     protected hasScoreChanges(originalGameScores: GameScoreHomeAway[], homeAwayControls: HomeAwayFormControl[]): boolean {

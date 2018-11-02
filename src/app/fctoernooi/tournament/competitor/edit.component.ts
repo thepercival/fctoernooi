@@ -102,7 +102,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
         }
     }
 
-    save() {
+    save(): boolean {
         this.processing = true;
         this.setAlert('info', 'de deelnemer wordt opgeslagen');
         if (this.poulePlace.getTeam() !== undefined) {
@@ -110,6 +110,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
         } else {
             this.add();
         }
+        return false;
     }
 
     add() {
