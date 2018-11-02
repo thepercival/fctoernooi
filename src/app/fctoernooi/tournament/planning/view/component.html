@@ -77,7 +77,8 @@
               <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
             </td>
             <td *ngIf="pouleHasPopover(game) && game.getPoule().needsRanking()" class="text-center pl-1 pointer"
-              container="body" placement="right" [ngbPopover]="popRanking" triggers="manual" #p="ngbPopover" (click)="showRanking( p, game.getPoule() )">
+              container="body" placement="right" [ngbPopover]="popRanking" [autoClose]="false" triggers="manual" #p="ngbPopover"
+              (click)="showRanking( p, game.getPoule() )">
               <span class="text-info">{{nameService.getPouleName(game.getPoule(), false)}}</span>
             </td>
             <td *ngIf="pouleHasPopover(game) && !game.getPoule().needsRanking()" class="text-center pl-1 pointer" title="wedstrijd"
