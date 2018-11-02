@@ -17,7 +17,7 @@ export class TournamentListRemoveModalComponent {
         return (firstRound.getPoules().length * 2) === firstRound.getPoulePlaces().length;
     }
 
-    hasNoDropouts() {
+    allCompetitorsQualifyForNextRound() {
         const firstRound = this.poulePlace.getPoule().getRound();
         return firstRound.getPoulePlaces().length <= firstRound.getNrOfPlacesChildRounds();
     }

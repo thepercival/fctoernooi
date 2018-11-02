@@ -101,11 +101,11 @@ export class TournamentStructureRoundComponent {
   }
 
   canRemovePoulePlace(round: Round) {
-    let nrOfPoulePlaces = round.getPoulePlaces().length;
-    round.getChildRounds().forEach(function (childRound) {
-      nrOfPoulePlaces -= childRound.getPoulePlaces().length;
-    });
-    return (nrOfPoulePlaces > 0);
+    return !this.hasMinimumNrOfTeamsPerPoule(round);
+  }
+
+  hasMinimumNrOfTeamsPerPoule(round: Round) {
+    return (round.getPoules().length * 2) === round.getPoulePlaces().length;
   }
 
   getMaxSliderValue(winnersOrLosers: number): number {
