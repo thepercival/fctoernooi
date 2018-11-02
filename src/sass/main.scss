@@ -4,9 +4,16 @@ $info:          #b041e7 !default;
 @import "./bootswatch/variables";
 $secondary:     $gray-500;
 $popover-border-color:                #fff;
-$popover-max-width:                 300px;
 @import "~bootstrap/scss/bootstrap";
 @import "./bootswatch/bootswatch";
+.popover {
+  @include media-breakpoint-only(xs) {
+    max-width: 300px;
+  }
+  @include media-breakpoint-up(sm) {
+    max-width: 400px;
+  }
+}
 
 hr {
   border-top: 1px solid rgba(136, 136, 136, 0.30);
