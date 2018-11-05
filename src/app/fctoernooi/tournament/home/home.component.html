@@ -86,21 +86,116 @@
       </div>
     </div>
   </div>
-  <div class="row d-flex justify-content-center my-3">
-    <div *ngIf="!processing && isAdmin()" class="card mt-3 mx-2">
+  <div *ngIf="!processing" class="row d-flex justify-content-center my-3">
+    <div class="card mt-3 mx-2">
       <div class="card-body">
-        <h5 (click)="toggleRemoveQuestion( true )" class="card-title pointer">
+        <h5 (click)="openModalPrint(contentprint)" class="card-title pointer">
+          <fa-icon [icon]="['fas', 'print']"></fa-icon> afdrukken
+        </h5>
+        <div class="card-text"></div>
+      </div>
+    </div>
+    <ngb-alert *ngIf="alertPrint" [type]="alertPrint.type" [dismissible]="false">{{ alertPrint.message }}</ngb-alert>
+    <div *ngIf="isAdmin()" class="card mt-3 mx-2">
+      <div class="card-body">
+        <h5 (click)="openModalRemove(contentremove)" class="card-title pointer">
           <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon> weggooien
         </h5>
-        <div *ngIf="showRemoveQuestion" class="card-text">
-          <div>nu weggooien?</div>
-          <div class="d-flex justify-content-between">
-            <button class="btn btn-secondary pointer" (click)="remove()">ja</button>
-            <button class="btn btn-secondary pointer" (click)="toggleRemoveQuestion( false )">nee</button>
-          </div>
-        </div>
+        <div class="card-text"></div>
       </div>
     </div>
     <ngb-alert *ngIf="alertRemove" [type]="alertRemove.type" [dismissible]="false">{{ alertRemove.message }}</ngb-alert>
   </div>
 </div>
+
+<ng-template #contentprint let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+      <fa-icon [icon]="['fas', 'print']"></fa-icon> afdrukken
+    </h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="form-check col-3">
+          <label class="custom-control custom-checkbox col-form-label pl-0">
+            <input type="checkbox" class="custom-control-input form-check-input" name="gamenotes" [(ngModel)]="printConfig.gamenotes">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+        <label for="gamenotes" class="col-9 col-form-label">wedstrijdbriefjes</label>
+      </div>
+      <ngb-alert class="mt-4 mb-1" type="info" [dismissible]="false">Onderstaande opties kun je via de website
+        bijhouden.
+        De deelnemers kunnen dan meekijken en zien altijd actuele gegevens.</ngb-alert>
+      <div class="row">
+        <div class="form-check col-3">
+          <label class="custom-control custom-checkbox col-form-label pl-0">
+            <input type="checkbox" class="custom-control-input form-check-input" name="structure" [(ngModel)]="printConfig.structure">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+        <label for="structure" class="col-8 col-form-label">structuur en indeling</label>
+      </div>
+      <div class="row">
+        <div class="form-check col-3">
+          <label class="custom-control custom-checkbox col-form-label pl-0">
+            <input type="checkbox" class="custom-control-input form-check-input" name="poules" [(ngModel)]="printConfig.poules">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+        <label for="poules" class="col-8 col-form-label">draaitabel per poule</label>
+      </div>
+      <div class="row">
+        <div class="form-check col-3">
+          <label class="custom-control custom-checkbox col-form-label pl-0">
+            <input type="checkbox" class="custom-control-input form-check-input" name="planning" [(ngModel)]="printConfig.planning">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+        <label for="planning" class="col-8 col-form-label">wedstrijdschema</label>
+      </div>
+      <div class="row">
+        <div class="form-check col-3">
+          <label class="custom-control custom-checkbox col-form-label pl-0">
+            <input type="checkbox" class="custom-control-input form-check-input" name="rules" [(ngModel)]="printConfig.rules">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+        <label for="rules" class="col-8 col-form-label">reglement</label>
+      </div>
+      <div class="row">
+        <div class="form-check col-3">
+          <label class="custom-control custom-checkbox col-form-label pl-0">
+            <input type="checkbox" class="custom-control-input form-check-input" name="gamesperfield" [(ngModel)]="printConfig.gamesperfield">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+        <label for="gamesperfield" class="col-8 col-form-label">wedstrijden per veld</label>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" [disabled]="allPrintOptionsOff()" data-dismiss="modal" (click)="modal.close('print')">afdrukken</button>
+  </div>
+</ng-template>
+
+<ng-template #contentremove let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">toernooi weggooien</h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>Weet je zeker dat je het toernooi wilt weggooien?</p>
+  </div>
+  <div class="modal-footer justify-content-around">
+    <button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal" (click)="modal.close('remove')">nu
+      weggooien</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.close('close')">sluiten</button>
+  </div>
+</ng-template>

@@ -163,8 +163,14 @@ export class TournamentRepository extends SportRepository {
         return jsonArray;
     }
 
-    getPdfUrl(tournament: Tournament): string {
-        return this.getUrl() + 'public/pdf/' + tournament.getId();
+    getPrintUrl(tournament: Tournament, printConfig: TournamentPrintConfig): string {
+        return this.getUrl() + 'public/pdf/' + tournament.getId() +
+            '?gamenotes=' + printConfig.gamenotes +
+            '&structure=' + printConfig.structure +
+            '&rules=' + printConfig.rules +
+            '&gamesperfield=' + printConfig.gamesperfield +
+            '&planning=' + printConfig.planning +
+            '&poules=' + printConfig.poules;
     }
 }
 
@@ -190,4 +196,13 @@ export interface TournamentShellFilter {
     maxDate?: Date;
     name?: string;
     withRoles?: boolean;
+}
+
+export interface TournamentPrintConfig {
+    gamenotes: boolean;
+    structure: boolean;
+    rules: boolean;
+    gamesperfield: boolean;
+    planning: boolean;
+    poules: boolean;
 }

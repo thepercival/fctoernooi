@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import { PlanningService, StructureRepository } from 'ngx-sport';
-import { IPlanningScrollTo } from '../planning/view/component';
 
 import { AuthService } from '../../../auth/auth.service';
 import { TournamentComponent } from '../component';
+import { IPlanningScrollTo } from '../planning/view/component';
 import { TournamentRepository } from '../repository';
 import { TournamentRole } from '../role';
 
@@ -50,23 +50,6 @@ export class GameListComponent extends TournamentComponent implements OnInit {
       TournamentRole.STRUCTUREADMIN + TournamentRole.PLANNER);
 
     this.processing = false;
-  }
-
-  // updateRound(newRound: Round) {
-  //   this.structureService = new StructureService(
-  //     this.tournament.getCompetition(),
-  //     { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
-  //     newRound
-  //   );
-  //   this.setPlanningService();
-  // }
-
-  // public beforeChange($event: NgbTabChangeEvent) {
-  //   this.showPrintBtn = ($event.nextId === 'tab-view');
-  // }
-
-  printPdf() {
-    const newWindow = window.open(this.tournamentRepository.getPdfUrl(this.tournament));
   }
 }
 

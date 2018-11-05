@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StructureRepository } from 'ngx-sport';
 
 import { IAlert } from '../../../app.definitions';
@@ -14,18 +15,26 @@ import { TournamentRole } from '../role';
     styleUrls: ['./home.component.css']
 })
 export class TournamentHomeComponent extends TournamentComponent implements OnInit {
-
     alertRemove: IAlert;
-    showRemoveQuestion = false;
+    printConfig;
 
     constructor(
         route: ActivatedRoute,
+        private modalService: NgbModal,
         router: Router,
         private authService: AuthService,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository
     ) {
         super(route, router, tournamentRepository, structureRepository);
+        this.printConfig = {
+            gamenotes: true,
+            structure: false,
+            rules: false,
+            gamesperfield: false,
+            planning: false,
+            poules: false
+        };
     }
 
     ngOnInit() {
@@ -95,10 +104,6 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
             );
     }
 
-    toggleRemoveQuestion(showRemoveQuastion: boolean) {
-        this.showRemoveQuestion = showRemoveQuastion;
-    }
-
     isManualMessageReadOnDevice() {
         let manualMessageReadOnDevice = localStorage.getItem('manualmessageread');
         if (manualMessageReadOnDevice === null) {
@@ -117,5 +122,32 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
 
     protected resetRemoveAlert(): void {
         this.alertRemove = undefined;
+    }
+
+    allPrintOptionsOff() {
+        return (!this.printConfig.gamenotes && !this.printConfig.structure && !this.printConfig.planning &&
+            !this.printConfig.gamesperfield && !this.printConfig.rules && !this.printConfig.poules);
+    }
+
+    openModalPrint(modalContent) {
+        const activeModal = this.modalService.open(modalContent/*, { windowClass: 'border-warning' }*/);
+        // (<TournamentListRemoveModalComponent>activeModal.componentInstance).poulePlace = poulePlace;
+        activeModal.result.then((result) => {
+            if (result === 'print') {
+                const newWindow = window.open(this.tournamentRepository.getPrintUrl(this.tournament, this.printConfig));
+            }
+        }, (reason) => {
+        });
+    }
+
+    openModalRemove(modalContent) {
+        const activeModal = this.modalService.open(modalContent/*, { windowClass: 'border-warning' }*/);
+        // (<TournamentListRemoveModalComponent>activeModal.componentInstance).poulePlace = poulePlace;
+        activeModal.result.then((result) => {
+            if (result === 'remove') {
+                this.remove();
+            }
+        }, (reason) => {
+        });
     }
 }
