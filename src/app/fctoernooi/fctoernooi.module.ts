@@ -7,7 +7,6 @@ import { faProductHunt } from '@fortawesome/free-brands-svg-icons';
 import { faCheckSquare, faSquare } from '@fortawesome/free-regular-svg-icons';
 import {
   faArrowsAltH,
-  faArrowsAltV,
   faCheckCircle,
   faCircle,
   faCogs,
@@ -81,7 +80,7 @@ import { TournamentViewComponent } from './tournament/view/view.component';
 library.add(
   faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus,
   faExpand, faCompress, faPrint, faSort, faRandom, faSquare, faCheckSquare, faArrowsAltH,
-  faArrowsAltV, faUserTag, faInfoCircle, faMedal, faProductHunt
+  faUserTag, faInfoCircle, faMedal, faProductHunt
 );
 
 @NgModule({

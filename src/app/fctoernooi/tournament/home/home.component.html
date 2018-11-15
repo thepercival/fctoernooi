@@ -122,23 +122,11 @@
       <div class="row">
         <div class="form-check col-3">
           <label class="custom-control custom-checkbox col-form-label pl-0">
-            <input type="checkbox" class="custom-control-input form-check-input" name="gamenotes" [(ngModel)]="printConfig.gamenotes">
-            <span class="custom-control-indicator"></span>
-          </label>
-        </div>
-        <label for="gamenotes" class="col-9 col-form-label">wedstrijdbriefjes</label>
-      </div>
-      <ngb-alert class="mt-4 mb-1" type="info" [dismissible]="false">Onderstaande opties kun je via de website
-        bijhouden.
-        De deelnemers kunnen dan meekijken en zien altijd actuele gegevens.</ngb-alert>
-      <div class="row">
-        <div class="form-check col-3">
-          <label class="custom-control custom-checkbox col-form-label pl-0">
             <input type="checkbox" class="custom-control-input form-check-input" name="structure" [(ngModel)]="printConfig.structure">
             <span class="custom-control-indicator"></span>
           </label>
         </div>
-        <label for="structure" class="col-8 col-form-label">structuur en indeling</label>
+        <label for="structure" class="col-8 col-form-label">indeling & structuur</label>
       </div>
       <div class="row">
         <div class="form-check col-3">
@@ -158,7 +146,7 @@
         </div>
         <label for="planning" class="col-8 col-form-label">wedstrijdschema</label>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="form-check col-3">
           <label class="custom-control custom-checkbox col-form-label pl-0">
             <input type="checkbox" class="custom-control-input form-check-input" name="rules" [(ngModel)]="printConfig.rules">
@@ -166,6 +154,15 @@
           </label>
         </div>
         <label for="rules" class="col-8 col-form-label">reglement</label>
+      </div> -->
+      <div class="row">
+        <div class="form-check col-3">
+          <label class="custom-control custom-checkbox col-form-label pl-0">
+            <input type="checkbox" class="custom-control-input form-check-input" name="gamenotes" [(ngModel)]="printConfig.gamenotes">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+        <label for="gamenotes" class="col-9 col-form-label">wedstrijdbriefjes</label>
       </div>
       <div class="row">
         <div class="form-check col-3">

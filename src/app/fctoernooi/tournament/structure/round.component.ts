@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PoulePlace, QualifyService, Round, StructureNameService, StructureService } from 'ngx-sport';
+import { PoulePlace, Round, StructureNameService, StructureService } from 'ngx-sport';
 
 @Component({
   selector: 'app-tournament-structureround',
@@ -53,9 +53,7 @@ export class TournamentStructureRoundComponent {
     this.resetAlert();
     this.structureService.addPoule(round, fillPouleToMinimum);
     if (round.getNumber() > 1) {
-      const qualifyService = new QualifyService(round);
-      qualifyService.removeObjectsForParentRound();
-      qualifyService.createObjectsForParentRound();
+      this.structureService.recalculateQualifyRulesForRound(round);
     }
     // this.getPlanningService().create(round.getNumber());
     this.roundChanged.emit(round.getNumber());
@@ -78,9 +76,7 @@ export class TournamentStructureRoundComponent {
     try {
       this.structureService.addPoulePlace(round);
       if (round.getNumber() > 1) {
-        const qualifyService = new QualifyService(round);
-        qualifyService.removeObjectsForParentRound();
-        qualifyService.createObjectsForParentRound();
+        this.structureService.recalculateQualifyRulesForRound(round);
       }
       // this.getPlanningService().create(round.getNumber());
       this.roundChanged.emit(round.getNumber());
@@ -144,15 +140,14 @@ export class TournamentStructureRoundComponent {
     this.roundChanged.emit(this.round.getNumber() + 1);
   }
 
+
   toggleQualifyOrder(round: Round) {
     this.resetAlert();
     if (!(round.getNumber() === 2 || round.getNumber() === 3)) {
       return;
     }
     round.setQualifyOrder(this.qualifyOrderIsHorizontal(round) ? Round.ORDER_VERTICAL : Round.ORDER_HORIZONTAL);
-    const qualifyService = new QualifyService(round);
-    qualifyService.removeObjectsForParentRound();
-    qualifyService.createObjectsForParentRound();
+    this.structureService.recalculateQualifyRulesForRound(round);
     // this.getPlanningService().create(round.getNumber());
     this.roundChanged.emit(round.getNumber());
   }

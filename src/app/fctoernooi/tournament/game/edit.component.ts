@@ -2,18 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    Game,
-    GameRepository,
-    GameScore,
-    GameScoreHomeAway,
-    INewQualifier,
-    PlanningService,
-    PoulePlace,
-    PoulePlaceRepository,
-    QualifyService,
-    RoundConfigScore,
-    StructureNameService,
-    StructureRepository,
+  Game,
+  GameRepository,
+  GameScore,
+  GameScoreHomeAway,
+  INewQualifier,
+  PlanningService,
+  PoulePlace,
+  PoulePlaceRepository,
+  QualifyService,
+  RoundConfigScore,
+  StructureNameService,
+  StructureRepository,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
 
@@ -298,7 +298,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
                     });
                     const newQualifiers: INewQualifier[] = [];
                     this.game.getRound().getChildRounds().forEach(childRound => {
-                        const qualService = new QualifyService(childRound);
+                        const qualService = new QualifyService(childRound.getParent(), childRound);
                         const qualifyRules = qualService.getRulesToProcess(this.game.getPoule(), oldPouleState, oldRoundState);
                         qualService.getNewQualifiers(qualifyRules).forEach((newQualifier) => {
                             newQualifiers.push(newQualifier);
