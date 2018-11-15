@@ -95,7 +95,6 @@
         <div class="card-text"></div>
       </div>
     </div>
-    <ngb-alert *ngIf="alertPrint" [type]="alertPrint.type" [dismissible]="false">{{ alertPrint.message }}</ngb-alert>
     <div *ngIf="isAdmin()" class="card mt-3 mx-2">
       <div class="card-body">
         <h5 (click)="openModalRemove(contentremove)" class="card-title pointer">
