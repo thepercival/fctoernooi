@@ -10,17 +10,18 @@
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
+      <ngb-alert *ngIf="!processing && alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <ngb-alert *ngIf="!isManualMessageReadOnDevice()" type="info" [dismissible]="true" (close)="manualMessageReadOnDevice()">gedetaileerde
         informatie kun je vinden onderaan de pagina via de handleiding-link</ngb-alert>
-      <div *ngIf="!processing" class="row d-flex justify-content-center">
+      <div *ngIf="!processing && structure" class="row d-flex justify-content-center">
         <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/structure', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
               <i class="fi flaticon-structure"></i> indeling</h5>
-            <p class="card-text" *ngIf="structureService.getFirstRound() !== undefined">
+            <p class="card-text" *ngIf="structure.getRootRound() !== undefined">
               <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> indeling aanwezig
             </p>
-            <p class="card-text" *ngIf="structureService.getFirstRound() === undefined">
+            <p class="card-text" *ngIf="structure.getRootRound() === undefined">
               <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> geen indeling aanwezig
             </p>
           </div>
@@ -29,12 +30,12 @@
           <div class="card-body">
             <h5 class="card-title">
               <i class="fi flaticon-group"></i> deelnemers</h5>
-            <p class="card-text" *ngIf="structureService.getFirstRound().getTeams().length === structureService.getFirstRound().getPoulePlaces().length">
+            <p class="card-text" *ngIf="structure.getRootRound().getTeams().length === structure.getRootRound().getPoulePlaces().length">
               <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> alle namen ingevuld
             </p>
-            <p class="card-text" *ngIf="structureService.getFirstRound().getTeams().length < structureService.getFirstRound().getPoulePlaces().length">
+            <p class="card-text" *ngIf="structure.getRootRound().getTeams().length < structure.getRootRound().getPoulePlaces().length">
               <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> vul de namen in
-              ({{structureService.getFirstRound().getTeams().length}}/{{structureService.getFirstRound().getPoulePlaces().length}})
+              ({{structure.getRootRound().getTeams().length}}/{{structure.getRootRound().getPoulePlaces().length}})
             </p>
           </div>
         </div>
@@ -42,10 +43,10 @@
           <div class="card-body">
             <h5 class="card-title">
               <i class="fi flaticon-schedule"></i> wedstrijden</h5>
-            <p class="card-text" *ngIf="structureService.getFirstRound().getGames().length > 0">
+            <p class="card-text" *ngIf="structure.getRootRound().getGames().length > 0">
               <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> wedstrijden ingepland
             </p>
-            <p class="card-text" *ngIf="structureService.getFirstRound().getGames().length === 0">
+            <p class="card-text" *ngIf="structure.getRootRound().getGames().length === 0">
               <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> plan wedstrijden in
             </p>
           </div>
@@ -86,7 +87,7 @@
       </div>
     </div>
   </div>
-  <div *ngIf="!processing" class="row d-flex justify-content-center my-3">
+  <div *ngIf="!processing && structure" class="row d-flex justify-content-center my-3">
     <div class="card mt-3 mx-2">
       <div class="card-body">
         <h5 (click)="openModalPrint(contentprint)" class="card-title pointer">
@@ -130,15 +131,6 @@
       <div class="row">
         <div class="form-check col-3">
           <label class="custom-control custom-checkbox col-form-label pl-0">
-            <input type="checkbox" class="custom-control-input form-check-input" name="poules" [(ngModel)]="printConfig.poules">
-            <span class="custom-control-indicator"></span>
-          </label>
-        </div>
-        <label for="poules" class="col-8 col-form-label">draaitabel per poule</label>
-      </div>
-      <div class="row">
-        <div class="form-check col-3">
-          <label class="custom-control custom-checkbox col-form-label pl-0">
             <input type="checkbox" class="custom-control-input form-check-input" name="planning" [(ngModel)]="printConfig.planning">
             <span class="custom-control-indicator"></span>
           </label>
@@ -171,6 +163,15 @@
           </label>
         </div>
         <label for="gamesperfield" class="col-8 col-form-label">wedstrijden per veld</label>
+      </div>
+      <div class="row">
+        <div class="form-check col-3">
+          <label class="custom-control custom-checkbox col-form-label pl-0">
+            <input type="checkbox" class="custom-control-input form-check-input" name="inputform" [(ngModel)]="printConfig.inputform">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+        <label for="inputform" class="col-8 col-form-label">invulformulier</label>
       </div>
     </div>
   </div>

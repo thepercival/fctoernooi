@@ -1,15 +1,14 @@
-
-import {throwError as observableThrowError,  Observable } from 'rxjs';
-
-
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { SportRepository } from 'ngx-sport';
-import { catchError ,  map } from 'rxjs/operators';
+import { Observable, throwError as observableThrowError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 import { UserRepository } from '../user/repository';
 import { User } from '../user/user';
+
+
 
 @Injectable()
 export class AuthService extends SportRepository {
@@ -44,7 +43,7 @@ export class AuthService extends SportRepository {
       map((res: any) => {
         const authItem: IAuthItem = { token: res.token, userid: res.user.id };
         this.setAuthItem(authItem);
-        const user = this.userRepos.jsonToObjectHelper(res.user);
+        const user = this.userRepos.jsonToObject(res.user);
         return user;
       }),
       catchError((err) => this.handleError(err))

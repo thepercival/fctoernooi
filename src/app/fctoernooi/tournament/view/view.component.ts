@@ -40,7 +40,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     ngOnInit() {
         super.myNgOnInit(() => {
             this.initTVViewLink();
-            this.planningService = new PlanningService(this.structureService);
+            this.planningService = new PlanningService(this.tournament.getCompetition());
             this.processing = false;
             this.tournamentRepository.getUserRefereeId(this.tournament).subscribe(
                 /* happy path */ userRefereeIdRes => {
@@ -64,7 +64,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
                 if (this.progress === 60) {
                     if (this.refreshAtCountDown === true) {
                         this.setData(this.tournament.getId(), () => {
-                            this.planningService = new PlanningService(this.structureService);
+                            this.planningService = new PlanningService(this.tournament.getCompetition());
                         });
                     }
                     this.countDown();

@@ -7,12 +7,13 @@ import {
   Competition,
   Field,
   IRoundStructure,
+  IStructure,
   League,
   PlanningRepository,
   PlanningService,
-  RoundRepository,
   Season,
   SportConfig,
+  Structure,
   StructureRepository,
   StructureService,
 } from 'ngx-sport';
@@ -50,7 +51,6 @@ export class TournamentNewComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private tournamentRepository: TournamentRepository,
-    private roundRepository: RoundRepository,
     private structureRepository: StructureRepository,
     private planningRepository: PlanningRepository,
     fb: FormBuilder
@@ -146,24 +146,16 @@ export class TournamentNewComponent implements OnInit {
       .subscribe(
         /* happy path */ tournamentOut => {
           // setTimeout(3000);
-          let structureService = new StructureService(
-            tournamentOut.getCompetition(),
-            { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
-            undefined, nrofcompetitors
-          );
-          const jsonRound = this.roundRepository.objectToJsonHelper(structureService.getFirstRound());
-          this.structureRepository.createObject(jsonRound, tournamentOut.getCompetition())
+          const structureService = new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
+          const structure: Structure = structureService.create(tournamentOut.getCompetition(), nrofcompetitors);
+          const jsonStructure: IStructure = this.structureRepository.objectToJson(structure);
+          this.structureRepository.createObject(jsonStructure, tournamentOut.getCompetition())
             .subscribe(
-            /* happy path */ firstRound => {
-                structureService = new StructureService(
-                  tournamentOut.getCompetition(),
-                  { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
-                  firstRound
-                );
-                const planningService = new PlanningService(structureService);
+            /* happy path */(structureOut: Structure) => {
+                const planningService = new PlanningService(tournamentOut.getCompetition());
                 const tournamentService = new TournamentService(tournamentOut);
-                tournamentService.create(planningService, structureService.getFirstRound().getNumber());
-                this.planningRepository.createObject([structureService.getFirstRound()])
+                tournamentService.create(planningService, structureOut.getFirstRoundNumber());
+                this.planningRepository.createObject([structureOut.getRootRound()])
                   .subscribe(
                     /* happy path */ games => {
                       this.router.navigate(['/toernooi', tournamentOut.getId()]);
@@ -171,7 +163,8 @@ export class TournamentNewComponent implements OnInit {
                   /* error path */ e => {
                       this.setAlert('danger', 'de toernooi-planning kon niet worden aangemaakt: ' + e);
                       this.processing = false;
-                    }
+                    },
+                  /* onComplete */() => { this.processing = false; }
                   );
               },
             /* error path */ e => {

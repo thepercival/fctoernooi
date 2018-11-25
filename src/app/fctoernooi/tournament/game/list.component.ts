@@ -45,7 +45,7 @@ export class GameListComponent extends TournamentComponent implements OnInit {
   }
 
   setPlanningService() {
-    this.planningService = new PlanningService(this.structureService);
+    this.planningService = new PlanningService(this.tournament.getCompetition());
     this.userIsPlannerOrStructureAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(),
       TournamentRole.STRUCTUREADMIN + TournamentRole.PLANNER);
 

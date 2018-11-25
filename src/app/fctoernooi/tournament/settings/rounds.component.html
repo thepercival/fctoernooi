@@ -11,7 +11,7 @@
 
         <h2 *ngIf="!processing">
             <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellingen
-            <span [innerHTML]="nameService.getRoundsName( roundNumber, allRoundsByNumber[roundNumber] ) | keepHtml"></span>
+            <span [innerHTML]="nameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
         </h2>
         <h2 *ngIf="processing" class="text-center">
             <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>

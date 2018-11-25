@@ -74,7 +74,7 @@ export class TournamentRepository extends SportRepository {
     getObject(id: number): Observable<Tournament> {
         const postUrl = SportConfig.getToken() === undefined ? 'public' : '';
         return this.http.get<ITournament>(this.url + postUrl + '/' + id, { headers: super.getHeaders() }).pipe(
-            map((jsonTournament: ITournament) => this.jsonToObjectHelper(jsonTournament)),
+            map((jsonTournament: ITournament) => this.jsonToObject(jsonTournament)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -90,17 +90,17 @@ export class TournamentRepository extends SportRepository {
     }
 
     createObject(tournament: Tournament): Observable<Tournament> {
-        return this.http.post(this.url, this.objectToJsonHelper(tournament), { headers: super.getHeaders() }).pipe(
-            map((res: ITournament) => this.jsonToObjectHelper(res)),
+        return this.http.post(this.url, this.objectToJson(tournament), { headers: super.getHeaders() }).pipe(
+            map((res: ITournament) => this.jsonToObject(res)),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(tournament: Tournament): Observable<Tournament> {
         const url = this.url + '/' + tournament.getId();
-        return this.http.put(url, this.objectToJsonHelper(tournament), { headers: super.getHeaders() }).pipe(
+        return this.http.put(url, this.objectToJson(tournament), { headers: super.getHeaders() }).pipe(
             map((res: ITournament) => {
-                return this.jsonToObjectHelper(res);
+                return this.jsonToObject(res);
             }),
             catchError((err) => this.handleError(err))
         );
@@ -125,14 +125,14 @@ export class TournamentRepository extends SportRepository {
     jsonArrayToObject(jsonArray: ITournament[]): Tournament[] {
         const tournaments: Tournament[] = [];
         for (const json of jsonArray) {
-            const object = this.jsonToObjectHelper(json);
+            const object = this.jsonToObject(json);
             tournaments.push(object);
         }
         return tournaments;
     }
 
-    jsonToObjectHelper(json: ITournament): Tournament {
-        const competition = this.csRepository.jsonToObjectHelper(json.competition);
+    jsonToObject(json: ITournament): Tournament {
+        const competition = this.csRepository.jsonToObject(json.competition);
         const tournament = new Tournament(competition);
         const roles = this.tournamentRoleRepository.jsonArrayToObject(json.roles ? json.roles : [], tournament);
         this.sponsorRepository.jsonArrayToObject(json.sponsors, tournament);
@@ -145,10 +145,10 @@ export class TournamentRepository extends SportRepository {
         return tournament;
     }
 
-    objectToJsonHelper(tournament: Tournament): ITournament {
+    objectToJson(tournament: Tournament): ITournament {
         return {
             id: tournament.getId(),
-            competition: this.csRepository.objectToJsonHelper(tournament.getCompetition()),
+            competition: this.csRepository.objectToJson(tournament.getCompetition()),
             roles: this.tournamentRoleRepository.objectsToJsonArray(tournament.getRoles()),
             sponsors: this.sponsorRepository.objectsToJsonArray(tournament.getSponsors()),
             breakStartDateTime: tournament.getBreakStartDateTime() ? tournament.getBreakStartDateTime().toISOString() : undefined,
@@ -170,7 +170,7 @@ export class TournamentRepository extends SportRepository {
             '&rules=' + printConfig.rules +
             '&gamesperfield=' + printConfig.gamesperfield +
             '&planning=' + printConfig.planning +
-            '&poules=' + printConfig.poules;
+            '&inputform=' + printConfig.inputform;
     }
 }
 
@@ -204,5 +204,5 @@ export interface TournamentPrintConfig {
     rules: boolean;
     gamesperfield: boolean;
     planning: boolean;
-    poules: boolean;
+    inputform: boolean;
 }

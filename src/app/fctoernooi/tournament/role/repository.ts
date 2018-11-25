@@ -48,7 +48,7 @@ export class TournamentRoleRepository extends SportRepository {
     jsonArrayToObject(jsonArray: ITournamentRole[], tournament: Tournament): TournamentRole[] {
         const tournamentRoles: TournamentRole[] = [];
         for (const json of jsonArray) {
-            tournamentRoles.push(this.jsonToObjectHelper(json, tournament));
+            tournamentRoles.push(this.jsonToObject(json, tournament));
         }
         return tournamentRoles;
     }
@@ -71,8 +71,8 @@ export class TournamentRoleRepository extends SportRepository {
     //     return observable;
     // }
     //
-    jsonToObjectHelper(json: ITournamentRole, tournament: Tournament): TournamentRole {
-        const user = this.userRepos.jsonToObjectHelper(json.user);
+    jsonToObject(json: ITournamentRole, tournament: Tournament): TournamentRole {
+        const user = this.userRepos.jsonToObject(json.user);
 
         const tournamentRole = new TournamentRole(tournament, user, json.value);
         tournamentRole.setId(json.id);
@@ -82,15 +82,15 @@ export class TournamentRoleRepository extends SportRepository {
     objectsToJsonArray(roles: TournamentRole[]): any[] {
         const jsonArray: ITournamentRole[] = [];
         for (const role of roles) {
-            jsonArray.push(this.objectToJsonHelper(role));
+            jsonArray.push(this.objectToJson(role));
         }
         return jsonArray;
     }
 
-    objectToJsonHelper(role: TournamentRole): any {
+    objectToJson(role: TournamentRole): any {
         const json: ITournamentRole = {
             id: role.getId(),
-            user: this.userRepos.objectToJsonHelper(role.getUser()),
+            user: this.userRepos.objectToJson(role.getUser()),
             value: role.getValue()
         };
         return json;
@@ -100,7 +100,7 @@ export class TournamentRoleRepository extends SportRepository {
     //     return this.http
     //         .post(this.url, jsonObject, new RequestOptions({ headers: this.getHeaders() }))
     //         // ...and calling .json() on the response to return data
-    //         .map((res) => /*this.jsonToObjectHelper(res.json())*/ )
+    //         .map((res) => /*this.jsonToObject(res.json())*/ )
     //         .catch(this.handleError);
     // }
     //
@@ -111,7 +111,7 @@ export class TournamentRoleRepository extends SportRepository {
     //     return this.http
     //         .put(url, JSON.stringify( object ), { headers: this.getHeaders() })
     //         // ...and calling .json() on the response to return data
-    //         .map((res) => { return this.jsonToObjectHelper(res.json()); })
+    //         .map((res) => { return this.jsonToObject(res.json()); })
     //         //...errors if any
     //         .catch(this.handleError);
     // }

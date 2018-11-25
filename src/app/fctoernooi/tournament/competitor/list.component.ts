@@ -8,9 +8,9 @@ import {
   PoulePlace,
   PoulePlaceRepository,
   Round,
+  Structure,
   StructureNameService,
   StructureRepository,
-  StructureService,
   TeamRepository,
 } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
@@ -61,7 +61,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   initPoulePlaces() {
-    const round = this.structureService.getFirstRound();
+    const round = this.structure.getRootRound();
     round.getPoulePlaces().forEach(poulePlace => {
       if (poulePlace.getTeam() === undefined && this.focusId === undefined) {
         this.focusId = poulePlace.getId();
@@ -84,7 +84,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   isStarted() {
-    return this.structureService.getFirstRound().isStarted();
+    return this.structure.getRootRound().isStarted();
   }
 
   allPoulePlaceHaveTeam() {
@@ -139,7 +139,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.processing = true;
     this.setAlert('info', 'volgorde wordt willekeurig gewijzigd');
     const poulePlacesCopy = this.poulePlaces.slice();
-    const teams = this.structureService.getFirstRound().getTeams();
+    const teams = this.structure.getRootRound().getTeams();
     while (teams.length > 0) {
       const poulePlaceIndex = Math.floor(Math.random() * poulePlacesCopy.length) + 1;
       poulePlacesCopy[poulePlaceIndex - 1].setTeam(teams.pop());
@@ -168,8 +168,9 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.processing = true;
     this.setAlert('info', 'er wordt een pouleplek toegevoegd');
     try {
-      const firstRound = this.structureService.getFirstRound();
-      const addedPoulePlace = this.structureService.addPoulePlace(firstRound);
+      const rootRound = this.structure.getRootRound();
+      const structureService = this.getStructureService();
+      const addedPoulePlace = structureService.addPoulePlace(rootRound);
       this.saveStructure('pouleplek ' + this.nameService.getPoulePlaceNameSimple(addedPoulePlace) + ' is toegevoegd');
     } catch (e) {
       this.setAlert('danger', e.message);
@@ -193,13 +194,13 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   hasMinimumNrOfTeamsPerPoule() {
-    const firstRound = this.structureService.getFirstRound();
-    return (firstRound.getPoules().length * 2) === firstRound.getPoulePlaces().length;
+    const rootRound = this.structure.getRootRound();
+    return (rootRound.getPoules().length * 2) === rootRound.getPoulePlaces().length;
   }
 
   hasNoDropouts() {
-    const firstRound = this.structureService.getFirstRound();
-    return firstRound.getPoulePlaces().length <= firstRound.getNrOfPlacesChildRounds();
+    const rootRound = this.structure.getRootRound();
+    return rootRound.getPoulePlaces().length <= rootRound.getNrOfPlacesChildRounds();
   }
 
   /**
@@ -225,13 +226,13 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
    */
   removePoulePlace(poulePlace: PoulePlace): void {
     this.processing = true;
-    const firstRound = this.structureService.getFirstRound();
+    const rootRound = this.structure.getRootRound();
     const competitor = poulePlace.getTeam() !== undefined ? ' en deelnemer ' + poulePlace.getTeam().getName() : '';
     const singledoubleWill = poulePlace.getTeam() !== undefined ? 'worden' : 'wordt';
     this.setAlert('info', 'een pouleplek' + competitor + ' ' + singledoubleWill + ' verwijderd');
     try {
-      this.moveCompetitors(firstRound, poulePlace);
-      this.structureService.removePoulePlace(firstRound);
+      this.moveCompetitors(rootRound, poulePlace);
+      this.getStructureService().removePoulePlace(rootRound);
       const singledoubleIs = poulePlace.getTeam() !== undefined ? 'zijn' : 'is';
       this.saveStructure('een pouleplek' + competitor + ' ' + singledoubleIs + ' verwijderd');
     } catch (e) {
@@ -243,8 +244,8 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   /**
    * haal alle pouleplekken op in verticale volgorde, verplaatst alles vanaf te verwijderen plek
    */
-  protected moveCompetitors(firstRound: Round, fromPoulePlace: PoulePlace) {
-    const poulePlaces: PoulePlace[] = firstRound.getPoulePlaces(Round.ORDER_HORIZONTAL);
+  protected moveCompetitors(rootRound: Round, fromPoulePlace: PoulePlace) {
+    const poulePlaces: PoulePlace[] = rootRound.getPoulePlaces(Round.ORDER_HORIZONTAL);
     const index = poulePlaces.indexOf(fromPoulePlace);
     if (index < 0) {
       return;
@@ -260,16 +261,14 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   protected saveStructure(message: string) {
-    const firstRound = this.structureService.getFirstRound();
-
-    this.structureRepository.editObject(firstRound, this.tournament.getCompetition())
+    this.structureRepository.editObject(this.structure, this.tournament.getCompetition())
       .subscribe(
-          /* happy path */ roundRes => {
-          this.structureService = this.createStructureService(roundRes);
-          const planningService = new PlanningService(this.structureService);
+          /* happy path */(structure: Structure) => {
+          this.structure = structure;
+          const planningService = new PlanningService(this.tournament.getCompetition());
           const tournamentService = new TournamentService(this.tournament);
-          tournamentService.create(planningService, roundRes.getNumber());
-          const changedRoundsForPlanning: Round[] = planningService.getRoundsByNumber(roundRes.getNumber());
+          tournamentService.create(planningService, this.structure.getFirstRoundNumber());
+          const changedRoundsForPlanning: Round[] = this.structure.getFirstRoundNumber().getRounds();
           this.planningRepository.createObject(changedRoundsForPlanning)
             .subscribe(
                     /* happy path */ games => {
@@ -282,13 +281,5 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
         },
         /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
       );
-  }
-
-  protected createStructureService(firstRound: Round): StructureService {
-    return new StructureService(
-      this.tournament.getCompetition(),
-      { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
-      firstRound
-    );
   }
 }

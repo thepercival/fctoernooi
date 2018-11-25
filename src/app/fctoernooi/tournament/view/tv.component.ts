@@ -9,6 +9,7 @@ import {
     Ranking,
     RankingItem,
     Round,
+    RoundNumber,
     StructureNameService,
     StructureRepository,
 } from 'ngx-sport';
@@ -34,7 +35,6 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
     ranking: Ranking;
     public planningService: PlanningService;
     screenDef: any;
-    private allRoundsByNumber: any;
     private maxLines = 8;
 
     constructor(
@@ -58,9 +58,8 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
     processScreens() {
         const link: NavBarTournamentTVViewLink = { showTVIcon: false, tournamentId: this.tournament.getId(), link: '/toernooi/view' };
         this.globalEventsManager.toggleTVIconInNavBar.emit(link);
-        this.planningService = new PlanningService(this.structureService);
-        this.allRoundsByNumber = this.structureService.getAllRoundsByNumber();
-        const screenDefs = this.getScreenDefinitions();
+        this.planningService = new PlanningService(this.tournament.getCompetition());
+        const screenDefs = this.getScreenDefinitions(this.structure.getFirstRoundNumber());
         if (screenDefs.length === 0) {
             this.setAlert('info', 'op dit moment zijn er geen schermen om weer te geven');
             this.processing = false;
@@ -81,18 +80,14 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         this.setData(this.tournament.getId(), () => { this.processScreens(); });
     }
 
-    getRoundsByNumber(roundNumber: number): Round[] {
-        return this.allRoundsByNumber[roundNumber];
-    }
-
-    getScreenDefinitions(): ScreenDefinition[] {
-        const lastPlayedRoundNumber = this.getLastPlayedRoundNumber();
-        const nextRoundNumber = lastPlayedRoundNumber + 1;
+    getScreenDefinitions(firstRoundNumber: RoundNumber): ScreenDefinition[] {
+        const lastPlayedRoundNumber = this.getLastPlayedRoundNumber(firstRoundNumber);
+        const nextRoundNumber = lastPlayedRoundNumber.getNext();
         const stateNextRoundNumber = this.getStateRoundNumber(nextRoundNumber);
 
         let roundNumberForScheduleAndRanking;
         let previousPlayedRoundNumber;
-        if (lastPlayedRoundNumber === 0) { // voor het begin
+        if (lastPlayedRoundNumber === undefined) { // voor het begin
             roundNumberForScheduleAndRanking = nextRoundNumber;
         } else if (stateNextRoundNumber === Game.STATE_CREATED) { // tussen twee ronden in
             roundNumberForScheduleAndRanking = nextRoundNumber;
@@ -134,12 +129,12 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
     /**
      * show next 8 games, show rankings
      */
-    getScreenDefinitionsForScheduleAndRanking(roundNumber: number): ScreenDefinition[] {
+    getScreenDefinitionsForScheduleAndRanking(roundNumber: RoundNumber): ScreenDefinition[] {
         const screenDefs: ScreenDefinition[] = [];
         const games: Game[] = this.getScheduledGamesForRoundNumber(roundNumber);
 
         const rankingScreenDefs = this.getScreenDefinitionsForRanking(roundNumber, this.getPoulesForRanking(roundNumber));
-        const roundsDescription = this.nameService.getRoundsName(roundNumber, this.allRoundsByNumber[roundNumber]);
+        const roundsDescription = this.nameService.getRoundNumberName(roundNumber);
         const scheduledGamesScreenDef = new ScheduledGamesScreenDefinition(roundNumber, games, roundsDescription);
         rankingScreenDefs.forEach(rankingScreenDef => {
             if (games.length > 0) {
@@ -156,8 +151,7 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
     /**
      * show next 8 games
      */
-    getScheduledGamesForRoundNumber(roundNumber: number): Game[] {
-        const roundsByNumber = this.getRoundsByNumber(roundNumber);
+    getScheduledGamesForRoundNumber(roundNumber: RoundNumber): Game[] {
         let games: Game[] = this.planningService.getGamesForRoundNumber(roundNumber, Game.ORDER_RESOURCEBATCH);
         games = games.filter(game => {
             return game.getStartDateTime() > new Date() && game.getState() !== Game.STATE_PLAYED;
@@ -168,26 +162,20 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         return games;
     }
 
-    needsRanking(roundsByNumber: Round[]): boolean {
-        return roundsByNumber.some(round => round.needsRanking());
-    }
-
     /**
      * show poules which needs ranking
      */
-    getPoulesForRanking(roundNumber: number): Poule[] {
+    getPoulesForRanking(roundNumber: RoundNumber): Poule[] {
         let poules: Poule[] = [];
-        const roundsByNumber = this.getRoundsByNumber(roundNumber);
-        roundsByNumber.forEach(round => {
+        roundNumber.getRounds().forEach(round => {
             poules = poules.concat(round.getPoules().filter(poule => this.hasPouleAPlaceWithTwoGamesPlayed(poule)));
         });
         return poules;
     }
 
-    getPoules(roundNumber: number): Poule[] {
+    getPoules(roundNumber: RoundNumber): Poule[] {
         let poules: Poule[] = [];
-        const roundsByNumber = this.getRoundsByNumber(roundNumber);
-        roundsByNumber.forEach(round => {
+        roundNumber.getRounds().forEach(round => {
             poules = poules.concat(round.getPoules());
         });
         return poules;
@@ -196,11 +184,11 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
     /**
      * show poules which needs ranking
      */
-    getScreenDefinitionsForRanking(roundNumber: number, poules: Poule[]): ScreenDefinition[] {
+    getScreenDefinitionsForRanking(roundNumber: RoundNumber, poules: Poule[]): ScreenDefinition[] {
         const screenDefs: ScreenDefinition[] = [];
         const twoPoules: Poule[] = [];
         const poulesForRanking = this.getPoulesForRanking(roundNumber);
-        const roundsDescription = this.nameService.getRoundsName(roundNumber, this.allRoundsByNumber[roundNumber]);
+        const roundsDescription = this.nameService.getRoundNumberName(roundNumber);
         poulesForRanking.forEach(poule => {
             twoPoules.push(poule);
             if (twoPoules.length < 2) {
@@ -214,7 +202,7 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         return screenDefs;
     }
 
-    getScreenDefinitionsForResultsAndRanking(roundNumber: number): ScreenDefinition[] {
+    getScreenDefinitionsForResultsAndRanking(roundNumber: RoundNumber): ScreenDefinition[] {
         const poulesForRanking = this.getPoulesForRanking(roundNumber);
         const screenDefs: ScreenDefinition[] = this.getScreenDefinitionsForRanking(roundNumber, poulesForRanking);
         const poulesForResults = this.getPoules(roundNumber).filter(poule => {
@@ -223,13 +211,13 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         // loop door de poules die wedstrijden moeten tonen( deze poules eerst samenvoegen)
         const games: Game[] = this.getResultsForRoundPoules(poulesForResults);
         if (games.length > 0) {
-            const roundsDescription = this.nameService.getRoundsName(roundNumber, this.allRoundsByNumber[roundNumber]);
+            const roundsDescription = this.nameService.getRoundNumberName(roundNumber);
             screenDefs.push(new PlayedGamesScreenDefinition(roundNumber, games, roundsDescription));
         }
         return screenDefs;
     }
 
-    getScreenDefinitionsForSponsors(roundNumber: number): ScreenDefinition[] {
+    getScreenDefinitionsForSponsors(roundNumber: RoundNumber): ScreenDefinition[] {
         const screenDefs: ScreenDefinition[] = [];
         const sponsors = this.tournament.getSponsors().slice();
         while (sponsors.length > 0) {
@@ -238,10 +226,10 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         return screenDefs;
     }
 
-    getScreenDefinitionsForEndRanking(roundNumber: number): ScreenDefinition[] {
+    getScreenDefinitionsForEndRanking(roundNumber: RoundNumber): ScreenDefinition[] {
         const screenDefs: ScreenDefinition[] = [];
         const endRankingService = new EndRanking(Ranking.RULESSET_WC);
-        const rankingItems = endRankingService.getItems(this.structureService.getFirstRound());
+        const rankingItems = endRankingService.getItems(this.structure.getRootRound());
         while (rankingItems.length > 0) {
             screenDefs.push(new EndRankingScreenDefinition(roundNumber, rankingItems.splice(0, this.maxLines)));
         }
@@ -260,28 +248,26 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         return poule.getPlaces().some((place: PoulePlace) => this.ranking.getNrOfGamesWithState(place, place.getGames()) > 1);
     }
 
-    getLastPlayedRoundNumber(roundNumber: number = 1): number {
-        const roundsByNumber = this.getRoundsByNumber(roundNumber);
-        if (roundsByNumber === undefined) {
+    getLastPlayedRoundNumber(roundNumber: RoundNumber): RoundNumber {
+        /*if (roundNumber.getRounds().length === 0 ) {
             return roundNumber - 1;
+        }*/
+        const played = !roundNumber.getRounds().some(round => round.getState() !== Game.STATE_PLAYED);
+        if (!played) {
+            return roundNumber.getPrevious();
         }
-        const played = !roundsByNumber.some(round => round.getState() !== Game.STATE_PLAYED);
-        if (played !== true) {
-            return roundNumber - 1;
-        }
-        return this.getLastPlayedRoundNumber(roundNumber + 1);
+        return this.getLastPlayedRoundNumber(roundNumber.getNext());
     }
 
-    getStateRoundNumber(roundNumber: number): number {
-        const roundsByNumber = this.getRoundsByNumber(roundNumber);
-        if (roundsByNumber === undefined) {
+    getStateRoundNumber(roundNumber: RoundNumber): number {
+        /*if (roundNumber.getRounds().length === 0) {
             return Game.STATE_PLAYED;
-        }
-        const hasGames = roundsByNumber.some(round => round.getGames().length > 0);
+        }*/
+        const hasGames = roundNumber.getRounds().some(round => round.getGames().length > 0);
         if (!hasGames) {
             return Game.STATE_PLAYED;
         }
-        const inplay = roundsByNumber.some(round => round.getState() !== Game.STATE_CREATED);
+        const inplay = roundNumber.getRounds().some(round => round.getState() !== Game.STATE_CREATED);
         if (inplay !== true) {
             return Game.STATE_CREATED;
         }
@@ -368,10 +354,10 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
 }
 
 export class ScreenDefinition {
-    roundNumber: number;
 
-    constructor(roundNumber: number) {
-        this.roundNumber = roundNumber;
+
+    constructor(public roundNumber: RoundNumber) {
+
     }
 }
 
@@ -380,7 +366,7 @@ export class PoulesRankingScreenDefinition extends ScreenDefinition {
     private pouleTwo: Poule;
     private description: string;
 
-    constructor(roundNumber: number, pouleOne: Poule, pouleTwo: Poule, roundsDescription: string) {
+    constructor(roundNumber: RoundNumber, pouleOne: Poule, pouleTwo: Poule, roundsDescription: string) {
         super(roundNumber);
         this.pouleOne = pouleOne;
         this.pouleTwo = pouleTwo;
@@ -411,7 +397,7 @@ export class PoulesRankingScreenDefinition extends ScreenDefinition {
 export class EndRankingScreenDefinition extends ScreenDefinition {
     private items: RankingItem[];
 
-    constructor(roundNumber: number, items: RankingItem[]) {
+    constructor(roundNumber: RoundNumber, items: RankingItem[]) {
         super(roundNumber);
         this.items = items;
     }
@@ -429,7 +415,7 @@ export class GamesScreenDefinition extends ScreenDefinition {
     private games: Game[]; // max 8
     protected description: string;
 
-    constructor(roundNumber: number, games: Game[]) {
+    constructor(roundNumber: RoundNumber, games: Game[]) {
         super(roundNumber);
         this.games = games;
     }
@@ -449,7 +435,7 @@ export interface IGamesScreenDefinition {
 
 export class ScheduledGamesScreenDefinition extends GamesScreenDefinition implements IGamesScreenDefinition {
 
-    constructor(roundNumber: number, scheduledGames: Game[], roundsDescription: string) {
+    constructor(roundNumber: RoundNumber, scheduledGames: Game[], roundsDescription: string) {
         super(roundNumber, scheduledGames);
         this.description = 'programma - ' + roundsDescription;
     }
@@ -462,7 +448,7 @@ export class ScheduledGamesScreenDefinition extends GamesScreenDefinition implem
 export class PlayedGamesScreenDefinition extends GamesScreenDefinition implements IGamesScreenDefinition {
     playedGames: Game[];
 
-    constructor(roundNumber: number, playedGames: Game[], roundsDescription: string) {
+    constructor(roundNumber: RoundNumber, playedGames: Game[], roundsDescription: string) {
         super(roundNumber, playedGames);
         this.description = 'uitslagen - ' + roundsDescription;
     }
@@ -476,7 +462,7 @@ export class PlayedGamesScreenDefinition extends GamesScreenDefinition implement
 export class SponsorScreenDefinition extends ScreenDefinition {
     private sponsors: Sponsor[]; // max 8
 
-    constructor(roundNumber: number, sponsors: Sponsor[]) {
+    constructor(roundNumber: RoundNumber, sponsors: Sponsor[]) {
         super(roundNumber);
         this.sponsors = sponsors;
     }

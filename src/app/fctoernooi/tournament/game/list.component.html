@@ -20,10 +20,10 @@
         </h2>
       </div>
       <div *ngIf="!processing">
-        <app-tournament-planning-view *ngFor="let roundNumber of structureService.getRoundNumbers()" [tournament]="tournament"
-          [roundNumber]="roundNumber" [structureService]="structureService" [canEditSettings]="userIsPlannerOrStructureAdmin"
-          [planningService]="planningService" [scrollTo]="scrollTo" [parentReturnAction]="'/toernooi/games'"></app-tournament-planning-view>
-        <app-tournament-endranking-view [firstRound]="structureService.getFirstRound()"></app-tournament-endranking-view>
+        <app-tournament-planning-view *ngFor="let roundNumber of structure.getRoundNumbers()" [tournament]="tournament"
+          [roundNumber]="roundNumber" [canEditSettings]="userIsPlannerOrStructureAdmin" [planningService]="planningService"
+          [scrollTo]="scrollTo" [parentReturnAction]="'/toernooi/games'"></app-tournament-planning-view>
+        <app-tournament-endranking-view [rootRound]="structure.getRootRound()"></app-tournament-endranking-view>
       </div>
     </div>
   </div>

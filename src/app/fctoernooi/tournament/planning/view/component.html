@@ -1,19 +1,19 @@
-<div *ngIf="tournament && haveMultiplePoulePlaces(roundsByNumber)" id="scroll-roundnumber-{{roundNumber}}">
+<div *ngIf="tournament && haveMultiplePoulePlaces()" id="scroll-roundnumber-{{roundNumber.getNumber()}}">
   <div class="d-flex justify-content-between mt-3">
     <h2>
-      <span [innerHTML]="nameService.getRoundsName( roundNumber, roundsByNumber ) | keepHtml"></span>
-      <!-- <ng-template *ngIf="nameService.roundsHaveSameName( roundsByNumber )">
+      <span [innerHTML]="nameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
+      <!-- <ng-template *ngIf="nameService.roundsHaveSameName( )">
         <fa-icon [icon]="['fas', 'circle']" *ngFor="let winnersOrLosers of structureService.getWinnersLosersPosition( round )" 
         [title]="structureService.getWinnersLosersDescription(
               round.getWinnersOrLosers() )" class="text-{{getClassPostfix(round.getWinnersOrLosers())}}"></fa-icon>
       </ng-template> -->
     </h2>
     <button type="button" class="btn btn-sm btn-outline-{{filterClass()}} mr-2" *ngIf="!canEditSettings && favTeamIds"
-      (click)="linkToFilterSettings(roundNumber)">
+      (click)="linkToFilterSettings()">
       <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       <span>filter</span>
     </button>
-    <button type="button" class="btn btn-sm btn-outline-primary mr-0" *ngIf="canEditSettings" (click)="linkToRoundSettings(roundNumber)">
+    <button type="button" class="btn btn-sm btn-outline-primary mr-0" *ngIf="canEditSettings" (click)="linkToRoundSettings()">
       <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellingen
     </button>
   </div>
@@ -21,8 +21,8 @@
   <div class="d-flex justify-content-around">
     <table class="table fixed">
       <colgroup>
-        <col *ngIf="aRoundNeedsRanking(roundsByNumber)">
-        <col *ngIf="!aRoundNeedsRanking(roundsByNumber)">
+        <col *ngIf="aRoundNeedsRanking()">
+        <col *ngIf="!aRoundNeedsRanking()">
         <col *ngIf="planningService.canCalculateStartDateTime(roundNumber)">
         <col *ngIf="hasFields()">
         <col class="width-25">
@@ -32,11 +32,11 @@
       </colgroup>
       <thead>
         <tr>
-          <th *ngIf="aRoundNeedsRanking(roundsByNumber)" class="text-center pl-1 text-info pointer" title="poule"
-            container="body" placement="right" [ngbPopover]="popRules" triggers="manual" #p="ngbPopover" (click)="toggleRulesPopover( p )">
+          <th *ngIf="aRoundNeedsRanking()" class="text-center pl-1 text-info pointer" title="poule" container="body"
+            placement="right" [ngbPopover]="popRules" triggers="manual" #p="ngbPopover" (click)="toggleRulesPopover( p )">
             <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
           </th>
-          <th *ngIf="!aRoundNeedsRanking(roundsByNumber)" class="text-center" title="wedstrijd">
+          <th *ngIf="!aRoundNeedsRanking()" class="text-center" title="wedstrijd">
             <span>vs</span>
           </th>
           <th *ngIf="planningService.canCalculateStartDateTime(roundNumber)" class="pointer text-info" container="body"

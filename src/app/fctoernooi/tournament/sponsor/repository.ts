@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { SportRepository } from 'ngx-sport';
 import { Observable } from 'rxjs';
-import { catchError ,  map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { Tournament } from '../../tournament';
 import { Sponsor } from '../sponsor';
@@ -27,14 +27,14 @@ export class SponsorRepository extends SportRepository {
 
     createObject(jsonSponsor: ISponsor, tournament: Tournament): Observable<Sponsor> {
         return this.http.post(this.url, jsonSponsor, this.getOptions(tournament)).pipe(
-            map((res: ISponsor) => this.jsonToObjectHelper(res, tournament)),
+            map((res: ISponsor) => this.jsonToObject(res, tournament)),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(sponsor: Sponsor, tournament: Tournament): Observable<Sponsor> {
-        return this.http.put(this.url + '/' + sponsor.getId(), this.objectToJsonHelper(sponsor), this.getOptions(tournament)).pipe(
-            map((res: ISponsor) => this.jsonToObjectHelper(res, tournament, sponsor)),
+        return this.http.put(this.url + '/' + sponsor.getId(), this.objectToJson(sponsor), this.getOptions(tournament)).pipe(
+            map((res: ISponsor) => this.jsonToObject(res, tournament, sponsor)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -64,13 +64,13 @@ export class SponsorRepository extends SportRepository {
     jsonArrayToObject(jsonArray: ISponsor[], tournament: Tournament): Sponsor[] {
         const objects: Sponsor[] = [];
         for (const json of jsonArray) {
-            const object = this.jsonToObjectHelper(json, tournament);
+            const object = this.jsonToObject(json, tournament);
             objects.push(object);
         }
         return objects;
     }
 
-    jsonToObjectHelper(json: ISponsor, tournament: Tournament, sponsor?: Sponsor): Sponsor {
+    jsonToObject(json: ISponsor, tournament: Tournament, sponsor?: Sponsor): Sponsor {
         if (sponsor === undefined) {
             sponsor = new Sponsor(tournament, json.name);
         }
@@ -82,13 +82,13 @@ export class SponsorRepository extends SportRepository {
     objectsToJsonArray(objects: any[]): any[] {
         const jsonArray: any[] = [];
         for (const object of objects) {
-            const json = this.objectToJsonHelper(object);
+            const json = this.objectToJson(object);
             jsonArray.push(json);
         }
         return jsonArray;
     }
 
-    objectToJsonHelper(object: Sponsor): ISponsor {
+    objectToJson(object: Sponsor): ISponsor {
         const json: ISponsor = {
             id: object.getId(),
             name: object.getName(),

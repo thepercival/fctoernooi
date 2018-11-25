@@ -36,7 +36,7 @@
           <th title="poule">
             <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
           </th>
-          <th *ngIf="isScheduled() && planningService.getRoundsByNumber(screenDef.roundNumber)[0]?.getConfig().getEnableTime()"
+          <th *ngIf="isScheduled() && structure.getRoundNumber(screenDef.roundNumber).getConfig().getEnableTime()"
             title="starttijd">
             {{planningService.calculateStartDateTime(screenDef.roundNumber).toLocaleString("nl",
             {"month":"short","day":"2-digit"})}}
@@ -59,7 +59,7 @@
           <td>
             <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
           </td>
-          <td *ngIf="isScheduled() && planningService.getRoundsByNumber(screenDef.roundNumber)[0]?.getConfig().getEnableTime() && planningService.canCalculateStartDateTime(screenDef.roundNumber)">
+          <td *ngIf="isScheduled() && structure.getRoundNumber(screenDef.roundNumber).getConfig().getEnableTime() && planningService.canCalculateStartDateTime(screenDef.roundNumber)">
             {{game.getStartDateTime().toLocaleString("nl", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}
           </td>
           <td *ngIf="isScheduled() && hasFields()">{{game.getField()?.getName()}}</td>
@@ -124,7 +124,7 @@
 
   <div *ngIf="isEndRankingScreenDef()" class="row no-gutters">
     <div class="col-12 tv-screen">
-      <app-tournament-endranking-view [scorebord]="true" [firstRound]="structureService.getFirstRound()"></app-tournament-endranking-view>
+      <app-tournament-endranking-view [scorebord]="true" [rootRound]="structure.getRootRound()"></app-tournament-endranking-view>
     </div>
   </div>
 

@@ -2,18 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  Game,
-  GameRepository,
-  GameScore,
-  GameScoreHomeAway,
-  INewQualifier,
-  PlanningService,
-  PoulePlace,
-  PoulePlaceRepository,
-  QualifyService,
-  RoundConfigScore,
-  StructureNameService,
-  StructureRepository,
+    Game,
+    GameRepository,
+    GameScore,
+    GameScoreHomeAway,
+    INewQualifier,
+    PlanningService,
+    PoulePlace,
+    PoulePlaceRepository,
+    QualifyService,
+    Round,
+    RoundNumberConfigScore,
+    StructureNameService,
+    StructureRepository,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
 
@@ -88,18 +89,18 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     getCalculateScoreDescription() {
-        const scoreConfig = this.game.getRound().getConfig().getCalculateScore();
+        const scoreConfig = this.game.getConfig().getCalculateScore();
         let description = '';
-        if (scoreConfig.getDirection() === RoundConfigScore.UPWARDS && scoreConfig.getMaximum() > 0) {
+        if (scoreConfig.getDirection() === RoundNumberConfigScore.UPWARDS && scoreConfig.getMaximum() > 0) {
             description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
         }
         return description + scoreConfig.getName();
     }
 
     getInputScoreDescription() {
-        const scoreConfig = this.game.getRound().getConfig().getInputScore();
+        const scoreConfig = this.game.getConfig().getInputScore();
         let description = '';
-        if (scoreConfig.getDirection() === RoundConfigScore.UPWARDS && scoreConfig.getMaximum() > 0) {
+        if (scoreConfig.getDirection() === RoundNumberConfigScore.UPWARDS && scoreConfig.getMaximum() > 0) {
             description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
         }
         return description + scoreConfig.getName();
@@ -118,8 +119,8 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     getCalculateClass() {
-        const scoreConfig = this.game.getRound().getConfig().getCalculateScore();
-        if (scoreConfig.getDirection() !== RoundConfigScore.UPWARDS || scoreConfig.getMaximum() === 0) {
+        const scoreConfig = this.game.getConfig().getCalculateScore();
+        if (scoreConfig.getDirection() !== RoundNumberConfigScore.UPWARDS || scoreConfig.getMaximum() === 0) {
             return 'is-valid';
         }
         const score = this.calculateScoreControl.getScore();
@@ -136,8 +137,8 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         if (this.isScoreValid(score) !== true) {
             return 'is-invalid';
         }
-        const scoreConfig = this.game.getRound().getConfig().getInputScore();
-        if (scoreConfig.getDirection() !== RoundConfigScore.UPWARDS || scoreConfig.getMaximum() === 0) {
+        const scoreConfig = this.game.getConfig().getInputScore();
+        if (scoreConfig.getDirection() !== RoundNumberConfigScore.UPWARDS || scoreConfig.getMaximum() === 0) {
             return 'is-valid';
         }
         if ((score.getHome() === scoreConfig.getMaximum() && score.getAway() < score.getHome())
@@ -149,7 +150,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     setGame(gameId: number) {
-        this.game = this.structureService.getGameById(gameId, this.structureService.getFirstRound());
+        this.game = this.getGameById(gameId, this.structure.getRootRound());
         // const date = this.game.getStartDateTime();
 
         this.customForm.controls.played.setValue(this.game.getState() === Game.STATE_PLAYED);
@@ -167,8 +168,24 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         //     this.model.startdate = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
         //     this.model.starttime = { hour: date.getHours(), minute: date.getMinutes() };
         // }
-        this.planningService = new PlanningService(this.structureService);
+        this.planningService = new PlanningService(this.tournament.getCompetition());
         this.processing = false;
+    }
+
+    protected getGameById(id: number, round: Round): Game {
+        if (round === undefined) {
+            return undefined;
+        }
+        let game = round.getGames().find(gameIt => gameIt.getId() === id);
+        if (game !== undefined) {
+            return game;
+        }
+
+        game = this.getGameById(id, round.getChildRound(Round.WINNERS));
+        if (game !== undefined) {
+            return game;
+        }
+        return this.getGameById(id, round.getChildRound(Round.LOSERS));
     }
 
     protected initScores(game?: Game) {
@@ -216,7 +233,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     calculateAndInputScoreDiffers() {
-        return this.game.getRound().getConfig().getCalculateScore() !== this.game.getRound().getConfig().getInputScore();
+        return this.game.getConfig().getCalculateScore() !== this.game.getConfig().getInputScore();
     }
 
     addScoreControl(home: number, away: number) {

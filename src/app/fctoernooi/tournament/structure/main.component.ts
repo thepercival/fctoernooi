@@ -6,13 +6,13 @@ import {
   PlanningRepository,
   PlanningService,
   Round,
+  RoundNumber,
+  Structure,
   StructureRepository,
-  StructureService,
   Team,
   TeamRepository,
 } from 'ngx-sport';
 
-import { Tournament } from '../../tournament';
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
 import { TournamentService } from '../service';
@@ -24,8 +24,9 @@ import { TournamentStructureHelpModalComponent } from './helpmodal.component';
   styleUrls: ['./main.component.css']
 })
 export class TournamentStructureComponent extends TournamentComponent implements OnInit {
-  changedRoundNumber;
+  changedRoundNumber: RoundNumber;
   originalTeams: Team[];
+  clonedStructure: Structure;
 
   uiSliderConfigExample: any = {
     behaviour: 'drag',
@@ -48,7 +49,7 @@ export class TournamentStructureComponent extends TournamentComponent implements
 
   ngOnInit() {
     super.myNgOnInit(() => {
-      this.structureService = this.createStructureServiceCopy(this.structureService.getFirstRound());
+      this.clonedStructure = this.createClonedStructure();
       this.processing = false;
       if (this.isHelpModalShownOnDevice() === false) {
         this.openHelp();
@@ -56,28 +57,15 @@ export class TournamentStructureComponent extends TournamentComponent implements
     });
   }
 
-  createStructureServiceCopy(firstRound: Round): StructureService {
-    this.originalTeams = firstRound.getTeams();
-    const deepCopyOfFirstRound = cloneDeep(firstRound);
-    return new StructureService(
-      this.tournament.getCompetition(),
-      { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
-      deepCopyOfFirstRound
-    );
+  createClonedStructure(): Structure {
+    this.originalTeams = this.structure.getRootRound().getTeams();
+    return cloneDeep(this.structure);
   }
 
-  createStructureService(firstRound: Round): StructureService {
-    return new StructureService(
-      this.tournament.getCompetition(),
-      { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
-      firstRound
-    );
-  }
-
-  processUnusedTeams(firstRound: Round) {
+  processUnusedTeams(rootRound: Round) {
     const unusedTeams = this.teamRepository.getUnusedTeams(this.tournament.getCompetition());
     const oldTeams = this.originalTeams;
-    const newTeams = firstRound.getTeams();
+    const newTeams = rootRound.getTeams();
 
     // add teams which are not used anymore to unusedteams
     oldTeams.forEach(oldTeam => {
@@ -99,7 +87,7 @@ export class TournamentStructureComponent extends TournamentComponent implements
     });
 
     // add an unused team if there are places without a team
-    const poulePlaces = firstRound.getPoulePlaces();
+    const poulePlaces = rootRound.getPoulePlaces();
     poulePlaces.forEach((poulePlace) => {
       if (poulePlace.getTeam() === undefined) {
         poulePlace.setTeam(unusedTeams.shift());
@@ -107,8 +95,8 @@ export class TournamentStructureComponent extends TournamentComponent implements
     });
   }
 
-  setChangedRoundNumber(changedRoundNumber) {
-    if (this.changedRoundNumber !== undefined && changedRoundNumber > this.changedRoundNumber) {
+  setChangedRoundNumber(changedRoundNumber: RoundNumber) {
+    if (this.changedRoundNumber !== undefined && changedRoundNumber.getNumber() > this.changedRoundNumber.getNumber()) {
       return;
     }
     this.changedRoundNumber = changedRoundNumber;
@@ -119,25 +107,24 @@ export class TournamentStructureComponent extends TournamentComponent implements
     this.processing = true;
     this.setAlert('info', 'wijzigingen worden opgeslagen');
 
-    const firstRound = this.structureService.getFirstRound();
-    this.processUnusedTeams(firstRound);
+    this.processUnusedTeams(this.structure.getRootRound());
 
-    this.structureRepository.editObject(firstRound, this.tournament.getCompetition())
+    this.structureRepository.editObject(this.clonedStructure, this.tournament.getCompetition())
       .subscribe(
-          /* happy path */ roundRes => {
-          this.structureService = this.createStructureService(roundRes);
-          const planningService = new PlanningService(this.structureService);
+          /* happy path */ structureRes => {
+          this.structure = structureRes;
+          const planningService = new PlanningService(this.tournament.getCompetition());
           const tournamentService = new TournamentService(this.tournament);
-          tournamentService.create(planningService, roundRes.getNumber());
-          const changedRoundsForPlanning: Round[] = planningService.getRoundsByNumber(this.changedRoundNumber);
-          if (changedRoundsForPlanning === undefined) {
-            this.completeSave(roundRes);
+          tournamentService.create(planningService, this.structure.getFirstRoundNumber());
+          const changedRoundsForPlanning: Round[] = this.changedRoundNumber.getRounds();
+          if (changedRoundsForPlanning.length === 0) {
+            this.completeSave();
             return;
           }
           this.planningRepository.createObject(changedRoundsForPlanning)
             .subscribe(
                     /* happy path */ games => {
-                this.completeSave(roundRes);
+                this.completeSave();
               },
                   /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
                   /* onComplete */() => this.processing = false
@@ -147,8 +134,8 @@ export class TournamentStructureComponent extends TournamentComponent implements
       );
   }
 
-  completeSave(round: Round) {
-    this.structureService = this.createStructureServiceCopy(round);
+  completeSave() {
+    this.clonedStructure = this.createClonedStructure();
     this.changedRoundNumber = undefined;
     this.processing = false;
     this.setAlert('success', 'de wijzigingen zijn opgeslagen');

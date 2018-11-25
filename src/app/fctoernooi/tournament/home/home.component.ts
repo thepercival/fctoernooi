@@ -6,7 +6,7 @@ import { StructureRepository } from 'ngx-sport';
 import { IAlert } from '../../../app.definitions';
 import { AuthService } from '../../../auth/auth.service';
 import { TournamentComponent } from '../component';
-import { TournamentRepository } from '../repository';
+import { TournamentPrintConfig, TournamentRepository } from '../repository';
 import { TournamentRole } from '../role';
 
 @Component({
@@ -16,7 +16,7 @@ import { TournamentRole } from '../role';
 })
 export class TournamentHomeComponent extends TournamentComponent implements OnInit {
     alertRemove: IAlert;
-    printConfig;
+    printConfig: TournamentPrintConfig;
 
     constructor(
         route: ActivatedRoute,
@@ -33,7 +33,7 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
             rules: false,
             gamesperfield: false,
             planning: false,
-            poules: false
+            inputform: false
         };
     }
 
@@ -126,7 +126,7 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
 
     allPrintOptionsOff() {
         return (!this.printConfig.gamenotes && !this.printConfig.structure && !this.printConfig.planning &&
-            !this.printConfig.gamesperfield && !this.printConfig.rules && !this.printConfig.poules);
+            !this.printConfig.gamesperfield && !this.printConfig.rules && !this.printConfig.inputform);
     }
 
     openModalPrint(modalContent) {

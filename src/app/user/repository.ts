@@ -33,14 +33,14 @@ export class UserRepository extends SportRepository {
   getObject(id: number): Observable<User> {
     const url = `${this.url}/${id}`;
     return this.http.get(url).pipe(
-      map((res: IUser) => this.jsonToObjectHelper(res)),
+      map((res: IUser) => this.jsonToObject(res)),
       catchError((err) => this.handleError(err))
     );
   }
 
   createObject(jsonObject: any): Observable<User> {
     return this.http.post(this.url, jsonObject, this.getOptions()).pipe(
-      map((res: IUser) => this.jsonToObjectHelper(res)),
+      map((res: IUser) => this.jsonToObject(res)),
       catchError((err) => this.handleError(err))
     );
   }
@@ -56,20 +56,20 @@ export class UserRepository extends SportRepository {
   jsonArrayToObject(jsonArray: IUser[]): User[] {
     const users: User[] = [];
     for (const json of jsonArray) {
-      const object = this.jsonToObjectHelper(json);
+      const object = this.jsonToObject(json);
       users.push(object);
     }
     return users;
   }
 
-  jsonToObjectHelper(json: IUser): User {
+  jsonToObject(json: IUser): User {
     const user = new User(json.emailaddress);
     user.setId(json.id);
     user.setName(json.name);
     return user;
   }
 
-  objectToJsonHelper(user: User): IUser {
+  objectToJson(user: User): IUser {
     return {
       id: user.getId(),
       emailaddress: user.getEmailaddress(),

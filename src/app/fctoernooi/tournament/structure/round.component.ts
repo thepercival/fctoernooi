@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PoulePlace, Round, StructureNameService, StructureService } from 'ngx-sport';
+import { PoulePlace, Round, RoundNumber, StructureNameService, StructureService } from 'ngx-sport';
+
+import { Tournament } from '../../tournament';
 
 @Component({
   selector: 'app-tournament-structureround',
@@ -9,8 +11,7 @@ import { PoulePlace, Round, StructureNameService, StructureService } from 'ngx-s
 export class TournamentStructureRoundComponent {
 
   @Input() round: Round;
-  @Input() structureService: StructureService;
-  @Output() roundChanged = new EventEmitter<number>();
+  @Output() roundNumberChanged = new EventEmitter<RoundNumber>();
   public alert: any;
   public sliderValueDummy = 3;
 
@@ -37,9 +38,9 @@ export class TournamentStructureRoundComponent {
     return Round.ORDER_CUSTOM;
   }
 
-  // private getPlanningService(): PlanningService {
-  //   return new PlanningService(this.structureService);
-  // }
+  private getStructureService(): StructureService {
+    return new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
+  }
 
   getWinnersLosersName(winnersOrLosers: number): string {
     return winnersOrLosers === Round.WINNERS ? 'winners' : 'losers';
@@ -51,21 +52,22 @@ export class TournamentStructureRoundComponent {
 
   addPoule(round, fillPouleToMinimum = true): void {
     this.resetAlert();
-    this.structureService.addPoule(round, fillPouleToMinimum);
+    const structureService = this.getStructureService();
+    structureService.addPoule(round, fillPouleToMinimum);
     if (round.getNumber() > 1) {
-      this.structureService.recalculateQualifyRulesForRound(round);
+      structureService.recalculateQualifyRulesForRound(round);
     }
     // this.getPlanningService().create(round.getNumber());
-    this.roundChanged.emit(round.getNumber());
+    this.roundNumberChanged.emit(round.getNumber());
   }
 
 
   removePoule(round): void {
     this.resetAlert();
     try {
-      this.structureService.removePoule(round);
+      this.getStructureService().removePoule(round);
       // this.getPlanningService().create(round.getNumber());
-      this.roundChanged.emit(round.getNumber());
+      this.roundNumberChanged.emit(round.getNumber());
     } catch (e) {
       this.setAlert('danger', e.message);
     }
@@ -74,12 +76,13 @@ export class TournamentStructureRoundComponent {
   addPoulePlace(round): void {
     this.resetAlert();
     try {
-      this.structureService.addPoulePlace(round);
+      const structureService = this.getStructureService();
+      structureService.addPoulePlace(round);
       if (round.getNumber() > 1) {
-        this.structureService.recalculateQualifyRulesForRound(round);
+        structureService.recalculateQualifyRulesForRound(round);
       }
       // this.getPlanningService().create(round.getNumber());
-      this.roundChanged.emit(round.getNumber());
+      this.roundNumberChanged.emit(round.getNumber());
     } catch (e) {
       this.setAlert('danger', e.message);
     }
@@ -88,9 +91,9 @@ export class TournamentStructureRoundComponent {
   removePoulePlace(round): void {
     this.resetAlert();
     try {
-      this.structureService.removePoulePlace(round);
+      this.getStructureService().removePoulePlace(round);
       // this.getPlanningService().create(round.getNumber());
-      this.roundChanged.emit(round.getNumber());
+      this.roundNumberChanged.emit(round.getNumber());
     } catch (e) {
       this.setAlert('danger', e.message);
     }
@@ -135,24 +138,39 @@ export class TournamentStructureRoundComponent {
   }
 
   public onSliderChange(nrOfChildPlacesNew: number, winnersOrLosers: number) {
-    this.structureService.changeNrOfPlacesChildRound(nrOfChildPlacesNew, this.round, winnersOrLosers);
+    this.getStructureService().changeNrOfPlacesChildRound(nrOfChildPlacesNew, this.round, winnersOrLosers);
     // this.getPlanningService().create(this.round.getNumber());
-    this.roundChanged.emit(this.round.getNumber() + 1);
+    this.roundNumberChanged.emit(this.round.getNumber().getNext());
   }
 
 
   toggleQualifyOrder(round: Round) {
     this.resetAlert();
-    if (!(round.getNumber() === 2 || round.getNumber() === 3)) {
+    if (!(round.getNumberAsValue() === 2 || round.getNumberAsValue() === 3)) {
       return;
     }
     round.setQualifyOrder(this.qualifyOrderIsHorizontal(round) ? Round.ORDER_VERTICAL : Round.ORDER_HORIZONTAL);
-    this.structureService.recalculateQualifyRulesForRound(round);
+    this.getStructureService().recalculateQualifyRulesForRound(round);
     // this.getPlanningService().create(round.getNumber());
-    this.roundChanged.emit(round.getNumber());
+    this.roundNumberChanged.emit(round.getNumber());
   }
 
   qualifyOrderIsHorizontal(round: Round) {
     return round.getQualifyOrder() === Round.ORDER_HORIZONTAL;
+  }
+
+  getDivisionClasses(round: Round): string {
+    const nrOfRounds = round.getNumber().getRounds().length;
+    let classes = '';
+    if (nrOfRounds > 2) {
+      classes += 'more-than-two-rounds';
+    }
+    if (nrOfRounds > 4) {
+      classes += ' more-than-four-rounds';
+    }
+    if (nrOfRounds > 8) {
+      classes += ' more-than-eight-rounds';
+    }
+    return classes;
   }
 }

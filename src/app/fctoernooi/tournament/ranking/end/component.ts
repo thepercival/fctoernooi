@@ -9,7 +9,7 @@ import { EndRanking, Ranking, RankingItem, Round, StructureNameService } from 'n
 export class TournamentEndRankingViewComponent {
 
   @Input() scorebord: boolean;
-  @Input() firstRound: Round;
+  @Input() rootRound: Round;
 
   endRankingService: EndRanking;
 
@@ -18,7 +18,7 @@ export class TournamentEndRankingViewComponent {
   }
 
   getRankingItems(): RankingItem[] {
-    return this.endRankingService.getItems(this.firstRound);
+    return this.endRankingService.getItems(this.rootRound);
   }
 
   isUnknown(rankingItem: RankingItem): boolean {

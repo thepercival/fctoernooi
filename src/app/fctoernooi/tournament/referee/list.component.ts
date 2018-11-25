@@ -38,7 +38,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
 
   initReferees() {
     this.createRefereesList();
-    this.planningService = new PlanningService(this.structureService);
+    this.planningService = new PlanningService(this.tournament.getCompetition());
     this.processing = false;
     if (this.isStarted()) {
       this.setAlert('warning', 'het toernooi is al begonnen, je kunt niet meer wijzigen');
@@ -46,11 +46,11 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   }
 
   isStarted() {
-    return this.structureService.getFirstRound().isStarted();
+    return this.structure.getRootRound().isStarted();
   }
 
   createRefereesList() {
-    this.referees = this.structureService.getCompetition().getReferees();
+    this.referees = this.tournament.getCompetition().getReferees();
   }
 
   addReferee() {
@@ -77,17 +77,17 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     this.setAlert('info', 'de scheidsrechter wordt verwijderd');
     this.processing = true;
 
-    this.refereeRepository.removeObject(referee, this.structureService.getCompetition())
+    this.refereeRepository.removeObject(referee, this.tournament.getCompetition())
       .subscribe(
             /* happy path */ refereeRes => {
           const index = this.referees.indexOf(referee);
           if (index > -1) {
             this.referees.splice(index, 1);
           }
-          const firstRound = this.structureService.getFirstRound();
+          const rootRound = this.structure.getRootRound();
           const tournamentService = new TournamentService(this.tournament);
-          tournamentService.reschedule(this.planningService, firstRound.getNumber());
-          this.planningRepository.editObject([firstRound])
+          tournamentService.reschedule(this.planningService, rootRound.getNumber());
+          this.planningRepository.editObject([rootRound])
             .subscribe(
                     /* happy path */ gamesdRes => {
                 this.processing = false;
@@ -98,6 +98,6 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
             );
         },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-    );
+      );
   }
 }

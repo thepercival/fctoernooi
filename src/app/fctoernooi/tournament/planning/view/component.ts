@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap/popover/popover';
@@ -12,8 +12,8 @@ import {
   RankingItem,
   Referee,
   Round,
+  RoundNumber,
   StructureNameService,
-  StructureService,
   Team,
 } from 'ngx-sport';
 
@@ -26,11 +26,11 @@ import { TournamentRole } from '../../role';
   templateUrl: './component.html',
   styleUrls: ['./component.scss']
 })
-export class TournamentPlanningViewComponent implements OnInit, OnChanges, AfterViewInit {
+export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
 
   @Input() tournament: Tournament;
-  @Input() roundNumber: number;
-  @Input() structureService: StructureService;
+  @Input() roundNumber: RoundNumber;
+  /*@Input() structureService: StructureService;*/
   @Input() planningService: PlanningService;
   @Input() parentReturnAction: string;
   @Input() favTeamIds: number[];
@@ -49,7 +49,6 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
   private openPopovers: NgbPopover[] = [];
   private rulesPopover: NgbPopover;
   ranking: Ranking;
-  roundsByNumber: Round[];
   userIsGameResultAdmin: boolean;
 
   constructor(
@@ -66,27 +65,22 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
     this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), TournamentRole.GAMERESULTADMIN);
   }
 
+  /*nakijken als eerste!! CDK*/
   ngAfterViewInit() {
-    if (this.scrollTo.roundNumber === this.roundNumber) {
+    if (this.scrollTo.roundNumber === this.roundNumber.getNumber()) {
       this.scrollService.scrollTo({
-        target: 'scroll-' + (this.scrollTo.roundNumber > 1 ? 'roundnumber-' + this.scrollTo.roundNumber : 'game-' + this.scrollTo.gameId),
+        target: 'scroll-' + (!this.roundNumber.isFirst() ? 'roundnumber-' + this.roundNumber.getNumber() : 'game-' + this.scrollTo.gameId),
         duration: 200
       });
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.structureService !== undefined) {
-      this.roundsByNumber = this.planningService.getRoundsByNumber(this.roundNumber);
-    }
-  }
-
-  haveMultiplePoulePlaces(roundsByNumber: Round[]) {
-    return roundsByNumber.some(round => round.getPoulePlaces().length > 1);
+  haveMultiplePoulePlaces() {
+    return this.roundNumber.getRounds().some(round => round.getPoulePlaces().length > 1);
   }
 
   getGameTimeTooltipDescription() {
-    const cfg = this.roundsByNumber[0].getConfig();
+    const cfg = this.roundNumber.getConfig();
     let descr = 'De wedstrijden duren ' + cfg.getMinutesPerGame() + ' minuten. ';
     if (cfg.getHasExtension()) {
       descr += 'De eventuele verlenging duurt ' + cfg.getMinutesPerGameExt() + ' minuten. ';
@@ -183,7 +177,7 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
       }
       return false;
     }
-    const cfg = this.roundsByNumber[0].getConfig();
+    const cfg = this.roundNumber.getConfig();
     const newStartDateTime = new Date(this.previousGameStartDateTime.getTime());
     newStartDateTime.setMinutes(newStartDateTime.getMinutes() + cfg.getMaximalNrOfMinutesPerGame() + cfg.getMinutesBetweenGames());
     this.previousGameStartDateTime = new Date(game.getStartDateTime().getTime());
@@ -227,27 +221,27 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
     );
   }
 
-  linkToRoundSettings(roundNumber: number) {
+  linkToRoundSettings() {
     this.router.navigate(
-      ['/toernooi/roundssettings', this.tournament.getId(), roundNumber],
+      ['/toernooi/roundssettings', this.tournament.getId(), this.roundNumber.getNumber()],
       {
         queryParams: {
           returnAction: this.parentReturnAction,
           returnParam: this.tournament.getId(),
           returnQueryParamKey: 'scrollToRoundNumber',
-          returnQueryParamValue: roundNumber
+          returnQueryParamValue: this.roundNumber.getNumber()
         }
       }
     );
   }
 
-  linkToFilterSettings(roundNumber: number) {
+  linkToFilterSettings() {
     this.router.navigate(
       ['/toernooi/filter', this.tournament.getId()],
       {
         queryParams: {
           returnQueryParamKey: 'scrollToRoundNumber',
-          returnQueryParamValue: roundNumber
+          returnQueryParamValue: this.roundNumber.getNumber()
         }
       }
     );
@@ -290,8 +284,8 @@ export class TournamentPlanningViewComponent implements OnInit, OnChanges, After
     return this.sameDay;
   }
 
-  aRoundNeedsRanking(roundsByNumber: Round[]): boolean {
-    return roundsByNumber.some(round => round.needsRanking());
+  aRoundNeedsRanking(): boolean {
+    return this.roundNumber.getRounds().some(round => round.needsRanking());
   }
 
   protected isSameDay(gameOne: Game, gameTwo: Game): boolean {

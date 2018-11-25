@@ -39,7 +39,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
 
     initFields() {
         this.createFieldsList();
-        this.planningService = new PlanningService(this.structureService);
+        this.planningService = new PlanningService(this.tournament.getCompetition());
         this.processing = false;
         if (this.isStarted()) {
             this.setAlert('warning', 'het toernooi is al begonnen, je kunt niet meer wijzigen');
@@ -47,11 +47,11 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
     }
 
     isStarted() {
-        return this.structureService.getFirstRound().isStarted();
+        return this.structure.getRootRound().isStarted();
     }
 
     createFieldsList() {
-        const fields = this.structureService.getCompetition().getFields();
+        const fields = this.tournament.getCompetition().getFields();
         this.fieldsList = [];
         fields.forEach(function (fieldIt) {
             this.fieldsList.push({
@@ -80,15 +80,15 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
             name: '' + (this.fieldsList.length + 1)
         };
 
-        this.fieldRepository.createObject(jsonField, this.structureService.getCompetition())
+        this.fieldRepository.createObject(jsonField, this.tournament.getCompetition())
             .subscribe(
             /* happy path */ fieldRes => {
                     const fieldItem: IFieldListItem = { field: fieldRes, editable: false };
                     this.fieldsList.push(fieldItem);
-                    const firstRound = this.structureService.getFirstRound();
+                    const rootRound = this.structure.getRootRound();
                     const tournamentService = new TournamentService(this.tournament);
-                    tournamentService.reschedule(this.planningService, firstRound.getNumber());
-                    this.planningRepository.editObject([firstRound])
+                    tournamentService.reschedule(this.planningService, rootRound.getNumber());
+                    this.planningRepository.editObject([rootRound])
                         .subscribe(
                         /* happy path */ gamesdRes => {
                                 this.processing = false;
@@ -100,14 +100,14 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
                 },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
 
-        );
+            );
     }
 
     removeField(fieldItem: IFieldListItem) {
         this.setAlert('info', 'het veld wordt verwijderd');
         this.processing = true;
 
-        this.fieldRepository.removeObject(fieldItem.field, this.structureService.getCompetition())
+        this.fieldRepository.removeObject(fieldItem.field, this.tournament.getCompetition())
             .subscribe(
             /* happy path */ fieldRes => {
 
@@ -115,10 +115,10 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
                     if (index > -1) {
                         this.fieldsList.splice(index, 1);
                     }
-                    const firstRound = this.structureService.getFirstRound();
+                    const rootRound = this.structure.getRootRound();
                     const tournamentService = new TournamentService(this.tournament);
-                    tournamentService.reschedule(this.planningService, firstRound.getNumber());
-                    this.planningRepository.editObject([firstRound])
+                    tournamentService.reschedule(this.planningService, rootRound.getNumber());
+                    this.planningRepository.editObject([rootRound])
                         .subscribe(
                         /* happy path */ gamesRes => {
                                 this.processing = false;
@@ -129,14 +129,14 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
                         );
                 },
             /* error path */ e => { this.setAlert('danger', 'X' + e); this.processing = false; },
-        );
+            );
     }
 
     editField(fieldItem) {
         this.setAlert('info', 'de veldnaam wordt gewijzigd');
         this.processing = true;
 
-        this.fieldRepository.editObject(fieldItem.field, this.structureService.getCompetition())
+        this.fieldRepository.editObject(fieldItem.field, this.tournament.getCompetition())
             .subscribe(
             /* happy path */ fieldRes => {
                     this.setAlert('success', 'de veldnaam is gewijzigd');

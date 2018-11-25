@@ -84,7 +84,7 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
             this.processing = false;
             return;
         }
-        const referee = this.structureService.getCompetition().getRefereeById(id);
+        const referee = this.tournament.getCompetition().getRefereeById(id);
         if (referee === undefined) {
             this.processing = false;
             return;
@@ -125,12 +125,12 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
             emailaddress: emailaddress ? emailaddress : undefined,
             info: info ? info : undefined
         };
-        this.refereeRepository.createObject(ref, this.structureService.getCompetition()).subscribe(
+        this.refereeRepository.createObject(ref, this.tournament.getCompetition()).subscribe(
             /* happy path */ refereeRes => {
-                const firstRound = this.structureService.getFirstRound();
+                const rootRound = this.structure.getRootRound();
                 const tournamentService = new TournamentService(this.tournament);
-                tournamentService.reschedule(new PlanningService(this.structureService), firstRound.getNumber());
-                this.planningRepository.editObject([firstRound]).subscribe(
+                tournamentService.reschedule(new PlanningService(this.tournament.getCompetition()), rootRound.getNumber());
+                this.planningRepository.editObject([rootRound]).subscribe(
                 /* happy path */ gamesRes => {
                         this.tournamentRepository.syncRefereeRoles(this.tournament).subscribe(
                         /* happy path */ allRolesRes => {
@@ -161,13 +161,13 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         const emailaddress = this.customForm.controls.emailaddress.value;
         const info = this.customForm.controls.info.value;
 
-        const referee = this.structureService.getCompetition().getRefereeById(this.refereeId);
+        const referee = this.tournament.getCompetition().getRefereeById(this.refereeId);
         referee.setInitials(initials);
         referee.setName(name ? name : undefined);
         const emailaddressChanged = emailaddress !== referee.getEmailaddress();
         referee.setEmailaddress(emailaddress ? emailaddress : undefined);
         referee.setInfo(info ? info : undefined);
-        this.refereeRepository.editObject(referee, this.structureService.getCompetition())
+        this.refereeRepository.editObject(referee, this.tournament.getCompetition())
             .subscribe(
             /* happy path */ refereeRes => {
                     if (!emailaddressChanged) {
@@ -202,7 +202,7 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
     }
 
     isInitialsDuplicate(initials: string, refereeId?: number): boolean {
-        const referees = this.structureService.getCompetition().getReferees();
+        const referees = this.tournament.getCompetition().getReferees();
         return referees.find(refereeIt => {
             return (initials === refereeIt.getInitials() && (refereeId === undefined || refereeIt.getId() === undefined));
         }) !== undefined;

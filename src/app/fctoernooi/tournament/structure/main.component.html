@@ -17,7 +17,7 @@
           <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
           <span class="d-none d-sm-inline-block">&nbsp;uitleg</span>
         </button>
-        <button *ngIf="!processing && !structureService?.getFirstRound().isStarted()" role="button" [disabled]="!changedRoundNumber"
+        <button *ngIf="!processing && !structure.getRootRound().isStarted()" role="button" [disabled]="!changedRoundNumber"
           (click)="saveStructure()" class="btn btn-outline-primary ml-3">
           <fa-icon [icon]="['fas', 'save']"></fa-icon>
           <span class="d-none d-sm-inline-block">&nbsp;opslaan</span>
@@ -32,12 +32,11 @@
   </div>
   <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
   <div *ngIf="!processing" class="row text-center">
-    <app-tournament-structureround [round]="structureService?.getFirstRound()" [structureService]="structureService"
-      (roundChanged)="setChangedRoundNumber($event)"></app-tournament-structureround>
+    <app-tournament-structureround [round]="structure.getRootRound()" (roundNumberChanged)="setChangedRoundNumber($event)"></app-tournament-structureround>
   </div>
 </div>
 <div class="text-center" class="mt-3 mb-1">
-  <button *ngIf="!processing && !structureService?.getFirstRound().isStarted()" role="button" [disabled]="!changedRoundNumber"
+  <button *ngIf="!processing && !structure.getRootRound().isStarted()" role="button" [disabled]="!changedRoundNumber"
     (click)="saveStructure()" class="btn btn-outline-primary">
     <fa-icon [icon]="['fas', 'save']"></fa-icon>
     <span> opslaan</span>

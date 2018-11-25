@@ -79,7 +79,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
         this.customForm.controls.togglebreak.setValue(this.tournament.hasBreak());
         this.toggleBreak(this.tournament.hasBreak(), this.tournament.getBreakDuration(), this.tournament.getBreakStartDateTime());
 
-        this.planningService = new PlanningService(this.structureService);
+        this.planningService = new PlanningService(this.tournament.getCompetition());
 
         this.processing = false;
     }
@@ -93,14 +93,14 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
         ) {
             return false;
         }
-        if (this.structureService.getFirstRound().isStarted()) {
+        if (this.structure.getRootRound().isStarted()) {
             this.setAlert('info', 'de startdatum mag niet veranderen omdat het toernooi al is begonnen');
         }
         return true;
     }
 
     isTimeEnabled() {
-        return this.structureService.getFirstRound().getConfig().getEnableTime();
+        return this.structure.getFirstRoundNumber().getConfig().getEnableTime();
     }
 
     toggleBreak(breakX: boolean, p_breakDuration: number, breakDateTime?: Date) {
@@ -146,7 +146,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
         }
         const breakDuration = this.customForm.controls.breakduration.value;
 
-        const round = this.structureService.getFirstRound();
+        const round = this.structure.getRootRound();
         try {
             this.tournament.getCompetition().getLeague().setName(this.customForm.controls.name.value);
             const reschedule = this.shouldReschedule(startDateTime, breakStartDateTime, breakDuration);
@@ -159,7 +159,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
                     this.tournament.setBreakDuration(breakDuration);
                 }
                 const tournamentService = new TournamentService(this.tournament);
-                tournamentService.reschedule(new PlanningService(this.structureService), round.getNumber());
+                tournamentService.reschedule(new PlanningService(this.tournament.getCompetition()), round.getNumber());
             }
 
             this.tournamentRepository.editObject(this.tournament)

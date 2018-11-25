@@ -13,17 +13,17 @@ export class TournamentListRemoveModalComponent {
     constructor(public activeModal: NgbActiveModal) { }
 
     hasMinimumNrOfTeamsPerPoule() {
-        const firstRound = this.poulePlace.getPoule().getRound();
-        return (firstRound.getPoules().length * 2) === firstRound.getPoulePlaces().length;
+        const rootRound = this.poulePlace.getPoule().getRound();
+        return (rootRound.getPoules().length * 2) === rootRound.getPoulePlaces().length;
     }
 
     allCompetitorsQualifyForNextRound() {
-        const firstRound = this.poulePlace.getPoule().getRound();
-        return firstRound.getPoulePlaces().length <= firstRound.getNrOfPlacesChildRounds();
+        const rootRound = this.poulePlace.getPoule().getRound();
+        return rootRound.getPoulePlaces().length <= rootRound.getNrOfPlacesChildRounds();
     }
 
     allPoulePlacesHaveCompetitor() {
-        const firstRound = this.poulePlace.getPoule().getRound();
-        return firstRound.getPoulePlaces().every(poulePlace => poulePlace.getTeam() !== undefined);
+        const rootRound = this.poulePlace.getPoule().getRound();
+        return rootRound.getPoulePlaces().every(poulePlace => poulePlace.getTeam() !== undefined);
     }
 }

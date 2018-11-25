@@ -6,10 +6,11 @@ import {
     PlanningRepository,
     PlanningService,
     Round,
-    RoundConfig,
-    RoundConfigRepository,
-    RoundConfigScore,
-    RoundConfigService,
+    RoundNumber,
+    RoundNumberConfig,
+    RoundNumberConfigRepository,
+    RoundNumberConfigScore,
+    RoundNumberConfigService,
     StructureNameService,
     StructureRepository,
 } from 'ngx-sport';
@@ -30,11 +31,12 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         gameunits: 2,
         planning: 3,
     };
+
     enableTime: boolean;
     ranges: any = {};
-    allRoundsByNumber: any;
-    roundNumber: number;
-    modelConfig: RoundConfig;
+    roundNumber: RoundNumber;
+    modelConfig: RoundNumberConfig;
+    configService: RoundNumberConfigService;
     modelRecreate: boolean;
     modelReschedule: boolean;
     customForm: FormGroup;
@@ -49,7 +51,6 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         maxMinutesPerGame: 60,
     };
     planningService: PlanningService;
-    private roundConfigService: RoundConfigService;
 
     returnUrl: string;
     returnUrlParam: number;
@@ -61,13 +62,13 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         router: Router,
         tournamentRepository: TournamentRepository,
         sructureRepository: StructureRepository,
-        private roundConfigRepository: RoundConfigRepository,
+        private configRepository: RoundNumberConfigRepository,
         public nameService: StructureNameService,
         private planningRepository: PlanningRepository
     ) {
         super(route, router, tournamentRepository, sructureRepository);
         this.initRanges();
-        this.roundConfigService = new RoundConfigService();
+        this.configService = new RoundNumberConfigService();
     }
 
     private initRanges() {
@@ -97,21 +98,21 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         });
     }
 
-    initConfigs(roundNumber: number) {
-        this.allRoundsByNumber = this.structureService.getAllRoundsByNumber();
-        this.planningService = new PlanningService(this.structureService);
+    initConfigs(roundNumberAsValue: number) {
+        this.planningService = new PlanningService(this.tournament.getCompetition());
+        const roundNumber = this.structure.getRoundNumber(roundNumberAsValue);
         this.changeRoundNumber(roundNumber);
         this.processing = false;
     }
 
-    canChangeMinutesAfter(roundNumber: number): boolean {
-        return this.allRoundsByNumber[roundNumber + 1] !== undefined && this.planningService.hasGames(roundNumber + 1);
+    canChangeMinutesAfter(roundNumber: RoundNumber): boolean {
+        return roundNumber.getNext() !== undefined && this.planningService.hasGames(roundNumber.getNext());
     }
 
-    changeRoundNumber(roundNumber: number) {
+    changeRoundNumber(roundNumber: RoundNumber) {
         this.roundNumber = roundNumber;
         this.category = undefined;
-        this.modelConfig = cloneDeep(this.getFirstRoundOfRoundNumber(this.roundNumber).getConfig());
+        this.modelConfig = cloneDeep(this.roundNumber.getConfig());
         this.toggleExtension(true);
         this.modelRecreate = false;
         this.modelReschedule = false;
@@ -126,15 +127,11 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             if (this.modelConfig.getHasExtension() === false) {
                 this.modelConfig.setMinutesPerGameExt(0);
             } else if (this.modelConfig.getMinutesPerGameExt() === 0) {
-                this.modelConfig.setMinutesPerGameExt(this.roundConfigService.getDefaultMinutesPerGameExt());
+                this.modelConfig.setMinutesPerGameExt(this.configService.getDefaultMinutesPerGameExt());
             }
         } else {
             this.modelConfig.setHasExtension(this.modelConfig.getMinutesPerGameExt() > 0);
         }
-    }
-
-    getFirstRoundOfRoundNumber(roundNumber): Round {
-        return this.allRoundsByNumber[this.roundNumber][0];
     }
 
     getClassPostfix(winnersOrLosers: number): string {
@@ -251,13 +248,13 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         }
         if (this.modelConfig.getEnableTime() === false && enableTime === true) {
             if (this.modelConfig.getMinutesPerGame() === 0) {
-                this.modelConfig.setMinutesPerGame(this.roundConfigService.getDefaultMinutesPerGame());
+                this.modelConfig.setMinutesPerGame(this.configService.getDefaultMinutesPerGame());
             }
             if (this.modelConfig.getMinutesBetweenGames() === 0) {
-                this.modelConfig.setMinutesBetweenGames(this.roundConfigService.getDefaultMinutesBetweenGames());
+                this.modelConfig.setMinutesBetweenGames(this.configService.getDefaultMinutesBetweenGames());
             }
             if (this.modelConfig.getMinutesAfter() === 0) {
-                this.modelConfig.setMinutesAfter(this.roundConfigService.getDefaultMinutesAfter());
+                this.modelConfig.setMinutesAfter(this.configService.getDefaultMinutesAfter());
             }
         }
         this.modelConfig.setEnableTime(enableTime);
@@ -265,10 +262,10 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     }
 
     getDirectionDescription(scoreConfig) {
-        return RoundConfigScore.getDirectionDescription(scoreConfig.getDirection());
+        return RoundNumberConfigScore.getDirectionDescription(scoreConfig.getDirection());
     }
 
-    setScoreConfigMaximum(scoreConfig: RoundConfigScore, scoreConfigMaximum) {
+    setScoreConfigMaximum(scoreConfig: RoundNumberConfigScore, scoreConfigMaximum) {
         if (scoreConfigMaximum > 9999 || scoreConfigMaximum < 0) {
             return;
         }
@@ -278,7 +275,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         scoreConfig.setMaximum(scoreConfigMaximum);
     }
 
-    isScoreConfigReadOnly(scoreConfig: RoundConfigScore) {
+    isScoreConfigReadOnly(scoreConfig: RoundNumberConfigScore) {
         if (scoreConfig.getChild() !== undefined && scoreConfig.getChild().getMaximum() === 0) {
             return true;
         }
@@ -291,7 +288,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         return false;
     }
 
-    getSelectRoundNumberButtonClassPostfix(roundNumber: number) {
+    getSelectRoundNumberButtonClassPostfix(roundNumber: RoundNumber) {
         if (roundNumber >= this.roundNumber) {
             return 'primary';
         }
@@ -302,16 +299,16 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         this.setAlert('info', 'instellingen worden opgeslagen');
         this.processing = true;
 
-        const jsonConfig = this.roundConfigRepository.objectToJsonHelper(this.modelConfig);
-        const rounds = this.allRoundsByNumber[this.roundNumber];
-        return this.roundConfigRepository.editObject(this.structureService.getCompetition(), this.roundNumber, jsonConfig)
+        // hier kijken als round of roundnumber is
+        const jsonConfig = this.configRepository.objectToJson(this.modelConfig);
+        return this.configRepository.editObject(this.roundNumber, jsonConfig)
             .subscribe(
                 /* happy path */ res => {
                     this.updateRoundConfig(this.roundNumber, this.modelConfig);
                     const tournamentService = new TournamentService(this.tournament);
                     if (this.modelRecreate === true) {
                         tournamentService.create(this.planningService, this.roundNumber);
-                        this.planningRepository.createObject(rounds)
+                        this.planningRepository.createObject(this.roundNumber.getRounds())
                             .subscribe(
                                 /* happy path */ gamesRes => {
                                     this.setAlert('success', 'de instellingen zijn opgeslagen');
@@ -323,7 +320,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
                             );
                     } else if (this.modelReschedule) {
                         tournamentService.reschedule(this.planningService, this.roundNumber);
-                        this.planningRepository.editObject(rounds)
+                        this.planningRepository.editObject(this.roundNumber.getRounds())
                             .subscribe(
                                 /* happy path */ gamesRes => {
                                     this.setAlert('success', 'de instellingen zijn opgeslagen');
@@ -347,29 +344,28 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
 
     }
 
-    protected updateRoundConfig(roundNumber: number, modelToUpdateWith: RoundConfig) {
-        const rounds = this.allRoundsByNumber[roundNumber];
-        rounds.forEach(round => {
-            round.getConfig().setQualifyRule(modelToUpdateWith.getQualifyRule());
-            round.getConfig().setNrOfHeadtoheadMatches(modelToUpdateWith.getNrOfHeadtoheadMatches());
-            round.getConfig().setWinPoints(modelToUpdateWith.getWinPoints());
-            round.getConfig().setDrawPoints(modelToUpdateWith.getDrawPoints());
-            round.getConfig().setHasExtension(modelToUpdateWith.getHasExtension());
-            round.getConfig().setWinPointsExt(modelToUpdateWith.getWinPointsExt());
-            round.getConfig().setDrawPointsExt(modelToUpdateWith.getDrawPointsExt());
-            round.getConfig().setMinutesPerGameExt(modelToUpdateWith.getMinutesPerGameExt());
-            round.getConfig().setEnableTime(modelToUpdateWith.getEnableTime());
-            round.getConfig().setMinutesPerGame(modelToUpdateWith.getMinutesPerGame());
-            round.getConfig().setMinutesBetweenGames(modelToUpdateWith.getMinutesBetweenGames());
-            round.getConfig().setMinutesAfter(modelToUpdateWith.getMinutesAfter());
-            this.updateRoundConfigScore(round.getConfig().getScore(), modelToUpdateWith.getScore());
-        });
-        if (this.allRoundsByNumber[roundNumber + 1] !== undefined) {
-            this.updateRoundConfig(roundNumber + 1, modelToUpdateWith);
+    protected updateRoundConfig(roundNumber: RoundNumber, modelToUpdateWith: RoundNumberConfig) {
+
+        roundNumber.getConfig().setQualifyRule(modelToUpdateWith.getQualifyRule());
+        roundNumber.getConfig().setNrOfHeadtoheadMatches(modelToUpdateWith.getNrOfHeadtoheadMatches());
+        roundNumber.getConfig().setWinPoints(modelToUpdateWith.getWinPoints());
+        roundNumber.getConfig().setDrawPoints(modelToUpdateWith.getDrawPoints());
+        roundNumber.getConfig().setHasExtension(modelToUpdateWith.getHasExtension());
+        roundNumber.getConfig().setWinPointsExt(modelToUpdateWith.getWinPointsExt());
+        roundNumber.getConfig().setDrawPointsExt(modelToUpdateWith.getDrawPointsExt());
+        roundNumber.getConfig().setMinutesPerGameExt(modelToUpdateWith.getMinutesPerGameExt());
+        roundNumber.getConfig().setEnableTime(modelToUpdateWith.getEnableTime());
+        roundNumber.getConfig().setMinutesPerGame(modelToUpdateWith.getMinutesPerGame());
+        roundNumber.getConfig().setMinutesBetweenGames(modelToUpdateWith.getMinutesBetweenGames());
+        roundNumber.getConfig().setMinutesAfter(modelToUpdateWith.getMinutesAfter());
+        this.updateRoundConfigScore(roundNumber.getConfig().getScore(), modelToUpdateWith.getScore());
+
+        if (roundNumber.getNext() !== undefined) {
+            this.updateRoundConfig(roundNumber.getNext(), modelToUpdateWith);
         }
     }
 
-    protected updateRoundConfigScore(roundConfigScore: RoundConfigScore, modelToUpdateWith: RoundConfigScore) {
+    protected updateRoundConfigScore(roundConfigScore: RoundNumberConfigScore, modelToUpdateWith: RoundNumberConfigScore) {
         roundConfigScore.setMaximum(modelToUpdateWith.getMaximum());
         if (roundConfigScore.getParent() && modelToUpdateWith.getParent()) {
             this.updateRoundConfigScore(roundConfigScore.getParent(), modelToUpdateWith.getParent());
@@ -377,25 +373,25 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     }
 
     // dit is idem als get position
-    // protected getWinnersLosers(firstRound: Round, aChildRound: Round): number[] {
+    // protected getWinnersLosers(rootRound: Round, aChildRound: Round): number[] {
     //     const winnersLosers: number[] = [];
-    //     while (aChildRound !== firstRound) {
+    //     while (aChildRound !== rootRound) {
     //         winnersLosers.push(aChildRound.getWinnersOrLosers());
     //         aChildRound = aChildRound.getParent();
     //     }
     //     return winnersLosers;
     // }
 
-    // protected getRoundByWinnersLosers(firstRound: Round, winnersLosers: number[]): Round {
-    //     let round: Round = firstRound;
+    // protected getRoundByWinnersLosers(rootRound: Round, winnersLosers: number[]): Round {
+    //     let round: Round = rootRound;
     //     while (winnersLosers.length > 0) {
     //         round = round.getChildRound(winnersLosers.pop());
     //     }
     //     return round;
     // }
 
-    getDirectionClass(scoreConfig: RoundConfigScore) {
-        return scoreConfig.getDirection() === RoundConfigScore.UPWARDS ? 'naar' : 'vanaf';
+    getDirectionClass(scoreConfig: RoundNumberConfigScore) {
+        return scoreConfig.getDirection() === RoundNumberConfigScore.UPWARDS ? 'naar' : 'vanaf';
     }
 
     private getForwarUrl() {

@@ -29,7 +29,7 @@
               placeholder="max. {{validations.maxlengthname}} karakters" autofocus>
           </div>
         </div>
-        <div *ngIf="!structureService.getFirstRound().isStarted()" class="form-group row">
+        <div *ngIf="!structure.getRootRound().isStarted()" class="form-group row">
           <div class="col-3">
             <label for="dp" class="col-form-label">startdatum</label>
           </div>
@@ -46,7 +46,7 @@
             </div>
           </div>
         </div>
-        <div *ngIf="!structureService.getFirstRound().isStarted()" class="form-group row">
+        <div *ngIf="!structure.getRootRound().isStarted()" class="form-group row">
           <div class="col-3">
             <label for="starttime" class="col-form-label">starttijd</label>
           </div>
@@ -55,7 +55,7 @@
               required></ngb-timepicker>
           </div>
         </div>
-        <div *ngIf="!structureService.getFirstRound().isStarted() && isTimeEnabled() " class="form-group row">
+        <div *ngIf="!structure.getRootRound().isStarted() && isTimeEnabled() " class="form-group row">
           <div class="col-3">
             <label for="togglebreak" class="col-form-label">pauze</label>
           </div>
@@ -70,8 +70,7 @@
             <label class="col-form-label">( tijdens een ronde )</label>
           </div>
         </div>
-        <div *ngIf="!structureService.getFirstRound().isStarted() && customForm.controls.togglebreak.value === true"
-          class="form-group row">
+        <div *ngIf="!structure.getRootRound().isStarted() && customForm.controls.togglebreak.value === true" class="form-group row">
           <div class="col-3">
             <label for="breaktime" class="col-form-label">pausetijd</label>
           </div>
@@ -79,7 +78,7 @@
             <ngb-timepicker id="breaktime" name="breaktime" [formControl]="customForm.controls.breaktime" [spinners]="false"></ngb-timepicker>
           </div>
         </div>
-        <div *ngIf="!structureService.getFirstRound().isStarted() && customForm.controls.togglebreak.value" class="form-group row">
+        <div *ngIf="!structure.getRootRound().isStarted() && customForm.controls.togglebreak.value" class="form-group row">
           <div class="col-3">
             <label for="breakduration" class="col-form-label">pauseduur</label>
           </div>
@@ -106,10 +105,10 @@
         <h2>
           <fa-icon [icon]="['fas', 'cogs']"></fa-icon> ronde-instellingen
         </h2>
-        <div *ngFor="let roundNumber of structureService.getRoundNumbers()" class="row justify-content-end">
+        <div *ngFor="let roundNumber of structure.getRoundNumbers()" class="row justify-content-end">
           <div *ngIf="planningService.hasGames(roundNumber)" class="col-9">
             <button type="button" class="btn btn-outline-secondary mb-3" (click)="linkToRoundSettings(roundNumber)">
-              <span [innerHTML]="nameService.getRoundsName( roundNumber, planningService.getRoundsByNumber(roundNumber) ) | keepHtml"></span>
+              <span [innerHTML]="nameService.getRoundNumberName( roundNumber) | keepHtml"></span>
             </button>
           </div>
         </div>

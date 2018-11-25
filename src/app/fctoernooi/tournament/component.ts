@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Round, StructureRepository, StructureService } from 'ngx-sport';
+import { Structure, StructureRepository, StructureService } from 'ngx-sport';
 
 import { IAlert } from '../../app.definitions';
 import { Tournament } from '../tournament';
@@ -15,7 +15,8 @@ export class TournamentComponent {
     protected router: Router;
     protected tournamentRepository: TournamentRepository;
     protected structureRepository: StructureRepository;
-    public structureService: StructureService;
+    // public structureService: StructureService;
+    public structure: Structure;
     public alert: IAlert;
     public processing = true;
 
@@ -45,21 +46,17 @@ export class TournamentComponent {
 
                     this.structureRepository.getObject(tournament.getCompetition())
                         .subscribe(
-                                /* happy path */(round: Round) => {
-                                this.structureService = new StructureService(
-                                    tournament.getCompetition(),
-                                    { min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS },
-                                    round
-                                );
+                                /* happy path */(structure: Structure) => {
+                                this.structure = structure;
                                 if (callback !== undefined) {
                                     callback();
                                 }
                             },
-                                /* error path */ e => { this.setAlert('danger', e); },
+                                /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
                                 /* onComplete */() => { }
                         );
                 },
-                    /* error path */ e => { this.setAlert('danger', e); },
+                    /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
                     /* onComplete */() => { }
             );
     }
@@ -70,6 +67,10 @@ export class TournamentComponent {
 
     protected resetAlert(): void {
         this.alert = undefined;
+    }
+
+    protected getStructureService(): StructureService {
+        return new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
     }
 }
 
