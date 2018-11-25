@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
-import { League, PlanningRepository, PlanningService, StructureNameService, StructureRepository } from 'ngx-sport';
+import { RoundNumber, League, PlanningRepository, PlanningService, StructureNameService, StructureRepository } from 'ngx-sport';
 
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
@@ -194,9 +194,9 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
     }
     isSelected = date => this.equals(date, this.customForm.controls.date.value);
 
-    linkToRoundSettings(roundNumber: number) {
+    linkToRoundSettings(roundNumber: RoundNumber) {
         this.router.navigate(
-            ['/toernooi/roundssettings', this.tournament.getId(), roundNumber],
+            ['/toernooi/roundssettings', this.tournament.getId(), roundNumber.getNumber()],
             {
                 queryParams: {
                     returnAction: '/toernooi/edit',
