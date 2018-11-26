@@ -125,8 +125,6 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
         this.processing = true;
         this.setAlert('info', 'het toernooi wordt opgeslagen');
 
-        const name = this.customForm.controls.name.value;
-
         const startDateTime = new Date(
             this.customForm.controls.date.value.year,
             this.customForm.controls.date.value.month - 1,
