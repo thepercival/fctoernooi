@@ -85,10 +85,9 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
             /* happy path */ fieldRes => {
                     const fieldItem: IFieldListItem = { field: fieldRes, editable: false };
                     this.fieldsList.push(fieldItem);
-                    const rootRound = this.structure.getRootRound();
                     const tournamentService = new TournamentService(this.tournament);
-                    tournamentService.reschedule(this.planningService, rootRound.getNumber());
-                    this.planningRepository.editObject([rootRound])
+                    tournamentService.reschedule(this.planningService, this.structure.getFirstRoundNumber());
+                    this.planningRepository.editObject(this.structure.getFirstRoundNumber())
                         .subscribe(
                         /* happy path */ gamesdRes => {
                                 this.processing = false;
@@ -115,10 +114,9 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
                     if (index > -1) {
                         this.fieldsList.splice(index, 1);
                     }
-                    const rootRound = this.structure.getRootRound();
                     const tournamentService = new TournamentService(this.tournament);
-                    tournamentService.reschedule(this.planningService, rootRound.getNumber());
-                    this.planningRepository.editObject([rootRound])
+                    tournamentService.reschedule(this.planningService, this.structure.getFirstRoundNumber());
+                    this.planningRepository.editObject(this.structure.getFirstRoundNumber())
                         .subscribe(
                         /* happy path */ gamesRes => {
                                 this.processing = false;

@@ -127,10 +127,10 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         };
         this.refereeRepository.createObject(ref, this.tournament.getCompetition()).subscribe(
             /* happy path */ refereeRes => {
-                const rootRound = this.structure.getRootRound();
+                const firstRoundNumber = this.structure.getFirstRoundNumber();
                 const tournamentService = new TournamentService(this.tournament);
-                tournamentService.reschedule(new PlanningService(this.tournament.getCompetition()), rootRound.getNumber());
-                this.planningRepository.editObject([rootRound]).subscribe(
+                tournamentService.reschedule(new PlanningService(this.tournament.getCompetition()), firstRoundNumber);
+                this.planningRepository.editObject(firstRoundNumber).subscribe(
                 /* happy path */ gamesRes => {
                         this.tournamentRepository.syncRefereeRoles(this.tournament).subscribe(
                         /* happy path */ allRolesRes => {

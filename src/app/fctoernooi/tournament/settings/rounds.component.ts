@@ -303,12 +303,11 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         const jsonConfig = this.configRepository.objectToJson(this.modelConfig);
         return this.configRepository.editObject(this.roundNumber, jsonConfig)
             .subscribe(
-                /* happy path */ res => {
-                    this.updateRoundConfig(this.roundNumber, this.modelConfig);
+                /* happy path */ configsRes => {
                     const tournamentService = new TournamentService(this.tournament);
                     if (this.modelRecreate === true) {
                         tournamentService.create(this.planningService, this.roundNumber);
-                        this.planningRepository.createObject(this.roundNumber.getRounds())
+                        this.planningRepository.createObject(this.roundNumber)
                             .subscribe(
                                 /* happy path */ gamesRes => {
                                     this.setAlert('success', 'de instellingen zijn opgeslagen');
@@ -320,7 +319,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
                             );
                     } else if (this.modelReschedule) {
                         tournamentService.reschedule(this.planningService, this.roundNumber);
-                        this.planningRepository.editObject(this.roundNumber.getRounds())
+                        this.planningRepository.editObject(this.roundNumber)
                             .subscribe(
                                 /* happy path */ gamesRes => {
                                     this.setAlert('success', 'de instellingen zijn opgeslagen');
@@ -344,7 +343,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
 
     }
 
-    protected updateRoundConfig(roundNumber: RoundNumber, modelToUpdateWith: RoundNumberConfig) {
+    /* protected updateRoundConfig(roundNumber: RoundNumber, modelToUpdateWith: RoundNumberConfig) {
 
         roundNumber.getConfig().setQualifyRule(modelToUpdateWith.getQualifyRule());
         roundNumber.getConfig().setNrOfHeadtoheadMatches(modelToUpdateWith.getNrOfHeadtoheadMatches());
@@ -370,7 +369,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         if (roundConfigScore.getParent() && modelToUpdateWith.getParent()) {
             this.updateRoundConfigScore(roundConfigScore.getParent(), modelToUpdateWith.getParent());
         }
-    }
+    } */
 
     // dit is idem als get position
     // protected getWinnersLosers(rootRound: Round, aChildRound: Round): number[] {

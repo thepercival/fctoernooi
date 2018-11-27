@@ -268,8 +268,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
           const planningService = new PlanningService(this.tournament.getCompetition());
           const tournamentService = new TournamentService(this.tournament);
           tournamentService.create(planningService, this.structure.getFirstRoundNumber());
-          const changedRoundsForPlanning: Round[] = this.structure.getFirstRoundNumber().getRounds();
-          this.planningRepository.createObject(changedRoundsForPlanning)
+          this.planningRepository.createObject(this.structure.getFirstRoundNumber())
             .subscribe(
                     /* happy path */ games => {
                 this.initPoulePlaces();

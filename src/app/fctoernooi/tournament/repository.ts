@@ -188,7 +188,7 @@ export interface TournamentShell {
     sport: string;
     name: string;
     startDateTime: Date;
-    editPermissions: boolean;
+    hasEditPermissions: boolean;
 }
 
 export interface TournamentShellFilter {

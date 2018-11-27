@@ -146,7 +146,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
         }
         const breakDuration = this.customForm.controls.breakduration.value;
 
-        const round = this.structure.getRootRound();
+        const firstRoundNumber = this.structure.getFirstRoundNumber();
         try {
             this.tournament.getCompetition().getLeague().setName(this.customForm.controls.name.value);
             const reschedule = this.shouldReschedule(startDateTime, breakStartDateTime, breakDuration);
@@ -159,7 +159,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
                     this.tournament.setBreakDuration(breakDuration);
                 }
                 const tournamentService = new TournamentService(this.tournament);
-                tournamentService.reschedule(new PlanningService(this.tournament.getCompetition()), round.getNumber());
+                tournamentService.reschedule(new PlanningService(this.tournament.getCompetition()), firstRoundNumber);
             }
 
             this.tournamentRepository.editObject(this.tournament)
@@ -167,7 +167,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
                     /* happy path */ tournamentRes => {
                         this.tournament = tournamentRes;
                         if (reschedule === true) {
-                            this.planningRepository.editObject([round]).subscribe(
+                            this.planningRepository.editObject(firstRoundNumber).subscribe(
                                     /* happy path */ gamesRes => {
                                     this.router.navigate(['/toernooi', tournamentRes.getId()]);
                                 },

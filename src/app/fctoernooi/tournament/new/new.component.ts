@@ -155,7 +155,7 @@ export class TournamentNewComponent implements OnInit {
                 const planningService = new PlanningService(tournamentOut.getCompetition());
                 const tournamentService = new TournamentService(tournamentOut);
                 tournamentService.create(planningService, structureOut.getFirstRoundNumber());
-                this.planningRepository.createObject([structureOut.getRootRound()])
+                this.planningRepository.createObject(structureOut.getFirstRoundNumber())
                   .subscribe(
                     /* happy path */ games => {
                       this.router.navigate(['/toernooi', tournamentOut.getId()]);

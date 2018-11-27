@@ -84,10 +84,10 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
           if (index > -1) {
             this.referees.splice(index, 1);
           }
-          const rootRound = this.structure.getRootRound();
+          const firstRoundNumber = this.structure.getFirstRoundNumber();
           const tournamentService = new TournamentService(this.tournament);
-          tournamentService.reschedule(this.planningService, rootRound.getNumber());
-          this.planningRepository.editObject([rootRound])
+          tournamentService.reschedule(this.planningService, firstRoundNumber);
+          this.planningRepository.editObject(firstRoundNumber)
             .subscribe(
                     /* happy path */ gamesdRes => {
                 this.processing = false;
