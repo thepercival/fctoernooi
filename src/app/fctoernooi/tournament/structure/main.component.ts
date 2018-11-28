@@ -115,7 +115,10 @@ export class TournamentStructureComponent extends TournamentComponent implements
           const planningService = new PlanningService(this.tournament.getCompetition());
           const tournamentService = new TournamentService(this.tournament);
           tournamentService.create(planningService, structureRes.getFirstRoundNumber());
-          this.planningRepository.createObject(this.changedRoundNumber)
+          if ( this.changedRoundNumber === undefined ) {
+            this.completeSave(structureRes);
+          } else {
+            this.planningRepository.createObject(this.changedRoundNumber)
             .subscribe(
                     /* happy path */ games => {
                 this.completeSave(structureRes);
@@ -123,6 +126,7 @@ export class TournamentStructureComponent extends TournamentComponent implements
                   /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
                   /* onComplete */() => this.processing = false
             );
+          }
         },
         /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
       );

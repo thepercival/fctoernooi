@@ -140,7 +140,9 @@ export class TournamentStructureRoundComponent {
   public onSliderChange(nrOfChildPlacesNew: number, winnersOrLosers: number) {
     this.getStructureService().changeNrOfPlacesChildRound(nrOfChildPlacesNew, this.round, winnersOrLosers);
     // this.getPlanningService().create(this.round.getNumber());
-    this.roundNumberChanged.emit(this.round.getNumber().getNext());
+    if ( this.round.getNumber().hasNext() ) {
+      this.roundNumberChanged.emit(this.round.getNumber().getNext());
+    }
   }
 
 
