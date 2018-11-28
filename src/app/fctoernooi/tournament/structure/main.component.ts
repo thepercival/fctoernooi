@@ -49,7 +49,7 @@ export class TournamentStructureComponent extends TournamentComponent implements
 
   ngOnInit() {
     super.myNgOnInit(() => {
-      this.clonedStructure = this.createClonedStructure();
+      this.clonedStructure = this.createClonedStructure(this.structure);
       this.processing = false;
       if (this.isHelpModalShownOnDevice() === false) {
         this.openHelp();
@@ -57,9 +57,9 @@ export class TournamentStructureComponent extends TournamentComponent implements
     });
   }
 
-  createClonedStructure(): Structure {
-    this.originalTeams = this.structure.getRootRound().getTeams();
-    return cloneDeep(this.structure);
+  createClonedStructure(structure: Structure): Structure {
+    this.originalTeams = structure.getRootRound().getTeams();
+    return cloneDeep(structure);
   }
 
   processUnusedTeams(rootRound: Round) {
@@ -107,19 +107,18 @@ export class TournamentStructureComponent extends TournamentComponent implements
     this.processing = true;
     this.setAlert('info', 'wijzigingen worden opgeslagen');
 
-    this.processUnusedTeams(this.structure.getRootRound());
+    this.processUnusedTeams(this.clonedStructure.getRootRound());
 
     this.structureRepository.editObject(this.clonedStructure, this.tournament.getCompetition())
       .subscribe(
           /* happy path */ structureRes => {
-          this.structure = structureRes;
           const planningService = new PlanningService(this.tournament.getCompetition());
           const tournamentService = new TournamentService(this.tournament);
-          tournamentService.create(planningService, this.structure.getFirstRoundNumber());
+          tournamentService.create(planningService, structureRes.getFirstRoundNumber());
           this.planningRepository.createObject(this.changedRoundNumber)
             .subscribe(
                     /* happy path */ games => {
-                this.completeSave();
+                this.completeSave(structureRes);
               },
                   /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
                   /* onComplete */() => this.processing = false
@@ -129,8 +128,8 @@ export class TournamentStructureComponent extends TournamentComponent implements
       );
   }
 
-  completeSave() {
-    this.clonedStructure = this.createClonedStructure();
+  completeSave(structureRes: Structure ) {
+    this.clonedStructure = this.createClonedStructure(structureRes);
     this.changedRoundNumber = undefined;
     this.processing = false;
     this.setAlert('success', 'de wijzigingen zijn opgeslagen');
