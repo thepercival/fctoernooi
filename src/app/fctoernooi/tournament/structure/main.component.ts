@@ -112,31 +112,36 @@ export class TournamentStructureComponent extends TournamentComponent implements
     this.structureRepository.editObject(this.clonedStructure, this.tournament.getCompetition())
       .subscribe(
           /* happy path */ structureRes => {
-          const planningService = new PlanningService(this.tournament.getCompetition());
-          const tournamentService = new TournamentService(this.tournament);
-          tournamentService.create(planningService, structureRes.getFirstRoundNumber());
-          if ( this.changedRoundNumber === undefined ) {
-            this.completeSave(structureRes);
-          } else {
-            this.planningRepository.createObject(this.changedRoundNumber)
-            .subscribe(
-                    /* happy path */ games => {
-                this.completeSave(structureRes);
-              },
-                  /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                  /* onComplete */() => this.processing = false
-            );
+          if (this.changedRoundNumber === undefined) {
+            return this.completeSave(structureRes);
           }
+          this.syncPlanning(structureRes, this.changedRoundNumber.getNumber());
         },
         /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
       );
   }
 
-  completeSave(structureRes: Structure ) {
+  completeSave(structureRes: Structure) {
     this.clonedStructure = this.createClonedStructure(structureRes);
     this.changedRoundNumber = undefined;
     this.processing = false;
     this.setAlert('success', 'de wijzigingen zijn opgeslagen');
+  }
+
+  protected syncPlanning(structure: Structure, roundNumberToSync: number) {
+    const changedRoundNumber = structure.getRoundNumber(roundNumberToSync);
+    if (changedRoundNumber === undefined) {
+      return this.completeSave(structure);
+    }
+    const planningService = new PlanningService(this.tournament.getCompetition());
+    const tournamentService = new TournamentService(this.tournament);
+    tournamentService.create(planningService, changedRoundNumber);
+    this.planningRepository.createObject(changedRoundNumber)
+      .subscribe(
+          /* happy path */ games => this.completeSave(structure),
+          /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+          /* onComplete */() => this.processing = false
+      );
   }
 
   isHelpModalShownOnDevice() {

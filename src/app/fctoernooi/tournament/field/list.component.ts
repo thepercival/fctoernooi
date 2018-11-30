@@ -89,7 +89,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
                     tournamentService.reschedule(this.planningService, this.structure.getFirstRoundNumber());
                     this.planningRepository.editObject(this.structure.getFirstRoundNumber())
                         .subscribe(
-                        /* happy path */ gamesdRes => {
+                        /* happy path */ gamesRes => {
                                 this.processing = false;
                                 this.setAlert('success', 'het veld is toegevoegd');
                             },
