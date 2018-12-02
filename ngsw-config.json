@@ -32,7 +32,7 @@
         "https://api.fctoernooi.nl/tournamentspublic",
         "https://api.fctoernooi.nl/voetbal/structures"
       ],
-      "version": 4,
+      "version": 5,
       "cacheConfig": {
         "maxSize": 100,
         "maxAge": "3d",
@@ -45,7 +45,7 @@
       "urls": [
         ""
       ],
-      "version": 4,
+      "version": 5,
       "cacheConfig": {
         "maxSize": 100,
         "maxAge": "3d",
