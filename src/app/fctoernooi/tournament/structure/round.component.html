@@ -67,12 +67,12 @@
           title="verdeel de plekken over 1 poule minder">
           <fa-icon [icon]="['fas', 'compress']"></fa-icon>
         </button>
-        <button *ngIf="round.getQualifyOrder() < CustomQualifyOrder && round.getPoules().length >= 2 && (round.getNumber().getRounds().length - 1) <= 1"
+        <button *ngIf="canChangeQualifyOrder()"
           type="button" class="btn btn-outline-secondary" (click)="toggleQualifyOrder(round)" [title]="'schakel kruisfinales ' + (qualifyOrderIsHorizontal(round) ? 'uit' : 'in')">
           <fa-icon [icon]="['fas', (qualifyOrderIsHorizontal(round) ? 'arrows-alt-h' : 'random') ]"></fa-icon>
         </button>
-        <button *ngIf="( round.getPoulePlaces().length / ( round.getPoules().length + 1 ) ) >= 2" type="button" class="btn btn-outline-secondary"
-          (click)="addPoule(round,false )" title="verdeel de plekken over 1 poule meer">
+        <button *ngIf="canExpand()" type="button" class="btn btn-outline-secondary"
+          (click)="addPoule(round,true)" title="verdeel de plekken over 1 poule meer">
           <fa-icon [icon]="['fas', 'expand']"></fa-icon>
         </button>
       </div>
@@ -95,7 +95,7 @@
     <div class="col px-3 my-4">
       {{getWinnersLosersDescription( RoundWINNERS )}}
       <nouislider class="horizontal-slider {{getWinnersLosersName( RoundWINNERS )}}" [config]="uiSliderConfig" [min]="0"
-        [max]="round.getPoulePlaces().length" [ngModel]="round.getNrOfPlacesChildRound( RoundWINNERS )" (ngModelChange)="onSliderChange($event, RoundWINNERS)"
+        [max]="round.getPoulePlaces().length" (start)="startSliding($event, RoundWINNERS)" (end)="endSliding($event, RoundWINNERS)" [ngModel]="round.getNrOfPlacesChildRound( RoundWINNERS )" (ngModelChange)="onSliderChange($event, RoundWINNERS)"
         [disabled]="round.isStarted()"></nouislider>
     </div>
     <div *ngIf="round.getNumberAsValue() === 1" class="col px-3 my-4">afvallers<br>{{ round.getPoulePlaces().length - (
@@ -104,7 +104,7 @@
     <div class="col px-3 my-4">
       {{getWinnersLosersDescription( RoundLOSERS )}}
       <nouislider class="horizontal-slider {{getWinnersLosersName( RoundLOSERS )}}" [config]="uiSliderConfig" [min]="0"
-        [max]="round.getPoulePlaces().length" [ngModel]="round.getNrOfPlacesChildRound( RoundLOSERS )" (ngModelChange)="onSliderChange($event, RoundLOSERS)"
+        [max]="round.getPoulePlaces().length" (start)="startSliding($event, RoundLOSERS)" (end)="endSliding($event, RoundLOSERS)" [ngModel]="round.getNrOfPlacesChildRound( RoundLOSERS )" (ngModelChange)="onSliderChange($event, RoundLOSERS)"
         [disabled]="round.isStarted()"></nouislider>
     </div>
   </div>

@@ -155,7 +155,7 @@
         </div>
         <label for="gamenotes" class="col-9 col-form-label">wedstrijdbriefjes</label>
       </div>
-      <div class="row">
+      <div *ngIf="tournament.getCompetition().getFields().length" class="row">
         <div class="form-check col-3">
           <label class="custom-control custom-checkbox col-form-label pl-0">
             <input type="checkbox" class="custom-control-input form-check-input" name="gamesperfield" [(ngModel)]="printConfig.gamesperfield">

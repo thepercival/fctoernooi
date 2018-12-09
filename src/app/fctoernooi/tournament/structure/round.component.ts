@@ -14,8 +14,8 @@ export class TournamentStructureRoundComponent {
   @Output() roundNumberChanged = new EventEmitter<RoundNumber>();
   public alert: any;
   public sliderValueDummy = 3;
-
-  uiSliderConfig: any = {
+  private structureService: StructureService;
+  public uiSliderConfig: any = {
     behaviour: 'drag',
     margin: 1,
     step: 1,
@@ -24,6 +24,7 @@ export class TournamentStructureRoundComponent {
 
   constructor(public nameService: StructureNameService) {
     this.resetAlert();
+    this.structureService = new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
   }
 
   get RoundWINNERS(): number {
@@ -34,12 +35,8 @@ export class TournamentStructureRoundComponent {
     return Round.LOSERS;
   }
 
-  get CustomQualifyOrder(): number {
-    return Round.ORDER_CUSTOM;
-  }
-
   private getStructureService(): StructureService {
-    return new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
+    return this.structureService;
   }
 
   getWinnersLosersName(winnersOrLosers: number): string {
@@ -50,10 +47,14 @@ export class TournamentStructureRoundComponent {
     return Round.getWinnersLosersDescription(winnersOrLosers, true);
   }
 
+  canExpand(): boolean {
+    return ( this.round.getPoulePlaces().length / ( this.round.getPoules().length + 1 ) ) >= 2;
+  }
+
   addPoule(round, fillPouleToMinimum = true): void {
     this.resetAlert();
     const structureService = this.getStructureService();
-    structureService.addPoule(round, fillPouleToMinimum);
+    structureService.addPoule(round, fillPouleToMinimum ? 2 : 0);
     if (round.getNumber() > 1) {
       structureService.recalculateQualifyRulesForRound(round);
     }
@@ -137,20 +138,52 @@ export class TournamentStructureRoundComponent {
     return (type === 'success');
   }
 
+  startSliding(nrOfChildPlaces: number, winnersOrLosers: number) {
+    const maxNrOfPlaces = this.calcMaxNrOfPlacesPerPoule(this.round, winnersOrLosers);
+    console.log('maxNrOfPoulesForChildRound at begin sliding: ' + maxNrOfPlaces);
+    this.getStructureService().setMaxNrOfPoulePlacesForChildRound( maxNrOfPlaces );
+  }
+
+  protected calcMaxNrOfPlacesPerPoule( parentRound: Round, winnersOrLosers: number ): number {
+    const nrOfChildRoundPlaces = parentRound.getNrOfPlacesChildRound(winnersOrLosers);
+    const childRound = parentRound.getChildRound(winnersOrLosers);
+    if ( childRound === undefined ) {
+        return 2;
+    }
+    const structureService = this.getStructureService();
+    return structureService.getNrOfPlacesPerPoule(nrOfChildRoundPlaces, childRound.getPoules().length);
+  }
+
   public onSliderChange(nrOfChildPlacesNew: number, winnersOrLosers: number) {
+    // console.log('start change' );
     this.getStructureService().changeNrOfPlacesChildRound(nrOfChildPlacesNew, this.round, winnersOrLosers);
     // this.getPlanningService().create(this.round.getNumber());
     if ( this.round.getNumber().hasNext() ) {
       this.roundNumberChanged.emit(this.round.getNumber().getNext());
     }
+    // console.log('end change' );
   }
 
+  endSliding(nrOfChildPlaces: number, winnersOrLosers: number) {
+    this.checkRoundWithOnePoulePlace( nrOfChildPlaces, winnersOrLosers );
+  }
+
+  checkRoundWithOnePoulePlace( nrOfPoulePlacesChildRound: number, winnersOrLosers: number ) {
+    if ( nrOfPoulePlacesChildRound !== 1 || this.round.getNrOfPlacesChildRound(winnersOrLosers) !== 1 ) {
+      return;
+    }
+    const nextRoundNumber = this.round.getNumber().getNext();
+    this.getStructureService().removeChildRound(this.round, winnersOrLosers);
+    this.roundNumberChanged.emit(nextRoundNumber);
+  }
+
+  canChangeQualifyOrder(): boolean {
+    return this.round.getQualifyOrder() < Round.ORDER_CUSTOM &&
+      this.round.getPoules().length >= 2 /*&& (this.round.getNumber().getRounds().length - 1) <= 1*/;
+  }
 
   toggleQualifyOrder(round: Round) {
     this.resetAlert();
-    if (!(round.getNumberAsValue() === 2 || round.getNumberAsValue() === 3)) {
-      return;
-    }
     round.setQualifyOrder(this.qualifyOrderIsHorizontal(round) ? Round.ORDER_VERTICAL : Round.ORDER_HORIZONTAL);
     this.getStructureService().recalculateQualifyRulesForRound(round);
     // this.getPlanningService().create(round.getNumber());
