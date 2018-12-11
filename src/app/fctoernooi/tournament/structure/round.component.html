@@ -68,8 +68,8 @@
           <fa-icon [icon]="['fas', 'compress']"></fa-icon>
         </button>
         <button *ngIf="canChangeQualifyOrder()"
-          type="button" class="btn btn-outline-secondary" (click)="toggleQualifyOrder(round)" [title]="'schakel kruisfinales ' + (qualifyOrderIsHorizontal(round) ? 'uit' : 'in')">
-          <fa-icon [icon]="['fas', (qualifyOrderIsHorizontal(round) ? 'arrows-alt-h' : 'random') ]"></fa-icon>
+          type="button" class="btn btn-outline-secondary" (click)="toggleQualifyOrder(round)" [title]="'schakel kruisfinales ' + (qualifyOrderIsCross(round) ? 'uit' : 'in')">
+          <fa-icon [icon]="['fas', (qualifyOrderIsCross(round) ? 'arrows-alt-h' : 'random') ]"></fa-icon>
         </button>
         <button *ngIf="canExpand()" type="button" class="btn btn-outline-secondary"
           (click)="addPoule(round,true)" title="verdeel de plekken over 1 poule meer">

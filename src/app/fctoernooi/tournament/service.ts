@@ -22,4 +22,3 @@ export class TournamentService {
         planningService.reschedule(roundNumber);
     }
 }
-

@@ -178,20 +178,20 @@ export class TournamentStructureRoundComponent {
   }
 
   canChangeQualifyOrder(): boolean {
-    return this.round.getQualifyOrder() < Round.ORDER_CUSTOM &&
+    return !this.round.hasCustomQualifyOrder() &&
       this.round.getPoules().length >= 2 /*&& (this.round.getNumber().getRounds().length - 1) <= 1*/;
   }
 
   toggleQualifyOrder(round: Round) {
     this.resetAlert();
-    round.setQualifyOrder(this.qualifyOrderIsHorizontal(round) ? Round.ORDER_VERTICAL : Round.ORDER_HORIZONTAL);
+    round.setQualifyOrder(this.qualifyOrderIsCross(round) ? Round.QUALIFYORDER_RANK : Round.QUALIFYORDER_CROSS);
     this.getStructureService().recalculateQualifyRulesForRound(round);
     // this.getPlanningService().create(round.getNumber());
     this.roundNumberChanged.emit(round.getNumber());
   }
 
-  qualifyOrderIsHorizontal(round: Round) {
-    return round.getQualifyOrder() === Round.ORDER_HORIZONTAL;
+  qualifyOrderIsCross(round: Round) {
+    return round.getQualifyOrder() === Round.QUALIFYORDER_CROSS;
   }
 
   getDivisionClasses(round: Round): string {

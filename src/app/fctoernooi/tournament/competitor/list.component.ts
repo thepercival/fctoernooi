@@ -245,7 +245,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
    * haal alle pouleplekken op in verticale volgorde, verplaatst alles vanaf te verwijderen plek
    */
   protected moveCompetitors(rootRound: Round, fromPoulePlace: PoulePlace) {
-    const poulePlaces: PoulePlace[] = rootRound.getPoulePlaces(Round.ORDER_HORIZONTAL);
+    const poulePlaces: PoulePlace[] = rootRound.getPoulePlaces(Round.ORDER_NUMBER_POULE);
     const index = poulePlaces.indexOf(fromPoulePlace);
     if (index < 0) {
       return;
