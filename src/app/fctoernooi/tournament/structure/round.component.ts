@@ -140,7 +140,6 @@ export class TournamentStructureRoundComponent {
 
   startSliding(nrOfChildPlaces: number, winnersOrLosers: number) {
     const maxNrOfPlaces = this.calcMaxNrOfPlacesPerPoule(this.round, winnersOrLosers);
-    console.log('maxNrOfPoulesForChildRound at begin sliding: ' + maxNrOfPlaces);
     this.getStructureService().setMaxNrOfPoulePlacesForChildRound( maxNrOfPlaces );
   }
 

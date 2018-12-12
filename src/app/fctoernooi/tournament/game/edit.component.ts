@@ -391,7 +391,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     private getForwarUrlQueryParams(): {} {
-        const queryParams = { scrollToGameId: this.game.getId(), scrollToRoundNumber: this.game.getRound().getNumber() };
+        const queryParams = { scrollToGameId: this.game.getId(), scrollToRoundNumber: this.game.getRound().getNumberAsValue() };
         if (this.returnUrlQueryParamKey !== undefined) {
             queryParams[this.returnUrlQueryParamKey] = this.returnUrlQueryParamValue;
         }
