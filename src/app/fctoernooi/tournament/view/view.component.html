@@ -16,7 +16,7 @@
             <li>Elke minuut worden de uitslagen op deze pagina automatisch bijgewerkt.</li>
           </ul>
         </div>
-        <app-progress [value]="progress"></app-progress>
+        <app-progress [max]="refreshAfterSeconds" [value]="progress"></app-progress>
       </div>
       <div>
         <h2 *ngIf="processing" class="text-center">

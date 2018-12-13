@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PlanningService, StructureRepository } from 'ngx-sport';
 import { interval, range, Subscription, zip } from 'rxjs';
 
-import { AuthService } from '../../../auth/auth.service';
 import { GlobalEventsManager } from '../../../common/eventmanager';
 import { NavBarTournamentTVViewLink } from '../../../nav/nav.component';
 import { TournamentComponent } from '../component';
@@ -19,6 +18,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     private tvViewLinkSet = false;
     public planningService: PlanningService;
     private timerSubscription: Subscription;
+    public refreshAfterSeconds = 60;
     private refreshAtCountDown = true;
     private favTeamIds: number[];
     private favRefereeIds: number[];
@@ -29,7 +29,6 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     constructor(
         route: ActivatedRoute,
         router: Router,
-        private authService: AuthService,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private globalEventsManager: GlobalEventsManager
@@ -57,11 +56,11 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     }
 
     countDown() {
-        const progress = range(1, 60).pipe();
-        zip(interval(1000), progress)
+        const progress = range(1, this.refreshAfterSeconds).pipe();
+        this.timerSubscription = zip(interval(1000), progress)
             .subscribe(fromTo => {
                 this.progress = fromTo[1];
-                if (this.progress === 60) {
+                if (this.progress === this.refreshAfterSeconds) {
                     if (this.refreshAtCountDown === true) {
                         this.setData(this.tournament.getId(), () => {
                             this.planningService = new PlanningService(this.tournament.getCompetition());

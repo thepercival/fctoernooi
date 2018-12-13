@@ -87,15 +87,25 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
           const firstRoundNumber = this.structure.getFirstRoundNumber();
           const tournamentService = new TournamentService(this.tournament);
           tournamentService.reschedule(this.planningService, firstRoundNumber);
-          this.planningRepository.editObject(firstRoundNumber)
-            .subscribe(
-                    /* happy path */ gamesdRes => {
+          this.planningRepository.editObject(firstRoundNumber).subscribe(
+            /* happy path */ gamesdRes => {
+              if (referee.getEmailaddress() === undefined || referee.getEmailaddress().length === 0) {
                 this.processing = false;
                 this.setAlert('success', 'de scheidsrechter is verwijderd');
-              },
+              } else {
+                this.tournamentRepository.syncRefereeRoles(this.tournament).subscribe(
+                  /* happy path */ allRolesRes => {
+                    this.processing = false;
+                    this.setAlert('success', 'de scheidsrechter is verwijderd');
+                  },
+                  /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+                  /* onComplete */() => this.processing = false
+                );
+              }
+            },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
             /* onComplete */() => this.processing = false
-            );
+          );
         },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
       );

@@ -48,7 +48,7 @@ export class TournamentStructureRoundComponent {
   }
 
   canExpand(): boolean {
-    return ( this.round.getPoulePlaces().length / ( this.round.getPoules().length + 1 ) ) >= 2;
+    return (this.round.getPoulePlaces().length / (this.round.getPoules().length + 1)) >= 2;
   }
 
   addPoule(round, fillPouleToMinimum = true): void {
@@ -140,14 +140,14 @@ export class TournamentStructureRoundComponent {
 
   startSliding(nrOfChildPlaces: number, winnersOrLosers: number) {
     const maxNrOfPlaces = this.calcMaxNrOfPlacesPerPoule(this.round, winnersOrLosers);
-    this.getStructureService().setMaxNrOfPoulePlacesForChildRound( maxNrOfPlaces );
+    this.getStructureService().setMaxNrOfPoulePlacesForChildRound(maxNrOfPlaces);
   }
 
-  protected calcMaxNrOfPlacesPerPoule( parentRound: Round, winnersOrLosers: number ): number {
+  protected calcMaxNrOfPlacesPerPoule(parentRound: Round, winnersOrLosers: number): number {
     const nrOfChildRoundPlaces = parentRound.getNrOfPlacesChildRound(winnersOrLosers);
     const childRound = parentRound.getChildRound(winnersOrLosers);
-    if ( childRound === undefined ) {
-        return 2;
+    if (childRound === undefined) {
+      return 2;
     }
     const structureService = this.getStructureService();
     return structureService.getNrOfPlacesPerPoule(nrOfChildRoundPlaces, childRound.getPoules().length);
@@ -157,18 +157,18 @@ export class TournamentStructureRoundComponent {
     // console.log('start change' );
     this.getStructureService().changeNrOfPlacesChildRound(nrOfChildPlacesNew, this.round, winnersOrLosers);
     // this.getPlanningService().create(this.round.getNumber());
-    if ( this.round.getNumber().hasNext() ) {
+    if (this.round.getNumber().hasNext()) {
       this.roundNumberChanged.emit(this.round.getNumber().getNext());
     }
     // console.log('end change' );
   }
 
   endSliding(nrOfChildPlaces: number, winnersOrLosers: number) {
-    this.checkRoundWithOnePoulePlace( nrOfChildPlaces, winnersOrLosers );
+    this.checkRoundWithOnePoulePlace(nrOfChildPlaces, winnersOrLosers);
   }
 
-  checkRoundWithOnePoulePlace( nrOfPoulePlacesChildRound: number, winnersOrLosers: number ) {
-    if ( nrOfPoulePlacesChildRound !== 1 || this.round.getNrOfPlacesChildRound(winnersOrLosers) !== 1 ) {
+  checkRoundWithOnePoulePlace(nrOfPoulePlacesChildRound: number, winnersOrLosers: number) {
+    if (nrOfPoulePlacesChildRound !== 1 || this.round.getNrOfPlacesChildRound(winnersOrLosers) !== 1) {
       return;
     }
     const nextRoundNumber = this.round.getNumber().getNext();

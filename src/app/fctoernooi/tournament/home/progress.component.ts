@@ -7,6 +7,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 })
 export class ProgressComponent implements OnInit, OnChanges {
     @Input() value: number;
+    @Input() max: number;
     radius = 16;
     strokeWidth = 5;
     circumference = 2 * Math.PI * this.radius;
@@ -26,12 +27,12 @@ export class ProgressComponent implements OnInit, OnChanges {
     }
 
     private progress(value: number) {
-        const progress = value / 60;
+        const progress = value / this.max;
         this.dashoffset = this.circumference * (1 - progress);
     }
 
     getSeconds(): string {
-        const val = 60 - this.value;
+        const val = this.max - this.value;
         if (val < 10) {
             return '0' + val;
         }
