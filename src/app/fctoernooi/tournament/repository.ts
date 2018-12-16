@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { CompetitionRepository, ICompetition, SportConfig, SportRepository } from 'ngx-sport';
+import { JsonCompetition, CompetitionMapper, SportConfig, SportRepository } from 'ngx-sport';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -17,16 +17,14 @@ import { ISponsor, SponsorRepository } from './sponsor/repository';
 export class TournamentRepository extends SportRepository {
 
     private url: string;
-    private csRepository: CompetitionRepository;
 
     constructor(
         private http: HttpClient,
-        csRepository: CompetitionRepository,
+        private csMapper: CompetitionMapper,
         private tournamentRoleRepository: TournamentRoleRepository,
         private sponsorRepository: SponsorRepository,
         router: Router) {
         super(router);
-        this.csRepository = csRepository;
         this.tournamentRoleRepository = tournamentRoleRepository;
         this.url = super.getApiUrl() + this.getUrlpostfix();
     }
@@ -132,7 +130,7 @@ export class TournamentRepository extends SportRepository {
     }
 
     jsonToObject(json: ITournament): Tournament {
-        const competition = this.csRepository.jsonToObject(json.competition);
+        const competition = this.csMapper.toObject(json.competition);
         const tournament = new Tournament(competition);
         const roles = this.tournamentRoleRepository.jsonArrayToObject(json.roles ? json.roles : [], tournament);
         this.sponsorRepository.jsonArrayToObject(json.sponsors, tournament);
@@ -148,7 +146,7 @@ export class TournamentRepository extends SportRepository {
     objectToJson(tournament: Tournament): ITournament {
         return {
             id: tournament.getId(),
-            competition: this.csRepository.objectToJson(tournament.getCompetition()),
+            competition: this.csMapper.toJson(tournament.getCompetition()),
             roles: this.tournamentRoleRepository.objectsToJsonArray(tournament.getRoles()),
             sponsors: this.sponsorRepository.objectsToJsonArray(tournament.getSponsors()),
             breakStartDateTime: tournament.getBreakStartDateTime() ? tournament.getBreakStartDateTime().toISOString() : undefined,
@@ -176,7 +174,7 @@ export class TournamentRepository extends SportRepository {
 
 export interface ITournament {
     id?: number;
-    competition: ICompetition;
+    competition: JsonCompetition;
     breakStartDateTime?: string;
     breakDuration?: number;
     roles: ITournamentRole[];

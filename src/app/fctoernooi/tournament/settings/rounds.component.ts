@@ -9,6 +9,7 @@ import {
     RoundNumber,
     RoundNumberConfig,
     RoundNumberConfigRepository,
+    RoundNumberConfigMapper,
     RoundNumberConfigScore,
     RoundNumberConfigService,
     StructureNameService,
@@ -63,6 +64,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         tournamentRepository: TournamentRepository,
         sructureRepository: StructureRepository,
         private configRepository: RoundNumberConfigRepository,
+        private configMapper: RoundNumberConfigMapper,
         public nameService: StructureNameService,
         private planningRepository: PlanningRepository
     ) {
@@ -296,7 +298,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         this.processing = true;
 
         // hier kijken als round of roundnumber is
-        const jsonConfig = this.configRepository.objectToJson(this.modelConfig);
+        const jsonConfig = this.configMapper.toJson(this.modelConfig);
         return this.configRepository.editObject(this.roundNumber, jsonConfig)
             .subscribe(
                 /* happy path */ configsRes => {

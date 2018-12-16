@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Field, FieldRepository, IField, PlanningRepository, PlanningService, StructureRepository } from 'ngx-sport';
+import { Field, FieldRepository, JsonField, PlanningRepository, PlanningService, StructureRepository } from 'ngx-sport';
 
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
@@ -75,7 +75,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
         this.setAlert('info', 'het veld wordt toegevoegd');
         this.processing = true;
 
-        const jsonField: IField = {
+        const jsonField: JsonField = {
             number: this.fieldsList.length + 1,
             name: '' + (this.fieldsList.length + 1)
         };

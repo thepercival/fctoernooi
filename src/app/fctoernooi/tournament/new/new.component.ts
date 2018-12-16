@@ -7,7 +7,8 @@ import {
   Competition,
   Field,
   IRoundStructure,
-  IStructure,
+  JsonStructure,
+  StructureMapper,
   League,
   PlanningRepository,
   PlanningService,
@@ -53,6 +54,7 @@ export class TournamentNewComponent implements OnInit {
     private tournamentRepository: TournamentRepository,
     private structureRepository: StructureRepository,
     private planningRepository: PlanningRepository,
+    private structureMapper: StructureMapper,
     fb: FormBuilder
   ) {
     const date = new Date();
@@ -148,7 +150,7 @@ export class TournamentNewComponent implements OnInit {
           // setTimeout(3000);
           const structureService = new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
           const structure: Structure = structureService.create(tournamentOut.getCompetition(), nrofcompetitors);
-          const jsonStructure: IStructure = this.structureRepository.objectToJson(structure);
+          const jsonStructure: JsonStructure = this.structureMapper.toJson(structure);
           this.structureRepository.createObject(jsonStructure, tournamentOut.getCompetition())
             .subscribe(
             /* happy path */(structureOut: Structure) => {

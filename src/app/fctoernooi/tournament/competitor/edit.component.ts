@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     AssociationRepository,
-    ITeam,
+    JsonTeam,
     PoulePlace,
     PoulePlaceRepository,
     StructureNameService,
@@ -123,7 +123,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
             return;
         }
         const association = this.tournament.getCompetition().getLeague().getAssociation();
-        const team: ITeam = {
+        const team: JsonTeam = {
             name: name,
             info: info ? info : undefined
         };

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IReferee, PlanningRepository, PlanningService, Referee, RefereeRepository, StructureRepository } from 'ngx-sport';
+import { JsonReferee, PlanningRepository, PlanningService, Referee, RefereeRepository, StructureRepository } from 'ngx-sport';
 
 import { User } from '../../../user/user';
 import { TournamentComponent } from '../component';
@@ -119,7 +119,7 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
             this.processing = false;
             return;
         }
-        const ref: IReferee = {
+        const ref: JsonReferee = {
             initials: initials,
             name: name ? name : undefined,
             emailaddress: emailaddress ? emailaddress : undefined,

@@ -35,11 +35,17 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import {
   AssociationRepository,
+  AssociationMapper,
   CompetitionRepository,
+  CompetitionMapper,
   FieldRepository,
+  FieldMapper,
   LeagueRepository,
+  LeagueMapper,
   RefereeRepository,
+  RefereeMapper,
   SeasonRepository,
+  SeasonMapper,
   StructureNameService,
 } from 'ngx-sport';
 
@@ -87,12 +93,18 @@ library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave
     TournamentRepository,
     TournamentRoleRepository,
     CompetitionRepository,
+    CompetitionMapper,
     AssociationRepository,
+    AssociationMapper,
     LeagueRepository,
+    LeagueMapper,
     SeasonRepository,
+    SeasonMapper,
     SponsorRepository,
     FieldRepository,
+    FieldMapper,
     RefereeRepository,
+    RefereeMapper,
     GlobalEventsManager,
     IconManager,
     StructureNameService
