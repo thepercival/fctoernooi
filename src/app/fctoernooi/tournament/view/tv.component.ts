@@ -82,8 +82,8 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
 
     getScreenDefinitions(firstRoundNumber: RoundNumber): ScreenDefinition[] {
         const lastPlayedRoundNumber = this.getLastPlayedRoundNumber(firstRoundNumber);
-        const nextRoundNumber = lastPlayedRoundNumber.getNext();
-        const stateNextRoundNumber = this.getStateRoundNumber(nextRoundNumber);
+        const nextRoundNumber = lastPlayedRoundNumber !== undefined ? lastPlayedRoundNumber.getNext() : firstRoundNumber;
+        const stateNextRoundNumber = nextRoundNumber !== undefined ? this.getStateRoundNumber(nextRoundNumber) : undefined;
 
         let roundNumberForScheduleAndRanking;
         let previousPlayedRoundNumber;
@@ -248,25 +248,28 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         return poule.getPlaces().some((place: PoulePlace) => this.ranking.getNrOfGamesWithState(place, place.getGames()) > 1);
     }
 
-    getLastPlayedRoundNumber(roundNumber: RoundNumber): RoundNumber {
-        /*if (roundNumber.getRounds().length === 0 ) {
-            return roundNumber - 1;
-        }*/
-        const played = !roundNumber.getRounds().some(round => round.getState() !== Game.STATE_PLAYED);
-        if (!played) {
-            return roundNumber.getPrevious();
+    protected getLastPlayedRoundNumber(roundNumber: RoundNumber): RoundNumber {
+        const played = this.isRoundNumberPlayed(roundNumber);
+        if (played) {
+            if (!roundNumber.hasNext() || !this.isRoundNumberPlayed(roundNumber.getNext())) {
+                return roundNumber;
+            }
+            return this.getLastPlayedRoundNumber(roundNumber.getNext());
         }
-        return this.getLastPlayedRoundNumber(roundNumber.getNext());
+        if (roundNumber.isFirst()) {
+            return undefined;
+        }
+        return this.getLastPlayedRoundNumber(roundNumber.getPrevious());
+    }
+
+    isRoundNumberPlayed(roundNumber: RoundNumber): boolean {
+        return !roundNumber.getRounds().some(round => round.getState() !== Game.STATE_PLAYED);
     }
 
     getStateRoundNumber(roundNumber: RoundNumber): number {
         /*if (roundNumber.getRounds().length === 0) {
             return Game.STATE_PLAYED;
         }*/
-        const hasGames = roundNumber.getRounds().some(round => round.getGames().length > 0);
-        if (!hasGames) {
-            return Game.STATE_PLAYED;
-        }
         const inplay = roundNumber.getRounds().some(round => round.getState() !== Game.STATE_CREATED);
         if (inplay !== true) {
             return Game.STATE_CREATED;

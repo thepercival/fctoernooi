@@ -1,4 +1,4 @@
-<div *ngIf="tournament && haveMultiplePoulePlaces()" id="scroll-roundnumber-{{roundNumber.getNumber()}}">
+<div *ngIf="tournament" id="scroll-roundnumber-{{roundNumber.getNumber()}}">
   <div class="d-flex justify-content-between mt-3">
     <h2>
       <span [innerHTML]="nameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
@@ -21,8 +21,8 @@
   <div class="d-flex justify-content-around">
     <table class="table fixed">
       <colgroup>
-        <col *ngIf="aRoundNeedsRanking()">
-        <col *ngIf="!aRoundNeedsRanking()">
+        <col *ngIf="roundNumber.needsRanking()">
+        <col *ngIf="!roundNumber.needsRanking()">
         <col *ngIf="planningService.canCalculateStartDateTime(roundNumber)">
         <col *ngIf="hasFields()">
         <col class="width-25">
@@ -32,11 +32,11 @@
       </colgroup>
       <thead>
         <tr>
-          <th *ngIf="aRoundNeedsRanking()" class="text-center pl-1 text-info pointer" title="poule" container="body"
+          <th *ngIf="roundNumber.needsRanking()" class="text-center pl-1 text-info pointer" title="poule" container="body"
             placement="right" [ngbPopover]="popRules" triggers="manual" #p="ngbPopover" (click)="toggleRulesPopover( p )">
             <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
           </th>
-          <th *ngIf="!aRoundNeedsRanking()" class="text-center" title="wedstrijd">
+          <th *ngIf="!roundNumber.needsRanking()" class="text-center" title="wedstrijd">
             <span>vs</span>
           </th>
           <th *ngIf="planningService.canCalculateStartDateTime(roundNumber)" class="pointer text-info" container="body"

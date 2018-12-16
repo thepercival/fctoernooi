@@ -75,10 +75,6 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
     }
   }
 
-  haveMultiplePoulePlaces() {
-    return this.roundNumber.getRounds().some(round => round.getPoulePlaces().length > 1);
-  }
-
   getGameTimeTooltipDescription() {
     const cfg = this.roundNumber.getConfig();
     let descr = 'De wedstrijden duren ' + cfg.getMinutesPerGame() + ' minuten. ';
@@ -282,10 +278,6 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
 
   onSameDay() {
     return this.sameDay;
-  }
-
-  aRoundNeedsRanking(): boolean {
-    return this.roundNumber.getRounds().some(round => round.needsRanking());
   }
 
   protected isSameDay(gameOne: Game, gameTwo: Game): boolean {

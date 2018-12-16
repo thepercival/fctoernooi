@@ -196,7 +196,7 @@
                                     id="minutesBetweenGames" name="minutesBetweenGames" class="form-control" required>
                             </div>
                         </div>
-                        <div *ngIf="modelConfig.getEnableTime() && canChangeMinutesAfter(roundNumber)" class="form-group row">
+                        <div *ngIf="modelConfig.getEnableTime() && roundNumber.hasNext()" class="form-group row">
                             <label for="minutesafter" class="col-8 col-form-label">minuten pauze na de ronde</label>
                             <div class="col-4">
                                 <input type="number" [maxlength]="3" [ngModel]="modelConfig.getMinutesAfter()"

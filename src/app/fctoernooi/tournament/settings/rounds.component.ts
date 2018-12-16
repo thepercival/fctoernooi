@@ -105,10 +105,6 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         this.processing = false;
     }
 
-    canChangeMinutesAfter(roundNumber: RoundNumber): boolean {
-        return roundNumber.getNext() !== undefined && this.planningService.hasGames(roundNumber.getNext());
-    }
-
     changeRoundNumber(roundNumber: RoundNumber) {
         this.roundNumber = roundNumber;
         this.category = undefined;

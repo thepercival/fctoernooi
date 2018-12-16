@@ -36,8 +36,7 @@
           <th title="poule">
             <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
           </th>
-          <th *ngIf="isScheduled() && structure.getRoundNumber(screenDef.roundNumber).getConfig().getEnableTime()"
-            title="starttijd">
+          <th *ngIf="isScheduled() && screenDef.roundNumber.getConfig().getEnableTime()" title="starttijd">
             {{planningService.calculateStartDateTime(screenDef.roundNumber).toLocaleString("nl",
             {"month":"short","day":"2-digit"})}}
           </th>
@@ -59,7 +58,7 @@
           <td>
             <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
           </td>
-          <td *ngIf="isScheduled() && structure.getRoundNumber(screenDef.roundNumber).getConfig().getEnableTime() && planningService.canCalculateStartDateTime(screenDef.roundNumber)">
+          <td *ngIf="isScheduled() && screenDef.roundNumber.getConfig().getEnableTime() && planningService.canCalculateStartDateTime(screenDef.roundNumber)">
             {{game.getStartDateTime().toLocaleString("nl", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}
           </td>
           <td *ngIf="isScheduled() && hasFields()">{{game.getField()?.getName()}}</td>

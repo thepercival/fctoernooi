@@ -2,7 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
-import { RoundNumber, League, PlanningRepository, PlanningService, StructureNameService, StructureRepository } from 'ngx-sport';
+import {
+    League,
+    PlanningRepository,
+    PlanningService,
+    RoundNumber,
+    StructureNameService,
+    StructureRepository,
+} from 'ngx-sport';
 
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../repository';
@@ -17,7 +24,6 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
     customForm: FormGroup;
     minDateStruct: NgbDateStruct;
     processing = true;
-    planningService: PlanningService;
 
     validations: any = {
         minlengthname: League.MIN_LENGTH_NAME,
@@ -78,8 +84,6 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
 
         this.customForm.controls.togglebreak.setValue(this.tournament.hasBreak());
         this.toggleBreak(this.tournament.hasBreak(), this.tournament.getBreakDuration(), this.tournament.getBreakStartDateTime());
-
-        this.planningService = new PlanningService(this.tournament.getCompetition());
 
         this.processing = false;
     }
