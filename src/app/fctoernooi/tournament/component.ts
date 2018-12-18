@@ -15,7 +15,6 @@ export class TournamentComponent {
     protected router: Router;
     protected tournamentRepository: TournamentRepository;
     protected structureRepository: StructureRepository;
-    // public structureService: StructureService;
     public structure: Structure;
     public alert: IAlert;
     public processing = true;
