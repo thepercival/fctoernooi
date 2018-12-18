@@ -343,8 +343,8 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
   }
 
   getGameQualificationDescription(game: Game) {
-    return this.nameService.getPoulePlaceName(game.getHomePoulePlace()) + ' - ' +
-      this.nameService.getPoulePlaceName(game.getAwayPoulePlace());
+    return this.nameService.getPoulePlaceFromName(game.getHomePoulePlace()) + ' - ' +
+      this.nameService.getPoulePlaceFromName(game.getAwayPoulePlace());
   }
 }
 

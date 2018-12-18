@@ -93,7 +93,7 @@
             </td>
             <td *ngIf="hasFields()" class="text-right">{{game.getField()?.getName()}}</td>
             <td class="pouleplace text-right" [ngClass]="{'text-primary': isTeamFav(game.getHomePoulePlace().getTeam()) }">
-              <span class="{{getPoulePlaceClass(game.getHomePoulePlace())}}">{{nameService.getPoulePlaceName(game.getHomePoulePlace(),
+              <span class="{{getPoulePlaceClass(game.getHomePoulePlace())}}">{{nameService.getPoulePlaceFromName(game.getHomePoulePlace(),
                 true )}}</span>
               <span *ngIf="game.getHomePoulePlace().getTeam() && game.getHomePoulePlace().getTeam().getAbbreviation()"
                 class="d-inline d-sm-none">{{game.getHomePoulePlace().getTeam().getAbbreviation()}}</span>
@@ -110,7 +110,7 @@
             <td class="pouleplace" [ngClass]="{ 'text-primary': isTeamFav(game.getAwayPoulePlace().getTeam()) }">
               <span *ngIf="game.getAwayPoulePlace().getTeam() && game.getAwayPoulePlace().getTeam().getAbbreviation()"
                 class="flag-16 flag-{{game.getAwayPoulePlace().getTeam().getAbbreviation()}}-16"></span>
-              <span class="{{getPoulePlaceClass(game.getAwayPoulePlace())}}">{{nameService.getPoulePlaceName(game.getAwayPoulePlace(),
+              <span class="{{getPoulePlaceClass(game.getAwayPoulePlace())}}">{{nameService.getPoulePlaceFromName(game.getAwayPoulePlace(),
                 true )}}</span>
               <span *ngIf="game.getAwayPoulePlace().getTeam() && game.getAwayPoulePlace().getTeam().getAbbreviation()"
                 class="d-inline d-sm-none">{{game.getAwayPoulePlace().getTeam().getAbbreviation()}}</span>
@@ -160,7 +160,7 @@
                   <span>{{rankingItem.getRank()}}</span>
                 </td>
                 <td class="pouleplace pl-0" [ngClass]="{ 'text-primary': isTeamFav(rankingItem.getPoulePlace().getTeam()) }">
-                  {{nameService.getPoulePlaceName(rankingItem.getPoulePlace(), true)}}
+                  {{nameService.getPoulePlaceFromName(rankingItem.getPoulePlace(), true)}}
                 </td>
                 <td class="text-right pl-0">{{ranking.getNrOfGamesWithState(rankingItem.getPoulePlace(),
                   rankingItem.getPoulePlace().getGames())}}</td>

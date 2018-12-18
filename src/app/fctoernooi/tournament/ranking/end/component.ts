@@ -29,7 +29,7 @@ export class TournamentEndRankingViewComponent {
     if (this.isUnknown(rankingItem)) {
       return 'nog onbekend';
     }
-    return this.nameService.getPoulePlaceName(rankingItem.getPoulePlace(), true);
+    return this.nameService.getPoulePlaceFromName(rankingItem.getPoulePlace(), true);
   }
 
   hasMedal(rank: number): boolean {

@@ -62,11 +62,11 @@
             {{game.getStartDateTime().toLocaleString("nl", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}
           </td>
           <td *ngIf="isScheduled() && hasFields()">{{game.getField()?.getName()}}</td>
-          <td class="text-right">{{nameService.getPoulePlaceName(game.getHomePoulePlace(), true )}}</td>
+          <td class="text-right">{{nameService.getPoulePlaceFromName(game.getHomePoulePlace(), true )}}</td>
           <td class="text-center">
             <span>{{getScore(game)}}</span>
           </td>
-          <td class="text-left">{{nameService.getPoulePlaceName(game.getAwayPoulePlace(), true )}}</td>
+          <td class="text-left">{{nameService.getPoulePlaceFromName(game.getAwayPoulePlace(), true )}}</td>
           <td *ngIf="isScheduled() && hasReferees()">{{game.getReferee()?.getInitials()}}</td>
         </tr>
       </tbody>
@@ -92,7 +92,7 @@
               </ng-container>
               <span>{{rankingItem.getRank()}}</span>
             </td>
-            <td class="pouleplace">{{nameService.getPoulePlaceName(rankingItem.getPoulePlace(), true)}}</td>
+            <td class="pouleplace">{{nameService.getPoulePlaceFromName(rankingItem.getPoulePlace(), true)}}</td>
             <td class="text-right">{{ranking.getNrOfGamesWithState(rankingItem.getPoulePlace(),
               rankingItem.getPoulePlace().getGames())}}</td>
             <td class="text-right">{{ranking.getPoints(rankingItem.getPoulePlace(),

@@ -171,7 +171,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
       const rootRound = this.structure.getRootRound();
       const structureService = this.getStructureService();
       const addedPoulePlace = structureService.addPoulePlace(rootRound);
-      this.saveStructure('pouleplek ' + this.nameService.getPoulePlaceNameSimple(addedPoulePlace) + ' is toegevoegd');
+      this.saveStructure('pouleplek ' + this.nameService.getPoulePlaceName(addedPoulePlace) + ' is toegevoegd');
     } catch (e) {
       this.setAlert('danger', e.message);
     }

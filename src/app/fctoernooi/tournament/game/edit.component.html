@@ -29,11 +29,11 @@
             <label for="hometeam" class="col-form-label">teams</label>
           </div>
           <div class="col-4 col-sm-3">
-            <h2>{{nameService.getPoulePlaceName(game.getHomePoulePlace(), true)}}</h2>
+            <h2>{{nameService.getPoulePlaceFromName(game.getHomePoulePlace(), true)}}</h2>
           </div>
           <div class="col-1 team-splitter">-</div>
           <div class="col-4 col-sm-3">
-            <h2>{{nameService.getPoulePlaceName(game.getAwayPoulePlace(), true)}}</h2>
+            <h2>{{nameService.getPoulePlaceFromName(game.getAwayPoulePlace(), true)}}</h2>
           </div>
         </div>
         <div *ngIf="calculateScoreControl" class="form-group row">

@@ -42,7 +42,7 @@
         <tbody>
           <tr *ngFor="let poulePlace of poulePlaces">
             <td>
-              <span>{{nameService.getPoulePlaceName(poulePlace, false)}}</span>
+              <span>{{nameService.getPoulePlaceFromName(poulePlace, false)}}</span>
             </td>
             <td class="pouleplace">
               <span *ngIf="poulePlace.getTeam()">{{poulePlace.getTeam().getName()}}</span>
