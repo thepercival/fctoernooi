@@ -55,14 +55,13 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked() {
-    // if (this.tournamentShells !== undefined && this.processing === false && this.scrollToId !== undefined) {
-    //   console.log('scrolling');
-    //   this.scrollService.scrollTo({
-    //     target: 'scroll-' + this.scrollToId,
-    //     duration: 100
-    //   });
-    //   this.scrollToId = undefined;
-    // }
+    if (this.tournamentShells !== undefined && this.processing === false && this.scrollToId !== undefined) {
+      this.scrollService.scrollTo({
+        target: 'scroll-' + this.scrollToId,
+        duration: 100
+      });
+      this.scrollToId = undefined;
+    }
   }
 
   setTournamentShells(futureDate) {
