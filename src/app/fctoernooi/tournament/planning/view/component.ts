@@ -1,5 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
-import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
+import { AfterViewInit, Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap/popover/popover';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
@@ -30,7 +29,6 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
 
   @Input() tournament: Tournament;
   @Input() roundNumber: RoundNumber;
-  /*@Input() structureService: StructureService;*/
   @Input() planningService: PlanningService;
   @Input() parentReturnAction: string;
   @Input() favTeamIds: number[];
@@ -65,7 +63,6 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
     this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), TournamentRole.GAMERESULTADMIN);
   }
 
-  /*nakijken als eerste!! CDK*/
   ngAfterViewInit() {
     if (this.scrollTo.roundNumber === this.roundNumber.getNumber()) {
       this.scrollService.scrollTo({

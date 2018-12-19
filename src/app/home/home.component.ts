@@ -1,34 +1,37 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { IAlert } from '../app.definitions';
 import { AuthService } from '../auth/auth.service';
 import { IconManager } from '../common/iconmanager';
 import { TournamentRepository, TournamentShell, TournamentShellFilter } from '../fctoernooi/tournament/repository';
+import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewChecked {
   tournamentShells: TournamentShell[];
   searchShells: TournamentShell[];
   showingFuture = false;
   alert: IAlert;
   processing = true;
   pastDate: Date;
-  pastDays = 28;
+  pastDays = 14;
   futureDate: Date;
   searchFilter: TournamentShellFilter;
   processingSearch = false;
   hasSearched = false;
+  scrollToId;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
     private tournamentRepos: TournamentRepository,
+    private scrollService: ScrollToService,
     public iconManager: IconManager
   ) {
     this.pastDate = new Date();
@@ -45,7 +48,21 @@ export class HomeComponent implements OnInit {
       if (params.type !== undefined && params.message !== undefined) {
         this.alert = { type: params['type'], message: params['message'] };
       }
+      if (params.scrollToId !== undefined) {
+        this.scrollToId = params.scrollToId;
+      }
     });
+  }
+
+  ngAfterViewChecked() {
+    // if (this.tournamentShells !== undefined && this.processing === false && this.scrollToId !== undefined) {
+    //   console.log('scrolling');
+    //   this.scrollService.scrollTo({
+    //     target: 'scroll-' + this.scrollToId,
+    //     duration: 100
+    //   });
+    //   this.scrollToId = undefined;
+    // }
   }
 
   setTournamentShells(futureDate) {

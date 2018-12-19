@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import { PlanningService, StructureRepository } from 'ngx-sport';
 
 import { AuthService } from '../../../auth/auth.service';
@@ -27,8 +26,7 @@ export class GameListComponent extends TournamentComponent implements OnInit {
     router: Router,
     tournamentRepository: TournamentRepository,
     structureRepository: StructureRepository,
-    private authService: AuthService,
-    private scrollService: ScrollToService
+    private authService: AuthService
   ) {
     super(route, router, tournamentRepository, structureRepository);
   }

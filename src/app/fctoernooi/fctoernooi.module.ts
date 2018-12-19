@@ -32,7 +32,6 @@ import {
   NgbPopoverModule,
   NgbTimepickerModule,
 } from '@ng-bootstrap/ng-bootstrap';
-import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 import { NouisliderModule } from 'ng2-nouislider';
 import {
   GameRepository,
@@ -98,7 +97,6 @@ library.add(
     NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule.forRoot(),
     NouisliderModule,
     ReactiveFormsModule,
-    ScrollToModule.forRoot(),
     FontAwesomeModule
   ],
   declarations: [

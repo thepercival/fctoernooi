@@ -31,7 +31,7 @@
             <span class="text-info"> toon toernooien die meer dan een maand na nu starten</span>
           </td>
         </tr>
-        <tr *ngFor="let shell of tournamentShells">
+        <tr *ngFor="let shell of tournamentShells" id="scroll-{{shell.tournamentId}}">
           <td *ngIf="isLoggedIn()" class="text-left">
             <button *ngIf="shell.hasEditPermissions" type="button" [routerLink]="['/toernooi', shell.tournamentId]"
               routerLinkActive="active" class="btn btn-sm btn-outline-primary" aria-label="change tournament" name="btn-change-tournament">

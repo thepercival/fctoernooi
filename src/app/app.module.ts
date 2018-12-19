@@ -64,6 +64,7 @@ import { FooterComponent } from './footer/footer.component';
 import { HomeComponent } from './home/home.component';
 import { NavComponent } from './nav/nav.component';
 import { UserModule } from './user/user.module';
+import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 
 library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave,
   faSignInAlt, faSignOutAlt, faPlusCircle, faPlus, faTv, faFutbol, faTableTennis, faSearch,
@@ -83,6 +84,7 @@ library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave
     FormsModule,
     UserModule,
     AdminModule,
+    ScrollToModule.forRoot(),
     NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule,
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
     FontAwesomeModule
