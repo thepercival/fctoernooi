@@ -12,7 +12,7 @@ import {
     RoundNumberConfigMapper,
     RoundNumberConfigScore,
     RoundNumberConfigService,
-    StructureNameService,
+    NameService,
     StructureRepository,
 } from 'ngx-sport';
 
@@ -65,7 +65,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         sructureRepository: StructureRepository,
         private configRepository: RoundNumberConfigRepository,
         private configMapper: RoundNumberConfigMapper,
-        public nameService: StructureNameService,
+        public nameService: NameService,
         private planningRepository: PlanningRepository
     ) {
         super(route, router, tournamentRepository, sructureRepository);

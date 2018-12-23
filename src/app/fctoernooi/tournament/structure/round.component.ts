@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PoulePlace, Round, RoundNumber, StructureNameService, StructureService } from 'ngx-sport';
+import { PoulePlace, Round, RoundNumber, NameService, StructureService } from 'ngx-sport';
 
 import { Tournament } from '../../tournament';
 
@@ -22,7 +22,7 @@ export class TournamentStructureRoundComponent {
     tooltips: [true]
   };
 
-  constructor(public nameService: StructureNameService) {
+  constructor(public nameService: NameService) {
     this.resetAlert();
     this.structureService = new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
   }

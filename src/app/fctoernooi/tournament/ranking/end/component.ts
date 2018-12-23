@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { EndRanking, Ranking, RankingItem, Round, StructureNameService } from 'ngx-sport';
+import { EndRanking, Ranking, RankingItem, Round, NameService } from 'ngx-sport';
 
 @Component({
   selector: 'app-tournament-endranking-view',
@@ -13,7 +13,7 @@ export class TournamentEndRankingViewComponent {
 
   endRankingService: EndRanking;
 
-  constructor(public nameService: StructureNameService) {
+  constructor(public nameService: NameService) {
     this.endRankingService = new EndRanking(Ranking.RULESSET_WC);
   }
 

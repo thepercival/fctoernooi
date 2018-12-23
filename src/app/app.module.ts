@@ -46,7 +46,7 @@ import {
   RefereeMapper,
   SeasonRepository,
   SeasonMapper,
-  StructureNameService,
+  NameService,
 } from 'ngx-sport';
 
 import { environment } from '../environments/environment';
@@ -109,7 +109,7 @@ library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave
     RefereeMapper,
     GlobalEventsManager,
     IconManager,
-    StructureNameService
+    NameService
   ],
   bootstrap: [AppComponent]
 })

@@ -6,7 +6,7 @@ import {
     JsonTeam,
     PoulePlace,
     PoulePlaceRepository,
-    StructureNameService,
+    NameService,
     StructureRepository,
     Team,
     TeamRepository,
@@ -45,7 +45,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private poulePlaceRepository: PoulePlaceRepository,
-        public nameService: StructureNameService,
+        public nameService: NameService,
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);

@@ -1,5 +1,5 @@
 import { AfterViewChecked, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { PoulePlace, StructureNameService } from 'ngx-sport';
+import { PoulePlace, NameService } from 'ngx-sport';
 
 @Component({
   selector: 'app-tournament-competitor-line',
@@ -10,7 +10,7 @@ export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
 
   @Input() poulePlaceToSwap: PoulePlace;
   @Input() poulePlace: PoulePlace;
-  @Input() nameService: StructureNameService;
+  @Input() nameService: NameService;
   @Input() focus: boolean;
   @Input() isStarted: boolean;
   @Input() showSwap: boolean;

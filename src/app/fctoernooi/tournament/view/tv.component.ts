@@ -10,7 +10,7 @@ import {
     RankingItem,
     Round,
     RoundNumber,
-    StructureNameService,
+    NameService,
     StructureRepository,
 } from 'ngx-sport';
 import { Subscription, timer } from 'rxjs';
@@ -45,7 +45,7 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         structureRepository: StructureRepository,
         private globalEventsManager: GlobalEventsManager,
         public iconManager: IconManager,
-        public nameService: StructureNameService
+        public nameService: NameService
     ) {
         super(route, router, tournamentRepository, structureRepository);
         this.ranking = new Ranking(Ranking.RULESSET_WC);

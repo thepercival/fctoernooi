@@ -12,7 +12,7 @@ import {
   Referee,
   Round,
   RoundNumber,
-  StructureNameService,
+  NameService,
   Team,
 } from 'ngx-sport';
 
@@ -53,7 +53,7 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
     private router: Router,
     private authService: AuthService,
     private scrollService: ScrollToService,
-    public nameService: StructureNameService) {
+    public nameService: NameService) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
     this.resetAlert();
     this.ranking = new Ranking(Ranking.RULESSET_WC);

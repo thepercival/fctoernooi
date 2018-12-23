@@ -7,7 +7,7 @@ import {
     PlanningRepository,
     PlanningService,
     RoundNumber,
-    StructureNameService,
+    NameService,
     StructureRepository,
 } from 'ngx-sport';
 
@@ -38,7 +38,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private planningRepository: PlanningRepository,
-        public nameService: StructureNameService,
+        public nameService: NameService,
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);

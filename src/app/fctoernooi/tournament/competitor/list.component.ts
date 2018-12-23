@@ -9,7 +9,7 @@ import {
   PoulePlaceRepository,
   Round,
   Structure,
-  StructureNameService,
+  NameService,
   StructureRepository,
   TeamRepository,
 } from 'ngx-sport';
@@ -44,7 +44,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     private planningRepository: PlanningRepository,
     private teamRepository: TeamRepository,
     private poulePlaceRepository: PoulePlaceRepository,
-    public nameService: StructureNameService,
+    public nameService: NameService,
     private scrollService: ScrollToService,
     private modalService: NgbModal
   ) {

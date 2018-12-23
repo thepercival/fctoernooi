@@ -13,7 +13,7 @@ import {
     QualifyService,
     Round,
     RoundNumberConfigScore,
-    StructureNameService,
+    NameService,
     StructureRepository,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
@@ -49,7 +49,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         structureRepository: StructureRepository,
         private gameRepository: GameRepository,
         private poulePlaceRepository: PoulePlaceRepository,
-        public nameService: StructureNameService,
+        public nameService: NameService,
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
