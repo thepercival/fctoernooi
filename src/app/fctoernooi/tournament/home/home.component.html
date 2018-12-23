@@ -11,9 +11,9 @@
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
       <ngb-alert *ngIf="!processing && alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-      <ngb-alert *ngIf="isAdmin() && !isManualMessageReadOnDevice()" type="info" [dismissible]="true" (close)="manualMessageReadOnDevice()">gedetaileerde
+      <ngb-alert *ngIf="!processing && isAdmin() && !isManualMessageReadOnDevice()" type="info" [dismissible]="true" (close)="manualMessageReadOnDevice()">gedetaileerde
         informatie kun je vinden onderaan de pagina via de handleiding-link</ngb-alert>
-      <ngb-alert *ngIf="!isAdmin()" type="danger" [dismissible]="false">je hebt geen rechten voor het beheergedeelte, klik 
+      <ngb-alert *ngIf="!processing && !isAdmin()" type="danger" [dismissible]="false">je hebt geen rechten voor het beheergedeelte, klik 
         <a routerLink="['/toernooi/view', tournament.getId()]">hier</a> om naar het toernooi te gaan</ngb-alert>
       <div *ngIf="!processing && structure && isAdmin()" class="row d-flex justify-content-center">
         <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/structure', tournament.getId()]">
