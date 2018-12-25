@@ -318,8 +318,8 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
   }
 
   hasMultipleScoreConfigs() {
-    return this.selectedPouleForRanking.getRound().getConfig().getCalculateScore()
-      !== this.selectedPouleForRanking.getRound().getConfig().getInputScore();
+    return this.selectedPouleForRanking.getRound().getNumber().getConfig().getCalculateScore()
+      !== this.selectedPouleForRanking.getRound().getNumber().getConfig().getInputScore();
   }
 
   toggleRulesPopover(popOver?: NgbPopover) {
