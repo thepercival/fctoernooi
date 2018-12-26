@@ -12,6 +12,7 @@ export class TournamentStructureRoundComponent {
 
   @Input() round: Round;
   @Output() roundNumberChanged = new EventEmitter<RoundNumber>();
+  @Input() editable: boolean;
   public alert: any;
   public sliderValueDummy = 3;
   private structureService: StructureService;

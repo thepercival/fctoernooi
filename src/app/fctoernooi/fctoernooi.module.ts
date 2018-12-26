@@ -79,6 +79,7 @@ import { TournamentSponsorEditComponent } from './tournament/sponsor/edit.compon
 import { SponsorListComponent } from './tournament/sponsor/list.component';
 import { TournamentStructureHelpModalComponent } from './tournament/structure/helpmodal.component';
 import { TournamentStructureComponent } from './tournament/structure/main.component';
+import { TournamentStructureViewComponent } from './tournament/structure/view.component';
 import { TournamentStructureRoundComponent } from './tournament/structure/round.component';
 import { TournamentViewTvComponent } from './tournament/view/tv.component';
 import { TournamentViewComponent } from './tournament/view/view.component';
@@ -104,6 +105,7 @@ library.add(
     TournamentEditComponent,
     TournamentHomeComponent,
     TournamentStructureComponent,
+    TournamentStructureViewComponent,
     TournamentStructureRoundComponent,
     GameListComponent,
     TournamentPlanningViewComponent,

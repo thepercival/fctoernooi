@@ -18,6 +18,7 @@ import { RoundsSettingsComponent } from './tournament/settings/rounds.component'
 import { TournamentSponsorEditComponent } from './tournament/sponsor/edit.component';
 import { SponsorListComponent } from './tournament/sponsor/list.component';
 import { TournamentStructureComponent } from './tournament/structure/main.component';
+import { TournamentStructureViewComponent } from './tournament/structure/view.component';
 import { TournamentViewTvComponent } from './tournament/view/tv.component';
 import { TournamentViewComponent } from './tournament/view/view.component';
 
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: ':id', component: TournamentHomeComponent, canActivate: [AuthguardService] },
   { path: 'competitors/:id', component: CompetitorListComponent, canActivate: [AuthguardService] },
   { path: 'structure/:id', component: TournamentStructureComponent, canActivate: [AuthguardService] },
+  { path: 'structureview/:id', component: TournamentStructureViewComponent },
   { path: 'games/:id', component: GameListComponent, canActivate: [AuthguardService] },
   { path: 'gameedit/:id/:gameId', component: TournamentGameEditComponent, canActivate: [AuthguardService] },
   { path: 'roundssettings/:id/:roundNumber', component: RoundsSettingsComponent, canActivate: [AuthguardService] },

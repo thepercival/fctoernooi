@@ -8,7 +8,6 @@ import { EndRanking, Ranking, RankingItem, Round, NameService } from 'ngx-sport'
 })
 export class TournamentEndRankingViewComponent {
 
-  @Input() scorebord: boolean;
   @Input() rootRound: Round;
 
   endRankingService: EndRanking;

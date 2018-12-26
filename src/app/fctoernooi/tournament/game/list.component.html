@@ -23,6 +23,16 @@
         <app-tournament-planning-view *ngFor="let roundNumber of structure.getRoundNumbers()" [tournament]="tournament"
           [roundNumber]="roundNumber" [canEditSettings]="userIsPlannerOrStructureAdmin" [planningService]="planningService"
           [scrollTo]="scrollTo" [parentReturnAction]="'/toernooi/games'"></app-tournament-planning-view>
+        <div class="d-flex justify-content-between mt-3">
+            <h2>
+              <span>eindstand</span>
+            </h2>
+            <button type="button" class="btn btn-sm btn-outline-secondary mr-2" *ngIf="structure.getRoundNumbers().length > 1"
+                [routerLink]="['/toernooi/structure', tournament.getId()]">
+              <i class="fi flaticon-structure"></i>
+              <span>indeling</span>
+            </button>  
+          </div>
         <app-tournament-endranking-view [rootRound]="structure.getRootRound()"></app-tournament-endranking-view>
       </div>
     </div>

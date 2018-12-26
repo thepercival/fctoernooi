@@ -29,6 +29,16 @@
           [roundNumber]="roundNumber" [planningService]="planningService" [userRefereeId]="userRefereeId" [scrollTo]="scrollTo"
           [parentReturnAction]="'/toernooi/view'" [favTeamIds]="getFavTeamIdsFromLocalStorage()" [favRefereeIds]="getFavRefereeIdsFromLocalStorage()"
           (popOverIsOpen)="setNoRefresh($event)"></app-tournament-planning-view>
+        <div class="d-flex justify-content-between mt-3">
+            <h2>
+              <span>eindstand</span>
+            </h2>
+            <button type="button" class="btn btn-sm btn-outline-secondary mr-2" *ngIf="structure.getRoundNumbers().length > 1"
+                [routerLink]="['/toernooi/structureview', tournament.getId()]">
+              <i class="fi flaticon-structure"></i>
+              <span>indeling</span>
+            </button>  
+          </div>
         <app-tournament-endranking-view [rootRound]="structure.getRootRound()"></app-tournament-endranking-view>
       </div>
     </div>

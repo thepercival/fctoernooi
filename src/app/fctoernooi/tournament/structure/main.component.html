@@ -32,7 +32,7 @@
   </div>
   <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
   <div *ngIf="!processing" class="row text-center">
-    <app-tournament-structureround [round]="clonedStructure.getRootRound()" (roundNumberChanged)="setChangedRoundNumber($event)"></app-tournament-structureround>
+    <app-tournament-structureround [editable]="true" [round]="clonedStructure.getRootRound()" (roundNumberChanged)="setChangedRoundNumber($event)"></app-tournament-structureround>
   </div>
 </div>
 <div class="text-center" class="mt-3 mb-1">
