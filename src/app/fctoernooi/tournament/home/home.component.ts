@@ -150,4 +150,15 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
         }, (reason) => {
         });
     }
+
+    openModalShare(modalContent) {
+        const activeModal = this.modalService.open(modalContent/*, { windowClass: 'border-warning' }*/);
+        // (<TournamentListRemoveModalComponent>activeModal.componentInstance).poulePlace = poulePlace;
+        activeModal.result.then((result) => {
+            // if (result === 'remove') {
+            //     this.remove();
+            // }
+        }, (reason) => {
+        });
+    }
 }

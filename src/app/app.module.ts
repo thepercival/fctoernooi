@@ -25,6 +25,8 @@ import {
   faTableTennis,
   faTv,
   faUserCircle,
+  faShareAlt,
+  faClipboardCheck
 } from '@fortawesome/free-solid-svg-icons';
 import {
   NgbAlertModule,
@@ -68,7 +70,7 @@ import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 
 library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave,
   faSignInAlt, faSignOutAlt, faPlusCircle, faPlus, faTv, faFutbol, faTableTennis, faSearch,
-  faMobileAlt, faEnvelope, faTwitter, faCopyright, faEye);
+  faMobileAlt, faEnvelope, faTwitter, faCopyright, faEye, faShareAlt, faClipboardCheck);
 
 @NgModule({
   declarations: [

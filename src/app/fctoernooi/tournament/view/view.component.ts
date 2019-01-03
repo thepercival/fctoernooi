@@ -3,12 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PlanningService, StructureRepository } from 'ngx-sport';
 import { interval, range, Subscription, zip } from 'rxjs';
 
+import { AuthService } from '../../../auth/auth.service';
 import { GlobalEventsManager } from '../../../common/eventmanager';
 import { NavBarTournamentTVViewLink } from '../../../nav/nav.component';
 import { TournamentComponent } from '../component';
 import { IPlanningScrollTo } from '../planning/view/component';
 import { TournamentRepository } from '../repository';
-
+import { TournamentRole } from '../role';
 @Component({
     selector: 'app-tournament-view',
     templateUrl: './view.component.html',
@@ -31,7 +32,8 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
-        private globalEventsManager: GlobalEventsManager
+        private globalEventsManager: GlobalEventsManager,
+        private authService: AuthService,
     ) {
         super(route, router, tournamentRepository, structureRepository);
     }
@@ -73,6 +75,10 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
 
     setNoRefresh(refresh) {
         this.refreshAtCountDown = refresh;
+    }
+
+    isAdmin(): boolean {
+        return this.tournament.hasRole(this.authService.getLoggedInUserId(), TournamentRole.ADMIN);
     }
 
     initTVViewLink() {
