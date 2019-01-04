@@ -60,7 +60,7 @@ export class TournamentNewComponent implements OnInit {
     const date = new Date();
     this.minDateStruct = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
 
-    this.sportnames = SportConfig.getSports();
+    this.sportnames = SportConfig.getSports().sort();
 
     this.customForm = fb.group({
       name: ['', Validators.compose([

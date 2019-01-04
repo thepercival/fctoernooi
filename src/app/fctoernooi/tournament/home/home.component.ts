@@ -153,12 +153,18 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
 
     openModalShare(modalContent) {
         const activeModal = this.modalService.open(modalContent/*, { windowClass: 'border-warning' }*/);
-        // (<TournamentListRemoveModalComponent>activeModal.componentInstance).poulePlace = poulePlace;
+        // (activeModal.componentInstance).copied = false;        
         activeModal.result.then((result) => {
             // if (result === 'remove') {
             //     this.remove();
             // }
         }, (reason) => {
         });
+    }
+
+    copyLink(inputElement){
+        inputElement.select();
+        document.execCommand('copy');
+        inputElement.setSelectionRange(0, 0);
     }
 }

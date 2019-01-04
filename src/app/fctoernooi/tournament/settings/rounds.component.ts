@@ -14,6 +14,7 @@ import {
     RoundNumberConfigService,
     NameService,
     StructureRepository,
+    SportConfig,
 } from 'ngx-sport';
 
 import { TournamentComponent } from '../component';
@@ -46,7 +47,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         maxNrOfHeadtoheadMatches: 4,
         minWinPoints: 1,
         maxWinPoints: 10,
-        minDrawPoints: 1,
+        minDrawPoints: 0,
         maxDrawPoints: 5,
         minMinutesPerGame: 0,
         maxMinutesPerGame: 60,
@@ -69,11 +70,10 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         private planningRepository: PlanningRepository
     ) {
         super(route, router, tournamentRepository, sructureRepository);
-        this.initRanges();
         this.configService = new RoundNumberConfigService();
     }
 
-    private initRanges() {
+    private initRanges(roundNumber: RoundNumber) {
         this.ranges.nrOfHeadtoheadMatches = [];
         for (let i = this.validations.minNrOfHeadtoheadMatches; i <= this.validations.maxNrOfHeadtoheadMatches; i++) {
             this.ranges.nrOfHeadtoheadMatches.push(i);
@@ -85,6 +85,11 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         this.ranges.drawPoints = [];
         for (let i = this.validations.minDrawPoints; i <= this.validations.maxDrawPoints; i++) {
             this.ranges.drawPoints.push(i);
+        }
+        const sport = roundNumber.getCompetition().getLeague().getSport();
+        if( sport === SportConfig.Chess ) {
+            this.ranges.drawPoints.push(0.5);
+            this.ranges.drawPoints.sort();
         }
     }
 
@@ -104,6 +109,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         this.planningService = new PlanningService(this.tournament.getCompetition());
         const roundNumber = this.structure.getRoundNumber(roundNumberAsValue);
         this.changeRoundNumber(roundNumber);
+        this.initRanges(roundNumber);
         this.processing = false;
     }
 

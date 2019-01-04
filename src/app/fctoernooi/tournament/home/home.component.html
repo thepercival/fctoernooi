@@ -31,7 +31,7 @@
         <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/competitors', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
-              <i class="fi flaticon-group"></i> deelnemers</h5>
+                <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers</h5>
             <p class="card-text" *ngIf="structure.getRootRound().getTeams().length === structure.getRootRound().getPoulePlaces().length">
               <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> alle namen ingevuld
             </p>
@@ -44,7 +44,7 @@
         <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/games', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
-              <i class="fi flaticon-schedule"></i> wedstrijden</h5>
+                <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijden</h5>
             <p class="card-text" *ngIf="structure.getRootRound().getGames().length > 0">
               <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> wedstrijden ingepland
             </p>
@@ -227,17 +227,17 @@
       </button>
     </div>
     <div class="modal-body">
-      <ngb-alert *ngIf="false"></ngb-alert>
+      <ngb-alert *ngIf="modal.copied === true" type="info" [dismissible]="false">de link is gekopieerd naar het klembord</ngb-alert>
         <div class="input-group mb-3">
           <div class="input-group-prepend">
             <span class="input-group-text"><fa-icon [icon]="['fas', 'link']"></fa-icon></span>
           </div>
-          <input type="text" readonly class="form-control" value="https://www.fctoernooi.nl/toernooi/view/{{tournament.getId()}}">
+          <input type="text" #userinput readonly class="form-control" value="https://www.fctoernooi.nl/toernooi/view/{{tournament.getId()}}">
         </div>
     </div>
     <div class="modal-footer justify-content-around">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.close('share')">
-            <fa-icon [icon]="['fas', 'clipboard-check']"></fa-icon> kopieer url naar klembord</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.copied = true; copyLink(userinput)">
+            <fa-icon [icon]="['fas', 'clipboard-check']"></fa-icon> kopieer link naar klembord</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.close('close')">sluiten</button>
       </div>
   </ng-template>

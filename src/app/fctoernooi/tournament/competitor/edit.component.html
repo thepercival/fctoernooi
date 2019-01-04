@@ -11,7 +11,8 @@
       </div>
       <div>
         <h2>
-          <i class="fi flaticon-group"></i> deelnemer
+            
+            <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemer
         </h2>
         <h2 *ngIf="processing" class="text-center">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
@@ -50,7 +51,7 @@
         <div class="form-group row justify-content-end">
           <div class="col-9">
             <button [disabled]="customForm.invalid" type="submit" class="btn btn-outline-primary">
-              <i class="fi flaticon-group"></i> deelnemer opslaan
+                <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemer opslaan
             </button>
           </div>
         </div>

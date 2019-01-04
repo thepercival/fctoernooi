@@ -16,7 +16,7 @@
     <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
     <p *ngIf="userIsGameResultAdmin && hasTeams() && hasReferees()" class="d-flex justify-content-between">
       <button [disabled]="processing" (click)="scrollTo('team-part')" class="btn btn-outline-secondary">
-        <i class="fi flaticon-group"></i> deelnemers
+          <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
         <span *ngIf="hasFavoriteTeams()" class="badge badge-primary badge-pill">{{getNrOfFavoriteTeams()}}</span>
       </button>
       <button [disabled]="processing" (click)="scrollTo('referee-part')" class="btn btn-outline-secondary">
@@ -28,7 +28,7 @@
     </p>
     <div *ngIf="!processing && hasTeams()" id="team-part">
       <h2>
-        <i class="fi flaticon-group"></i> deelnemers
+          <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
         <span *ngIf="hasFavoriteTeams()" class="badge badge-primary badge-pill">{{getNrOfFavoriteTeams()}}</span>
       </h2>
       <table class="table">

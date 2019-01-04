@@ -23,7 +23,8 @@ import {
   faTimesCircle,
   faTrashAlt,
   faUserTag,
-  faLink
+  faLink,
+  faUsers
 } from '@fortawesome/free-solid-svg-icons';
 import {
   NgbAlertModule,
@@ -88,7 +89,7 @@ import { TournamentViewComponent } from './tournament/view/view.component';
 library.add(
   faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus,
   faExpand, faCompress, faPrint, faSort, faRandom, faSquare, faCheckSquare, faArrowsAltH,
-  faUserTag, faInfoCircle, faMedal, faProductHunt, faLink
+  faUserTag, faInfoCircle, faMedal, faProductHunt, faLink, faUsers
 );
 
 @NgModule({
