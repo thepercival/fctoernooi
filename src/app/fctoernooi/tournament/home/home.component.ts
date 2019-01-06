@@ -167,4 +167,15 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
         document.execCommand('copy');
         inputElement.setSelectionRange(0, 0);
     }
+
+    linkToStructure() {
+        this.router.navigate( ['/toernooi/structure', this.tournament.getId()], 
+            {
+                queryParams: {
+                    returnAction: '/toernooi',
+                    returnParam: this.tournament.getId()
+                }
+            }
+        );
+    }
 }

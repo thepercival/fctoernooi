@@ -88,7 +88,7 @@
                             <div class="col-4">
                                 <select [ngModel]="modelConfig.getDrawPoints()" (ngModelChange)="setDrawPoints($event)"
                                     id="drawpoints" name="drawpoints" class="form-control" required>
-                                    <option *ngFor="let n of ranges.drawPoints" [attr.value]=n>{{n}}</option>
+                                    <option *ngFor="let n of ranges.drawPoints" [attr.value]="n">{{n}}</option>
                                 </select>
                             </div>
                         </div>

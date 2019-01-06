@@ -34,6 +34,10 @@ export class TournamentStructureComponent extends TournamentComponent implements
     step: 1,
     start: 1
   };
+  private returnUrl: string;
+  private returnUrlParam: string;
+  private returnUrlQueryParamKey: string;
+  private returnUrlQueryParamValue: string;
 
   constructor(
     route: ActivatedRoute,
@@ -45,6 +49,13 @@ export class TournamentStructureComponent extends TournamentComponent implements
     private modalService: NgbModal
   ) {
     super(route, router, tournamentRepository, structureRepository);
+
+    this.route.queryParamMap.subscribe(params => {
+      this.returnUrl = params.get('returnAction') !== null ? params.get('returnAction') : undefined;
+      this.returnUrlParam = +params.get('returnParam') !== null ? params.get('returnParam') : undefined;
+      this.returnUrlQueryParamKey = params.get('returnQueryParamKey') !== null ? params.get('returnQueryParamKey') : undefined;
+      this.returnUrlQueryParamValue = params.get('returnQueryParamValue') !== null ? params.get('returnQueryParamValue') : undefined;
+  });
   }
 
   ngOnInit() {
@@ -162,5 +173,14 @@ export class TournamentStructureComponent extends TournamentComponent implements
     }, (reason) => {
       this.helpModalShownOnDevice();
     });
+  }
+
+  navigateBack() {
+    let extras;
+    if( this.returnUrlQueryParamKey !== undefined ) {
+      extras = { queryParams: {} };
+      extras.queryParams[this.returnUrlQueryParamKey] = this.returnUrlQueryParamValue;
+    }
+    this.router.navigate([this.returnUrl, this.returnUrlParam],extras);
   }
 }

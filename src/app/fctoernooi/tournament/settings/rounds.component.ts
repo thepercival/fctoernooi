@@ -53,7 +53,6 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         maxMinutesPerGame: 60,
     };
     planningService: PlanningService;
-
     returnUrl: string;
     returnUrlParam: number;
     returnUrlQueryParamKey: string;
@@ -142,7 +141,8 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         return winnersOrLosers === Round.WINNERS ? 'success' : (winnersOrLosers === Round.LOSERS ? 'danger' : '');
     }
 
-    setNrOfHeadtoheadMatches(nrOfHeadtoheadMatches) {
+    setNrOfHeadtoheadMatches(nrOfHeadtoheadMatchesAsString: string) {
+        const nrOfHeadtoheadMatches = +nrOfHeadtoheadMatchesAsString;
         if (nrOfHeadtoheadMatches < this.validations.minNrOfHeadtoheadMatches
             || nrOfHeadtoheadMatches > this.validations.maxNrOfHeadtoheadMatches) {
             return;
@@ -151,7 +151,8 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         this.modelRecreate = true; // this.planningService.create( this.roundNumber );
     }
 
-    setWinPoints(winPoints) {
+    setWinPoints(winPointsAsString: string) {
+        const winPoints = +winPointsAsString;
         if (winPoints < this.validations.minWinPoints
             || winPoints > this.validations.maxWinPoints) {
             return;
@@ -160,7 +161,8 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     }
 
 
-    setDrawPoints(drawPoints) {
+    setDrawPoints(drawPointsAsString: string) {
+        const drawPoints = +drawPointsAsString;
         if (drawPoints < this.validations.minDrawPoints
             || drawPoints > this.validations.maxDrawPoints) {
             return;
@@ -177,7 +179,8 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         this.modelReschedule = true;  // this.tournament.reschedule(new PlanningService(this.structureService), this.roundNumber);
     }
 
-    setWinPointsExt(winPointsExt) {
+    setWinPointsExt(winPointsExtAsString: string) {
+        const winPointsExt = +winPointsExtAsString;
         if (winPointsExt < this.validations.minWinPoints
             || winPointsExt > this.validations.maxWinPoints) {
             return;
@@ -185,7 +188,8 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         this.modelConfig.setWinPointsExt(winPointsExt);
     }
 
-    setDrawPointsExt(drawPointsExt) {
+    setDrawPointsExt(drawPointsExtAsString: string) {
+        const drawPointsExt = +drawPointsExtAsString;
         if (drawPointsExt < this.validations.minDrawPoints
             || drawPointsExt > this.validations.maxDrawPoints) {
             return;
@@ -346,52 +350,6 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             );
 
     }
-
-    /* protected updateRoundConfig(roundNumber: RoundNumber, modelToUpdateWith: RoundNumberConfig) {
-
-        roundNumber.getConfig().setQualifyRule(modelToUpdateWith.getQualifyRule());
-        roundNumber.getConfig().setNrOfHeadtoheadMatches(modelToUpdateWith.getNrOfHeadtoheadMatches());
-        roundNumber.getConfig().setWinPoints(modelToUpdateWith.getWinPoints());
-        roundNumber.getConfig().setDrawPoints(modelToUpdateWith.getDrawPoints());
-        roundNumber.getConfig().setHasExtension(modelToUpdateWith.getHasExtension());
-        roundNumber.getConfig().setWinPointsExt(modelToUpdateWith.getWinPointsExt());
-        roundNumber.getConfig().setDrawPointsExt(modelToUpdateWith.getDrawPointsExt());
-        roundNumber.getConfig().setMinutesPerGameExt(modelToUpdateWith.getMinutesPerGameExt());
-        roundNumber.getConfig().setEnableTime(modelToUpdateWith.getEnableTime());
-        roundNumber.getConfig().setMinutesPerGame(modelToUpdateWith.getMinutesPerGame());
-        roundNumber.getConfig().setMinutesBetweenGames(modelToUpdateWith.getMinutesBetweenGames());
-        roundNumber.getConfig().setMinutesAfter(modelToUpdateWith.getMinutesAfter());
-        this.updateRoundConfigScore(roundNumber.getConfig().getScore(), modelToUpdateWith.getScore());
-
-        if (roundNumber.getNext() !== undefined) {
-            this.updateRoundConfig(roundNumber.getNext(), modelToUpdateWith);
-        }
-    }
-
-    protected updateRoundConfigScore(roundConfigScore: RoundNumberConfigScore, modelToUpdateWith: RoundNumberConfigScore) {
-        roundConfigScore.setMaximum(modelToUpdateWith.getMaximum());
-        if (roundConfigScore.getParent() && modelToUpdateWith.getParent()) {
-            this.updateRoundConfigScore(roundConfigScore.getParent(), modelToUpdateWith.getParent());
-        }
-    } */
-
-    // dit is idem als get position
-    // protected getWinnersLosers(rootRound: Round, aChildRound: Round): number[] {
-    //     const winnersLosers: number[] = [];
-    //     while (aChildRound !== rootRound) {
-    //         winnersLosers.push(aChildRound.getWinnersOrLosers());
-    //         aChildRound = aChildRound.getParent();
-    //     }
-    //     return winnersLosers;
-    // }
-
-    // protected getRoundByWinnersLosers(rootRound: Round, winnersLosers: number[]): Round {
-    //     let round: Round = rootRound;
-    //     while (winnersLosers.length > 0) {
-    //         round = round.getChildRound(winnersLosers.pop());
-    //     }
-    //     return round;
-    // }
 
     getDirectionClass(scoreConfig: RoundNumberConfigScore) {
         return scoreConfig.getDirection() === RoundNumberConfigScore.UPWARDS ? 'naar' : 'vanaf';

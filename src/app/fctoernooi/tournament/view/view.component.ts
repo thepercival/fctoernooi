@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, AfterViewChecked, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlanningService, StructureRepository } from 'ngx-sport';
 import { interval, range, Subscription, zip } from 'rxjs';
+import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 
 import { AuthService } from '../../../auth/auth.service';
 import { GlobalEventsManager } from '../../../common/eventmanager';
@@ -15,7 +16,7 @@ import { TournamentRole } from '../role';
     templateUrl: './view.component.html',
     styleUrls: ['./view.component.scss']
 })
-export class TournamentViewComponent extends TournamentComponent implements OnInit, OnDestroy {
+export class TournamentViewComponent extends TournamentComponent implements OnInit, AfterViewChecked, OnDestroy {
     private tvViewLinkSet = false;
     public planningService: PlanningService;
     private timerSubscription: Subscription;
@@ -24,6 +25,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     private favTeamIds: number[];
     private favRefereeIds: number[];
     scrollTo: IPlanningScrollTo = {};
+    scrollToEndRanking:string;
     userRefereeId: number;
     progress: number;
 
@@ -34,6 +36,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
         structureRepository: StructureRepository,
         private globalEventsManager: GlobalEventsManager,
         private authService: AuthService,
+        private scrollService: ScrollToService,
     ) {
         super(route, router, tournamentRepository, structureRepository);
     }
@@ -51,11 +54,22 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
             );
         });
         this.route.queryParamMap.subscribe(params => {
-            this.scrollTo.roundNumber = +params.get('scrollToRoundNumber');
-            this.scrollTo.gameId = +params.get('scrollToGameId');
+            this.scrollTo.roundNumber = params.get('scrollToRoundNumber') !== null ? +params.get('scrollToRoundNumber') : undefined;
+            this.scrollTo.gameId = params.get('scrollToGameId') !== null ? +params.get('scrollToGameId') : undefined;
+            this.scrollToEndRanking = params.get('scrollToId') !== null ? params.get('scrollToId') : undefined;
         });
         this.countDown();
     }
+
+    ngAfterViewChecked() {       
+        if (this.processing === false && this.scrollToEndRanking !== undefined) {
+          this.scrollService.scrollTo({
+            target: 'endranking',
+            duration: 200
+          });
+          this.scrollToEndRanking = undefined;
+        }
+      }
 
     countDown() {
         const progress = range(1, this.refreshAfterSeconds).pipe();
@@ -136,5 +150,14 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
         return favReferees[this.tournament.getId()];
     }
 
-
+    linkToStructureView() {
+        this.router.navigate( ['/toernooi/structureview', this.tournament.getId()], 
+            {
+                queryParams: {
+                    returnQueryParamKey: 'scrollToId',
+                    returnQueryParamValue: 'endranking'
+                }
+            }
+        );
+    }
 }

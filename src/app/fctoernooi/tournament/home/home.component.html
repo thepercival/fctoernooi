@@ -16,7 +16,7 @@
       <ngb-alert *ngIf="!processing && !isAdmin()" type="danger" [dismissible]="false">je hebt geen rechten voor het beheergedeelte, klik 
         <a routerLink="['/toernooi/view', tournament.getId()]">hier</a> om naar het toernooi te gaan</ngb-alert>
       <div *ngIf="!processing && structure && isAdmin()" class="row d-flex justify-content-center">
-        <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/structure', tournament.getId()]">
+        <div class="card pointer mt-3 mx-2" (click)="linkToStructure()">
           <div class="card-body">
             <h5 class="card-title">
               <i class="fi flaticon-structure"></i> indeling</h5>
