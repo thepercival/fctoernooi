@@ -168,7 +168,8 @@ export class TournamentRepository extends SportRepository {
             '&rules=' + printConfig.rules +
             '&gamesperfield=' + printConfig.gamesperfield +
             '&planning=' + printConfig.planning +
-            '&poulepivottables=' + printConfig.poulepivottables;
+            '&poulepivottables=' + printConfig.poulepivottables + 
+            '&qrcode=' + printConfig.qrcode;
     }
 }
 
@@ -203,4 +204,5 @@ export interface TournamentPrintConfig {
     gamesperfield: boolean;
     planning: boolean;
     poulepivottables: boolean;
+    qrcode: boolean;
 }

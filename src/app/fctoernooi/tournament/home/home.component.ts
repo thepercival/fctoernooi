@@ -33,7 +33,8 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
             rules: false,
             gamesperfield: false,
             planning: false,
-            poulepivottables: false
+            poulepivottables: false,
+            qrcode: true
         };
     }
 
@@ -126,7 +127,9 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
 
     allPrintOptionsOff() {
         return (!this.printConfig.gamenotes && !this.printConfig.structure && !this.printConfig.planning &&
-            !this.printConfig.gamesperfield && !this.printConfig.rules && !this.printConfig.poulepivottables);
+            !this.printConfig.gamesperfield && !this.printConfig.rules && !this.printConfig.poulepivottables
+            && !this.printConfig.qrcode);
+            
     }
 
     openModalPrint(modalContent) {

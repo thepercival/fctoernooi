@@ -122,7 +122,7 @@
                     <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>                                    
                 </h5>
               </div>
-              <div><span>verwijderen</span></div>
+              <div><span>weggooien</span></div>
             </div>
       </div>    
     </div>
@@ -194,6 +194,15 @@
           </label>
         </div>
         <label for="poulepivottables" class="col-8 col-form-label">poule draaitabellen</label>
+      </div>
+      <div class="row">
+        <div class="form-check col-3">
+          <label class="custom-control custom-checkbox col-form-label pl-0">
+            <input type="checkbox" class="custom-control-input form-check-input" name="qrcode" [(ngModel)]="printConfig.qrcode">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+        <label for="qrcode" class="col-8 col-form-label">delen met link en qr-code <fa-icon [icon]="['fas', 'qrcode']"></fa-icon></label>
       </div>
     </div>
   </div>
