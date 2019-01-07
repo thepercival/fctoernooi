@@ -34,14 +34,14 @@
     "core-js": "^2.5.7",
     "lodash": "^4.17.11",
     "ng2-nouislider": "^1.7.13",
-    "ngx-sport": "0.0.62",
+    "ngx-sport": "0.0.63",
     "nouislider": "^12.1.0",
     "rxjs": "^6.3.3",
     "tslib": "^1.9.0",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.10.6",
+    "@angular-devkit/build-angular": "^0.11.4",
     "@angular/cli": "7.1.4",
     "@angular/compiler-cli": "7.1.4",
     "@angular/language-service": "7.1.4",
