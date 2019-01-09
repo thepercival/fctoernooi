@@ -89,16 +89,28 @@
       </div>
     </div>
   </div>
-  <div *ngIf="!processing && structure && isAdmin()" class="row d-flex justify-content-center my-3">
+  <div *ngIf="!processing && structure" class="row d-flex justify-content-center my-3">    
     <div class="card mt-3 mx-2">
-      <div class="card-body">
-        <h5 (click)="openModalPrint(contentprint)" class="card-title pointer">
-          <fa-icon [icon]="['fas', 'print']"></fa-icon> afdrukken
-        </h5>
-        <div class="card-text"></div>
-      </div>
+      <div class="card-body d-flex justify-content-between">
+        <div [routerLink]="['/toernooi/view', tournament.getId()]" class="text-center pointer">
+          <div>
+            <h5 class="card-title">
+              <fa-icon [icon]="['fas', 'print']"></fa-icon> 
+            </h5>
+          </div>
+          <div><span>afdrukken</span></div>
+        </div>
+        <div *ngIf="isAdmin()" (click)="openModalCopy(contentcopy)" class="text-center pointer">
+          <div>
+            <h5 class="card-title">
+                <fa-icon [icon]="['fas', 'copy']"></fa-icon>                                    
+            </h5>
+          </div>
+          <div><span>nieuwe</span><br><span>editie</span></div>
+        </div>        
+      </div>    
     </div>
-    <div *ngIf="isAdmin()" class="card mt-3 mx-2">
+    <div class="card mt-3 mx-2">
       <div class="card-body d-flex justify-content-between">
         <div [routerLink]="['/toernooi/view', tournament.getId()]" class="text-center pointer">
           <div>
@@ -109,21 +121,21 @@
           <div><span>bekijken</span></div>
         </div>
         <div (click)="openModalShare(contentshare)" class="text-center pointer">
-            <div>
-              <h5 class="card-title">
-                  <fa-icon [icon]="['fas', 'share-alt']"></fa-icon>                                    
-              </h5>
-            </div>
-            <div><span>delen</span></div>
+          <div>
+            <h5 class="card-title">
+                <fa-icon [icon]="['fas', 'share-alt']"></fa-icon>                                    
+            </h5>
           </div>
-          <div (click)="openModalRemove(contentremove)" class="text-center pointer">
-              <div>
-                <h5 class="card-title">
-                    <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>                                    
-                </h5>
-              </div>
-              <div><span>weggooien</span></div>
-            </div>
+          <div><span>delen</span></div>
+        </div>
+        <div *ngIf="isAdmin()" (click)="openModalRemove(contentremove)" class="text-center pointer">
+          <div>
+            <h5 class="card-title">
+                <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>                                    
+            </h5>
+          </div>
+          <div><span>weggooien</span></div>
+        </div>
       </div>    
     </div>
     <ngb-alert *ngIf="alertRemove" [type]="alertRemove.type" [dismissible]="false">{{ alertRemove.message }}</ngb-alert>
@@ -208,6 +220,25 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" [disabled]="allPrintOptionsOff()" data-dismiss="modal" (click)="modal.close('print')">afdrukken</button>
+  </div>
+</ng-template>
+
+<ng-template #contentcopy let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+      <fa-icon [icon]="['fas', 'copy']"></fa-icon> toernooi kopiëren
+    </h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container-fluid">
+      van jaar {{tournament.getCompetition().getSeason().getName()}} naar jaar {{getCurrentYear()}}
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.close('copy')">kopiëren</button>
   </div>
 </ng-template>
 

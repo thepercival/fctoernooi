@@ -143,6 +143,17 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
         });
     }
 
+    openModalCopy(modalContent) {
+        const activeModal = this.modalService.open(modalContent/*, { windowClass: 'border-warning' }*/);
+        // (<TournamentListRemoveModalComponent>activeModal.componentInstance).poulePlace = poulePlace;
+        activeModal.result.then((result) => {
+            if (result === 'copy') {
+                this.copy();
+            }
+        }, (reason) => {
+        });
+    }
+
     openModalRemove(modalContent) {
         const activeModal = this.modalService.open(modalContent/*, { windowClass: 'border-warning' }*/);
         // (<TournamentListRemoveModalComponent>activeModal.componentInstance).poulePlace = poulePlace;
@@ -180,5 +191,14 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
                 }
             }
         );
+    }
+
+    getCurrentYear() {
+        const date = new Date();
+        return date.getFullYear();
+    }
+
+    copy() {
+        console.log('copy and redirect!!');
     }
 }
