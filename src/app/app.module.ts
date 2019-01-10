@@ -7,15 +7,16 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import {
+  faBasketballBall,
+  faCalendarAlt,
+  faChess,
+  faClipboardCheck,
   faCopyright,
   faEnvelope,
   faEye,
   faFilter,
-  faChess,
   faFutbol,
-  faVolleyballBall,
   faGamepad,
-  faBasketballBall,
   faLevelUpAlt,
   faMobileAlt,
   faPencilAlt,
@@ -23,15 +24,14 @@ import {
   faPlusCircle,
   faSave,
   faSearch,
+  faShareAlt,
   faSignInAlt,
   faSignOutAlt,
   faSpinner,
   faTableTennis,
   faTv,
   faUserCircle,
-  faShareAlt,
-  faClipboardCheck,
-  faCalendarAlt
+  faVolleyballBall,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   NgbAlertModule,
@@ -40,20 +40,21 @@ import {
   NgbPopoverModule,
   NgbTimepickerModule,
 } from '@ng-bootstrap/ng-bootstrap';
+import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 import {
-  AssociationRepository,
   AssociationMapper,
-  CompetitionRepository,
+  AssociationRepository,
   CompetitionMapper,
-  FieldRepository,
+  CompetitionRepository,
   FieldMapper,
-  LeagueRepository,
+  FieldRepository,
   LeagueMapper,
-  RefereeRepository,
-  RefereeMapper,
-  SeasonRepository,
-  SeasonMapper,
+  LeagueRepository,
   NameService,
+  RefereeMapper,
+  RefereeRepository,
+  SeasonMapper,
+  SeasonRepository,
 } from 'ngx-sport';
 
 import { environment } from '../environments/environment';
@@ -64,14 +65,15 @@ import { AuthService } from './auth/auth.service';
 import { AuthguardService } from './auth/authguard.service';
 import { GlobalEventsManager } from './common/eventmanager';
 import { IconManager } from './common/iconmanager';
-import { TournamentRepository } from './fctoernooi/tournament/repository';
-import { TournamentRoleRepository } from './fctoernooi/tournament/role/repository';
-import { SponsorRepository } from './fctoernooi/tournament/sponsor/repository';
 import { FooterComponent } from './footer/footer.component';
 import { HomeComponent } from './home/home.component';
+import { RoleMapper } from './lib/role/mapper';
+import { SponsorRepository } from './lib/sponsor/repository';
+import { TournamentRepository } from './lib/tournament/repository';
+import { TournamentShellRepository } from './lib/tournament/shell/repository';
+import { UserMapper } from './lib/user/mapper';
 import { NavComponent } from './nav/nav.component';
 import { UserModule } from './user/user.module';
-import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 
 library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave,
   faSignInAlt, faSignOutAlt, faPlusCircle, faPlus, faTv, faFutbol, faTableTennis, faSearch,
@@ -101,7 +103,9 @@ library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave
     AuthService,
     AuthguardService,
     TournamentRepository,
-    TournamentRoleRepository,
+    TournamentShellRepository,
+    RoleMapper,
+    UserMapper,
     CompetitionRepository,
     CompetitionMapper,
     AssociationRepository,

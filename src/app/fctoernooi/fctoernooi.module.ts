@@ -13,19 +13,19 @@ import {
   faCompress,
   faExpand,
   faInfoCircle,
+  faLink,
   faListUl,
   faMedal,
   faMinus,
   faMoneyBillAlt,
   faPrint,
+  faQrcode,
   faRandom,
   faSort,
   faTimesCircle,
   faTrashAlt,
-  faUserTag,
-  faLink,
   faUsers,
-  faQrcode
+  faUserTag,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   NgbAlertModule,
@@ -37,28 +37,29 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { NouisliderModule } from 'ng2-nouislider';
 import {
-  GameRepository,
-  PlanningRepository,
   GameMapper,
+  GameRepository,
   GameScoreMapper,
+  PlanningRepository,
+  PouleMapper,
+  PoulePlaceMapper,
   PoulePlaceRepository,
   QualifyRuleRepository,
-  RoundNumberConfigRepository,
+  RoundMapper,
   RoundNumberConfigMapper,
+  RoundNumberConfigRepository,
   RoundNumberConfigScoreMapper,
   RoundNumberMapper,
   RoundRepository,
-  RoundMapper,
-  PouleMapper,
-  PoulePlaceMapper,
-  StructureRepository,
   StructureMapper,
+  StructureRepository,
+  TeamMapper,
   TeamRepository,
-  TeamMapper
 } from 'ngx-sport';
 
 import { EscapeHtmlPipe } from '../common/escapehtmlpipe';
 import { IconManager } from '../common/iconmanager';
+import { RoleMapper } from '../lib/role/mapper';
 import { FctoernooiRoutingModule } from './fctoernooi-routing.module';
 import { TournamentCompetitorEditComponent } from './tournament/competitor/edit.component';
 import { CompetitorListComponent } from './tournament/competitor/list.component';
@@ -76,14 +77,13 @@ import { TournamentPlanningViewComponent } from './tournament/planning/view/comp
 import { TournamentEndRankingViewComponent } from './tournament/ranking/end/component';
 import { TournamentRefereeEditComponent } from './tournament/referee/edit.component';
 import { RefereeListComponent } from './tournament/referee/list.component';
-import { TournamentRoleRepository } from './tournament/role/repository';
 import { RoundsSettingsComponent } from './tournament/settings/rounds.component';
 import { TournamentSponsorEditComponent } from './tournament/sponsor/edit.component';
 import { SponsorListComponent } from './tournament/sponsor/list.component';
 import { TournamentStructureHelpModalComponent } from './tournament/structure/helpmodal.component';
 import { TournamentStructureComponent } from './tournament/structure/main.component';
-import { TournamentStructureViewComponent } from './tournament/structure/view.component';
 import { TournamentStructureRoundComponent } from './tournament/structure/round.component';
+import { TournamentStructureViewComponent } from './tournament/structure/view.component';
 import { TournamentViewTvComponent } from './tournament/view/tv.component';
 import { TournamentViewComponent } from './tournament/view/view.component';
 
@@ -133,7 +133,7 @@ library.add(
   ],
   entryComponents: [TournamentStructureHelpModalComponent, TournamentListRemoveModalComponent],
   providers: [
-    TournamentRoleRepository,
+    RoleMapper,
     StructureRepository,
     StructureMapper,
     RoundRepository,

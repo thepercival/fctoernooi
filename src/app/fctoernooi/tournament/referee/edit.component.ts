@@ -3,10 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { JsonReferee, PlanningRepository, PlanningService, Referee, RefereeRepository, StructureRepository } from 'ngx-sport';
 
-import { User } from '../../../user/user';
+import { User } from '../../../lib/user';
 import { TournamentComponent } from '../component';
-import { TournamentRepository } from '../repository';
-import { TournamentService } from '../service';
+import { TournamentRepository } from '../../../lib/tournament/repository';
+import { TournamentService } from '../../../lib/tournament/service';
 
 @Component({
     selector: 'app-tournament-referee-edit',

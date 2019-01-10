@@ -5,14 +5,17 @@ import { SportRepository } from 'ngx-sport';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { User } from './user';
+import { User } from '../user';
+import { JsonUser, UserMapper } from './mapper';
 
 @Injectable()
 export class UserRepository extends SportRepository {
-
   private url: string;
 
-  constructor(private http: HttpClient, router: Router) {
+  constructor(
+    private http: HttpClient,
+    router: Router,
+    private mapper: UserMapper) {
     super(router);
     this.url = super.getApiUrl() + this.getUrlpostfix();
   }
@@ -22,10 +25,8 @@ export class UserRepository extends SportRepository {
   }
 
   getObjects(): Observable<User[]> {
-    return this.http.get<Array<IUser>>(this.url, this.getOptions()).pipe(
-      map((res: IUser[]) => {
-        return this.jsonArrayToObject(res);
-      }),
+    return this.http.get<Array<JsonUser>>(this.url, this.getOptions()).pipe(
+      map((jsonUsers: JsonUser[]) => jsonUsers.map(jsonUser => this.mapper.toObject(jsonUser))),
       catchError((err) => this.handleError(err))
     );
   }
@@ -33,14 +34,14 @@ export class UserRepository extends SportRepository {
   getObject(id: number): Observable<User> {
     const url = `${this.url}/${id}`;
     return this.http.get(url).pipe(
-      map((res: IUser) => this.jsonToObject(res)),
+      map((res: JsonUser) => this.mapper.toObject(res)),
       catchError((err) => this.handleError(err))
     );
   }
 
   createObject(jsonObject: any): Observable<User> {
     return this.http.post(this.url, jsonObject, this.getOptions()).pipe(
-      map((res: IUser) => this.jsonToObject(res)),
+      map((res: JsonUser) => this.mapper.toObject(res)),
       catchError((err) => this.handleError(err))
     );
   }
@@ -52,34 +53,4 @@ export class UserRepository extends SportRepository {
       params: httpParams
     };
   }
-
-  jsonArrayToObject(jsonArray: IUser[]): User[] {
-    const users: User[] = [];
-    for (const json of jsonArray) {
-      const object = this.jsonToObject(json);
-      users.push(object);
-    }
-    return users;
-  }
-
-  jsonToObject(json: IUser): User {
-    const user = new User(json.emailaddress);
-    user.setId(json.id);
-    user.setName(json.name);
-    return user;
-  }
-
-  objectToJson(user: User): IUser {
-    return {
-      id: user.getId(),
-      emailaddress: user.getEmailaddress(),
-      name: user.getName()
-    };
-  }
-}
-
-export interface IUser {
-  id?: number;
-  emailaddress: string;
-  name?: string;
 }

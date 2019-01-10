@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap/popover/popover';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import {
   Game,
+  NameService,
   PlanningService,
   Poule,
   PoulePlace,
@@ -12,13 +13,12 @@ import {
   Referee,
   Round,
   RoundNumber,
-  NameService,
   Team,
 } from 'ngx-sport';
 
 import { AuthService } from '../../../../auth/auth.service';
-import { Tournament } from '../../../tournament';
-import { TournamentRole } from '../../role';
+import { Role } from '../../../../lib/role';
+import { Tournament } from '../../../../lib/tournament';
 
 @Component({
   selector: 'app-tournament-planning-view',
@@ -60,7 +60,7 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), TournamentRole.GAMERESULTADMIN);
+    this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.GAMERESULTADMIN);
   }
 
   ngAfterViewInit() {
@@ -125,14 +125,14 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
 
   hasEditPermissions(game: Game): boolean {
     const loggedInUserId = this.authService.getLoggedInUserId();
-    if (this.tournament.hasRole(loggedInUserId, TournamentRole.GAMERESULTADMIN)) {
+    if (this.tournament.hasRole(loggedInUserId, Role.GAMERESULTADMIN)) {
       return true;
     }
     if (game.getReferee() === undefined) {
       return false;
     }
     if (this.userRefereeId !== undefined
-      && this.tournament.hasRole(loggedInUserId, TournamentRole.REFEREE)
+      && this.tournament.hasRole(loggedInUserId, Role.REFEREE)
       && this.userRefereeId === game.getReferee().getId()) {
       return true;
     }

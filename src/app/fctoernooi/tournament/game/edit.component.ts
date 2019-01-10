@@ -7,21 +7,21 @@ import {
     GameScore,
     GameScoreHomeAway,
     INewQualifier,
+    NameService,
     PlanningService,
     PoulePlace,
     PoulePlaceRepository,
     QualifyService,
     Round,
     RoundNumberConfigScore,
-    NameService,
     StructureRepository,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
 
 import { AuthService } from '../../../auth/auth.service';
+import { Role } from '../../../lib/role';
+import { TournamentRepository } from '../../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
-import { TournamentRepository } from '../repository';
-import { TournamentRole } from '../role';
 
 @Component({
     selector: 'app-tournament-game-edit',
@@ -82,7 +82,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
 
     hasAllEditPermissions() {
         const loggedInUserId = this.authService.getLoggedInUserId();
-        if (this.tournament.hasRole(loggedInUserId, TournamentRole.GAMERESULTADMIN)) {
+        if (this.tournament.hasRole(loggedInUserId, Role.GAMERESULTADMIN)) {
             return true;
         }
         return false;

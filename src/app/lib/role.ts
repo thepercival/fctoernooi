@@ -1,11 +1,11 @@
-import { User } from '../../user/user';
-import { Tournament } from '../tournament';
+import { Tournament } from './tournament';
+import { User } from './user';
 
 /**
  * Created by coen on 9-10-17.
  */
 
-export class TournamentRole {
+export class Role {
     static readonly ADMIN = 1;
     static readonly STRUCTUREADMIN = 2;
     static readonly PLANNER = 4;

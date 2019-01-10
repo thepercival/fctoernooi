@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlanningRepository, StructureRepository } from 'ngx-sport';
+import { StructureRepository } from 'ngx-sport';
 
+import { Sponsor } from '../../../lib/sponsor';
+import { JsonSponsor } from '../../../lib/sponsor/mapper';
+import { SponsorRepository } from '../../../lib/sponsor/repository';
+import { TournamentRepository } from '../../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
-import { TournamentRepository } from '../repository';
-import { Sponsor } from '../sponsor';
-import { ISponsor, SponsorRepository } from '../sponsor/repository';
 
 @Component({
     selector: 'app-tournament-sponsor-edit',
@@ -33,7 +34,6 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
-        private planningRepository: PlanningRepository,
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
@@ -98,7 +98,7 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
         const name = this.customForm.controls.name.value;
         const url = this.customForm.controls.url.value;
 
-        const ref: ISponsor = {
+        const ref: JsonSponsor = {
             name: name,
             url: url ? url : undefined
         };

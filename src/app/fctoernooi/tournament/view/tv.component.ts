@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
     EndRanking,
     Game,
+    NameService,
     PlanningService,
     Poule,
     PoulePlace,
@@ -10,7 +11,6 @@ import {
     RankingItem,
     Round,
     RoundNumber,
-    NameService,
     StructureRepository,
 } from 'ngx-sport';
 import { Subscription, timer } from 'rxjs';
@@ -18,11 +18,11 @@ import { Subscription, timer } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
 import { GlobalEventsManager } from '../../../common/eventmanager';
 import { IconManager } from '../../../common/iconmanager';
+import { Role } from '../../../lib/role';
+import { Sponsor } from '../../../lib/sponsor';
+import { TournamentRepository } from '../../../lib/tournament/repository';
 import { NavBarTournamentTVViewLink } from '../../../nav/nav.component';
 import { TournamentComponent } from '../component';
-import { TournamentRepository } from '../repository';
-import { TournamentRole } from '../role';
-import { Sponsor } from '../sponsor';
 
 @Component({
     selector: 'app-tournament-view-tv',
@@ -154,7 +154,7 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
     getScheduledGamesForRoundNumber(roundNumber: RoundNumber): Game[] {
         let games: Game[] = this.planningService.getGamesForRoundNumber(roundNumber, Game.ORDER_RESOURCEBATCH);
         games = games.filter(game => game.getState() !== Game.STATE_PLAYED &&
-            (!roundNumber.getConfig().getEnableTime() || game.getStartDateTime() > new Date() )
+            (!roundNumber.getConfig().getEnableTime() || game.getStartDateTime() > new Date())
         );
         if (games.length > this.maxLines) {
             return games.splice(0, this.maxLines);
@@ -285,7 +285,7 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
     }
 
     isAdmin(): boolean {
-        return this.tournament.hasRole(this.authService.getLoggedInUserId(), TournamentRole.ADMIN);
+        return this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.ADMIN);
     }
 
     isPoulesRankingScreenDef(): boolean {

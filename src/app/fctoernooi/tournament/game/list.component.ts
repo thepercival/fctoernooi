@@ -1,13 +1,13 @@
-import { Component, OnInit, AfterViewChecked } from '@angular/core';
+import { AfterViewChecked, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlanningService, StructureRepository } from 'ngx-sport';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
+import { PlanningService, StructureRepository } from 'ngx-sport';
 
 import { AuthService } from '../../../auth/auth.service';
+import { Role } from '../../../lib/role';
+import { TournamentRepository } from '../../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
 import { IPlanningScrollTo } from '../planning/view/component';
-import { TournamentRepository } from '../repository';
-import { TournamentRole } from '../role';
 
 @Component({
   selector: 'app-tournament-games',
@@ -21,7 +21,7 @@ export class GameListComponent extends TournamentComponent implements OnInit, Af
   noRefresh = false;
   scrollTo: IPlanningScrollTo = {};
   userIsPlannerOrStructureAdmin: boolean;
-  private scrollToEndRanking:string;
+  private scrollToEndRanking: string;
 
   constructor(
     route: ActivatedRoute,
@@ -46,7 +46,7 @@ export class GameListComponent extends TournamentComponent implements OnInit, Af
     this.showPrintBtn = true;
   }
 
-  ngAfterViewChecked() {       
+  ngAfterViewChecked() {
     if (this.processing === false && this.scrollToEndRanking !== undefined) {
       this.scrollService.scrollTo({
         target: 'endranking',
@@ -59,21 +59,21 @@ export class GameListComponent extends TournamentComponent implements OnInit, Af
   setPlanningService() {
     this.planningService = new PlanningService(this.tournament.getCompetition());
     this.userIsPlannerOrStructureAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(),
-      TournamentRole.STRUCTUREADMIN + TournamentRole.PLANNER);
+      Role.STRUCTUREADMIN + Role.PLANNER);
 
     this.processing = false;
   }
 
   linkToStructure() {
-    this.router.navigate( ['/toernooi/structure', this.tournament.getId()], 
-        {
-            queryParams: {
-                returnAction: '/toernooi/games',
-                returnParam: this.tournament.getId(),
-                returnQueryParamKey: 'scrollToId',
-                returnQueryParamValue: 'endranking'
-            }
+    this.router.navigate(['/toernooi/structure', this.tournament.getId()],
+      {
+        queryParams: {
+          returnAction: '/toernooi/games',
+          returnParam: this.tournament.getId(),
+          returnQueryParamKey: 'scrollToId',
+          returnQueryParamValue: 'endranking'
         }
+      }
     );
   }
 }

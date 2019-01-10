@@ -5,18 +5,21 @@ import { SportRepository } from 'ngx-sport';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { Tournament } from '../../tournament';
 import { Sponsor } from '../sponsor';
+import { Tournament } from '../tournament';
+import { JsonSponsor, SponsorMapper } from './mapper';
 
 /**
  * Created by coen on 10-10-17.
  */
 @Injectable()
 export class SponsorRepository extends SportRepository {
-
     private url: string;
 
-    constructor(private http: HttpClient, router: Router) {
+    constructor(
+        private http: HttpClient,
+        router: Router,
+        private mapper: SponsorMapper) {
         super(router);
         this.url = super.getApiUrl() + this.getUrlpostfix();
     }
@@ -25,16 +28,16 @@ export class SponsorRepository extends SportRepository {
         return 'sponsors';
     }
 
-    createObject(jsonSponsor: ISponsor, tournament: Tournament): Observable<Sponsor> {
+    createObject(jsonSponsor: JsonSponsor, tournament: Tournament): Observable<Sponsor> {
         return this.http.post(this.url, jsonSponsor, this.getOptions(tournament)).pipe(
-            map((res: ISponsor) => this.jsonToObject(res, tournament)),
+            map((res: JsonSponsor) => this.mapper.toObject(res, tournament)),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(sponsor: Sponsor, tournament: Tournament): Observable<Sponsor> {
-        return this.http.put(this.url + '/' + sponsor.getId(), this.objectToJson(sponsor), this.getOptions(tournament)).pipe(
-            map((res: ISponsor) => this.jsonToObject(res, tournament, sponsor)),
+        return this.http.put(this.url + '/' + sponsor.getId(), this.mapper.toJson(sponsor), this.getOptions(tournament)).pipe(
+            map((res: JsonSponsor) => this.mapper.toObject(res, tournament, sponsor)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -60,46 +63,6 @@ export class SponsorRepository extends SportRepository {
             params: httpParams
         };
     }
-
-    jsonArrayToObject(jsonArray: ISponsor[], tournament: Tournament): Sponsor[] {
-        const objects: Sponsor[] = [];
-        for (const json of jsonArray) {
-            const object = this.jsonToObject(json, tournament);
-            objects.push(object);
-        }
-        return objects;
-    }
-
-    jsonToObject(json: ISponsor, tournament: Tournament, sponsor?: Sponsor): Sponsor {
-        if (sponsor === undefined) {
-            sponsor = new Sponsor(tournament, json.name);
-        }
-        sponsor.setId(json.id);
-        sponsor.setUrl(json.url);
-        return sponsor;
-    }
-
-    objectsToJsonArray(objects: any[]): any[] {
-        const jsonArray: any[] = [];
-        for (const object of objects) {
-            const json = this.objectToJson(object);
-            jsonArray.push(json);
-        }
-        return jsonArray;
-    }
-
-    objectToJson(object: Sponsor): ISponsor {
-        const json: ISponsor = {
-            id: object.getId(),
-            name: object.getName(),
-            url: object.getUrl()
-        };
-        return json;
-    }
 }
 
-export interface ISponsor {
-    id?: number;
-    name: string;
-    url?: string;
-}
+

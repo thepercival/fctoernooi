@@ -6,7 +6,7 @@ import {
 
 
 import { TournamentComponent } from '../component';
-import { TournamentRepository } from '../repository';
+import { TournamentRepository } from '../../../lib/tournament/repository';
 
 @Component({
   selector: 'app-tournament-structure-view',

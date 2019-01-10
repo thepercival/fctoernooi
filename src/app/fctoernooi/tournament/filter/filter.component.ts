@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
-import { PoulePlace, Referee, NameService, StructureRepository, Team } from 'ngx-sport';
+import { NameService, PoulePlace, Referee, StructureRepository, Team } from 'ngx-sport';
 import { interval, range, zip } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { AuthService } from '../../../auth/auth.service';
+import { Role } from '../../../lib/role';
+import { TournamentRepository } from '../../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
-import { TournamentRepository } from '../repository';
-import { TournamentRole } from '../role';
 
 @Component({
     selector: 'app-tournament-filter',
@@ -41,7 +41,7 @@ export class TournamentFilterComponent extends TournamentComponent implements On
     ngOnInit() {
         super.myNgOnInit(() => {
             this.initPoulePlaces();
-            this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), TournamentRole.GAMERESULTADMIN);
+            this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.GAMERESULTADMIN);
             this.removeOldFavIds();
             this.processing = false;
         });

@@ -1,11 +1,11 @@
-import { Component, OnInit, AfterViewChecked } from '@angular/core';
+import { AfterViewChecked, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 
 import { IAlert } from '../app.definitions';
 import { AuthService } from '../auth/auth.service';
 import { IconManager } from '../common/iconmanager';
-import { TournamentRepository, TournamentShell, TournamentShellFilter } from '../fctoernooi/tournament/repository';
-import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
+import { TournamentShell, TournamentShellFilter, TournamentShellRepository } from '../lib/tournament/shell/repository';
 
 @Component({
   selector: 'app-home',
@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private tournamentRepos: TournamentRepository,
+    private tournamentShellRepos: TournamentShellRepository,
     private scrollService: ScrollToService,
     public iconManager: IconManager
   ) {
@@ -68,37 +68,51 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     this.processing = true;
     this.tournamentShells = [];
 
-    this.tournamentRepos.getShells({ minDate: this.pastDate, maxDate: futureDate })
+    this.tournamentShellRepos.getObjects({ minDate: this.pastDate, maxDate: futureDate })
       .subscribe(
           /* happy path */ tournamentShellsRes => {
           this.tournamentShells = tournamentShellsRes;
-          if (this.authService.isLoggedIn()) {
-            this.tournamentRepos.getShells({ withRoles: true })
-              .subscribe(
-                /* happy path */ myTournamentShellsRes => {
-                  myTournamentShellsRes.forEach(myShell => {
-                    if (this.tournamentShells.find(tournamentShell => tournamentShell.tournamentId === myShell.tournamentId)
-                      === undefined) {
-                      this.tournamentShells.push(myShell);
-                    }
-                  });
-                  this.tournamentShells = tournamentShellsRes.sort((ts1, ts2) => {
-                    return (ts1.startDateTime < ts2.startDateTime ? 1 : -1);
-                  });
-                },
-                /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                /* onComplete */() => { this.processing = false; this.showingFuture = (futureDate === undefined); }
-              );
+          this.sortShells();
+          this.showingFuture = (futureDate === undefined);
+
+          // if token is validated!!
+          const tokenValidated = true;
+          if (tokenValidated) {
+            if (this.authService.isLoggedIn()) {
+              this.tournamentShellRepos.getObjectsWithRoles()
+                .subscribe(
+                    /* happy path */ myShells => {
+                    this.addMyShells(myShells);
+                    this.sortShells();
+                    this.processing = false;
+                  },
+                    /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+                    /* onComplete */() => { this.processing = false; this.showingFuture = (futureDate === undefined); }
+                );
+            }
           } else {
-            this.tournamentShells = tournamentShellsRes.sort((ts1, ts2) => {
-              return (ts1.startDateTime < ts2.startDateTime ? 1 : -1);
-            });
-            this.showingFuture = (futureDate === undefined);
+            this.authService.logout();
+            this.setAlert('danger', 'token is niet meer geldig, log hier opnieuw in');
             this.processing = false;
           }
         },
         /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
       );
+  }
+
+  protected addMyShells(myShells: TournamentShell[]) {
+    myShells.forEach(myShell => {
+      if (this.tournamentShells.find(tournamentShell => tournamentShell.tournamentId === myShell.tournamentId)
+        === undefined) {
+        this.tournamentShells.push(myShell);
+      }
+    });
+  }
+
+  protected sortShells() {
+    this.tournamentShells.sort((ts1, ts2) => {
+      return (ts1.startDateTime < ts2.startDateTime ? 1 : -1);
+    });
   }
 
   protected setAlert(type: string, message: string) {
@@ -126,7 +140,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   searchOlderShells() {
     this.processingSearch = true;
     this.hasSearched = true;
-    this.tournamentRepos.getShells(this.searchFilter)
+    this.tournamentShellRepos.getObjects(this.searchFilter)
       .subscribe(
           /* happy path */ tournamentShellsRes => {
           this.searchShells = tournamentShellsRes.sort((ts1, ts2) => {

@@ -5,9 +5,8 @@ import { SportRepository } from 'ngx-sport';
 import { Observable, throwError as observableThrowError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { UserRepository } from '../user/repository';
-import { User } from '../user/user';
-
+import { User } from '../lib/user';
+import { UserMapper } from '../lib/user/mapper';
 
 
 @Injectable()
@@ -16,7 +15,7 @@ export class AuthService extends SportRepository {
   private authItem: IAuthItem;
   private url: string;
 
-  constructor(private http: HttpClient, router: Router, private userRepos: UserRepository) {
+  constructor(private http: HttpClient, router: Router, private userMapper: UserMapper) {
     super(router);
     const jsonAuth = JSON.parse(localStorage.getItem('auth'));
     this.authItem = {
@@ -43,10 +42,16 @@ export class AuthService extends SportRepository {
       map((res: any) => {
         const authItem: IAuthItem = { token: res.token, userid: res.user.id };
         this.setAuthItem(authItem);
-        const user = this.userRepos.jsonToObject(res.user);
-        return user;
+        return this.userMapper.toObject(res.user);
       }),
       catchError((err) => this.handleError(err))
+    );
+  }
+
+  validateToken(): Observable<void> {
+    return this.http.post(this.url + '/validatetoken', undefined, { headers: super.getHeaders() }).pipe(
+      map((res: any) => undefined),
+      catchError((err) => observableThrowError(err))
     );
   }
 

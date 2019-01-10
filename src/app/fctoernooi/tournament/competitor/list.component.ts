@@ -16,10 +16,10 @@ import {
 import { forkJoin, Observable } from 'rxjs';
 
 import { IAlert } from '../../../app.definitions';
-import { Tournament } from '../../tournament';
+import { Tournament } from '../../../lib/tournament';
 import { TournamentComponent } from '../component';
-import { TournamentRepository } from '../repository';
-import { TournamentService } from '../service';
+import { TournamentRepository } from '../../../lib/tournament/repository';
+import { TournamentService } from '../../../lib/tournament/service';
 import { TournamentListRemoveModalComponent } from './listremovemodal.component';
 
 @Component({

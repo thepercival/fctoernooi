@@ -1,16 +1,17 @@
-import { Component, OnDestroy, AfterViewChecked, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import { PlanningService, StructureRepository } from 'ngx-sport';
 import { interval, range, Subscription, zip } from 'rxjs';
-import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 
 import { AuthService } from '../../../auth/auth.service';
 import { GlobalEventsManager } from '../../../common/eventmanager';
+import { Role } from '../../../lib/role';
+import { TournamentRepository } from '../../../lib/tournament/repository';
 import { NavBarTournamentTVViewLink } from '../../../nav/nav.component';
 import { TournamentComponent } from '../component';
 import { IPlanningScrollTo } from '../planning/view/component';
-import { TournamentRepository } from '../repository';
-import { TournamentRole } from '../role';
+
 @Component({
     selector: 'app-tournament-view',
     templateUrl: './view.component.html',
@@ -25,7 +26,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     private favTeamIds: number[];
     private favRefereeIds: number[];
     scrollTo: IPlanningScrollTo = {};
-    scrollToEndRanking:string;
+    scrollToEndRanking: string;
     userRefereeId: number;
     progress: number;
 
@@ -61,15 +62,15 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
         this.countDown();
     }
 
-    ngAfterViewChecked() {       
+    ngAfterViewChecked() {
         if (this.processing === false && this.scrollToEndRanking !== undefined) {
-          this.scrollService.scrollTo({
-            target: 'endranking',
-            duration: 200
-          });
-          this.scrollToEndRanking = undefined;
+            this.scrollService.scrollTo({
+                target: 'endranking',
+                duration: 200
+            });
+            this.scrollToEndRanking = undefined;
         }
-      }
+    }
 
     countDown() {
         const progress = range(1, this.refreshAfterSeconds).pipe();
@@ -92,7 +93,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     }
 
     isAdmin(): boolean {
-        return this.tournament.hasRole(this.authService.getLoggedInUserId(), TournamentRole.ADMIN);
+        return this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.ADMIN);
     }
 
     initTVViewLink() {
@@ -151,7 +152,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     }
 
     linkToStructureView() {
-        this.router.navigate( ['/toernooi/structureview', this.tournament.getId()], 
+        this.router.navigate(['/toernooi/structureview', this.tournament.getId()],
             {
                 queryParams: {
                     returnQueryParamKey: 'scrollToId',

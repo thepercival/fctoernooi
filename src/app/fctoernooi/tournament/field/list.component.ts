@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Field, FieldRepository, JsonField, PlanningRepository, PlanningService, StructureRepository } from 'ngx-sport';
 
 import { TournamentComponent } from '../component';
-import { TournamentRepository } from '../repository';
-import { TournamentService } from '../service';
+import { TournamentRepository } from '../../../lib/tournament/repository';
+import { TournamentService } from '../../../lib/tournament/service';
 
 @Component({
     selector: 'app-tournament-fields',

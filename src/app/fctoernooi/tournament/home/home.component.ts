@@ -5,9 +5,9 @@ import { StructureRepository } from 'ngx-sport';
 
 import { IAlert } from '../../../app.definitions';
 import { AuthService } from '../../../auth/auth.service';
+import { Role } from '../../../lib/role';
+import { TournamentPrintConfig, TournamentRepository } from '../../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
-import { TournamentPrintConfig, TournamentRepository } from '../repository';
-import { TournamentRole } from '../role';
 
 @Component({
     selector: 'app-tournament-home',
@@ -77,7 +77,7 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
     }
 
     isAdmin(): boolean {
-        return this.tournament.hasRole(this.authService.getLoggedInUserId(), TournamentRole.ADMIN);
+        return this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.ADMIN);
     }
 
     remove() {
@@ -129,7 +129,7 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
         return (!this.printConfig.gamenotes && !this.printConfig.structure && !this.printConfig.planning &&
             !this.printConfig.gamesperfield && !this.printConfig.rules && !this.printConfig.poulepivottables
             && !this.printConfig.qrcode);
-            
+
     }
 
     openModalPrint(modalContent) {
@@ -165,14 +165,14 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
         });
     }
 
-    copyLink(inputElement){
+    copyLink(inputElement) {
         inputElement.select();
         document.execCommand('copy');
         inputElement.setSelectionRange(0, 0);
     }
 
     linkToStructure() {
-        this.router.navigate( ['/toernooi/structure', this.tournament.getId()], 
+        this.router.navigate(['/toernooi/structure', this.tournament.getId()],
             {
                 queryParams: {
                     returnAction: '/toernooi',

@@ -1,10 +1,10 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 
+import { UserRepository } from '../lib/user/repository';
 import { AdminRoutingModule } from './admin-routing.module';
 import { HomeComponent } from './home/home.component';
 import { UsersComponent } from './users/users.component';
-import { UserRepository } from '../user/repository';
 
 @NgModule({
   imports: [

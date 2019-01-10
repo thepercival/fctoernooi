@@ -1,7 +1,7 @@
 /**
  * Created by coen on 9-10-17.
  */
-import { Tournament } from '../tournament';
+import { Tournament } from './tournament';
 
 
 export class Sponsor {

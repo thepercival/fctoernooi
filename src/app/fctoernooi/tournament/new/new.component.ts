@@ -21,9 +21,9 @@ import {
 
 import { IAlert } from '../../../app.definitions';
 import { AuthService } from '../../../auth/auth.service';
-import { Tournament } from '../../tournament';
-import { TournamentRepository } from '../repository';
-import { TournamentService } from '../service';
+import { Tournament } from '../../../lib/tournament';
+import { TournamentRepository } from '../../../lib/tournament/repository';
+import { TournamentService } from '../../../lib/tournament/service';
 
 
 @Component({

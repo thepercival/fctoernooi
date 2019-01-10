@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { UserRepository } from '../../user/repository';
-import { User } from '../../user/user';
+import { User } from '../../lib/user';
+import { UserRepository } from '../../lib/user/repository';
 
 @Component({
   selector: 'app-users',
@@ -15,12 +15,12 @@ export class UsersComponent implements OnInit {
   users: User[];
 
   constructor(
-      private router: Router,
-      private userRepos: UserRepository) { }
+    private router: Router,
+    private userRepos: UserRepository) { }
 
   // methods
   getUsers(): void {
-    this.userRepos.getObjects().forEach( users => this.users = users);
+    this.userRepos.getObjects().forEach(users => this.users = users);
   }
 
   onSelect(user: User): void {

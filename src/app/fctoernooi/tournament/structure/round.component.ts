@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PoulePlace, Round, RoundNumber, NameService, StructureService } from 'ngx-sport';
+import { NameService, PoulePlace, Round, RoundNumber, StructureService } from 'ngx-sport';
 
-import { Tournament } from '../../tournament';
+import { Tournament } from '../../../lib/tournament';
 
 @Component({
   selector: 'app-tournament-structureround',

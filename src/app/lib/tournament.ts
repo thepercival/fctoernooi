@@ -1,7 +1,7 @@
-import { Competition, PlanningService } from 'ngx-sport';
+import { Competition } from 'ngx-sport';
 
-import { TournamentRole } from './tournament/role';
-import { Sponsor } from './tournament/sponsor';
+import { Role } from './role';
+import { Sponsor } from './sponsor';
 
 /**
  * Created by coen on 9-10-17.
@@ -13,7 +13,7 @@ export class Tournament {
 
     protected id: number;
     protected competition: Competition;
-    protected roles: TournamentRole[] = [];
+    protected roles: Role[] = [];
     protected sponsors: Sponsor[] = [];
     protected breakStartDateTime: Date;
     protected breakDuration: number;
@@ -39,11 +39,11 @@ export class Tournament {
         this.competition = competition;
     }
 
-    getRoles(): TournamentRole[] {
+    getRoles(): Role[] {
         return this.roles;
     }
 
-    setRoles(roles: TournamentRole[]): void {
+    setRoles(roles: Role[]): void {
         this.roles = roles;
     }
 

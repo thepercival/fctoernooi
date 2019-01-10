@@ -12,8 +12,8 @@ import {
 } from 'ngx-sport';
 
 import { TournamentComponent } from '../component';
-import { TournamentRepository } from '../repository';
-import { TournamentService } from '../service';
+import { TournamentRepository } from '../../../lib/tournament/repository';
+import { TournamentService } from '../../../lib/tournament/service';
 
 @Component({
     selector: 'app-tournament-edit',

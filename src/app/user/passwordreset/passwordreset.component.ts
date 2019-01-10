@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { IAlert } from '../../app.definitions';
 import { AuthService } from '../../auth/auth.service';
-import { User } from '../user';
+import { User } from '../../lib/user';
 
 @Component({
   selector: 'app-passwordreset',

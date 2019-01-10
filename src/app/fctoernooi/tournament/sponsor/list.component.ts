@@ -3,11 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { StructureRepository } from 'ngx-sport';
 
 import { IAlert } from '../../../app.definitions';
-import { Tournament } from '../../tournament';
+import { Tournament } from '../../../lib/tournament';
 import { TournamentComponent } from '../component';
-import { TournamentRepository } from '../repository';
-import { Sponsor } from '../sponsor';
-import { SponsorRepository } from '../sponsor/repository';
+import { TournamentRepository } from '../../../lib/tournament/repository';
+import { Sponsor } from '../../../lib/sponsor';
+import { SponsorRepository } from '../../../lib/sponsor/repository';
 
 
 @Component({

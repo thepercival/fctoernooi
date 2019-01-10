@@ -4,8 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { IAlert } from '../../app.definitions';
 import { AuthService } from '../../auth/auth.service';
+import { User } from '../../lib/user';
 import { PasswordValidation } from '../password-validation';
-import { User } from '../user';
 
 @Component({
   selector: 'app-passwordchange',
