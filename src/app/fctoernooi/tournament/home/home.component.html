@@ -92,7 +92,7 @@
   <div *ngIf="!processing && structure" class="row d-flex justify-content-center my-3">    
     <div class="card mt-3 mx-2">
       <div class="card-body d-flex justify-content-between">
-        <div [routerLink]="['/toernooi/view', tournament.getId()]" class="text-center pointer">
+        <div (click)="openModalPrint(contentprint)" class="text-center pointer">
           <div>
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'print']"></fa-icon> 
@@ -226,7 +226,7 @@
 <ng-template #contentcopy let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">
-      <fa-icon [icon]="['fas', 'copy']"></fa-icon> toernooi kopiëren
+      <fa-icon [icon]="['fas', 'copy']"></fa-icon> nieuwe editie
     </h4>
     <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
       <span aria-hidden="true">&times;</span>
@@ -234,11 +234,11 @@
   </div>
   <div class="modal-body">
     <div class="container-fluid">
-      van jaar {{tournament.getCompetition().getSeason().getName()}} naar jaar {{getCurrentYear()}}
+      maak een nieuwe editie van dit toernooi en ga meteen naar het nieuwe toernooi
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.close('copy')">kopiëren</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.close('copy')">gaan</button>
   </div>
 </ng-template>
 

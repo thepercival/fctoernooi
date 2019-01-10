@@ -59,8 +59,8 @@ export class TournamentShellRepository extends SportRepository {
 
     getHttpParams(withRoles: boolean, filter?: TournamentShellFilter): HttpParams {
         let httpParams = new HttpParams();
-        if (withRoles === true && SportConfig.getToken() !== undefined) {
-            httpParams = httpParams.set('withRoles', filter.withRoles ? 'true' : 'false');
+        if (withRoles && SportConfig.getToken() !== undefined) {
+            httpParams = httpParams.set('withRoles', 'true');
         }
         if (filter === undefined) {
             return httpParams;

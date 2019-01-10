@@ -15,7 +15,8 @@ export class TournamentMapper {
     toObject(json: JsonTournament): Tournament {
         const competition = this.csMapper.toObject(json.competition);
         const tournament = new Tournament(competition);
-        const roles = json.roles.map(jsonRole => this.roleMapper.toObject(jsonRole, tournament));
+        const jsonRoles = json.roles !== undefined ? json.roles : [];
+        const roles = jsonRoles.map(jsonRole => this.roleMapper.toObject(jsonRole, tournament));
         json.sponsors.map(jsonSponsor => this.sponsorMapper.toObject(jsonSponsor, tournament));
         tournament.setRoles(roles);
         tournament.setId(json.id);

@@ -88,7 +88,7 @@ export class TournamentRepository extends SportRepository {
     }
 
     getPrintUrl(tournament: Tournament, printConfig: TournamentPrintConfig): string {
-        return this.getUrl() + 'pdf/' + tournament.getId() +
+        return this.getUrl() + '/pdf/' + tournament.getId() +
             '?gamenotes=' + printConfig.gamenotes +
             '&structure=' + printConfig.structure +
             '&rules=' + printConfig.rules +

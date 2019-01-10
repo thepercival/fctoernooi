@@ -19,7 +19,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   alert: IAlert;
   processing = true;
   pastDate: Date;
-  pastDays = 14;
+  pastDays = 7;
   futureDate: Date;
   searchFilter: TournamentShellFilter;
   processingSearch = false;
@@ -75,24 +75,29 @@ export class HomeComponent implements OnInit, AfterViewChecked {
           this.sortShells();
           this.showingFuture = (futureDate === undefined);
 
-          // if token is validated!!
-          const tokenValidated = true;
-          if (tokenValidated) {
-            if (this.authService.isLoggedIn()) {
-              this.tournamentShellRepos.getObjectsWithRoles()
-                .subscribe(
-                    /* happy path */ myShells => {
-                    this.addMyShells(myShells);
-                    this.sortShells();
-                    this.processing = false;
-                  },
-                    /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                    /* onComplete */() => { this.processing = false; this.showingFuture = (futureDate === undefined); }
-                );
-            }
+          if (this.authService.isLoggedIn()) {
+            this.authService.validateToken()
+              .subscribe(
+                /* happy path */ res => {
+                  this.tournamentShellRepos.getObjectsWithRoles()
+                  .subscribe(
+                      /* happy path */ myShells => {
+                      this.mergeMyShells(myShells);
+                      this.sortShells();
+                      this.processing = false;
+                    },
+                      /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+                      /* onComplete */() => { this.processing = false; this.showingFuture = (futureDate === undefined); }
+                  );
+              },
+                /* error path */ e => { 
+                  this.authService.logout();
+                  this.setAlert('danger', 'de sessie is verlopen, log opnieuw in');
+                  this.processing = false;
+                },
+                /* onComplete */() => { this.processing = false; this.showingFuture = (futureDate === undefined); }
+            );
           } else {
-            this.authService.logout();
-            this.setAlert('danger', 'token is niet meer geldig, log hier opnieuw in');
             this.processing = false;
           }
         },
@@ -100,12 +105,13 @@ export class HomeComponent implements OnInit, AfterViewChecked {
       );
   }
 
-  protected addMyShells(myShells: TournamentShell[]) {
+  protected mergeMyShells(myShells: TournamentShell[]) {
     myShells.forEach(myShell => {
-      if (this.tournamentShells.find(tournamentShell => tournamentShell.tournamentId === myShell.tournamentId)
-        === undefined) {
-        this.tournamentShells.push(myShell);
+      const idx = this.tournamentShells.findIndex(tournamentShell => tournamentShell.tournamentId === myShell.tournamentId);
+      if( idx >= 0) {
+        this.tournamentShells.splice(idx, 1);
       }
+      this.tournamentShells.push(myShell);
     });
   }
 

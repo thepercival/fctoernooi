@@ -48,9 +48,9 @@ export class AuthService extends SportRepository {
     );
   }
 
-  validateToken(): Observable<void> {
+  validateToken(): Observable<boolean> {
     return this.http.post(this.url + '/validatetoken', undefined, { headers: super.getHeaders() }).pipe(
-      map((res: any) => undefined),
+      map((res) => true),
       catchError((err) => observableThrowError(err))
     );
   }

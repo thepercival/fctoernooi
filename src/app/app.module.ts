@@ -70,7 +70,9 @@ import { HomeComponent } from './home/home.component';
 import { RoleMapper } from './lib/role/mapper';
 import { SponsorRepository } from './lib/sponsor/repository';
 import { TournamentRepository } from './lib/tournament/repository';
+import { TournamentMapper } from './lib/tournament/mapper';
 import { TournamentShellRepository } from './lib/tournament/shell/repository';
+import { SponsorMapper } from './lib/sponsor/mapper';
 import { UserMapper } from './lib/user/mapper';
 import { NavComponent } from './nav/nav.component';
 import { UserModule } from './user/user.module';
@@ -103,7 +105,9 @@ library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave
     AuthService,
     AuthguardService,
     TournamentRepository,
+    TournamentMapper,
     TournamentShellRepository,
+    SponsorMapper,
     RoleMapper,
     UserMapper,
     CompetitionRepository,
