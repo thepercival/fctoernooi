@@ -200,5 +200,17 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
 
     copy() {
         console.log('copy and redirect!!');
+        this.processing = true;
+        this.tournamentRepository.copyObject(this.tournament)
+            .subscribe(
+                /* happy path */(newTournamentId: number) => {
+                    this.router.navigate(['/toernooi', newTournamentId]);
+                },
+                /* error path */ e => {
+                    this.setRemoveAlert('danger', 'er kon geen nieuwe editie worden aangemaakt');
+                    this.processing = false;
+                },
+                /* onComplete */() => { this.processing = false; }
+            );
     }
 }

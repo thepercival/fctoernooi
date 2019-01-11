@@ -79,6 +79,14 @@ export class TournamentRepository extends SportRepository {
         );
     }
 
+    copyObject(tournament: Tournament): Observable<number> {
+        const url = this.url + '/copy/' + tournament.getId();
+        return this.http.post(url, null, { headers: super.getHeaders() }).pipe(
+            map((id: number) => id),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
     syncRefereeRoles(tournament: Tournament): Observable<Role[]> {
         const url = this.url + '/syncrefereeroles/' + tournament.getId();
         return this.http.post(url, null, { headers: super.getHeaders() }).pipe(
