@@ -37,12 +37,6 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
     screenDef: any;
     private maxLines = 8;
 
-// sponsors goed verdelen, bij negen dus niet 1 scherm van 8 en een scherm van 1
-
-// programma niet laten ophouden bij rondenummer, wanneer minder als 8 wedstrijden in programma
-// dan wedstrijden uit volgende ronde ook toevoegen, laat wel rondenummer dan zien!! dus heeft alleen zin als 
-// er minder dan 7 wedstrijden zijn, want 1 regel is om het rondenummer aan te geven!
-
     constructor(
         route: ActivatedRoute,
         router: Router,
@@ -113,9 +107,9 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
         if (previousPlayedRoundNumber !== undefined) {
             screenDefs = screenDefs.concat(this.getScreenDefinitionsForResultsAndRanking(previousPlayedRoundNumber));
         }
-        // if (this.tournament.getSponsors().length > 0) {
-        //     screenDefs = screenDefs.concat(this.getScreenDefinitionsForSponsors(previousPlayedRoundNumber));
-        // }
+        if (this.tournament.getSponsors().length > 0) {
+            screenDefs = screenDefs.concat(this.getScreenDefinitionsForSponsors(previousPlayedRoundNumber));
+        }
 
         return screenDefs;
     }
@@ -158,8 +152,8 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
      */
     getScheduledGames(roundNumber: RoundNumber): Game[] {
         let games: Game[] = this.planningService.getGamesForRoundNumber(roundNumber, Game.ORDER_RESOURCEBATCH);
-        games = games.filter(game => game.getState() !== Game.STATE_PLAYED /*&&
-            (!roundNumber.getConfig().getEnableTime() || game.getStartDateTime() > new Date())*/
+        games = games.filter(game => game.getState() !== Game.STATE_PLAYED &&
+            (!roundNumber.getConfig().getEnableTime() || game.getStartDateTime() > new Date())
         );        
         if( games.length < this.maxLines && roundNumber.hasNext() ) {
             games = games.concat(this.getScheduledGames(roundNumber.getNext()));
