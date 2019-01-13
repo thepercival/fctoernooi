@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { SportConfig, SportRepository } from 'ngx-sport';
@@ -79,12 +79,21 @@ export class TournamentRepository extends SportRepository {
         );
     }
 
-    copyObject(tournament: Tournament): Observable<number> {
+    copyObject(tournament: Tournament, newStartDateTime: Date): Observable<number> {
         const url = this.url + '/copy/' + tournament.getId();
-        return this.http.post(url, null, { headers: super.getHeaders() }).pipe(
+        return this.http.post(url, null, this.getOptions(newStartDateTime)).pipe(
             map((id: number) => id),
             catchError((err) => this.handleError(err))
         );
+    }
+
+    protected getOptions(newStartDateTime: Date): { headers: HttpHeaders; params: HttpParams } {
+        let httpParams = new HttpParams();
+        httpParams = httpParams.set('startdatetime', newStartDateTime.toISOString());
+        return {
+            headers: super.getHeaders(),
+            params: httpParams
+        };
     }
 
     syncRefereeRoles(tournament: Tournament): Observable<Role[]> {

@@ -1,0 +1,132 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+      <div class="mb-4">
+        <h1>
+          nieuw toernooi
+          <button *ngIf="!processing" [routerLink]="['']" type="button" class="btn btn-outline-secondary btn-sm"
+            tabindex="9">
+            <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+          </button>
+        </h1>
+      </div>
+      <div *ngIf="!isLoggedIn()">
+        <blockquote class="blockquote my-5">
+          <p>Registreer je of log in om een toernooi aan te maken.</p>
+        </blockquote>
+        <div class="d-flex justify-content-around">
+          <button type="button" class="btn btn-outline-primary" [routerLink]="['/user/register']">
+            <fa-icon [icon]="['fas', 'user-circle']"></fa-icon> registreer
+          </button>
+          <button type="button" class="btn btn-outline-primary" [routerLink]="['/user/login']">
+            <fa-icon [icon]="['fas', 'sign-in-alt']"></fa-icon> inloggen
+          </button>
+        </div>
+      </div>
+      <div>
+        <h2 *ngIf="processing" class="text-center">
+          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+        </h2>
+      </div>
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">
+        {{ alert.message }}</ngb-alert>
+      <form *ngIf="!processing && isLoggedIn()" name="form" (ngSubmit)="create()" [formGroup]="customForm" novalidate>
+        <div class="form-group row">
+          <div class="col-3">
+            <label for="name" class="col-form-label">naam</label>
+          </div>
+          <div class="col-9">
+            <input class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.name.invalid, 'is-valid': customForm.controls.name.valid }"
+              type="text" name="name" id="name" [formControl]="customForm.controls.name" maxlength="{{validations.maxlengthname}}"
+              placeholder="max. {{validations.maxlengthname}} karakters" autofocus>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-3">
+            <label for="sportname" class="col-form-label">sport</label>
+          </div>
+          <div class="col-9">
+            <select id="sportname" name="sportname" class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.sportName.invalid, 'is-valid': customForm.controls.sportName.valid }"
+              [formControl]="customForm.controls.sportName" required>
+              <option value="">kies..</option>
+              <option *ngFor="let sportname of sportnames" [ngValue]="sportname">{{sportname}}</option>
+              <option value="-1">anders namelijk..</option>
+            </select>
+          </div>
+        </div>
+        <div *ngIf="customForm.controls.sportName.value == -1" class="form-group row">
+          <div class="col-3">
+            <label for="sportNameOther" class="col-form-label">naam</label>
+          </div>
+          <div class="col-9">
+            <input class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.sportNameOther.invalid, 'is-valid': customForm.controls.sportNameOther.valid }"
+              type="text" name="sportNameOther" id="sportNameOther" [formControl]="customForm.controls.sportNameOther"
+              maxlength="{{validations.maxlengthsportname}}" placeholder="max. {{validations.maxlengthsportname}} karakters">
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-3">
+            <label for="nrofcompetitors" class="col-form-label">deelnemers</label>
+          </div>
+          <div class="col-9">
+            <input type="number" class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.nrofcompetitors.invalid, 'is-valid': customForm.controls.nrofcompetitors.valid}"
+              id="nrofcompetitors" name="nrofcompetitors" [formControl]="customForm.controls.nrofcompetitors" [min]="validations.minnrofcompetitors"
+              [max]="validations.maxnrofcompetitors" required>
+            <label *ngIf="getStructureDescription()" class="text-info mb-0"><span class="font-weight-bold">{{getStructureDescription()}}
+                en 1 ronde</span>, pas dit aan onder "<span class="font-weight-bold">Indeling</span>" in het
+              beheerscherm</label>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-3">
+            <label for="nroffields" class="col-form-label">velden</label>
+          </div>
+          <div class="col-9">
+            <input type="number" class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.nroffields.invalid, 'is-valid': customForm.controls.nroffields.valid}"
+              id="nroffields" name="nroffields" [formControl]="customForm.controls.nroffields" [min]="validations.minnroffields"
+              [max]="validations.maxnroffields" required>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-3">
+            <label for="dp" class="col-form-label">startdatum</label>
+          </div>
+          <div class="col-9">
+            <div class="input-group input-group-date">
+              <input class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.date.invalid, 'is-valid': customForm.controls.date.valid }"
+                placeholder="yyyy-mm-dd" id="dp" name="dp" [formControl]="customForm.controls.date" ngbDatepicker #d="ngbDatepicker"
+                required [dayTemplate]="t" [minDate]="minDateStruct">
+              <div class="input-group-append">
+                <span class="input-group-text pointer" (click)="d.toggle()">                    
+                  <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-3">
+            <label for="starttime" class="col-form-label">starttijd</label>
+          </div>
+          <div class="col-9">
+            <ngb-timepicker id="starttime" name="starttime" [formControl]="customForm.controls.time" [spinners]="false"
+              required></ngb-timepicker>
+          </div>
+        </div>
+        <div class="form-group row justify-content-end">
+          <div class="col-9">
+            <button [disabled]="customForm.invalid" type="submit" class="btn btn-outline-primary">
+              maken
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<ng-template #t let-date="date" let-focused="focused" let-disabled="disabled">
+  <span class="custom-day" [class.focused]="focused" [class.selected]="isSelected(date)" [class.text-muted]="disabled">
+    {{ date.day }}
+  </span>
+</ng-template>
