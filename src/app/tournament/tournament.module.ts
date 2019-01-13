@@ -85,7 +85,7 @@ import { TournamentStructureHelpModalComponent } from './structure/helpmodal.com
 import { TournamentStructureComponent } from './structure/main.component';
 import { TournamentStructureRoundComponent } from './structure/round.component';
 import { TournamentStructureViewComponent } from './structure/view.component';
-import { TournamentViewTvComponent } from './view/tv.component';
+import { TournamentViewTvComponent } from './scoreboard/scoreboard.component';
 import { TournamentViewComponent } from './view/view.component';
 
 library.add(

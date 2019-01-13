@@ -279,11 +279,13 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             while (scores.length > 0) {
                 scores.pop();
             }
-            let counter = 0;
-            this.scoreControls.forEach(scoreControl => {
-                const scoreHomeAway = scoreControl.getScore();
-                const newGameScore = new GameScore(this.game, scoreHomeAway.getHome(), scoreHomeAway.getAway(), ++counter);
-            });
+            if( state === Game.STATE_PLAYED ) {
+                let counter = 0;
+                this.scoreControls.forEach(scoreControl => {
+                    const scoreHomeAway = scoreControl.getScore();
+                    const newGameScore = new GameScore(this.game, scoreHomeAway.getHome(), scoreHomeAway.getAway(), ++counter);
+                });
+            }            
         }
         // if (this.planningService.canCalculateStartDateTime(this.game.getRound().getNumber())) {
         //     const startdate = new Date(

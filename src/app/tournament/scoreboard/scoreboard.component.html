@@ -129,8 +129,9 @@
   </div>
 
   <div *ngIf="isEndRankingScreenDef()" class="row no-gutters">
-    <div class="col-12 tv-screen">
-      <app-tournament-endranking-view [rootRound]="structure.getRootRound()"></app-tournament-endranking-view>
+    <div class="col-12 tv-screen">        
+      <app-tournament-endranking-view [rootRound]="structure.getRootRound()"
+      [filterStart]="filterStart" [filterEnd]="filterEnd"></app-tournament-endranking-view>
     </div>
   </div>
 

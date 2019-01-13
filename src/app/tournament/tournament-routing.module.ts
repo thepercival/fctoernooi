@@ -19,7 +19,7 @@ import { TournamentSponsorEditComponent } from './sponsor/edit.component';
 import { SponsorListComponent } from './sponsor/list.component';
 import { TournamentStructureComponent } from './structure/main.component';
 import { TournamentStructureViewComponent } from './structure/view.component';
-import { TournamentViewTvComponent } from './view/tv.component';
+import { TournamentViewTvComponent } from './scoreboard/scoreboard.component';
 import { TournamentViewComponent } from './view/view.component';
 
 const routes: Routes = [

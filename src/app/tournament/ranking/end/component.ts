@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { EndRanking, Ranking, RankingItem, Round, NameService } from 'ngx-sport';
 
 @Component({
@@ -6,18 +6,29 @@ import { EndRanking, Ranking, RankingItem, Round, NameService } from 'ngx-sport'
   templateUrl: './component.html',
   styleUrls: ['./component.scss']
 })
-export class TournamentEndRankingViewComponent {
+export class TournamentEndRankingViewComponent implements OnInit {
 
   @Input() rootRound: Round;
+  @Input() filterStart: number;
+  @Input() filterEnd: number;
 
-  endRankingService: EndRanking;
+  private endRankingService: EndRanking;
+  private processing = true;
 
   constructor(public nameService: NameService) {
     this.endRankingService = new EndRanking(Ranking.RULESSET_WC);
   }
 
+  ngOnInit() {
+    this.processing = false;
+  }
+
   getRankingItems(): RankingItem[] {
-    return this.endRankingService.getItems(this.rootRound);
+    const items = this.endRankingService.getItems(this.rootRound);
+    if( this.filterStart !== undefined && this.filterEnd !== undefined ) {
+      return items.filter( item => item.getRank() >= this.filterStart && item.getRank() <= this.filterEnd);
+    }
+    return items;
   }
 
   isUnknown(rankingItem: RankingItem): boolean {

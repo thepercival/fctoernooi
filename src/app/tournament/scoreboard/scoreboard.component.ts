@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    EndRanking,
     Game,
     NameService,
     PlanningService,
@@ -25,7 +24,7 @@ import { NavBarTournamentTVViewLink } from '../../nav/nav.component';
 import { TournamentComponent } from '../component';
 
 @Component({
-    selector: 'app-tournament-view-tv',
+    selector: 'app-tournament-scoreboard',
     templateUrl: './tv.component.html',
     styleUrls: ['./tv.component.scss']
 })
@@ -230,10 +229,11 @@ export class TournamentViewTvComponent extends TournamentComponent implements On
 
     getScreenDefinitionsForEndRanking(roundNumber: RoundNumber): ScreenDefinition[] {
         const screenDefs: ScreenDefinition[] = [];
-        const endRankingService = new EndRanking(Ranking.RULESSET_WC);
-        const rankingItems = endRankingService.getItems(this.structure.getRootRound());
-        while (rankingItems.length > 0) {
-            screenDefs.push(new EndRankingScreenDefinition(roundNumber, rankingItems.splice(0, this.maxLines)));
+        let nrOfItems = 0;
+        this.structure.getRootRound().getPoules().forEach( poule => nrOfItems += poule.getPlaces().length );
+        for ( let currentRank = 0; currentRank + this.maxLines <= nrOfItems ; currentRank += this.maxLines ) {
+            const endRank = currentRank + this.maxLines > nrOfItems ? nrOfItems : currentRank + this.maxLines;
+            screenDefs.push(new EndRankingScreenDefinition(roundNumber, currentRank + 1, endRank));
         }
         return screenDefs;
     }
@@ -406,17 +406,10 @@ export class PoulesRankingScreenDefinition extends ScreenDefinition {
 }
 
 export class EndRankingScreenDefinition extends ScreenDefinition {
-    private items: RankingItem[];
-
-    constructor(roundNumber: RoundNumber, items: RankingItem[]) {
+    constructor(roundNumber: RoundNumber, public filterStart: number, public filterEnd: number) {
         super(roundNumber);
-        this.items = items;
+        console.log(filterStart, filterEnd);
     }
-
-    getItems(): RankingItem[] {
-        return this.items;
-    }
-
     getDescription() {
         return 'eindstand';
     }
