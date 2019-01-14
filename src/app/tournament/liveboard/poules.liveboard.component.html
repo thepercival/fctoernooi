@@ -1,0 +1,47 @@
+<div class="row no-gutters">
+  <div class="col-5">
+    <ng-container *ngTemplateOutlet="pouleRanking;context:{$implicit: screen.getFirstPoule()}">
+    </ng-container>
+  </div>
+  <div class="col-2"></div>
+  <div class="col-5">
+    <ng-container *ngTemplateOutlet="pouleRanking;context:{$implicit: screen.getLastPoule()}">
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #pouleRanking let-poule>
+  <table *ngIf="poule" class="table liveboard">
+    <thead>
+      <tr>
+        <th class="text-right">pl</th>
+        <th class="text-info">{{nameService.getPouleName(poule, true)}}</th>
+        <th class="text-right">g</th>
+        <th class="text-right">pnt</th>
+        <th class="text-center">&Delta;</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-template ngFor let-rankingItem [ngForOf]="getRankingItems(poule)">
+        <tr>
+          <td class="text-right">
+            <ng-container *ngTemplateOutlet="qualclass;context:{$implicit: getQualificationClass(poule, rankingItem.getRank())}">
+            </ng-container>
+            <span>{{rankingItem.getRank()}}</span>
+          </td>
+          <td class="pouleplace">{{nameService.getPoulePlaceFromName(rankingItem.getPoulePlace(), true)}}</td>
+          <td class="text-right">{{ranking.getNrOfGamesWithState(rankingItem.getPoulePlace(),
+            rankingItem.getPoulePlace().getGames())}}</td>
+          <td class="text-right">{{ranking.getPoints(rankingItem.getPoulePlace(),
+            rankingItem.getPoulePlace().getGames())}}</td>
+          <td class="unitdiff text-center">{{getUnitDifference(rankingItem.getPoulePlace(),
+            rankingItem.getPoulePlace().getGames())}}</td>
+        </tr>
+      </ng-template>
+    </tbody>
+  </table>
+</ng-template>
+
+<ng-template #qualclass let-qualclass>
+  <fa-icon *ngIf="qualclass.icon !== undefined" [icon]="['fas', qualclass.icon]" class="{{qualclass.text}}"></fa-icon>
+</ng-template>

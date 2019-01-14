@@ -13,14 +13,14 @@ export class NavComponent implements OnInit {
   @Input()
   title: string;
   navbarCollapsed = true;
-  tournamentViewTVLink: NavBarTournamentTVViewLink = {};
+  tournamentLiveboardLink: NavBarTournamentLiveboardLink = {};
 
   constructor(
     private authService: AuthService,
     private globalEventsManager: GlobalEventsManager
   ) {
-    this.globalEventsManager.toggleTVIconInNavBar.subscribe((tournamentViewTVLink: NavBarTournamentTVViewLink) => {
-      this.tournamentViewTVLink = tournamentViewTVLink;
+    this.globalEventsManager.toggleLiveboardIconInNavBar.subscribe((tournamentLiveboardLink: NavBarTournamentLiveboardLink) => {
+      this.tournamentLiveboardLink = tournamentLiveboardLink;
     });
   }
 
@@ -34,8 +34,8 @@ export class NavComponent implements OnInit {
 
 }
 
-export class NavBarTournamentTVViewLink {
-  showTVIcon?: boolean;
+export class NavBarTournamentLiveboardLink {
+  showIcon?: boolean;
   tournamentId?: number;
   link?: string;
 }

@@ -3,9 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PlanningRepository, PlanningService, Referee, RefereeRepository, StructureRepository } from 'ngx-sport';
 
 import { Tournament } from '../../lib/tournament';
-import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentService } from '../../lib/tournament/service';
+import { TournamentComponent } from '../component';
 
 @Component({
   selector: 'app-tournament-referee',
@@ -15,6 +15,7 @@ import { TournamentService } from '../../lib/tournament/service';
 export class RefereeListComponent extends TournamentComponent implements OnInit {
   private planningService: PlanningService;
   referees: Referee[];
+  public competitorsasreferee: boolean;
 
   validations: any = {
     'minlengthname': Referee.MIN_LENGTH_NAME,

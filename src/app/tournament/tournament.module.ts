@@ -61,7 +61,6 @@ import {
 import { EscapeHtmlPipe } from '../common/escapehtmlpipe';
 import { IconManager } from '../common/iconmanager';
 import { RoleMapper } from '../lib/role/mapper';
-import { TournamentRoutingModule } from './tournament-routing.module';
 import { TournamentCompetitorEditComponent } from './competitor/edit.component';
 import { CompetitorListComponent } from './competitor/list.component';
 import { CompetitorListLineComponent } from './competitor/listline.component';
@@ -73,6 +72,9 @@ import { TournamentGameEditComponent } from './game/edit.component';
 import { GameListComponent } from './game/list.component';
 import { TournamentHomeComponent } from './home/home.component';
 import { ProgressComponent } from './home/progress.component';
+import { TournamentLiveboardGamesComponent } from './liveboard/games.liveboard.component';
+import { TournamentLiveboardComponent } from './liveboard/liveboard.component';
+import { TournamentLiveboardPoulesComponent } from './liveboard/poules.liveboard.component';
 import { TournamentNewComponent } from './new/new.component';
 import { TournamentPlanningViewComponent } from './planning/view/component';
 import { TournamentEndRankingViewComponent } from './ranking/end/component';
@@ -85,7 +87,7 @@ import { TournamentStructureHelpModalComponent } from './structure/helpmodal.com
 import { TournamentStructureComponent } from './structure/main.component';
 import { TournamentStructureRoundComponent } from './structure/round.component';
 import { TournamentStructureViewComponent } from './structure/view.component';
-import { TournamentViewTvComponent } from './scoreboard/scoreboard.component';
+import { TournamentRoutingModule } from './tournament-routing.module';
 import { TournamentViewComponent } from './view/view.component';
 
 library.add(
@@ -122,7 +124,9 @@ library.add(
     RoundsSettingsComponent,
     FieldListComponent,
     TournamentViewComponent,
-    TournamentViewTvComponent,
+    TournamentLiveboardComponent,
+    TournamentLiveboardPoulesComponent,
+    TournamentLiveboardGamesComponent,
     TournamentGameEditComponent,
     TournamentRefereeEditComponent,
     TournamentSponsorEditComponent,

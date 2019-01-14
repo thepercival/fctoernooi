@@ -11,6 +11,7 @@ import { TournamentFilterComponent } from './filter/filter.component';
 import { TournamentGameEditComponent } from './game/edit.component';
 import { GameListComponent } from './game/list.component';
 import { TournamentHomeComponent } from './home/home.component';
+import { TournamentLiveboardComponent } from './liveboard/liveboard.component';
 import { TournamentNewComponent } from './new/new.component';
 import { TournamentRefereeEditComponent } from './referee/edit.component';
 import { RefereeListComponent } from './referee/list.component';
@@ -19,12 +20,11 @@ import { TournamentSponsorEditComponent } from './sponsor/edit.component';
 import { SponsorListComponent } from './sponsor/list.component';
 import { TournamentStructureComponent } from './structure/main.component';
 import { TournamentStructureViewComponent } from './structure/view.component';
-import { TournamentViewTvComponent } from './scoreboard/scoreboard.component';
 import { TournamentViewComponent } from './view/view.component';
 
 const routes: Routes = [
   { path: 'view/:id', component: TournamentViewComponent },
-  { path: 'viewtv/:id', component: TournamentViewTvComponent },
+  { path: 'liveboard/:id', component: TournamentLiveboardComponent },
   { path: 'new', component: TournamentNewComponent },
   { path: 'edit/:id', component: TournamentEditComponent },
   { path: 'filter/:id', component: TournamentFilterComponent },

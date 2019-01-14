@@ -13,6 +13,7 @@ const routes: Routes = [
   { path: 'user', loadChildren: 'app/user/user.module#UserModule' },
   { path: 'admin', loadChildren: 'app/admin/admin.module#AdminModule' },
   { path: 'toernooi', loadChildren: 'app/tournament/tournament.module#TournamentModule' },
+  { path: ':id', redirectTo: '/toernooi/view/:id', pathMatch: 'full' },
   /*{ path: '', redirectTo: '/home', pathMatch: 'full' },*/
   // // otherwise redirect to home
   { path: '**', redirectTo: '' }

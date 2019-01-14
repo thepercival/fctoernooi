@@ -1,0 +1,63 @@
+<div class="container-fluid px-0">
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <h1 *ngIf="tournament">
+      <small>
+        <i *ngIf="iconManager.getIconType(tournament.getCompetition().getLeague().getSport()) === 'fi'" class="{{iconManager.getIconClass(tournament.getCompetition().getLeague().getSport())}}"></i>
+        <fa-icon *ngIf="iconManager.getIconType(tournament.getCompetition().getLeague().getSport()) === 'fa'" [icon]="['fas', iconManager.getIconClass(tournament.getCompetition().getLeague().getSport())]"></fa-icon>
+      </small>
+      <span class="smaller">{{tournament.getName()}}</span>
+      <small *ngIf="activeScreen">
+        -
+        <span [innerHTML]="activeScreen.getDescription() | keepHtml"></span>
+      </small>
+    </h1>
+    <h1 *ngIf="tournament">
+      <small>
+        <span class="smaller text-secondary">https://www.fctoernooi.nl/{{tournament.getId()}}</span>
+      </small>
+    </h1>
+    <button *ngIf="tournament" [routerLink]="['/toernooi/view', tournament.getId()]" routerLinkActive="active" class="btn btn-outline-secondary"
+      type="button">
+      <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+      <span> terug</span>
+    </button>
+  </div>
+  <div>
+    <h2 *ngIf="processing" class="text-center">
+      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    </h2>
+  </div>
+  <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+
+  <!-- scheduled games and results screen -->
+  <app-tournament-liveboard-games *ngIf="isGamesScreen()" [screen]="activeScreen" [hasFields]="hasFields()"
+    [hasReferees]="hasReferees()" [planningService]="planningService"></app-tournament-liveboard-games>
+
+  <!-- pouleranking screen -->
+  <app-tournament-liveboard-poules *ngIf="isPoulesRankingScreen()" [screen]="activeScreen"></app-tournament-liveboard-poules>
+
+  <!-- endranking screen -->
+  <div *ngIf="isEndRankingScreen()" class="row no-gutters">
+    <div class="col-12 liveboard">
+      <app-tournament-endranking-view [rootRound]="structure.getRootRound()" [filterStart]="activeScreen.filterStart"
+        [filterEnd]="activeScreen.filterEnd"></app-tournament-endranking-view>
+    </div>
+  </div>
+
+  <!-- sponsor screen -->
+  <div *ngIf="isSponsorScreen()">
+    <table class="table liveboard">
+      <tbody>
+        <tr *ngFor="let sponsor of activeScreen.getSponsors(); let first = first;" [ngStyle]="{ 'font-size': (getFontSizePercentage(activeScreen.getSponsors().length)) + '%' }">
+          <td [ngClass]="{ 'firstrow': first, 'text-right': aSponsorHasUrl(activeScreen.getSponsors()), 'text-center': !aSponsorHasUrl(activeScreen.getSponsors()) }">
+            <span>{{sponsor.getName()}}</span>
+          </td>
+          <td *ngIf="aSponsorHasUrl(activeScreen.getSponsors())" [ngClass]="{ 'firstrow': first }">
+            <span *ngIf="sponsor.getUrl() !== undefined && sponsor.getUrl().length > 0" class="pl-5">
+              {{sponsor.getUrl()}}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

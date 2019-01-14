@@ -1,5 +1,5 @@
 <div class="d-flex flex-row">
-  <table class="table tv-screen">
+  <table class="table liveboard">
     <thead>
       <tr>
         <th>
@@ -8,11 +8,11 @@
         <th>
           <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
         </th>
-        <th *ngIf="isScheduled() && screenDef.roundNumber.getConfig().getEnableTime()" title="starttijd">
-          {{planningService.calculateStartDateTime(screenDef.roundNumber).toLocaleString("nl",
+        <th *ngIf="isScheduled() && screen.roundNumber.getConfig().getEnableTime()" title="starttijd">
+          {{planningService.calculateStartDateTime(screen.roundNumber).toLocaleString("nl",
           {"month":"short","day":"2-digit"})}}
         </th>
-        <th *ngIf="isScheduled() && hasFields()" title="veld">
+        <th *ngIf="isScheduled() && hasFields" title="veld">
           <i class="fi flaticon-soccer-field"></i>
         </th>
         <th class="text-right">thuis</th>
@@ -20,32 +20,31 @@
           <i class="fi flaticon-scoreboard"></i>
         </th>
         <th class="text-left">uit</th>
-        <th *ngIf="isScheduled() && hasReferees()" class="" title="scheidsrechter">
+        <th *ngIf="isScheduled() && hasReferees" class="" title="scheidsrechter">
           <i class="fi flaticon-referee"></i>
         </th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let game of screenDef.getGames()">
+      <tr *ngFor="let game of screen.getGames()">
         <td>
           <span [innerHtml]="nameService.getRoundNumberName(game.getRound().getNumber()) | keepHtml"></span>
           <!-- <span [innerHtml]="getRoundNumberAbbreviation(game.getRound().getNumber()) | keepHtml"></span> -->
         </td>
         <td>
-            <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
-          </td>
-        <td *ngIf="isScheduled() && screenDef.roundNumber.getConfig().getEnableTime() && planningService.canCalculateStartDateTime(screenDef.roundNumber)">
+          <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
+        </td>
+        <td *ngIf="isScheduled() && screen.roundNumber.getConfig().getEnableTime() && planningService.canCalculateStartDateTime(screen.roundNumber)">
           {{game.getStartDateTime().toLocaleString("nl", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}
         </td>
-        <td *ngIf="isScheduled() && hasFields()">{{game.getField()?.getName()}}</td>
+        <td *ngIf="isScheduled() && hasFields">{{game.getField()?.getName()}}</td>
         <td class="text-right">{{nameService.getPoulePlaceFromName(game.getHomePoulePlace(), true )}}</td>
         <td class="text-center">
           <span>{{getScore(game)}}</span>
         </td>
         <td class="text-left">{{nameService.getPoulePlaceFromName(game.getAwayPoulePlace(), true )}}</td>
-        <td *ngIf="isScheduled() && hasReferees()">{{game.getReferee()?.getInitials()}}</td>
+        <td *ngIf="isScheduled() && hasReferees">{{game.getReferee()?.getInitials()}}</td>
       </tr>
     </tbody>
   </table>
 </div>
-  

@@ -8,7 +8,7 @@ import { AuthService } from '../../auth/auth.service';
 import { GlobalEventsManager } from '../../common/eventmanager';
 import { Role } from '../../lib/role';
 import { TournamentRepository } from '../../lib/tournament/repository';
-import { NavBarTournamentTVViewLink } from '../../nav/nav.component';
+import { NavBarTournamentLiveboardLink } from '../../nav/nav.component';
 import { TournamentComponent } from '../component';
 import { IPlanningScrollTo } from '../planning/view/component';
 
@@ -18,7 +18,7 @@ import { IPlanningScrollTo } from '../planning/view/component';
     styleUrls: ['./view.component.scss']
 })
 export class TournamentViewComponent extends TournamentComponent implements OnInit, AfterViewChecked, OnDestroy {
-    private tvViewLinkSet = false;
+    private liveboardLinkSet = false;
     public planningService: PlanningService;
     private timerSubscription: Subscription;
     public refreshAfterSeconds = 60;
@@ -44,7 +44,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
 
     ngOnInit() {
         super.myNgOnInit(() => {
-            this.initTVViewLink();
+            this.initLiveboardLink();
             this.planningService = new PlanningService(this.tournament.getCompetition());
             this.processing = false;
             this.tournamentRepository.getUserRefereeId(this.tournament).subscribe(
@@ -96,17 +96,17 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
         return this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.ADMIN);
     }
 
-    initTVViewLink() {
-        if (this.tvViewLinkSet === true) {
+    initLiveboardLink() {
+        if (this.liveboardLinkSet === true) {
             return;
         }
-        const link: NavBarTournamentTVViewLink = { showTVIcon: true, tournamentId: this.tournament.getId(), link: '/toernooi/viewtv' };
-        this.globalEventsManager.toggleTVIconInNavBar.emit(link);
-        this.tvViewLinkSet = true;
+        const link: NavBarTournamentLiveboardLink = { showIcon: true, tournamentId: this.tournament.getId(), link: '/toernooi/liveboard' };
+        this.globalEventsManager.toggleLiveboardIconInNavBar.emit(link);
+        this.liveboardLinkSet = true;
     }
 
     ngOnDestroy() {
-        this.globalEventsManager.toggleTVIconInNavBar.emit({});
+        this.globalEventsManager.toggleLiveboardIconInNavBar.emit({});
         if (this.timerSubscription !== undefined) {
             this.timerSubscription.unsubscribe();
         }
