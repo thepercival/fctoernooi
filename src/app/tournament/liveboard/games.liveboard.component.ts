@@ -6,7 +6,7 @@ import { GamesScreen, ScheduledGamesScreen } from './screens';
 @Component({
     selector: 'app-tournament-liveboard-games',
     templateUrl: './games.liveboard.component.html',
-    styleUrls: []
+    styleUrls: ['./games.liveboard.component.scss']
 })
 export class TournamentLiveboardGamesComponent {
 
