@@ -28,8 +28,7 @@
     <tbody>
       <tr *ngFor="let game of screen.getGames()">
         <td>
-          <span [innerHtml]="nameService.getRoundNumberName(game.getRound().getNumber()) | keepHtml"></span>
-          <!-- <span [innerHtml]="getRoundNumberAbbreviation(game.getRound().getNumber()) | keepHtml"></span> -->
+          <span [innerHtml]="nameService.getRoundName(game.getRound()) | keepHtml"></span>
         </td>
         <td>
           <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>

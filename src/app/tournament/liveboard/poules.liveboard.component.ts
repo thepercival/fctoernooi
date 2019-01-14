@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Game, NameService, Poule, PoulePlace, Ranking, RankingItem, Round } from 'ngx-sport';
 
-import { PoulesRankingScreen } from './screens';
+import { PoulesRankingScreen } from '../../lib/liveboard/screens';
 
 @Component({
     selector: 'app-tournament-liveboard-poules',

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Game, NameService, PlanningService } from 'ngx-sport';
 
-import { GamesScreen, ScheduledGamesScreen } from './screens';
+import { GamesScreen, ScheduledGamesScreen } from '../../lib/liveboard/screens';
 
 @Component({
     selector: 'app-tournament-liveboard-games',
