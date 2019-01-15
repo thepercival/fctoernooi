@@ -63,8 +63,8 @@ export class Liveboard {
 
     getGamesCreatedAndInplayHelper(roundNumber: RoundNumber): Game[] {
         let games: Game[] = this.planningService.getGamesForRoundNumber(roundNumber, Game.ORDER_RESOURCEBATCH);
-        games = games.filter(game => game.getState() !== Game.STATE_PLAYED /*&&
-            (!roundNumber.getConfig().getEnableTime() || game.getStartDateTime() > new Date())*/
+        games = games.filter(game => game.getState() !== Game.STATE_PLAYED &&
+            (!roundNumber.getConfig().getEnableTime() || game.getStartDateTime() > new Date())
         );
         if (games.length < this.maxLines && roundNumber.hasNext()) {
             games = games.concat(this.getGamesCreatedAndInplayHelper(roundNumber.getNext()));
