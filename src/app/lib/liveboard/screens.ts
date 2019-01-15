@@ -1,4 +1,4 @@
-import { Game, Poule, RoundNumber } from 'ngx-sport';
+import { Game, Poule } from 'ngx-sport';
 
 import { Sponsor } from '../sponsor';
 
@@ -10,11 +10,11 @@ export class Screen {
     }
 }
 
-export class PoulesRankingScreen extends Screen{
+export class PoulesRankingScreen extends Screen {
     constructor(
-        public roundNumber: RoundNumber, 
-        private pouleOne: Poule, 
-        private pouleTwo: Poule, roundsDescription: string) {
+        private pouleOne: Poule,
+        private pouleTwo: Poule,
+        roundsDescription: string) {
         super();
         this.description = 'stand - ' + roundsDescription;
     }
@@ -36,7 +36,7 @@ export class PoulesRankingScreen extends Screen{
     }
 }
 
-export class EndRankingScreen extends Screen{
+export class EndRankingScreen extends Screen {
     constructor(public filterStart: number, public filterEnd: number) {
         super();
         this.description = 'eindstand';
@@ -44,9 +44,7 @@ export class EndRankingScreen extends Screen{
 }
 
 export class GamesScreen extends Screen {
-    private games: Game[];
-
-    constructor(public roundNumber: RoundNumber, games: Game[]) {
+    constructor(protected games: Game[]) {
         super();
         this.games = games;
     }
@@ -60,10 +58,10 @@ export interface IGamesScreen {
     isScheduled(): boolean;
 }
 
-export class ScheduledGamesScreen extends GamesScreen implements IGamesScreen {
+export class CreatedAndInplayGamesScreen extends GamesScreen implements IGamesScreen {
 
-    constructor(roundNumber: RoundNumber, scheduledGames: Game[]) {
-        super(roundNumber, scheduledGames);
+    constructor(scheduledGames: Game[]) {
+        super(scheduledGames);
         this.description = 'programma';
     }
 
@@ -75,8 +73,8 @@ export class ScheduledGamesScreen extends GamesScreen implements IGamesScreen {
 export class PlayedGamesScreen extends GamesScreen implements IGamesScreen {
     playedGames: Game[];
 
-    constructor(roundNumber: RoundNumber, playedGames: Game[]) {
-        super(roundNumber, playedGames);
+    constructor(playedGames: Game[]) {
+        super(playedGames);
         this.description = 'uitslagen';
     }
 
@@ -86,9 +84,9 @@ export class PlayedGamesScreen extends GamesScreen implements IGamesScreen {
 }
 
 
-export class SponsorScreen extends Screen{
-    constructor(private sponsors: Sponsor[]) { 
-        super(); 
+export class SponsorScreen extends Screen {
+    constructor(private sponsors: Sponsor[]) {
+        super();
         this.description = 'sponsoren';
     }
 

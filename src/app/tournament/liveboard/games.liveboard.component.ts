@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Game, NameService, PlanningService } from 'ngx-sport';
 
-import { GamesScreen, ScheduledGamesScreen } from '../../lib/liveboard/screens';
+import { CreatedAndInplayGamesScreen, GamesScreen } from '../../lib/liveboard/screens';
 
 @Component({
     selector: 'app-tournament-liveboard-games',
@@ -20,8 +20,18 @@ export class TournamentLiveboardGamesComponent {
     ) {
     }
 
-    isScheduled(): boolean {
-        return this.screen instanceof ScheduledGamesScreen;
+    isCreatedAndInplay(): boolean {
+        return this.screen instanceof CreatedAndInplayGamesScreen;
+    }
+
+    showDateTime(game?: Game): boolean {
+        if (game === undefined) {
+            game = this.screen.getGames()[0];
+        }
+        const roundNumber = game.getRound().getNumber();
+        return this.isCreatedAndInplay()
+            && roundNumber.getConfig().getEnableTime()
+            && this.planningService.canCalculateStartDateTime(roundNumber);
     }
 
     getScore(game: Game): string {

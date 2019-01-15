@@ -1,25 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Game, NameService, PlanningService, Poule, PoulePlace, Ranking, RoundNumber, StructureRepository } from 'ngx-sport';
+import { NameService, PlanningService, Ranking, StructureRepository } from 'ngx-sport';
 import { Subscription, timer } from 'rxjs';
 
-import { Liveboard } from '../../lib/liveboard';
 import { GlobalEventsManager } from '../../common/eventmanager';
 import { IconManager } from '../../common/iconmanager';
-import { Role } from '../../lib/role';
+import { Liveboard } from '../../lib/liveboard';
+import { EndRankingScreen, GamesScreen, PoulesRankingScreen, SponsorScreen } from '../../lib/liveboard/screens';
 import { Sponsor } from '../../lib/sponsor';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { NavBarTournamentLiveboardLink } from '../../nav/nav.component';
 import { TournamentComponent } from '../component';
-import {
-    EndRankingScreen,
-    Screen,
-    GamesScreen,
-    PlayedGamesScreen,
-    PoulesRankingScreen,
-    ScheduledGamesScreen,
-    SponsorScreen,
-} from '../../lib/liveboard/screens';
 
 @Component({
     selector: 'app-tournament-liveboard',
@@ -48,15 +39,15 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
     }
 
     ngOnInit() {
-        super.myNgOnInit(() => this.processScreens());        
+        super.myNgOnInit(() => this.processScreens());
     }
 
     processScreens() {
         const link: NavBarTournamentLiveboardLink = { showIcon: false, tournamentId: this.tournament.getId(), link: 'wim' };
         this.globalEventsManager.toggleLiveboardIconInNavBar.emit(link);
         this.planningService = new PlanningService(this.tournament.getCompetition());
-        const liveBoard = new Liveboard(this.tournament,this.structure,this.maxLines,this.ranking,this.planningService);        
-        const screens = liveBoard.getScreens(this.structure.getFirstRoundNumber());
+        const liveBoard = new Liveboard(this.tournament, this.structure, this.maxLines, this.ranking, this.planningService);
+        const screens = liveBoard.getScreens();
         if (screens.length === 0) {
             this.setAlert('info', 'op dit moment zijn er geen schermen om weer te geven');
             this.processing = false;
@@ -94,7 +85,7 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
         if (this.timerSubscription !== undefined) {
             this.timerSubscription.unsubscribe();
         }
-    }    
+    }
 
     isPoulesRankingScreen(): boolean {
         return this.activeScreen instanceof PoulesRankingScreen;
@@ -110,10 +101,6 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
 
     isSponsorScreen(): boolean {
         return this.activeScreen instanceof SponsorScreen;
-    }
-
-    isScheduled(): boolean {
-        return this.activeScreen instanceof ScheduledGamesScreen;
     }
 
     hasFields() {

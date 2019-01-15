@@ -1,136 +1,58 @@
-import { Structure, Round, PoulePlace, Game, Poule, PlanningService, RoundNumber, NameService, Ranking } from 'ngx-sport';
+import { Game, NameService, PlanningService, Poule, PoulePlace, Ranking, RoundNumber, Structure } from 'ngx-sport';
 
-import { Tournament } from './tournament';
 import {
+    CreatedAndInplayGamesScreen,
     EndRankingScreen,
-    Screen,
     PlayedGamesScreen,
     PoulesRankingScreen,
-    ScheduledGamesScreen,
+    Screen,
     SponsorScreen,
 } from './liveboard/screens';
+import { Tournament } from './tournament';
 
 export class Liveboard {
 
     constructor(
-        private tournament: Tournament, 
-        private structure: Structure, 
+        private tournament: Tournament,
+        private structure: Structure,
         private maxLines: number,
         private ranking: Ranking,
-        private planningService: PlanningService) {}
+        private planningService: PlanningService) { }
 
     getScreens(): Screen[] {
-        // const lastPlayedRoundNumber = this.getLastPlayedRoundNumber(firstRoundNumber);
+        let screens: Screen[] = [];
 
         const createdAndInplayGamesScreen = this.getScreenForGamesCreatedAndInplay();
-        
+        if (createdAndInplayGamesScreen !== undefined) {
+            screens.push(createdAndInplayGamesScreen);
+        }
+
         const playedGamesScreen = this.getScreenForGamesPlayed();
-        
-        const sponsorScreens = this.getScreensForSponsors();        
-        
-        const pouleRankingsScreens = this.getScreensForPouleRankings( a round number );        
-        
-        const endRankingScreens = this.getScreensForEndRanking();
-
-        // per 1 of 2 pouleranking-screens, hele riedeltje 1x keer??
-        return screens;
-    }
-
-    /*getActiveRoundNumber( states: number ): RoundNumber {
-        return this.getActiveRoundNumberHelper( this.structure.getFirstRoundNumber(), states);
-    }
-
-    protected getActiveRoundNumberHelper( roundNumber: RoundNumber, states: number ): RoundNumber {
-        const state = roundNumber.getState();
-        if( (state & states) === state ) {
-            if( state)
-            return 
+        if (playedGamesScreen !== undefined) {
+            screens.push(playedGamesScreen);
         }
-        const lastPlayedRoundNumber = this.getLastRoundNumberPlayed(firstRoundNumber);
-        const nextRoundNumber = lastPlayedRoundNumber !== undefined ? lastPlayedRoundNumber.getNext() : firstRoundNumber;
-        const stateNextRoundNumber = nextRoundNumber !== undefined ? this.getStateRoundNumber(nextRoundNumber) : undefined;
 
-        let roundNumberForSchedule;
-        let lastRoundNumberWithPlayedGames;
-        if (lastPlayedRoundNumber === undefined) { // voor het begin
-            roundNumberForSchedule = nextRoundNumber;
-        } else if (stateNextRoundNumber === Game.STATE_CREATED) { // tussen twee ronden in
-            roundNumberForSchedule = nextRoundNumber;
-            lastRoundNumberWithPlayedGames = lastPlayedRoundNumber;
-        } else if (stateNextRoundNumber === Game.STATE_INPLAY) { // tijdens een ronde
-            roundNumberForSchedule = nextRoundNumber;
-            lastRoundNumberWithPlayedGames = nextRoundNumber;
-        } else if (nextRoundNumber === undefined) { // na het einde
-            lastRoundNumberWithPlayedGames = lastPlayedRoundNumber;
-        }
-    }*/
-
-    /*protected getLastRoundNumberPlayed(roundNumber: RoundNumber): RoundNumber {
-        if (roundNumber.getState() === Game.STATE_PLAYED) {
-            if (!roundNumber.hasNext() || roundNumber.getNext().getState() < Game.STATE_PLAYED) {
-                return roundNumber;
+        const pouleRankingsScreens = this.getScreensForPouleRankings();
+        let currentNrOfPouleRankingsScreens = 0;
+        pouleRankingsScreens.forEach(pouleRankingScreen => {
+            screens.push(pouleRankingScreen);
+            if ((++currentNrOfPouleRankingsScreens % 2) === 0 && createdAndInplayGamesScreen !== undefined) {
+                screens.push(createdAndInplayGamesScreen);
             }
-            return this.getLastRoundNumberPlayed(roundNumber.getNext());
-        }
-        if (roundNumber.isFirst()) {
-            return undefined;
-        }
-        return this.getLastRoundNumberPlayed(roundNumber.getPrevious());
-    }*/
+        });
 
-    /*getRoundNumberForCetainGoal( theGoal ): RoundNumber {
-        const lastPlayedRoundNumber = this.getLastPlayedRoundNumber(firstRoundNumber);
-        const nextRoundNumber = lastPlayedRoundNumber !== undefined ? lastPlayedRoundNumber.getNext() : firstRoundNumber;
-        const stateNextRoundNumber = nextRoundNumber !== undefined ? this.getStateRoundNumber(nextRoundNumber) : undefined;
+        screens = screens.concat(this.getScreensForEndRanking());
 
-        let roundNumberForSchedule;
-        let lastRoundNumberWithPlayedGames;
-        if (lastPlayedRoundNumber === undefined) { // voor het begin
-            roundNumberForSchedule = nextRoundNumber;
-        } else if (stateNextRoundNumber === Game.STATE_CREATED) { // tussen twee ronden in
-            roundNumberForSchedule = nextRoundNumber;
-            lastRoundNumberWithPlayedGames = lastPlayedRoundNumber;
-        } else if (stateNextRoundNumber === Game.STATE_INPLAY) { // tijdens een ronde
-            roundNumberForSchedule = nextRoundNumber;
-            lastRoundNumberWithPlayedGames = nextRoundNumber;
-        } else if (nextRoundNumber === undefined) { // na het einde
-            lastRoundNumberWithPlayedGames = lastPlayedRoundNumber;
-        }
-    }*/
+        return screens.concat(this.getScreensForSponsors());
+    }
 
     getScreenForGamesCreatedAndInplay(): Screen {
         const games: Game[] = this.getGamesCreatedAndInplay();
-        if( games.length === 0) {
+        if (games.length === 0) {
             return undefined;
         }
-        return new ScheduledGamesScreen(games);
+        return new CreatedAndInplayGamesScreen(games);
     }
-
-    // getScreensForScheduleOld(roundNumber: RoundNumber): Screen[] {
-    //     const screens: Screen[] = [];
-    //     const games: Game[] = this.getScheduledGames(roundNumber);
-
-    //     // nadenken over scherm-verhouding
-
-    //     // sponsors
-    //     // uitslagen
-    //     // schema
-    //     // poules
-
-
-    //     const pouleRankingScreens = this.getScreensForPouleRanking(roundNumber);
-    //     const scheduledGamesScreen = new ScheduledGamesScreen(roundNumber, games);
-    //     pouleRankingScreens.forEach(pouleRankingScreen => {
-    //         if (games.length > 0) {
-    //             screens.push(scheduledGamesScreen);
-    //         }
-    //         screens.push(pouleRankingScreen);
-    //     });
-    //     if (screens.length === 0 && games.length > 0) {
-    //         screens.push(scheduledGamesScreen);
-    //     }
-    //     return screens;
-    // }
 
     getGamesCreatedAndInplay(): Game[] {
         return this.getGamesCreatedAndInplayHelper(this.structure.getFirstRoundNumber());
@@ -150,9 +72,29 @@ export class Liveboard {
         return games;
     }
 
-    /**
-     * show poules which needs ranking
-     */
+    private getScreensForPouleRankings(): Screen[] {
+        const screens: Screen[] = [];
+        const roundNumber = this.getRoundNumberForPouleRankings();
+        if (roundNumber === undefined) {
+            return screens;
+        }
+        const poulesForRanking = this.getPoulesForRanking(roundNumber);
+        const nameService = new NameService();
+        const roundsDescription = nameService.getRoundNumberName(roundNumber);
+        const twoPoules: Poule[] = [];
+        poulesForRanking.forEach(poule => {
+            twoPoules.push(poule);
+            if (twoPoules.length < 2) {
+                return;
+            }
+            screens.push(new PoulesRankingScreen(twoPoules.shift(), twoPoules.shift(), roundsDescription));
+        });
+        if (twoPoules.length === 1) {
+            screens.push(new PoulesRankingScreen(twoPoules.shift(), undefined, roundsDescription));
+        }
+        return screens;
+    }
+
     getPoulesForRanking(roundNumber: RoundNumber): Poule[] {
         let poules: Poule[] = [];
         roundNumber.getRounds().forEach(round => {
@@ -161,44 +103,37 @@ export class Liveboard {
         return poules;
     }
 
-    getPoules(roundNumber: RoundNumber): Poule[] {
-        let poules: Poule[] = [];
-        roundNumber.getRounds().forEach(round => {
-            poules = poules.concat(round.getPoules());
-        });
-        return poules;
+    protected getRoundNumberForPouleRankings(): RoundNumber {
+        return this.getRoundNumberForPouleRankingsHelper(this.structure.getFirstRoundNumber());
     }
 
-    private getScreensForPouleRankings(roundNumber: RoundNumber): Screen[] {
-        const screens: Screen[] = [];
-        const twoPoules: Poule[] = [];
-        const poulesForRanking = this.getPoulesForRanking(roundNumber);
-        const nameService = new NameService();
-        const roundsDescription = nameService.getRoundNumberName(roundNumber);
-        poulesForRanking.forEach(poule => {
-            twoPoules.push(poule);
-            if (twoPoules.length < 2) {
-                return;
-            }
-            screens.push(new PoulesRankingScreen(roundNumber, twoPoules.shift(), twoPoules.shift(), roundsDescription));
-        });
-        if (twoPoules.length === 1) {
-            screens.push(new PoulesRankingScreen(roundNumber, twoPoules.shift(), undefined, roundsDescription));
+    /**
+     * pak laatst gespeelde ronde, 
+     * wanner er een volgende ronde is en deze is inplay, gebruik dan deze
+     * 
+     * @param roundNumber
+     */
+    protected getRoundNumberForPouleRankingsHelper(roundNumber: RoundNumber): RoundNumber {
+        if (roundNumber.getState() === Game.STATE_INPLAY) {
+            return roundNumber;
         }
-        return screens;
+        if (roundNumber.getState() === Game.STATE_PLAYED) {
+            if (!roundNumber.hasNext() || roundNumber.getNext().getState() === Game.STATE_CREATED) {
+                return roundNumber;
+            }
+            return this.getRoundNumberForPouleRankingsHelper(roundNumber.getNext());
+        }
+        return undefined;
     }
 
     private getScreenForGamesPlayed(): Screen {
         const games: Game[] = this.getPlayedGames();
         if (games.length === 0) {
-            return undefined;    
+            return undefined;
         }
-        return new PlayedGamesScreen(games);        
+        return new PlayedGamesScreen(games);
     }
 
-    /**
-     * show next 8 games
-     */
     getPlayedGames(): Game[] {
         return this.getPlayedGamesHelper(this.structure.getLastRoundNumber());
     }
@@ -229,7 +164,7 @@ export class Liveboard {
 
     private getScreensForEndRanking(): Screen[] {
         const screens: Screen[] = [];
-        if( this.structure.getLastRoundNumber().getState() !== Game.STATE_PLAYED) {
+        if (this.structure.getLastRoundNumber().getState() !== Game.STATE_PLAYED) {
             return screens;
         }
         let nrOfItems = 0;
