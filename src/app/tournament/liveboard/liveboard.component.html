@@ -34,7 +34,7 @@
     [hasReferees]="hasReferees()" [planningService]="planningService"></app-tournament-liveboard-games>
 
   <!-- pouleranking screen -->
-  <app-tournament-liveboard-poules *ngIf="isPoulesRankingScreen()" [screen]="activeScreen"></app-tournament-liveboard-poules>
+  <app-tournament-liveboard-poules *ngIf="isPoulesRankingScreen()" [screen]="activeScreen" [ranking]="ranking"></app-tournament-liveboard-poules>
 
   <!-- endranking screen -->
   <div *ngIf="isEndRankingScreen()" class="row no-gutters">

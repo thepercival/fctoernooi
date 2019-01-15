@@ -36,7 +36,10 @@ export class Liveboard {
         let currentNrOfPouleRankingsScreens = 0;
         pouleRankingsScreens.forEach(pouleRankingScreen => {
             screens.push(pouleRankingScreen);
-            if ((++currentNrOfPouleRankingsScreens % 2) === 0 && createdAndInplayGamesScreen !== undefined) {
+            if ((++currentNrOfPouleRankingsScreens % 2) === 0
+                && createdAndInplayGamesScreen !== undefined
+                && currentNrOfPouleRankingsScreens < pouleRankingsScreens.length
+            ) {
                 screens.push(createdAndInplayGamesScreen);
             }
         });
