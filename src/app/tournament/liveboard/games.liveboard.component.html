@@ -33,8 +33,9 @@
         <td>
           <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
         </td>
-        <td *ngIf="showDateTime(game)">
-          {{game.getStartDateTime().toLocaleString("nl", {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}
+        <td *ngIf="showDateTime()">
+          <span *ngIf="showDateTime(game)">{{game.getStartDateTime().toLocaleString("nl", {"hour12":
+            false,"hour":"2-digit","minute":"2-digit"})}}</span>
         </td>
         <td *ngIf="isCreatedAndInplay() && hasFields">{{game.getField()?.getName()}}</td>
         <td class="text-right">{{nameService.getPoulePlaceFromName(game.getHomePoulePlace(), true )}}</td>
