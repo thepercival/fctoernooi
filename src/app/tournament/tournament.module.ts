@@ -5,6 +5,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faProductHunt } from '@fortawesome/free-brands-svg-icons';
 import { faCheckSquare, faSquare } from '@fortawesome/free-regular-svg-icons';
+import { FileUploadModule } from 'ng2-file-upload';
 import {
   faArrowsAltH,
   faCheckCircle,
@@ -104,7 +105,8 @@ library.add(
     NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule.forRoot(),
     NouisliderModule,
     ReactiveFormsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    FileUploadModule
   ],
   declarations: [
     TournamentNewComponent,

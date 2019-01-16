@@ -154,13 +154,16 @@ export class Liveboard {
     }
 
     private getScreensForSponsors(): Screen[] {
-        if (this.tournament.getSponsors().length > 0) {
+        const nrOfSponsors = this.tournament.getSponsors().length;
+        if ( nrOfSponsors === 0) {
             return [];
         }
+        const nrOfScreens = ( ( this.maxLines - ( nrOfSponsors % this.maxLines ) ) + nrOfSponsors ) / this.maxLines;
+        const nrOfSponsorsPerScreen = Math.round( nrOfSponsors / nrOfScreens );
         const screens: Screen[] = [];
         const sponsors = this.tournament.getSponsors().slice();
         while (sponsors.length > 0) {
-            screens.push(new SponsorScreen(sponsors.splice(0, this.maxLines)));
+            screens.push(new SponsorScreen(sponsors.splice(0, nrOfSponsorsPerScreen)));
         }
         return screens;
     }

@@ -33,6 +33,7 @@
     "bootstrap": "^4.1.3",
     "core-js": "^2.5.7",
     "lodash": "^4.17.11",
+    "ng2-file-upload": "^1.3.0",
     "ng2-nouislider": "^1.7.13",
     "ngx-sport": "0.0.63",
     "nouislider": "^12.1.0",

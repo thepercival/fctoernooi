@@ -9,6 +9,13 @@ table.fixed {
     table-layout: fixed;
 }
 
+.table th, .table td {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
 col.width-25 {
     width:25%;
 }
