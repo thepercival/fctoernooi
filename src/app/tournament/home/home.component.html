@@ -10,10 +10,12 @@
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
-      <ngb-alert *ngIf="!processing && alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-      <ngb-alert *ngIf="!processing && isAdmin() && !isManualMessageReadOnDevice()" type="info" [dismissible]="true" (close)="manualMessageReadOnDevice()">gedetaileerde
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+      <ngb-alert *ngIf="!processing && isAdmin() && !isManualMessageReadOnDevice()" type="info" [dismissible]="true"
+        (close)="manualMessageReadOnDevice()">gedetaileerde
         informatie kun je vinden onderaan de pagina via de handleiding-link</ngb-alert>
-      <ngb-alert *ngIf="!processing && !isAdmin()" type="danger" [dismissible]="false">je hebt geen rechten voor het beheergedeelte, klik 
+      <ngb-alert *ngIf="!processing && !isAdmin()" type="danger" [dismissible]="false">je hebt geen rechten voor het
+        beheergedeelte, klik
         <a routerLink="['/toernooi/view', tournament.getId()]">hier</a> om naar het toernooi te gaan</ngb-alert>
       <div *ngIf="!processing && structure && isAdmin()" class="row d-flex justify-content-center">
         <div class="card pointer mt-3 mx-2" (click)="linkToStructure()">
@@ -31,7 +33,8 @@
         <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/competitors', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
-                <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers</h5>
+              <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
+            </h5>
             <p class="card-text" *ngIf="structure.getRootRound().getTeams().length === structure.getRootRound().getPoulePlaces().length">
               <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> alle namen ingevuld
             </p>
@@ -44,7 +47,8 @@
         <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/games', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
-                <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijden</h5>
+              <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijden
+            </h5>
             <p class="card-text" *ngIf="structure.getRootRound().getGames().length > 0">
               <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> wedstrijden ingepland
             </p>
@@ -89,13 +93,13 @@
       </div>
     </div>
   </div>
-  <div *ngIf="!processing && structure" class="row d-flex justify-content-center my-3">    
+  <div *ngIf="!processing && structure" class="row d-flex justify-content-center my-3">
     <div class="card mt-3 mx-2">
       <div class="card-body d-flex justify-content-between">
         <div (click)="openModalPrint(contentprint)" class="text-center pointer">
           <div>
             <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'print']"></fa-icon> 
+              <fa-icon [icon]="['fas', 'print']"></fa-icon>
             </h5>
           </div>
           <div><span>afdrukken</span></div>
@@ -103,19 +107,19 @@
         <div *ngIf="isAdmin()" (click)="openModalCopy(contentcopy)" class="text-center pointer">
           <div>
             <h5 class="card-title">
-                <fa-icon [icon]="['fas', 'copy']"></fa-icon>                                    
+              <fa-icon [icon]="['fas', 'copy']"></fa-icon>
             </h5>
           </div>
           <div><span>nieuwe</span><br><span>editie</span></div>
-        </div>        
-      </div>    
-    </div>    
+        </div>
+      </div>
+    </div>
     <div class="card mt-3 mx-2">
       <div class="card-body d-flex justify-content-between">
         <div [routerLink]="['/toernooi/view', tournament.getId()]" class="text-center pointer">
           <div>
             <h5 class="card-title">
-                <fa-icon [icon]="['fas', 'eye']"></fa-icon>                                    
+              <fa-icon [icon]="['fas', 'eye']"></fa-icon>
             </h5>
           </div>
           <div><span>bekijken</span></div>
@@ -123,7 +127,7 @@
         <div (click)="openModalShare(contentshare)" class="text-center pointer">
           <div>
             <h5 class="card-title">
-                <fa-icon [icon]="['fas', 'share-alt']"></fa-icon>                                    
+              <fa-icon [icon]="['fas', 'share-alt']"></fa-icon>
             </h5>
           </div>
           <div><span>delen</span></div>
@@ -131,13 +135,13 @@
         <div *ngIf="isAdmin()" (click)="openModalRemove(contentremove)" class="text-center pointer">
           <div>
             <h5 class="card-title">
-                <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>                                    
+              <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
             </h5>
           </div>
           <div><span>weggooien</span></div>
         </div>
-      </div>    
-    </div>    
+      </div>
+    </div>
   </div>
 </div>
 
@@ -233,25 +237,25 @@
   </div>
   <div class="modal-body">
     <div class="container-fluid">
-        <form *ngIf="!processing" name="form" (ngSubmit)="false" [formGroup]="copyForm" novalidate>
+      <form *ngIf="!processing" name="form" (ngSubmit)="false" [formGroup]="copyForm" novalidate>
         <div class="form-group row">
-            <div class="col-5">
-              <label for="dp" class="col-form-label">nieuwe startdatum</label>
-            </div>
-            <div class="col-7">
-              <div class="input-group input-group-date">
-                <input class="form-control" id="dp" name="dp" [formControl]="copyForm.controls.date" ngbDatepicker #d="ngbDatepicker"
-                  required [dayTemplate]="t" [minDate]="minDateStruct">
-                <div class="input-group-append">
-                  <span class="input-group-text pointer" (click)="d.toggle()">                    
-                    <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
-                  </span>
-                </div>
+          <div class="col-5">
+            <label for="dp" class="col-form-label">nieuwe startdatum</label>
+          </div>
+          <div class="col-7">
+            <div class="input-group input-group-date">
+              <input class="form-control" id="dp" name="dp" [formControl]="copyForm.controls.date" ngbDatepicker #d="ngbDatepicker"
+                required [dayTemplate]="t" [minDate]="minDateStruct">
+              <div class="input-group-append">
+                <span class="input-group-text pointer" (click)="d.toggle()">
+                  <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+                </span>
               </div>
             </div>
           </div>
-          maak een nieuwe editie van dit toernooi en ga meteen naar het nieuwe toernooi
-        </form>
+        </div>
+        maak een nieuwe editie van dit toernooi en ga meteen naar het nieuwe toernooi
+      </form>
     </div>
   </div>
   <div class="modal-footer">
@@ -260,10 +264,10 @@
 </ng-template>
 
 <ng-template #t let-date="date" let-focused="focused" let-disabled="disabled">
-    <span class="custom-day" [class.focused]="focused" [class.selected]="isSelected(date)" [class.text-muted]="disabled">
-      {{ date.day }}
-    </span>
-  </ng-template>
+  <span class="custom-day" [class.focused]="focused" [class.selected]="isSelected(date)" [class.text-muted]="disabled">
+    {{ date.day }}
+  </span>
+</ng-template>
 
 <ng-template #contentremove let-modal>
   <div class="modal-header">
@@ -283,24 +287,27 @@
 </ng-template>
 
 <ng-template #contentshare let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">toernooi delen</h4>
-      <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <ngb-alert *ngIf="modal.copied === true" type="info" [dismissible]="false">de link is gekopieerd naar het klembord</ngb-alert>
-        <div class="input-group mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text"><fa-icon [icon]="['fas', 'link']"></fa-icon></span>
-          </div>
-          <input type="text" #userinput readonly class="form-control" value="https://www.fctoernooi.nl/toernooi/view/{{tournament.getId()}}">
-        </div>
-    </div>
-    <div class="modal-footer justify-content-around">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.copied = true; copyLink(userinput)">
-            <fa-icon [icon]="['fas', 'clipboard-check']"></fa-icon> kopieer link naar klembord</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.close('close')">sluiten</button>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">toernooi delen</h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <ngb-alert *ngIf="modal.copied === true" type="info" [dismissible]="false">de link is gekopieerd naar het klembord</ngb-alert>
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text">
+          <fa-icon [icon]="['fas', 'link']"></fa-icon>
+        </span>
       </div>
-  </ng-template>
+      <input type="text" #userinput readonly class="form-control" value="https://www.fctoernooi.nl/toernooi/view/{{tournament.getId()}}">
+    </div>
+  </div>
+  <div class="modal-footer justify-content-around">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.copied = true; copyLink(userinput)">
+      <fa-icon [icon]="['fas', 'clipboard-check']"></fa-icon> kopieer link naar klembord
+    </button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.close('close')">sluiten</button>
+  </div>
+</ng-template>

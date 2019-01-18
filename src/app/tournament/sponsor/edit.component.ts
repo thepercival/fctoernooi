@@ -8,9 +8,10 @@ import { JsonSponsor } from '../../lib/sponsor/mapper';
 import { SponsorRepository } from '../../lib/sponsor/repository';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
-import { FileUploader } from 'ng2-file-upload';
 
-const URL = 'https://evening-anchorage-3159.herokuapp.com/api/';
+/*import { FileUploader } from 'ng2-file-upload';
+
+const URL = 'https://evening-anchorage-3159.herokuapp.com/api/';*/
 
 @Component({
     selector: 'app-tournament-sponsor-edit',
@@ -24,7 +25,7 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
     returnUrlQueryParamValue: string;
     customForm: FormGroup;
     sponsorId: number;
-    public uploader:FileUploader = new FileUploader({url: URL});
+    // public uploader:FileUploader = new FileUploader({url: URL});
 
     validations: RefValidations = {
         minlengthname: Sponsor.MIN_LENGTH_NAME,

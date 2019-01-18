@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { NgbModal, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-import { StructureRepository } from 'ngx-sport';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { StructureRepository } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
 import { Role } from '../../lib/role';
@@ -41,7 +41,7 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
         const date = new Date();
         this.minDateStruct = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
         this.copyForm = fb.group({
-                date: ['', Validators.compose([
+            date: ['', Validators.compose([
             ])]
         });
     }
@@ -208,13 +208,14 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
             this.copyForm.controls.date.value.day,
             this.tournament.getCompetition().getStartDateTime().getHours(),
             this.tournament.getCompetition().getStartDateTime().getMinutes(),
-          );
+        );
 
         this.processing = true;
         this.tournamentRepository.copyObject(this.tournament, startDateTime)
             .subscribe(
                 /* happy path */(newTournamentId: number) => {
                     this.router.navigate(['/toernooi', newTournamentId]);
+                    this.setAlert('info', 'de nieuwe editie is aangemaakt, je bevindt je nu in de nieuwe editie');
                 },
                 /* error path */ e => {
                     this.setAlert('danger', 'er kon geen nieuwe editie worden aangemaakt');
@@ -226,6 +227,6 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
 
     equals(one: NgbDateStruct, two: NgbDateStruct) {
         return one && two && two.year === one.year && two.month === one.month && two.day === one.day;
-      }
-      isSelected = date => this.equals(date, this.copyForm.controls.date.value);
+    }
+    isSelected = date => this.equals(date, this.copyForm.controls.date.value);
 }

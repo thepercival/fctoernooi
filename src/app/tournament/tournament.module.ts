@@ -5,7 +5,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faProductHunt } from '@fortawesome/free-brands-svg-icons';
 import { faCheckSquare, faSquare } from '@fortawesome/free-regular-svg-icons';
-import { FileUploadModule } from 'ng2-file-upload';
 import {
   faArrowsAltH,
   faCheckCircle,
@@ -91,6 +90,7 @@ import { TournamentStructureViewComponent } from './structure/view.component';
 import { TournamentRoutingModule } from './tournament-routing.module';
 import { TournamentViewComponent } from './view/view.component';
 
+// import { FileUploadModule } from 'ng2-file-upload';
 library.add(
   faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus,
   faExpand, faCompress, faPrint, faSort, faRandom, faSquare, faCheckSquare, faArrowsAltH,
@@ -105,8 +105,8 @@ library.add(
     NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule.forRoot(),
     NouisliderModule,
     ReactiveFormsModule,
-    FontAwesomeModule,
-    FileUploadModule
+    FontAwesomeModule/*,
+    FileUploadModule*/
   ],
   declarations: [
     TournamentNewComponent,
