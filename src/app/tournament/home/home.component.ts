@@ -215,7 +215,7 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
             .subscribe(
                 /* happy path */(newTournamentId: number) => {
                     this.router.navigate(['/toernooi', newTournamentId]);
-                    this.setAlert('info', 'de nieuwe editie is aangemaakt, je bevindt je nu in de nieuwe editie');
+                    this.setAlert('success', 'de nieuwe editie is aangemaakt, je bevindt je nu in de nieuwe editie');
                 },
                 /* error path */ e => {
                     this.setAlert('danger', 'er kon geen nieuwe editie worden aangemaakt');
