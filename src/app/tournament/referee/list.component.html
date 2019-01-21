@@ -17,6 +17,7 @@
       </h2>
     </div>
     <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+    <!--
     <div *ngIf="!processing">
       <label for="competitorsasreferee" class="col-form-label">de deelnemers zijn ook scheidsrechter</label>
       <label class="custom-checkbox col-form-label pl-3">
@@ -26,6 +27,7 @@
       bij aanzetten in modal laten zien dat alleen in poules dit wordt toegepast en ook alleen als het wedstrijdprogramma qua niet er niet
       onder hoeft te lijden.
     </div>
+    -->
     <table *ngIf="!processing" class="table">
       <thead>
         <tr>

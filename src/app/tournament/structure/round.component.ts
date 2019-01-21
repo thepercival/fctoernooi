@@ -156,6 +156,9 @@ export class TournamentStructureRoundComponent {
 
   public onSliderChange(nrOfChildPlacesNew: number, winnersOrLosers: number) {
     // console.log('start change' );
+    if( ( nrOfChildPlacesNew + this.round.getNrOfPlacesChildRound( Round.getOpposing(winnersOrLosers) ) ) > this.round.getNrOfPlaces() ) {
+      return;
+    }
     this.getStructureService().changeNrOfPlacesChildRound(nrOfChildPlacesNew, this.round, winnersOrLosers);
     // this.getPlanningService().create(this.round.getNumber());
     if (this.round.getNumber().hasNext()) {

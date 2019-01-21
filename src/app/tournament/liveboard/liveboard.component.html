@@ -52,9 +52,6 @@
           <td [ngClass]="{ 'firstrow': first, 'text-right': aSponsorHasUrl(activeScreen.getSponsors()), 'text-center': !aSponsorHasUrl(activeScreen.getSponsors()) }">
             <span>{{sponsor.getName()}}</span>
           </td>
-          <td>
-            <img src="{{sponsor.getUrl()}}images/favicon.ico" />
-          </td>
           <td *ngIf="aSponsorHasUrl(activeScreen.getSponsors())" [ngClass]="{ 'firstrow': first }">
             <span *ngIf="sponsor.getUrl() !== undefined && sponsor.getUrl().length > 0" class="pl-5">
               {{sponsor.getUrl()}}
