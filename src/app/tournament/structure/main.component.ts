@@ -123,9 +123,9 @@ export class TournamentStructureComponent extends TournamentComponent implements
     this.structureRepository.editObject(this.clonedStructure, this.tournament.getCompetition())
       .subscribe(
           /* happy path */ structureRes => {
-          if (this.changedRoundNumber === undefined) {
-            return this.completeSave(structureRes);
-          }
+          // if (this.changedRoundNumber === undefined) {
+          //   return this.completeSave(structureRes);
+          // }
           this.syncPlanning(structureRes, this.changedRoundNumber.getNumber());
         },
         /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
@@ -140,10 +140,14 @@ export class TournamentStructureComponent extends TournamentComponent implements
   }
 
   protected syncPlanning(structure: Structure, roundNumberToSync: number) {
-    const changedRoundNumber = structure.getRoundNumber(roundNumberToSync);
-    if (changedRoundNumber === undefined) {
-      return this.completeSave(structure);
-    }
+    // let changedRoundNumber = structure.getRoundNumber(roundNumberToSync);
+    // if (changedRoundNumber === undefined) {
+    //   return this.completeSave(structure);
+    // }
+
+    // first better test creating planning in php!!
+    const changedRoundNumber = structure.getFirstRoundNumber();
+
     const planningService = new PlanningService(this.tournament.getCompetition());
     const tournamentService = new TournamentService(this.tournament);
     tournamentService.create(planningService, changedRoundNumber);

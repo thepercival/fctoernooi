@@ -95,7 +95,7 @@
     <div class="col px-3">
       {{getWinnersLosersDescription( RoundWINNERS )}}
       <nouislider class="horizontal-slider {{getWinnersLosersName( RoundWINNERS )}}" [config]="uiSliderConfig" [min]="0"
-        [max]="round.getPoulePlaces().length" (start)="startSliding($event, RoundWINNERS)" (end)="endSliding($event, RoundWINNERS)"
+        [max]="round.getPoulePlaces().length - round.getNrOfPlacesChildRound( RoundLOSERS )" (start)="startSliding($event, RoundWINNERS)" (end)="endSliding($event, RoundWINNERS)"
         [ngModel]="round.getNrOfPlacesChildRound( RoundWINNERS )" (ngModelChange)="onSliderChange($event, RoundWINNERS)"
         [disabled]="round.isStarted()"></nouislider>
     </div>
@@ -105,7 +105,7 @@
     <div class="col px-3">
       {{getWinnersLosersDescription( RoundLOSERS )}}
       <nouislider class="horizontal-slider {{getWinnersLosersName( RoundLOSERS )}}" [config]="uiSliderConfig" [min]="0"
-        [max]="round.getPoulePlaces().length" (start)="startSliding($event, RoundLOSERS)" (end)="endSliding($event, RoundLOSERS)"
+        [max]="round.getPoulePlaces().length - round.getNrOfPlacesChildRound( RoundWINNERS )" (start)="startSliding($event, RoundLOSERS)" (end)="endSliding($event, RoundLOSERS)"
         [ngModel]="round.getNrOfPlacesChildRound( RoundLOSERS )" (ngModelChange)="onSliderChange($event, RoundLOSERS)"
         [disabled]="round.isStarted()"></nouislider>
     </div>
