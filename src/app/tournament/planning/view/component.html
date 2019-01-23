@@ -92,8 +92,7 @@
             </td>
             <td *ngIf="hasFields()" class="text-center">{{game.getField()?.getName()}}</td>
             <td class="pouleplace text-right" [ngClass]="{'text-primary': isTeamFav(game.getHomePoulePlace().getTeam()) }">
-              <span class="d-sm-none {{getPoulePlaceClass(game.getHomePoulePlace())}}">{{nameService.getPoulePlaceFromName(game.getHomePoulePlace(),true)}}</span>
-              <span class="d-none d-sm-inline-flex {{getPoulePlaceClass(game.getHomePoulePlace())}}">{{nameService.getPoulePlaceFromName(game.getHomePoulePlace(),true,true)}}</span>
+              <span class="{{getPoulePlaceClass(game.getHomePoulePlace())}}">{{nameService.getPoulePlaceFromName(game.getHomePoulePlace(),true,true)}}</span>
             </td>
             <td class="score text-center" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
               <button *ngIf="hasEditPermissions(game)" class="btn btn-sm btn-outline-primary" (click)="linkToGameEdit(game)">
