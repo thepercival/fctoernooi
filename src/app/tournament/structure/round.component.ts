@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NameService, PoulePlace, Round, RoundNumber, StructureService } from 'ngx-sport';
+import { max } from 'rxjs/operators';
 
 import { Tournament } from '../../lib/tournament';
 
@@ -16,7 +17,13 @@ export class TournamentStructureRoundComponent {
   public alert: any;
   public sliderValueDummy = 3;
   private structureService: StructureService;
-  public uiSliderConfig: any = {
+  public uiSliderConfigWinners: any = {
+    behaviour: 'drag',
+    margin: 1,
+    step: 1,
+    tooltips: [true]
+  };
+  public uiSliderConfigLosers: any = {
     behaviour: 'drag',
     margin: 1,
     step: 1,
@@ -111,7 +118,11 @@ export class TournamentStructureRoundComponent {
 
   getMaxSliderValue(winnersOrLosers: number): number {
     const opposing = Round.getOpposing(winnersOrLosers);
-    return this.round.getPoulePlaces().length - this.round.getNrOfPlacesChildRound(opposing);
+    const max = this.round.getNrOfPlaces() - this.round.getNrOfPlacesChildRound(opposing);
+    if (max < 1) {
+      return 1;
+    }
+    return max;
   }
 
   getClassPostfix(winnersOrLosers: number): string {
@@ -156,7 +167,7 @@ export class TournamentStructureRoundComponent {
 
   public onSliderChange(nrOfChildPlacesNew: number, winnersOrLosers: number) {
     // console.log('start change' );
-    if( ( nrOfChildPlacesNew + this.round.getNrOfPlacesChildRound( Round.getOpposing(winnersOrLosers) ) ) > this.round.getNrOfPlaces() ) {
+    if ((nrOfChildPlacesNew + this.round.getNrOfPlacesChildRound(Round.getOpposing(winnersOrLosers))) > this.round.getNrOfPlaces()) {
       return;
     }
     this.getStructureService().changeNrOfPlacesChildRound(nrOfChildPlacesNew, this.round, winnersOrLosers);

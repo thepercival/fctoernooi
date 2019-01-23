@@ -76,9 +76,8 @@
             <td *ngIf="!pouleHasPopover(game)" class="text-center">
               <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
             </td>
-            <td *ngIf="pouleHasPopover(game) && game.getPoule().needsRanking()" class="text-center pointer"
-              container="body" placement="right" [ngbPopover]="popRanking" [autoClose]="false" triggers="manual" #p="ngbPopover"
-              (click)="showRanking( p, game.getPoule() )">
+            <td *ngIf="pouleHasPopover(game) && game.getPoule().needsRanking()" class="text-center pointer" container="body"
+              placement="right" [ngbPopover]="popRanking" [autoClose]="false" triggers="manual" #p="ngbPopover" (click)="showRanking( p, game.getPoule() )">
               <span class="text-info">{{nameService.getPouleName(game.getPoule(), false)}}</span>
             </td>
             <td *ngIf="pouleHasPopover(game) && !game.getPoule().needsRanking()" class="text-center pointer" title="wedstrijd"
@@ -93,12 +92,8 @@
             </td>
             <td *ngIf="hasFields()" class="text-center">{{game.getField()?.getName()}}</td>
             <td class="pouleplace text-right" [ngClass]="{'text-primary': isTeamFav(game.getHomePoulePlace().getTeam()) }">
-              <span class="{{getPoulePlaceClass(game.getHomePoulePlace())}}">{{nameService.getPoulePlaceFromName(game.getHomePoulePlace(),
-                true )}}</span>
-              <span *ngIf="game.getHomePoulePlace().getTeam() && game.getHomePoulePlace().getTeam().getAbbreviation()"
-                class="d-inline d-sm-none">{{game.getHomePoulePlace().getTeam().getAbbreviation()}}</span>
-              <span *ngIf="game.getHomePoulePlace().getTeam() && game.getHomePoulePlace().getTeam().getAbbreviation()"
-                class="flag-16 flag-{{game.getHomePoulePlace().getTeam().getAbbreviation()}}-16"></span>
+              <span class="d-sm-none {{getPoulePlaceClass(game.getHomePoulePlace())}}">{{nameService.getPoulePlaceFromName(game.getHomePoulePlace(),true)}}</span>
+              <span class="d-none d-sm-inline-flex {{getPoulePlaceClass(game.getHomePoulePlace())}}">{{nameService.getPoulePlaceFromName(game.getHomePoulePlace(),true,true)}}</span>
             </td>
             <td class="score text-center" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
               <button *ngIf="hasEditPermissions(game)" class="btn btn-sm btn-outline-primary" (click)="linkToGameEdit(game)">
@@ -108,12 +103,7 @@
               <span *ngIf="!hasEditPermissions(game)">{{getScore(game)}}</span>
             </td>
             <td class="pouleplace" [ngClass]="{ 'text-primary': isTeamFav(game.getAwayPoulePlace().getTeam()) }">
-              <span *ngIf="game.getAwayPoulePlace().getTeam() && game.getAwayPoulePlace().getTeam().getAbbreviation()"
-                class="flag-16 flag-{{game.getAwayPoulePlace().getTeam().getAbbreviation()}}-16"></span>
-              <span class="{{getPoulePlaceClass(game.getAwayPoulePlace())}}">{{nameService.getPoulePlaceFromName(game.getAwayPoulePlace(),
-                true )}}</span>
-              <span *ngIf="game.getAwayPoulePlace().getTeam() && game.getAwayPoulePlace().getTeam().getAbbreviation()"
-                class="d-inline d-sm-none">{{game.getAwayPoulePlace().getTeam().getAbbreviation()}}</span>
+              <span class="{{getPoulePlaceClass(game.getAwayPoulePlace())}}">{{nameService.getPoulePlaceFromName(game.getAwayPoulePlace(),true,true)}}</span>
             </td>
             <td *ngIf="hasReferees()" class="d-none d-sm-table-cell" [ngClass]="{'text-primary': isRefereeFav(game.getReferee()) }">{{game.getReferee()?.getInitials()}}</td>
           </tr>
@@ -122,6 +112,7 @@
     </table>
   </div>
 </div>
+
 
 <ng-template #popRanking>
   <div *ngIf="selectedPouleForRanking" class="card border-0">

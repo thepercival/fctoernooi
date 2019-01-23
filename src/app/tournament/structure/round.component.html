@@ -94,8 +94,8 @@
   <div class="qualifier" *ngIf="editable && round.getPoulePlaces().length > 2" class="row text-center no-gutters pt-3">
     <div class="col px-3">
       {{getWinnersLosersDescription( RoundWINNERS )}}
-      <nouislider class="horizontal-slider {{getWinnersLosersName( RoundWINNERS )}}" [config]="uiSliderConfig" [min]="0"
-        [max]="round.getPoulePlaces().length - round.getNrOfPlacesChildRound( RoundLOSERS )" (start)="startSliding($event, RoundWINNERS)" (end)="endSliding($event, RoundWINNERS)"
+      <nouislider class="horizontal-slider {{getWinnersLosersName( RoundWINNERS )}}" [min]="0" [config]="uiSliderConfigWinners"
+        [max]="getMaxSliderValue( RoundWINNERS )" (start)="startSliding($event, RoundWINNERS)" (end)="endSliding($event, RoundWINNERS)"
         [ngModel]="round.getNrOfPlacesChildRound( RoundWINNERS )" (ngModelChange)="onSliderChange($event, RoundWINNERS)"
         [disabled]="round.isStarted()"></nouislider>
     </div>
@@ -104,8 +104,8 @@
       RoundWINNERS ) + round.getNrOfPlacesChildRound( RoundLOSERS ) ) }}</div>
     <div class="col px-3">
       {{getWinnersLosersDescription( RoundLOSERS )}}
-      <nouislider class="horizontal-slider {{getWinnersLosersName( RoundLOSERS )}}" [config]="uiSliderConfig" [min]="0"
-        [max]="round.getPoulePlaces().length - round.getNrOfPlacesChildRound( RoundWINNERS )" (start)="startSliding($event, RoundLOSERS)" (end)="endSliding($event, RoundLOSERS)"
+      <nouislider class="horizontal-slider {{getWinnersLosersName( RoundLOSERS )}}" [config]="uiSliderConfigLosers"
+        [min]="0" [max]="getMaxSliderValue( RoundLOSERS )" (start)="startSliding($event, RoundLOSERS)" (end)="endSliding($event, RoundLOSERS)"
         [ngModel]="round.getNrOfPlacesChildRound( RoundLOSERS )" (ngModelChange)="onSliderChange($event, RoundLOSERS)"
         [disabled]="round.isStarted()"></nouislider>
     </div>
@@ -115,10 +115,10 @@
       [round]="childRound" [editable]="editable" (roundNumberChanged)="roundNumberChanged.emit($event)"></app-tournament-structureround>
   </div>
   <div class="mt-2" *ngIf="!round.isRoot() && round.getPoulePlaces().length === 2">
-      <div class="card round">
-          <div class="card-header px-1">
-            <span [innerHTML]="nameService.getRoundName(round) | keepHtml"></span>
-          </div>
+    <div class="card round">
+      <div class="card-header px-1">
+        <span [innerHTML]="nameService.getRoundName(round) | keepHtml"></span>
       </div>
-  </div>  
+    </div>
+  </div>
 </div>
