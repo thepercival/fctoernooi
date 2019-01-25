@@ -21,6 +21,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   pastDate: Date;
   pastDays = 7;
   futureDate: Date;
+  private futureDays = 14;
   searchFilter: TournamentShellFilter;
   processingSearch = false;
   hasSearched = false;
@@ -37,7 +38,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     this.pastDate = new Date();
     this.pastDate.setDate(this.pastDate.getDate() - this.pastDays);
     this.futureDate = new Date();
-    this.futureDate.setDate(this.futureDate.getDate() + 30);
+    this.futureDate.setDate(this.futureDate.getDate() + this.futureDays);
     this.searchFilter = { maxDate: this.pastDate, name: undefined };
   }
 
@@ -80,23 +81,23 @@ export class HomeComponent implements OnInit, AfterViewChecked {
               .subscribe(
                 /* happy path */ res => {
                   this.tournamentShellRepos.getObjectsWithRoles()
-                  .subscribe(
+                    .subscribe(
                       /* happy path */ myShells => {
-                      this.mergeMyShells(myShells);
-                      this.sortShells();
-                      this.processing = false;
-                    },
+                        this.mergeMyShells(myShells);
+                        this.sortShells();
+                        this.processing = false;
+                      },
                       /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
                       /* onComplete */() => { this.processing = false; this.showingFuture = (futureDate === undefined); }
-                  );
-              },
-                /* error path */ e => { 
+                    );
+                },
+                /* error path */ e => {
                   this.authService.logout();
                   this.setAlert('danger', 'de sessie is verlopen, log opnieuw in');
                   this.processing = false;
                 },
                 /* onComplete */() => { this.processing = false; this.showingFuture = (futureDate === undefined); }
-            );
+              );
           } else {
             this.processing = false;
           }
@@ -108,7 +109,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   protected mergeMyShells(myShells: TournamentShell[]) {
     myShells.forEach(myShell => {
       const idx = this.tournamentShells.findIndex(tournamentShell => tournamentShell.tournamentId === myShell.tournamentId);
-      if( idx >= 0) {
+      if (idx >= 0) {
         this.tournamentShells.splice(idx, 1);
       }
       this.tournamentShells.push(myShell);
