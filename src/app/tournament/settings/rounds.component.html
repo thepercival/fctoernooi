@@ -153,16 +153,6 @@
                     </div>
                     <div *ngIf="category === categories.planning">
                         <div class="form-group row">
-                            <label for="teamup" class="col-8 col-form-label">met en tegen elkaar(duo's)</label>
-                            <div class="form-check col-4">
-                                <label class="custom-control custom-checkbox col-form-label pl-0">
-                                    <input type="checkbox" class="custom-control-input form-check-input" id="teamup"
-                                        name="teamup" [ngModel]="modelConfig.getTeamup()" (ngModelChange)="setTeamup($event)">
-                                    <span class="custom-control-indicator"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group row">
                             <label for="nrofheadtoheadmatches" class="col-8 col-form-label">aantal onderlinge duels</label>
                             <div class="col-4">
                                 <select [ngModel]="modelConfig.getNrOfHeadtoheadMatches()" (ngModelChange)="setNrOfHeadtoheadMatches($event)"
@@ -172,8 +162,22 @@
                                 </select>
                             </div>
                         </div>
+                        <div *ngIf="canSportBeDoneTeamup()" class="form-group row">
+                            <label for="teamupnoaction" class="col-8 col-form-label pointer" container="body" placement="right"
+                                ngbPopover="deze optie geldt alleen voor poules van 4-6 deelnemers">met
+                                en tegen elkaar(duo's)
+                                <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
+                            </label>
+                            <div class="form-check col-4">
+                                <label class="custom-control custom-checkbox col-form-label pl-0">
+                                    <input type="checkbox" class="custom-control-input form-check-input" id="teamup"
+                                        name="teamup" [ngModel]="modelConfig.getTeamup()" (ngModelChange)="setTeamup($event)">
+                                    <span class="custom-control-indicator"></span>
+                                </label>
+                            </div>
+                        </div>
                         <div class="form-group row">
-                            <label for="enableTime" class="col-8 col-form-label">plannen o.b.v. tijd</label>
+                            <label for="enableTime" class="col-8 col-form-label pointer">plannen o.b.v. tijd</label>
                             <div class="form-check col-4">
                                 <label class="custom-control custom-checkbox col-form-label pl-0">
                                     <input type="checkbox" class="custom-control-input form-check-input" id="enableTime"

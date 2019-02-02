@@ -307,6 +307,11 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         return false;
     }
 
+    canSportBeDoneTeamup(sportName: string): boolean {
+        const sport = this.tournament.getCompetition().getLeague().getSport();
+        return this.configService.canSportBeDoneTeamup(sport);
+    }
+
     getSelectRoundNumberButtonClassPostfix(roundNumber: RoundNumber) {
         if (roundNumber >= this.roundNumber) {
             return 'primary';
