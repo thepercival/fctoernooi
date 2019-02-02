@@ -53,7 +53,8 @@
             <div class="card pointer mt-3 mx-2" (click)="category = categories.planning">
                 <div class="card-body">
                     <h5 class="card-title">
-                        <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> planning</h5>
+                        <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> planning
+                    </h5>
                     <div class="card-text">
                         <ul class="pl-3">
                             <li>onderlinge duels</li>
@@ -151,6 +152,16 @@
                         </div>
                     </div>
                     <div *ngIf="category === categories.planning">
+                        <div class="form-group row">
+                            <label for="teamup" class="col-8 col-form-label">met en tegen elkaar(duo's)</label>
+                            <div class="form-check col-4">
+                                <label class="custom-control custom-checkbox col-form-label pl-0">
+                                    <input type="checkbox" class="custom-control-input form-check-input" id="teamup"
+                                        name="teamup" [ngModel]="modelConfig.getTeamup()" (ngModelChange)="setTeamup($event)">
+                                    <span class="custom-control-indicator"></span>
+                                </label>
+                            </div>
+                        </div>
                         <div class="form-group row">
                             <label for="nrofheadtoheadmatches" class="col-8 col-form-label">aantal onderlinge duels</label>
                             <div class="col-4">

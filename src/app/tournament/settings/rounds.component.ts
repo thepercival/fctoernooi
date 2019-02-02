@@ -3,23 +3,23 @@ import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { cloneDeep } from 'lodash';
 import {
+    NameService,
     PlanningRepository,
     PlanningService,
     Round,
     RoundNumber,
     RoundNumberConfig,
-    RoundNumberConfigRepository,
     RoundNumberConfigMapper,
+    RoundNumberConfigRepository,
     RoundNumberConfigScore,
     RoundNumberConfigService,
-    NameService,
-    StructureRepository,
     SportConfig,
+    StructureRepository,
 } from 'ngx-sport';
 
-import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentService } from '../../lib/tournament/service';
+import { TournamentComponent } from '../component';
 
 @Component({
     selector: 'app-rounds-settings',
@@ -86,7 +86,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             this.ranges.drawPoints.push(i);
         }
         const sport = roundNumber.getCompetition().getLeague().getSport();
-        if( sport === SportConfig.Chess ) {
+        if (sport === SportConfig.Chess) {
             this.ranges.drawPoints.push(0.5);
             this.ranges.drawPoints.sort();
         }
@@ -159,7 +159,6 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         }
         this.modelConfig.setWinPoints(winPoints);
     }
-
 
     setDrawPoints(drawPointsAsString: string) {
         const drawPoints = +drawPointsAsString;
@@ -281,6 +280,18 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             this.setScoreConfigMaximum(scoreConfig.getParent(), 0);
         }
         scoreConfig.setMaximum(scoreConfigMaximum);
+    }
+
+    setTeamup(teamUp: boolean) {
+        // const drawPoints = +drawPointsAsString;
+        // if (drawPoints < this.validations.minDrawPoints
+        //     || drawPoints > this.validations.maxDrawPoints) {
+        //     return;
+        // }
+
+        this.modelReschedule = true;
+        this.modelRecreate = true;
+        this.modelConfig.setTeamup(teamUp);
     }
 
     isScoreConfigReadOnly(scoreConfig: RoundNumberConfigScore) {

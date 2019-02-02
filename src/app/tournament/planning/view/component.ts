@@ -72,6 +72,9 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
     }
   }
 
+  get GameHOME(): boolean { return Game.HOME; }
+  get GameAWAY(): boolean { return Game.AWAY; }
+
   getGameTimeTooltipDescription() {
     const cfg = this.roundNumber.getConfig();
     let descr = 'De wedstrijden duren ' + cfg.getMinutesPerGame() + ' minuten. ';
@@ -98,13 +101,6 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
       return { icon: 'circle', text: 'text-' + (qualifyRule.isMultiple() ? 'warning' : singleColor) };
     }
     return { icon: undefined, text: '' };
-  }
-
-  getPoulePlaceClass(poulePlace: PoulePlace): string {
-    if (poulePlace.getTeam() === undefined || poulePlace.getTeam().getAbbreviation() === undefined) {
-      return '';
-    }
-    return 'd-none d-sm-inline';
   }
 
   getScore(game: Game): string {
@@ -158,8 +154,8 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
   }
 
   hasGameFavIds(game: Game): boolean {
-    const x = this.hasGameFavTeamIds(game)
-      || ((game.getReferee() === undefined && this.hasGameTeams(game) && !this.hasFavTeamIds()) || this.isRefereeFav(game.getReferee()));
+    const x = this.hasGameAFavTeamId(game)
+      || ((game.getReferee() === undefined && this.haveAllGamePoulePlacesTeams(game) && !this.hasFavTeamIds()) || this.isRefereeFav(game.getReferee()));
     return x;
   }
 
@@ -177,12 +173,16 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
     return newStartDateTime < game.getStartDateTime();
   }
 
-  hasGameTeams(game: Game): boolean {
-    return game.getHomePoulePlace().getTeam() !== undefined && game.getAwayPoulePlace().getTeam() !== undefined;
+  haveAllGamePoulePlacesTeams(game: Game): boolean {
+    return game.getPoulePlaces().every(gamePoulePlace => gamePoulePlace.getPoulePlace().getTeam() !== undefined);
   }
 
-  hasGameFavTeamIds(game: Game): boolean {
-    return (this.isTeamFav(game.getHomePoulePlace().getTeam()) || this.isTeamFav(game.getAwayPoulePlace().getTeam()));
+  hasAGamePoulePlaceATeam(game: Game): boolean {
+    return game.getPoulePlaces().some(gamePoulePlace => gamePoulePlace.getPoulePlace().getTeam() !== undefined);
+  }
+
+  hasGameAFavTeamId(game: Game, homeaway: boolean = undefined): boolean {
+    return game.getPoulePlaces(homeaway).some(gamePoulePlace => this.isTeamFav(gamePoulePlace.getPoulePlace().getTeam()));
   }
 
   isTeamFav(team: Team): boolean {
@@ -331,15 +331,14 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
   }
 
   pouleHasPopover(game: Game): boolean {
-    return game.getPoule().needsRanking() ||
-      (game.getRound().getParent() !== undefined &&
-        (game.getHomePoulePlace().getTeam() !== undefined || game.getAwayPoulePlace().getTeam() !== undefined)
-      );
+    return game.getPoule().needsRanking() || (game.getRound().getParent() !== undefined && this.hasAGamePoulePlaceATeam(game));
   }
 
   getGameQualificationDescription(game: Game) {
-    return this.nameService.getPoulePlaceFromName(game.getHomePoulePlace(), false, true) + ' - ' +
-      this.nameService.getPoulePlaceFromName(game.getAwayPoulePlace(), false, true);
+    return
+    this.nameService.getPoulePlacesFromName(game.getPoulePlaces(Game.HOME), false, true)
+      + ' - ' +
+      this.nameService.getPoulePlacesFromName(game.getPoulePlaces(Game.AWAY), false, true);
   }
 }
 

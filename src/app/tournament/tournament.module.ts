@@ -39,6 +39,7 @@ import {
 import { NouisliderModule } from 'ng2-nouislider';
 import {
   GameMapper,
+  GamePoulePlaceMapper,
   GameRepository,
   GameScoreMapper,
   PlanningRepository,
@@ -148,6 +149,7 @@ library.add(
     PouleMapper,
     PoulePlaceMapper,
     GameMapper,
+    GamePoulePlaceMapper,
     GameScoreMapper,
     RoundNumberConfigRepository,
     RoundNumberMapper,

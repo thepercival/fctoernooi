@@ -20,6 +20,9 @@ export class TournamentLiveboardGamesComponent {
     ) {
     }
 
+    get GameHOME(): boolean { return Game.HOME; }
+    get GameAWAY(): boolean { return Game.AWAY; }
+
     isCreatedAndInplay(): boolean {
         return this.screen instanceof CreatedAndInplayGamesScreen;
     }

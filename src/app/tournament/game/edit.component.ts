@@ -80,6 +80,9 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         });
     }
 
+    get GameHOME(): boolean { return Game.HOME; }
+    get GameAWAY(): boolean { return Game.AWAY; }
+
     hasAllEditPermissions() {
         const loggedInUserId = this.authService.getLoggedInUserId();
         if (this.tournament.hasRole(loggedInUserId, Role.GAMERESULTADMIN)) {
@@ -279,13 +282,13 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             while (scores.length > 0) {
                 scores.pop();
             }
-            if( state === Game.STATE_PLAYED ) {
+            if (state === Game.STATE_PLAYED) {
                 let counter = 0;
                 this.scoreControls.forEach(scoreControl => {
                     const scoreHomeAway = scoreControl.getScore();
                     const newGameScore = new GameScore(this.game, scoreHomeAway.getHome(), scoreHomeAway.getAway(), ++counter);
                 });
-            }            
+            }
         }
         // if (this.planningService.canCalculateStartDateTime(this.game.getRound().getNumber())) {
         //     const startdate = new Date(
