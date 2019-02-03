@@ -72,7 +72,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         this.configService = new RoundNumberConfigService();
     }
 
-    private initRanges(roundNumber: RoundNumber) {
+    private initRanges() {
         this.ranges.nrOfHeadtoheadMatches = [];
         for (let i = this.validations.minNrOfHeadtoheadMatches; i <= this.validations.maxNrOfHeadtoheadMatches; i++) {
             this.ranges.nrOfHeadtoheadMatches.push(i);
@@ -85,7 +85,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         for (let i = this.validations.minDrawPoints; i <= this.validations.maxDrawPoints; i++) {
             this.ranges.drawPoints.push(i);
         }
-        const sport = roundNumber.getCompetition().getLeague().getSport();
+        const sport = this.tournament.getCompetition().getLeague().getSport();
         if (sport === SportConfig.Chess) {
             this.ranges.drawPoints.push(0.5);
             this.ranges.drawPoints.sort();
@@ -108,7 +108,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         this.planningService = new PlanningService(this.tournament.getCompetition());
         const roundNumber = this.structure.getRoundNumber(roundNumberAsValue);
         this.changeRoundNumber(roundNumber);
-        this.initRanges(roundNumber);
+        this.initRanges();
         this.processing = false;
     }
 
