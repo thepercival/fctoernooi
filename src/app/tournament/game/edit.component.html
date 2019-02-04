@@ -87,7 +87,8 @@
           </div>
           <div class="col-9 col-sm-7">
             <label class="custom-control custom-checkbox col-form-label pl-0">
-              <input type="checkbox" class="custom-control-input form-check-input" [formControl]="customForm.controls.extratime">
+              <input type="checkbox" class="custom-control-input form-check-input" [formControl]="customForm.controls.extratime"
+                (ngModelChange)="setExtratime($event)">
               <span class="custom-control-indicator"></span>
             </label>
           </div>

@@ -21,7 +21,7 @@ export class TournamentEndRankingViewComponent {
   getRankingItems(): RankingItem[] {
     const items = this.endRankingService.getItems(this.rootRound);
     if (this.filterStart !== undefined && this.filterEnd !== undefined) {
-      return items.filter(item => item.getRank() >= this.filterStart && item.getRank() <= this.filterEnd);
+      return items.filter(item => item.getUniqueRank() >= this.filterStart && item.getUniqueRank() <= this.filterEnd);
     }
     return items;
   }

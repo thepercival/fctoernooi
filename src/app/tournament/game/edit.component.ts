@@ -11,13 +11,13 @@ import {
     PlanningService,
     PoulePlace,
     PoulePlaceRepository,
+    QualifyRule,
     QualifyService,
+    Ranking,
+    RankingItem,
     Round,
     RoundNumberConfigScore,
     StructureRepository,
-    RankingItem,
-    Ranking,
-    QualifyRule
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
 
@@ -224,18 +224,40 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         });
     }
 
+    protected synGameScores(alwaysAdd: boolean = true) {
+        const scores = this.game.getScores();
+        while (scores.length > 0) {
+            scores.pop();
+        }
+        if (alwaysAdd || this.game.getState() === Game.STATE_PLAYED) {
+            let counter = 0;
+            this.scoreControls.forEach(scoreControl => {
+                const scoreHomeAway = scoreControl.getScore();
+                const newGameScore = new GameScore(this.game, scoreHomeAway.getHome(), scoreHomeAway.getAway(), ++counter);
+            });
+        }
+    }
+
     setHome(scoreControl: HomeAwayFormControl, home) {
         if (this.isScoreValid(scoreControl.getScore()) && this.enablePlayedAtFirstChange === true) {
             this.customForm.controls.played.setValue(true);
+            this.game.setState(Game.STATE_PLAYED);
         }
         this.updateCalculateScoreControl();
+        this.synGameScores();
     }
 
     setAway(scoreControl: HomeAwayFormControl, away) {
         if (this.isScoreValid(scoreControl.getScore()) && this.enablePlayedAtFirstChange === true) {
             this.customForm.controls.played.setValue(true);
+            this.game.setState(Game.STATE_PLAYED);
         }
         this.updateCalculateScoreControl();
+        this.synGameScores();
+    }
+
+    setExtratime(extratime: boolean) {
+        this.game.setScoresMoment(extratime ? Game.MOMENT_EXTRATIME : Game.MOMENT_FULLTIME);
     }
 
     calculateAndInputScoreDiffers() {
@@ -251,6 +273,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         if (index >= 0) {
             this.scoreControls.splice(index, 1);
             this.updateCalculateScoreControl();
+            this.synGameScores();
         }
     }
 
@@ -259,54 +282,57 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             this.customForm.controls.extratime.setValue(false);
             this.initScores();
             this.updateCalculateScoreControl();
+            this.synGameScores();
         }
+        this.game.setState(played ? Game.STATE_PLAYED : Game.STATE_CREATED);
     }
 
-    getWarningsForEqualsInQualification(): string[] {        
-        const poulePlayed = false;
-        if( !poulePlayed ) {
+    getWarningsForEqualsInQualification(): string[] {
+        if (this.game.getPoule().getState() !== Game.STATE_PLAYED) {
             return undefined;
         }
-        const qualService = new QualifyService(this.game.getRound(), this.game.getRound().getParent());
-        const qualifyRules = qualService.getRulesToProcess(this.game.getPoule(), Game.STATE_CREATED, Game.STATE_CREATED);
-        
         const ranking = new Ranking(Ranking.RULESSET_WC);
-        const pouleRankingItems = ranking.getItems(this.game.getPoule().getPlaces(), this.game.getPoule().getGames() );
-        const equalPouleItems = this.getEqualPouleRankingItems( ranking, pouleRankingItems );
+        const pouleRankingItems = ranking.getItems(this.game.getPoule().getPlaces(), this.game.getPoule().getGames());
+        const equalPouleItems = this.getEqualPouleRankingItems(ranking, pouleRankingItems);
         let warnings: string[] = this.getWarningsForEqualsInQualificationHelper(equalPouleItems);
-        
-        qualifyRules.filter( qualifyRule => qualifyRule.isMultiple() ).forEach( multipleRule => {
-            const ruleRankingItems = ranking.getItemsForMultipleRule(multipleRule);
-            const equalRuleItems = this.getEqualRuleRankingItems( ranking, multipleRule, ruleRankingItems );            
-            warnings = warnings.concat( this.getWarningsForEqualsInQualificationHelper(equalRuleItems) );            
+
+        const round = this.game.getRound();
+        round.getChildRounds().forEach(childRound => {
+            const qualService = new QualifyService(childRound, round);
+            const qualifyRules = qualService.getRulesToProcess(this.game.getPoule(), Game.STATE_CREATED, Game.STATE_CREATED);
+            qualifyRules.filter(qualifyRule => qualifyRule.isMultiple()).forEach(multipleRule => {
+                const ruleRankingItems = ranking.getItemsForMultipleRule(multipleRule);
+                const equalRuleItems = this.getEqualRuleRankingItems(ranking, multipleRule, ruleRankingItems);
+                warnings = warnings.concat(this.getWarningsForEqualsInQualificationHelper(equalRuleItems));
+            });
         });
+
         return warnings;
     }
 
-    protected getWarningsForEqualsInQualificationHelper( equalItemsPerRank: RankingItem[][] ): string[] {
-        return equalItemsPerRank.map( equalItems => {
-            const names: string[] = equalItems.map( equalItem => {
-                return this.nameService.getPoulePlaceName( equalItem.getPoulePlace(), true, true ) 
-                + '(' + this.nameService.getPoulePlaceName( equalItem.getPoulePlace(), false, false ) + ')'; // teamname(A1)
-            } );
-            return 'let op ' + names.join('&') + ' zijn precies gelijk geeindigd';
+    protected getWarningsForEqualsInQualificationHelper(equalItemsPerRank: RankingItem[][]): string[] {
+        return equalItemsPerRank.map(equalItems => {
+            const names: string[] = equalItems.map(equalItem => {
+                return this.nameService.getPoulePlaceName(equalItem.getPoulePlace(), true, true);
+            });
+            return names.join(' & ') + ' zijn precies gelijk geëindigd';
         });
     }
 
-    protected getEqualRuleRankingItems( ranking: Ranking, multipleRule: QualifyRule, rankingItems: RankingItem[]): RankingItem[][] {
+    protected getEqualRuleRankingItems(ranking: Ranking, multipleRule: QualifyRule, rankingItems: RankingItem[]): RankingItem[][] {
         const equalItemsPerRank = ranking.getEqualItems(rankingItems);
-        const nrToQualify = multipleRule.getToPoulePlaces().length;        
-        return equalItemsPerRank.filter( equalItems => {
-            const equalRank = equalItems[0].getRankExt();
-            return equalRank <= nrToQualify && ( ( equalRank + ( equalItems.length - 1) ) > nrToQualify );            
+        const nrToQualify = multipleRule.getToPoulePlaces().length;
+        return equalItemsPerRank.filter(equalItems => {
+            const equalRank = equalItems[0].getRank();
+            return equalRank <= nrToQualify && ((equalRank + (equalItems.length - 1)) > nrToQualify);
         });
     }
 
-    protected getEqualPouleRankingItems( ranking: Ranking, rankingItems: RankingItem[]): RankingItem[][] {
+    protected getEqualPouleRankingItems(ranking: Ranking, rankingItems: RankingItem[]): RankingItem[][] {
         const equalItemsPerRank = ranking.getEqualItems(rankingItems);
-        return equalItemsPerRank.filter( equalItems => {
+        return equalItemsPerRank.filter(equalItems => {
             // als alle equalitems geen torule hebben dan false
-            if( equalItems.every( item => item.getPoulePlace().getToQualifyRules().length === 0 ) ) {
+            if (equalItems.every(item => item.getPoulePlaceForRank().getToQualifyRules().length === 0)) {
                 return false;
             }
             return true;
@@ -328,22 +354,10 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         const oldPouleState = this.game.getPoule().getState();
         const oldRoundState = this.game.getRound().getState();
 
-
         this.game.setScoresMoment(moment);
         this.game.setState(state);
-        if (scoreChanged) {
-            const scores = this.game.getScores();
-            while (scores.length > 0) {
-                scores.pop();
-            }
-            if (state === Game.STATE_PLAYED) {
-                let counter = 0;
-                this.scoreControls.forEach(scoreControl => {
-                    const scoreHomeAway = scoreControl.getScore();
-                    const newGameScore = new GameScore(this.game, scoreHomeAway.getHome(), scoreHomeAway.getAway(), ++counter);
-                });
-            }
-        }
+        this.synGameScores(false);
+
         // if (this.planningService.canCalculateStartDateTime(this.game.getRound().getNumber())) {
         //     const startdate = new Date(
         //         this.model.startdate.year,

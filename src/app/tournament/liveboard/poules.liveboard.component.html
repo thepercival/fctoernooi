@@ -25,9 +25,9 @@
       <ng-template ngFor let-rankingItem [ngForOf]="getRankingItems(poule)">
         <tr>
           <td nowrap class="text-right">
-            <ng-container *ngTemplateOutlet="qualclass;context:{$implicit: getQualificationClass(poule, rankingItem.getRank())}">
+            <ng-container *ngTemplateOutlet="qualclass;context:{$implicit: getQualificationClass(poule, rankingItem.getUniqueRank())}">
             </ng-container>
-            <span>{{rankingItem.getRank()}}</span>
+            <span>{{rankingItem.getUniqueRank()}}</span>
           </td>
           <td class="pouleplace">{{nameService.getPoulePlaceFromName(rankingItem.getPoulePlace(), true)}}</td>
           <td class="text-right">{{ranking.getNrOfGamesWithState(rankingItem.getPoulePlace(),

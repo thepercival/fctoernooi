@@ -145,9 +145,9 @@
             <ng-template ngFor let-rankingItem [ngForOf]="getRankingItems(selectedPouleForRanking)">
               <tr>
                 <td class="rankingnr text-right pl-0">
-                  <ng-container *ngTemplateOutlet="qualclass;context:{$implicit: getQualificationClass(selectedPouleForRanking, rankingItem.getRank())}">
+                  <ng-container *ngTemplateOutlet="qualclass;context:{$implicit: getQualificationClass(selectedPouleForRanking, rankingItem.getUniqueRank())}">
                   </ng-container>
-                  <span>{{rankingItem.getRank()}}</span>
+                  <span>{{rankingItem.getUniqueRank()}}</span>
                 </td>
                 <td class="pouleplace pl-0" [ngClass]="{ 'text-primary': isTeamFav(rankingItem.getPoulePlace().getTeam()) }">
                   {{nameService.getPoulePlaceFromName(rankingItem.getPoulePlace(), true)}}
