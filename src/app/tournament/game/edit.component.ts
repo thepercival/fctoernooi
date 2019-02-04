@@ -15,6 +15,9 @@ import {
     Round,
     RoundNumberConfigScore,
     StructureRepository,
+    RankingItem,
+    Ranking,
+    QualifyRule
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
 
@@ -257,6 +260,57 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             this.initScores();
             this.updateCalculateScoreControl();
         }
+    }
+
+    getWarningsForEqualsInQualification(): string[] {        
+        const poulePlayed = false;
+        if( !poulePlayed ) {
+            return undefined;
+        }
+        const qualService = new QualifyService(this.game.getRound(), this.game.getRound().getParent());
+        const qualifyRules = qualService.getRulesToProcess(this.game.getPoule(), Game.STATE_CREATED, Game.STATE_CREATED);
+        
+        const ranking = new Ranking(Ranking.RULESSET_WC);
+        const pouleRankingItems = ranking.getItems(this.game.getPoule().getPlaces(), this.game.getPoule().getGames() );
+        const equalPouleItems = this.getEqualPouleRankingItems( ranking, pouleRankingItems );
+        let warnings: string[] = this.getWarningsForEqualsInQualificationHelper(equalPouleItems);
+        
+        qualifyRules.filter( qualifyRule => qualifyRule.isMultiple() ).forEach( multipleRule => {
+            const ruleRankingItems = ranking.getItemsForMultipleRule(multipleRule);
+            const equalRuleItems = this.getEqualRuleRankingItems( ranking, multipleRule, ruleRankingItems );            
+            warnings = warnings.concat( this.getWarningsForEqualsInQualificationHelper(equalRuleItems) );            
+        });
+        return warnings;
+    }
+
+    protected getWarningsForEqualsInQualificationHelper( equalItemsPerRank: RankingItem[][] ): string[] {
+        return equalItemsPerRank.map( equalItems => {
+            const names: string[] = equalItems.map( equalItem => {
+                return this.nameService.getPoulePlaceName( equalItem.getPoulePlace(), true, true ) 
+                + '(' + this.nameService.getPoulePlaceName( equalItem.getPoulePlace(), false, false ) + ')'; // teamname(A1)
+            } );
+            return 'let op ' + names.join('&') + ' zijn precies gelijk geeindigd';
+        });
+    }
+
+    protected getEqualRuleRankingItems( ranking: Ranking, multipleRule: QualifyRule, rankingItems: RankingItem[]): RankingItem[][] {
+        const equalItemsPerRank = ranking.getEqualItems(rankingItems);
+        const nrToQualify = multipleRule.getToPoulePlaces().length;        
+        return equalItemsPerRank.filter( equalItems => {
+            const equalRank = equalItems[0].getRankExt();
+            return equalRank <= nrToQualify && ( ( equalRank + ( equalItems.length - 1) ) > nrToQualify );            
+        });
+    }
+
+    protected getEqualPouleRankingItems( ranking: Ranking, rankingItems: RankingItem[]): RankingItem[][] {
+        const equalItemsPerRank = ranking.getEqualItems(rankingItems);
+        return equalItemsPerRank.filter( equalItems => {
+            // als alle equalitems geen torule hebben dan false
+            if( equalItems.every( item => item.getPoulePlace().getToQualifyRules().length === 0 ) ) {
+                return false;
+            }
+            return true;
+        });
     }
 
     save(): boolean {
