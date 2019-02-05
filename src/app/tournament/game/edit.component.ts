@@ -294,28 +294,30 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         const ranking = new Ranking(Ranking.RULESSET_WC);
         const pouleRankingItems = ranking.getItems(this.game.getPoule().getPlaces(), this.game.getPoule().getGames());
         const equalPouleItems = this.getEqualPouleRankingItems(ranking, pouleRankingItems);
-        let warnings: string[] = this.getWarningsForEqualsInQualificationHelper(equalPouleItems);
+        const postFix = '(' + this.nameService.getPouleName(this.game.getPoule(), true) + ')';
+        let warnings: string[] = this.getWarningsForEqualsInQualificationHelper(equalPouleItems, postFix);
 
         const round = this.game.getRound();
         round.getChildRounds().forEach(childRound => {
-            const qualService = new QualifyService(childRound, round);
+            const qualService = new QualifyService(round, childRound);
             const qualifyRules = qualService.getRulesToProcess(this.game.getPoule(), Game.STATE_CREATED, Game.STATE_CREATED);
             qualifyRules.filter(qualifyRule => qualifyRule.isMultiple()).forEach(multipleRule => {
                 const ruleRankingItems = ranking.getItemsForMultipleRule(multipleRule);
                 const equalRuleItems = this.getEqualRuleRankingItems(ranking, multipleRule, ruleRankingItems);
-                warnings = warnings.concat(this.getWarningsForEqualsInQualificationHelper(equalRuleItems));
+                const postFix = '(' + this.nameService.getQualifyRuleName(multipleRule) + ')';
+                warnings = warnings.concat(this.getWarningsForEqualsInQualificationHelper(equalRuleItems, postFix));
             });
         });
 
         return warnings;
     }
 
-    protected getWarningsForEqualsInQualificationHelper(equalItemsPerRank: RankingItem[][]): string[] {
+    protected getWarningsForEqualsInQualificationHelper(equalItemsPerRank: RankingItem[][], postFix: string): string[] {
         return equalItemsPerRank.map(equalItems => {
             const names: string[] = equalItems.map(equalItem => {
                 return this.nameService.getPoulePlaceName(equalItem.getPoulePlace(), true, true);
             });
-            return names.join(' & ') + ' zijn precies gelijk geëindigd';
+            return names.join(' & ') + ' zijn precies gelijk geëindigd' + postFix;
         });
     }
 

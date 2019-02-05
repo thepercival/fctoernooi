@@ -29,6 +29,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     scrollToEndRanking: string;
     userRefereeId: number;
     progress: number;
+    showEndRanking: boolean;
 
     constructor(
         route: ActivatedRoute,
@@ -44,6 +45,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
 
     ngOnInit() {
         super.myNgOnInit(() => {
+            this.showEndRanking = this.structure.getRootRound().getNrOfPlaces() <= 20;
             this.initLiveboardLink();
             this.planningService = new PlanningService(this.tournament.getCompetition());
             this.processing = false;

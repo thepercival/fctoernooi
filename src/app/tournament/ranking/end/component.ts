@@ -13,17 +13,20 @@ export class TournamentEndRankingViewComponent {
   @Input() filterEnd: number;
 
   private endRankingService: EndRanking;
+  private rankingItems: RankingItem[];
 
   constructor(public nameService: NameService) {
     this.endRankingService = new EndRanking(Ranking.RULESSET_WC);
   }
 
   getRankingItems(): RankingItem[] {
-    const items = this.endRankingService.getItems(this.rootRound);
-    if (this.filterStart !== undefined && this.filterEnd !== undefined) {
-      return items.filter(item => item.getUniqueRank() >= this.filterStart && item.getUniqueRank() <= this.filterEnd);
+    if (this.rankingItems === undefined) {
+      this.rankingItems = this.endRankingService.getItems(this.rootRound);
     }
-    return items;
+    if (this.filterStart !== undefined && this.filterEnd !== undefined) {
+      return this.rankingItems.filter(item => item.getUniqueRank() >= this.filterStart && item.getUniqueRank() <= this.filterEnd);
+    }
+    return this.rankingItems;
   }
 
   isUnknown(rankingItem: RankingItem): boolean {

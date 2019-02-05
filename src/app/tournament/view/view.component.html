@@ -5,8 +5,8 @@
         <h1 *ngIf="tournament">
           {{tournament.getName()}}
           <button *ngIf="isAdmin()" [routerLink]="['/toernooi', tournament.getId()]" type="button" class="btn btn-outline-secondary btn-sm mr-1">
-              <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
-            </button>
+            <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+          </button>
           <button [routerLink]="['']" [queryParams]="{scrollToId:tournament.getId()}" type="button" class="btn btn-outline-secondary btn-sm">
             <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
           </button>
@@ -33,15 +33,15 @@
           [parentReturnAction]="'/toernooi/view'" [favTeamIds]="getFavTeamIdsFromLocalStorage()" [favRefereeIds]="getFavRefereeIdsFromLocalStorage()"
           (popOverIsOpen)="setNoRefresh($event)"></app-tournament-planning-view>
         <div class="d-flex justify-content-between mt-3" id="endranking">
-            <h2>
-              <span>eindstand</span>
-            </h2>
-            <button type="button" class="btn btn-sm btn-outline-secondary mr-2" *ngIf="structure.getRoundNumbers().length > 1"
-                (click)="linkToStructureView()">
-              <i class="fi flaticon-structure"></i>
-              <span>indeling</span>
-            </button>  
-          </div>
+          <h2>
+            <span>eindstand</span>
+          </h2>
+          <button type="button" class="btn btn-sm btn-outline-secondary mr-2" *ngIf="structure.getRoundNumbers().length > 1"
+            (click)="linkToStructureView()">
+            <i class="fi flaticon-structure"></i>
+            <span>indeling</span>
+          </button>
+        </div>
         <app-tournament-endranking-view [rootRound]="structure.getRootRound()"></app-tournament-endranking-view>
       </div>
     </div>

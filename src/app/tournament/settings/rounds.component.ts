@@ -307,7 +307,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         return false;
     }
 
-    canSportBeDoneTeamup(sportName: string): boolean {
+    canSportBeDoneTeamup(): boolean {
         const sport = this.tournament.getCompetition().getLeague().getSport();
         return this.configService.canSportBeDoneTeamup(sport);
     }
