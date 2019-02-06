@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlanningRepository, PlanningService, Referee, RefereeRepository, StructureRepository } from 'ngx-sport';
 
+import { IAlert } from '../../app.definitions';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentService } from '../../lib/tournament/service';
@@ -15,7 +16,8 @@ import { TournamentComponent } from '../component';
 export class RefereeListComponent extends TournamentComponent implements OnInit {
   private planningService: PlanningService;
   referees: Referee[];
-  public competitorsasreferee: boolean;
+  public selfReferee: boolean;
+  alertSelfReferee: IAlert;
 
   validations: any = {
     'minlengthname': Referee.MIN_LENGTH_NAME,
@@ -44,6 +46,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     if (this.isStarted()) {
       this.setAlert('warning', 'het toernooi is al begonnen, je kunt niet meer wijzigen');
     }
+    // http://localhost:4200/toernooi/roundssettings/957/1?returnAction=%2Ftoernooi%2Fedit&returnParam=957
   }
 
   isStarted() {
@@ -69,6 +72,19 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
         queryParams: {
           returnAction: '/toernooi/referees',
           returnParam: tournament.getId()
+        }
+      }
+    );
+  }
+
+  linkToRoundSettings() {
+    this.router.navigate(
+      ['/toernooi/roundssettings', this.tournament.getId(), this.structure.getFirstRoundNumber().getNumber()],
+      {
+        queryParams: {
+          category: '3',
+          returnAction: '/toernooi/edit',
+          returnParam: this.tournament.getId()
         }
       }
     );

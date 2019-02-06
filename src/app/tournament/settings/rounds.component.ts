@@ -31,7 +31,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     categories: IRoundConfigCategories = {
         qualification: 1,
         gameunits: 2,
-        planning: 3,
+        planning: 3, // let op : wordt gelinkt vanuit referees
     };
 
     enableTime: boolean;
@@ -97,6 +97,9 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             super.myNgOnInit(() => this.initConfigs(+params.roundNumber));
         });
         this.route.queryParamMap.subscribe(params => {
+            if (params.get('category') !== null) {
+                this.category = +params.get('category');
+            }
             this.returnUrl = params.get('returnAction');
             this.returnUrlParam = +params.get('returnParam');
             this.returnUrlQueryParamKey = params.get('returnQueryParamKey');
@@ -114,7 +117,6 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
 
     changeRoundNumber(roundNumber: RoundNumber) {
         this.roundNumber = roundNumber;
-        this.category = undefined;
         this.modelConfig = cloneDeep(this.roundNumber.getConfig());
         this.toggleExtension(true);
         this.modelRecreate = false;
@@ -292,6 +294,18 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         this.modelReschedule = true;
         this.modelRecreate = true;
         this.modelConfig.setTeamup(teamUp);
+    }
+
+    setSelfReferee(selfReferee: boolean) {
+        if (!this.modelConfig.getSelfReferee() && selfReferee) {
+            this.setAlert('warning', 'er worden alleen deelnemers als scheidsrechter ingezet' +
+                ' voor wedstrijden uit dezelfde poule en wanneer de planning hierdoor niet uitloopt'
+            );
+        } else if (this.modelConfig.getSelfReferee() && !selfReferee) {
+            this.resetAlert();
+        }
+        this.modelReschedule = true;
+        this.modelConfig.setSelfReferee(selfReferee);
     }
 
     isScoreConfigReadOnly(scoreConfig: RoundNumberConfigScore) {

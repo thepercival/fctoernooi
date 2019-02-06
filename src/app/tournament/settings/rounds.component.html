@@ -60,6 +60,7 @@
                         <ul class="pl-3">
                             <li>onderlinge duels</li>
                             <li>tijdsinstellingen</li>
+                            <li>deelnemers als scheidsrechters</li>
                         </ul>
                     </div>
                 </div>
@@ -162,6 +163,18 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label for="selfreferee" class="col-8 col-form-label pointer">
+                                deelnemers als scheidsrechters
+                            </label>
+                            <div class="form-check col-4">
+                                <label class="custom-control custom-checkbox col-form-label pl-0">
+                                    <input type="checkbox" class="custom-control-input form-check-input" id="selfreferee"
+                                        name="selfreferee" [ngModel]="modelConfig.getSelfReferee()" (ngModelChange)="setSelfReferee($event)">
+                                    <span class="custom-control-indicator"></span>
+                                </label>
+                            </div>
+                        </div>
                         <div *ngIf="canSportBeDoneTeamup()" class="form-group row">
                             <label for="teamupnoaction" class="col-8 col-form-label pointer" container="body" placement="right"
                                 ngbPopover="deze optie geldt alleen voor poules van 4-6 deelnemers">met
@@ -223,7 +236,7 @@
                     <div *ngIf="category !== undefined">
                         <div class="form-group row">
                             <div class="col-8 text-right">
-                                <button type="button" [disabled]="processing" class="btn btn-outline-secondary" (click)="changeRoundNumber(roundNumber)">terug
+                                <button type="button" [disabled]="processing" class="btn btn-outline-secondary" (click)="changeRoundNumber(roundNumber); category = undefined;">terug
                                 </button>
                             </div>
                             <div class="col-4">
