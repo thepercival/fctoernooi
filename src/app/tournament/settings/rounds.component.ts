@@ -297,13 +297,6 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     }
 
     setSelfReferee(selfReferee: boolean) {
-        if (!this.modelConfig.getSelfReferee() && selfReferee) {
-            this.setAlert('warning', 'er worden alleen deelnemers als scheidsrechter ingezet' +
-                ' voor wedstrijden uit dezelfde poule en wanneer de planning hierdoor niet uitloopt'
-            );
-        } else if (this.modelConfig.getSelfReferee() && !selfReferee) {
-            this.resetAlert();
-        }
         this.modelReschedule = true;
         this.modelConfig.setSelfReferee(selfReferee);
     }
