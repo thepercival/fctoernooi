@@ -43,7 +43,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     returnUrlQueryParamValue: string;
     userRefereeId: number;
     private enablePlayedAtFirstChange;
-
+    
     constructor(
         route: ActivatedRoute,
         router: Router,
@@ -347,15 +347,8 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         if (this.game.getState() === Game.STATE_PLAYED && this.scoreControls.length === 0) {
             this.scoreControls.push(new HomeAwayFormControl(0, 0));
         }
-
         const moment = this.customForm.controls.extratime.value === true ? Game.MOMENT_EXTRATIME : Game.MOMENT_FULLTIME;
-        const state = this.customForm.controls.played.value === true ? Game.STATE_PLAYED : Game.STATE_CREATED;
-        const stateChanged = this.game.getState() !== state;
-        let scoreChanged = this.hasScoreChanges(this.game.getScores(), this.scoreControls);
-        scoreChanged = scoreChanged || this.game.getScoresMoment() !== moment;
-        const oldPouleState = this.game.getPoule().getState();
-        const oldRoundState = this.game.getRound().getState();
-
+        const state = this.customForm.controls.played.value === true ? Game.STATE_PLAYED : Game.STATE_CREATED;                
         this.game.setScoresMoment(moment);
         this.game.setState(state);
         this.synGameScores(false);
@@ -375,12 +368,6 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             .subscribe(
                 /* happy path */ gameRes => {
                     this.game = gameRes;
-                    if (!stateChanged && !scoreChanged) {
-                        this.processing = false;
-                        this.setAlert('success', 'de wedstrijd is opgeslagen');
-                        this.navigateBack();
-                        return;
-                    }
 
                     const currentQualifiedPoulePlaces: PoulePlace[] = [];
                     this.game.getRound().getChildRounds().forEach(childRound => {
@@ -391,7 +378,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
                     const newQualifiers: INewQualifier[] = [];
                     this.game.getRound().getChildRounds().forEach(childRound => {
                         const qualService = new QualifyService(childRound.getParent(), childRound);
-                        const qualifyRules = qualService.getRulesToProcess(this.game.getPoule(), oldPouleState, oldRoundState);
+                        const qualifyRules = qualService.getRulesToProcess(this.game.getPoule(), Game.STATE_CREATED, Game.STATE_CREATED);
                         qualService.getNewQualifiers(qualifyRules).forEach((newQualifier) => {
                             newQualifiers.push(newQualifier);
                         });
@@ -409,7 +396,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
                         },
                             err => {
                                 this.processing = false;
-                                this.setAlert('info', 'de wedstrijd is niet opgeslagen: ' + err);
+                                this.setAlert('danger', 'de wedstrijd is niet opgeslagen: ' + err);
                             }
                         );
                     } else {

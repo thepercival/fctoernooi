@@ -18,3 +18,7 @@ input.ng-invalid, select.ng-invalid {
 input.max-width-100 {
     max-width: 100px;
 }
+
+h2 {
+    word-break: break-all;
+}

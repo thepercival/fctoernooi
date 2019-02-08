@@ -103,7 +103,7 @@ library.add(
     CommonModule,
     FormsModule,
     TournamentRoutingModule,
-    NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule.forRoot(),
+    NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule,
     NouisliderModule,
     ReactiveFormsModule,
     FontAwesomeModule/*,
