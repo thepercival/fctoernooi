@@ -30,6 +30,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     userRefereeId: number;
     progress: number;
     showEndRanking: boolean;
+    recalcEndRanking = true;
 
     constructor(
         route: ActivatedRoute,
@@ -83,6 +84,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
                     if (this.refreshAtCountDown === true) {
                         this.setData(this.tournament.getId(), () => {
                             this.planningService = new PlanningService(this.tournament.getCompetition());
+                            this.recalcEndRanking = !this.recalcEndRanking;
                         });
                     }
                     this.countDown();

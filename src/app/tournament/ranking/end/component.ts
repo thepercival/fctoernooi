@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { EndRanking, NameService, Ranking, RankingItem, Round } from 'ngx-sport';
 
 @Component({
@@ -6,17 +6,24 @@ import { EndRanking, NameService, Ranking, RankingItem, Round } from 'ngx-sport'
   templateUrl: './component.html',
   styleUrls: ['./component.scss']
 })
-export class TournamentEndRankingViewComponent {
+export class TournamentEndRankingViewComponent implements OnChanges {
 
   @Input() rootRound: Round;
   @Input() filterStart: number;
   @Input() filterEnd: number;
+  @Input() recalculate: boolean;
 
   private endRankingService: EndRanking;
   private rankingItems: RankingItem[];
 
   constructor(public nameService: NameService) {
     this.endRankingService = new EndRanking(Ranking.RULESSET_WC);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.recalculate.currentValue !== changes.recalculate.previousValue) {
+      this.rankingItems = undefined;
+    }
   }
 
   getRankingItems(): RankingItem[] {
