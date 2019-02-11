@@ -5,6 +5,7 @@ import { Subscription, timer } from 'rxjs';
 
 import { GlobalEventsManager } from '../../common/eventmanager';
 import { IconManager } from '../../common/iconmanager';
+import { MyNavigation } from '../../common/navigation';
 import { Liveboard } from '../../lib/liveboard';
 import { EndRankingScreen, GamesScreen, PoulesRankingScreen, SponsorScreen } from '../../lib/liveboard/screens';
 import { Sponsor } from '../../lib/sponsor';
@@ -24,6 +25,8 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
     public activeScreen: any;
     public ranking: Ranking;
     private maxLines = 8;
+    private returnUrl: string;
+    private returnUrlParam: number;
 
     constructor(
         route: ActivatedRoute,
@@ -32,13 +35,19 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
         structureRepository: StructureRepository,
         private globalEventsManager: GlobalEventsManager,
         public iconManager: IconManager,
-        public nameService: NameService
+        public nameService: NameService,
+        private myNavigation: MyNavigation
     ) {
         super(route, router, tournamentRepository, structureRepository);
         this.ranking = new Ranking(Ranking.RULESSET_WC);
     }
 
     ngOnInit() {
+        console.log();
+        this.route.queryParamMap.subscribe(params => {
+            this.returnUrl = params.get('returnAction');
+        });
+
         super.myNgOnInit(() => this.processScreens());
     }
 
@@ -111,13 +120,9 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
         return this.tournament.getCompetition().getReferees().length > 0;
     }
 
-
-
-    /*getRoundNumberAbbreviation( roundNumber: RoundNumber ): string {
-        const name = this.nameService.getRoundNumberName(roundNumber);
-        const idxSpace = name.indexOf(' ');
-        return name.substring(0, idxSpace) + name.substring(idxSpace + 1, idxSpace + 2).toUpperCase();
-    }*/
+    navigateBack() {
+        this.router.navigateByUrl(this.myNavigation.getPreviousUrl(''));
+    }
 }
 
 

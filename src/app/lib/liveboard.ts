@@ -1,4 +1,4 @@
-import { Game, NameService, PlanningService, Poule, PoulePlace, Ranking, RoundNumber, Structure } from 'ngx-sport';
+import { Game, NameService, PlanningService, Poule, Ranking, RoundNumber, Structure } from 'ngx-sport';
 
 import {
     CreatedAndInplayGamesScreen,
@@ -77,56 +77,47 @@ export class Liveboard {
 
     private getScreensForPouleRankings(): Screen[] {
         const screens: Screen[] = [];
-        const roundNumber = this.getRoundNumberForPouleRankings();
-        if (roundNumber === undefined) {
+        const roundNumbers: RoundNumber[] = this.getRoundNumbersForPouleRankings();
+        if (roundNumbers.length === 0) {
             return screens;
         }
-        const poulesForRanking = this.getPoulesForRanking(roundNumber);
-        const nameService = new NameService();
-        const roundsDescription = nameService.getRoundNumberName(roundNumber);
-        const twoPoules: Poule[] = [];
-        poulesForRanking.forEach(poule => {
-            twoPoules.push(poule);
-            if (twoPoules.length < 2) {
-                return;
+        roundNumbers.forEach(roundNumber => {
+            const poulesForRanking = roundNumber.getPoules();
+            const nameService = new NameService();
+            const roundsDescription = nameService.getRoundNumberName(roundNumber);
+            const twoPoules: Poule[] = [];
+            poulesForRanking.forEach(poule => {
+                twoPoules.push(poule);
+                if (twoPoules.length < 2) {
+                    return;
+                }
+                screens.push(new PoulesRankingScreen(twoPoules.shift(), twoPoules.shift(), roundsDescription));
+            });
+            if (twoPoules.length === 1) {
+                screens.push(new PoulesRankingScreen(twoPoules.shift(), undefined, roundsDescription));
             }
-            screens.push(new PoulesRankingScreen(twoPoules.shift(), twoPoules.shift(), roundsDescription));
         });
-        if (twoPoules.length === 1) {
-            screens.push(new PoulesRankingScreen(twoPoules.shift(), undefined, roundsDescription));
-        }
         return screens;
     }
 
-    getPoulesForRanking(roundNumber: RoundNumber): Poule[] {
-        let poules: Poule[] = [];
-        roundNumber.getRounds().forEach(round => {
-            poules = poules.concat(round.getPoules().filter(poule => this.hasPouleAPlaceWithTwoGamesPlayed(poule)));
-        });
-        return poules;
+    protected getRoundNumbersForPouleRankings(): RoundNumber[] {
+        return this.getRoundNumbersForPouleRankingsHelper(this.structure.getFirstRoundNumber());
     }
 
-    protected getRoundNumberForPouleRankings(): RoundNumber {
-        return this.getRoundNumberForPouleRankingsHelper(this.structure.getFirstRoundNumber());
-    }
-
-    /**
-     * pak laatst gespeelde ronde, 
-     * wanner er een volgende ronde is en deze is inplay, gebruik dan deze
-     * 
-     * @param roundNumber
-     */
-    protected getRoundNumberForPouleRankingsHelper(roundNumber: RoundNumber): RoundNumber {
+    protected getRoundNumbersForPouleRankingsHelper(roundNumber: RoundNumber): RoundNumber[] {
         if (roundNumber.getState() === Game.STATE_INPLAY) {
-            return roundNumber;
+            return [roundNumber];
         }
         if (roundNumber.getState() === Game.STATE_PLAYED) {
-            if (!roundNumber.hasNext() || roundNumber.getNext().getState() === Game.STATE_CREATED) {
-                return roundNumber;
+            if (!roundNumber.hasNext()) {
+                return [roundNumber];
             }
-            return this.getRoundNumberForPouleRankingsHelper(roundNumber.getNext());
+            if (roundNumber.getNext().getState() === Game.STATE_CREATED) {
+                return [roundNumber, roundNumber.getNext()];
+            }
+            return this.getRoundNumbersForPouleRankingsHelper(roundNumber.getNext());
         }
-        return undefined;
+        return [];
     }
 
     private getScreenForGamesPlayed(): Screen {
@@ -155,11 +146,11 @@ export class Liveboard {
 
     private getScreensForSponsors(): Screen[] {
         const nrOfSponsors = this.tournament.getSponsors().length;
-        if ( nrOfSponsors === 0) {
+        if (nrOfSponsors === 0) {
             return [];
         }
-        const nrOfScreens = ( ( this.maxLines - ( nrOfSponsors % this.maxLines ) ) + nrOfSponsors ) / this.maxLines;
-        const nrOfSponsorsPerScreen = Math.round( nrOfSponsors / nrOfScreens );
+        const nrOfScreens = ((this.maxLines - (nrOfSponsors % this.maxLines)) + nrOfSponsors) / this.maxLines;
+        const nrOfSponsorsPerScreen = Math.round(nrOfSponsors / nrOfScreens);
         const screens: Screen[] = [];
         const sponsors = this.tournament.getSponsors().slice();
         while (sponsors.length > 0) {
@@ -180,9 +171,5 @@ export class Liveboard {
             screens.push(new EndRankingScreen(currentRank + 1, endRank));
         }
         return screens;
-    }
-
-    hasPouleAPlaceWithTwoGamesPlayed(poule: Poule): boolean {
-        return poule.getPlaces().some((place: PoulePlace) => this.ranking.getNrOfGamesWithState(place, place.getGames()) > 1);
     }
 }

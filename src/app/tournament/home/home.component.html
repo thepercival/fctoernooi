@@ -96,6 +96,22 @@
   <div *ngIf="!processing && structure" class="row d-flex justify-content-center my-3">
     <div class="card mt-3 mx-2">
       <div class="card-body d-flex justify-content-between">
+        <div [routerLink]="['/toernooi/view', tournament.getId()]" class="text-center pointer">
+          <div>
+            <h5 class="card-title">
+              <fa-icon [icon]="['fas', 'eye']"></fa-icon>
+            </h5>
+          </div>
+          <div><span>bekijken</span></div>
+        </div>
+        <div [routerLink]="['/toernooi/liveboard', tournament.getId()]" class="text-center pointer">
+          <div>
+            <h5 class="card-title">
+              <fa-icon [icon]=" [ 'fas', 'tv'] "></fa-icon>
+            </h5>
+          </div>
+          <div><span>live</span><br><span>scorebord</span></div>
+        </div>
         <div (click)="openModalPrint(contentprint)" class="text-center pointer">
           <div>
             <h5 class="card-title">
@@ -104,6 +120,10 @@
           </div>
           <div><span>afdrukken</span></div>
         </div>
+      </div>
+    </div>
+    <div class="card mt-3 mx-2">
+      <div class="card-body d-flex justify-content-between">
         <div *ngIf="isAdmin()" (click)="openModalCopy(contentcopy)" class="text-center pointer">
           <div>
             <h5 class="card-title">
@@ -111,18 +131,6 @@
             </h5>
           </div>
           <div><span>nieuwe</span><br><span>editie</span></div>
-        </div>
-      </div>
-    </div>
-    <div class="card mt-3 mx-2">
-      <div class="card-body d-flex justify-content-between">
-        <div [routerLink]="['/toernooi/view', tournament.getId()]" class="text-center pointer">
-          <div>
-            <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'eye']"></fa-icon>
-            </h5>
-          </div>
-          <div><span>bekijken</span></div>
         </div>
         <div (click)="openModalShare(contentshare)" class="text-center pointer">
           <div>

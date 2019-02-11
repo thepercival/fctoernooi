@@ -129,7 +129,7 @@
                                 <div class="col-6">
                                     <label class="col-form-label">{{scoreConfig.getName()}}</label>
                                 </div>
-                                <label for="scoreMaximum-{{scoreConfig.getId()}}" class="col-2 col-form-label text-right">{{getDirectionClass(scoreConfig)}}</label>
+                                <label for="scoreMaximum-{{scoreConfig.getId()}}" class="col-2 col-form-label text-right">{{getDirectionName(scoreConfig)}}</label>
                                 <div class="col-4">
                                     <input type="number" [maxlength]="4" [ngModel]="scoreConfig.getMaximum()"
                                         (ngModelChange)="setScoreConfigMaximum(scoreConfig,$event)" id="scoreMaximum-{{scoreConfig.getId()}}"

@@ -21,7 +21,7 @@ export class TournamentEndRankingViewComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.recalculate.currentValue !== changes.recalculate.previousValue) {
+    if (changes.recalculate !== undefined && changes.recalculate.currentValue !== changes.recalculate.previousValue) {
       this.rankingItems = undefined;
     }
   }

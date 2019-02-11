@@ -1,4 +1,17 @@
-<div class="container-fluid px-0">
+<div class=" text-center align-items-center d-lg-none">
+  <div>
+    <ngb-alert type="info" [dismissible]="false">deze pagina werkt alleen vanaf middelgrote schermen</ngb-alert>
+  </div>
+  <div>
+    <button *ngIf="tournament" (click)="navigateBack()" routerLinkActive="active" class="btn btn-outline-secondary"
+      type="button">
+      <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+      <span> terug</span>
+    </button>
+  </div>
+</div>
+
+<div class="container-fluid px-0 d-none d-lg-block">
   <div class="d-flex justify-content-between align-items-center mb-5">
     <h1 *ngIf="tournament">
       <small>
