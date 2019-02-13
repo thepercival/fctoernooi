@@ -35,12 +35,12 @@
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
             </h5>
-            <p class="card-text" *ngIf="structure.getRootRound().getTeams().length === structure.getRootRound().getPoulePlaces().length">
+            <p class="card-text" *ngIf="structure.getRootRound().getCompetitors().length === structure.getRootRound().getPoulePlaces().length">
               <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> alle namen ingevuld
             </p>
-            <p class="card-text" *ngIf="structure.getRootRound().getTeams().length < structure.getRootRound().getPoulePlaces().length">
+            <p class="card-text" *ngIf="structure.getRootRound().getCompetitors().length < structure.getRootRound().getPoulePlaces().length">
               <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> vul de namen in
-              ({{structure.getRootRound().getTeams().length}}/{{structure.getRootRound().getPoulePlaces().length}})
+              ({{structure.getRootRound().getCompetitors().length}}/{{structure.getRootRound().getPoulePlaces().length}})
             </p>
           </div>
         </div>

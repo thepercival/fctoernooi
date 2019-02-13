@@ -390,7 +390,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
                             newQualifiers.push(newQualifier);
                         });
                     });
-                    const changedPoulePlaces = this.setTeams(newQualifiers, currentQualifiedPoulePlaces);
+                    const changedPoulePlaces = this.setCompetitors(newQualifiers, currentQualifiedPoulePlaces);
                     if (changedPoulePlaces.length > 0) {
                         const reposUpdates = [];
                         changedPoulePlaces.forEach((changedPoulePlace) => {
@@ -443,12 +443,12 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         return originalGameScoresTmp.length > 0;
     }
 
-    protected setTeams(newQualifiers: INewQualifier[], poulePlaces: PoulePlace[]): PoulePlace[] {
+    protected setCompetitors(newQualifiers: INewQualifier[], poulePlaces: PoulePlace[]): PoulePlace[] {
         const changedPoulePlaces: PoulePlace[] = [];
         newQualifiers.forEach(newQualifier => {
             const poulePlace = poulePlaces.find(poulePlaceIt => newQualifier.poulePlace === poulePlaceIt);
-            if (poulePlace.getTeam() !== newQualifier.team) {
-                poulePlace.setTeam(newQualifier.team);
+            if (poulePlace.getCompetitor() !== newQualifier.competitor) {
+                poulePlace.setCompetitor(newQualifier.competitor);
                 changedPoulePlaces.push(poulePlace);
             }
         });

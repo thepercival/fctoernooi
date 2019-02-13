@@ -30,7 +30,7 @@
       <div *ngIf="!processing">
         <app-tournament-planning-view *ngFor="let roundNumber of structure.getRoundNumbers()" [tournament]="tournament"
           [roundNumber]="roundNumber" [planningService]="planningService" [userRefereeId]="userRefereeId" [scrollTo]="scrollTo"
-          [parentReturnAction]="'/toernooi/view'" [favTeamIds]="getFavTeamIdsFromLocalStorage()" [favRefereeIds]="getFavRefereeIdsFromLocalStorage()"
+          [parentReturnAction]="'/toernooi/view'" [favCompetitorIds]="getFavCompetitorIdsFromLocalStorage()" [favRefereeIds]="getFavRefereeIdsFromLocalStorage()"
           (popOverIsOpen)="setNoRefresh($event)"></app-tournament-planning-view>
         <div class="d-flex justify-content-between mt-3" id="endranking">
           <h2>

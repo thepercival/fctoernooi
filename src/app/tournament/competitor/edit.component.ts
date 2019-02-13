@@ -2,14 +2,13 @@ import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@ang
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    AssociationRepository,
-    JsonTeam,
+    JsonCompetitor,
     PoulePlace,
     PoulePlaceRepository,
     NameService,
     StructureRepository,
-    Team,
-    TeamRepository,
+    Competitor,
+    CompetitorRepository,
 } from 'ngx-sport';
 
 import { TournamentComponent } from '../component';
@@ -31,15 +30,14 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
 
     @ViewChild('inputname') private elementRef: ElementRef;
 
-    validations: TeamValidations = {
-        minlengthname: Team.MIN_LENGTH_NAME,
-        maxlengthname: Team.MAX_LENGTH_NAME,
-        maxlengthinfo: Team.MAX_LENGTH_INFO
+    validations: CompetitorValidations = {
+        minlengthname: Competitor.MIN_LENGTH_NAME,
+        maxlengthname: Competitor.MAX_LENGTH_NAME,
+        maxlengthinfo: Competitor.MAX_LENGTH_INFO
     };
 
     constructor(
-        private teamRepository: TeamRepository,
-        private associationRepository: AssociationRepository,
+        private competitorRepository: CompetitorRepository,
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
@@ -90,13 +88,13 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
             this.processing = false;
             return;
         }
-        this.customForm.controls.name.setValue(this.poulePlace.getTeam() ? this.poulePlace.getTeam().getName() : undefined);
-        this.customForm.controls.info.setValue(this.poulePlace.getTeam() ? this.poulePlace.getTeam().getInfo() : undefined);
+        this.customForm.controls.name.setValue(this.poulePlace.getCompetitor() ? this.poulePlace.getCompetitor().getName() : undefined);
+        this.customForm.controls.info.setValue(this.poulePlace.getCompetitor() ? this.poulePlace.getCompetitor().getInfo() : undefined);
         this.processing = false;
     }
 
     ngAfterViewChecked() {
-        if (this.poulePlace !== undefined && this.poulePlace.getTeam() === undefined && this.focused === false) {
+        if (this.poulePlace !== undefined && this.poulePlace.getCompetitor() === undefined && this.focused === false) {
             this.focused = true;
             this.elementRef.nativeElement.focus();
         }
@@ -105,7 +103,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
     save(): boolean {
         this.processing = true;
         this.setAlert('info', 'de deelnemer wordt opgeslagen');
-        if (this.poulePlace.getTeam() !== undefined) {
+        if (this.poulePlace.getCompetitor() !== undefined) {
             this.edit();
         } else {
             this.add();
@@ -123,22 +121,22 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
             return;
         }
         const association = this.tournament.getCompetition().getLeague().getAssociation();
-        const team: JsonTeam = {
+        const competitor: JsonCompetitor = {
             name: name,
             info: info ? info : undefined
         };
 
-        this.teamRepository.createObject(team, association)
+        this.competitorRepository.createObject(competitor, association)
             .subscribe(
-            /* happy path */ teamRes => {
-                    this.assignTeam(teamRes);
+            /* happy path */ competitorRes => {
+                    this.assignCompetitor(competitorRes);
                 },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
             );
     }
 
-    assignTeam(team: Team) {
-        this.poulePlace.setTeam(team);
+    assignCompetitor(competitor: Competitor) {
+        this.poulePlace.setCompetitor(competitor);
         this.poulePlaceRepository.editObject(this.poulePlace, this.poulePlace.getPoule())
             .subscribe(
                   /* happy path */ poulePlaceRes => {
@@ -149,21 +147,21 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
     }
 
     edit() {
-        if (this.isNameDuplicate(this.customForm.controls.name.value, this.poulePlace.getTeam().getId())) {
+        if (this.isNameDuplicate(this.customForm.controls.name.value, this.poulePlace.getCompetitor().getId())) {
             this.setAlert('danger', 'de naam bestaat al voor dit toernooi');
             this.processing = false;
             return;
         }
 
-        const team = this.poulePlace.getTeam();
+        const competitor = this.poulePlace.getCompetitor();
         const name = this.customForm.controls.name.value;
         const info = this.customForm.controls.info.value;
 
-        team.setName(name);
-        team.setInfo(info ? info : undefined);
-        this.teamRepository.editObject(team)
+        competitor.setName(name);
+        competitor.setInfo(info ? info : undefined);
+        this.competitorRepository.editObject(competitor)
             .subscribe(
-                    /* happy path */ teamRes => {
+                    /* happy path */ competitorRes => {
                     this.navigateBack();
                 },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
@@ -187,11 +185,11 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
         this.router.navigate(this.getForwarUrl(), { queryParams: this.getForwarUrlQueryParams() });
     }
 
-    isNameDuplicate(name: string, teamId?: number): boolean {
+    isNameDuplicate(name: string, competitorId?: number): boolean {
         const poulePlaces = this.structure.getRootRound().getPoulePlaces();
         return poulePlaces.find(poulePlaceIt => {
-            const teamName = poulePlaceIt.getTeam() ? poulePlaceIt.getTeam().getName() : undefined;
-            return (name === teamName && (teamId === undefined || poulePlaceIt.getTeam().getId() === undefined));
+            const competitorName = poulePlaceIt.getCompetitor() ? poulePlaceIt.getCompetitor().getName() : undefined;
+            return (name === competitorName && (competitorId === undefined || poulePlaceIt.getCompetitor().getId() === undefined));
         }) !== undefined;
     }
 
@@ -205,7 +203,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
     // }
 }
 
-export interface TeamValidations {
+export interface CompetitorValidations {
     minlengthname: number;
     maxlengthname: number;
     maxlengthinfo: number;

@@ -68,7 +68,7 @@
           <div class="col-9">
             <button [disabled]="customForm.invalid" type="submit" class="btn btn-outline-primary">
               <i class="fi flaticon-referee" title="scheidsrechter"></i>
-              <span>{{refereeId > 0 ? 'wijzigen' : 'toevoegen'}}</span>
+              <span>{{referee ? 'wijzigen' : 'toevoegen'}}</span>
             </button>
           </div>
         </div>

@@ -9,8 +9,8 @@ import {
   RoundNumber,
   Structure,
   StructureRepository,
-  Team,
-  TeamRepository,
+  Competitor,
+  CompetitorRepository,
 } from 'ngx-sport';
 
 import { TournamentComponent } from '../component';
@@ -25,7 +25,7 @@ import { TournamentStructureHelpModalComponent } from './helpmodal.component';
 })
 export class TournamentStructureComponent extends TournamentComponent implements OnInit {
   changedRoundNumber: RoundNumber;
-  originalTeams: Team[];
+  originalCompetitors: Competitor[];
   clonedStructure: Structure;
 
   uiSliderConfigExample: any = {
@@ -45,7 +45,7 @@ export class TournamentStructureComponent extends TournamentComponent implements
     tournamentRepository: TournamentRepository,
     structureRepository: StructureRepository,
     private planningRepository: PlanningRepository,
-    private teamRepository: TeamRepository,
+    private competitorRepository: CompetitorRepository,
     private modalService: NgbModal
   ) {
     super(route, router, tournamentRepository, structureRepository);
@@ -69,39 +69,39 @@ export class TournamentStructureComponent extends TournamentComponent implements
   }
 
   createClonedStructure(structure: Structure): Structure {
-    this.originalTeams = structure.getRootRound().getTeams();
+    this.originalCompetitors = structure.getRootRound().getCompetitors();
     return cloneDeep(structure);
   }
 
-  processUnusedTeams(rootRound: Round) {
-    const unusedTeams = this.teamRepository.getUnusedTeams(this.tournament.getCompetition());
-    const oldTeams = this.originalTeams;
-    const newTeams = rootRound.getTeams();
+  processUnusedCompetitors(rootRound: Round) {
+    const unusedCompetitors = this.competitorRepository.getUnusedCompetitors(this.tournament.getCompetition());
+    const oldCompetitors = this.originalCompetitors;
+    const newCompetitors = rootRound.getCompetitors();
 
-    // add teams which are not used anymore to unusedteams
-    oldTeams.forEach(oldTeam => {
-      if (newTeams.find(newTeam => newTeam.getId() === oldTeam.getId()) === undefined
-        && unusedTeams.find(unusedTeam => unusedTeam.getId() === oldTeam.getId()) === undefined
+    // add competitors which are not used anymore to unusedcompetitors
+    oldCompetitors.forEach(oldCompetitor => {
+      if (newCompetitors.find(newCompetitor => newCompetitor.getId() === oldCompetitor.getId()) === undefined
+        && unusedCompetitors.find(unusedCompetitor => unusedCompetitor.getId() === oldCompetitor.getId()) === undefined
       ) {
-        unusedTeams.push(oldTeam);
+        unusedCompetitors.push(oldCompetitor);
       }
     });
 
-    // remove teams which are used again
-    unusedTeams.forEach(unusedTeam => {
-      if (newTeams.find(newTeam => newTeam.getId() === unusedTeam.getId()) !== undefined) {
-        const index = unusedTeams.indexOf(unusedTeam);
+    // remove competitors which are used again
+    unusedCompetitors.forEach(unusedCompetitor => {
+      if (newCompetitors.find(newCompetitor => newCompetitor.getId() === unusedCompetitor.getId()) !== undefined) {
+        const index = unusedCompetitors.indexOf(unusedCompetitor);
         if (index > -1) {
-          unusedTeams.splice(index, 1);
+          unusedCompetitors.splice(index, 1);
         }
       }
     });
 
-    // add an unused team if there are places without a team
+    // add an unused Competitor if there are places without a Competitor
     const poulePlaces = rootRound.getPoulePlaces();
     poulePlaces.forEach((poulePlace) => {
-      if (poulePlace.getTeam() === undefined) {
-        poulePlace.setTeam(unusedTeams.shift());
+      if (poulePlace.getCompetitor() === undefined) {
+        poulePlace.setCompetitor(unusedCompetitors.shift());
       }
     });
   }
@@ -118,7 +118,7 @@ export class TournamentStructureComponent extends TournamentComponent implements
     this.processing = true;
     this.setAlert('info', 'wijzigingen worden opgeslagen');
 
-    this.processUnusedTeams(this.clonedStructure.getRootRound());
+    this.processUnusedCompetitors(this.clonedStructure.getRootRound());
 
     this.structureRepository.editObject(this.clonedStructure, this.tournament.getCompetition())
       .subscribe(

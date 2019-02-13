@@ -12,7 +12,7 @@ export class TournamentListRemoveModalComponent {
 
     constructor(public activeModal: NgbActiveModal) { }
 
-    hasMinimumNrOfTeamsPerPoule() {
+    hasMinimumNrOfPlacesPerPoule() {
         const rootRound = this.poulePlace.getPoule().getRound();
         return (rootRound.getPoules().length * 2) === rootRound.getPoulePlaces().length;
     }
@@ -24,6 +24,6 @@ export class TournamentListRemoveModalComponent {
 
     allPoulePlacesHaveCompetitor() {
         const rootRound = this.poulePlace.getPoule().getRound();
-        return rootRound.getPoulePlaces().every(poulePlace => poulePlace.getTeam() !== undefined);
+        return rootRound.getPoulePlaces().every(poulePlace => poulePlace.getCompetitor() !== undefined);
     }
 }

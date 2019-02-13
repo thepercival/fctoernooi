@@ -109,10 +109,10 @@ export class TournamentStructureRoundComponent {
   }
 
   canRemovePoulePlace(round: Round) {
-    return !this.hasMinimumNrOfTeamsPerPoule(round);
+    return !this.hasMinimumNrOfPlacesPerPoule(round);
   }
 
-  hasMinimumNrOfTeamsPerPoule(round: Round) {
+  hasMinimumNrOfPlacesPerPoule(round: Round) {
     return (round.getPoules().length * 2) === round.getPoulePlaces().length;
   }
 

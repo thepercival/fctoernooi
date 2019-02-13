@@ -13,7 +13,7 @@ import {
   Referee,
   Round,
   RoundNumber,
-  Team,
+  Competitor,
 } from 'ngx-sport';
 
 import { AuthService } from '../../../auth/auth.service';
@@ -31,7 +31,7 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
   @Input() roundNumber: RoundNumber;
   @Input() planningService: PlanningService;
   @Input() parentReturnAction: string;
-  @Input() favTeamIds: number[];
+  @Input() favCompetitorIds: number[];
   @Input() favRefereeIds: number[];
   @Input() scrollTo: IPlanningScrollTo;
   @Input() userRefereeId: number;
@@ -136,17 +136,17 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
   }
 
   filterClass(): string {
-    const hasFilter = (this.favTeamIds !== undefined && this.favTeamIds.length > 0)
+    const hasFilter = (this.favCompetitorIds !== undefined && this.favCompetitorIds.length > 0)
       || (this.favRefereeIds !== undefined && this.favRefereeIds.length > 0 && this.hasReferees());
     return hasFilter ? 'primary' : 'secondary';
   }
 
   hasFavIds(): boolean {
-    return this.hasFavTeamIds() || this.hasFavRefereeIds();
+    return this.hasFavCompetitorIds() || this.hasFavRefereeIds();
   }
 
-  hasFavTeamIds(): boolean {
-    return this.favTeamIds !== undefined && (this.favTeamIds.length > 0);
+  hasFavCompetitorIds(): boolean {
+    return this.favCompetitorIds !== undefined && (this.favCompetitorIds.length > 0);
   }
 
   hasFavRefereeIds(): boolean {
@@ -154,8 +154,8 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
   }
 
   hasGameFavIds(game: Game): boolean {
-    const x = this.hasGameAFavTeamId(game)
-      || ((game.getReferee() === undefined && this.haveAllGamePoulePlacesTeams(game) && !this.hasFavTeamIds()) || this.isRefereeFav(game.getReferee()));
+    const x = this.hasGameAFavCompetitorId(game)
+      || ((game.getReferee() === undefined && this.haveAllGamePoulePlacesCompetitors(game) && !this.hasFavCompetitorIds()) || this.isRefereeFav(game.getReferee()));
     return x;
   }
 
@@ -173,21 +173,20 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
     return newStartDateTime < game.getStartDateTime();
   }
 
-  haveAllGamePoulePlacesTeams(game: Game): boolean {
-    return game.getPoulePlaces().every(gamePoulePlace => gamePoulePlace.getPoulePlace().getTeam() !== undefined);
+  haveAllGamePoulePlacesCompetitors(game: Game): boolean {
+    return game.getPoulePlaces().every(gamePoulePlace => gamePoulePlace.getPoulePlace().getCompetitor() !== undefined);
   }
 
-  hasAGamePoulePlaceATeam(game: Game): boolean {
-    return game.getPoulePlaces().some(gamePoulePlace => gamePoulePlace.getPoulePlace().getTeam() !== undefined);
+  hasAGamePoulePlaceACompetitor(game: Game): boolean {
+    return game.getPoulePlaces().some(gamePoulePlace => gamePoulePlace.getPoulePlace().getCompetitor() !== undefined);
   }
 
-  hasGameAFavTeamId(game: Game, homeaway: boolean = undefined): boolean {
-    return game.getPoulePlaces(homeaway).some(gamePoulePlace => this.isTeamFav(gamePoulePlace.getPoulePlace().getTeam()));
+  hasGameAFavCompetitorId(game: Game, homeaway?: boolean): boolean {
+    return game.getPoulePlaces(homeaway).some(gamePoulePlace => this.isCompetitorFav(gamePoulePlace.getPoulePlace().getCompetitor()));
   }
 
-  isTeamFav(team: Team): boolean {
-    // console.log('isTeamFav', team && this.favTeamIds && this.favTeamIds.some(favTeamId => favTeamId === team.getId()));
-    return team && this.favTeamIds && this.favTeamIds.some(favTeamId => favTeamId === team.getId());
+  isCompetitorFav(competitor: Competitor): boolean {
+    return competitor && this.favCompetitorIds && this.favCompetitorIds.some(favCompetitorId => favCompetitorId === competitor.getId());
   }
 
   hasGameReferee(game: Game): boolean {
@@ -331,7 +330,7 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
   }
 
   pouleHasPopover(game: Game): boolean {
-    return game.getPoule().needsRanking() || (game.getRound().getParent() !== undefined && this.hasAGamePoulePlaceATeam(game));
+    return game.getPoule().needsRanking() || (game.getRound().getParent() !== undefined && this.hasAGamePoulePlaceACompetitor(game));
   }
 
   getGameQualificationDescription(game: Game) {

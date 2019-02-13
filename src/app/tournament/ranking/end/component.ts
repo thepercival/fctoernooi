@@ -37,7 +37,7 @@ export class TournamentEndRankingViewComponent implements OnChanges {
   }
 
   isUnknown(rankingItem: RankingItem): boolean {
-    return (rankingItem.isSpecified() === false || rankingItem.getPoulePlace().getTeam() === undefined);
+    return (rankingItem.isSpecified() === false || rankingItem.getPoulePlace().getCompetitor() === undefined);
   }
 
   getRankingItemName(rankingItem: RankingItem): string {

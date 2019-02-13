@@ -7,14 +7,14 @@
 <td>
   <span>{{nameService.getPoulePlaceFromName(poulePlace, false)}}</span>
 </td>
-<td *ngIf="poulePlace.getTeam()">
-  <span>{{poulePlace.getTeam().getName()}}</span>
+<td *ngIf="poulePlace.getCompetitor()">
+  <span>{{poulePlace.getCompetitor().getName()}}</span>
 </td>
-<td *ngIf="poulePlace.getTeam()" class="text-center">
+<td *ngIf="poulePlace.getCompetitor()" class="text-center">
   <fa-icon *ngIf="showSwap" class="text-primary pointer" (click)="swapTwo()" [icon]="['far', (poulePlaceToSwap === poulePlace ? 'check-' : '') + 'square']"
     size="2x"></fa-icon>
 </td>
-<td colspan=2 *ngIf="!poulePlace.getTeam()">
+<td colspan=2 *ngIf="!poulePlace.getCompetitor()">
   <span class="badge badge-danger">vul een naam in</span>
 </td>
 <td *ngIf="!isStarted" class="text-right"><button type="button" class="btn btn-sm btn-outline-primary" (click)="remove()">

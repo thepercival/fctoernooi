@@ -26,12 +26,12 @@
         </div>
         <div class="form-group row">
           <div class="col-3">
-            <label for="hometeam" class="col-form-label">teams</label>
+            <label for="competitors" class="col-form-label">deelnemers</label>
           </div>
           <div class="col-4">
             <h2>{{nameService.getPoulePlacesFromName(game.getPoulePlaces( GameHOME ), true)}}</h2>
           </div>
-          <div class="col-1 team-splitter">-</div>
+          <div class="col-1 homeaway-splitter">-</div>
           <div class="col-4">
             <h2>{{nameService.getPoulePlacesFromName(game.getPoulePlaces( GameAWAY ), true)}}</h2>
           </div>
@@ -44,7 +44,7 @@
             <input [formControl]="calculateScoreControl.home" class="form-control max-width-100 {{getCalculateClass()}}"
               type="number">
           </div>
-          <div class="col-1 team-splitter">-</div>
+          <div class="col-1 homeaway-splitter">-</div>
           <div class="col-4">
             <input [formControl]="calculateScoreControl.away" class="form-control max-width-100 {{getCalculateClass()}}"
               type="number">
@@ -61,8 +61,8 @@
             <input [formControl]="scoreControl.home" (ngModelChange)="setHome(scoreControl,$event)" class="form-control max-width-100 {{getInputClass(scoreControl)}}"
               type="number">
           </div>
-          <div *ngIf="!(last && calculateAndInputScoreDiffers())" class="col-1 team-splitter">-</div>
-          <div *ngIf="last && calculateAndInputScoreDiffers()" class="col-1 team-splitter">
+          <div *ngIf="!(last && calculateAndInputScoreDiffers())" class="col-1 homeaway-splitter">-</div>
+          <div *ngIf="last && calculateAndInputScoreDiffers()" class="col-1 homeaway-splitter">
             <button type="button" class="btn btn-sm btn-outline-secondary" (click)="removeScoreControl(scoreControl)">
               <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
             </button>

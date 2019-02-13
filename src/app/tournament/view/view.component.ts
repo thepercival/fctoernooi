@@ -23,7 +23,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     private timerSubscription: Subscription;
     public refreshAfterSeconds = 60;
     private refreshAtCountDown = true;
-    private favTeamIds: number[];
+    private favCompetitorIds: number[];
     private favRefereeIds: number[];
     scrollTo: IPlanningScrollTo = {};
     scrollToEndRanking: string;
@@ -116,23 +116,23 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
         }
     }
 
-    getFavTeamIdsFromLocalStorage(): number[] {
-        if (this.favTeamIds === undefined) {
-            this.favTeamIds = this.getFavTeamIdsFromLocalStorageHelper();
+    getFavCompetitorIdsFromLocalStorage(): number[] {
+        if (this.favCompetitorIds === undefined) {
+            this.favCompetitorIds = this.getFavCompetitorIdsFromLocalStorageHelper();
         }
-        return this.favTeamIds;
+        return this.favCompetitorIds;
     }
 
-    protected getFavTeamIdsFromLocalStorageHelper(): number[] {
-        const favTeamsAsString = localStorage.getItem('favoriteteams');
-        if (favTeamsAsString === null) {
+    protected getFavCompetitorIdsFromLocalStorageHelper(): number[] {
+        const favCompetitorsAsString = localStorage.getItem('favoritecompetitors');
+        if (favCompetitorsAsString === null) {
             return [];
         }
-        const favTeams: {} = JSON.parse(favTeamsAsString);
-        if (favTeams[this.tournament.getId()] === undefined) {
+        const favCompetitors: {} = JSON.parse(favCompetitorsAsString);
+        if (favCompetitors[this.tournament.getId()] === undefined) {
             return [];
         }
-        return favTeams[this.tournament.getId()];
+        return favCompetitors[this.tournament.getId()];
     }
 
 

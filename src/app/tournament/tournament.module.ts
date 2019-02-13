@@ -55,8 +55,8 @@ import {
   RoundRepository,
   StructureMapper,
   StructureRepository,
-  TeamMapper,
-  TeamRepository,
+  CompetitorMapper,
+  CompetitorRepository,
 } from 'ngx-sport';
 
 import { EscapeHtmlPipe } from '../common/escapehtmlpipe';
@@ -157,8 +157,8 @@ library.add(
     RoundNumberConfigScoreMapper,
     PoulePlaceRepository,
     QualifyRuleRepository,
-    TeamRepository,
-    TeamMapper,
+    CompetitorRepository,
+    CompetitorMapper,
     GameRepository,
     PlanningRepository,
     IconManager,

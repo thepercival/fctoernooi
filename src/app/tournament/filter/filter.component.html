@@ -14,10 +14,10 @@
       </h2>
     </div>
     <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-    <p *ngIf="userIsGameResultAdmin && hasTeams() && hasReferees()" class="d-flex justify-content-between">
-      <button [disabled]="processing" (click)="scrollTo('team-part')" class="btn btn-outline-secondary">
+    <p *ngIf="userIsGameResultAdmin && hasCompetitors() && hasReferees()" class="d-flex justify-content-between">
+      <button [disabled]="processing" (click)="scrollTo('competitor-part')" class="btn btn-outline-secondary">
           <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
-        <span *ngIf="hasFavoriteTeams()" class="badge badge-primary badge-pill">{{getNrOfFavoriteTeams()}}</span>
+        <span *ngIf="hasFavoriteCompetitors()" class="badge badge-primary badge-pill">{{getNrOfFavoriteCompetitors()}}</span>
       </button>
       <button [disabled]="processing" (click)="scrollTo('referee-part')" class="btn btn-outline-secondary">
         <i class="fi flaticon-referee"></i>
@@ -26,10 +26,10 @@
         <span *ngIf="hasFavoriteReferees()" class="badge badge-primary badge-pill">{{getNrOfFavoriteReferees()}}</span>
       </button>
     </p>
-    <div *ngIf="!processing && hasTeams()" id="team-part">
+    <div *ngIf="!processing && hasCompetitors()" id="competitor-part">
       <h2>
           <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
-        <span *ngIf="hasFavoriteTeams()" class="badge badge-primary badge-pill">{{getNrOfFavoriteTeams()}}</span>
+        <span *ngIf="hasFavoriteCompetitors()" class="badge badge-primary badge-pill">{{getNrOfFavoriteCompetitors()}}</span>
       </h2>
       <table class="table">
         <thead>
@@ -45,18 +45,18 @@
               <span>{{nameService.getPoulePlaceFromName(poulePlace, false)}}</span>
             </td>
             <td class="pouleplace">
-              <span *ngIf="poulePlace.getTeam()">{{poulePlace.getTeam().getName()}}</span>
+              <span *ngIf="poulePlace.getCompetitor()">{{poulePlace.getCompetitor().getName()}}</span>
             </td>
             <td>
-              <span *ngIf="toggledItem === poulePlace.getTeam()" class="smallfont">
+              <span *ngIf="toggledItem === poulePlace.getCompetitor()" class="smallfont">
                 <fa-icon *ngIf="this.toggledItemProgress < 10" class="text-info" [icon]="['fas', 'save']" size="{{5 + (toggledItemProgress/2)}}x"></fa-icon>
                 <fa-icon *ngIf="this.toggledItemProgress === 10" class="text-success" [icon]="['fas', 'check-circle']"
                   size="10x"></fa-icon>
               </span>
             </td>
             <td class="text-right">
-              <fa-icon *ngIf="poulePlace.getTeam()" class="text-primary pointer" (click)="toggleFavoriteTeams(poulePlace.getTeam())"
-                [icon]="['far', (inFavoriteTeamIds(poulePlace.getTeam()) ? 'check-' : '') + 'square']" size="2x"></fa-icon>
+              <fa-icon *ngIf="poulePlace.getCompetitor()" class="text-primary pointer" (click)="toggleFavoriteCompetitors(poulePlace.getCompetitor())"
+                [icon]="['far', (inFavoriteCompetitorIds(poulePlace.getCompetitor()) ? 'check-' : '') + 'square']" size="2x"></fa-icon>
             </td>
           </tr>
         </tbody>

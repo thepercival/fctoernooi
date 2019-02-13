@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
-import { NameService, PoulePlace, Referee, StructureRepository, Team } from 'ngx-sport';
+import { NameService, PoulePlace, Referee, StructureRepository, Competitor } from 'ngx-sport';
 import { interval, range, zip } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -18,7 +18,7 @@ import { TournamentComponent } from '../component';
 export class TournamentFilterComponent extends TournamentComponent implements OnInit {
     poulePlaces: PoulePlace[];
     poulePlaceToSwap: PoulePlace;
-    toggledItem: Team | Referee;
+    toggledItem: Competitor | Referee;
     toggledItemProgress = 0;
     userIsGameResultAdmin: boolean;
 
@@ -66,7 +66,7 @@ export class TournamentFilterComponent extends TournamentComponent implements On
     initPoulePlaces() {
         const round = this.structure.getRootRound();
         this.poulePlaces = round.getPoulePlaces();
-        if (this.hasTeams() === false) {
+        if (this.hasCompetitors() === false) {
             this.setAlert('info', 'er zijn nog geen deelnemers ingevuld, je kunt daarom nog geen filter instellen');
         }
     }
@@ -78,37 +78,37 @@ export class TournamentFilterComponent extends TournamentComponent implements On
         });
     }
 
-    hasTeams() {
-        return this.poulePlaces.some(poulePlace => poulePlace.getTeam() !== undefined);
+    hasCompetitors() {
+        return this.poulePlaces.some(poulePlace => poulePlace.getCompetitor() !== undefined);
     }
 
-    inFavoriteTeamIds(team: Team): boolean {
-        const favTeams = this.getFavTeamsFromLocalStorage();
-        const favTeamIds: number[] = favTeams[this.tournament.getId()];
-        if (favTeamIds === undefined) {
+    inFavoriteCompetitorIds(competitor: Competitor): boolean {
+        const favCompetitors = this.getFavCompetitorsFromLocalStorage();
+        const favCompetitorIds: number[] = favCompetitors[this.tournament.getId()];
+        if (favCompetitorIds === undefined) {
             return false;
         }
-        return favTeamIds.find(favTeamId => favTeamId === team.getId()) !== undefined;
+        return favCompetitorIds.find(favCompetitorId => favCompetitorId === competitor.getId()) !== undefined;
     }
 
-    toggleFavoriteTeams(team: Team) {
-        this.startProgressing(team);
+    toggleFavoriteCompetitors(competitor: Competitor) {
+        this.startProgressing(competitor);
 
-        const favTeams = this.getFavTeamsFromLocalStorage();
-        if (favTeams[this.tournament.getId()] === undefined) {
-            favTeams[this.tournament.getId()] = [];
+        const favCompetitors = this.getFavCompetitorsFromLocalStorage();
+        if (favCompetitors[this.tournament.getId()] === undefined) {
+            favCompetitors[this.tournament.getId()] = [];
         }
-        const favTeamIds: number[] = favTeams[this.tournament.getId()];
-        const index = favTeamIds.indexOf(team.getId());
+        const favCompetitorIds: number[] = favCompetitors[this.tournament.getId()];
+        const index = favCompetitorIds.indexOf(competitor.getId());
         if (index < 0) {
-            favTeamIds.push(team.getId());
+            favCompetitorIds.push(competitor.getId());
         } else {
-            favTeamIds.splice(index, 1);
+            favCompetitorIds.splice(index, 1);
         }
-        localStorage.setItem('favoriteteams', JSON.stringify(favTeams));
+        localStorage.setItem('favoritecompetitors', JSON.stringify(favCompetitors));
     }
 
-    private startProgressing(toggledItem: Team | Referee) {
+    private startProgressing(toggledItem: Competitor | Referee) {
         this.toggledItemProgress = 0;
         this.toggledItem = toggledItem;
         const progress = range(1, 10).pipe(
@@ -120,24 +120,24 @@ export class TournamentFilterComponent extends TournamentComponent implements On
             });
     }
 
-    protected getFavTeamsFromLocalStorage(): any {
-        const favTeams = localStorage.getItem('favoriteteams');
-        if (favTeams === null) {
+    protected getFavCompetitorsFromLocalStorage(): any {
+        const favCompetitors = localStorage.getItem('favoritecompetitors');
+        if (favCompetitors === null) {
             return {};
         }
-        return JSON.parse(favTeams);
+        return JSON.parse(favCompetitors);
     }
 
-    hasFavoriteTeams(): boolean {
-        return this.getNrOfFavoriteTeams() > 0;
+    hasFavoriteCompetitors(): boolean {
+        return this.getNrOfFavoriteCompetitors() > 0;
     }
 
-    getNrOfFavoriteTeams(): number {
-        const favTeams = this.getFavTeamsFromLocalStorage();
-        if (favTeams[this.tournament.getId()] === undefined) {
+    getNrOfFavoriteCompetitors(): number {
+        const favCompetitors = this.getFavCompetitorsFromLocalStorage();
+        if (favCompetitors[this.tournament.getId()] === undefined) {
             return 0;
         }
-        return favTeams[this.tournament.getId()].length;
+        return favCompetitors[this.tournament.getId()].length;
     }
 
     hasReferees() {
