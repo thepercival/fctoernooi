@@ -1,12 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { JsonReferee, PlanningRepository, PlanningService, Referee, RefereeRepository, StructureRepository } from 'ngx-sport';
+import {
+    JsonReferee,
+    PlanningRepository,
+    PlanningService,
+    Referee,
+    RefereeRepository,
+    StructureRepository,
+} from 'ngx-sport';
 
-import { User } from '../../lib/user';
-import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentService } from '../../lib/tournament/service';
+import { User } from '../../lib/user';
+import { TournamentComponent } from '../component';
 
 @Component({
     selector: 'app-tournament-referee-edit',
@@ -19,7 +26,7 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
     returnUrlQueryParamKey: string;
     returnUrlQueryParamValue: string;
     customForm: FormGroup;
-    refereeId: number;
+    referee: Referee;
 
     validations: RefValidations = {
         minlengthinitials: Referee.MIN_LENGTH_INITIALS,
@@ -79,26 +86,29 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         });
     }
 
+    private getRefereeById(id: number): Referee {
+        if (id === undefined || id === 0) {
+            this.processing = false;
+            return;
+        }
+        return this.tournament.getCompetition().getReferees().find(refereeIt => id === refereeIt.getId());
+    }
+
     private postInit(id: number) {
-        if (id === undefined || id < 1) {
+        this.referee = this.getRefereeById(id);
+        if (this.referee === undefined) {
             this.processing = false;
             return;
         }
-        const referee = this.tournament.getCompetition().getRefereeById(id);
-        if (referee === undefined) {
-            this.processing = false;
-            return;
-        }
-        this.refereeId = id;
-        this.customForm.controls.initials.setValue(referee.getInitials());
-        this.customForm.controls.name.setValue(referee.getName());
-        this.customForm.controls.emailaddress.setValue(referee.getEmailaddress());
-        this.customForm.controls.info.setValue(referee.getInfo());
+        this.customForm.controls.initials.setValue(this.referee.getInitials());
+        this.customForm.controls.name.setValue(this.referee.getName());
+        this.customForm.controls.emailaddress.setValue(this.referee.getEmailaddress());
+        this.customForm.controls.info.setValue(this.referee.getInfo());
         this.processing = false;
     }
 
     save(): boolean {
-        if (this.refereeId > 0) {
+        if (this.referee !== undefined) {
             this.edit();
         } else {
             this.add();
@@ -151,7 +161,7 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
     edit() {
         this.processing = true;
         this.setAlert('info', 'de scheidsrechter wordt gewijzigd');
-        if (this.isInitialsDuplicate(this.customForm.controls.initials.value, this.refereeId)) {
+        if (this.isInitialsDuplicate(this.customForm.controls.initials.value, this.referee)) {
             this.setAlert('danger', 'de initialen bestaan al voor dit toernooi');
             this.processing = false;
             return;
@@ -161,13 +171,12 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         const emailaddress = this.customForm.controls.emailaddress.value;
         const info = this.customForm.controls.info.value;
 
-        const referee = this.tournament.getCompetition().getRefereeById(this.refereeId);
-        referee.setInitials(initials);
-        referee.setName(name ? name : undefined);
-        const emailaddressChanged = emailaddress !== referee.getEmailaddress();
-        referee.setEmailaddress(emailaddress ? emailaddress : undefined);
-        referee.setInfo(info ? info : undefined);
-        this.refereeRepository.editObject(referee, this.tournament.getCompetition())
+        this.referee.setInitials(initials);
+        this.referee.setName(name ? name : undefined);
+        const emailaddressChanged = emailaddress !== this.referee.getEmailaddress();
+        this.referee.setEmailaddress(emailaddress ? emailaddress : undefined);
+        this.referee.setInfo(info ? info : undefined);
+        this.refereeRepository.editObject(this.referee, this.tournament.getCompetition())
             .subscribe(
             /* happy path */ refereeRes => {
                     if (!emailaddressChanged) {
@@ -201,10 +210,10 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         this.router.navigate(this.getForwarUrl(), { queryParams: this.getForwarUrlQueryParams() });
     }
 
-    isInitialsDuplicate(initials: string, refereeId?: number): boolean {
+    isInitialsDuplicate(initials: string, referee?: Referee): boolean {
         const referees = this.tournament.getCompetition().getReferees();
         return referees.find(refereeIt => {
-            return (initials === refereeIt.getInitials() && (refereeId === undefined || refereeIt.getId() === undefined));
+            return (initials === refereeIt.getInitials() && (referee === undefined || refereeIt.getId() === undefined));
         }) !== undefined;
     }
 }
