@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import {
+  Competitor,
   Game,
   NameService,
   PlanningService,
@@ -10,10 +11,8 @@ import {
   PoulePlace,
   Ranking,
   RankingItem,
-  Referee,
   Round,
   RoundNumber,
-  Competitor,
 } from 'ngx-sport';
 
 import { AuthService } from '../../../auth/auth.service';
@@ -155,7 +154,7 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
 
   hasGameFavIds(game: Game): boolean {
     const x = this.hasGameAFavCompetitorId(game)
-      || ((game.getReferee() === undefined && this.haveAllGamePoulePlacesCompetitors(game) && !this.hasFavCompetitorIds()) || this.isRefereeFav(game.getReferee()));
+      || ((game.getReferee() === undefined && this.haveAllGamePoulePlacesCompetitors(game) && !this.hasFavCompetitorIds()) || this.hasGameFavRefereeId(game));
     return x;
   }
 
@@ -189,16 +188,12 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
     return competitor && this.favCompetitorIds && this.favCompetitorIds.some(favCompetitorId => favCompetitorId === competitor.getId());
   }
 
-  hasGameReferee(game: Game): boolean {
-    return game.getReferee() !== undefined;
-  }
-
   hasGameFavRefereeId(game: Game): boolean {
-    return (this.isRefereeFav(game.getReferee()));
-  }
-
-  isRefereeFav(referee: Referee): boolean {
-    return referee && this.favRefereeIds && this.favRefereeIds.some(favRefereeId => favRefereeId === referee.getId());
+    const referee = game.getReferee();
+    if (referee !== undefined) {
+      return this.favRefereeIds && this.favRefereeIds.some(favRefereeId => favRefereeId === referee.getId());
+    }
+    return game.getPoulePlaceReferee() ? this.isCompetitorFav(game.getPoulePlaceReferee().getCompetitor()) : false;
   }
 
   linkToGameEdit(game: Game) {
@@ -244,7 +239,7 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
   }
 
   hasReferees() {
-    return this.tournament.getCompetition().getReferees().length > 0;
+    return this.tournament.getCompetition().getReferees().length > 0 || this.roundNumber.getConfig().getSelfReferee();
   }
 
   showRanking(popOver: NgbPopover, poule: Poule) {

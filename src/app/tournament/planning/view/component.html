@@ -99,12 +99,14 @@
                 <fa-icon *ngIf="!isPlayed(game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
                 <span *ngIf="isPlayed(game)">{{getScore(game)}}</span>
               </button>
-              <span *ngIf="!hasEditPermissions(game)">{{getScore(game)}}</span>
+              <span *ngIf="!hasEditPermissions(game)" class="d-none d-sm-inline">{{getScore(game)}}</span>
+              <span *ngIf="!hasEditPermissions(game) && hasReferees() && !isPlayed(game)" class="d-sm-none"><i class="fi flaticon-referee"></i></span>
+              <span *ngIf="!hasEditPermissions(game) && !(hasReferees() && !isPlayed(game))" class="d-sm-none">{{getScore(game)}}</span>
             </td>
             <td class="pouleplace" [ngClass]="{ 'text-primary': hasGameAFavCompetitorId(game, GameAWAY) }">
               <span>{{nameService.getPoulePlacesFromName(game.getPoulePlaces( GameAWAY ),true,true)}}</span>
             </td>
-            <td *ngIf="hasReferees()" class="d-none d-sm-table-cell" [ngClass]="{'text-primary': isRefereeFav(game.getReferee()) }">{{game.getReferee()?.getInitials()}}</td>
+            <td *ngIf="hasReferees()" class="d-none d-sm-table-cell" [ngClass]="{'text-primary': hasGameFavRefereeId(game) }">{{nameService.getRefereeName(game)}}</td>
           </tr>
         </ng-template>
       </tbody>
