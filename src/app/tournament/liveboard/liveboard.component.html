@@ -29,6 +29,7 @@
         <span class="smaller text-secondary">https://www.fctoernooi.nl/{{tournament.getId()}}</span>
       </small>
     </h1>
+    <app-progress [toggleProgress]="toggleProgress" [max]="refreshAfterSeconds" (executeAtZero)="executeScheduledTask($event)"></app-progress>
     <button *ngIf="tournament" [routerLink]="['/toernooi/view', tournament.getId()]" routerLinkActive="active" class="btn btn-outline-secondary"
       type="button">
       <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>

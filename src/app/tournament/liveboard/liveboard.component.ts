@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NameService, PlanningService, Ranking, StructureRepository } from 'ngx-sport';
-import { Subscription, timer } from 'rxjs';
 
 import { GlobalEventsManager } from '../../common/eventmanager';
 import { IconManager } from '../../common/iconmanager';
@@ -20,13 +19,13 @@ import { TournamentComponent } from '../component';
 })
 export class TournamentLiveboardComponent extends TournamentComponent implements OnInit, OnDestroy {
 
-    private timerSubscription: Subscription;
     public planningService: PlanningService;
     public activeScreen: any;
+    private screens: any[] = [];
     public ranking: Ranking;
     private maxLines = 8;
-    private returnUrl: string;
-    private returnUrlParam: number;
+    public refreshAfterSeconds = 10;
+    public toggleProgress: boolean = false;
 
     constructor(
         route: ActivatedRoute,
@@ -43,11 +42,6 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
     }
 
     ngOnInit() {
-        console.log();
-        this.route.queryParamMap.subscribe(params => {
-            this.returnUrl = params.get('returnAction');
-        });
-
         super.myNgOnInit(() => this.processScreens());
     }
 
@@ -56,21 +50,29 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
         this.globalEventsManager.toggleLiveboardIconInNavBar.emit(link);
         this.planningService = new PlanningService(this.tournament.getCompetition());
         const liveBoard = new Liveboard(this.tournament, this.structure, this.maxLines, this.ranking, this.planningService);
-        const screens = liveBoard.getScreens();
-        if (screens.length === 0) {
-            this.setAlert('info', 'op dit moment zijn er geen schermen om weer te geven');
-            this.processing = false;
-            return;
+        this.screens = liveBoard.getScreens();
+        // console.log(this.screens);
+        // if (screens.length === 0) {
+        //     this.setAlert('info', 'op dit moment zijn er geen schermen om weer te geven');
+        //     this.processing = false;
+        //     return;
+        // }
+        this.executeScheduledTask();
+        this.processing = false;
+    }
+
+    executeScheduledTask() {
+        // console.log('executeScheduledTask', callback);
+        this.activeScreen = this.screens.shift();
+        // this.processing = false;
+        if (this.activeScreen === undefined) {
+
+            // console.log('getnewsscreens');
+            this.processing = true;
+            this.getDataAndProcessScreens();
+        } else {
+            this.toggleProgress = !this.toggleProgress;
         }
-        this.timerSubscription = timer(0, 10000).subscribe(number => {
-            this.activeScreen = screens.shift();
-            this.processing = false;
-            if (this.activeScreen === undefined) {
-                this.timerSubscription.unsubscribe();
-                this.processing = true;
-                this.getDataAndProcessScreens();
-            }
-        });
     }
 
     getDataAndProcessScreens() {
@@ -91,9 +93,6 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
 
     ngOnDestroy() {
         this.globalEventsManager.toggleLiveboardIconInNavBar.emit({});
-        if (this.timerSubscription !== undefined) {
-            this.timerSubscription.unsubscribe();
-        }
     }
 
     isPoulesRankingScreen(): boolean {

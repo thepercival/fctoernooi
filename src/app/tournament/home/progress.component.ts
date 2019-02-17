@@ -1,41 +1,89 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    NgZone,
+    OnChanges,
+    OnDestroy,
+    Output,
+    SimpleChanges,
+} from '@angular/core';
+import { Subscription, timer } from 'rxjs';
 
 @Component({
     selector: 'app-progress',
     templateUrl: './progress.component.html',
     styleUrls: ['./progress.component.scss']
 })
-export class ProgressComponent implements OnInit, OnChanges {
-    @Input() value: number;
+export class ProgressComponent implements OnDestroy, OnChanges {
     @Input() max: number;
+    @Input() toggleProgress: boolean;
+    @Output() executeAtZero = new EventEmitter<boolean>();
     radius = 16;
     strokeWidth = 5;
     circumference = 2 * Math.PI * this.radius;
-    dashoffset: number;
     length = (this.radius + this.strokeWidth) * 2;
+    private timer: Subscription;
+    private progress: number;
+    public dashoffset: number;
 
-    constructor() {
-        this.progress(0);
+    constructor(private _ngZone: NgZone, private changeRef: ChangeDetectorRef) {
+        this.resetProgress();
     }
 
-    ngOnInit() { }
-
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.value.currentValue !== changes.value.previousValue) {
-            this.progress(changes.value.currentValue);
+        if (changes.toggleProgress !== undefined && changes.toggleProgress.previousValue !== undefined
+            && changes.toggleProgress.currentValue !== changes.toggleProgress.previousValue) {
+            this.processOutsideOfAngularZone();
         }
     }
 
-    private progress(value: number) {
-        const progress = value / this.max;
-        this.dashoffset = this.circumference * (1 - progress);
+    processOutsideOfAngularZone() {
+        this._ngZone.runOutsideAngular(() => {
+            this._increaseProgress(() => {
+                // reenter the Angular zone and display done
+                this._ngZone.run(() => {
+                    this.resetProgress();
+                    this.executeAtZero.emit(true);
+                });
+            });
+        });
+    }
+
+    _increaseProgress(doneCallback: () => void) {
+        this.increaseProgress();
+        this.changeRef.markForCheck();
+        this.changeRef.detectChanges();
+        // console.log(`Current progress: ${this.progress}  / ${this.max}  seconds`);
+
+        if (this.progress < this.max) {
+            this.timer = timer(1000).subscribe(counter => {
+                this._increaseProgress(doneCallback);
+            });
+        } else {
+            doneCallback();
+        }
+    }
+
+    ngOnDestroy() {
+        if (this.timer !== undefined) {
+            this.timer.unsubscribe();
+        }
+    }
+
+    private resetProgress() {
+        this.progress = 0;
+        this.dashoffset = this.circumference;
+    }
+
+    private increaseProgress() {
+        this.progress += 1;
+        this.dashoffset = this.circumference * (1 - (this.progress / this.max));
     }
 
     getSeconds(): string {
-        const val = this.max - this.value;
-        if (val < 10) {
-            return '0' + val;
-        }
-        return '' + val;
+        const val = this.max - this.progress;
+        return (val < 10) ? '0' + val : '' + val;
     }
 }

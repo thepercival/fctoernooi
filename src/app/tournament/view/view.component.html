@@ -19,7 +19,7 @@
             <li>Elke minuut worden de uitslagen op deze pagina automatisch bijgewerkt.</li>
           </ul>
         </div>
-        <app-progress [max]="refreshAfterSeconds" [value]="progress"></app-progress>
+        <app-progress [toggleProgress]="toggleProgress" [max]="refreshAfterSeconds" (executeAtZero)="executeScheduledTask($event)"></app-progress>
       </div>
       <div>
         <h2 *ngIf="processing" class="text-center">
@@ -30,8 +30,8 @@
       <div *ngIf="!processing">
         <app-tournament-planning-view *ngFor="let roundNumber of structure.getRoundNumbers()" [tournament]="tournament"
           [roundNumber]="roundNumber" [planningService]="planningService" [userRefereeId]="userRefereeId" [scrollTo]="scrollTo"
-          [parentReturnAction]="'/toernooi/view'" [favCompetitorIds]="getFavCompetitorIdsFromLocalStorage()" [favRefereeIds]="getFavRefereeIdsFromLocalStorage()"
-          (popOverIsOpen)="setNoRefresh($event)"></app-tournament-planning-view>
+          [parentReturnAction]="'/toernooi/view'" [favCompetitorIds]="getFavCompetitorIdsFromLocalStorage()"
+          [favRefereeIds]="getFavRefereeIdsFromLocalStorage()" (popOverIsOpen)="setNoRefresh($event)"></app-tournament-planning-view>
         <div class="d-flex justify-content-between mt-3" id="endranking">
           <h2>
             <span>eindstand</span>
@@ -42,7 +42,7 @@
             <span>indeling</span>
           </button>
         </div>
-        <app-tournament-endranking-view [rootRound]="structure.getRootRound()" [recalculate]="recalcEndRanking"></app-tournament-endranking-view>
+        <app-tournament-endranking-view [rootRound]="structure.getRootRound()"></app-tournament-endranking-view>
       </div>
     </div>
   </div>
