@@ -68,6 +68,7 @@ import { IconManager } from './common/iconmanager';
 import { MyNavigation } from './common/navigation';
 import { FooterComponent } from './footer/footer.component';
 import { HomeComponent } from './home/home.component';
+import { FavoritesRepository } from './lib/favorites/repository';
 import { RoleMapper } from './lib/role/mapper';
 import { SponsorMapper } from './lib/sponsor/mapper';
 import { SponsorRepository } from './lib/sponsor/repository';
@@ -127,7 +128,8 @@ library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave
     GlobalEventsManager,
     IconManager,
     MyNavigation,
-    NameService
+    NameService,
+    FavoritesRepository
   ],
   bootstrap: [AppComponent]
 })

@@ -3,8 +3,8 @@ import { EndRanking, NameService, Ranking, RankingItem, Round } from 'ngx-sport'
 
 @Component({
   selector: 'app-tournament-endranking-view',
-  templateUrl: './component.html',
-  styleUrls: ['./component.scss']
+  templateUrl: './end.component.html',
+  styleUrls: ['./end.component.scss']
 })
 export class TournamentEndRankingViewComponent {
 
@@ -18,8 +18,6 @@ export class TournamentEndRankingViewComponent {
   constructor(public nameService: NameService) {
     this.endRankingService = new EndRanking(Ranking.RULESSET_WC);
   }
-
-
 
   getRankingItems(): RankingItem[] {
     if (this.rankingItems === undefined) {

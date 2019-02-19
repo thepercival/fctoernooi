@@ -2,20 +2,11 @@ import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@
 import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
-import {
-  Competitor,
-  Game,
-  NameService,
-  PlanningService,
-  Poule,
-  PoulePlace,
-  Ranking,
-  RankingItem,
-  Round,
-  RoundNumber,
-} from 'ngx-sport';
+import { Game, NameService, PlanningService, Poule, Ranking, RoundNumber } from 'ngx-sport';
 
 import { AuthService } from '../../../auth/auth.service';
+import { Favorites } from '../../../lib/favorites';
+import { FavoritesRepository } from '../../../lib/favorites/repository';
 import { Role } from '../../../lib/role';
 import { Tournament } from '../../../lib/tournament';
 
@@ -30,36 +21,33 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
   @Input() roundNumber: RoundNumber;
   @Input() planningService: PlanningService;
   @Input() parentReturnAction: string;
-  @Input() favCompetitorIds: number[];
-  @Input() favRefereeIds: number[];
   @Input() scrollTo: IPlanningScrollTo;
   @Input() userRefereeId: number;
   @Input() canEditSettings: boolean;
-  @Output() popOverIsOpen = new EventEmitter<boolean>();
+  @Output() popOverIsOpen = new EventEmitter<boolean>(); // kan misschien uit
   alert: any;
   GameStatePlayed = Game.STATE_PLAYED;
-  selectedPouleForRanking;
   sameDay = true;
   previousGameStartDateTime: Date;
-  showDifferenceDetail: boolean;
-
-  private openPopovers: NgbPopover[] = [];
-  private rulesPopover: NgbPopover;
   ranking: Ranking;
   userIsGameResultAdmin: boolean;
+  favorites: Favorites;
 
   constructor(
     private router: Router,
     private authService: AuthService,
     private scrollService: ScrollToService,
-    public nameService: NameService) {
+    public nameService: NameService,
+    public favRepository: FavoritesRepository) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
     this.resetAlert();
     this.ranking = new Ranking(Ranking.RULESSET_WC);
   }
 
+
   ngOnInit() {
     this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.GAMERESULTADMIN);
+    this.favorites = this.favRepository.getItem(this.tournament);
   }
 
   ngAfterViewInit() {
@@ -82,24 +70,6 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
     }
     descr += 'Er zit ' + cfg.getMinutesBetweenGames() + ' minuten tussen de wedstrijden.';
     return descr;
-  }
-
-
-  getClassPostfix(winnersOrLosers: number): string {
-    return winnersOrLosers === Round.WINNERS ? 'success' : (winnersOrLosers === Round.LOSERS ? 'danger' : '');
-  }
-
-  getQualificationClass(poule: Poule, poulePlaceNumber: number): {} {
-    const poulePlace: PoulePlace = poule.getPlace(poulePlaceNumber);
-    const rules = poulePlace.getToQualifyRules();
-    if (rules.length === 2) {
-      return { icon: 'circle', text: 'text-warning' };
-    } else if (rules.length === 1) {
-      const qualifyRule = rules[0];
-      const singleColor = this.getClassPostfix(qualifyRule.getWinnersOrLosers());
-      return { icon: 'circle', text: 'text-' + (qualifyRule.isMultiple() ? 'warning' : singleColor) };
-    }
-    return { icon: undefined, text: '' };
   }
 
   getScore(game: Game): string {
@@ -134,30 +104,6 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
     return false;
   }
 
-  filterClass(): string {
-    const hasFilter = (this.favCompetitorIds !== undefined && this.favCompetitorIds.length > 0)
-      || (this.favRefereeIds !== undefined && this.favRefereeIds.length > 0 && this.hasReferees());
-    return hasFilter ? 'primary' : 'secondary';
-  }
-
-  hasFavIds(): boolean {
-    return this.hasFavCompetitorIds() || this.hasFavRefereeIds();
-  }
-
-  hasFavCompetitorIds(): boolean {
-    return this.favCompetitorIds !== undefined && (this.favCompetitorIds.length > 0);
-  }
-
-  hasFavRefereeIds(): boolean {
-    return this.favRefereeIds !== undefined && (this.favRefereeIds.length > 0);
-  }
-
-  hasGameFavIds(game: Game): boolean {
-    const x = this.hasGameAFavCompetitorId(game)
-      || ((game.getReferee() === undefined && this.haveAllGamePoulePlacesCompetitors(game) && !this.hasFavCompetitorIds()) || this.hasGameFavRefereeId(game));
-    return x;
-  }
-
   isBreakInBetween(game: Game) {
     if (this.previousGameStartDateTime === undefined) {
       if (game.getStartDateTime() !== undefined) {
@@ -172,28 +118,8 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
     return newStartDateTime < game.getStartDateTime();
   }
 
-  haveAllGamePoulePlacesCompetitors(game: Game): boolean {
-    return game.getPoulePlaces().every(gamePoulePlace => gamePoulePlace.getPoulePlace().getCompetitor() !== undefined);
-  }
-
   hasAGamePoulePlaceACompetitor(game: Game): boolean {
     return game.getPoulePlaces().some(gamePoulePlace => gamePoulePlace.getPoulePlace().getCompetitor() !== undefined);
-  }
-
-  hasGameAFavCompetitorId(game: Game, homeaway?: boolean): boolean {
-    return game.getPoulePlaces(homeaway).some(gamePoulePlace => this.isCompetitorFav(gamePoulePlace.getPoulePlace().getCompetitor()));
-  }
-
-  isCompetitorFav(competitor: Competitor): boolean {
-    return competitor && this.favCompetitorIds && this.favCompetitorIds.some(favCompetitorId => favCompetitorId === competitor.getId());
-  }
-
-  hasGameFavRefereeId(game: Game): boolean {
-    const referee = game.getReferee();
-    if (referee !== undefined) {
-      return this.favRefereeIds && this.favRefereeIds.some(favRefereeId => favRefereeId === referee.getId());
-    }
-    return game.getPoulePlaceReferee() ? this.isCompetitorFav(game.getPoulePlaceReferee().getCompetitor()) : false;
   }
 
   linkToGameEdit(game: Game) {
@@ -242,23 +168,13 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
     return this.tournament.getCompetition().getReferees().length > 0 || this.roundNumber.getConfig().getSelfReferee();
   }
 
-  showRanking(popOver: NgbPopover, poule: Poule) {
-    const popOverClosed = this.openPopovers.find(openPopover => openPopover === popOver) === undefined;
-    this.openPopovers.forEach(openPopover => openPopover.close());
-    this.openPopovers = [];
-    this.selectedPouleForRanking = poule;
-    if (popOverClosed === true) {
-      popOver.open();
-      this.showDifferenceDetail = false;
-      this.openPopovers.push(popOver);
+  showPouleRanking(popOver: NgbPopover, poule: Poule) {
+    if (popOver.isOpen()) {
+      popOver.close();
+    } else {
+      const tournament = this.tournament;
+      popOver.open({ poule, tournament });
     }
-    this.popOverIsOpen.emit(popOverClosed);
-    return false;
-  }
-
-  hideRanking() {
-    this.openPopovers.forEach(openPopover => openPopover.close());
-    this.openPopovers = [];
   }
 
   getGamesHelper(): Game[] {
@@ -282,10 +198,6 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
       && dateOne.getFullYear() === dateTwo.getFullYear());
   }
 
-  getRankingItems(poule: Poule): RankingItem[] {
-    return this.ranking.getItems(poule.getPlaces(), poule.getGames());
-  }
-
   protected resetAlert(): void {
     this.alert = undefined;
   }
@@ -293,35 +205,6 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
   protected setAlert(type: string, message: string): boolean {
     this.alert = { 'type': type, 'message': message };
     return (type === 'success');
-  }
-
-  getUnitDifference(poulePlace: PoulePlace, games: Game[]) {
-    const nrOfUnitsScored = this.ranking.getNrOfUnitsScored(poulePlace, games);
-    const nrOfUnitsReceived = this.ranking.getNrOfUnitsReceived(poulePlace, games);
-    const delta = nrOfUnitsScored - nrOfUnitsReceived;
-    return delta > 0 ? '+' + delta : delta;
-  }
-
-  getDifferenceDetail(poulePlace: PoulePlace, games: Game[], sub: boolean) {
-    const nrOfUnitsScored = this.ranking.getNrOfUnitsScored(poulePlace, games, sub);
-    const nrOfUnitsReceived = this.ranking.getNrOfUnitsReceived(poulePlace, games, sub);
-    const delta = nrOfUnitsScored - nrOfUnitsReceived;
-    return '( ' + nrOfUnitsScored + ' - ' + nrOfUnitsReceived + ' )';
-  }
-
-  hasMultipleScoreConfigs() {
-    return this.selectedPouleForRanking.getRound().getNumber().getConfig().getCalculateScore()
-      !== this.selectedPouleForRanking.getRound().getNumber().getConfig().getInputScore();
-  }
-
-  toggleRulesPopover(popOver?: NgbPopover) {
-    if (popOver === undefined || this.rulesPopover !== undefined) {
-      this.rulesPopover.close();
-      this.rulesPopover = undefined;
-    } else {
-      this.rulesPopover = popOver;
-      this.rulesPopover.open();
-    }
   }
 
   pouleHasPopover(game: Game): boolean {

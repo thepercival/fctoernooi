@@ -83,7 +83,7 @@
         <ngb-alert [dismissible]="false" [type]="alert.type">{{ alert.message }}</ngb-alert>
       </p>
       <div class="d-flex flex-wrap justify-content-around">
-        <ul *ngFor="let poule of round.getPoules();" class="list-group list-group-poule mb-3">
+        <ul *ngFor="let poule of round.getPoules();" class="list-group mb-3">
           <li class="list-group-item px-2 px-sm-3">{{nameService.getPouleName( poule, false)}}</li>
           <li *ngFor="let place of poule.getPlaces();" class="list-group-item px-2 px-sm-3 bg-transparent {{getClassForPoulePlace(place)}}">{{nameService.getPoulePlaceFromName(
             place, false)}}</li>

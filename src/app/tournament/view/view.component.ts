@@ -19,10 +19,8 @@ import { IPlanningScrollTo } from '../planning/view/component';
 export class TournamentViewComponent extends TournamentComponent implements OnInit, AfterViewChecked, OnDestroy {
     private liveboardLinkSet = false;
     public planningService: PlanningService;
-    public refreshAfterSeconds = 10;
+    public refreshAfterSeconds = 60;
     private refreshAtCountDown = true;
-    private favCompetitorIds: number[];
-    private favRefereeIds: number[];
     scrollTo: IPlanningScrollTo = {};
     scrollToEndRanking: string;
     userRefereeId: number;
@@ -101,45 +99,6 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
 
     ngOnDestroy() {
         this.globalEventsManager.toggleLiveboardIconInNavBar.emit({});
-    }
-
-    getFavCompetitorIdsFromLocalStorage(): number[] {
-        if (this.favCompetitorIds === undefined) {
-            this.favCompetitorIds = this.getFavCompetitorIdsFromLocalStorageHelper();
-        }
-        return this.favCompetitorIds;
-    }
-
-    protected getFavCompetitorIdsFromLocalStorageHelper(): number[] {
-        const favCompetitorsAsString = localStorage.getItem('favoritecompetitors');
-        if (favCompetitorsAsString === null) {
-            return [];
-        }
-        const favCompetitors: {} = JSON.parse(favCompetitorsAsString);
-        if (favCompetitors[this.tournament.getId()] === undefined) {
-            return [];
-        }
-        return favCompetitors[this.tournament.getId()];
-    }
-
-
-    getFavRefereeIdsFromLocalStorage(): number[] {
-        if (this.favRefereeIds === undefined) {
-            this.favRefereeIds = this.getFavRefereeIdsFromLocalStorageHelper();
-        }
-        return this.favRefereeIds;
-    }
-
-    protected getFavRefereeIdsFromLocalStorageHelper(): number[] {
-        const favRefereesAsString = localStorage.getItem('favoritereferees');
-        if (favRefereesAsString === null) {
-            return [];
-        }
-        const favReferees: {} = JSON.parse(favRefereesAsString);
-        if (favReferees[this.tournament.getId()] === undefined) {
-            return [];
-        }
-        return favReferees[this.tournament.getId()];
     }
 
     linkToStructureView() {

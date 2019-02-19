@@ -8,7 +8,7 @@
               round.getWinnersOrLosers() )" class="text-{{getClassPostfix(round.getWinnersOrLosers())}}"></fa-icon>
       </ng-template> -->
     </h2>
-    <button type="button" class="btn btn-sm btn-outline-{{filterClass()}} mr-2" *ngIf="!canEditSettings && favCompetitorIds"
+    <button *ngIf="!canEditSettings" type="button" class="btn btn-sm btn-outline-{{favorites.hasItems() ? 'primary' : 'secondary'}} mr-2"
       (click)="linkToFilterSettings()">
       <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       <span>filter</span>
@@ -33,7 +33,7 @@
       <thead>
         <tr>
           <th *ngIf="roundNumber.needsRanking()" class="text-center text-info pointer" title="poule" container="body"
-            placement="right" [ngbPopover]="popRules" triggers="manual" #p="ngbPopover" (click)="toggleRulesPopover( p )">
+            placement="right" [ngbPopover]="popRules" #p="ngbPopover">
             <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
           </th>
           <th *ngIf="!roundNumber.needsRanking()" class="text-center" title="wedstrijd">
@@ -59,9 +59,6 @@
         </tr>
       </thead>
       <tbody>
-        <!-- <ng-container *ngTemplateOutlet="qualclass;context:{$implicit: myVar}">
-        </ng-container> -->
-
         <ng-template ngFor let-game [ngForOf]="getGamesHelper()">
           <tr *ngIf="tournament.hasBreak() && isBreakInBetween(game)" class="table-info">
             <td></td>
@@ -72,17 +69,20 @@
             <td class="width-25"></td>
             <td *ngIf="hasReferees()" class="d-none d-sm-table-cell"></td>
           </tr>
-          <tr *ngIf="!hasFavIds() || hasGameFavIds(game)" id="scroll-game-{{game.getId()}}">
+          <tr *ngIf="!favorites.hasItems() || favorites.hasGameItem(game) || !hasAGamePoulePlaceACompetitor(game)" id="scroll-game-{{game.getId()}}">
             <td *ngIf="!pouleHasPopover(game)" class="text-center">
               <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
             </td>
-            <td *ngIf="pouleHasPopover(game) && game.getPoule().needsRanking()" class="text-center pointer" container="body"
-              placement="right" [ngbPopover]="popRanking" [autoClose]="false" triggers="manual" #p="ngbPopover" (click)="showRanking( p, game.getPoule() )">
-              <span class="text-info">{{nameService.getPouleName(game.getPoule(), false)}}</span>
+            <td *ngIf="pouleHasPopover(game) && game.getPoule().needsRanking()" class="text-center">
+              <button class="btn btn-outline-info btn-sm" container="body" placement="right" [ngbPopover]="popRanking"
+                autoClose="outside" popoverClass="coen" triggers="manual" #p="ngbPopover" (click)="showPouleRanking( p, game.getPoule() )">
+                <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
+              </button>
             </td>
-            <td *ngIf="pouleHasPopover(game) && !game.getPoule().needsRanking()" class="text-center pointer" title="wedstrijd"
-              container="body" placement="right" [ngbPopover]="getGameQualificationDescription(game)">
-              <span class="text-info">{{nameService.getPouleName(game.getPoule(), false)}}</span>
+            <td *ngIf="pouleHasPopover(game) && !game.getPoule().needsRanking()" class="text-center">
+              <button class="btn btn-outline-info btn-sm" placement="right" [ngbPopover]="getGameQualificationDescription(game)">
+                <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
+              </button>
             </td>
             <td *ngIf="planningService.canCalculateStartDateTime(roundNumber)">
               <span *ngIf="!onSameDay()">{{game.getStartDateTime().toLocaleString("nl",
@@ -91,7 +91,7 @@
                 false,"hour":"2-digit","minute":"2-digit"})}}</span>
             </td>
             <td *ngIf="hasFields()" class="text-center">{{game.getField()?.getName()}}</td>
-            <td class="pouleplace text-right" [ngClass]="{'text-primary': hasGameAFavCompetitorId(game, GameHOME) }">
+            <td class="pouleplace text-right" [ngClass]="{'text-primary': favorites.hasGameCompetitor(game, GameHOME) }">
               <span>{{nameService.getPoulePlacesFromName(game.getPoulePlaces( GameHOME ),true,true)}}</span>
             </td>
             <td class="score text-center" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
@@ -100,13 +100,16 @@
                 <span *ngIf="isPlayed(game)">{{getScore(game)}}</span>
               </button>
               <span *ngIf="!hasEditPermissions(game)" class="d-none d-sm-inline">{{getScore(game)}}</span>
-              <span *ngIf="!hasEditPermissions(game) && hasReferees() && !isPlayed(game)" class="d-sm-none"><i class="fi flaticon-referee"></i></span>
+              <button *ngIf="!hasEditPermissions(game) && hasReferees() && !isPlayed(game)" class="btn btn-outline-info btn-sm d-sm-none"
+                placement="top" [ngbPopover]="nameService.getRefereeName(game)">
+                <span [ngClass]="{'text-primary': favorites.hasGameReferee(game) }"><i class="fi flaticon-referee"></i></span>
+              </button>
               <span *ngIf="!hasEditPermissions(game) && !(hasReferees() && !isPlayed(game))" class="d-sm-none">{{getScore(game)}}</span>
             </td>
-            <td class="pouleplace" [ngClass]="{ 'text-primary': hasGameAFavCompetitorId(game, GameAWAY) }">
+            <td class="pouleplace" [ngClass]="{ 'text-primary': favorites.hasGameCompetitor(game, GameAWAY) }">
               <span>{{nameService.getPoulePlacesFromName(game.getPoulePlaces( GameAWAY ),true,true)}}</span>
             </td>
-            <td *ngIf="hasReferees()" class="d-none d-sm-table-cell" [ngClass]="{'text-primary': hasGameFavRefereeId(game) }">{{nameService.getRefereeName(game)}}</td>
+            <td *ngIf="hasReferees()" class="d-none d-sm-table-cell" [ngClass]="{'text-primary': favorites.hasGameReferee(game) }">{{nameService.getRefereeName(game)}}</td>
           </tr>
         </ng-template>
       </tbody>
@@ -114,75 +117,15 @@
   </div>
 </div>
 
-
-<ng-template #popRanking>
-  <div *ngIf="selectedPouleForRanking" class="card border-0">
-    <div class="card-header d-flex justify-content-between px-0 pt-2 pb-1" style="margin-top: -8px;">
-      <span>stand {{nameService.getPouleName(selectedPouleForRanking, true)}}</span>
-      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="hideRanking()">
-        x
-      </button>
-    </div>
-    <div class="card-body p-0">
-      <div class="card-text">
-        <table class="table fixed">
-          <colgroup>
-            <col>
-            <col class="width-30">
-            <col>
-            <col>
-            <col>
-          </colgroup>
-          <thead>
-            <tr>
-              <th class="text-right pl-0">pl</th>
-              <th class="pouleplace pl-0">deelnemer</th>
-              <th class="text-right pl-0" title="gespeeld">g</th>
-              <th class="text-right pl-0" title="punten">p</th>
-              <th class="text-center text-info pl-0 pointer" (click)="showDifferenceDetail = !showDifferenceDetail"
-                title="doelsaldo">&Delta;</th>
-            </tr>
-          </thead>
-          <tbody>
-            <ng-template ngFor let-rankingItem [ngForOf]="getRankingItems(selectedPouleForRanking)">
-              <tr>
-                <td class="rankingnr text-right pl-0">
-                  <ng-container *ngTemplateOutlet="qualclass;context:{$implicit: getQualificationClass(selectedPouleForRanking, rankingItem.getUniqueRank())}">
-                  </ng-container>
-                  <span>{{rankingItem.getUniqueRank()}}</span>
-                </td>
-                <td class="pouleplace pl-0" [ngClass]="{ 'text-primary': isCompetitorFav(rankingItem.getPoulePlace().getCompetitor()) }">
-                  {{nameService.getPoulePlaceFromName(rankingItem.getPoulePlace(), true)}}
-                </td>
-                <td class="text-right pl-0">{{ranking.getNrOfGamesWithState(rankingItem.getPoulePlace(),
-                  rankingItem.getPoulePlace().getGames())}}</td>
-                <td class="text-right pl-0">{{ranking.getPoints(rankingItem.getPoulePlace(),
-                  rankingItem.getPoulePlace().getGames())}}</td>
-                <td class="text-center unitdiff pl-0">
-                  <div>{{getUnitDifference(rankingItem.getPoulePlace(), rankingItem.getPoulePlace().getGames())}}</div>
-                  <div *ngIf="showDifferenceDetail">{{getDifferenceDetail(rankingItem.getPoulePlace(),
-                    rankingItem.getPoulePlace().getGames(),false)}}</div>
-                  <div *ngIf="showDifferenceDetail && hasMultipleScoreConfigs()">{{getDifferenceDetail(rankingItem.getPoulePlace(),
-                    rankingItem.getPoulePlace().getGames(),true)}}</div>
-                </td>
-              </tr>
-            </ng-template>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #qualclass let-qualclass>
-  <fa-icon *ngIf="qualclass.icon !== undefined" [icon]="['fas', qualclass.icon]" class="{{qualclass.text}}"></fa-icon>
+<ng-template #popRanking let-poule="poule" let-tournament="tournament">
+  <app-tournament-pouleranking [poule]="poule" [tournament]="tournament"></app-tournament-pouleranking>
 </ng-template>
 
 <ng-template #popRules>
   <div class="card border-0">
     <div class="card-header d-flex justify-content-between px-0 pt-2 pb-1" style="margin-top: -8px;">
       <span>regelvolgorde</span>
-      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="toggleRulesPopover()">
+      <button type="button" class="btn btn-sm btn-outline-secondary">
         x
       </button>
     </div>
