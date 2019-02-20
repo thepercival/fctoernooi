@@ -19,7 +19,7 @@ import { IPlanningScrollTo } from '../planning/view/component';
 export class TournamentViewComponent extends TournamentComponent implements OnInit, AfterViewChecked, OnDestroy {
     private liveboardLinkSet = false;
     public planningService: PlanningService;
-    public refreshAfterSeconds = 10;
+    public refreshAfterSeconds = 60;
     private refreshAtCountDown = true;
     scrollTo: IPlanningScrollTo = {};
     scrollToEndRanking: string;
