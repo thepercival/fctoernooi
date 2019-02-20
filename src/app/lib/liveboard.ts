@@ -105,19 +105,16 @@ export class Liveboard {
     }
 
     protected getRoundNumbersForPouleRankingsHelper(roundNumber: RoundNumber): RoundNumber[] {
-        if (roundNumber.getState() === Game.STATE_INPLAY) {
+        if (roundNumber.getState() === Game.STATE_CREATED || roundNumber.getState() === Game.STATE_INPLAY) {
             return [roundNumber];
         }
-        if (roundNumber.getState() === Game.STATE_PLAYED) {
-            if (!roundNumber.hasNext()) {
-                return [roundNumber];
-            }
-            if (roundNumber.getNext().getState() === Game.STATE_CREATED) {
-                return [roundNumber, roundNumber.getNext()];
-            }
-            return this.getRoundNumbersForPouleRankingsHelper(roundNumber.getNext());
+        if (!roundNumber.hasNext()) {
+            return [roundNumber];
         }
-        return [];
+        if (roundNumber.getNext().getState() === Game.STATE_CREATED) {
+            return [roundNumber, roundNumber.getNext()];
+        }
+        return this.getRoundNumbersForPouleRankingsHelper(roundNumber.getNext());
     }
 
     private getScreenForGamesPlayed(): Screen {

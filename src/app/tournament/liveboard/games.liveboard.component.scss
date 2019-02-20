@@ -1,4 +1,41 @@
 table.liveboard {
+    table-layout: fixed;
     font-size: 28px;
 }
 
+td, th {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+td.firstrow {
+    border-top: 0;
+}
+
+th.width-25 {
+    width:25%;
+}
+
+th.width-14 {
+    width:16%;
+}
+
+th.width-10 {
+    width:10%;
+}
+
+th.width-8 {
+    width:8%;
+}
+
+th.width-6 {
+    width:6%;
+}
+
+th.width-5 {
+    width:5%;
+}
+
+th.width-4 {
+    width:4%;
+}

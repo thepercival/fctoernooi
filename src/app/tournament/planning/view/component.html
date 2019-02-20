@@ -19,16 +19,16 @@
   </div>
 
   <div class="d-flex justify-content-around">
-    <table class="table fixed">
+    <table class="table">
       <colgroup>
         <col *ngIf="roundNumber.needsRanking()">
         <col *ngIf="!roundNumber.needsRanking()">
         <col *ngIf="planningService.canCalculateStartDateTime(roundNumber)">
         <col *ngIf="hasFields()">
-        <col class="width-25">
         <col>
-        <col class="width-25">
-        <col *ngIf="hasReferees()" class="d-none d-sm-table-cell">
+        <col>
+        <col>
+        <col *ngIf="hasReferees()" class="d-none d-sm-table-cell text-right">
       </colgroup>
       <thead>
         <tr>
@@ -41,9 +41,9 @@
           </th>
           <th *ngIf="planningService.canCalculateStartDateTime(roundNumber)" class="pointer text-info" container="body"
             title="start" placement="right" [ngbPopover]="getGameTimeTooltipDescription()">
-            <span *ngIf="!onSameDay()">{{planningService.calculateStartDateTime(roundNumber).toLocaleString("nl",
+            <span *ngIf="!sameDay">{{planningService.calculateStartDateTime(roundNumber).toLocaleString("nl",
               {"month":"short","day":"2-digit"})}}</span>
-            <span *ngIf="onSameDay()">start</span>
+            <span *ngIf="sameDay">start</span>
           </th>
           <th *ngIf="hasFields()" class="text-center" title="veld">
             <i class="fi flaticon-soccer-field"></i>
@@ -53,23 +53,23 @@
             <i class="fi flaticon-scoreboard"></i>
           </th>
           <th>uit</th>
-          <th *ngIf="hasReferees()" class="d-none d-sm-table-cell" title="scheidsrechter">
+          <th *ngIf="hasReferees()" class="d-none d-sm-table-cell text-right" title="scheidsrechter">
             <i class="fi flaticon-referee"></i>
           </th>
         </tr>
       </thead>
       <tbody>
-        <ng-template ngFor let-game [ngForOf]="getGamesHelper()">
+        <ng-template ngFor let-game [ngForOf]="gamesToShow">
           <tr *ngIf="tournament.hasBreak() && isBreakInBetween(game)" class="table-info">
             <td></td>
             <td *ngIf="planningService.canCalculateStartDateTime(roundNumber)"></td>
             <td *ngIf="hasFields()"></td>
-            <td class="width-25 text-right">PAUZE</td>
+            <td class="text-right">PAUZE</td>
             <td></td>
-            <td class="width-25"></td>
+            <td class=""></td>
             <td *ngIf="hasReferees()" class="d-none d-sm-table-cell"></td>
           </tr>
-          <tr *ngIf="!favorites.hasItems() || favorites.hasGameItem(game) || !hasAGamePoulePlaceACompetitor(game)" id="scroll-game-{{game.getId()}}">
+          <tr id="scroll-game-{{game.getId()}}">
             <td *ngIf="!pouleHasPopover(game)" class="text-center">
               <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
             </td>
@@ -85,7 +85,7 @@
               </button>
             </td>
             <td *ngIf="planningService.canCalculateStartDateTime(roundNumber)">
-              <span *ngIf="!onSameDay()">{{game.getStartDateTime().toLocaleString("nl",
+              <span *ngIf="!sameDay">{{game.getStartDateTime().toLocaleString("nl",
                 {"month":"short","day":"2-digit"})}} </span>
               <span>{{game.getStartDateTime().toLocaleString("nl", {"hour12":
                 false,"hour":"2-digit","minute":"2-digit"})}}</span>
@@ -109,7 +109,7 @@
             <td class="pouleplace" [ngClass]="{ 'text-primary': favorites.hasGameCompetitor(game, GameAWAY) }">
               <span>{{nameService.getPoulePlacesFromName(game.getPoulePlaces( GameAWAY ),true,true)}}</span>
             </td>
-            <td *ngIf="hasReferees()" class="d-none d-sm-table-cell" [ngClass]="{'text-primary': favorites.hasGameReferee(game) }">{{nameService.getRefereeName(game)}}</td>
+            <td *ngIf="hasReferees()" class="d-none d-sm-table-cell text-right" [ngClass]="{'text-primary': favorites.hasGameReferee(game) }">{{nameService.getRefereeName(game)}}</td>
           </tr>
         </ng-template>
       </tbody>

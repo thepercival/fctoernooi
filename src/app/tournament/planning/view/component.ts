@@ -32,6 +32,7 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
   ranking: Ranking;
   userIsGameResultAdmin: boolean;
   favorites: Favorites;
+  gamesToShow: Game[];
 
   constructor(
     private router: Router,
@@ -48,6 +49,10 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.GAMERESULTADMIN);
     this.favorites = this.favRepository.getItem(this.tournament);
+    this.gamesToShow = this.planningService.getGamesForRoundNumber(this.roundNumber, Game.ORDER_RESOURCEBATCH).filter(game => {
+      return !this.favorites.hasItems() || this.favorites.hasGameItem(game) || !this.hasAGamePoulePlaceACompetitor(game);
+    });
+    this.sameDay = this.gamesToShow.length > 1 ? this.isSameDay(this.gamesToShow[0], this.gamesToShow[this.gamesToShow.length - 1]) : true;
   }
 
   ngAfterViewInit() {
@@ -175,16 +180,6 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
       const tournament = this.tournament;
       popOver.open({ poule, tournament });
     }
-  }
-
-  getGamesHelper(): Game[] {
-    const games: Game[] = this.planningService.getGamesForRoundNumber(this.roundNumber, Game.ORDER_RESOURCEBATCH);
-    this.sameDay = games.length > 1 ? this.isSameDay(games[0], games[games.length - 1]) : true;
-    return games;
-  }
-
-  onSameDay() {
-    return this.sameDay;
   }
 
   protected isSameDay(gameOne: Game, gameTwo: Game): boolean {

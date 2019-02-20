@@ -115,10 +115,6 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
         return this.tournament.getCompetition().getFields().length > 0;
     }
 
-    hasReferees() {
-        return this.tournament.getCompetition().getReferees().length > 0;
-    }
-
     navigateBack() {
         this.router.navigateByUrl(this.myNavigation.getPreviousUrl(''));
     }

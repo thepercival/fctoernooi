@@ -1,10 +1,9 @@
 <div class="row no-gutters">
-  <div class="col-5">
+  <div class="col-6 pr-4">
     <ng-container *ngTemplateOutlet="pouleRanking;context:{$implicit: screen.getFirstPoule()}">
     </ng-container>
   </div>
-  <div class="col-2"></div>
-  <div class="col-5">
+  <div class="col-6 pl-4">
     <ng-container *ngTemplateOutlet="pouleRanking;context:{$implicit: screen.getLastPoule()}">
     </ng-container>
   </div>
@@ -14,11 +13,11 @@
   <table *ngIf="poule" class="table liveboard">
     <thead>
       <tr>
-        <th class="text-right">pl</th>
-        <th class="text-info">{{nameService.getPouleName(poule, true)}}</th>
-        <th class="text-right">g</th>
-        <th class="text-right">pnt</th>
-        <th class="text-center">&Delta;</th>
+        <th class="text-right width-14">pl</th>
+        <th class="text-info width-40">{{nameService.getPouleName(poule, true)}}</th>
+        <th class="text-right width-8">g</th>
+        <th class="text-right width-8">pnt</th>
+        <th class="text-center width-30">&Delta;</th>
       </tr>
     </thead>
     <tbody>
