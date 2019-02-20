@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiurl: 'https://api.fctoernooi.nl/',
+  apiurl: 'https://api-acc.fctoernooi.nl/',
   useExternal: false
 };
