@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
-    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
       <div class="mb-4">
         <h1>
           nieuw toernooi
@@ -97,7 +97,7 @@
                 placeholder="yyyy-mm-dd" id="dp" name="dp" [formControl]="customForm.controls.date" ngbDatepicker #d="ngbDatepicker"
                 required [dayTemplate]="t" [minDate]="minDateStruct">
               <div class="input-group-append">
-                <span class="input-group-text pointer" (click)="d.toggle()">                    
+                <span class="input-group-text pointer" (click)="d.toggle()">
                   <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
                 </span>
               </div>
