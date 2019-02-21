@@ -111,10 +111,10 @@
     </div>
   </div>
   <div class="row text-center no-gutters">
-    <app-tournament-structureround *ngFor="let childRound of round.getChildRounds()" class="mt-2" [ngStyle]="{ 'width': (100/round.getChildRounds().length) + '%' }"
+    <app-tournament-structureround *ngFor="let childRound of round.getChildRounds()" class="mb-2" [ngStyle]="{ 'width': (100/round.getChildRounds().length) + '%' }"
       [round]="childRound" [editable]="editable" (roundNumberChanged)="roundNumberChanged.emit($event)"></app-tournament-structureround>
   </div>
-  <div class="mt-2" *ngIf="!round.isRoot() && round.getPoulePlaces().length === 2">
+  <div *ngIf="!round.isRoot() && round.getPoulePlaces().length === 2">
     <div class="card round">
       <div class="card-header px-1">
         <span [innerHTML]="nameService.getRoundName(round) | keepHtml"></span>
