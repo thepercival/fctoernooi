@@ -3,22 +3,22 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import {
+  NameService,
   PlanningRepository,
   PlanningService,
   PoulePlace,
   PoulePlaceRepository,
   Round,
   Structure,
-  NameService,
-  StructureRepository
+  StructureRepository,
 } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
 
 import { IAlert } from '../../app.definitions';
 import { Tournament } from '../../lib/tournament';
-import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentService } from '../../lib/tournament/service';
+import { TournamentComponent } from '../component';
 import { TournamentListRemoveModalComponent } from './listremovemodal.component';
 
 @Component({
@@ -150,7 +150,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
 
   protected swapHelper(reposUpdates: Observable<PoulePlace>[]) {
     forkJoin(reposUpdates).subscribe(results => {
-      this.setAlert('info', 'volgorde gewijzigd');
+      this.setAlert('success', 'volgorde gewijzigd');
       this.poulePlaceToSwap = undefined;
       this.processing = false;
     },

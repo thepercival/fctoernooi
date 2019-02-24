@@ -31,8 +31,7 @@
           <div class="col-9">
             <input class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.emailaddress.invalid, 'is-valid': customForm.controls.emailaddress.valid }"
               type="text" name="emailaddress" id="emailaddress" [formControl]="customForm.controls.emailaddress"
-              maxlength="{{validations.maxlengthemailaddress}}" placeholder="max. {{validations.maxlengthemailaddress}} karakters"
-              autofocus>
+              maxlength="{{validations.maxlengthemailaddress}}" placeholder="max. {{validations.maxlengthemailaddress}} karakters">
           </div>
         </div>
         <div class="form-group row">
