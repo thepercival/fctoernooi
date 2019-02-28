@@ -28,9 +28,9 @@
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <div *ngIf="!processing">
-        <app-tournament-planning-view *ngFor="let roundNumber of structure.getRoundNumbers()" [tournament]="tournament"
+        <app-tournament-roundnumber-view *ngFor="let roundNumber of structure.getRoundNumbers()" [tournament]="tournament"
           [roundNumber]="roundNumber" [planningService]="planningService" [userRefereeId]="userRefereeId" [scrollTo]="scrollTo"
-          [parentReturnAction]="'/toernooi/view'" (popOverIsOpen)="setNoRefresh($event)"></app-tournament-planning-view>
+          [parentReturnAction]="'/toernooi/view'" (popOverIsOpen)="setNoRefresh($event)"></app-tournament-roundnumber-view>
         <div class="d-flex justify-content-between mt-3" id="endranking">
           <h2>
             <span>eindstand</span>

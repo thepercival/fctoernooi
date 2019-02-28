@@ -4,18 +4,18 @@ import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import { Game, NameService, PlanningService, Poule, Ranking, RoundNumber } from 'ngx-sport';
 
-import { AuthService } from '../../../auth/auth.service';
-import { Favorites } from '../../../lib/favorites';
-import { FavoritesRepository } from '../../../lib/favorites/repository';
-import { Role } from '../../../lib/role';
-import { Tournament } from '../../../lib/tournament';
+import { AuthService } from '../../auth/auth.service';
+import { Favorites } from '../../lib/favorites';
+import { FavoritesRepository } from '../../lib/favorites/repository';
+import { Role } from '../../lib/role';
+import { Tournament } from '../../lib/tournament';
 
 @Component({
-  selector: 'app-tournament-planning-view',
-  templateUrl: './component.html',
-  styleUrls: ['./component.scss']
+  selector: 'app-tournament-roundnumber-view',
+  templateUrl: './view.component.html',
+  styleUrls: ['./view.component.scss']
 })
-export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
+export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit {
 
   @Input() tournament: Tournament;
   @Input() roundNumber: RoundNumber;
@@ -53,13 +53,16 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
       return !this.favorites.hasItems() || this.favorites.hasGameItem(game) || !this.hasAGamePoulePlaceACompetitor(game);
     });
     this.sameDay = this.gamesToShow.length > 1 ? this.isSameDay(this.gamesToShow[0], this.gamesToShow[this.gamesToShow.length - 1]) : true;
+    console.log('planningview oninit end', new Date());
   }
 
   ngAfterViewInit() {
     if (this.scrollTo.roundNumber === this.roundNumber.getNumber()) {
+      console.log('planningview scrolling to scroll-' + (!this.roundNumber.isFirst() ? 'roundnumber-' + this.roundNumber.getNumber() : 'game-' + this.scrollTo.gameId), new Date());
       this.scrollService.scrollTo({
-        target: 'scroll-' + (!this.roundNumber.isFirst() ? 'roundnumber-' + this.roundNumber.getNumber() : 'game-' + this.scrollTo.gameId),
-        duration: 200
+        target: 'scroll-' + (this.scrollTo.gameId === undefined ? 'roundnumber-' + this.roundNumber.getNumber() : 'game-' + this.scrollTo.gameId),
+        duration: 0/*,
+        easing: 'easeInOutQuint'*/
       });
     }
   }
@@ -109,7 +112,10 @@ export class TournamentPlanningViewComponent implements OnInit, AfterViewInit {
     return false;
   }
 
-  isBreakInBetween(game: Game) {
+  isBreakBeforeGame(game: Game): boolean {
+    if (!this.tournament.hasBreak()) {
+      return false;
+    }
     if (this.previousGameStartDateTime === undefined) {
       if (game.getStartDateTime() !== undefined) {
         this.previousGameStartDateTime = new Date(game.getStartDateTime().getTime());

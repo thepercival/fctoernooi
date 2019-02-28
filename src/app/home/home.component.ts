@@ -2,8 +2,8 @@ import { AfterViewChecked, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 
-import { IAlert } from '../app.definitions';
 import { AuthService } from '../auth/auth.service';
+import { IAlert } from '../common/alert';
 import { IconManager } from '../common/iconmanager';
 import { TournamentShell, TournamentShellFilter, TournamentShellRepository } from '../lib/tournament/shell/repository';
 

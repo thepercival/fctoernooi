@@ -77,11 +77,11 @@ import { TournamentLiveboardGamesComponent } from './liveboard/games.liveboard.c
 import { TournamentLiveboardComponent } from './liveboard/liveboard.component';
 import { TournamentLiveboardPoulesComponent } from './liveboard/poules.liveboard.component';
 import { TournamentNewComponent } from './new/new.component';
-import { TournamentPlanningViewComponent } from './planning/view/component';
 import { TournamentEndRankingViewComponent } from './ranking/end/end.component';
 import { TournamentPouleRankingComponent } from './ranking/poule/poule.component';
 import { TournamentRefereeEditComponent } from './referee/edit.component';
 import { RefereeListComponent } from './referee/list.component';
+import { TournamentRoundNumberViewComponent } from './roundnumber/view.component';
 import { RoundsSettingsComponent } from './settings/rounds.component';
 import { TournamentSponsorEditComponent } from './sponsor/edit.component';
 import { SponsorListComponent } from './sponsor/list.component';
@@ -118,7 +118,7 @@ library.add(
     TournamentStructureViewComponent,
     TournamentStructureRoundComponent,
     GameListComponent,
-    TournamentPlanningViewComponent,
+    TournamentRoundNumberViewComponent,
     TournamentEndRankingViewComponent,
     TournamentPouleRankingComponent,
     CompetitorListComponent,

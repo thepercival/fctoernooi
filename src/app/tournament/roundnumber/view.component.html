@@ -60,7 +60,7 @@
       </thead>
       <tbody>
         <ng-template ngFor let-game [ngForOf]="gamesToShow">
-          <tr *ngIf="tournament.hasBreak() && isBreakInBetween(game)" class="table-info">
+          <tr *ngIf="isBreakBeforeGame(game)" class="table-info">
             <td></td>
             <td *ngIf="planningService.canCalculateStartDateTime(roundNumber)"></td>
             <td *ngIf="hasFields()"></td>
@@ -94,7 +94,7 @@
             <td class="pouleplace text-right" [ngClass]="{'text-primary': favorites.hasGameCompetitor(game, GameHOME) }">
               <span>{{nameService.getPoulePlacesFromName(game.getPoulePlaces( GameHOME ),true,true)}}</span>
             </td>
-            <td class="score text-center" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
+            <td nowrap class="score text-center" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
               <button *ngIf="hasEditPermissions(game)" class="btn btn-sm btn-outline-primary" (click)="linkToGameEdit(game)">
                 <fa-icon *ngIf="!isPlayed(game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
                 <span *ngIf="isPlayed(game)">{{getScore(game)}}</span>

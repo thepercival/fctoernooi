@@ -9,7 +9,7 @@ import { Role } from '../../lib/role';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { NavBarTournamentLiveboardLink } from '../../nav/nav.component';
 import { TournamentComponent } from '../component';
-import { IPlanningScrollTo } from '../planning/view/component';
+import { IPlanningScrollTo } from '../roundnumber/view.component';
 
 @Component({
     selector: 'app-tournament-view',

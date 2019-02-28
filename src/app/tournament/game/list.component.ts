@@ -7,7 +7,7 @@ import { AuthService } from '../../auth/auth.service';
 import { Role } from '../../lib/role';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
-import { IPlanningScrollTo } from '../planning/view/component';
+import { IPlanningScrollTo } from '../roundnumber/view.component';
 
 @Component({
   selector: 'app-tournament-games',
@@ -42,12 +42,14 @@ export class GameListComponent extends TournamentComponent implements OnInit, Af
     });
     super.myNgOnInit(() => {
       this.setPlanningService();
+      console.log('gamelist : oninit end', new Date());
     });
     this.showPrintBtn = true;
   }
 
   ngAfterViewChecked() {
     if (this.processing === false && this.scrollToEndRanking !== undefined) {
+      console.log('gamelist : ngAfterViewChecked -> scrolling to endranking', new Date());
       this.scrollService.scrollTo({
         target: 'endranking',
         duration: 200

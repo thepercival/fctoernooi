@@ -14,7 +14,7 @@ import {
 } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
 
-import { IAlert } from '../../app.definitions';
+import { IAlert } from '../../common/alert';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentService } from '../../lib/tournament/service';

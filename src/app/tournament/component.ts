@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Structure, StructureRepository, StructureService } from 'ngx-sport';
 
-import { IAlert } from '../app.definitions';
+import { IAlert } from '../common/alert';
 import { Tournament } from '../lib/tournament';
 import { TournamentRepository } from '../lib/tournament/repository';
 

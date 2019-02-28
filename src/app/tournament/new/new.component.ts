@@ -8,19 +8,19 @@ import {
   Field,
   IRoundStructure,
   JsonStructure,
-  StructureMapper,
   League,
   PlanningRepository,
   PlanningService,
   Season,
   SportConfig,
   Structure,
+  StructureMapper,
   StructureRepository,
   StructureService,
 } from 'ngx-sport';
 
-import { IAlert } from '../../app.definitions';
 import { AuthService } from '../../auth/auth.service';
+import { IAlert } from '../../common/alert';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentService } from '../../lib/tournament/service';
