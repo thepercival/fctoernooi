@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { IAlert } from '../../app.definitions';
 import { AuthService } from '../../auth/auth.service';
+import { IAlert } from '../../common/alert';
 import { User } from '../../lib/user';
 
 @Component({

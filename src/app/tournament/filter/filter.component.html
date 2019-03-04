@@ -1,5 +1,5 @@
 <div class="row justify-content-center no-gutters">
-  <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+  <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
     <div class="mb-4">
       <h1 *ngIf="tournament">
         {{tournament.getName()}}
@@ -14,22 +14,22 @@
       </h2>
     </div>
     <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-    <p *ngIf="userIsGameResultAdmin && hasTeams() && hasReferees()" class="d-flex justify-content-between">
-      <button [disabled]="processing" (click)="scrollTo('team-part')" class="btn btn-outline-secondary">
-          <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
-        <span *ngIf="hasFavoriteTeams()" class="badge badge-primary badge-pill">{{getNrOfFavoriteTeams()}}</span>
+    <p *ngIf="userIsGameResultAdmin && hasCompetitors() && hasReferees()" class="d-flex justify-content-between">
+      <button [disabled]="processing" (click)="scrollTo('competitor-part')" class="btn btn-outline-secondary">
+        <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
+        <span *ngIf="favorites.hasCompetitors()" class="badge badge-primary badge-pill">{{favorites.getNrOfCompetitors()}}</span>
       </button>
       <button [disabled]="processing" (click)="scrollTo('referee-part')" class="btn btn-outline-secondary">
         <i class="fi flaticon-referee"></i>
         <span class="d-none d-sm-inline"> scheidsrechters </span>
         <span class="d-sm-none"> scheidsr. </span>
-        <span *ngIf="hasFavoriteReferees()" class="badge badge-primary badge-pill">{{getNrOfFavoriteReferees()}}</span>
+        <span *ngIf="favorites.hasReferees()" class="badge badge-primary badge-pill">{{favorites.getNrOfReferees()}}</span>
       </button>
     </p>
-    <div *ngIf="!processing && hasTeams()" id="team-part">
+    <div *ngIf="!processing && hasCompetitors()" id="competitor-part">
       <h2>
-          <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
-        <span *ngIf="hasFavoriteTeams()" class="badge badge-primary badge-pill">{{getNrOfFavoriteTeams()}}</span>
+        <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
+        <span *ngIf="favorites.hasCompetitors()" class="badge badge-primary badge-pill">{{favorites.getNrOfCompetitors()}}</span>
       </h2>
       <table class="table">
         <thead>
@@ -45,18 +45,16 @@
               <span>{{nameService.getPoulePlaceFromName(poulePlace, false)}}</span>
             </td>
             <td class="pouleplace">
-              <span *ngIf="poulePlace.getTeam()">{{poulePlace.getTeam().getName()}}</span>
+              <span *ngIf="poulePlace.getCompetitor()">{{poulePlace.getCompetitor().getName()}}</span>
             </td>
             <td>
-              <span *ngIf="toggledItem === poulePlace.getTeam()" class="smallfont">
-                <fa-icon *ngIf="this.toggledItemProgress < 10" class="text-info" [icon]="['fas', 'save']" size="{{5 + (toggledItemProgress/2)}}x"></fa-icon>
-                <fa-icon *ngIf="this.toggledItemProgress === 10" class="text-success" [icon]="['fas', 'check-circle']"
-                  size="10x"></fa-icon>
+              <span *ngIf="toggledItem === poulePlace.getCompetitor()" class="smallfont">
+                <fa-icon *ngIf="this.toggledItemProgress === 10" class="text-success" [icon]="['fas', 'save']" size="{{5 + (toggledItemProgress/2)}}x"></fa-icon>
               </span>
             </td>
             <td class="text-right">
-              <fa-icon *ngIf="poulePlace.getTeam()" class="text-primary pointer" (click)="toggleFavoriteTeams(poulePlace.getTeam())"
-                [icon]="['far', (inFavoriteTeamIds(poulePlace.getTeam()) ? 'check-' : '') + 'square']" size="2x"></fa-icon>
+              <fa-icon *ngIf="poulePlace.getCompetitor()" class="text-primary pointer" (click)="toggleFavoriteCompetitor(poulePlace.getCompetitor())"
+                [icon]="['far', (favorites.hasCompetitor(poulePlace.getCompetitor()) ? 'check-' : '') + 'square']" size="2x"></fa-icon>
             </td>
           </tr>
         </tbody>
@@ -92,7 +90,7 @@
               </span>
             </td>
             <td class="text-right">
-              <fa-icon class="text-primary pointer" (click)="toggleFavoriteReferees(referee)" [icon]="['far', (inFavoriteRefereeIds(referee) ? 'check-' : '') + 'square']"
+              <fa-icon class="text-primary pointer" (click)="toggleFavoriteReferee(referee)" [icon]="['far', (favorites.hasReferee(referee) ? 'check-' : '') + 'square']"
                 size="2x"></fa-icon>
             </td>
         </tbody>

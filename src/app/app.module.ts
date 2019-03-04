@@ -65,14 +65,16 @@ import { AuthService } from './auth/auth.service';
 import { AuthguardService } from './auth/authguard.service';
 import { GlobalEventsManager } from './common/eventmanager';
 import { IconManager } from './common/iconmanager';
+import { MyNavigation } from './common/navigation';
 import { FooterComponent } from './footer/footer.component';
 import { HomeComponent } from './home/home.component';
+import { FavoritesRepository } from './lib/favorites/repository';
 import { RoleMapper } from './lib/role/mapper';
-import { SponsorRepository } from './lib/sponsor/repository';
-import { TournamentRepository } from './lib/tournament/repository';
-import { TournamentMapper } from './lib/tournament/mapper';
-import { TournamentShellRepository } from './lib/tournament/shell/repository';
 import { SponsorMapper } from './lib/sponsor/mapper';
+import { SponsorRepository } from './lib/sponsor/repository';
+import { TournamentMapper } from './lib/tournament/mapper';
+import { TournamentRepository } from './lib/tournament/repository';
+import { TournamentShellRepository } from './lib/tournament/shell/repository';
 import { UserMapper } from './lib/user/mapper';
 import { NavComponent } from './nav/nav.component';
 import { UserModule } from './user/user.module';
@@ -125,7 +127,9 @@ library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave
     RefereeMapper,
     GlobalEventsManager,
     IconManager,
-    NameService
+    MyNavigation,
+    NameService,
+    FavoritesRepository
   ],
   bootstrap: [AppComponent]
 })

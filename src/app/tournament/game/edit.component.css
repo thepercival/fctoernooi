@@ -10,7 +10,7 @@ input.ng-invalid, select.ng-invalid {
     width: 170px;
 }
 
-.team-splitter {
+.homeaway-splitter {
   padding: 0;
   text-align: center;
 }

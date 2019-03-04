@@ -308,9 +308,6 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         if (this.modelConfig.getEnableTime() && scoreConfig.getParent() === undefined) {
             return true;
         }
-        if (this.planningService.isStarted(this.roundNumber)) {
-            return true;
-        }
         return false;
     }
 
@@ -374,7 +371,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
 
     }
 
-    getDirectionClass(scoreConfig: RoundNumberConfigScore) {
+    getDirectionName(scoreConfig: RoundNumberConfigScore) {
         return scoreConfig.getDirection() === RoundNumberConfigScore.UPWARDS ? 'naar' : 'vanaf';
     }
 

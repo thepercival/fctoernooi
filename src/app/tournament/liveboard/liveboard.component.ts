@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NameService, PlanningService, Ranking, StructureRepository } from 'ngx-sport';
-import { Subscription, timer } from 'rxjs';
 
 import { GlobalEventsManager } from '../../common/eventmanager';
 import { IconManager } from '../../common/iconmanager';
+import { MyNavigation } from '../../common/navigation';
 import { Liveboard } from '../../lib/liveboard';
 import { EndRankingScreen, GamesScreen, PoulesRankingScreen, SponsorScreen } from '../../lib/liveboard/screens';
 import { Sponsor } from '../../lib/sponsor';
@@ -19,11 +19,13 @@ import { TournamentComponent } from '../component';
 })
 export class TournamentLiveboardComponent extends TournamentComponent implements OnInit, OnDestroy {
 
-    private timerSubscription: Subscription;
     public planningService: PlanningService;
     public activeScreen: any;
+    private screens: any[] = [];
     public ranking: Ranking;
     private maxLines = 8;
+    public refreshAfterSeconds = 10;
+    public toggleProgress: boolean = false;
 
     constructor(
         route: ActivatedRoute,
@@ -32,7 +34,8 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
         structureRepository: StructureRepository,
         private globalEventsManager: GlobalEventsManager,
         public iconManager: IconManager,
-        public nameService: NameService
+        public nameService: NameService,
+        private myNavigation: MyNavigation
     ) {
         super(route, router, tournamentRepository, structureRepository);
         this.ranking = new Ranking(Ranking.RULESSET_WC);
@@ -47,21 +50,29 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
         this.globalEventsManager.toggleLiveboardIconInNavBar.emit(link);
         this.planningService = new PlanningService(this.tournament.getCompetition());
         const liveBoard = new Liveboard(this.tournament, this.structure, this.maxLines, this.ranking, this.planningService);
-        const screens = liveBoard.getScreens();
-        if (screens.length === 0) {
-            this.setAlert('info', 'op dit moment zijn er geen schermen om weer te geven');
-            this.processing = false;
-            return;
+        this.screens = liveBoard.getScreens();
+        // console.log(this.screens);
+        // if (screens.length === 0) {
+        //     this.setAlert('info', 'op dit moment zijn er geen schermen om weer te geven');
+        //     this.processing = false;
+        //     return;
+        // }
+        this.executeScheduledTask();
+        this.processing = false;
+    }
+
+    executeScheduledTask() {
+        // console.log('executeScheduledTask', callback);
+        this.activeScreen = this.screens.shift();
+        // this.processing = false;
+        if (this.activeScreen === undefined) {
+
+            // console.log('getnewsscreens');
+            this.processing = true;
+            this.getDataAndProcessScreens();
+        } else {
+            this.toggleProgress = !this.toggleProgress;
         }
-        this.timerSubscription = timer(0, 10000).subscribe(number => {
-            this.activeScreen = screens.shift();
-            this.processing = false;
-            if (this.activeScreen === undefined) {
-                this.timerSubscription.unsubscribe();
-                this.processing = true;
-                this.getDataAndProcessScreens();
-            }
-        });
     }
 
     getDataAndProcessScreens() {
@@ -82,9 +93,6 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
 
     ngOnDestroy() {
         this.globalEventsManager.toggleLiveboardIconInNavBar.emit({});
-        if (this.timerSubscription !== undefined) {
-            this.timerSubscription.unsubscribe();
-        }
     }
 
     isPoulesRankingScreen(): boolean {
@@ -107,17 +115,9 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
         return this.tournament.getCompetition().getFields().length > 0;
     }
 
-    hasReferees() {
-        return this.tournament.getCompetition().getReferees().length > 0;
+    navigateBack() {
+        this.router.navigateByUrl(this.myNavigation.getPreviousUrl(''));
     }
-
-
-
-    /*getRoundNumberAbbreviation( roundNumber: RoundNumber ): string {
-        const name = this.nameService.getRoundNumberName(roundNumber);
-        const idxSpace = name.indexOf(' ');
-        return name.substring(0, idxSpace) + name.substring(idxSpace + 1, idxSpace + 2).toUpperCase();
-    }*/
 }
 
 

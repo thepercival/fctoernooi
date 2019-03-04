@@ -35,7 +35,7 @@
     <app-tournament-structureround [editable]="true" [round]="clonedStructure.getRootRound()" (roundNumberChanged)="setChangedRoundNumber($event)"></app-tournament-structureround>
   </div>
 </div>
-<div class="text-center" class="mt-3 mb-1">
+<div class="text-center" class="my-1">
   <button *ngIf="!processing && !clonedStructure.getRootRound().isStarted()" role="button" [disabled]="!changedRoundNumber"
     (click)="saveStructure()" class="btn btn-outline-primary">
     <fa-icon [icon]="['fas', 'save']"></fa-icon>

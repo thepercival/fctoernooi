@@ -1,7 +1,9 @@
 @import './mixins';
 
 $info:          #b041e7 !default;
+$enable-responsive-font-sizes: true !default;
 @import "./bootswatch/variables";
+$body-color: $gray-400;
 $secondary:     $gray-500;
 $popover-border-color:                #fff;
 @import "~bootstrap/scss/bootstrap";

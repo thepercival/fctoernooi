@@ -43,7 +43,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     returnUrlQueryParamValue: string;
     userRefereeId: number;
     private enablePlayedAtFirstChange;
-    
+
     constructor(
         route: ActivatedRoute,
         router: Router,
@@ -257,6 +257,10 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     setExtratime(extratime: boolean) {
+        if (this.game.getScores().length === 0) {
+            this.updateCalculateScoreControl();
+            this.synGameScores();
+        }
         this.game.setScoresMoment(extratime ? Game.MOMENT_EXTRATIME : Game.MOMENT_FULLTIME);
     }
 
@@ -281,6 +285,9 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         if (played === false) {
             this.customForm.controls.extratime.setValue(false);
             this.initScores();
+            this.updateCalculateScoreControl();
+            this.synGameScores();
+        } else if (this.game.getScores().length === 0) {
             this.updateCalculateScoreControl();
             this.synGameScores();
         }
@@ -348,7 +355,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             this.scoreControls.push(new HomeAwayFormControl(0, 0));
         }
         const moment = this.customForm.controls.extratime.value === true ? Game.MOMENT_EXTRATIME : Game.MOMENT_FULLTIME;
-        const state = this.customForm.controls.played.value === true ? Game.STATE_PLAYED : Game.STATE_CREATED;                
+        const state = this.customForm.controls.played.value === true ? Game.STATE_PLAYED : Game.STATE_CREATED;
         this.game.setScoresMoment(moment);
         this.game.setState(state);
         this.synGameScores(false);
@@ -383,7 +390,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
                             newQualifiers.push(newQualifier);
                         });
                     });
-                    const changedPoulePlaces = this.setTeams(newQualifiers, currentQualifiedPoulePlaces);
+                    const changedPoulePlaces = this.setCompetitors(newQualifiers, currentQualifiedPoulePlaces);
                     if (changedPoulePlaces.length > 0) {
                         const reposUpdates = [];
                         changedPoulePlaces.forEach((changedPoulePlace) => {
@@ -436,12 +443,12 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         return originalGameScoresTmp.length > 0;
     }
 
-    protected setTeams(newQualifiers: INewQualifier[], poulePlaces: PoulePlace[]): PoulePlace[] {
+    protected setCompetitors(newQualifiers: INewQualifier[], poulePlaces: PoulePlace[]): PoulePlace[] {
         const changedPoulePlaces: PoulePlace[] = [];
         newQualifiers.forEach(newQualifier => {
             const poulePlace = poulePlaces.find(poulePlaceIt => newQualifier.poulePlace === poulePlaceIt);
-            if (poulePlace.getTeam() !== newQualifier.team) {
-                poulePlace.setTeam(newQualifier.team);
+            if (poulePlace.getCompetitor() !== newQualifier.competitor) {
+                poulePlace.setCompetitor(newQualifier.competitor);
                 changedPoulePlaces.push(poulePlace);
             }
         });

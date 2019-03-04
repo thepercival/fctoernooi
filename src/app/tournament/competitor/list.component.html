@@ -1,5 +1,5 @@
 <div class="row justify-content-center no-gutters">
-  <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+  <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
     <div class="mb-4">
       <h1 *ngIf="!processing">
         {{tournament.getName()}}
@@ -10,7 +10,7 @@
     </div>
     <div>
       <h2>
-          <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
+        <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
       </h2>
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
@@ -26,11 +26,12 @@
             <th>plek</th>
             <th>naam</th>
             <th class="text-center">
-              <button *ngIf="!isStarted() && allPoulePlaceHaveTeam()" type="button" class="btn btn-sm btn-outline-primary"
+              <button *ngIf="!isStarted() && allPoulePlaceHaveCompetitor()" type="button" class="btn btn-sm btn-outline-primary"
                 (click)="swapAll()" [disabled]="processing || poulePlaceToSwap !== undefined" title="willekeurige volgorde">
                 <fa-icon [icon]="['fas', 'random']"></fa-icon>
               </button>
-              <fa-icon *ngIf="!isStarted() && !allPoulePlaceHaveTeam() && showSwap" title="volgorder omwisselen" [icon]="['fas', 'sort']"></fa-icon>
+              <fa-icon *ngIf="!isStarted() && !allPoulePlaceHaveCompetitor() && showSwap" title="volgorder omwisselen"
+                [icon]="['fas', 'sort']"></fa-icon>
             </th>
             <th *ngIf="!isStarted()" class="text-right"><button type="button" class="btn btn-sm btn-outline-primary"
                 (click)="addPoulePlace()">

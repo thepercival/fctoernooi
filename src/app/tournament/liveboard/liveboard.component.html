@@ -1,4 +1,17 @@
-<div class="container-fluid px-0">
+<div class=" text-center align-items-center d-lg-none">
+  <div>
+    <ngb-alert type="info" [dismissible]="false">deze pagina werkt alleen vanaf middelgrote schermen</ngb-alert>
+  </div>
+  <div>
+    <button *ngIf="tournament" (click)="navigateBack()" routerLinkActive="active" class="btn btn-outline-secondary"
+      type="button">
+      <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+      <span> terug</span>
+    </button>
+  </div>
+</div>
+
+<div class="container-fluid px-0 d-none d-lg-block">
   <div class="d-flex justify-content-between align-items-center mb-5">
     <h1 *ngIf="tournament">
       <small>
@@ -16,6 +29,7 @@
         <span class="smaller text-secondary">https://www.fctoernooi.nl/{{tournament.getId()}}</span>
       </small>
     </h1>
+    <app-progress [toggleProgress]="toggleProgress" [max]="refreshAfterSeconds" (executeAtZero)="executeScheduledTask()"></app-progress>
     <button *ngIf="tournament" [routerLink]="['/toernooi/view', tournament.getId()]" routerLinkActive="active" class="btn btn-outline-secondary"
       type="button">
       <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
@@ -31,7 +45,7 @@
 
   <!-- scheduled games and results screen -->
   <app-tournament-liveboard-games *ngIf="isGamesScreen()" [screen]="activeScreen" [hasFields]="hasFields()"
-    [hasReferees]="hasReferees()" [planningService]="planningService"></app-tournament-liveboard-games>
+    [planningService]="planningService"></app-tournament-liveboard-games>
 
   <!-- pouleranking screen -->
   <app-tournament-liveboard-poules *ngIf="isPoulesRankingScreen()" [screen]="activeScreen" [ranking]="ranking"></app-tournament-liveboard-poules>

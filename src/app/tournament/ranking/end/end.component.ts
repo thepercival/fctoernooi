@@ -1,36 +1,34 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { EndRanking, NameService, Ranking, RankingItem, Round } from 'ngx-sport';
 
 @Component({
   selector: 'app-tournament-endranking-view',
-  templateUrl: './component.html',
-  styleUrls: ['./component.scss']
+  templateUrl: './end.component.html',
+  styleUrls: ['./end.component.scss']
 })
-export class TournamentEndRankingViewComponent {
+export class TournamentEndRankingViewComponent implements OnInit {
 
   @Input() rootRound: Round;
   @Input() filterStart: number;
   @Input() filterEnd: number;
 
   private endRankingService: EndRanking;
-  private rankingItems: RankingItem[];
+  public items: RankingItem[];
 
   constructor(public nameService: NameService) {
     this.endRankingService = new EndRanking(Ranking.RULESSET_WC);
   }
 
-  getRankingItems(): RankingItem[] {
-    if (this.rankingItems === undefined) {
-      this.rankingItems = this.endRankingService.getItems(this.rootRound);
-    }
+  ngOnInit() {
+    let items = this.endRankingService.getItems(this.rootRound);
     if (this.filterStart !== undefined && this.filterEnd !== undefined) {
-      return this.rankingItems.filter(item => item.getUniqueRank() >= this.filterStart && item.getUniqueRank() <= this.filterEnd);
+      items = items.filter(item => item.getUniqueRank() >= this.filterStart && item.getUniqueRank() <= this.filterEnd);
     }
-    return this.rankingItems;
+    this.items = items;
   }
 
   isUnknown(rankingItem: RankingItem): boolean {
-    return (rankingItem.isSpecified() === false || rankingItem.getPoulePlace().getTeam() === undefined);
+    return (rankingItem.isSpecified() === false || rankingItem.getPoulePlace().getCompetitor() === undefined);
   }
 
   getRankingItemName(rankingItem: RankingItem): string {

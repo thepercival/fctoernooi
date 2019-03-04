@@ -1,0 +1,24 @@
+// @import "~bootstrap/scss/bootstrap";
+
+/* table-sm */
+table.fixed {
+    table-layout: fixed;
+}
+
+.table th, .table td {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+/* .table th {
+    border-top: 0;
+    margin-top: 0;-
+} */
+
+// @include media-breakpoint-up(sm) {
+//   .some-class {
+//     display: block;
+//   }
+// }

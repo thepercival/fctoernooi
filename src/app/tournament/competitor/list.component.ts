@@ -3,23 +3,22 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import {
+  NameService,
   PlanningRepository,
   PlanningService,
   PoulePlace,
   PoulePlaceRepository,
   Round,
   Structure,
-  NameService,
   StructureRepository,
-  TeamRepository,
 } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
 
-import { IAlert } from '../../app.definitions';
+import { IAlert } from '../../common/alert';
 import { Tournament } from '../../lib/tournament';
-import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentService } from '../../lib/tournament/service';
+import { TournamentComponent } from '../component';
 import { TournamentListRemoveModalComponent } from './listremovemodal.component';
 
 @Component({
@@ -42,7 +41,6 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     private planningRepository: PlanningRepository,
-    private teamRepository: TeamRepository,
     private poulePlaceRepository: PoulePlaceRepository,
     public nameService: NameService,
     private scrollService: ScrollToService,
@@ -63,13 +61,13 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   initPoulePlaces() {
     const round = this.structure.getRootRound();
     round.getPoulePlaces().forEach(poulePlace => {
-      if (poulePlace.getTeam() === undefined && this.focusId === undefined) {
+      if (poulePlace.getCompetitor() === undefined && this.focusId === undefined) {
         this.focusId = poulePlace.getId();
       }
     });
     this.poulePlaces = round.getPoulePlaces();
     const isStarted = this.isStarted();
-    this.showSwap = !isStarted && this.atLeastTwoPoulePlaceHaveTeam();
+    this.showSwap = !isStarted && this.atLeastTwoPoulePlaceHaveCompetitor();
     this.processing = false;
   }
 
@@ -87,12 +85,12 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     return this.structure.getRootRound().isStarted();
   }
 
-  allPoulePlaceHaveTeam() {
-    return !this.poulePlaces.some(poulePlace => poulePlace.getTeam() === undefined);
+  allPoulePlaceHaveCompetitor() {
+    return !this.poulePlaces.some(poulePlace => poulePlace.getCompetitor() === undefined);
   }
 
-  atLeastTwoPoulePlaceHaveTeam() {
-    return this.poulePlaces.filter(poulePlace => poulePlace.getTeam() !== undefined).length >= 2;
+  atLeastTwoPoulePlaceHaveCompetitor() {
+    return this.poulePlaces.filter(poulePlace => poulePlace.getCompetitor() !== undefined).length >= 2;
   }
 
   editPoulePlace(poulePlace: PoulePlace) {
@@ -124,9 +122,9 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     }
     this.processing = true;
     this.setAlert('info', 'volgorde wordt gewijzigd');
-    const teamTmp = this.poulePlaceToSwap.getTeam();
-    this.poulePlaceToSwap.setTeam(poulePlaceToSwap.getTeam());
-    poulePlaceToSwap.setTeam(teamTmp);
+    const tmp = this.poulePlaceToSwap.getCompetitor();
+    this.poulePlaceToSwap.setCompetitor(poulePlaceToSwap.getCompetitor());
+    poulePlaceToSwap.setCompetitor(tmp);
 
     const reposUpdates: Observable<PoulePlace>[] = [];
     reposUpdates.push(this.poulePlaceRepository.editObject(this.poulePlaceToSwap, this.poulePlaceToSwap.getPoule()));
@@ -139,10 +137,10 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.processing = true;
     this.setAlert('info', 'volgorde wordt willekeurig gewijzigd');
     const poulePlacesCopy = this.poulePlaces.slice();
-    const teams = this.structure.getRootRound().getTeams();
-    while (teams.length > 0) {
+    const competitors = this.structure.getRootRound().getCompetitors();
+    while (competitors.length > 0) {
       const poulePlaceIndex = Math.floor(Math.random() * poulePlacesCopy.length) + 1;
-      poulePlacesCopy[poulePlaceIndex - 1].setTeam(teams.pop());
+      poulePlacesCopy[poulePlaceIndex - 1].setCompetitor(competitors.pop());
       poulePlacesCopy.splice(poulePlaceIndex - 1, 1);
     }
     const reposUpdates: Observable<PoulePlace>[] = [];
@@ -152,7 +150,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
 
   protected swapHelper(reposUpdates: Observable<PoulePlace>[]) {
     forkJoin(reposUpdates).subscribe(results => {
-      this.setAlert('info', 'volgorde gewijzigd');
+      this.setAlert('success', 'volgorde gewijzigd');
       this.poulePlaceToSwap = undefined;
       this.processing = false;
     },
@@ -193,7 +191,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     });
   }
 
-  hasMinimumNrOfTeamsPerPoule() {
+  hasMinimumNrOfPlacesPerPoule() {
     const rootRound = this.structure.getRootRound();
     return (rootRound.getPoules().length * 2) === rootRound.getPoulePlaces().length;
   }
@@ -204,12 +202,12 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   /**
-   * verwijder het team van de pouleplek
+   * verwijder de deelnemer van de pouleplek
    */
   removeCompetitor(poulePlace: PoulePlace): void {
     this.processing = true;
-    const competitor = poulePlace.getTeam() !== undefined ? poulePlace.getTeam().getName() : '';
-    poulePlace.setTeam(undefined);
+    const competitor = poulePlace.getCompetitor() !== undefined ? poulePlace.getCompetitor().getName() : '';
+    poulePlace.setCompetitor(undefined);
     this.setAlert('info', 'deelnemer ' + competitor + ' wordt verwijderd');
     this.poulePlaceRepository.editObject(poulePlace, poulePlace.getPoule())
       .subscribe(
@@ -222,18 +220,18 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   /**
-   * verplaatst alle teams vanaf de te verwijderen pouleplek naar de vorige pouleplek, verwijder vervolgens de laatste pouleplek
+   * verplaatst alle deelnemers vanaf de te verwijderen pouleplek naar de vorige pouleplek, verwijder vervolgens de laatste pouleplek
    */
   removePoulePlace(poulePlace: PoulePlace): void {
     this.processing = true;
     const rootRound = this.structure.getRootRound();
-    const competitor = poulePlace.getTeam() !== undefined ? ' en deelnemer ' + poulePlace.getTeam().getName() : '';
-    const singledoubleWill = poulePlace.getTeam() !== undefined ? 'worden' : 'wordt';
+    const competitor = poulePlace.getCompetitor() !== undefined ? ' en deelnemer ' + poulePlace.getCompetitor().getName() : '';
+    const singledoubleWill = poulePlace.getCompetitor() !== undefined ? 'worden' : 'wordt';
     this.setAlert('info', 'een pouleplek' + competitor + ' ' + singledoubleWill + ' verwijderd');
     try {
       this.moveCompetitors(rootRound, poulePlace);
       this.getStructureService().removePoulePlace(rootRound);
-      const singledoubleIs = poulePlace.getTeam() !== undefined ? 'zijn' : 'is';
+      const singledoubleIs = poulePlace.getCompetitor() !== undefined ? 'zijn' : 'is';
       this.saveStructure('een pouleplek' + competitor + ' ' + singledoubleIs + ' verwijderd');
     } catch (e) {
       this.processing = false;
@@ -254,7 +252,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
       const poulePlacesToChange: PoulePlace[] = poulePlaces.splice(index);
       let previousPoulePlace = fromPoulePlace;
       poulePlacesToChange.forEach(poulePlace => {
-        previousPoulePlace.setTeam(poulePlace.getTeam());
+        previousPoulePlace.setCompetitor(poulePlace.getCompetitor());
         previousPoulePlace = poulePlace;
       });
     }

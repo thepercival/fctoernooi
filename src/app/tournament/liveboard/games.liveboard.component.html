@@ -2,33 +2,33 @@
   <table class="table liveboard">
     <thead>
       <tr>
-        <th>
+        <th class="d-none d-xl-table-cell width-6">
           ronde
         </th>
-        <th>
+        <th class="width-4">
           <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
         </th>
-        <th *ngIf="showDateTime()" title="starttijd">
+        <th *ngIf="showDateTime()" title="starttijd" class="width-10">
           {{planningService.calculateStartDateTime(getRoundNumber()).toLocaleString("nl",
           {"month":"short","day":"2-digit"})}}
         </th>
-        <th *ngIf="isCreatedAndInplay() && hasFields" title="veld">
+        <th *ngIf="isCreatedAndInplay() && hasFields" title="veld" class="width-8">
           <i class="fi flaticon-soccer-field"></i>
         </th>
-        <th class="text-right">thuis</th>
-        <th class="text-center">
+        <th class="text-right width-25">thuis</th>
+        <th class="text-center" class="width-8">
           <i class="fi flaticon-scoreboard"></i>
         </th>
-        <th class="text-left">uit</th>
-        <th *ngIf="isCreatedAndInplay() && hasReferees" class="" title="scheidsrechter">
+        <th class="text-left width-25">uit</th>
+        <th *ngIf="isCreatedAndInplay() && hasReferees()" class="width-14 text-right" title="scheidsrechter">
           <i class="fi flaticon-referee"></i>
         </th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let game of screen.getGames()">
-        <td>
-          <span [innerHtml]="nameService.getRoundName(game.getRound()) | keepHtml"></span>
+        <td class="d-none d-xl-table-cell">
+          <span [innerHtml]="getRoundAbbreviation(game.getRound()) | keepHtml"></span>
         </td>
         <td>
           <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
@@ -47,7 +47,7 @@
         <td class="text-left">
           <span>{{nameService.getPoulePlacesFromName(game.getPoulePlaces(GameAWAY),true,true)}}</span>
         </td>
-        <td *ngIf="isCreatedAndInplay() && hasReferees">{{game.getReferee()?.getInitials()}}</td>
+        <td *ngIf="isCreatedAndInplay() && hasReferees()" class="text-right">{{nameService.getRefereeName(game)}}</td>
       </tr>
     </tbody>
   </table>

@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
-    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
       <div class="mb-4">
         <h1>
           <fa-icon [icon]="['fas', 'sign-in-alt']"></fa-icon> inloggen
@@ -21,8 +21,7 @@
           <div class="col-9">
             <input class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.emailaddress.invalid, 'is-valid': customForm.controls.emailaddress.valid }"
               type="text" name="emailaddress" id="emailaddress" [formControl]="customForm.controls.emailaddress"
-              maxlength="{{validations.maxlengthemailaddress}}" placeholder="max. {{validations.maxlengthemailaddress}} karakters"
-              autofocus>
+              maxlength="{{validations.maxlengthemailaddress}}" placeholder="max. {{validations.maxlengthemailaddress}} karakters">
           </div>
         </div>
         <div class="form-group row">

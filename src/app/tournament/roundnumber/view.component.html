@@ -1,0 +1,140 @@
+<div *ngIf="tournament" id="scroll-roundnumber-{{roundNumber.getNumber()}}">
+  <div class="d-flex justify-content-between mt-3">
+    <h2>
+      <span [innerHTML]="nameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
+      <!-- <ng-template *ngIf="nameService.roundsHaveSameName( )">
+        <fa-icon [icon]="['fas', 'circle']" *ngFor="let winnersOrLosers of structureService.getWinnersLosersPosition( round )" 
+        [title]="structureService.getWinnersLosersDescription(
+              round.getWinnersOrLosers() )" class="text-{{getClassPostfix(round.getWinnersOrLosers())}}"></fa-icon>
+      </ng-template> -->
+    </h2>
+    <button *ngIf="!canEditSettings" type="button" class="btn btn-sm btn-outline-{{favorites.hasItems() ? 'primary' : 'secondary'}} mr-2"
+      (click)="linkToFilterSettings()">
+      <fa-icon [icon]="['fas', 'filter']"></fa-icon>
+      <span>filter</span>
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-primary mr-0" *ngIf="canEditSettings" (click)="linkToRoundSettings()">
+      <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellingen
+    </button>
+  </div>
+
+  <div class="d-flex justify-content-around">
+    <table class="table">
+      <colgroup>
+        <col *ngIf="roundNumber.needsRanking()">
+        <col *ngIf="!roundNumber.needsRanking()">
+        <col *ngIf="planningService.canCalculateStartDateTime(roundNumber)">
+        <col *ngIf="hasFields()">
+        <col>
+        <col>
+        <col>
+        <col *ngIf="hasReferees()" class="d-none d-sm-table-cell text-right">
+      </colgroup>
+      <thead>
+        <tr>
+          <th *ngIf="roundNumber.needsRanking()" class="text-center text-info pointer" title="poule" container="body"
+            placement="right" [ngbPopover]="popRules" #p="ngbPopover">
+            <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
+          </th>
+          <th *ngIf="!roundNumber.needsRanking()" class="text-center" title="wedstrijd">
+            <span>vs</span>
+          </th>
+          <th *ngIf="planningService.canCalculateStartDateTime(roundNumber)" class="pointer text-info" container="body"
+            title="start" placement="right" [ngbPopover]="getGameTimeTooltipDescription()">
+            <span *ngIf="!sameDay">{{planningService.calculateStartDateTime(roundNumber).toLocaleString("nl",
+              {"month":"short","day":"2-digit"})}}</span>
+            <span *ngIf="sameDay">start</span>
+          </th>
+          <th *ngIf="hasFields()" class="text-center" title="veld">
+            <i class="fi flaticon-soccer-field"></i>
+          </th>
+          <th class="text-right">thuis</th>
+          <th class="text-center" title="score">
+            <i class="fi flaticon-scoreboard"></i>
+          </th>
+          <th>uit</th>
+          <th *ngIf="hasReferees()" class="d-none d-sm-table-cell text-right" title="scheidsrechter">
+            <i class="fi flaticon-referee"></i>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-template ngFor let-game [ngForOf]="gamesToShow">
+          <tr *ngIf="isBreakBeforeGame(game)" class="table-info">
+            <td></td>
+            <td *ngIf="planningService.canCalculateStartDateTime(roundNumber)"></td>
+            <td *ngIf="hasFields()"></td>
+            <td class="text-right">PAUZE</td>
+            <td></td>
+            <td class=""></td>
+            <td *ngIf="hasReferees()" class="d-none d-sm-table-cell"></td>
+          </tr>
+          <tr id="scroll-game-{{game.getId()}}">
+            <td *ngIf="!pouleHasPopover(game)" class="text-center">
+              <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
+            </td>
+            <td *ngIf="pouleHasPopover(game) && game.getPoule().needsRanking()" class="text-center">
+              <button class="btn btn-outline-info btn-sm" container="body" placement="right" [ngbPopover]="popRanking"
+                autoClose="outside" popoverClass="coen" triggers="manual" #p="ngbPopover" (click)="showPouleRanking( p, game.getPoule() )">
+                <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
+              </button>
+            </td>
+            <td *ngIf="pouleHasPopover(game) && !game.getPoule().needsRanking()" class="text-center">
+              <button class="btn btn-outline-info btn-sm" placement="right" [ngbPopover]="getGameQualificationDescription(game)">
+                <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
+              </button>
+            </td>
+            <td *ngIf="planningService.canCalculateStartDateTime(roundNumber)">
+              <span *ngIf="!sameDay">{{game.getStartDateTime().toLocaleString("nl",
+                {"month":"short","day":"2-digit"})}} </span>
+              <span>{{game.getStartDateTime().toLocaleString("nl", {"hour12":
+                false,"hour":"2-digit","minute":"2-digit"})}}</span>
+            </td>
+            <td *ngIf="hasFields()" class="text-center">{{game.getField()?.getName()}}</td>
+            <td class="pouleplace text-right" [ngClass]="{'text-primary': favorites.hasGameCompetitor(game, GameHOME) }">
+              <span>{{nameService.getPoulePlacesFromName(game.getPoulePlaces( GameHOME ),true,true)}}</span>
+            </td>
+            <td nowrap class="score text-center" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
+              <button *ngIf="hasEditPermissions(game)" class="btn btn-sm btn-outline-primary" (click)="linkToGameEdit(game)">
+                <fa-icon *ngIf="!isPlayed(game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
+                <span *ngIf="isPlayed(game)">{{getScore(game)}}</span>
+              </button>
+              <span *ngIf="!hasEditPermissions(game)" class="d-none d-sm-inline">{{getScore(game)}}</span>
+              <button *ngIf="!hasEditPermissions(game) && hasReferees() && !isPlayed(game)" class="btn btn-outline-info btn-sm d-sm-none"
+                placement="top" [ngbPopover]="nameService.getRefereeName(game)">
+                <span [ngClass]="{'text-primary': favorites.hasGameReferee(game) }"><i class="fi flaticon-referee"></i></span>
+              </button>
+              <span *ngIf="!hasEditPermissions(game) && !(hasReferees() && !isPlayed(game))" class="d-sm-none">{{getScore(game)}}</span>
+            </td>
+            <td class="pouleplace" [ngClass]="{ 'text-primary': favorites.hasGameCompetitor(game, GameAWAY) }">
+              <span>{{nameService.getPoulePlacesFromName(game.getPoulePlaces( GameAWAY ),true,true)}}</span>
+            </td>
+            <td *ngIf="hasReferees()" class="d-none d-sm-table-cell text-right" [ngClass]="{'text-primary': favorites.hasGameReferee(game) }">{{nameService.getRefereeName(game)}}</td>
+          </tr>
+        </ng-template>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<ng-template #popRanking let-poule="poule" let-tournament="tournament">
+  <app-tournament-pouleranking [poule]="poule" [tournament]="tournament"></app-tournament-pouleranking>
+</ng-template>
+
+<ng-template #popRules>
+  <div class="card border-0">
+    <div class="card-header d-flex justify-content-between px-0 pt-2 pb-1" style="margin-top: -8px;">
+      <span>regelvolgorde</span>
+      <button type="button" class="btn btn-sm btn-outline-secondary">
+        x
+      </button>
+    </div>
+    <div class="card-body p-0">
+      <div class="card-text">
+        <ol class="pl-3 pt-2">
+          <li *ngFor="let ruleDescription of ranking.getRuleDescriptions()">{{ruleDescription}}</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</ng-template>

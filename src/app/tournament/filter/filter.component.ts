@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
-import { NameService, PoulePlace, Referee, StructureRepository, Team } from 'ngx-sport';
-import { interval, range, zip } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { Competitor, NameService, PoulePlace, Referee, StructureRepository } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
+import { Favorites } from '../../lib/favorites';
+import { FavoritesRepository } from '../../lib/favorites/repository';
 import { Role } from '../../lib/role';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
@@ -18,9 +18,10 @@ import { TournamentComponent } from '../component';
 export class TournamentFilterComponent extends TournamentComponent implements OnInit {
     poulePlaces: PoulePlace[];
     poulePlaceToSwap: PoulePlace;
-    toggledItem: Team | Referee;
+    toggledItem: Competitor | Referee;
     toggledItemProgress = 0;
     userIsGameResultAdmin: boolean;
+    favorites: Favorites;
 
     returnUrlQueryParamKey: string;
     returnUrlQueryParamValue: string;
@@ -32,7 +33,8 @@ export class TournamentFilterComponent extends TournamentComponent implements On
         sructureRepository: StructureRepository,
         public nameService: NameService,
         private authService: AuthService,
-        private scrollService: ScrollToService
+        private scrollService: ScrollToService,
+        public favRepository: FavoritesRepository
     ) {
         super(route, router, tournamentRepository, sructureRepository);
         this.resetAlert();
@@ -42,7 +44,7 @@ export class TournamentFilterComponent extends TournamentComponent implements On
         super.myNgOnInit(() => {
             this.initPoulePlaces();
             this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.GAMERESULTADMIN);
-            this.removeOldFavIds();
+            this.favorites = this.favRepository.getItem(this.tournament);
             this.processing = false;
         });
         this.route.queryParamMap.subscribe(params => {
@@ -51,22 +53,10 @@ export class TournamentFilterComponent extends TournamentComponent implements On
         });
     }
 
-    removeOldFavIds() {
-        const referees = this.tournament.getCompetition().getReferees();
-        const favRefereeIds = this.getFavRefereeIdsFromLocalStorage();
-        if (favRefereeIds[this.tournament.getId()] === undefined) {
-            return;
-        }
-        favRefereeIds[this.tournament.getId()] = favRefereeIds[this.tournament.getId()].filter(refereeId => {
-            return (referees.find(referee => referee.getId() === refereeId) !== undefined);
-        });
-        localStorage.setItem('favoritereferees', JSON.stringify(favRefereeIds));
-    }
-
     initPoulePlaces() {
         const round = this.structure.getRootRound();
         this.poulePlaces = round.getPoulePlaces();
-        if (this.hasTeams() === false) {
+        if (this.hasCompetitors() === false) {
             this.setAlert('info', 'er zijn nog geen deelnemers ingevuld, je kunt daarom nog geen filter instellen');
         }
     }
@@ -78,117 +68,50 @@ export class TournamentFilterComponent extends TournamentComponent implements On
         });
     }
 
-    hasTeams() {
-        return this.poulePlaces.some(poulePlace => poulePlace.getTeam() !== undefined);
+    hasCompetitors() {
+        return this.poulePlaces.some(poulePlace => poulePlace.getCompetitor() !== undefined);
     }
 
-    inFavoriteTeamIds(team: Team): boolean {
-        const favTeams = this.getFavTeamsFromLocalStorage();
-        const favTeamIds: number[] = favTeams[this.tournament.getId()];
-        if (favTeamIds === undefined) {
-            return false;
-        }
-        return favTeamIds.find(favTeamId => favTeamId === team.getId()) !== undefined;
-    }
+    toggleFavoriteCompetitor(competitor: Competitor) {
+        this.startProgressing(competitor);
 
-    toggleFavoriteTeams(team: Team) {
-        this.startProgressing(team);
-
-        const favTeams = this.getFavTeamsFromLocalStorage();
-        if (favTeams[this.tournament.getId()] === undefined) {
-            favTeams[this.tournament.getId()] = [];
-        }
-        const favTeamIds: number[] = favTeams[this.tournament.getId()];
-        const index = favTeamIds.indexOf(team.getId());
-        if (index < 0) {
-            favTeamIds.push(team.getId());
+        if (this.favorites.hasCompetitor(competitor)) {
+            this.favorites.removeCompetitor(competitor);
         } else {
-            favTeamIds.splice(index, 1);
+            this.favorites.addCompetitor(competitor);
         }
-        localStorage.setItem('favoriteteams', JSON.stringify(favTeams));
+        this.favRepository.writeToLocalStorage();
     }
 
-    private startProgressing(toggledItem: Team | Referee) {
+    toggleFavoriteReferee(referee: Referee) {
+        this.startProgressing(referee);
+
+        if (this.favorites.hasReferee(referee)) {
+            this.favorites.removeReferee(referee);
+        } else {
+            this.favorites.addReferee(referee);
+        }
+        this.favRepository.writeToLocalStorage();
+    }
+
+    private startProgressing(toggledItem: Competitor | Referee) {
         this.toggledItemProgress = 0;
         this.toggledItem = toggledItem;
-        const progress = range(1, 10).pipe(
+        this.toggledItemProgress = 10;
+        /*const progress = range(1, 10).pipe(
             filter(number => (number % 2) === 0)
         );
         zip(interval(100), progress)
             .subscribe(fromTo => {
                 this.toggledItemProgress = fromTo[1];
-            });
-    }
-
-    protected getFavTeamsFromLocalStorage(): any {
-        const favTeams = localStorage.getItem('favoriteteams');
-        if (favTeams === null) {
-            return {};
-        }
-        return JSON.parse(favTeams);
-    }
-
-    hasFavoriteTeams(): boolean {
-        return this.getNrOfFavoriteTeams() > 0;
-    }
-
-    getNrOfFavoriteTeams(): number {
-        const favTeams = this.getFavTeamsFromLocalStorage();
-        if (favTeams[this.tournament.getId()] === undefined) {
-            return 0;
-        }
-        return favTeams[this.tournament.getId()].length;
+            });*/
     }
 
     hasReferees() {
         return this.tournament.getCompetition().getReferees().length > 0;
     }
 
-    inFavoriteRefereeIds(referee: Referee): boolean {
-        const favReferees = this.getFavRefereeIdsFromLocalStorage();
-        const favRefereeIds: number[] = favReferees[this.tournament.getId()];
-        if (favRefereeIds === undefined) {
-            return false;
-        }
-        return favRefereeIds.find(favRefereeId => favRefereeId === referee.getId()) !== undefined;
-    }
 
-    toggleFavoriteReferees(referee: Referee) {
-        this.startProgressing(referee);
-
-        const favReferees = this.getFavRefereeIdsFromLocalStorage();
-        if (favReferees[this.tournament.getId()] === undefined) {
-            favReferees[this.tournament.getId()] = [];
-        }
-        const favRefereeIds: number[] = favReferees[this.tournament.getId()];
-        const index = favRefereeIds.indexOf(referee.getId());
-        if (index < 0) {
-            favRefereeIds.push(referee.getId());
-        } else {
-            favRefereeIds.splice(index, 1);
-        }
-        localStorage.setItem('favoritereferees', JSON.stringify(favReferees));
-    }
-
-    protected getFavRefereeIdsFromLocalStorage(): any {
-        const favReferees = localStorage.getItem('favoritereferees');
-        if (favReferees === null) {
-            return {};
-        }
-        return JSON.parse(favReferees);
-    }
-
-    hasFavoriteReferees(): boolean {
-        return this.getNrOfFavoriteReferees() > 0;
-    }
-
-    getNrOfFavoriteReferees(): number {
-        const favReferees = this.getFavRefereeIdsFromLocalStorage();
-        if (favReferees[this.tournament.getId()] === undefined) {
-            return 0;
-        }
-        return favReferees[this.tournament.getId()].length;
-    }
 
     private getForwarUrl() {
         return ['/toernooi/view', this.tournament.getId()];

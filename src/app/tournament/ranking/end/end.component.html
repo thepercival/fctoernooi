@@ -4,11 +4,11 @@
       <tr>
         <th class="text-right">pl</th>
         <th></th>
-        <th>team</th>
+        <th>deelnemers</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let rankingItem of getRankingItems()">
+      <tr *ngFor="let rankingItem of items">
         <td class="text-right">
           <span>{{rankingItem.getRank()}}</span>
         </td>

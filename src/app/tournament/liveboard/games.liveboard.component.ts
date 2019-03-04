@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Game, NameService, PlanningService, RoundNumber } from 'ngx-sport';
+import { Game, NameService, PlanningService, Round, RoundNumber } from 'ngx-sport';
 
 import { CreatedAndInplayGamesScreen, GamesScreen } from '../../lib/liveboard/screens';
 
@@ -12,7 +12,6 @@ export class TournamentLiveboardGamesComponent {
 
     @Input() screen: GamesScreen;
     @Input() hasFields: boolean;
-    @Input() hasReferees: boolean;
     @Input() planningService: PlanningService;
 
     constructor(
@@ -51,5 +50,23 @@ export class TournamentLiveboardGamesComponent {
             return sScore;
         }
         return finalScore.getHome() + sScore + finalScore.getAway();
+    }
+
+    hasReferees() {
+        return this.screen.getGames().some(game => game.getReferee() !== undefined || game.getRefereePoulePlace() !== undefined);
+    }
+
+    getRoundAbbreviation(round: Round, sameName: boolean = false) {
+        const name = this.nameService.getRoundName(round);
+        if (name.indexOf(" finale") >= 0) {
+            return name.replace(" finale", "F");
+        } else if (name.indexOf("finale") >= 0) {
+            return "FIN";
+        } else if (name.indexOf(" plaats") >= 0) {
+            return name.replace(" plaats", "");
+        } else if (name.indexOf(" ronde") >= 0) {
+            return 'R' + name.substring(0, 1);
+        }
+        return name;
     }
 }

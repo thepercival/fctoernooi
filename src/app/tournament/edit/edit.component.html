@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
-    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
       <div class="mb-4">
         <h1 *ngIf="tournament">
           {{tournament.getName()}}
@@ -26,7 +26,7 @@
           <div class="col-9">
             <input class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.name.invalid, 'is-valid': customForm.controls.name.valid }"
               type="text" name="name" id="name" [formControl]="customForm.controls.name" maxlength="{{validations.maxlengthname}}"
-              placeholder="max. {{validations.maxlengthname}} karakters" autofocus>
+              placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
         </div>
         <div *ngIf="!structure.getRootRound().isStarted()" class="form-group row">
@@ -40,7 +40,7 @@
                 required [dayTemplate]="t" [minDate]="minDateStruct">
               <div class="input-group-append">
                 <span class="input-group-text pointer" (click)="d.toggle()">
-                    <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+                  <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
                 </span>
               </div>
             </div>
