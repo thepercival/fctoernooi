@@ -7,7 +7,7 @@ import { AuthService } from '../../auth/auth.service';
 import { Role } from '../../lib/role';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
-import { IPlanningScrollTo } from '../roundnumber/view.component';
+import { IPlanningScrollTo } from '../roundnumber/rnview.component';
 
 @Component({
   selector: 'app-tournament-games',

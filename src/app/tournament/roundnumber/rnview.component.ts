@@ -12,8 +12,8 @@ import { Tournament } from '../../lib/tournament';
 
 @Component({
   selector: 'app-tournament-roundnumber-view',
-  templateUrl: './view.component.html',
-  styleUrls: ['./view.component.scss']
+  templateUrl: './rnview.component.html',
+  styleUrls: ['./rnview.component.scss']
 })
 export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit {
 

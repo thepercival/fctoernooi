@@ -81,7 +81,7 @@ import { TournamentEndRankingViewComponent } from './ranking/end.component';
 import { TournamentPouleRankingComponent } from './ranking/poule.component';
 import { TournamentRefereeEditComponent } from './referee/edit.component';
 import { RefereeListComponent } from './referee/list.component';
-import { TournamentRoundNumberViewComponent } from './roundnumber/view.component';
+import { TournamentRoundNumberViewComponent } from './roundnumber/rnview.component';
 import { RoundsSettingsComponent } from './settings/rounds.component';
 import { TournamentSponsorEditComponent } from './sponsor/edit.component';
 import { SponsorListComponent } from './sponsor/list.component';
