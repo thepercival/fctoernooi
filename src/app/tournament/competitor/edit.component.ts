@@ -2,17 +2,17 @@ import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@ang
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    JsonCompetitor,
-    PoulePlace,
-    PoulePlaceRepository,
-    NameService,
-    StructureRepository,
     Competitor,
     CompetitorRepository,
+    JsonCompetitor,
+    NameService,
+    PoulePlace,
+    PoulePlaceRepository,
+    StructureRepository,
 } from 'ngx-sport';
 
-import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../../lib/tournament/repository';
+import { TournamentComponent } from '../component';
 
 @Component({
     selector: 'app-tournament-competitor-edit',
@@ -53,6 +53,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
                 Validators.minLength(this.validations.minlengthname),
                 Validators.maxLength(this.validations.maxlengthname)
             ])],
+            registered: [''],
             info: ['', Validators.compose([
                 Validators.maxLength(this.validations.maxlengthinfo)
             ])],
@@ -89,6 +90,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
             return;
         }
         this.customForm.controls.name.setValue(this.poulePlace.getCompetitor() ? this.poulePlace.getCompetitor().getName() : undefined);
+        this.customForm.controls.registered.setValue(this.poulePlace.getCompetitor() ? this.poulePlace.getCompetitor().getRegistered() : false);
         this.customForm.controls.info.setValue(this.poulePlace.getCompetitor() ? this.poulePlace.getCompetitor().getInfo() : undefined);
         this.processing = false;
     }
@@ -123,6 +125,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
         const association = this.tournament.getCompetition().getLeague().getAssociation();
         const competitor: JsonCompetitor = {
             name: name,
+            registered: this.customForm.controls.registered.value,
             info: info ? info : undefined
         };
 
@@ -155,9 +158,11 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
 
         const competitor = this.poulePlace.getCompetitor();
         const name = this.customForm.controls.name.value;
+        const registered = this.customForm.controls.registered.value;
         const info = this.customForm.controls.info.value;
 
         competitor.setName(name);
+        competitor.setRegistered(registered);
         competitor.setInfo(info ? info : undefined);
         this.competitorRepository.editObject(competitor)
             .subscribe(

@@ -6,7 +6,6 @@ import {
   Association,
   Competition,
   Field,
-  IRoundStructure,
   JsonStructure,
   League,
   PlanningRepository,
@@ -191,16 +190,10 @@ export class TournamentNewComponent implements OnInit {
   getStructureDescription() {
 
     const nrOfCompetitors = this.customForm.controls.nrofcompetitors.value;
-
-    let roundStructure: IRoundStructure;
-    if (nrOfCompetitors !== undefined && StructureService.DEFAULTS[nrOfCompetitors] !== undefined) {
-      roundStructure = StructureService.DEFAULTS[nrOfCompetitors];
-    }
-    if (roundStructure === undefined) {
-      return '';
-    }
-    const sPouleDescr = roundStructure.nrofpoules > 1 ? 'poules' : 'poule';
-    return roundStructure.nrofpoules + ' ' + sPouleDescr;
+    const structureService = new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
+    const defaultNrOfPoules = nrOfCompetitors !== undefined ? structureService.getDefaultNrOfPoules(nrOfCompetitors) : undefined;
+    const sPouleDescr = defaultNrOfPoules > 1 ? 'poules' : 'poule';
+    return defaultNrOfPoules + ' ' + sPouleDescr;
   }
 
   isLoggedIn() {

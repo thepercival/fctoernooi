@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import {
+  Competitor,
+  CompetitorRepository,
   NameService,
   PlanningRepository,
   PlanningService,
@@ -42,6 +44,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     sructureRepository: StructureRepository,
     private planningRepository: PlanningRepository,
     private poulePlaceRepository: PoulePlaceRepository,
+    private competitorRepository: CompetitorRepository,
     public nameService: NameService,
     private scrollService: ScrollToService,
     private modalService: NgbModal
@@ -199,6 +202,25 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   hasNoDropouts() {
     const rootRound = this.structure.getRootRound();
     return rootRound.getPoulePlaces().length <= rootRound.getNrOfPlacesChildRounds();
+  }
+
+  /**
+   * verwijder de deelnemer van de pouleplek
+   */
+  registerCompetitor(competitor: Competitor): void {
+    this.processing = true;
+    const newRegistered = competitor.getRegistered() === true ? false : true;
+    competitor.setRegistered(newRegistered);
+    const prefix = newRegistered ? 'aan' : 'af';
+    this.setAlert('info', 'deelnemer ' + competitor.getName() + ' wordt ' + prefix + 'gemeld');
+    this.competitorRepository.editObject(competitor)
+      .subscribe(
+            /* happy path */ competitorRes => {
+          this.setAlert('success', 'deelnemer ' + competitor.getName() + ' is ' + prefix + 'gemeld');
+        },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+            /* onComplete */() => { this.processing = false; }
+      );
   }
 
   /**

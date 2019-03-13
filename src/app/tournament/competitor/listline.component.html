@@ -7,8 +7,12 @@
 <td>
   <span>{{nameService.getPoulePlaceFromName(poulePlace, false)}}</span>
 </td>
+<td class="text-center d-none d-sm-table-cell">
+  <fa-icon *ngIf="poulePlace.getCompetitor()" class="text-primary pointer" (click)="register()" [icon]="['far', (poulePlace.getCompetitor().getRegistered() ? 'check-' : '') + 'square']"
+    size="2x"></fa-icon>
+</td>
 <td *ngIf="poulePlace.getCompetitor()">
-  <span>{{poulePlace.getCompetitor().getName()}}</span>
+  <span [ngClass]="{ 'registered-xs': poulePlace.getCompetitor().getRegistered() }">{{poulePlace.getCompetitor().getName()}}</span>
 </td>
 <td *ngIf="poulePlace.getCompetitor()" class="text-center">
   <fa-icon *ngIf="showSwap" class="text-primary pointer" (click)="swapTwo()" [icon]="['far', (poulePlaceToSwap === poulePlace ? 'check-' : '') + 'square']"

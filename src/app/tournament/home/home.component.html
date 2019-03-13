@@ -3,7 +3,8 @@
     <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
       <h1 *ngIf="tournament" class="text-center">
         {{tournament.getName()}}
-        <button [routerLink]="['']" [queryParams]="{scrollToId:tournament.getId()}" type="button" class="btn btn-outline-secondary btn-sm">
+        <button [routerLink]="['']" [queryParams]="{scrollToId:tournament.getId()}" type="button"
+          class="btn btn-outline-secondary btn-sm">
           <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
         </button>
       </h1>
@@ -35,10 +36,16 @@
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
             </h5>
-            <p class="card-text" *ngIf="structure.getRootRound().getCompetitors().length === structure.getRootRound().getPoulePlaces().length">
-              <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> alle namen ingevuld
+            <p class="card-text" *ngIf="competitorsComplete()">
+              <span *ngIf="!someCompetitorsRegistered()">
+                <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> alle namen ingevuld
+              </span>
+              <span *ngIf="someCompetitorsRegistered()">
+                <fa-icon [icon]="['fas', 'check-circle']" class="text-warning"></fa-icon> niet alle deelnemers zijn
+                aangemeld
+              </span>
             </p>
-            <p class="card-text" *ngIf="structure.getRootRound().getCompetitors().length < structure.getRootRound().getPoulePlaces().length">
+            <p class="card-text" *ngIf="!competitorsComplete()">
               <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> vul de namen in
               ({{structure.getRootRound().getCompetitors().length}}/{{structure.getRootRound().getPoulePlaces().length}})
             </p>
@@ -167,7 +174,8 @@
       <div class="row">
         <div class="form-check col-3">
           <label class="custom-control custom-checkbox col-form-label pl-0">
-            <input type="checkbox" class="custom-control-input form-check-input" name="structure" [(ngModel)]="printConfig.structure">
+            <input type="checkbox" class="custom-control-input form-check-input" name="structure"
+              [(ngModel)]="printConfig.structure">
             <span class="custom-control-indicator"></span>
           </label>
         </div>
@@ -176,7 +184,8 @@
       <div class="row">
         <div class="form-check col-3">
           <label class="custom-control custom-checkbox col-form-label pl-0">
-            <input type="checkbox" class="custom-control-input form-check-input" name="planning" [(ngModel)]="printConfig.planning">
+            <input type="checkbox" class="custom-control-input form-check-input" name="planning"
+              [(ngModel)]="printConfig.planning">
             <span class="custom-control-indicator"></span>
           </label>
         </div>
@@ -194,7 +203,8 @@
       <div class="row">
         <div class="form-check col-3">
           <label class="custom-control custom-checkbox col-form-label pl-0">
-            <input type="checkbox" class="custom-control-input form-check-input" name="gamenotes" [(ngModel)]="printConfig.gamenotes">
+            <input type="checkbox" class="custom-control-input form-check-input" name="gamenotes"
+              [(ngModel)]="printConfig.gamenotes">
             <span class="custom-control-indicator"></span>
           </label>
         </div>
@@ -203,7 +213,8 @@
       <div *ngIf="tournament.getCompetition().getFields().length" class="row">
         <div class="form-check col-3">
           <label class="custom-control custom-checkbox col-form-label pl-0">
-            <input type="checkbox" class="custom-control-input form-check-input" name="gamesperfield" [(ngModel)]="printConfig.gamesperfield">
+            <input type="checkbox" class="custom-control-input form-check-input" name="gamesperfield"
+              [(ngModel)]="printConfig.gamesperfield">
             <span class="custom-control-indicator"></span>
           </label>
         </div>
@@ -212,7 +223,8 @@
       <div class="row">
         <div class="form-check col-3">
           <label class="custom-control custom-checkbox col-form-label pl-0">
-            <input type="checkbox" class="custom-control-input form-check-input" name="poulepivottables" [(ngModel)]="printConfig.poulepivottables">
+            <input type="checkbox" class="custom-control-input form-check-input" name="poulepivottables"
+              [(ngModel)]="printConfig.poulepivottables">
             <span class="custom-control-indicator"></span>
           </label>
         </div>
@@ -221,16 +233,19 @@
       <div class="row">
         <div class="form-check col-3">
           <label class="custom-control custom-checkbox col-form-label pl-0">
-            <input type="checkbox" class="custom-control-input form-check-input" name="qrcode" [(ngModel)]="printConfig.qrcode">
+            <input type="checkbox" class="custom-control-input form-check-input" name="qrcode"
+              [(ngModel)]="printConfig.qrcode">
             <span class="custom-control-indicator"></span>
           </label>
         </div>
-        <label for="qrcode" class="col-8 col-form-label">delen met link en qr-code <fa-icon [icon]="['fas', 'qrcode']"></fa-icon></label>
+        <label for="qrcode" class="col-8 col-form-label">delen met link en qr-code <fa-icon [icon]="['fas', 'qrcode']">
+          </fa-icon></label>
       </div>
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" [disabled]="allPrintOptionsOff()" data-dismiss="modal" (click)="modal.close('print')">afdrukken</button>
+    <button type="button" class="btn btn-secondary" [disabled]="allPrintOptionsOff()" data-dismiss="modal"
+      (click)="modal.close('print')">afdrukken</button>
   </div>
 </ng-template>
 
@@ -252,8 +267,8 @@
           </div>
           <div class="col-7">
             <div class="input-group input-group-date">
-              <input class="form-control" id="dp" name="dp" [formControl]="copyForm.controls.date" ngbDatepicker #d="ngbDatepicker"
-                required [dayTemplate]="t" [minDate]="minDateStruct">
+              <input class="form-control" id="dp" name="dp" [formControl]="copyForm.controls.date" ngbDatepicker
+                #d="ngbDatepicker" required [dayTemplate]="t" [minDate]="minDateStruct">
               <div class="input-group-append">
                 <span class="input-group-text pointer" (click)="d.toggle()">
                   <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
@@ -302,18 +317,21 @@
     </button>
   </div>
   <div class="modal-body">
-    <ngb-alert *ngIf="modal.copied === true" type="info" [dismissible]="false">de link is gekopieerd naar het klembord</ngb-alert>
+    <ngb-alert *ngIf="modal.copied === true" type="info" [dismissible]="false">de link is gekopieerd naar het klembord
+    </ngb-alert>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
         <span class="input-group-text">
           <fa-icon [icon]="['fas', 'link']"></fa-icon>
         </span>
       </div>
-      <input type="text" #userinput readonly class="form-control" value="https://www.fctoernooi.nl/toernooi/view/{{tournament.getId()}}">
+      <input type="text" #userinput readonly class="form-control"
+        value="https://www.fctoernooi.nl/toernooi/view/{{tournament.getId()}}">
     </div>
   </div>
   <div class="modal-footer justify-content-around">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.copied = true; copyLink(userinput)">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+      (click)="modal.copied = true; copyLink(userinput)">
       <fa-icon [icon]="['fas', 'clipboard-check']"></fa-icon> kopieer link naar klembord
     </button>
     <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.close('close')">sluiten</button>

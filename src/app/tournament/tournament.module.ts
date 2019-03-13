@@ -77,8 +77,8 @@ import { TournamentLiveboardGamesComponent } from './liveboard/games.liveboard.c
 import { TournamentLiveboardComponent } from './liveboard/liveboard.component';
 import { TournamentLiveboardPoulesComponent } from './liveboard/poules.liveboard.component';
 import { TournamentNewComponent } from './new/new.component';
-import { TournamentEndRankingViewComponent } from './ranking/end/end.component';
-import { TournamentPouleRankingComponent } from './ranking/poule/poule.component';
+import { TournamentEndRankingViewComponent } from './ranking/end.component';
+import { TournamentPouleRankingComponent } from './ranking/poule.component';
 import { TournamentRefereeEditComponent } from './referee/edit.component';
 import { RefereeListComponent } from './referee/list.component';
 import { TournamentRoundNumberViewComponent } from './roundnumber/view.component';

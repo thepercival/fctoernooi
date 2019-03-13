@@ -102,6 +102,12 @@ ngb-alert {
   width:100%;
 }
 
+.registered-xs {
+  @include media-breakpoint-only(xs) {
+      color: #{$success};
+  }
+}
+
 .more-than-two-rounds {
   @include media-breakpoint-only(xs) {
       flex-direction: column;

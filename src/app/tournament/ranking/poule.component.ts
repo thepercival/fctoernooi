@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Game, NameService, Poule, PoulePlace, Ranking, RankingItem, Round } from 'ngx-sport';
 
-import { Favorites } from '../../../lib/favorites';
-import { FavoritesRepository } from '../../../lib/favorites/repository';
-import { Tournament } from '../../../lib/tournament';
+import { Favorites } from '../../lib/favorites';
+import { FavoritesRepository } from '../../lib/favorites/repository';
+import { Tournament } from '../../lib/tournament';
 
 @Component({
   selector: 'app-tournament-pouleranking',
@@ -12,11 +12,12 @@ import { Tournament } from '../../../lib/tournament';
 })
 export class TournamentPouleRankingComponent implements OnInit {
   public ranking: Ranking;
+  public rankingItems: RankingItem[];
   @Input() poule: Poule;
   @Input() tournament: Tournament;
   public showDifferenceDetail = false;
   favorites: Favorites;
-
+  public processing = true;
 
   constructor(
     public nameService: NameService,
@@ -26,10 +27,10 @@ export class TournamentPouleRankingComponent implements OnInit {
 
   ngOnInit() {
     this.favorites = this.favRepository.getItem(this.tournament);
-  }
-
-  getRankingItems(): RankingItem[] {
-    return this.ranking.getItems(this.poule.getPlaces(), this.poule.getGames());
+    this.processing = true;
+    this.rankingItems = this.ranking.getItems(this.poule.getPlaces(), this.poule.getGames())
+    console.log('pouleRanking:ngOnInit()');
+    this.processing = false;
   }
 
   getQualificationClass(poulePlaceNumber: number): {} {

@@ -56,6 +56,15 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
         this.processing = false;
     }
 
+    competitorsComplete(): boolean {
+        return this.structure.getRootRound().getCompetitors().length === this.structure.getRootRound().getPoulePlaces().length;
+    }
+
+    someCompetitorsRegistered(): boolean {
+        const competitors = this.structure.getRootRound().getCompetitors();
+        return competitors.some(competitor => competitor.getRegistered()) && !competitors.every(competitor => competitor.getRegistered());
+    }
+
     getNrOfFieldsDescription() {
         const nrOfFields = this.tournament.getCompetition().getFields().length;
         if (nrOfFields === 0) {

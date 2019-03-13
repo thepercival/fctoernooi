@@ -3,7 +3,10 @@
         <span>stand {{nameService.getPouleName(poule, true)}}</span>
     </div>
     <div class="card-body p-0">
-        <div class="card-text">
+        <h2 *ngIf="processing" class="text-center">
+            <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+        </h2>
+        <div *ngIf="!processing" class="card-text">
             <table class="table fixed mb-0">
                 <colgroup>
                     <col>
@@ -18,19 +21,21 @@
                         <th class="pouleplace pl-0">deelnemer</th>
                         <th class="text-right pl-0" title="gespeeld">g</th>
                         <th class="text-right pl-0" title="punten">p</th>
-                        <th class="text-center text-info pl-0 pointer" (click)="showDifferenceDetail = !showDifferenceDetail"
-                            title="doelsaldo">&Delta;</th>
+                        <th class="text-center text-info pl-0 pointer"
+                            (click)="showDifferenceDetail = !showDifferenceDetail" title="doelsaldo">&Delta;</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <ng-template ngFor let-rankingItem [ngForOf]="getRankingItems()">
+                    <ng-template ngFor let-rankingItem [ngForOf]="rankingItems">
                         <tr>
                             <td class="rankingnr text-right pl-0">
-                                <ng-container *ngTemplateOutlet="qualclass;context:{$implicit: getQualificationClass(rankingItem.getUniqueRank())}">
+                                <ng-container
+                                    *ngTemplateOutlet="qualclass;context:{$implicit: getQualificationClass(rankingItem.getUniqueRank())}">
                                 </ng-container>
                                 <span>{{rankingItem.getUniqueRank()}}</span>
                             </td>
-                            <td class="pouleplace pl-0" [ngClass]="{ 'text-primary': favorites.hasCompetitor(rankingItem.getPoulePlace().getCompetitor()) }">
+                            <td class="pouleplace pl-0"
+                                [ngClass]="{ 'text-primary': favorites.hasCompetitor(rankingItem.getPoulePlace().getCompetitor()) }">
                                 {{nameService.getPoulePlaceFromName(rankingItem.getPoulePlace(), true)}}
                             </td>
                             <td class="text-right pl-0">{{ranking.getNrOfGamesWithState(rankingItem.getPoulePlace(),
