@@ -38,17 +38,14 @@
                                 [ngClass]="{ 'text-primary': favorites.hasCompetitor(rankingItem.getPoulePlace().getCompetitor()) }">
                                 {{nameService.getPoulePlaceFromName(rankingItem.getPoulePlace(), true)}}
                             </td>
-                            <td class="text-right pl-0">{{ranking.getNrOfGamesWithState(rankingItem.getPoulePlace(),
-                                rankingItem.getPoulePlace().getGames())}}</td>
-                            <td class="text-right pl-0">{{ranking.getPoints(rankingItem.getPoulePlace(),
-                                rankingItem.getPoulePlace().getGames())}}</td>
+                            <td class="text-right pl-0">{{rankingItem.getGames()}}</td>
+                            <td class="text-right pl-0">{{rankingItem.getPoints()}}</td>
                             <td class="text-center unitdiff pl-0">
-                                <div>{{getUnitDifference(rankingItem.getPoulePlace(),
-                                    rankingItem.getPoulePlace().getGames())}}</div>
-                                <div *ngIf="showDifferenceDetail">{{getDifferenceDetail(rankingItem.getPoulePlace(),
-                                    rankingItem.getPoulePlace().getGames(),false)}}</div>
-                                <div *ngIf="showDifferenceDetail && hasMultipleScoreConfigs()">{{getDifferenceDetail(rankingItem.getPoulePlace(),
-                                    rankingItem.getPoulePlace().getGames(),true)}}</div>
+                                <div>{{rankingItem.getDiff() > 0 ? '+' : ''}}{{rankingItem.getDiff()}}</div>
+                                <div *ngIf="showDifferenceDetail">( {{rankingItem.getScored()}} -
+                                    {{rankingItem.getReceived()}} )</div>
+                                <div *ngIf="showDifferenceDetail && hasMultipleScoreConfigs()">(
+                                    {{rankingItem.getSubScored()}} - {{rankingItem.getSubReceived()}} )</div>
                             </td>
                         </tr>
                     </ng-template>

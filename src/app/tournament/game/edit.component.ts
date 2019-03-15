@@ -9,14 +9,15 @@ import {
     INewQualifier,
     NameService,
     PlanningService,
+    Poule,
     PoulePlace,
     PoulePlaceRepository,
     QualifyRule,
     QualifyService,
-    Ranking,
-    RankingItem,
+    RankingService,
     Round,
     RoundNumberConfigScore,
+    RoundRankingItem,
     StructureRepository,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
@@ -298,19 +299,18 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         if (this.game.getPoule().getState() !== Game.STATE_PLAYED) {
             return undefined;
         }
-        const ranking = new Ranking(Ranking.RULESSET_WC);
-        const pouleRankingItems = ranking.getItems(this.game.getPoule().getPlaces(), this.game.getPoule().getGames());
-        const equalPouleItems = this.getEqualPouleRankingItems(ranking, pouleRankingItems);
+        const round = this.game.getRound();
+        const ranking = new RankingService(this.tournament.getCompetition().getRuleSet());
+        const pouleRankingItems = ranking.getItemsForPoule(this.game.getPoule());
+        const equalPouleItems = this.getEqualPouleRankingItems(pouleRankingItems);
         const postFix = '(' + this.nameService.getPouleName(this.game.getPoule(), true) + ')';
         let warnings: string[] = this.getWarningsForEqualsInQualificationHelper(equalPouleItems, postFix);
 
-        const round = this.game.getRound();
         round.getChildRounds().forEach(childRound => {
-            const qualService = new QualifyService(round, childRound);
-            const qualifyRules = qualService.getRulesToProcess(this.game.getPoule(), Game.STATE_CREATED, Game.STATE_CREATED);
+            const qualifyRules = this.getRulesToProcess(childRound, this.game.getPoule(), Game.STATE_CREATED, Game.STATE_CREATED);
             qualifyRules.filter(qualifyRule => qualifyRule.isMultiple()).forEach(multipleRule => {
                 const ruleRankingItems = ranking.getItemsForMultipleRule(multipleRule);
-                const equalRuleItems = this.getEqualRuleRankingItems(ranking, multipleRule, ruleRankingItems);
+                const equalRuleItems = this.getEqualRuleRankingItems(multipleRule, ruleRankingItems);
                 const postFix = '(' + this.nameService.getQualifyRuleName(multipleRule) + ')';
                 warnings = warnings.concat(this.getWarningsForEqualsInQualificationHelper(equalRuleItems, postFix));
             });
@@ -319,17 +319,18 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         return warnings;
     }
 
-    protected getWarningsForEqualsInQualificationHelper(equalItemsPerRank: RankingItem[][], postFix: string): string[] {
+    protected getWarningsForEqualsInQualificationHelper(equalItemsPerRank: RoundRankingItem[][], postFix: string): string[] {
         return equalItemsPerRank.map(equalItems => {
             const names: string[] = equalItems.map(equalItem => {
-                return this.nameService.getPoulePlaceName(equalItem.getPoulePlace(), true, true);
+                const poulePlace = equalItem.getRound().getPoulePlace(equalItem.getPoulePlaceLocation());
+                return this.nameService.getPoulePlaceName(poulePlace, true, true);
             });
             return names.join(' & ') + ' zijn precies gelijk geëindigd' + postFix;
         });
     }
 
-    protected getEqualRuleRankingItems(ranking: Ranking, multipleRule: QualifyRule, rankingItems: RankingItem[]): RankingItem[][] {
-        const equalItemsPerRank = ranking.getEqualItems(rankingItems);
+    protected getEqualRuleRankingItems(multipleRule: QualifyRule, rankingItems: RoundRankingItem[]): RoundRankingItem[][] {
+        const equalItemsPerRank = this.getEqualRankedItems(rankingItems);
         const nrToQualify = multipleRule.getToPoulePlaces().length;
         return equalItemsPerRank.filter(equalItems => {
             const equalRank = equalItems[0].getRank();
@@ -337,15 +338,27 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         });
     }
 
-    protected getEqualPouleRankingItems(ranking: Ranking, rankingItems: RankingItem[]): RankingItem[][] {
-        const equalItemsPerRank = ranking.getEqualItems(rankingItems);
+    protected getEqualPouleRankingItems(rankingItems: RoundRankingItem[]): RoundRankingItem[][] {
+        const equalItemsPerRank = this.getEqualRankedItems(rankingItems);
         return equalItemsPerRank.filter(equalItems => {
             // als alle equalitems geen torule hebben dan false
-            if (equalItems.every(item => item.getPoulePlaceForRank().getToQualifyRules().length === 0)) {
-                return false;
-            }
-            return true;
+            return !equalItems.every(item => {
+                const poulePlace = item.getRound().getPoulePlace(item.getPoulePlaceLocation());
+                return poulePlace.getToQualifyRules().length === 0;
+            });
         });
+    }
+
+    protected getEqualRankedItems(rankingItems: RoundRankingItem[]): RoundRankingItem[][] {
+        const equalItems = [];
+        const maxRank = rankingItems[rankingItems.length - 1].getRank();
+        for (let rank = 1; rank <= maxRank; rank++) {
+            const equalItemsTmp = rankingItems.filter(item => item.getRank() === rank);
+            if (equalItemsTmp.length > 1) {
+                equalItems.push(equalItemsTmp);
+            }
+        }
+        return equalItems;
     }
 
     save(): boolean {
@@ -383,9 +396,11 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
                         });
                     });
                     const newQualifiers: INewQualifier[] = [];
+
                     this.game.getRound().getChildRounds().forEach(childRound => {
-                        const qualService = new QualifyService(childRound.getParent(), childRound);
-                        const qualifyRules = qualService.getRulesToProcess(this.game.getPoule(), Game.STATE_CREATED, Game.STATE_CREATED);
+                        const qualService = new QualifyService(childRound.getParent(), childRound, this.tournament.getCompetition().getRuleSet());
+                        const qualifyRules = this.getRulesToProcess(childRound, this.game.getPoule(), Game.STATE_CREATED, Game.STATE_CREATED);
+
                         qualService.getNewQualifiers(qualifyRules).forEach((newQualifier) => {
                             newQualifiers.push(newQualifier);
                         });
@@ -453,6 +468,40 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             }
         });
         return changedPoulePlaces;
+    }
+
+    // transities:
+    // state changed
+    // 1 van hele ronde gespeeld naar niet hele ronde gespeeld
+    // 2 van niet hele ronde gespeeld naar hele ronde gespeeld
+    // 3 hele ronde gespeeld
+    //      update all
+    // 4 van niet hele poule gespeeld naar hele poule gespeeld
+    // 5 van hele poule gespeeld naar niet hele poule gespeeld
+    // 6 hele poule gespeeld
+    //      update from poule
+    getRulesToProcess(childRound: Round, poule: Poule, oldPouleState: number, oldRoundState: number): QualifyRule[] {
+        const rules: QualifyRule[] = [];
+
+        const newPouleState = poule.getState();
+        const newRoundState = poule.getRound().getState();
+        if ((oldRoundState !== Game.STATE_PLAYED && newRoundState === Game.STATE_PLAYED)
+            || (oldRoundState === Game.STATE_PLAYED && newRoundState !== Game.STATE_PLAYED)
+            || (oldRoundState === Game.STATE_PLAYED && newRoundState === Game.STATE_PLAYED)) {
+            const winnersOrLosers = childRound.getWinnersOrLosers();
+            poule.getRound().getToQualifyRules(winnersOrLosers).forEach(rule => rules.push(rule));
+        } else if ((oldPouleState !== Game.STATE_PLAYED && newPouleState === Game.STATE_PLAYED)
+            || (oldPouleState === Game.STATE_PLAYED && newPouleState !== Game.STATE_PLAYED)
+            || (oldPouleState === Game.STATE_PLAYED && newPouleState === Game.STATE_PLAYED)) {
+            const winnersOrLosers = childRound.getWinnersOrLosers();
+            poule.getPlaces().forEach(poulePlace => {
+                const qualifyRule = poulePlace.getToQualifyRule(winnersOrLosers);
+                if (qualifyRule !== undefined && !qualifyRule.isMultiple()) {
+                    rules.push(qualifyRule);
+                }
+            });
+        }
+        return rules;
     }
 
     private getForwarUrl() {

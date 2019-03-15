@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { EndRanking, NameService, Ranking, RankingItem, Round } from 'ngx-sport';
+import { EndRanking, EndRankingItem, RankingService, Round } from 'ngx-sport';
 
 @Component({
   selector: 'app-tournament-endranking-view',
@@ -12,30 +12,18 @@ export class TournamentEndRankingViewComponent implements OnInit {
   @Input() filterStart: number;
   @Input() filterEnd: number;
 
-  private endRankingService: EndRanking;
-  public items: RankingItem[];
+  public items: EndRankingItem[];
 
-  constructor(public nameService: NameService) {
-    this.endRankingService = new EndRanking(Ranking.RULESSET_WC);
+  constructor() {
   }
 
   ngOnInit() {
-    let items = this.endRankingService.getItems(this.rootRound);
+    const endRankingService = new EndRanking(RankingService.RULESSET_WC);
+    let items = endRankingService.getItems(this.rootRound);
     if (this.filterStart !== undefined && this.filterEnd !== undefined) {
       items = items.filter(item => item.getUniqueRank() >= this.filterStart && item.getUniqueRank() <= this.filterEnd);
     }
     this.items = items;
-  }
-
-  isUnknown(rankingItem: RankingItem): boolean {
-    return (rankingItem.isSpecified() === false || rankingItem.getPoulePlace().getCompetitor() === undefined);
-  }
-
-  getRankingItemName(rankingItem: RankingItem): string {
-    if (this.isUnknown(rankingItem)) {
-      return 'nog onbekend';
-    }
-    return this.nameService.getPoulePlaceFromName(rankingItem.getPoulePlace(), true);
   }
 
   hasMedal(rank: number): boolean {

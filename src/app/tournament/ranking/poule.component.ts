@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Game, NameService, Poule, PoulePlace, Ranking, RankingItem, Round } from 'ngx-sport';
+import { NameService, Poule, PoulePlace, RankingService, Round, RoundRankingItem } from 'ngx-sport';
 
 import { Favorites } from '../../lib/favorites';
 import { FavoritesRepository } from '../../lib/favorites/repository';
@@ -11,8 +11,7 @@ import { Tournament } from '../../lib/tournament';
   styleUrls: ['./poule.component.scss']
 })
 export class TournamentPouleRankingComponent implements OnInit {
-  public ranking: Ranking;
-  public rankingItems: RankingItem[];
+  public rankingItems: RoundRankingItem[];
   @Input() poule: Poule;
   @Input() tournament: Tournament;
   public showDifferenceDetail = false;
@@ -22,13 +21,13 @@ export class TournamentPouleRankingComponent implements OnInit {
   constructor(
     public nameService: NameService,
     public favRepository: FavoritesRepository) {
-    this.ranking = new Ranking(Ranking.RULESSET_WC);
   }
 
   ngOnInit() {
     this.favorites = this.favRepository.getItem(this.tournament);
     this.processing = true;
-    this.rankingItems = this.ranking.getItems(this.poule.getPlaces(), this.poule.getGames())
+    const ranking = new RankingService(this.tournament.getCompetition().getRuleSet());
+    this.rankingItems = ranking.getItemsForPoule(this.poule)
     console.log('pouleRanking:ngOnInit()');
     this.processing = false;
   }
@@ -56,17 +55,11 @@ export class TournamentPouleRankingComponent implements OnInit {
       !== this.poule.getRound().getNumber().getConfig().getInputScore();
   }
 
-  getUnitDifference(poulePlace: PoulePlace, games: Game[]) {
-    const nrOfUnitsScored = this.ranking.getNrOfUnitsScored(poulePlace, games);
-    const nrOfUnitsReceived = this.ranking.getNrOfUnitsReceived(poulePlace, games);
-    const delta = nrOfUnitsScored - nrOfUnitsReceived;
-    return delta > 0 ? '+' + delta : delta;
-  }
+  // getUnitDifference(poulePlace: PoulePlace, games: Game[]) {
+  //   const nrOfUnitsScored = this.ranking.getNrOfUnitsScored(poulePlace, games);
+  //   const nrOfUnitsReceived = this.ranking.getNrOfUnitsReceived(poulePlace, games);
+  //   const delta = nrOfUnitsScored - nrOfUnitsReceived;
+  //   return delta > 0 ? '+' + delta : delta;
+  // }
 
-  getDifferenceDetail(poulePlace: PoulePlace, games: Game[], sub: boolean) {
-    const nrOfUnitsScored = this.ranking.getNrOfUnitsScored(poulePlace, games, sub);
-    const nrOfUnitsReceived = this.ranking.getNrOfUnitsReceived(poulePlace, games, sub);
-    const delta = nrOfUnitsScored - nrOfUnitsReceived;
-    return '( ' + nrOfUnitsScored + ' - ' + nrOfUnitsReceived + ' )';
-  }
 }

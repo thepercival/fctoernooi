@@ -2,7 +2,7 @@ import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@
 import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
-import { Game, NameService, PlanningService, Poule, Ranking, RoundNumber } from 'ngx-sport';
+import { Game, NameService, PlanningService, Poule, RankingService, RoundNumber } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
 import { Favorites } from '../../lib/favorites';
@@ -29,7 +29,6 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   GameStatePlayed = Game.STATE_PLAYED;
   sameDay = true;
   previousGameStartDateTime: Date;
-  ranking: Ranking;
   userIsGameResultAdmin: boolean;
   favorites: Favorites;
   gamesToShow: Game[];
@@ -42,9 +41,7 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     public favRepository: FavoritesRepository) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
     this.resetAlert();
-    this.ranking = new Ranking(Ranking.RULESSET_WC);
   }
-
 
   ngOnInit() {
     this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.GAMERESULTADMIN);
@@ -215,6 +212,12 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   getGameQualificationDescription(game: Game) {
     return this.nameService.getPoulePlacesFromName(game.getPoulePlaces(Game.HOME), false, true)
       + ' - ' + this.nameService.getPoulePlacesFromName(game.getPoulePlaces(Game.AWAY), false, true);
+  }
+
+  getRankingRuleDescriptions(): string[] {
+    const ruleSet = this.tournament.getCompetition().getRuleSet();
+    const rankingService = new RankingService(ruleSet);
+    return rankingService.getRuleDescriptions();
   }
 }
 

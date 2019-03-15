@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NameService, PlanningService, Ranking, StructureRepository } from 'ngx-sport';
+import { NameService, PlanningService, StructureRepository } from 'ngx-sport';
 
 import { GlobalEventsManager } from '../../common/eventmanager';
 import { IconManager } from '../../common/iconmanager';
@@ -22,7 +22,6 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
     public planningService: PlanningService;
     public activeScreen: any;
     private screens: any[] = [];
-    public ranking: Ranking;
     private maxLines = 8;
     public refreshAfterSeconds = 10;
     public toggleProgress: boolean = false;
@@ -38,7 +37,6 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
         private myNavigation: MyNavigation
     ) {
         super(route, router, tournamentRepository, structureRepository);
-        this.ranking = new Ranking(Ranking.RULESSET_WC);
     }
 
     ngOnInit() {
@@ -49,7 +47,7 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
         const link: NavBarTournamentLiveboardLink = { showIcon: false, tournamentId: this.tournament.getId(), link: 'wim' };
         this.globalEventsManager.toggleLiveboardIconInNavBar.emit(link);
         this.planningService = new PlanningService(this.tournament.getCompetition());
-        const liveBoard = new Liveboard(this.tournament, this.structure, this.maxLines, this.ranking, this.planningService);
+        const liveBoard = new Liveboard(this.tournament, this.structure, this.maxLines, this.planningService);
         this.screens = liveBoard.getScreens();
         // console.log(this.screens);
         // if (screens.length === 0) {

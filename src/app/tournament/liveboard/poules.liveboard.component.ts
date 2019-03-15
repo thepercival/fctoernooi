@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Game, NameService, Poule, PoulePlace, Ranking, RankingItem, Round } from 'ngx-sport';
+import { NameService, Poule, PoulePlace, RankingService, Round, RoundRankingItem } from 'ngx-sport';
 
 import { PoulesRankingScreen } from '../../lib/liveboard/screens';
 
@@ -9,17 +9,17 @@ import { PoulesRankingScreen } from '../../lib/liveboard/screens';
     styleUrls: ['./poules.liveboard.component.scss']
 })
 export class TournamentLiveboardPoulesComponent {
-
     @Input() screen: PoulesRankingScreen;
-    @Input() ranking: Ranking;
+    @Input() ruleSet: number;
 
     constructor(
         public nameService: NameService
     ) {
     }
 
-    getRankingItems(poule: Poule): RankingItem[] {
-        return this.ranking.getItems(poule.getPlaces(), poule.getGames());
+    getRankingItems(poule: Poule): RoundRankingItem[] {
+        const ranking = new RankingService(this.ruleSet);
+        return ranking.getItemsForPoule(poule);
     }
 
     getQualificationClass(poule: Poule, poulePlaceNumber: number): {} {
@@ -39,9 +39,9 @@ export class TournamentLiveboardPoulesComponent {
         return winnersOrLosers === Round.WINNERS ? 'success' : (winnersOrLosers === Round.LOSERS ? 'danger' : '');
     }
 
-    getUnitDifference(poulePlace: PoulePlace, games: Game[]) {
-        const nrOfUnitsScored = this.ranking.getNrOfUnitsScored(poulePlace, games);
-        const nrOfUnitsReceived = this.ranking.getNrOfUnitsReceived(poulePlace, games);
-        return (nrOfUnitsScored - nrOfUnitsReceived) + ' ( ' + nrOfUnitsScored + ' - ' + nrOfUnitsReceived + ' )';
-    }
+    // getUnitDifference(poulePlace: PoulePlace, games: Game[]) {
+    //     const nrOfUnitsScored = this.ranking.getNrOfUnitsScored(poulePlace, games);
+    //     const nrOfUnitsReceived = this.ranking.getNrOfUnitsReceived(poulePlace, games);
+    //     return (nrOfUnitsScored - nrOfUnitsReceived) + ' ( ' + nrOfUnitsScored + ' - ' + nrOfUnitsReceived + ' )';
+    // }
 }

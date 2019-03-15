@@ -1,4 +1,4 @@
-import { Game, NameService, PlanningService, Poule, Ranking, RoundNumber, Structure } from 'ngx-sport';
+import { Game, NameService, PlanningService, Poule, RoundNumber, Structure } from 'ngx-sport';
 
 import {
     CreatedAndInplayGamesScreen,
@@ -16,7 +16,6 @@ export class Liveboard {
         private tournament: Tournament,
         private structure: Structure,
         private maxLines: number,
-        private ranking: Ranking,
         private planningService: PlanningService) { }
 
     getScreens(): Screen[] {

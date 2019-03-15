@@ -13,9 +13,10 @@
           <span>{{rankingItem.getRank()}}</span>
         </td>
         <td>
-          <fa-icon *ngIf="!isUnknown(rankingItem) && hasMedal(rankingItem.getRank())" [icon]="['fas', 'medal']" class="{{getMedalColor(rankingItem.getRank())}}"></fa-icon>
+          <fa-icon *ngIf="hasMedal(rankingItem.getRank())" [icon]="['fas', 'medal']"
+            class="{{getMedalColor(rankingItem.getRank())}}"></fa-icon>
         </td>
-        <td class="pouleplace">{{getRankingItemName(rankingItem)}}</td>
+        <td class="pouleplace">{{rankingItem.getName()}}</td>
       </tr>
     </tbody>
   </table>

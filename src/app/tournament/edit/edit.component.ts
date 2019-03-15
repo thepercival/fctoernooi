@@ -2,18 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-import {
-    League,
-    PlanningRepository,
-    PlanningService,
-    RoundNumber,
-    NameService,
-    StructureRepository,
-} from 'ngx-sport';
+import { League, NameService, PlanningRepository, PlanningService, RoundNumber, StructureRepository } from 'ngx-sport';
 
-import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentService } from '../../lib/tournament/service';
+import { TournamentComponent } from '../component';
 
 @Component({
     selector: 'app-tournament-edit',
@@ -42,6 +35,9 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
+
+        // hier regelset toevoegen @TODO
+
         this.customForm = fb.group({
             name: ['', Validators.compose([
                 Validators.required,
