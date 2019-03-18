@@ -23,31 +23,31 @@
   <div class="d-flex justify-content-around">
     <table class="table">
       <colgroup>
-        <col *ngIf="roundNumber.needsRanking()">
-        <col *ngIf="!roundNumber.needsRanking()">
-        <col *ngIf="planningService.canCalculateStartDateTime(roundNumber)">
-        <col *ngIf="hasFields()">
+        <col *ngIf="roundNumberNeedsRanking">
+        <col *ngIf="!roundNumberNeedsRanking">
+        <col *ngIf="canCalculateStartDateTime">
+        <col *ngIf="hasFields">
         <col>
         <col>
         <col>
-        <col *ngIf="hasReferees()" class="d-none d-sm-table-cell text-right">
+        <col *ngIf="hasReferees" class="d-none d-sm-table-cell text-right">
       </colgroup>
       <thead>
         <tr>
-          <th *ngIf="roundNumber.needsRanking()" class="text-center text-info pointer" title="poule" container="body"
+          <th *ngIf="roundNumberNeedsRanking" class="text-center text-info pointer" title="poule" container="body"
             placement="right" [ngbPopover]="popRules" #p="ngbPopover">
             <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
           </th>
-          <th *ngIf="!roundNumber.needsRanking()" class="text-center" title="wedstrijd">
+          <th *ngIf="!roundNumberNeedsRanking" class="text-center" title="wedstrijd">
             <span>vs</span>
           </th>
-          <th *ngIf="planningService.canCalculateStartDateTime(roundNumber)" class="pointer text-info" container="body"
-            title="start" placement="right" [ngbPopover]="getGameTimeTooltipDescription()">
+          <th *ngIf="canCalculateStartDateTime" class="pointer text-info" container="body" title="start"
+            placement="right" [ngbPopover]="getGameTimeTooltipDescription()">
             <span *ngIf="!sameDay">{{planningService.calculateStartDateTime(roundNumber).toLocaleString("nl",
               {"month":"short","day":"2-digit"})}}</span>
             <span *ngIf="sameDay">start</span>
           </th>
-          <th *ngIf="hasFields()" class="text-center" title="veld">
+          <th *ngIf="hasFields" class="text-center" title="veld">
             <i class="fi flaticon-soccer-field"></i>
           </th>
           <th class="text-right">thuis</th>
@@ -55,71 +55,72 @@
             <i class="fi flaticon-scoreboard"></i>
           </th>
           <th>uit</th>
-          <th *ngIf="hasReferees()" class="d-none d-sm-table-cell text-right" title="scheidsrechter">
+          <th *ngIf="hasReferees" class="d-none d-sm-table-cell text-right" title="scheidsrechter">
             <i class="fi flaticon-referee"></i>
           </th>
         </tr>
       </thead>
       <tbody>
-        <ng-template ngFor let-game [ngForOf]="gamesToShow">
-          <tr *ngIf="isBreakBeforeGame(game)" class="table-info">
+        <ng-template ngFor let-gmData [ngForOf]="gameDatas">
+          <tr *ngIf="isBreakBeforeGame(gmData.game)" class="table-info">
             <td></td>
-            <td *ngIf="planningService.canCalculateStartDateTime(roundNumber)"></td>
-            <td *ngIf="hasFields()"></td>
+            <td *ngIf="canCalculateStartDateTime"></td>
+            <td *ngIf="hasFields"></td>
             <td class="text-right">PAUZE</td>
             <td></td>
             <td class=""></td>
-            <td *ngIf="hasReferees()" class="d-none d-sm-table-cell"></td>
+            <td *ngIf="hasReferees" class="d-none d-sm-table-cell"></td>
           </tr>
-          <tr id="scroll-game-{{game.getId()}}">
-            <td *ngIf="!pouleHasPopover(game)" class="text-center">
-              <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
+          <tr id="scroll-game-{{gmData.game.getId()}}">
+            <td *ngIf="!gmData.hasPopover" class="text-center">
+              <span>{{gmData.poule.name}}</span>
             </td>
-            <td *ngIf="pouleHasPopover(game) && game.getPoule().needsRanking()" class="text-center">
+            <td *ngIf="gmData.hasPopover && gmData.poule.needsRanking" class="text-center">
               <button class="btn btn-outline-info btn-sm" container="body" placement="right" [ngbPopover]="popRanking"
                 autoClose="outside" popoverClass="coen" triggers="manual" #p="ngbPopover"
-                (click)="showPouleRanking( p, game.getPoule() )">
-                <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
+                (click)="showPouleRanking( p, gmData.game.getPoule() )">
+                <span>{{gmData.poule.name}}</span>
               </button>
             </td>
-            <td *ngIf="pouleHasPopover(game) && !game.getPoule().needsRanking()" class="text-center">
+            <td *ngIf="gmData.hasPopover && !gmData.poule.needsRanking" class="text-center">
               <button class="btn btn-outline-info btn-sm" placement="right"
-                [ngbPopover]="getGameQualificationDescription(game)">
-                <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
+                [ngbPopover]="getGameQualificationDescription(gmData.game)">
+                <span>{{gmData.poule.name}}</span>
               </button>
             </td>
-            <td *ngIf="planningService.canCalculateStartDateTime(roundNumber)">
-              <span *ngIf="!sameDay">{{game.getStartDateTime().toLocaleString("nl",
+            <td *ngIf="canCalculateStartDateTime">
+              <span *ngIf="!sameDay">{{gmData.game.getStartDateTime().toLocaleString("nl",
                 {"month":"short","day":"2-digit"})}} </span>
-              <span>{{game.getStartDateTime().toLocaleString("nl", {"hour12":
+              <span>{{gmData.game.getStartDateTime().toLocaleString("nl", {"hour12":
                 false,"hour":"2-digit","minute":"2-digit"})}}</span>
             </td>
-            <td *ngIf="hasFields()" class="text-center">{{game.getField()?.getName()}}</td>
+            <td *ngIf="hasFields" class="text-center">{{gmData.game.getField()?.getName()}}</td>
             <td class="pouleplace text-right"
-              [ngClass]="{'text-primary': favorites.hasGameCompetitor(game, GameHOME) }">
-              <span>{{nameService.getPoulePlacesFromName(game.getPoulePlaces( GameHOME ),true,true)}}</span>
+              [ngClass]="{'text-primary': favorites.hasGameCompetitor(gmData.game, GameHOME) }">
+              <span>{{nameService.getPoulePlacesFromName(gmData.game.getPoulePlaces( GameHOME ),true,true)}}</span>
             </td>
             <td nowrap class="score text-center" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
-              <button *ngIf="hasEditPermissions(game)" class="btn btn-sm btn-outline-primary"
-                (click)="linkToGameEdit(game)">
-                <fa-icon *ngIf="!isPlayed(game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
-                <span *ngIf="isPlayed(game)">{{getScore(game)}}</span>
+              <button *ngIf="gmData.game.hasEditPermissions" class="btn btn-sm btn-outline-primary"
+                (click)="linkToGameEdit(gmData.game)">
+                <fa-icon *ngIf="!isPlayed(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
+                <span *ngIf="isPlayed(gmData.game)">{{getScore(gmData.game)}}</span>
               </button>
-              <span *ngIf="!hasEditPermissions(game)" class="d-none d-sm-inline">{{getScore(game)}}</span>
-              <button *ngIf="!hasEditPermissions(game) && hasReferees() && !isPlayed(game)"
+              <span *ngIf="!gmData.hasEditPermissions" class="d-none d-sm-inline">{{getScore(gmData.game)}}</span>
+              <button *ngIf="!gmData.hasEditPermissions && hasReferees && !isPlayed(gmData.game)"
                 class="btn btn-outline-info btn-sm d-sm-none" placement="top"
-                [ngbPopover]="nameService.getRefereeName(game)">
-                <span [ngClass]="{'text-primary': favorites.hasGameReferee(game) }"><i
+                [ngbPopover]="nameService.getRefereeName(gmData.game)">
+                <span [ngClass]="{'text-primary': favorites.hasGameReferee(gmData.game) }"><i
                     class="fi flaticon-referee"></i></span>
               </button>
-              <span *ngIf="!hasEditPermissions(game) && !(hasReferees() && !isPlayed(game))"
-                class="d-sm-none">{{getScore(game)}}</span>
+              <span *ngIf="!gmData.hasEditPermissions && !(hasReferees && !isPlayed(gmData.game))"
+                class="d-sm-none">{{getScore(gmData.game)}}</span>
             </td>
-            <td class="pouleplace" [ngClass]="{ 'text-primary': favorites.hasGameCompetitor(game, GameAWAY) }">
-              <span>{{nameService.getPoulePlacesFromName(game.getPoulePlaces( GameAWAY ),true,true)}}</span>
+            <td class="pouleplace" [ngClass]="{ 'text-primary': favorites.hasGameCompetitor(gmData.game, GameAWAY) }">
+              <span>{{nameService.getPoulePlacesFromName(gmData.game.getPoulePlaces( GameAWAY ),true,true)}}</span>
             </td>
-            <td *ngIf="hasReferees()" class="d-none d-sm-table-cell text-right"
-              [ngClass]="{'text-primary': favorites.hasGameReferee(game) }">{{nameService.getRefereeName(game)}}</td>
+            <td *ngIf="hasReferees" class="d-none d-sm-table-cell text-right"
+              [ngClass]="{'text-primary': favorites.hasGameReferee(gmData.game) }">
+              {{nameService.getRefereeName(gmData.game)}}</td>
           </tr>
         </ng-template>
       </tbody>

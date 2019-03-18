@@ -31,7 +31,12 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   previousGameStartDateTime: Date;
   userIsGameResultAdmin: boolean;
   favorites: Favorites;
-  gamesToShow: Game[];
+  hasFields: boolean;
+  hasReferees: boolean;
+  gameDatas: GameData[];
+  // game data 
+  roundNumberNeedsRanking: boolean;
+  canCalculateStartDateTime: boolean;
 
   constructor(
     private router: Router,
@@ -46,16 +51,18 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   ngOnInit() {
     this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.GAMERESULTADMIN);
     this.favorites = this.favRepository.getItem(this.tournament);
-    this.gamesToShow = this.planningService.getGamesForRoundNumber(this.roundNumber, Game.ORDER_RESOURCEBATCH).filter(game => {
-      return !this.favorites.hasItems() || this.favorites.hasGameItem(game) || !this.hasAGamePoulePlaceACompetitor(game);
-    });
-    this.sameDay = this.gamesToShow.length > 1 ? this.isSameDay(this.gamesToShow[0], this.gamesToShow[this.gamesToShow.length - 1]) : true;
-    console.log('planningview oninit end', new Date());
+    this.hasFields = this.tournament.getCompetition().getFields().length > 0;
+    this.hasReferees = this.tournament.getCompetition().getReferees().length > 0 || this.roundNumber.getConfig().getSelfReferee();
+
+    // gamedate
+    this.roundNumberNeedsRanking = this.roundNumber.needsRanking();
+    this.canCalculateStartDateTime = this.planningService.canCalculateStartDateTime(this.roundNumber);
+    this.gameDatas = this.getGameData();
+    this.sameDay = this.gameDatas.length > 1 ? this.isSameDay(this.gameDatas[0], this.gameDatas[this.gameDatas.length - 1]) : true;
   }
 
   ngAfterViewInit() {
     if (this.scrollTo.roundNumber === this.roundNumber.getNumber()) {
-      console.log('planningview scrolling to scroll-' + (!this.roundNumber.isFirst() ? 'roundnumber-' + this.roundNumber.getNumber() : 'game-' + this.scrollTo.gameId), new Date());
       this.scrollService.scrollTo({
         target: 'scroll-' + (this.scrollTo.gameId === undefined ? 'roundnumber-' + this.roundNumber.getNumber() : 'game-' + this.scrollTo.gameId),
         duration: 0/*,
@@ -66,6 +73,41 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
 
   get GameHOME(): boolean { return Game.HOME; }
   get GameAWAY(): boolean { return Game.AWAY; }
+
+  private getGameData() {
+    const gameDatas: GameData[] = [];
+    const pouleDatas = this.getPouleDatas();
+    this.planningService.getGamesForRoundNumber(this.roundNumber, Game.ORDER_RESOURCEBATCH).forEach(game => {
+      const aPoulePlaceHasACompetitor = this.hasAPoulePlaceACompetitor(game);
+      if (!(!this.favorites.hasItems() || this.favorites.hasGameItem(game) || !aPoulePlaceHasACompetitor)) {
+        return;
+      };
+      const pouleData: PouleData = pouleDatas[game.getPoule().getId()];
+      const hasPopover = pouleData.needsRanking || (!this.roundNumber.isFirst() && aPoulePlaceHasACompetitor);
+
+      const gameData: GameData = {
+        hasEditPermissions: this.hasEditPermissions(game),
+        hasACompetitor: aPoulePlaceHasACompetitor,
+        hasPopover: hasPopover,
+        poule: pouleData,
+        game: game
+      };
+      gameDatas.push(gameData);
+    });
+    return gameDatas;
+  }
+
+  private getPouleDatas(): any {
+    const pouleDatas = {};
+
+    this.roundNumber.getPoules().forEach(poule => {
+      pouleDatas[poule.getId()] = {
+        name: this.nameService.getPouleName(poule, false),
+        needsRanking: poule.needsRanking()
+      }
+    });
+    return pouleDatas;
+  }
 
   getGameTimeTooltipDescription() {
     const cfg = this.roundNumber.getConfig();
@@ -94,15 +136,14 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   }
 
   hasEditPermissions(game: Game): boolean {
-    const loggedInUserId = this.authService.getLoggedInUserId();
-    if (this.tournament.hasRole(loggedInUserId, Role.GAMERESULTADMIN)) {
+    if (this.userIsGameResultAdmin) {
       return true;
     }
     if (game.getReferee() === undefined) {
       return false;
     }
     if (this.userRefereeId !== undefined
-      && this.tournament.hasRole(loggedInUserId, Role.REFEREE)
+      && this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.REFEREE)
       && this.userRefereeId === game.getReferee().getId()) {
       return true;
     }
@@ -126,7 +167,7 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     return newStartDateTime < game.getStartDateTime();
   }
 
-  hasAGamePoulePlaceACompetitor(game: Game): boolean {
+  hasAPoulePlaceACompetitor(game: Game): boolean {
     return game.getPoulePlaces().some(gamePoulePlace => gamePoulePlace.getPoulePlace().getCompetitor() !== undefined);
   }
 
@@ -168,14 +209,6 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     );
   }
 
-  hasFields() {
-    return this.tournament.getCompetition().getFields().length > 0;
-  }
-
-  hasReferees() {
-    return this.tournament.getCompetition().getReferees().length > 0 || this.roundNumber.getConfig().getSelfReferee();
-  }
-
   showPouleRanking(popOver: NgbPopover, poule: Poule) {
     if (popOver.isOpen()) {
       popOver.close();
@@ -185,7 +218,9 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     }
   }
 
-  protected isSameDay(gameOne: Game, gameTwo: Game): boolean {
+  protected isSameDay(gameDataOne: GameData, gameDataTwo: GameData): boolean {
+    const gameOne = gameDataOne.game;
+    const gameTwo = gameDataTwo.game;
     const dateOne: Date = gameOne.getStartDateTime();
     const dateTwo: Date = gameTwo.getStartDateTime();
     if (dateOne === undefined && dateTwo === undefined) {
@@ -205,10 +240,6 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     return (type === 'success');
   }
 
-  pouleHasPopover(game: Game): boolean {
-    return game.getPoule().needsRanking() || (game.getRound().getParent() !== undefined && this.hasAGamePoulePlaceACompetitor(game));
-  }
-
   getGameQualificationDescription(game: Game) {
     return this.nameService.getPoulePlacesFromName(game.getPoulePlaces(Game.HOME), false, true)
       + ' - ' + this.nameService.getPoulePlacesFromName(game.getPoulePlaces(Game.AWAY), false, true);
@@ -219,6 +250,19 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     const rankingService = new RankingService(ruleSet);
     return rankingService.getRuleDescriptions();
   }
+}
+
+interface GameData {
+  hasEditPermissions: boolean;
+  hasACompetitor: boolean;
+  hasPopover: boolean;
+  poule: PouleData;
+  game: Game;
+}
+
+interface PouleData {
+  name: string;
+  needsRanking: boolean;
 }
 
 export interface IPlanningScrollTo {

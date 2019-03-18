@@ -42,14 +42,12 @@ export class GameListComponent extends TournamentComponent implements OnInit, Af
     });
     super.myNgOnInit(() => {
       this.setPlanningService();
-      console.log('gamelist : oninit end', new Date());
     });
     this.showPrintBtn = true;
   }
 
   ngAfterViewChecked() {
     if (this.processing === false && this.scrollToEndRanking !== undefined) {
-      console.log('gamelist : ngAfterViewChecked -> scrolling to endranking', new Date());
       this.scrollService.scrollTo({
         target: 'endranking',
         duration: 200

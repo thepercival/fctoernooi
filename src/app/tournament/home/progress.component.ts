@@ -55,8 +55,6 @@ export class ProgressComponent implements OnDestroy, OnChanges {
         this.increaseProgress();
         this.changeRef.markForCheck();
         this.changeRef.detectChanges();
-        // console.log(`Current progress: ${this.progress}  / ${this.max}  seconds`);
-
         if (this.progress < this.max) {
             this.timer = timer(1000).subscribe(counter => {
                 this._increaseProgress(doneCallback);

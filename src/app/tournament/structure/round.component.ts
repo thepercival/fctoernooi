@@ -166,7 +166,6 @@ export class TournamentStructureRoundComponent {
   }
 
   public onSliderChange(nrOfChildPlacesNew: number, winnersOrLosers: number) {
-    // console.log('start change' );
     if ((nrOfChildPlacesNew + this.round.getNrOfPlacesChildRound(Round.getOpposing(winnersOrLosers))) > this.round.getNrOfPlaces()) {
       return;
     }
@@ -175,7 +174,6 @@ export class TournamentStructureRoundComponent {
     if (this.round.getNumber().hasNext()) {
       this.roundNumberChanged.emit(this.round.getNumber().getNext());
     }
-    // console.log('end change' );
   }
 
   endSliding(nrOfChildPlaces: number, winnersOrLosers: number) {

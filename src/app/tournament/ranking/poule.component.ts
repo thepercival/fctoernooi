@@ -27,8 +27,7 @@ export class TournamentPouleRankingComponent implements OnInit {
     this.favorites = this.favRepository.getItem(this.tournament);
     this.processing = true;
     const ranking = new RankingService(this.tournament.getCompetition().getRuleSet());
-    this.rankingItems = ranking.getItemsForPoule(this.poule)
-    console.log('pouleRanking:ngOnInit()');
+    this.rankingItems = ranking.getItemsForPoule(this.poule);
     this.processing = false;
   }
 
@@ -49,17 +48,12 @@ export class TournamentPouleRankingComponent implements OnInit {
     return winnersOrLosers === Round.WINNERS ? 'success' : (winnersOrLosers === Round.LOSERS ? 'danger' : '');
   }
 
-
   hasMultipleScoreConfigs() {
     return this.poule.getRound().getNumber().getConfig().getCalculateScore()
       !== this.poule.getRound().getNumber().getConfig().getInputScore();
   }
 
-  // getUnitDifference(poulePlace: PoulePlace, games: Game[]) {
-  //   const nrOfUnitsScored = this.ranking.getNrOfUnitsScored(poulePlace, games);
-  //   const nrOfUnitsReceived = this.ranking.getNrOfUnitsReceived(poulePlace, games);
-  //   const delta = nrOfUnitsScored - nrOfUnitsReceived;
-  //   return delta > 0 ? '+' + delta : delta;
-  // }
-
+  getPoulePlace(rankingItem: RoundRankingItem): PoulePlace {
+    return rankingItem.getRound().getPoulePlace(rankingItem.getPoulePlaceLocation());
+  }
 }

@@ -49,23 +49,15 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
         this.planningService = new PlanningService(this.tournament.getCompetition());
         const liveBoard = new Liveboard(this.tournament, this.structure, this.maxLines, this.planningService);
         this.screens = liveBoard.getScreens();
-        // console.log(this.screens);
-        // if (screens.length === 0) {
-        //     this.setAlert('info', 'op dit moment zijn er geen schermen om weer te geven');
-        //     this.processing = false;
-        //     return;
-        // }
         this.executeScheduledTask();
         this.processing = false;
     }
 
     executeScheduledTask() {
-        // console.log('executeScheduledTask', callback);
         this.activeScreen = this.screens.shift();
         // this.processing = false;
         if (this.activeScreen === undefined) {
 
-            // console.log('getnewsscreens');
             this.processing = true;
             this.getDataAndProcessScreens();
         } else {

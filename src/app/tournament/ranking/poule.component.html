@@ -35,8 +35,8 @@
                                 <span>{{rankingItem.getUniqueRank()}}</span>
                             </td>
                             <td class="pouleplace pl-0"
-                                [ngClass]="{ 'text-primary': favorites.hasCompetitor(rankingItem.getPoulePlace().getCompetitor()) }">
-                                {{nameService.getPoulePlaceFromName(rankingItem.getPoulePlace(), true)}}
+                                [ngClass]="{ 'text-primary': favorites.hasCompetitor(getPoulePlace(rankingItem).getCompetitor()) }">
+                                {{nameService.getPoulePlaceFromName(getPoulePlace(rankingItem), true)}}
                             </td>
                             <td class="text-right pl-0">{{rankingItem.getGames()}}</td>
                             <td class="text-right pl-0">{{rankingItem.getPoints()}}</td>
