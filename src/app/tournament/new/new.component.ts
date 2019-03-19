@@ -146,7 +146,6 @@ export class TournamentNewComponent implements OnInit {
     this.tournamentRepository.createObject(tournament)
       .subscribe(
         /* happy path */ tournamentOut => {
-          // setTimeout(3000);
           const structureService = new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
           const structure: Structure = structureService.create(tournamentOut.getCompetition(), nrofcompetitors);
           const jsonStructure: JsonStructure = this.structureMapper.toJson(structure);
