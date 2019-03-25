@@ -17,7 +17,7 @@
       </h2>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <ngb-alert *ngIf="!processing && isAdmin() && !isManualMessageReadOnDevice()" type="info" [dismissible]="true"
-        (close)="manualMessageReadOnDevice()">gedetaileerde
+        (close)="manualMessageReadOnDevice()">gedetailleerde
         informatie kun je vinden onderaan de pagina via de handleiding-link</ngb-alert>
       <ngb-alert *ngIf="!processing && !isAdmin()" type="danger" [dismissible]="false">je hebt geen rechten voor het
         beheergedeelte, klik
