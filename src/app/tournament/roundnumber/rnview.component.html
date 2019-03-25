@@ -100,7 +100,7 @@
               <span>{{nameService.getPoulePlacesFromName(gmData.game.getPoulePlaces( GameHOME ),true,true)}}</span>
             </td>
             <td nowrap class="score text-center" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
-              <button *ngIf="gmData.game.hasEditPermissions" class="btn btn-sm btn-outline-primary"
+              <button *ngIf="gmData.hasEditPermissions" class="btn btn-sm btn-outline-primary"
                 (click)="linkToGameEdit(gmData.game)">
                 <fa-icon *ngIf="!isPlayed(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
                 <span *ngIf="isPlayed(gmData.game)">{{getScore(gmData.game)}}</span>
