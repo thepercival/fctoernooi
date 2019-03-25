@@ -1,9 +1,10 @@
 <div class="container-fluid">
-  <div class="mb-4">
-    <h1 *ngIf="tournament">
-      {{tournament.getName()}}
-      <button type="button" (click)="navigateBack()" class="btn btn-outline-secondary btn-sm">
+  <div *ngIf="tournament" class="d-flex justify-content-between mb-4">
+    <h1>{{tournament.getName()}}</h1>
+    <h1 class="mr-1">
+      <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary">
         <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+        <span class="ml-1 d-none d-md-inline"> terug</span>
       </button>
     </h1>
   </div>
@@ -17,8 +18,8 @@
           <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
           <span class="d-none d-sm-inline-block">&nbsp;uitleg</span>
         </button>
-        <button *ngIf="!processing && !clonedStructure.getRootRound().isStarted()" role="button" [disabled]="!changedRoundNumber"
-          (click)="saveStructure()" class="btn btn-outline-primary ml-3">
+        <button *ngIf="!processing && !clonedStructure.getRootRound().isStarted()" role="button"
+          [disabled]="!changedRoundNumber" (click)="saveStructure()" class="btn btn-outline-primary ml-3">
           <fa-icon [icon]="['fas', 'save']"></fa-icon>
           <span class="d-none d-sm-inline-block">&nbsp;opslaan</span>
         </button>
@@ -32,12 +33,13 @@
   </div>
   <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
   <div *ngIf="!processing" class="row text-center">
-    <app-tournament-structureround [editable]="true" [round]="clonedStructure.getRootRound()" (roundNumberChanged)="setChangedRoundNumber($event)"></app-tournament-structureround>
+    <app-tournament-structureround [editable]="true" [round]="clonedStructure.getRootRound()"
+      (roundNumberChanged)="setChangedRoundNumber($event)"></app-tournament-structureround>
   </div>
 </div>
 <div class="text-center" class="my-1">
-  <button *ngIf="!processing && !clonedStructure.getRootRound().isStarted()" role="button" [disabled]="!changedRoundNumber"
-    (click)="saveStructure()" class="btn btn-outline-primary">
+  <button *ngIf="!processing && !clonedStructure.getRootRound().isStarted()" role="button"
+    [disabled]="!changedRoundNumber" (click)="saveStructure()" class="btn btn-outline-primary">
     <fa-icon [icon]="['fas', 'save']"></fa-icon>
     <span> opslaan</span>
   </button>

@@ -1,9 +1,10 @@
 <div class="container-fluid">
-  <div class="mb-4">
-    <h1 *ngIf="tournament">
-      {{tournament.getName()}}
-      <button type="button" (click)="navigateBack()" class="btn btn-outline-secondary btn-sm">
+  <div *ngIf="tournament" class="d-flex justify-content-between mb-4">
+    <h1>{{tournament.getName()}}</h1>
+    <h1 class="mr-1">
+      <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary">
         <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+        <span class="ml-1 d-none d-md-inline"> terug</span>
       </button>
     </h1>
   </div>
@@ -21,6 +22,7 @@
   </div>
   <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
   <div *ngIf="!processing" class="row text-center">
-    <app-tournament-structureround [editable]="false" [round]="structure.getRootRound()"></app-tournament-structureround>
+    <app-tournament-structureround [editable]="false" [round]="structure.getRootRound()">
+    </app-tournament-structureround>
   </div>
 </div>

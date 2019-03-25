@@ -1,14 +1,17 @@
 <div class="container-fluid px-0">
   <div class="row justify-content-around no-gutters">
     <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
-      <div class="mb-4">
-        <h1 *ngIf="tournament">
-          {{tournament.getName()}}
-          <button *ngIf="isAdmin()" [routerLink]="['/toernooi', tournament.getId()]" type="button" class="btn btn-outline-secondary btn-sm mr-1">
+      <div class="d-flex justify-content-between mb-4">
+        <h1 *ngIf="tournament">{{tournament.getName()}}<button *ngIf="isAdmin()"
+            [routerLink]="['/toernooi', tournament.getId()]" type="button"
+            class="btn btn-outline-secondary btn-sm mr-1">
             <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
-          </button>
-          <button [routerLink]="['']" [queryParams]="{scrollToId:tournament.getId()}" type="button" class="btn btn-outline-secondary btn-sm">
+          </button></h1>
+        <h1 class="mr-1">
+          <button [routerLink]="['']" [queryParams]="{scrollToId:tournament.getId()}" type="button"
+            class="btn btn-outline-secondary">
             <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+            <span class="d-none d-md-inline">&nbsp;&nbsp;terug</span>
           </button>
         </h1>
       </div>
@@ -19,7 +22,8 @@
             <li>Elke minuut worden de uitslagen op deze pagina automatisch bijgewerkt.</li>
           </ul>
         </div>
-        <app-progress [toggleProgress]="toggleProgress" [max]="refreshAfterSeconds" (executeAtZero)="executeScheduledTask()"></app-progress>
+        <app-progress [toggleProgress]="toggleProgress" [max]="refreshAfterSeconds"
+          (executeAtZero)="executeScheduledTask()"></app-progress>
       </div>
       <div>
         <h2 *ngIf="processing" class="text-center">
@@ -28,15 +32,16 @@
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <div *ngIf="!processing">
-        <app-tournament-roundnumber-view *ngFor="let roundNumber of structure.getRoundNumbers()" [tournament]="tournament"
-          [roundNumber]="roundNumber" [planningService]="planningService" [userRefereeId]="userRefereeId" [scrollTo]="scrollTo"
-          [parentReturnAction]="'/toernooi/view'" (popOverIsOpen)="setNoRefresh($event)"></app-tournament-roundnumber-view>
+        <app-tournament-roundnumber-view *ngFor="let roundNumber of structure.getRoundNumbers()"
+          [tournament]="tournament" [roundNumber]="roundNumber" [planningService]="planningService"
+          [userRefereeId]="userRefereeId" [scrollTo]="scrollTo" [parentReturnAction]="'/toernooi/view'"
+          (popOverIsOpen)="setNoRefresh($event)"></app-tournament-roundnumber-view>
         <div class="d-flex justify-content-between mt-3" id="endranking">
           <h2>
             <span>eindstand</span>
           </h2>
-          <button type="button" class="btn btn-sm btn-outline-secondary mr-2" *ngIf="structure.getRoundNumbers().length > 1"
-            (click)="linkToStructureView()">
+          <button type="button" class="btn btn-sm btn-outline-secondary mr-2"
+            *ngIf="structure.getRoundNumbers().length > 1" (click)="linkToStructureView()">
             <i class="fi flaticon-structure"></i>
             <span>indeling</span>
           </button>

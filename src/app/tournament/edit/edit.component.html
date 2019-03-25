@@ -1,11 +1,12 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
-    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-      <div class="mb-4">
-        <h1 *ngIf="tournament">
-          {{tournament.getName()}}
-          <button [routerLink]="['/toernooi', tournament.getId()]" type="button" class="btn btn-outline-secondary btn-sm">
+    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
+      <div *ngIf="tournament" class="d-flex justify-content-between mb-4">
+        <h1>{{tournament.getName()}}</h1>
+        <h1 class="mr-1">
+          <button [routerLink]="['/toernooi', tournament.getId()]" type="button" class="btn btn-outline-secondary">
             <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+            <span class="d-none d-md-inline"> terug</span>
           </button>
         </h1>
       </div>
@@ -23,10 +24,11 @@
           <div class="col-3">
             <label for="name" class="col-form-label">naam</label>
           </div>
-          <div class="col-9">
-            <input class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.name.invalid, 'is-valid': customForm.controls.name.valid }"
-              type="text" name="name" id="name" [formControl]="customForm.controls.name" maxlength="{{validations.maxlengthname}}"
-              placeholder="max. {{validations.maxlengthname}} karakters">
+          <div class="col-9 col-sm-8 col-md-7">
+            <input class="form-control"
+              [ngClass]="{ 'is-invalid': customForm.controls.name.invalid, 'is-valid': customForm.controls.name.valid }"
+              type="text" name="name" id="name" [formControl]="customForm.controls.name"
+              maxlength="{{validations.maxlengthname}}" placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
         </div>
         <div *ngIf="!structure.getRootRound().isStarted()" class="form-group row">
@@ -35,9 +37,10 @@
           </div>
           <div class="col-9">
             <div class="input-group input-group-date">
-              <input class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.date.invalid, 'is-valid': customForm.controls.date.valid }"
-                placeholder="yyyy-mm-dd" id="dp" name="dp" [formControl]="customForm.controls.date" ngbDatepicker #d="ngbDatepicker"
-                required [dayTemplate]="t" [minDate]="minDateStruct">
+              <input class="form-control"
+                [ngClass]="{ 'is-invalid': customForm.controls.date.invalid, 'is-valid': customForm.controls.date.valid }"
+                placeholder="yyyy-mm-dd" id="dp" name="dp" [formControl]="customForm.controls.date" ngbDatepicker
+                #d="ngbDatepicker" required [dayTemplate]="t" [minDate]="minDateStruct">
               <div class="input-group-append">
                 <span class="input-group-text pointer" (click)="d.toggle()">
                   <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
@@ -61,8 +64,8 @@
           </div>
           <div class="col-2 col-md-1 pr-0">
             <label class="custom-control custom-checkbox pointer col-form-label pl-0">
-              <input type="checkbox" class="custom-control-input form-check-input" [formControl]="customForm.controls.togglebreak"
-                (ngModelChange)="toggleBreak($event,0)">
+              <input type="checkbox" class="custom-control-input form-check-input"
+                [formControl]="customForm.controls.togglebreak" (ngModelChange)="toggleBreak($event,0)">
               <span class="custom-control-indicator"></span>
             </label>
           </div>
@@ -70,23 +73,28 @@
             <label class="col-form-label">( tijdens een ronde )</label>
           </div>
         </div>
-        <div *ngIf="!structure.getRootRound().isStarted() && customForm.controls.togglebreak.value === true" class="form-group row">
+        <div *ngIf="!structure.getRootRound().isStarted() && customForm.controls.togglebreak.value === true"
+          class="form-group row">
           <div class="col-3">
             <label for="breaktime" class="col-form-label">pausetijd</label>
           </div>
           <div class="col-9">
-            <ngb-timepicker id="breaktime" name="breaktime" [formControl]="customForm.controls.breaktime" [spinners]="false"></ngb-timepicker>
+            <ngb-timepicker id="breaktime" name="breaktime" [formControl]="customForm.controls.breaktime"
+              [spinners]="false">
+            </ngb-timepicker>
           </div>
         </div>
-        <div *ngIf="!structure.getRootRound().isStarted() && customForm.controls.togglebreak.value" class="form-group row">
+        <div *ngIf="!structure.getRootRound().isStarted() && customForm.controls.togglebreak.value"
+          class="form-group row">
           <div class="col-3">
             <label for="breakduration" class="col-form-label">pauseduur</label>
           </div>
           <div class="col-6 col-sm-5 ">
             <div class="input-group">
-              <input type="number" class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.breakduration.invalid, 'is-valid': customForm.controls.breakduration.valid}"
-                id="breakduration" name="breakduration" [formControl]="customForm.controls.breakduration" [min]="validations.minbreakduration"
-                [max]="validations.maxbreakduration">
+              <input type="number" class="form-control"
+                [ngClass]="{ 'is-invalid': customForm.controls.breakduration.invalid, 'is-valid': customForm.controls.breakduration.valid}"
+                id="breakduration" name="breakduration" [formControl]="customForm.controls.breakduration"
+                [min]="validations.minbreakduration" [max]="validations.maxbreakduration">
               <div class="input-group-append">
                 <span class="input-group-text text-white">min.</span>
               </div>
@@ -114,9 +122,10 @@
         </div>
       </div>
     </div>
-
-    <ng-template #t let-date="date" let-focused="focused" let-disabled="disabled">
-      <span class="custom-day" [class.focused]="focused" [class.selected]="isSelected(date)" [class.text-muted]="disabled">
-        {{ date.day }}
-      </span>
-    </ng-template>
+  </div>
+</div>
+<ng-template #t let-date="date" let-focused="focused" let-disabled="disabled">
+  <span class="custom-day" [class.focused]="focused" [class.selected]="isSelected(date)" [class.text-muted]="disabled">
+    {{ date.day }}
+  </span>
+</ng-template>

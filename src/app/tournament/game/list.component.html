@@ -1,11 +1,12 @@
 <div class="container-fluid px-0">
   <div class="row justify-content-around no-gutters">
     <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
-      <div class="mb-4">
-        <h1 *ngIf="tournament">
-          {{tournament.getName()}}
-          <button [routerLink]="['/toernooi', tournament.getId()]" type="button" class="btn btn-outline-secondary btn-sm">
+      <div *ngIf="tournament" class="d-flex justify-content-between mb-4">
+        <h1>{{tournament.getName()}}</h1>
+        <h1 class="mr-1">
+          <button [routerLink]="['/toernooi', tournament.getId()]" type="button" class="btn btn-outline-secondary">
             <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+            <span class="ml-1 d-none d-md-inline"> terug</span>
           </button>
         </h1>
       </div>
@@ -20,15 +21,16 @@
         </h2>
       </div>
       <div *ngIf="!processing">
-        <app-tournament-roundnumber-view *ngFor="let roundNumber of structure.getRoundNumbers()" [tournament]="tournament"
-          [roundNumber]="roundNumber" [canEditSettings]="userIsPlannerOrStructureAdmin" [planningService]="planningService"
-          [scrollTo]="scrollTo" [parentReturnAction]="'/toernooi/games'"></app-tournament-roundnumber-view>
+        <app-tournament-roundnumber-view *ngFor="let roundNumber of structure.getRoundNumbers()"
+          [tournament]="tournament" [roundNumber]="roundNumber" [canEditSettings]="userIsPlannerOrStructureAdmin"
+          [planningService]="planningService" [scrollTo]="scrollTo" [parentReturnAction]="'/toernooi/games'">
+        </app-tournament-roundnumber-view>
         <div class="d-flex justify-content-between mt-3" id="endranking">
           <h2>
             <span>eindstand</span>
           </h2>
-          <button type="button" class="btn btn-sm btn-outline-secondary mr-2" *ngIf="structure.getRoundNumbers().length > 1"
-            (click)="linkToStructure()">
+          <button type="button" class="btn btn-sm btn-outline-secondary mr-2"
+            *ngIf="structure.getRoundNumbers().length > 1" (click)="linkToStructure()">
             <i class="fi flaticon-structure"></i>
             <span>indeling</span>
           </button>

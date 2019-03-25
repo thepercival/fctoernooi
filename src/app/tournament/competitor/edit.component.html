@@ -1,17 +1,17 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-      <div class="mb-4">
-        <h1 *ngIf="!processing">
-          {{tournament.getName()}}
-          <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary btn-sm">
+      <div *ngIf="tournament" class="d-flex justify-content-between mb-4">
+        <h1>{{tournament.getName()}}</h1>
+        <h1 class="mr-1">
+          <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary">
             <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+            <span class="d-none d-md-inline">terug</span>
           </button>
         </h1>
       </div>
       <div>
         <h2>
-
           <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemer
         </h2>
         <h2 *ngIf="processing" class="text-center">

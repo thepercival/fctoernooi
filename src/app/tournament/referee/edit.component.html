@@ -1,11 +1,12 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-      <div class="mb-4">
-        <h1 *ngIf="tournament">
-          {{tournament.getName()}}
-          <button *ngIf="!processing" (click)="navigateBack()" type="button" class="btn btn-outline-secondary btn-sm">
+      <div *ngIf="tournament" class="d-flex justify-content-between mb-4">
+        <h1>{{tournament.getName()}}</h1>
+        <h1 class="mr-1">
+          <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary">
             <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+            <span class="ml-1 d-none d-md-inline"> terug</span>
           </button>
         </h1>
       </div>
@@ -24,8 +25,10 @@
             <label for="initials" class="col-form-label">initialen</label>
           </div>
           <div class="col-9">
-            <input class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.initials.invalid, 'is-valid': customForm.controls.initials.valid }"
-              type="text" name="initials" id="initials" [formControl]="customForm.controls.initials" maxlength="{{validations.maxlengthinitials}}"
+            <input class="form-control"
+              [ngClass]="{ 'is-invalid': customForm.controls.initials.invalid, 'is-valid': customForm.controls.initials.valid }"
+              type="text" name="initials" id="initials" [formControl]="customForm.controls.initials"
+              maxlength="{{validations.maxlengthinitials}}"
               placeholder="max. {{validations.maxlengthinitials}} karakters">
           </div>
         </div>
@@ -34,24 +37,26 @@
             <label for="name" class="col-form-label">naam</label>
           </div>
           <div class="col-9">
-            <input class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.name.invalid, 'is-valid': customForm.controls.name.valid }"
-              type="text" name="name" id="name" [formControl]="customForm.controls.name" maxlength="{{validations.maxlengthname}}"
-              placeholder="max. {{validations.maxlengthname}} karakters">
+            <input class="form-control"
+              [ngClass]="{ 'is-invalid': customForm.controls.name.invalid, 'is-valid': customForm.controls.name.valid }"
+              type="text" name="name" id="name" [formControl]="customForm.controls.name"
+              maxlength="{{validations.maxlengthname}}" placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
         </div>
         <div class="form-group row">
           <div class="col-3 d-flex justify-content-between">
             <label for="emailaddress" container="body" placement="right" ngbPopover="De gebruiker met dit emailadres kan de stand van de wedstrijden, waarvoor
-            hij/zij is aangesteld, wijzigen"
-              class="col-form-label pointer">email
+            hij/zij is aangesteld, wijzigen" class="col-form-label pointer">email
               <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
             </label>
 
           </div>
           <div class="col-9">
-            <input class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.emailaddress.invalid, 'is-valid': customForm.controls.emailaddress.valid }"
+            <input class="form-control"
+              [ngClass]="{ 'is-invalid': customForm.controls.emailaddress.invalid, 'is-valid': customForm.controls.emailaddress.valid }"
               type="text" name="emailaddress" id="emailaddress" [formControl]="customForm.controls.emailaddress"
-              maxlength="{{validations.maxlengthemailaddress}}" placeholder="max. {{validations.maxlengthemailaddress}} karakters">
+              maxlength="{{validations.maxlengthemailaddress}}"
+              placeholder="max. {{validations.maxlengthemailaddress}} karakters">
           </div>
         </div>
         <div class="form-group row">
@@ -59,7 +64,8 @@
             <label for="info" class="col-form-label">info</label>
           </div>
           <div class="col-9">
-            <textarea class="form-control" [ngClass]="{ 'is-invalid': customForm.controls.info.invalid, 'is-valid': customForm.controls.info.valid }"
+            <textarea class="form-control"
+              [ngClass]="{ 'is-invalid': customForm.controls.info.invalid, 'is-valid': customForm.controls.info.valid }"
               name="info" id="info" [formControl]="customForm.controls.info" maxlength="{{validations.maxlengthinfo}}"
               placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>

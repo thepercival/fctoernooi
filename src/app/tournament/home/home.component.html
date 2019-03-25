@@ -1,13 +1,17 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
-      <h1 *ngIf="tournament" class="text-center">
-        {{tournament.getName()}}
-        <button [routerLink]="['']" [queryParams]="{scrollToId:tournament.getId()}" type="button"
-          class="btn btn-outline-secondary btn-sm">
-          <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
-        </button>
-      </h1>
+      <div *ngIf="tournament" class="d-flex justify-content-between mb-4">
+        <span></span>
+        <h1>{{tournament.getName()}}</h1>
+        <h1 class="mr-1">
+          <button [routerLink]="['']" [queryParams]="{scrollToId:tournament.getId()}" type="button"
+            class="btn btn-outline-secondary">
+            <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+            <span class="ml-1 d-none d-md-inline"> terug</span>
+          </button>
+        </h1>
+      </div>
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>

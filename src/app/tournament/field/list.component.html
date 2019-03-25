@@ -1,11 +1,13 @@
 <div>
     <div class="row justify-content-center no-gutters">
         <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-            <div class="mb-4">
-                <h1 *ngIf="tournament">
-                    {{tournament.getName()}}
-                    <button type="button" [routerLink]="['/toernooi', tournament.getId()]" class="btn btn-outline-secondary btn-sm">
+            <div *ngIf="tournament" class="d-flex justify-content-between mb-4">
+                <h1>{{tournament.getName()}}</h1>
+                <h1 class="mr-1">
+                    <button [routerLink]="['/toernooi', tournament.getId()]" type="button"
+                        class="btn btn-outline-secondary">
                         <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+                        <span class="ml-1 d-none d-md-inline"> terug</span>
                     </button>
                 </h1>
             </div>
@@ -25,8 +27,8 @@
                         <th>nr.</th>
                         <th>naam</th>
                         <th class="text-right">
-                            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" (click)="addField()"
-                                [disabled]="processing || disableEditButtons">
+                            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary"
+                                (click)="addField()" [disabled]="processing || disableEditButtons">
                                 <fa-icon [icon]="['fas', 'plus']"></fa-icon>
                             </button>
                         </th>
@@ -47,9 +49,10 @@
                         <td>
                             <span *ngIf="!fieldItem.editable && fieldItem.field !== undefined">{{fieldItem.field.getName()
                                 }}</span>
-                            <input type="text" class="form-control input-fieldname" [minlength]="validations.minlengthname"
-                                [maxlength]="validations.maxlengthname" [ngModel]="fieldItem.field.getName()"
-                                (ngModelChange)="fieldItem.field.setName($event)" *ngIf="fieldItem.editable" required>
+                            <input type="text" class="form-control input-fieldname"
+                                [minlength]="validations.minlengthname" [maxlength]="validations.maxlengthname"
+                                [ngModel]="fieldItem.field.getName()" (ngModelChange)="fieldItem.field.setName($event)"
+                                *ngIf="fieldItem.editable" required>
                         </td>
                         <td class="text-right">
                             <button *ngIf="last && !isStarted()" type="button" class="btn btn-sm btn-outline-primary"

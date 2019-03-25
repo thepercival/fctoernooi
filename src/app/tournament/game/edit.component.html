@@ -1,17 +1,18 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-      <div class="mb-4">
-        <h1 *ngIf="tournament">
-          {{tournament.getName()}}
-          <button *ngIf="!processing" (click)="navigateBack()" type="button" class="btn btn-outline-secondary btn-sm">
+      <div *ngIf="tournament" class="d-flex justify-content-between mb-4">
+        <h1>{{tournament.getName()}}</h1>
+        <h1 class="mr-1">
+          <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary">
             <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+            <span class="ml-1 d-none d-md-inline"> terug</span>
           </button>
         </h1>
-        <h2 *ngIf="processing" class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-        </h2>
       </div>
+      <h2 *ngIf="processing" class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <form *ngIf="!processing" name="form" (ngSubmit)="save()" #f="ngForm" novalidate>
         <div class="form-group row">
@@ -21,7 +22,8 @@
           <div class="col-9">
             <label class="col-form-label" [innerHTML]="nameService.getRoundName( game.getRound() ) | keepHtml"></label>
             <label class="mx-1">-</label>
-            <label class="col-form-label" [innerHTML]="nameService.getPouleName( game.getPoule(), true) | keepHtml"></label>
+            <label class="col-form-label"
+              [innerHTML]="nameService.getPouleName( game.getPoule(), true) | keepHtml"></label>
           </div>
         </div>
         <div class="form-group row">
@@ -58,8 +60,8 @@
             </label>
           </div>
           <div class="col-4">
-            <input [formControl]="scoreControl.home" (ngModelChange)="setHome(scoreControl,$event)" class="form-control max-width-100 {{getInputClass(scoreControl)}}"
-              type="number">
+            <input [formControl]="scoreControl.home" (ngModelChange)="setHome(scoreControl,$event)"
+              class="form-control max-width-100 {{getInputClass(scoreControl)}}" type="number">
           </div>
           <div *ngIf="!(last && calculateAndInputScoreDiffers())" class="col-1 homeaway-splitter">-</div>
           <div *ngIf="last && calculateAndInputScoreDiffers()" class="col-1 homeaway-splitter">
@@ -68,15 +70,16 @@
             </button>
           </div>
           <div class="col-4">
-            <input [formControl]="scoreControl.away" (ngModelChange)="setAway(scoreControl,$event)" class="form-control max-width-100 {{getInputClass(scoreControl)}}"
-              type="number">
+            <input [formControl]="scoreControl.away" (ngModelChange)="setAway(scoreControl,$event)"
+              class="form-control max-width-100 {{getInputClass(scoreControl)}}" type="number">
           </div>
         </div>
         <div *ngIf="calculateAndInputScoreDiffers()" class="form-group row">
           <div class="col-3">
           </div>
           <div class="col-9">
-            <button type="button" class="btn btn-outline-secondary" [disabled]="aScoreIsInvalid()" (click)="addScoreControl(0,0)">
+            <button type="button" class="btn btn-outline-secondary" [disabled]="aScoreIsInvalid()"
+              (click)="addScoreControl(0,0)">
               <span>voeg {{game.getConfig().getCalculateScore().getNameSingle()}} toe</span>
             </button>
           </div>
@@ -87,8 +90,8 @@
           </div>
           <div class="col-9">
             <label class="custom-control custom-checkbox col-form-label pl-0">
-              <input type="checkbox" class="custom-control-input form-check-input" [formControl]="customForm.controls.extratime"
-                (ngModelChange)="setExtratime($event)">
+              <input type="checkbox" class="custom-control-input form-check-input"
+                [formControl]="customForm.controls.extratime" (ngModelChange)="setExtratime($event)">
               <span class="custom-control-indicator"></span>
             </label>
           </div>
@@ -99,8 +102,8 @@
           </div>
           <div class="col-9">
             <label class="custom-control custom-checkbox col-form-label pl-0">
-              <input type="checkbox" class="custom-control-input form-check-input" [formControl]="customForm.controls.played"
-                (ngModelChange)="setPlayed($event)">
+              <input type="checkbox" class="custom-control-input form-check-input"
+                [formControl]="customForm.controls.played" (ngModelChange)="setPlayed($event)">
               <span class="custom-control-indicator"></span>
             </label>
           </div>
@@ -154,7 +157,8 @@
         <div *ngFor="let warning of getWarningsForEqualsInQualification()" class="alert alert-warning">{{warning}}</div>
         <div class="form-group row justify-content-end">
           <div class="col-9">
-            <button type="submit" [disabled]="customForm.invalid || aScoreIsInvalid()" class="btn btn-outline-primary">wijzig
+            <button type="submit" [disabled]="customForm.invalid || aScoreIsInvalid()"
+              class="btn btn-outline-primary">wijzig
               wedstrijd</button>
           </div>
         </div>
