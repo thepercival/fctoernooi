@@ -17,6 +17,7 @@ export class Tournament {
     protected sponsors: Sponsor[] = [];
     protected breakStartDateTime: Date;
     protected breakDuration: number;
+    protected public: boolean;
 
     // constructor
     constructor(competition: Competition) {
@@ -79,6 +80,14 @@ export class Tournament {
 
     setBreakDuration(breakDuration: number): void {
         this.breakDuration = breakDuration;
+    }
+
+    getPublic(): boolean {
+        return this.public;
+    }
+
+    setPublic(publicX: boolean): void {
+        this.public = publicX;
     }
 
     hasBreak(): boolean {

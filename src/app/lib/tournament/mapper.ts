@@ -24,6 +24,7 @@ export class TournamentMapper {
             tournament.setBreakStartDateTime(new Date(json.breakStartDateTime));
         }
         tournament.setBreakDuration(json.breakDuration);
+        tournament.setPublic(json.public);
         return tournament;
     }
 
@@ -35,6 +36,7 @@ export class TournamentMapper {
             sponsors: tournament.getSponsors().map(sponsor => this.sponsorMapper.toJson(sponsor)),
             breakStartDateTime: tournament.getBreakStartDateTime() ? tournament.getBreakStartDateTime().toISOString() : undefined,
             breakDuration: tournament.getBreakDuration(),
+            public: tournament.getPublic(),
         };
     }
 }
@@ -44,6 +46,7 @@ export interface JsonTournament {
     competition: JsonCompetition;
     breakStartDateTime?: string;
     breakDuration?: number;
+    public: boolean;
     roles: JsonRole[];
     sponsors: JsonSponsor[];
 }

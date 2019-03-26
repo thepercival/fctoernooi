@@ -141,6 +141,7 @@ export class TournamentNewComponent implements OnInit {
         field.setName(String(fieldNumber));
       }
       tournament = new Tournament(competition);
+      tournament.setPublic(true);
     }
 
     this.tournamentRepository.createObject(tournament)
