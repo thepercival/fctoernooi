@@ -51,6 +51,10 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
             url: ['', Validators.compose([
                 Validators.maxLength(this.validations.maxlengthurl)
             ])],
+            logourl: ['', Validators.compose([
+                Validators.maxLength(this.validations.maxlengthurl)
+            ])],
+            logo: null
         });
     }
 
@@ -85,6 +89,7 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
         this.sponsorId = id;
         this.customForm.controls.name.setValue(sponsor.getName());
         this.customForm.controls.url.setValue(sponsor.getUrl());
+        this.customForm.controls.logourl.setValue(sponsor.getLogoUrl());
         this.processing = false;
     }
 
@@ -143,6 +148,33 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
         const queryParams = {};
         queryParams[this.returnUrlQueryParamKey] = this.returnUrlQueryParamValue;
         return queryParams;
+    }
+
+    onFileChange(event) {
+        if (event.target.files.length === 0) {
+            return;
+        }
+        let file = event.target.files[0];
+        this.customForm.get('logo').setValue(file);
+
+        let input = new FormData();
+        input.append('avatar', this.customForm.get('logo').value);
+        // send stream to server
+        console.log(input);
+
+        const sponsor = this.tournament.getSponsors().find(sponsorIt => sponsorIt.getId() === this.sponsorId);
+
+        this.sponsorRepository.uploadImage(sponsor, this.tournament, this.customForm.get('logo').value)
+            .subscribe(
+            /* happy path */ logoUrlRes => {
+                    console.log('logoUrlRes: ', logoUrlRes);
+                    sponsor.setLogoUrl(logoUrlRes);
+                    console.log('logo-url need to be set if upload is succesfull');
+                },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+            /* onComplete */() => { this.processing = false; }
+            );
+
     }
 
     navigateBack() {

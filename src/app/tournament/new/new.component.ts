@@ -28,7 +28,7 @@ import { TournamentService } from '../../lib/tournament/service';
 @Component({
   selector: 'app-tournament-new',
   templateUrl: './new.component.html',
-  styleUrls: ['./new.component.css']
+  styleUrls: ['./new.component.scss']
 })
 export class TournamentNewComponent implements OnInit {
   customForm: FormGroup;
@@ -87,6 +87,8 @@ export class TournamentNewComponent implements OnInit {
       date: ['', Validators.compose([
       ])],
       time: ['', Validators.compose([
+      ])],
+      public: ['', Validators.compose([
       ])]
     });
   }
@@ -101,6 +103,7 @@ export class TournamentNewComponent implements OnInit {
     this.customForm.controls.time.setValue({ hour: date.getHours(), minute: date.getMinutes() });
     this.customForm.controls.nrofcompetitors.setValue(5);
     this.customForm.controls.nroffields.setValue(1);
+    this.customForm.controls.public.setValue(true);
     this.processing = false;
   }
 
@@ -141,7 +144,7 @@ export class TournamentNewComponent implements OnInit {
         field.setName(String(fieldNumber));
       }
       tournament = new Tournament(competition);
-      tournament.setPublic(true);
+      tournament.setPublic(this.customForm.controls.public.value);
     }
 
     this.tournamentRepository.createObject(tournament)
@@ -188,12 +191,14 @@ export class TournamentNewComponent implements OnInit {
   }
 
   getStructureDescription() {
-
     const nrOfCompetitors = this.customForm.controls.nrofcompetitors.value;
+    if (nrOfCompetitors < Tournament.MINNROFCOMPETITORS || nrOfCompetitors > Tournament.MAXNROFCOMPETITORS) {
+      return '';
+    }
     const structureService = new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
     const defaultNrOfPoules = nrOfCompetitors !== undefined ? structureService.getDefaultNrOfPoules(nrOfCompetitors) : undefined;
     const sPouleDescr = defaultNrOfPoules > 1 ? 'poules' : 'poule';
-    return defaultNrOfPoules + ' ' + sPouleDescr;
+    return defaultNrOfPoules + ' ' + sPouleDescr + ' en ';
   }
 
   isLoggedIn() {

@@ -58,9 +58,9 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
                 Validators.min(this.validations.minbreakduration),
                 Validators.max(this.validations.maxbreakduration)
             ])],
-
+            public: ['', Validators.compose([
+            ])]
         });
-
     }
 
     ngOnInit() {
@@ -78,6 +78,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
         this.customForm.controls.date.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
         this.customForm.controls.time.setValue({ hour: date.getHours(), minute: date.getMinutes() });
 
+        this.customForm.controls.public.setValue(this.tournament.getPublic());
         this.customForm.controls.togglebreak.setValue(this.tournament.hasBreak());
         this.toggleBreak(this.tournament.hasBreak(), this.tournament.getBreakDuration(), this.tournament.getBreakStartDateTime());
 
@@ -146,6 +147,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
 
         const firstRoundNumber = this.structure.getFirstRoundNumber();
         try {
+            this.tournament.setPublic(this.customForm.controls.public.value);
             this.tournament.getCompetition().getLeague().setName(this.customForm.controls.name.value);
             const reschedule = this.shouldReschedule(startDateTime, breakStartDateTime, breakDuration);
             if (reschedule === true) {

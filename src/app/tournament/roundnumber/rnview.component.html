@@ -77,7 +77,7 @@
             </td>
             <td *ngIf="gmData.hasPopover && gmData.poule.needsRanking" class="text-center">
               <button class="btn btn-outline-info btn-sm" container="body" placement="right" [ngbPopover]="popRanking"
-                autoClose="outside" popoverClass="coen" triggers="manual" #p="ngbPopover"
+                autoClose="outside" triggers="manual" #p="ngbPopover"
                 (click)="showPouleRanking( p, gmData.game.getPoule() )">
                 <span>{{gmData.poule.name}}</span>
               </button>

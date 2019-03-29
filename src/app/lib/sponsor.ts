@@ -12,6 +12,7 @@ export class Sponsor {
     protected id: number;
     protected name: string;
     protected url: string;
+    protected logoUrl: string;
     protected tournament: Tournament;
 
     // constructor
@@ -51,5 +52,13 @@ export class Sponsor {
 
     setUrl(url: string): void {
         this.url = url;
+    }
+
+    getLogoUrl(): string {
+        return this.logoUrl;
+    }
+
+    setLogoUrl(logoUrl: string): void {
+        this.logoUrl = logoUrl;
     }
 }

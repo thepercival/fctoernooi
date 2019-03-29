@@ -23,14 +23,16 @@
           </button>
         </div>
       </div>
-      <div>
-        <h2 *ngIf="processing" class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-        </h2>
-      </div>
+
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">
         {{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing && isLoggedIn()" name="form" (ngSubmit)="create()" [formGroup]="customForm" novalidate>
+
+      <h2 *ngIf="processing" class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
+
+      <form *ngIf="!processing && isLoggedIn()" id="newForm" name="form" (ngSubmit)="create()" [formGroup]="customForm"
+        novalidate>
         <div class="form-group row">
           <div class="col-3">
             <label for="name" class="col-form-label">naam</label>
@@ -77,9 +79,9 @@
               [ngClass]="{ 'is-invalid': customForm.controls.nrofcompetitors.invalid, 'is-valid': customForm.controls.nrofcompetitors.valid}"
               id="nrofcompetitors" name="nrofcompetitors" [formControl]="customForm.controls.nrofcompetitors"
               [min]="validations.minnrofcompetitors" [max]="validations.maxnrofcompetitors" required>
-            <label *ngIf="getStructureDescription()" class="text-info mb-0"><span
+            <label *ngIf="customForm.controls.nrofcompetitors.value" class="text-info mb-0"><span
                 class="font-weight-bold">{{getStructureDescription()}}
-                en 1 ronde</span>, pas dit aan onder "<span class="font-weight-bold">Indeling</span>" in het
+                1 ronde</span>, pas dit aan onder "<span class="font-weight-bold">Indeling</span>" in het
               beheerscherm</label>
           </div>
         </div>
@@ -119,6 +121,20 @@
           <div class="col-9">
             <ngb-timepicker id="starttime" name="starttime" [formControl]="customForm.controls.time" [spinners]="false"
               required></ngb-timepicker>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="publicnotthesame" class="col-3 col-form-label pointer" popoverClass="popover-small"
+            container="newForm" placement="right" ngbPopover="Publieke toernooien zijn te bekijken door anderen. Standen, uitslagen, etc. zijn live te bekijken, 
+            niet publieke toernooien zijn alleen voor jou beschikbaar.">publiek
+            <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
+          </label>
+          <div class="form-check col-9">
+            <label class="custom-control custom-checkbox col-form-label pl-0">
+              <input type="checkbox" class="custom-control-input form-check-input" id="public" name="public"
+                [formControl]="customForm.controls.public">
+              <span class="custom-control-indicator"></span>
+            </label>
           </div>
         </div>
         <div class="form-group row justify-content-end">

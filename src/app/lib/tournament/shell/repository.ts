@@ -57,7 +57,7 @@ export class TournamentShellRepository extends SportRepository {
         return jsonArray;
     }
 
-    getHttpParams(withRoles: boolean, filter?: TournamentShellFilter): HttpParams {
+    private getHttpParams(withRoles: boolean, filter?: TournamentShellFilter): HttpParams {
         let httpParams = new HttpParams();
         if (withRoles && SportConfig.getToken() !== undefined) {
             httpParams = httpParams.set('withRoles', 'true');
@@ -65,11 +65,11 @@ export class TournamentShellRepository extends SportRepository {
         if (filter === undefined) {
             return httpParams;
         }
-        if (filter.minDate !== undefined) {
-            httpParams = httpParams.set('minDate', filter.minDate.toISOString());
+        if (filter.startDate !== undefined) {
+            httpParams = httpParams.set('startDate', filter.startDate.toISOString());
         }
-        if (filter.maxDate !== undefined) {
-            httpParams = httpParams.set('maxDate', filter.maxDate.toISOString());
+        if (filter.endDate !== undefined) {
+            httpParams = httpParams.set('endDate', filter.endDate.toISOString());
         }
         if (filter.name !== undefined) {
             httpParams = httpParams.set('name', filter.name);
@@ -85,11 +85,12 @@ export interface TournamentShell {
     name: string;
     startDateTime: Date;
     hasEditPermissions: boolean;
+    public: boolean;
 }
 
 export interface TournamentShellFilter {
-    minDate?: Date;
-    maxDate?: Date;
+    startDate?: Date;
+    endDate?: Date;
     name?: string;
     withRoles?: boolean;
 }

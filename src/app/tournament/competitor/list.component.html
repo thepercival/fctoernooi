@@ -42,7 +42,7 @@
               </button></th>
           </tr>
         </thead>
-        <tbody #tablecomp>
+        <tbody>
           <app-tournament-competitor-line *ngFor="let poulePlace of poulePlaces;" [poulePlace]="poulePlace"
             [poulePlaceToSwap]="poulePlaceToSwap" [nameService]="nameService" [isStarted]="isStarted()"
             [showSwap]="showSwap" (swapPressed)="swapTwo($event)" [focus]="poulePlace.getId() === focusId"

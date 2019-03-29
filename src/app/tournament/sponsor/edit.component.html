@@ -42,6 +42,30 @@
               maxlength="{{validations.maxlengthurl}}" placeholder="max. {{validations.maxlengthurl}} karakters">
           </div>
         </div>
+        <div class="form-group row">
+          <div class="col-3">
+            <label for="log">logo-url</label>
+          </div>
+          <div class="col-9">
+            <input class="form-control"
+              [ngClass]="{ 'is-invalid': customForm.controls.logourl.invalid, 'is-valid': customForm.controls.logourl.valid }"
+              type="text" name="logourl" id="logourl" [formControl]="customForm.controls.logourl"
+              maxlength="{{validations.maxlengthurl}}" placeholder="max. {{validations.maxlengthurl}} karakters">
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-3">
+            <label for="log">logo-upload</label>
+          </div>
+          <div class="col-9">
+            <input type="file" id="logo" (change)="onFileChange($event)" #fileInput>
+            <button type="button" class="btn btn-sm btn-default" (click)="clearFile()">clear file</button>
+            <!-- <input class="form-control"
+              [ngClass]="{ 'is-invalid': customForm.controls.url.invalid, 'is-valid': customForm.controls.url.valid }"
+              type="text" name="url" id="url" [formControl]="customForm.controls.url"
+              maxlength="{{validations.maxlengthurl}}" placeholder="max. {{validations.maxlengthurl}} karakters"> -->
+          </div>
+        </div>
         <div class="form-group row justify-content-end">
           <div class="col-9">
             <button [disabled]="customForm.invalid" type="submit" class="btn btn-outline-primary">
@@ -51,6 +75,10 @@
           </div>
         </div>
       </form>
+      <div *ngIf="customForm.controls.logourl">
+        <div>preview:</div>
+        <img src="{{customForm.controls.logourl.value}}" width="150px;" height="150px;">
+      </div>
     </div>
   </div>
 </div>
