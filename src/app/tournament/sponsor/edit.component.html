@@ -100,7 +100,7 @@
           <div class="col-9">
             <button [disabled]="customForm.invalid" type="submit" class="btn btn-outline-primary">
               <i class="fi flaticon-sponsor" title="sponsor"></i>
-              <span>{{sponsorId > 0 ? 'wijzigen' : 'toevoegen'}}</span>
+              <span>{{sponsor !== undefined ? 'wijzigen' : 'toevoegen'}}</span>
             </button>
           </div>
         </div>

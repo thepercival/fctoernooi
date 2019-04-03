@@ -66,11 +66,11 @@ export class TournamentLiveboardSponsorsComponent implements OnChanges {
         return Math.floor(100 / sponsorGroup.length);
     }
 
-    getFontSizePercentage() {
-        const fontSizePerc = (8 / this.sponsors.length) * 100;
-        if (fontSizePerc > 150) {
-            return 150;
-        }
-        return fontSizePerc;
+    getTitleFontSize() {
+        return this.getRowViewHeight() * 0.1;
+    }
+
+    getFooterFontSize() {
+        return this.getRowViewHeight() * 0.06;
     }
 }

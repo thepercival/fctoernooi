@@ -4,16 +4,21 @@
     <div *ngFor="let sponsor of sponsorGroup" [ngClass]="{ 'card-dummy': sponsor === undefined }"
       class="card mb-3 mx-2 bg-transparent" [ngStyle]="{ 'width': getColumnViewWidth(sponsorGroup) + 'vw' }">
       <div *ngIf="sponsor !== undefined" class="row no-gutters card-body-custom">
-        <div class="col-md-5">
+        <div *ngIf="sponsor.getLogoUrl()" class="col-md-5 col-lg-4 col-xl-3">
           <img src="{{sponsor.getLogoUrl()}}" class="card-img" alt="img">
         </div>
-        <div class="col-md-7">
+        <div *ngIf="sponsor.getLogoUrl()" class="col-md-7 col-lg-8 col-xl-9">
           <div class="card-body text-center">
-            <h3 class="card-title">{{sponsor.getName()}}</h3>
+            <span class="card-title" [ngStyle]="{ 'font-size': getTitleFontSize() + 'vh' }">{{sponsor.getName()}}</span>
+          </div>
+        </div>
+        <div *ngIf="!sponsor.getLogoUrl()" class="col-12">
+          <div class="card-body text-center">
+            <span class="card-title" [ngStyle]="{ 'font-size': getTitleFontSize() + 'vh' }">{{sponsor.getName()}}</span>
           </div>
         </div>
       </div>
-      <div *ngIf="sponsor !== undefined" class="card-footer">
+      <div *ngIf="sponsor !== undefined" class="card-footer" [ngStyle]="{ 'font-size': getFooterFontSize() + 'vh' }">
         {{sponsor.getUrl()}}</div>
     </div>
   </div>

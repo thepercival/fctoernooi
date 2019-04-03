@@ -101,8 +101,8 @@ export class SponsorScreen extends Screen {
 }
 
 export class SponsorScreenService {
-    static readonly MAXNROFSPONSORSCREENS: number = 2;
-    static readonly MAXNROFSPONSORSPERSCREEN: number = 2;
+    static readonly MAXNROFSPONSORSCREENS: number = 4;
+    static readonly MAXNROFSPONSORSPERSCREEN: number = 9;
 
     private screens: SponsorScreen[];
 
@@ -121,6 +121,9 @@ export class SponsorScreenService {
             if (screen.getSponsors().length < SponsorScreenService.MAXNROFSPONSORSPERSCREEN) {
                 screen.getSponsors().push(sponsor);
             }
+        });
+        this.screens.sort((s1, s2) => {
+            return (s1.getNumber() > s2.getNumber() ? 1 : -1);
         });
     }
 
