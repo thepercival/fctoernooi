@@ -83,14 +83,56 @@ export class PlayedGamesScreen extends GamesScreen implements IGamesScreen {
     }
 }
 
-
 export class SponsorScreen extends Screen {
-    constructor(private sponsors: Sponsor[]) {
+    private sponsors: Sponsor[] = [];
+
+    constructor(private number) {
         super();
         this.description = 'sponsoren';
     }
 
+    getNumber() {
+        return this.number;
+    }
+
     getSponsors() {
         return this.sponsors;
+    }
+}
+
+export class SponsorScreenService {
+    static readonly MAXNROFSPONSORSCREENS: number = 2;
+    static readonly MAXNROFSPONSORSPERSCREEN: number = 2;
+
+    private screens: SponsorScreen[];
+
+    constructor(private sponsors: Sponsor[]) {
+        this.initScreens(sponsors);
+    }
+
+    private initScreens(sponsors: Sponsor[]) {
+        this.screens = [];
+        sponsors.forEach(sponsor => {
+            let screen = this.getScreen(sponsor.getScreenNr());
+            if (screen === undefined && this.screens.length < SponsorScreenService.MAXNROFSPONSORSCREENS) {
+                screen = new SponsorScreen(sponsor.getScreenNr());
+                this.screens.push(screen);
+            }
+            if (screen.getSponsors().length < SponsorScreenService.MAXNROFSPONSORSPERSCREEN) {
+                screen.getSponsors().push(sponsor);
+            }
+        });
+    }
+
+    getScreens(): SponsorScreen[] {
+        return this.screens;
+    }
+
+    getScreen(screenNr: number): SponsorScreen {
+        return this.screens.find(screen => screen.getNumber() === screenNr);
+    }
+
+    getMaxNrOfSponsors(): number {
+        return SponsorScreenService.MAXNROFSPONSORSCREENS * SponsorScreenService.MAXNROFSPONSORSPERSCREEN;
     }
 }

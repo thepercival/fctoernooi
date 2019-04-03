@@ -63,7 +63,6 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
         this.activeScreen = this.screens.shift();
         // this.processing = false;
         if (this.activeScreen === undefined) {
-
             this.processing = true;
             this.getDataAndProcessScreens();
         } else {

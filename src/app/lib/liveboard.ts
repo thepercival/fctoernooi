@@ -6,13 +6,11 @@ import {
     PlayedGamesScreen,
     PoulesRankingScreen,
     Screen,
-    SponsorScreen,
+    SponsorScreenService,
 } from './liveboard/screens';
 import { Tournament } from './tournament';
 
 export class Liveboard {
-    maxSponsorsPerScreen: number = 9;
-
     constructor(
         private tournament: Tournament,
         private structure: Structure,
@@ -148,15 +146,8 @@ export class Liveboard {
         if (nrOfSponsors === 0) {
             return [];
         }
-        const max = this.maxSponsorsPerScreen + 1;
-        const nrOfScreens = ((max - (nrOfSponsors % max)) + nrOfSponsors) / max;
-        const nrOfSponsorsPerScreen = Math.round(nrOfSponsors / nrOfScreens);
-        const screens: Screen[] = [];
-        const sponsors = this.tournament.getSponsors().slice();
-        while (sponsors.length > 0) {
-            screens.push(new SponsorScreen(sponsors.splice(0, nrOfSponsorsPerScreen)));
-        }
-        return screens;
+        const sponsorScreenService = new SponsorScreenService(this.tournament.getSponsors());
+        return sponsorScreenService.getScreens();
     }
 
     private getScreensForEndRanking(): Screen[] {

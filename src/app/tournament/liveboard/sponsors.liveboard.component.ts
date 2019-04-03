@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { NameService } from 'ngx-sport';
 
 import { Sponsor } from '../../lib/sponsor';
@@ -8,7 +8,7 @@ import { Sponsor } from '../../lib/sponsor';
     templateUrl: './sponsors.liveboard.component.html',
     styleUrls: ['./sponsors.liveboard.component.scss']
 })
-export class TournamentLiveboardSponsorsComponent implements OnInit {
+export class TournamentLiveboardSponsorsComponent implements OnChanges {
     @Input() sponsors: Sponsor[];
     sponsorGroups: Sponsor[][];
     maxNrOfSponsorsPerGroup: number;
@@ -20,16 +20,18 @@ export class TournamentLiveboardSponsorsComponent implements OnInit {
         this.viewHeight = 90;
     }
 
-    ngOnInit() {
-        this.sponsorGroups = [[]];
-        const nrOfSponsors = this.sponsors.length;
-        this.maxNrOfSponsorsPerGroup = nrOfSponsors < 3 ? 1 : (nrOfSponsors < 7 ? 2 : 3);
-        this.sponsors.forEach(sponsor => {
-            const sponsorGroup = this.getSponsorGroup();
-            sponsorGroup.push(sponsor);
-            this.sponsorGroups.push(sponsorGroup);
-        });
-        this.addDummies();
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.sponsors !== undefined && changes.sponsors.currentValue !== changes.sponsors.previousValue) {
+            this.sponsorGroups = [[]];
+            const nrOfSponsors = this.sponsors.length;
+            this.maxNrOfSponsorsPerGroup = nrOfSponsors < 3 ? 1 : (nrOfSponsors < 7 ? 2 : 3);
+            this.sponsors.forEach(sponsor => {
+                const sponsorGroup = this.getSponsorGroup();
+                sponsorGroup.push(sponsor);
+                this.sponsorGroups.push(sponsorGroup);
+            });
+            this.addDummies();
+        }
     }
 
     private getSponsorGroup(): Sponsor[] {

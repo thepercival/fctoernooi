@@ -31,10 +31,12 @@
       <thead>
         <tr>
           <th></th>
-          <th>name</th>
+          <th>naam</th>
+          <th class="text-center">scherm nummer</th>
           <th class="d-none d-sm-table-cell">url</th>
           <th class="text-right">
-            <button type="button" class="btn btn-sm btn-outline-primary" (click)="addSponsor()">
+            <button type="button" class="btn btn-sm btn-outline-primary" (click)="addSponsor()"
+              *ngIf="sponsors.length < sponsorScreenService.getMaxNrOfSponsors()">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button>
           </th>
@@ -49,6 +51,9 @@
           </td>
           <td>
             <span>{{sponsor.getName()}}</span>
+          </td>
+          <td class="text-center">
+            <span>{{sponsor.getScreenNr()}}</span>
           </td>
           <td class="d-none d-sm-table-cell">
             <span>{{sponsor.getUrl()}}</span>

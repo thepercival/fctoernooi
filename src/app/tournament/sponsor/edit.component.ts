@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StructureRepository } from 'ngx-sport';
 
+import { SponsorScreenService } from '../../lib/liveboard/screens';
 import { Sponsor } from '../../lib/sponsor';
 import { JsonSponsor } from '../../lib/sponsor/mapper';
 import { SponsorRepository } from '../../lib/sponsor/repository';
@@ -20,18 +21,21 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
     returnUrlQueryParamKey: string;
     returnUrlQueryParamValue: string;
     customForm: FormGroup;
-    sponsorId: number;
+    sponsor: Sponsor;
     base64Logo: string | ArrayBuffer;
 
+    private sponsorScreenService: SponsorScreenService;
+    rangeScreenNrs: number[];
     logoInput: number;
     logoInputUpload = 1;
     logoInputUrl = 2;
     newLogoUploaded: boolean;
+    private readonly LOGO_ASPECTRATIO_THRESHOLD = 0.34;
 
     validations: RefValidations = {
         minlengthname: Sponsor.MIN_LENGTH_NAME,
         maxlengthname: Sponsor.MAX_LENGTH_NAME,
-        maxlengthurl: Sponsor.MAX_LENGTH_URL
+        maxlengthurl: Sponsor.MAX_LENGTH_URL,
     };
 
     constructor(
@@ -45,12 +49,14 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
         super(route, router, tournamentRepository, structureRepository);
         this.logoInput = this.logoInputUpload;
         this.newLogoUploaded = false;
+
         this.customForm = fb.group({
             name: ['', Validators.compose([
                 Validators.required,
                 Validators.minLength(this.validations.minlengthname),
                 Validators.maxLength(this.validations.maxlengthname)
             ])],
+            screennr: ['', Validators.compose([])],
             url: ['', Validators.compose([
                 Validators.maxLength(this.validations.maxlengthurl)
             ])],
@@ -81,26 +87,40 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
     }
 
     private postInit(id: number) {
-        if (id === undefined || id < 1) {
+        this.sponsorScreenService = new SponsorScreenService(this.tournament.getSponsors());
+
+        if (id !== undefined && id > 0) {
+            this.sponsor = this.tournament.getSponsors().find(sponsorIt => sponsorIt.getId() === id);
+        }
+
+        this.rangeScreenNrs = [];
+        for (let screenNr = 1; screenNr <= SponsorScreenService.MAXNROFSPONSORSCREENS; screenNr++) {
+            const screen = this.sponsorScreenService.getScreen(screenNr);
+            if (screen !== undefined && (screen.getSponsors().length > SponsorScreenService.MAXNROFSPONSORSPERSCREEN
+                || (screen.getSponsors().length === SponsorScreenService.MAXNROFSPONSORSPERSCREEN
+                    && !(this.sponsor !== undefined && this.sponsor.getScreenNr() === screenNr)))) {
+                continue;
+            }
+            this.rangeScreenNrs.push(screenNr);
+        }
+        if (this.sponsor === undefined) {
+            let currentScreenNr = this.rangeScreenNrs.length > 0 ? this.rangeScreenNrs[0] : undefined;
+            this.customForm.controls.screennr.setValue(currentScreenNr);
             this.processing = false;
             return;
         }
-        const sponsor = this.tournament.getSponsors().find(sponsorIt => sponsorIt.getId() === id);
-        if (sponsor === undefined) {
-            this.processing = false;
-            return;
-        }
-        this.sponsorId = id;
-        this.customForm.controls.name.setValue(sponsor.getName());
-        this.customForm.controls.url.setValue(sponsor.getUrl());
-        this.customForm.controls.logourl.setValue(sponsor.getLogoUrl());
+
+        this.customForm.controls.name.setValue(this.sponsor.getName());
+        this.customForm.controls.url.setValue(this.sponsor.getUrl());
+        this.customForm.controls.logourl.setValue(this.sponsor.getLogoUrl());
+        this.customForm.controls.screennr.setValue(this.sponsor.getScreenNr());
         this.processing = false;
     }
 
     save(): boolean {
         this.processing = true;
         this.setAlert('info', 'de sponsor wordt opgeslagen');
-        if (this.sponsorId > 0) {
+        if (this.sponsor !== undefined) {
             this.edit();
         } else {
             this.add();
@@ -112,12 +132,13 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
         const name = this.customForm.controls.name.value;
         const url = this.customForm.controls.url.value;
         const logoUrl = this.logoInput === this.logoInputUrl ? this.customForm.controls.logourl.value : undefined;
+        const screennr = this.customForm.controls.screennr.value;
 
         const ref: JsonSponsor = {
             name: name,
             url: url ? url : undefined,
             logoUrl: logoUrl,
-            screenNr: 1
+            screenNr: screennr
         };
         this.sponsorRepository.createObject(ref, this.tournament)
             .subscribe(
@@ -135,12 +156,11 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
 
         const logoUrl = (this.newLogoUploaded !== true || this.logoInput === this.logoInputUrl) ? this.customForm.controls.logourl.value : undefined;
 
-        const sponsor = this.tournament.getSponsors().find(sponsorIt => sponsorIt.getId() === this.sponsorId);
-        sponsor.setName(name);
-        sponsor.setUrl(url ? url : undefined);
-        sponsor.setLogoUrl(logoUrl);
-        sponsor.setScreenNr(1);
-        this.sponsorRepository.editObject(sponsor, this.tournament)
+        this.sponsor.setName(name);
+        this.sponsor.setUrl(url ? url : undefined);
+        this.sponsor.setLogoUrl(logoUrl);
+        this.sponsor.setScreenNr(this.customForm.controls.screennr.value);
+        this.sponsorRepository.editObject(this.sponsor, this.tournament)
             .subscribe(
             /* happy path */ sponsorRes => {
                     this.processLogoAndNavigateBack(sponsorRes.getId());
@@ -189,20 +209,15 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
             this.setAlert('danger', "alleen plaatjes worden ondersteund");
             return;
         }
-
         var reader = new FileReader();
         // const imagePath = event.target.files;
         reader.readAsDataURL(file);
         reader.onload = (_event) => {
             this.base64Logo = reader.result;
         }
-
         this.customForm.get('logoupload').setValue(file);
 
         this.newLogoUploaded = true;
-
-
-
     }
 
     toggleLogoInput() {
@@ -215,6 +230,11 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
 
     navigateBack() {
         this.router.navigate(this.getForwarUrl(), { queryParams: this.getForwarUrlQueryParams() });
+    }
+
+    getLogoUploadDescription() {
+        return 'het plaatje wordt geschaald naar een hoogte van 200px. De beeldverhouding moet liggen tussen '
+            + (1 - this.LOGO_ASPECTRATIO_THRESHOLD).toFixed(2) + ' en ' + (1 + this.LOGO_ASPECTRATIO_THRESHOLD).toFixed(2);
     }
 }
 

@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StructureRepository } from 'ngx-sport';
 
-import { Tournament } from '../../lib/tournament';
-import { TournamentComponent } from '../component';
-import { TournamentRepository } from '../../lib/tournament/repository';
+import { SponsorScreenService } from '../../lib/liveboard/screens';
 import { Sponsor } from '../../lib/sponsor';
 import { SponsorRepository } from '../../lib/sponsor/repository';
+import { Tournament } from '../../lib/tournament';
+import { TournamentRepository } from '../../lib/tournament/repository';
+import { TournamentComponent } from '../component';
 
 
 @Component({
@@ -16,6 +17,7 @@ import { SponsorRepository } from '../../lib/sponsor/repository';
 })
 export class SponsorListComponent extends TournamentComponent implements OnInit {
   sponsors: Sponsor[];
+  sponsorScreenService: SponsorScreenService;
 
   validations: any = {
     'minlengthname': Sponsor.MIN_LENGTH_NAME,
@@ -39,11 +41,14 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
 
   initSponsors() {
     this.createSponsorsList();
+    this.sponsorScreenService = new SponsorScreenService(this.sponsors);
     this.processing = false;
   }
 
   createSponsorsList() {
-    this.sponsors = this.tournament.getSponsors();
+    this.sponsors = this.tournament.getSponsors().sort((s1, s2) => {
+      return (s1.getScreenNr() > s2.getScreenNr() ? 1 : -1);
+    });
   }
 
   addSponsor() {
