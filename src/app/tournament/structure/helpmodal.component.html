@@ -23,8 +23,8 @@
             <div class="col-4 custom-bg">
                 <nouislider class="horizontal-slider losers " [config]="uiSliderConfigExample " [min]="0 " [max]="3"
                     [disabled]="true "></nouislider>
-                <nouislider class="horizontal-slider winners mt-4 " [config]="uiSliderConfigExample " [min]="0 " [max]="3"
-                    [disabled]="true "></nouislider>
+                <nouislider class="horizontal-slider winners mt-4 " [config]="uiSliderConfigExample " [min]="0 "
+                    [max]="3" [disabled]="true "></nouislider>
             </div>
             <div class="col-8 ">schuif om het aantal deelnemers voor de verliezers- en winnaarsronde in te stellen</div>
         </div>
@@ -42,10 +42,10 @@
         </div>
         <div class="row mt-1 ">
             <div class="col-4 px-0">
-                <button disabled type="button" style="padding-left: 0.95rem; padding-right: 0.95rem;" class="btn btn-outline-secondary ml-1 mt-1">
+                <button disabled type="button" class="btn btn-outline-secondary ml-1 mt-1 btn-help-align-left">
                     <fa-icon [icon]="[ 'fas', 'random']"></fa-icon>
                 </button>
-                <button disabled type="button" style="padding-left: 1.15rem; padding-right: 1.15rem;" class="btn btn-outline-secondary ml-1 mt-1">
+                <button disabled type="button" class="btn btn-outline-secondary ml-1 mt-1 btn-help-align-right">
                     <fa-icon [icon]="[ 'fas', 'arrows-alt-h']"></fa-icon>
                 </button>
             </div>
@@ -54,5 +54,6 @@
     </div>
 </div>
 <div class="modal-footer ">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="activeModal.close('Close click')">sluiten</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+        (click)="activeModal.close('Close click')">sluiten</button>
 </div>

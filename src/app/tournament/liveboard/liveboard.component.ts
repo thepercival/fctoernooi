@@ -7,7 +7,6 @@ import { IconManager } from '../../common/iconmanager';
 import { MyNavigation } from '../../common/navigation';
 import { Liveboard } from '../../lib/liveboard';
 import { EndRankingScreen, GamesScreen, PoulesRankingScreen, SponsorScreen } from '../../lib/liveboard/screens';
-import { Sponsor } from '../../lib/sponsor';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { NavBarTournamentLiveboardLink } from '../../nav/nav.component';
 import { TournamentComponent } from '../component';
@@ -25,6 +24,7 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
     private maxLines = 8;
     public refreshAfterSeconds = 10;
     public toggleProgress: boolean = false;
+    private screenfilter: string;
 
     constructor(
         route: ActivatedRoute,
@@ -40,6 +40,12 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
     }
 
     ngOnInit() {
+        this.route.queryParamMap.subscribe(params => {
+            if (params.get('screenfilter') !== null) {
+                this.screenfilter = params.get('screenfilter');
+            }
+        });
+
         super.myNgOnInit(() => this.processScreens());
     }
 
@@ -48,7 +54,7 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
         this.globalEventsManager.toggleLiveboardIconInNavBar.emit(link);
         this.planningService = new PlanningService(this.tournament.getCompetition());
         const liveBoard = new Liveboard(this.tournament, this.structure, this.maxLines, this.planningService);
-        this.screens = liveBoard.getScreens();
+        this.screens = liveBoard.getScreens(this.screenfilter);
         this.executeScheduledTask();
         this.processing = false;
     }
@@ -67,18 +73,6 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
 
     getDataAndProcessScreens() {
         this.setData(this.tournament.getId(), () => { this.processScreens(); });
-    }
-
-    getFontSizePercentage(nrOfSponsors: number) {
-        const fontSizePerc = (8 / nrOfSponsors) * 100;
-        if (fontSizePerc > 150) {
-            return 150;
-        }
-        return fontSizePerc;
-    }
-
-    aSponsorHasUrl(sponsors: Sponsor[]): boolean {
-        return sponsors.some(sponsor => sponsor.getUrl() !== undefined && sponsor.getUrl().length > 0);
     }
 
     ngOnDestroy() {

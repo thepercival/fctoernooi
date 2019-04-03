@@ -33,7 +33,7 @@
         </div>
         <div class="form-group row">
           <div class="col-3">
-            <label for="name" class="col-form-label">url</label>
+            <label for="url" class="col-form-label">url</label>
           </div>
           <div class="col-9">
             <input class="form-control"
@@ -44,7 +44,22 @@
         </div>
         <div class="form-group row">
           <div class="col-3">
-            <label for="log">logo-url</label>
+            <label for="logo" class="col-form-label">logo</label>
+          </div>
+          <div class="col-9">
+            <div class="btn-group" role="group">
+              <button type="button" (click)="toggleLogoInput()" class="btn btn-outline-secondary">
+                <fa-icon *ngIf="logoInput === logoInputUrl" [icon]="['fas', 'check-circle']"></fa-icon> via url
+              </button>
+              <button type="button" (click)="toggleLogoInput()" class="btn btn-outline-secondary">
+                <fa-icon *ngIf="logoInput === logoInputUpload" [icon]="['fas', 'check-circle']"></fa-icon> via upload
+              </button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="logoInput === logoInputUrl" class="form-group row">
+          <div class="col-3">
+            <label for="log">via url</label>
           </div>
           <div class="col-9">
             <input class="form-control"
@@ -53,17 +68,16 @@
               maxlength="{{validations.maxlengthurl}}" placeholder="max. {{validations.maxlengthurl}} karakters">
           </div>
         </div>
-        <div class="form-group row">
+        <div *ngIf="logoInput === logoInputUpload" class="form-group row">
           <div class="col-3">
-            <label for="log">logo-upload</label>
+            <label for="log">via upload</label>
           </div>
           <div class="col-9">
-            <input type="file" id="logo" (change)="onFileChange($event)" #fileInput>
-            <button type="button" class="btn btn-sm btn-default" (click)="clearFile()">clear file</button>
-            <!-- <input class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.url.invalid, 'is-valid': customForm.controls.url.valid }"
-              type="text" name="url" id="url" [formControl]="customForm.controls.url"
-              maxlength="{{validations.maxlengthurl}}" placeholder="max. {{validations.maxlengthurl}} karakters"> -->
+            <div class="custom-file">
+              <input type="file" accept='image/*' class="custom-file-input" id="logoupload"
+                (change)="onFileChange($event)" #fileInput>
+              <label class="custom-file-label" for="logoupload">kies plaatje</label>
+            </div>
           </div>
         </div>
         <div class="form-group row justify-content-end">
@@ -74,11 +88,19 @@
             </button>
           </div>
         </div>
+        <div *ngIf="base64Logo || customForm.controls.logourl.value" class="form-group row">
+          <div class="col-3">
+            <label for="log">preview</label>
+          </div>
+          <div class="col-9">
+            <img *ngIf="base64Logo" [src]="base64Logo" width="150px;" height="150px;">
+            <img *ngIf="!base64Logo && customForm.controls.logourl.value" [src]="customForm.controls.logourl.value"
+              width="150px;" height="150px;">
+          </div>
+        </div>
+        <!-- <button *ngIf="customForm.controls.logourl" type="button" class="btn btn-sm btn-outline-secondary"
+                (click)="clearFile()">logo weghalen</button> -->
       </form>
-      <div *ngIf="customForm.controls.logourl">
-        <div>preview:</div>
-        <img src="{{customForm.controls.logourl.value}}" width="150px;" height="150px;">
-      </div>
     </div>
   </div>
 </div>

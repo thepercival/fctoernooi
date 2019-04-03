@@ -55,12 +55,9 @@ export class SponsorRepository extends SportRepository {
         );
     }
 
-    uploadImage(sponsor: Sponsor, tournament: Tournament, stream: any): Observable<string> {
-        return this.http.post(this.url + '/upload/', stream, this.getImageUploadOptions(sponsor, tournament)).pipe(
-            map((logoUrl: string) => {
-                console.log(logoUrl);
-                return logoUrl;
-            }),
+    uploadImage(sponsorId: number, tournament: Tournament, formData: FormData): Observable<string> {
+        return this.http.post(this.url + '/upload/', formData, this.getImageUploadOptions(sponsorId, tournament)).pipe(
+            map((res: JsonSponsor) => res.logoUrl),
             catchError((err) => this.handleError(err))
         );
     }
@@ -74,18 +71,17 @@ export class SponsorRepository extends SportRepository {
         };
     }
 
-    protected getImageUploadOptions(sponsor: Sponsor, tournament: Tournament): { headers: HttpHeaders; params: HttpParams } {
+    protected getImageUploadOptions(sponsorId: number, tournament: Tournament): { headers: HttpHeaders; params: HttpParams } {
         let httpParams = new HttpParams();
         httpParams = httpParams.set('tournamentid', tournament.getId().toString());
-        httpParams = httpParams.set('sponsorid', sponsor.getId().toString());
-        let headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
-        headers = headers.append('X-Api-Version', '2');
+        httpParams = httpParams.set('sponsorid', sponsorId.toString());
+        let headers = new HttpHeaders({ 'X-Api-Version': '2' });
         const token = SportConfig.getToken();
         if (token !== undefined) {
             headers = headers.append('Authorization', 'Bearer ' + token);
         }
         return {
-            headers: super.getHeaders(),
+            headers: headers,
             params: httpParams
         };
     }

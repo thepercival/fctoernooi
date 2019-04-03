@@ -18,6 +18,7 @@ export class SponsorMapper {
         sponsor.setId(json.id);
         sponsor.setUrl(json.url);
         sponsor.setLogoUrl(json.logoUrl);
+        sponsor.setScreenNr(json.screenNr);
         return sponsor;
     }
 
@@ -26,7 +27,8 @@ export class SponsorMapper {
             id: sponsor.getId(),
             name: sponsor.getName(),
             url: sponsor.getUrl(),
-            logoUrl: sponsor.getLogoUrl()
+            logoUrl: sponsor.getLogoUrl(),
+            screenNr: sponsor.getScreenNr()
         };
     }
 }
@@ -36,4 +38,5 @@ export interface JsonSponsor {
     name: string;
     url?: string;
     logoUrl?: string;
+    screenNr?: number;
 }

@@ -76,6 +76,7 @@ import { ProgressComponent } from './home/progress.component';
 import { TournamentLiveboardGamesComponent } from './liveboard/games.liveboard.component';
 import { TournamentLiveboardComponent } from './liveboard/liveboard.component';
 import { TournamentLiveboardPoulesComponent } from './liveboard/poules.liveboard.component';
+import { TournamentLiveboardSponsorsComponent } from './liveboard/sponsors.liveboard.component';
 import { TournamentNewComponent } from './new/new.component';
 import { TournamentEndRankingViewComponent } from './ranking/end.component';
 import { TournamentPouleRankingComponent } from './ranking/poule.component';
@@ -92,7 +93,6 @@ import { TournamentStructureViewComponent } from './structure/view.component';
 import { TournamentRoutingModule } from './tournament-routing.module';
 import { TournamentViewComponent } from './view/view.component';
 
-// import { FileUploadModule } from 'ng2-file-upload';
 library.add(
   faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus,
   faExpand, faCompress, faPrint, faSort, faRandom, faSquare, faCheckSquare, faArrowsAltH,
@@ -107,8 +107,7 @@ library.add(
     NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule,
     NouisliderModule,
     ReactiveFormsModule,
-    FontAwesomeModule/*,
-    FileUploadModule*/
+    FontAwesomeModule
   ],
   declarations: [
     TournamentNewComponent,
@@ -131,6 +130,7 @@ library.add(
     TournamentViewComponent,
     TournamentLiveboardComponent,
     TournamentLiveboardPoulesComponent,
+    TournamentLiveboardSponsorsComponent,
     TournamentLiveboardGamesComponent,
     TournamentGameEditComponent,
     TournamentRefereeEditComponent,

@@ -45,9 +45,10 @@ export class HomeComponent implements OnInit, AfterViewChecked {
 
   ngOnInit() {
 
-    this.setShellsWithRole();
+
     this.publicShells = [];
     this.addToPublicShells(HomeComponent.FUTURE, this.defaultFutureDays);
+    this.setShellsWithRole();
 
     this.route.queryParams.subscribe(params => {
       if (params.type !== undefined && params.message !== undefined) {

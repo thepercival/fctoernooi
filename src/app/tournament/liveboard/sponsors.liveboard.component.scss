@@ -1,0 +1,39 @@
+h1 > span.smaller {
+    font-size: 80%;
+}
+h1 > small {
+    font-size: 60%;
+}
+h1 > i.smaller {
+    font-size: 80%;
+}
+.liveboard {
+    font-size: 28px;
+}
+
+.card{
+    /*background-color: black;*/
+    border-color: white;
+    flex-grow: 1;    
+}
+
+.card-dummy {
+    border-color: transparent;
+}
+
+.card-body-custom {
+    height:80%;
+}
+.card-footer {
+    border-top-color: white;
+    height:20%;
+    font-size: 15px;
+}
+
+img {  
+    display: block;
+    max-width:200px;
+    max-height:200px;
+    width: auto;
+    height: auto;
+}

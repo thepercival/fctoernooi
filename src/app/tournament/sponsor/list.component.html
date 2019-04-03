@@ -10,9 +10,18 @@
       </h1>
     </div>
     <div>
-      <h2>
-        <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon> sponsoren
-      </h2>
+      <div *ngIf="!processing" class="d-flex justify-content-between">
+        <h2>
+          <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon> sponsoren
+        </h2>
+        <h2>
+          <button *ngIf="sponsors.length > 0" [routerLink]="['/toernooi/liveboard', tournament.getId()]"
+            [queryParams]="{screenfilter:'sponsors'}" type="button" class="btn btn-outline-secondary">
+            <fa-icon [icon]="['fas', 'eye']"></fa-icon>
+            <span> preview</span>
+          </button>
+        </h2>
+      </div>
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
@@ -24,7 +33,7 @@
           <th></th>
           <th>name</th>
           <th class="d-none d-sm-table-cell">url</th>
-          <th class="text-right;">
+          <th class="text-right">
             <button type="button" class="btn btn-sm btn-outline-primary" (click)="addSponsor()">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button>
@@ -44,7 +53,7 @@
           <td class="d-none d-sm-table-cell">
             <span>{{sponsor.getUrl()}}</span>
           </td>
-          <td class="text-right;">
+          <td class="text-right">
             <button type="button" class="btn btn-sm btn-outline-primary" (click)="removeSponsor(sponsor);">
               <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
             </button>

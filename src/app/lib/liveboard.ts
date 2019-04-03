@@ -11,6 +11,7 @@ import {
 import { Tournament } from './tournament';
 
 export class Liveboard {
+    maxSponsorsPerScreen: number = 9;
 
     constructor(
         private tournament: Tournament,
@@ -18,34 +19,36 @@ export class Liveboard {
         private maxLines: number,
         private planningService: PlanningService) { }
 
-    getScreens(): Screen[] {
+    getScreens(screenfilter: string): Screen[] {
         let screens: Screen[] = [];
 
-        const createdAndInplayGamesScreen = this.getScreenForGamesCreatedAndInplay();
-        if (createdAndInplayGamesScreen !== undefined) {
-            screens.push(createdAndInplayGamesScreen);
-        }
-
-        const playedGamesScreen = this.getScreenForGamesPlayed();
-        if (playedGamesScreen !== undefined) {
-            screens.push(playedGamesScreen);
-        }
-
-        const pouleRankingsScreens = this.getScreensForPouleRankings();
-        let currentNrOfPouleRankingsScreens = 0;
-        pouleRankingsScreens.forEach(pouleRankingScreen => {
-            screens.push(pouleRankingScreen);
-            if ((++currentNrOfPouleRankingsScreens % 2) === 0
-                && createdAndInplayGamesScreen !== undefined
-                && currentNrOfPouleRankingsScreens < pouleRankingsScreens.length
-            ) {
+        if (screenfilter === undefined) {
+            const createdAndInplayGamesScreen = this.getScreenForGamesCreatedAndInplay();
+            if (createdAndInplayGamesScreen !== undefined) {
                 screens.push(createdAndInplayGamesScreen);
             }
-        });
+            const playedGamesScreen = this.getScreenForGamesPlayed();
+            if (playedGamesScreen !== undefined) {
+                screens.push(playedGamesScreen);
+            }
+            const pouleRankingsScreens = this.getScreensForPouleRankings();
+            let currentNrOfPouleRankingsScreens = 0;
+            pouleRankingsScreens.forEach(pouleRankingScreen => {
+                screens.push(pouleRankingScreen);
+                if ((++currentNrOfPouleRankingsScreens % 2) === 0
+                    && createdAndInplayGamesScreen !== undefined
+                    && currentNrOfPouleRankingsScreens < pouleRankingsScreens.length
+                ) {
+                    screens.push(createdAndInplayGamesScreen);
+                }
+            });
+            screens = screens.concat(this.getScreensForEndRanking());
+        }
+        if (screenfilter === undefined || screenfilter === 'sponsors') {
+            screens = screens.concat(this.getScreensForSponsors());
+        }
 
-        screens = screens.concat(this.getScreensForEndRanking());
-
-        return screens.concat(this.getScreensForSponsors());
+        return screens;
     }
 
     getScreenForGamesCreatedAndInplay(): Screen {
@@ -145,7 +148,8 @@ export class Liveboard {
         if (nrOfSponsors === 0) {
             return [];
         }
-        const nrOfScreens = ((this.maxLines - (nrOfSponsors % this.maxLines)) + nrOfSponsors) / this.maxLines;
+        const max = this.maxSponsorsPerScreen + 1;
+        const nrOfScreens = ((max - (nrOfSponsors % max)) + nrOfSponsors) / max;
         const nrOfSponsorsPerScreen = Math.round(nrOfSponsors / nrOfScreens);
         const screens: Screen[] = [];
         const sponsors = this.tournament.getSponsors().slice();

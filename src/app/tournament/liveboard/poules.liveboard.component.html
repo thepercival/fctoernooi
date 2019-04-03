@@ -29,7 +29,7 @@
             </ng-container>
             <span>{{rankingItem.getUniqueRank()}}</span>
           </td>
-          <td class="pouleplace">{{nameService.getPoulePlaceFromName(rankingItem.getPoulePlace(), true)}}</td>
+          <td class="pouleplace">{{nameService.getPoulePlaceFromName(getPoulePlace(rankingItem), true)}}</td>
           <td class="text-right">{{rankingItem.getGames()}}</td>
           <td class="text-right">{{rankingItem.getPoints()}}</td>
           <td nowrap class="text-center">{{rankingItem.getDiff()}}</td>

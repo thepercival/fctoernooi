@@ -1,0 +1,20 @@
+<div [ngStyle]="{ 'height': viewHeight + 'vh' }">
+  <div *ngFor="let sponsorGroup of sponsorGroups" class="d-flex  justify-content-around"
+    [ngStyle]="{ 'height': getRowViewHeight() + 'vh' }">
+    <div *ngFor="let sponsor of sponsorGroup" [ngClass]="{ 'card-dummy': sponsor === undefined }"
+      class="card mb-3 mx-2 bg-transparent" [ngStyle]="{ 'width': getColumnViewWidth(sponsorGroup) + 'vw' }">
+      <div *ngIf="sponsor !== undefined" class="row no-gutters card-body-custom">
+        <div class="col-md-5">
+          <img src="{{sponsor.getLogoUrl()}}" class="card-img" alt="img">
+        </div>
+        <div class="col-md-7">
+          <div class="card-body text-center">
+            <h3 class="card-title">{{sponsor.getName()}}</h3>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="sponsor !== undefined" class="card-footer">
+        {{sponsor.getUrl()}}</div>
+    </div>
+  </div>
+</div>

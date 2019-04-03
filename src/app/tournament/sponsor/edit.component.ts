@@ -9,10 +9,6 @@ import { SponsorRepository } from '../../lib/sponsor/repository';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
 
-/*import { FileUploader } from 'ng2-file-upload';
-
-const URL = 'https://evening-anchorage-3159.herokuapp.com/api/';*/
-
 @Component({
     selector: 'app-tournament-sponsor-edit',
     templateUrl: './edit.component.html',
@@ -25,7 +21,12 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
     returnUrlQueryParamValue: string;
     customForm: FormGroup;
     sponsorId: number;
-    // public uploader:FileUploader = new FileUploader({url: URL});
+    base64Logo: string | ArrayBuffer;
+
+    logoInput: number;
+    logoInputUpload = 1;
+    logoInputUrl = 2;
+    newLogoUploaded: boolean;
 
     validations: RefValidations = {
         minlengthname: Sponsor.MIN_LENGTH_NAME,
@@ -42,6 +43,8 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
+        this.logoInput = this.logoInputUpload;
+        this.newLogoUploaded = false;
         this.customForm = fb.group({
             name: ['', Validators.compose([
                 Validators.required,
@@ -51,10 +54,11 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
             url: ['', Validators.compose([
                 Validators.maxLength(this.validations.maxlengthurl)
             ])],
+            logo: null,
             logourl: ['', Validators.compose([
                 Validators.maxLength(this.validations.maxlengthurl)
             ])],
-            logo: null
+            logoupload: null
         });
     }
 
@@ -107,16 +111,18 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
     add() {
         const name = this.customForm.controls.name.value;
         const url = this.customForm.controls.url.value;
+        const logoUrl = this.logoInput === this.logoInputUrl ? this.customForm.controls.logourl.value : undefined;
 
         const ref: JsonSponsor = {
             name: name,
-            url: url ? url : undefined
+            url: url ? url : undefined,
+            logoUrl: logoUrl,
+            screenNr: 1
         };
         this.sponsorRepository.createObject(ref, this.tournament)
             .subscribe(
             /* happy path */ sponsorRes => {
-                    this.processing = false;
-                    this.navigateBack();
+                    this.processLogoAndNavigateBack(sponsorRes.getId());
                 },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
             /* onComplete */() => this.processing = false
@@ -127,16 +133,39 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
         const name = this.customForm.controls.name.value;
         const url = this.customForm.controls.url.value;
 
+        const logoUrl = (this.newLogoUploaded !== true || this.logoInput === this.logoInputUrl) ? this.customForm.controls.logourl.value : undefined;
+
         const sponsor = this.tournament.getSponsors().find(sponsorIt => sponsorIt.getId() === this.sponsorId);
         sponsor.setName(name);
         sponsor.setUrl(url ? url : undefined);
+        sponsor.setLogoUrl(logoUrl);
+        sponsor.setScreenNr(1);
         this.sponsorRepository.editObject(sponsor, this.tournament)
             .subscribe(
             /* happy path */ sponsorRes => {
-                    this.navigateBack();
+                    this.processLogoAndNavigateBack(sponsorRes.getId());
                 },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
             /* onComplete */() => { this.processing = false; }
+            );
+    }
+
+    processLogoAndNavigateBack(sponsorId: number) {
+        if (this.logoInput === this.logoInputUrl || this.newLogoUploaded !== true) {
+            this.processing = false;
+            this.navigateBack();
+            return;
+        }
+        let input = new FormData();
+        input.append('logostream', this.customForm.get('logoupload').value);
+        this.sponsorRepository.uploadImage(sponsorId, this.tournament, input)
+            .subscribe(
+                        /* happy path */ logoUrlRes => {
+                    this.processing = false;
+                    this.navigateBack();
+                },
+                        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+                        /* onComplete */() => { this.processing = false; }
             );
     }
 
@@ -155,26 +184,33 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
             return;
         }
         let file = event.target.files[0];
-        this.customForm.get('logo').setValue(file);
+        var mimeType = file.type;
+        if (mimeType.match(/image\/*/) == null) {
+            this.setAlert('danger', "alleen plaatjes worden ondersteund");
+            return;
+        }
 
-        let input = new FormData();
-        input.append('avatar', this.customForm.get('logo').value);
-        // send stream to server
-        console.log(input);
+        var reader = new FileReader();
+        // const imagePath = event.target.files;
+        reader.readAsDataURL(file);
+        reader.onload = (_event) => {
+            this.base64Logo = reader.result;
+        }
 
-        const sponsor = this.tournament.getSponsors().find(sponsorIt => sponsorIt.getId() === this.sponsorId);
+        this.customForm.get('logoupload').setValue(file);
 
-        this.sponsorRepository.uploadImage(sponsor, this.tournament, this.customForm.get('logo').value)
-            .subscribe(
-            /* happy path */ logoUrlRes => {
-                    console.log('logoUrlRes: ', logoUrlRes);
-                    sponsor.setLogoUrl(logoUrlRes);
-                    console.log('logo-url need to be set if upload is succesfull');
-                },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => { this.processing = false; }
-            );
+        this.newLogoUploaded = true;
 
+
+
+    }
+
+    toggleLogoInput() {
+        if (this.logoInput === this.logoInputUpload) {
+            this.logoInput = this.logoInputUrl;
+        } else {
+            this.logoInput = this.logoInputUpload;
+        }
     }
 
     navigateBack() {

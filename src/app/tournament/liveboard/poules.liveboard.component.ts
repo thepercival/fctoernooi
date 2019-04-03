@@ -39,9 +39,7 @@ export class TournamentLiveboardPoulesComponent {
         return winnersOrLosers === Round.WINNERS ? 'success' : (winnersOrLosers === Round.LOSERS ? 'danger' : '');
     }
 
-    // getUnitDifference(poulePlace: PoulePlace, games: Game[]) {
-    //     const nrOfUnitsScored = this.ranking.getNrOfUnitsScored(poulePlace, games);
-    //     const nrOfUnitsReceived = this.ranking.getNrOfUnitsReceived(poulePlace, games);
-    //     return (nrOfUnitsScored - nrOfUnitsReceived) + ' ( ' + nrOfUnitsScored + ' - ' + nrOfUnitsReceived + ' )';
-    // }
+    getPoulePlace(rankingItem: RoundRankingItem): PoulePlace {
+        return rankingItem.getRound().getPoulePlace(rankingItem.getPoulePlaceLocation());
+    }
 }

@@ -33,8 +33,7 @@
     </h1>
     <app-progress [toggleProgress]="toggleProgress" [max]="refreshAfterSeconds"
       (executeAtZero)="executeScheduledTask()"></app-progress>
-    <button *ngIf="tournament" [routerLink]="['/toernooi/view', tournament.getId()]" routerLinkActive="active"
-      class="btn btn-outline-secondary" type="button">
+    <button *ngIf="tournament" (click)="navigateBack()" class="btn btn-outline-secondary" type="button">
       <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
       <span> terug</span>
     </button>
@@ -65,20 +64,6 @@
 
   <!-- sponsor screen -->
   <div *ngIf="isSponsorScreen()">
-    <table class="table liveboard">
-      <tbody>
-        <tr *ngFor="let sponsor of activeScreen.getSponsors(); let first = first;"
-          [ngStyle]="{ 'font-size': (getFontSizePercentage(activeScreen.getSponsors().length)) + '%' }">
-          <td
-            [ngClass]="{ 'firstrow': first, 'text-right': aSponsorHasUrl(activeScreen.getSponsors()), 'text-center': !aSponsorHasUrl(activeScreen.getSponsors()) }">
-            <span>{{sponsor.getName()}}</span>
-          </td>
-          <td *ngIf="aSponsorHasUrl(activeScreen.getSponsors())" [ngClass]="{ 'firstrow': first }">
-            <span *ngIf="sponsor.getUrl() !== undefined && sponsor.getUrl().length > 0" class="pl-5">
-              {{sponsor.getUrl()}}
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <app-tournament-liveboard-sponsors [sponsors]="activeScreen.getSponsors()"></app-tournament-liveboard-sponsors>
   </div>
+</div>
