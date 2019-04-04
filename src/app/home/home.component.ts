@@ -1,9 +1,9 @@
 import { AfterViewChecked, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 
 import { AuthService } from '../auth/auth.service';
 import { IAlert } from '../common/alert';
+import { MyNavigation } from '../common/navigation';
 import { TournamentShell, TournamentShellFilter, TournamentShellRepository } from '../lib/tournament/shell/repository';
 
 @Component({
@@ -30,22 +30,19 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   searchFilterActive = false;
   searchFilterName: string;
   hasSearched = false;
-  scrollToId;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
     private tournamentShellRepos: TournamentShellRepository,
-    private scrollService: ScrollToService
+    private myNavigation: MyNavigation
   ) {
     this.pastDays = this.defaultPastDays;
     this.futureDays = this.defaultFutureDays;
   }
 
   ngOnInit() {
-
-
     this.publicShells = [];
     this.addToPublicShells(HomeComponent.FUTURE, this.defaultFutureDays);
     this.setShellsWithRole();
@@ -54,20 +51,11 @@ export class HomeComponent implements OnInit, AfterViewChecked {
       if (params.type !== undefined && params.message !== undefined) {
         this.alert = { type: params['type'], message: params['message'] };
       }
-      // if (params.scrollToId !== undefined) {
-      //   this.scrollToId = params.scrollToId;
-      // }
     });
   }
 
   ngAfterViewChecked() {
-    // if (this.tournamentShells !== undefined && this.processing === false && this.scrollToId !== undefined) {
-    //   this.scrollService.scrollTo({
-    //     target: 'scroll-' + this.scrollToId,
-    //     duration: 100
-    //   });
-    //   this.scrollToId = undefined;
-    // }
+    this.myNavigation.scroll();
   }
 
   setShellsWithRole() {

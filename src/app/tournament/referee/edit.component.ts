@@ -10,6 +10,7 @@ import {
     StructureRepository,
 } from 'ngx-sport';
 
+import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentService } from '../../lib/tournament/service';
 import { User } from '../../lib/user';
@@ -21,10 +22,6 @@ import { TournamentComponent } from '../component';
     styleUrls: ['./edit.component.css']
 })
 export class TournamentRefereeEditComponent extends TournamentComponent implements OnInit {
-    returnUrl: string;
-    returnUrlParam: number;
-    returnUrlQueryParamKey: string;
-    returnUrlQueryParamValue: string;
     customForm: FormGroup;
     referee: Referee;
 
@@ -44,6 +41,7 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private planningRepository: PlanningRepository,
+        private myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
         // EditPermissions, EmailAddresses
@@ -77,12 +75,6 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
     ngOnInit() {
         this.route.params.subscribe(params => {
             super.myNgOnInit(() => this.postInit(+params.refereeId));
-        });
-        this.route.queryParamMap.subscribe(params => {
-            this.returnUrl = params.get('returnAction');
-            this.returnUrlParam = +params.get('returnParam');
-            this.returnUrlQueryParamKey = params.get('returnQueryParamKey');
-            this.returnUrlQueryParamValue = params.get('returnQueryParamValue');
         });
     }
 
@@ -196,18 +188,8 @@ export class TournamentRefereeEditComponent extends TournamentComponent implemen
             );
     }
 
-    private getForwarUrl() {
-        return [this.returnUrl, this.returnUrlParam];
-    }
-
-    private getForwarUrlQueryParams(): {} {
-        const queryParams = {};
-        queryParams[this.returnUrlQueryParamKey] = this.returnUrlQueryParamValue;
-        return queryParams;
-    }
-
     navigateBack() {
-        this.router.navigate(this.getForwarUrl(), { queryParams: this.getForwarUrlQueryParams() });
+        this.myNavigation.back();
     }
 
     isInitialsDuplicate(initials: string, referee?: Referee): boolean {

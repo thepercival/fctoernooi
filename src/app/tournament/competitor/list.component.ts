@@ -1,7 +1,6 @@
 import { AfterViewChecked, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import {
   Competitor,
   CompetitorRepository,
@@ -17,6 +16,7 @@ import {
 import { forkJoin, Observable } from 'rxjs';
 
 import { IAlert } from '../../common/alert';
+import { MyNavigation } from '../../common/navigation';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentService } from '../../lib/tournament/service';
@@ -33,7 +33,6 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   poulePlaces: PoulePlace[];
   alert: IAlert;
   poulePlaceToSwap: PoulePlace;
-  scrollToId: number;
   focusId: number;
   showSwap: boolean;
 
@@ -46,8 +45,8 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     private poulePlaceRepository: PoulePlaceRepository,
     private competitorRepository: CompetitorRepository,
     public nameService: NameService,
-    private scrollService: ScrollToService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private myNavigation: MyNavigation
   ) {
     super(route, router, tournamentRepository, sructureRepository);
   }
@@ -55,9 +54,6 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   ngOnInit() {
     super.myNgOnInit(() => {
       this.initPoulePlaces();
-    });
-    this.route.queryParamMap.subscribe(params => {
-      this.scrollToId = +params.get('scrollToId');
     });
   }
 
@@ -75,13 +71,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   ngAfterViewChecked() {
-    if (this.processing === false && this.scrollToId !== undefined) {
-      this.scrollService.scrollTo({
-        target: 'scroll-pouleplace-' + this.scrollToId,
-        duration: 200
-      });
-      this.scrollToId = undefined;
-    }
+    this.myNavigation.scroll();
   }
 
   isStarted() {
@@ -102,13 +92,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
 
   linkToEdit(tournament: Tournament, poulePlace: PoulePlace) {
     this.router.navigate(
-      ['/toernooi/competitoredit', tournament.getId(), poulePlace.getId()],
-      {
-        queryParams: {
-          returnAction: '/toernooi/competitors',
-          returnParam: tournament.getId()
-        }
-      }
+      ['/toernooi/competitoredit', tournament.getId(), poulePlace.getId()]
     );
   }
 

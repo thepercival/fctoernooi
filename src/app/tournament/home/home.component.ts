@@ -194,14 +194,7 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
     }
 
     linkToStructure() {
-        this.router.navigate(['/toernooi/structure', this.tournament.getId()],
-            {
-                queryParams: {
-                    returnAction: '/toernooi',
-                    returnParam: this.tournament.getId()
-                }
-            }
-        );
+        this.router.navigate(['/toernooi/structure', this.tournament.getId()]);
     }
 
     getCurrentYear() {

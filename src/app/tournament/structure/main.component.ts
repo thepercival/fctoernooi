@@ -3,19 +3,20 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { cloneDeep } from 'lodash';
 import {
+  Competitor,
+  CompetitorRepository,
   PlanningRepository,
   PlanningService,
   Round,
   RoundNumber,
   Structure,
   StructureRepository,
-  Competitor,
-  CompetitorRepository,
 } from 'ngx-sport';
 
-import { TournamentComponent } from '../component';
+import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentService } from '../../lib/tournament/service';
+import { TournamentComponent } from '../component';
 import { TournamentStructureHelpModalComponent } from './helpmodal.component';
 
 @Component({
@@ -34,10 +35,6 @@ export class TournamentStructureComponent extends TournamentComponent implements
     step: 1,
     start: 1
   };
-  private returnUrl: string;
-  private returnUrlParam: string;
-  private returnUrlQueryParamKey: string;
-  private returnUrlQueryParamValue: string;
 
   constructor(
     route: ActivatedRoute,
@@ -46,16 +43,10 @@ export class TournamentStructureComponent extends TournamentComponent implements
     structureRepository: StructureRepository,
     private planningRepository: PlanningRepository,
     private competitorRepository: CompetitorRepository,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private myNavigation: MyNavigation
   ) {
     super(route, router, tournamentRepository, structureRepository);
-
-    this.route.queryParamMap.subscribe(params => {
-      this.returnUrl = params.get('returnAction') !== null ? params.get('returnAction') : undefined;
-      this.returnUrlParam = +params.get('returnParam') !== null ? params.get('returnParam') : undefined;
-      this.returnUrlQueryParamKey = params.get('returnQueryParamKey') !== null ? params.get('returnQueryParamKey') : undefined;
-      this.returnUrlQueryParamValue = params.get('returnQueryParamValue') !== null ? params.get('returnQueryParamValue') : undefined;
-  });
   }
 
   ngOnInit() {
@@ -180,11 +171,6 @@ export class TournamentStructureComponent extends TournamentComponent implements
   }
 
   navigateBack() {
-    let extras;
-    if( this.returnUrlQueryParamKey !== undefined ) {
-      extras = { queryParams: {} };
-      extras.queryParams[this.returnUrlQueryParamKey] = this.returnUrlQueryParamValue;
-    }
-    this.router.navigate([this.returnUrl, this.returnUrlParam],extras);
+    this.myNavigation.back();
   }
 }

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import { Competitor, NameService, PoulePlace, Referee, StructureRepository } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
+import { MyNavigation } from '../../common/navigation';
 import { Favorites } from '../../lib/favorites';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { Role } from '../../lib/role';
@@ -23,9 +23,6 @@ export class TournamentFilterComponent extends TournamentComponent implements On
     userIsGameResultAdmin: boolean;
     favorites: Favorites;
 
-    returnUrlQueryParamKey: string;
-    returnUrlQueryParamValue: string;
-
     constructor(
         route: ActivatedRoute,
         router: Router,
@@ -33,7 +30,7 @@ export class TournamentFilterComponent extends TournamentComponent implements On
         sructureRepository: StructureRepository,
         public nameService: NameService,
         private authService: AuthService,
-        private scrollService: ScrollToService,
+        private myNavigation: MyNavigation,
         public favRepository: FavoritesRepository
     ) {
         super(route, router, tournamentRepository, sructureRepository);
@@ -47,10 +44,6 @@ export class TournamentFilterComponent extends TournamentComponent implements On
             this.favorites = this.favRepository.getItem(this.tournament);
             this.processing = false;
         });
-        this.route.queryParamMap.subscribe(params => {
-            this.returnUrlQueryParamKey = params.get('returnQueryParamKey');
-            this.returnUrlQueryParamValue = params.get('returnQueryParamValue');
-        });
     }
 
     initPoulePlaces() {
@@ -62,10 +55,7 @@ export class TournamentFilterComponent extends TournamentComponent implements On
     }
 
     scrollTo(divId: string) {
-        this.scrollService.scrollTo({
-            target: divId,
-            duration: 200
-        });
+        this.myNavigation.scrollTo(divId);
     }
 
     hasCompetitors() {
@@ -111,22 +101,7 @@ export class TournamentFilterComponent extends TournamentComponent implements On
         return this.tournament.getCompetition().getReferees().length > 0;
     }
 
-
-
-    private getForwarUrl() {
-        return ['/toernooi/view', this.tournament.getId()];
-    }
-
-    private getForwarUrlQueryParams(): {} {
-        const queryParams = {};
-        if (this.returnUrlQueryParamKey !== undefined) {
-            queryParams[this.returnUrlQueryParamKey] = this.returnUrlQueryParamValue;
-        }
-        return queryParams;
-
-    }
-
     navigateBack() {
-        this.router.navigate(this.getForwarUrl(), { queryParams: this.getForwarUrlQueryParams() });
+        this.myNavigation.back();
     }
 }

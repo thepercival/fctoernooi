@@ -1,7 +1,6 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import { Game, NameService, PlanningService, Poule, RankingService, RoundNumber } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
@@ -15,13 +14,12 @@ import { Tournament } from '../../lib/tournament';
   templateUrl: './rnview.component.html',
   styleUrls: ['./rnview.component.scss']
 })
-export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit {
+export class TournamentRoundNumberViewComponent implements OnInit {
 
   @Input() tournament: Tournament;
   @Input() roundNumber: RoundNumber;
   @Input() planningService: PlanningService;
   @Input() parentReturnAction: string;
-  @Input() scrollTo: IPlanningScrollTo;
   @Input() userRefereeId: number;
   @Input() canEditSettings: boolean;
   @Output() popOverIsOpen = new EventEmitter<boolean>(); // kan misschien uit
@@ -41,7 +39,6 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   constructor(
     private router: Router,
     private authService: AuthService,
-    private scrollService: ScrollToService,
     public nameService: NameService,
     public favRepository: FavoritesRepository) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
@@ -59,16 +56,6 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     this.canCalculateStartDateTime = this.planningService.canCalculateStartDateTime(this.roundNumber);
     this.gameDatas = this.getGameData();
     this.sameDay = this.gameDatas.length > 1 ? this.isSameDay(this.gameDatas[0], this.gameDatas[this.gameDatas.length - 1]) : true;
-  }
-
-  ngAfterViewInit() {
-    if (this.scrollTo.roundNumber === this.roundNumber.getNumber()) {
-      this.scrollService.scrollTo({
-        target: 'scroll-' + (this.scrollTo.gameId === undefined ? 'roundnumber-' + this.roundNumber.getNumber() : 'game-' + this.scrollTo.gameId),
-        duration: 0/*,
-        easing: 'easeInOutQuint'*/
-      });
-    }
   }
 
   get GameHOME(): boolean { return Game.HOME; }
@@ -172,41 +159,15 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   }
 
   linkToGameEdit(game: Game) {
-    this.router.navigate(
-      ['/toernooi/gameedit', this.tournament.getId(), game.getId()],
-      {
-        queryParams: {
-          returnAction: this.parentReturnAction,
-          returnParam: this.tournament.getId()
-        }
-      }
-    );
+    this.router.navigate(['/toernooi/gameedit', this.tournament.getId(), game.getId()]);
   }
 
   linkToRoundSettings() {
-    this.router.navigate(
-      ['/toernooi/roundssettings', this.tournament.getId(), this.roundNumber.getNumber()],
-      {
-        queryParams: {
-          returnAction: this.parentReturnAction,
-          returnParam: this.tournament.getId(),
-          returnQueryParamKey: 'scrollToRoundNumber',
-          returnQueryParamValue: this.roundNumber.getNumber()
-        }
-      }
-    );
+    this.router.navigate(['/toernooi/roundssettings', this.tournament.getId(), this.roundNumber.getNumber()]);
   }
 
   linkToFilterSettings() {
-    this.router.navigate(
-      ['/toernooi/filter', this.tournament.getId()],
-      {
-        queryParams: {
-          returnQueryParamKey: 'scrollToRoundNumber',
-          returnQueryParamValue: this.roundNumber.getNumber()
-        }
-      }
-    );
+    this.router.navigate(['/toernooi/filter', this.tournament.getId()]);
   }
 
   showPouleRanking(popOver: NgbPopover, poule: Poule) {
@@ -263,9 +224,4 @@ interface GameData {
 interface PouleData {
   name: string;
   needsRanking: boolean;
-}
-
-export interface IPlanningScrollTo {
-  roundNumber?: number;
-  gameId?: number;
 }

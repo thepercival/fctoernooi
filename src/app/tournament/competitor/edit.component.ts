@@ -11,6 +11,7 @@ import {
     StructureRepository,
 } from 'ngx-sport';
 
+import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
 
@@ -20,10 +21,6 @@ import { TournamentComponent } from '../component';
     styleUrls: ['./edit.component.css']
 })
 export class TournamentCompetitorEditComponent extends TournamentComponent implements OnInit, AfterViewChecked {
-    returnUrl: string;
-    returnUrlParam: number;
-    // returnUrlQueryParamKey: string;
-    // returnUrlQueryParamValue: string;
     customForm: FormGroup;
     poulePlace: PoulePlace;
     private focused = false;
@@ -44,6 +41,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
         structureRepository: StructureRepository,
         private poulePlaceRepository: PoulePlaceRepository,
         public nameService: NameService,
+        private myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
@@ -69,12 +67,6 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
     ngOnInit() {
         this.route.params.subscribe(params => {
             super.myNgOnInit(() => this.postInit(+params.poulePlaceId));
-        });
-        this.route.queryParamMap.subscribe(params => {
-            this.returnUrl = params.get('returnAction');
-            this.returnUrlParam = +params.get('returnParam');
-            // this.returnUrlQueryParamKey = params.get('returnQueryParamKey');
-            // this.returnUrlQueryParamValue = params.get('returnQueryParamValue');
         });
     }
 
@@ -174,20 +166,8 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
             );
     }
 
-    private getForwarUrl() {
-        return [this.returnUrl, this.returnUrlParam];
-    }
-
-    private getForwarUrlQueryParams(): {} {
-        const queryParams = { scrollToId: this.poulePlace.getId() };
-        // if (this.returnUrlQueryParamKey !== undefined) {
-        //     queryParams[this.returnUrlQueryParamKey] = this.returnUrlQueryParamValue;
-        // }
-        return queryParams;
-    }
-
     navigateBack() {
-        this.router.navigate(this.getForwarUrl(), { queryParams: this.getForwarUrlQueryParams() });
+        this.myNavigation.back();
     }
 
     isNameDuplicate(name: string, competitorId?: number): boolean {

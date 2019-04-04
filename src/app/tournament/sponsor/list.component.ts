@@ -60,15 +60,7 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
   }
 
   linkToEdit(tournament: Tournament, sponsor?: Sponsor) {
-    this.router.navigate(
-      ['/toernooi/sponsoredit', tournament.getId(), sponsor ? sponsor.getId() : 0],
-      {
-        queryParams: {
-          returnAction: '/toernooi/sponsors',
-          returnParam: tournament.getId()
-        }
-      }
-    );
+    this.router.navigate(['/toernooi/sponsoredit', tournament.getId(), sponsor ? sponsor.getId() : 0]);
   }
 
   removeSponsor(sponsor: Sponsor) {

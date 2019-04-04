@@ -23,6 +23,7 @@ import {
 import { forkJoin } from 'rxjs';
 
 import { AuthService } from '../../auth/auth.service';
+import { MyNavigation } from '../../common/navigation';
 import { Role } from '../../lib/role';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
@@ -38,10 +39,6 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     customForm: FormGroup;
     scoreControls: HomeAwayFormControl[] = [];
     calculateScoreControl: HomeAwayFormControl;
-    returnUrl: string;
-    returnUrlParam: number;
-    returnUrlQueryParamKey: string;
-    returnUrlQueryParamValue: string;
     userRefereeId: number;
     private enablePlayedAtFirstChange;
 
@@ -54,6 +51,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         private gameRepository: GameRepository,
         private poulePlaceRepository: PoulePlaceRepository,
         public nameService: NameService,
+        private myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
@@ -74,13 +72,6 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
                 /* error path */ e => { this.setAlert('danger', e); }
                 );
             });
-        });
-
-        this.route.queryParamMap.subscribe(params => {
-            this.returnUrl = params.get('returnAction');
-            this.returnUrlParam = +params.get('returnParam');
-            this.returnUrlQueryParamKey = params.get('returnQueryParamKey');
-            this.returnUrlQueryParamValue = params.get('returnQueryParamValue');
         });
     }
 
@@ -504,20 +495,8 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         return rules;
     }
 
-    private getForwarUrl() {
-        return [this.returnUrl, this.returnUrlParam];
-    }
-
-    private getForwarUrlQueryParams(): {} {
-        const queryParams = { scrollToGameId: this.game.getId(), scrollToRoundNumber: this.game.getRound().getNumberAsValue() };
-        if (this.returnUrlQueryParamKey !== undefined) {
-            queryParams[this.returnUrlQueryParamKey] = this.returnUrlQueryParamValue;
-        }
-        return queryParams;
-    }
-
     navigateBack() {
-        this.router.navigate(this.getForwarUrl(), { queryParams: this.getForwarUrlQueryParams() });
+        this.myNavigation.back();
     }
 
     // equals(one: NgbDateStruct, two: NgbDateStruct) {

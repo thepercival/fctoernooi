@@ -23,7 +23,7 @@
       <div *ngIf="!processing">
         <app-tournament-roundnumber-view *ngFor="let roundNumber of structure.getRoundNumbers()"
           [tournament]="tournament" [roundNumber]="roundNumber" [canEditSettings]="userIsPlannerOrStructureAdmin"
-          [planningService]="planningService" [scrollTo]="scrollTo" [parentReturnAction]="'/toernooi/games'">
+          [planningService]="planningService" [parentReturnAction]="'/toernooi/games'">
         </app-tournament-roundnumber-view>
         <div class="d-flex justify-content-between mt-3" id="endranking">
           <h2>

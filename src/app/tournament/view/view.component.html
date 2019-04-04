@@ -7,8 +7,7 @@
             <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
           </button></h1>
         <h1 class="mr-1">
-          <button [routerLink]="['']" [queryParams]="{scrollToId:tournament.getId()}" type="button"
-            class="btn btn-outline-secondary">
+          <button [routerLink]="['']" type="button" class="btn btn-outline-secondary">
             <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
             <span class="d-none d-md-inline">&nbsp;&nbsp;terug</span>
           </button>
@@ -33,7 +32,7 @@
       <div *ngIf="!processing">
         <app-tournament-roundnumber-view *ngFor="let roundNumber of structure.getRoundNumbers()"
           [tournament]="tournament" [roundNumber]="roundNumber" [planningService]="planningService"
-          [userRefereeId]="userRefereeId" [scrollTo]="scrollTo" [parentReturnAction]="'/toernooi/view'"
+          [userRefereeId]="userRefereeId" [parentReturnAction]="'/toernooi/view'"
           (popOverIsOpen)="setNoRefresh($event)"></app-tournament-roundnumber-view>
         <div class="d-flex justify-content-between mt-3" id="endranking">
           <h2>

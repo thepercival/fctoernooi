@@ -46,7 +46,6 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     if (this.isStarted()) {
       this.setAlert('warning', 'het toernooi is al begonnen, je kunt niet meer wijzigen');
     }
-    // http://localhost:4200/toernooi/roundssettings/957/1?returnAction=%2Ftoernooi%2Fedit&returnParam=957
   }
 
   isStarted() {
@@ -66,26 +65,14 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   }
 
   linkToEdit(tournament: Tournament, referee?: Referee) {
-    this.router.navigate(
-      ['/toernooi/refereeedit', tournament.getId(), referee ? referee.getId() : 0],
-      {
-        queryParams: {
-          returnAction: '/toernooi/referees',
-          returnParam: tournament.getId()
-        }
-      }
-    );
+    this.router.navigate(['/toernooi/refereeedit', tournament.getId(), referee ? referee.getId() : 0]);
   }
 
   linkToRoundSettings() {
     this.router.navigate(
       ['/toernooi/roundssettings', this.tournament.getId(), this.structure.getFirstRoundNumber().getNumber()],
       {
-        queryParams: {
-          category: '3',
-          returnAction: '/toernooi/edit',
-          returnParam: this.tournament.getId()
-        }
+        queryParams: { category: '3' }
       }
     );
   }

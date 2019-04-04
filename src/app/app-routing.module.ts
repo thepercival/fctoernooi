@@ -15,11 +15,11 @@ const routes: Routes = [
   { path: 'toernooi', loadChildren: 'app/tournament/tournament.module#TournamentModule' },
   { path: ':id', redirectTo: '/toernooi/view/:id', pathMatch: 'full' },
   /*{ path: '', redirectTo: '/home', pathMatch: 'full' },*/
-  // // otherwise redirect to home
+  // otherwise redirect to home
   { path: '**', redirectTo: '' }
 ];
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
+  imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', preloadingStrategy: PreloadAllModules })],
   exports: [RouterModule]
 })
 export class RoutingModule { }

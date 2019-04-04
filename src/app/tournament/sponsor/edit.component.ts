@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StructureRepository } from 'ngx-sport';
 
+import { MyNavigation } from '../../common/navigation';
 import { SponsorScreenService } from '../../lib/liveboard/screens';
 import { Sponsor } from '../../lib/sponsor';
 import { JsonSponsor } from '../../lib/sponsor/mapper';
@@ -16,10 +17,6 @@ import { TournamentComponent } from '../component';
     styleUrls: ['./edit.component.css']
 })
 export class TournamentSponsorEditComponent extends TournamentComponent implements OnInit {
-    returnUrl: string;
-    returnUrlParam: number;
-    returnUrlQueryParamKey: string;
-    returnUrlQueryParamValue: string;
     customForm: FormGroup;
     sponsor: Sponsor;
     base64Logo: string | ArrayBuffer;
@@ -44,6 +41,7 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
+        private myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
@@ -77,12 +75,6 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
     ngOnInit() {
         this.route.params.subscribe(params => {
             super.myNgOnInit(() => this.postInit(+params.sponsorId));
-        });
-        this.route.queryParamMap.subscribe(params => {
-            this.returnUrl = params.get('returnAction');
-            this.returnUrlParam = +params.get('returnParam');
-            this.returnUrlQueryParamKey = params.get('returnQueryParamKey');
-            this.returnUrlQueryParamValue = params.get('returnQueryParamValue');
         });
     }
 
@@ -189,16 +181,6 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
             );
     }
 
-    private getForwarUrl() {
-        return [this.returnUrl, this.returnUrlParam];
-    }
-
-    private getForwarUrlQueryParams(): {} {
-        const queryParams = {};
-        queryParams[this.returnUrlQueryParamKey] = this.returnUrlQueryParamValue;
-        return queryParams;
-    }
-
     onFileChange(event) {
         if (event.target.files.length === 0) {
             return;
@@ -229,7 +211,7 @@ export class TournamentSponsorEditComponent extends TournamentComponent implemen
     }
 
     navigateBack() {
-        this.router.navigate(this.getForwarUrl(), { queryParams: this.getForwarUrlQueryParams() });
+        this.myNavigation.back();
     }
 
     getLogoUploadDescription() {

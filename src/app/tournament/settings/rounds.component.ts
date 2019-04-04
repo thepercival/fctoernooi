@@ -17,6 +17,7 @@ import {
     StructureRepository,
 } from 'ngx-sport';
 
+import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentService } from '../../lib/tournament/service';
 import { TournamentComponent } from '../component';
@@ -53,10 +54,6 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         maxMinutesPerGame: 60,
     };
     planningService: PlanningService;
-    returnUrl: string;
-    returnUrlParam: number;
-    returnUrlQueryParamKey: string;
-    returnUrlQueryParamValue: string;
 
     constructor(
         route: ActivatedRoute,
@@ -66,6 +63,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         private configRepository: RoundNumberConfigRepository,
         private configMapper: RoundNumberConfigMapper,
         public nameService: NameService,
+        private myNavigation: MyNavigation,
         private planningRepository: PlanningRepository
     ) {
         super(route, router, tournamentRepository, sructureRepository);
@@ -100,10 +98,6 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
             if (params.get('category') !== null) {
                 this.category = +params.get('category');
             }
-            this.returnUrl = params.get('returnAction');
-            this.returnUrlParam = +params.get('returnParam');
-            this.returnUrlQueryParamKey = params.get('returnQueryParamKey');
-            this.returnUrlQueryParamValue = params.get('returnQueryParamValue');
         });
     }
 
@@ -375,21 +369,8 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         return scoreConfig.getDirection() === RoundNumberConfigScore.UPWARDS ? 'naar' : 'vanaf';
     }
 
-    private getForwarUrl() {
-        return [this.returnUrl, this.returnUrlParam];
-    }
-
-    private getForwarUrlQueryParams(): {} {
-        const queryParams = {};
-        if (this.returnUrlQueryParamKey !== undefined) {
-            queryParams[this.returnUrlQueryParamKey] = this.returnUrlQueryParamValue;
-        }
-        return queryParams;
-
-    }
-
     navigateBack() {
-        this.router.navigate(this.getForwarUrl(), { queryParams: this.getForwarUrlQueryParams() });
+        this.myNavigation.back();
     }
 }
 

@@ -195,14 +195,6 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
     isSelected = date => this.equals(date, this.customForm.controls.date.value);
 
     linkToRoundSettings(roundNumber: RoundNumber) {
-        this.router.navigate(
-            ['/toernooi/roundssettings', this.tournament.getId(), roundNumber.getNumber()],
-            {
-                queryParams: {
-                    returnAction: '/toernooi/edit',
-                    returnParam: this.tournament.getId()
-                }
-            }
-        );
+        this.router.navigate(['/toernooi/roundssettings', this.tournament.getId(), roundNumber.getNumber()]);
     }
 }
