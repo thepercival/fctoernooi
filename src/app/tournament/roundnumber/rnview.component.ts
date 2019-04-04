@@ -171,9 +171,7 @@ export class TournamentRoundNumberViewComponent implements OnInit {
   }
 
   showPouleRanking(popOver: NgbPopover, poule: Poule) {
-    if (popOver.isOpen()) {
-      popOver.close();
-    } else {
+    if (!popOver.isOpen()) {
       const tournament = this.tournament;
       popOver.open({ poule, tournament });
     }

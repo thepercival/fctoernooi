@@ -23,11 +23,9 @@
         <tr *ngIf="!showingAllWithRole && shellsWithRoleFromFour.length > 0"
           (click)="showingAllWithRole = !showingAllWithRole" class="pointer">
           <td colspan="4" class="text-center">
-            <div class="d-flex justify-content-around">
-              <fa-icon [icon]="['fas', 'angle-double-down']"></fa-icon>
-              <span>meer</span>
-              <fa-icon [icon]="['fas', 'angle-double-down']"></fa-icon>
-            </div>
+            <fa-icon [icon]="['fas', 'angle-double-down']"></fa-icon>
+            <span class="mx-3">meer</span>
+            <fa-icon [icon]="['fas', 'angle-double-down']"></fa-icon>
           </td>
         </tr>
         <ng-template ngFor let-shell [ngForOf]="shellsWithRoleFromFour">
@@ -40,8 +38,7 @@
     <h2 *ngIf="processingWithRole" class="text-center">
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
-
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between mt-3">
       <h2>publieke toernooien</h2>
       <button *ngIf="!searchFilterActive" type="button" name="btn-search-tournaments" id="btn-search-tournaments"
         class="btn btn-outline-secondary" (click)="enableSearchFilter()" aria-label="search tournaments">
@@ -51,7 +48,7 @@
       <button *ngIf="searchFilterActive" type="button" name="btn-search-tournaments" id="btn-search-tournaments"
         class="btn btn-outline-primary" (click)="disableSearchFilter()" aria-label="reset search tournaments">
         <fa-icon [icon]="['fas', 'search']"></fa-icon>
-        <span class="ml-1 d-none d-sm-inline"> reset</span>
+        <span class="ml-1 d-none d-sm-inline"> herstel</span>
       </button>
     </div>
     <div *ngIf="searchFilterActive">
@@ -63,23 +60,19 @@
     <table *ngIf="!publicProcessing" class="table">
       <tbody>
         <tr *ngIf="!searchFilterActive" (click)="expandPastDays()" class="pointer">
-          <td colspan="4" class="text-center">
-            <div class="d-flex justify-content-around">
-              <fa-icon [icon]="['fas', 'angle-double-down']" rotate="180"></fa-icon>
-              <span>meer eerdere</span>
-              <fa-icon [icon]="['fas', 'angle-double-down']" rotate="180"></fa-icon>
-            </div>
+          <td colspan="3" class="text-center">
+            <fa-icon [icon]="['fas', 'angle-double-down']" rotate="180"></fa-icon>
+            <span class="mx-3">meer eerdere</span>
+            <fa-icon [icon]="['fas', 'angle-double-down']" rotate="180"></fa-icon>
           </td>
         </tr>
         <app-home-shell class="pointer" (click)="linkToView(shell)" *ngFor="let shell of publicShells" [shell]="shell"
           [showPublic]="false" id="scroll-{{shell.tournamentId}}"></app-home-shell>
         <tr *ngIf="!searchFilterActive" (click)="expandFutureDays()" class="pointer">
-          <td colspan="4" class="text-center">
-            <div class="d-flex justify-content-around">
-              <fa-icon [icon]="['fas', 'angle-double-down']"></fa-icon>
-              <span>meer latere</span>
-              <fa-icon [icon]="['fas', 'angle-double-down']"></fa-icon>
-            </div>
+          <td colspan="3" class="text-center">
+            <fa-icon [icon]="['fas', 'angle-double-down']"></fa-icon>
+            <span class="mx-3">meer latere</span>
+            <fa-icon [icon]="['fas', 'angle-double-down']"></fa-icon>
           </td>
         </tr>
       </tbody>

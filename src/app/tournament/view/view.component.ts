@@ -41,11 +41,11 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
             this.showEndRanking = this.structure.getRootRound().getNrOfPlaces() <= 20;
             this.initLiveboardLink();
             this.planningService = new PlanningService(this.tournament.getCompetition());
-            this.processing = false;
-            this.toggleProgress = !this.toggleProgress;
             this.tournamentRepository.getUserRefereeId(this.tournament).subscribe(
                 /* happy path */ userRefereeIdRes => {
                     this.userRefereeId = userRefereeIdRes;
+                    this.processing = false;
+                    this.toggleProgress = !this.toggleProgress;
                 },
                 /* error path */ e => { this.setAlert('danger', e); }
             );

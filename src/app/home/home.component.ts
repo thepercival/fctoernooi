@@ -23,7 +23,6 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   alert: IAlert;
   processingWithRole = true;
   publicProcessing = true;
-  private defaultPastDays = 0;
   private pastDays: number;
   private defaultFutureDays = 7;
   private futureDays: number;
@@ -38,13 +37,10 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     private tournamentShellRepos: TournamentShellRepository,
     private myNavigation: MyNavigation
   ) {
-    this.pastDays = this.defaultPastDays;
-    this.futureDays = this.defaultFutureDays;
   }
 
   ngOnInit() {
-    this.publicShells = [];
-    this.addToPublicShells(HomeComponent.FUTURE, this.defaultFutureDays);
+    this.disableSearchFilter();
     this.setShellsWithRole();
 
     this.route.queryParams.subscribe(params => {
@@ -152,8 +148,8 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   disableSearchFilter() {
     this.searchFilterActive = false;
     this.publicShells = [];
-    this.pastDays = this.defaultPastDays;
-    this.futureDays = this.defaultFutureDays;
+    this.pastDays = 0;
+    this.futureDays = 0;
     this.addToPublicShells(HomeComponent.FUTURE, this.defaultFutureDays);
   }
 

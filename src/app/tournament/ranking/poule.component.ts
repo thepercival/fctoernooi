@@ -24,8 +24,8 @@ export class TournamentPouleRankingComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.favorites = this.favRepository.getItem(this.tournament);
     this.processing = true;
+    this.favorites = this.favRepository.getItem(this.tournament);
     const ranking = new RankingService(this.tournament.getCompetition().getRuleSet());
     this.rankingItems = ranking.getItemsForPoule(this.poule);
     this.processing = false;
