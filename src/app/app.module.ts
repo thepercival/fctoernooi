@@ -43,7 +43,6 @@ import {
   NgbPopoverModule,
   NgbTimepickerModule,
 } from '@ng-bootstrap/ng-bootstrap';
-import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 import {
   AssociationMapper,
   AssociationRepository,
@@ -104,7 +103,6 @@ library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave
     FormsModule,
     UserModule,
     AdminModule,
-    ScrollToModule.forRoot(),
     NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule,
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
     FontAwesomeModule
