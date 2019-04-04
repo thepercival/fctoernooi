@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { Game, NameService, PlanningService, Poule, RankingService, RoundNumber } from 'ngx-sport';
@@ -14,7 +14,7 @@ import { Tournament } from '../../lib/tournament';
   templateUrl: './rnview.component.html',
   styleUrls: ['./rnview.component.scss']
 })
-export class TournamentRoundNumberViewComponent implements OnInit {
+export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit {
 
   @Input() tournament: Tournament;
   @Input() roundNumber: RoundNumber;
@@ -23,6 +23,7 @@ export class TournamentRoundNumberViewComponent implements OnInit {
   @Input() userRefereeId: number;
   @Input() canEditSettings: boolean;
   @Output() popOverIsOpen = new EventEmitter<boolean>(); // kan misschien uit
+  @Output() scroll = new EventEmitter<boolean>(); // kan misschien uit
   alert: any;
   GameStatePlayed = Game.STATE_PLAYED;
   sameDay = true;
@@ -56,6 +57,12 @@ export class TournamentRoundNumberViewComponent implements OnInit {
     this.canCalculateStartDateTime = this.planningService.canCalculateStartDateTime(this.roundNumber);
     this.gameDatas = this.getGameData();
     this.sameDay = this.gameDatas.length > 1 ? this.isSameDay(this.gameDatas[0], this.gameDatas[this.gameDatas.length - 1]) : true;
+  }
+
+  ngAfterViewInit() {
+    if (this.roundNumber.getNext() === undefined) {
+      this.scroll.emit(true);
+    }
   }
 
   get GameHOME(): boolean { return Game.HOME; }
@@ -171,7 +178,9 @@ export class TournamentRoundNumberViewComponent implements OnInit {
   }
 
   showPouleRanking(popOver: NgbPopover, poule: Poule) {
-    if (!popOver.isOpen()) {
+    if (popOver.isOpen()) {
+      popOver.close();
+    } else {
       const tournament = this.tournament;
       popOver.open({ poule, tournament });
     }

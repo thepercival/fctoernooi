@@ -1,9 +1,8 @@
-import { AfterViewChecked, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../auth/auth.service';
 import { IAlert } from '../common/alert';
-import { MyNavigation } from '../common/navigation';
 import { TournamentShell, TournamentShellFilter, TournamentShellRepository } from '../lib/tournament/shell/repository';
 
 @Component({
@@ -11,7 +10,7 @@ import { TournamentShell, TournamentShellFilter, TournamentShellRepository } fro
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit, AfterViewChecked {
+export class HomeComponent implements OnInit {
   static readonly FUTURE: number = 1;
   static readonly PAST: number = 2;
 
@@ -34,8 +33,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private tournamentShellRepos: TournamentShellRepository,
-    private myNavigation: MyNavigation
+    private tournamentShellRepos: TournamentShellRepository
   ) {
   }
 
@@ -48,10 +46,6 @@ export class HomeComponent implements OnInit, AfterViewChecked {
         this.alert = { type: params['type'], message: params['message'] };
       }
     });
-  }
-
-  ngAfterViewChecked() {
-    this.myNavigation.scroll();
   }
 
   setShellsWithRole() {

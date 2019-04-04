@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlanningService, StructureRepository } from 'ngx-sport';
 
@@ -15,7 +15,7 @@ import { TournamentComponent } from '../component';
     templateUrl: './view.component.html',
     styleUrls: ['./view.component.scss']
 })
-export class TournamentViewComponent extends TournamentComponent implements OnInit, AfterViewChecked, OnDestroy {
+export class TournamentViewComponent extends TournamentComponent implements OnInit, OnDestroy {
     private liveboardLinkSet = false;
     public planningService: PlanningService;
     public refreshAfterSeconds = 60;
@@ -52,7 +52,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
         });
     }
 
-    ngAfterViewChecked() {
+    scroll() {
         this.myNavigation.scroll();
     }
 

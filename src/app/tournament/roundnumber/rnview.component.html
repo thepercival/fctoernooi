@@ -35,7 +35,7 @@
       <thead>
         <tr>
           <th *ngIf="roundNumberNeedsRanking" class="text-center text-info pointer" title="poule" container="body"
-            placement="right" [ngbPopover]="popRules" #p="ngbPopover">
+            autoClose="outside" placement="right" [ngbPopover]="popRules" #p="ngbPopover">
             <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
           </th>
           <th *ngIf="!roundNumberNeedsRanking" class="text-center" title="wedstrijd">
@@ -136,11 +136,8 @@
   <div class="card border-0">
     <div class="card-header card-header-rules d-flex justify-content-between px-0 pt-2 pb-1">
       <span>regelvolgorde</span>
-      <button type="button" class="btn btn-sm btn-outline-secondary">
-        x
-      </button>
     </div>
-    <div class="card-body p-0">
+    <div class="card-body card-body-rules p-0">
       <div class="card-text">
         <ol class="pl-3 pt-2">
           <li *ngFor="let ruleDescription of getRankingRuleDescriptions()">{{ruleDescription}}</li>

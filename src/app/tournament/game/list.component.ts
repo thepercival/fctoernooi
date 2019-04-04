@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlanningService, StructureRepository } from 'ngx-sport';
 
@@ -13,7 +13,7 @@ import { TournamentComponent } from '../component';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css']
 })
-export class GameListComponent extends TournamentComponent implements OnInit, AfterViewChecked {
+export class GameListComponent extends TournamentComponent implements OnInit {
 
   planningService: PlanningService;
   showPrintBtn: boolean;
@@ -38,7 +38,7 @@ export class GameListComponent extends TournamentComponent implements OnInit, Af
     this.showPrintBtn = true;
   }
 
-  ngAfterViewChecked() {
+  scroll() {
     this.myNavigation.scroll();
   }
 
