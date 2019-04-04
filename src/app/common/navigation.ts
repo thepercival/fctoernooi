@@ -24,10 +24,8 @@ export class MyNavigation {
         ).subscribe(e => {
             if ((e as Scroll).position) {
                 this.scrollPosition = (e as Scroll).position;
-                console.log(this.scrollPosition);
             } else {
                 this.scrollPosition = [0, 0];
-                console.log(this.scrollPosition);
             }
         });
     }
