@@ -1,13 +1,6 @@
 import { Game, NameService, PlanningService, Poule, RoundNumber, Structure } from 'ngx-sport';
 
-import {
-    CreatedAndInplayGamesScreen,
-    EndRankingScreen,
-    PlayedGamesScreen,
-    PoulesRankingScreen,
-    Screen,
-    SponsorScreenService,
-} from './liveboard/screens';
+import { EndRankingScreen, PlayedGamesScreen, PoulesRankingScreen, Screen, SponsorScreenService } from './liveboard/screens';
 import { Tournament } from './tournament';
 
 export class Liveboard {
@@ -21,10 +14,9 @@ export class Liveboard {
         let screens: Screen[] = [];
 
         if (screenfilter === undefined) {
-            const createdAndInplayGamesScreen = this.getScreenForGamesCreatedAndInplay();
-            if (createdAndInplayGamesScreen !== undefined) {
-                screens.push(createdAndInplayGamesScreen);
-            }
+            const createdAndInplayGamesScreens = this.getScreensForGamesCreatedAndInplay();
+            screens = screens.concat(createdAndInplayGamesScreens);
+
             const playedGamesScreen = this.getScreenForGamesPlayed();
             if (playedGamesScreen !== undefined) {
                 screens.push(playedGamesScreen);
@@ -34,10 +26,10 @@ export class Liveboard {
             pouleRankingsScreens.forEach(pouleRankingScreen => {
                 screens.push(pouleRankingScreen);
                 if ((++currentNrOfPouleRankingsScreens % 2) === 0
-                    && createdAndInplayGamesScreen !== undefined
+                    && createdAndInplayGamesScreens.length > 0
                     && currentNrOfPouleRankingsScreens < pouleRankingsScreens.length
                 ) {
-                    screens.push(createdAndInplayGamesScreen);
+                    screens = screens.concat(createdAndInplayGamesScreens);
                 }
             });
             screens = screens.concat(this.getScreensForEndRanking());
@@ -49,12 +41,17 @@ export class Liveboard {
         return screens;
     }
 
-    getScreenForGamesCreatedAndInplay(): Screen {
+    getScreensForGamesCreatedAndInplay(): Screen[] {
         const games: Game[] = this.getGamesCreatedAndInplay();
         if (games.length === 0) {
             return undefined;
         }
-        return new CreatedAndInplayGamesScreen(games);
+        return [];
+
+        // while (games.length > 0) {
+        //     // get maxlines of it
+        // }
+        // return new CreatedAndInplayGamesScreen(games);
     }
 
     getGamesCreatedAndInplay(): Game[] {
@@ -62,9 +59,14 @@ export class Liveboard {
     }
 
     getGamesCreatedAndInplayHelper(roundNumber: RoundNumber): Game[] {
+        // @TODO every competitor should be listed at least once in one of the scheduled - games - screens
+        // create a list with competitors
+        // remove competitors from games unit there are no competitors left, than stop
+        // and divide games over one or more screens
         let games: Game[] = this.planningService.getGamesForRoundNumber(roundNumber, Game.ORDER_RESOURCEBATCH);
+        const now = new Date();
         games = games.filter(game => game.getState() !== Game.STATE_PLAYED &&
-            (!roundNumber.getConfig().getEnableTime() || game.getStartDateTime() > new Date())
+            (!roundNumber.getConfig().getEnableTime() || game.getStartDateTime() > now)
         );
         if (games.length < this.maxLines && roundNumber.hasNext()) {
             games = games.concat(this.getGamesCreatedAndInplayHelper(roundNumber.getNext()));

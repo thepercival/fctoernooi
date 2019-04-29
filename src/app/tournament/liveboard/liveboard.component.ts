@@ -22,7 +22,7 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
     public activeScreen: any;
     private screens: any[] = [];
     private maxLines = 8;
-    public refreshAfterSeconds = 10;
+    public refreshAfterSeconds = 15;
     public toggleProgress: boolean = false;
     private screenfilter: string;
 

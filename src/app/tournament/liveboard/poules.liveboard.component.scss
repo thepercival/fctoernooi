@@ -27,3 +27,7 @@ th.width-8 {
 th.width-30 {
     width:30%;
 }
+
+td.score, td.unitdiff, td.rankingnr {
+    white-space: nowrap;
+}

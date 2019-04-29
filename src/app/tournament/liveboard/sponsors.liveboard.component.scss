@@ -36,3 +36,7 @@ img {
     width: auto;
     height: auto;
 }
+
+td.score, td.unitdiff, td.rankingnr {
+    white-space: nowrap;
+}

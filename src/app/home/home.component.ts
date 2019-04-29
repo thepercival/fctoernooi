@@ -22,9 +22,10 @@ export class HomeComponent implements OnInit {
   alert: IAlert;
   processingWithRole = true;
   publicProcessing = true;
-  private pastDays: number;
-  private defaultFutureDays = 7;
-  private futureDays: number;
+  private defaultHourRange: HourRange = {
+    start: -4, end: 168
+  };
+  private hourRange: HourRange;
   searchFilterActive = false;
   searchFilterName: string;
   hasSearched = false;
@@ -85,9 +86,9 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  addToPublicShells(pastFuture: number, daysToAdd: number) {
+  addToPublicShells(pastFuture: number, hoursToAdd: number) {
     this.publicProcessing = true;
-    const searchFilter = this.changeDayRange(pastFuture, daysToAdd);
+    const searchFilter = this.extendHourRange(pastFuture, hoursToAdd);
     this.tournamentShellRepos.getObjects(searchFilter)
       .subscribe(
           /* happy path */(shellsRes: TournamentShell[]) => {
@@ -142,34 +143,29 @@ export class HomeComponent implements OnInit {
   disableSearchFilter() {
     this.searchFilterActive = false;
     this.publicShells = [];
-    this.pastDays = 0;
-    this.futureDays = 0;
-    this.addToPublicShells(HomeComponent.FUTURE, this.defaultFutureDays);
+    this.hourRange = { start: this.defaultHourRange.start, end: this.defaultHourRange.start };
+    this.addToPublicShells(HomeComponent.FUTURE, this.defaultHourRange.end - this.defaultHourRange.start);
   }
 
   expandPastDays() {
-    const pastDays = this.pastDays;
-    const newPastDays = this.pastDays === 0 ? this.defaultFutureDays : pastDays * 2;
-    this.addToPublicShells(HomeComponent.PAST, newPastDays - pastDays);
+    const pastHoursToAdd = this.hourRange.start === this.defaultHourRange.start ? this.defaultHourRange.start + this.defaultHourRange.end : -this.hourRange.start;
+    this.addToPublicShells(HomeComponent.PAST, pastHoursToAdd);
   }
 
   expandFutureDays() {
-    const futureDays = this.futureDays;
-    const newFutureDays = futureDays * 2;
-    this.addToPublicShells(HomeComponent.FUTURE, newFutureDays - futureDays);
+    this.addToPublicShells(HomeComponent.FUTURE, this.hourRange.end);
   }
 
-
-  private changeDayRange(pastFuture: number, daysToAdd: number): TournamentShellFilter {
+  private extendHourRange(pastFuture: number, hoursToAdd: number): TournamentShellFilter {
     let startDate = new Date(), endDate = new Date();
     if (pastFuture === HomeComponent.PAST) {
-      endDate.setDate(endDate.getDate() - this.pastDays);
-      this.pastDays += daysToAdd;
-      startDate.setDate(startDate.getDate() - this.pastDays);
+      endDate.setHours(endDate.getHours() + this.hourRange.start);
+      this.hourRange.start -= hoursToAdd;
+      startDate.setHours(startDate.getHours() + this.hourRange.start);
     } else if (pastFuture === HomeComponent.FUTURE) {
-      startDate.setDate(startDate.getDate() + this.futureDays);
-      this.futureDays += daysToAdd;
-      endDate.setDate(endDate.getDate() + this.futureDays);
+      startDate.setHours(startDate.getHours() + this.hourRange.end);
+      this.hourRange.end += hoursToAdd;
+      endDate.setHours(endDate.getHours() + this.hourRange.end);
     }
     return this.getSearchFilter(startDate, endDate, undefined);
   }
@@ -194,4 +190,9 @@ export class HomeComponent implements OnInit {
       /* error path */ e => { this.setAlert('danger', e); this.publicProcessing = false; }
       );
   }
+}
+
+interface HourRange {
+  start: number;
+  end: number;
 }

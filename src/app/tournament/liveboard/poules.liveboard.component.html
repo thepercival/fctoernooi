@@ -32,7 +32,12 @@
           <td class="pouleplace">{{nameService.getPoulePlaceFromName(getPoulePlace(rankingItem), true)}}</td>
           <td class="text-right">{{rankingItem.getGames()}}</td>
           <td class="text-right">{{rankingItem.getPoints()}}</td>
-          <td nowrap class="text-center">{{rankingItem.getDiff()}}</td>
+          <td nowrap class="text-center unitdiff">
+            <span>{{rankingItem.getDiff() > 0 ? '+' : ''}}{{rankingItem.getDiff()}} </span>
+            <span class="d-none d-xl-inline">
+              ({{rankingItem.getScored()}}-{{rankingItem.getReceived()}})
+            </span>
+          </td>
         </tr>
       </ng-template>
     </tbody>

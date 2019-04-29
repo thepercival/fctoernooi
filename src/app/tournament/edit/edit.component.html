@@ -31,7 +31,7 @@
               maxlength="{{validations.maxlengthname}}" placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
         </div>
-        <div *ngIf="!structure.getRootRound().isStarted()" class="form-group row">
+        <div *ngIf="!isStarted" class="form-group row">
           <div class="col-3">
             <label for="dp" class="col-form-label">startdatum</label>
           </div>
@@ -49,13 +49,23 @@
             </div>
           </div>
         </div>
-        <div *ngIf="!structure.getRootRound().isStarted()" class="form-group row">
+        <div *ngIf="!isStarted" class="form-group row">
           <div class="col-3">
             <label for="starttime" class="col-form-label">starttijd</label>
           </div>
           <div class="col-9">
             <ngb-timepicker id="starttime" name="starttime" [formControl]="customForm.controls.time" [spinners]="false"
               required></ngb-timepicker>
+          </div>
+        </div>
+        <div *ngIf="isStarted" class="form-group row">
+          <div class="col-3">
+            <label for="start" class="col-form-label">start</label>
+          </div>
+          <div class="col-9 col-sm-8 col-md-7">
+            <input class="form-control" type="text"
+              placeholder="{{tournament.getCompetition().getStartDateTime().toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12': false,'hour':'2-digit','minute':'2-digit'})}}"
+              readonly>
           </div>
         </div>
         <div class="form-group row">
@@ -72,7 +82,7 @@
             </label>
           </div>
         </div>
-        <div *ngIf="!structure.getRootRound().isStarted() && isTimeEnabled() " class="form-group row">
+        <div *ngIf="!isStarted && isTimeEnabled() " class="form-group row">
           <div class="col-3">
             <label for="togglebreak" class="col-form-label">pauze</label>
           </div>
@@ -87,8 +97,7 @@
             <label class="col-form-label">( tijdens een ronde )</label>
           </div>
         </div>
-        <div *ngIf="!structure.getRootRound().isStarted() && customForm.controls.togglebreak.value === true"
-          class="form-group row">
+        <div *ngIf="isStarted && customForm.controls.togglebreak.value === true" class="form-group row">
           <div class="col-3">
             <label for="breaktime" class="col-form-label">pausetijd</label>
           </div>
@@ -98,8 +107,7 @@
             </ngb-timepicker>
           </div>
         </div>
-        <div *ngIf="!structure.getRootRound().isStarted() && customForm.controls.togglebreak.value"
-          class="form-group row">
+        <div *ngIf="!isStarted && customForm.controls.togglebreak.value" class="form-group row">
           <div class="col-3">
             <label for="breakduration" class="col-form-label">pauseduur</label>
           </div>

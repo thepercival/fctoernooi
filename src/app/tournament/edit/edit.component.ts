@@ -17,6 +17,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
     customForm: FormGroup;
     minDateStruct: NgbDateStruct;
     processing = true;
+    isStarted: boolean;
 
     validations: any = {
         minlengthname: League.MIN_LENGTH_NAME,
@@ -68,6 +69,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
     }
 
     initFields() {
+        this.isStarted = this.structure.getRootRound().isStarted();
         const date = this.tournament.getCompetition().getStartDateTime();
 
         const now = new Date();
