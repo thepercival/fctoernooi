@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../auth/auth.service';
@@ -13,6 +13,8 @@ import { TournamentShell, TournamentShellFilter, TournamentShellRepository } fro
 export class HomeComponent implements OnInit {
   static readonly FUTURE: number = 1;
   static readonly PAST: number = 2;
+
+  @ViewChild('inputsearchname') searchElementRef: ElementRef;
 
   shellsWithRole: TournamentShell[];
   shellsWithRoleFromFour: TournamentShell[];
@@ -137,6 +139,9 @@ export class HomeComponent implements OnInit {
 
   enableSearchFilter() {
     this.searchFilterActive = true;
+    setTimeout(()=>{ // this will make the execution after the above boolean has changed
+      this.searchElementRef.nativeElement.focus();
+    },0);  
     this.publicShells = [];
   }
 
@@ -144,6 +149,7 @@ export class HomeComponent implements OnInit {
     this.searchFilterActive = false;
     this.publicShells = [];
     this.hourRange = { start: this.defaultHourRange.start, end: this.defaultHourRange.start };
+    this.searchFilterName = undefined;
     this.addToPublicShells(HomeComponent.FUTURE, this.defaultHourRange.end - this.defaultHourRange.start);
   }
 

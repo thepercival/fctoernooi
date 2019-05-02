@@ -51,12 +51,11 @@
         <span class="ml-1 d-none d-sm-inline"> herstel</span>
       </button>
     </div>
-    <div *ngIf="searchFilterActive">
+    <form *ngIf="searchFilterActive" name="searchform" (ngSubmit)="false" #f="ngForm" novalidate>    
       <input type="text" class="form-control form-control-search" [ngModel]="searchFilterName"
-        (ngModelChange)="changeSearchFilterName($event)" aria-labelledby="btn-search-tournaments"
+        name="searchFilterName" #inputsearchname (ngModelChange)="changeSearchFilterName($event)" aria-labelledby="btn-search-tournaments"
         placeholder="zoek op toernooinaam">
-    </div>
-
+    </form>
     <table *ngIf="!publicProcessing" class="table">
       <tbody>
         <tr *ngIf="!searchFilterActive" (click)="expandPastDays()" class="pointer">
@@ -83,98 +82,5 @@
 
     <ngb-alert *ngIf="searchFilterActive && ( searchFilterName === undefined || searchFilterName.length < 2)"
       type="info" [dismissible]="false">voer minimaal 2 karakters in</ngb-alert>
-
-
-
-    <!-- <table *ngIf="!processing" class="table">
-      <tbody>
-        <tr *ngIf="!showingFuture" (click)="showFuture()">
-          <td [attr.colspan]="getFutureTextRowspan( true )" class="d-sm-none pointer">
-            <button type="button" class="btn btn-sm btn-outline-info" aria-label="view future tournaments"
-              name="btn-view-future">
-              <fa-icon [icon]="['fas', 'eye']"></fa-icon>
-            </button>
-            <span class="text-info"> toon toernooien die een maand na nu starten</span>
-          </td>
-          <td [attr.colspan]="getFutureTextRowspan( false )" class="d-none d-sm-table-cell pointer">
-            <button type="button" class="btn btn-sm btn-outline-info" aria-label="view future tournaments"
-              name="btn-view-future">
-              <fa-icon [icon]="['fas', 'eye']"></fa-icon>
-            </button>
-            <span class="text-info"> toon toernooien die meer dan een maand na nu starten</span>
-          </td>
-        </tr>
-        <tr *ngFor="let shell of tournamentShells" id="scroll-{{shell.tournamentId}}">
-          <td *ngIf="isLoggedIn()" class="text-left">
-            <button *ngIf="shell.hasEditPermissions" type="button" [routerLink]="['/toernooi', shell.tournamentId]"
-              routerLinkActive="active" class="btn btn-sm btn-outline-primary" aria-label="change tournament"
-              name="btn-change-tournament">
-              <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
-            </button>
-          </td>
-          <td class="pointer" (click)="linkToView(shell)">{{shell.startDateTime.toLocaleString("nl",
-            {"month":"short","day":"2-digit","hour12": false,"hour":"2-digit","minute":"2-digit"}
-            )}}
-          </td>
-          <td class="d-none d-sm-table-cell pointer" (click)="linkToView(shell)">
-            <i *ngIf="iconManager.getIconType(shell.sport) === 'fi'"
-              class="{{iconManager.getIconClass(shell.sport)}}"></i>
-            <fa-icon *ngIf="iconManager.getIconType(shell.sport) === 'fa'"
-              [icon]="['fas', iconManager.getIconClass(shell.sport)]"></fa-icon>
-          </td>
-          <td class="pointer" (click)="linkToView(shell)">{{shell.name}}</td>
-        </tr>
-      </tbody>
-    </table> -->
-
-    <!-- <div *ngIf="!processing container">
-      <h2 class="text-center">
-        toernooien ouder dan {{pastDays}} dagen
-      </h2>
-      <h2 *ngIf="processingSearch" class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-      </h2>
-      <div class="row mb-2 no-gutters" *ngIf="!processingSearch">
-        <div class="col-2 col-sm-4 text-right">
-          <button type="button" name="btn-search-tournaments" id="btn-search-tournaments"
-            class="btn btn-outline-primary" [disabled]="!(searchFilter.name && searchFilter.name.length > 2)"
-            (click)="searchOlderShells()" aria-label="search older tournaments">
-            <fa-icon [icon]="['fas', 'search']"></fa-icon>
-          </button>
-        </div>
-        <div class="col-10 col-sm-8">
-          <input type="text" class="form-control form-control-search-name ml-3" [(ngModel)]="searchFilter.name"
-            aria-labelledby="btn-search-tournaments" placeholder="naam (min. 3 kar.)">
-        </div>
-      </div>
-      <table *ngIf="!processingSearch && searchShells" class="table mt-3">
-        <tbody>
-          <tr *ngIf="hasSearched && searchShells.length === 0">
-            <td colspan="4" class="text-center">
-              geen items gevonden
-            </td>
-          </tr>
-          <tr *ngFor="let shell of searchShells">
-            <td *ngIf="isLoggedIn()" class="text-right">
-              <button *ngIf="shell.hasEditPermissions" type="button" [routerLink]="['/toernooi', shell.tournamentId]"
-                routerLinkActive="active" class="btn btn-sm btn-outline-primary" name="btn-change-tournament">
-                <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
-              </button>
-            </td>
-            <td class="pointer" (click)="linkToView(shell)">{{shell.startDateTime.toLocaleString("nl",
-              {"month":"short","day":"2-digit","hour12": false,"hour":"2-digit","minute":"2-digit"}
-              )}}
-            </td>
-            <td class="d-none d-sm-table-cell pointer" (click)="linkToView(shell)">
-              <i *ngIf="iconManager.getIconType(shell.sport) === 'fi'"
-                class="{{iconManager.getIconClass(shell.sport)}}"></i>
-              <fa-icon *ngIf="iconManager.getIconType(shell.sport) === 'fa'"
-                [icon]="['fas', iconManager.getIconClass(shell.sport)]"></fa-icon>
-            </td>
-            <td class="pointer" (click)="linkToView(shell)">{{shell.name}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div> -->
   </div>
 </div>

@@ -1,9 +1,9 @@
-<div class="row no-gutters">
-  <div class="col-6 pr-4">
+<div class="d-flex justify-content-between">
+  <div class="pr-5">
     <ng-container *ngTemplateOutlet="pouleRanking;context:{$implicit: screen.getFirstPoule()}">
     </ng-container>
-  </div>
-  <div class="col-6 pl-4">
+  </div>  
+  <div class="pl-5">
     <ng-container *ngTemplateOutlet="pouleRanking;context:{$implicit: screen.getLastPoule()}">
     </ng-container>
   </div>

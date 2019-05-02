@@ -1,6 +1,6 @@
 import { Game, NameService, PlanningService, Poule, RoundNumber, Structure } from 'ngx-sport';
 
-import { EndRankingScreen, PlayedGamesScreen, PoulesRankingScreen, Screen, SponsorScreenService } from './liveboard/screens';
+import { EndRankingScreen, PlayedGamesScreen, PoulesRankingScreen, Screen, SponsorScreenService, CreatedAndInplayGamesScreen } from './liveboard/screens';
 import { Tournament } from './tournament';
 
 export class Liveboard {
@@ -15,12 +15,12 @@ export class Liveboard {
 
         if (screenfilter === undefined) {
             const createdAndInplayGamesScreens = this.getScreensForGamesCreatedAndInplay();
-            screens = screens.concat(createdAndInplayGamesScreens);
+            // screens = screens.concat(createdAndInplayGamesScreens);
 
-            const playedGamesScreen = this.getScreenForGamesPlayed();
-            if (playedGamesScreen !== undefined) {
-                screens.push(playedGamesScreen);
-            }
+            // const playedGamesScreen = this.getScreenForGamesPlayed();
+            // if (playedGamesScreen !== undefined) {
+            //     screens.push(playedGamesScreen);
+            // }
             const pouleRankingsScreens = this.getScreensForPouleRankings();
             let currentNrOfPouleRankingsScreens = 0;
             pouleRankingsScreens.forEach(pouleRankingScreen => {
@@ -44,21 +44,31 @@ export class Liveboard {
     getScreensForGamesCreatedAndInplay(): Screen[] {
         const games: Game[] = this.getGamesCreatedAndInplay();
         if (games.length === 0) {
-            return undefined;
-        }
-        return [];
+            return [];
+        }        
 
+        const screens: Screen[] = [];
         // while (games.length > 0) {
-        //     // get maxlines of it
+            screens.push( new CreatedAndInplayGamesScreen(games) );
         // }
-        // return new CreatedAndInplayGamesScreen(games);
+        return screens;
     }
 
     getGamesCreatedAndInplay(): Game[] {
-        return this.getGamesCreatedAndInplayHelper(this.structure.getFirstRoundNumber());
+        const firstRoundNuber = this.structure.getFirstRoundNumber();
+        // const maxScreens
+        return this.getGamesCreatedAndInplayHelper(firstRoundNuber);
     }
 
+    
     getGamesCreatedAndInplayHelper(roundNumber: RoundNumber): Game[] {
+        // if( roundNumber.getState() === Game.STATE_PLAYED ) {
+        //     if( roundNumber.hasNext() ) {
+        //         return this.getGamesCreatedAndInplayHelper(roundNumber.getNext());
+        //     }
+        //     return [];
+        // }
+
         // @TODO every competitor should be listed at least once in one of the scheduled - games - screens
         // create a list with competitors
         // remove competitors from games unit there are no competitors left, than stop
@@ -68,9 +78,17 @@ export class Liveboard {
         games = games.filter(game => game.getState() !== Game.STATE_PLAYED &&
             (!roundNumber.getConfig().getEnableTime() || game.getStartDateTime() > now)
         );
+
+        // aantal wedstrijden per rondenummber < this.maxLines
+
+
         if (games.length < this.maxLines && roundNumber.hasNext()) {
             games = games.concat(this.getGamesCreatedAndInplayHelper(roundNumber.getNext()));
         }
+
+
+
+
         if (games.length > this.maxLines) {
             games = games.splice(0, this.maxLines);
         }
