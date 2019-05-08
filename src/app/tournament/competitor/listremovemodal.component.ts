@@ -19,7 +19,7 @@ export class TournamentListRemoveModalComponent {
 
     allCompetitorsQualifyForNextRound() {
         const rootRound = this.poulePlace.getPoule().getRound();
-        return rootRound.getPoulePlaces().length <= rootRound.getNrOfPlacesChildRounds();
+        return rootRound.getPoulePlaces().length <= rootRound.getNrOfPlacesChildren();
     }
 
     allPoulePlacesHaveCompetitor() {

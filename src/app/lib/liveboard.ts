@@ -175,8 +175,7 @@ export class Liveboard {
         if (this.structure.getLastRoundNumber().getState() !== Game.STATE_PLAYED) {
             return screens;
         }
-        let nrOfItems = 0;
-        this.structure.getRootRound().getPoules().forEach(poule => nrOfItems += poule.getPlaces().length);
+        const nrOfItems = this.structure.getRootRound().getNrOfPlaces();
         for (let currentRank = 0; currentRank + this.maxLines <= nrOfItems; currentRank += this.maxLines) {
             const endRank = currentRank + this.maxLines > nrOfItems ? nrOfItems : currentRank + this.maxLines;
             screens.push(new EndRankingScreen(currentRank + 1, endRank));

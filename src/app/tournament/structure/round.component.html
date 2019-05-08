@@ -82,12 +82,20 @@
       <p *ngIf="editable && alert">
         <ngb-alert [dismissible]="false" [type]="alert.type">{{ alert.message }}</ngb-alert>
       </p>
+
+      <!-- test -->
       <div class="d-flex flex-wrap justify-content-around">
-        <ul *ngFor="let poule of round.getPoules();" class="list-group mb-3">
-          <li class="list-group-item px-2 px-sm-3">{{nameService.getPouleName( poule, false)}}</li>
-          <li *ngFor="let place of poule.getPlaces();" class="list-group-item px-2 px-sm-3 bg-transparent {{getClassForPoulePlace(place)}}">{{nameService.getPoulePlaceFromName(
-            place, false)}}</li>
-        </ul>
+          <div *ngFor="let poule of round.getPoules();" class="flex-item">
+              {{nameService.getPouleName( poule, false)}}
+            </div>
+      </div>
+
+      <div class="d-flex flex-wrap justify-content-around">
+          <ul *ngFor="let poule of round.getPoules();" class="list-group mb-3">
+              <li class="list-group-item px-2 px-sm-3">{{nameService.getPouleName( poule, false)}}</li>
+              <li *ngFor="let place of poule.getPlaces();" style="margin-top: 5px;" class="list-group-item px-2 px-sm-3 bg-transparent {{getClassForPoulePlace(place)}}">{{nameService.getPoulePlaceFromName(
+                place, false)}}</li>
+            </ul>
       </div>
     </div>
   </div>
@@ -111,7 +119,7 @@
     </div>
   </div>
   <div class="row text-center no-gutters">
-    <app-tournament-structureround *ngFor="let childRound of round.getChildRounds()" class="mb-2" [ngStyle]="{ 'width': (100/round.getChildRounds().length) + '%' }"
+    <app-tournament-structureround *ngFor="let childRound of round.getChildren()" class="mb-2" [ngStyle]="{ 'width': (100/round.getNrOfChildren()) + '%' }"
       [round]="childRound" [editable]="editable" (roundNumberChanged)="roundNumberChanged.emit($event)"></app-tournament-structureround>
   </div>
   <div *ngIf="!round.isRoot() && round.getPoulePlaces().length === 2">

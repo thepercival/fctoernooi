@@ -57,11 +57,11 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
     }
 
     competitorsComplete(): boolean {
-        return this.structure.getRootRound().getCompetitors().length === this.structure.getRootRound().getPoulePlaces().length;
+        return this.structure.getFirstRoundNumber().getNrOfCompetitors() === this.structure.getFirstRoundNumber().getNrOfPlaces();
     }
 
     someCompetitorsRegistered(): boolean {
-        const competitors = this.structure.getRootRound().getCompetitors();
+        const competitors = this.structure.getFirstRoundNumber().getCompetitors();
         return competitors.some(competitor => competitor.getRegistered()) && !competitors.every(competitor => competitor.getRegistered());
     }
 

@@ -50,7 +50,7 @@
             </p>
             <p class="card-text" *ngIf="!competitorsComplete()">
               <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> vul de namen in
-              ({{structure.getRootRound().getCompetitors().length}}/{{structure.getRootRound().getPoulePlaces().length}})
+              ({{structure.getFirstRoundNumber().getNrOfCompetitors()}}/{{structure.getFirstRoundNumber().getNrOfPlaces()}})
             </p>
           </div>
         </div>
@@ -59,10 +59,10 @@
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijden
             </h5>
-            <p class="card-text" *ngIf="structure.getRootRound().getGames().length > 0">
+            <p class="card-text" *ngIf="structure.getFirstRoundNumber().getNrOfGames() > 0">
               <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> wedstrijden ingepland
             </p>
-            <p class="card-text" *ngIf="structure.getRootRound().getGames().length === 0">
+            <p class="card-text" *ngIf="structure.getFirstRoundNumber().getNrOfGames() === 0">
               <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> plan wedstrijden in
             </p>
           </div>

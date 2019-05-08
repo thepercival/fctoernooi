@@ -60,7 +60,7 @@ export class TournamentStructureComponent extends TournamentComponent implements
   }
 
   createClonedStructure(structure: Structure): Structure {
-    this.originalCompetitors = structure.getRootRound().getCompetitors();
+    this.originalCompetitors = structure.getFirstRoundNumber().getCompetitors();
     return cloneDeep(structure);
   }
 

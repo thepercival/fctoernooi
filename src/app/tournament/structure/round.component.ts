@@ -52,7 +52,7 @@ export class TournamentStructureRoundComponent {
   }
 
   getWinnersLosersDescription(winnersOrLosers: number): string {
-    return Round.getWinnersLosersDescription(winnersOrLosers, true);
+    return this.nameService.getWinnersLosersDescription(winnersOrLosers, true);
   }
 
   canExpand(): boolean {
@@ -117,12 +117,14 @@ export class TournamentStructureRoundComponent {
   }
 
   getMaxSliderValue(winnersOrLosers: number): number {
-    const opposing = Round.getOpposing(winnersOrLosers);
-    const max = this.round.getNrOfPlaces() - this.round.getNrOfPlacesChildRound(opposing);
-    if (max < 1) {
-      return 1;
-    }
-    return max;
+    console.error('getMaxSliderValue');
+    return 0;
+    // const opposing = Round.getOpposing(winnersOrLosers);
+    // const max = this.round.getNrOfPlaces() - this.round.getNrOfPlacesChildRound(opposing);
+    // if (max < 1) {
+    //   return 1;
+    // }
+    // return max;
   }
 
   getClassPostfix(winnersOrLosers: number): string {
@@ -155,25 +157,41 @@ export class TournamentStructureRoundComponent {
     this.getStructureService().setMaxNrOfPoulePlacesForChildRound(maxNrOfPlaces);
   }
 
-  protected calcMaxNrOfPlacesPerPoule(parentRound: Round, winnersOrLosers: number): number {
-    const nrOfChildRoundPlaces = parentRound.getNrOfPlacesChildRound(winnersOrLosers);
-    const childRound = parentRound.getChildRound(winnersOrLosers);
-    if (childRound === undefined) {
-      return 2;
+  getPlaceNumbers(round: Round): number[] {
+    const placeNumbers: number[] = [];
+    const nrOfPlacesPerPoule = this.structureService.getNrOfPlacesPerPoule(round.getNrOfPlaces(), round.getPoules().length );
+    for( let placeNr = 0 ; placeNr < nrOfPlacesPerPoule ; placeNr++ ) {
+      placeNumbers.push(placeNr);
     }
-    const structureService = this.getStructureService();
-    return structureService.getNrOfPlacesPerPoule(nrOfChildRoundPlaces, childRound.getPoules().length);
+    return placeNumbers;    
+  }
+
+  getNrOfPlacesPerPoule(round: Round) {
+    this.structureService.getNrOfPlacesPerPoule(round.getNrOfPlaces(), round.getPoules().length );
+  }  
+
+  protected calcMaxNrOfPlacesPerPoule(parentRound: Round, winnersOrLosers: number): number {
+    console.error('calcMaxNrOfPlacesPerPoule');
+    return 0;
+    // const nrOfChildRoundPlaces = parentRound.getNrOfPlacesChildRound(winnersOrLosers);
+    // const childRound = parentRound.getChildRound(winnersOrLosers);
+    // if (childRound === undefined) {
+    //   return 2;
+    // }
+    // const structureService = this.getStructureService();
+    // return structureService.getNrOfPlacesPerPoule(nrOfChildRoundPlaces, childRound.getPoules().length);
   }
 
   public onSliderChange(nrOfChildPlacesNew: number, winnersOrLosers: number) {
-    if ((nrOfChildPlacesNew + this.round.getNrOfPlacesChildRound(Round.getOpposing(winnersOrLosers))) > this.round.getNrOfPlaces()) {
-      return;
-    }
-    this.getStructureService().changeNrOfPlacesChildRound(nrOfChildPlacesNew, this.round, winnersOrLosers);
-    // this.getPlanningService().create(this.round.getNumber());
-    if (this.round.getNumber().hasNext()) {
-      this.roundNumberChanged.emit(this.round.getNumber().getNext());
-    }
+    console.error('onSliderChange, do only something when letting loose');
+    // if ((nrOfChildPlacesNew + this.round.getNrOfPlacesChildRound(Round.getOpposing(winnersOrLosers))) > this.round.getNrOfPlaces()) {
+    //   return;
+    // }
+    // this.getStructureService().changeNrOfPlacesChildRound(nrOfChildPlacesNew, this.round, winnersOrLosers);
+    // // this.getPlanningService().create(this.round.getNumber());
+    // if (this.round.getNumber().hasNext()) {
+    //   this.roundNumberChanged.emit(this.round.getNumber().getNext());
+    // }
   }
 
   endSliding(nrOfChildPlaces: number, winnersOrLosers: number) {
@@ -181,29 +199,35 @@ export class TournamentStructureRoundComponent {
   }
 
   checkRoundWithOnePoulePlace(nrOfPoulePlacesChildRound: number, winnersOrLosers: number) {
-    if (nrOfPoulePlacesChildRound !== 1 || this.round.getNrOfPlacesChildRound(winnersOrLosers) !== 1) {
-      return;
-    }
+    console.log('checkRoundWithOnePoulePlace');
+    // if (nrOfPoulePlacesChildRound !== 1 || this.round.getNrOfPlacesChildren(winnersOrLosers) !== 1) {
+    //   return;
+    // }
     const nextRoundNumber = this.round.getNumber().getNext();
     this.getStructureService().removeChildRound(this.round, winnersOrLosers);
     this.roundNumberChanged.emit(nextRoundNumber);
   }
 
   canChangeQualifyOrder(): boolean {
-    return !this.round.hasCustomQualifyOrder() &&
-      this.round.getPoules().length >= 2 /*&& (this.round.getNumber().getRounds().length - 1) <= 1*/;
+    console.error('canChangeQualifyOrder');
+    return true;
+    // !this.round.hasCustomQualifyOrder() &&
+    //   this.round.getPoules().length >= 2 /*&& (this.round.getNumber().getRounds().length - 1) <= 1*/;
   }
 
   toggleQualifyOrder(round: Round) {
-    this.resetAlert();
-    round.setQualifyOrder(this.qualifyOrderIsCross(round) ? Round.QUALIFYORDER_RANK : Round.QUALIFYORDER_CROSS);
-    this.getStructureService().recalculateQualifyRulesForRound(round);
-    // this.getPlanningService().create(round.getNumber());
-    this.roundNumberChanged.emit(round.getNumber());
+    console.error('toggleQualifyOrder');
+    // this.resetAlert();
+    // round.setQualifyOrder(this.qualifyOrderIsCross(round) ? Round.QUALIFYORDER_RANK : Round.QUALIFYORDER_CROSS);
+    // this.getStructureService().recalculateQualifyRulesForRound(round);
+    // // this.getPlanningService().create(round.getNumber());
+    // this.roundNumberChanged.emit(round.getNumber());
   }
 
   qualifyOrderIsCross(round: Round) {
-    return round.getQualifyOrder() === Round.QUALIFYORDER_CROSS;
+    console.error('qualifyOrderIsCross');
+    return true;
+    // return round.getQualifyOrder() === Round.QUALIFYORDER_CROSS;
   }
 
   getDivisionClasses(round: Round): string {

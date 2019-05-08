@@ -178,12 +178,13 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         if (game !== undefined) {
             return game;
         }
-
-        game = this.getGameById(id, round.getChildRound(Round.WINNERS));
-        if (game !== undefined) {
-            return game;
-        }
-        return this.getGameById(id, round.getChildRound(Round.LOSERS));
+        console.error('getGameById');
+        // // game = this.getGameById(id, round.getChildRound(Round.WINNERS));
+        // // if (game !== undefined) {
+        // //     return game;
+        // // }
+        // return this.getGameById(id, round.getChildRound(Round.LOSERS));
+        return undefined;
     }
 
     protected initScores(game?: Game) {
@@ -296,16 +297,16 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         const equalPouleItems = this.getEqualPouleRankingItems(pouleRankingItems);
         const postFix = '(' + this.nameService.getPouleName(this.game.getPoule(), true) + ')';
         let warnings: string[] = this.getWarningsForEqualsInQualificationHelper(equalPouleItems, postFix);
-
-        round.getChildRounds().forEach(childRound => {
-            const qualifyRules = this.getRulesToProcess(childRound, this.game.getPoule(), Game.STATE_CREATED, Game.STATE_CREATED);
-            qualifyRules.filter(qualifyRule => qualifyRule.isMultiple()).forEach(multipleRule => {
-                const ruleRankingItems = ranking.getItemsForMultipleRule(multipleRule);
-                const equalRuleItems = this.getEqualRuleRankingItems(multipleRule, ruleRankingItems);
-                const postFix = '(' + this.nameService.getQualifyRuleName(multipleRule) + ')';
-                warnings = warnings.concat(this.getWarningsForEqualsInQualificationHelper(equalRuleItems, postFix));
-            });
-        });
+console.error('getWarningsForEqualsInQualification');
+        // round.getChildRounds().forEach(childRound => {
+        //     const qualifyRules = this.getRulesToProcess(childRound, this.game.getPoule(), Game.STATE_CREATED, Game.STATE_CREATED);
+        //     qualifyRules.filter(qualifyRule => qualifyRule.isMultiple()).forEach(multipleRule => {
+        //         const ruleRankingItems = ranking.getItemsForMultipleRule(multipleRule);
+        //         const equalRuleItems = this.getEqualRuleRankingItems(multipleRule, ruleRankingItems);
+        //         const postFix = '(' + this.nameService.getQualifyRuleName(multipleRule) + ')';
+        //         warnings = warnings.concat(this.getWarningsForEqualsInQualificationHelper(equalRuleItems, postFix));
+        //     });
+        // });
 
         return warnings;
     }
@@ -375,55 +376,56 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         //     this.game.setStartDateTime(startdate);
         // }
 
-        this.gameRepository.editObject(this.game, this.game.getPoule())
-            .subscribe(
-                /* happy path */ gameRes => {
-                    this.game = gameRes;
+        console.error(' this.gameRepository.editObject');
+        // this.gameRepository.editObject(this.game, this.game.getPoule())
+        //     .subscribe(
+        //         /* happy path */ gameRes => {
+        //             this.game = gameRes;
 
-                    const currentQualifiedPoulePlaces: PoulePlace[] = [];
-                    this.game.getRound().getChildRounds().forEach(childRound => {
-                        childRound.getPoulePlaces().forEach(poulePlace => {
-                            currentQualifiedPoulePlaces.push(poulePlace);
-                        });
-                    });
-                    const newQualifiers: INewQualifier[] = [];
+        //             const currentQualifiedPoulePlaces: PoulePlace[] = [];
+        //             this.game.getRound().getChildRounds().forEach(childRound => {
+        //                 childRound.getPoulePlaces().forEach(poulePlace => {
+        //                     currentQualifiedPoulePlaces.push(poulePlace);
+        //                 });
+        //             });
+        //             const newQualifiers: INewQualifier[] = [];
 
-                    this.game.getRound().getChildRounds().forEach(childRound => {
-                        const qualService = new QualifyService(childRound.getParent(), childRound, this.tournament.getCompetition().getRuleSet());
-                        const qualifyRules = this.getRulesToProcess(childRound, this.game.getPoule(), Game.STATE_CREATED, Game.STATE_CREATED);
+        //             this.game.getRound().getChildRounds().forEach(childRound => {
+        //                 const qualService = new QualifyService(childRound.getParent(), childRound, this.tournament.getCompetition().getRuleSet());
+        //                 const qualifyRules = this.getRulesToProcess(childRound, this.game.getPoule(), Game.STATE_CREATED, Game.STATE_CREATED);
 
-                        qualService.getNewQualifiers(qualifyRules).forEach((newQualifier) => {
-                            newQualifiers.push(newQualifier);
-                        });
-                    });
-                    const changedPoulePlaces = this.setCompetitors(newQualifiers, currentQualifiedPoulePlaces);
-                    if (changedPoulePlaces.length > 0) {
-                        const reposUpdates = [];
-                        changedPoulePlaces.forEach((changedPoulePlace) => {
-                            reposUpdates.push(this.poulePlaceRepository.editObject(changedPoulePlace, changedPoulePlace.getPoule()));
-                        });
+        //                 qualService.getNewQualifiers(qualifyRules).forEach((newQualifier) => {
+        //                     newQualifiers.push(newQualifier);
+        //                 });
+        //             });
+        //             const changedPoulePlaces = this.setCompetitors(newQualifiers, currentQualifiedPoulePlaces);
+        //             if (changedPoulePlaces.length > 0) {
+        //                 const reposUpdates = [];
+        //                 changedPoulePlaces.forEach((changedPoulePlace) => {
+        //                     reposUpdates.push(this.poulePlaceRepository.editObject(changedPoulePlace, changedPoulePlace.getPoule()));
+        //                 });
 
-                        forkJoin(reposUpdates).subscribe(results => {
-                            this.navigateBack();
-                            this.processing = false;
-                        },
-                            err => {
-                                this.processing = false;
-                                this.setAlert('danger', 'de wedstrijd is niet opgeslagen: ' + err);
-                            }
-                        );
-                    } else {
-                        this.navigateBack();
-                    }
-                },
-             /* error path */ e => { this.setAlert('danger', 'de wedstrijd kan niet worden opgeslagen: ' + e); this.processing = false; },
-                // /* onComplete */() => {
-                //     if (!stateChanged && !scoreChanged) {
-                //             this.processing = false;
-                //             this.setAlert('success', 'de wedstrijd is opgeslagen');
-                //         }
-                //     }
-            );
+        //                 forkJoin(reposUpdates).subscribe(results => {
+        //                     this.navigateBack();
+        //                     this.processing = false;
+        //                 },
+        //                     err => {
+        //                         this.processing = false;
+        //                         this.setAlert('danger', 'de wedstrijd is niet opgeslagen: ' + err);
+        //                     }
+        //                 );
+        //             } else {
+        //                 this.navigateBack();
+        //             }
+        //         },
+        //      /* error path */ e => { this.setAlert('danger', 'de wedstrijd kan niet worden opgeslagen: ' + e); this.processing = false; },
+        //         // /* onComplete */() => {
+        //         //     if (!stateChanged && !scoreChanged) {
+        //         //             this.processing = false;
+        //         //             this.setAlert('success', 'de wedstrijd is opgeslagen');
+        //         //         }
+        //         //     }
+        //     );
         return false;
     }
 

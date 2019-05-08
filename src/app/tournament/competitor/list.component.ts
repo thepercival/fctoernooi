@@ -71,6 +71,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   ngAfterViewChecked() {
+    console.error("scroll()");
     // this.myNavigation.scroll();
   }
 
@@ -178,14 +179,14 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     });
   }
 
-  hasMinimumNrOfPlacesPerPoule() {
+  hasMinimumNrOfPlacesPerPoule(): boolean {
     const rootRound = this.structure.getRootRound();
     return (rootRound.getPoules().length * 2) === rootRound.getPoulePlaces().length;
   }
 
-  hasNoDropouts() {
+  hasNoDropouts(): boolean {
     const rootRound = this.structure.getRootRound();
-    return rootRound.getPoulePlaces().length <= rootRound.getNrOfPlacesChildRounds();
+    return rootRound.getPoulePlaces().length <= rootRound.getNrOfPlacesChildren();
   }
 
   /**
