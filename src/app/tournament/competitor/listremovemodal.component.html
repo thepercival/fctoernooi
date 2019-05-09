@@ -30,28 +30,32 @@
         </div>
     </div>
 </div>
-<div *ngIf="hasMinimumNrOfPlacesPerPoule() || allCompetitorsQualifyForNextRound()" class="modal-footer justify-content-around">
-    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" (click)="activeModal.close('to-structure')">naar
+<div *ngIf="hasMinimumNrOfPlacesPerPoule() || allCompetitorsQualifyForNextRound()"
+    class="modal-footer justify-content-around">
+    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+        (click)="activeModal.close('to-structure')">naar
         <i class="fi flaticon-structure"></i> indeling</button>
-    <button *ngIf="poulePlace.getCompetitor() !== undefined" type="button" class="btn btn-outline-secondary" data-dismiss="modal"
-        (click)="activeModal.close('remove-competitor')">
+    <button *ngIf="poulePlace.getCompetitor() !== undefined" type="button" class="btn btn-outline-secondary"
+        data-dismiss="modal" (click)="activeModal.close('remove-competitor')">
         <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon> <span> deelnemer</span>
         <span class="d-none d-sm-inline"> verwijderen</span>
     </button>
-    <button *ngIf="poulePlace.getCompetitor() === undefined" type="button" class="btn btn-secondary" data-dismiss="modal"
-        (click)="activeModal.close('close')">sluiten</button>
+    <button *ngIf="poulePlace.getCompetitor() === undefined" type="button" class="btn btn-outline-secondary"
+        data-dismiss="modal" (click)="activeModal.close('close')">sluiten</button>
 </div>
 
-<div *ngIf="!hasMinimumNrOfPlacesPerPoule() && !allCompetitorsQualifyForNextRound()" class="modal-footer justify-content-around">
-    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" (click)="activeModal.close('remove-pouleplace')">
+<div *ngIf="!hasMinimumNrOfPlacesPerPoule() && !allCompetitorsQualifyForNextRound()"
+    class="modal-footer justify-content-around">
+    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+        (click)="activeModal.close('remove-pouleplace')">
         <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon><span> pouleplek</span>
         <span class="d-none d-sm-inline"> verwijderen</span>
     </button>
-    <button *ngIf="poulePlace.getCompetitor() !== undefined" type="button" class="btn btn-outline-secondary" data-dismiss="modal"
-        (click)="activeModal.close('remove-competitor')">
+    <button *ngIf="poulePlace.getCompetitor() !== undefined" type="button" class="btn btn-outline-secondary"
+        data-dismiss="modal" (click)="activeModal.close('remove-competitor')">
         <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon> <span> deelnemer</span>
         <span class="d-none d-sm-inline"> verwijderen</span>
     </button>
-    <button *ngIf="poulePlace.getCompetitor() === undefined" type="button" class="btn btn-secondary" data-dismiss="modal"
-        (click)="activeModal.close('close')">sluiten</button>
+    <button *ngIf="poulePlace.getCompetitor() === undefined" type="button" class="btn btn-outline-secondary"
+        data-dismiss="modal" (click)="activeModal.close('close')">sluiten</button>
 </div>

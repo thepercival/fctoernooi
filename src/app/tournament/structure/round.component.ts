@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NameService, PoulePlace, Round, RoundNumber, StructureService } from 'ngx-sport';
 import { max } from 'rxjs/operators';
 
 import { Tournament } from '../../lib/tournament';
+import { TournamentStructureQualificationModalComponent } from './qualificationmodal.component';
 
 @Component({
   selector: 'app-tournament-structureround',
@@ -15,22 +17,9 @@ export class TournamentStructureRoundComponent {
   @Output() roundNumberChanged = new EventEmitter<RoundNumber>();
   @Input() editable: boolean;
   public alert: any;
-  public sliderValueDummy = 3;
   private structureService: StructureService;
-  public uiSliderConfigWinners: any = {
-    behaviour: 'drag',
-    margin: 1,
-    step: 1,
-    tooltips: [true]
-  };
-  public uiSliderConfigLosers: any = {
-    behaviour: 'drag',
-    margin: 1,
-    step: 1,
-    tooltips: [true]
-  };
 
-  constructor(public nameService: NameService) {
+  constructor(public nameService: NameService, private modalService: NgbModal) {
     this.resetAlert();
     this.structureService = new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
   }
@@ -45,10 +34,6 @@ export class TournamentStructureRoundComponent {
 
   private getStructureService(): StructureService {
     return this.structureService;
-  }
-
-  getWinnersLosersName(winnersOrLosers: number): string {
-    return winnersOrLosers === Round.WINNERS ? 'winners' : 'losers';
   }
 
   getWinnersLosersDescription(winnersOrLosers: number): string {
@@ -159,16 +144,16 @@ export class TournamentStructureRoundComponent {
 
   getPlaceNumbers(round: Round): number[] {
     const placeNumbers: number[] = [];
-    const nrOfPlacesPerPoule = this.structureService.getNrOfPlacesPerPoule(round.getNrOfPlaces(), round.getPoules().length );
-    for( let placeNr = 0 ; placeNr < nrOfPlacesPerPoule ; placeNr++ ) {
+    const nrOfPlacesPerPoule = this.structureService.getNrOfPlacesPerPoule(round.getNrOfPlaces(), round.getPoules().length);
+    for (let placeNr = 0; placeNr < nrOfPlacesPerPoule; placeNr++) {
       placeNumbers.push(placeNr);
     }
-    return placeNumbers;    
+    return placeNumbers;
   }
 
   getNrOfPlacesPerPoule(round: Round) {
-    this.structureService.getNrOfPlacesPerPoule(round.getNrOfPlaces(), round.getPoules().length );
-  }  
+    this.structureService.getNrOfPlacesPerPoule(round.getNrOfPlaces(), round.getPoules().length);
+  }
 
   protected calcMaxNrOfPlacesPerPoule(parentRound: Round, winnersOrLosers: number): number {
     console.error('calcMaxNrOfPlacesPerPoule');
@@ -243,5 +228,17 @@ export class TournamentStructureRoundComponent {
       classes += ' more-than-eight-rounds';
     }
     return classes;
+  }
+
+  openQualificationModal(round: Round) {
+    const activeModal = this.modalService.open(TournamentStructureQualificationModalComponent/*, { windowClass: 'border-warning' }*/);
+    const specifiedModal = (<TournamentStructureQualificationModalComponent>activeModal.componentInstance);
+    specifiedModal.init(round);
+
+    activeModal.result.then((result) => {
+      // this.helpModalShownOnDevice();
+    }, (reason) => {
+      // this.helpModalShownOnDevice();
+    });
   }
 }

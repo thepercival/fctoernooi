@@ -1,8 +1,8 @@
 <div [ngStyle]="{ 'height': viewHeight + 'vh' }">
   <div *ngFor="let sponsorGroup of sponsorGroups" class="d-flex  justify-content-around"
     [ngStyle]="{ 'height': getRowViewHeight() + 'vh' }">
-    <div *ngFor="let sponsor of sponsorGroup" [ngClass]="{ 'card-dummy': sponsor === undefined }"
-      class="card mb-3 mx-2 bg-transparent" [ngStyle]="{ 'width': getColumnViewWidth(sponsorGroup) + 'vw' }">
+    <div *ngFor="let sponsor of sponsorGroup" [ngClass]="{ 'card-dummy': sponsor === undefined }" class="card mb-3 mx-2"
+      [ngStyle]="{ 'width': getColumnViewWidth(sponsorGroup) + 'vw' }">
       <div *ngIf="sponsor !== undefined" class="row no-gutters card-body-custom">
         <div *ngIf="sponsor.getLogoUrl()" class="col-md-5 col-lg-4 col-xl-3">
           <img src="{{sponsor.getLogoUrl()}}" class="card-img" alt="img">

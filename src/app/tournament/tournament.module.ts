@@ -6,57 +6,54 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faProductHunt } from '@fortawesome/free-brands-svg-icons';
 import { faCheckSquare, faSquare } from '@fortawesome/free-regular-svg-icons';
 import {
-  faArrowsAltH,
-  faCheckCircle,
-  faCircle,
-  faCogs,
-  faCompress,
-  faCopy,
-  faExpand,
-  faInfoCircle,
-  faLink,
-  faListUl,
-  faMedal,
-  faMinus,
-  faMoneyBillAlt,
-  faPrint,
-  faQrcode,
-  faRandom,
-  faSort,
-  faTimesCircle,
-  faTrashAlt,
-  faUsers,
-  faUserTag,
+    faCheckCircle,
+    faCircle,
+    faCogs,
+    faCopy,
+    faInfoCircle,
+    faLink,
+    faListUl,
+    faMedal,
+    faMinus,
+    faMoneyBillAlt,
+    faPrint,
+    faQrcode,
+    faRandom,
+    faSort,
+    faTimesCircle,
+    faTrashAlt,
+    faUnlink,
+    faUsers,
+    faUserTag,
 } from '@fortawesome/free-solid-svg-icons';
 import {
-  NgbAlertModule,
-  NgbCollapseModule,
-  NgbDatepickerModule,
-  NgbModalModule,
-  NgbPopoverModule,
-  NgbTimepickerModule,
+    NgbAlertModule,
+    NgbCollapseModule,
+    NgbDatepickerModule,
+    NgbModalModule,
+    NgbPopoverModule,
+    NgbTimepickerModule,
 } from '@ng-bootstrap/ng-bootstrap';
-import { NouisliderModule } from 'ng2-nouislider';
 import {
-  CompetitorMapper,
-  CompetitorRepository,
-  GameMapper,
-  GamePoulePlaceMapper,
-  GameRepository,
-  GameScoreMapper,
-  PlanningRepository,
-  PouleMapper,
-  PoulePlaceMapper,
-  PoulePlaceRepository,
-  QualifyRuleRepository,
-  RoundMapper,
-  RoundNumberConfigMapper,
-  RoundNumberConfigRepository,
-  RoundNumberConfigScoreMapper,
-  RoundNumberMapper,
-  RoundRepository,
-  StructureMapper,
-  StructureRepository,
+    CompetitorMapper,
+    CompetitorRepository,
+    GameMapper,
+    GamePoulePlaceMapper,
+    GameRepository,
+    GameScoreMapper,
+    PlanningRepository,
+    PouleMapper,
+    PoulePlaceMapper,
+    PoulePlaceRepository,
+    QualifyRuleRepository,
+    RoundMapper,
+    RoundNumberConfigMapper,
+    RoundNumberConfigRepository,
+    RoundNumberConfigScoreMapper,
+    RoundNumberMapper,
+    RoundRepository,
+    StructureMapper,
+    StructureRepository,
 } from 'ngx-sport';
 
 import { EscapeHtmlPipe } from '../common/escapehtmlpipe';
@@ -86,8 +83,8 @@ import { TournamentRoundNumberViewComponent } from './roundnumber/rnview.compone
 import { RoundsSettingsComponent } from './settings/rounds.component';
 import { TournamentSponsorEditComponent } from './sponsor/edit.component';
 import { SponsorListComponent } from './sponsor/list.component';
-import { TournamentStructureHelpModalComponent } from './structure/helpmodal.component';
 import { TournamentStructureComponent } from './structure/main.component';
+import { TournamentStructureQualificationModalComponent } from './structure/qualificationmodal.component';
 import { TournamentStructureRoundComponent } from './structure/round.component';
 import { TournamentStructureViewComponent } from './structure/view.component';
 import { TournamentRoutingModule } from './tournament-routing.module';
@@ -95,8 +92,7 @@ import { TournamentViewComponent } from './view/view.component';
 
 library.add(
   faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus,
-  faExpand, faCompress, faPrint, faSort, faRandom, faSquare, faCheckSquare, faArrowsAltH,
-  faUserTag, faInfoCircle, faMedal, faProductHunt, faLink, faUsers, faQrcode, faCopy
+  faUnlink, faPrint, faSort, faRandom, faSquare, faCheckSquare, faUserTag, faInfoCircle, faMedal, faProductHunt, faLink, faUsers, faQrcode, faCopy
 );
 
 @NgModule({
@@ -105,7 +101,6 @@ library.add(
     FormsModule,
     TournamentRoutingModule,
     NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule,
-    NouisliderModule,
     ReactiveFormsModule,
     FontAwesomeModule
   ],
@@ -136,12 +131,12 @@ library.add(
     TournamentRefereeEditComponent,
     TournamentSponsorEditComponent,
     TournamentFilterComponent,
-    TournamentStructureHelpModalComponent,
+    TournamentStructureQualificationModalComponent,
     TournamentListRemoveModalComponent,
     ProgressComponent,
     EscapeHtmlPipe
   ],
-  entryComponents: [TournamentStructureHelpModalComponent, TournamentListRemoveModalComponent],
+  entryComponents: [TournamentStructureQualificationModalComponent, TournamentListRemoveModalComponent],
   providers: [
     RoleMapper,
     StructureRepository,

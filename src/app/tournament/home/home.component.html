@@ -247,7 +247,7 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" [disabled]="allPrintOptionsOff()" data-dismiss="modal"
+    <button type="button" class="btn btn-outline-secondary" [disabled]="allPrintOptionsOff()" data-dismiss="modal"
       (click)="modal.close('print')">afdrukken</button>
   </div>
 </ng-template>
@@ -285,7 +285,8 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.close('copy')">gaan</button>
+    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+      (click)="modal.close('copy')">gaan</button>
   </div>
 </ng-template>
 
@@ -306,9 +307,10 @@
     <p>Weet je zeker dat je het toernooi wilt weggooien?</p>
   </div>
   <div class="modal-footer justify-content-around">
-    <button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal" (click)="modal.close('remove')">nu
+    <button type="button" class="btn btn-outline-danger" data-dismiss="modal" (click)="modal.close('remove')">nu
       weggooien</button>
-    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.close('close')">sluiten</button>
+    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+      (click)="modal.close('close')">sluiten</button>
   </div>
 </ng-template>
 
@@ -333,10 +335,11 @@
     </div>
   </div>
   <div class="modal-footer justify-content-around">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
       (click)="modal.copied = true; copyLink(userinput)">
       <fa-icon [icon]="['fas', 'clipboard-check']"></fa-icon> kopieer link naar klembord
     </button>
-    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.close('close')">sluiten</button>
+    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+      (click)="modal.close('close')">sluiten</button>
   </div>
 </ng-template>

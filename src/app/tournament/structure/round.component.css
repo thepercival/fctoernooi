@@ -18,13 +18,9 @@ app-tournament-structureround {
     background-color: black;
 }
 
-.qualifier{
-    flex-basis: 100%;
-    border: 0;
-}
-
-.bg-transparent {
+.place-list-item {
     background-color: transparent;
+    margin-top: 3px;
 }
 
 .card.qualification{

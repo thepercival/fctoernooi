@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { cloneDeep } from 'lodash';
 import {
   Competitor,
@@ -17,7 +16,6 @@ import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentService } from '../../lib/tournament/service';
 import { TournamentComponent } from '../component';
-import { TournamentStructureHelpModalComponent } from './helpmodal.component';
 
 @Component({
   selector: 'app-tournament-structure',
@@ -43,7 +41,6 @@ export class TournamentStructureComponent extends TournamentComponent implements
     structureRepository: StructureRepository,
     private planningRepository: PlanningRepository,
     private competitorRepository: CompetitorRepository,
-    private modalService: NgbModal,
     private myNavigation: MyNavigation
   ) {
     super(route, router, tournamentRepository, structureRepository);
@@ -53,9 +50,6 @@ export class TournamentStructureComponent extends TournamentComponent implements
     super.myNgOnInit(() => {
       this.clonedStructure = this.createClonedStructure(this.structure);
       this.processing = false;
-      if (this.isHelpModalShownOnDevice() === false) {
-        this.openHelp();
-      }
     });
   }
 
@@ -148,26 +142,6 @@ export class TournamentStructureComponent extends TournamentComponent implements
           /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
           /* onComplete */() => this.processing = false
       );
-  }
-
-  isHelpModalShownOnDevice() {
-    let helpModalShownOnDevice = localStorage.getItem('helpmodalshown');
-    if (helpModalShownOnDevice === null) {
-      helpModalShownOnDevice = 'false';
-    }
-    return JSON.parse(helpModalShownOnDevice);
-  }
-
-  helpModalShownOnDevice() {
-    localStorage.setItem('helpmodalshown', JSON.stringify(true));
-  }
-
-  openHelp() {
-    this.modalService.open(TournamentStructureHelpModalComponent).result.then((result) => {
-      this.helpModalShownOnDevice();
-    }, (reason) => {
-      this.helpModalShownOnDevice();
-    });
   }
 
   navigateBack() {

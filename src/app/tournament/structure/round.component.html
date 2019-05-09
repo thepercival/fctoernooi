@@ -4,19 +4,21 @@
       <span class="lead" [innerHTML]="nameService.getRoundName( round ) | keepHtml"></span>
       &nbsp;
       <!-- round.getPath()-->
-      <fa-icon [icon]="['fas', 'circle']" *ngFor="let winnersOrLosers of round.getPath()" [title]="getWinnersLosersDescription(
+      <!-- <fa-icon [icon]="['fas', 'circle']" *ngFor="let winnersOrLosers of round.getPath()" [title]="getWinnersLosersDescription(
       winnersOrLosers )"
-        class="text-{{getClassPostfix(winnersOrLosers)}}"></fa-icon>
+        class="text-{{getClassPostfix(winnersOrLosers)}}"></fa-icon> -->
     </div>
     <div class="card-body px-1">
-      <div *ngIf="editable && round.getNumberAsValue() === 1 && !round.isStarted()" class="d-flex justify-content-around mb-3">
+      <div *ngIf="editable && round.getNumberAsValue() === 1 && !round.isStarted()"
+        class="d-flex justify-content-around mb-3">
         <div class="d-sm-none btn-group-vertical" role="group" aria-label="aantal poules">
           <button type="button" disabled class="btn btn-outline-secondary">poules</button>
           <div class="btn-group" role="group" aria-label="aantal poules">
             <button type="button" class="btn btn-outline-secondary" (click)="removePoule(round)">
               <fa-icon [icon]="['fas', 'minus']"></fa-icon>
             </button>
-            <button *ngIf="round.getPoules().length < 8" type="button" class="btn btn-outline-secondary" (click)="addPoule(round)">
+            <button *ngIf="round.getPoules().length < 8" type="button" class="btn btn-outline-secondary"
+              (click)="addPoule(round)">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button>
           </div>
@@ -24,11 +26,13 @@
         <div class="d-sm-none btn-group-vertical" role="group" aria-label="aantal poules">
           <button type="button" disabled class="btn btn-outline-secondary">deelnemers</button>
           <div class="btn-group" role="group" aria-label="aantal deelnemers">
-            <button *ngIf="canRemovePoulePlace(round)" type="button" class="btn btn-outline-secondary" (click)="removePoulePlace(round)">
+            <button *ngIf="canRemovePoulePlace(round)" type="button" class="btn btn-outline-secondary"
+              (click)="removePoulePlace(round)">
               <fa-icon [icon]="['fas', 'minus']"></fa-icon>
             </button>
             <button *ngIf="!canRemovePoulePlace(round)" type="button" class="btn btn-outline-secondary disabled"
-              container="body" placement="bottom" ngbPopover="Er kan geen deelnemer verwijderd worden. Alle deelnemers gaan door naar de volgende ronde. Pas 1 van de 2 schuiven aan.">
+              container="body" placement="bottom"
+              ngbPopover="Er kan geen deelnemer verwijderd worden. Alle deelnemers gaan door naar de volgende ronde. Pas 1 van de 2 schuiven aan.">
               <fa-icon [icon]="['fas', 'minus']"></fa-icon>
             </button>
             <button type="button" class="btn btn-outline-secondary" (click)="addPoulePlace(round)">
@@ -46,11 +50,13 @@
           </button>
         </div>
         <div class="d-none d-sm-inline-flex btn-group" role="group" aria-label="aantal deelnemers">
-          <button *ngIf="canRemovePoulePlace(round)" type="button" class="btn btn-outline-secondary" (click)="removePoulePlace(round)">
+          <button *ngIf="canRemovePoulePlace(round)" type="button" class="btn btn-outline-secondary"
+            (click)="removePoulePlace(round)">
             <fa-icon [icon]="['fas', 'minus']"></fa-icon>
           </button>
           <button *ngIf="!canRemovePoulePlace(round)" type="button" class="btn btn-outline-secondary disabled"
-            container="body" placement="bottom" ngbPopover="Er kan geen deelnemer verwijderd worden. Alle deelnemers gaan door naar de volgende ronde. Pas 1 van de 2 schuiven aan.">
+            container="body" placement="bottom"
+            ngbPopover="Er kan geen deelnemer verwijderd worden. Alle deelnemers gaan door naar de volgende ronde. Pas 1 van de 2 schuiven aan.">
             <fa-icon [icon]="['fas', 'minus']"></fa-icon>
           </button>
 
@@ -60,21 +66,23 @@
           </button>
         </div>
       </div>
-      <div *ngIf="editable && !round.isRoot() && round.getPoulePlaces().length >= 4 && !round.isStarted()">verdeling</div>
-      <div *ngIf="editable && !round.isRoot() && round.getPoulePlaces().length >= 4 && !round.isStarted()" class="mb-3 btn-group {{getDivisionClasses(round)}}"
-        role="group" aria-label="verdeel">
-        <button *ngIf="round.getPoules().length > 1" type="button" class="btn btn-outline-secondary" (click)="removePoule(round)"
-          title="verdeel de plekken over 1 poule minder">
+      <div *ngIf="editable && !round.isRoot() && round.getPoulePlaces().length >= 4 && !round.isStarted()">verdeling
+      </div>
+      <div *ngIf="editable && !round.isRoot() && round.getPoulePlaces().length >= 4 && !round.isStarted()"
+        class="mb-3 btn-group {{getDivisionClasses(round)}}" role="group" aria-label="verdeel">
+        <!-- <button *ngIf="round.getPoules().length > 1" type="button" class="btn btn-outline-secondary"
+          (click)="removePoule(round)" title="verdeel de plekken over 1 poule minder">
           <fa-icon [icon]="['fas', 'compress']"></fa-icon>
         </button>
-        <button *ngIf="canChangeQualifyOrder()" type="button" class="btn btn-outline-secondary" (click)="toggleQualifyOrder(round)"
+        <button *ngIf="canChangeQualifyOrder()" type="button" class="btn btn-outline-secondary"
+          (click)="toggleQualifyOrder(round)"
           [title]="'schakel kruisfinales ' + (qualifyOrderIsCross(round) ? 'uit' : 'in')">
           <fa-icon [icon]="['fas', (qualifyOrderIsCross(round) ? 'arrows-alt-h' : 'random') ]"></fa-icon>
         </button>
         <button *ngIf="canExpand()" type="button" class="btn btn-outline-secondary" (click)="addPoule(round,true)"
           title="verdeel de plekken over 1 poule meer">
           <fa-icon [icon]="['fas', 'expand']"></fa-icon>
-        </button>
+        </button> -->
       </div>
       <p *ngIf="editable && round.isStarted()">
         <ngb-alert [dismissible]="false" type="warning">de ronde is begonnen, je kunt niet meer wijzigen</ngb-alert>
@@ -83,44 +91,25 @@
         <ngb-alert [dismissible]="false" [type]="alert.type">{{ alert.message }}</ngb-alert>
       </p>
 
-      <!-- test -->
       <div class="d-flex flex-wrap justify-content-around">
-          <div *ngFor="let poule of round.getPoules();" class="flex-item">
-              {{nameService.getPouleName( poule, false)}}
-            </div>
-      </div>
-
-      <div class="d-flex flex-wrap justify-content-around">
-          <ul *ngFor="let poule of round.getPoules();" class="list-group mb-3">
-              <li class="list-group-item px-2 px-sm-3">{{nameService.getPouleName( poule, false)}}</li>
-              <li *ngFor="let place of poule.getPlaces();" style="margin-top: 5px;" class="list-group-item px-2 px-sm-3 bg-transparent {{getClassForPoulePlace(place)}}">{{nameService.getPoulePlaceFromName(
+        <ul *ngFor="let poule of round.getPoules();" class="list-group mb-3">
+          <li class="list-group-item px-2 py-2">{{nameService.getPouleName( poule, false)}}</li>
+          <li *ngFor="let place of poule.getPlaces();"
+            class="list-group-item px-2 py-2 place-list-item {{getClassForPoulePlace(place)}}">{{nameService.getPoulePlaceFromName(
                 place, false)}}</li>
-            </ul>
+        </ul>
       </div>
     </div>
   </div>
-  <div class="qualifier" *ngIf="editable && round.getPoulePlaces().length > 2" class="row text-center no-gutters pt-3">
-    <div class="col px-3">
-      {{getWinnersLosersDescription( RoundWINNERS )}}
-      <nouislider class="horizontal-slider {{getWinnersLosersName( RoundWINNERS )}}" [min]="0" [config]="uiSliderConfigWinners"
-        [max]="getMaxSliderValue( RoundWINNERS )" (start)="startSliding($event, RoundWINNERS)" (end)="endSliding($event, RoundWINNERS)"
-        [ngModel]="round.getNrOfPlacesChildRound( RoundWINNERS )" (ngModelChange)="onSliderChange($event, RoundWINNERS)"
-        [disabled]="round.isStarted()"></nouislider>
-    </div>
-    <div *ngIf="round.getNumberAsValue() === 1" class="col px-3">afvallers<br>{{ round.getPoulePlaces().length - (
-      round.getNrOfPlacesChildRound(
-      RoundWINNERS ) + round.getNrOfPlacesChildRound( RoundLOSERS ) ) }}</div>
-    <div class="col px-3">
-      {{getWinnersLosersDescription( RoundLOSERS )}}
-      <nouislider class="horizontal-slider {{getWinnersLosersName( RoundLOSERS )}}" [config]="uiSliderConfigLosers"
-        [min]="0" [max]="getMaxSliderValue( RoundLOSERS )" (start)="startSliding($event, RoundLOSERS)" (end)="endSliding($event, RoundLOSERS)"
-        [ngModel]="round.getNrOfPlacesChildRound( RoundLOSERS )" (ngModelChange)="onSliderChange($event, RoundLOSERS)"
-        [disabled]="round.isStarted()"></nouislider>
-    </div>
+  <div class="d-flex justify-content-center" *ngIf="editable && round.getNrOfPlaces() > 2">
+    <button type="button" class="btn btn-outline-secondary" (click)="openQualificationModal(round)">
+      <i class="fi flaticon-structure"></i><span> kwalificatie instellen</span>
+    </button>
   </div>
   <div class="row text-center no-gutters">
-    <app-tournament-structureround *ngFor="let childRound of round.getChildren()" class="mb-2" [ngStyle]="{ 'width': (100/round.getNrOfChildren()) + '%' }"
-      [round]="childRound" [editable]="editable" (roundNumberChanged)="roundNumberChanged.emit($event)"></app-tournament-structureround>
+    <app-tournament-structureround *ngFor="let childRound of round.getChildren()" class="mb-2"
+      [ngStyle]="{ 'width': (100/round.getChildren().length) + '%' }" [round]="childRound" [editable]="editable"
+      (roundNumberChanged)="roundNumberChanged.emit($event)"></app-tournament-structureround>
   </div>
   <div *ngIf="!round.isRoot() && round.getPoulePlaces().length === 2">
     <div class="card round">

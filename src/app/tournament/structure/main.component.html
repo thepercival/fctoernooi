@@ -14,14 +14,10 @@
         <i class="fi flaticon-structure"></i> indeling
       </h2>
       <div>
-        <button *ngIf="!processing" role="button" (click)="openHelp()" class="btn btn-outline-info">
-          <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
-          <span class="d-none d-sm-inline-block">&nbsp;uitleg</span>
-        </button>
         <button *ngIf="!processing && !clonedStructure.getRootRound().isStarted()" role="button"
           [disabled]="!changedRoundNumber" (click)="saveStructure()" class="btn btn-outline-primary ml-3">
           <fa-icon [icon]="['fas', 'save']"></fa-icon>
-          <span class="d-none d-sm-inline-block">&nbsp;opslaan</span>
+          <span> opslaan</span>
         </button>
       </div>
     </div>
@@ -37,7 +33,7 @@
       (roundNumberChanged)="setChangedRoundNumber($event)"></app-tournament-structureround>
   </div>
 </div>
-<div class="text-center" class="my-1">
+<div class="d-flex justify-content-around mt-3 mb-1">
   <button *ngIf="!processing && !clonedStructure.getRootRound().isStarted()" role="button"
     [disabled]="!changedRoundNumber" (click)="saveStructure()" class="btn btn-outline-primary">
     <fa-icon [icon]="['fas', 'save']"></fa-icon>

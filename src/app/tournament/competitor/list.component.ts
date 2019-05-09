@@ -71,8 +71,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   ngAfterViewChecked() {
-    console.error("scroll()");
-    // this.myNavigation.scroll();
+    this.myNavigation.scroll();
   }
 
   isStarted() {
