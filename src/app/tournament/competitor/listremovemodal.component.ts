@@ -14,16 +14,16 @@ export class TournamentListRemoveModalComponent {
 
     hasMinimumNrOfPlacesPerPoule() {
         const rootRound = this.poulePlace.getPoule().getRound();
-        return (rootRound.getPoules().length * 2) === rootRound.getPoulePlaces().length;
+        return (rootRound.getPoules().length * 2) === rootRound.getNrOfPlaces();
     }
 
     allCompetitorsQualifyForNextRound() {
         const rootRound = this.poulePlace.getPoule().getRound();
-        return rootRound.getPoulePlaces().length <= rootRound.getNrOfPlacesChildren();
+        return rootRound.getNrOfPlaces() <= rootRound.getNrOfPlacesChildren();
     }
 
     allPoulePlacesHaveCompetitor() {
         const rootRound = this.poulePlace.getPoule().getRound();
-        return rootRound.getPoulePlaces().every(poulePlace => poulePlace.getCompetitor() !== undefined);
+        return rootRound.getPlaces().every(poulePlace => poulePlace.getCompetitor() !== undefined);
     }
 }

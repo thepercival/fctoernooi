@@ -13,14 +13,13 @@ import {
     PoulePlace,
     PoulePlaceRepository,
     QualifyRule,
-    QualifyService,
+    QualifyRuleMultiple,
     RankingService,
     Round,
     RoundNumberConfigScore,
     RoundRankingItem,
     StructureRepository,
 } from 'ngx-sport';
-import { forkJoin } from 'rxjs';
 
 import { AuthService } from '../../auth/auth.service';
 import { MyNavigation } from '../../common/navigation';
@@ -179,7 +178,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             return game;
         }
         console.error('getGameById');
-        // // game = this.getGameById(id, round.getChildRound(Round.WINNERS));
+        // // game = this.getGameById(id, round.getChildRound(QualifyGroup.WINNERS));
         // // if (game !== undefined) {
         // //     return game;
         // // }
@@ -297,7 +296,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         const equalPouleItems = this.getEqualPouleRankingItems(pouleRankingItems);
         const postFix = '(' + this.nameService.getPouleName(this.game.getPoule(), true) + ')';
         let warnings: string[] = this.getWarningsForEqualsInQualificationHelper(equalPouleItems, postFix);
-console.error('getWarningsForEqualsInQualification');
+        console.error('getWarningsForEqualsInQualification');
         // round.getChildRounds().forEach(childRound => {
         //     const qualifyRules = this.getRulesToProcess(childRound, this.game.getPoule(), Game.STATE_CREATED, Game.STATE_CREATED);
         //     qualifyRules.filter(qualifyRule => qualifyRule.isMultiple()).forEach(multipleRule => {
@@ -321,9 +320,9 @@ console.error('getWarningsForEqualsInQualification');
         });
     }
 
-    protected getEqualRuleRankingItems(multipleRule: QualifyRule, rankingItems: RoundRankingItem[]): RoundRankingItem[][] {
+    protected getEqualRuleRankingItems(multipleRule: QualifyRuleMultiple, rankingItems: RoundRankingItem[]): RoundRankingItem[][] {
         const equalItemsPerRank = this.getEqualRankedItems(rankingItems);
-        const nrToQualify = multipleRule.getToPoulePlaces().length;
+        const nrToQualify = multipleRule.getToPlaces().length;
         return equalItemsPerRank.filter(equalItems => {
             const equalRank = equalItems[0].getRank();
             return equalRank <= nrToQualify && ((equalRank + (equalItems.length - 1)) > nrToQualify);
@@ -476,24 +475,25 @@ console.error('getWarningsForEqualsInQualification');
     getRulesToProcess(childRound: Round, poule: Poule, oldPouleState: number, oldRoundState: number): QualifyRule[] {
         const rules: QualifyRule[] = [];
 
-        const newPouleState = poule.getState();
-        const newRoundState = poule.getRound().getState();
-        if ((oldRoundState !== Game.STATE_PLAYED && newRoundState === Game.STATE_PLAYED)
-            || (oldRoundState === Game.STATE_PLAYED && newRoundState !== Game.STATE_PLAYED)
-            || (oldRoundState === Game.STATE_PLAYED && newRoundState === Game.STATE_PLAYED)) {
-            const winnersOrLosers = childRound.getWinnersOrLosers();
-            poule.getRound().getToQualifyRules(winnersOrLosers).forEach(rule => rules.push(rule));
-        } else if ((oldPouleState !== Game.STATE_PLAYED && newPouleState === Game.STATE_PLAYED)
-            || (oldPouleState === Game.STATE_PLAYED && newPouleState !== Game.STATE_PLAYED)
-            || (oldPouleState === Game.STATE_PLAYED && newPouleState === Game.STATE_PLAYED)) {
-            const winnersOrLosers = childRound.getWinnersOrLosers();
-            poule.getPlaces().forEach(poulePlace => {
-                const qualifyRule = poulePlace.getToQualifyRule(winnersOrLosers);
-                if (qualifyRule !== undefined && !qualifyRule.isMultiple()) {
-                    rules.push(qualifyRule);
-                }
-            });
-        }
+        console.error("getRulesToProcess");
+        // const newPouleState = poule.getState();
+        // const newRoundState = poule.getRound().getState();
+        // if ((oldRoundState !== Game.STATE_PLAYED && newRoundState === Game.STATE_PLAYED)
+        //     || (oldRoundState === Game.STATE_PLAYED && newRoundState !== Game.STATE_PLAYED)
+        //     || (oldRoundState === Game.STATE_PLAYED && newRoundState === Game.STATE_PLAYED)) {
+        //     const winnersOrLosers = childRound.getWinnersOrLosers();
+        //     poule.getRound().getToQualifyRules(winnersOrLosers).forEach(rule => rules.push(rule));
+        // } else if ((oldPouleState !== Game.STATE_PLAYED && newPouleState === Game.STATE_PLAYED)
+        //     || (oldPouleState === Game.STATE_PLAYED && newPouleState !== Game.STATE_PLAYED)
+        //     || (oldPouleState === Game.STATE_PLAYED && newPouleState === Game.STATE_PLAYED)) {
+        //     const winnersOrLosers = childRound.getWinnersOrLosers();
+        //     poule.getPlaces().forEach(poulePlace => {
+        //         const qualifyRule = poulePlace.getToQualifyRule(winnersOrLosers);
+        //         if (qualifyRule !== undefined && !qualifyRule.isMultiple()) {
+        //             rules.push(qualifyRule);
+        //         }
+        //     });
+        // }
         return rules;
     }
 

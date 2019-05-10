@@ -75,7 +75,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
             this.processing = false;
             return;
         }
-        const poulePlaces = this.structure.getRootRound().getPoulePlaces();
+        const poulePlaces = this.structure.getRootRound().getPlaces();
         this.poulePlace = poulePlaces.find(poulePlace => poulePlaceId === poulePlace.getId());
         if (this.poulePlace === undefined) {
             this.processing = false;
@@ -171,7 +171,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
     }
 
     isNameDuplicate(name: string, competitorId?: number): boolean {
-        const poulePlaces = this.structure.getRootRound().getPoulePlaces();
+        const poulePlaces = this.structure.getRootRound().getPlaces();
         return poulePlaces.find(poulePlaceIt => {
             const competitorName = poulePlaceIt.getCompetitor() ? poulePlaceIt.getCompetitor().getName() : undefined;
             return (name === competitorName && (competitorId === undefined || poulePlaceIt.getCompetitor().getId() === undefined));

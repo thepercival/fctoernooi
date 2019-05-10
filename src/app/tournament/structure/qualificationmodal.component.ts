@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { NameService, Round } from 'ngx-sport';
+import { NameService, QualifyGroup, Round } from 'ngx-sport';
 
 @Component({
     selector: 'app-ngbd-modal-help',
@@ -18,11 +18,11 @@ export class TournamentStructureQualificationModalComponent {
         public activeModal: NgbActiveModal
     ) {
         this.nameService = new NameService();
-        this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
+        this.winnersAndLosers = [QualifyGroup.WINNERS, QualifyGroup.LOSERS];
     }
 
     getWinnersLosersName(winnersOrLosers: number): string {
-        return 'nrof' + (winnersOrLosers === Round.WINNERS ? 'winners' : 'losers');
+        return 'nrof' + (winnersOrLosers === QualifyGroup.WINNERS ? 'winners' : 'losers');
     }
 
     public init(round: Round) {

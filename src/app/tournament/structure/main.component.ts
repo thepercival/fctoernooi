@@ -83,7 +83,7 @@ export class TournamentStructureComponent extends TournamentComponent implements
     });
 
     // add an unused Competitor if there are places without a Competitor
-    const poulePlaces = rootRound.getPoulePlaces();
+    const poulePlaces = rootRound.getPlaces();
     poulePlaces.forEach((poulePlace) => {
       if (poulePlace.getCompetitor() === undefined) {
         poulePlace.setCompetitor(unusedCompetitors.shift());

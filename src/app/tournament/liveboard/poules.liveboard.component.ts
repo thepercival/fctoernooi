@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { NameService, Poule, PoulePlace, RankingService, Round, RoundRankingItem } from 'ngx-sport';
+import { NameService, Poule, PoulePlace, QualifyGroup, RankingService, RoundRankingItem } from 'ngx-sport';
 
 import { PoulesRankingScreen } from '../../lib/liveboard/screens';
 
@@ -23,20 +23,22 @@ export class TournamentLiveboardPoulesComponent {
     }
 
     getQualificationClass(poule: Poule, poulePlaceNumber: number): {} {
-        const poulePlace: PoulePlace = poule.getPlace(poulePlaceNumber);
-        const rules = poulePlace.getToQualifyRules();
-        if (rules.length === 2) {
-            return { icon: 'circle', text: 'text-warning' };
-        } else if (rules.length === 1) {
-            const qualifyRule = rules[0];
-            const singleColor = this.getClassPostfix(qualifyRule.getWinnersOrLosers());
-            return { icon: 'circle', text: 'text-' + (qualifyRule.isMultiple() ? 'warning' : singleColor) };
-        }
-        return { icon: undefined, text: '' };
+        console.error("getQualificationClass");
+        return {};
+        // const poulePlace: PoulePlace = poule.getPlace(poulePlaceNumber);
+        // const rules = poulePlace.getToQualifyRules();
+        // if (rules.length === 2) {
+        //     return { icon: 'circle', text: 'text-warning' };
+        // } else if (rules.length === 1) {
+        //     const qualifyRule = rules[0];
+        //     const singleColor = this.getClassPostfix(qualifyRule.getWinnersOrLosers());
+        //     return { icon: 'circle', text: 'text-' + (qualifyRule.isMultiple() ? 'warning' : singleColor) };
+        // }
+        // return { icon: undefined, text: '' };
     }
 
     private getClassPostfix(winnersOrLosers: number): string {
-        return winnersOrLosers === Round.WINNERS ? 'success' : (winnersOrLosers === Round.LOSERS ? 'danger' : '');
+        return winnersOrLosers === QualifyGroup.WINNERS ? 'success' : (winnersOrLosers === QualifyGroup.LOSERS ? 'danger' : '');
     }
 
     getPoulePlace(rankingItem: RoundRankingItem): PoulePlace {

@@ -6,7 +6,7 @@ import {
     NameService,
     PlanningRepository,
     PlanningService,
-    Round,
+    QualifyGroup,
     RoundNumber,
     RoundNumberConfig,
     RoundNumberConfigMapper,
@@ -134,7 +134,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     }
 
     getClassPostfix(winnersOrLosers: number): string {
-        return winnersOrLosers === Round.WINNERS ? 'success' : (winnersOrLosers === Round.LOSERS ? 'danger' : '');
+        return winnersOrLosers === QualifyGroup.WINNERS ? 'success' : (winnersOrLosers === QualifyGroup.LOSERS ? 'danger' : '');
     }
 
     setNrOfHeadtoheadMatches(nrOfHeadtoheadMatchesAsString: string) {

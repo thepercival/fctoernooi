@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NameService, PoulePlace, Round, RoundNumber, StructureService } from 'ngx-sport';
+import { NameService, PoulePlace, QualifyGroup, Round, RoundNumber, StructureService } from 'ngx-sport';
 import { max } from 'rxjs/operators';
 
 import { Tournament } from '../../lib/tournament';
@@ -25,11 +25,11 @@ export class TournamentStructureRoundComponent {
   }
 
   get RoundWINNERS(): number {
-    return Round.WINNERS;
+    return QualifyGroup.WINNERS;
   }
 
   get RoundLOSERS(): number {
-    return Round.LOSERS;
+    return QualifyGroup.LOSERS;
   }
 
   private getStructureService(): StructureService {
@@ -41,7 +41,7 @@ export class TournamentStructureRoundComponent {
   }
 
   canExpand(): boolean {
-    return (this.round.getPoulePlaces().length / (this.round.getPoules().length + 1)) >= 2;
+    return (this.round.getNrOfPlaces() / (this.round.getPoules().length + 1)) >= 2;
   }
 
   addPoule(round, fillPouleToMinimum = true): void {
@@ -98,7 +98,7 @@ export class TournamentStructureRoundComponent {
   }
 
   hasMinimumNrOfPlacesPerPoule(round: Round) {
-    return (round.getPoules().length * 2) === round.getPoulePlaces().length;
+    return (round.getPoules().length * 2) === round.getNrOfPlaces();
   }
 
   getMaxSliderValue(winnersOrLosers: number): number {
@@ -113,19 +113,23 @@ export class TournamentStructureRoundComponent {
   }
 
   getClassPostfix(winnersOrLosers: number): string {
-    return winnersOrLosers === Round.WINNERS ? 'success' : (winnersOrLosers === Round.LOSERS ? 'danger' : '');
+    return winnersOrLosers === QualifyGroup.WINNERS ? 'success' : (winnersOrLosers === QualifyGroup.LOSERS ? 'danger' : '');
   }
 
-  getClassForPoulePlace(poulePlace: PoulePlace): string {
-    const rules = poulePlace.getToQualifyRules();
-    if (rules.length === 2) {
-      return 'text-warning';
-    } else if (rules.length === 1) {
-      const qualifyRule = rules[0];
-      const singleColor = this.getClassPostfix(qualifyRule.getWinnersOrLosers());
-      return 'text-' + (qualifyRule.getFromPoulePlaces().length === qualifyRule.getToPoulePlaces().length ? singleColor : 'warning');
-    }
-    return '';
+  getClassForPlace(place: PoulePlace): string {
+    console.error('getClassForPoulePlace');
+    console.log('winners: blauw, licht-blauw, groen, lichtgroen');
+    console.log('losers: rood, lichtrood, oranje, licht-oranje');
+    return "0";
+    // const rules = poulePlace.getToQualifyRules();
+    // if (rules.length === 2) {
+    //   return 'text-warning';
+    // } else if (rules.length === 1) {
+    //   const qualifyRule = rules[0];
+    //   const singleColor = this.getClassPostfix(qualifyRule.getWinnersOrLosers());
+    //   return 'text-' + (qualifyRule.getFromPoulePlaces().length === qualifyRule.getToPlaces().length ? singleColor : 'warning');
+    // }
+    // return '';
   }
 
   protected resetAlert(): void {

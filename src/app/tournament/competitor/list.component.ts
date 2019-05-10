@@ -59,12 +59,12 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
 
   initPoulePlaces() {
     const round = this.structure.getRootRound();
-    round.getPoulePlaces().forEach(poulePlace => {
+    round.getPlaces().forEach(poulePlace => {
       if (poulePlace.getCompetitor() === undefined && this.focusId === undefined) {
         this.focusId = poulePlace.getId();
       }
     });
-    this.poulePlaces = round.getPoulePlaces();
+    this.poulePlaces = round.getPlaces();
     const isStarted = this.isStarted();
     this.showSwap = !isStarted && this.atLeastTwoPoulePlaceHaveCompetitor();
     this.processing = false;
@@ -180,12 +180,12 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
 
   hasMinimumNrOfPlacesPerPoule(): boolean {
     const rootRound = this.structure.getRootRound();
-    return (rootRound.getPoules().length * 2) === rootRound.getPoulePlaces().length;
+    return (rootRound.getPoules().length * 2) === rootRound.getNrOfPlaces();
   }
 
   hasNoDropouts(): boolean {
     const rootRound = this.structure.getRootRound();
-    return rootRound.getPoulePlaces().length <= rootRound.getNrOfPlacesChildren();
+    return rootRound.getNrOfPlaces() <= rootRound.getNrOfPlacesChildren();
   }
 
   /**
@@ -249,7 +249,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
    * haal alle pouleplekken op in verticale volgorde, verplaatst alles vanaf te verwijderen plek
    */
   protected moveCompetitors(rootRound: Round, fromPoulePlace: PoulePlace) {
-    const poulePlaces: PoulePlace[] = rootRound.getPoulePlaces(Round.ORDER_NUMBER_POULE);
+    const poulePlaces: PoulePlace[] = rootRound.getPlaces(Round.ORDER_NUMBER_POULE);
     const index = poulePlaces.indexOf(fromPoulePlace);
     if (index < 0) {
       return;

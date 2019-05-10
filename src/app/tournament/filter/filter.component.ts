@@ -48,7 +48,7 @@ export class TournamentFilterComponent extends TournamentComponent implements On
 
     initPoulePlaces() {
         const round = this.structure.getRootRound();
-        this.poulePlaces = round.getPoulePlaces();
+        this.poulePlaces = round.getPlaces();
         if (this.hasCompetitors() === false) {
             this.setAlert('info', 'er zijn nog geen deelnemers ingevuld, je kunt daarom nog geen filter instellen');
         }
