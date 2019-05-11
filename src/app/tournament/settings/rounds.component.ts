@@ -6,7 +6,6 @@ import {
     NameService,
     PlanningRepository,
     PlanningService,
-    QualifyGroup,
     RoundNumber,
     RoundNumberConfig,
     RoundNumberConfigMapper,
@@ -131,10 +130,6 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         } else {
             this.modelConfig.setHasExtension(this.modelConfig.getMinutesPerGameExt() > 0);
         }
-    }
-
-    getClassPostfix(winnersOrLosers: number): string {
-        return winnersOrLosers === QualifyGroup.WINNERS ? 'success' : (winnersOrLosers === QualifyGroup.LOSERS ? 'danger' : '');
     }
 
     setNrOfHeadtoheadMatches(nrOfHeadtoheadMatchesAsString: string) {

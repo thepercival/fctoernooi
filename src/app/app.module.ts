@@ -65,8 +65,8 @@ import { RoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthService } from './auth/auth.service';
 import { AuthguardService } from './auth/authguard.service';
+import { CSSService } from './common/cssservice';
 import { GlobalEventsManager } from './common/eventmanager';
-import { IconManager } from './common/iconmanager';
 import { MyNavigation } from './common/navigation';
 import { FooterComponent } from './footer/footer.component';
 import { HomeComponent } from './home/home.component';
@@ -130,7 +130,7 @@ library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave
     RefereeRepository,
     RefereeMapper,
     GlobalEventsManager,
-    IconManager,
+    CSSService,
     MyNavigation,
     NameService,
     FavoritesRepository

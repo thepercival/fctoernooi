@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NameService, PlanningService, StructureRepository } from 'ngx-sport';
 
+import { CSSService } from '../../common/cssservice';
 import { GlobalEventsManager } from '../../common/eventmanager';
-import { IconManager } from '../../common/iconmanager';
 import { MyNavigation } from '../../common/navigation';
 import { Liveboard } from '../../lib/liveboard';
 import { EndRankingScreen, GamesScreen, PoulesRankingScreen, SponsorScreen } from '../../lib/liveboard/screens';
@@ -32,7 +32,7 @@ export class TournamentLiveboardComponent extends TournamentComponent implements
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private globalEventsManager: GlobalEventsManager,
-        public iconManager: IconManager,
+        public cssService: CSSService,
         public nameService: NameService,
         private myNavigation: MyNavigation
     ) {

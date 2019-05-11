@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, PoulePlace, QualifyGroup, RankingService, RoundRankingItem } from 'ngx-sport';
+import { NameService, Poule, PoulePlace, RankingService, RoundRankingItem } from 'ngx-sport';
 
 import { Favorites } from '../../lib/favorites';
 import { FavoritesRepository } from '../../lib/favorites/repository';
@@ -29,25 +29,6 @@ export class TournamentPouleRankingComponent implements OnInit {
     const ranking = new RankingService(this.tournament.getCompetition().getRuleSet());
     this.rankingItems = ranking.getItemsForPoule(this.poule);
     this.processing = false;
-  }
-
-  getQualificationClass(poulePlaceNumber: number): {} {
-    console.error("getQualificationClass");
-    return {};
-    // const poulePlace: PoulePlace = this.poule.getPlace(poulePlaceNumber);
-    // const rules = poulePlace.getToQualifyRules();
-    // if (rules.length === 2) {
-    //   return { icon: 'circle', text: 'text-warning' };
-    // } else if (rules.length === 1) {
-    //   const qualifyRule = rules[0];
-    //   const singleColor = this.getClassPostfix(qualifyRule.getWinnersOrLosers());
-    //   return { icon: 'circle', text: 'text-' + (qualifyRule.isMultiple() ? 'warning' : singleColor) };
-    // }
-    // return { icon: undefined, text: '' };
-  }
-
-  getClassPostfix(winnersOrLosers: number): string {
-    return winnersOrLosers === QualifyGroup.WINNERS ? 'success' : (winnersOrLosers === QualifyGroup.LOSERS ? 'danger' : '');
   }
 
   hasMultipleScoreConfigs() {

@@ -55,8 +55,8 @@ import {
   StructureRepository,
 } from 'ngx-sport';
 
+import { CSSService } from '../common/cssservice';
 import { EscapeHtmlPipe } from '../common/escapehtmlpipe';
-import { IconManager } from '../common/iconmanager';
 import { RoleMapper } from '../lib/role/mapper';
 import { TournamentCompetitorEditComponent } from './competitor/edit.component';
 import { CompetitorListComponent } from './competitor/list.component';
@@ -156,7 +156,7 @@ library.add(
     CompetitorMapper,
     GameRepository,
     PlanningRepository,
-    IconManager,
+    CSSService,
   ]
 })
 export class TournamentModule { }

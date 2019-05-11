@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NameService, PoulePlace, QualifyGroup, Round, RoundNumber, StructureService } from 'ngx-sport';
+import { NameService, QualifyGroup, Round, RoundNumber, StructureService } from 'ngx-sport';
 import { max } from 'rxjs/operators';
 
+import { CSSService } from '../../common/cssservice';
 import { Tournament } from '../../lib/tournament';
 import { TournamentStructureQualificationModalComponent } from './qualificationmodal.component';
 
@@ -19,7 +20,7 @@ export class TournamentStructureRoundComponent {
   public alert: any;
   private structureService: StructureService;
 
-  constructor(public nameService: NameService, private modalService: NgbModal) {
+  constructor(public nameService: NameService, public cssService: CSSService, private modalService: NgbModal) {
     this.resetAlert();
     this.structureService = new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
   }
@@ -110,26 +111,6 @@ export class TournamentStructureRoundComponent {
     //   return 1;
     // }
     // return max;
-  }
-
-  getClassPostfix(winnersOrLosers: number): string {
-    return winnersOrLosers === QualifyGroup.WINNERS ? 'success' : (winnersOrLosers === QualifyGroup.LOSERS ? 'danger' : '');
-  }
-
-  getClassForPlace(place: PoulePlace): string {
-    console.error('getClassForPoulePlace');
-    console.log('winners: blauw, licht-blauw, groen, lichtgroen');
-    console.log('losers: rood, lichtrood, oranje, licht-oranje');
-    return "0";
-    // const rules = poulePlace.getToQualifyRules();
-    // if (rules.length === 2) {
-    //   return 'text-warning';
-    // } else if (rules.length === 1) {
-    //   const qualifyRule = rules[0];
-    //   const singleColor = this.getClassPostfix(qualifyRule.getWinnersOrLosers());
-    //   return 'text-' + (qualifyRule.getFromPoulePlaces().length === qualifyRule.getToPlaces().length ? singleColor : 'warning');
-    // }
-    // return '';
   }
 
   protected resetAlert(): void {

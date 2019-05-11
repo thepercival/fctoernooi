@@ -5,8 +5,8 @@
   {{shell.startDateTime.toLocaleString("nl",{"month":"short","day":"2-digit","hour12": false,"hour":"2-digit","minute":"2-digit"})}}
 </td>
 <td>
-  <i *ngIf="iconManager.getIconType(shell.sport) === 'fi'" class="{{iconManager.getIconClass(shell.sport)}}"></i>
-  <fa-icon *ngIf="iconManager.getIconType(shell.sport) === 'fa'"
-    [icon]="['fas', iconManager.getIconClass(shell.sport)]"></fa-icon>
+  <i *ngIf="cssService.getIconType(shell.sport) === 'fi'" class="{{cssService.getIcon(shell.sport)}}"></i>
+  <fa-icon *ngIf="cssService.getIconType(shell.sport) === 'fa'" [icon]="['fas', cssService.getIcon(shell.sport)]">
+  </fa-icon>
 </td>
 <td>{{shell.name}}</td>
