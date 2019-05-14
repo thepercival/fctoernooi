@@ -84,10 +84,13 @@ import { TournamentSponsorEditComponent } from './sponsor/edit.component';
 import { SponsorListComponent } from './sponsor/list.component';
 import { TournamentStructureComponent } from './structure/main.component';
 import { TournamentStructureQualificationModalComponent } from './structure/qualificationmodal.component';
+import { TournamentStructureQualifyComponent } from './structure/qualify.component';
 import { TournamentStructureRoundComponent } from './structure/round.component';
+import { TournamentStructureRoundArrangeComponent } from './structure/round/arrange.component';
 import { TournamentStructureViewComponent } from './structure/view.component';
 import { TournamentRoutingModule } from './tournament-routing.module';
 import { TournamentViewComponent } from './view/view.component';
+
 
 library.add(
   faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus,
@@ -110,6 +113,8 @@ library.add(
     TournamentStructureComponent,
     TournamentStructureViewComponent,
     TournamentStructureRoundComponent,
+    TournamentStructureRoundArrangeComponent,
+    TournamentStructureQualifyComponent,
     GameListComponent,
     TournamentRoundNumberViewComponent,
     TournamentEndRankingViewComponent,

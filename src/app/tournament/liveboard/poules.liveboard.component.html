@@ -2,7 +2,7 @@
   <div class="pr-5">
     <ng-container *ngTemplateOutlet="pouleRanking;context:{$implicit: screen.getFirstPoule()}">
     </ng-container>
-  </div>  
+  </div>
   <div class="pl-5">
     <ng-container *ngTemplateOutlet="pouleRanking;context:{$implicit: screen.getLastPoule()}">
     </ng-container>
@@ -25,7 +25,7 @@
         <tr>
           <td nowrap class="text-right">
             <ng-container
-              *ngTemplateOutlet="qualclass;context:{$implicit: getQualificationClass(poule, rankingItem.getUniqueRank())}">
+              *ngTemplateOutlet="qualclass;context:{$implicit: cssService.getQualify(poule.getPlace(rankingItem.getUniqueRank()))}">
             </ng-container>
             <span>{{rankingItem.getUniqueRank()}}</span>
           </td>

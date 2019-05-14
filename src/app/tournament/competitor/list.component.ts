@@ -149,13 +149,13 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     );
   }
 
-  addPoulePlace(): void {
+  addPlaceToRootRound(): void {
     this.processing = true;
     this.setAlert('info', 'er wordt een pouleplek toegevoegd');
     try {
       const rootRound = this.structure.getRootRound();
       const structureService = this.getStructureService();
-      const addedPoulePlace = structureService.addPoulePlace(rootRound);
+      const addedPoulePlace = structureService.addPlaceToRootRound(rootRound);
       this.saveStructure('pouleplek ' + this.nameService.getPoulePlaceName(addedPoulePlace) + ' is toegevoegd');
     } catch (e) {
       this.setAlert('danger', e.message);
@@ -167,7 +167,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     (<TournamentListRemoveModalComponent>activeModal.componentInstance).poulePlace = poulePlace;
     activeModal.result.then((result) => {
       if (result === 'remove-pouleplace') {
-        this.removePoulePlace(poulePlace);
+        this.removePoulePlaceFromRootRound(poulePlace);
       } else if (result === 'remove-competitor') {
         this.removeCompetitor(poulePlace);
       } else if (result === 'to-structure') {
@@ -228,7 +228,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   /**
    * verplaatst alle deelnemers vanaf de te verwijderen pouleplek naar de vorige pouleplek, verwijder vervolgens de laatste pouleplek
    */
-  removePoulePlace(poulePlace: PoulePlace): void {
+  removePoulePlaceFromRootRound(poulePlace: PoulePlace): void {
     this.processing = true;
     const rootRound = this.structure.getRootRound();
     const competitor = poulePlace.getCompetitor() !== undefined ? ' en deelnemer ' + poulePlace.getCompetitor().getName() : '';
@@ -236,7 +236,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.setAlert('info', 'een pouleplek' + competitor + ' ' + singledoubleWill + ' verwijderd');
     try {
       this.moveCompetitors(rootRound, poulePlace);
-      this.getStructureService().removePoulePlace(rootRound);
+      this.getStructureService().removePlaceFromRootRound(rootRound);
       const singledoubleIs = poulePlace.getCompetitor() !== undefined ? 'zijn' : 'is';
       this.saveStructure('een pouleplek' + competitor + ' ' + singledoubleIs + ' verwijderd');
     } catch (e) {

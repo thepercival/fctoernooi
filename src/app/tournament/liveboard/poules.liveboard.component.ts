@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { NameService, Poule, PoulePlace, RankingService, RoundRankingItem } from 'ngx-sport';
 
+import { CSSService } from '../../common/cssservice';
 import { PoulesRankingScreen } from '../../lib/liveboard/screens';
 
 @Component({
@@ -13,7 +14,8 @@ export class TournamentLiveboardPoulesComponent {
     @Input() ruleSet: number;
 
     constructor(
-        public nameService: NameService
+        public nameService: NameService,
+        public cssService: CSSService
     ) {
     }
 

@@ -30,7 +30,7 @@
                         <tr>
                             <td class="rankingnr text-right pl-0">
                                 <ng-container
-                                    *ngTemplateOutlet="qualclass;context:{$implicit: getQualificationClass(rankingItem.getUniqueRank())}">
+                                    *ngTemplateOutlet="qualclass;context:{$implicit: cssService.getQualify(poule.getPlace(rankingItem.getUniqueRank()))}">
                                 </ng-container>
                                 <span>{{rankingItem.getUniqueRank()}}</span>
                             </td>

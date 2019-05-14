@@ -1,34 +1,24 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NameService, Round, RoundNumber, StructureService } from 'ngx-sport';
-import { max } from 'rxjs/operators';
-
-import { CSSService } from '../../common/cssservice';
-import { Tournament } from '../../lib/tournament';
+import { Component, Input } from '@angular/core';
+import { Round } from 'ngx-sport';
 
 @Component({
-  selector: 'app-tournament-structureround',
-  templateUrl: './round.component.html',
-  styleUrls: ['./round.component.css']
+  selector: 'app-tournament-structureround-arrange',
+  templateUrl: './arrange.component.html',
+  styleUrls: ['./arrange.component.css']
 })
-export class TournamentStructureRoundComponent {
+export class TournamentStructureRoundArrangeComponent {
 
   @Input() round: Round;
-  @Output() roundNumberChanged = new EventEmitter<RoundNumber>();
-  @Input() editable: boolean;
-  public alert: any;
-  private structureService: StructureService;
+  // @Output() roundNumberChanged = new EventEmitter<RoundNumber>();
+  // @Input() editable: boolean;
+  // public alert: any;
+  // private structureService: StructureService;
 
-  constructor(public nameService: NameService, public cssService: CSSService) {
-    this.resetAlert();
-    this.structureService = new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
-  }
-
-  // rearrange(nrOfPlaces: number, nrOfPoules: number) {
-  //   this.structureService.rearrange(round, nrOfPlaces, nrOfPoules);
-  // }
-
-  addPoule() {
-    // this.rearrange(this.round.getPoules().length, this.round.getNrOfCompetitors());
+  constructor(
+    //   public nameService: NameService, public cssService: CSSService, private modalService: NgbModal
+  ) {
+    // this.resetAlert();
+    // this.structureService = new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
   }
 
   // get RoundWINNERS(): number {
@@ -100,13 +90,13 @@ export class TournamentStructureRoundComponent {
   //   }
   // }
 
-  // canRemovePoulePlace(round: Round) {
-  //   return !this.hasMinimumNrOfPlacesPerPoule(round);
-  // }
+  canRemovePoulePlace() {
+    return !this.hasMinimumNrOfPlacesPerPoule();
+  }
 
-  // hasMinimumNrOfPlacesPerPoule(round: Round) {
-  //   return (round.getPoules().length * 2) === round.getNrOfPlaces();
-  // }
+  hasMinimumNrOfPlacesPerPoule() {
+    return (this.round.getPoules().length * 2) === this.round.getNrOfPlaces();
+  }
 
   // getMaxSliderValue(winnersOrLosers: number): number {
   //   console.error('getMaxSliderValue');
@@ -119,7 +109,9 @@ export class TournamentStructureRoundComponent {
   //   // return max;
   // }
 
-
+  // protected resetAlert(): void {
+  //   this.alert = undefined;
+  // }
 
   // protected setAlert(type: string, message: string): boolean {
   //   this.alert = { 'type': type, 'message': message };
@@ -219,7 +211,15 @@ export class TournamentStructureRoundComponent {
   //   return classes;
   // }
 
-  protected resetAlert(): void {
-    this.alert = undefined;
-  }
+  // openQualificationModal(round: Round) {
+  //   const activeModal = this.modalService.open(TournamentStructureQualificationModalComponent/*, { windowClass: 'border-warning' }*/);
+  //   const specifiedModal = (<TournamentStructureQualificationModalComponent>activeModal.componentInstance);
+  //   specifiedModal.init(round);
+
+  //   activeModal.result.then((result) => {
+  //     // this.helpModalShownOnDevice();
+  //   }, (reason) => {
+  //     // this.helpModalShownOnDevice();
+  //   });
+  // }
 }
