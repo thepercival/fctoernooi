@@ -27,7 +27,7 @@ export class TournamentStructureRoundComponent {
   //   this.structureService.rearrange(round, nrOfPlaces, nrOfPoules);
   // }
 
-  addPoule() {
+  addPlace() {
     // this.rearrange(this.round.getPoules().length, this.round.getNrOfCompetitors());
   }
 

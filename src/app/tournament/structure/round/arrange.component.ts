@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { Round } from 'ngx-sport';
+import { Round, StructureService } from 'ngx-sport';
+
+import { Tournament } from '../../../lib/tournament';
 
 @Component({
   selector: 'app-tournament-structureround-arrange',
@@ -9,6 +11,7 @@ import { Round } from 'ngx-sport';
 export class TournamentStructureRoundArrangeComponent {
 
   @Input() round: Round;
+  private structureService: StructureService;
   // @Output() roundNumberChanged = new EventEmitter<RoundNumber>();
   // @Input() editable: boolean;
   // public alert: any;
@@ -18,7 +21,7 @@ export class TournamentStructureRoundArrangeComponent {
     //   public nameService: NameService, public cssService: CSSService, private modalService: NgbModal
   ) {
     // this.resetAlert();
-    // this.structureService = new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
+    this.structureService = new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
   }
 
   // get RoundWINNERS(): number {
@@ -90,12 +93,31 @@ export class TournamentStructureRoundArrangeComponent {
   //   }
   // }
 
-  canRemovePoulePlace() {
+  canRemovePlace() {
     return !this.hasMinimumNrOfPlacesPerPoule();
   }
 
   hasMinimumNrOfPlacesPerPoule() {
     return (this.round.getPoules().length * 2) === this.round.getNrOfPlaces();
+  }
+
+  addPoule() {
+
+  }
+
+  removePoule() {
+
+  }
+
+  addPlace() {
+    if (this.round.isRoot()) {
+      this.structureService.addPlaceToRootRound(this.round)
+    }
+
+  }
+
+  removePlace() {
+
   }
 
   // getMaxSliderValue(winnersOrLosers: number): number {
