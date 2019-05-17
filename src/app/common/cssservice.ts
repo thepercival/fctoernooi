@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PoulePlace, QualifyGroup, SportConfig } from 'ngx-sport';
+import { PoulePlace, QualifyGroup, Round, SportConfig } from 'ngx-sport';
 
 @Injectable()
 export class CSSService {
@@ -38,39 +38,34 @@ export class CSSService {
         return 'fi';
     }
 
-    getQualify(place: PoulePlace): string {
-        const qualifyGroupWinners: QualifyGroup = place.getHorizontalPoule(QualifyGroup.WINNERS).getQualifyGroup();
+    getQualifyPlace(place: PoulePlace): string {
+        const horizontalPouleWinners = place.getHorizontalPoule(QualifyGroup.WINNERS);
+        const qualifyGroupWinners: QualifyGroup = horizontalPouleWinners.getQualifyGroup();
         const qualifyGroupLosers: QualifyGroup = place.getHorizontalPoule(QualifyGroup.LOSERS).getQualifyGroup();
         if (!qualifyGroupWinners && !qualifyGroupLosers) {
             return "";
         }
         if (qualifyGroupWinners && !qualifyGroupLosers) {
-            return "q-w-" + qualifyGroupWinners.getNumber();
+            const classes = (qualifyGroupWinners.getNrOfToPlacesShort() > 0 && horizontalPouleWinners.isBorderPoule() ? 'q-partial' : '')
+            return classes + ' q-w-' + qualifyGroupWinners.getNumber();
         }
         if (qualifyGroupLosers && !qualifyGroupWinners) {
-            return "q-w-" + qualifyGroupLosers.getNumber();
+            const classes = (qualifyGroupLosers.getNrOfToPlacesShort() > 0 ? 'q-partial' : '')
+            return classes + ' q-l-' + qualifyGroupLosers.getNumber();
         }
         console.error('make css combination');
         return "";
     }
 
+    getQualifyRound(round: Round): string {
+        const qualifyGroup: QualifyGroup = round.getParentQualifyGroup();
+        if (qualifyGroup === undefined) {
+            return '';
+        }
+        return ' q-' + (qualifyGroup.getWinnersOrLosers() === QualifyGroup.WINNERS ? 'w' : 'l') + '-' + qualifyGroup.getNumber();
+    }
+
     getWinnersOrLosers(winnersOrLosers: number): string {
         return winnersOrLosers === QualifyGroup.WINNERS ? 'success' : (winnersOrLosers === QualifyGroup.LOSERS ? 'danger' : '');
     }
-
-    //       <div>
-    //     <div style="color: #52D017">color winner 1</div>
-    //     <div style="color: #347235">color winner 2</div>
-
-    //     <div style="color: #F87217">color loser 2</div>
-    //     <div style="color: #FF0000">color loser 1</div>
-    //   </div>
 }
-
-//       <div>
-    //     <div style="color: #52D017">color winner 1</div>
-    //     <div style="color: #347235">color winner 2</div>
-
-    //     <div style="color: #F87217">color loser 2</div>
-    //     <div style="color: #FF0000">color loser 1</div>
-    //   </div>

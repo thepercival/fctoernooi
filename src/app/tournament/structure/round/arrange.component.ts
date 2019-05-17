@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Round, StructureService } from 'ngx-sport';
 
 import { Tournament } from '../../../lib/tournament';
@@ -12,7 +12,7 @@ export class TournamentStructureRoundArrangeComponent {
 
   @Input() round: Round;
   private structureService: StructureService;
-  // @Output() roundNumberChanged = new EventEmitter<RoundNumber>();
+  @Output() arrangeAction = new EventEmitter<string>();
   // @Input() editable: boolean;
   // public alert: any;
   // private structureService: StructureService;
@@ -20,8 +20,35 @@ export class TournamentStructureRoundArrangeComponent {
   constructor(
     //   public nameService: NameService, public cssService: CSSService, private modalService: NgbModal
   ) {
-    // this.resetAlert();
     this.structureService = new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
+  }
+
+  addPoule() {
+    if (this.round.isRoot()) {
+      // poule toevoegen met zelfde aantal deelnemers als laatste poule
+      this.arrangeAction.emit('addPoule');
+    } else {
+      // poule toevoegen, maar zelfde aantal deelnemers behouden
+    }
+  }
+
+  removePoule() {
+    if (this.round.isRoot()) {
+      // poule toevoegen met zelfde aantal deelnemers als laatste poule
+      this.arrangeAction.emit('removePoule');
+    } else {
+      // poule toevoegen, maar zelfde aantal deelnemers behouden
+    }
+  }
+
+  addPlace() {
+    if (this.round.isRoot()) {
+      this.arrangeAction.emit('addPlace');
+    }
+  }
+
+  removePlace() {
+    this.arrangeAction.emit('removePlace');
   }
 
   // get RoundWINNERS(): number {
@@ -99,25 +126,6 @@ export class TournamentStructureRoundArrangeComponent {
 
   hasMinimumNrOfPlacesPerPoule() {
     return (this.round.getPoules().length * 2) === this.round.getNrOfPlaces();
-  }
-
-  addPoule() {
-
-  }
-
-  removePoule() {
-
-  }
-
-  addPlace() {
-    if (this.round.isRoot()) {
-      this.structureService.addPlaceToRootRound(this.round)
-    }
-
-  }
-
-  removePlace() {
-
   }
 
   // getMaxSliderValue(winnersOrLosers: number): number {

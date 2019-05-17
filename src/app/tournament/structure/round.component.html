@@ -1,5 +1,6 @@
 <div *ngIf="round" class="col {{round.isRoot() ? 'px-2' : 'px-1'}}">
-  <div class="card round mb-2" *ngIf="round.isRoot() || round.getNrOfPlaces() > 2">
+  <div class="card round mb-2 {{cssService.getQualifyRound(round)}}"
+    *ngIf="round.isRoot() || round.getNrOfPlaces() > 2">
     <div class="card-header px-1">
       <span class="lead" [innerHTML]="nameService.getRoundName( round ) | keepHtml"></span>
       &nbsp;
@@ -9,7 +10,8 @@
         class="text-{{getClassPostfix(winnersOrLosers)}}"></fa-icon> -->
     </div>
     <div class="card-body px-1">
-      <app-tournament-structureround-arrange *ngIf="editable" [round]="round"></app-tournament-structureround-arrange>
+      <app-tournament-structureround-arrange *ngIf="editable" [round]="round" (arrangeAction)="arrangeAction($event)">
+      </app-tournament-structureround-arrange>
 
       <p *ngIf="editable && round.isStarted()">
         <ngb-alert [dismissible]="false" type="warning">de ronde is begonnen, je kunt niet meer wijzigen</ngb-alert>
@@ -22,13 +24,15 @@
         <ul *ngFor="let poule of round.getPoules();" class="list-group mb-3">
           <li class="list-group-item px-2 py-2">{{nameService.getPouleName( poule, false)}}</li>
           <li *ngFor="let place of poule.getPlaces();"
-            class="list-group-item px-2 py-2 place-list-item {{cssService.getQualify(place)}}">{{nameService.getPoulePlaceFromName(
+            class="list-group-item px-2 py-2 place-list-item pointer {{cssService.getQualifyPlace(place)}}"
+            placement="top" ngbPopover="{{nameService.getPoulePlaceFromName(place,false,true)}}">{{nameService.getPoulePlaceFromName(
                 place, false)}}</li>
         </ul>
       </div>
     </div>
   </div>
-  <app-tournament-structurequalify *ngIf="editable" [round]="round"></app-tournament-structurequalify>
+  <app-tournament-structurequalify *ngIf="editable" [round]="round">
+  </app-tournament-structurequalify>
 
   <div class="row text-center no-gutters">
     <app-tournament-structureround *ngFor="let childRound of round.getChildren()" class="mb-2"
@@ -36,7 +40,7 @@
       (roundNumberChanged)="roundNumberChanged.emit($event)"></app-tournament-structureround>
   </div>
   <div *ngIf="!round.isRoot() && round.getNrOfPlaces() === 2">
-    <div class="card round">
+    <div class="card round {{cssService.getQualifyRound(round)}}">
       <div class="card-header px-1">
         <span [innerHTML]="nameService.getRoundName(round) | keepHtml"></span>
       </div>

@@ -25,7 +25,7 @@
         <tr>
           <td nowrap class="text-right">
             <ng-container
-              *ngTemplateOutlet="qualclass;context:{$implicit: cssService.getQualify(poule.getPlace(rankingItem.getUniqueRank()))}">
+              *ngTemplateOutlet="qualclass;context:{$implicit: cssService.getQualifyPlace(poule.getPlace(rankingItem.getUniqueRank()))}">
             </ng-container>
             <span>{{rankingItem.getUniqueRank()}}</span>
           </td>

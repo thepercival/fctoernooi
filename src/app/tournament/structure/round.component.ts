@@ -23,21 +23,62 @@ export class TournamentStructureRoundComponent {
     this.structureService = new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
   }
 
+  arrangeAction(action: string) {
+    this.resetAlert();
+    try {
+      if (action === 'removePoule') {
+        this.removePoule();
+      } else if (action === 'addPoule') {
+        this.addPoule();
+      } else if (action === 'removePlace') {
+        this.removePlace();
+      } else if (action === 'addPlace') {
+        this.addPlace();
+      }
+    } catch (e) {
+      this.setAlert('danger', e.message);
+    }
+
+
+  }
   // rearrange(nrOfPlaces: number, nrOfPoules: number) {
   //   this.structureService.rearrange(round, nrOfPlaces, nrOfPoules);
   // }
 
-  addPlace() {
-    // this.rearrange(this.round.getPoules().length, this.round.getNrOfCompetitors());
+  protected removePoule() {
+    if (this.round.isRoot()) {
+      // poule verwijderen maar wel hetzelfde aantal deelnemers behouden
+      this.structureService.removePouleFromRootRound(this.round);
+    } else {
+      // poule verwijderen, ??
+    }
   }
 
-  // get RoundWINNERS(): number {
-  //   return QualifyGroup.WINNERS;
-  // }
+  protected addPoule() {
+    if (this.round.isRoot()) {
+      // poule toevoegen met zelfde aantal deelnemers als laatste poule
+      this.structureService.addPouleToRootRound(this.round);
+    } else {
+      // poule toevoegen, maar zelfde aantal deelnemers behouden
+    }
+  }
 
-  // get RoundLOSERS(): number {
-  //   return QualifyGroup.LOSERS;
-  // }
+  protected removePlace() {
+    if (this.round.isRoot()) {
+      this.structureService.removePlaceFromRootRound(this.round);
+    }
+  }
+
+  protected addPlace() {
+    if (this.round.isRoot()) {
+      this.structureService.addPlaceToRootRound(this.round);
+    }
+
+  }
+
+
+
+
 
   // private getStructureService(): StructureService {
   //   return this.structureService;
@@ -221,5 +262,9 @@ export class TournamentStructureRoundComponent {
 
   protected resetAlert(): void {
     this.alert = undefined;
+  }
+
+  protected setAlert(type: string, message: string) {
+    this.alert = { type: type, message: message };
   }
 }

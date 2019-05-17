@@ -15,12 +15,7 @@
   <div *ngIf="round.isRoot()" class="d-sm-none btn-group-vertical" role="group" aria-label="aantal deelnemers">
     <button type="button" disabled class="btn btn-outline-secondary">deelnemers</button>
     <div class="btn-group" role="group" aria-label="aantal deelnemers">
-      <button *ngIf="canRemovePlace()" type="button" class="btn btn-outline-secondary" (click)="removePlace()">
-        <fa-icon [icon]="['fas', 'minus']"></fa-icon>
-      </button>
-      <button *ngIf="!canRemovePlace()" type="button" class="btn btn-outline-secondary disabled" container="body"
-        placement="bottom"
-        ngbPopover="Er kan geen deelnemer verwijderd worden. Alle deelnemers gaan door naar de volgende ronde. Pas 1 van de 2 schuiven aan.">
+      <button type="button" class="btn btn-outline-secondary" (click)="removePlace()">
         <fa-icon [icon]="['fas', 'minus']"></fa-icon>
       </button>
       <button type="button" class="btn btn-outline-secondary" (click)="addPlace()">
@@ -42,15 +37,9 @@
     </button>
   </div>
   <div *ngIf="round.isRoot()" class="d-none d-sm-inline-flex btn-group" role="group" aria-label="aantal deelnemers">
-    <button *ngIf="canRemovePlace()" type="button" class="btn btn-outline-secondary" (click)="removePlace()">
+    <button type="button" class="btn btn-outline-secondary" (click)="removePlace()">
       <fa-icon [icon]="['fas', 'minus']"></fa-icon>
     </button>
-    <button *ngIf="!canRemovePlace()" type="button" class="btn btn-outline-secondary disabled" container="body"
-      placement="bottom"
-      ngbPopover="Er kan geen deelnemer verwijderd worden. Alle deelnemers gaan door naar de volgende ronde. Pas 1 van de 2 schuiven aan.">
-      <fa-icon [icon]="['fas', 'minus']"></fa-icon>
-    </button>
-
     <button type="button" disabled class="btn btn-outline-secondary">deelnemers</button>
     <button type="button" class="btn btn-outline-secondary" (click)="addPlace()">
       <fa-icon [icon]="['fas', 'plus']"></fa-icon>

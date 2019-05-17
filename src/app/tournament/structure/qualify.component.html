@@ -1,5 +1,42 @@
-<div class="d-flex justify-content-center mb-2" *ngIf="round.getNrOfPlaces() > 2">
-    <button type="button" class="btn btn-outline-secondary" (click)="switchView()">
-        <i class="fi flaticon-structure"></i><span> kwalificatie instellen</span>
+<p *ngIf="alert">
+    <ngb-alert [dismissible]="false" [type]="alert.type">{{ alert.message }}</ngb-alert>
+</p>
+<div class="d-flex justify-content-around mb-2" *ngIf="round.getNrOfPlaces() > 2 && !round.isStarted()">
+    <ng-container *ngTemplateOutlet="modifyQualifiers;context:{$implicit: QualifyGroupWINNERS}">
+    </ng-container>
+    <button *ngIf="qualifyGroupsEditable() && round.isRoot()" type="button" class="btn btn-outline-secondary"
+        (click)="switchView()">
+        <i class="fi flaticon-structure"></i><span class="d-none d-sm-inline-flex"> kwalificatiegroepen</span>
     </button>
+    <ng-container *ngTemplateOutlet="modifyQualifiers;context:{$implicit: QualifyGroupLOSERS}">
+    </ng-container>
 </div>
+
+<ng-template #modifyQualifiers let-winnersOrLosers>
+    <!-- start vertical-->
+    <div *ngIf="round.getNrOfPlaces() >= 4" class="d-sm-none btn-group-vertical" role="group" aria-label="aantal">
+        <button type="button" disabled
+            class="btn btn-outline-secondary">{{nameService.getWinnersLosersDescription(winnersOrLosers,true)}}</button>
+        <div class="btn-group" role="group" aria-label="aantal">
+            <button type="button" class="btn btn-outline-secondary" (click)="removeQualifier(winnersOrLosers)">
+                <fa-icon [icon]="['fas', 'minus']"></fa-icon>
+            </button>
+            <button type="button" class="btn btn-outline-secondary" (click)="addQualifier(winnersOrLosers)">
+                <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <!-- end vertical-->
+    <!-- start horizontal-->
+    <div *ngIf="round.getNrOfPlaces() >= 4" class="d-none d-sm-inline-flex btn-group" role="group" aria-label="aantal">
+        <button type="button" class="btn btn-outline-secondary" (click)="removeQualifier(winnersOrLosers)">
+            <fa-icon [icon]="['fas', 'minus']"></fa-icon>
+        </button>
+        <button type="button" disabled
+            class="btn btn-outline-secondary">{{nameService.getWinnersLosersDescription(winnersOrLosers,true)}}</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="addQualifier(winnersOrLosers)">
+            <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+        </button>
+    </div>
+    <!-- end horizontal-->
+</ng-template>
