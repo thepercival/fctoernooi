@@ -41,7 +41,8 @@ export class CSSService {
     getQualifyPlace(place: PoulePlace): string {
         const horizontalPouleWinners = place.getHorizontalPoule(QualifyGroup.WINNERS);
         const qualifyGroupWinners: QualifyGroup = horizontalPouleWinners.getQualifyGroup();
-        const qualifyGroupLosers: QualifyGroup = place.getHorizontalPoule(QualifyGroup.LOSERS).getQualifyGroup();
+        const horizontalPouleLosers = place.getHorizontalPoule(QualifyGroup.LOSERS);
+        const qualifyGroupLosers: QualifyGroup = horizontalPouleLosers.getQualifyGroup();
         if (!qualifyGroupWinners && !qualifyGroupLosers) {
             return "";
         }
@@ -50,11 +51,18 @@ export class CSSService {
             return classes + ' q-w-' + qualifyGroupWinners.getNumber();
         }
         if (qualifyGroupLosers && !qualifyGroupWinners) {
-            const classes = (qualifyGroupLosers.getNrOfToPlacesShort() > 0 ? 'q-partial' : '')
+            const classes = (qualifyGroupLosers.getNrOfToPlacesShort() > 0 && horizontalPouleLosers.isBorderPoule() ? 'q-partial' : '')
             return classes + ' q-l-' + qualifyGroupLosers.getNumber();
         }
-        console.error('make css combination');
-        return "";
+        const partialWinners = (qualifyGroupWinners.getNrOfToPlacesShort() > 0 && horizontalPouleWinners.isBorderPoule());
+        const partialLosers = (qualifyGroupLosers.getNrOfToPlacesShort() > 0 && horizontalPouleLosers.isBorderPoule());
+        if (partialWinners && partialLosers) {
+            return 'q-partial q-w-' + qualifyGroupWinners.getNumber() + '-double-partial q-l-' + qualifyGroupLosers.getNumber() + '-double-partial';
+        }
+        if (!partialWinners) {
+            return 'q-w-' + qualifyGroupWinners.getNumber();
+        }
+        return 'q-l-' + qualifyGroupLosers.getNumber();
     }
 
     getQualifyRound(round: Round): string {

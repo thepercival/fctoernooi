@@ -46,21 +46,11 @@ export class TournamentStructureRoundComponent {
   // }
 
   protected removePoule() {
-    if (this.round.isRoot()) {
-      // poule verwijderen maar wel hetzelfde aantal deelnemers behouden
-      this.structureService.removePouleFromRootRound(this.round);
-    } else {
-      // poule verwijderen, ??
-    }
+    this.structureService.removePoule(this.round, this.round.isRoot());
   }
 
   protected addPoule() {
-    if (this.round.isRoot()) {
-      // poule toevoegen met zelfde aantal deelnemers als laatste poule
-      this.structureService.addPouleToRootRound(this.round);
-    } else {
-      // poule toevoegen, maar zelfde aantal deelnemers behouden
-    }
+    this.structureService.addPoule(this.round, this.round.isRoot());
   }
 
   protected removePlace() {

@@ -24,21 +24,11 @@ export class TournamentStructureRoundArrangeComponent {
   }
 
   addPoule() {
-    if (this.round.isRoot()) {
-      // poule toevoegen met zelfde aantal deelnemers als laatste poule
-      this.arrangeAction.emit('addPoule');
-    } else {
-      // poule toevoegen, maar zelfde aantal deelnemers behouden
-    }
+    this.arrangeAction.emit('addPoule');
   }
 
   removePoule() {
-    if (this.round.isRoot()) {
-      // poule toevoegen met zelfde aantal deelnemers als laatste poule
-      this.arrangeAction.emit('removePoule');
-    } else {
-      // poule toevoegen, maar zelfde aantal deelnemers behouden
-    }
+    this.arrangeAction.emit('removePoule');
   }
 
   addPlace() {

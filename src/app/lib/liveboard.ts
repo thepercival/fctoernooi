@@ -1,6 +1,13 @@
 import { Game, NameService, PlanningService, Poule, RoundNumber, Structure } from 'ngx-sport';
 
-import { EndRankingScreen, PlayedGamesScreen, PoulesRankingScreen, Screen, SponsorScreenService, CreatedAndInplayGamesScreen } from './liveboard/screens';
+import {
+    CreatedAndInplayGamesScreen,
+    EndRankingScreen,
+    PlayedGamesScreen,
+    PoulesRankingScreen,
+    Screen,
+    SponsorScreenService,
+} from './liveboard/screens';
 import { Tournament } from './tournament';
 
 export class Liveboard {
@@ -45,11 +52,11 @@ export class Liveboard {
         const games: Game[] = this.getGamesCreatedAndInplay();
         if (games.length === 0) {
             return [];
-        }        
+        }
 
         const screens: Screen[] = [];
         // while (games.length > 0) {
-            screens.push( new CreatedAndInplayGamesScreen(games) );
+        screens.push(new CreatedAndInplayGamesScreen(games));
         // }
         return screens;
     }
@@ -60,7 +67,7 @@ export class Liveboard {
         return this.getGamesCreatedAndInplayHelper(firstRoundNuber);
     }
 
-    
+
     getGamesCreatedAndInplayHelper(roundNumber: RoundNumber): Game[] {
         // if( roundNumber.getState() === Game.STATE_PLAYED ) {
         //     if( roundNumber.hasNext() ) {
@@ -172,6 +179,9 @@ export class Liveboard {
 
     private getScreensForEndRanking(): Screen[] {
         const screens: Screen[] = [];
+        if (!(this.structure.getFirstRoundNumber().hasNext() || this.structure.getRootRound().getPoules().length === 1)) {
+            return screens;
+        }
         if (this.structure.getLastRoundNumber().getState() !== Game.STATE_PLAYED) {
             return screens;
         }

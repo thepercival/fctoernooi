@@ -19,6 +19,7 @@ export class GameListComponent extends TournamentComponent implements OnInit {
   showPrintBtn: boolean;
   noRefresh = false;
   userIsPlannerOrStructureAdmin: boolean;
+  shouldShowEndRanking: boolean;
 
   constructor(
     route: ActivatedRoute,
@@ -34,6 +35,7 @@ export class GameListComponent extends TournamentComponent implements OnInit {
   ngOnInit() {
     super.myNgOnInit(() => {
       this.setPlanningService();
+      this.shouldShowEndRanking = (this.structure.getFirstRoundNumber().hasNext() || this.structure.getRootRound().getPoules().length === 1);
     });
     this.showPrintBtn = true;
   }

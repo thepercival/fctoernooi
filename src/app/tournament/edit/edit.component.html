@@ -97,9 +97,9 @@
             <label class="col-form-label">( tijdens een ronde )</label>
           </div>
         </div>
-        <div *ngIf="isStarted && customForm.controls.togglebreak.value === true" class="form-group row">
+        <div *ngIf="!isStarted && customForm.controls.togglebreak.value === true" class="form-group row">
           <div class="col-3">
-            <label for="breaktime" class="col-form-label">pausetijd</label>
+            <label for="breaktime" class="col-form-label">pauzetijd</label>
           </div>
           <div class="col-9">
             <ngb-timepicker id="breaktime" name="breaktime" [formControl]="customForm.controls.breaktime"
@@ -109,7 +109,7 @@
         </div>
         <div *ngIf="!isStarted && customForm.controls.togglebreak.value" class="form-group row">
           <div class="col-3">
-            <label for="breakduration" class="col-form-label">pauseduur</label>
+            <label for="breakduration" class="col-form-label">pauzeduur</label>
           </div>
           <div class="col-6 col-sm-5 ">
             <div class="input-group">

@@ -17,7 +17,7 @@
         <ngb-alert [dismissible]="false" type="warning">de ronde is begonnen, je kunt niet meer wijzigen</ngb-alert>
       </p>
       <p *ngIf="editable && alert">
-        <ngb-alert [dismissible]="false" [type]="alert.type">{{ alert.message }}</ngb-alert>
+        <ngb-alert [dismissible]="true" (close)="alert = undefined" [type]="alert.type">{{ alert.message }}</ngb-alert>
       </p>
 
       <div class="d-flex flex-wrap justify-content-around">

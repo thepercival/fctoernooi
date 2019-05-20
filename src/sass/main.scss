@@ -184,8 +184,6 @@ ngb-alert {
   box-shadow: none !important; 
 }
 
-			
-
 .q-w-1 {
   border-color: #298F00;
 }
@@ -198,11 +196,6 @@ ngb-alert {
 .q-w-4 {
   border-color: #00578A;
 }
-
-.q-partial {
-  border-style: dashed;
-}
-
 .q-l-4 {
   border-color: #FFFF66;
 }
@@ -215,3 +208,38 @@ ngb-alert {
 .q-l-1 {
   border-color: #FF0000;
 }			
+.q-partial {
+  border-style: dashed;
+}
+.q-w-1-double-partial {
+  border-left-color: #298F00;
+  border-top-color: #298F00;
+}
+.q-w-2-double-partial {
+  border-left-color: #84CF96;
+  border-top-color: #84CF96;
+}
+.q-w-3-double-partial {
+  border-left-color: #0588BC;
+  border-top-color: #0588BC;
+}
+.q-w-4-double-partial {
+  border-left-color: #00578A;
+  border-top-color: #00578A;
+}
+.q-l-4-double-partial {
+  border-right-color: #FFFF66;
+  border-bottom-color: #FFFF66;
+}
+.q-l-3-double-partial {
+  border-right-color: #FFCC00;
+  border-bottom-color: #FFCC00;
+}
+.q-l-2-double-partial {
+  border-right-color: #FF9900;
+  border-bottom-color: #FF9900;
+}
+.q-l-1-double-partial {
+  border-right-color: #FF0000;
+  border-bottom-color: #FF0000;
+}
