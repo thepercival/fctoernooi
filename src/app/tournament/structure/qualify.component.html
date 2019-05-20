@@ -1,5 +1,5 @@
 <p *ngIf="alert">
-    <ngb-alert [dismissible]="false" [type]="alert.type">{{ alert.message }}</ngb-alert>
+    <ngb-alert [dismissible]="true" (close)="alert = undefined" [type]="alert.type">{{ alert.message }}</ngb-alert>
 </p>
 <div class="d-flex justify-content-around mb-2" *ngIf="round.getNrOfPlaces() > 2 && !round.isStarted()">
     <ng-container *ngTemplateOutlet="modifyQualifiers;context:{$implicit: QualifyGroupWINNERS}">

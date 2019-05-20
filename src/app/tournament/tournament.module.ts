@@ -83,7 +83,6 @@ import { RoundsSettingsComponent } from './settings/rounds.component';
 import { TournamentSponsorEditComponent } from './sponsor/edit.component';
 import { SponsorListComponent } from './sponsor/list.component';
 import { TournamentStructureComponent } from './structure/main.component';
-import { TournamentStructureQualificationModalComponent } from './structure/qualificationmodal.component';
 import { TournamentStructureQualifyComponent } from './structure/qualify.component';
 import { TournamentStructureRoundComponent } from './structure/round.component';
 import { TournamentStructureRoundArrangeComponent } from './structure/round/arrange.component';
@@ -135,12 +134,11 @@ library.add(
     TournamentRefereeEditComponent,
     TournamentSponsorEditComponent,
     TournamentFilterComponent,
-    TournamentStructureQualificationModalComponent,
     TournamentListRemoveModalComponent,
     ProgressComponent,
     EscapeHtmlPipe
   ],
-  entryComponents: [TournamentStructureQualificationModalComponent, TournamentListRemoveModalComponent],
+  entryComponents: [TournamentListRemoveModalComponent],
   providers: [
     RoleMapper,
     StructureRepository,
