@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NameService, Round, RoundNumber, StructureService } from 'ngx-sport';
-import { max } from 'rxjs/operators';
+import { HorizontalPoule, NameService, QualifyGroup, Round, RoundNumber, StructureService } from 'ngx-sport';
 
 import { CSSService } from '../../common/cssservice';
 import { Tournament } from '../../lib/tournament';
+import { StructureViewType } from './main.component';
 
 @Component({
   selector: 'app-tournament-structureround',
@@ -15,6 +15,7 @@ export class TournamentStructureRoundComponent {
   @Input() round: Round;
   @Output() roundNumberChanged = new EventEmitter<RoundNumber>();
   @Input() editable: boolean;
+  @Input() viewType: StructureViewType;
   public alert: any;
   private structureService: StructureService;
 
@@ -38,12 +39,19 @@ export class TournamentStructureRoundComponent {
     } catch (e) {
       this.setAlert('danger', e.message);
     }
-
-
   }
-  // rearrange(nrOfPlaces: number, nrOfPoules: number) {
-  //   this.structureService.rearrange(round, nrOfPlaces, nrOfPoules);
-  // }
+
+  get QualifyGroupWINNERS(): number {
+    return QualifyGroup.WINNERS;
+  }
+
+  get QualifyGroupLOSERS(): number {
+    return QualifyGroup.LOSERS;
+  }
+
+  get ViewTypeQualifyGroups(): number {
+    return StructureViewType.QUALIFYGROUPS;
+  }
 
   protected removePoule() {
     this.structureService.removePoule(this.round, this.round.isRoot());
@@ -63,12 +71,88 @@ export class TournamentStructureRoundComponent {
     if (this.round.isRoot()) {
       this.structureService.addPlaceToRootRound(this.round);
     }
+  }
+
+  getEditHorizontalPoules(): EditHorPoule[] {
+    const horizontalPoulesWinners: HorizontalPoule[] = [];
+    // QualifyGroup.WINNERS
+    this.round.getQualifyGroups(QualifyGroup.WINNERS).forEach(qualifyGroup => {
+      qualifyGroup.getHorizontalPoules().forEach(horizontalPoule => {
+        if (horizontalPoule.getNrOfQualifiers() > 1) {
+          horizontalPoulesWinners.push(horizontalPoule);
+        }
+      })
+    });
+
+    // QualifyGroup.LOSERS
+    const horizontalPoulesLosers: HorizontalPoule[] = [];
+    this.round.getQualifyGroups(QualifyGroup.LOSERS).forEach(qualifyGroup => {
+      qualifyGroup.getHorizontalPoules().forEach(horizontalPoule => {
+        if (horizontalPoule.getNrOfQualifiers() > 1) {
+          horizontalPoulesLosers.push(horizontalPoule);
+        }
+      })
+    });
+
+    // QualifyGroup.DROPOUTS
+    const lastWinnersHorPoule = horizontalPoulesWinners[horizontalPoulesWinners.length - 1];
+    const lastLosersHorPoule = horizontalPoulesLosers[horizontalPoulesLosers.length - 1];
+    const horizontalPoulesDropouts: HorizontalPoule[] = this.round.getHorizontalPoules(QualifyGroup.WINNERS).filter(horizontalPoule => {
+      return ((!lastWinnersHorPoule || horizontalPoule.getPlaceNumber() > lastWinnersHorPoule.getPlaceNumber())
+        && (!lastLosersHorPoule || horizontalPoule.getPlaceNumber() < lastLosersHorPoule.getPlaceNumber())
+      );
+    });
+
+    let horizontalPoules: HorizontalPoule[] = horizontalPoulesWinners.concat(horizontalPoulesDropouts);
+    horizontalPoules = horizontalPoules.concat(horizontalPoulesLosers);
+
+    const editHorPoules: EditHorPoule[] = [];
+    let previous;
+    horizontalPoules.forEach(horizontalPoule => {
+      editHorPoules.push({ current: horizontalPoule, previous: previous });
+      previous = horizontalPoule;
+    });
+    return editHorPoules;
+  }
+
+  areQualifyGroupsSplittable(editHorPoule: EditHorPoule): boolean {
+    if (!editHorPoule.previous || !editHorPoule.previous.getQualifyGroup()
+      || editHorPoule.previous.getQualifyGroup() !== editHorPoule.current.getQualifyGroup()) {
+      return false;
+    }
+    if (editHorPoule.previous.isBorderPoule() && editHorPoule.previous.getNrOfQualifiers() < 2) {
+      return false;
+    }
+    if (editHorPoule.current.isBorderPoule() && editHorPoule.current.getNrOfQualifiers() < 2) {
+      return false;
+    }
+    return true;
+  }
+
+  areQualifyGroupsMergable(editHorPoule: EditHorPoule): boolean {
+    return (editHorPoule.previous && editHorPoule.previous.getQualifyGroup() && editHorPoule.current.getQualifyGroup()
+      && editHorPoule.previous.getQualifyGroup().getWinnersOrLosers() !== QualifyGroup.DROPOUTS
+      && editHorPoule.previous.getQualifyGroup().getWinnersOrLosers() !== editHorPoule.current.getQualifyGroup().getWinnersOrLosers()
+      && editHorPoule.previous.getQualifyGroup() !== editHorPoule.current.getQualifyGroup());
+  }
+
+  splitQualifyGroup(editHorPoule: EditHorPoule) {
+    this.structureService.splitQualifyGroup(editHorPoule.previous.getQualifyGroup(), editHorPoule.previous, editHorPoule.current);
+  }
+
+  mergeQualifyGroups(editHorPoule: EditHorPoule) {
 
   }
 
-
-
-
+  // getPlaceNumbers(): number[] {
+  //   const losersHorPoule = this.round.getFirstHorizontalPoule(QualifyGroup.LOSERS);
+  //   const maxPlaceNumber = losersHorPoule.getFirstPlace().getNumber();
+  //   const placeNumbers = [];
+  //   for (let placeNumber = 1; placeNumber <= 6; placeNumber++) {
+  //     placeNumbers.push(placeNumber);
+  //   }
+  //   return placeNumbers;
+  // }
 
   // private getStructureService(): StructureService {
   //   return this.structureService;
@@ -82,84 +166,12 @@ export class TournamentStructureRoundComponent {
   //   return (this.round.getNrOfPlaces() / (this.round.getPoules().length + 1)) >= 2;
   // }
 
-  // addPoule(round, fillPouleToMinimum = true): void {
-  //   this.resetAlert();
-  //   const structureService = this.getStructureService();
-  //   structureService.addPoule(round, fillPouleToMinimum ? 2 : 0);
-  //   if (round.getNumber() > 1) {
-  //     structureService.recalculateQualifyRulesForRound(round);
-  //   }
-  //   // this.getPlanningService().create(round.getNumber());
-  //   this.roundNumberChanged.emit(round.getNumber());
-  // }
-
-
-  // removePoule(round): void {
-  //   this.resetAlert();
-  //   try {
-  //     this.getStructureService().removePoule(round);
-  //     // this.getPlanningService().create(round.getNumber());
-  //     this.roundNumberChanged.emit(round.getNumber());
-  //   } catch (e) {
-  //     this.setAlert('danger', e.message);
-  //   }
-  // }
-
-  // addPoulePlace(round): void {
-  //   this.resetAlert();
-  //   try {
-  //     const structureService = this.getStructureService();
-  //     structureService.addPoulePlace(round);
-  //     if (round.getNumber() > 1) {
-  //       structureService.recalculateQualifyRulesForRound(round);
-  //     }
-  //     // this.getPlanningService().create(round.getNumber());
-  //     this.roundNumberChanged.emit(round.getNumber());
-  //   } catch (e) {
-  //     this.setAlert('danger', e.message);
-  //   }
-  // }
-
-  // removePoulePlace(round): void {
-  //   this.resetAlert();
-  //   try {
-  //     this.getStructureService().removePoulePlace(round);
-  //     // this.getPlanningService().create(round.getNumber());
-  //     this.roundNumberChanged.emit(round.getNumber());
-  //   } catch (e) {
-  //     this.setAlert('danger', e.message);
-  //   }
-  // }
-
   // canRemovePoulePlace(round: Round) {
   //   return !this.hasMinimumNrOfPlacesPerPoule(round);
   // }
 
   // hasMinimumNrOfPlacesPerPoule(round: Round) {
   //   return (round.getPoules().length * 2) === round.getNrOfPlaces();
-  // }
-
-  // getMaxSliderValue(winnersOrLosers: number): number {
-  //   console.error('getMaxSliderValue');
-  //   return 0;
-  //   // const opposing = Round.getOpposing(winnersOrLosers);
-  //   // const max = this.round.getNrOfPlaces() - this.round.getNrOfPlacesChildRound(opposing);
-  //   // if (max < 1) {
-  //   //   return 1;
-  //   // }
-  //   // return max;
-  // }
-
-
-
-  // protected setAlert(type: string, message: string): boolean {
-  //   this.alert = { 'type': type, 'message': message };
-  //   return (type === 'success');
-  // }
-
-  // startSliding(nrOfChildPlaces: number, winnersOrLosers: number) {
-  //   const maxNrOfPlaces = this.calcMaxNrOfPlacesPerPoule(this.round, winnersOrLosers);
-  //   this.getStructureService().setMaxNrOfPoulePlacesForChildRound(maxNrOfPlaces);
   // }
 
   // getPlaceNumbers(round: Round): number[] {
@@ -171,69 +183,6 @@ export class TournamentStructureRoundComponent {
   //   return placeNumbers;
   // }
 
-  // getNrOfPlacesPerPoule(round: Round) {
-  //   this.structureService.getNrOfPlacesPerPoule(round.getNrOfPlaces(), round.getPoules().length);
-  // }
-
-  // protected calcMaxNrOfPlacesPerPoule(parentRound: Round, winnersOrLosers: number): number {
-  //   console.error('calcMaxNrOfPlacesPerPoule');
-  //   return 0;
-  //   // const nrOfChildRoundPlaces = parentRound.getNrOfPlacesChildRound(winnersOrLosers);
-  //   // const childRound = parentRound.getChildRound(winnersOrLosers);
-  //   // if (childRound === undefined) {
-  //   //   return 2;
-  //   // }
-  //   // const structureService = this.getStructureService();
-  //   // return structureService.getNrOfPlacesPerPoule(nrOfChildRoundPlaces, childRound.getPoules().length);
-  // }
-
-  // public onSliderChange(nrOfChildPlacesNew: number, winnersOrLosers: number) {
-  //   console.error('onSliderChange, do only something when letting loose');
-  //   // if ((nrOfChildPlacesNew + this.round.getNrOfPlacesChildRound(Round.getOpposing(winnersOrLosers))) > this.round.getNrOfPlaces()) {
-  //   //   return;
-  //   // }
-  //   // this.getStructureService().changeNrOfPlacesChildRound(nrOfChildPlacesNew, this.round, winnersOrLosers);
-  //   // // this.getPlanningService().create(this.round.getNumber());
-  //   // if (this.round.getNumber().hasNext()) {
-  //   //   this.roundNumberChanged.emit(this.round.getNumber().getNext());
-  //   // }
-  // }
-
-  // endSliding(nrOfChildPlaces: number, winnersOrLosers: number) {
-  //   this.checkRoundWithOnePoulePlace(nrOfChildPlaces, winnersOrLosers);
-  // }
-
-  // checkRoundWithOnePoulePlace(nrOfPoulePlacesChildRound: number, winnersOrLosers: number) {
-  //   console.log('checkRoundWithOnePoulePlace');
-  //   // if (nrOfPoulePlacesChildRound !== 1 || this.round.getNrOfPlacesChildren(winnersOrLosers) !== 1) {
-  //   //   return;
-  //   // }
-  //   const nextRoundNumber = this.round.getNumber().getNext();
-  //   this.getStructureService().removeChildRound(this.round, winnersOrLosers);
-  //   this.roundNumberChanged.emit(nextRoundNumber);
-  // }
-
-  // canChangeQualifyOrder(): boolean {
-  //   console.error('canChangeQualifyOrder');
-  //   return true;
-  //   // !this.round.hasCustomQualifyOrder() &&
-  //   //   this.round.getPoules().length >= 2 /*&& (this.round.getNumber().getRounds().length - 1) <= 1*/;
-  // }
-
-  // toggleQualifyOrder(round: Round) {
-  //   console.error('toggleQualifyOrder');
-  //   // this.resetAlert();
-  //   // round.setQualifyOrder(this.qualifyOrderIsCross(round) ? Round.QUALIFYORDER_RANK : Round.QUALIFYORDER_CROSS);
-  //   // this.getStructureService().recalculateQualifyRulesForRound(round);
-  //   // // this.getPlanningService().create(round.getNumber());
-  //   // this.roundNumberChanged.emit(round.getNumber());
-  // }
-
-  // qualifyOrderIsCross(round: Round) {
-  //   console.error('qualifyOrderIsCross');
-  //   return true;
-  //   // return round.getQualifyOrder() === Round.QUALIFYORDER_CROSS;
-  // }
 
   // getDivisionClasses(round: Round): string {
   //   const nrOfRounds = round.getNumber().getRounds().length;
@@ -257,4 +206,9 @@ export class TournamentStructureRoundComponent {
   protected setAlert(type: string, message: string) {
     this.alert = { type: type, message: message };
   }
+}
+
+interface EditHorPoule {
+  current: HorizontalPoule;
+  previous: HorizontalPoule;
 }

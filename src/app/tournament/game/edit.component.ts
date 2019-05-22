@@ -177,13 +177,11 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         if (game !== undefined) {
             return game;
         }
-        console.error('getGameById');
-        // // game = this.getGameById(id, round.getChildRound(QualifyGroup.WINNERS));
-        // // if (game !== undefined) {
-        // //     return game;
-        // // }
-        // return this.getGameById(id, round.getChildRound(Round.LOSERS));
-        return undefined;
+        round.getChildren().some(child => {
+            game = this.getGameById(id, child);
+            return (game !== undefined);
+        });
+        return game;
     }
 
     protected initScores(game?: Game) {
@@ -313,7 +311,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     protected getWarningsForEqualsInQualificationHelper(equalItemsPerRank: RoundRankingItem[][], postFix: string): string[] {
         return equalItemsPerRank.map(equalItems => {
             const names: string[] = equalItems.map(equalItem => {
-                const poulePlace = equalItem.getRound().getPoulePlace(equalItem.getPoulePlaceLocation());
+                const poulePlace = equalItem.getRound().getPoulePlace(equalItem.getPlaceLocation());
                 return this.nameService.getPoulePlaceName(poulePlace, true, true);
             });
             return names.join(' & ') + ' zijn precies gelijk geëindigd' + postFix;
@@ -334,7 +332,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         return equalItemsPerRank.filter(equalItems => {
             // als alle equalitems geen torule hebben dan false
             return !equalItems.every(item => {
-                const poulePlace = item.getRound().getPoulePlace(item.getPoulePlaceLocation());
+                const poulePlace = item.getRound().getPoulePlace(item.getPlaceLocation());
                 return poulePlace.getToQualifyRules().length === 0;
             });
         });

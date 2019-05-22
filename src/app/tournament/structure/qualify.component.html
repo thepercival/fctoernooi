@@ -4,10 +4,6 @@
 <div class="d-flex justify-content-around mb-2" *ngIf="round.getNrOfPlaces() > 2 && !round.isStarted()">
     <ng-container *ngTemplateOutlet="modifyQualifiers;context:{$implicit: QualifyGroupWINNERS}">
     </ng-container>
-    <button *ngIf="qualifyGroupsEditable() && round.isRoot()" type="button" class="btn btn-outline-secondary"
-        (click)="switchView()">
-        <i class="fi flaticon-structure"></i><span class="d-none d-sm-inline-flex"> kwalificatiegroepen</span>
-    </button>
     <ng-container *ngTemplateOutlet="modifyQualifiers;context:{$implicit: QualifyGroupLOSERS}">
     </ng-container>
 </div>

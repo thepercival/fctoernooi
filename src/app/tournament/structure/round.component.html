@@ -10,7 +10,8 @@
         class="text-{{getClassPostfix(winnersOrLosers)}}"></fa-icon> -->
     </div>
     <div class="card-body px-1">
-      <app-tournament-structureround-arrange *ngIf="editable" [round]="round" (arrangeAction)="arrangeAction($event)">
+      <app-tournament-structureround-arrange *ngIf="editable && viewType !== ViewTypeQualifyGroups" [round]="round"
+        (arrangeAction)="arrangeAction($event)">
       </app-tournament-structureround-arrange>
 
       <p *ngIf="editable && round.isStarted()">
@@ -20,7 +21,7 @@
         <ngb-alert [dismissible]="true" (close)="alert = undefined" [type]="alert.type">{{ alert.message }}</ngb-alert>
       </p>
 
-      <div class="d-flex flex-wrap justify-content-around">
+      <div *ngIf="viewType !== ViewTypeQualifyGroups" class="d-flex flex-wrap justify-content-around">
         <ul *ngFor="let poule of round.getPoules();" class="list-group mb-3">
           <li class="list-group-item px-2 py-2">{{nameService.getPouleName( poule, false)}}</li>
           <li *ngFor="let place of poule.getPlaces();"
@@ -29,15 +30,35 @@
                 place, false)}}</li>
         </ul>
       </div>
+      <div *ngIf="editable && viewType === ViewTypeQualifyGroups" class="d-flex flex-wrap justify-content-around">
+        <ul class="list-group mb-3">
+          <ng-template ngFor let-editHorPoule [ngForOf]="getEditHorizontalPoules()">
+            <li *ngIf="areQualifyGroupsSplittable(editHorPoule)"
+              class="list-group-item px-2 py-2 place-list-item pointer" (click)="splitQualifyGroup(editHorPoule)">
+              <fa-icon class="rotate-45" [icon]="['fas', 'unlink']"></fa-icon> <span *ngIf="round.isRoot()"> plekken
+                ontkoppelen</span>
+            </li>
+            <li *ngIf="areQualifyGroupsMergable(editHorPoule)" class="list-group-item px-2 py-1 place-list-item pointer"
+              (click)="mergeQualifyGroups(editHorPoule)">
+              <fa-icon class="rotate-45" [icon]="['fas', 'link']"></fa-icon> <span *ngIf="round.isRoot()"> plekken
+                koppelen</span>
+            </li>
+            <li class="list-group-item px-2 py-2 place-list-item  {{cssService.getQualifyPoule(editHorPoule.current)}}">
+              {{editHorPoule.current.getPlaceNumber()}}
+            </li>
+          </ng-template>
+        </ul>
+      </div>
     </div>
   </div>
-  <app-tournament-structurequalify *ngIf="editable" [round]="round">
+  <app-tournament-structurequalify *ngIf="editable && viewType !== ViewTypeQualifyGroups" [round]="round"
+    [viewType]="viewType">
   </app-tournament-structurequalify>
 
   <div class="row text-center no-gutters">
     <app-tournament-structureround *ngFor="let childRound of round.getChildren()" class="mb-2"
       [ngStyle]="{ 'width': (100/round.getChildren().length) + '%' }" [round]="childRound" [editable]="editable"
-      (roundNumberChanged)="roundNumberChanged.emit($event)"></app-tournament-structureround>
+      (roundNumberChanged)="roundNumberChanged.emit($event)" [viewType]="viewType"></app-tournament-structureround>
   </div>
   <div *ngIf="!round.isRoot() && round.getNrOfPlaces() === 2">
     <div class="card round {{cssService.getQualifyRound(round)}}">

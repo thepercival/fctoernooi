@@ -25,6 +25,6 @@ export class TournamentLiveboardPoulesComponent {
     }
 
     getPoulePlace(rankingItem: RoundRankingItem): PoulePlace {
-        return rankingItem.getRound().getPoulePlace(rankingItem.getPoulePlaceLocation());
+        return rankingItem.getRound().getPoulePlace(rankingItem.getPlaceLocation());
     }
 }

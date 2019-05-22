@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { NameService, QualifyGroup, Round, StructureService } from 'ngx-sport';
 
 import { Tournament } from '../../lib/tournament';
+import { StructureViewType } from './main.component';
 
 @Component({
     selector: 'app-tournament-structurequalify',
@@ -11,6 +12,7 @@ import { Tournament } from '../../lib/tournament';
 export class TournamentStructureQualifyComponent {
 
     @Input() round: Round;
+    @Input() viewType: number;
     public alert: any;
     private structureService: StructureService;
 
@@ -30,14 +32,8 @@ export class TournamentStructureQualifyComponent {
         return QualifyGroup.LOSERS;
     }
 
-    qualifyGroupsEditable() {
-        return true;
-        // if one qualifygroup with 2 complete horizontalpoules
-        // or 2 full qualifygroups for winners or losers
-    }
-
-    switchView() {
-        // call Output
+    get ViewTypeQualifyGroups(): number {
+        return StructureViewType.QUALIFYGROUPS;
     }
 
     removeQualifier(winnersOrLosers: number) {
