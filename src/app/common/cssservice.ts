@@ -47,8 +47,8 @@ export class CSSService {
             return "";
         }
         if (qualifyGroupWinners && qualifyGroupLosers) {
-            const partialWinners = (qualifyGroupWinners.getNrOfToPlacesShort() > 0 && horizontalPouleWinners.isBorderPoule());
-            const partialLosers = (qualifyGroupLosers.getNrOfToPlacesShort() > 0 && horizontalPouleLosers.isBorderPoule());
+            const partialWinners = (qualifyGroupWinners.getNrOfToPlacesTooMuch() > 0 && horizontalPouleWinners.isBorderPoule());
+            const partialLosers = (qualifyGroupLosers.getNrOfToPlacesTooMuch() > 0 && horizontalPouleLosers.isBorderPoule());
             if (partialWinners && partialLosers) {
                 return 'q-partial q-w-' + qualifyGroupWinners.getNumber() + '-double-partial q-l-' + qualifyGroupLosers.getNumber() + '-double-partial';
             }
@@ -68,7 +68,7 @@ export class CSSService {
         if (qualifyGroup === undefined) {
             return '';
         }
-        const classes = (qualifyGroup.getNrOfToPlacesShort() > 0 && horizontalPoule.isBorderPoule()) ? 'q-partial' : '';
+        const classes = (qualifyGroup.getNrOfToPlacesTooMuch() > 0 && horizontalPoule.isBorderPoule()) ? 'q-partial' : '';
         return classes + ' q-' + this.getQualifyWinnersOrLosers(qualifyGroup.getWinnersOrLosers()) + '-' + qualifyGroup.getNumber();
     }
 

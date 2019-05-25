@@ -6,7 +6,6 @@ import {
   CompetitorRepository,
   PlanningRepository,
   PlanningService,
-  QualifyGroup,
   Round,
   RoundNumber,
   Structure,
@@ -27,7 +26,6 @@ export class TournamentStructureComponent extends TournamentComponent implements
   changedRoundNumber: RoundNumber;
   originalCompetitors: Competitor[];
   clonedStructure: Structure;
-  viewType: number = StructureViewType.ROUNDSTRUCTURE;
 
   uiSliderConfigExample: any = {
     behaviour: 'drag',
@@ -146,47 +144,7 @@ export class TournamentStructureComponent extends TournamentComponent implements
       );
   }
 
-  get ViewTypeQualifyGroups(): number {
-    return StructureViewType.QUALIFYGROUPS;
-  }
-
   navigateBack() {
     this.myNavigation.back();
   }
-
-  switchView() {
-    const newViewType = this.viewType === StructureViewType.QUALIFYGROUPS ? StructureViewType.ROUNDSTRUCTURE : StructureViewType.QUALIFYGROUPS;
-    this.viewType = newViewType;
-  }
-
-  /**
-   * 1 : wanneer er een kw.groep van minimaal 2 horizontale poules is (grens h poule  moet minimaal twee door laten gaan) 
-   * 2 : 2 kw.groepen van winners of losers.
-   */
-  showSwitchView(): boolean {
-    if (this.viewType === StructureViewType.QUALIFYGROUPS) {
-      return true;
-    }
-    const round = this.clonedStructure.getRootRound();
-    const winnersQualifyGroups = round.getQualifyGroups(QualifyGroup.WINNERS);
-    const losersQualifyGroups = round.getQualifyGroups(QualifyGroup.LOSERS);
-    if (winnersQualifyGroups.length > 1 || losersQualifyGroups.length > 1) {
-      return true;
-    }
-    const qualifyGroups = winnersQualifyGroups.concat(losersQualifyGroups);
-    return qualifyGroups.some(qualifyGroup => {
-      if (qualifyGroup.getHorizontalPoules().length < 2) {
-        return false;
-      }
-      if (qualifyGroup.getHorizontalPoules().length > 2) {
-        return true;
-      }
-      return (!qualifyGroup.isBorderGroup() || qualifyGroup.getBorderPoule().getNrOfQualifiers() >= 2);
-    });
-  }
-}
-
-export enum StructureViewType {
-  ROUNDSTRUCTURE = 1,
-  QUALIFYGROUPS = 2
 }

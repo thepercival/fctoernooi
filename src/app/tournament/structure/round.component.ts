@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { HorizontalPoule, NameService, QualifyGroup, Round, RoundNumber, StructureService } from 'ngx-sport';
 
+import { IAlert } from '../../common/alert';
 import { CSSService } from '../../common/cssservice';
 import { Tournament } from '../../lib/tournament';
-import { StructureViewType } from './main.component';
+import { StructureViewType } from './qualify.component';
 
 @Component({
   selector: 'app-tournament-structureround',
@@ -15,9 +16,10 @@ export class TournamentStructureRoundComponent {
   @Input() round: Round;
   @Output() roundNumberChanged = new EventEmitter<RoundNumber>();
   @Input() editable: boolean;
-  @Input() viewType: StructureViewType;
-  public alert: any;
+  viewType: number = StructureViewType.ROUNDSTRUCTURE;
+  alert: IAlert;
   private structureService: StructureService;
+  showQualifyInfo = true;
 
   constructor(public nameService: NameService, public cssService: CSSService) {
     this.resetAlert();
@@ -36,6 +38,7 @@ export class TournamentStructureRoundComponent {
       } else if (action === 'addPlace') {
         this.addPlace();
       }
+      this.roundNumberChanged.emit(this.round.getNumber());
     } catch (e) {
       this.setAlert('danger', e.message);
     }
@@ -89,14 +92,14 @@ export class TournamentStructureRoundComponent {
     this.round.getQualifyGroups(QualifyGroup.LOSERS).forEach(qualifyGroup => {
       qualifyGroup.getHorizontalPoules().forEach(horizontalPoule => {
         if (horizontalPoule.getNrOfQualifiers() > 1) {
-          horizontalPoulesLosers.push(horizontalPoule);
+          horizontalPoulesLosers.unshift(horizontalPoule);
         }
       })
     });
 
     // QualifyGroup.DROPOUTS
     const lastWinnersHorPoule = horizontalPoulesWinners[horizontalPoulesWinners.length - 1];
-    const lastLosersHorPoule = horizontalPoulesLosers[horizontalPoulesLosers.length - 1];
+    const lastLosersHorPoule = horizontalPoulesLosers[0]; // because losers are unshifted instead of pushed
     const horizontalPoulesDropouts: HorizontalPoule[] = this.round.getHorizontalPoules(QualifyGroup.WINNERS).filter(horizontalPoule => {
       return ((!lastWinnersHorPoule || horizontalPoule.getPlaceNumber() > lastWinnersHorPoule.getPlaceNumber())
         && (!lastLosersHorPoule || horizontalPoule.getPlaceNumber() < lastLosersHorPoule.getPlaceNumber())
@@ -132,7 +135,7 @@ export class TournamentStructureRoundComponent {
   areQualifyGroupsMergable(editHorPoule: EditHorPoule): boolean {
     return (editHorPoule.previous && editHorPoule.previous.getQualifyGroup() && editHorPoule.current.getQualifyGroup()
       && editHorPoule.previous.getQualifyGroup().getWinnersOrLosers() !== QualifyGroup.DROPOUTS
-      && editHorPoule.previous.getQualifyGroup().getWinnersOrLosers() !== editHorPoule.current.getQualifyGroup().getWinnersOrLosers()
+      && editHorPoule.previous.getQualifyGroup().getWinnersOrLosers() === editHorPoule.current.getQualifyGroup().getWinnersOrLosers()
       && editHorPoule.previous.getQualifyGroup() !== editHorPoule.current.getQualifyGroup());
   }
 
@@ -141,7 +144,7 @@ export class TournamentStructureRoundComponent {
   }
 
   mergeQualifyGroups(editHorPoule: EditHorPoule) {
-
+    this.structureService.mergeQualifyGroups(editHorPoule.previous.getQualifyGroup(), editHorPoule.current.getQualifyGroup());
   }
 
   // getPlaceNumbers(): number[] {
@@ -212,3 +215,4 @@ interface EditHorPoule {
   current: HorizontalPoule;
   previous: HorizontalPoule;
 }
+
