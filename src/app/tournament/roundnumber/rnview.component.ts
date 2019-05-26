@@ -215,7 +215,7 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
 
   getRankingRuleDescriptions(): string[] {
     const ruleSet = this.tournament.getCompetition().getRuleSet();
-    const rankingService = new RankingService(ruleSet);
+    const rankingService = new RankingService(undefined, ruleSet);
     return rankingService.getRuleDescriptions();
   }
 }

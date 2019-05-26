@@ -20,7 +20,7 @@ export class TournamentLiveboardPoulesComponent {
     }
 
     getRankingItems(poule: Poule): RoundRankingItem[] {
-        const ranking = new RankingService(this.ruleSet);
+        const ranking = new RankingService(poule.getRound(), this.ruleSet);
         return ranking.getItemsForPoule(poule);
     }
 
