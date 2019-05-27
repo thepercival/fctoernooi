@@ -20,7 +20,7 @@
         <fa-icon *ngIf="cssService.getIconType(tournament.getCompetition().getLeague().getSport()) === 'fa'"
           [icon]="['fas', cssService.getIcon(tournament.getCompetition().getLeague().getSport())]"></fa-icon>
       </small>
-      <span class="smaller">{{tournament.getName()}}</span>
+      <span class="smaller overflow-hidden">{{tournament.getName()}}</span>
       <small *ngIf="activeScreen">
         -
         <span [innerHTML]="activeScreen.getDescription() | keepHtml"></span>

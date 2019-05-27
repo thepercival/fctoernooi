@@ -2,11 +2,6 @@
   <div class="d-flex justify-content-between mt-3">
     <h2>
       <span [innerHTML]="nameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
-      <!-- <ng-template *ngIf="nameService.roundsHaveSameName( )">
-        <fa-icon [icon]="['fas', 'circle']" *ngFor="let winnersOrLosers of structureService.getWinnersLosersPosition( round )" 
-        [title]="structureService.getWinnersLosersDescription(
-              round.getWinnersOrLosers() )" class="text-{{getClassPostfix(round.getWinnersOrLosers())}}"></fa-icon>
-      </ng-template> -->
     </h2>
     <button *ngIf="!canEditSettings" type="button"
       class="btn btn-sm btn-outline-{{favorites.hasItems() ? 'primary' : 'secondary'}} mr-2"
@@ -73,7 +68,8 @@
           </tr>
           <tr id="scroll-game-{{gmData.game.getId()}}">
             <td *ngIf="!gmData.hasPopover" class="text-center">
-              <span>{{gmData.poule.name}}</span>
+              <span
+                class="badge badge-pill badge-rank {{cssService.getQualifyRound(gmData.poule.round)}}">{{gmData.poule.name}}</span>
             </td>
             <td *ngIf="gmData.hasPopover && gmData.poule.needsRanking" class="text-center">
               <button class="btn btn-outline-info btn-sm" container="body" placement="right" [ngbPopover]="popRanking"
