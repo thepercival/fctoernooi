@@ -14,10 +14,10 @@ import {
     PoulePlaceRepository,
     QualifyRuleMultiple,
     QualifyService,
+    RankedRoundItem,
     RankingService,
     Round,
     RoundNumberConfigScore,
-    RoundRankingItem,
     StructureRepository,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
@@ -310,8 +310,8 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
                 if (multipleRule === undefined) {
                     return;
                 }
-                const ruleRankingItems = ranking.getItemsForHorizontalPoule(horizontalPoule);
-                const equalRuleItems = this.getEqualRuleRankingItems(multipleRule, ruleRankingItems);
+                const rankedItems = ranking.getItemsForHorizontalPoule(horizontalPoule);
+                const equalRuleItems = this.getEqualRuleRankingItems(multipleRule, rankedItems);
                 const postFix = '(' + this.nameService.getHorizontalPouleName(horizontalPoule) + ')';
                 warnings = warnings.concat(this.getWarningsForEqualQualifiersHelper(equalRuleItems, postFix));
             });
@@ -320,17 +320,16 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         return warnings;
     }
 
-    protected getWarningsForEqualQualifiersHelper(equalItemsPerRank: RoundRankingItem[][], postFix: string): string[] {
+    protected getWarningsForEqualQualifiersHelper(equalItemsPerRank: RankedRoundItem[][], postFix: string): string[] {
         return equalItemsPerRank.map(equalItems => {
             const names: string[] = equalItems.map(equalItem => {
-                const poulePlace = equalItem.getRound().getPoulePlace(equalItem.getPlaceLocation());
-                return this.nameService.getPoulePlaceName(poulePlace, true, true);
+                return this.nameService.getPoulePlaceName(equalItem.getPlace(), true, true);
             });
             return names.join(' & ') + ' zijn precies gelijk geëindigd' + postFix;
         });
     }
 
-    protected getEqualRuleRankingItems(multipleRule: QualifyRuleMultiple, rankingItems: RoundRankingItem[]): RoundRankingItem[][] {
+    protected getEqualRuleRankingItems(multipleRule: QualifyRuleMultiple, rankingItems: RankedRoundItem[]): RankedRoundItem[][] {
         const equalItemsPerRank = this.getEqualRankedItems(rankingItems);
         const nrToQualify = multipleRule.getToPlaces().length;
         return equalItemsPerRank.filter(equalItems => {
@@ -339,17 +338,17 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         });
     }
 
-    protected getEqualPouleRankingItemsWithQualifyRules(rankingItems: RoundRankingItem[]): RoundRankingItem[][] {
+    protected getEqualPouleRankingItemsWithQualifyRules(rankingItems: RankedRoundItem[]): RankedRoundItem[][] {
         const equalItemsPerRank = this.getEqualRankedItems(rankingItems);
         return equalItemsPerRank.filter(equalItems => {
             return equalItems.some(item => {
-                const poulePlace = item.getRound().getPoulePlace(item.getPlaceLocation());
+                const poulePlace = item.getPlace();
                 return poulePlace.getToQualifyRules().length > 0;
             });
         });
     }
 
-    protected getEqualRankedItems(rankingItems: RoundRankingItem[]): RoundRankingItem[][] {
+    protected getEqualRankedItems(rankingItems: RankedRoundItem[]): RankedRoundItem[][] {
         const equalItems = [];
         const maxRank = rankingItems[rankingItems.length - 1].getRank();
         for (let rank = 1; rank <= maxRank; rank++) {
@@ -397,6 +396,10 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
                     }
                     const pouleToFilter = this.shouldQualifiersBeCalculatedForRound(poule) ? undefined : poule;
                     const changedPoulePlaces = qualifyService.setQualifiers(pouleToFilter);
+                    if (changedPoulePlaces.length === 0) {
+                        this.navigateBack();
+                        this.processing = false;
+                    }
 
                     const reposUpdates = [];
                     changedPoulePlaces.forEach((changedPoulePlace) => {

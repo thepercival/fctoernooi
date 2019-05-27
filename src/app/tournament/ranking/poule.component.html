@@ -33,17 +33,20 @@
                                     class="badge badge-pill badge-rank {{cssService.getQualifyPlace(poule.getPlace(rankingItem.getUniqueRank()))}}">{{rankingItem.getUniqueRank()}}</span>
                             </td>
                             <td class="pouleplace pl-0"
-                                [ngClass]="{ 'text-primary': favorites.hasCompetitor(getPoulePlace(rankingItem).getCompetitor()) }">
-                                {{nameService.getPoulePlaceFromName(getPoulePlace(rankingItem), true)}}
+                                [ngClass]="{ 'text-primary': favorites.hasCompetitor(rankingItem.getPlace().getCompetitor()) }">
+                                {{nameService.getPoulePlaceFromName(rankingItem.getPlace(), true)}}
                             </td>
-                            <td class="text-right pl-0">{{rankingItem.getGames()}}</td>
-                            <td class="text-right pl-0">{{rankingItem.getPoints()}}</td>
+                            <td class="text-right pl-0">{{rankingItem.getUnranked().getGames()}}</td>
+                            <td class="text-right pl-0">{{rankingItem.getUnranked().getPoints()}}</td>
                             <td class="text-center unitdiff pl-0">
-                                <div>{{rankingItem.getDiff() > 0 ? '+' : ''}}{{rankingItem.getDiff()}}</div>
-                                <div *ngIf="showDifferenceDetail">( {{rankingItem.getScored()}} -
-                                    {{rankingItem.getReceived()}} )</div>
+                                <div>
+                                    {{rankingItem.getUnranked().getDiff() > 0 ? '+' : ''}}{{rankingItem.getUnranked().getDiff()}}
+                                </div>
+                                <div *ngIf="showDifferenceDetail">( {{rankingItem.getUnranked().getScored()}} -
+                                    {{rankingItem.getUnranked().getReceived()}} )</div>
                                 <div *ngIf="showDifferenceDetail && hasMultipleScoreConfigs()">(
-                                    {{rankingItem.getSubScored()}} - {{rankingItem.getSubReceived()}} )</div>
+                                    {{rankingItem.getUnranked().getSubScored()}} -
+                                    {{rankingItem.getUnranked().getSubReceived()}} )</div>
                             </td>
                         </tr>
                     </ng-template>

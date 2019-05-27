@@ -76,10 +76,10 @@ export class CSSService {
         return winnersOrLosers === QualifyGroup.WINNERS ? 'w' : 'l';
     }
 
-    getQualifyRound(round: Round): string {
+    getQualifyRound(round: Round, noQualifyClass: string = ''): string {
         const qualifyGroup: QualifyGroup = round.getParentQualifyGroup();
         if (qualifyGroup === undefined) {
-            return '';
+            return noQualifyClass;
         }
         return ' q-' + (qualifyGroup.getWinnersOrLosers() === QualifyGroup.WINNERS ? 'w' : 'l') + '-' + qualifyGroup.getNumber();
     }

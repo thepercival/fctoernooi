@@ -27,13 +27,13 @@
             <span
               class="badge badge-pill badge-rank {{cssService.getQualifyPlace(poule.getPlace(rankingItem.getUniqueRank()))}}">{{rankingItem.getUniqueRank()}}</span>
           </td>
-          <td class="pouleplace">{{nameService.getPoulePlaceFromName(getPoulePlace(rankingItem), true)}}</td>
-          <td class="text-right">{{rankingItem.getGames()}}</td>
-          <td class="text-right">{{rankingItem.getPoints()}}</td>
+          <td class="pouleplace">{{nameService.getPoulePlaceFromName(rankingItem.getPlace(), true)}}</td>
+          <td class="text-right">{{rankingItem.getUnranked().getGames()}}</td>
+          <td class="text-right">{{rankingItem.getUnranked().getPoints()}}</td>
           <td nowrap class="text-center unitdiff">
-            <span>{{rankingItem.getDiff() > 0 ? '+' : ''}}{{rankingItem.getDiff()}} </span>
+            <span>{{rankingItem.getUnranked().getDiff() > 0 ? '+' : ''}}{{rankingItem.getUnranked().getDiff()}} </span>
             <span class="d-none d-xl-inline">
-              ({{rankingItem.getScored()}}-{{rankingItem.getReceived()}})
+              ({{rankingItem.getUnranked().getScored()}}-{{rankingItem.getUnranked().getReceived()}})
             </span>
           </td>
         </tr>

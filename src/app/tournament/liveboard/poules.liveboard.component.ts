@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { NameService, Poule, PoulePlace, RankingService, RoundRankingItem } from 'ngx-sport';
+import { NameService, Poule, RankedRoundItem, RankingService } from 'ngx-sport';
 
 import { CSSService } from '../../common/cssservice';
 import { PoulesRankingScreen } from '../../lib/liveboard/screens';
@@ -19,12 +19,8 @@ export class TournamentLiveboardPoulesComponent {
     ) {
     }
 
-    getRankingItems(poule: Poule): RoundRankingItem[] {
+    getRankingItems(poule: Poule): RankedRoundItem[] {
         const ranking = new RankingService(poule.getRound(), this.ruleSet);
         return ranking.getItemsForPoule(poule);
-    }
-
-    getPoulePlace(rankingItem: RoundRankingItem): PoulePlace {
-        return rankingItem.getRound().getPoulePlace(rankingItem.getPlaceLocation());
     }
 }
