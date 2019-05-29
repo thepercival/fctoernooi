@@ -5,10 +5,12 @@ import {
   Competitor,
   CompetitorRepository,
   NameService,
+  PlaceLocation,
   PlanningRepository,
   PlanningService,
   PoulePlace,
   PoulePlaceRepository,
+  QualifyGroup,
   Round,
   Structure,
   StructureRepository,
@@ -154,12 +156,32 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.setAlert('info', 'er wordt een pouleplek toegevoegd');
     try {
       const rootRound = this.structure.getRootRound();
+      const competitorLocations = this.getCompetitorLocations(rootRound);
       const structureService = this.getStructureService();
       const addedPoulePlace = structureService.addPlaceToRootRound(rootRound);
+      this.setCompetitors(rootRound, competitorLocations);
       this.saveStructure('pouleplek ' + this.nameService.getPoulePlaceName(addedPoulePlace) + ' is toegevoegd');
     } catch (e) {
       this.setAlert('danger', e.message);
     }
+  }
+
+  getCompetitorLocations(rootRound: Round): CompetitorLocation[] {
+    const competitorLocations: CompetitorLocation[] = [];
+    rootRound.getPlaces().forEach(place => {
+      competitorLocations.push({ placeLocation: place.getLocation(), competitor: place.getCompetitor() });
+    });
+    return competitorLocations;
+  }
+
+  setCompetitors(rootRound: Round, competitorLocations: CompetitorLocation[]) {
+    competitorLocations.forEach(competitorLocation => {
+      const poule = rootRound.getPoule(competitorLocation.placeLocation.getPouleNr());
+      const place = poule.getPlace(competitorLocation.placeLocation.getPlaceNr());
+      if (place !== undefined) { // can be undefined if place is removed
+        place.setCompetitor(competitorLocation.competitor);
+      }
+    });
   }
 
   preRemove(poulePlace: PoulePlace) {
@@ -226,7 +248,8 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   /**
-   * verplaatst alle deelnemers vanaf de te verwijderen pouleplek naar de vorige pouleplek, verwijder vervolgens de laatste pouleplek
+   * 
+   * @param poulePlace 
    */
   removePoulePlaceFromRootRound(poulePlace: PoulePlace): void {
     this.processing = true;
@@ -235,32 +258,15 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     const singledoubleWill = poulePlace.getCompetitor() !== undefined ? 'worden' : 'wordt';
     this.setAlert('info', 'een pouleplek' + competitor + ' ' + singledoubleWill + ' verwijderd');
     try {
-      this.moveCompetitors(rootRound, poulePlace);
+      poulePlace.setCompetitor(rootRound.getFirstPlace(QualifyGroup.LOSERS).getCompetitor());
+      const competitorLocations = this.getCompetitorLocations(rootRound);
       this.getStructureService().removePlaceFromRootRound(rootRound);
+      this.setCompetitors(rootRound, competitorLocations);
       const singledoubleIs = poulePlace.getCompetitor() !== undefined ? 'zijn' : 'is';
       this.saveStructure('een pouleplek' + competitor + ' ' + singledoubleIs + ' verwijderd');
     } catch (e) {
       this.processing = false;
       this.setAlert('danger', e.message);
-    }
-  }
-
-  /**
-   * haal alle pouleplekken op in verticale volgorde, verplaatst alles vanaf te verwijderen plek
-   */
-  protected moveCompetitors(rootRound: Round, fromPoulePlace: PoulePlace) {
-    const poulePlaces: PoulePlace[] = rootRound.getPlaces(Round.ORDER_NUMBER_POULE);
-    const index = poulePlaces.indexOf(fromPoulePlace);
-    if (index < 0) {
-      return;
-    }
-    if ((index + 1) < poulePlaces.length) {
-      const poulePlacesToChange: PoulePlace[] = poulePlaces.splice(index);
-      let previousPoulePlace = fromPoulePlace;
-      poulePlacesToChange.forEach(poulePlace => {
-        previousPoulePlace.setCompetitor(poulePlace.getCompetitor());
-        previousPoulePlace = poulePlace;
-      });
     }
   }
 
@@ -285,4 +291,9 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
         /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
       );
   }
+}
+
+interface CompetitorLocation {
+  placeLocation: PlaceLocation;
+  competitor: Competitor;
 }

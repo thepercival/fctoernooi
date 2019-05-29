@@ -39,7 +39,7 @@
       <div *ngIf="editable && viewType === ViewTypeQualifyGroups" class="d-flex flex-wrap justify-content-around">
         <ul class="list-group mb-3">
           <ng-template ngFor let-editHorPoule [ngForOf]="getEditHorizontalPoules()">
-            <li *ngIf="areQualifyGroupsSplittable(editHorPoule)"
+            <li *ngIf="isQualifyGroupSplittable(editHorPoule)"
               class="list-group-item btn-outline-secondary px-2 py-1 place-list-item pointer"
               (click)="splitQualifyGroup(editHorPoule)">
               <fa-icon class="rotate-45" [icon]="['fas', 'unlink']"></fa-icon>

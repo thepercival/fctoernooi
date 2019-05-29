@@ -59,27 +59,42 @@ export class TournamentStructureQualifyComponent {
     }
 
     /**
-* 1 : wanneer er een kw.groep van minimaal 2 horizontale poules is (grens h poule  moet minimaal twee door laten gaan) 
-* 2 : 2 kw.groepen van winners of losers.
-*/
+    * 1 : wanneer er een kw.groep van minimaal 2 horizontale poules is (grens h poule  moet minimaal twee door laten gaan) 
+    * 2 : 2 kw.groepen van winners of losers.
+    */
     showSwitchView(): boolean {
         if (this.viewType === StructureViewType.QUALIFYGROUPS) {
             return true;
         }
-        const winnersQualifyGroups = this.round.getQualifyGroups(QualifyGroup.WINNERS);
-        const losersQualifyGroups = this.round.getQualifyGroups(QualifyGroup.LOSERS);
-        if (winnersQualifyGroups.length > 1 || losersQualifyGroups.length > 1) {
+        if (this.round.getNrOfPlaces() < 4) {
+            return false;
+        }
+        // can some merge
+        const mergable = [QualifyGroup.WINNERS, QualifyGroup.LOSERS].some(winnersOrLosers => {
+            let previous;
+            return this.round.getQualifyGroups(winnersOrLosers).some(qualifyGroup => {
+                if (this.structureService.areQualifyGroupsMergable(previous, qualifyGroup)) {
+                    return true;
+                };
+                previous = qualifyGroup;
+                return false;
+            });
+        });
+        if (mergable) {
             return true;
         }
-        const qualifyGroups = winnersQualifyGroups.concat(losersQualifyGroups);
-        return qualifyGroups.some(qualifyGroup => {
-            if (qualifyGroup.getHorizontalPoules().length < 2) {
-                return false;
-            }
-            if (qualifyGroup.getHorizontalPoules().length > 2) {
-                return true;
-            }
-            return (!qualifyGroup.isBorderGroup() || qualifyGroup.getBorderPoule().getNrOfQualifiers() >= 2);
+        // can some split
+        return [QualifyGroup.WINNERS, QualifyGroup.LOSERS].some(winnersOrLosers => {
+            return this.round.getQualifyGroups(winnersOrLosers).some(qualifyGroup => {
+                let previous;
+                return qualifyGroup.getHorizontalPoules().some(horizontalPoule => {
+                    if (this.structureService.isQualifyGroupSplittable(previous, horizontalPoule)) {
+                        return true;
+                    };
+                    previous = horizontalPoule;
+                    return false;
+                });
+            });
         });
     }
 

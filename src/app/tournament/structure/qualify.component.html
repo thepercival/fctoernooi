@@ -1,11 +1,11 @@
 <p *ngIf="alert">
     <ngb-alert [dismissible]="true" (close)="alert = undefined" [type]="alert.type">{{ alert.message }}</ngb-alert>
 </p>
-<div class="d-flex justify-content-around mb-2" *ngIf="round.getNrOfPlaces() > 2 && !round.isStarted()">
+<div class="d-flex flex-wrap justify-content-around mb-2" *ngIf="round.getNrOfPlaces() > 2 && !round.isStarted()">
     <ng-container *ngTemplateOutlet="modifyQualifiers;context:{$implicit: QualifyGroupWINNERS}">
     </ng-container>
     <button *ngIf="round.isRoot() || showSwitchView()" type="button" class="btn btn-outline-secondary"
-        (click)="switchView()" [disabled]="round.isRoot() && viewType !== ViewTypeQualifyGroups && !showSwitchView()">
+        (click)="switchView()" [disabled]="viewType !== ViewTypeQualifyGroups && !showSwitchView()">
         <i *ngIf="viewType !== ViewTypeQualifyGroups" class="fi flaticon-structure"></i>
         <span *ngIf="round.isRoot() && viewType !== ViewTypeQualifyGroups" class="d-none d-sm-inline-flex">
             kwalificatiegroepen</span>

@@ -118,25 +118,15 @@ export class TournamentStructureRoundComponent {
     return editHorPoules;
   }
 
-  areQualifyGroupsSplittable(editHorPoule: EditHorPoule): boolean {
-    if (!editHorPoule.previous || !editHorPoule.previous.getQualifyGroup()
-      || editHorPoule.previous.getQualifyGroup() !== editHorPoule.current.getQualifyGroup()) {
-      return false;
-    }
-    if (editHorPoule.previous.isBorderPoule() && editHorPoule.previous.getNrOfQualifiers() < 2) {
-      return false;
-    }
-    if (editHorPoule.current.isBorderPoule() && editHorPoule.current.getNrOfQualifiers() < 2) {
-      return false;
-    }
-    return true;
+  isQualifyGroupSplittable(editHorPoule: EditHorPoule): boolean {
+    return this.structureService.isQualifyGroupSplittable(editHorPoule.previous, editHorPoule.current);
   }
 
   areQualifyGroupsMergable(editHorPoule: EditHorPoule): boolean {
-    return (editHorPoule.previous && editHorPoule.previous.getQualifyGroup() && editHorPoule.current.getQualifyGroup()
-      && editHorPoule.previous.getQualifyGroup().getWinnersOrLosers() !== QualifyGroup.DROPOUTS
-      && editHorPoule.previous.getQualifyGroup().getWinnersOrLosers() === editHorPoule.current.getQualifyGroup().getWinnersOrLosers()
-      && editHorPoule.previous.getQualifyGroup() !== editHorPoule.current.getQualifyGroup());
+    return (editHorPoule.previous
+      && this.structureService.areQualifyGroupsMergable(
+        editHorPoule.previous.getQualifyGroup(),
+        editHorPoule.current.getQualifyGroup()));
   }
 
   splitQualifyGroup(editHorPoule: EditHorPoule) {
