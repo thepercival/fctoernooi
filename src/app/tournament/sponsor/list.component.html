@@ -1,7 +1,7 @@
 <div class="row justify-content-center no-gutters">
   <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
     <div *ngIf="tournament" class="d-flex justify-content-between mb-4">
-      <h1 class="text-break">{{tournament.getName()}}</h1>
+      <h1 class="text-truncate">{{tournament.getName()}}</h1>
       <h1 class="mr-1">
         <button [routerLink]="['/toernooi', tournament.getId()]" type="button" class="btn btn-outline-secondary">
           <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
