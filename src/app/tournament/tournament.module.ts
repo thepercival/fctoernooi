@@ -88,6 +88,7 @@ import { TournamentStructureQualifyComponent } from './structure/qualify.compone
 import { TournamentStructureRoundComponent } from './structure/round.component';
 import { TournamentStructureRoundArrangeComponent } from './structure/round/arrange.component';
 import { TournamentStructureViewComponent } from './structure/view.component';
+import { TournamentTitleComponent } from './title/title.component';
 import { TournamentRoutingModule } from './tournament-routing.module';
 import { TournamentViewComponent } from './view/view.component';
 
@@ -110,6 +111,7 @@ library.add(
     TournamentNewComponent,
     TournamentEditComponent,
     TournamentHomeComponent,
+    TournamentTitleComponent,
     TournamentStructureComponent,
     TournamentStructureViewComponent,
     TournamentStructureRoundComponent,
