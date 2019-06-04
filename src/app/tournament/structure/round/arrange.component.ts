@@ -43,8 +43,6 @@ export class TournamentStructureRoundArrangeComponent {
   hasMinimumNrOfPlacesPerPoule() {
     return (this.round.getPoules().length * 2) === this.round.getNrOfPlaces();
   }
-<<<<<<< HEAD
-=======
 
   // getDivisionClasses(round: Round): string {
   //   const nrOfRounds = round.getNumber().getRounds().length;
@@ -60,5 +58,4 @@ export class TournamentStructureRoundArrangeComponent {
   //   }
   //   return classes;
   // }
->>>>>>> 69fba412e881afb86e96b578edc3d3c0e5e1c69f
 }

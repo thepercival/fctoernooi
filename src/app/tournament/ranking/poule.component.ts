@@ -1,9 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-<<<<<<< HEAD
-import { NameService, Poule, Place, RankingService, RoundRankingItem } from 'ngx-sport';
-=======
 import { NameService, Poule, RankedRoundItem, RankingService } from 'ngx-sport';
->>>>>>> 69fba412e881afb86e96b578edc3d3c0e5e1c69f
 
 import { CSSService } from '../../common/cssservice';
 import { Favorites } from '../../lib/favorites';
@@ -41,11 +37,4 @@ export class TournamentPouleRankingComponent implements OnInit {
     return this.poule.getRound().getNumber().getConfig().getCalculateScore()
       !== this.poule.getRound().getNumber().getConfig().getInputScore();
   }
-<<<<<<< HEAD
-
-  getPlace(rankingItem: RoundRankingItem): Place {
-    return rankingItem.getRound().getPlace(rankingItem.getPlaceLocation());
-  }
-=======
->>>>>>> 69fba412e881afb86e96b578edc3d3c0e5e1c69f
 }
