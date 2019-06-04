@@ -145,7 +145,7 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
 
     openModalPrint(modalContent) {
         const activeModal = this.modalService.open(modalContent/*, { windowClass: 'border-warning' }*/);
-        // (<TournamentListRemoveModalComponent>activeModal.componentInstance).poulePlace = poulePlace;
+        // (<TournamentListRemoveModalComponent>activeModal.componentInstance).place = place;
         activeModal.result.then((result) => {
             if (result === 'print') {
                 const newWindow = window.open(this.tournamentRepository.getPrintUrl(this.tournament, this.printConfig));
@@ -156,7 +156,7 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
 
     openModalCopy(modalContent) {
         const activeModal = this.modalService.open(modalContent/*, { windowClass: 'border-warning' }*/);
-        // (<TournamentListRemoveModalComponent>activeModal.componentInstance).poulePlace = poulePlace;
+        // (<TournamentListRemoveModalComponent>activeModal.componentInstance).place = place;
         activeModal.result.then((result) => {
             if (result === 'copy') {
                 this.copy();
@@ -167,7 +167,7 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
 
     openModalRemove(modalContent) {
         const activeModal = this.modalService.open(modalContent/*, { windowClass: 'border-warning' }*/);
-        // (<TournamentListRemoveModalComponent>activeModal.componentInstance).poulePlace = poulePlace;
+        // (<TournamentListRemoveModalComponent>activeModal.componentInstance).place = place;
         activeModal.result.then((result) => {
             if (result === 'remove') {
                 this.remove();

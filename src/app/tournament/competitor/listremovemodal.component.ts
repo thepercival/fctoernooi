@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { PoulePlace } from 'ngx-sport';
+import { Place } from 'ngx-sport';
 
 @Component({
     selector: 'app-ngbd-modal-listremove',
@@ -8,22 +8,22 @@ import { PoulePlace } from 'ngx-sport';
     styleUrls: ['./listremovemodal.component.scss']
 })
 export class TournamentListRemoveModalComponent {
-    poulePlace: PoulePlace;
+    place: Place;
 
     constructor(public activeModal: NgbActiveModal) { }
 
     hasMinimumNrOfPlacesPerPoule() {
-        const rootRound = this.poulePlace.getPoule().getRound();
+        const rootRound = this.place.getPoule().getRound();
         return (rootRound.getPoules().length * 2) === rootRound.getNrOfPlaces();
     }
 
     allCompetitorsQualifyForNextRound() {
-        const rootRound = this.poulePlace.getPoule().getRound();
+        const rootRound = this.place.getPoule().getRound();
         return rootRound.getNrOfPlaces() <= rootRound.getNrOfPlacesChildren();
     }
 
-    allPoulePlacesHaveCompetitor() {
-        const rootRound = this.poulePlace.getPoule().getRound();
-        return rootRound.getPlaces().every(poulePlace => poulePlace.getCompetitor() !== undefined);
+    allPlacesHaveCompetitor() {
+        const rootRound = this.place.getPoule().getRound();
+        return rootRound.getPlaces().every(place => place.getCompetitor() !== undefined);
     }
 }

@@ -95,9 +95,9 @@
                 false,"hour":"2-digit","minute":"2-digit"})}}</span>
             </td>
             <td *ngIf="hasFields" class="text-center">{{gmData.game.getField()?.getName()}}</td>
-            <td class="pouleplace text-right"
+            <td class="place text-right"
               [ngClass]="{'text-primary': favorites.hasGameCompetitor(gmData.game, GameHOME) }">
-              <span>{{nameService.getPoulePlacesFromName(gmData.game.getPoulePlaces( GameHOME ),true,true)}}</span>
+              <span>{{nameService.getPlacesFromName(gmData.game.getPlaces( GameHOME ),true,true)}}</span>
             </td>
             <td nowrap class="score text-center" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
               <button *ngIf="gmData.hasEditPermissions" class="btn btn-sm btn-outline-primary"
@@ -115,8 +115,8 @@
               <span *ngIf="!gmData.hasEditPermissions && !(hasReferees && !isPlayed(gmData.game))"
                 class="d-sm-none">{{getScore(gmData.game)}}</span>
             </td>
-            <td class="pouleplace" [ngClass]="{ 'text-primary': favorites.hasGameCompetitor(gmData.game, GameAWAY) }">
-              <span>{{nameService.getPoulePlacesFromName(gmData.game.getPoulePlaces( GameAWAY ),true,true)}}</span>
+            <td class="place" [ngClass]="{ 'text-primary': favorites.hasGameCompetitor(gmData.game, GameAWAY) }">
+              <span>{{nameService.getPlacesFromName(gmData.game.getPlaces( GameAWAY ),true,true)}}</span>
             </td>
             <td *ngIf="hasReferees" class="d-none d-sm-table-cell text-right"
               [ngClass]="{'text-primary': favorites.hasGameReferee(gmData.game) }">

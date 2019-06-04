@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { EndRanking, EndRankingItem, RankingService, Round } from 'ngx-sport';
+import { EndRankingService, EndRankingItem, RankingService, Structure } from 'ngx-sport';
 
 @Component({
   selector: 'app-tournament-endranking-view',
@@ -8,7 +8,7 @@ import { EndRanking, EndRankingItem, RankingService, Round } from 'ngx-sport';
 })
 export class TournamentEndRankingViewComponent implements OnInit {
 
-  @Input() rootRound: Round;
+  @Input() structure: Structure;
   @Input() filterStart: number;
   @Input() filterEnd: number;
 
@@ -18,8 +18,8 @@ export class TournamentEndRankingViewComponent implements OnInit {
   }
 
   ngOnInit() {
-    const endRankingService = new EndRanking(RankingService.RULESSET_WC);
-    let items = endRankingService.getItems(this.rootRound);
+    const endRankingService = new EndRankingService(this.structure, RankingService.RULESSET_WC);
+    let items = endRankingService.getItems();
     if (this.filterStart !== undefined && this.filterEnd !== undefined) {
       items = items.filter(item => item.getUniqueRank() >= this.filterStart && item.getUniqueRank() <= this.filterEnd);
     }

@@ -10,13 +10,13 @@ import {
     NameService,
     PlanningService,
     Poule,
-    PoulePlace,
-    PoulePlaceRepository,
+    Place,
+    PlaceRepository,
     QualifyRule,
     QualifyRuleMultiple,
     RankingService,
     Round,
-    RoundNumberConfigScore,
+    ConfigScore,
     RoundRankingItem,
     StructureRepository,
 } from 'ngx-sport';
@@ -48,7 +48,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private gameRepository: GameRepository,
-        private poulePlaceRepository: PoulePlaceRepository,
+        private pPlaceRepository: PlaceRepository,
         public nameService: NameService,
         private myNavigation: MyNavigation,
         fb: FormBuilder
@@ -88,7 +88,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     getCalculateScoreDescription() {
         const scoreConfig = this.game.getConfig().getCalculateScore();
         let description = '';
-        if (scoreConfig.getDirection() === RoundNumberConfigScore.UPWARDS && scoreConfig.getMaximum() > 0) {
+        if (scoreConfig.getDirection() === ConfigScore.UPWARDS && scoreConfig.getMaximum() > 0) {
             description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
         }
         return description + scoreConfig.getName();
@@ -97,7 +97,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     getInputScoreDescription() {
         const scoreConfig = this.game.getConfig().getInputScore();
         let description = '';
-        if (scoreConfig.getDirection() === RoundNumberConfigScore.UPWARDS && scoreConfig.getMaximum() > 0) {
+        if (scoreConfig.getDirection() === ConfigScore.UPWARDS && scoreConfig.getMaximum() > 0) {
             description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
         }
         return description + scoreConfig.getName();
@@ -117,7 +117,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
 
     getCalculateClass() {
         const scoreConfig = this.game.getConfig().getCalculateScore();
-        if (scoreConfig.getDirection() !== RoundNumberConfigScore.UPWARDS || scoreConfig.getMaximum() === 0) {
+        if (scoreConfig.getDirection() !== ConfigScore.UPWARDS || scoreConfig.getMaximum() === 0) {
             return 'is-valid';
         }
         const score = this.calculateScoreControl.getScore();
@@ -135,7 +135,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             return 'is-invalid';
         }
         const scoreConfig = this.game.getConfig().getInputScore();
-        if (scoreConfig.getDirection() !== RoundNumberConfigScore.UPWARDS || scoreConfig.getMaximum() === 0) {
+        if (scoreConfig.getDirection() !== ConfigScore.UPWARDS || scoreConfig.getMaximum() === 0) {
             return 'is-valid';
         }
         if ((score.getHome() === scoreConfig.getMaximum() && score.getAway() < score.getHome())
@@ -313,8 +313,8 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     protected getWarningsForEqualsInQualificationHelper(equalItemsPerRank: RoundRankingItem[][], postFix: string): string[] {
         return equalItemsPerRank.map(equalItems => {
             const names: string[] = equalItems.map(equalItem => {
-                const poulePlace = equalItem.getRound().getPoulePlace(equalItem.getPoulePlaceLocation());
-                return this.nameService.getPoulePlaceName(poulePlace, true, true);
+                const place = equalItem.getRound().getPlace(equalItem.getPlaceLocation());
+                return this.nameService.getPlaceName(place, true, true);
             });
             return names.join(' & ') + ' zijn precies gelijk geëindigd' + postFix;
         });
@@ -334,8 +334,8 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         return equalItemsPerRank.filter(equalItems => {
             // als alle equalitems geen torule hebben dan false
             return !equalItems.every(item => {
-                const poulePlace = item.getRound().getPoulePlace(item.getPoulePlaceLocation());
-                return poulePlace.getToQualifyRules().length === 0;
+                const place = item.getRound().getPlace(item.getPlaceLocation());
+                return place.getToQualifyRules().length === 0;
             });
         });
     }
@@ -381,10 +381,10 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         //         /* happy path */ gameRes => {
         //             this.game = gameRes;
 
-        //             const currentQualifiedPoulePlaces: PoulePlace[] = [];
+        //             const currentQualifiedPlaces: Place[] = [];
         //             this.game.getRound().getChildRounds().forEach(childRound => {
-        //                 childRound.getPoulePlaces().forEach(poulePlace => {
-        //                     currentQualifiedPoulePlaces.push(poulePlace);
+        //                 childRound.getPlaces().forEach(place => {
+        //                     currentQualifiedPlaces.push(place);
         //                 });
         //             });
         //             const newQualifiers: INewQualifier[] = [];
@@ -397,11 +397,11 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         //                     newQualifiers.push(newQualifier);
         //                 });
         //             });
-        //             const changedPoulePlaces = this.setCompetitors(newQualifiers, currentQualifiedPoulePlaces);
-        //             if (changedPoulePlaces.length > 0) {
+        //             const changedPlaces = this.setCompetitors(newQualifiers, currentQualifiedPlaces);
+        //             if (changedPlaces.length > 0) {
         //                 const reposUpdates = [];
-        //                 changedPoulePlaces.forEach((changedPoulePlace) => {
-        //                     reposUpdates.push(this.poulePlaceRepository.editObject(changedPoulePlace, changedPoulePlace.getPoule()));
+        //                 changedPlaces.forEach((changedPlace) => {
+        //                     reposUpdates.push(this.placeRepository.editObject(changedPlace, changedPlace.getPoule()));
         //                 });
 
         //                 forkJoin(reposUpdates).subscribe(results => {
@@ -450,16 +450,16 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         return originalGameScoresTmp.length > 0;
     }
 
-    protected setCompetitors(newQualifiers: INewQualifier[], poulePlaces: PoulePlace[]): PoulePlace[] {
-        const changedPoulePlaces: PoulePlace[] = [];
+    protected setCompetitors(newQualifiers: INewQualifier[], places: Place[]): Place[] {
+        const changedPlaces: Place[] = [];
         newQualifiers.forEach(newQualifier => {
-            const poulePlace = poulePlaces.find(poulePlaceIt => newQualifier.poulePlace === poulePlaceIt);
-            if (poulePlace.getCompetitor() !== newQualifier.competitor) {
-                poulePlace.setCompetitor(newQualifier.competitor);
-                changedPoulePlaces.push(poulePlace);
+            const place = places.find(placeIt => newQualifier.place === placeIt);
+            if (place.getCompetitor() !== newQualifier.competitor) {
+                place.setCompetitor(newQualifier.competitor);
+                changedPlaces.push(place);
             }
         });
-        return changedPoulePlaces;
+        return changedPlaces;
     }
 
     // transities:
@@ -487,8 +487,8 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         //     || (oldPouleState === Game.STATE_PLAYED && newPouleState !== Game.STATE_PLAYED)
         //     || (oldPouleState === Game.STATE_PLAYED && newPouleState === Game.STATE_PLAYED)) {
         //     const winnersOrLosers = childRound.getWinnersOrLosers();
-        //     poule.getPlaces().forEach(poulePlace => {
-        //         const qualifyRule = poulePlace.getToQualifyRule(winnersOrLosers);
+        //     poule.getPlaces().forEach(place => {
+        //         const qualifyRule = place.getToQualifyRule(winnersOrLosers);
         //         if (qualifyRule !== undefined && !qualifyRule.isMultiple()) {
         //             rules.push(qualifyRule);
         //         }

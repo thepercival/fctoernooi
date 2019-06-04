@@ -25,7 +25,7 @@
           <li class="list-group-item px-2 py-2">{{nameService.getPouleName( poule, false)}}</li>
           <li *ngFor="let place of poule.getPlaces();"
             class="list-group-item px-2 py-2 place-list-item pointer {{cssService.getQualifyPlace(place)}}"
-            placement="top" ngbPopover="{{nameService.getPoulePlaceFromName(place,false,true)}}">{{nameService.getPoulePlaceFromName(
+            placement="top" ngbPopover="{{nameService.getPlaceFromName(place,false,true)}}">{{nameService.getPlaceFromName(
                 place, false)}}</li>
         </ul>
       </div>

@@ -31,11 +31,11 @@
             <label for="competitors" class="col-form-label">deelnemers</label>
           </div>
           <div class="col-4">
-            <h2>{{nameService.getPoulePlacesFromName(game.getPoulePlaces( GameHOME ), true)}}</h2>
+            <h2>{{nameService.getPlacesFromName(game.getPlaces( GameHOME ), true)}}</h2>
           </div>
           <div class="col-1 homeaway-splitter">-</div>
           <div class="col-4">
-            <h2>{{nameService.getPoulePlacesFromName(game.getPoulePlaces( GameAWAY ), true)}}</h2>
+            <h2>{{nameService.getPlacesFromName(game.getPlaces( GameAWAY ), true)}}</h2>
           </div>
         </div>
         <div *ngIf="calculateScoreControl" class="form-group row">

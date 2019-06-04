@@ -72,16 +72,16 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     const gameDatas: GameData[] = [];
     const pouleDatas = this.getPouleDatas();
     this.planningService.getGamesForRoundNumber(this.roundNumber, Game.ORDER_RESOURCEBATCH).forEach(game => {
-      const aPoulePlaceHasACompetitor = this.hasAPoulePlaceACompetitor(game);
-      if (!(!this.favorites.hasItems() || this.favorites.hasGameItem(game) || !aPoulePlaceHasACompetitor)) {
+      const aPlaceHasACompetitor = this.hasAPlaceACompetitor(game);
+      if (!(!this.favorites.hasItems() || this.favorites.hasGameItem(game) || !aPlaceHasACompetitor)) {
         return;
       };
       const pouleData: PouleData = pouleDatas[game.getPoule().getId()];
-      const hasPopover = pouleData.needsRanking || (!this.roundNumber.isFirst() && aPoulePlaceHasACompetitor);
+      const hasPopover = pouleData.needsRanking || (!this.roundNumber.isFirst() && aPlaceHasACompetitor);
 
       const gameData: GameData = {
         hasEditPermissions: this.hasEditPermissions(game),
-        hasACompetitor: aPoulePlaceHasACompetitor,
+        hasACompetitor: aPlaceHasACompetitor,
         hasPopover: hasPopover,
         poule: pouleData,
         game: game
@@ -161,8 +161,8 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     return newStartDateTime < game.getStartDateTime();
   }
 
-  hasAPoulePlaceACompetitor(game: Game): boolean {
-    return game.getPoulePlaces().some(gamePoulePlace => gamePoulePlace.getPoulePlace().getCompetitor() !== undefined);
+  hasAPlaceACompetitor(game: Game): boolean {
+    return game.getPlaces().some(gamePlace => gamePlace.getPlace().getCompetitor() !== undefined);
   }
 
   linkToGameEdit(game: Game) {
@@ -209,8 +209,8 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   }
 
   getGameQualificationDescription(game: Game) {
-    return this.nameService.getPoulePlacesFromName(game.getPoulePlaces(Game.HOME), false, true)
-      + ' - ' + this.nameService.getPoulePlacesFromName(game.getPoulePlaces(Game.AWAY), false, true);
+    return this.nameService.getPlacesFromName(game.getPlaces(Game.HOME), false, true)
+      + ' - ' + this.nameService.getPlacesFromName(game.getPlaces(Game.AWAY), false, true);
   }
 
   getRankingRuleDescriptions(): string[] {

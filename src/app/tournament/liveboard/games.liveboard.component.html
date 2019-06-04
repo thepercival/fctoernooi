@@ -39,13 +39,13 @@
         </td>
         <td *ngIf="isCreatedAndInplay() && hasFields">{{game.getField()?.getName()}}</td>
         <td class="text-right">
-          <span>{{nameService.getPoulePlacesFromName(game.getPoulePlaces(GameHOME),true,true)}}</span>
+          <span>{{nameService.getPlacesFromName(game.getPlaces(GameHOME),true,true)}}</span>
         </td>
         <td nowrap class="text-center">
           <span>{{getScore(game)}}</span>
         </td>
         <td class="text-left">
-          <span>{{nameService.getPoulePlacesFromName(game.getPoulePlaces(GameAWAY),true,true)}}</span>
+          <span>{{nameService.getPlacesFromName(game.getPlaces(GameAWAY),true,true)}}</span>
         </td>
         <td *ngIf="isCreatedAndInplay() && hasReferees()" class="text-right">{{nameService.getRefereeName(game)}}</td>
       </tr>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PoulePlace, QualifyGroup, Round, SportConfig } from 'ngx-sport';
+import { Place, QualifyGroup, Round, SportConfig } from 'ngx-sport';
 
 @Injectable()
 export class CSSService {
@@ -38,7 +38,7 @@ export class CSSService {
         return 'fi';
     }
 
-    getQualifyPlace(place: PoulePlace): string {
+    getQualifyPlace(place: Place): string {
         const horizontalPouleWinners = place.getHorizontalPoule(QualifyGroup.WINNERS);
         const qualifyGroupWinners: QualifyGroup = horizontalPouleWinners.getQualifyGroup();
         const qualifyGroupLosers: QualifyGroup = place.getHorizontalPoule(QualifyGroup.LOSERS).getQualifyGroup();

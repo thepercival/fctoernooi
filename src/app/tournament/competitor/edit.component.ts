@@ -6,8 +6,8 @@ import {
     CompetitorRepository,
     JsonCompetitor,
     NameService,
-    PoulePlace,
-    PoulePlaceRepository,
+    Place,
+    PlaceRepository,
     StructureRepository,
 } from 'ngx-sport';
 
@@ -22,7 +22,7 @@ import { TournamentComponent } from '../component';
 })
 export class TournamentCompetitorEditComponent extends TournamentComponent implements OnInit, AfterViewChecked {
     customForm: FormGroup;
-    poulePlace: PoulePlace;
+    place: Place;
     private focused = false;
 
     @ViewChild('inputname') private elementRef: ElementRef;
@@ -39,7 +39,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
-        private poulePlaceRepository: PoulePlaceRepository,
+        private placeRepository: PlaceRepository,
         public nameService: NameService,
         private myNavigation: MyNavigation,
         fb: FormBuilder
@@ -66,29 +66,29 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
 
     ngOnInit() {
         this.route.params.subscribe(params => {
-            super.myNgOnInit(() => this.postInit(+params.poulePlaceId));
+            super.myNgOnInit(() => this.postInit(+params.placeId));
         });
     }
 
-    private postInit(poulePlaceId: number) {
-        if (poulePlaceId === undefined || poulePlaceId < 1) {
+    private postInit(placeId: number) {
+        if (placeId === undefined || placeId < 1) {
             this.processing = false;
             return;
         }
-        const poulePlaces = this.structure.getRootRound().getPlaces();
-        this.poulePlace = poulePlaces.find(poulePlace => poulePlaceId === poulePlace.getId());
-        if (this.poulePlace === undefined) {
+        const places = this.structure.getRootRound().getPlaces();
+        this.place = places.find(placeIt => placeId === placeIt.getId());
+        if (this.place === undefined) {
             this.processing = false;
             return;
         }
-        this.customForm.controls.name.setValue(this.poulePlace.getCompetitor() ? this.poulePlace.getCompetitor().getName() : undefined);
-        this.customForm.controls.registered.setValue(this.poulePlace.getCompetitor() ? this.poulePlace.getCompetitor().getRegistered() : false);
-        this.customForm.controls.info.setValue(this.poulePlace.getCompetitor() ? this.poulePlace.getCompetitor().getInfo() : undefined);
+        this.customForm.controls.name.setValue(this.place.getCompetitor() ? this.place.getCompetitor().getName() : undefined);
+        this.customForm.controls.registered.setValue(this.place.getCompetitor() ? this.place.getCompetitor().getRegistered() : false);
+        this.customForm.controls.info.setValue(this.place.getCompetitor() ? this.place.getCompetitor().getInfo() : undefined);
         this.processing = false;
     }
 
     ngAfterViewChecked() {
-        if (this.poulePlace !== undefined && this.poulePlace.getCompetitor() === undefined && this.focused === false) {
+        if (this.place !== undefined && this.place.getCompetitor() === undefined && this.focused === false) {
             this.focused = true;
             this.elementRef.nativeElement.focus();
         }
@@ -97,7 +97,7 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
     save(): boolean {
         this.processing = true;
         this.setAlert('info', 'de deelnemer wordt opgeslagen');
-        if (this.poulePlace.getCompetitor() !== undefined) {
+        if (this.place.getCompetitor() !== undefined) {
             this.edit();
         } else {
             this.add();
@@ -131,10 +131,10 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
     }
 
     assignCompetitor(competitor: Competitor) {
-        this.poulePlace.setCompetitor(competitor);
-        this.poulePlaceRepository.editObject(this.poulePlace, this.poulePlace.getPoule())
+        this.place.setCompetitor(competitor);
+        this.placeRepository.editObject(this.place, this.place.getPoule())
             .subscribe(
-                  /* happy path */ poulePlaceRes => {
+                  /* happy path */ placeRes => {
                     this.navigateBack();
                 },
                   /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
@@ -142,13 +142,13 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
     }
 
     edit() {
-        if (this.isNameDuplicate(this.customForm.controls.name.value, this.poulePlace.getCompetitor().getId())) {
+        if (this.isNameDuplicate(this.customForm.controls.name.value, this.place.getCompetitor().getId())) {
             this.setAlert('danger', 'de naam bestaat al voor dit toernooi');
             this.processing = false;
             return;
         }
 
-        const competitor = this.poulePlace.getCompetitor();
+        const competitor = this.place.getCompetitor();
         const name = this.customForm.controls.name.value;
         const registered = this.customForm.controls.registered.value;
         const info = this.customForm.controls.info.value;
@@ -171,10 +171,10 @@ export class TournamentCompetitorEditComponent extends TournamentComponent imple
     }
 
     isNameDuplicate(name: string, competitorId?: number): boolean {
-        const poulePlaces = this.structure.getRootRound().getPlaces();
-        return poulePlaces.find(poulePlaceIt => {
-            const competitorName = poulePlaceIt.getCompetitor() ? poulePlaceIt.getCompetitor().getName() : undefined;
-            return (name === competitorName && (competitorId === undefined || poulePlaceIt.getCompetitor().getId() === undefined));
+        const places = this.structure.getRootRound().getPlaces();
+        return places.find(placeIt => {
+            const competitorName = placeIt.getCompetitor() ? placeIt.getCompetitor().getName() : undefined;
+            return (name === competitorName && (competitorId === undefined || placeIt.getCompetitor().getId() === undefined));
         }) !== undefined;
     }
 

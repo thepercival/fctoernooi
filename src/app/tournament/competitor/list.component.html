@@ -28,25 +28,25 @@
             <th class="text-center d-none d-sm-table-cell">aangemeld</th>
             <th>naam</th>
             <th class="text-center">
-              <button *ngIf="!isStarted() && allPoulePlaceHaveCompetitor()" type="button"
+              <button *ngIf="!isStarted() && allPlaceHaveCompetitor()" type="button"
                 class="btn btn-sm btn-outline-primary" (click)="swapAll()"
-                [disabled]="processing || poulePlaceToSwap !== undefined" title="willekeurige volgorde">
+                [disabled]="processing || placeToSwap !== undefined" title="willekeurige volgorde">
                 <fa-icon [icon]="['fas', 'random']"></fa-icon>
               </button>
-              <fa-icon *ngIf="!isStarted() && !allPoulePlaceHaveCompetitor() && showSwap" title="volgorder omwisselen"
+              <fa-icon *ngIf="!isStarted() && !allPlaceHaveCompetitor() && showSwap" title="volgorder omwisselen"
                 [icon]="['fas', 'sort']"></fa-icon>
             </th>
             <th *ngIf="!isStarted()" class="text-right"><button type="button" class="btn btn-sm btn-outline-primary"
-                (click)="addPoulePlace()">
+                (click)="addPlace()">
                 <fa-icon [icon]="['fas', 'plus']"></fa-icon>
               </button></th>
           </tr>
         </thead>
         <tbody>
-          <app-tournament-competitor-line *ngFor="let poulePlace of poulePlaces" [poulePlace]="poulePlace"
-            [poulePlaceToSwap]="poulePlaceToSwap" [nameService]="nameService" [isStarted]="isStarted()"
-            [showSwap]="showSwap" (swapPressed)="swapTwo($event)" [focus]="poulePlace.getId() === focusId"
-            (editPressed)="editPoulePlace($event)" (removePressed)="preRemove($event)"
+          <app-tournament-competitor-line *ngFor="let place of places" [place]="place"
+            [placeToSwap]="placeToSwap" [nameService]="nameService" [isStarted]="isStarted()"
+            [showSwap]="showSwap" (swapPressed)="swapTwo($event)" [focus]="place.getId() === focusId"
+            (editPressed)="editPlace($event)" (removePressed)="preRemove($event)"
             (registerPressed)="registerCompetitor($event)"></app-tournament-competitor-line>
         </tbody>
       </table>

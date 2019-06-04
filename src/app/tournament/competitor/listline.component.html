@@ -1,28 +1,28 @@
-<td id="scroll-pouleplace-{{poulePlace.getId()}}">
-  <button #btnEdit type="button" class="btn btn-sm btn-outline-primary" [disabled]="poulePlaceToSwap !== undefined"
+<td id="scroll-place-{{place.getId()}}">
+  <button #btnEdit type="button" class="btn btn-sm btn-outline-primary" [disabled]="placeToSwap !== undefined"
     (click)="edit()">
     <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
   </button>
 </td>
 <td>
-  <span>{{nameService.getPoulePlaceFromName(poulePlace, false)}}</span>
+  <span>{{nameService.getPlaceFromName(place, false)}}</span>
 </td>
 <td class="text-center d-none d-sm-table-cell">
-  <fa-icon *ngIf="poulePlace.getCompetitor()" class="text-primary pointer" (click)="register()"
-    [icon]="['far', (poulePlace.getCompetitor().getRegistered() ? 'check-' : '') + 'square']" size="2x"></fa-icon>
+  <fa-icon *ngIf="place.getCompetitor()" class="text-primary pointer" (click)="register()"
+    [icon]="['far', (place.getCompetitor().getRegistered() ? 'check-' : '') + 'square']" size="2x"></fa-icon>
 </td>
-<td *ngIf="poulePlace.getCompetitor()">
+<td *ngIf="place.getCompetitor()">
   <span
-    [ngClass]="{ 'registered-xs': poulePlace.getCompetitor().getRegistered() }">{{poulePlace.getCompetitor().getName()}}</span>
+    [ngClass]="{ 'registered-xs': place.getCompetitor().getRegistered() }">{{place.getCompetitor().getName()}}</span>
 </td>
-<td *ngIf="poulePlace.getCompetitor()" class="text-center">
+<td *ngIf="place.getCompetitor()" class="text-center">
   <fa-icon *ngIf="showSwap" class="text-primary pointer" (click)="swapTwo()"
-    [icon]="['far', (poulePlaceToSwap === poulePlace ? 'check-' : '') + 'square']" size="2x"></fa-icon>
+    [icon]="['far', (placeToSwap === place ? 'check-' : '') + 'square']" size="2x"></fa-icon>
 </td>
-<td colspan=2 *ngIf="!poulePlace.getCompetitor()">
+<td colspan=2 *ngIf="!place.getCompetitor()">
   <span class="badge badge-danger">vul een naam in</span>
 </td>
 <td *ngIf="!isStarted" class="text-right"><button type="button" class="btn btn-sm btn-outline-primary"
-    (click)="remove()" [disabled]="poulePlaceToSwap !== undefined">
+    (click)="remove()" [disabled]="placeToSwap !== undefined">
     <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
   </button></td>

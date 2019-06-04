@@ -18,7 +18,7 @@
                 <thead>
                     <tr>
                         <th class="text-right pl-0">pl</th>
-                        <th class="pouleplace pl-0">deelnemer</th>
+                        <th class="place pl-0">deelnemer</th>
                         <th class="text-right pl-0" title="gespeeld">g</th>
                         <th class="text-right pl-0" title="punten">p</th>
                         <th class="text-center text-info pl-0 pointer"
@@ -34,9 +34,9 @@
                                 </ng-container>
                                 <span>{{rankingItem.getUniqueRank()}}</span>
                             </td>
-                            <td class="pouleplace pl-0"
-                                [ngClass]="{ 'text-primary': favorites.hasCompetitor(getPoulePlace(rankingItem).getCompetitor()) }">
-                                {{nameService.getPoulePlaceFromName(getPoulePlace(rankingItem), true)}}
+                            <td class="place pl-0"
+                                [ngClass]="{ 'text-primary': favorites.hasCompetitor(getPlace(rankingItem).getCompetitor()) }">
+                                {{nameService.getPlaceFromName(getPlace(rankingItem), true)}}
                             </td>
                             <td class="text-right pl-0">{{rankingItem.getGames()}}</td>
                             <td class="text-right pl-0">{{rankingItem.getPoints()}}</td>

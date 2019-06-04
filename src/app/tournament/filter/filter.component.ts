@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Competitor, NameService, PoulePlace, Referee, StructureRepository } from 'ngx-sport';
+import { Competitor, NameService, Place, Referee, StructureRepository } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
 import { MyNavigation } from '../../common/navigation';
@@ -16,8 +16,8 @@ import { TournamentComponent } from '../component';
     styleUrls: ['./filter.component.scss']
 })
 export class TournamentFilterComponent extends TournamentComponent implements OnInit {
-    poulePlaces: PoulePlace[];
-    poulePlaceToSwap: PoulePlace;
+    places: Place[];
+    placeToSwap: Place;
     toggledItem: Competitor | Referee;
     toggledItemProgress = 0;
     userIsGameResultAdmin: boolean;
@@ -39,16 +39,16 @@ export class TournamentFilterComponent extends TournamentComponent implements On
 
     ngOnInit() {
         super.myNgOnInit(() => {
-            this.initPoulePlaces();
+            this.initPlaces();
             this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.GAMERESULTADMIN);
             this.favorites = this.favRepository.getItem(this.tournament);
             this.processing = false;
         });
     }
 
-    initPoulePlaces() {
+    initPlaces() {
         const round = this.structure.getRootRound();
-        this.poulePlaces = round.getPlaces();
+        this.places = round.getPlaces();
         if (this.hasCompetitors() === false) {
             this.setAlert('info', 'er zijn nog geen deelnemers ingevuld, je kunt daarom nog geen filter instellen');
         }
@@ -59,7 +59,7 @@ export class TournamentFilterComponent extends TournamentComponent implements On
     }
 
     hasCompetitors() {
-        return this.poulePlaces.some(poulePlace => poulePlace.getCompetitor() !== undefined);
+        return this.places.some(place => place.getCompetitor() !== undefined);
     }
 
     toggleFavoriteCompetitor(competitor: Competitor) {

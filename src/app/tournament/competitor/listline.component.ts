@@ -1,5 +1,5 @@
 import { AfterViewChecked, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { Competitor, NameService, PoulePlace } from 'ngx-sport';
+import { Competitor, NameService, Place } from 'ngx-sport';
 
 @Component({
   selector: 'app-tournament-competitor-line',
@@ -8,15 +8,15 @@ import { Competitor, NameService, PoulePlace } from 'ngx-sport';
 })
 export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
 
-  @Input() poulePlaceToSwap: PoulePlace;
-  @Input() poulePlace: PoulePlace;
+  @Input() placeToSwap: Place;
+  @Input() place: Place;
   @Input() nameService: NameService;
   @Input() focus: boolean;
   @Input() isStarted: boolean;
   @Input() showSwap: boolean;
-  @Output() editPressed = new EventEmitter<PoulePlace>();
-  @Output() swapPressed = new EventEmitter<PoulePlace>();
-  @Output() removePressed = new EventEmitter<PoulePlace>();
+  @Output() editPressed = new EventEmitter<Place>();
+  @Output() swapPressed = new EventEmitter<Place>();
+  @Output() removePressed = new EventEmitter<Place>();
   @Output() registerPressed = new EventEmitter<Competitor>();
 
   @ViewChild('btnEdit') private elementRef: ElementRef;
@@ -29,19 +29,19 @@ export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
   }
 
   edit() {
-    this.editPressed.emit(this.poulePlace);
+    this.editPressed.emit(this.place);
   }
 
   remove() {
-    this.removePressed.emit(this.poulePlace);
+    this.removePressed.emit(this.place);
   }
 
   swapTwo() {
-    this.swapPressed.emit(this.poulePlace);
+    this.swapPressed.emit(this.place);
   }
 
   register() {
-    this.registerPressed.emit(this.poulePlace.getCompetitor());
+    this.registerPressed.emit(this.place.getCompetitor());
   }
 
   ngAfterViewChecked() {

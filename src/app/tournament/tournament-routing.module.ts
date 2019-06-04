@@ -40,7 +40,7 @@ const routes: Routes = [
   { path: 'refereeedit/:id/:refereeId', component: TournamentRefereeEditComponent, canActivate: [AuthguardService] },
   { path: 'sponsors/:id', component: SponsorListComponent, canActivate: [AuthguardService] },
   { path: 'sponsoredit/:id/:sponsorId', component: TournamentSponsorEditComponent, canActivate: [AuthguardService] },
-  { path: 'competitoredit/:id/:poulePlaceId', component: TournamentCompetitorEditComponent, canActivate: [AuthguardService] }
+  { path: 'competitoredit/:id/:placeId', component: TournamentCompetitorEditComponent, canActivate: [AuthguardService] }
 ];
 
 @NgModule({

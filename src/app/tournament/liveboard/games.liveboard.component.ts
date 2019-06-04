@@ -53,7 +53,7 @@ export class TournamentLiveboardGamesComponent {
     }
 
     hasReferees() {
-        return this.screen.getGames().some(game => game.getReferee() !== undefined || game.getRefereePoulePlace() !== undefined);
+        return this.screen.getGames().some(game => game.getReferee() !== undefined || game.getRefereePlace() !== undefined);
     }
 
     getRoundAbbreviation(round: Round, sameName: boolean = false) {

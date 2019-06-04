@@ -38,7 +38,7 @@ export class Favorites {
     }
 
     hasGameCompetitor(game: Game, homeaway?: boolean): boolean {
-        return game.getPoulePlaces(homeaway).some(gamePoulePlace => this.hasCompetitor(gamePoulePlace.getPoulePlace().getCompetitor()));
+        return game.getPlaces(homeaway).some(gamePlace => this.hasCompetitor(gamePlace.getPlace().getCompetitor()));
     }
 
     addCompetitor(competitor: Competitor) {
@@ -73,7 +73,7 @@ export class Favorites {
         if (referee !== undefined) {
             return this.hasReferee(referee);
         }
-        return game.getRefereePoulePlace() ? this.hasCompetitor(game.getRefereePoulePlace().getCompetitor()) : false;
+        return game.getRefereePlace() ? this.hasCompetitor(game.getRefereePlace().getCompetitor()) : false;
     }
 
     addReferee(referee: Referee) {

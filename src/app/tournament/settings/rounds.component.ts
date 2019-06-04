@@ -7,11 +7,11 @@ import {
     PlanningRepository,
     PlanningService,
     RoundNumber,
-    RoundNumberConfig,
-    RoundNumberConfigMapper,
-    RoundNumberConfigRepository,
-    RoundNumberConfigScore,
-    RoundNumberConfigService,
+    Config,
+    ConfigMapper,
+    ConfigRepository,
+    ConfigScore,
+    ConfigService,
     SportConfig,
     StructureRepository,
 } from 'ngx-sport';
@@ -37,8 +37,8 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     enableTime: boolean;
     ranges: any = {};
     roundNumber: RoundNumber;
-    modelConfig: RoundNumberConfig;
-    configService: RoundNumberConfigService;
+    modelConfig: Config;
+    configService: ConfigService;
     modelRecreate: boolean;
     modelReschedule: boolean;
     customForm: FormGroup;
@@ -59,14 +59,14 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         router: Router,
         tournamentRepository: TournamentRepository,
         sructureRepository: StructureRepository,
-        private configRepository: RoundNumberConfigRepository,
-        private configMapper: RoundNumberConfigMapper,
+        private configRepository: ConfigRepository,
+        private configMapper: ConfigMapper,
         public nameService: NameService,
         private myNavigation: MyNavigation,
         private planningRepository: PlanningRepository
     ) {
         super(route, router, tournamentRepository, sructureRepository);
-        this.configService = new RoundNumberConfigService();
+        this.configService = new ConfigService();
     }
 
     private initRanges() {
@@ -260,10 +260,10 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     }
 
     getDirectionDescription(scoreConfig) {
-        return RoundNumberConfigScore.getDirectionDescription(scoreConfig.getDirection());
+        return ConfigScore.getDirectionDescription(scoreConfig.getDirection());
     }
 
-    setScoreConfigMaximum(scoreConfig: RoundNumberConfigScore, scoreConfigMaximum) {
+    setScoreConfigMaximum(scoreConfig: ConfigScore, scoreConfigMaximum) {
         if (scoreConfigMaximum > 9999 || scoreConfigMaximum < 0) {
             return;
         }
@@ -290,7 +290,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         this.modelConfig.setSelfReferee(selfReferee);
     }
 
-    isScoreConfigReadOnly(scoreConfig: RoundNumberConfigScore) {
+    isScoreConfigReadOnly(scoreConfig: ConfigScore) {
         if (scoreConfig.getChild() !== undefined && scoreConfig.getChild().getMaximum() === 0) {
             return true;
         }
@@ -360,8 +360,8 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
 
     }
 
-    getDirectionName(scoreConfig: RoundNumberConfigScore) {
-        return scoreConfig.getDirection() === RoundNumberConfigScore.UPWARDS ? 'naar' : 'vanaf';
+    getDirectionName(scoreConfig: ConfigScore) {
+        return scoreConfig.getDirection() === ConfigScore.UPWARDS ? 'naar' : 'vanaf';
     }
 
     navigateBack() {

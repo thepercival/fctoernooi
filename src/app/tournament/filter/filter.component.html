@@ -44,23 +44,23 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let poulePlace of poulePlaces">
+          <tr *ngFor="let place of places">
             <td>
-              <span>{{nameService.getPoulePlaceFromName(poulePlace, false)}}</span>
+              <span>{{nameService.getPlaceFromName(place, false)}}</span>
             </td>
-            <td class="pouleplace">
-              <span *ngIf="poulePlace.getCompetitor()">{{poulePlace.getCompetitor().getName()}}</span>
+            <td class="place">
+              <span *ngIf="place.getCompetitor()">{{place.getCompetitor().getName()}}</span>
             </td>
             <td>
-              <span *ngIf="toggledItem === poulePlace.getCompetitor()" class="smallfont">
+              <span *ngIf="toggledItem === place.getCompetitor()" class="smallfont">
                 <fa-icon *ngIf="this.toggledItemProgress === 10" class="text-success" [icon]="['fas', 'save']"
                   size="{{5 + (toggledItemProgress/2)}}x"></fa-icon>
               </span>
             </td>
             <td class="text-right">
-              <fa-icon *ngIf="poulePlace.getCompetitor()" class="text-primary pointer"
-                (click)="toggleFavoriteCompetitor(poulePlace.getCompetitor())"
-                [icon]="['far', (favorites.hasCompetitor(poulePlace.getCompetitor()) ? 'check-' : '') + 'square']"
+              <fa-icon *ngIf="place.getCompetitor()" class="text-primary pointer"
+                (click)="toggleFavoriteCompetitor(place.getCompetitor())"
+                [icon]="['far', (favorites.hasCompetitor(place.getCompetitor()) ? 'check-' : '') + 'square']"
                 size="2x"></fa-icon>
             </td>
           </tr>
