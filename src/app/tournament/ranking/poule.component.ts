@@ -1,5 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
+<<<<<<< HEAD
 import { NameService, Poule, Place, RankingService, RoundRankingItem } from 'ngx-sport';
+=======
+import { NameService, Poule, RankedRoundItem, RankingService } from 'ngx-sport';
+>>>>>>> 69fba412e881afb86e96b578edc3d3c0e5e1c69f
 
 import { CSSService } from '../../common/cssservice';
 import { Favorites } from '../../lib/favorites';
@@ -12,7 +16,7 @@ import { Tournament } from '../../lib/tournament';
   styleUrls: ['./poule.component.scss']
 })
 export class TournamentPouleRankingComponent implements OnInit {
-  public rankingItems: RoundRankingItem[];
+  public rankingItems: RankedRoundItem[];
   @Input() poule: Poule;
   @Input() tournament: Tournament;
   public showDifferenceDetail = false;
@@ -28,7 +32,7 @@ export class TournamentPouleRankingComponent implements OnInit {
   ngOnInit() {
     this.processing = true;
     this.favorites = this.favRepository.getItem(this.tournament);
-    const ranking = new RankingService(this.tournament.getCompetition().getRuleSet());
+    const ranking = new RankingService(this.poule.getRound(), this.tournament.getCompetition().getRuleSet());
     this.rankingItems = ranking.getItemsForPoule(this.poule);
     this.processing = false;
   }
@@ -37,8 +41,11 @@ export class TournamentPouleRankingComponent implements OnInit {
     return this.poule.getRound().getNumber().getConfig().getCalculateScore()
       !== this.poule.getRound().getNumber().getConfig().getInputScore();
   }
+<<<<<<< HEAD
 
   getPlace(rankingItem: RoundRankingItem): Place {
     return rankingItem.getRound().getPlace(rankingItem.getPlaceLocation());
   }
+=======
+>>>>>>> 69fba412e881afb86e96b578edc3d3c0e5e1c69f
 }

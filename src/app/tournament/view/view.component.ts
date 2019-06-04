@@ -22,7 +22,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
     private refreshAtCountDown = true;
     userRefereeId: number;
     toggleProgress: boolean = false;
-    showEndRanking: boolean;
+    shouldShowEndRanking: boolean;
 
     constructor(
         route: ActivatedRoute,
@@ -38,7 +38,7 @@ export class TournamentViewComponent extends TournamentComponent implements OnIn
 
     ngOnInit() {
         super.myNgOnInit(() => {
-            this.showEndRanking = this.structure.getRootRound().getNrOfPlaces() <= 20;
+            this.shouldShowEndRanking = (this.structure.getFirstRoundNumber().hasNext() || this.structure.getRootRound().getPoules().length === 1);
             this.initLiveboardLink();
             this.planningService = new PlanningService(this.tournament.getCompetition());
             this.tournamentRepository.getUserRefereeId(this.tournament).subscribe(

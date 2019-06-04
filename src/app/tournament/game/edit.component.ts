@@ -10,16 +10,28 @@ import {
     NameService,
     PlanningService,
     Poule,
+<<<<<<< HEAD
     Place,
     PlaceRepository,
     QualifyRule,
+=======
+    PoulePlace,
+    PoulePlaceRepository,
+>>>>>>> 69fba412e881afb86e96b578edc3d3c0e5e1c69f
     QualifyRuleMultiple,
+    QualifyService,
+    RankedRoundItem,
     RankingService,
     Round,
+<<<<<<< HEAD
     ConfigScore,
     RoundRankingItem,
+=======
+    RoundNumberConfigScore,
+>>>>>>> 69fba412e881afb86e96b578edc3d3c0e5e1c69f
     StructureRepository,
 } from 'ngx-sport';
+import { forkJoin } from 'rxjs';
 
 import { AuthService } from '../../auth/auth.service';
 import { MyNavigation } from '../../common/navigation';
@@ -40,6 +52,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     calculateScoreControl: HomeAwayFormControl;
     userRefereeId: number;
     private enablePlayedAtFirstChange;
+    private originalPouleState: number;
 
     constructor(
         route: ActivatedRoute,
@@ -54,6 +67,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
+        this.originalPouleState = Game.STATE_CREATED;
         this.customForm = fb.group({
             played: [''],
             extratime: ['']
@@ -64,6 +78,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         this.route.params.subscribe(params => {
             super.myNgOnInit(() => {
                 this.setGame(+params.gameId);
+                this.originalPouleState = this.game.getPoule().getState();
                 this.tournamentRepository.getUserRefereeId(this.tournament).subscribe(
                 /* happy path */ userRefereeIdRes => {
                         this.userRefereeId = userRefereeIdRes;
@@ -177,13 +192,11 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         if (game !== undefined) {
             return game;
         }
-        console.error('getGameById');
-        // // game = this.getGameById(id, round.getChildRound(QualifyGroup.WINNERS));
-        // // if (game !== undefined) {
-        // //     return game;
-        // // }
-        // return this.getGameById(id, round.getChildRound(Round.LOSERS));
-        return undefined;
+        round.getChildren().some(child => {
+            game = this.getGameById(id, child);
+            return (game !== undefined);
+        });
+        return game;
     }
 
     protected initScores(game?: Game) {
@@ -216,7 +229,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         });
     }
 
-    protected synGameScores(alwaysAdd: boolean = true) {
+    protected syncGameScores(alwaysAdd: boolean = true) {
         const scores = this.game.getScores();
         while (scores.length > 0) {
             scores.pop();
@@ -236,7 +249,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             this.game.setState(Game.STATE_PLAYED);
         }
         this.updateCalculateScoreControl();
-        this.synGameScores();
+        this.syncGameScores();
     }
 
     setAway(scoreControl: HomeAwayFormControl, away) {
@@ -245,13 +258,13 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             this.game.setState(Game.STATE_PLAYED);
         }
         this.updateCalculateScoreControl();
-        this.synGameScores();
+        this.syncGameScores();
     }
 
     setExtratime(extratime: boolean) {
         if (this.game.getScores().length === 0) {
             this.updateCalculateScoreControl();
-            this.synGameScores();
+            this.syncGameScores();
         }
         this.game.setScoresMoment(extratime ? Game.MOMENT_EXTRATIME : Game.MOMENT_FULLTIME);
     }
@@ -269,7 +282,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         if (index >= 0) {
             this.scoreControls.splice(index, 1);
             this.updateCalculateScoreControl();
-            this.synGameScores();
+            this.syncGameScores();
         }
     }
 
@@ -278,49 +291,61 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             this.customForm.controls.extratime.setValue(false);
             this.initScores();
             this.updateCalculateScoreControl();
-            this.synGameScores();
+            this.syncGameScores();
         } else if (this.game.getScores().length === 0) {
             this.updateCalculateScoreControl();
-            this.synGameScores();
+            this.syncGameScores();
         }
         this.game.setState(played ? Game.STATE_PLAYED : Game.STATE_CREATED);
     }
 
-    getWarningsForEqualsInQualification(): string[] {
-        if (this.game.getPoule().getState() !== Game.STATE_PLAYED) {
-            return undefined;
+    getWarningsForEqualQualifiers(): string[] {
+        const poule = this.game.getPoule()
+        if (poule.getState() !== Game.STATE_PLAYED) {
+            return [];
         }
-        const round = this.game.getRound();
-        const ranking = new RankingService(this.tournament.getCompetition().getRuleSet());
+
+        const round = poule.getRound();
+        const ranking = new RankingService(round, this.tournament.getCompetition().getRuleSet());
         const pouleRankingItems = ranking.getItemsForPoule(this.game.getPoule());
-        const equalPouleItems = this.getEqualPouleRankingItems(pouleRankingItems);
+        const equalPouleItems = this.getEqualPouleRankingItemsWithQualifyRules(pouleRankingItems);
         const postFix = '(' + this.nameService.getPouleName(this.game.getPoule(), true) + ')';
-        let warnings: string[] = this.getWarningsForEqualsInQualificationHelper(equalPouleItems, postFix);
-        console.error('getWarningsForEqualsInQualification');
-        // round.getChildRounds().forEach(childRound => {
-        //     const qualifyRules = this.getRulesToProcess(childRound, this.game.getPoule(), Game.STATE_CREATED, Game.STATE_CREATED);
-        //     qualifyRules.filter(qualifyRule => qualifyRule.isMultiple()).forEach(multipleRule => {
-        //         const ruleRankingItems = ranking.getItemsForMultipleRule(multipleRule);
-        //         const equalRuleItems = this.getEqualRuleRankingItems(multipleRule, ruleRankingItems);
-        //         const postFix = '(' + this.nameService.getQualifyRuleName(multipleRule) + ')';
-        //         warnings = warnings.concat(this.getWarningsForEqualsInQualificationHelper(equalRuleItems, postFix));
-        //     });
-        // });
+        let warnings: string[] = this.getWarningsForEqualQualifiersHelper(equalPouleItems, postFix);
+
+        if (round.getState() !== Game.STATE_PLAYED) {
+            return warnings;
+        }
+        round.getQualifyGroups().forEach(qualifyGroup => {
+            qualifyGroup.getHorizontalPoules().forEach(horizontalPoule => {
+                const multipleRule = horizontalPoule.getQualifyRuleMultiple();
+                if (multipleRule === undefined) {
+                    return;
+                }
+                const rankedItems = ranking.getItemsForHorizontalPoule(horizontalPoule);
+                const equalRuleItems = this.getEqualRuleRankingItems(multipleRule, rankedItems);
+                const postFix = '(' + this.nameService.getHorizontalPouleName(horizontalPoule) + ')';
+                warnings = warnings.concat(this.getWarningsForEqualQualifiersHelper(equalRuleItems, postFix));
+            });
+        });
 
         return warnings;
     }
 
-    protected getWarningsForEqualsInQualificationHelper(equalItemsPerRank: RoundRankingItem[][], postFix: string): string[] {
+    protected getWarningsForEqualQualifiersHelper(equalItemsPerRank: RankedRoundItem[][], postFix: string): string[] {
         return equalItemsPerRank.map(equalItems => {
             const names: string[] = equalItems.map(equalItem => {
+<<<<<<< HEAD
                 const place = equalItem.getRound().getPlace(equalItem.getPlaceLocation());
                 return this.nameService.getPlaceName(place, true, true);
+=======
+                return this.nameService.getPoulePlaceName(equalItem.getPlace(), true, true);
+>>>>>>> 69fba412e881afb86e96b578edc3d3c0e5e1c69f
             });
             return names.join(' & ') + ' zijn precies gelijk geëindigd' + postFix;
         });
     }
 
-    protected getEqualRuleRankingItems(multipleRule: QualifyRuleMultiple, rankingItems: RoundRankingItem[]): RoundRankingItem[][] {
+    protected getEqualRuleRankingItems(multipleRule: QualifyRuleMultiple, rankingItems: RankedRoundItem[]): RankedRoundItem[][] {
         const equalItemsPerRank = this.getEqualRankedItems(rankingItems);
         const nrToQualify = multipleRule.getToPlaces().length;
         return equalItemsPerRank.filter(equalItems => {
@@ -329,18 +354,24 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         });
     }
 
-    protected getEqualPouleRankingItems(rankingItems: RoundRankingItem[]): RoundRankingItem[][] {
+    protected getEqualPouleRankingItemsWithQualifyRules(rankingItems: RankedRoundItem[]): RankedRoundItem[][] {
         const equalItemsPerRank = this.getEqualRankedItems(rankingItems);
         return equalItemsPerRank.filter(equalItems => {
+<<<<<<< HEAD
             // als alle equalitems geen torule hebben dan false
             return !equalItems.every(item => {
                 const place = item.getRound().getPlace(item.getPlaceLocation());
                 return place.getToQualifyRules().length === 0;
+=======
+            return equalItems.some(item => {
+                const poulePlace = item.getPlace();
+                return poulePlace.getToQualifyRules().length > 0;
+>>>>>>> 69fba412e881afb86e96b578edc3d3c0e5e1c69f
             });
         });
     }
 
-    protected getEqualRankedItems(rankingItems: RoundRankingItem[]): RoundRankingItem[][] {
+    protected getEqualRankedItems(rankingItems: RankedRoundItem[]): RankedRoundItem[][] {
         const equalItems = [];
         const maxRank = rankingItems[rankingItems.length - 1].getRank();
         for (let rank = 1; rank <= maxRank; rank++) {
@@ -362,7 +393,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         const state = this.customForm.controls.played.value === true ? Game.STATE_PLAYED : Game.STATE_CREATED;
         this.game.setScoresMoment(moment);
         this.game.setState(state);
-        this.synGameScores(false);
+        this.syncGameScores(false);
 
         // if (this.planningService.canCalculateStartDateTime(this.game.getRound().getNumber())) {
         //     const startdate = new Date(
@@ -375,6 +406,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         //     this.game.setStartDateTime(startdate);
         // }
 
+<<<<<<< HEAD
         console.error(' this.gameRepository.editObject');
         // this.gameRepository.editObject(this.game, this.game.getPoule())
         //     .subscribe(
@@ -425,6 +457,50 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         //         //         }
         //         //     }
         //     );
+=======
+
+        this.gameRepository.editObject(this.game, this.game.getPoule())
+            .subscribe(
+                /* happy path */ gameRes => {
+                    this.game = gameRes;
+                    const poule = this.game.getPoule();
+                    const round = poule.getRound();
+                    const qualifyService = new QualifyService(round, this.tournament.getCompetition().getRuleSet());
+                    if (!this.shouldQualifiersBeCalculated(poule)) {
+                        return this.navigateBack();
+                    }
+                    const pouleToFilter = this.shouldQualifiersBeCalculatedForRound(poule) ? undefined : poule;
+                    const changedPoulePlaces = qualifyService.setQualifiers(pouleToFilter);
+                    if (changedPoulePlaces.length === 0) {
+                        this.navigateBack();
+                        this.processing = false;
+                    }
+
+                    const reposUpdates = [];
+                    changedPoulePlaces.forEach((changedPoulePlace) => {
+                        reposUpdates.push(this.poulePlaceRepository.editObject(changedPoulePlace, changedPoulePlace.getPoule()));
+                    });
+
+                    forkJoin(reposUpdates).subscribe(results => {
+                        this.navigateBack();
+                        this.processing = false;
+                    },
+                        err => {
+                            this.processing = false;
+                            this.setAlert('danger', 'de wedstrijd is niet opgeslagen: ' + err);
+                        }
+                    );
+
+                },
+             /* error path */ e => { this.setAlert('danger', 'de wedstrijd kan niet worden opgeslagen: ' + e); this.processing = false; },
+                // /* onComplete */() => {
+                //     if (!stateChanged && !scoreChanged) {
+                //             this.processing = false;
+                //             this.setAlert('success', 'de wedstrijd is opgeslagen');
+                //         }
+                //     }
+            );
+>>>>>>> 69fba412e881afb86e96b578edc3d3c0e5e1c69f
         return false;
     }
 
@@ -462,6 +538,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         return changedPlaces;
     }
 
+<<<<<<< HEAD
     // transities:
     // state changed
     // 1 van hele ronde gespeeld naar niet hele ronde gespeeld
@@ -495,6 +572,14 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         //     });
         // }
         return rules;
+=======
+    protected shouldQualifiersBeCalculated(poule: Poule): boolean {
+        return !(this.originalPouleState !== Game.STATE_PLAYED && poule.getState() !== Game.STATE_PLAYED);
+    }
+
+    shouldQualifiersBeCalculatedForRound(poule: Poule): boolean {
+        return poule.getRound().getQualifyGroups().some(qualifyGroup => qualifyGroup.getNrOfToPlacesTooMuch() > 0);
+>>>>>>> 69fba412e881afb86e96b578edc3d3c0e5e1c69f
     }
 
     navigateBack() {

@@ -29,23 +29,24 @@
                     <ng-template ngFor let-rankingItem [ngForOf]="rankingItems">
                         <tr>
                             <td class="rankingnr text-right pl-0">
-                                <ng-container
-                                    *ngTemplateOutlet="qualclass;context:{$implicit: cssService.getQualifyPlace(poule.getPlace(rankingItem.getUniqueRank()))}">
-                                </ng-container>
-                                <span>{{rankingItem.getUniqueRank()}}</span>
+                                <span
+                                    class="badge badge-pill badge-rank {{cssService.getQualifyPlace(poule.getPlace(rankingItem.getUniqueRank()))}}">{{rankingItem.getUniqueRank()}}</span>
                             </td>
-                            <td class="place pl-0"
-                                [ngClass]="{ 'text-primary': favorites.hasCompetitor(getPlace(rankingItem).getCompetitor()) }">
-                                {{nameService.getPlaceFromName(getPlace(rankingItem), true)}}
+                            <td class="pouleplace pl-0"
+                                [ngClass]="{ 'text-primary': favorites.hasCompetitor(rankingItem.getPlace().getCompetitor()) }">
+                                {{nameService.getPoulePlaceFromName(rankingItem.getPlace(), true)}}
                             </td>
-                            <td class="text-right pl-0">{{rankingItem.getGames()}}</td>
-                            <td class="text-right pl-0">{{rankingItem.getPoints()}}</td>
+                            <td class="text-right pl-0">{{rankingItem.getUnranked().getGames()}}</td>
+                            <td class="text-right pl-0">{{rankingItem.getUnranked().getPoints()}}</td>
                             <td class="text-center unitdiff pl-0">
-                                <div>{{rankingItem.getDiff() > 0 ? '+' : ''}}{{rankingItem.getDiff()}}</div>
-                                <div *ngIf="showDifferenceDetail">( {{rankingItem.getScored()}} -
-                                    {{rankingItem.getReceived()}} )</div>
+                                <div>
+                                    {{rankingItem.getUnranked().getDiff() > 0 ? '+' : ''}}{{rankingItem.getUnranked().getDiff()}}
+                                </div>
+                                <div *ngIf="showDifferenceDetail">( {{rankingItem.getUnranked().getScored()}} -
+                                    {{rankingItem.getUnranked().getReceived()}} )</div>
                                 <div *ngIf="showDifferenceDetail && hasMultipleScoreConfigs()">(
-                                    {{rankingItem.getSubScored()}} - {{rankingItem.getSubReceived()}} )</div>
+                                    {{rankingItem.getUnranked().getSubScored()}} -
+                                    {{rankingItem.getUnranked().getSubReceived()}} )</div>
                             </td>
                         </tr>
                     </ng-template>
@@ -54,7 +55,3 @@
         </div>
     </div>
 </div>
-
-<ng-template #qualclass let-qualclass>
-    <fa-icon *ngIf="qualclass.icon !== undefined" [icon]="['fas', qualclass.icon]" class="{{qualclass.text}}"></fa-icon>
-</ng-template>

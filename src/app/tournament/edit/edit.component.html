@@ -1,15 +1,8 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
-      <div *ngIf="tournament" class="d-flex justify-content-between mb-4">
-        <h1>{{tournament.getName()}}</h1>
-        <h1 class="mr-1">
-          <button [routerLink]="['/toernooi', tournament.getId()]" type="button" class="btn btn-outline-secondary">
-            <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
-            <span class="d-none d-md-inline"> terug</span>
-          </button>
-        </h1>
-      </div>
+      <app-tournament-title [tournament]="tournament" [routerLink]="['/toernooi', tournament.getId()]">
+      </app-tournament-title>
       <div>
         <h2>
           <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellingen
@@ -97,9 +90,9 @@
             <label class="col-form-label">( tijdens een ronde )</label>
           </div>
         </div>
-        <div *ngIf="isStarted && customForm.controls.togglebreak.value === true" class="form-group row">
+        <div *ngIf="!isStarted && customForm.controls.togglebreak.value === true" class="form-group row">
           <div class="col-3">
-            <label for="breaktime" class="col-form-label">pausetijd</label>
+            <label for="breaktime" class="col-form-label">pauzetijd</label>
           </div>
           <div class="col-9">
             <ngb-timepicker id="breaktime" name="breaktime" [formControl]="customForm.controls.breaktime"
@@ -109,7 +102,7 @@
         </div>
         <div *ngIf="!isStarted && customForm.controls.togglebreak.value" class="form-group row">
           <div class="col-3">
-            <label for="breakduration" class="col-form-label">pauseduur</label>
+            <label for="breakduration" class="col-form-label">pauzeduur</label>
           </div>
           <div class="col-6 col-sm-5 ">
             <div class="input-group">

@@ -4,6 +4,7 @@ import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { Game, NameService, PlanningService, Poule, RankingService, RoundNumber } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
+import { CSSService } from '../../common/cssservice';
 import { Favorites } from '../../lib/favorites';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { Role } from '../../lib/role';
@@ -41,6 +42,7 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     private router: Router,
     private authService: AuthService,
     public nameService: NameService,
+    public cssService: CSSService,
     public favRepository: FavoritesRepository) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
     this.resetAlert();
@@ -97,7 +99,8 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     this.roundNumber.getPoules().forEach(poule => {
       pouleDatas[poule.getId()] = {
         name: this.nameService.getPouleName(poule, false),
-        needsRanking: poule.needsRanking()
+        needsRanking: poule.needsRanking(),
+        round: poule.getRound()
       }
     });
     return pouleDatas;
@@ -215,7 +218,7 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
 
   getRankingRuleDescriptions(): string[] {
     const ruleSet = this.tournament.getCompetition().getRuleSet();
-    const rankingService = new RankingService(ruleSet);
+    const rankingService = new RankingService(undefined, ruleSet);
     return rankingService.getRuleDescriptions();
   }
 }

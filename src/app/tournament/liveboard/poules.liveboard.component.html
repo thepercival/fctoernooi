@@ -24,26 +24,26 @@
       <ng-template ngFor let-rankingItem [ngForOf]="getRankingItems(poule)">
         <tr>
           <td nowrap class="text-right">
-            <ng-container
-              *ngTemplateOutlet="qualclass;context:{$implicit: cssService.getQualifyPlace(poule.getPlace(rankingItem.getUniqueRank()))}">
-            </ng-container>
-            <span>{{rankingItem.getUniqueRank()}}</span>
+            <span
+              class="badge badge-pill badge-rank {{cssService.getQualifyPlace(poule.getPlace(rankingItem.getUniqueRank()))}}">{{rankingItem.getUniqueRank()}}</span>
           </td>
+<<<<<<< HEAD
           <td class="place">{{nameService.getPlaceFromName(getPlace(rankingItem), true)}}</td>
           <td class="text-right">{{rankingItem.getGames()}}</td>
           <td class="text-right">{{rankingItem.getPoints()}}</td>
+=======
+          <td class="pouleplace">{{nameService.getPoulePlaceFromName(rankingItem.getPlace(), true)}}</td>
+          <td class="text-right">{{rankingItem.getUnranked().getGames()}}</td>
+          <td class="text-right">{{rankingItem.getUnranked().getPoints()}}</td>
+>>>>>>> 69fba412e881afb86e96b578edc3d3c0e5e1c69f
           <td nowrap class="text-center unitdiff">
-            <span>{{rankingItem.getDiff() > 0 ? '+' : ''}}{{rankingItem.getDiff()}} </span>
+            <span>{{rankingItem.getUnranked().getDiff() > 0 ? '+' : ''}}{{rankingItem.getUnranked().getDiff()}} </span>
             <span class="d-none d-xl-inline">
-              ({{rankingItem.getScored()}}-{{rankingItem.getReceived()}})
+              ({{rankingItem.getUnranked().getScored()}}-{{rankingItem.getUnranked().getReceived()}})
             </span>
           </td>
         </tr>
       </ng-template>
     </tbody>
   </table>
-</ng-template>
-
-<ng-template #qualclass let-qualclass>
-  <fa-icon *ngIf="qualclass.icon !== undefined" [icon]="['fas', qualclass.icon]" class="{{qualclass.text}}"></fa-icon>
 </ng-template>

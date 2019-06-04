@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../auth/auth.service';
@@ -139,9 +139,10 @@ export class HomeComponent implements OnInit {
 
   enableSearchFilter() {
     this.searchFilterActive = true;
-    setTimeout(()=>{ // this will make the execution after the above boolean has changed
+    setTimeout(() => { // this will make the execution after the above boolean has changed
+      this.searchElementRef.nativeElement.scrollIntoView(true);
       this.searchElementRef.nativeElement.focus();
-    },0);  
+    }, 0);
     this.publicShells = [];
   }
 

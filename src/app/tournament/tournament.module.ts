@@ -20,6 +20,7 @@ import {
   faQrcode,
   faRandom,
   faSort,
+  faTh,
   faTimesCircle,
   faTrashAlt,
   faUnlink,
@@ -83,17 +84,17 @@ import { RoundsSettingsComponent } from './settings/rounds.component';
 import { TournamentSponsorEditComponent } from './sponsor/edit.component';
 import { SponsorListComponent } from './sponsor/list.component';
 import { TournamentStructureComponent } from './structure/main.component';
-import { TournamentStructureQualificationModalComponent } from './structure/qualificationmodal.component';
 import { TournamentStructureQualifyComponent } from './structure/qualify.component';
 import { TournamentStructureRoundComponent } from './structure/round.component';
 import { TournamentStructureRoundArrangeComponent } from './structure/round/arrange.component';
 import { TournamentStructureViewComponent } from './structure/view.component';
+import { TournamentTitleComponent } from './title/title.component';
 import { TournamentRoutingModule } from './tournament-routing.module';
 import { TournamentViewComponent } from './view/view.component';
 
 
 library.add(
-  faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus,
+  faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
   faUnlink, faPrint, faSort, faRandom, faSquare, faCheckSquare, faUserTag, faInfoCircle, faMedal, faProductHunt, faLink, faUsers, faQrcode, faCopy
 );
 
@@ -110,6 +111,7 @@ library.add(
     TournamentNewComponent,
     TournamentEditComponent,
     TournamentHomeComponent,
+    TournamentTitleComponent,
     TournamentStructureComponent,
     TournamentStructureViewComponent,
     TournamentStructureRoundComponent,
@@ -135,12 +137,11 @@ library.add(
     TournamentRefereeEditComponent,
     TournamentSponsorEditComponent,
     TournamentFilterComponent,
-    TournamentStructureQualificationModalComponent,
     TournamentListRemoveModalComponent,
     ProgressComponent,
     EscapeHtmlPipe
   ],
-  entryComponents: [TournamentStructureQualificationModalComponent, TournamentListRemoveModalComponent],
+  entryComponents: [TournamentListRemoveModalComponent],
   providers: [
     RoleMapper,
     StructureRepository,

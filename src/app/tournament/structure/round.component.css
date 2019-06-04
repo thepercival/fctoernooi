@@ -23,6 +23,18 @@ app-tournament-structureround {
     margin-top: 3px;
 }
 
+.qualifygroup-list-item {
+    background-color: transparent;
+    margin-top: 3px;
+    border-color: white;
+}
+
 .card.qualification{
     width:100%;
+}
+
+.rotate-45 {
+    transform: rotate(-45deg);
+    display: inline-block;
+    transition: transform 1s;
 }

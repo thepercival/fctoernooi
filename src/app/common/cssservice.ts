@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
+<<<<<<< HEAD
 import { Place, QualifyGroup, Round, SportConfig } from 'ngx-sport';
+=======
+import { HorizontalPoule, PoulePlace, QualifyGroup, Round, SportConfig } from 'ngx-sport';
+>>>>>>> 69fba412e881afb86e96b578edc3d3c0e5e1c69f
 
 @Injectable()
 export class CSSService {
@@ -41,31 +45,50 @@ export class CSSService {
     getQualifyPlace(place: Place): string {
         const horizontalPouleWinners = place.getHorizontalPoule(QualifyGroup.WINNERS);
         const qualifyGroupWinners: QualifyGroup = horizontalPouleWinners.getQualifyGroup();
-        const qualifyGroupLosers: QualifyGroup = place.getHorizontalPoule(QualifyGroup.LOSERS).getQualifyGroup();
+        const horizontalPouleLosers = place.getHorizontalPoule(QualifyGroup.LOSERS);
+        const qualifyGroupLosers: QualifyGroup = horizontalPouleLosers.getQualifyGroup();
         if (!qualifyGroupWinners && !qualifyGroupLosers) {
             return "";
         }
+        if (qualifyGroupWinners && qualifyGroupLosers) {
+            const partialWinners = (qualifyGroupWinners.getNrOfToPlacesTooMuch() > 0 && horizontalPouleWinners.isBorderPoule());
+            const partialLosers = (qualifyGroupLosers.getNrOfToPlacesTooMuch() > 0 && horizontalPouleLosers.isBorderPoule());
+            if (partialWinners && partialLosers) {
+                return 'q-partial q-w-' + qualifyGroupWinners.getNumber() + '-double-partial q-l-' + qualifyGroupLosers.getNumber() + '-double-partial';
+            }
+            if (!partialWinners) {
+                return 'q-w-' + qualifyGroupWinners.getNumber();
+            }
+            return 'q-l-' + qualifyGroupLosers.getNumber();
+        }
         if (qualifyGroupWinners && !qualifyGroupLosers) {
-            const classes = (qualifyGroupWinners.getNrOfToPlacesShort() > 0 && horizontalPouleWinners.isBorderPoule() ? 'q-partial' : '')
-            return classes + ' q-w-' + qualifyGroupWinners.getNumber();
+            return this.getQualifyPoule(horizontalPouleWinners);
         }
-        if (qualifyGroupLosers && !qualifyGroupWinners) {
-            const classes = (qualifyGroupLosers.getNrOfToPlacesShort() > 0 ? 'q-partial' : '')
-            return classes + ' q-l-' + qualifyGroupLosers.getNumber();
-        }
-        console.error('make css combination');
-        return "";
+        return this.getQualifyPoule(horizontalPouleLosers);
     }
 
-    getQualifyRound(round: Round): string {
-        const qualifyGroup: QualifyGroup = round.getParentQualifyGroup();
+    getQualifyPoule(horizontalPoule: HorizontalPoule): string {
+        const qualifyGroup = horizontalPoule.getQualifyGroup();
         if (qualifyGroup === undefined) {
             return '';
+        }
+        const classes = (qualifyGroup.getNrOfToPlacesTooMuch() > 0 && horizontalPoule.isBorderPoule()) ? 'q-partial' : '';
+        return classes + ' q-' + this.getQualifyWinnersOrLosers(qualifyGroup.getWinnersOrLosers()) + '-' + qualifyGroup.getNumber();
+    }
+
+    getQualifyWinnersOrLosers(winnersOrLosers: number): string {
+        return winnersOrLosers === QualifyGroup.WINNERS ? 'w' : 'l';
+    }
+
+    getQualifyRound(round: Round, noQualifyClass: string = ''): string {
+        const qualifyGroup: QualifyGroup = round.getParentQualifyGroup();
+        if (qualifyGroup === undefined) {
+            return noQualifyClass;
         }
         return ' q-' + (qualifyGroup.getWinnersOrLosers() === QualifyGroup.WINNERS ? 'w' : 'l') + '-' + qualifyGroup.getNumber();
     }
 
-    getWinnersOrLosers(winnersOrLosers: number): string {
-        return winnersOrLosers === QualifyGroup.WINNERS ? 'success' : (winnersOrLosers === QualifyGroup.LOSERS ? 'danger' : '');
-    }
+    // getWinnersOrLosers(winnersOrLosers: number): string {
+    //     return winnersOrLosers === QualifyGroup.WINNERS ? 'success' : (winnersOrLosers === QualifyGroup.LOSERS ? 'danger' : '');
+    // }
 }

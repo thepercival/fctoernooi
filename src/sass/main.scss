@@ -184,34 +184,69 @@ ngb-alert {
   box-shadow: none !important; 
 }
 
-			
-
 .q-w-1 {
-  border-color: #298F00;
+  border-color: #298F00 !important;
 }
 .q-w-2 {
-  border-color: #84CF96;
+  border-color: #84CF96 !important;
 }
 .q-w-3 {
-  border-color: #0588BC;
+  border-color: #0588BC !important;
 }
 .q-w-4 {
-  border-color: #00578A;
+  border-color: #00578A !important;
 }
-
-.q-partial {
-  border-style: dashed;
-}
-
 .q-l-4 {
-  border-color: #FFFF66;
+  border-color: #FFFF66 !important;
 }
 .q-l-3 {
-  border-color: #FFCC00;
+  border-color: #FFCC00 !important;
 }
 .q-l-2 {
-  border-color: #FF9900;
+  border-color: #FF9900 !important;
 }
 .q-l-1 {
-  border-color: #FF0000;
+  border-color: #FF0000 !important;
 }			
+.q-partial {
+  border-style: dashed !important;
+}
+.q-w-1-double-partial {
+  border-left-color: #298F00;
+  border-top-color: #298F00;
+}
+.q-w-2-double-partial {
+  border-left-color: #84CF96;
+  border-top-color: #84CF96;
+}
+.q-w-3-double-partial {
+  border-left-color: #0588BC;
+  border-top-color: #0588BC;
+}
+.q-w-4-double-partial {
+  border-left-color: #00578A;
+  border-top-color: #00578A;
+}
+.q-l-4-double-partial {
+  border-right-color: #FFFF66;
+  border-bottom-color: #FFFF66;
+}
+.q-l-3-double-partial {
+  border-right-color: #FFCC00;
+  border-bottom-color: #FFCC00;
+}
+.q-l-2-double-partial {
+  border-right-color: #FF9900;
+  border-bottom-color: #FF9900;
+}
+.q-l-1-double-partial {
+  border-right-color: #FF0000;
+  border-bottom-color: #FF0000;
+}
+
+span.badge-rank {
+    background-color: inherit;
+    color: inherit;
+    border: 1px solid black;
+    font-size: inherit;
+}

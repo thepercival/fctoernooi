@@ -19,21 +19,11 @@ export class TournamentStructureRoundArrangeComponent {
   }
 
   addPoule() {
-    if (this.round.isRoot()) {
-      // poule toevoegen met zelfde aantal deelnemers als laatste poule
-      this.arrangeAction.emit('addPoule');
-    } else {
-      // poule toevoegen, maar zelfde aantal deelnemers behouden
-    }
+    this.arrangeAction.emit('addPoule');
   }
 
   removePoule() {
-    if (this.round.isRoot()) {
-      // poule toevoegen met zelfde aantal deelnemers als laatste poule
-      this.arrangeAction.emit('removePoule');
-    } else {
-      // poule toevoegen, maar zelfde aantal deelnemers behouden
-    }
+    this.arrangeAction.emit('removePoule');
   }
 
   addPlace() {
@@ -53,4 +43,22 @@ export class TournamentStructureRoundArrangeComponent {
   hasMinimumNrOfPlacesPerPoule() {
     return (this.round.getPoules().length * 2) === this.round.getNrOfPlaces();
   }
+<<<<<<< HEAD
+=======
+
+  // getDivisionClasses(round: Round): string {
+  //   const nrOfRounds = round.getNumber().getRounds().length;
+  //   let classes = '';
+  //   if (nrOfRounds > 2) {
+  //     classes += 'more-than-two-rounds';
+  //   }
+  //   if (nrOfRounds > 4) {
+  //     classes += ' more-than-four-rounds';
+  //   }
+  //   if (nrOfRounds > 8) {
+  //     classes += ' more-than-eight-rounds';
+  //   }
+  //   return classes;
+  // }
+>>>>>>> 69fba412e881afb86e96b578edc3d3c0e5e1c69f
 }
