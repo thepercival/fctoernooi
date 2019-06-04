@@ -42,7 +42,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
         this.planningService = new PlanningService(this.tournament.getCompetition());
         this.processing = false;
         if (this.isStarted()) {
-            this.setAlert('warning', 'het toernooi is al begonnen, je kunt niet meer wijzigen');
+            this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
         }
     }
 

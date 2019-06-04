@@ -116,7 +116,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         this.modelReschedule = false;
         this.setAlert('info', 'instellingen gelden ook voor volgende ronden');
         if (this.planningService.isStarted(this.roundNumber)) {
-            this.setAlert('info', 'deze ronde is al begonnen, kies een andere ronde');
+            this.setAlert('info', 'deze ronde heeft al gespeelde wedstrijden, kies een andere ronde');
         }
     }
 

@@ -97,7 +97,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
             return false;
         }
         if (this.structure.getRootRound().isStarted()) {
-            this.setAlert('info', 'de startdatum mag niet veranderen omdat het toernooi al is begonnen');
+            this.setAlert('info', 'de startdatum kan niet meer gewijzigd worden, omdat er al gespeelde wedstrijden zijn');
         }
         return true;
     }
