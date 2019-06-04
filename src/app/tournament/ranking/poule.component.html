@@ -32,9 +32,9 @@
                                 <span
                                     class="badge badge-pill badge-rank {{cssService.getQualifyPlace(poule.getPlace(rankingItem.getUniqueRank()))}}">{{rankingItem.getUniqueRank()}}</span>
                             </td>
-                            <td class="pouleplace pl-0"
+                            <td class="place pl-0"
                                 [ngClass]="{ 'text-primary': favorites.hasCompetitor(rankingItem.getPlace().getCompetitor()) }">
-                                {{nameService.getPoulePlaceFromName(rankingItem.getPlace(), true)}}
+                                {{nameService.getPlaceFromName(rankingItem.getPlace(), true)}}
                             </td>
                             <td class="text-right pl-0">{{rankingItem.getUnranked().getGames()}}</td>
                             <td class="text-right pl-0">{{rankingItem.getUnranked().getPoints()}}</td>

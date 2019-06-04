@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-<<<<<<< HEAD
-import { Place, QualifyGroup, Round, SportConfig } from 'ngx-sport';
-=======
-import { HorizontalPoule, PoulePlace, QualifyGroup, Round, SportConfig } from 'ngx-sport';
->>>>>>> 69fba412e881afb86e96b578edc3d3c0e5e1c69f
+import { HorizontalPoule, Place, QualifyGroup, Round, SportConfig } from 'ngx-sport';
 
 @Injectable()
 export class CSSService {

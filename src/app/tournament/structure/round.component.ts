@@ -42,26 +42,6 @@ export class TournamentStructureRoundComponent {
     } catch (e) {
       this.setAlert('danger', e.message);
     }
-<<<<<<< HEAD
-  }
-
-  protected removePoule() {
-    if (this.round.isRoot()) {
-      // poule verwijderen maar wel hetzelfde aantal deelnemers behouden
-      this.structureService.removePoule(this.round);
-    } else {
-      // poule verwijderen, ??
-    }
-  }
-
-  protected addPoule() {
-    if (this.round.isRoot()) {
-      // poule toevoegen met zelfde aantal deelnemers als laatste poule
-      this.structureService.addPoule(this.round);
-    } else {
-      // poule toevoegen, maar zelfde aantal deelnemers behouden
-    }
-=======
   }
 
   get QualifyGroupWINNERS(): number {
@@ -82,7 +62,6 @@ export class TournamentStructureRoundComponent {
 
   protected addPoule() {
     this.structureService.addPoule(this.round, this.round.isRoot());
->>>>>>> 69fba412e881afb86e96b578edc3d3c0e5e1c69f
   }
 
   protected removePlace() {
@@ -95,10 +74,6 @@ export class TournamentStructureRoundComponent {
     if (this.round.isRoot()) {
       this.structureService.addPlaceToRootRound(this.round);
     }
-<<<<<<< HEAD
-  }
-
-=======
   }
 
   getEditHorizontalPoules(): EditHorPoule[] {
@@ -184,7 +159,7 @@ export class TournamentStructureRoundComponent {
   //   return (this.round.getNrOfPlaces() / (this.round.getPoules().length + 1)) >= 2;
   // }
 
-  // canRemovePoulePlace(round: Round) {
+  // canRemovePlace(round: Round) {
   //   return !this.hasMinimumNrOfPlacesPerPoule(round);
   // }
 
@@ -217,7 +192,6 @@ export class TournamentStructureRoundComponent {
   //   return classes;
   // }
 
->>>>>>> 69fba412e881afb86e96b578edc3d3c0e5e1c69f
   protected resetAlert(): void {
     this.alert = undefined;
   }
