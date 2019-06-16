@@ -152,8 +152,7 @@ export class TournamentNewComponent implements OnInit {
         /* happy path */ tournamentOut => {
           const structureService = new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
           const structure: Structure = structureService.create(tournamentOut.getCompetition(), nrofcompetitors);
-          const jsonStructure: JsonStructure = this.structureMapper.toJson(structure);
-          this.structureRepository.createObject(jsonStructure, tournamentOut.getCompetition())
+          this.structureRepository.editObject(structure, tournamentOut.getCompetition())
             .subscribe(
             /* happy path */(structureOut: Structure) => {
                 const planningService = new PlanningService(tournamentOut.getCompetition());
