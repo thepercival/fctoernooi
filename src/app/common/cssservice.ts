@@ -1,38 +1,41 @@
 import { Injectable } from '@angular/core';
-import { HorizontalPoule, Place, QualifyGroup, Round, SportConfig } from 'ngx-sport';
+import { HorizontalPoule, Place, QualifyGroup, Round, Sport } from 'ngx-sport';
+import { TSport } from '../lib/tsport';
 
 @Injectable()
 export class CSSService {
-    getIcon(sportName: string): string {
-        if (sportName === SportConfig.Basketball) {
+    getIcon(sport: Sport): string {
+        const customId = sport.getCustomId();
+        if ( customId === TSport.Basketball) {
             return 'basketball-ball';
-        } else if (sportName === SportConfig.Badminton) {
+        } else if (customId === TSport.Badminton) {
             return 'fi flaticon-badminton';
-        } else if (sportName === SportConfig.Chess) {
+        } else if (customId === TSport.Chess) {
             return 'chess';
-        } else if (sportName === SportConfig.Darts) {
+        } else if (customId === TSport.Darts) {
             return 'fi flaticon-darts';
-        } else if (sportName === SportConfig.ESports) {
+        } else if (customId === TSport.ESports) {
             return 'gamepad';
-        } else if (sportName === SportConfig.Football) {
+        } else if (customId === TSport.Football) {
             return 'futbol';
-        } else if (sportName === SportConfig.Hockey) {
+        } else if (customId === TSport.Hockey) {
             return 'fi flaticon-hockey';
-        } else if (sportName === SportConfig.Squash) {
+        } else if (customId === TSport.Squash) {
             return 'fi flaticon-squash';
-        } else if (sportName === SportConfig.TableTennis) {
+        } else if (customId === TSport.TableTennis) {
             return 'table-tennis';
-        } else if (sportName === SportConfig.Tennis) {
+        } else if (customId === TSport.Tennis) {
             return 'fi flaticon-tennis';
-        } else if (sportName === SportConfig.Volleyball) {
+        } else if (customId === TSport.Volleyball) {
             return 'volleyball-ball';
         }
-        return undefined;
+        return '';
     }
 
-    getIconType(sportName: string): string {
-        if (sportName === SportConfig.Football || sportName === SportConfig.TableTennis || sportName === SportConfig.Basketball
-            || sportName === SportConfig.Chess || sportName === SportConfig.ESports || sportName === SportConfig.Volleyball) {
+    getIconType(sport: Sport): string {
+        const customId = sport.getCustomId();
+        if (customId === TSport.Football || customId === TSport.TableTennis || customId === TSport.Basketball
+            || customId === TSport.Chess || customId === TSport.ESports || customId === TSport.Volleyball) {
             return 'fa';
         }
         return 'fi';
@@ -44,13 +47,14 @@ export class CSSService {
         const horizontalPouleLosers = place.getHorizontalPoule(QualifyGroup.LOSERS);
         const qualifyGroupLosers: QualifyGroup = horizontalPouleLosers.getQualifyGroup();
         if (!qualifyGroupWinners && !qualifyGroupLosers) {
-            return "";
+            return '';
         }
         if (qualifyGroupWinners && qualifyGroupLosers) {
             const partialWinners = (qualifyGroupWinners.getNrOfToPlacesTooMuch() > 0 && horizontalPouleWinners.isBorderPoule());
             const partialLosers = (qualifyGroupLosers.getNrOfToPlacesTooMuch() > 0 && horizontalPouleLosers.isBorderPoule());
             if (partialWinners && partialLosers) {
-                return 'q-partial q-w-' + qualifyGroupWinners.getNumber() + '-double-partial q-l-' + qualifyGroupLosers.getNumber() + '-double-partial';
+                return 'q-partial q-w-' + qualifyGroupWinners.getNumber() + '-double-partial q-l-' 
+                    + qualifyGroupLosers.getNumber() + '-double-partial';
             }
             if (!partialWinners) {
                 return 'q-w-' + qualifyGroupWinners.getNumber();

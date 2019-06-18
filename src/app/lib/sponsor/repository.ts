@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { SportConfig, SportRepository } from 'ngx-sport';
+import { APIConfig, SportRepository } from 'ngx-sport';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -76,7 +76,7 @@ export class SponsorRepository extends SportRepository {
         httpParams = httpParams.set('tournamentid', tournament.getId().toString());
         httpParams = httpParams.set('sponsorid', sponsorId.toString());
         let headers = new HttpHeaders({ 'X-Api-Version': '2' });
-        const token = SportConfig.getToken();
+        const token = APIConfig.getToken();
         if (token !== undefined) {
             headers = headers.append('Authorization', 'Bearer ' + token);
         }

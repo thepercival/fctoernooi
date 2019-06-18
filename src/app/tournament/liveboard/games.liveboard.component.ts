@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Game, NameService, PlanningService, Round, RoundNumber } from 'ngx-sport';
+import { State, Game, NameService, PlanningService, Round, RoundNumber } from 'ngx-sport';
 
 import { CreatedAndInplayGamesScreen, GamesScreen } from '../../lib/liveboard/screens';
 
@@ -42,7 +42,7 @@ export class TournamentLiveboardGamesComponent {
 
     getScore(game: Game): string {
         const sScore = ' - ';
-        if (game.getState() !== Game.STATE_PLAYED) {
+        if (game.getState() !== State.Finished) {
             return sScore;
         }
         const finalScore = game.getFinalScore();

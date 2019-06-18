@@ -1,6 +1,6 @@
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { SportConfig } from 'ngx-sport';
+import { APIConfig } from 'ngx-sport';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
@@ -9,8 +9,8 @@ if (environment.production) {
   enableProdMode();
 }
 
-SportConfig.apiurl = environment.apiurl;
-SportConfig.useExternal = environment.useExternal;
+APIConfig.apiurl = environment.apiurl;
+APIConfig.useExternal = environment.useExternal;
 
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.log(err));

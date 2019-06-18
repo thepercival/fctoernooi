@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import { Game, NameService, PlanningService, Poule, RankingService, RoundNumber } from 'ngx-sport';
+import { State, Game, NameService, PlanningService, Poule, RankingService, RoundNumber } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
 import { CSSService } from '../../common/cssservice';
@@ -26,7 +26,6 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   @Output() popOverIsOpen = new EventEmitter<boolean>(); // kan misschien uit
   @Output() scroll = new EventEmitter<boolean>(); // kan misschien uit
   alert: any;
-  GameStatePlayed = Game.STATE_PLAYED;
   sameDay = true;
   previousGameStartDateTime: Date;
   userIsGameResultAdmin: boolean;
@@ -118,7 +117,7 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
 
   getScore(game: Game): string {
     const sScore = ' - ';
-    if (game.getState() !== Game.STATE_PLAYED) {
+    if (game.getState() !== State.Finished) {
       return sScore;
     }
     const finalScore = game.getFinalScore();
@@ -129,7 +128,7 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   }
 
   isPlayed(game: Game): boolean {
-    return game.getState() === Game.STATE_PLAYED;
+    return game.getState() === State.Finished;
   }
 
   hasEditPermissions(game: Game): boolean {

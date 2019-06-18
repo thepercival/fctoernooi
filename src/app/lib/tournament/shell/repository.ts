@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { SportConfig, SportRepository } from 'ngx-sport';
+import { APIConfig, SportRepository } from 'ngx-sport';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -59,7 +59,7 @@ export class TournamentShellRepository extends SportRepository {
 
     private getHttpParams(withRoles: boolean, filter?: TournamentShellFilter): HttpParams {
         let httpParams = new HttpParams();
-        if (withRoles && SportConfig.getToken() !== undefined) {
+        if (withRoles && APIConfig.getToken() !== undefined) {
             httpParams = httpParams.set('withRoles', 'true');
         }
         if (filter === undefined) {

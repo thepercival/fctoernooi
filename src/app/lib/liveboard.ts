@@ -1,4 +1,4 @@
-import { Game, NameService, PlanningService, Poule, RoundNumber, Structure } from 'ngx-sport';
+import { State, Game, NameService, PlanningService, Poule, RoundNumber, Structure } from 'ngx-sport';
 
 import {
     CreatedAndInplayGamesScreen,
@@ -69,7 +69,7 @@ export class Liveboard {
 
 
     getGamesCreatedAndInplayHelper(roundNumber: RoundNumber): Game[] {
-        // if( roundNumber.getState() === Game.STATE_PLAYED ) {
+        // if( roundNumber.getState() === State.Finished ) {
         //     if( roundNumber.hasNext() ) {
         //         return this.getGamesCreatedAndInplayHelper(roundNumber.getNext());
         //     }
@@ -82,8 +82,8 @@ export class Liveboard {
         // and divide games over one or more screens
         let games: Game[] = this.planningService.getGamesForRoundNumber(roundNumber, Game.ORDER_RESOURCEBATCH);
         const now = new Date();
-        games = games.filter(game => game.getState() !== Game.STATE_PLAYED &&
-            (!roundNumber.getConfig().getEnableTime() || game.getStartDateTime() > now)
+        games = games.filter(game => game.getState() !== State.Finished &&
+            (!roundNumber.getPlanningConfig().getEnableTime() || game.getStartDateTime() > now)
         );
 
         // aantal wedstrijden per rondenummber < this.maxLines
@@ -132,13 +132,13 @@ export class Liveboard {
     }
 
     protected getRoundNumbersForPouleRankingsHelper(roundNumber: RoundNumber): RoundNumber[] {
-        if (roundNumber.getState() === Game.STATE_CREATED || roundNumber.getState() === Game.STATE_INPLAY) {
+        if (roundNumber.getState() === State.Created || roundNumber.getState() === State.InProgress) {
             return [roundNumber];
         }
         if (!roundNumber.hasNext()) {
             return [roundNumber];
         }
-        if (roundNumber.getNext().getState() === Game.STATE_CREATED) {
+        if (roundNumber.getNext().getState() === State.Created) {
             return [roundNumber, roundNumber.getNext()];
         }
         return this.getRoundNumbersForPouleRankingsHelper(roundNumber.getNext());
@@ -158,7 +158,7 @@ export class Liveboard {
 
     getPlayedGamesHelper(roundNumber: RoundNumber): Game[] {
         let games: Game[] = this.planningService.getGamesForRoundNumber(roundNumber, Game.ORDER_RESOURCEBATCH);
-        games = games.reverse().filter(game => game.getState() === Game.STATE_PLAYED);
+        games = games.reverse().filter(game => game.getState() === State.Finished);
         if (games.length < this.maxLines && roundNumber.hasPrevious()) {
             games = games.concat(this.getPlayedGamesHelper(roundNumber.getPrevious()));
         }
@@ -182,7 +182,7 @@ export class Liveboard {
         if (!(this.structure.getFirstRoundNumber().hasNext() || this.structure.getRootRound().getPoules().length === 1)) {
             return screens;
         }
-        if (this.structure.getLastRoundNumber().getState() !== Game.STATE_PLAYED) {
+        if (this.structure.getLastRoundNumber().getState() !== State.Finished) {
             return screens;
         }
         const nrOfItems = this.structure.getRootRound().getNrOfPlaces();

@@ -11,8 +11,6 @@ import {
     ConfigMapper,
     ConfigRepository,
     ConfigScore,
-    ConfigService,
-    SportConfig,
     StructureRepository,
 } from 'ngx-sport';
 
@@ -38,7 +36,6 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     ranges: any = {};
     roundNumber: RoundNumber;
     modelConfig: Config;
-    configService: ConfigService;
     modelRecreate: boolean;
     modelReschedule: boolean;
     customForm: FormGroup;
@@ -66,7 +63,6 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         private planningRepository: PlanningRepository
     ) {
         super(route, router, tournamentRepository, sructureRepository);
-        this.configService = new ConfigService();
     }
 
     private initRanges() {

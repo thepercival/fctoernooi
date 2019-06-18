@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
+    State,
     Game,
     GameRepository,
     GameScore,
@@ -56,7 +57,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
-        this.originalPouleState = Game.STATE_CREATED;
+        this.originalPouleState = State.Created;
         this.customForm = fb.group({
             played: [''],
             extratime: ['']
@@ -154,7 +155,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         this.game = this.getGameById(gameId, this.structure.getRootRound());
         // const date = this.game.getStartDateTime();
 
-        this.customForm.controls.played.setValue(this.game.getState() === Game.STATE_PLAYED);
+        this.customForm.controls.played.setValue(this.game.getState() === State.Finished);
         this.customForm.controls.extratime.setValue(this.game.getScoresMoment() === Game.MOMENT_EXTRATIME);
         if (this.calculateAndInputScoreDiffers()) {
             this.calculateScoreControl = new HomeAwayFormControl(0, 0, true);
@@ -163,7 +164,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         this.initScores(this.game);
         this.updateCalculateScoreControl();
 
-        this.enablePlayedAtFirstChange = this.game.getScores().length === 0 && this.game.getState() !== Game.STATE_PLAYED;
+        this.enablePlayedAtFirstChange = this.game.getScores().length === 0 && this.game.getState() !== State.Finished;
 
         // if (date !== undefined) {
         //     this.model.startdate = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
@@ -223,7 +224,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         while (scores.length > 0) {
             scores.pop();
         }
-        if (alwaysAdd || this.game.getState() === Game.STATE_PLAYED) {
+        if (alwaysAdd || this.game.getState() === State.Finished) {
             let counter = 0;
             this.scoreControls.forEach(scoreControl => {
                 const scoreHomeAway = scoreControl.getScore();
@@ -235,7 +236,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     setHome(scoreControl: HomeAwayFormControl, home) {
         if (this.isScoreValid(scoreControl.getScore()) && this.enablePlayedAtFirstChange === true) {
             this.customForm.controls.played.setValue(true);
-            this.game.setState(Game.STATE_PLAYED);
+            this.game.setState(State.Finished);
         }
         this.updateCalculateScoreControl();
         this.syncGameScores();
@@ -244,7 +245,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     setAway(scoreControl: HomeAwayFormControl, away) {
         if (this.isScoreValid(scoreControl.getScore()) && this.enablePlayedAtFirstChange === true) {
             this.customForm.controls.played.setValue(true);
-            this.game.setState(Game.STATE_PLAYED);
+            this.game.setState(State.Finished);
         }
         this.updateCalculateScoreControl();
         this.syncGameScores();
@@ -285,12 +286,12 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             this.updateCalculateScoreControl();
             this.syncGameScores();
         }
-        this.game.setState(played ? Game.STATE_PLAYED : Game.STATE_CREATED);
+        this.game.setState(played ? State.Finished : State.Created);
     }
 
     getWarningsForEqualQualifiers(): string[] {
         const poule = this.game.getPoule()
-        if (poule.getState() !== Game.STATE_PLAYED) {
+        if (poule.getState() !== State.Finished) {
             return [];
         }
 
@@ -301,7 +302,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         const postFix = '(' + this.nameService.getPouleName(this.game.getPoule(), true) + ')';
         let warnings: string[] = this.getWarningsForEqualQualifiersHelper(equalPouleItems, postFix);
 
-        if (round.getState() !== Game.STATE_PLAYED) {
+        if (round.getState() !== State.Finished) {
             return warnings;
         }
         round.getQualifyGroups().forEach(qualifyGroup => {
@@ -363,11 +364,11 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     save(): boolean {
         this.processing = true;
         this.setAlert('info', 'de wedstrijd wordt opgeslagen');
-        if (this.game.getState() === Game.STATE_PLAYED && this.scoreControls.length === 0) {
+        if (this.game.getState() === State.Finished && this.scoreControls.length === 0) {
             this.scoreControls.push(new HomeAwayFormControl(0, 0));
         }
         const moment = this.customForm.controls.extratime.value === true ? Game.MOMENT_EXTRATIME : Game.MOMENT_FULLTIME;
-        const state = this.customForm.controls.played.value === true ? Game.STATE_PLAYED : Game.STATE_CREATED;
+        const state = this.customForm.controls.played.value === true ? State.Finished : State.Created;
         this.game.setScoresMoment(moment);
         this.game.setState(state);
         this.syncGameScores(false);
@@ -463,7 +464,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     protected shouldQualifiersBeCalculated(poule: Poule): boolean {
-        return !(this.originalPouleState !== Game.STATE_PLAYED && poule.getState() !== Game.STATE_PLAYED);
+        return !(this.originalPouleState !== State.Finished && poule.getState() !== State.Finished);
     }
 
     shouldQualifiersBeCalculatedForRound(poule: Poule): boolean {
