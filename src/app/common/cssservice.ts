@@ -68,7 +68,7 @@ export class CSSService {
             const partialWinners = (qualifyGroupWinners.getNrOfToPlacesTooMuch() > 0 && horizontalPouleWinners.isBorderPoule());
             const partialLosers = (qualifyGroupLosers.getNrOfToPlacesTooMuch() > 0 && horizontalPouleLosers.isBorderPoule());
             if (partialWinners && partialLosers) {
-                return 'q-partial q-w-' + qualifyGroupWinners.getNumber() + '-double-partial q-l-' 
+                return 'q-partial q-w-' + qualifyGroupWinners.getNumber() + '-double-partial q-l-'
                     + qualifyGroupLosers.getNumber() + '-double-partial';
             }
             if (!partialWinners) {
