@@ -6,7 +6,7 @@
 </td>
 <td>
   <i *ngIf="cssService.getIconTypeBySportCustomId(shell.sportCustomId) === 'fi'" class="{{cssService.getIconBySportCustomId(shell.sportCustomId)}}"></i>
-  <fa-icon *ngIf="cssService.getIconTypeBySportCustomId(shell.sportCustomId) === 'fa'" [icon]="['fas', cssService.getIconBySportCustomId(shell.sportCustomIdsport)]">
+  <fa-icon *ngIf="cssService.getIconTypeBySportCustomId(shell.sportCustomId) === 'fa'" [icon]="['fas', cssService.getIconBySportCustomId(shell.sportCustomId)]">
   </fa-icon>
 </td>
 <td>{{shell.name}}</td>

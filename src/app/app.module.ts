@@ -53,10 +53,12 @@ import {
   LeagueMapper,
   LeagueRepository,
   NameService,
+  PlanningConfigMapper,
   RefereeMapper,
   RefereeRepository,
   SeasonMapper,
   SeasonRepository,
+  SportMapper
 } from 'ngx-sport';
 
 import { environment } from '../environments/environment';
@@ -118,6 +120,8 @@ library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave
     UserMapper,
     CompetitionRepository,
     CompetitionMapper,
+    SportMapper,
+    PlanningConfigMapper,
     AssociationRepository,
     AssociationMapper,
     LeagueRepository,

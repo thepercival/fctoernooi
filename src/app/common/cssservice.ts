@@ -46,6 +46,9 @@ export class CSSService {
     }
 
     getIconTypeBySportCustomId( customId: number ): string {
+        if (customId < 1 || customId === TSport.Korfball) {
+            return '';
+        }
         if (customId === TSport.Football || customId === TSport.TableTennis || customId === TSport.Basketball
             || customId === TSport.Chess || customId === TSport.ESports || customId === TSport.Volleyball) {
             return 'fa';
