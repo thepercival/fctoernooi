@@ -51,7 +51,8 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.GAMERESULTADMIN);
     this.favorites = this.favRepository.getItem(this.tournament);
     this.hasFields = this.tournament.getCompetition().getFields().length > 0;
-    this.hasReferees = this.tournament.getCompetition().getReferees().length > 0 || this.roundNumber.getConfig().getSelfReferee();
+    // @TODO
+    this.hasReferees = this.tournament.getCompetition().getReferees().length > 0 || this.roundNumber.getPlanningConfig().getSelfReferee();
 
     // gamedate
     this.roundNumberNeedsRanking = this.roundNumber.needsRanking();
@@ -106,7 +107,7 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   }
 
   getGameTimeTooltipDescription() {
-    const cfg = this.roundNumber.getConfig();
+    const cfg = this.roundNumber.getPlanningConfig();
     let descr = 'De wedstrijden duren ' + cfg.getMinutesPerGame() + ' minuten. ';
     if (cfg.getHasExtension()) {
       descr += 'De eventuele verlenging duurt ' + cfg.getMinutesPerGameExt() + ' minuten. ';
@@ -156,7 +157,7 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
       }
       return false;
     }
-    const cfg = this.roundNumber.getConfig();
+    const cfg = this.roundNumber.getPlanningConfig();
     const newStartDateTime = new Date(this.previousGameStartDateTime.getTime());
     newStartDateTime.setMinutes(newStartDateTime.getMinutes() + cfg.getMaximalNrOfMinutesPerGame() + cfg.getMinutesBetweenGames());
     this.previousGameStartDateTime = new Date(game.getStartDateTime().getTime());

@@ -103,7 +103,7 @@ export class TournamentEditComponent extends TournamentComponent implements OnIn
     }
 
     isTimeEnabled() {
-        return this.structure.getFirstRoundNumber().getConfig().getEnableTime();
+        return this.structure.getFirstRoundNumber().getPlanningConfig().getEnableTime();
     }
 
     toggleBreak(breakX: boolean, p_breakDuration: number, breakDateTime?: Date) {

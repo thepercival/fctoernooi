@@ -4,8 +4,14 @@ import { TSport } from '../lib/tsport';
 
 @Injectable()
 export class CSSService {
-    getIcon(sport: Sport): string {
-        const customId = sport.getCustomId();
+    getIcon(sports: Sport[]): string {
+        if ( sports.length !== 1 ) {
+            return '';
+        }
+        return this.getIconBySportCustomId(sports[0].getCustomId());
+    }
+
+    getIconBySportCustomId( customId: number ): string {
         if ( customId === TSport.Basketball) {
             return 'basketball-ball';
         } else if (customId === TSport.Badminton) {
@@ -32,8 +38,14 @@ export class CSSService {
         return '';
     }
 
-    getIconType(sport: Sport): string {
-        const customId = sport.getCustomId();
+    getIconType(sports: Sport[]): string {
+        if ( sports.length !== 1 ) {
+            return '';
+        }
+        return this.getIconTypeBySportCustomId(sports[0].getCustomId());
+    }
+
+    getIconTypeBySportCustomId( customId: number ): string {
         if (customId === TSport.Football || customId === TSport.TableTennis || customId === TSport.Basketball
             || customId === TSport.Chess || customId === TSport.ESports || customId === TSport.Volleyball) {
             return 'fa';

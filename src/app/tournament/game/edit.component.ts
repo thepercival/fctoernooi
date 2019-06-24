@@ -18,7 +18,7 @@ import {
     RankedRoundItem,
     RankingService,
     Round,
-    ConfigScore,
+    SportConfigScore,
     StructureRepository,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
@@ -91,21 +91,23 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     getCalculateScoreDescription() {
-        const scoreConfig = this.game.getConfig().getCalculateScore();
+        const scoreConfig = this.game.getSportConfig().getCalculateScore();
         let description = '';
-        if (scoreConfig.getDirection() === ConfigScore.UPWARDS && scoreConfig.getMaximum() > 0) {
+        if (scoreConfig.getDirection() === SportConfigScore.UPWARDS && scoreConfig.getMaximum() > 0) {
             description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
         }
-        return description + scoreConfig.getName();
+        // @TODO
+        return description + '@TODO'; //scoreConfig.getName()
     }
 
     getInputScoreDescription() {
-        const scoreConfig = this.game.getConfig().getInputScore();
+        const scoreConfig = this.game.getSportConfig().getInputScore();
         let description = '';
-        if (scoreConfig.getDirection() === ConfigScore.UPWARDS && scoreConfig.getMaximum() > 0) {
+        if (scoreConfig.getDirection() === SportConfigScore.UPWARDS && scoreConfig.getMaximum() > 0) {
             description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
         }
-        return description + scoreConfig.getName();
+        // @TODO
+        return description + '@TODO'; // scoreConfig.getName();
     }
 
     aScoreIsInvalid() {
@@ -121,8 +123,8 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     getCalculateClass() {
-        const scoreConfig = this.game.getConfig().getCalculateScore();
-        if (scoreConfig.getDirection() !== ConfigScore.UPWARDS || scoreConfig.getMaximum() === 0) {
+        const scoreConfig = this.game.getSportConfig().getCalculateScore();
+        if (scoreConfig.getDirection() !== SportConfigScore.UPWARDS || scoreConfig.getMaximum() === 0) {
             return 'is-valid';
         }
         const score = this.calculateScoreControl.getScore();
@@ -139,8 +141,8 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         if (this.isScoreValid(score) !== true) {
             return 'is-invalid';
         }
-        const scoreConfig = this.game.getConfig().getInputScore();
-        if (scoreConfig.getDirection() !== ConfigScore.UPWARDS || scoreConfig.getMaximum() === 0) {
+        const scoreConfig = this.game.getSportConfig().getInputScore();
+        if (scoreConfig.getDirection() !== SportConfigScore.UPWARDS || scoreConfig.getMaximum() === 0) {
             return 'is-valid';
         }
         if ((score.getHome() === scoreConfig.getMaximum() && score.getAway() < score.getHome())
@@ -260,7 +262,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     calculateAndInputScoreDiffers() {
-        return this.game.getConfig().getCalculateScore() !== this.game.getConfig().getInputScore();
+        return this.game.getSportConfig().getCalculateScore() !== this.game.getSportConfig().getInputScore();
     }
 
     addScoreControl(home: number, away: number) {

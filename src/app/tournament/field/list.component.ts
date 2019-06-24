@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Field, FieldRepository, JsonField, PlanningRepository, PlanningService, StructureRepository } from 'ngx-sport';
+import { Field, FieldRepository, JsonField, PlanningRepository, PlanningService, StructureRepository, Sport } from 'ngx-sport';
 
 import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -77,7 +77,8 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
 
         const jsonField: JsonField = {
             number: this.fieldsList.length + 1,
-            name: '' + (this.fieldsList.length + 1)
+            name: '' + (this.fieldsList.length + 1),
+            sportId: 12 /* @TODO */
         };
 
         this.fieldRepository.createObject(jsonField, this.tournament.getCompetition())

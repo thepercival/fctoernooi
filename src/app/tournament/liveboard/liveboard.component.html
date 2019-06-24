@@ -15,10 +15,10 @@
   <div class="d-flex justify-content-between align-items-center mb-5">
     <h1 *ngIf="tournament">
       <small>
-        <i *ngIf="cssService.getIconType(tournament.getCompetition().getLeague().getSport()) === 'fi'"
-          class="{{cssService.getIcon(tournament.getCompetition().getLeague().getSport())}}"></i>
-        <fa-icon *ngIf="cssService.getIconType(tournament.getCompetition().getLeague().getSport()) === 'fa'"
-          [icon]="['fas', cssService.getIcon(tournament.getCompetition().getLeague().getSport())]"></fa-icon>
+        <i *ngIf="cssService.getIconType(tournament.getCompetition().getSports()) === 'fi'"
+          class="{{cssService.getIcon(tournament.getCompetition().getSports())}}"></i>
+        <fa-icon *ngIf="cssService.getIconType(tournament.getCompetition().getSports()) === 'fa'"
+          [icon]="['fas', cssService.getIcon(tournament.getCompetition().getSports())]"></fa-icon>
       </small>
       <span class="smaller text-truncate">{{tournament.getName()}}</span>
       <small *ngIf="activeScreen">

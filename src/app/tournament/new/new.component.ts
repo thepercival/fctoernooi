@@ -59,7 +59,8 @@ export class TournamentNewComponent implements OnInit {
     const date = new Date();
     this.minDateStruct = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
 
-    this.sportnames = SportConfig.getSports().sort();
+    // @TODO
+    this.sportnames = ['@TODO']; // SportConfig.getSports().sort();
 
     this.customForm = fb.group({
       name: ['', Validators.compose([
@@ -133,15 +134,20 @@ export class TournamentNewComponent implements OnInit {
       const association = new Association('username'); // dummy
       const league = new League(name);
       league.setAssociation(association);
-      league.setSport(sportName);
       const season = new Season('123'); // dummy
       season.setStartDateTime(new Date());
       season.setEndDateTime(new Date());
       const competition = new Competition(league, season);
       competition.setStartDateTime(startDateTime);
+      // @TODO 
+      // league.setSport(sportName);
+      competition.getSports().push(undefined);
+
       for (let fieldNumber = 1; fieldNumber <= nroffields; fieldNumber++) {
         const field = new Field(competition, fieldNumber);
         field.setName(String(fieldNumber));
+        // @TODO
+        field.setSport(undefined);
       }
       tournament = new Tournament(competition);
       tournament.setPublic(this.customForm.controls.public.value);

@@ -34,7 +34,9 @@ export class TournamentPouleRankingComponent implements OnInit {
   }
 
   hasMultipleScoreConfigs() {
-    return this.poule.getRound().getNumber().getConfig().getCalculateScore()
-      !== this.poule.getRound().getNumber().getConfig().getInputScore();
+    // @TODO
+    return false;
+    // return this.poule.getRound().getNumber().getConfig().getCalculateScore()
+    //   !== this.poule.getRound().getNumber().getConfig().getInputScore();
   }
 }

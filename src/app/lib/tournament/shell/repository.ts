@@ -81,7 +81,7 @@ export class TournamentShellRepository extends SportRepository {
 
 export interface TournamentShell {
     tournamentId: number;
-    sport: string;
+    sportCustomId: number;
     name: string;
     startDateTime: Date;
     hasEditPermissions: boolean;

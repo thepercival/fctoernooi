@@ -29,7 +29,7 @@ export class TournamentLiveboardGamesComponent {
     showDateTime(game?: Game): boolean {
         const roundNumber = this.getRoundNumber(game);
         return this.isCreatedAndInplay()
-            && roundNumber.getConfig().getEnableTime()
+            && roundNumber.getPlanningConfig().getEnableTime()
             && this.planningService.canCalculateStartDateTime(roundNumber);
     }
 
