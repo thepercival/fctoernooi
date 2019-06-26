@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlanningRepository, PlanningService, Sport, RefereeRepository, StructureRepository } from 'ngx-sport';
+import { PlanningRepository, SportConfig, Sport, RefereeRepository, StructureRepository } from 'ngx-sport';
 
 import { IAlert } from '../../common/alert';
 import { Tournament } from '../../lib/tournament';
@@ -13,8 +13,8 @@ import { TournamentComponent } from '../component';
   templateUrl: './list.component.html',
   styles: ['./list.component.scss']
 })
-export class SportListComponent extends TournamentComponent implements OnInit {
-  sports: Sport[];
+export class SportConfigListComponent extends TournamentComponent implements OnInit {
+  sportConfigs: SportConfig[];
 
   validations: any = {
     'minlengthname': Sport.MIN_LENGTH_NAME,
@@ -37,7 +37,7 @@ export class SportListComponent extends TournamentComponent implements OnInit {
   }
 
   initSports() {
-    this.createSportsList();
+    this.createSportConfigsList();
     // this.planningService = new PlanningService(this.tournament.getCompetition());
     this.processing = false;
     // if (this.isStarted()) {
@@ -49,21 +49,21 @@ export class SportListComponent extends TournamentComponent implements OnInit {
     return this.structure.getRootRound().isStarted();
   }
 
-  createSportsList() {
-    this.sports = this.tournament.getCompetition().getSports();
+  createSportConfigsList() {
+    this.sportConfigs = this.tournament.getCompetition().getSportConfigs();
   }
 
   // addSport() {
   //   this.linkToEdit(this.tournament);
   // }
 
-  // editSport(sport: Sport) {
-  //   this.linkToEdit(this.tournament, referee);
-  // }
+  editSportConfig(sportConfig: SportConfig) {
+    this.linkToEdit(this.tournament, sportConfig);
+  }
 
-  // linkToEdit(tournament: Tournament, referee?: Referee) {
-  //   this.router.navigate(['/toernooi/refereeedit', tournament.getId(), referee ? referee.getId() : 0]);
-  // }
+  linkToEdit(tournament: Tournament, sportConfig?: SportConfig) {
+    this.router.navigate(['/toernooi/sportconfigedit', tournament.getId(), sportConfig ? sportConfig.getId() : 0]);
+  }
 
   // linkToRoundSettings() {
   //   this.router.navigate(

@@ -31,10 +31,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let sport of sports; let last = last;">
+        <tr *ngFor="let sportConfig of sportConfigs; let last = last;">
           <td>
             <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing"
-              (click)="editSport(sport)">
+              (click)="editSportConfig(sportConfig)">
               <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
             </button>
           </td>

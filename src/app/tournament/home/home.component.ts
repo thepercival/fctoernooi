@@ -99,8 +99,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
 
     sportConfigsAreDefault() {
         const sportConfigService = new SportConfigService();
-        const firstRoundNumber = this.structure.getFirstRoundNumber();
-        return firstRoundNumber.getSportConfigs().every( sportConfig => {
+        return this.tournament.getCompetition().getSportConfigs().every( sportConfig => {
             return sportConfigService.isDefault(sportConfig);
         });
     }
@@ -208,9 +207,9 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     linkToSportConfig() {
-        if ( !this.tournament.getCompetition().hasMultipleSports() ) {
+        if ( !this.tournament.getCompetition().hasMultipleSportConfigs() ) {
             this.router.navigate(['/toernooi/sportconfigedit'
-            , this.tournament.getId(), this.tournament.getCompetition().getFirstSport()]);
+            , this.tournament.getId(), this.tournament.getCompetition().getFirstSportConfig()]);
         } else {
             this.router.navigate(['/toernooi/sports', this.tournament.getId()]);
         }

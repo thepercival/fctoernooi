@@ -5,8 +5,8 @@
       </app-tournament-title>
       <div>
         <h2>
-            <i *ngIf="cssService.getIconTypeBySportCustomId(sport.getCustomId()) === 'fi'" class="{{cssService.getIconBySportCustomId(sport.getCustomId())}}"></i>
-            <fa-icon *ngIf="cssService.getIconTypeBySportCustomId(sport.getCustomId()) === 'fa'" [icon]="['fas', cssService.getIconBySportCustomId(sport.getCustomId())]">
+            <i *ngIf="cssService.getIconTypeBySportCustomId(sportConfig.getSport().getCustomId()) === 'fi'" class="{{cssService.getIconBySportCustomId(sportConfig.getSport().getCustomId())}}"></i>
+            <fa-icon *ngIf="cssService.getIconTypeBySportCustomId(sportConfig.getSport().getCustomId()) === 'fa'" [icon]="['fas', cssService.getIconBySportCustomId(sportConfig.getSport().getCustomId())]">
             </fa-icon>
           <i class="fi flaticon-referee"></i> sport
         </h2>

@@ -96,7 +96,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
             this.rangeScreenNrs.push(screenNr);
         }
         if (this.sponsor === undefined) {
-            let currentScreenNr = this.rangeScreenNrs.length > 0 ? this.rangeScreenNrs[0] : undefined;
+            const currentScreenNr = this.rangeScreenNrs.length > 0 ? this.rangeScreenNrs[0] : undefined;
             this.customForm.controls.screennr.setValue(currentScreenNr);
             this.processing = false;
             return;
@@ -146,7 +146,8 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         const name = this.customForm.controls.name.value;
         const url = this.customForm.controls.url.value;
 
-        const logoUrl = (this.newLogoUploaded !== true || this.logoInput === this.logoInputUrl) ? this.customForm.controls.logourl.value : undefined;
+        const logoUrl = (this.newLogoUploaded !== true || this.logoInput === this.logoInputUrl) ?
+         this.customForm.controls.logourl.value : undefined;
 
         this.sponsor.setName(name);
         this.sponsor.setUrl(url ? url : undefined);
@@ -168,7 +169,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
             this.navigateBack();
             return;
         }
-        let input = new FormData();
+        const input = new FormData();
         input.append('logostream', this.customForm.get('logoupload').value);
         this.sponsorRepository.uploadImage(sponsorId, this.tournament, input)
             .subscribe(
@@ -185,18 +186,18 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         if (event.target.files.length === 0) {
             return;
         }
-        let file = event.target.files[0];
-        var mimeType = file.type;
+        const file = event.target.files[0];
+        const mimeType = file.type;
         if (mimeType.match(/image\/*/) == null) {
-            this.setAlert('danger', "alleen plaatjes worden ondersteund");
+            this.setAlert('danger', 'alleen plaatjes worden ondersteund');
             return;
         }
-        var reader = new FileReader();
+        const reader = new FileReader();
         // const imagePath = event.target.files;
         reader.readAsDataURL(file);
         reader.onload = (_event) => {
             this.base64Logo = reader.result;
-        }
+        };
         this.customForm.get('logoupload').setValue(file);
 
         this.newLogoUploaded = true;

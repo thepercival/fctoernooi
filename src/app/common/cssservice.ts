@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HorizontalPoule, Place, QualifyGroup, Round, Sport, SportConfig } from 'ngx-sport';
-import { TSport } from '../lib/tsport';
+import { HorizontalPoule, Place, QualifyGroup, Round, SportCustomId, SportConfig } from 'ngx-sport';
 
 @Injectable()
 export class CSSService {
@@ -12,27 +11,27 @@ export class CSSService {
     }
 
     getIconBySportCustomId( customId: number ): string {
-        if ( customId === TSport.Basketball) {
+        if ( customId === SportCustomId.Basketball) {
             return 'basketball-ball';
-        } else if (customId === TSport.Badminton) {
+        } else if (customId === SportCustomId.Badminton) {
             return 'fi flaticon-badminton';
-        } else if (customId === TSport.Chess) {
+        } else if (customId === SportCustomId.Chess) {
             return 'chess';
-        } else if (customId === TSport.Darts) {
+        } else if (customId === SportCustomId.Darts) {
             return 'fi flaticon-darts';
-        } else if (customId === TSport.ESports) {
+        } else if (customId === SportCustomId.ESports) {
             return 'gamepad';
-        } else if (customId === TSport.Football) {
+        } else if (customId === SportCustomId.Football) {
             return 'futbol';
-        } else if (customId === TSport.Hockey) {
+        } else if (customId === SportCustomId.Hockey) {
             return 'fi flaticon-hockey';
-        } else if (customId === TSport.Squash) {
+        } else if (customId === SportCustomId.Squash) {
             return 'fi flaticon-squash';
-        } else if (customId === TSport.TableTennis) {
+        } else if (customId === SportCustomId.TableTennis) {
             return 'table-tennis';
-        } else if (customId === TSport.Tennis) {
+        } else if (customId === SportCustomId.Tennis) {
             return 'fi flaticon-tennis';
-        } else if (customId === TSport.Volleyball) {
+        } else if (customId === SportCustomId.Voleyball) {
             return 'volleyball-ball';
         }
         return '';
@@ -46,11 +45,11 @@ export class CSSService {
     }
 
     getIconTypeBySportCustomId( customId: number ): string {
-        if (customId < 1 || customId === TSport.Korfball) {
+        if (customId < 1 || customId === SportCustomId.Korfball) {
             return '';
         }
-        if (customId === TSport.Football || customId === TSport.TableTennis || customId === TSport.Basketball
-            || customId === TSport.Chess || customId === TSport.ESports || customId === TSport.Volleyball) {
+        if (customId === SportCustomId.Football || customId === SportCustomId.TableTennis || customId === SportCustomId.Basketball
+            || customId === SportCustomId.Chess || customId === SportCustomId.ESports || customId === SportCustomId.Voleyball) {
             return 'fa';
         }
         return 'fi';

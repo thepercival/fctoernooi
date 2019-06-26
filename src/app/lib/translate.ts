@@ -1,4 +1,4 @@
-import { TSport } from './tsport';
+import { SportCustomId } from 'ngx-sport';
 import {
     SportScoreConfig
 } from 'ngx-sport';
@@ -6,64 +6,66 @@ import {
 export class Translate {
     static readonly data = {
         'nl': {
-            'sport': [
-                TSport.Badminton: 'badminton',
-                TSport.Basketball: 'basketbal',
-                TSport.Darts: 'darten',
-                TSport.ESports: 'e-sporten',
-                TSport.Hockey: 'hockey',
-                TSport.Korfball: 'korfbal',
-                TSport.Chess: 'schaken',
-                TSport.Squash: 'squash',
-                TSport.TableTennis: 'tafeltennis',
-                TSport.Tennis: 'hockey',
-                TSport.Football: 'voetbal',
-                TSport.Volleyball: 'volleybal'
-            ],
+            'sport': {
+            },
             'score': {
-                TSport.Badminton: 'sets',
-                TSport.Basketball: 'punten',
-                TSport.Darts: 'sets',
-                TSport.ESports: 'punten',
-                TSport.Hockey: 'goals',
-                TSport.Korfball: 'punten',
-                TSport.Chess: 'punten',
-                TSport.Squash: 'sets',
-                TSport.TableTennis: 'sets',
-                TSport.Tennis: 'sets',
-                TSport.Football: 'goals',
-                TSport.Volleyball: 'sets'
+                // SportCustomId.Badminton: 'sets',
+                // SportCustomId.Basketball: 'punten',
+                // SportCustomId.Darts: 'sets',
+                // SportCustomId.ESports: 'punten',
+                // SportCustomId.Hockey: 'goals',
+                // SportCustomId.Korfball: 'punten',
+                // SportCustomId.Chess: 'punten',
+                // SportCustomId.Squash: 'sets',
+                // SportCustomId.TableTennis: 'sets',
+                // SportCustomId.Tennis: 'sets',
+                // SportCustomId.Football: 'goals',
+                // SportCustomId.Volleyball: 'sets'
             },
             'scoresub': {
-                TSport.Darts: 'legs',
-                TSport.Tennis: 'games',
+                // SportCustomId.Darts: 'legs',
+                // SportCustomId.Tennis: 'games',
             },
             'scoresingle': {
-                TSport.Badminton: 'set',
-                TSport.Basketball: 'punt',
-                TSport.Darts: 'set',
-                TSport.ESports: 'punt',
-                TSport.Hockey: 'goal',
-                TSport.Korfball: 'punt',
-                TSport.Chess: 'punt',
-                TSport.Squash: 'set',
-                TSport.TableTennis: 'set',
-                TSport.Tennis: 'set',
-                TSport.Football: 'goal',
-                TSport.Volleyball: 'set'
+                // SportCustomId.Badminton: 'set',
+                // SportCustomId.Basketball: 'punt',
+                // SportCustomId.Darts: 'set',
+                // SportCustomId.ESports: 'punt',
+                // SportCustomId.Hockey: 'goal',
+                // SportCustomId.Korfball: 'punt',
+                // SportCustomId.Chess: 'punt',
+                // SportCustomId.Squash: 'set',
+                // SportCustomId.TableTennis: 'set',
+                // SportCustomId.Tennis: 'set',
+                // SportCustomId.Football: 'goal',
+                // SportCustomId.Volleyball: 'set'
             },
             'scoresinglesub': {
-                TSport.Darts: 'leg',
-                TSport.Tennis: 'game',
+                // SportCustomId.Darts: 'leg',
+                // SportCustomId.Tennis: 'game',
             },
             'scoredirection': {
-                SportScoreConfig.UPWARDS: 'naar',
-                SportScoreConfig.DOWNWARDS: 'vanaf'
+                // SportScoreConfig.UPWARDS: 'naar',
+                // SportScoreConfig.DOWNWARDS: 'vanaf'
             }
         }
     };
 
-    static getSport( language: string, customId: number ): string {
+    // this.data['nl']['sport'][SportCustomId.Badminton] = 'badminton';
+
+                // SportCustomId.Basketball: 'basketbal',
+                // SportCustomId.Darts: 'darten',
+                // SportCustomId.ESports: 'e-sporten',
+                // SportCustomId.Hockey: 'hockey',
+                // SportCustomId.Korfball: 'korfbal',
+                // SportCustomId.Chess: 'schaken',
+                // SportCustomId.Squash: 'squash',
+                // SportCustomId.TableTennis: 'tafeltennis',
+                // SportCustomId.Tennis: 'hockey',
+                // SportCustomId.Football: 'voetbal',
+                // SportCustomId.Volleyball: 'volleybal'
+
+    static geSportCustomId( language: string, customId: number ): string {
         return this.data[language]['sport'][customId];
     }
 

@@ -15,8 +15,8 @@ import { LiveboardComponent } from './liveboard/liveboard.component';
 import { NewComponent } from './new/new.component';
 import { RefereeEditComponent } from './referee/edit.component';
 import { RefereeListComponent } from './referee/list.component';
-import { SportConfigEditComponent } from './sport/configedit.component';
-import { SportListComponent } from './sport/list.component';
+import { SportConfigEditComponent } from './sportconfig/edit.component';
+import { SportConfigListComponent } from './sportconfig/list.component';
 import { RoundsSettingsComponent } from './settings/rounds.component';
 import { SponsorEditComponent } from './sponsor/edit.component';
 import { SponsorListComponent } from './sponsor/list.component';
@@ -37,7 +37,7 @@ const routes: Routes = [
   { path: 'games/:id', component: GameListComponent, canActivate: [AuthguardService] },
   { path: 'gameedit/:id/:gameId', component: GameEditComponent, canActivate: [AuthguardService] },
   { path: 'roundssettings/:id/:roundNumber', component: RoundsSettingsComponent, canActivate: [AuthguardService] },
-  { path: 'sports/:id', component: SportListComponent, canActivate: [AuthguardService] },
+  { path: 'sportconfigs/:id', component: SportConfigListComponent, canActivate: [AuthguardService] },
   { path: 'sportconfigedit/:id/:sportId', component: SportConfigEditComponent, canActivate: [AuthguardService] },
   { path: 'fields/:id', component: FieldListComponent, canActivate: [AuthguardService] },
   { path: 'referees/:id', component: RefereeListComponent, canActivate: [AuthguardService] },

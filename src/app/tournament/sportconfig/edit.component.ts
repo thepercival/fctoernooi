@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     JsonSport,
-    Sport,
+    SportConfig,
     Referee,
     RefereeRepository,
     StructureRepository,
@@ -11,18 +11,18 @@ import {
 
 import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
-import { TournamentService } from '../../lib/tournament/service';
+import { CSSService } from '../../common/cssservice';
 import { User } from '../../lib/user';
 import { TournamentComponent } from '../component';
 
 @Component({
     selector: 'app-tournament-sportconfig-edit',
-    templateUrl: './configedit.component.html',
-    styleUrls: ['./configedit.component.css']
+    templateUrl: './edit.component.html',
+    styleUrls: ['./edit.component.css']
 })
 export class SportConfigEditComponent extends TournamentComponent implements OnInit {
     customForm: FormGroup;
-    sport: Sport;
+    sportConfig: SportConfig;
 
     validations: SportValidations = {
         minlengthinitials: Referee.MIN_LENGTH_INITIALS,
@@ -35,6 +35,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
 
     constructor(
         /*private sportRepository: SportRepository,*/
+        public cssService: CSSService,
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
@@ -76,17 +77,17 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         });
     }
 
-    private getSportById(id: number): Sport {
+    private getSportConfigById(id: number): SportConfig {
         if (id === undefined || id === 0) {
             this.processing = false;
             return;
         }
-        return this.tournament.getCompetition().getSports().find(sportIt => id === sportIt.getId());
+        return this.tournament.getCompetition().getSportConfigs().find(sportConfig => id === sportConfig.getId());
     }
 
     private postInit(id: number) {
-        this.sport = this.getSportById(id);
-        if (this.sport === undefined) {
+        this.sportConfig = this.getSportConfigById(id);
+        if (this.sportConfig === undefined) {
             this.processing = false;
             return;
         }

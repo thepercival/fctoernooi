@@ -10,6 +10,8 @@ import { CreatedAndInplayGamesScreen, GamesScreen } from '../../lib/liveboard/sc
 })
 export class LiveboardGamesComponent {
 
+    private sportScoreConfigService: SportScoreConfigService;
+
     @Input() screen: GamesScreen;
     @Input() hasFields: boolean;
     @Input() planningService: PlanningService;

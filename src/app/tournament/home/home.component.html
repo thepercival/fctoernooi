@@ -81,16 +81,16 @@
         </div>
         <div class="card pointer mt-3 mx-2" (click)="linkToSportConfig()">
           <div class="card-body">
-            <h5 class="card-title" *ngIf="tournament.getCompetition().hasMultipleSports()">
+            <h5 class="card-title" *ngIf="tournament.getCompetition().hasMultipleSportConfigs()">
               <fa-icon [icon]="['fas', 'cogs']"></fa-icon> sporten
             </h5>
-            <h5 class="card-title" *ngIf="!tournament.getCompetition().hasMultipleSports()">
+            <h5 class="card-title" *ngIf="!tournament.getCompetition().hasMultipleSportConfigs()">
               <small>
-                <i *ngIf="cssService.getIconType(tournament.getCompetition().getSports()) === 'fi'"
-                  class="{{cssService.getIcon(tournament.getCompetition().getSports())}}"></i>
-                <fa-icon *ngIf="cssService.getIconType(tournament.getCompetition().getSports()) === 'fa'"
-                  [icon]="['fas', cssService.getIcon(tournament.getCompetition().getSports())]"></fa-icon>
-              </small> {{tournament.getCompetition().getFirstSport().getName()}}
+                <i *ngIf="cssService.getIconType(tournament.getCompetition().getSportConfigs()) === 'fi'"
+                  class="{{cssService.getIcon(tournament.getCompetition().getSportConfigs())}}"></i>
+                <fa-icon *ngIf="cssService.getIconType(tournament.getCompetition().getSportConfigs()) === 'fa'"
+                  [icon]="['fas', cssService.getIcon(tournament.getCompetition().getSportConfigs())]"></fa-icon>
+              </small> {{tournament.getCompetition().getFirstSportConfig().getSport().getName()}}
             </h5>
             <p class="card-text">
               <span *ngIf="!sportConfigsAreDefault()">

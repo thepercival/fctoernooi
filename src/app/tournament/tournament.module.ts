@@ -79,8 +79,8 @@ import { EndRankingViewComponent } from './ranking/end.component';
 import { PouleRankingComponent } from './ranking/poule.component';
 import { RefereeEditComponent } from './referee/edit.component';
 import { RefereeListComponent } from './referee/list.component';
-import { SportConfigEditComponent } from './sport/configedit.component';
-import { SportListComponent } from './sport/list.component';
+import { SportConfigEditComponent } from './sportconfig/edit.component';
+import { SportConfigListComponent } from './sportconfig/list.component';
 import { TournamentRoundNumberViewComponent } from './roundnumber/rnview.component';
 import { RoundsSettingsComponent } from './settings/rounds.component';
 import { SponsorEditComponent } from './sponsor/edit.component';
@@ -97,7 +97,7 @@ import { ViewComponent } from './view/view.component';
 
 library.add(
   faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
-  faUnlink, faPrint, faSort, faRandom, faSquare, faCheckSquare, faUserTag, faInfoCircle, faMedal, 
+  faUnlink, faPrint, faSort, faRandom, faSquare, faCheckSquare, faUserTag, faInfoCircle, faMedal,
   faProductHunt, faLink, faUsers, faQrcode, faCopy
 );
 
@@ -127,7 +127,7 @@ library.add(
     CompetitorListComponent,
     CompetitorListLineComponent,
     RefereeListComponent,
-    SportListComponent,
+    SportConfigListComponent,
     SportConfigEditComponent,
     SponsorListComponent,
     CompetitorEditComponent,
