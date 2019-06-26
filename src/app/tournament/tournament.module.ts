@@ -49,7 +49,7 @@ import {
   RoundMapper,
   SportConfigMapper,
   SportConfigRepository,
-  SportConfigScoreMapper,
+  SportScoreConfigMapper,
   RoundNumberMapper,
   RoundRepository,
   StructureMapper,
@@ -97,7 +97,8 @@ import { ViewComponent } from './view/view.component';
 
 library.add(
   faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
-  faUnlink, faPrint, faSort, faRandom, faSquare, faCheckSquare, faUserTag, faInfoCircle, faMedal, faProductHunt, faLink, faUsers, faQrcode, faCopy
+  faUnlink, faPrint, faSort, faRandom, faSquare, faCheckSquare, faUserTag, faInfoCircle, faMedal, 
+  faProductHunt, faLink, faUsers, faQrcode, faCopy
 );
 
 @NgModule({
@@ -160,7 +161,7 @@ library.add(
     SportConfigRepository,
     RoundNumberMapper,
     SportConfigMapper,
-    SportConfigScoreMapper,
+    SportScoreConfigMapper,
     PlaceRepository,
     CompetitorRepository,
     CompetitorMapper,

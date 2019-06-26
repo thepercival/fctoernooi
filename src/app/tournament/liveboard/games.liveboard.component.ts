@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { State, Game, NameService, PlanningService, Round, RoundNumber } from 'ngx-sport';
+import { State, Game, NameService, PlanningService, Round, RoundNumber, SportScoreConfigService } from 'ngx-sport';
 
 import { CreatedAndInplayGamesScreen, GamesScreen } from '../../lib/liveboard/screens';
 
@@ -17,6 +17,7 @@ export class LiveboardGamesComponent {
     constructor(
         public nameService: NameService
     ) {
+        this.sportScoreConfigService = new SportScoreConfigService();
     }
 
     get GameHOME(): boolean { return Game.HOME; }
@@ -45,7 +46,7 @@ export class LiveboardGamesComponent {
         if (game.getState() !== State.Finished) {
             return sScore;
         }
-        const finalScore = game.getFinalScore();
+        const finalScore = this.sportScoreConfigService.getFinal(game);
         if (finalScore === undefined) {
             return sScore;
         }
@@ -58,13 +59,13 @@ export class LiveboardGamesComponent {
 
     getRoundAbbreviation(round: Round, sameName: boolean = false) {
         const name = this.nameService.getRoundName(round);
-        if (name.indexOf(" finale") >= 0) {
-            return name.replace(" finale", "F");
-        } else if (name.indexOf("finale") >= 0) {
-            return "FIN";
-        } else if (name.indexOf(" plaats") >= 0) {
-            return name.replace(" plaats", "");
-        } else if (name.indexOf(" ronde") >= 0) {
+        if (name.indexOf(' finale') >= 0) {
+            return name.replace(' finale', 'F');
+        } else if (name.indexOf('finale') >= 0) {
+            return 'FIN';
+        } else if (name.indexOf(' plaats') >= 0) {
+            return name.replace(' plaats', '');
+        } else if (name.indexOf(' ronde') >= 0) {
             return 'R' + name.substring(0, 1);
         }
         return name;
