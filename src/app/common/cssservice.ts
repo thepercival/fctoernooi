@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HorizontalPoule, Place, QualifyGroup, Round, Sport } from 'ngx-sport';
+import { HorizontalPoule, Place, QualifyGroup, Round, Sport, SportConfig } from 'ngx-sport';
 import { TSport } from '../lib/tsport';
 
 @Injectable()
 export class CSSService {
-    getIcon(sports: Sport[]): string {
-        if ( sports.length !== 1 ) {
+    getIcon(sportConfigs: SportConfig[]): string {
+        if ( sportConfigs.length !== 1 ) {
             return '';
         }
-        return this.getIconBySportCustomId(sports[0].getCustomId());
+        return this.getIconBySportCustomId(sportConfigs[0].getSport().getCustomId());
     }
 
     getIconBySportCustomId( customId: number ): string {
@@ -38,11 +38,11 @@ export class CSSService {
         return '';
     }
 
-    getIconType(sports: Sport[]): string {
-        if ( sports.length !== 1 ) {
+    getIconType(sportConfigs: SportConfig[]): string {
+        if ( sportConfigs.length !== 1 ) {
             return '';
         }
-        return this.getIconTypeBySportCustomId(sports[0].getCustomId());
+        return this.getIconTypeBySportCustomId(sportConfigs[0].getSport().getCustomId());
     }
 
     getIconTypeBySportCustomId( customId: number ): string {

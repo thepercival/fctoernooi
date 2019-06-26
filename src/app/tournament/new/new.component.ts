@@ -139,9 +139,9 @@ export class TournamentNewComponent implements OnInit {
       season.setEndDateTime(new Date());
       const competition = new Competition(league, season);
       competition.setStartDateTime(startDateTime);
-      // @TODO 
+      // @TODO
       // league.setSport(sportName);
-      competition.getSports().push(undefined);
+      competition.getSportConfigs().push(undefined);
 
       for (let fieldNumber = 1; fieldNumber <= nroffields; fieldNumber++) {
         const field = new Field(competition, fieldNumber);

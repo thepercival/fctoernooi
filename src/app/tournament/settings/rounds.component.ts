@@ -10,7 +10,7 @@ import {
     SportConfig,
     SportConfigMapper,
     SportConfigRepository,
-    SportConfigScore,
+    SportScoreConfig,
     StructureRepository,
 } from 'ngx-sport';
 
@@ -256,10 +256,10 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     // }
 
     // getDirectionDescription(scoreConfig) {
-    //     return ConfigScore.getDirectionDescription(scoreConfig.getDirection());
+    //     return SportScoreConfig.getDirectionDescription(scoreConfig.getDirection());
     // }
 
-    // setScoreConfigMaximum(scoreConfig: ConfigScore, scoreConfigMaximum) {
+    // setScoreConfigMaximum(scoreConfig: SportScoreConfig, scoreConfigMaximum) {
     //     if (scoreConfigMaximum > 9999 || scoreConfigMaximum < 0) {
     //         return;
     //     }
@@ -286,7 +286,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     //     this.modelConfig.setSelfReferee(selfReferee);
     // }
 
-    // isScoreConfigReadOnly(scoreConfig: ConfigScore) {
+    // isScoreConfigReadOnly(scoreConfig: SportScoreConfig) {
     //     if (scoreConfig.getChild() !== undefined && scoreConfig.getChild().getMaximum() === 0) {
     //         return true;
     //     }
@@ -356,8 +356,8 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
 
     // }
 
-    // getDirectionName(scoreConfig: ConfigScore) {
-    //     return scoreConfig.getDirection() === ConfigScore.UPWARDS ? 'naar' : 'vanaf';
+    // getDirectionName(scoreConfig: SportScoreConfig) {
+    //     return scoreConfig.getDirection() === SportScoreConfig.UPWARDS ? 'naar' : 'vanaf';
     // }
 
     // navigateBack() {

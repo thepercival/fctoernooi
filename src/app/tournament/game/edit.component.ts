@@ -18,11 +18,12 @@ import {
     RankedRoundItem,
     RankingService,
     Round,
-    SportConfigScore,
+    SportScoreConfig,
     StructureRepository,
+    SportScoreConfigService
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
-
+import { Translate } from '../../lib/translate';
 import { AuthService } from '../../auth/auth.service';
 import { MyNavigation } from '../../common/navigation';
 import { Role } from '../../lib/role';
@@ -37,6 +38,7 @@ import { TournamentComponent } from '../component';
 export class TournamentGameEditComponent extends TournamentComponent implements OnInit {
     game: Game;
     planningService: PlanningService;
+    sportScoreConfigService: SportScoreConfigService;
     customForm: FormGroup;
     scoreControls: HomeAwayFormControl[] = [];
     calculateScoreControl: HomeAwayFormControl;
@@ -58,6 +60,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     ) {
         super(route, router, tournamentRepository, structureRepository);
         this.originalPouleState = State.Created;
+        this.sportScoreConfigService = new SportScoreConfigService();
         this.customForm = fb.group({
             played: [''],
             extratime: ['']
@@ -91,19 +94,19 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     getCalculateScoreDescription() {
-        const scoreConfig = this.game.getSportConfig().getCalculateScore();
+        const scoreConfig = this.sportScoreConfigService.getCalculate(this.game.getSportScoreConfig());
         let description = '';
-        if (scoreConfig.getDirection() === SportConfigScore.UPWARDS && scoreConfig.getMaximum() > 0) {
+        if (scoreConfig.getDirection() === SportScoreConfig.UPWARDS && scoreConfig.getMaximum() > 0) {
             description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
         }
         // @TODO
-        return description + '@TODO'; //scoreConfig.getName()
+        return description + '@TODO'; // scoreConfig.getName()
     }
 
     getInputScoreDescription() {
-        const scoreConfig = this.game.getSportConfig().getInputScore();
+        const scoreConfig = this.sportScoreConfigService.getInput(this.game.getSportScoreConfig());
         let description = '';
-        if (scoreConfig.getDirection() === SportConfigScore.UPWARDS && scoreConfig.getMaximum() > 0) {
+        if (scoreConfig.getDirection() === SportScoreConfig.UPWARDS && scoreConfig.getMaximum() > 0) {
             description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
         }
         // @TODO
@@ -123,8 +126,8 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     getCalculateClass() {
-        const scoreConfig = this.game.getSportConfig().getCalculateScore();
-        if (scoreConfig.getDirection() !== SportConfigScore.UPWARDS || scoreConfig.getMaximum() === 0) {
+        const scoreConfig = this.sportScoreConfigService.getCalculate(this.game.getSportScoreConfig());
+        if (scoreConfig.getDirection() !== SportScoreConfig.UPWARDS || scoreConfig.getMaximum() === 0) {
             return 'is-valid';
         }
         const score = this.calculateScoreControl.getScore();
@@ -141,8 +144,8 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
         if (this.isScoreValid(score) !== true) {
             return 'is-invalid';
         }
-        const scoreConfig = this.game.getSportConfig().getInputScore();
-        if (scoreConfig.getDirection() !== SportConfigScore.UPWARDS || scoreConfig.getMaximum() === 0) {
+        const scoreConfig = this.sportScoreConfigService.getInput(this.game.getSportScoreConfig());
+        if (scoreConfig.getDirection() !== SportScoreConfig.UPWARDS || scoreConfig.getMaximum() === 0) {
             return 'is-valid';
         }
         if ((score.getHome() === scoreConfig.getMaximum() && score.getAway() < score.getHome())
@@ -262,7 +265,9 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     calculateAndInputScoreDiffers() {
-        return this.game.getSportConfig().getCalculateScore() !== this.game.getSportConfig().getInputScore();
+        const inputScoreConfig = this.sportScoreConfigService.getInput(this.game.getSportScoreConfig());
+        const calculateScoreConfig = this.sportScoreConfigService.getCalculate(this.game.getSportScoreConfig());
+        return inputScoreConfig !== calculateScoreConfig;
     }
 
     addScoreControl(home: number, away: number) {
@@ -292,7 +297,7 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
     }
 
     getWarningsForEqualQualifiers(): string[] {
-        const poule = this.game.getPoule()
+        const poule = this.game.getPoule();
         if (poule.getState() !== State.Finished) {
             return [];
         }
@@ -315,8 +320,8 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
                 }
                 const rankedItems = ranking.getItemsForHorizontalPoule(horizontalPoule);
                 const equalRuleItems = this.getEqualRuleRankingItems(multipleRule, rankedItems);
-                const postFix = '(' + this.nameService.getHorizontalPouleName(horizontalPoule) + ')';
-                warnings = warnings.concat(this.getWarningsForEqualQualifiersHelper(equalRuleItems, postFix));
+                const postFixTmp = '(' + this.nameService.getHorizontalPouleName(horizontalPoule) + ')';
+                warnings = warnings.concat(this.getWarningsForEqualQualifiersHelper(equalRuleItems, postFixTmp));
             });
         });
 
@@ -361,6 +366,10 @@ export class TournamentGameEditComponent extends TournamentComponent implements 
             }
         }
         return equalItems;
+    }
+
+    getCalculateScoreUnitName(game: Game): string {
+        return Translate.getScoreSingle('nl', game.getConfig().getCalculateScore() );
     }
 
     save(): boolean {

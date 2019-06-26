@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import { State, Game, NameService, PlanningService, Poule, RankingService, RoundNumber } from 'ngx-sport';
+import { State, Game, NameService, PlanningService, Poule, RankingService, RoundNumber, SportScoreConfigService } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
 import { CSSService } from '../../common/cssservice';
@@ -33,7 +33,8 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   hasFields: boolean;
   hasReferees: boolean;
   gameDatas: GameData[];
-  // game data 
+  private sportScoreConfigService: SportScoreConfigService;
+  // game data
   roundNumberNeedsRanking: boolean;
   canCalculateStartDateTime: boolean;
 
@@ -45,6 +46,7 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     public favRepository: FavoritesRepository) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
     this.resetAlert();
+    this.sportScoreConfigService = new SportScoreConfigService();
   }
 
   ngOnInit() {
@@ -77,7 +79,7 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
       const aPlaceHasACompetitor = this.hasAPlaceACompetitor(game);
       if (!(!this.favorites.hasItems() || this.favorites.hasGameItem(game) || !aPlaceHasACompetitor)) {
         return;
-      };
+      }
       const pouleData: PouleData = pouleDatas[game.getPoule().getId()];
       const hasPopover = pouleData.needsRanking || (!this.roundNumber.isFirst() && aPlaceHasACompetitor);
 
@@ -101,7 +103,7 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
         name: this.nameService.getPouleName(poule, false),
         needsRanking: poule.needsRanking(),
         round: poule.getRound()
-      }
+      };
     });
     return pouleDatas;
   }
@@ -121,7 +123,7 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     if (game.getState() !== State.Finished) {
       return sScore;
     }
-    const finalScore = game.getFinalScore();
+    const finalScore = this.sportScoreConfigService.getFinal(game);
     if (finalScore === undefined) {
       return sScore;
     }
