@@ -22,7 +22,7 @@ import { TournamentComponent } from '../component';
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.css']
 })
-export class TournamentStructureComponent extends TournamentComponent implements OnInit {
+export class StructureComponent extends TournamentComponent implements OnInit {
   changedRoundNumber: RoundNumber;
   originalCompetitors: Competitor[];
   clonedStructure: Structure;

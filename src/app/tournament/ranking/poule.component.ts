@@ -11,7 +11,7 @@ import { Tournament } from '../../lib/tournament';
   templateUrl: './poule.component.html',
   styleUrls: ['./poule.component.scss']
 })
-export class TournamentPouleRankingComponent implements OnInit {
+export class PouleRankingComponent implements OnInit {
   public rankingItems: RankedRoundItem[];
   @Input() poule: Poule;
   @Input() tournament: Tournament;

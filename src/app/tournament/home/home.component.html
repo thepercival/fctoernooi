@@ -57,13 +57,11 @@
         <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/games', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijden
+              <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> planning
             </h5>
-            <p class="card-text" *ngIf="structure.getFirstRoundNumber().getNrOfGames() > 0">
-              <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> wedstrijden ingepland
-            </p>
-            <p class="card-text" *ngIf="structure.getFirstRoundNumber().getNrOfGames() === 0">
-              <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> plan wedstrijden in
+            <p class="card-text">start is {{tournament.getCompetition().getStartDateTime().toLocaleString("nl",
+              {"month":"short","day":"2-digit","hour12":
+              false,"hour":"2-digit","minute":"2-digit"})}}
             </p>
           </div>
         </div>
@@ -81,14 +79,26 @@
             <p class="card-text">{{getNrOfFieldsDescription()}}</p>
           </div>
         </div>
-        <div class="card pointer mt-3 mx-2" [routerLink]="['/toernooi/edit', tournament.getId()]">
+        <div class="card pointer mt-3 mx-2" (click)="linkToSportConfig()">
           <div class="card-body">
-            <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellingen
+            <h5 class="card-title" *ngIf="tournament.getCompetition().hasMultipleSports()">
+              <fa-icon [icon]="['fas', 'cogs']"></fa-icon> sporten
             </h5>
-            <p class="card-text">start is {{tournament.getCompetition().getStartDateTime().toLocaleString("nl",
-              {"month":"short","day":"2-digit","hour12":
-              false,"hour":"2-digit","minute":"2-digit"})}}
+            <h5 class="card-title" *ngIf="!tournament.getCompetition().hasMultipleSports()">
+              <small>
+                <i *ngIf="cssService.getIconType(tournament.getCompetition().getSports()) === 'fi'"
+                  class="{{cssService.getIcon(tournament.getCompetition().getSports())}}"></i>
+                <fa-icon *ngIf="cssService.getIconType(tournament.getCompetition().getSports()) === 'fa'"
+                  [icon]="['fas', cssService.getIcon(tournament.getCompetition().getSports())]"></fa-icon>
+              </small> {{tournament.getCompetition().getFirstSport().getName()}}
+            </h5>
+            <p class="card-text">
+              <span *ngIf="!sportConfigsAreDefault()">
+                <fa-icon [icon]="['fas', 'check-circle']"></fa-icon> instellingen aangepast
+              </span>
+              <span *ngIf="sportConfigsAreDefault()">
+                <fa-icon [icon]="['fas', 'times-circle']"></fa-icon> standaardinstellingen
+              </span>
             </p>
           </div>
         </div>

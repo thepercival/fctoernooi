@@ -15,7 +15,7 @@ import { TournamentComponent } from '../component';
     templateUrl: './filter.component.html',
     styleUrls: ['./filter.component.scss']
 })
-export class TournamentFilterComponent extends TournamentComponent implements OnInit {
+export class FilterComponent extends TournamentComponent implements OnInit {
     places: Place[];
     placeToSwap: Place;
     toggledItem: Competitor | Referee;

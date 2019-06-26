@@ -8,7 +8,7 @@ import { CreatedAndInplayGamesScreen, GamesScreen } from '../../lib/liveboard/sc
     templateUrl: './games.liveboard.component.html',
     styleUrls: ['./games.liveboard.component.scss']
 })
-export class TournamentLiveboardGamesComponent {
+export class LiveboardGamesComponent {
 
     @Input() screen: GamesScreen;
     @Input() hasFields: boolean;

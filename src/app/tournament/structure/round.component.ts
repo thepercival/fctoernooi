@@ -11,7 +11,7 @@ import { StructureViewType } from './qualify.component';
   templateUrl: './round.component.html',
   styleUrls: ['./round.component.css']
 })
-export class TournamentStructureRoundComponent {
+export class StructureRoundComponent {
 
   @Input() round: Round;
   @Output() roundNumberChanged = new EventEmitter<RoundNumber>();

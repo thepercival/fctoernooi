@@ -59,38 +59,40 @@ import {
 import { CSSService } from '../common/cssservice';
 import { EscapeHtmlPipe } from '../common/escapehtmlpipe';
 import { RoleMapper } from '../lib/role/mapper';
-import { TournamentCompetitorEditComponent } from './competitor/edit.component';
+import { CompetitorEditComponent } from './competitor/edit.component';
 import { CompetitorListComponent } from './competitor/list.component';
 import { CompetitorListLineComponent } from './competitor/listline.component';
-import { TournamentListRemoveModalComponent } from './competitor/listremovemodal.component';
-import { TournamentEditComponent } from './edit/edit.component';
+import { CompetitorListRemoveModalComponent } from './competitor/listremovemodal.component';
+import { EditComponent } from './edit/edit.component';
 import { FieldListComponent } from './field/list.component';
-import { TournamentFilterComponent } from './filter/filter.component';
-import { TournamentGameEditComponent } from './game/edit.component';
+import { FilterComponent } from './filter/filter.component';
+import { GameEditComponent } from './game/edit.component';
 import { GameListComponent } from './game/list.component';
-import { TournamentHomeComponent } from './home/home.component';
+import { HomeComponent } from './home/home.component';
 import { ProgressComponent } from './home/progress.component';
-import { TournamentLiveboardGamesComponent } from './liveboard/games.liveboard.component';
-import { TournamentLiveboardComponent } from './liveboard/liveboard.component';
-import { TournamentLiveboardPoulesComponent } from './liveboard/poules.liveboard.component';
-import { TournamentLiveboardSponsorsComponent } from './liveboard/sponsors.liveboard.component';
-import { TournamentNewComponent } from './new/new.component';
-import { TournamentEndRankingViewComponent } from './ranking/end.component';
-import { TournamentPouleRankingComponent } from './ranking/poule.component';
-import { TournamentRefereeEditComponent } from './referee/edit.component';
+import { LiveboardGamesComponent } from './liveboard/games.liveboard.component';
+import { LiveboardComponent } from './liveboard/liveboard.component';
+import { LiveboardPoulesComponent } from './liveboard/poules.liveboard.component';
+import { LiveboardSponsorsComponent } from './liveboard/sponsors.liveboard.component';
+import { NewComponent } from './new/new.component';
+import { EndRankingViewComponent } from './ranking/end.component';
+import { PouleRankingComponent } from './ranking/poule.component';
+import { RefereeEditComponent } from './referee/edit.component';
 import { RefereeListComponent } from './referee/list.component';
+import { SportConfigEditComponent } from './sport/configedit.component';
+import { SportListComponent } from './sport/list.component';
 import { TournamentRoundNumberViewComponent } from './roundnumber/rnview.component';
 import { RoundsSettingsComponent } from './settings/rounds.component';
-import { TournamentSponsorEditComponent } from './sponsor/edit.component';
+import { SponsorEditComponent } from './sponsor/edit.component';
 import { SponsorListComponent } from './sponsor/list.component';
-import { TournamentStructureComponent } from './structure/main.component';
-import { TournamentStructureQualifyComponent } from './structure/qualify.component';
-import { TournamentStructureRoundComponent } from './structure/round.component';
-import { TournamentStructureRoundArrangeComponent } from './structure/round/arrange.component';
-import { TournamentStructureViewComponent } from './structure/view.component';
-import { TournamentTitleComponent } from './title/title.component';
-import { TournamentRoutingModule } from './tournament-routing.module';
-import { TournamentViewComponent } from './view/view.component';
+import { StructureComponent } from './structure/main.component';
+import { StructureQualifyComponent } from './structure/qualify.component';
+import { StructureRoundComponent } from './structure/round.component';
+import { StructureRoundArrangeComponent } from './structure/round/arrange.component';
+import { StructureViewComponent } from './structure/view.component';
+import { TitleComponent } from './title/title.component';
+import { RoutingModule } from './tournament-routing.module';
+import { ViewComponent } from './view/view.component';
 
 
 library.add(
@@ -102,46 +104,48 @@ library.add(
   imports: [
     CommonModule,
     FormsModule,
-    TournamentRoutingModule,
+    RoutingModule,
     NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule,
     ReactiveFormsModule,
     FontAwesomeModule
   ],
   declarations: [
-    TournamentNewComponent,
-    TournamentEditComponent,
-    TournamentHomeComponent,
-    TournamentTitleComponent,
-    TournamentStructureComponent,
-    TournamentStructureViewComponent,
-    TournamentStructureRoundComponent,
-    TournamentStructureRoundArrangeComponent,
-    TournamentStructureQualifyComponent,
+    NewComponent,
+    EditComponent,
+    HomeComponent,
+    TitleComponent,
+    StructureComponent,
+    StructureViewComponent,
+    StructureRoundComponent,
+    StructureRoundArrangeComponent,
+    StructureQualifyComponent,
     GameListComponent,
     TournamentRoundNumberViewComponent,
-    TournamentEndRankingViewComponent,
-    TournamentPouleRankingComponent,
+    EndRankingViewComponent,
+    PouleRankingComponent,
     CompetitorListComponent,
     CompetitorListLineComponent,
     RefereeListComponent,
+    SportListComponent,
+    SportConfigEditComponent,
     SponsorListComponent,
-    TournamentCompetitorEditComponent,
+    CompetitorEditComponent,
     RoundsSettingsComponent,
     FieldListComponent,
-    TournamentViewComponent,
-    TournamentLiveboardComponent,
-    TournamentLiveboardPoulesComponent,
-    TournamentLiveboardSponsorsComponent,
-    TournamentLiveboardGamesComponent,
-    TournamentGameEditComponent,
-    TournamentRefereeEditComponent,
-    TournamentSponsorEditComponent,
-    TournamentFilterComponent,
-    TournamentListRemoveModalComponent,
+    ViewComponent,
+    LiveboardComponent,
+    LiveboardPoulesComponent,
+    LiveboardSponsorsComponent,
+    LiveboardGamesComponent,
+    GameEditComponent,
+    RefereeEditComponent,
+    SponsorEditComponent,
+    FilterComponent,
+    CompetitorListRemoveModalComponent,
     ProgressComponent,
     EscapeHtmlPipe
   ],
-  entryComponents: [TournamentListRemoveModalComponent],
+  entryComponents: [CompetitorListRemoveModalComponent],
   providers: [
     RoleMapper,
     StructureRepository,

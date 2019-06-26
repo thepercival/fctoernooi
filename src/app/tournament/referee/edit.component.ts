@@ -21,7 +21,7 @@ import { TournamentComponent } from '../component';
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css']
 })
-export class TournamentRefereeEditComponent extends TournamentComponent implements OnInit {
+export class RefereeEditComponent extends TournamentComponent implements OnInit {
     customForm: FormGroup;
     referee: Referee;
 

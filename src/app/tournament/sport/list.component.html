@@ -1,0 +1,57 @@
+<div class="row justify-content-center no-gutters">
+  <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+    <app-tournament-title [tournament]="tournament" [routerLink]="['/toernooi', tournament.getId()]">
+    </app-tournament-title>
+    <div>
+      <h2>
+        sporten
+      </h2>
+      <h2 *ngIf="processing" class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
+    </div>
+    <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{alert.message}}</ngb-alert>
+    <!-- <div *ngIf="!processing && !structure.getFirstRoundNumber().getConfig().getSelfReferee()" class="text-info">
+      "deelnemers als scheidsrechter" kun je aanzetten onder <a [routerLink]="" (click)="linkToRoundSettings()">
+        <fa-icon [icon]="['fas', 'cogs']"></fa-icon> <span>instellingen</span>
+      </a>
+    </div> -->
+    <table *ngIf="!processing" class="table">
+      <thead>
+        <tr>
+          <th></th>
+          <!-- <th>initialen</th>
+          <th class="d-none d-sm-table-cell">naam</th>
+          <th class="text-right">
+            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" (click)="addReferee()"
+              [disabled]="processing">
+              <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+            </button>
+          </th> -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let sport of sports; let last = last;">
+          <td>
+            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing"
+              (click)="editSport(sport)">
+              <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+            </button>
+          </td>
+          <!-- <td>
+            <span>{{sport.getInitials()}}</span>
+          </td>
+          <td class="d-none d-sm-table-cell">
+            <span>{{referee.getName()}}</span>
+          </td>
+          <td class="text-right">
+            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing"
+              (click)="removeReferee(referee);">
+              <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+            </button>
+          </td> -->
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

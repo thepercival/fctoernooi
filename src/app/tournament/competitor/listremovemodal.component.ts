@@ -7,7 +7,7 @@ import { Place } from 'ngx-sport';
     templateUrl: './listremovemodal.component.html',
     styleUrls: ['./listremovemodal.component.scss']
 })
-export class TournamentListRemoveModalComponent {
+export class CompetitorListRemoveModalComponent {
     place: Place;
 
     constructor(public activeModal: NgbActiveModal) { }

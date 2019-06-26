@@ -11,7 +11,7 @@ import { TournamentComponent } from '../component';
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.css']
 })
-export class TournamentStructureViewComponent extends TournamentComponent implements OnInit {
+export class StructureViewComponent extends TournamentComponent implements OnInit {
 
   constructor(
     route: ActivatedRoute,

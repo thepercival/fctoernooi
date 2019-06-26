@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { StructureRepository } from 'ngx-sport';
+import { StructureRepository, SportConfigService } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
 import { Role } from '../../lib/role';
+import { CSSService } from '../../common/cssservice';
 import { TournamentPrintConfig, TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
 
@@ -14,7 +15,7 @@ import { TournamentComponent } from '../component';
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css']
 })
-export class TournamentHomeComponent extends TournamentComponent implements OnInit {
+export class HomeComponent extends TournamentComponent implements OnInit {
     printConfig: TournamentPrintConfig;
     copyForm: FormGroup;
     minDateStruct: NgbDateStruct;
@@ -22,6 +23,7 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
     constructor(
         route: ActivatedRoute,
         private modalService: NgbModal,
+        public cssService: CSSService,
         router: Router,
         private authService: AuthService,
         tournamentRepository: TournamentRepository,
@@ -93,6 +95,14 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
             return '1 sponsor';
         }
         return nrOfSponsors + ' sponsors';
+    }
+
+    sportConfigsAreDefault() {
+        const sportConfigService = new SportConfigService();
+        const firstRoundNumber = this.structure.getFirstRoundNumber();
+        return firstRoundNumber.getSportConfigs().every( sportConfig => {
+            return sportConfigService.isDefault(sportConfig);
+        });
     }
 
     isAdmin(): boolean {
@@ -195,6 +205,15 @@ export class TournamentHomeComponent extends TournamentComponent implements OnIn
 
     linkToStructure() {
         this.router.navigate(['/toernooi/structure', this.tournament.getId()]);
+    }
+
+    linkToSportConfig() {
+        if ( !this.tournament.getCompetition().hasMultipleSports() ) {
+            this.router.navigate(['/toernooi/sportconfigedit'
+            , this.tournament.getId(), this.tournament.getCompetition().getFirstSport()]);
+        } else {
+            this.router.navigate(['/toernooi/sports', this.tournament.getId()]);
+        }
     }
 
     getCurrentYear() {

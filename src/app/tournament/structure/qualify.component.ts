@@ -9,7 +9,7 @@ import { Tournament } from '../../lib/tournament';
     templateUrl: './qualify.component.html',
     styleUrls: ['./qualify.component.css']
 })
-export class TournamentStructureQualifyComponent {
+export class StructureQualifyComponent {
 
     @Input() round: Round;
     @Output() viewTypeChanged = new EventEmitter<number>();

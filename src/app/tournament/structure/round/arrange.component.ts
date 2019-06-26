@@ -8,7 +8,7 @@ import { Tournament } from '../../../lib/tournament';
   templateUrl: './arrange.component.html',
   styleUrls: ['./arrange.component.css']
 })
-export class TournamentStructureRoundArrangeComponent {
+export class StructureRoundArrangeComponent {
 
   @Input() round: Round;
   private structureService: StructureService;

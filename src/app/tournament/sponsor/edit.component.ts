@@ -16,7 +16,7 @@ import { TournamentComponent } from '../component';
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css']
 })
-export class TournamentSponsorEditComponent extends TournamentComponent implements OnInit {
+export class SponsorEditComponent extends TournamentComponent implements OnInit {
     customForm: FormGroup;
     sponsor: Sponsor;
     base64Logo: string | ArrayBuffer;

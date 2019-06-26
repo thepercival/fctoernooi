@@ -23,7 +23,7 @@ import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentService } from '../../lib/tournament/service';
 import { TournamentComponent } from '../component';
-import { TournamentListRemoveModalComponent } from './listremovemodal.component';
+import { CompetitorListRemoveModalComponent } from './listremovemodal.component';
 
 @Component({
   selector: 'app-tournament-competitors',
@@ -185,8 +185,8 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   preRemove(place: Place) {
-    const activeModal = this.modalService.open(TournamentListRemoveModalComponent/*, { windowClass: 'border-warning' }*/);
-    (<TournamentListRemoveModalComponent>activeModal.componentInstance).place = place;
+    const activeModal = this.modalService.open(CompetitorListRemoveModalComponent/*, { windowClass: 'border-warning' }*/);
+    (<CompetitorListRemoveModalComponent>activeModal.componentInstance).place = place;
     activeModal.result.then((result) => {
       if (result === 'remove-place') {
         this.removePlaceFromRootRound(place);

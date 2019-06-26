@@ -1,0 +1,79 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+      <app-tournament-title [tournament]="tournament">
+      </app-tournament-title>
+      <div>
+        <h2>
+            <i *ngIf="cssService.getIconTypeBySportCustomId(sport.getCustomId()) === 'fi'" class="{{cssService.getIconBySportCustomId(sport.getCustomId())}}"></i>
+            <fa-icon *ngIf="cssService.getIconTypeBySportCustomId(sport.getCustomId()) === 'fa'" [icon]="['fas', cssService.getIconBySportCustomId(sport.getCustomId())]">
+            </fa-icon>
+          <i class="fi flaticon-referee"></i> sport
+        </h2>
+        <h2 *ngIf="processing" class="text-center">
+          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+        </h2>
+      </div>
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+      <!-- <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="customForm" novalidate>
+        <div class="form-group row">
+          <div class="col-3">
+            <label for="initials" class="col-form-label">initialen</label>
+          </div>
+          <div class="col-9">
+            <input class="form-control"
+              [ngClass]="{ 'is-invalid': customForm.controls.initials.invalid, 'is-valid': customForm.controls.initials.valid }"
+              type="text" name="initials" id="initials" [formControl]="customForm.controls.initials"
+              maxlength="{{validations.maxlengthinitials}}"
+              placeholder="max. {{validations.maxlengthinitials}} karakters">
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-3">
+            <label for="name" class="col-form-label">naam</label>
+          </div>
+          <div class="col-9">
+            <input class="form-control"
+              [ngClass]="{ 'is-invalid': customForm.controls.name.invalid, 'is-valid': customForm.controls.name.valid }"
+              type="text" name="name" id="name" [formControl]="customForm.controls.name"
+              maxlength="{{validations.maxlengthname}}" placeholder="max. {{validations.maxlengthname}} karakters">
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-3 d-flex justify-content-between">
+            <label for="emailaddress" container="body" placement="right" ngbPopover="De gebruiker met dit emailadres kan de stand van de wedstrijden, waarvoor
+            hij/zij is aangesteld, wijzigen" class="col-form-label pointer">email
+              <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
+            </label>
+          </div>
+          <div class="col-9">
+            <input class="form-control"
+              [ngClass]="{ 'is-invalid': customForm.controls.emailaddress.invalid, 'is-valid': customForm.controls.emailaddress.valid }"
+              type="text" name="emailaddress" id="emailaddress" [formControl]="customForm.controls.emailaddress"
+              maxlength="{{validations.maxlengthemailaddress}}"
+              placeholder="max. {{validations.maxlengthemailaddress}} karakters">
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-3">
+            <label for="info" class="col-form-label">info</label>
+          </div>
+          <div class="col-9">
+            <textarea class="form-control"
+              [ngClass]="{ 'is-invalid': customForm.controls.info.invalid, 'is-valid': customForm.controls.info.valid }"
+              name="info" id="info" [formControl]="customForm.controls.info" maxlength="{{validations.maxlengthinfo}}"
+              placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
+          </div>
+        </div>
+        <div class="form-group row justify-content-end">
+          <div class="col-9">
+            <button [disabled]="customForm.invalid" type="submit" class="btn btn-outline-primary">
+              <i class="fi flaticon-referee" title="scheidsrechter"></i>
+              <span>{{referee ? 'wijzigen' : 'toevoegen'}}</span>
+            </button>
+          </div>
+        </div>
+      </form> -->
+    </div>
+  </div>
+</div>

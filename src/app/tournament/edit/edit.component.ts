@@ -13,7 +13,7 @@ import { TournamentComponent } from '../component';
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css']
 })
-export class TournamentEditComponent extends TournamentComponent implements OnInit {
+export class EditComponent extends TournamentComponent implements OnInit {
     customForm: FormGroup;
     minDateStruct: NgbDateStruct;
     processing = true;

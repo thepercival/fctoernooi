@@ -16,7 +16,7 @@ import { TournamentComponent } from '../component';
     templateUrl: './liveboard.component.html',
     styleUrls: ['./liveboard.component.scss']
 })
-export class TournamentLiveboardComponent extends TournamentComponent implements OnInit, OnDestroy {
+export class LiveboardComponent extends TournamentComponent implements OnInit, OnDestroy {
 
     public planningService: PlanningService;
     public activeScreen: any;

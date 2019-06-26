@@ -8,7 +8,7 @@ import { Tournament } from '../../lib/tournament';
   selector: 'app-tournament-title',
   templateUrl: './title.component.html'
 })
-export class TournamentTitleComponent {
+export class TitleComponent {
 
   @Input() tournament: Tournament;
   @Input() routerLink: [];

@@ -15,7 +15,7 @@ import { TournamentComponent } from '../component';
     templateUrl: './view.component.html',
     styleUrls: ['./view.component.scss']
 })
-export class TournamentViewComponent extends TournamentComponent implements OnInit, OnDestroy {
+export class ViewComponent extends TournamentComponent implements OnInit, OnDestroy {
     private liveboardLinkSet = false;
     public planningService: PlanningService;
     public refreshAfterSeconds = 60;

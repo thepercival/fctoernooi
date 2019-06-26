@@ -8,7 +8,7 @@ import { Sponsor } from '../../lib/sponsor';
     templateUrl: './sponsors.liveboard.component.html',
     styleUrls: ['./sponsors.liveboard.component.scss']
 })
-export class TournamentLiveboardSponsorsComponent implements OnChanges {
+export class LiveboardSponsorsComponent implements OnChanges {
     @Input() sponsors: Sponsor[];
     sponsorGroups: Sponsor[][];
     maxNrOfSponsorsPerGroup: number;

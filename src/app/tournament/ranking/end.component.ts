@@ -6,7 +6,7 @@ import { EndRankingService, EndRankingItem, RankingService, Structure } from 'ng
   templateUrl: './end.component.html',
   styleUrls: ['./end.component.scss']
 })
-export class TournamentEndRankingViewComponent implements OnInit {
+export class EndRankingViewComponent implements OnInit {
 
   @Input() structure: Structure;
   @Input() filterStart: number;

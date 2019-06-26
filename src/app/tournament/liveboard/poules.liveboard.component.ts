@@ -9,7 +9,7 @@ import { PoulesRankingScreen } from '../../lib/liveboard/screens';
     templateUrl: './poules.liveboard.component.html',
     styleUrls: ['./poules.liveboard.component.scss']
 })
-export class TournamentLiveboardPoulesComponent {
+export class LiveboardPoulesComponent {
     @Input() screen: PoulesRankingScreen;
     @Input() ruleSet: number;
 

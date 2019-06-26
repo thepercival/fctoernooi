@@ -20,7 +20,7 @@ import { TournamentComponent } from '../component';
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css']
 })
-export class TournamentCompetitorEditComponent extends TournamentComponent implements OnInit, AfterViewChecked {
+export class CompetitorEditComponent extends TournamentComponent implements OnInit, AfterViewChecked {
     customForm: FormGroup;
     place: Place;
     private focused = false;

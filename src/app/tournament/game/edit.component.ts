@@ -34,7 +34,7 @@ import { TournamentComponent } from '../component';
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css']
 })
-export class TournamentGameEditComponent extends TournamentComponent implements OnInit {
+export class GameEditComponent extends TournamentComponent implements OnInit {
     game: Game;
     planningService: PlanningService;
     customForm: FormGroup;

@@ -30,7 +30,7 @@ import { TournamentService } from '../../lib/tournament/service';
   templateUrl: './new.component.html',
   styleUrls: ['./new.component.scss']
 })
-export class TournamentNewComponent implements OnInit {
+export class NewComponent implements OnInit {
   customForm: FormGroup;
   processing = true;
   alert: IAlert;
