@@ -187,7 +187,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
 
     openModalShare(modalContent) {
         const activeModal = this.modalService.open(modalContent/*, { windowClass: 'border-warning' }*/);
-        // (activeModal.componentInstance).copied = false;        
+        // (activeModal.componentInstance).copied = false;
         activeModal.result.then((result) => {
             // if (result === 'remove') {
             //     this.remove();

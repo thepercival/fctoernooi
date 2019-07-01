@@ -53,8 +53,6 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         // pointsCalculation   nieuw optie uit drie:  wedstrijdpunten, subscore, wedstrijdpunten + subscore???
         // nrOfGameCompetitors is 2, zonder form
 
-        
-
         // EditPermissions, EmailAddresses
         // andere groep moet dan zijn getEditPermission, wanneer ingelogd, bij gewone view
         super(route, router, tournamentRepository, structureRepository);

@@ -70,7 +70,6 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     //     for (let i = this.validations.minNrOfHeadtoheadMatches; i <= this.validations.maxNrOfHeadtoheadMatches; i++) {
     //         this.ranges.nrOfHeadtoheadMatches.push(i);
     //     }
-   
     // }
 
     ngOnInit() {
