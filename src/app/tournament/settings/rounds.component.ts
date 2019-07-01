@@ -70,19 +70,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     //     for (let i = this.validations.minNrOfHeadtoheadMatches; i <= this.validations.maxNrOfHeadtoheadMatches; i++) {
     //         this.ranges.nrOfHeadtoheadMatches.push(i);
     //     }
-    //     this.ranges.winPoints = [];
-    //     for (let i = this.validations.minWinPoints; i <= this.validations.maxWinPoints; i++) {
-    //         this.ranges.winPoints.push(i);
-    //     }
-    //     this.ranges.drawPoints = [];
-    //     for (let i = this.validations.minDrawPoints; i <= this.validations.maxDrawPoints; i++) {
-    //         this.ranges.drawPoints.push(i);
-    //     }
-    //     const sport = this.tournament.getCompetition().getLeague().getSport();
-    //     if (sport === SportConfig.Chess) {
-    //         this.ranges.drawPoints.push(0.5);
-    //         this.ranges.drawPoints.sort();
-    //     }
+   
     // }
 
     ngOnInit() {

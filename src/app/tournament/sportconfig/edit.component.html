@@ -5,25 +5,40 @@
       </app-tournament-title>
       <div>
         <h2>
-            <i *ngIf="cssService.getIconTypeBySportCustomId(sportConfig.getSport().getCustomId()) === 'fi'" class="{{cssService.getIconBySportCustomId(sportConfig.getSport().getCustomId())}}"></i>
-            <fa-icon *ngIf="cssService.getIconTypeBySportCustomId(sportConfig.getSport().getCustomId()) === 'fa'" [icon]="['fas', cssService.getIconBySportCustomId(sportConfig.getSport().getCustomId())]">
+            <i *ngIf="sportConfig && cssService.getIconTypeBySportCustomId(sportConfig.getSport().getCustomId()) === 'fi'" class="{{cssService.getIconBySportCustomId(sportConfig.getSport().getCustomId())}}"></i>
+            <fa-icon *ngIf="sportConfig && cssService.getIconTypeBySportCustomId(sportConfig.getSport().getCustomId()) === 'fa'" [icon]="['fas', cssService.getIconBySportCustomId(sportConfig.getSport().getCustomId())]">
             </fa-icon>
-          <i class="fi flaticon-referee"></i> sport
+          <span *ngIf="sportConfig">{{sportConfig.getSport().getName()}}</span>
+          <span *ngIf="!sportConfig">sport</span>
         </h2>
         <h2 *ngIf="processing" class="text-center">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-      <!-- <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="customForm" novalidate>
+      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+
         <div class="form-group row">
+            <div class="col-3">
+              <label for="winPoints" class="col-form-label">winpunten</label>
+            </div>
+            <div class="col-9">
+              <select class="form-control" formControlName="winPoints" required 
+              [ngClass]="{ 'is-invalid': form.controls.winPoints.invalid, 'is-valid': form.controls.winPoints.valid }"
+              >
+                <option *ngFor="let winpoints of ranges.winPoints" [ngValue]="winpoints">{{winpoints}}</option>
+              </select>
+            </div>
+          </div>
+
+        <!-- <div class="form-group row">
           <div class="col-3">
             <label for="initials" class="col-form-label">initialen</label>
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.initials.invalid, 'is-valid': customForm.controls.initials.valid }"
-              type="text" name="initials" id="initials" [formControl]="customForm.controls.initials"
+              [ngClass]="{ 'is-invalid': form.controls.initials.invalid, 'is-valid': form.controls.initials.valid }"
+              type="text" name="initials" id="initials" [formControl]="form.controls.initials"
               maxlength="{{validations.maxlengthinitials}}"
               placeholder="max. {{validations.maxlengthinitials}} karakters">
           </div>
@@ -34,8 +49,8 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.name.invalid, 'is-valid': customForm.controls.name.valid }"
-              type="text" name="name" id="name" [formControl]="customForm.controls.name"
+              [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }"
+              type="text" name="name" id="name" [formControl]="form.controls.name"
               maxlength="{{validations.maxlengthname}}" placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
         </div>
@@ -48,8 +63,8 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.emailaddress.invalid, 'is-valid': customForm.controls.emailaddress.valid }"
-              type="text" name="emailaddress" id="emailaddress" [formControl]="customForm.controls.emailaddress"
+              [ngClass]="{ 'is-invalid': form.controls.emailaddress.invalid, 'is-valid': form.controls.emailaddress.valid }"
+              type="text" name="emailaddress" id="emailaddress" [formControl]="form.controls.emailaddress"
               maxlength="{{validations.maxlengthemailaddress}}"
               placeholder="max. {{validations.maxlengthemailaddress}} karakters">
           </div>
@@ -60,20 +75,20 @@
           </div>
           <div class="col-9">
             <textarea class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.info.invalid, 'is-valid': customForm.controls.info.valid }"
-              name="info" id="info" [formControl]="customForm.controls.info" maxlength="{{validations.maxlengthinfo}}"
+              [ngClass]="{ 'is-invalid': form.controls.info.invalid, 'is-valid': form.controls.info.valid }"
+              name="info" id="info" [formControl]="form.controls.info" maxlength="{{validations.maxlengthinfo}}"
               placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>
         <div class="form-group row justify-content-end">
           <div class="col-9">
-            <button [disabled]="customForm.invalid" type="submit" class="btn btn-outline-primary">
+            <button [disabled]="form.invalid" type="submit" class="btn btn-outline-primary">
               <i class="fi flaticon-referee" title="scheidsrechter"></i>
               <span>{{referee ? 'wijzigen' : 'toevoegen'}}</span>
             </button>
           </div>
-        </div>
-      </form> -->
+        </div> -->
+      </form>
     </div>
   </div>
 </div>

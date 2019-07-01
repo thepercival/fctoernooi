@@ -38,7 +38,7 @@ const routes: Routes = [
   { path: 'gameedit/:id/:gameId', component: GameEditComponent, canActivate: [AuthguardService] },
   { path: 'roundssettings/:id/:roundNumber', component: RoundsSettingsComponent, canActivate: [AuthguardService] },
   { path: 'sportconfigs/:id', component: SportConfigListComponent, canActivate: [AuthguardService] },
-  { path: 'sportconfigedit/:id/:sportId', component: SportConfigEditComponent, canActivate: [AuthguardService] },
+  { path: 'sportconfigedit/:id/:sportConfigId', component: SportConfigEditComponent, canActivate: [AuthguardService] },
   { path: 'fields/:id', component: FieldListComponent, canActivate: [AuthguardService] },
   { path: 'referees/:id', component: RefereeListComponent, canActivate: [AuthguardService] },
   { path: 'refereeedit/:id/:refereeId', component: RefereeEditComponent, canActivate: [AuthguardService] },

@@ -14,6 +14,7 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { CSSService } from '../../common/cssservice';
 import { User } from '../../lib/user';
 import { TournamentComponent } from '../component';
+import { formArrayNameProvider } from '@angular/forms/src/directives/reactive_directives/form_group_name';
 
 @Component({
     selector: 'app-tournament-sportconfig-edit',
@@ -21,16 +22,17 @@ import { TournamentComponent } from '../component';
     styleUrls: ['./edit.component.css']
 })
 export class SportConfigEditComponent extends TournamentComponent implements OnInit {
-    customForm: FormGroup;
+    form: FormGroup;
     sportConfig: SportConfig;
+    ranges: any = {};
 
     validations: SportValidations = {
-        minlengthinitials: Referee.MIN_LENGTH_INITIALS,
-        maxlengthinitials: Referee.MAX_LENGTH_INITIALS,
-        maxlengthname: Referee.MAX_LENGTH_NAME,
-        maxlengthinfo: Referee.MAX_LENGTH_INFO,
-        minlengthemailaddress: User.MIN_LENGTH_EMAIL,
-        maxlengthemailaddress: User.MAX_LENGTH_EMAIL,
+        minWinPoints: 1,
+        maxWinPoints: 10,
+        minDrawPoints: 0,
+        maxDrawPoints: 5,
+        minMinutesPerGame: 0,
+        maxMinutesPerGame: 60,
     };
 
     constructor(
@@ -43,15 +45,26 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         private myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
+
+        // winPoints       zie oude form
+        // drawPoints      zie oude form
+        // winPointsExt        zie oude form
+        // drawPointsExt       zie oude form
+        // pointsCalculation   nieuw optie uit drie:  wedstrijdpunten, subscore, wedstrijdpunten + subscore???
+        // nrOfGameCompetitors is 2, zonder form
+
+        
+
         // EditPermissions, EmailAddresses
         // andere groep moet dan zijn getEditPermission, wanneer ingelogd, bij gewone view
         super(route, router, tournamentRepository, structureRepository);
-        this.customForm = fb.group({
-            initials: ['', Validators.compose([
+        this.initRanges();
+        this.form = fb.group({
+            winPoints: ['', Validators.compose([
                 Validators.required,
-                Validators.minLength(this.validations.minlengthinitials),
-                Validators.maxLength(this.validations.maxlengthinitials)
-            ])],
+                Validators.minLength(this.validations.minWinPoints),
+                Validators.maxLength(this.validations.maxWinPoints)
+            ])]/*,
             name: ['', Validators.compose([
                 Validators.maxLength(this.validations.maxlengthname)
             ])],
@@ -61,7 +74,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
             ])],
             info: ['', Validators.compose([
                 Validators.maxLength(this.validations.maxlengthinfo)
-            ])],
+            ])],*/
         });
     }
 
@@ -71,9 +84,25 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
     //     }
     // }
 
+    initRanges() {
+        this.ranges.winPoints = [];
+        for (let i = this.validations.minWinPoints; i <= this.validations.maxWinPoints; i++) {
+            this.ranges.winPoints.push(i);
+        }
+        // this.ranges.drawPoints = [];
+        // for (let i = this.validations.minDrawPoints; i <= this.validations.maxDrawPoints; i++) {
+        //     this.ranges.drawPoints.push(i);
+        // }
+        // const sport = this.tournament.getCompetition().getLeague().getSport();
+        // if (sport === SportConfig.Chess) {
+        //     this.ranges.drawPoints.push(0.5);
+        //     this.ranges.drawPoints.sort();
+        // }
+    }
+
     ngOnInit() {
         this.route.params.subscribe(params => {
-            super.myNgOnInit(() => this.postInit(+params.sportId));
+            super.myNgOnInit(() => this.postInit(+params.sportConfigId));
         });
     }
 
@@ -91,10 +120,10 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
             this.processing = false;
             return;
         }
-        // this.customForm.controls.initials.setValue(this.referee.getInitials());
-        // this.customForm.controls.name.setValue(this.referee.getName());
-        // this.customForm.controls.emailaddress.setValue(this.referee.getEmailaddress());
-        // this.customForm.controls.info.setValue(this.referee.getInfo());
+        // this.form.controls.initials.setValue(this.referee.getInitials());
+        // this.form.controls.name.setValue(this.referee.getName());
+        // this.form.controls.emailaddress.setValue(this.referee.getEmailaddress());
+        // this.form.controls.info.setValue(this.referee.getInfo());
         this.processing = false;
     }
 
@@ -110,12 +139,12 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
     // add() {
     //     this.processing = true;
     //     this.setAlert('info', 'de scheidsrechter wordt toegevoegd');
-    //     const initials = this.customForm.controls.initials.value;
-    //     const name = this.customForm.controls.name.value;
-    //     const emailaddress = this.customForm.controls.emailaddress.value;
-    //     const info = this.customForm.controls.info.value;
+    //     const initials = this.form.controls.initials.value;
+    //     const name = this.form.controls.name.value;
+    //     const emailaddress = this.form.controls.emailaddress.value;
+    //     const info = this.form.controls.info.value;
 
-    //     if (this.isInitialsDuplicate(this.customForm.controls.initials.value)) {
+    //     if (this.isInitialsDuplicate(this.form.controls.initials.value)) {
     //         this.setAlert('danger', 'de initialen bestaan al voor dit toernooi');
     //         this.processing = false;
     //         return;
@@ -152,15 +181,15 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
     // edit() {
     //     this.processing = true;
     //     this.setAlert('info', 'de scheidsrechter wordt gewijzigd');
-    //     if (this.isInitialsDuplicate(this.customForm.controls.initials.value, this.referee)) {
+    //     if (this.isInitialsDuplicate(this.form.controls.initials.value, this.referee)) {
     //         this.setAlert('danger', 'de initialen bestaan al voor dit toernooi');
     //         this.processing = false;
     //         return;
     //     }
-    //     const initials = this.customForm.controls.initials.value;
-    //     const name = this.customForm.controls.name.value;
-    //     const emailaddress = this.customForm.controls.emailaddress.value;
-    //     const info = this.customForm.controls.info.value;
+    //     const initials = this.form.controls.initials.value;
+    //     const name = this.form.controls.name.value;
+    //     const emailaddress = this.form.controls.emailaddress.value;
+    //     const info = this.form.controls.info.value;
 
     //     this.referee.setInitials(initials);
     //     this.referee.setName(name ? name : undefined);
@@ -200,10 +229,10 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
 }
 
 export interface SportValidations {
-    minlengthinitials: number;
-    maxlengthinitials: number;
-    maxlengthname: number;
-    maxlengthinfo: number;
-    minlengthemailaddress: number;
-    maxlengthemailaddress: number;
+    minWinPoints: number; // 1
+    maxWinPoints: number; // 10
+    minDrawPoints: number; // 0
+    maxDrawPoints: number; // 5
+    minMinutesPerGame: number; // 0
+    maxMinutesPerGame: number; // 60
 }

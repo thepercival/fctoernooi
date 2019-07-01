@@ -58,7 +58,9 @@ import {
   RefereeRepository,
   SeasonMapper,
   SeasonRepository,
-  SportMapper
+  SportMapper,
+  SportConfigRepository,
+  SportConfigMapper
 } from 'ngx-sport';
 
 import { environment } from '../environments/environment';
@@ -137,7 +139,9 @@ library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave
     CSSService,
     MyNavigation,
     NameService,
-    FavoritesRepository
+    FavoritesRepository,
+    SportConfigRepository,
+    SportConfigMapper
   ],
   bootstrap: [AppComponent]
 })

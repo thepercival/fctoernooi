@@ -209,9 +209,9 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     linkToSportConfig() {
         if ( !this.tournament.getCompetition().hasMultipleSportConfigs() ) {
             this.router.navigate(['/toernooi/sportconfigedit'
-            , this.tournament.getId(), this.tournament.getCompetition().getFirstSportConfig()]);
+            , this.tournament.getId(), this.tournament.getCompetition().getFirstSportConfig().getId()]);
         } else {
-            this.router.navigate(['/toernooi/sports', this.tournament.getId()]);
+            this.router.navigate(['/toernooi/sports', this.tournament.getId() ]);
         }
     }
 
