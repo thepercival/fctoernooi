@@ -23,7 +23,7 @@ export class EditComponent extends TournamentComponent implements OnInit {
         minlengthname: League.MIN_LENGTH_NAME,
         maxlengthname: League.MAX_LENGTH_NAME,
         minbreakduration: 0,
-        maxbreakduration: 360
+        maxbreakduration: 3600
     };
 
     constructor(
