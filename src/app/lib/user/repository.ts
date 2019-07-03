@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { SportRepository } from 'ngx-sport';
+import { APIRepository } from 'ngx-sport';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -9,7 +9,7 @@ import { User } from '../user';
 import { JsonUser, UserMapper } from './mapper';
 
 @Injectable()
-export class UserRepository extends SportRepository {
+export class UserRepository extends APIRepository {
   private url: string;
 
   constructor(

@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { SportRepository } from 'ngx-sport';
+import { APIRepository } from 'ngx-sport';
 import { Observable, throwError as observableThrowError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -10,7 +10,7 @@ import { UserMapper } from '../lib/user/mapper';
 
 
 @Injectable()
-export class AuthService extends SportRepository {
+export class AuthService extends APIRepository {
 
   private authItem: IAuthItem;
   private url: string;

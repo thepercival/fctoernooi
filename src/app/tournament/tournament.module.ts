@@ -42,16 +42,17 @@ import {
   GamePlaceMapper,
   GameRepository,
   GameScoreMapper,
-  PlanningRepository,
-  PouleMapper,
   PlaceMapper,
   PlaceRepository,
+  PlanningRepository,
+  PouleMapper,
   RoundMapper,
-  SportConfigMapper,
-  SportConfigRepository,
-  SportScoreConfigMapper,
   RoundNumberMapper,
   RoundRepository,
+  SportConfigMapper,
+  SportConfigRepository,
+  SportRepository,
+  SportScoreConfigMapper,
   StructureMapper,
   StructureRepository,
 } from 'ngx-sport';
@@ -79,12 +80,13 @@ import { EndRankingViewComponent } from './ranking/end.component';
 import { PouleRankingComponent } from './ranking/poule.component';
 import { RefereeEditComponent } from './referee/edit.component';
 import { RefereeListComponent } from './referee/list.component';
-import { SportConfigEditComponent } from './sportconfig/edit.component';
-import { SportConfigListComponent } from './sportconfig/list.component';
 import { TournamentRoundNumberViewComponent } from './roundnumber/rnview.component';
 import { RoundsSettingsComponent } from './settings/rounds.component';
 import { SponsorEditComponent } from './sponsor/edit.component';
 import { SponsorListComponent } from './sponsor/list.component';
+import { SportSelectComponent } from './sport/select.component';
+import { SportConfigEditComponent } from './sportconfig/edit.component';
+import { SportConfigListComponent } from './sportconfig/list.component';
 import { StructureComponent } from './structure/main.component';
 import { StructureQualifyComponent } from './structure/qualify.component';
 import { StructureRoundComponent } from './structure/round.component';
@@ -129,6 +131,7 @@ library.add(
     RefereeListComponent,
     SportConfigListComponent,
     SportConfigEditComponent,
+    SportSelectComponent,
     SponsorListComponent,
     CompetitorEditComponent,
     RoundsSettingsComponent,
@@ -159,6 +162,7 @@ library.add(
     GamePlaceMapper,
     GameScoreMapper,
     SportConfigRepository,
+    SportRepository,
     RoundNumberMapper,
     SportConfigMapper,
     SportScoreConfigMapper,

@@ -31,18 +31,23 @@ export class TournamentComponent {
         this.structureRepository = structureRepository;
     }
 
-    myNgOnInit(callback?: DataProcessCallBack) {
+    myNgOnInit(callback?: DataProcessCallBack, noStructure?: boolean) {
         this.route.params.subscribe(params => {
-            this.setData(+params['id'], callback);
+            this.setData(+params['id'], callback, noStructure);
         });
     }
 
-    setData(tournamentId: number, callback?: DataProcessCallBack) {
+    setData(tournamentId: number, callback?: DataProcessCallBack, noStructure?: boolean) {
         this.tournamentRepository.getObject(tournamentId)
             .subscribe(
                     /* happy path */(tournament: Tournament) => {
                     this.tournament = tournament;
-
+                    if (noStructure === true) {
+                        if (callback !== undefined) {
+                            callback();
+                        }
+                        return;
+                    }
                     this.structureRepository.getObject(tournament.getCompetition())
                         .subscribe(
                                 /* happy path */(structure: Structure) => {

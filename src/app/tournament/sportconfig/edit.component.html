@@ -1,13 +1,16 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
-    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+    <div *ngIf="sportConfig" class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
       <app-tournament-title [tournament]="tournament">
       </app-tournament-title>
       <div>
         <h2>
-            <i *ngIf="sportConfig && cssService.getIconTypeBySportCustomId(sportConfig.getSport().getCustomId()) === 'fi'" class="{{cssService.getIconBySportCustomId(sportConfig.getSport().getCustomId())}}"></i>
-            <fa-icon *ngIf="sportConfig && cssService.getIconTypeBySportCustomId(sportConfig.getSport().getCustomId()) === 'fa'" [icon]="['fas', cssService.getIconBySportCustomId(sportConfig.getSport().getCustomId())]">
-            </fa-icon>
+          <i *ngIf="sportConfig && cssService.getIconTypeBySportCustomId(sportConfig.getSport().getCustomId()) === 'fi'"
+            class="{{cssService.getIconBySportCustomId(sportConfig.getSport().getCustomId())}}"></i>
+          <fa-icon
+            *ngIf="sportConfig && cssService.getIconTypeBySportCustomId(sportConfig.getSport().getCustomId()) === 'fa'"
+            [icon]="['fas', cssService.getIconBySportCustomId(sportConfig.getSport().getCustomId())]">
+          </fa-icon>
           <span *ngIf="sportConfig">{{sportConfig.getSport().getName()}}</span>
           <span *ngIf="!sportConfig">sport</span>
         </h2>
@@ -17,78 +20,47 @@
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
-
         <div class="form-group row">
-            <div class="col-3">
-              <label for="winPoints" class="col-form-label">winpunten</label>
-            </div>
-            <div class="col-9">
-              <select class="form-control" formControlName="winPoints" required 
-              [ngClass]="{ 'is-invalid': form.controls.winPoints.invalid, 'is-valid': form.controls.winPoints.valid }"
-              >
-                <option *ngFor="let winpoints of ranges.winPoints" [ngValue]="winpoints">{{winpoints}}</option>
-              </select>
-            </div>
+          <div class="col-7">
+            <label for="winPoints" class="col-form-label">punten bij overwinning</label>
           </div>
-
-        <!-- <div class="form-group row">
-          <div class="col-3">
-            <label for="initials" class="col-form-label">initialen</label>
-          </div>
-          <div class="col-9">
-            <input class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.initials.invalid, 'is-valid': form.controls.initials.valid }"
-              type="text" name="initials" id="initials" [formControl]="form.controls.initials"
-              maxlength="{{validations.maxlengthinitials}}"
-              placeholder="max. {{validations.maxlengthinitials}} karakters">
+          <div class="col-5">
+            <select class="form-control" formControlName="winPoints" required
+              [ngClass]="{ 'is-invalid': form.controls.winPoints.invalid, 'is-valid': form.controls.winPoints.valid }">
+              <option *ngFor="let winpoints of ranges.winPoints" [ngValue]="winpoints">{{winpoints}}</option>
+            </select>
           </div>
         </div>
         <div class="form-group row">
-          <div class="col-3">
-            <label for="name" class="col-form-label">naam</label>
+          <div class="col-7">
+            <label for="drawPoints" class="col-form-label">punten bij gelijkspel</label>
           </div>
-          <div class="col-9">
-            <input class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }"
-              type="text" name="name" id="name" [formControl]="form.controls.name"
-              maxlength="{{validations.maxlengthname}}" placeholder="max. {{validations.maxlengthname}} karakters">
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-3 d-flex justify-content-between">
-            <label for="emailaddress" container="body" placement="right" ngbPopover="De gebruiker met dit emailadres kan de stand van de wedstrijden, waarvoor
-            hij/zij is aangesteld, wijzigen" class="col-form-label pointer">email
-              <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
-            </label>
-          </div>
-          <div class="col-9">
-            <input class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.emailaddress.invalid, 'is-valid': form.controls.emailaddress.valid }"
-              type="text" name="emailaddress" id="emailaddress" [formControl]="form.controls.emailaddress"
-              maxlength="{{validations.maxlengthemailaddress}}"
-              placeholder="max. {{validations.maxlengthemailaddress}} karakters">
+          <div class="col-5">
+            <select class="form-control" formControlName="drawPoints" required
+              [ngClass]="{ 'is-invalid': form.controls.drawPoints.invalid, 'is-valid': form.controls.drawPoints.valid }">
+              <option *ngFor="let drawpoints of ranges.drawPoints" [ngValue]="drawpoints">{{drawpoints}}</option>
+            </select>
           </div>
         </div>
         <div class="form-group row">
-          <div class="col-3">
-            <label for="info" class="col-form-label">info</label>
-          </div>
-          <div class="col-9">
-            <textarea class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.info.invalid, 'is-valid': form.controls.info.valid }"
-              name="info" id="info" [formControl]="form.controls.info" maxlength="{{validations.maxlengthinfo}}"
-              placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
-          </div>
-        </div>
-        <div class="form-group row justify-content-end">
-          <div class="col-9">
-            <button [disabled]="form.invalid" type="submit" class="btn btn-outline-primary">
-              <i class="fi flaticon-referee" title="scheidsrechter"></i>
-              <span>{{referee ? 'wijzigen' : 'toevoegen'}}</span>
+          <div class="col-7">
+            <button [disabled]="form.invalid" [routerLink]="['/toernooi/sportconfigs', tournament.getId()]"
+              class="btn btn-outline-secondary">
+              <span>meerdere sporten</span>
             </button>
           </div>
-        </div> -->
+          <div class="col-5">
+            <button [disabled]="form.invalid" type="submit" class="btn btn-outline-primary">
+              <span>wijzigen</span>
+            </button>
+          </div>
+        </div>
       </form>
     </div>
+    <app-tournament-sport-select *ngIf="tournament && !sportConfig" class="col-xs-12 col-sm-10 col-md-8 col-lg-6"
+      [competition]="tournament.getCompetition()" (finish)="onAddSportConfig($event)">
+
+    </app-tournament-sport-select>
+
   </div>
 </div>

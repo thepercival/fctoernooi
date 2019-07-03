@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { APIConfig, SportRepository } from 'ngx-sport';
+import { APIConfig, APIRepository } from 'ngx-sport';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -15,7 +15,7 @@ import { JsonTournament, TournamentMapper } from './mapper';
  * Created by coen on 1-10-17.
  */
 @Injectable()
-export class TournamentRepository extends SportRepository {
+export class TournamentRepository extends APIRepository {
 
     private url: string;
 

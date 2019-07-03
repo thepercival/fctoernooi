@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlanningRepository, SportConfig, Sport, RefereeRepository, StructureRepository } from 'ngx-sport';
+import { PlanningRepository, RefereeRepository, Sport, SportConfig, StructureRepository } from 'ngx-sport';
 
-import { IAlert } from '../../common/alert';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
-import { TournamentService } from '../../lib/tournament/service';
 import { TournamentComponent } from '../component';
 
 @Component({
@@ -40,9 +38,9 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
     this.createSportConfigsList();
     // this.planningService = new PlanningService(this.tournament.getCompetition());
     this.processing = false;
-    // if (this.isStarted()) {
-    //   this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
-    // }
+    if (this.isStarted()) {
+      this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
+    }
   }
 
   isStarted() {

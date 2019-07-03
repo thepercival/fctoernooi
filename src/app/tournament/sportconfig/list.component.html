@@ -1,6 +1,6 @@
 <div class="row justify-content-center no-gutters">
   <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-    <app-tournament-title [tournament]="tournament" [routerLink]="['/toernooi', tournament.getId()]">
+    <app-tournament-title [tournament]="tournament">
     </app-tournament-title>
     <div>
       <h2>
@@ -20,14 +20,15 @@
       <thead>
         <tr>
           <th></th>
-          <!-- <th>initialen</th>
-          <th class="d-none d-sm-table-cell">naam</th>
+          <th>naam</th>
+          <!--
+          <th class="d-none d-sm-table-cell">naam</th>-->
           <th class="text-right">
-            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" (click)="addReferee()"
-              [disabled]="processing">
+            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary"
+              [routerLink]="['/toernooi/sportconfigedit', tournament.getId(), undefined]" [disabled]="processing">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button>
-          </th> -->
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -38,9 +39,10 @@
               <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
             </button>
           </td>
-          <!-- <td>
-            <span>{{sport.getInitials()}}</span>
+          <td>
+            <span>{{sportConfig.getSport().getName()}}</span>
           </td>
+          <!--
           <td class="d-none d-sm-table-cell">
             <span>{{referee.getName()}}</span>
           </td>

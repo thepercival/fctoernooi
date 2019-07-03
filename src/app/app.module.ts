@@ -58,9 +58,9 @@ import {
   RefereeRepository,
   SeasonMapper,
   SeasonRepository,
-  SportMapper,
+  SportConfigMapper,
   SportConfigRepository,
-  SportConfigMapper
+  SportMapper,
 } from 'ngx-sport';
 
 import { environment } from '../environments/environment';

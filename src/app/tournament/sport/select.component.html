@@ -1,0 +1,66 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+      <app-tournament-title [tournament]="tournament">
+      </app-tournament-title>
+      <div>
+        <h2>kies of maak een sport</h2>
+        <h2 *ngIf="processing" class="text-center">
+          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+        </h2>
+      </div>
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+
+      <!-- <div class="btn-group btn-group-toggle" ngbRadioGroup>
+        <label ngbButtonLabel class="btn btn-outline-secondary active" (click)="inputType='select'">
+          <input ngbButton type="radio" [value]="select" checked>
+          <fa-icon *ngIf="inputType === 'select'" [icon]="['fas', 'check-circle']">
+          </fa-icon> selecteren
+        </label>
+        <label ngbButtonLabel class="btn btn-outline-secondary" (click)="inputType='new'">
+          <input ngbButton type="radio" value="new">
+          <fa-icon *ngIf="inputType === 'new'" [icon]="['fas', 'check-circle']">
+          </fa-icon> zelf invoeren
+        </label>
+      </div> -->
+
+      <form [formGroup]="radioGroupForm">
+        <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="model">
+          <label ngbButtonLabel class="btn  btn-primary">
+            <input ngbButton type="radio" [value]="1"> Left (pre-checked)
+          </label>
+          <label ngbButtonLabel class="btn  btn-primary">
+            <input ngbButton type="radio" value="middle"> Middle
+          </label>
+          <label ngbButtonLabel class="btn  btn-primary">
+            <input ngbButton type="radio" [value]="false"> Right
+          </label>
+        </div>
+      </form>
+
+      <ul *ngIf="inputType === 'select'" class="list-group">
+        <li class="list-group-item">Cras justo odio</li>
+        <!-- <h2>
+          <i *ngIf="sportConfig && cssService.getIconTypeBySportCustomId(sportConfig.getSport().getCustomId()) === 'fi'"
+            class="{{cssService.getIconBySportCustomId(sportConfig.getSport().getCustomId())}}"></i>
+          <fa-icon *ngIf="sportConfig && cssService.getIconTypeBySportCustomId(sportConfig.getSport().getCustomId()) === 'fa'"
+            [icon]="['fas', cssService.getIconBySportCustomId(sportConfig.getSport().getCustomId())]">
+          </fa-icon>
+          
+        </h2> -->
+      </ul>
+      <form *ngIf="!processing && inputType === 'new'" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+        <div class="form-group row">
+          <div class="col-3">
+            <label for="newSportName" class="col-form-label">naam</label>
+          </div>
+          <div class="col-9">
+            <input class="form-control"
+              [ngClass]="{ 'is-invalid': customForm.controls.name.invalid, 'is-valid': customForm.controls.name.valid }"
+              type="text" formControlName="newSportName" placeholder="naam nieuwe sport" required>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

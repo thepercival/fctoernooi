@@ -10,9 +10,9 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   // { path: 'users', component: UsersComponent, canActivate: [AuthGuard] },
   // { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
-  { path: 'user', loadChildren: 'app/user/user.module#UserModule' },
-  { path: 'admin', loadChildren: 'app/admin/admin.module#AdminModule' },
-  { path: 'toernooi', loadChildren: 'app/tournament/tournament.module#TournamentModule' },
+  { path: 'user', loadChildren: () => import('app/user/user.module').then(m => m.UserModule) },
+  { path: 'admin', loadChildren: () => import('app/admin/admin.module').then(m => m.AdminModule) },
+  { path: 'toernooi', loadChildren: () => import('app/tournament/tournament.module').then(m => m.TournamentModule) },
   { path: ':id', redirectTo: '/toernooi/view/:id', pathMatch: 'full' },
   /*{ path: '', redirectTo: '/home', pathMatch: 'full' },*/
   // otherwise redirect to home
