@@ -59,27 +59,20 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
                 Validators.required,
                 Validators.minLength(this.validations.minDrawPoints),
                 Validators.maxLength(this.validations.maxDrawPoints)
+            ])],
+            winPointsExt: ['', Validators.compose([
+                Validators.required,
+                Validators.minLength(this.validations.minWinPoints),
+                Validators.maxLength(this.validations.maxWinPoints)
+            ])],
+            drawPointsExt: ['', Validators.compose([
+                Validators.required,
+                Validators.minLength(this.validations.minDrawPoints),
+                Validators.maxLength(this.validations.maxDrawPoints)
             ])]
-            /*,
-            name: ['', Validators.compose([
-                Validators.maxLength(this.validations.maxlengthname)
-            ])],
-            emailaddress: ['', Validators.compose([
-                Validators.minLength(this.validations.minlengthemailaddress),
-                Validators.maxLength(this.validations.maxlengthemailaddress)
-            ])],
-            info: ['', Validators.compose([
-                Validators.maxLength(this.validations.maxlengthinfo)
-            ])],*/
         });
         this.sportConfigService = new SportConfigService();
     }
-
-    // initialsValidator(control: FormControl): { [s: string]: boolean } {
-    //     if (control.value.length < this.validations.minlengthinitials || control.value.length < this.validations.maxlengthinitials) {
-    //         return { invalidInitials: true };
-    //     }
-    // }
 
     initRanges() {
         this.ranges.winPoints = [];
@@ -99,7 +92,6 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
 
     ngOnInit() {
         this.route.params.subscribe(params => {
-            console.log(params.sportConfigId);
             if (params.sportConfigId !== undefined) {
                 super.myNgOnInit(() => this.postInit(+params.sportConfigId), true);
             }
@@ -120,40 +112,34 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
             return;
         }
         this.initForm();
+        this.processing = false;
     }
 
     initForm() {
         this.initRanges();
         this.form.controls.winPoints.setValue(this.sportConfig.getWinPoints());
         this.form.controls.drawPoints.setValue(this.sportConfig.getDrawPoints());
-        this.processing = false;
+        this.form.controls.winPointsExt.setValue(this.sportConfig.getWinPointsExt());
+        this.form.controls.drawPointsExt.setValue(this.sportConfig.getDrawPointsExt());
     }
 
     onGetSport(sport: Sport) {
         this.sportConfig = this.sportConfigService.createDefault(sport, this.tournament.getCompetition());
-        console.log(this.sportConfig);
         this.initForm();
     }
 
     save(): boolean {
+        this.processing = true;
         this.setAlert('info', 'de sport wordt gewijzigd');
 
-        this.sportConfig.setWinPoints(this.form.controls.winPoints.value);
-        this.sportConfig.setDrawPoints(this.form.controls.drawPoints.value);
-        this.sportConfigRepository.editObject(this.sportConfig, this.tournament.getCompetition())
+        this.sportConfig.setWinPoints(this.form.value['winPoints']);
+        this.sportConfig.setDrawPoints(this.form.value['drawPoints']);
+        this.sportConfig.setWinPointsExt(this.form.value['winPointsExt']);
+        this.sportConfig.setDrawPointsExt(this.form.value['drawPointsExt']);
+        this.sportConfigRepository.saveObject(this.sportConfig, this.tournament.getCompetition())
             .subscribe(
-            /* happy path */ sportRes => {
-                    // if (!emailaddressChanged) {
-                    this.navigateBack();
-                    // return;
-                    // }
-                    // this.tournamentRepository.syncRefereeRoles(this.tournament).subscribe(
-                    //     /* happy path */ allRolesRes => {
-                    //         this.navigateBack();
-                    //     },
-                    //     /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                    //     /* onComplete */() => this.processing = false
-                    // );
+            /* happy path */ sportConfigRes => {
+                    this.linkToSportConfig(); /* niet navigate back van kan van sport komen */
                 },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
             /* onComplete */() => { this.processing = false; }
@@ -163,6 +149,15 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
 
     navigateBack() {
         this.myNavigation.back();
+    }
+
+    linkToSportConfig() {
+        if (!this.tournament.getCompetition().hasMultipleSportConfigs()) {
+            this.router.navigate(['/toernooi/sportconfigedit'
+                , this.tournament.getId(), this.tournament.getCompetition().getFirstSportConfig().getId()]);
+        } else {
+            this.router.navigate(['/toernooi/sports', this.tournament.getId()]);
+        }
     }
 }
 

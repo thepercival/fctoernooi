@@ -40,7 +40,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
     game: Game;
     planningService: PlanningService;
     sportScoreConfigService: SportScoreConfigService;
-    customForm: FormGroup;
+    form: FormGroup;
     scoreControls: HomeAwayFormControl[] = [];
     calculateScoreControl: HomeAwayFormControl;
     userRefereeId: number;
@@ -62,7 +62,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         super(route, router, tournamentRepository, structureRepository);
         this.originalPouleState = State.Created;
         this.sportScoreConfigService = new SportScoreConfigService();
-        this.customForm = fb.group({
+        this.form = fb.group({
             played: [''],
             extratime: ['']
         });
@@ -161,8 +161,8 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         this.game = this.getGameById(gameId, this.structure.getRootRound());
         // const date = this.game.getStartDateTime();
 
-        this.customForm.controls.played.setValue(this.game.getState() === State.Finished);
-        this.customForm.controls.extratime.setValue(this.game.getScoresMoment() === Game.MOMENT_EXTRATIME);
+        this.form.controls.played.setValue(this.game.getState() === State.Finished);
+        this.form.controls.extratime.setValue(this.game.getScoresMoment() === Game.MOMENT_EXTRATIME);
         if (this.calculateAndInputScoreDiffers()) {
             this.calculateScoreControl = new HomeAwayFormControl(0, 0, true);
         }
@@ -241,7 +241,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
 
     setHome(scoreControl: HomeAwayFormControl, home) {
         if (this.isScoreValid(scoreControl.getScore()) && this.enablePlayedAtFirstChange === true) {
-            this.customForm.controls.played.setValue(true);
+            this.form.controls.played.setValue(true);
             this.game.setState(State.Finished);
         }
         this.updateCalculateScoreControl();
@@ -250,7 +250,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
 
     setAway(scoreControl: HomeAwayFormControl, away) {
         if (this.isScoreValid(scoreControl.getScore()) && this.enablePlayedAtFirstChange === true) {
-            this.customForm.controls.played.setValue(true);
+            this.form.controls.played.setValue(true);
             this.game.setState(State.Finished);
         }
         this.updateCalculateScoreControl();
@@ -286,7 +286,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
 
     setPlayed(played: boolean) {
         if (played === false) {
-            this.customForm.controls.extratime.setValue(false);
+            this.form.controls.extratime.setValue(false);
             this.initScores();
             this.updateCalculateScoreControl();
             this.syncGameScores();
@@ -381,8 +381,8 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         if (this.game.getState() === State.Finished && this.scoreControls.length === 0) {
             this.scoreControls.push(new HomeAwayFormControl(0, 0));
         }
-        const moment = this.customForm.controls.extratime.value === true ? Game.MOMENT_EXTRATIME : Game.MOMENT_FULLTIME;
-        const state = this.customForm.controls.played.value === true ? State.Finished : State.Created;
+        const moment = this.form.controls.extratime.value === true ? Game.MOMENT_EXTRATIME : Game.MOMENT_FULLTIME;
+        const state = this.form.controls.played.value === true ? State.Finished : State.Created;
         this.game.setScoresMoment(moment);
         this.game.setState(state);
         this.syncGameScores(false);

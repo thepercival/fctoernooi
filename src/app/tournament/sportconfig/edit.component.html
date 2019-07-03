@@ -37,6 +37,30 @@
             </select>
           </div>
         </div>
+        <h5><small>na verlenging</small></h5>
+        <div class="form-group row">
+          <div class="col-7">
+            <label for="winPointsExt" class="col-form-label">punten bij overwinning</label>
+          </div>
+          <div class="col-5">
+            <select class="form-control" formControlName="winPointsExt" required
+              [ngClass]="{ 'is-invalid': form.controls.winPoints.invalid, 'is-valid': form.controls.winPointsExt.valid }">
+              <option *ngFor="let winpointsext of ranges.winPoints" [ngValue]="winpointsext">{{winpointsext}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-7">
+            <label for="drawPointsExt" class="col-form-label">punten bij gelijkspel</label>
+          </div>
+          <div class="col-5">
+            <select class="form-control" formControlName="drawPointsExt" required
+              [ngClass]="{ 'is-invalid': form.controls.drawPointsExt.invalid, 'is-valid': form.controls.drawPointsExt.valid }">
+              <option *ngFor="let drawpointsext of ranges.drawPoints" [ngValue]="drawpointsext">{{drawpointsext}}
+              </option>
+            </select>
+          </div>
+        </div>
         <div class="form-group row">
           <div class="col-7">
             <button *ngIf="this.tournament.getCompetition().getSportConfigs().length === 1" [disabled]="form.invalid"
