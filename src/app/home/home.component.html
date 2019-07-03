@@ -51,10 +51,10 @@
         <span class="ml-1 d-none d-sm-inline"> herstel</span>
       </button>
     </div>
-    <form *ngIf="searchFilterActive" name="searchform" (ngSubmit)="false" #f="ngForm" novalidate>    
-      <input type="text" class="form-control form-control-search" [ngModel]="searchFilterName"
-        name="searchFilterName" #inputsearchname (ngModelChange)="changeSearchFilterName($event)" aria-labelledby="btn-search-tournaments"
-        placeholder="zoek op toernooinaam">
+    <!-- #f="ngForm" -->
+    <form *ngIf="searchFilterActive" (ngSubmit)="false" [formGroup]="searchform" novalidate>
+      <input type="text" class="form-control form-control-search" formControlName="filterName" #inputsearchname
+        aria-labelledby="btn-search-tournaments" placeholder="zoek op toernooinaam">
     </form>
     <table *ngIf="!publicProcessing" class="table">
       <tbody>

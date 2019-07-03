@@ -61,8 +61,8 @@ import {
 
 import { CSSService } from '../common/cssservice';
 import { EscapeHtmlPipe } from '../common/escapehtmlpipe';
-import { SportIconComponent } from '../common/sport/icon.component';
 import { RoleMapper } from '../lib/role/mapper';
+import { CommonSharedModule } from './../common/shared.module';
 import { CompetitorEditComponent } from './competitor/edit.component';
 import { CompetitorListComponent } from './competitor/list.component';
 import { CompetitorListLineComponent } from './competitor/listline.component';
@@ -112,7 +112,8 @@ library.add(
     RoutingModule,
     NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule,
     ReactiveFormsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    CommonSharedModule
   ],
   declarations: [
     NewComponent,
@@ -149,7 +150,6 @@ library.add(
     FilterComponent,
     CompetitorListRemoveModalComponent,
     ProgressComponent,
-    SportIconComponent,
     EscapeHtmlPipe
   ],
   entryComponents: [CompetitorListRemoveModalComponent],

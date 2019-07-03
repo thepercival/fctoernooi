@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../auth/auth.service';
@@ -29,15 +30,25 @@ export class HomeComponent implements OnInit {
   };
   private hourRange: HourRange;
   searchFilterActive = false;
-  searchFilterName: string;
+  searchForm: FormGroup;
+  /* searchFilterName: string; */
   hasSearched = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private tournamentShellRepos: TournamentShellRepository
+    private tournamentShellRepos: TournamentShellRepository,
+    fb: FormBuilder
   ) {
+    this.searchForm = fb.group({
+      filterName: ['', Validators.compose([
+        Validators.required,
+        Validators.minLength(0),
+        Validators.maxLength(20)
+      ])],
+    });
+    this.onSearchChanges();
   }
 
   ngOnInit() {
@@ -48,6 +59,12 @@ export class HomeComponent implements OnInit {
       if (params.type !== undefined && params.message !== undefined) {
         this.alert = { type: params['type'], message: params['message'] };
       }
+    });
+  }
+
+  onSearchChanges(): void {
+    this.searchForm.get('filterName').valueChanges.subscribe(val => {
+      this.changeSearchFilterName(val);
     });
   }
 
@@ -150,7 +167,7 @@ export class HomeComponent implements OnInit {
     this.searchFilterActive = false;
     this.publicShells = [];
     this.hourRange = { start: this.defaultHourRange.start, end: this.defaultHourRange.start };
-    this.searchFilterName = undefined;
+    this.searchForm.controls.filterName.setValue(undefined);
     this.addToPublicShells(HomeComponent.FUTURE, this.defaultHourRange.end - this.defaultHourRange.start);
   }
 
@@ -182,12 +199,11 @@ export class HomeComponent implements OnInit {
   }
 
   changeSearchFilterName(searchFilterName: string) {
-    this.searchFilterName = searchFilterName;
-    if (this.searchFilterName === undefined || this.searchFilterName.length < 2) {
+    if (searchFilterName === undefined || searchFilterName.length < 2) {
       return;
     }
     this.publicProcessing = true;
-    const searchFilter = this.getSearchFilter(undefined, undefined, this.searchFilterName);
+    const searchFilter = this.getSearchFilter(undefined, undefined, searchFilterName);
     this.tournamentShellRepos.getObjects(searchFilter)
       .subscribe(
         /* happy path */(shellsRes: TournamentShell[]) => {
