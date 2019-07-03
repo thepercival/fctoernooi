@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -72,6 +72,7 @@ import { AuthguardService } from './auth/authguard.service';
 import { CSSService } from './common/cssservice';
 import { GlobalEventsManager } from './common/eventmanager';
 import { MyNavigation } from './common/navigation';
+import { CommonSharedModule } from './common/shared.module';
 import { FooterComponent } from './footer/footer.component';
 import { HomeComponent } from './home/home.component';
 import { HomeShellComponent } from './home/shell.component';
@@ -98,13 +99,14 @@ library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave
     NavComponent,
     FooterComponent,
     HomeComponent,
-    HomeShellComponent
+    HomeShellComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     RoutingModule,
-    FormsModule,
+    ReactiveFormsModule,
+    CommonSharedModule,
     UserModule,
     AdminModule,
     NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule,

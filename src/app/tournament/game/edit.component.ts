@@ -2,32 +2,33 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    State,
     Game,
     GameRepository,
     GameScore,
     GameScoreHomeAway,
     INewQualifier,
     NameService,
-    PlanningService,
-    Poule,
     Place,
     PlaceRepository,
+    PlanningService,
+    Poule,
     QualifyRuleMultiple,
     QualifyService,
     RankedRoundItem,
     RankingService,
     Round,
     SportScoreConfig,
+    SportScoreConfigService,
+    State,
     StructureRepository,
-    SportScoreConfigService
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
-import { Translate } from '../../lib/translate';
+
 import { AuthService } from '../../auth/auth.service';
 import { MyNavigation } from '../../common/navigation';
 import { Role } from '../../lib/role';
 import { TournamentRepository } from '../../lib/tournament/repository';
+import { TranslateService } from '../../lib/translate';
 import { TournamentComponent } from '../component';
 
 @Component({
@@ -370,7 +371,8 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
 
     getCalculateScoreUnitName(game: Game): string {
         const calculateScore = this.sportScoreConfigService.getCalculate(game.getSportScoreConfig());
-        return Translate.getScoreSingle('nl', calculateScore );
+        const translateService = new TranslateService();
+        return translateService.getScoreSingleName(TranslateService.language, calculateScore);
     }
 
     save(): boolean {

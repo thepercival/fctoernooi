@@ -61,6 +61,7 @@ import {
 
 import { CSSService } from '../common/cssservice';
 import { EscapeHtmlPipe } from '../common/escapehtmlpipe';
+import { SportIconComponent } from '../common/sport/icon.component';
 import { RoleMapper } from '../lib/role/mapper';
 import { CompetitorEditComponent } from './competitor/edit.component';
 import { CompetitorListComponent } from './competitor/list.component';
@@ -148,6 +149,7 @@ library.add(
     FilterComponent,
     CompetitorListRemoveModalComponent,
     ProgressComponent,
+    SportIconComponent,
     EscapeHtmlPipe
   ],
   entryComponents: [CompetitorListRemoveModalComponent],

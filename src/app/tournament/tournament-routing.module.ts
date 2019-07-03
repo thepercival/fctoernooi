@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AuthguardService } from '../auth/authguard.service';
@@ -48,7 +48,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes), FormsModule, ReactiveFormsModule],
+  imports: [RouterModule.forChild(routes), ReactiveFormsModule],
   exports: [RouterModule]
 })
 export class RoutingModule { }

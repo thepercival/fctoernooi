@@ -11,7 +11,7 @@
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <form [formGroup]="radioGroupForm">
-        <div class="btn-group btn-group-toggle" ngbRadioGroup formControlName="inputtype">
+        <div class="btn-group btn-group-toggle mb-3" ngbRadioGroup formControlName="inputtype">
           <label ngbButtonLabel class="btn btn-outline-secondary">
             <input ngbButton type="radio" value="select">
             <fa-icon *ngIf="radioGroupForm.value['inputtype'] === 'select'" [icon]="['fas', 'check-circle']">
@@ -24,8 +24,10 @@
           </label>
         </div>
       </form>
+
       <ul *ngIf="radioGroupForm.value['inputtype'] === 'select'" class="list-group">
-        <li class="list-group-item">Cras justo odio</li>
+        <li *ngFor="let sport of getSportsToShow()" class="list-group-item">
+          <span>icon</span><span>{{translate(sport)}}</span></li>
         <!-- <h2>
           <i *ngIf="sportConfig && cssService.getIconTypeBySportCustomId(sportConfig.getSport().getCustomId()) === 'fi'"
             class="{{cssService.getIconBySportCustomId(sportConfig.getSport().getCustomId())}}"></i>

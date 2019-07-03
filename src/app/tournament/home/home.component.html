@@ -86,10 +86,7 @@
             </h5>
             <h5 class="card-title" *ngIf="!tournament.getCompetition().hasMultipleSportConfigs()">
               <small>
-                <i *ngIf="cssService.getIconType(tournament.getCompetition().getSportConfigs()) === 'fi'"
-                  class="{{cssService.getIcon(tournament.getCompetition().getSportConfigs())}}"></i>
-                <fa-icon *ngIf="cssService.getIconType(tournament.getCompetition().getSportConfigs()) === 'fa'"
-                  [icon]="['fas', cssService.getIcon(tournament.getCompetition().getSportConfigs())]"></fa-icon>
+                <app-sport-icon [configs]="tournament.getCompetition().getSportConfigs()"></app-sport-icon>
               </small> {{tournament.getCompetition().getFirstSportConfig().getSport().getName()}}
             </h5>
             <p class="card-text">

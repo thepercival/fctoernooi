@@ -1,10 +1,10 @@
-import { SportScoreConfig } from 'ngx-sport';
+import { SportCustom, SportScoreConfig } from 'ngx-sport';
 
-export class Translate {
+export class TranslateService {
+    static readonly language = 'nl';
+
     static readonly data = {
         'nl': {
-            'sport': {
-            },
             'score': {
                 // SportCustom.Badminton: 'sets',
                 // SportCustom.Basketball: 'punten',
@@ -23,24 +23,7 @@ export class Translate {
                 // SportCustom.Darts: 'legs',
                 // SportCustom.Tennis: 'games',
             },
-            'scoresingle': {
-                // SportCustom.Badminton: 'set',
-                // SportCustom.Basketball: 'punt',
-                // SportCustom.Darts: 'set',
-                // SportCustom..ESports: 'punt',
-                // SportCustom.Hockey: 'goal',
-                // SportCustom.Korfball: 'punt',
-                // SportCustom.Chess: 'punt',
-                // SportCustom.Squash: 'set',
-                // SportCustom.TableTennis: 'set',
-                // SportCustom.Tennis: 'set',
-                // SportCustom.Football: 'goal',
-                // SportCustom.Volleyball: 'set'
-            },
-            'scoresinglesub': {
-                // SportCustom.Darts: 'leg',
-                // SportCustom.Tennis: 'game',
-            },
+
             'scoredirection': {
                 // SportScoreConfig.UPWARDS: 'naar',
                 // SportScoreConfig.DOWNWARDS: 'vanaf'
@@ -48,22 +31,23 @@ export class Translate {
         }
     };
 
-    // this.data['nl']['sport'][SportCustom.Badminton] = 'badminton';
-
-    // SportCustom.Basketball: 'basketbal',
-    // SportCustom.Darts: 'darten',
-    // SportCustom.ESports: 'e-sporten',
-    // SportCustom.Hockey: 'hockey',
-    // SportCustom.Korfball: 'korfbal',
-    // SportCustom.Chess: 'schaken',
-    // SportCustom.Squash: 'squash',
-    // SportCustom.TableTennis: 'tafeltennis',
-    // SportCustom.Tennis: 'hockey',
-    // SportCustom.Football: 'voetbal',
-    // SportCustom.Volleyball: 'volleybal'
-
-    static geSportCustomId(language: string, customId: number): string {
-        return this.data[language]['sport'][customId];
+    getSportName(language: string, customId: number): string {
+        switch (customId) {
+            case SportCustom.Badminton: { return 'badminton'; }
+            case SportCustom.Basketball: { return 'basketbal'; }
+            case SportCustom.Darts: { return 'darten'; }
+            case SportCustom.ESports: { return 'e-sporten'; }
+            case SportCustom.Hockey: { return 'hockey'; }
+            case SportCustom.Korfball: { return 'korfbal'; }
+            case SportCustom.Chess: { return 'schaken'; }
+            case SportCustom.Squash: { return 'squash'; }
+            case SportCustom.TableTennis: { return 'tafeltennis'; }
+            case SportCustom.Tennis: { return 'darten'; }
+            case SportCustom.Football: { return 'voetbal'; }
+            case SportCustom.Voleyball: { return 'volleybal'; }
+            case SportCustom.Baseball: { return 'honkbal'; }
+        }
+        return undefined;
     }
 
     static getScore(language: string, sportScoreConfig: SportScoreConfig): string {
@@ -71,10 +55,38 @@ export class Translate {
         return this.data[language][id][sportScoreConfig.getSport().getCustomId()];
     }
 
-    static getScoreSingle(language: string, sportScoreConfig: SportScoreConfig): string {
-        const id = sportScoreConfig.getParent() === undefined ? 'scoresingle' : 'scoresinglesub';
-        return this.data[language][id][sportScoreConfig.getSport().getCustomId()];
+    getScoreSingleName(language: string, sportScoreConfig: SportScoreConfig): string {
+        const customId = sportScoreConfig.getSport().getCustomId();
+        if (sportScoreConfig.getParent() !== undefined) {
+            return this.getScoreSubSingleName(language, customId);
+        }
+        switch (customId) {
+            case SportCustom.Badminton: { return 'set'; }
+            case SportCustom.Basketball: { return 'punt'; }
+            case SportCustom.Darts: { return 'set'; }
+            case SportCustom.ESports: { return 'punt'; }
+            case SportCustom.Hockey: { return 'goal'; }
+            case SportCustom.Korfball: { return 'punt'; }
+            case SportCustom.Chess: { return 'punt'; }
+            case SportCustom.Squash: { return 'set'; }
+            case SportCustom.TableTennis: { return 'set'; }
+            case SportCustom.Tennis: { return 'set'; }
+            case SportCustom.Football: { return 'goal'; }
+            case SportCustom.Voleyball: { return 'set'; }
+            case SportCustom.Baseball: { return 'punt'; }
+        }
+        return undefined;
     }
+
+    protected getScoreSubSingleName(language: string, customId: number): string {
+        switch (customId) {
+            case SportCustom.Darts: { return 'leg'; }
+            case SportCustom.Tennis: { return 'game'; }
+        }
+        return undefined;
+
+    }
+
 
     static getScoreDirection(language: string, direction: number): string {
         return this.data[language]['scoredirection'][direction];

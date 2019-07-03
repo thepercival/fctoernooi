@@ -5,6 +5,7 @@ import { Competition, JsonSport, Sport, SportRepository } from 'ngx-sport';
 
 import { IAlert } from '../../common/alert';
 import { CSSService } from '../../common/cssservice';
+import { TranslateService } from '../../lib/translate';
 
 @Component({
     selector: 'app-tournament-sport-select',
@@ -18,6 +19,7 @@ export class SportSelectComponent implements OnInit {
     form: FormGroup;
     public radioGroupForm: FormGroup;
     public alert: IAlert;
+    translateService: TranslateService;
 
     constructor(
         public cssService: CSSService,
@@ -37,6 +39,7 @@ export class SportSelectComponent implements OnInit {
         this.radioGroupForm = fb.group({
             inputtype: 'select'
         });
+        this.translateService = new TranslateService();
     }
 
     ngOnInit() {
@@ -44,12 +47,11 @@ export class SportSelectComponent implements OnInit {
     }
 
     getSportsToShow(): Sport[] {
-        return [];
-        // if (id === undefined || id === 0) {
-        //     this.processing = false;
-        //     return;
-        // }
-        // return this.tournament.getCompetition().getSportConfigs().find(sportConfig => id === sportConfig.getId());
+        return this.competition.getSportConfigs().map(sportConfig => sportConfig.getSport());
+    }
+
+    translate(sport: Sport): string {
+        return this.translateService.getSportName(TranslateService.language, sport.getCustomId());
     }
 
     protected setAlert(type: string, message: string) {
