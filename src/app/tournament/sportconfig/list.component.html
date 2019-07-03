@@ -42,11 +42,9 @@
           <td>
             <span>{{sportConfig.getSport().getName()}}</span>
           </td>
+          sportconfigs kun je alleen verwijderen als de sport niet aan een veld hangt!
           <!--
-          <td class="d-none d-sm-table-cell">
-            <span>{{referee.getName()}}</span>
-          </td>
-          <td class="text-right">
+         <td class="text-right">
             <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing"
               (click)="removeReferee(referee);">
               <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>

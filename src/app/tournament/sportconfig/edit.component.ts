@@ -52,23 +52,23 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         this.form = fb.group({
             winPoints: ['', Validators.compose([
                 Validators.required,
-                Validators.minLength(this.validations.minWinPoints),
-                Validators.maxLength(this.validations.maxWinPoints)
+                Validators.min(this.validations.minWinPoints),
+                Validators.max(this.validations.maxWinPoints)
             ])],
             drawPoints: ['', Validators.compose([
                 Validators.required,
-                Validators.minLength(this.validations.minDrawPoints),
-                Validators.maxLength(this.validations.maxDrawPoints)
+                Validators.min(this.validations.minDrawPoints),
+                Validators.max(this.validations.maxDrawPoints)
             ])],
             winPointsExt: ['', Validators.compose([
                 Validators.required,
-                Validators.minLength(this.validations.minWinPoints),
-                Validators.maxLength(this.validations.maxWinPoints)
+                Validators.min(this.validations.minWinPoints),
+                Validators.max(this.validations.maxWinPoints)
             ])],
             drawPointsExt: ['', Validators.compose([
                 Validators.required,
-                Validators.minLength(this.validations.minDrawPoints),
-                Validators.maxLength(this.validations.maxDrawPoints)
+                Validators.min(this.validations.minDrawPoints),
+                Validators.max(this.validations.maxDrawPoints)
             ])]
         });
         this.sportConfigService = new SportConfigService();
