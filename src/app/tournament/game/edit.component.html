@@ -7,7 +7,7 @@
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing" name="form" (ngSubmit)="save()" #f="ngForm" novalidate>
+      <form *ngIf="!processing" [formGroup]="form" (ngSubmit)="save()" #f="ngForm" novalidate>
         <div class="form-group row">
           <div class="col-3">
             <label class="col-form-label">poule</label>
@@ -45,7 +45,8 @@
               type="number">
           </div>
         </div>
-
+        @TODO
+        <!-- 
         <div *ngFor="let scoreControl of scoreControls; let i = index; let last = last" class="form-group row">
           <div class="col-3">
             <label class="col-form-label">
@@ -100,7 +101,7 @@
               <span class="custom-control-indicator"></span>
             </label>
           </div>
-        </div>
+        </div> -->
         <div *ngIf="planningService.canCalculateStartDateTime(game.getRound().getNumber())" class="form-group row">
           <div class="col-3">
             <label class="col-form-label">start</label>

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faProductHunt } from '@fortawesome/free-brands-svg-icons';
@@ -29,6 +29,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import {
   NgbAlertModule,
+  NgbButtonsModule,
   NgbCollapseModule,
   NgbDatepickerModule,
   NgbModalModule,
@@ -51,6 +52,7 @@ import {
   RoundRepository,
   SportConfigMapper,
   SportConfigRepository,
+  SportConfigService,
   SportRepository,
   SportScoreConfigMapper,
   StructureMapper,
@@ -106,9 +108,8 @@ library.add(
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
     RoutingModule,
-    NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule,
+    NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule,
     ReactiveFormsModule,
     FontAwesomeModule
   ],
@@ -165,6 +166,7 @@ library.add(
     SportRepository,
     RoundNumberMapper,
     SportConfigMapper,
+    SportConfigService,
     SportScoreConfigMapper,
     PlaceRepository,
     CompetitorRepository,

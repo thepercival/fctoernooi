@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Competition, Sport, SportConfig, SportCustom, SportRepository } from 'ngx-sport';
+import { Competition, JsonSport, Sport, SportRepository } from 'ngx-sport';
 
+import { IAlert } from '../../common/alert';
 import { CSSService } from '../../common/cssservice';
 
 @Component({
@@ -12,16 +13,11 @@ import { CSSService } from '../../common/cssservice';
 })
 export class SportSelectComponent implements OnInit {
     @Input() competition: Competition;
-    @Output() finish = new EventEmitter<SportConfig>();
-
-
-    // this.finish.emit(sportConfig);
-
+    @Output() sendSport = new EventEmitter<Sport>();
+    processing = false;
     form: FormGroup;
-
-    public inputType = 'select'; // or new
     public radioGroupForm: FormGroup;
-
+    public alert: IAlert;
 
     constructor(
         public cssService: CSSService,
@@ -31,19 +27,19 @@ export class SportSelectComponent implements OnInit {
         fb: FormBuilder
     ) {
         this.form = fb.group({
-            search: ['', Validators.compose([
+            newSportName: ['', Validators.compose([
                 Validators.required,
                 Validators.minLength(Sport.MIN_LENGTH_NAME),
                 Validators.maxLength(Sport.MAX_LENGTH_NAME)
-            ])]
+            ])],
+            team: true
         });
         this.radioGroupForm = fb.group({
-            model: 1
+            inputtype: 'select'
         });
     }
 
     ngOnInit() {
-        console.log(SportCustom.get());
 
     }
 
@@ -56,25 +52,26 @@ export class SportSelectComponent implements OnInit {
         // return this.tournament.getCompetition().getSportConfigs().find(sportConfig => id === sportConfig.getId());
     }
 
+    protected setAlert(type: string, message: string) {
+        this.alert = { 'type': type, 'message': message };
+    }
+
+    save() {
+        this.processing = true;
+        const json: JsonSport = { name: this.form.value['newSportName'], team: this.form.value['newSportName'] };
+        this.sportRepository.createObject(json).subscribe(
+            /* happy path */ sportRes => {
+                this.sendSport.emit(sportRes);
+            },
+            /* error path */ e => {
+                this.setAlert('danger', 'de toernooi-indeling kon niet worden aangemaakt: ' + e);
+                this.processing = false;
+            },
+            /* onComplete */() => this.processing = false
+        );
+    }
     // private postInit(id: number) {
 
     //     const sports = this.tournament.getCompetition().getSports();
     //     // sports is filter for list
-
-
-
-    // this.sportConfig = this.getSportConfigById(id);
-    // if (this.sportConfig === undefined) {
-    //     this.processing = false;
-    //     return;
-    // }
-
-    // this.form.controls.initials.setValue(this.referee.getInitials());
-    // this.form.controls.name.setValue(this.referee.getName());
-    // this.form.controls.emailaddress.setValue(this.referee.getEmailaddress());
-    // this.form.controls.info.setValue(this.referee.getInfo());
-    //     this.processing = false;
-    // }
-
-
 }

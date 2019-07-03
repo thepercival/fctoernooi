@@ -25,7 +25,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
     place: Place;
     private focused = false;
 
-    @ViewChild('inputname') private elementRef: ElementRef;
+    @ViewChild('inputname', { static: false }) private elementRef: ElementRef;
 
     validations: CompetitorValidations = {
         minlengthname: Competitor.MIN_LENGTH_NAME,

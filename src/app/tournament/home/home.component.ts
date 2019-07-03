@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { StructureRepository, SportConfigService } from 'ngx-sport';
+import { SportConfigService, StructureRepository } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
-import { Role } from '../../lib/role';
 import { CSSService } from '../../common/cssservice';
+import { Role } from '../../lib/role';
 import { TournamentPrintConfig, TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
 
@@ -18,6 +18,7 @@ import { TournamentComponent } from '../component';
 export class HomeComponent extends TournamentComponent implements OnInit {
     printConfig: TournamentPrintConfig;
     copyForm: FormGroup;
+    printForm: FormGroup;
     minDateStruct: NgbDateStruct;
 
     constructor(
@@ -45,6 +46,15 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         this.copyForm = fb.group({
             date: ['', Validators.compose([
             ])]
+        });
+        this.printForm = fb.group({
+            gamenotes: true,
+            structure: false,
+            rules: false,
+            gamesperfield: false,
+            planning: false,
+            poulepivottables: false,
+            qrcode: true
         });
     }
 
@@ -99,7 +109,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
 
     sportConfigsAreDefault() {
         const sportConfigService = new SportConfigService();
-        return this.tournament.getCompetition().getSportConfigs().every( sportConfig => {
+        return this.tournament.getCompetition().getSportConfigs().every(sportConfig => {
             return sportConfigService.isDefault(sportConfig);
         });
     }
@@ -207,11 +217,11 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     linkToSportConfig() {
-        if ( !this.tournament.getCompetition().hasMultipleSportConfigs() ) {
+        if (!this.tournament.getCompetition().hasMultipleSportConfigs()) {
             this.router.navigate(['/toernooi/sportconfigedit'
-            , this.tournament.getId(), this.tournament.getCompetition().getFirstSportConfig().getId()]);
+                , this.tournament.getId(), this.tournament.getCompetition().getFirstSportConfig().getId()]);
         } else {
-            this.router.navigate(['/toernooi/sports', this.tournament.getId() ]);
+            this.router.navigate(['/toernooi/sports', this.tournament.getId()]);
         }
     }
 

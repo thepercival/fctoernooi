@@ -1,4 +1,4 @@
-<div class="row justify-content-center no-gutters">
+<!-- <div class="row justify-content-center no-gutters">
     <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
         <app-tournament-title [tournament]="tournament">
         </app-tournament-title>
@@ -9,17 +9,17 @@
         <h2 *ngIf="processing" class="text-center">
             <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
-        <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-        <!-- categories : begin-->
-        <div *ngIf="!processing && category === undefined" class="row d-flex justify-content-center no-gutters">
+        <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert> -->
+<!-- categories : begin-->
+<!-- <div *ngIf="!processing && category === undefined" class="row d-flex justify-content-center no-gutters">
             <div class="card pointer mt-3 mx-2" (click)="category = categories.qualification">
                 <div class="card-body">
                     <h5 class="card-title">
                         <i class="fi flaticon-structure"></i> kwalificatie</h5>
                     <div class="card-text">
-                        <ul class="pl-3">
-                            <!--<li>kwalificatieregel</li>-->
-                            <li>punten overwinning</li>
+                        <ul class="pl-3"> -->
+<!--<li>kwalificatieregel</li>-->
+<!-- <li>punten overwinning</li>
                             <li>punten gelijkspel</li>
                             <li>verlenging ja/nee</li>
                         </ul>
@@ -67,9 +67,9 @@
             <span *ngIf="category === categories.qualification">kwalificatie</span>
             <span *ngIf="category === categories.gameunits">puntentelling</span>
             <span *ngIf="category === categories.planning">planning</span>
-        </h2>
-        <!-- categories : end -->
-        <form *ngIf="!processing" name="form" (ngSubmit)="saveConfig() && false" #f="ngForm" novalidate>
+        </h2> -->
+<!-- categories : end -->
+<!-- <form *ngIf="!processing" name="form" (ngSubmit)="saveConfig() && false" #f="ngForm" novalidate>
             <div class="row justify-content-center mx-0">
                 <div class="col">
                     <div *ngIf="category === categories.qualification">
@@ -276,4 +276,4 @@
             </div>
         </form>
     </div>
-</div>
+</div> -->

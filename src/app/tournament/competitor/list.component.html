@@ -12,37 +12,36 @@
     </div>
     <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">
       {{ alert.message }}</ngb-alert>
-    <form>
-      <table *ngIf="!processing" class="table">
-        <thead>
-          <tr>
-            <th></th>
-            <th>plek</th>
-            <th class="text-center d-none d-sm-table-cell">aangemeld</th>
-            <th>naam</th>
-            <th class="text-center">
-              <button *ngIf="!isStarted() && allPlaceHaveCompetitor()" type="button"
-                class="btn btn-sm btn-outline-primary" (click)="swapAll()"
-                [disabled]="processing || placeToSwap !== undefined" title="willekeurige volgorde">
-                <fa-icon [icon]="['fas', 'random']"></fa-icon>
-              </button>
-              <fa-icon *ngIf="!isStarted() && !allPlaceHaveCompetitor() && showSwap" title="volgorder omwisselen"
-                [icon]="['fas', 'sort']"></fa-icon>
-            </th>
-            <th *ngIf="!isStarted()" class="text-right"><button type="button" class="btn btn-sm btn-outline-primary"
-                (click)="addPlaceToRootRound()">
-                <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-              </button></th>
-          </tr>
-        </thead>
-        <tbody>
-          <app-tournament-competitor-line *ngFor="let place of places" [place]="place"
-            [placeToSwap]="placeToSwap" [nameService]="nameService" [isStarted]="isStarted()"
-            [showSwap]="showSwap" (swapPressed)="swapTwo($event)" [focus]="place.getId() === focusId"
-            (editPressed)="editPlace($event)" (removePressed)="preRemove($event)"
-            (registerPressed)="registerCompetitor($event)"></app-tournament-competitor-line>
-        </tbody>
-      </table>
-    </form>
+    <!-- <form> -->
+    <table *ngIf="!processing" class="table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>plek</th>
+          <th class="text-center d-none d-sm-table-cell">aangemeld</th>
+          <th>naam</th>
+          <th class="text-center">
+            <button *ngIf="!isStarted() && allPlaceHaveCompetitor()" type="button"
+              class="btn btn-sm btn-outline-primary" (click)="swapAll()"
+              [disabled]="processing || placeToSwap !== undefined" title="willekeurige volgorde">
+              <fa-icon [icon]="['fas', 'random']"></fa-icon>
+            </button>
+            <fa-icon *ngIf="!isStarted() && !allPlaceHaveCompetitor() && showSwap" title="volgorder omwisselen"
+              [icon]="['fas', 'sort']"></fa-icon>
+          </th>
+          <th *ngIf="!isStarted()" class="text-right"><button type="button" class="btn btn-sm btn-outline-primary"
+              (click)="addPlaceToRootRound()">
+              <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+            </button></th>
+        </tr>
+      </thead>
+      <tbody>
+        <app-tournament-competitor-line *ngFor="let place of places" [place]="place" [placeToSwap]="placeToSwap"
+          [nameService]="nameService" [isStarted]="isStarted()" [showSwap]="showSwap" (swapPressed)="swapTwo($event)"
+          [focus]="place.getId() === focusId" (editPressed)="editPlace($event)" (removePressed)="preRemove($event)"
+          (registerPressed)="registerCompetitor($event)"></app-tournament-competitor-line>
+      </tbody>
+    </table>
+    <!-- </form> -->
   </div>
 </div>

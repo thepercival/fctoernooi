@@ -4,41 +4,27 @@
       <app-tournament-title [tournament]="tournament">
       </app-tournament-title>
       <div>
-        <h2>kies of maak een sport</h2>
+        <h2>Sport</h2>
         <h2 *ngIf="processing" class="text-center">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-
-      <!-- <div class="btn-group btn-group-toggle" ngbRadioGroup>
-        <label ngbButtonLabel class="btn btn-outline-secondary active" (click)="inputType='select'">
-          <input ngbButton type="radio" [value]="select" checked>
-          <fa-icon *ngIf="inputType === 'select'" [icon]="['fas', 'check-circle']">
-          </fa-icon> selecteren
-        </label>
-        <label ngbButtonLabel class="btn btn-outline-secondary" (click)="inputType='new'">
-          <input ngbButton type="radio" value="new">
-          <fa-icon *ngIf="inputType === 'new'" [icon]="['fas', 'check-circle']">
-          </fa-icon> zelf invoeren
-        </label>
-      </div> -->
-
       <form [formGroup]="radioGroupForm">
-        <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="model">
-          <label ngbButtonLabel class="btn  btn-primary">
-            <input ngbButton type="radio" [value]="1"> Left (pre-checked)
+        <div class="btn-group btn-group-toggle" ngbRadioGroup formControlName="inputtype">
+          <label ngbButtonLabel class="btn btn-outline-secondary">
+            <input ngbButton type="radio" value="select">
+            <fa-icon *ngIf="radioGroupForm.value['inputtype'] === 'select'" [icon]="['fas', 'check-circle']">
+            </fa-icon> selecteren
           </label>
-          <label ngbButtonLabel class="btn  btn-primary">
-            <input ngbButton type="radio" value="middle"> Middle
-          </label>
-          <label ngbButtonLabel class="btn  btn-primary">
-            <input ngbButton type="radio" [value]="false"> Right
+          <label ngbButtonLabel class="btn btn-outline-secondary">
+            <input ngbButton type="radio" value="new">
+            <fa-icon *ngIf="radioGroupForm.value['inputtype'] === 'new'" [icon]="['fas', 'check-circle']">
+            </fa-icon> zelf invoeren
           </label>
         </div>
       </form>
-
-      <ul *ngIf="inputType === 'select'" class="list-group">
+      <ul *ngIf="radioGroupForm.value['inputtype'] === 'select'" class="list-group">
         <li class="list-group-item">Cras justo odio</li>
         <!-- <h2>
           <i *ngIf="sportConfig && cssService.getIconTypeBySportCustomId(sportConfig.getSport().getCustomId()) === 'fi'"
@@ -49,15 +35,31 @@
           
         </h2> -->
       </ul>
-      <form *ngIf="!processing && inputType === 'new'" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+      <form *ngIf="radioGroupForm.value['inputtype'] === 'new'" [formGroup]="form" (ngSubmit)="save()" novalidate>
         <div class="form-group row">
           <div class="col-3">
             <label for="newSportName" class="col-form-label">naam</label>
           </div>
           <div class="col-9">
-            <input class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.name.invalid, 'is-valid': customForm.controls.name.valid }"
+            <input class="form-control" #newSportName
+              [ngClass]="{ 'is-invalid': form.controls.newSportName.invalid, 'is-valid': form.controls.newSportName.valid }"
               type="text" formControlName="newSportName" placeholder="naam nieuwe sport" required>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="team" class="col-3 col-form-label">teamsport</label>
+          <div class="form-check col-9">
+            <label class="custom-control custom-checkbox col-form-label pl-0">
+              <input type="checkbox" class="custom-control-input form-check-input" formControlName="team">
+              <span class="custom-control-indicator"></span>
+            </label>
+          </div>
+        </div>
+        <div class="form-group row justify-content-end">
+          <div class="col-9">
+            <button [disabled]="form.invalid" type="submit" class="btn btn-outline-primary">
+              opslaan
+            </button>
           </div>
         </div>
       </form>

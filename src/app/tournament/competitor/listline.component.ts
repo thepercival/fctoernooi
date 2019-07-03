@@ -19,7 +19,7 @@ export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
   @Output() removePressed = new EventEmitter<Place>();
   @Output() registerPressed = new EventEmitter<Competitor>();
 
-  @ViewChild('btnEdit') private elementRef: ElementRef;
+  @ViewChild('btnEdit', { static: true }) private elementRef: ElementRef;
 
   constructor(
   ) {

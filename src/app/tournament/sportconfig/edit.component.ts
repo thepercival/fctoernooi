@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SportConfig, SportConfigRepository, SportCustom, StructureRepository } from 'ngx-sport';
+import { Sport, SportConfig, SportConfigRepository, SportConfigService, SportCustom, StructureRepository } from 'ngx-sport';
 
 import { CSSService } from '../../common/cssservice';
 import { MyNavigation } from '../../common/navigation';
@@ -16,6 +16,7 @@ import { TournamentComponent } from '../component';
 export class SportConfigEditComponent extends TournamentComponent implements OnInit {
     form: FormGroup;
     sportConfig: SportConfig;
+    sportConfigService: SportConfigService;
     ranges: any = {};
 
     validations: SportValidations = {
@@ -71,6 +72,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
                 Validators.maxLength(this.validations.maxlengthinfo)
             ])],*/
         });
+        this.sportConfigService = new SportConfigService();
     }
 
     // initialsValidator(control: FormControl): { [s: string]: boolean } {
@@ -106,8 +108,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
 
     private getSportConfigById(id: number): SportConfig {
         if (id === undefined || id === 0) {
-            this.processing = false;
-            return;
+            return undefined;
         }
         return this.tournament.getCompetition().getSportConfigs().find(sportConfig => id === sportConfig.getId());
     }
@@ -116,17 +117,22 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         this.sportConfig = this.getSportConfigById(id);
         if (this.sportConfig === undefined) {
             this.processing = false;
-            this.setAlert('danger', 'de sport kan niet gevonden worden');
             return;
         }
+        this.initForm();
+    }
+
+    initForm() {
         this.initRanges();
         this.form.controls.winPoints.setValue(this.sportConfig.getWinPoints());
         this.form.controls.drawPoints.setValue(this.sportConfig.getDrawPoints());
         this.processing = false;
     }
 
-    onAddSportConfig(sportConfig: SportConfig) {
-        this.sportConfig = sportConfig;
+    onGetSport(sport: Sport) {
+        this.sportConfig = this.sportConfigService.createDefault(sport, this.tournament.getCompetition());
+        console.log(this.sportConfig);
+        this.initForm();
     }
 
     save(): boolean {

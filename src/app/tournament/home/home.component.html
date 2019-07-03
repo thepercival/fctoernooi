@@ -184,76 +184,73 @@
   </div>
   <div class="modal-body">
     <div class="container-fluid">
-      <div class="row">
-        <div class="form-check col-3">
-          <label class="custom-control custom-checkbox col-form-label pl-0">
-            <input type="checkbox" class="custom-control-input form-check-input" name="structure"
-              [(ngModel)]="printConfig.structure">
-            <span class="custom-control-indicator"></span>
-          </label>
+      <form [formGroup]="printForm">
+        <div class="row">
+          <div class="form-check col-3">
+            <label class="custom-control custom-checkbox col-form-label pl-0">
+              <input type="checkbox" class="custom-control-input form-check-input" formControlName="structure">
+              <span class="custom-control-indicator"></span>
+            </label>
+          </div>
+          <label for="structure" class="col-8 col-form-label">indeling & structuur</label>
         </div>
-        <label for="structure" class="col-8 col-form-label">indeling & structuur</label>
-      </div>
-      <div class="row">
-        <div class="form-check col-3">
-          <label class="custom-control custom-checkbox col-form-label pl-0">
-            <input type="checkbox" class="custom-control-input form-check-input" name="planning"
-              [(ngModel)]="printConfig.planning">
-            <span class="custom-control-indicator"></span>
-          </label>
+        <div class="row">
+          <div class="form-check col-3">
+            <label class="custom-control custom-checkbox col-form-label pl-0">
+              <input type="checkbox" class="custom-control-input form-check-input" formControlName="planning">
+              <span class="custom-control-indicator"></span>
+            </label>
+          </div>
+          <label for="planning" class="col-8 col-form-label">wedstrijdschema</label>
         </div>
-        <label for="planning" class="col-8 col-form-label">wedstrijdschema</label>
-      </div>
-      <!-- <div class="row">
-        <div class="form-check col-3">
-          <label class="custom-control custom-checkbox col-form-label pl-0">
-            <input type="checkbox" class="custom-control-input form-check-input" name="rules" [(ngModel)]="printConfig.rules">
-            <span class="custom-control-indicator"></span>
-          </label>
+        <!-- <div class="row">
+          <div class="form-check col-3">
+            <label class="custom-control custom-checkbox col-form-label pl-0">
+              <input type="checkbox" class="custom-control-input form-check-input" name="rules" [(ngModel)]="printConfig.rules">
+              <span class="custom-control-indicator"></span>
+            </label>
+          </div>
+          <label for="rules" class="col-8 col-form-label">reglement</label>
+        </div> -->
+        <div class="row">
+          <div class="form-check col-3">
+            <label class="custom-control custom-checkbox col-form-label pl-0">
+              <input type="checkbox" class="custom-control-input form-check-input" formControlName="gamenotes">
+              <span class="custom-control-indicator"></span>
+            </label>
+          </div>
+          <label for="gamenotes" class="col-9 col-form-label">wedstrijdbriefjes</label>
         </div>
-        <label for="rules" class="col-8 col-form-label">reglement</label>
-      </div> -->
-      <div class="row">
-        <div class="form-check col-3">
-          <label class="custom-control custom-checkbox col-form-label pl-0">
-            <input type="checkbox" class="custom-control-input form-check-input" name="gamenotes"
-              [(ngModel)]="printConfig.gamenotes">
-            <span class="custom-control-indicator"></span>
-          </label>
+        <div *ngIf="tournament.getCompetition().getFields().length" class="row">
+          <div class="form-check col-3">
+            <label class="custom-control custom-checkbox col-form-label pl-0">
+              <input type="checkbox" class="custom-control-input form-check-input" formControlName="gamesperfield">
+              <span class="custom-control-indicator"></span>
+            </label>
+          </div>
+          <label for="gamesperfield" class="col-8 col-form-label">wedstrijden per veld</label>
         </div>
-        <label for="gamenotes" class="col-9 col-form-label">wedstrijdbriefjes</label>
-      </div>
-      <div *ngIf="tournament.getCompetition().getFields().length" class="row">
-        <div class="form-check col-3">
-          <label class="custom-control custom-checkbox col-form-label pl-0">
-            <input type="checkbox" class="custom-control-input form-check-input" name="gamesperfield"
-              [(ngModel)]="printConfig.gamesperfield">
-            <span class="custom-control-indicator"></span>
-          </label>
+        <div class="row">
+          <div class="form-check col-3">
+            <label class="custom-control custom-checkbox col-form-label pl-0">
+              <input type="checkbox" class="custom-control-input form-check-input" formControlName="poulepivottables">
+              <span class="custom-control-indicator"></span>
+            </label>
+          </div>
+          <label for="poulepivottables" class="col-8 col-form-label">poule draaitabellen</label>
         </div>
-        <label for="gamesperfield" class="col-8 col-form-label">wedstrijden per veld</label>
-      </div>
-      <div class="row">
-        <div class="form-check col-3">
-          <label class="custom-control custom-checkbox col-form-label pl-0">
-            <input type="checkbox" class="custom-control-input form-check-input" name="poulepivottables"
-              [(ngModel)]="printConfig.poulepivottables">
-            <span class="custom-control-indicator"></span>
-          </label>
+        <div class="row">
+          <div class="form-check col-3">
+            <label class="custom-control custom-checkbox col-form-label pl-0">
+              <input type="checkbox" class="custom-control-input form-check-input" formControlName="qrcode">
+              <span class="custom-control-indicator"></span>
+            </label>
+          </div>
+          <label for="qrcode" class="col-8 col-form-label">delen met link en qr-code <fa-icon
+              [icon]="['fas', 'qrcode']">
+            </fa-icon></label>
         </div>
-        <label for="poulepivottables" class="col-8 col-form-label">poule draaitabellen</label>
-      </div>
-      <div class="row">
-        <div class="form-check col-3">
-          <label class="custom-control custom-checkbox col-form-label pl-0">
-            <input type="checkbox" class="custom-control-input form-check-input" name="qrcode"
-              [(ngModel)]="printConfig.qrcode">
-            <span class="custom-control-indicator"></span>
-          </label>
-        </div>
-        <label for="qrcode" class="col-8 col-form-label">delen met link en qr-code <fa-icon [icon]="['fas', 'qrcode']">
-          </fa-icon></label>
-      </div>
+      </form>
     </div>
   </div>
   <div class="modal-footer">
