@@ -17,7 +17,7 @@ export class EditComponent extends TournamentComponent implements OnInit {
     customForm: FormGroup;
     minDateStruct: NgbDateStruct;
     processing = true;
-    isStarted: boolean;
+    hasBegun: boolean;
 
     validations: any = {
         minlengthname: League.MIN_LENGTH_NAME,
@@ -69,7 +69,7 @@ export class EditComponent extends TournamentComponent implements OnInit {
     }
 
     initFields() {
-        this.isStarted = this.structure.getRootRound().isStarted();
+        this.hasBegun = this.structure.getRootRound().hasBegun();
         const date = this.tournament.getCompetition().getStartDateTime();
 
         const now = new Date();
@@ -96,7 +96,7 @@ export class EditComponent extends TournamentComponent implements OnInit {
         ) {
             return false;
         }
-        if (this.structure.getRootRound().isStarted()) {
+        if (this.structure.getRootRound().hasBegun()) {
             this.setAlert('info', 'de startdatum kan niet meer gewijzigd worden, omdat er al gespeelde wedstrijden zijn');
         }
         return true;

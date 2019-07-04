@@ -1,4 +1,4 @@
-import { Game, Poule, Round } from 'ngx-sport';
+import { Game, Poule } from 'ngx-sport';
 
 import { Sponsor } from '../sponsor';
 

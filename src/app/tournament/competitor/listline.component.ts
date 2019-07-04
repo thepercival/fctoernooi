@@ -12,7 +12,7 @@ export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
   @Input() place: Place;
   @Input() nameService: NameService;
   @Input() focus: boolean;
-  @Input() isStarted: boolean;
+  @Input() hasBegun: boolean;
   @Input() showSwap: boolean;
   @Output() editPressed = new EventEmitter<Place>();
   @Output() swapPressed = new EventEmitter<Place>();

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Field, FieldRepository, JsonField, PlanningRepository, PlanningService, StructureRepository, Sport } from 'ngx-sport';
+import { Field, FieldRepository, JsonField, PlanningRepository, PlanningService, StructureRepository } from 'ngx-sport';
 
-import { TournamentComponent } from '../component';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentService } from '../../lib/tournament/service';
+import { TournamentComponent } from '../component';
 
 @Component({
     selector: 'app-tournament-fields',
@@ -41,13 +41,13 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
         this.createFieldsList();
         this.planningService = new PlanningService(this.tournament.getCompetition());
         this.processing = false;
-        if (this.isStarted()) {
+        if (this.hasBegun()) {
             this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
         }
     }
 
-    isStarted() {
-        return this.structure.getRootRound().isStarted();
+    hasBegun() {
+        return this.structure.getRootRound().hasBegun();
     }
 
     createFieldsList() {
@@ -110,11 +110,6 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
         this.fieldRepository.removeObject(fieldItem.field, this.tournament.getCompetition())
             .subscribe(
             /* happy path */ fieldRes => {
-
-                    const index = this.fieldsList.indexOf(fieldItem);
-                    if (index > -1) {
-                        this.fieldsList.splice(index, 1);
-                    }
                     const tournamentService = new TournamentService(this.tournament);
                     tournamentService.reschedule(this.planningService, this.structure.getFirstRoundNumber());
                     this.planningRepository.editObject(this.structure.getFirstRoundNumber())

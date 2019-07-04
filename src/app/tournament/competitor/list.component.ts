@@ -5,11 +5,11 @@ import {
   Competitor,
   CompetitorRepository,
   NameService,
+  Place,
   PlaceLocation,
+  PlaceRepository,
   PlanningRepository,
   PlanningService,
-  Place,
-  PlaceRepository,
   QualifyGroup,
   Round,
   Structure,
@@ -67,8 +67,8 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
       }
     });
     this.places = round.getPlaces();
-    const isStarted = this.isStarted();
-    this.showSwap = !isStarted && this.atLeastTwoPlaceHaveCompetitor();
+    const hasBegun = this.hasBegun();
+    this.showSwap = !hasBegun && this.atLeastTwoPlaceHaveCompetitor();
     this.processing = false;
   }
 
@@ -76,8 +76,8 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.myNavigation.scroll();
   }
 
-  isStarted() {
-    return this.structure.getRootRound().isStarted();
+  hasBegun() {
+    return this.structure.getRootRound().hasBegun();
   }
 
   allPlaceHaveCompetitor() {

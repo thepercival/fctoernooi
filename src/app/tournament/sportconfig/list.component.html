@@ -21,10 +21,9 @@
         <tr>
           <th></th>
           <th>naam</th>
-          <!--
-          <th class="d-none d-sm-table-cell">naam</th>-->
-          <th class="text-right">
-            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary"
+          <th class="d-none d-sm-table-cell" title="aantal"><i class="fi flaticon-soccer-field"></i></th>
+          <th class="text-right" *ngIf="!hasBegun()">
+            <button type="button" class="btn btn-sm btn-outline-primary"
               [routerLink]="['/toernooi/sportconfigedit', tournament.getId(), undefined]" [disabled]="processing">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button>
@@ -34,7 +33,7 @@
       <tbody>
         <tr *ngFor="let sportConfig of sportConfigs; let last = last;">
           <td>
-            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing"
+            <button *ngIf="!hasBegun()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing"
               (click)="editSportConfig(sportConfig)">
               <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
             </button>
@@ -42,16 +41,30 @@
           <td>
             <span>{{sportConfig.getSport().getName()}}</span>
           </td>
-          sportconfigs kun je alleen verwijderen als de sport niet aan een veld hangt!
-          <!--
-         <td class="text-right">
-            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing"
-              (click)="removeReferee(referee);">
+          <td class="d-none d-sm-table-cell">{{getNrOfFields(sportConfig.getSport())}}</td>
+          <td class="text-right" *ngIf="!hasBegun()">
+            <button type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing"
+              (click)="openRemoveModal(content, sportConfig)">
               <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
             </button>
-          </td> -->
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
 </div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-remove">sport verwijderen</h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('cancel')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <ngb-alert type="warning" [dismissible]="false">de velden voor deze sport worden ook verwijderd</ngb-alert>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-primary" (click)="modal.close('remove')">verwijderen</button>
+  </div>
+</ng-template>

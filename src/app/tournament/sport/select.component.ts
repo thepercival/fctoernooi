@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Competition, JsonSport, Sport, SportRepository } from 'ngx-sport';
+import { Competition, JsonSport, Sport, SportCustom, SportRepository } from 'ngx-sport';
 
 import { IAlert } from '../../common/alert';
 import { CSSService } from '../../common/cssservice';
@@ -46,12 +46,18 @@ export class SportSelectComponent implements OnInit {
 
     }
 
-    getSportsToShow(): Sport[] {
-        return this.competition.getSportConfigs().map(sportConfig => sportConfig.getSport());
+    getSortableSports(): SortableSport[] {
+        return SportCustom.get().filter(customId => {
+            return this.competition.getSportConfigs().find(sportConfig => sportConfig.getSport().getCustomId() === customId) === undefined
+        }).map(customId => {
+            return { customId: customId, name: this.translate(customId) };
+        }).sort((s1, s2) => {
+            return (s1.name > s2.name ? 1 : -1);
+        });
     }
 
-    translate(sport: Sport): string {
-        return this.translateService.getSportName(TranslateService.language, sport.getCustomId());
+    translate(sportCustomId: number): string {
+        return this.translateService.getSportName(TranslateService.language, sportCustomId);
     }
 
     protected setAlert(type: string, message: string) {
@@ -72,8 +78,29 @@ export class SportSelectComponent implements OnInit {
             /* onComplete */() => this.processing = false
         );
     }
+
+    sendSportByCustomId(customId: number) {
+        this.processing = true;
+        this.sportRepository.getObject(customId).subscribe(
+            /* happy path */ sportRes => {
+                this.sendSport.emit(sportRes);
+            },
+            /* error path */ e => {
+                this.setAlert('danger', 'de sport kan niet gevonden worden: ' + e);
+                this.processing = false;
+            },
+            /* onComplete */() => this.processing = false
+        );
+
+    }
+
     // private postInit(id: number) {
 
     //     const sports = this.tournament.getCompetition().getSports();
     //     // sports is filter for list
+}
+
+interface SortableSport {
+    customId: number;
+    name: string;
 }

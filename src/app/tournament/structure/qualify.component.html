@@ -1,7 +1,7 @@
 <p *ngIf="alert">
     <ngb-alert [dismissible]="true" (close)="alert = undefined" [type]="alert.type">{{ alert.message }}</ngb-alert>
 </p>
-<div class="d-flex flex-wrap justify-content-around mb-2" *ngIf="round.getNrOfPlaces() > 2 && !round.isStarted()">
+<div class="d-flex flex-wrap justify-content-around mb-2" *ngIf="round.getNrOfPlaces() > 2 && !round.hasBegun()">
     <ng-container *ngTemplateOutlet="modifyQualifiers;context:{$implicit: QualifyGroupWINNERS}">
     </ng-container>
     <button *ngIf="round.isRoot() || showSwitchView()" type="button" class="btn btn-outline-secondary"

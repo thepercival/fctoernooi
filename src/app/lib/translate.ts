@@ -1,4 +1,4 @@
-import { SportCustom, SportScoreConfig } from 'ngx-sport';
+import { Sport, SportCustom, SportScoreConfig } from 'ngx-sport';
 
 export class TranslateService {
     static readonly language = 'nl';
@@ -90,5 +90,45 @@ export class TranslateService {
 
     static getScoreDirection(language: string, direction: number): string {
         return this.data[language]['scoredirection'][direction];
+    }
+
+    getFieldName(language: string, sport: Sport): string {
+        const customId = sport.getCustomId();
+        switch (customId) {
+            case SportCustom.Badminton: { return 'veld'; }
+            case SportCustom.Basketball: { return 'veld'; }
+            case SportCustom.Darts: { return 'bord'; }
+            case SportCustom.ESports: { return 'veld'; }
+            case SportCustom.Hockey: { return 'veld'; }
+            case SportCustom.Korfball: { return 'veld'; }
+            case SportCustom.Chess: { return 'bord'; }
+            case SportCustom.Squash: { return 'baan'; }
+            case SportCustom.TableTennis: { return 'tafel'; }
+            case SportCustom.Tennis: { return 'veld'; }
+            case SportCustom.Football: { return 'veld'; }
+            case SportCustom.Voleyball: { return 'veld'; }
+            case SportCustom.Baseball: { return 'veld'; }
+        }
+        return undefined;
+    }
+
+    getFieldsName(language: string, sport: Sport): string {
+        const customId = sport.getCustomId();
+        switch (customId) {
+            case SportCustom.Badminton: { return 'velden'; }
+            case SportCustom.Basketball: { return 'velden'; }
+            case SportCustom.Darts: { return 'borden'; }
+            case SportCustom.ESports: { return 'velden'; }
+            case SportCustom.Hockey: { return 'velden'; }
+            case SportCustom.Korfball: { return 'velden'; }
+            case SportCustom.Chess: { return 'borden'; }
+            case SportCustom.Squash: { return 'banen'; }
+            case SportCustom.TableTennis: { return 'tafels'; }
+            case SportCustom.Tennis: { return 'velden'; }
+            case SportCustom.Football: { return 'velden'; }
+            case SportCustom.Voleyball: { return 'velden'; }
+            case SportCustom.Baseball: { return 'velden'; }
+        }
+        return undefined;
     }
 }

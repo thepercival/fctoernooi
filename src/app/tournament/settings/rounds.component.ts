@@ -1,22 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { cloneDeep } from 'lodash';
-import {
-    NameService,
-    PlanningRepository,
-    PlanningService,
-    RoundNumber,
-    SportConfig,
-    SportConfigMapper,
-    SportConfigRepository,
-    SportScoreConfig,
-    StructureRepository,
-} from 'ngx-sport';
+import { NameService, PlanningRepository, SportConfigMapper, SportConfigRepository, StructureRepository } from 'ngx-sport';
 
 import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
-import { TournamentService } from '../../lib/tournament/service';
 import { TournamentComponent } from '../component';
 
 @Component({
@@ -98,7 +85,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     //     this.modelRecreate = false;
     //     this.modelReschedule = false;
     //     this.setAlert('info', 'instellingen gelden ook voor volgende ronden');
-    //     if (this.planningService.isStarted(this.roundNumber)) {
+    //     if (this.planningService.hasBegun(this.roundNumber)) {
     //         this.setAlert('info', 'deze ronde heeft al gespeelde wedstrijden, kies een andere ronde');
     //     }
     // }

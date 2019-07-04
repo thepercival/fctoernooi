@@ -23,7 +23,7 @@
           <th>initialen</th>
           <th class="d-none d-sm-table-cell">naam</th>
           <th class="text-right">
-            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" (click)="addReferee()"
+            <button *ngIf="!hasBegun()" type="button" class="btn btn-sm btn-outline-primary" (click)="addReferee()"
               [disabled]="processing">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button>
@@ -33,7 +33,7 @@
       <tbody>
         <tr *ngFor="let referee of referees; let last = last;">
           <td>
-            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing"
+            <button *ngIf="!hasBegun()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing"
               (click)="editReferee(referee)">
               <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
             </button>
@@ -45,7 +45,7 @@
             <span>{{referee.getName()}}</span>
           </td>
           <td class="text-right">
-            <button *ngIf="!isStarted()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing"
+            <button *ngIf="!hasBegun()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing"
               (click)="removeReferee(referee);">
               <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
             </button>

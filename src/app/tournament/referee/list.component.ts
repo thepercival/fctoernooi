@@ -43,13 +43,13 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     this.createRefereesList();
     this.planningService = new PlanningService(this.tournament.getCompetition());
     this.processing = false;
-    if (this.isStarted()) {
+    if (this.hasBegun()) {
       this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
     }
   }
 
-  isStarted() {
-    return this.structure.getRootRound().isStarted();
+  hasBegun() {
+    return this.structure.getRootRound().hasBegun();
   }
 
   createRefereesList() {
@@ -84,10 +84,6 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     this.refereeRepository.removeObject(referee, this.tournament.getCompetition())
       .subscribe(
             /* happy path */ refereeRes => {
-          const index = this.referees.indexOf(referee);
-          if (index > -1) {
-            this.referees.splice(index, 1);
-          }
           const firstRoundNumber = this.structure.getFirstRoundNumber();
           const tournamentService = new TournamentService(this.tournament);
           tournamentService.reschedule(this.planningService, firstRoundNumber);

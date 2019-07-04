@@ -1,4 +1,4 @@
-<div *ngIf="!round.isStarted()" class="d-flex justify-content-around mb-3">
+<div *ngIf="!round.hasBegun()" class="d-flex justify-content-around mb-3">
   <!-- start vertical-->
   <div *ngIf="round.isRoot() || round.getNrOfPlaces() >= 4" class="d-sm-none btn-group-vertical" role="group"
     aria-label="aantal poules">

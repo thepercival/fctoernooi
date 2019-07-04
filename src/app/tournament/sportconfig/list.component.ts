@@ -1,9 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlanningRepository, RefereeRepository, Sport, SportConfig, StructureRepository } from 'ngx-sport';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {
+  PlanningRepository,
+  PlanningService,
+  Sport,
+  SportConfig,
+  SportConfigRepository,
+  StructureRepository,
+} from 'ngx-sport';
 
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
+import { TournamentService } from '../../lib/tournament/service';
+import { TranslateService } from '../../lib/translate';
 import { TournamentComponent } from '../component';
 
 @Component({
@@ -13,6 +23,8 @@ import { TournamentComponent } from '../component';
 })
 export class SportConfigListComponent extends TournamentComponent implements OnInit {
   sportConfigs: SportConfig[];
+  private planningService: PlanningService;
+  translateService: TranslateService;
 
   validations: any = {
     'minlengthname': Sport.MIN_LENGTH_NAME,
@@ -24,10 +36,12 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
     router: Router,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
-    private refereeRepository: RefereeRepository,
-    private planningRepository: PlanningRepository
+    private sportConfigRepository: SportConfigRepository,
+    private planningRepository: PlanningRepository,
+    private modalService: NgbModal
   ) {
     super(route, router, tournamentRepository, sructureRepository);
+    this.translateService = new TranslateService();
   }
 
   ngOnInit() {
@@ -36,21 +50,25 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
 
   initSports() {
     this.createSportConfigsList();
+    this.planningService = new PlanningService(this.tournament.getCompetition());
     // this.planningService = new PlanningService(this.tournament.getCompetition());
     this.processing = false;
-    if (this.isStarted()) {
+    if (this.hasBegun()) {
       this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
     }
   }
 
-  isStarted() {
-    return this.structure.getRootRound().isStarted();
+  hasBegun() {
+    return this.structure.getRootRound().hasBegun();
   }
 
   createSportConfigsList() {
     this.sportConfigs = this.tournament.getCompetition().getSportConfigs();
   }
 
+  getNrOfFields(sport: Sport): number {
+    return this.tournament.getCompetition().getFields().filter(field => field.getSport() === sport).length;
+  }
   // addSport() {
   //   this.linkToEdit(this.tournament);
   // }
@@ -63,6 +81,16 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
     this.router.navigate(['/toernooi/sportconfigedit', tournament.getId(), sportConfig ? sportConfig.getId() : 0]);
   }
 
+  openRemoveModal(content, sportConfig: SportConfig) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-remove' }).result.then((result) => {
+      if (result === 'remove') {
+        this.remove(sportConfig);
+      }
+    }, (reason) => {
+
+    });
+  }
+
   // linkToRoundSettings() {
   //   this.router.navigate(
   //     ['/toernooi/roundssettings', this.tournament.getId(), this.structure.getFirstRoundNumber().getNumber()],
@@ -72,41 +100,25 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
   //   );
   // }
 
-  // removeReferee(referee: Referee) {
-  //   this.setAlert('info', 'de scheidsrechter wordt verwijderd');
-  //   this.processing = true;
+  remove(sportConfig: SportConfig) {
+    this.setAlert('info', 'de sport wordt verwijderd');
+    this.processing = true;
 
-  //   this.refereeRepository.removeObject(referee, this.tournament.getCompetition())
-  //     .subscribe(
-  //           /* happy path */ refereeRes => {
-  //         const index = this.referees.indexOf(referee);
-  //         if (index > -1) {
-  //           this.referees.splice(index, 1);
-  //         }
-  //         const firstRoundNumber = this.structure.getFirstRoundNumber();
-  //         const tournamentService = new TournamentService(this.tournament);
-  //         tournamentService.reschedule(this.planningService, firstRoundNumber);
-  //         this.planningRepository.editObject(firstRoundNumber).subscribe(
-  //           /* happy path */ gamesdRes => {
-  //             if (referee.getEmailaddress() === undefined || referee.getEmailaddress().length === 0) {
-  //               this.processing = false;
-  //               this.setAlert('success', 'de scheidsrechter is verwijderd');
-  //             } else {
-  //               this.tournamentRepository.syncRefereeRoles(this.tournament).subscribe(
-  //                 /* happy path */ allRolesRes => {
-  //                   this.processing = false;
-  //                   this.setAlert('success', 'de scheidsrechter is verwijderd');
-  //                 },
-  //                 /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-  //                 /* onComplete */() => this.processing = false
-  //               );
-  //             }
-  //           },
-  //           /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-  //           /* onComplete */() => this.processing = false
-  //         );
-  //       },
-  //           /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-  //     );
-  // }
+    this.sportConfigRepository.removeObject(sportConfig, this.tournament.getCompetition())
+      .subscribe(
+        /* happy path */ refereeRes => {
+          const firstRoundNumber = this.structure.getFirstRoundNumber();
+          const tournamentService = new TournamentService(this.tournament);
+          tournamentService.reschedule(this.planningService, firstRoundNumber);
+          this.planningRepository.editObject(firstRoundNumber).subscribe(
+            /* happy path */ gamesRes => {
+              this.setAlert('success', 'de sport is verwijderd');
+            },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+            /* onComplete */() => this.processing = false
+          );
+        },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+      );
+  }
 }

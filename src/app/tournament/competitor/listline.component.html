@@ -22,7 +22,7 @@
 <td colspan=2 *ngIf="!place.getCompetitor()">
   <span class="badge badge-danger">vul een naam in</span>
 </td>
-<td *ngIf="!isStarted" class="text-right"><button type="button" class="btn btn-sm btn-outline-primary"
+<td *ngIf="!hasBegun" class="text-right"><button type="button" class="btn btn-sm btn-outline-primary"
     (click)="remove()" [disabled]="placeToSwap !== undefined">
     <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
   </button></td>

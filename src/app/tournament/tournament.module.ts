@@ -10,6 +10,7 @@ import {
   faCircle,
   faCogs,
   faCopy,
+  faDotCircle,
   faInfoCircle,
   faLink,
   faListUl,
@@ -103,7 +104,7 @@ import { ViewComponent } from './view/view.component';
 library.add(
   faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
   faUnlink, faPrint, faSort, faRandom, faSquare, faCheckSquare, faUserTag, faInfoCircle, faMedal,
-  faProductHunt, faLink, faUsers, faQrcode, faCopy
+  faProductHunt, faLink, faUsers, faQrcode, faCopy, faDotCircle
 );
 
 @NgModule({

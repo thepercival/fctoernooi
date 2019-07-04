@@ -24,16 +24,14 @@
       </form>
 
       <ul *ngIf="radioGroupForm.value['inputtype'] === 'select'" class="list-group">
-        <li *ngFor="let sport of getSportsToShow()" class="list-group-item">
-          <span>icon</span><span>{{translate(sport)}}</span></li>
-        <!-- <h2>
-          <i *ngIf="sportConfig && cssService.getIconTypeBySportCustomId(sportConfig.getSport().getCustomId()) === 'fi'"
-            class="{{cssService.getIconBySportCustomId(sportConfig.getSport().getCustomId())}}"></i>
-          <fa-icon *ngIf="sportConfig && cssService.getIconTypeBySportCustomId(sportConfig.getSport().getCustomId()) === 'fa'"
-            [icon]="['fas', cssService.getIconBySportCustomId(sportConfig.getSport().getCustomId())]">
-          </fa-icon>
-          
-        </h2> -->
+        <li *ngFor="let showableSport of getSortableSports()" class="list-group-item pointer"
+          (click)="sendSportByCustomId(showableSport.customId)">
+          <span class="sport-icon">
+            <app-sport-icon [customId]="showableSport.customId"></app-sport-icon>
+          </span>
+          <span>{{showableSport.name}}</span>
+          <fa-icon [icon]="['fas', 'dot-circle']" class="text-primary" pull="right"></fa-icon>
+        </li>
       </ul>
       <form *ngIf="radioGroupForm.value['inputtype'] === 'new'" [formGroup]="form" (ngSubmit)="save()" novalidate>
         <div class="form-group row">

@@ -156,7 +156,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
             this.router.navigate(['/toernooi/sportconfigedit'
                 , this.tournament.getId(), this.tournament.getCompetition().getFirstSportConfig().getId()]);
         } else {
-            this.router.navigate(['/toernooi/sports', this.tournament.getId()]);
+            this.router.navigate(['/toernooi/sportconfigs', this.tournament.getId()]);
         }
     }
 }
