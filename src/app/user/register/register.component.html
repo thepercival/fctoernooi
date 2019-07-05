@@ -35,8 +35,7 @@
           <div class="col-9">
             <input class="form-control"
               [ngClass]="{ 'is-invalid': customForm.controls.emailaddress.invalid, 'is-valid': customForm.controls.emailaddress.valid }"
-              type="text" name="emailaddress" id="emailaddress" [formControl]="customForm.controls.emailaddress"
-              maxlength="{{validations.maxlengthemailaddress}}"
+              type="text" name="emailaddress" id="emailaddress" formControlName="emailaddress"
               placeholder="max. {{validations.maxlengthemailaddress}} karakters">
           </div>
         </div>
@@ -47,8 +46,7 @@
           <div class="col-9">
             <input class="form-control"
               [ngClass]="{ 'is-invalid': customForm.controls.password.invalid, 'is-valid': customForm.controls.password.valid }"
-              type="password" name="password" id="password" [formControl]="customForm.controls.password"
-              maxlength="{{validations.maxlengthpassword}}"
+              type="password" name="password" id="password" formControlName="password"
               placeholder="min. {{validations.minlengthpassword}} karakters">
           </div>
         </div>
@@ -59,8 +57,7 @@
           <div class="col-9">
             <input class="form-control"
               [ngClass]="{ 'is-invalid': customForm.controls.passwordRepeat.invalid, 'is-valid': customForm.controls.passwordRepeat.valid }"
-              type="password" name="passwordRepeat" id="passwordRepeat"
-              [formControl]="customForm.controls.passwordRepeat" maxlength="{{validations.maxlengthpassword}}"
+              type="password" name="passwordRepeat" id="passwordRepeat" formControlName="passwordRepeat"
               placeholder="min. {{validations.minlengthpassword}} karakters">
           </div>
         </div>

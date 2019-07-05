@@ -6,12 +6,13 @@ import {
   Association,
   Competition,
   Field,
-  JsonStructure,
   League,
   PlanningRepository,
   PlanningService,
+  RankingService,
   Season,
-  SportConfig,
+  Sport,
+  SportConfigService,
   Structure,
   StructureMapper,
   StructureRepository,
@@ -31,13 +32,14 @@ import { TournamentService } from '../../lib/tournament/service';
   styleUrls: ['./new.component.scss']
 })
 export class NewComponent implements OnInit {
-  customForm: FormGroup;
+  form: FormGroup;
   processing = true;
   alert: IAlert;
   minDateStruct: NgbDateStruct;
-  sportnames: string[];
+  chooseSport: boolean = false;
+  sport: Sport;
   validations: any = {
-    minnroffields: 0,
+    minnroffields: 1,
     maxnroffields: Tournament.MAXNROFCOMPETITORS / 2,
     minnrofcompetitors: Tournament.MINNROFCOMPETITORS,
     maxnrofcompetitors: Tournament.MAXNROFCOMPETITORS,
@@ -59,21 +61,14 @@ export class NewComponent implements OnInit {
     const date = new Date();
     this.minDateStruct = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
 
-    // @TODO
-    this.sportnames = ['@TODO']; // SportConfig.getSports().sort();
-
-    this.customForm = fb.group({
+    this.form = fb.group({
       name: ['', Validators.compose([
         Validators.required,
         Validators.minLength(this.validations.minlengthname),
         Validators.maxLength(this.validations.maxlengthname)
       ])],
-      sportName: ['', Validators.compose([
+      sport: [{ value: '', disabled: true }, Validators.compose([
         Validators.required
-      ])],
-      sportNameOther: ['', Validators.compose([
-        Validators.minLength(0),
-        Validators.maxLength(this.validations.maxlengthsportname)
       ])],
       nrofcompetitors: ['', Validators.compose([
         Validators.required,
@@ -82,7 +77,7 @@ export class NewComponent implements OnInit {
       ])],
       nroffields: ['', Validators.compose([
         Validators.required,
-        Validators.min(0),
+        Validators.min(this.validations.minnroffields),
         Validators.max(this.validations.maxnroffields)
       ])],
       date: ['', Validators.compose([
@@ -100,12 +95,18 @@ export class NewComponent implements OnInit {
       const nrOfMinutesTillQuarter = date.getMinutes() % 15;
       date.setTime(date.getTime() + ((15 + (15 - nrOfMinutesTillQuarter)) * 60 * 1000));
     }
-    this.customForm.controls.date.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
-    this.customForm.controls.time.setValue({ hour: date.getHours(), minute: date.getMinutes() });
-    this.customForm.controls.nrofcompetitors.setValue(5);
-    this.customForm.controls.nroffields.setValue(1);
-    this.customForm.controls.public.setValue(true);
+    this.form.controls.date.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
+    this.form.controls.time.setValue({ hour: date.getHours(), minute: date.getMinutes() });
+    this.form.controls.nrofcompetitors.setValue(5);
+    this.form.controls.nroffields.setValue(1);
+    this.form.controls.public.setValue(true);
     this.processing = false;
+  }
+
+  onGetSport(sport: Sport) {
+    this.form.controls.sport.setValue(sport.getName());
+    this.sport = sport;
+    this.chooseSport = false;
   }
 
   create(): boolean {
@@ -113,20 +114,16 @@ export class NewComponent implements OnInit {
     this.processing = true;
     this.setAlert('info', 'het toernooi wordt aangemaakt');
 
-    const name = this.customForm.controls.name.value;
-    let sportName = this.customForm.controls.sportName.value;
-    if (sportName === '-1') {
-      sportName = this.customForm.controls.sportNameOther.value;
-    }
-    const nrofcompetitors = this.customForm.controls.nrofcompetitors.value;
-    const nroffields = this.customForm.controls.nroffields.value;
+    const name = this.form.controls.name.value;
+    const nrofcompetitors = this.form.controls.nrofcompetitors.value;
+    const nroffields = this.form.controls.nroffields.value;
 
     const startDateTime = new Date(
-      this.customForm.controls.date.value.year,
-      this.customForm.controls.date.value.month - 1,
-      this.customForm.controls.date.value.day,
-      this.customForm.controls.time.value.hour,
-      this.customForm.controls.time.value.minute
+      this.form.controls.date.value.year,
+      this.form.controls.date.value.month - 1,
+      this.form.controls.date.value.day,
+      this.form.controls.time.value.hour,
+      this.form.controls.time.value.minute
     );
 
     let tournament;
@@ -139,18 +136,17 @@ export class NewComponent implements OnInit {
       season.setEndDateTime(new Date());
       const competition = new Competition(league, season);
       competition.setStartDateTime(startDateTime);
-      // @TODO
-      // league.setSport(sportName);
-      competition.getSportConfigs().push(undefined);
+      competition.setRuleSet(RankingService.RULESSET_WC);
+      const sportConfigService = new SportConfigService();
+      sportConfigService.createDefault(this.sport, competition);
 
       for (let fieldNumber = 1; fieldNumber <= nroffields; fieldNumber++) {
         const field = new Field(competition, fieldNumber);
         field.setName(String(fieldNumber));
-        // @TODO
-        field.setSport(undefined);
+        field.setSport(this.sport);
       }
       tournament = new Tournament(competition);
-      tournament.setPublic(this.customForm.controls.public.value);
+      tournament.setPublic(this.form.controls.public.value);
     }
 
     this.tournamentRepository.createObject(tournament)
@@ -196,7 +192,7 @@ export class NewComponent implements OnInit {
   }
 
   getStructureDescription() {
-    const nrOfCompetitors = this.customForm.controls.nrofcompetitors.value;
+    const nrOfCompetitors = this.form.controls.nrofcompetitors.value;
     if (nrOfCompetitors < Tournament.MINNROFCOMPETITORS || nrOfCompetitors > Tournament.MAXNROFCOMPETITORS) {
       return '';
     }
@@ -213,6 +209,6 @@ export class NewComponent implements OnInit {
   equals(one: NgbDateStruct, two: NgbDateStruct) {
     return one && two && two.year === one.year && two.month === one.month && two.day === one.day;
   }
-  isSelected = date => this.equals(date, this.customForm.controls.date.value);
+  isSelected = date => this.equals(date, this.form.controls.date.value);
 
 }

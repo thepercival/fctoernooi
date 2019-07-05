@@ -20,8 +20,8 @@
           <div class="col-9">
             <input class="form-control"
               [ngClass]="{ 'is-invalid': customForm.controls.name.invalid, 'is-valid': customForm.controls.name.valid }"
-              type="text" name="name" id="name" [formControl]="customForm.controls.name"
-              maxlength="{{validations.maxlengthname}}" placeholder="max. {{validations.maxlengthname}} karakters">
+              type="text" name="name" id="name" formControlName="name"
+              placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
         </div>
         <div class="form-group row">
@@ -31,8 +31,8 @@
           <div class="col-9">
             <input class="form-control"
               [ngClass]="{ 'is-invalid': customForm.controls.url.invalid, 'is-valid': customForm.controls.url.valid }"
-              type="text" name="url" id="url" [formControl]="customForm.controls.url"
-              maxlength="{{validations.maxlengthurl}}" placeholder="max. {{validations.maxlengthurl}} karakters">
+              type="text" name="url" id="url" formControlName="url"
+              placeholder="max. {{validations.maxlengthurl}} karakters">
           </div>
         </div>
         <!-- <div class="form-group row">
@@ -57,8 +57,8 @@
           <div class="col-9">
             <input class="form-control"
               [ngClass]="{ 'is-invalid': customForm.controls.logourl.invalid, 'is-valid': customForm.controls.logourl.valid }"
-              type="text" name="logourl" id="logourl" [formControl]="customForm.controls.logourl"
-              maxlength="{{validations.maxlengthurl}}" placeholder="max. {{validations.maxlengthurl}} karakters">
+              type="text" name="logourl" id="logourl" formControlName="logourl"
+              placeholder="max. {{validations.maxlengthurl}} karakters">
           </div>
         </div> -->
         <div *ngIf="logoInput === logoInputUpload" class="form-group row">
@@ -81,7 +81,7 @@
             <label for="screennr" class="col-form-label">scherm nummer</label>
           </div>
           <div class="col-9">
-            <select [formControl]="customForm.controls.screennr" id="screennr" name="screennr" class="form-control"
+            <select formControlName="screennr" id="screennr" name="screennr" class="form-control"
               [ngClass]="{ 'is-invalid': customForm.controls.screennr.invalid, 'is-valid': customForm.controls.screennr.valid }"
               required>
               <option *ngFor="let screenNr of rangeScreenNrs" [ngValue]="screenNr">

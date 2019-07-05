@@ -20,8 +20,8 @@
           <div class="col-9 col-sm-8 col-md-7">
             <input class="form-control"
               [ngClass]="{ 'is-invalid': customForm.controls.name.invalid, 'is-valid': customForm.controls.name.valid }"
-              type="text" name="name" id="name" [formControl]="customForm.controls.name"
-              maxlength="{{validations.maxlengthname}}" placeholder="max. {{validations.maxlengthname}} karakters">
+              type="text" name="name" id="name" formControlName="name"
+              placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
         </div>
         <div *ngIf="!hasBegun" class="form-group row">
@@ -32,8 +32,8 @@
             <div class="input-group input-group-date">
               <input class="form-control"
                 [ngClass]="{ 'is-invalid': customForm.controls.date.invalid, 'is-valid': customForm.controls.date.valid }"
-                placeholder="yyyy-mm-dd" id="dp" name="dp" [formControl]="customForm.controls.date" ngbDatepicker
-                #d="ngbDatepicker" required [dayTemplate]="t" [minDate]="minDateStruct">
+                placeholder="yyyy-mm-dd" id="dp" name="dp" formControlName="date" ngbDatepicker #d="ngbDatepicker"
+                required [dayTemplate]="t" [minDate]="minDateStruct">
               <div class="input-group-append">
                 <span class="input-group-text pointer" (click)="d.toggle()">
                   <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
@@ -47,8 +47,8 @@
             <label for="starttime" class="col-form-label">starttijd</label>
           </div>
           <div class="col-9">
-            <ngb-timepicker id="starttime" name="starttime" [formControl]="customForm.controls.time" [spinners]="false"
-              required></ngb-timepicker>
+            <ngb-timepicker id="starttime" name="starttime" formControlName="time" [spinners]="false" required>
+            </ngb-timepicker>
           </div>
         </div>
         <div *ngIf="hasBegun" class="form-group row">
@@ -70,7 +70,7 @@
           <div class="form-check col-9">
             <label class="custom-control custom-checkbox col-form-label pl-0">
               <input type="checkbox" class="custom-control-input form-check-input" id="public" name="public"
-                [formControl]="customForm.controls.public">
+                formControlName="public">
               <span class="custom-control-indicator"></span>
             </label>
           </div>
@@ -81,8 +81,8 @@
           </div>
           <div class="col-2 col-md-1 pr-0">
             <label class="custom-control custom-checkbox pointer col-form-label pl-0">
-              <input type="checkbox" class="custom-control-input form-check-input"
-                [formControl]="customForm.controls.togglebreak" (ngModelChange)="toggleBreak($event,0)">
+              <input type="checkbox" class="custom-control-input form-check-input" formControlName="togglebreak"
+                (ngModelChange)="toggleBreak($event,0)">
               <span class="custom-control-indicator"></span>
             </label>
           </div>
@@ -95,8 +95,7 @@
             <label for="breaktime" class="col-form-label">pauzetijd</label>
           </div>
           <div class="col-9">
-            <ngb-timepicker id="breaktime" name="breaktime" [formControl]="customForm.controls.breaktime"
-              [spinners]="false">
+            <ngb-timepicker id="breaktime" name="breaktime" formControlName="breaktime" [spinners]="false">
             </ngb-timepicker>
           </div>
         </div>
@@ -108,7 +107,7 @@
             <div class="input-group">
               <input type="number" class="form-control"
                 [ngClass]="{ 'is-invalid': customForm.controls.breakduration.invalid, 'is-valid': customForm.controls.breakduration.valid}"
-                id="breakduration" name="breakduration" [formControl]="customForm.controls.breakduration"
+                id="breakduration" name="breakduration" formControlName="breakduration"
                 [min]="validations.minbreakduration" [max]="validations.maxbreakduration">
               <div class="input-group-append">
                 <span class="input-group-text text-white">min.</span>

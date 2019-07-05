@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Competition, JsonSport, Sport, SportCustom, SportRepository } from 'ngx-sport';
+import { JsonSport, Sport, SportConfig, SportCustom, SportRepository } from 'ngx-sport';
 
 import { IAlert } from '../../common/alert';
 import { CSSService } from '../../common/cssservice';
@@ -13,7 +13,7 @@ import { TranslateService } from '../../lib/translate';
     styleUrls: ['./select.component.css']
 })
 export class SportSelectComponent implements OnInit {
-    @Input() competition: Competition;
+    @Input() sportConfigs: SportConfig[];
     @Output() sendSport = new EventEmitter<Sport>();
     processing = false;
     form: FormGroup;
@@ -48,7 +48,7 @@ export class SportSelectComponent implements OnInit {
 
     getSortableSports(): SortableSport[] {
         return SportCustom.get().filter(customId => {
-            return this.competition.getSportConfigs().find(sportConfig => sportConfig.getSport().getCustomId() === customId) === undefined
+            return !this.sportConfigs || this.sportConfigs.find(sportConfig => sportConfig.getSport().getCustomId() === customId) === undefined
         }).map(customId => {
             return { customId: customId, name: this.translate(customId) };
         }).sort((s1, s2) => {

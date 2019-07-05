@@ -274,8 +274,8 @@
           </div>
           <div class="col-7">
             <div class="input-group input-group-date">
-              <input class="form-control" id="dp" name="dp" [formControl]="copyForm.controls.date" ngbDatepicker
-                #d="ngbDatepicker" required [dayTemplate]="t" [minDate]="minDateStruct">
+              <input class="form-control" id="dp" name="dp" formControlName="date" ngbDatepicker #d="ngbDatepicker"
+                required [dayTemplate]="t" [minDate]="minDateStruct">
               <div class="input-group-append">
                 <span class="input-group-text pointer" (click)="d.toggle()">
                   <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>

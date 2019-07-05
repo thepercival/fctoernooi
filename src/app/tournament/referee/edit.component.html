@@ -20,8 +20,7 @@
           <div class="col-9">
             <input class="form-control"
               [ngClass]="{ 'is-invalid': customForm.controls.initials.invalid, 'is-valid': customForm.controls.initials.valid }"
-              type="text" name="initials" id="initials" [formControl]="customForm.controls.initials"
-              maxlength="{{validations.maxlengthinitials}}"
+              type="text" name="initials" id="initials" formControlName="initials"
               placeholder="max. {{validations.maxlengthinitials}} karakters">
           </div>
         </div>
@@ -32,8 +31,8 @@
           <div class="col-9">
             <input class="form-control"
               [ngClass]="{ 'is-invalid': customForm.controls.name.invalid, 'is-valid': customForm.controls.name.valid }"
-              type="text" name="name" id="name" [formControl]="customForm.controls.name"
-              maxlength="{{validations.maxlengthname}}" placeholder="max. {{validations.maxlengthname}} karakters">
+              type="text" name="name" id="name" formControlName="name"
+              placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
         </div>
         <div class="form-group row">
@@ -46,8 +45,7 @@
           <div class="col-9">
             <input class="form-control"
               [ngClass]="{ 'is-invalid': customForm.controls.emailaddress.invalid, 'is-valid': customForm.controls.emailaddress.valid }"
-              type="text" name="emailaddress" id="emailaddress" [formControl]="customForm.controls.emailaddress"
-              maxlength="{{validations.maxlengthemailaddress}}"
+              type="text" name="emailaddress" id="emailaddress" formControlName="emailaddress"
               placeholder="max. {{validations.maxlengthemailaddress}} karakters">
           </div>
         </div>
@@ -58,7 +56,7 @@
           <div class="col-9">
             <textarea class="form-control"
               [ngClass]="{ 'is-invalid': customForm.controls.info.invalid, 'is-valid': customForm.controls.info.valid }"
-              name="info" id="info" [formControl]="customForm.controls.info" maxlength="{{validations.maxlengthinfo}}"
+              name="info" id="info" formControlName="info"
               placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>

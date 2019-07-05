@@ -27,8 +27,8 @@
           <div class="col-9">
             <input #inputname class="form-control"
               [ngClass]="{ 'is-invalid': customForm.controls.name.invalid, 'is-valid': customForm.controls.name.valid }"
-              type="text" name="name" id="name" [formControl]="customForm.controls.name"
-              maxlength="{{validations.maxlengthname}}" placeholder="max. {{validations.maxlengthname}} karakters">
+              type="text" name="name" id="name" formControlName="name"
+              placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
         </div>
         <div class="form-group row">
@@ -37,7 +37,7 @@
           <div class="form-check col-9">
             <label class="custom-control custom-checkbox col-form-label pl-0">
               <input type="checkbox" class="custom-control-input form-check-input" id="registered" name="registered"
-                [formControl]="customForm.controls.registered">
+                formControlName="registered">
               <span class="custom-control-indicator"></span>
             </label>
           </div>
@@ -49,7 +49,7 @@
           <div class="col-9">
             <textarea class="form-control"
               [ngClass]="{ 'is-invalid': customForm.controls.info.invalid, 'is-valid': customForm.controls.info.valid }"
-              name="info" id="info" [formControl]="customForm.controls.info" maxlength="{{validations.maxlengthinfo}}"
+              name="info" id="info" formControlName="info"
               placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>

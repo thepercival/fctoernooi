@@ -1,6 +1,9 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
-    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+    <app-tournament-sport-select *ngIf="chooseSport" class="col-xs-12 col-sm-10 col-md-8 col-lg-6"
+      (sendSport)="onGetSport($event)">
+    </app-tournament-sport-select>
+    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6" *ngIf="!chooseSport">
       <div class="d-flex justify-content-between mb-4">
         <h1>nieuw toernooi</h1>
         <h1 class="mr-1">
@@ -31,7 +34,7 @@
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
 
-      <form *ngIf="!processing && isLoggedIn()" id="newForm" name="form" (ngSubmit)="create()" [formGroup]="customForm"
+      <form *ngIf="!processing && isLoggedIn()" id="newForm" name="form" (ngSubmit)="create()" [formGroup]="form"
         novalidate>
         <div class="form-group row">
           <div class="col-3">
@@ -39,31 +42,19 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.name.invalid, 'is-valid': customForm.controls.name.valid }"
-              type="text" formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
+              [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
+              formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
         </div>
         <div class="form-group row">
           <div class="col-3">
             <label for="sportname" class="col-form-label">sport</label>
           </div>
-          <div class="col-9">
-            <input class="form-control" formControlName="sport" disabled="true">
-            <button type="button" class="btn btn-outline-primary">
-              kies sport
-            </button>
+          <div class="col-5">
+            <input class="form-control" [ngClass]="{ 'is-invalid': !sport, 'is-valid': sport }" formControlName="sport">
           </div>
-        </div>
-        <div *ngIf="customForm.controls.sportName.value == -1" class="form-group row">
-          <div class="col-3">
-            <label for="sportNameOther" class="col-form-label">naam</label>
-          </div>
-          <div class="col-9">
-            <input class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.sportNameOther.invalid, 'is-valid': customForm.controls.sportNameOther.valid }"
-              type="text" name="sportNameOther" id="sportNameOther" [formControl]="customForm.controls.sportNameOther"
-              maxlength="{{validations.maxlengthsportname}}"
-              placeholder="max. {{validations.maxlengthsportname}} karakters">
+          <div class="col-4">
+            <button type="button" class="btn btn-outline-secondary" (click)="chooseSport = true">kies</button>
           </div>
         </div>
         <div class="form-group row">
@@ -72,10 +63,10 @@
           </div>
           <div class="col-9">
             <input type="number" class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.nrofcompetitors.invalid, 'is-valid': customForm.controls.nrofcompetitors.valid}"
-              id="nrofcompetitors" name="nrofcompetitors" [formControl]="customForm.controls.nrofcompetitors"
-              [min]="validations.minnrofcompetitors" [max]="validations.maxnrofcompetitors" required>
-            <label *ngIf="customForm.controls.nrofcompetitors.value" class="text-info mb-0"><span
+              [ngClass]="{ 'is-invalid': form.controls.nrofcompetitors.invalid, 'is-valid': form.controls.nrofcompetitors.valid}"
+              formControlName="nrofcompetitors" [min]="validations.minnrofcompetitors"
+              [max]="validations.maxnrofcompetitors">
+            <label *ngIf="form.controls.nrofcompetitors.value" class="text-info mb-0"><span
                 class="font-weight-bold">{{getStructureDescription()}}
                 1 ronde</span>, pas dit aan onder "<span class="font-weight-bold">Indeling</span>" in het
               beheerscherm</label>
@@ -87,9 +78,8 @@
           </div>
           <div class="col-9">
             <input type="number" class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.nroffields.invalid, 'is-valid': customForm.controls.nroffields.valid}"
-              id="nroffields" name="nroffields" [formControl]="customForm.controls.nroffields"
-              [min]="validations.minnroffields" [max]="validations.maxnroffields" required>
+              [ngClass]="{ 'is-invalid': form.controls.nroffields.invalid, 'is-valid': form.controls.nroffields.valid}"
+              formControlName="nroffields" [min]="validations.minnroffields" [max]="validations.maxnroffields">
           </div>
         </div>
         <div class="form-group row">
@@ -99,9 +89,9 @@
           <div class="col-9">
             <div class="input-group input-group-date">
               <input class="form-control"
-                [ngClass]="{ 'is-invalid': customForm.controls.date.invalid, 'is-valid': customForm.controls.date.valid }"
-                placeholder="yyyy-mm-dd" id="dp" name="dp" [formControl]="customForm.controls.date" ngbDatepicker
-                #d="ngbDatepicker" required [dayTemplate]="t" [minDate]="minDateStruct">
+                [ngClass]="{ 'is-invalid': form.controls.date.invalid, 'is-valid': form.controls.date.valid }"
+                placeholder="yyyy-mm-dd" id="dp" name="dp" formControlName="date" ngbDatepicker #d="ngbDatepicker"
+                [dayTemplate]="t" [minDate]="minDateStruct">
               <div class="input-group-append">
                 <span class="input-group-text pointer" (click)="d.toggle()">
                   <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
@@ -115,8 +105,8 @@
             <label for="starttime" class="col-form-label">starttijd</label>
           </div>
           <div class="col-9">
-            <ngb-timepicker id="starttime" name="starttime" [formControl]="customForm.controls.time" [spinners]="false"
-              required></ngb-timepicker>
+            <ngb-timepicker id="starttime" name="starttime" formControlName="time" [spinners]="false" required>
+            </ngb-timepicker>
           </div>
         </div>
         <div class="form-group row">
@@ -128,14 +118,14 @@
           <div class="form-check col-9">
             <label class="custom-control custom-checkbox col-form-label pl-0">
               <input type="checkbox" class="custom-control-input form-check-input" id="public" name="public"
-                [formControl]="customForm.controls.public">
+                formControlName="public">
               <span class="custom-control-indicator"></span>
             </label>
           </div>
         </div>
         <div class="form-group row justify-content-end">
           <div class="col-9">
-            <button [disabled]="customForm.invalid" type="submit" class="btn btn-outline-primary">
+            <button [disabled]="form.invalid" type="submit" class="btn btn-outline-primary">
               maken
             </button>
           </div>

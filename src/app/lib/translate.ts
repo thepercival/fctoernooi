@@ -3,34 +3,6 @@ import { Sport, SportCustom, SportScoreConfig } from 'ngx-sport';
 export class TranslateService {
     static readonly language = 'nl';
 
-    static readonly data = {
-        'nl': {
-            'score': {
-                // SportCustom.Badminton: 'sets',
-                // SportCustom.Basketball: 'punten',
-                // SportCustom.Darts: 'sets',
-                // SportCustom.ESports: 'punten',
-                // SportCustom.Hockey: 'goals',
-                // SportCustom.Korfball: 'punten',
-                // SportCustom.Chess: 'punten',
-                // SportCustom.Squash: 'sets',
-                // SportCustom.TableTennis: 'sets',
-                // SportCustom.Tennis: 'sets',
-                // SportCustom.Football: 'goals',
-                // SportCustom.Volleyball: 'sets'
-            },
-            'scoresub': {
-                // SportCustom.Darts: 'legs',
-                // SportCustom.Tennis: 'games',
-            },
-
-            'scoredirection': {
-                // SportScoreConfig.UPWARDS: 'naar',
-                // SportScoreConfig.DOWNWARDS: 'vanaf'
-            }
-        }
-    };
-
     getSportName(language: string, customId: number): string {
         switch (customId) {
             case SportCustom.Badminton: { return 'badminton'; }
@@ -50,12 +22,7 @@ export class TranslateService {
         return undefined;
     }
 
-    static getScore(language: string, sportScoreConfig: SportScoreConfig): string {
-        const id = sportScoreConfig.getParent() === undefined ? 'score' : 'scoresub';
-        return this.data[language][id][sportScoreConfig.getSport().getCustomId()];
-    }
-
-    getScoreSingleName(language: string, sportScoreConfig: SportScoreConfig): string {
+    getScoreNameSingle(language: string, sportScoreConfig: SportScoreConfig): string {
         const customId = sportScoreConfig.getSport().getCustomId();
         if (sportScoreConfig.getParent() !== undefined) {
             return this.getScoreSubSingleName(language, customId);
@@ -84,12 +51,46 @@ export class TranslateService {
             case SportCustom.Tennis: { return 'game'; }
         }
         return undefined;
+    }
 
+    getScoreNameMultiple(language: string, sportScoreConfig: SportScoreConfig): string {
+        const customId = sportScoreConfig.getSport().getCustomId();
+        if (sportScoreConfig.getParent() !== undefined) {
+            return this.getScoreSubSingleName(language, customId);
+        }
+        switch (customId) {
+            case SportCustom.Badminton: { return 'sets'; }
+            case SportCustom.Basketball: { return 'punten'; }
+            case SportCustom.Darts: { return 'sets'; }
+            case SportCustom.ESports: { return 'punten'; }
+            case SportCustom.Hockey: { return 'goals'; }
+            case SportCustom.Korfball: { return 'punten'; }
+            case SportCustom.Chess: { return 'punten'; }
+            case SportCustom.Squash: { return 'sets'; }
+            case SportCustom.TableTennis: { return 'sets'; }
+            case SportCustom.Tennis: { return 'sets'; }
+            case SportCustom.Football: { return 'goals'; }
+            case SportCustom.Voleyball: { return 'sets'; }
+            case SportCustom.Baseball: { return 'punten'; }
+        }
+        return undefined;
+    }
+
+    protected getScoreSubNameMultiple(language: string, customId: number): string {
+        switch (customId) {
+            case SportCustom.Darts: { return 'legs'; }
+            case SportCustom.Tennis: { return 'games'; }
+        }
+        return undefined;
     }
 
 
-    static getScoreDirection(language: string, direction: number): string {
-        return this.data[language]['scoredirection'][direction];
+    getScoreDirection(language: string, direction: number): string {
+        switch (direction) {
+            case SportScoreConfig.UPWARDS: { return 'naar'; }
+            case SportScoreConfig.DOWNWARDS: { return 'vanaf'; }
+        }
+        return undefined;
     }
 
     getFieldName(language: string, sport: Sport): string {
