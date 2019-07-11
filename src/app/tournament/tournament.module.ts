@@ -54,6 +54,7 @@ import {
   SportConfigMapper,
   SportConfigRepository,
   SportConfigService,
+  SportPlanningConfigMapper,
   SportRepository,
   SportScoreConfigMapper,
   StructureMapper,
@@ -177,6 +178,7 @@ library.add(
     GameRepository,
     PlanningRepository,
     CSSService,
+    SportPlanningConfigMapper
   ]
 })
 export class TournamentModule { }
