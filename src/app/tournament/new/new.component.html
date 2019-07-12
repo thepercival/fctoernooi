@@ -125,7 +125,7 @@
         </div>
         <div class="form-group row justify-content-end">
           <div class="col-9">
-            <button [disabled]="form.invalid" type="submit" class="btn btn-outline-primary">
+            <button [disabled]="form.invalid || sport === undefined" type="submit" class="btn btn-outline-primary">
               maken
             </button>
           </div>
