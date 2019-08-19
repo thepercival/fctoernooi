@@ -8,7 +8,7 @@
       </h2>
       <h2>
         <button *ngIf="sponsors.length > 0" [routerLink]="['/toernooi/liveboard', tournament.getId()]"
-          [queryParams]="{screenfilter:'sponsors'}" type="button" class="btn btn-outline-secondary">
+          [queryParams]="{screenfilter:'sponsors'}" type="button" class="btn btn-secondary">
           <fa-icon [icon]="['fas', 'eye']"></fa-icon>
           <span> preview</span>
         </button>
@@ -28,7 +28,7 @@
           <th class="text-center">scherm nummer</th>
           <th class="d-none d-lg-table-cell">url</th>
           <th class="text-right">
-            <button type="button" class="btn btn-sm btn-outline-primary" (click)="addSponsor()"
+            <button type="button" class="btn btn-sm btn-primary" (click)="addSponsor()"
               *ngIf="sponsors.length < sponsorScreenService.getMaxNrOfSponsors()">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button>
@@ -38,7 +38,7 @@
       <tbody>
         <tr *ngFor="let sponsor of sponsors; let last = last;">
           <td>
-            <button type="button" class="btn btn-sm btn-outline-primary" (click)="editSponsor(sponsor)">
+            <button type="button" class="btn btn-sm btn-primary" (click)="editSponsor(sponsor)">
               <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
             </button>
           </td>
@@ -52,7 +52,7 @@
             <span>{{sponsor.getUrl()}}</span>
           </td>
           <td class="text-right">
-            <button type="button" class="btn btn-sm btn-outline-primary" (click)="removeSponsor(sponsor);">
+            <button type="button" class="btn btn-sm btn-danger" (click)="removeSponsor(sponsor);">
               <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
             </button>
           </td>

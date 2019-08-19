@@ -6,16 +6,8 @@
     padding-bottom:0;
 }
 
-.card.round>.card-header{
-    color: white;
-}
-
 app-tournament-structureround {
     width: 100%;
-}
-
-.card-body{
-    background-color: black;
 }
 
 .place-list-item {

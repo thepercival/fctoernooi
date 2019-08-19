@@ -1,7 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Sport, SportConfig, SportConfigRepository, SportConfigService, SportCustom, StructureRepository } from 'ngx-sport';
+import {
+  Sport,
+  SportConfig,
+  SportConfigRepository,
+  SportConfigService,
+  SportCustom,
+  SportPlanningConfigService,
+  SportScoreConfigService,
+  StructureRepository,
+} from 'ngx-sport';
 
 import { CSSService } from '../../common/cssservice';
 import { MyNavigation } from '../../common/navigation';
@@ -71,7 +80,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
                 Validators.max(this.validations.maxDrawPoints)
             ])]
         });
-        this.sportConfigService = new SportConfigService();
+        this.sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
     }
 
     initRanges() {

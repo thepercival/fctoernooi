@@ -13,6 +13,8 @@ import {
   Season,
   Sport,
   SportConfigService,
+  SportPlanningConfigService,
+  SportScoreConfigService,
   Structure,
   StructureMapper,
   StructureRepository,
@@ -137,7 +139,7 @@ export class NewComponent implements OnInit {
       const competition = new Competition(league, season);
       competition.setStartDateTime(startDateTime);
       competition.setRuleSet(RankingService.RULESSET_WC);
-      const sportConfigService = new SportConfigService();
+      const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
       sportConfigService.createDefault(this.sport, competition);
 
       for (let fieldNumber = 1; fieldNumber <= nroffields; fieldNumber++) {

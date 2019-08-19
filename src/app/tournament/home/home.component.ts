@@ -29,6 +29,8 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         private authService: AuthService,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
+        private sportConfigService: SportConfigService,
+
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
@@ -108,9 +110,8 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     sportConfigsAreDefault() {
-        const sportConfigService = new SportConfigService();
         return this.tournament.getCompetition().getSportConfigs().every(sportConfig => {
-            return sportConfigService.isDefault(sportConfig);
+            return this.sportConfigService.isDefault(sportConfig);
         });
     }
 

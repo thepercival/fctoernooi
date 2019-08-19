@@ -104,7 +104,7 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
     this.setAlert('info', 'de sport wordt verwijderd');
     this.processing = true;
 
-    this.sportConfigRepository.removeObject(sportConfig, this.tournament.getCompetition())
+    this.sportConfigRepository.removeObject(sportConfig, this.tournament.getCompetition(), this.structure)
       .subscribe(
         /* happy path */ refereeRes => {
           const firstRoundNumber = this.structure.getFirstRoundNumber();

@@ -54,7 +54,7 @@
             <input class="form-control" [ngClass]="{ 'is-invalid': !sport, 'is-valid': sport }" formControlName="sport">
           </div>
           <div class="col-4">
-            <button type="button" class="btn btn-outline-secondary" (click)="chooseSport = true">kies</button>
+            <button type="button" class="btn btn-secondary" (click)="chooseSport = true">kies</button>
           </div>
         </div>
         <div class="form-group row">
@@ -125,7 +125,7 @@
         </div>
         <div class="form-group row justify-content-end">
           <div class="col-9">
-            <button [disabled]="form.invalid || sport === undefined" type="submit" class="btn btn-outline-primary">
+            <button [disabled]="form.invalid || sport === undefined" type="submit" class="btn btn-primary">
               maken
             </button>
           </div>

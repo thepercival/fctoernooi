@@ -1,9 +1,10 @@
-<nav *ngIf="tournamentLiveboardLink.showIcon !== false" class="navbar navbar-dark bg-dark">
+<nav *ngIf="tournamentLiveboardLink.showIcon !== false" class="navbar navbar-dark bg-primary">
   <a class="navbar-brand" tabindex="-1" [routerLink]="['/']">
     <i class="fi flaticon-favicon"></i> {{title}}</a>
 
-  <button *ngIf="tournamentLiveboardLink.showIcon === true" [routerLink]="[tournamentLiveboardLink.link, tournamentLiveboardLink.tournamentId]"
-    routerLinkActive="active" class="btn btn-outline-secondary d-none d-lg-block" type="button" tabindex="-1">
+  <button *ngIf="tournamentLiveboardLink.showIcon === true"
+    [routerLink]="[tournamentLiveboardLink.link, tournamentLiveboardLink.tournamentId]" routerLinkActive="active"
+    class="btn btn-outline-secondary d-none d-lg-block" type="button" tabindex="-1">
     <fa-icon [icon]=" [ 'fas', 'tv'] "></fa-icon>
     <span> scorebord</span>
   </button>
