@@ -1,6 +1,6 @@
 <div class="row justify-content-center no-gutters">
   <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
-    <app-tournament-title [tournament]="tournament" [routerLink]="['/toernooi', tournament.getId()]">
+    <app-tournament-title [tournament]="tournament" [admin]="true">
     </app-tournament-title>
     <div>
       <h2>
@@ -21,15 +21,14 @@
           <th class="text-center d-none d-sm-table-cell">aangemeld</th>
           <th>naam</th>
           <th class="text-center">
-            <button *ngIf="!hasBegun() && allPlaceHaveCompetitor()" type="button"
-              class="btn btn-sm btn-outline-primary" (click)="swapAll()"
-              [disabled]="processing || placeToSwap !== undefined" title="willekeurige volgorde">
+            <button *ngIf="!hasBegun() && allPlaceHaveCompetitor()" type="button" class="btn btn-sm btn-outline-primary"
+              (click)="swapAll()" [disabled]="processing || placeToSwap !== undefined" title="willekeurige volgorde">
               <fa-icon [icon]="['fas', 'random']"></fa-icon>
             </button>
             <fa-icon *ngIf="!hasBegun() && !allPlaceHaveCompetitor() && showSwap" title="volgorder omwisselen"
               [icon]="['fas', 'sort']"></fa-icon>
           </th>
-          <th *ngIf="!hasBegun()" class="text-right"><button type="button" class="btn btn-sm btn-outline-primary"
+          <th *ngIf="!hasBegun()" class="text-right"><button type="button" class="btn btn-sm btn-primary"
               (click)="addPlaceToRootRound()">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button></th>

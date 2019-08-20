@@ -1,4 +1,4 @@
-import { State, Game, NameService, PlanningService, Poule, RoundNumber, Structure } from 'ngx-sport';
+import { Game, NameService, PlanningService, Poule, RoundNumber, State, Structure } from 'ngx-sport';
 
 import {
     CreatedAndInplayGamesScreen,
@@ -83,7 +83,7 @@ export class Liveboard {
         let games: Game[] = this.planningService.getGamesForRoundNumber(roundNumber, Game.ORDER_RESOURCEBATCH);
         const now = new Date();
         games = games.filter(game => game.getState() !== State.Finished &&
-            (!roundNumber.getPlanningConfig().getEnableTime() || game.getStartDateTime() > now)
+            (!roundNumber.getValidPlanningConfig().getEnableTime() || game.getStartDateTime() > now)
         );
 
         // aantal wedstrijden per rondenummber < this.maxLines

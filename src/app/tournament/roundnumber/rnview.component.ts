@@ -1,7 +1,16 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import { State, Game, NameService, PlanningService, Poule, RankingService, RoundNumber, SportScoreConfigService } from 'ngx-sport';
+import {
+  Game,
+  NameService,
+  PlanningService,
+  Poule,
+  RankingService,
+  RoundNumber,
+  SportScoreConfigService,
+  State,
+} from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
 import { CSSService } from '../../common/cssservice';
@@ -54,7 +63,7 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     this.favorites = this.favRepository.getItem(this.tournament);
     this.hasFields = this.tournament.getCompetition().getFields().length > 0;
     // @TODO
-    this.hasReferees = this.tournament.getCompetition().getReferees().length > 0 || this.roundNumber.getPlanningConfig().getSelfReferee();
+    this.hasReferees = this.tournament.getCompetition().getReferees().length > 0 || this.roundNumber.getValidPlanningConfig().getSelfReferee();
 
     // gamedate
     this.roundNumberNeedsRanking = this.roundNumber.needsRanking();
@@ -109,7 +118,7 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   }
 
   getGameTimeTooltipDescription() {
-    const cfg = this.roundNumber.getPlanningConfig();
+    const cfg = this.roundNumber.getValidPlanningConfig();
     let descr = 'De wedstrijden duren ' + cfg.getMinutesPerGame() + ' minuten. ';
     if (cfg.getHasExtension()) {
       descr += 'De eventuele verlenging duurt ' + cfg.getMinutesPerGameExt() + ' minuten. ';
@@ -159,7 +168,7 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
       }
       return false;
     }
-    const cfg = this.roundNumber.getPlanningConfig();
+    const cfg = this.roundNumber.getValidPlanningConfig();
     const newStartDateTime = new Date(this.previousGameStartDateTime.getTime());
     newStartDateTime.setMinutes(newStartDateTime.getMinutes() + cfg.getMaximalNrOfMinutesPerGame() + cfg.getMinutesBetweenGames());
     this.previousGameStartDateTime = new Date(game.getStartDateTime().getTime());

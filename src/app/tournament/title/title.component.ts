@@ -11,14 +11,14 @@ import { Tournament } from '../../lib/tournament';
 export class TitleComponent {
 
   @Input() tournament: Tournament;
-  @Input() routerLink: [];
+  @Input() admin: boolean;
 
   constructor(private router: Router, private myNavigation: MyNavigation) {
   }
 
   navigateBack() {
-    if (this.routerLink !== undefined) {
-      this.router.navigate(this.routerLink);
+    if (this.admin && this.tournament) {
+      this.router.navigate(['/toernooi', this.tournament.getId()]);
     } else {
       this.myNavigation.back();
     }

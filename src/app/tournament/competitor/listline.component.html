@@ -1,6 +1,5 @@
 <td id="scroll-place-{{place.getId()}}">
-  <button #btnEdit type="button" class="btn btn-sm btn-outline-primary" [disabled]="placeToSwap !== undefined"
-    (click)="edit()">
+  <button #btnEdit type="button" class="btn btn-sm btn-primary" [disabled]="placeToSwap !== undefined" (click)="edit()">
     <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
   </button>
 </td>
@@ -20,9 +19,9 @@
     [icon]="['far', (placeToSwap === place ? 'check-' : '') + 'square']" size="2x"></fa-icon>
 </td>
 <td colspan=2 *ngIf="!place.getCompetitor()">
-  <span class="badge badge-danger">vul een naam in</span>
+  <span class="badge badge-warning">vul een naam in</span>
 </td>
-<td *ngIf="!hasBegun" class="text-right"><button type="button" class="btn btn-sm btn-outline-primary"
-    (click)="remove()" [disabled]="placeToSwap !== undefined">
+<td *ngIf="!hasBegun" class="text-right"><button type="button" class="btn btn-sm btn-danger" (click)="remove()"
+    [disabled]="placeToSwap !== undefined">
     <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
   </button></td>

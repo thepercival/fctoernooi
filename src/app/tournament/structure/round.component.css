@@ -11,14 +11,7 @@ app-tournament-structureround {
 }
 
 .place-list-item {
-    background-color: transparent;
     margin-top: 3px;
-}
-
-.qualifygroup-list-item {
-    background-color: transparent;
-    margin-top: 3px;
-    border-color: white;
 }
 
 .card.qualification{

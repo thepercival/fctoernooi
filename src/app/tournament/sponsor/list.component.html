@@ -1,6 +1,6 @@
 <div class="row justify-content-center no-gutters">
   <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-    <app-tournament-title [tournament]="tournament" [routerLink]="['/toernooi', tournament.getId()]">
+    <app-tournament-title [tournament]="tournament" [admin]="true">
     </app-tournament-title>
     <div *ngIf="!processing" class="d-flex justify-content-between">
       <h2>
