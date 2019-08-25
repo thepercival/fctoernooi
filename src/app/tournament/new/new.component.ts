@@ -38,7 +38,7 @@ export class NewComponent implements OnInit {
   processing = true;
   alert: IAlert;
   minDateStruct: NgbDateStruct;
-  chooseSport: boolean = false;
+  chooseSport = false;
   sport: Sport;
   validations: any = {
     minnroffields: 1,
