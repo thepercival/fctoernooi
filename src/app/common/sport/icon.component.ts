@@ -26,7 +26,6 @@ export class SportIconComponent implements OnInit {
             this.type = this.getIconType(this.configs[0].getSport().getCustomId());
             this.class = this.getIconClass(this.configs[0].getSport().getCustomId());
         }
-        console.log(this.class);
         this.show = this.class !== undefined;
     }
 

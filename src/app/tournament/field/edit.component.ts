@@ -8,6 +8,7 @@ import {
     PlanningRepository,
     PlanningService,
     Sport,
+    SportConfigService,
     StructureRepository,
 } from 'ngx-sport';
 
@@ -33,6 +34,7 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
     };
 
     constructor(
+        private sportConfigService: SportConfigService,
         private fieldRepository: FieldRepository,
         route: ActivatedRoute,
         router: Router,
@@ -115,12 +117,8 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
         };
 
         // als sportConfig nog niet bestaat dan toevoegen aan ..... 
-        this.sportConfigService.createDefault(sport, this.tournament.getCompetition());
-        competition.getSportConfigs().forEach(sportConfig => {
-            this.sportConfigService.addToRoundNumber(sportConfig, firstRoundNumber);
-        });
-
-
+        this.sportConfigService.createDefault(this.sport, this.tournament.getCompetition(), this.structure);
+        // @TODO deze ook opslaan in db!!
 
         this.fieldRepository.createObject(field, this.tournament.getCompetition()).subscribe(
             /* happy path */ fieldRes => {
