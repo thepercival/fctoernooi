@@ -11,7 +11,7 @@
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="customForm" novalidate>
+      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
         <div class="form-group row">
           <div class="col-3">
             <label for="place" class="col-form-label">plek</label>
@@ -26,14 +26,14 @@
           </div>
           <div class="col-9">
             <input #inputname class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.name.invalid, 'is-valid': customForm.controls.name.valid }"
+              [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }"
               type="text" name="name" id="name" formControlName="name"
               placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
         </div>
         <div class="form-group row">
           <label for="registered" class="col-3 col-form-label">
-            <span [ngClass]="{ 'registered-xs': customForm.controls.registered.value }">aangemeld</span></label>
+            <span [ngClass]="{ 'registered-xs': form.controls.registered.value }">aangemeld</span></label>
           <div class="form-check col-9">
             <label class="custom-control custom-checkbox col-form-label pl-0">
               <input type="checkbox" class="custom-control-input form-check-input" id="registered" name="registered"
@@ -48,14 +48,14 @@
           </div>
           <div class="col-9">
             <textarea class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.info.invalid, 'is-valid': customForm.controls.info.valid }"
+              [ngClass]="{ 'is-invalid': form.controls.info.invalid, 'is-valid': form.controls.info.valid }"
               name="info" id="info" formControlName="info"
               placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>
         <div class="form-group row justify-content-end">
           <div class="col-9">
-            <button [disabled]="customForm.invalid" type="submit" class="btn btn-primary">
+            <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
               <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemer opslaan
             </button>
           </div>

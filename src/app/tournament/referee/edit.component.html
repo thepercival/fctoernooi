@@ -12,14 +12,14 @@
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="customForm" novalidate>
+      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
         <div class="form-group row">
           <div class="col-3">
             <label for="initials" class="col-form-label">initialen</label>
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.initials.invalid, 'is-valid': customForm.controls.initials.valid }"
+              [ngClass]="{ 'is-invalid': form.controls.initials.invalid, 'is-valid': custformomForm.controls.initials.valid }"
               type="text" name="initials" id="initials" formControlName="initials"
               placeholder="max. {{validations.maxlengthinitials}} karakters">
           </div>
@@ -30,7 +30,7 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.name.invalid, 'is-valid': customForm.controls.name.valid }"
+              [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': custformomForm.controls.name.valid }"
               type="text" name="name" id="name" formControlName="name"
               placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
@@ -44,7 +44,7 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.emailaddress.invalid, 'is-valid': customForm.controls.emailaddress.valid }"
+              [ngClass]="{ 'is-invalid': form.controls.emailaddress.invalid, 'is-valid': form.controls.emailaddress.valid }"
               type="text" name="emailaddress" id="emailaddress" formControlName="emailaddress"
               placeholder="max. {{validations.maxlengthemailaddress}} karakters">
           </div>
@@ -55,14 +55,13 @@
           </div>
           <div class="col-9">
             <textarea class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.info.invalid, 'is-valid': customForm.controls.info.valid }"
-              name="info" id="info" formControlName="info"
-              placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
+              [ngClass]="{ 'is-invalid': form.controls.info.invalid, 'is-valid': form.controls.info.valid }" name="info"
+              id="info" formControlName="info" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>
         <div class="form-group row justify-content-end">
           <div class="col-9">
-            <button [disabled]="customForm.invalid" type="submit" class="btn btn-primary">
+            <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
               <i class="fi flaticon-referee" title="scheidsrechter"></i>
               <span>{{referee ? 'wijzigen' : 'toevoegen'}}</span>
             </button>

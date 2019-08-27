@@ -5,7 +5,7 @@
             </app-tournament-title>
             <div>
                 <h2>
-                    <i class="fi flaticon-field"></i> velden
+                    <i class="fi flaticon-soccer-field"></i> velden
                 </h2>
                 <h2 *ngIf="processing" class="text-center">
                     <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
@@ -16,39 +16,34 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th>nr.</th>
+                        <th>sport</th>
                         <th>naam</th>
                         <th class="text-right">
-                            <button *ngIf="!hasBegun()" type="button" class="btn btn-sm btn-outline-primary"
-                                (click)="addField()" [disabled]="processing || disableEditButtons">
+                            <button *ngIf="!hasBegun()" type="button" class="btn btn-sm btn-primary"
+                                (click)="addField()" [disabled]="processing">
                                 <fa-icon [icon]="['fas', 'plus']"></fa-icon>
                             </button>
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let fieldItem of fieldsList; let last = last;">
+                    <tr *ngFor="let field of fields">
                         <td>
-                            <button *ngIf="!hasBegun()" type="button" class="btn btn-sm btn-outline-primary"
-                                [disabled]="processing || ( !fieldItem.editable && disableEditButtons ) || ( fieldItem.editable && fieldItem.field.getName().length < validations.minlengthname )"
-                                (click)="saveedit(fieldItem);">
-                                <fa-icon [icon]="['fas', fieldItem.editable ? 'save' : 'pencil-alt' ]"></fa-icon>
+                            <button *ngIf="!hasBegun()" type="button" class="btn btn-sm btn-primary"
+                                [disabled]="processing" (click)="editField(field)">
+                                <fa-icon [icon]="['fas', 'pencil-alt' ]"></fa-icon>
                             </button>
                         </td>
                         <td>
-                            <span>{{fieldItem.field.getNumber()}}</span>
+                            <app-sport-icon [customId]="field.getSport().getCustomId()"></app-sport-icon>
+                            <span> {{field.getSport().getName()}}</span>
                         </td>
                         <td>
-                            <span *ngIf="!fieldItem.editable && fieldItem.field !== undefined">{{fieldItem.field.getName()
-                                }}</span>
-                            <!-- <input type="text" class="form-control input-fieldname"
-                                [ngModel]="fieldItem.field.getName()" (ngModelChange)="fieldItem.field.setName($event)"
-                                *ngIf="fieldItem.editable" required> -->
-                            @TODO
+                            <span>{{field.getName()}}</span>
                         </td>
                         <td class="text-right">
-                            <button *ngIf="last && !hasBegun()" type="button" class="btn btn-sm btn-outline-primary"
-                                [disabled]="processing || disableEditButtons" (click)="removeField(fieldItem);">
+                            <button *ngIf="!hasBegun()" type="button" class="btn btn-sm btn-danger"
+                                [disabled]="processing" (click)="removeField(field);">
                                 <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
                             </button>
                         </td>

@@ -17,7 +17,7 @@ import { TournamentComponent } from '../component';
     styleUrls: ['./edit.component.css']
 })
 export class SponsorEditComponent extends TournamentComponent implements OnInit {
-    customForm: FormGroup;
+    form: FormGroup;
     sponsor: Sponsor;
     base64Logo: string | ArrayBuffer;
 
@@ -48,7 +48,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         this.logoInput = this.logoInputUpload;
         this.newLogoUploaded = false;
 
-        this.customForm = fb.group({
+        this.form = fb.group({
             name: ['', Validators.compose([
                 Validators.required,
                 Validators.minLength(this.validations.minlengthname),
@@ -97,15 +97,15 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         }
         if (this.sponsor === undefined) {
             const currentScreenNr = this.rangeScreenNrs.length > 0 ? this.rangeScreenNrs[0] : undefined;
-            this.customForm.controls.screennr.setValue(currentScreenNr);
+            this.form.controls.screennr.setValue(currentScreenNr);
             this.processing = false;
             return;
         }
 
-        this.customForm.controls.name.setValue(this.sponsor.getName());
-        this.customForm.controls.url.setValue(this.sponsor.getUrl());
-        this.customForm.controls.logourl.setValue(this.sponsor.getLogoUrl());
-        this.customForm.controls.screennr.setValue(this.sponsor.getScreenNr());
+        this.form.controls.name.setValue(this.sponsor.getName());
+        this.form.controls.url.setValue(this.sponsor.getUrl());
+        this.form.controls.logourl.setValue(this.sponsor.getLogoUrl());
+        this.form.controls.screennr.setValue(this.sponsor.getScreenNr());
         this.processing = false;
     }
 
@@ -121,10 +121,10 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
     }
 
     add() {
-        const name = this.customForm.controls.name.value;
-        const url = this.customForm.controls.url.value;
-        const logoUrl = this.logoInput === this.logoInputUrl ? this.customForm.controls.logourl.value : undefined;
-        const screennr = this.customForm.controls.screennr.value;
+        const name = this.form.controls.name.value;
+        const url = this.form.controls.url.value;
+        const logoUrl = this.logoInput === this.logoInputUrl ? this.form.controls.logourl.value : undefined;
+        const screennr = this.form.controls.screennr.value;
 
         const ref: JsonSponsor = {
             name: name,
@@ -143,16 +143,16 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
     }
 
     edit() {
-        const name = this.customForm.controls.name.value;
-        const url = this.customForm.controls.url.value;
+        const name = this.form.controls.name.value;
+        const url = this.form.controls.url.value;
 
         const logoUrl = (this.newLogoUploaded !== true || this.logoInput === this.logoInputUrl) ?
-         this.customForm.controls.logourl.value : undefined;
+            this.form.controls.logourl.value : undefined;
 
         this.sponsor.setName(name);
         this.sponsor.setUrl(url ? url : undefined);
         this.sponsor.setLogoUrl(logoUrl);
-        this.sponsor.setScreenNr(this.customForm.controls.screennr.value);
+        this.sponsor.setScreenNr(this.form.controls.screennr.value);
         this.sponsorRepository.editObject(this.sponsor, this.tournament)
             .subscribe(
             /* happy path */ sponsorRes => {
@@ -170,7 +170,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
             return;
         }
         const input = new FormData();
-        input.append('logostream', this.customForm.get('logoupload').value);
+        input.append('logostream', this.form.get('logoupload').value);
         this.sponsorRepository.uploadImage(sponsorId, this.tournament, input)
             .subscribe(
                         /* happy path */ logoUrlRes => {
@@ -198,7 +198,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         reader.onload = (_event) => {
             this.base64Logo = reader.result;
         };
-        this.customForm.get('logoupload').setValue(file);
+        this.form.get('logoupload').setValue(file);
 
         this.newLogoUploaded = true;
     }

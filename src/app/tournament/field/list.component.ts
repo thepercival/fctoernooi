@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Field, FieldRepository, JsonField, PlanningRepository, PlanningService, StructureRepository } from 'ngx-sport';
+import { Field, FieldRepository, PlanningRepository, PlanningService, StructureRepository } from 'ngx-sport';
 
+import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentService } from '../../lib/tournament/service';
 import { TournamentComponent } from '../component';
@@ -15,7 +16,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
 
     public disableEditButtons = false;
     private planningService: PlanningService;
-    fieldsList: Array<IFieldListItem>;
+    fields: Field[];
 
     validations: any = {
         'minlengthname': Field.MIN_LENGTH_NAME,
@@ -38,7 +39,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
     }
 
     initFields() {
-        this.createFieldsList();
+        this.fields = this.tournament.getCompetition().getFields();
         this.planningService = new PlanningService(this.tournament.getCompetition());
         this.processing = false;
         if (this.hasBegun()) {
@@ -50,64 +51,23 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
         return this.structure.getRootRound().hasBegun();
     }
 
-    createFieldsList() {
-        const fields = this.tournament.getCompetition().getFields();
-        this.fieldsList = [];
-        fields.forEach(function (fieldIt) {
-            this.fieldsList.push({
-                field: fieldIt,
-                editable: false
-            });
-        }, this);
-    }
-
-    saveedit(fieldListItem: IFieldListItem) {
-        if (fieldListItem.editable) {
-            this.editField(fieldListItem);
-        } else {
-            this.resetAlert();
-        }
-        fieldListItem.editable = !fieldListItem.editable;
-        this.disableEditButtons = fieldListItem.editable;
-    }
-
     addField() {
-        this.setAlert('info', 'het veld wordt toegevoegd');
-        this.processing = true;
-
-        const jsonField: JsonField = {
-            number: this.fieldsList.length + 1,
-            name: '' + (this.fieldsList.length + 1),
-            sportId: 12 /* @TODO */
-        };
-
-        this.fieldRepository.createObject(jsonField, this.tournament.getCompetition())
-            .subscribe(
-            /* happy path */ fieldRes => {
-                    const fieldItem: IFieldListItem = { field: fieldRes, editable: false };
-                    this.fieldsList.push(fieldItem);
-                    const tournamentService = new TournamentService(this.tournament);
-                    tournamentService.reschedule(this.planningService, this.structure.getFirstRoundNumber());
-                    this.planningRepository.editObject(this.structure.getFirstRoundNumber())
-                        .subscribe(
-                        /* happy path */ gamesRes => {
-                                this.processing = false;
-                                this.setAlert('success', 'het veld is toegevoegd');
-                            },
-                /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                /* onComplete */() => this.processing = false
-                        );
-                },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-
-            );
+        this.linkToEdit(this.tournament);
     }
 
-    removeField(fieldItem: IFieldListItem) {
+    editField(field: Field) {
+        this.linkToEdit(this.tournament, field);
+    }
+
+    linkToEdit(tournament: Tournament, field?: Field) {
+        this.router.navigate(['/toernooi/fieldedit', tournament.getId(), field ? field.getNumber() : 0]);
+    }
+
+    removeField(field: Field) {
         this.setAlert('info', 'het veld wordt verwijderd');
         this.processing = true;
 
-        this.fieldRepository.removeObject(fieldItem.field, this.tournament.getCompetition())
+        this.fieldRepository.removeObject(field, this.tournament.getCompetition())
             .subscribe(
             /* happy path */ fieldRes => {
                     const tournamentService = new TournamentService(this.tournament);
@@ -125,23 +85,4 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
             /* error path */ e => { this.setAlert('danger', 'X' + e); this.processing = false; },
             );
     }
-
-    editField(fieldItem) {
-        this.setAlert('info', 'de veldnaam wordt gewijzigd');
-        this.processing = true;
-
-        this.fieldRepository.editObject(fieldItem.field, this.tournament.getCompetition())
-            .subscribe(
-            /* happy path */ fieldRes => {
-                    this.setAlert('success', 'de veldnaam is gewijzigd');
-                },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => { this.processing = false; }
-            );
-    }
-}
-
-export interface IFieldListItem {
-    field: Field;
-    editable: boolean;
 }

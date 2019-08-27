@@ -13,7 +13,3 @@ input.ng-invalid, select.ng-invalid {
 .card-body {
     padding: 1rem;
 }
-
-.pointer{
-    cursor:pointer;
-}

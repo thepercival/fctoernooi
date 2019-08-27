@@ -17,7 +17,7 @@ export class PasswordchangeComponent implements OnInit {
   alert: IAlert;
   passwordChanged = false;
   processing = true;
-  customForm: FormGroup;
+  form: FormGroup;
 
   validations: any = {
     minlengthcode: 100000,
@@ -34,7 +34,7 @@ export class PasswordchangeComponent implements OnInit {
     private authService: AuthService,
     fb: FormBuilder
   ) {
-    this.customForm = fb.group({
+    this.form = fb.group({
       code: ['', Validators.compose([
         Validators.required,
         Validators.min(this.validations.minlengthcode),
@@ -78,8 +78,8 @@ export class PasswordchangeComponent implements OnInit {
     this.processing = true;
     this.setAlert('info', 'het wachtwoord wordt gewijzigd');
 
-    const code = this.customForm.controls.code.value;
-    const password = this.customForm.controls.password.value;
+    const code = this.form.controls.code.value;
+    const password = this.form.controls.password.value;
 
     // this.activationmessage = undefined;
     this.authService.passwordChange(this.emailaddress, password, code)

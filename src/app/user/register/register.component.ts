@@ -17,7 +17,7 @@ export class RegisterComponent implements OnInit {
   alert: IAlert;
   registered = false;
   processing = true;
-  customForm: FormGroup;
+  form: FormGroup;
 
   validations: UserValidations = {
     minlengthemailaddress: User.MIN_LENGTH_EMAIL,
@@ -32,7 +32,7 @@ export class RegisterComponent implements OnInit {
     private authService: AuthService,
     fb: FormBuilder
   ) {
-    this.customForm = fb.group({
+    this.form = fb.group({
       emailaddress: ['', Validators.compose([
         Validators.required,
         Validators.minLength(this.validations.minlengthemailaddress),
@@ -73,8 +73,8 @@ export class RegisterComponent implements OnInit {
     this.processing = true;
     this.setAlert('info', 'de registratie wordt opgeslagen');
 
-    const emailaddress = this.customForm.controls.emailaddress.value;
-    const password = this.customForm.controls.password.value;
+    const emailaddress = this.form.controls.emailaddress.value;
+    const password = this.form.controls.password.value;
 
     // this.activationmessage = undefined;
     this.authService.register({ emailaddress: emailaddress, password: password })

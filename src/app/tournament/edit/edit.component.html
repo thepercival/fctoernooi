@@ -13,14 +13,14 @@
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing" name="form" (ngSubmit)="edit()" [formGroup]="customForm" novalidate>
+      <form *ngIf="!processing" name="form" (ngSubmit)="edit()" [formGroup]="form" novalidate>
         <div class="form-group row">
           <div class="col-3">
             <label for="name" class="col-form-label">naam</label>
           </div>
           <div class="col-9 col-sm-8 col-md-7">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.name.invalid, 'is-valid': customForm.controls.name.valid }"
+              [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }"
               type="text" name="name" id="name" formControlName="name"
               placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
@@ -32,7 +32,7 @@
           <div class="col-9">
             <div class="input-group input-group-date">
               <input class="form-control"
-                [ngClass]="{ 'is-invalid': customForm.controls.date.invalid, 'is-valid': customForm.controls.date.valid }"
+                [ngClass]="{ 'is-invalid': form.controls.date.invalid, 'is-valid': form.controls.date.valid }"
                 placeholder="yyyy-mm-dd" id="dp" name="dp" formControlName="date" ngbDatepicker #d="ngbDatepicker"
                 required [dayTemplate]="t" [minDate]="minDateStruct">
               <div class="input-group-append">
@@ -91,7 +91,7 @@
             <label class="col-form-label">( tijdens een ronde )</label>
           </div>
         </div>
-        <div *ngIf="!hasBegun && customForm.controls.togglebreak.value === true" class="form-group row">
+        <div *ngIf="!hasBegun && form.controls.togglebreak.value === true" class="form-group row">
           <div class="col-3">
             <label for="breaktime" class="col-form-label">pauzetijd</label>
           </div>
@@ -100,14 +100,14 @@
             </ngb-timepicker>
           </div>
         </div>
-        <div *ngIf="!hasBegun && customForm.controls.togglebreak.value" class="form-group row">
+        <div *ngIf="!hasBegun && form.controls.togglebreak.value" class="form-group row">
           <div class="col-3">
             <label for="breakduration" class="col-form-label">pauzeduur</label>
           </div>
           <div class="col-6 col-sm-5 ">
             <div class="input-group">
               <input type="number" class="form-control"
-                [ngClass]="{ 'is-invalid': customForm.controls.breakduration.invalid, 'is-valid': customForm.controls.breakduration.valid}"
+                [ngClass]="{ 'is-invalid': form.controls.breakduration.invalid, 'is-valid': form.controls.breakduration.valid}"
                 id="breakduration" name="breakduration" formControlName="breakduration"
                 [min]="validations.minbreakduration" [max]="validations.maxbreakduration">
               <div class="input-group-append">
@@ -118,7 +118,7 @@
         </div>
         <div class="form-group row justify-content-end">
           <div class="col-9">
-            <button [disabled]="customForm.invalid" type="submit" class="btn btn-outline-primary">
+            <button [disabled]="form.invalid" type="submit" class="btn btn-outline-primary">
               opslaan
             </button>
           </div>

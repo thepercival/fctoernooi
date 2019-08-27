@@ -26,15 +26,15 @@
         <a role="button" class="btn btn-outline-secondary" routerLink="/">ga terug</a>
       </div>
 
-      <form *ngIf="!processing && !isLoggedIn() && !registered" name="form" (ngSubmit)="register()"
-        [formGroup]="customForm" novalidate>
+      <form *ngIf="!processing && !isLoggedIn() && !registered" name="form" (ngSubmit)="register()" [formGroup]="form"
+        novalidate>
         <div class="form-group row">
           <div class="col-3">
             <label for="emailaddress" class="col-form-label">emailadres</label>
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.emailaddress.invalid, 'is-valid': customForm.controls.emailaddress.valid }"
+              [ngClass]="{ 'is-invalid': form.controls.emailaddress.invalid, 'is-valid': form.controls.emailaddress.valid }"
               type="text" name="emailaddress" id="emailaddress" formControlName="emailaddress"
               placeholder="max. {{validations.maxlengthemailaddress}} karakters">
           </div>
@@ -45,7 +45,7 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.password.invalid, 'is-valid': customForm.controls.password.valid }"
+              [ngClass]="{ 'is-invalid': form.controls.password.invalid, 'is-valid': form.controls.password.valid }"
               type="password" name="password" id="password" formControlName="password"
               placeholder="min. {{validations.minlengthpassword}} karakters">
           </div>
@@ -56,14 +56,14 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.passwordRepeat.invalid, 'is-valid': customForm.controls.passwordRepeat.valid }"
+              [ngClass]="{ 'is-invalid': form.controls.passwordRepeat.invalid, 'is-valid': form.controls.passwordRepeat.valid }"
               type="password" name="passwordRepeat" id="passwordRepeat" formControlName="passwordRepeat"
               placeholder="min. {{validations.minlengthpassword}} karakters">
           </div>
         </div>
         <div class="form-group row justify-content-end">
           <div class="col-9">
-            <button [disabled]="customForm.invalid" type="submit" class="btn btn-outline-primary">
+            <button [disabled]="form.invalid" type="submit" class="btn btn-outline-primary">
               registreren
             </button>
           </div>

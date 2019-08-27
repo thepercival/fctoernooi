@@ -25,7 +25,7 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     // modelConfig: Config;
     // modelRecreate: boolean;
     // modelReschedule: boolean;
-    // customForm: FormGroup;
+    // form: FormGroup;
     // validations: any = {
     //     minNrOfHeadtoheadMatches: 1,
     //     maxNrOfHeadtoheadMatches: 4,

@@ -23,7 +23,7 @@
           <th>naam</th>
           <th class="d-none d-sm-table-cell" title="aantal"><i class="fi flaticon-soccer-field"></i></th>
           <th class="text-right" *ngIf="!hasBegun()">
-            <button type="button" class="btn btn-sm btn-outline-primary"
+            <button type="button" class="btn btn-sm btn-primary"
               [routerLink]="['/toernooi/sportconfigedit', tournament.getId(), undefined]" [disabled]="processing">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button>
@@ -33,7 +33,7 @@
       <tbody>
         <tr *ngFor="let sportConfig of sportConfigs; let last = last;">
           <td>
-            <button *ngIf="!hasBegun()" type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing"
+            <button *ngIf="!hasBegun()" type="button" class="btn btn-sm btn-primary" [disabled]="processing"
               (click)="editSportConfig(sportConfig)">
               <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
             </button>
@@ -43,7 +43,7 @@
           </td>
           <td class="d-none d-sm-table-cell">{{getNrOfFields(sportConfig.getSport())}}</td>
           <td class="text-right" *ngIf="!hasBegun()">
-            <button type="button" class="btn btn-sm btn-outline-primary" [disabled]="processing"
+            <button type="button" class="btn btn-sm btn-danger" [disabled]="processing"
               (click)="openRemoveModal(content, sportConfig)">
               <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
             </button>

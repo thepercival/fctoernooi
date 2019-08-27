@@ -12,16 +12,15 @@
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="customForm" novalidate>
+      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
         <div class="form-group row">
           <div class="col-3">
             <label for="name" class="col-form-label">naam</label>
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.name.invalid, 'is-valid': customForm.controls.name.valid }"
-              type="text" name="name" id="name" formControlName="name"
-              placeholder="max. {{validations.maxlengthname}} karakters">
+              [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
+              name="name" id="name" formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
         </div>
         <div class="form-group row">
@@ -30,9 +29,8 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.url.invalid, 'is-valid': customForm.controls.url.valid }"
-              type="text" name="url" id="url" formControlName="url"
-              placeholder="max. {{validations.maxlengthurl}} karakters">
+              [ngClass]="{ 'is-invalid': form.controls.url.invalid, 'is-valid': form.controls.url.valid }" type="text"
+              name="url" id="url" formControlName="url" placeholder="max. {{validations.maxlengthurl}} karakters">
           </div>
         </div>
         <!-- <div class="form-group row">
@@ -56,7 +54,7 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.logourl.invalid, 'is-valid': customForm.controls.logourl.valid }"
+              [ngClass]="{ 'is-invalid': form.controls.logourl.invalid, 'is-valid': form.controls.logourl.valid }"
               type="text" name="logourl" id="logourl" formControlName="logourl"
               placeholder="max. {{validations.maxlengthurl}} karakters">
           </div>
@@ -82,7 +80,7 @@
           </div>
           <div class="col-9">
             <select formControlName="screennr" id="screennr" name="screennr" class="form-control"
-              [ngClass]="{ 'is-invalid': customForm.controls.screennr.invalid, 'is-valid': customForm.controls.screennr.valid }"
+              [ngClass]="{ 'is-invalid': form.controls.screennr.invalid, 'is-valid': form.controls.screennr.valid }"
               required>
               <option *ngFor="let screenNr of rangeScreenNrs" [ngValue]="screenNr">
                 {{screenNr}}</option>
@@ -91,23 +89,23 @@
         </div>
         <div class="form-group row justify-content-end">
           <div class="col-9">
-            <button [disabled]="customForm.invalid" type="submit" class="btn btn-primary">
+            <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
               <i class="fi flaticon-sponsor" title="sponsor"></i>
               <span>{{sponsor !== undefined ? 'wijzigen' : 'toevoegen'}}</span>
             </button>
           </div>
         </div>
-        <div *ngIf="base64Logo || customForm.controls.logourl.value" class="form-group row">
+        <div *ngIf="base64Logo || form.controls.logourl.value" class="form-group row">
           <div class="col-3">
             <label for="log">preview</label>
           </div>
           <div class="col-9">
             <img *ngIf="base64Logo" [src]="base64Logo" width="150px;" height="150px;">
-            <img *ngIf="!base64Logo && customForm.controls.logourl.value" [src]="customForm.controls.logourl.value"
-              width="150px;" height="150px;">
+            <img *ngIf="!base64Logo && form.controls.logourl.value" [src]="form.controls.logourl.value" width="150px;"
+              height="150px;">
           </div>
         </div>
-        <!-- <button *ngIf="customForm.controls.logourl" type="button" class="btn btn-sm btn-outline-secondary"
+        <!-- <button *ngIf="form.controls.logourl" type="button" class="btn btn-sm btn-outline-secondary"
                 (click)="clearFile()">logo weghalen</button> -->
       </form>
     </div>

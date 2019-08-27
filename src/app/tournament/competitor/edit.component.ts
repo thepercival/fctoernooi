@@ -21,7 +21,7 @@ import { TournamentComponent } from '../component';
     styleUrls: ['./edit.component.css']
 })
 export class CompetitorEditComponent extends TournamentComponent implements OnInit, AfterViewChecked {
-    customForm: FormGroup;
+    form: FormGroup;
     place: Place;
     private focused = false;
 
@@ -45,7 +45,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
-        this.customForm = fb.group({
+        this.form = fb.group({
             name: ['', Validators.compose([
                 Validators.required,
                 Validators.minLength(this.validations.minlengthname),
@@ -81,9 +81,9 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
             this.processing = false;
             return;
         }
-        this.customForm.controls.name.setValue(this.place.getCompetitor() ? this.place.getCompetitor().getName() : undefined);
-        this.customForm.controls.registered.setValue(this.place.getCompetitor() ? this.place.getCompetitor().getRegistered() : false);
-        this.customForm.controls.info.setValue(this.place.getCompetitor() ? this.place.getCompetitor().getInfo() : undefined);
+        this.form.controls.name.setValue(this.place.getCompetitor() ? this.place.getCompetitor().getName() : undefined);
+        this.form.controls.registered.setValue(this.place.getCompetitor() ? this.place.getCompetitor().getRegistered() : false);
+        this.form.controls.info.setValue(this.place.getCompetitor() ? this.place.getCompetitor().getInfo() : undefined);
         this.processing = false;
     }
 
@@ -106,10 +106,10 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
     }
 
     add() {
-        const name = this.customForm.controls.name.value;
-        const info = this.customForm.controls.info.value;
+        const name = this.form.controls.name.value;
+        const info = this.form.controls.info.value;
 
-        if (this.isNameDuplicate(this.customForm.controls.name.value)) {
+        if (this.isNameDuplicate(this.form.controls.name.value)) {
             this.setAlert('danger', 'de naam bestaat al voor dit toernooi');
             this.processing = false;
             return;
@@ -117,7 +117,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         const association = this.tournament.getCompetition().getLeague().getAssociation();
         const competitor: JsonCompetitor = {
             name: name,
-            registered: this.customForm.controls.registered.value,
+            registered: this.form.controls.registered.value,
             info: info ? info : undefined
         };
 
@@ -142,16 +142,16 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
     }
 
     edit() {
-        if (this.isNameDuplicate(this.customForm.controls.name.value, this.place.getCompetitor().getId())) {
+        if (this.isNameDuplicate(this.form.controls.name.value, this.place.getCompetitor().getId())) {
             this.setAlert('danger', 'de naam bestaat al voor dit toernooi');
             this.processing = false;
             return;
         }
 
         const competitor = this.place.getCompetitor();
-        const name = this.customForm.controls.name.value;
-        const registered = this.customForm.controls.registered.value;
-        const info = this.customForm.controls.info.value;
+        const name = this.form.controls.name.value;
+        const registered = this.form.controls.registered.value;
+        const info = this.form.controls.info.value;
 
         competitor.setName(name);
         competitor.setRegistered(registered);

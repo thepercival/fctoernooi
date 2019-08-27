@@ -16,7 +16,7 @@ export class PasswordresetComponent implements OnInit {
   alert: IAlert;
   codeSend = false;
   processing = true;
-  customForm: FormGroup;
+  form: FormGroup;
 
   validations: any = {
     minlengthemailaddress: User.MIN_LENGTH_EMAIL,
@@ -29,7 +29,7 @@ export class PasswordresetComponent implements OnInit {
     private authService: AuthService,
     fb: FormBuilder
   ) {
-    this.customForm = fb.group({
+    this.form = fb.group({
       emailaddress: ['', Validators.compose([
         Validators.required,
         Validators.minLength(this.validations.minlengthemailaddress),
@@ -58,7 +58,7 @@ export class PasswordresetComponent implements OnInit {
     this.processing = true;
     this.setAlert('info', 'de code wordt verstuurd');
 
-    const emailaddress = this.customForm.controls.emailaddress.value;
+    const emailaddress = this.form.controls.emailaddress.value;
 
     // this.activationmessage = undefined;
     this.authService.passwordReset(emailaddress)

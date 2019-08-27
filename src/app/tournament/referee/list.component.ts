@@ -65,7 +65,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   }
 
   linkToEdit(tournament: Tournament, referee?: Referee) {
-    this.router.navigate(['/toernooi/refereeedit', tournament.getId(), referee ? referee.getId() : 0]);
+    this.router.navigate(['/toernooi/refereeedit', tournament.getId(), referee ? referee.getInitials() : '']);
   }
 
   linkToRoundSettings() {

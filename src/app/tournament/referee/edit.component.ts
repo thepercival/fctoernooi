@@ -22,7 +22,7 @@ import { TournamentComponent } from '../component';
     styleUrls: ['./edit.component.css']
 })
 export class RefereeEditComponent extends TournamentComponent implements OnInit {
-    customForm: FormGroup;
+    form: FormGroup;
     referee: Referee;
 
     validations: RefValidations = {
@@ -47,7 +47,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
         // EditPermissions, EmailAddresses
         // andere groep moet dan zijn getEditPermission, wanneer ingelogd, bij gewone view
         super(route, router, tournamentRepository, structureRepository);
-        this.customForm = fb.group({
+        this.form = fb.group({
             initials: ['', Validators.compose([
                 Validators.required,
                 Validators.minLength(this.validations.minlengthinitials),
@@ -74,28 +74,28 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
 
     ngOnInit() {
         this.route.params.subscribe(params => {
-            super.myNgOnInit(() => this.postInit(+params.refereeId));
+            super.myNgOnInit(() => this.postInit(params.initials));
         });
     }
 
-    private getRefereeById(id: number): Referee {
-        if (id === undefined || id === 0) {
+    private getReferee(initials: string): Referee {
+        if (initials === undefined || initials.length === 0) {
             this.processing = false;
             return;
         }
-        return this.tournament.getCompetition().getReferees().find(refereeIt => id === refereeIt.getId());
+        return this.tournament.getCompetition().getReferee(initials);
     }
 
-    private postInit(id: number) {
-        this.referee = this.getRefereeById(id);
+    private postInit(initials: string) {
+        this.referee = this.getReferee(initials);
         if (this.referee === undefined) {
             this.processing = false;
             return;
         }
-        this.customForm.controls.initials.setValue(this.referee.getInitials());
-        this.customForm.controls.name.setValue(this.referee.getName());
-        this.customForm.controls.emailaddress.setValue(this.referee.getEmailaddress());
-        this.customForm.controls.info.setValue(this.referee.getInfo());
+        this.form.controls.initials.setValue(this.referee.getInitials());
+        this.form.controls.name.setValue(this.referee.getName());
+        this.form.controls.emailaddress.setValue(this.referee.getEmailaddress());
+        this.form.controls.info.setValue(this.referee.getInfo());
         this.processing = false;
     }
 
@@ -111,12 +111,12 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
     add() {
         this.processing = true;
         this.setAlert('info', 'de scheidsrechter wordt toegevoegd');
-        const initials = this.customForm.controls.initials.value;
-        const name = this.customForm.controls.name.value;
-        const emailaddress = this.customForm.controls.emailaddress.value;
-        const info = this.customForm.controls.info.value;
+        const initials = this.form.controls.initials.value;
+        const name = this.form.controls.name.value;
+        const emailaddress = this.form.controls.emailaddress.value;
+        const info = this.form.controls.info.value;
 
-        if (this.isInitialsDuplicate(this.customForm.controls.initials.value)) {
+        if (this.isInitialsDuplicate(this.form.controls.initials.value)) {
             this.setAlert('danger', 'de initialen bestaan al voor dit toernooi');
             this.processing = false;
             return;
@@ -153,15 +153,15 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
     edit() {
         this.processing = true;
         this.setAlert('info', 'de scheidsrechter wordt gewijzigd');
-        if (this.isInitialsDuplicate(this.customForm.controls.initials.value, this.referee)) {
+        if (this.isInitialsDuplicate(this.form.controls.initials.value, this.referee)) {
             this.setAlert('danger', 'de initialen bestaan al voor dit toernooi');
             this.processing = false;
             return;
         }
-        const initials = this.customForm.controls.initials.value;
-        const name = this.customForm.controls.name.value;
-        const emailaddress = this.customForm.controls.emailaddress.value;
-        const info = this.customForm.controls.info.value;
+        const initials = this.form.controls.initials.value;
+        const name = this.form.controls.name.value;
+        const emailaddress = this.form.controls.emailaddress.value;
+        const info = this.form.controls.info.value;
 
         this.referee.setInitials(initials);
         this.referee.setName(name ? name : undefined);

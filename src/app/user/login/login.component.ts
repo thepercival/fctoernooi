@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   alert: IAlert;
   registered = false;
   processing = true;
-  customForm: FormGroup;
+  form: FormGroup;
 
   validations: any = {
     minlengthemailaddress: User.MIN_LENGTH_EMAIL,
@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     fb: FormBuilder
   ) {
-    this.customForm = fb.group({
+    this.form = fb.group({
       emailaddress: ['', Validators.compose([
         Validators.required,
         Validators.minLength(this.validations.minlengthemailaddress),
@@ -75,8 +75,8 @@ export class LoginComponent implements OnInit {
     this.processing = true;
     this.setAlert('info', 'je wordt ingelogd');
 
-    const emailaddress = this.customForm.controls.emailaddress.value;
-    const password = this.customForm.controls.password.value;
+    const emailaddress = this.form.controls.emailaddress.value;
+    const password = this.form.controls.password.value;
 
     this.authService.login(emailaddress, password)
       .subscribe(

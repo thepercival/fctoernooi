@@ -6,6 +6,7 @@ import { AuthguardService } from '../auth/authguard.service';
 import { CompetitorEditComponent } from './competitor/edit.component';
 import { CompetitorListComponent } from './competitor/list.component';
 import { EditComponent } from './edit/edit.component';
+import { FieldEditComponent } from './field/edit.component';
 import { FieldListComponent } from './field/list.component';
 import { FilterComponent } from './filter/filter.component';
 import { GameEditComponent } from './game/edit.component';
@@ -40,8 +41,9 @@ const routes: Routes = [
   { path: 'sportconfigs/:id', component: SportConfigListComponent, canActivate: [AuthguardService] },
   { path: 'sportconfigedit/:id/:sportConfigId', component: SportConfigEditComponent, canActivate: [AuthguardService] },
   { path: 'fields/:id', component: FieldListComponent, canActivate: [AuthguardService] },
+  { path: 'fieldedit/:id/:number', component: FieldEditComponent, canActivate: [AuthguardService] },
   { path: 'referees/:id', component: RefereeListComponent, canActivate: [AuthguardService] },
-  { path: 'refereeedit/:id/:refereeId', component: RefereeEditComponent, canActivate: [AuthguardService] },
+  { path: 'refereeedit/:id/:initials', component: RefereeEditComponent, canActivate: [AuthguardService] },
   { path: 'sponsors/:id', component: SponsorListComponent, canActivate: [AuthguardService] },
   { path: 'sponsoredit/:id/:sponsorId', component: SponsorEditComponent, canActivate: [AuthguardService] },
   { path: 'competitoredit/:id/:placeId', component: CompetitorEditComponent, canActivate: [AuthguardService] }
