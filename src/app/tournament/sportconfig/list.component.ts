@@ -8,6 +8,7 @@ import {
   SportConfig,
   SportConfigRepository,
   StructureRepository,
+  SportConfigService,
 } from 'ngx-sport';
 
 import { Tournament } from '../../lib/tournament';
@@ -34,6 +35,7 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
   constructor(
     route: ActivatedRoute,
     router: Router,
+    private sportConfigService: SportConfigService,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     private sportConfigRepository: SportConfigRepository,
@@ -103,6 +105,8 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
   remove(sportConfig: SportConfig) {
     this.setAlert('info', 'de sport wordt verwijderd');
     this.processing = true;
+
+    this.sportConfigService.remove(sportConfig, this.structure);
 
     this.sportConfigRepository.removeObject(sportConfig, this.tournament.getCompetition(), this.structure)
       .subscribe(

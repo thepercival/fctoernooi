@@ -10,12 +10,17 @@ import {
   SportPlanningConfigService,
   SportScoreConfigService,
   StructureRepository,
+  FieldRepository,
+  JsonField,
+  PlanningRepository,
+  PlanningService,
 } from 'ngx-sport';
-
+import { forkJoin } from 'rxjs';
 import { CSSService } from '../../common/cssservice';
 import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
+import { TournamentService } from '../../lib/tournament/service';
 
 @Component({
     selector: 'app-tournament-sportconfig-edit',
@@ -44,6 +49,8 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
+        private fieldRepository: FieldRepository,
+        private planningRepository: PlanningRepository,
         private myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
@@ -78,7 +85,8 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
                 Validators.required,
                 Validators.min(this.validations.minDrawPoints),
                 Validators.max(this.validations.maxDrawPoints)
-            ])]
+            ])],
+            nrOfFields: ['']
         });
         this.sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
     }
@@ -97,12 +105,16 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
             this.ranges.drawPoints.push(0.5);
             this.ranges.drawPoints.sort();
         }
+        this.ranges.nrOfFields = [];
+        for (let i = 0; i <= 5; i++) {
+            this.ranges.nrOfFields.push(i);
+        }
     }
 
     ngOnInit() {
         this.route.params.subscribe(params => {
             if (params.sportConfigId !== undefined) {
-                super.myNgOnInit(() => this.postInit(+params.sportConfigId), true);
+                super.myNgOnInit(() => this.postInit(+params.sportConfigId), false);
             }
         });
     }
@@ -130,6 +142,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         this.form.controls.drawPoints.setValue(this.sportConfig.getDrawPoints());
         this.form.controls.winPointsExt.setValue(this.sportConfig.getWinPointsExt());
         this.form.controls.drawPointsExt.setValue(this.sportConfig.getDrawPointsExt());
+        this.form.controls.nrOfFields.setValue(1);
     }
 
     onGetSport(sport: Sport) {
@@ -138,6 +151,13 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
     }
 
     save(): boolean {
+        if (this.sportConfig.getId() === undefined) {
+            return this.add();
+        }
+        return this.edit();
+    }
+
+    add(): boolean {
         this.processing = true;
         this.setAlert('info', 'de sport wordt gewijzigd');
 
@@ -145,7 +165,57 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         this.sportConfig.setDrawPoints(this.form.value['drawPoints']);
         this.sportConfig.setWinPointsExt(this.form.value['winPointsExt']);
         this.sportConfig.setDrawPointsExt(this.form.value['drawPointsExt']);
-        this.sportConfigRepository.saveObject(this.sportConfig, this.tournament.getCompetition())
+
+        const competition = this.tournament.getCompetition();
+
+        this.sportConfigRepository.createObject(this.sportConfig, competition)
+        .subscribe(
+        /* happy path */ sportConfigRes => {
+
+            const fieldReposAdds = [];
+            for ( let i = 0 ; i < this.form.value['nrOfFields'] ; i++ ) {
+                const fieldNr = competition.getFields().length + i + 1;
+                const jsonField: JsonField = { number: fieldNr, name: '' + fieldNr, sportId: this.sportConfig.getSport().getId() };
+                fieldReposAdds.push(this.fieldRepository.createObject(jsonField, competition));
+            }
+
+            forkJoin(fieldReposAdds).subscribe(results => {
+
+                const firstRoundNumber = this.structure.getFirstRoundNumber();
+                const tournamentService = new TournamentService(this.tournament);
+                const planningService = new PlanningService(competition);
+                tournamentService.reschedule(planningService, firstRoundNumber);
+                this.planningRepository.editObject(firstRoundNumber).subscribe(
+                    /* happy path */ gamesRes => {
+                        this.linkToSportConfig(); /* niet navigate back van kan van sport komen */
+                        this.processing = false;
+                    },
+                    /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+                    /* onComplete */() => this.processing = false
+                );
+            },
+                err => {
+                    this.processing = false;
+                    this.setAlert('danger', 'de wedstrijd is niet opgeslagen: ' + err);
+                }
+            );
+        },
+        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+        /* onComplete */() => { this.processing = false; }
+        );
+        return false;
+    }
+
+    edit(): boolean {
+        this.processing = true;
+        this.setAlert('info', 'de sport wordt gewijzigd');
+
+        this.sportConfig.setWinPoints(this.form.value['winPoints']);
+        this.sportConfig.setDrawPoints(this.form.value['drawPoints']);
+        this.sportConfig.setWinPointsExt(this.form.value['winPointsExt']);
+        this.sportConfig.setDrawPointsExt(this.form.value['drawPointsExt']);
+
+        this.sportConfigRepository.editObject(this.sportConfig, this.tournament.getCompetition())
             .subscribe(
             /* happy path */ sportConfigRes => {
                     this.linkToSportConfig(); /* niet navigate back van kan van sport komen */
