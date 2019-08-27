@@ -133,7 +133,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
     }
 
     onGetSport(sport: Sport) {
-        this.sportConfig = this.sportConfigService.createDefault(sport, this.tournament.getCompetition());
+        this.sportConfig = this.sportConfigService.createDefault(sport, this.tournament.getCompetition(), this.structure);
         this.initForm();
     }
 
