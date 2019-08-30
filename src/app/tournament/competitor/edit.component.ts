@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -20,12 +20,10 @@ import { TournamentComponent } from '../component';
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css']
 })
-export class CompetitorEditComponent extends TournamentComponent implements OnInit, AfterViewChecked {
+export class CompetitorEditComponent extends TournamentComponent implements OnInit {
     form: FormGroup;
     place: Place;
     private focused = false;
-
-    @ViewChild('inputname', { static: false }) private elementRef: ElementRef;
 
     validations: CompetitorValidations = {
         minlengthname: Competitor.MIN_LENGTH_NAME,
@@ -85,13 +83,6 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         this.form.controls.registered.setValue(this.place.getCompetitor() ? this.place.getCompetitor().getRegistered() : false);
         this.form.controls.info.setValue(this.place.getCompetitor() ? this.place.getCompetitor().getInfo() : undefined);
         this.processing = false;
-    }
-
-    ngAfterViewChecked() {
-        if (this.place !== undefined && this.place.getCompetitor() === undefined && this.focused === false) {
-            this.focused = true;
-            this.elementRef.nativeElement.focus();
-        }
     }
 
     save(): boolean {

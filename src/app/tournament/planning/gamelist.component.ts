@@ -10,8 +10,8 @@ import { TournamentComponent } from '../component';
 
 @Component({
   selector: 'app-tournament-games',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.css']
+  templateUrl: './gamelist.component.html',
+  styleUrls: ['./gamelist.component.css']
 })
 export class GameListComponent extends TournamentComponent implements OnInit {
 

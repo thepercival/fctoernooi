@@ -5,8 +5,12 @@
       </app-tournament-title>
       <div class="d-flex justify-content-between">
         <h2>
-          <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijden
+          <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> planning
         </h2>
+        <button *ngIf="tournament" type="button" class="btn btn-sm btn-primary mr-0"
+          [routerLink]="['/toernooi/planningedit', tournament.getId()]">
+          start & pauze
+        </button>
       </div>
       <div>
         <h2 *ngIf="processing" class="text-center">

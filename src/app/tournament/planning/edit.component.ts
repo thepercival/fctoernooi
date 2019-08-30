@@ -2,26 +2,25 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-import { League, NameService, PlanningRepository, PlanningService, RoundNumber, StructureRepository } from 'ngx-sport';
+import { NameService, PlanningRepository, PlanningService, StructureRepository } from 'ngx-sport';
 
+import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentService } from '../../lib/tournament/service';
 import { TournamentComponent } from '../component';
 
 @Component({
-    selector: 'app-tournament-edit',
+    selector: 'app-tournament-planningedit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css']
 })
-export class EditComponent extends TournamentComponent implements OnInit {
+export class PlanningEditComponent extends TournamentComponent implements OnInit {
     form: FormGroup;
     minDateStruct: NgbDateStruct;
     processing = true;
     hasBegun: boolean;
 
     validations: any = {
-        minlengthname: League.MIN_LENGTH_NAME,
-        maxlengthname: League.MAX_LENGTH_NAME,
         minbreakduration: 0,
         maxbreakduration: 3600
     };
@@ -33,6 +32,7 @@ export class EditComponent extends TournamentComponent implements OnInit {
         structureRepository: StructureRepository,
         private planningRepository: PlanningRepository,
         public nameService: NameService,
+        private myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
@@ -40,11 +40,6 @@ export class EditComponent extends TournamentComponent implements OnInit {
         // hier regelset toevoegen @TODO
 
         this.form = fb.group({
-            name: ['', Validators.compose([
-                Validators.required,
-                Validators.minLength(this.validations.minlengthname),
-                Validators.maxLength(this.validations.maxlengthname)
-            ])],
             date: ['', Validators.compose([
             ])],
             time: ['', Validators.compose([
@@ -58,8 +53,6 @@ export class EditComponent extends TournamentComponent implements OnInit {
             breakduration: ['', Validators.compose([
                 Validators.min(this.validations.minbreakduration),
                 Validators.max(this.validations.maxbreakduration)
-            ])],
-            public: ['', Validators.compose([
             ])]
         });
     }
@@ -76,11 +69,9 @@ export class EditComponent extends TournamentComponent implements OnInit {
         const minDate = date > now ? now : date;
         this.minDateStruct = { year: minDate.getFullYear(), month: minDate.getMonth() + 1, day: minDate.getDate() };
 
-        this.form.controls.name.setValue(this.tournament.getCompetition().getLeague().getName());
         this.form.controls.date.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
         this.form.controls.time.setValue({ hour: date.getHours(), minute: date.getMinutes() });
 
-        this.form.controls.public.setValue(this.tournament.getPublic());
         this.form.controls.togglebreak.setValue(this.tournament.hasBreak());
         this.toggleBreak(this.tournament.hasBreak(), this.tournament.getBreakDuration(), this.tournament.getBreakStartDateTime());
 
@@ -149,8 +140,6 @@ export class EditComponent extends TournamentComponent implements OnInit {
 
         const firstRoundNumber = this.structure.getFirstRoundNumber();
         try {
-            this.tournament.setPublic(this.form.controls.public.value);
-            this.tournament.getCompetition().getLeague().setName(this.form.controls.name.value);
             const reschedule = this.shouldReschedule(startDateTime, breakStartDateTime, breakDuration);
             if (reschedule === true) {
                 this.tournament.getCompetition().setStartDateTime(startDateTime);
@@ -171,7 +160,7 @@ export class EditComponent extends TournamentComponent implements OnInit {
                         if (reschedule === true) {
                             this.planningRepository.editObject(firstRoundNumber).subscribe(
                                     /* happy path */ gamesRes => {
-                                    this.router.navigate(['/toernooi', tournamentRes.getId()]);
+                                    this.myNavigation.back();
                                 },
                                 /* error path */ e => {
                                     this.setAlert('danger', 'de planning is niet opgeslagen: ' + e);
@@ -195,8 +184,4 @@ export class EditComponent extends TournamentComponent implements OnInit {
         return one && two && two.year === one.year && two.month === one.month && two.day === one.day;
     }
     isSelected = date => this.equals(date, this.form.controls.date.value);
-
-    linkToRoundSettings(roundNumber: RoundNumber) {
-        this.router.navigate(['/toernooi/roundssettings', this.tournament.getId(), roundNumber.getNumber()]);
-    }
 }

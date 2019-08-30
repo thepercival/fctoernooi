@@ -20,7 +20,7 @@
     <span class="d-none d-sm-inline " aria-label="uitloggen "> uitloggen</span>
   </button>
 
-  <!-- <button class="navbar-toggler navbar-toggler-right text-white pointer " type="button " data-toggle="collapse
+  <!-- <button class="navbar-toggler navbar-toggler-right pointer" type="button" data-toggle="collapse
     " data-target="#navbarResponsive "
     aria-controls="navbarResponsive " aria-label="Toggle navigation " (click)="navbarCollapsed=! navbarCollapsed
     " [attr.aria-expanded]="!navbarCollapsed ">
@@ -35,10 +35,10 @@
 
     <ul class="nav navbar-nav ml-auto ">
       <li *ngIf="!isLoggedIn() " class="nav-item ">
-        <a class="nav-link text-white " routerLink="/user/login " routerLinkActive="active " (click)="navbarCollapsed=!navbarCollapsed ">inloggen</a>
+        <a class="nav-link" routerLink="/user/login " routerLinkActive="active " (click)="navbarCollapsed=!navbarCollapsed ">inloggen</a>
       </li>
       <li *ngIf="isLoggedIn() " class="nav-item ">
-        <a class="nav-link text-white " routerLink="/user/logout " routerLinkActive="active " (click)="navbarCollapsed=!navbarCollapsed ">uitloggen</a>
+        <a class="nav-link" routerLink="/user/logout " routerLinkActive="active " (click)="navbarCollapsed=!navbarCollapsed ">uitloggen</a>
       </li>
     </ul>
   </div> -->

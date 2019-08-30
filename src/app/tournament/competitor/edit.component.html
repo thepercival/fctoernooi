@@ -25,10 +25,9 @@
             <label for="name" class="col-form-label">naam</label>
           </div>
           <div class="col-9">
-            <input #inputname class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }"
-              type="text" name="name" id="name" formControlName="name"
-              placeholder="max. {{validations.maxlengthname}} karakters">
+            <input class="form-control"
+              [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
+              name="name" id="name" formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
         </div>
         <div class="form-group row">
@@ -48,9 +47,8 @@
           </div>
           <div class="col-9">
             <textarea class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.info.invalid, 'is-valid': form.controls.info.valid }"
-              name="info" id="info" formControlName="info"
-              placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
+              [ngClass]="{ 'is-invalid': form.controls.info.invalid, 'is-valid': form.controls.info.valid }" name="info"
+              id="info" formControlName="info" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>
         <div class="form-group row justify-content-end">

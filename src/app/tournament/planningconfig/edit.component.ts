@@ -1,17 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NameService, PlanningRepository, SportConfigMapper, SportConfigRepository, StructureRepository } from 'ngx-sport';
+import {
+    NameService,
+    PlanningRepository,
+    PlanningService,
+    RoundNumber,
+    SportConfigMapper,
+    SportConfigRepository,
+    StructureRepository,
+} from 'ngx-sport';
 
 import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
 
 @Component({
-    selector: 'app-rounds-settings',
-    templateUrl: './rounds.component.html',
-    styleUrls: ['./rounds.component.css']
+    selector: 'app-planningconfig-edit',
+    templateUrl: './edit.component.html',
+    styleUrls: ['./edit.component.css']
 })
-export class RoundsSettingsComponent extends TournamentComponent implements OnInit {
+export class PlanningConfigComponent extends TournamentComponent implements OnInit {
     // category: number;
     // categories: IRoundConfigCategories = {
     //     qualification: 1,
@@ -20,23 +28,19 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
     // };
 
     // enableTime: boolean;
-    // ranges: any = {};
+    ranges: any = {};
     // roundNumber: RoundNumber;
     // modelConfig: Config;
     // modelRecreate: boolean;
     // modelReschedule: boolean;
     // form: FormGroup;
-    // validations: any = {
-    //     minNrOfHeadtoheadMatches: 1,
-    //     maxNrOfHeadtoheadMatches: 4,
-    //     minWinPoints: 1,
-    //     maxWinPoints: 10,
-    //     minDrawPoints: 0,
-    //     maxDrawPoints: 5,
-    //     minMinutesPerGame: 0,
-    //     maxMinutesPerGame: 60,
-    // };
-    // planningService: PlanningService;
+    validations: PlanningConfigValidations = {
+        minNrOfHeadtoheadMatches: 1,
+        maxNrOfHeadtoheadMatches: 4,
+        minMinutesPerGame: 0,
+        maxMinutesPerGame: 60,
+    };
+    private planningService: PlanningService;
 
     constructor(
         route: ActivatedRoute,
@@ -52,43 +56,38 @@ export class RoundsSettingsComponent extends TournamentComponent implements OnIn
         super(route, router, tournamentRepository, sructureRepository);
     }
 
-    // private initRanges() {
-    //     this.ranges.nrOfHeadtoheadMatches = [];
-    //     for (let i = this.validations.minNrOfHeadtoheadMatches; i <= this.validations.maxNrOfHeadtoheadMatches; i++) {
-    //         this.ranges.nrOfHeadtoheadMatches.push(i);
-    //     }
-    // }
-
-    ngOnInit() {
-        // this.route.params.subscribe(params => {
-        //     super.myNgOnInit(() => this.initConfigs(+params.roundNumber));
-        // });
-        // this.route.queryParamMap.subscribe(params => {
-        //     if (params.get('category') !== null) {
-        //         this.category = +params.get('category');
-        //     }
-        // });
+    private initRanges() {
+        this.ranges.nrOfHeadtoheadMatches = [];
+        for (let i = this.validations.minNrOfHeadtoheadMatches; i <= this.validations.maxNrOfHeadtoheadMatches; i++) {
+            this.ranges.nrOfHeadtoheadMatches.push(i);
+        }
     }
 
-    // initConfigs(roundNumberAsValue: number) {
-    //     this.planningService = new PlanningService(this.tournament.getCompetition());
-    //     const roundNumber = this.structure.getRoundNumber(roundNumberAsValue);
-    //     this.changeRoundNumber(roundNumber);
-    //     this.initRanges();
-    //     this.processing = false;
-    // }
+    ngOnInit() {
+        this.route.params.subscribe(params => {
+            super.myNgOnInit(() => this.initConfig(+params.roundNumber));
+        });
+    }
 
-    // changeRoundNumber(roundNumber: RoundNumber) {
-    //     this.roundNumber = roundNumber;
-    //     this.modelConfig = cloneDeep(this.roundNumber.getConfig());
-    //     this.toggleExtension(true);
-    //     this.modelRecreate = false;
-    //     this.modelReschedule = false;
-    //     this.setAlert('info', 'instellingen gelden ook voor volgende ronden');
-    //     if (this.planningService.hasBegun(this.roundNumber)) {
-    //         this.setAlert('info', 'deze ronde heeft al gespeelde wedstrijden, kies een andere ronde');
-    //     }
-    // }
+    initConfig(roundNumberAsValue: number) {
+        this.planningService = new PlanningService(this.tournament.getCompetition());
+        const roundNumber = this.structure.getRoundNumber(roundNumberAsValue);
+        this.changeRoundNumber(roundNumber);
+        this.initRanges();
+        this.processing = false;
+    }
+
+    changeRoundNumber(roundNumber: RoundNumber) {
+        // this.roundNumber = roundNumber;
+        // this.modelConfig = cloneDeep(this.roundNumber.getConfig());
+        // this.toggleExtension(true);
+        // this.modelRecreate = false;
+        // this.modelReschedule = false;
+        // this.setAlert('info', 'instellingen gelden ook voor volgende ronden');
+        // if (this.planningService.hasBegun(this.roundNumber)) {
+        //     this.setAlert('info', 'deze ronde heeft al gespeelde wedstrijden, kies een andere ronde');
+        // }
+    }
 
     // toggleExtension(fromHasExtension: boolean) {
     //     if (fromHasExtension === true) {
@@ -343,4 +342,11 @@ interface IRoundConfigCategories {
     qualification: number;
     gameunits: number;
     planning: number;
+}
+
+export interface PlanningConfigValidations {
+    minNrOfHeadtoheadMatches: number;
+    maxNrOfHeadtoheadMatches: number;
+    minMinutesPerGame: number;
+    maxMinutesPerGame: number;
 }

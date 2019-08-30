@@ -4,27 +4,13 @@
       <app-tournament-title [tournament]="tournament" [admin]="true">
       </app-tournament-title>
       <div>
-        <h2>
-          <fa-icon [icon]=" ['fas', 'cogs' ]">
-          </fa-icon> instellingen
-        </h2>
+        <h2>start & pauze</h2>
         <h2 *ngIf="processing" class="text-center">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <form *ngIf="!processing" name="form" (ngSubmit)="edit()" [formGroup]="form" novalidate>
-        <div class="form-group row">
-          <div class="col-3">
-            <label for="name" class="col-form-label">naam</label>
-          </div>
-          <div class="col-9 col-sm-8 col-md-7">
-            <input class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }"
-              type="text" name="name" id="name" formControlName="name"
-              placeholder="max. {{validations.maxlengthname}} karakters">
-          </div>
-        </div>
         <div *ngIf="!hasBegun" class="form-group row">
           <div class="col-3">
             <label for="dp" class="col-form-label">startdatum</label>
@@ -62,20 +48,6 @@
               readonly>
           </div>
         </div>
-        <div class="form-group row">
-          <label for="publicnotthesame" class="col-3 col-form-label pointer" popoverClass="popover-small"
-            container="newForm" placement="right" ngbPopover="Publieke toernooien zijn te bekijken door anderen. Standen, uitslagen, etc. zijn live te bekijken, 
-                    niet publieke toernooien zijn alleen voor jou beschikbaar.">publiek
-            <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
-          </label>
-          <div class="form-check col-9">
-            <label class="custom-control custom-checkbox col-form-label pl-0">
-              <input type="checkbox" class="custom-control-input form-check-input" id="public" name="public"
-                formControlName="public">
-              <span class="custom-control-indicator"></span>
-            </label>
-          </div>
-        </div>
         <div *ngIf="!hasBegun && isTimeEnabled() " class="form-group row">
           <div class="col-3">
             <label for="togglebreak" class="col-form-label">pauze</label>
@@ -111,31 +83,19 @@
                 id="breakduration" name="breakduration" formControlName="breakduration"
                 [min]="validations.minbreakduration" [max]="validations.maxbreakduration">
               <div class="input-group-append">
-                <span class="input-group-text text-white">min.</span>
+                <span class="input-group-text">min.</span>
               </div>
             </div>
           </div>
         </div>
         <div class="form-group row justify-content-end">
           <div class="col-9">
-            <button [disabled]="form.invalid" type="submit" class="btn btn-outline-primary">
+            <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
               opslaan
             </button>
           </div>
         </div>
       </form>
-      <div *ngIf="!processing">
-        <h2>
-          <fa-icon [icon]="['fas', 'cogs']"></fa-icon> ronde-instellingen
-        </h2>
-        <div *ngFor="let roundNumber of structure.getRoundNumbers()" class="row justify-content-end">
-          <div class="col-9">
-            <button type="button" class="btn btn-outline-secondary mb-3" (click)="linkToRoundSettings(roundNumber)">
-              <span [innerHTML]="nameService.getRoundNumberName( roundNumber) | keepHtml"></span>
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </div>

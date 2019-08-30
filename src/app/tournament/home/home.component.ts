@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { SportConfigService, StructureRepository } from 'ngx-sport';
+import { League, SportConfigService, StructureRepository } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
 import { CSSService } from '../../common/cssservice';
 import { Role } from '../../lib/role';
+import { Tournament } from '../../lib/tournament';
 import { TournamentPrintConfig, TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
 
@@ -17,8 +18,10 @@ import { TournamentComponent } from '../component';
 })
 export class HomeComponent extends TournamentComponent implements OnInit {
     printConfig: TournamentPrintConfig;
+    nameForm: FormGroup;
     copyForm: FormGroup;
     printForm: FormGroup;
+    shareForm: FormGroup;
     minDateStruct: NgbDateStruct;
 
     constructor(
@@ -45,8 +48,21 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         };
         const date = new Date();
         this.minDateStruct = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
+        this.nameForm = fb.group({
+            name: ['', Validators.compose([
+                Validators.required,
+                Validators.minLength(League.MIN_LENGTH_NAME),
+                Validators.maxLength(League.MAX_LENGTH_NAME)
+            ])]
+        });
         this.copyForm = fb.group({
             date: ['', Validators.compose([
+            ])]
+        });
+        this.shareForm = fb.group({
+            url: [{ value: '', disabled: true }, Validators.compose([
+            ])],
+            public: ['', Validators.compose([
             ])]
         });
         this.printForm = fb.group({
@@ -66,7 +82,10 @@ export class HomeComponent extends TournamentComponent implements OnInit {
 
     postNgOnInit() {
         const date = new Date();
+        this.nameForm.controls.name.setValue(this.tournament.getCompetition().getLeague().getName());
         this.copyForm.controls.date.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
+        this.shareForm.controls.url.setValue('https://www.fctoernooi.nl/' + this.tournament.getId());
+        this.shareForm.controls.public.setValue(this.tournament.getPublic());
         this.processing = false;
     }
 
@@ -174,6 +193,17 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         });
     }
 
+    openModalName(modalContent) {
+        const activeModal = this.modalService.open(modalContent/*, { windowClass: 'border-warning' }*/);
+        // (<TournamentListRemoveModalComponent>activeModal.componentInstance).place = place;
+        activeModal.result.then((result) => {
+            if (result === 'save') {
+                this.saveName();
+            }
+        }, (reason) => {
+        });
+    }
+
     openModalCopy(modalContent) {
         const activeModal = this.modalService.open(modalContent/*, { windowClass: 'border-warning' }*/);
         // (<TournamentListRemoveModalComponent>activeModal.componentInstance).place = place;
@@ -200,17 +230,11 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         const activeModal = this.modalService.open(modalContent/*, { windowClass: 'border-warning' }*/);
         // (activeModal.componentInstance).copied = false;
         activeModal.result.then((result) => {
-            // if (result === 'remove') {
-            //     this.remove();
-            // }
+            if (result === 'share') {
+                this.share();
+            }
         }, (reason) => {
         });
-    }
-
-    copyLink(inputElement) {
-        inputElement.select();
-        document.execCommand('copy');
-        inputElement.setSelectionRange(0, 0);
     }
 
     linkToStructure() {
@@ -260,4 +284,44 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         return one && two && two.year === one.year && two.month === one.month && two.day === one.day;
     }
     isSelected = date => this.equals(date, this.copyForm.controls.date.value);
+
+    share() {
+        this.setAlert('info', 'het delen wordt gewijzigd');
+
+        this.processing = true;
+        this.tournament.setPublic(this.shareForm.controls.public.value);
+        this.tournamentRepository.editObject(this.tournament)
+            .subscribe(
+                /* happy path */(tournamentRes: Tournament) => {
+                    this.tournament = tournamentRes;
+                    // this.router.navigate(['/toernooi', newTournamentId]);
+                    this.setAlert('success', 'het delen is gewijzigd');
+                },
+                /* error path */ e => {
+                    this.setAlert('danger', 'het delen kon niet worden gewijzigd');
+                    this.processing = false;
+                },
+                /* onComplete */() => { this.processing = false; }
+            );
+    }
+
+    saveName() {
+        this.setAlert('info', 'de naam wordt opgeslagen');
+
+        this.processing = true;
+        this.tournament.getCompetition().getLeague().setName(this.nameForm.controls.name.value);
+        this.tournamentRepository.editObject(this.tournament)
+            .subscribe(
+                /* happy path */(tournamentRes: Tournament) => {
+                    this.tournament = tournamentRes;
+                    // this.router.navigate(['/toernooi', newTournamentId]);
+                    this.setAlert('success', 'de naam is opgeslagen');
+                },
+                /* error path */ e => {
+                    this.setAlert('danger', 'de naam kon niet worden opgeslagen');
+                    this.processing = false;
+                },
+                /* onComplete */() => { this.processing = false; }
+            );
+    }
 }
