@@ -84,7 +84,7 @@ export class StructureRoundComponent {
         if (horizontalPoule.getNrOfQualifiers() > 1) {
           horizontalPoulesWinners.push(horizontalPoule);
         }
-      })
+      });
     });
 
     // QualifyGroup.LOSERS
@@ -94,7 +94,7 @@ export class StructureRoundComponent {
         if (horizontalPoule.getNrOfQualifiers() > 1) {
           horizontalPoulesLosers.unshift(horizontalPoule);
         }
-      })
+      });
     });
 
     // QualifyGroup.DROPOUTS
