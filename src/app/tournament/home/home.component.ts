@@ -17,7 +17,6 @@ import { TournamentComponent } from '../component';
     styleUrls: ['./home.component.css']
 })
 export class HomeComponent extends TournamentComponent implements OnInit {
-    printConfig: TournamentPrintConfig;
     nameForm: FormGroup;
     copyForm: FormGroup;
     printForm: FormGroup;
@@ -37,15 +36,6 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
-        this.printConfig = {
-            gamenotes: true,
-            structure: false,
-            rules: false,
-            gamesperfield: false,
-            planning: false,
-            poulepivottables: false,
-            qrcode: true
-        };
         const date = new Date();
         this.minDateStruct = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
         this.nameForm = fb.group({
@@ -69,6 +59,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
             gamenotes: true,
             structure: false,
             rules: false,
+            gamesperpoule: false,
             gamesperfield: false,
             planning: false,
             poulepivottables: false,
@@ -176,9 +167,10 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     allPrintOptionsOff() {
-        return (!this.printConfig.gamenotes && !this.printConfig.structure && !this.printConfig.planning &&
-            !this.printConfig.gamesperfield && !this.printConfig.rules && !this.printConfig.poulepivottables
-            && !this.printConfig.qrcode);
+        return !this.printForm.value['gamenotes']
+            && !this.printForm.value['structure'] && !this.printForm.value['planning']
+            && !this.printForm.value['gamesperpoule'] && !this.printForm.value['gamesperfield'] && !this.printForm.value['rules']
+            && !this.printForm.value['poulepivottables'] && !this.printForm.value['qrcode'];
 
     }
 
@@ -187,7 +179,18 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         // (<TournamentListRemoveModalComponent>activeModal.componentInstance).place = place;
         activeModal.result.then((result) => {
             if (result === 'print') {
-                const newWindow = window.open(this.tournamentRepository.getPrintUrl(this.tournament, this.printConfig));
+                const printConfig = {
+                    gamenotes: this.printForm.value['gamenotes'],
+                    structure: this.printForm.value['structure'],
+                    rules: this.printForm.value['rules'],
+                    gamesperpoule: this.printForm.value['gamesperpoule'],
+                    gamesperfield: this.printForm.value['gamesperfield'],
+                    planning: this.printForm.value['planning'],
+                    poulepivottables: this.printForm.value['poulepivottables'],
+                    qrcode: this.printForm.value['qrcode']
+                };
+
+                const newWindow = window.open(this.tournamentRepository.getPrintUrl(this.tournament, printConfig));
             }
         }, (reason) => {
         });

@@ -21,6 +21,7 @@ import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
 import { TournamentService } from '../../lib/tournament/service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-tournament-sportconfig-edit',
@@ -52,7 +53,8 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         private fieldRepository: FieldRepository,
         private planningRepository: PlanningRepository,
         private myNavigation: MyNavigation,
-        fb: FormBuilder
+        fb: FormBuilder,
+        private modalService: NgbModal
     ) {
 
         // winPoints       zie oude form
@@ -238,6 +240,14 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
             this.router.navigate(['/toernooi/sportconfigs', this.tournament.getId()]);
         }
     }
+
+    openMultiSportsModal(content) {
+        this.modalService.open(content, { ariaLabelledBy: 'modal-multisports' }).result.then((result) => {
+          if (result === 'continue') {
+            this.router.navigate(['/toernooi/sportconfigs', this.tournament.getId()]);
+          }
+        }, (reason) => {});
+      }
 }
 
 export interface SportValidations {

@@ -51,7 +51,7 @@
       </button>
     </div>
     <!-- #f="ngForm" -->
-    <form *ngIf="searchFilterActive" (ngSubmit)="false" [formGroup]="searchform" novalidate>
+    <form *ngIf="searchFilterActive" (ngSubmit)="false" [formGroup]="searchForm" novalidate>
       <input type="text" class="form-control form-control-search" formControlName="filterName" #inputsearchname
         aria-labelledby="btn-search-tournaments" placeholder="zoek op toernooinaam">
     </form>
@@ -79,7 +79,7 @@
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
 
-    <ngb-alert *ngIf="searchFilterActive && ( searchFilterName === undefined || searchFilterName.length < 2)"
+    <ngb-alert *ngIf="searchFilterActive && ( searchForm.value['filterName'] === undefined || searchForm.value['filterName'].length < 2)"
       type="info" [dismissible]="false">voer minimaal 2 karakters in</ngb-alert>
   </div>
 </div>

@@ -1,0 +1,68 @@
+//////// controller
+
+ // getDirectionDescription(scoreConfig) {
+    //     return SportScoreConfig.getDirectionDescription(scoreConfig.getDirection());
+    // }
+
+    // setScoreConfigMaximum(scoreConfig: SportScoreConfig, scoreConfigMaximum) {
+    //     if (scoreConfigMaximum > 9999 || scoreConfigMaximum < 0) {
+    //         return;
+    //     }
+    //     if (scoreConfigMaximum === 0 && scoreConfig.getParent() !== undefined) {
+    //         this.setScoreConfigMaximum(scoreConfig.getParent(), 0);
+    //     }
+    //     scoreConfig.setMaximum(scoreConfigMaximum);
+    // }
+
+        // isScoreConfigReadOnly(scoreConfig: SportScoreConfig) {
+    //     if (scoreConfig.getChild() !== undefined && scoreConfig.getChild().getMaximum() === 0) {
+    //         return true;
+    //     }
+    //     if (this.modelConfig.getEnableTime() && scoreConfig.getParent() === undefined) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
+
+     // getDirectionName(scoreConfig: SportScoreConfig) {
+    //     return scoreConfig.getDirection() === SportScoreConfig.UPWARDS ? 'naar' : 'vanaf';
+    // }
+
+    // ////////////// view
+
+<div *ngIf="category === categories.gameunits">
+                        <ng-template #recursiveList let-scoreConfig>
+                            <div *ngIf="scoreConfig" class="form-group row">
+                                <div class="col-6">
+                                    <label class="col-form-label">{{scoreConfig.getName()}}</label>
+                                </div>
+                                <label for="scoreMaximum-{{scoreConfig.getId()}}"
+                                    class="col-2 col-form-label text-right">{{getDirectionName(scoreConfig)}}</label>
+                                <div class="col-4">
+                                    <input type="number" [maxlength]="4" [ngModel]="scoreConfig.getMaximum()"
+                                        (ngModelChange)="setScoreConfigMaximum(scoreConfig,$event)"
+                                        id="scoreMaximum-{{scoreConfig.getId()}}"
+                                        name="scoreMaximum-{{scoreConfig.getId()}}" class="form-control"
+                                        [disabled]="isScoreConfigReadOnly(scoreConfig)" />
+                                </div>
+                            </div>
+                            <div *ngIf="scoreConfig && isScoreConfigReadOnly(scoreConfig) && scoreConfig === modelConfig.getScore().getRoot()"
+                                class="form-group row">
+                                <label class="col-12 col-form-label text-info">{{scoreConfig.getName()}} kan niet
+                                    aangepast worden omdat er o.b.v. tijd gespeeld wordt</label>
+                            </div>
+                            <ng-container *ngIf="scoreConfig && scoreConfig.getChild()">
+                                <ng-container
+                                    *ngTemplateOutlet="recursiveList; context:{ $implicit: scoreConfig.getChild() }">
+                                </ng-container>
+                            </ng-container>
+                        </ng-template>
+                        <ng-container
+                            *ngTemplateOutlet="recursiveList; context:{ $implicit: modelConfig.getScore().getRoot() }">
+                        </ng-container>
+                        <div class="form-group row">
+                            <label class="col-12 col-form-label text-info">De invoer vindt plaats o.b.v.
+                                {{modelConfig.getInputScore().getName()}}. De berekening vindt plaats o.b.v.
+                                {{modelConfig.getCalculateScore().getName()}}</label>
+                        </div>
+                    </div>

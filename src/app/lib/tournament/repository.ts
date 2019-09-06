@@ -109,6 +109,7 @@ export class TournamentRepository extends APIRepository {
             '?gamenotes=' + printConfig.gamenotes +
             '&structure=' + printConfig.structure +
             '&rules=' + printConfig.rules +
+            '&gamesperpoule=' + printConfig.gamesperpoule +
             '&gamesperfield=' + printConfig.gamesperfield +
             '&planning=' + printConfig.planning +
             '&poulepivottables=' + printConfig.poulepivottables +
@@ -120,6 +121,7 @@ export interface TournamentPrintConfig {
     gamenotes: boolean;
     structure: boolean;
     rules: boolean;
+    gamesperpoule: boolean;
     gamesperfield: boolean;
     planning: boolean;
     poulepivottables: boolean;

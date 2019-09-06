@@ -12,7 +12,7 @@
           {{planningService.calculateStartDateTime(getRoundNumber()).toLocaleString("nl",
           {"month":"short","day":"2-digit"})}}
         </th>
-        <th *ngIf="isCreatedAndInplay() && hasFields" title="veld" class="width-8">
+        <th *ngIf="isCreatedAndInplay()" title="veld" class="width-8">
           <i class="fi flaticon-soccer-field"></i>
         </th>
         <th class="text-right width-25">thuis</th>
@@ -37,7 +37,7 @@
           <span *ngIf="showDateTime(game)">{{game.getStartDateTime().toLocaleString("nl", {"hour12":
             false,"hour":"2-digit","minute":"2-digit"})}}</span>
         </td>
-        <td *ngIf="isCreatedAndInplay() && hasFields">{{game.getField()?.getName()}}</td>
+        <td *ngIf="isCreatedAndInplay()">{{game.getField()?.getName()}}</td>
         <td class="text-right">
           <span>{{nameService.getPlacesFromName(game.getPlaces(GameHOME),true,true)}}</span>
         </td>

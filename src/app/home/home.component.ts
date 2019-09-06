@@ -172,7 +172,8 @@ export class HomeComponent implements OnInit {
   }
 
   expandPastDays() {
-    const pastHoursToAdd = this.hourRange.start === this.defaultHourRange.start ? this.defaultHourRange.start + this.defaultHourRange.end : -this.hourRange.start;
+    const pastHoursToAdd = this.hourRange.start === this.defaultHourRange.start
+    ? this.defaultHourRange.start + this.defaultHourRange.end : -this.hourRange.start;
     this.addToPublicShells(HomeComponent.PAST, pastHoursToAdd);
   }
 
@@ -181,7 +182,7 @@ export class HomeComponent implements OnInit {
   }
 
   private extendHourRange(pastFuture: number, hoursToAdd: number): TournamentShellFilter {
-    let startDate = new Date(), endDate = new Date();
+    const startDate = new Date(), endDate = new Date();
     if (pastFuture === HomeComponent.PAST) {
       endDate.setHours(endDate.getHours() + this.hourRange.start);
       this.hourRange.start -= hoursToAdd;

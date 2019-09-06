@@ -15,7 +15,7 @@ import { TranslateService } from '../../lib/translate';
 export class SportSelectComponent implements OnInit {
     @Input() sportConfigs: SportConfig[];
     @Output() sendSport = new EventEmitter<Sport>();
-    processing = false;
+    processing = true;
     form: FormGroup;
     public radioGroupForm: FormGroup;
     public alert: IAlert;
@@ -43,12 +43,12 @@ export class SportSelectComponent implements OnInit {
     }
 
     ngOnInit() {
-
+        this.processing = false;
     }
 
     getSortableSports(): SortableSport[] {
         return SportCustom.get().filter(customId => {
-            return !this.sportConfigs || this.sportConfigs.find(sportConfig => sportConfig.getSport().getCustomId() === customId) === undefined
+            return !this.sportConfigs || !this.sportConfigs.some(sportConfig => sportConfig.getSport().getCustomId() === customId);
         }).map(customId => {
             return { customId: customId, name: this.translate(customId) };
         }).sort((s1, s2) => {

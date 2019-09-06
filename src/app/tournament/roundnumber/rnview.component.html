@@ -9,7 +9,7 @@
       <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       <span>filter</span>
     </button>
-    <button type="button" class="btn btn-sm btn-primary mr-0" *ngIf="canEditSettings" (click)="linkToRoundSettings()">
+    <button type="button" class="btn btn-sm btn-primary mr-0" *ngIf="canEditSettings" (click)="linkToPlanningConfig()">
       <fa-icon [icon]="['fas', 'cogs']"></fa-icon> ronde instellingen
     </button>
   </div>
@@ -20,7 +20,7 @@
         <col *ngIf="roundNumberNeedsRanking">
         <col *ngIf="!roundNumberNeedsRanking">
         <col *ngIf="canCalculateStartDateTime">
-        <col *ngIf="hasFields">
+        <col>
         <col>
         <col>
         <col>
@@ -41,7 +41,7 @@
               {"month":"short","day":"2-digit"})}}</span>
             <span *ngIf="sameDay">start</span>
           </th>
-          <th *ngIf="hasFields" class="text-center" title="veld">
+          <th class="text-center" title="veld">
             <i class="fi flaticon-soccer-field"></i>
           </th>
           <th class="text-right">thuis</th>
@@ -59,7 +59,7 @@
           <tr *ngIf="isBreakBeforeGame(gmData.game)" class="table-info">
             <td></td>
             <td *ngIf="canCalculateStartDateTime"></td>
-            <td *ngIf="hasFields"></td>
+            <td></td>
             <td class="text-right">PAUZE</td>
             <td></td>
             <td class=""></td>
@@ -89,7 +89,7 @@
               <span>{{gmData.game.getStartDateTime().toLocaleString("nl", {"hour12":
                 false,"hour":"2-digit","minute":"2-digit"})}}</span>
             </td>
-            <td *ngIf="hasFields" class="text-center">{{gmData.game.getField()?.getName()}}</td>
+            <td class="text-center">{{gmData.game.getField()?.getName()}}</td>
             <td class="place text-right"
               [ngClass]="{'text-primary': favorites.hasGameCompetitor(gmData.game, GameHOME) }">
               <span>{{nameService.getPlacesFromName(gmData.game.getPlaces( GameHOME ),true,true)}}</span>

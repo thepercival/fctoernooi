@@ -19,7 +19,7 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.initials.invalid, 'is-valid': custformomForm.controls.initials.valid }"
+              [ngClass]="{ 'is-invalid': form.controls.initials.invalid, 'is-valid': form.controls.initials.valid }"
               type="text" name="initials" id="initials" formControlName="initials"
               placeholder="max. {{validations.maxlengthinitials}} karakters">
           </div>
@@ -30,7 +30,7 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': custformomForm.controls.name.valid }"
+              [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }"
               type="text" name="name" id="name" formControlName="name"
               placeholder="max. {{validations.maxlengthname}} karakters">
           </div>

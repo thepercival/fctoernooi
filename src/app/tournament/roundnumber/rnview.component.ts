@@ -39,7 +39,6 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   previousGameStartDateTime: Date;
   userIsGameResultAdmin: boolean;
   favorites: Favorites;
-  hasFields: boolean;
   hasReferees: boolean;
   gameDatas: GameData[];
   private sportScoreConfigService: SportScoreConfigService;
@@ -61,9 +60,9 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   ngOnInit() {
     this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.GAMERESULTADMIN);
     this.favorites = this.favRepository.getItem(this.tournament);
-    this.hasFields = this.tournament.getCompetition().getFields().length > 0;
     // @TODO
-    this.hasReferees = this.tournament.getCompetition().getReferees().length > 0 || this.roundNumber.getValidPlanningConfig().getSelfReferee();
+    this.hasReferees = this.tournament.getCompetition().getReferees().length > 0
+    || this.roundNumber.getValidPlanningConfig().getSelfReferee();
 
     // gamedate
     this.roundNumberNeedsRanking = this.roundNumber.needsRanking();
@@ -183,8 +182,8 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     this.router.navigate(['/toernooi/gameedit', this.tournament.getId(), game.getId()]);
   }
 
-  linkToRoundSettings() {
-    this.router.navigate(['/toernooi/roundssettings', this.tournament.getId(), this.roundNumber.getNumber()]);
+  linkToPlanningConfig() {
+    this.router.navigate(['/toernooi/planningconfig', this.tournament.getId(), this.roundNumber.getNumber()]);
   }
 
   linkToFilterSettings() {

@@ -13,7 +13,6 @@ export class LiveboardGamesComponent {
     private sportScoreConfigService: SportScoreConfigService;
 
     @Input() screen: GamesScreen;
-    @Input() hasFields: boolean;
     @Input() planningService: PlanningService;
 
     constructor(

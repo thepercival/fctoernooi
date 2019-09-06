@@ -57,6 +57,8 @@ import {
   SportConfigService,
   SportPlanningConfigMapper,
   SportPlanningConfigService,
+  PlanningConfigService,
+  PlanningConfigRepository,
   SportRepository,
   SportScoreConfigMapper,
   SportScoreConfigService,
@@ -177,6 +179,7 @@ library.add(
     SportConfigMapper,
     SportScoreConfigService,
     SportPlanningConfigService,
+    PlanningConfigService,
     SportConfigService,
     SportScoreConfigMapper,
     PlaceRepository,
@@ -184,6 +187,7 @@ library.add(
     CompetitorMapper,
     GameRepository,
     PlanningRepository,
+    PlanningConfigRepository,
     CSSService,
     SportPlanningConfigMapper
   ]

@@ -75,8 +75,8 @@
         </div>
         <div class="form-group row">
           <div class="col-7">
-            <button *ngIf="this.tournament.getCompetition().getSportConfigs().length === 1" [disabled]="form.invalid"
-              [routerLink]="['/toernooi/sportconfigs', tournament.getId()]" class="btn btn-outline-secondary">
+            <button *ngIf="this.tournament.getCompetition().getSportConfigs().length === 1"
+            (click)="openMultiSportsModal(multisports)" class="btn btn-outline-secondary">
               <span>meerdere sporten</span>
             </button>
           </div>
@@ -88,8 +88,27 @@
         </div>
       </form>
     </div>
-    <app-tournament-sport-select *ngIf="tournament && !sportConfig" class="col-xs-12 col-sm-10 col-md-8 col-lg-6"
+    <app-tournament-sport-select *ngIf="!processing && tournament && !sportConfig" class="col-xs-12 col-sm-10 col-md-8 col-lg-6"
       [sportConfigs]="tournament.getCompetition().getSportConfigs()" (sendSport)="onGetSport($event)">
     </app-tournament-sport-select>
   </div>
 </div>
+
+<ng-template #multisports let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-multisports">planning meerdere sporten</h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('cancel')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+      <ul class="list-group">           
+        <li class="list-group-item">elke deelnemers speelt even vaak tegen andere deelnemers(net zoals bij een enkele sport)</li>
+        <li class="list-group-item">elke deelnemer doet iederee sport in ieder geval 1 keer(of hoeveel velden er voor de sport zijn)</li>
+        <li class="list-group-item">wanneer er meer sporten gedaan moeten worden dan er wedstrijden zijn, dan speelt iedereen vaker tegen elkaar</li>
+      </ul>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="modal.close('continue')">doorgaan</button>
+  </div>
+</ng-template>

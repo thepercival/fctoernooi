@@ -94,10 +94,6 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         return this.activeScreen instanceof SponsorScreen;
     }
 
-    hasFields() {
-        return this.tournament.getCompetition().getFields().length > 0;
-    }
-
     navigateBack() {
         this.router.navigateByUrl(this.myNavigation.getPreviousUrl(''));
     }
