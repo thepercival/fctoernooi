@@ -24,6 +24,7 @@ import { SportConfigListComponent } from './sportconfig/list.component';
 import { StructureComponent } from './structure/main.component';
 import { StructureViewComponent } from './structure/view.component';
 import { ViewComponent } from './view/view.component';
+import { SportScoreEditComponent } from './sportscore/edit.component';
 
 const routes: Routes = [
   { path: 'view/:id', component: ViewComponent },
@@ -40,6 +41,7 @@ const routes: Routes = [
   { path: 'planningconfig/:id/:roundNumber', component: PlanningConfigComponent, canActivate: [AuthguardService] },
   { path: 'sportconfigs/:id', component: SportConfigListComponent, canActivate: [AuthguardService] },
   { path: 'sportconfigedit/:id/:sportConfigId', component: SportConfigEditComponent, canActivate: [AuthguardService] },
+  { path: 'sportscoreedit/:id/:sportConfigId', component: SportScoreEditComponent, canActivate: [AuthguardService] },
   { path: 'fields/:id', component: FieldListComponent, canActivate: [AuthguardService] },
   { path: 'fieldedit/:id/:number', component: FieldEditComponent, canActivate: [AuthguardService] },
   { path: 'referees/:id', component: RefereeListComponent, canActivate: [AuthguardService] },

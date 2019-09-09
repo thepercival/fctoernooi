@@ -11,11 +11,9 @@ import { Tournament } from '../../../lib/tournament';
 export class StructureRoundArrangeComponent {
 
   @Input() round: Round;
-  private structureService: StructureService;
   @Output() arrangeAction = new EventEmitter<string>();
 
   constructor() {
-    this.structureService = new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
   }
 
   addPoule() {

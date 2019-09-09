@@ -1,0 +1,68 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div *ngIf="sportConfig" class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+      <app-tournament-title [tournament]="tournament">
+      </app-tournament-title>
+      <div>
+        <h2 class="text-truncate">
+          <app-sport-icon *ngIf="sportConfig" [customId]="sportConfig.getSport().getCustomId()"></app-sport-icon>
+          <span *ngIf="sportConfig">{{sportConfig.getSport().getName()}} </span>
+          <span *ngIf="!sportConfig">sport </span>
+           <small>scoreinstellingen</small>
+        </h2>
+      </div>
+      <div>
+        <h2 *ngIf="processing" class="text-center">
+          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+        </h2>
+      </div>
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+      <form *ngIf="!processing && scoreConfig" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+        <div class="form-group row">
+            <label class="col-6 col-form-label">{{translateService.getScoreNameSingle(scoreConfig)}}</label>
+            <label for="scoreMaximum-{{scoreConfig.getId()}}"
+                class="col-2 col-form-label text-right">{{translateService.getScoreDirection(scoreConfig.getDirection())}}</label>
+            <div class="col-4">
+            <input type="number" [ngClass]="{ 'is-invalid': form.controls.max.invalid, 'is-valid': form.controls.max.valid}"
+                        formControlName="max" 
+                        [maxlength]="2" class="form-control"/>
+          </div>
+        </div>  
+        <div class="form-group row justify-content-end">
+          <div class="col-4">
+            <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
+              <span>opslaan</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+  <!-- <div *ngIf="scoreConfig" class="form-group row">
+      <div class="col-6">
+          <label class="col-form-label">{{scoreConfig.getName()}}</label>
+      </div>
+      <label for="scoreMaximum-{{scoreConfig.getId()}}"
+          class="col-2 col-form-label text-right">{{getDirectionName(scoreConfig)}}</label>
+      <div class="col-4">
+          <input type="number" [maxlength]="4" [ngModel]="scoreConfig.getMaximum()"
+              (ngModelChange)="setScoreConfigMaximum(scoreConfig,$event)"
+              id="scoreMaximum-{{scoreConfig.getId()}}"
+              name="scoreMaximum-{{scoreConfig.getId()}}" class="form-control"
+              [disabled]="isScoreConfigReadOnly(scoreConfig)" />
+      </div>
+  </div>
+  <div *ngIf="scoreConfig && isScoreConfigReadOnly(scoreConfig) && scoreConfig === modelConfig.getScore().getRoot()"
+      class="form-group row">
+      <label class="col-12 col-form-label text-info">{{scoreConfig.getName()}} kan niet
+          aangepast worden omdat er o.b.v. tijd gespeeld wordt</label>
+  </div> -->
+  
+
+<!-- <div class="form-group row">
+  <label class="col-12 col-form-label text-info">De invoer vindt plaats o.b.v.
+      {{modelConfig.getInputScore().getName()}}. De berekening vindt plaats o.b.v.
+      {{modelConfig.getCalculateScore().getName()}}</label>
+</div> -->

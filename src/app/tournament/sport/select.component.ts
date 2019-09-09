@@ -57,7 +57,7 @@ export class SportSelectComponent implements OnInit {
     }
 
     translate(sportCustomId: number): string {
-        return this.translateService.getSportName(TranslateService.language, sportCustomId);
+        return this.translateService.getSportName(sportCustomId);
     }
 
     protected setAlert(type: string, message: string) {

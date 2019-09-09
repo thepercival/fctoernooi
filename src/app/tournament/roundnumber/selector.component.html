@@ -1,0 +1,27 @@
+<div class="modal-header">
+  <h4 class="modal-title">kies rondenummers</h4>
+  <button type="button" class="close" aria-label="sluiten" (click)="activeModal.dismiss('cancel')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <p>Voor welke rondenummers wil je de scoreinstellingen opslaan?</p>
+  <form *ngIf="!processing" name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
+    <div *ngFor="let roundNumber of structure.getRoundNumbers()" class="form-group row">
+      <label for="rn{{roundNumber.getNumber()}}" class="col-9 col-form-label">
+          <span [innerHTML]="nameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
+      </label>
+      <div class="form-check col-3">
+        <label class="custom-control custom-checkbox col-form-label pl-0">
+          <input type="checkbox" class="custom-control-input form-check-input"
+            formControlName="rn{{roundNumber.getNumber()}}">
+          <span class="custom-control-indicator"></span>
+        </label>
+      </div>
+    </div>
+  </form>
+  <ngb-alert *ngIf="allDeselected()" type="info" [dismissible]="false">kies minimaal 1 rondenummer</ngb-alert>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" [disabled]="allDeselected()" (click)="activeModal.close(getSelectedRoundNumber())">doorgaan</button>
+</div>

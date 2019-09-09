@@ -3,7 +3,7 @@ import { Sport, SportCustom, SportScoreConfig } from 'ngx-sport';
 export class TranslateService {
     static readonly language = 'nl';
 
-    getSportName(language: string, customId: number): string {
+    getSportName(customId: number): string {
         switch (customId) {
             case SportCustom.Badminton: { return 'badminton'; }
             case SportCustom.Basketball: { return 'basketbal'; }
@@ -22,10 +22,10 @@ export class TranslateService {
         return undefined;
     }
 
-    getScoreNameSingle(language: string, sportScoreConfig: SportScoreConfig): string {
+    getScoreNameSingle(sportScoreConfig: SportScoreConfig): string {
         const customId = sportScoreConfig.getSport().getCustomId();
         if (sportScoreConfig.getParent() !== undefined) {
-            return this.getScoreSubSingleName(language, customId);
+            return this.getScoreSubSingleName(customId);
         }
         switch (customId) {
             case SportCustom.Badminton: { return 'set'; }
@@ -45,7 +45,7 @@ export class TranslateService {
         return undefined;
     }
 
-    protected getScoreSubSingleName(language: string, customId: number): string {
+    protected getScoreSubSingleName(customId: number): string {
         switch (customId) {
             case SportCustom.Darts: { return 'leg'; }
             case SportCustom.Tennis: { return 'game'; }
@@ -56,7 +56,7 @@ export class TranslateService {
     getScoreNameMultiple(language: string, sportScoreConfig: SportScoreConfig): string {
         const customId = sportScoreConfig.getSport().getCustomId();
         if (sportScoreConfig.getParent() !== undefined) {
-            return this.getScoreSubSingleName(language, customId);
+            return this.getScoreSubSingleName(customId);
         }
         switch (customId) {
             case SportCustom.Badminton: { return 'sets'; }
@@ -76,7 +76,7 @@ export class TranslateService {
         return undefined;
     }
 
-    protected getScoreSubNameMultiple(language: string, customId: number): string {
+    protected getScoreSubNameMultiple(customId: number): string {
         switch (customId) {
             case SportCustom.Darts: { return 'legs'; }
             case SportCustom.Tennis: { return 'games'; }
@@ -85,7 +85,7 @@ export class TranslateService {
     }
 
 
-    getScoreDirection(language: string, direction: number): string {
+    getScoreDirection(direction: number): string {
         switch (direction) {
             case SportScoreConfig.UPWARDS: { return 'naar'; }
             case SportScoreConfig.DOWNWARDS: { return 'vanaf'; }
@@ -93,7 +93,7 @@ export class TranslateService {
         return undefined;
     }
 
-    getFieldName(language: string, sport: Sport): string {
+    getFieldName(sport: Sport): string {
         const customId = sport.getCustomId();
         switch (customId) {
             case SportCustom.Badminton: { return 'veld'; }
@@ -113,7 +113,7 @@ export class TranslateService {
         return undefined;
     }
 
-    getFieldsName(language: string, sport: Sport): string {
+    getFieldsName(sport: Sport): string {
         const customId = sport.getCustomId();
         switch (customId) {
             case SportCustom.Badminton: { return 'velden'; }

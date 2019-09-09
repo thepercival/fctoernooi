@@ -106,6 +106,8 @@ import { StructureViewComponent } from './structure/view.component';
 import { TitleComponent } from './title/title.component';
 import { RoutingModule } from './tournament-routing.module';
 import { ViewComponent } from './view/view.component';
+import { SportScoreEditComponent } from './sportscore/edit.component';
+import { ModalRoundNumbersComponent } from './roundnumber/selector.component';
 
 library.add(
   faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
@@ -141,6 +143,7 @@ library.add(
     RefereeListComponent,
     SportConfigListComponent,
     SportConfigEditComponent,
+    SportScoreEditComponent,
     SportSelectComponent,
     SponsorListComponent,
     CompetitorEditComponent,
@@ -157,11 +160,12 @@ library.add(
     SponsorEditComponent,
     PlanningEditComponent,
     FilterComponent,
+    ModalRoundNumbersComponent,
     CompetitorListRemoveModalComponent,
     ProgressComponent,
     EscapeHtmlPipe
   ],
-  entryComponents: [CompetitorListRemoveModalComponent],
+  entryComponents: [ModalRoundNumbersComponent, CompetitorListRemoveModalComponent],
   providers: [
     RoleMapper,
     StructureRepository,

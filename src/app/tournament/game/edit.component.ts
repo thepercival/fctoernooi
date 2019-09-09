@@ -372,7 +372,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
     getCalculateScoreUnitName(game: Game): string {
         const calculateScore = this.sportScoreConfigService.getCalculate(game.getSportScoreConfig());
         const translateService = new TranslateService();
-        return translateService.getScoreNameSingle(TranslateService.language, calculateScore);
+        return translateService.getScoreNameSingle(calculateScore);
     }
 
     save(): boolean {

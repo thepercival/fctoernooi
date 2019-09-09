@@ -19,7 +19,6 @@ export class Tournament {
     protected breakDuration: number;
     protected public: boolean;
 
-    // constructor
     constructor(competition: Competition) {
         this.setCompetition(competition);
     }

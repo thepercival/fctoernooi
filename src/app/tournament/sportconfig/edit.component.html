@@ -3,12 +3,18 @@
     <div *ngIf="sportConfig" class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
       <app-tournament-title [tournament]="tournament">
       </app-tournament-title>
-      <div>
-        <h2>
+      <div class="d-flex justify-content-between">
+        <h2 class="text-truncate">
           <app-sport-icon *ngIf="sportConfig" [customId]="sportConfig.getSport().getCustomId()"></app-sport-icon>
           <span *ngIf="sportConfig">{{sportConfig.getSport().getName()}}</span>
           <span *ngIf="!sportConfig">sport</span>
         </h2>
+        <button *ngIf="tournament" type="button" class="btn btn-sm btn-outline-secondary mr-0 mb-3"
+          [routerLink]="['/toernooi/sportscoreedit', tournament.getId(), sportConfig.getId()]">
+          <fa-icon [icon]="['fas', 'cogs']"></fa-icon> scoreinstellingen
+        </button>
+      </div>
+      <div>
         <h2 *ngIf="processing" class="text-center">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
@@ -16,10 +22,10 @@
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
         <div class="form-group row">
-          <div class="col-7">
+          <div class="col-8">
             <label for="winPoints" class="col-form-label">punten bij overwinning</label>
           </div>
-          <div class="col-5">
+          <div class="col-4">
             <select class="form-control" formControlName="winPoints" required
               [ngClass]="{ 'is-invalid': form.controls.winPoints.invalid, 'is-valid': form.controls.winPoints.valid }">
               <option *ngFor="let winpoints of ranges.winPoints" [ngValue]="winpoints">{{winpoints}}</option>
@@ -27,22 +33,22 @@
           </div>
         </div>
         <div class="form-group row">
-          <div class="col-7">
+          <div class="col-8">
             <label for="drawPoints" class="col-form-label">punten bij gelijkspel</label>
           </div>
-          <div class="col-5">
+          <div class="col-4">
             <select class="form-control" formControlName="drawPoints" required
               [ngClass]="{ 'is-invalid': form.controls.drawPoints.invalid, 'is-valid': form.controls.drawPoints.valid }">
               <option *ngFor="let drawpoints of ranges.drawPoints" [ngValue]="drawpoints">{{drawpoints}}</option>
             </select>
           </div>
         </div>
-        <h5><small>na verlenging</small></h5>
+        <h3><small>na verlenging</small></h3>
         <div class="form-group row">
-          <div class="col-7">
+          <div class="col-8">
             <label for="winPointsExt" class="col-form-label">punten bij overwinning</label>
           </div>
-          <div class="col-5">
+          <div class="col-4">
             <select class="form-control" formControlName="winPointsExt" required
               [ngClass]="{ 'is-invalid': form.controls.winPoints.invalid, 'is-valid': form.controls.winPointsExt.valid }">
               <option *ngFor="let winpointsext of ranges.winPoints" [ngValue]="winpointsext">{{winpointsext}}</option>
@@ -50,10 +56,10 @@
           </div>
         </div>
         <div class="form-group row">
-          <div class="col-7">
+          <div class="col-8">
             <label for="drawPointsExt" class="col-form-label">punten bij gelijkspel</label>
           </div>
-          <div class="col-5">
+          <div class="col-4">
             <select class="form-control" formControlName="drawPointsExt" required
               [ngClass]="{ 'is-invalid': form.controls.drawPointsExt.invalid, 'is-valid': form.controls.drawPointsExt.valid }">
               <option *ngFor="let drawpointsext of ranges.drawPoints" [ngValue]="drawpointsext">{{drawpointsext}}
@@ -62,10 +68,10 @@
           </div>
         </div>
         <div *ngIf="!sportConfig.getId()" class="form-group row">
-          <div class="col-7">
+          <div class="col-8">
             <label for="nrOfFields" class="col-form-label">aantal velden</label>
           </div>
-          <div class="col-5">
+          <div class="col-4">
             <select class="form-control" formControlName="nrOfFields" required
               [ngClass]="{ 'is-invalid': form.controls.nrOfFields.invalid, 'is-valid': form.controls.nrOfFields.valid }">
               <option *ngFor="let nrOfFields of ranges.nrOfFields" [ngValue]="nrOfFields">{{nrOfFields}}
@@ -74,13 +80,13 @@
           </div>
         </div>
         <div class="form-group row">
-          <div class="col-7">
+          <div class="col-8">
             <button *ngIf="this.tournament.getCompetition().getSportConfigs().length === 1"
             (click)="openMultiSportsModal(multisports)" class="btn btn-outline-secondary">
               <span>meerdere sporten</span>
             </button>
           </div>
-          <div class="col-5">
+          <div class="col-4">
             <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
               <span>opslaan</span>
             </button>
