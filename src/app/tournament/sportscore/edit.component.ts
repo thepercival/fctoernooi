@@ -115,7 +115,6 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
         const modalRef = this.modalService.open(ModalRoundNumbersComponent);
         modalRef.componentInstance.structure = this.structure;
         modalRef.result.then((roundNumber: RoundNumber) => {
-            console.log(roundNumber);
             const scoreConfig = roundNumber.getSportScoreConfig(this.sportConfig.getSport());
             this.setScoreConfig(scoreConfig);
         }, (reason) => { this.setScoreConfig(); });
