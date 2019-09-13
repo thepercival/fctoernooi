@@ -2,20 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  Sport,
-  SportConfig,
-  SportConfigRepository,
-  SportConfigService,
-  SportCustom,
-  SportPlanningConfigService,
-  SportScoreConfigService,
-  StructureRepository,
-  FieldRepository,
-  JsonField,
-  PlanningRepository,
-  PlanningService,
-  SportScoreConfig,
-  RoundNumber,
+    Sport,
+    SportConfig,
+    SportConfigRepository,
+    SportConfigService,
+    SportCustom,
+    SportPlanningConfigService,
+    SportScoreConfigService,
+    StructureRepository,
+    FieldRepository,
+    JsonField,
+    PlanningRepository,
+    PlanningService,
+    SportScoreConfig,
+    RoundNumber,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
 import { CSSService } from '../../common/cssservice';
@@ -65,7 +65,6 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
                 Validators.max(this.validations.maxScore)
             ])],
             maxNext: ['', Validators.compose([
-                Validators.required,
                 Validators.min(this.validations.minScore),
                 Validators.max(this.validations.maxScore)
             ])],
@@ -95,7 +94,7 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
             return;
         }
 
-        if( this.structure.getFirstRoundNumber().hasNext() ) {
+        if (this.structure.getFirstRoundNumber().hasNext()) {
             this.openModal();
         } else {
             this.setScoreConfig();
@@ -104,11 +103,14 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
     }
 
     setScoreConfig(scoreConfig?: SportScoreConfig) {
-        if( scoreConfig === undefined ) {
+        if (scoreConfig === undefined) {
             scoreConfig = this.structure.getFirstRoundNumber().getSportScoreConfig(this.sportConfig.getSport());
         }
         this.scoreConfig = scoreConfig;
         this.form.controls.max.setValue(this.scoreConfig.getMaximum());
+        if (scoreConfig.hasNext()) {
+            this.form.controls.maxNext.setValue(this.scoreConfig.getNext().getMaximum());
+        }
     }
 
     openModal() {
@@ -118,6 +120,24 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
             const scoreConfig = roundNumber.getSportScoreConfig(this.sportConfig.getSport());
             this.setScoreConfig(scoreConfig);
         }, (reason) => { this.setScoreConfig(); });
+    }
+
+    getInput(): SportScoreConfig {
+        if (!this.scoreConfig.hasNext()) {
+            return this.scoreConfig;
+        }
+        const max = this.form.value['max'];
+        const maxNext = this.form.value['maxNext'];
+        return (maxNext > 0 || max === 0) ? this.scoreConfig.getNext() : this.scoreConfig;
+    }
+
+    getCalculate(): SportScoreConfig {
+        if (!this.scoreConfig.hasNext()) {
+            return this.scoreConfig;
+        }
+        const max = this.form.value['max'];
+        const maxNext = this.form.value['maxNext'];
+        return (max > 0 || maxNext === 0) ? this.scoreConfig : this.scoreConfig.getNext();
     }
 
     // save(): boolean {
@@ -213,14 +233,14 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
         if (scoreConfigMaximum > 9999 || scoreConfigMaximum < 0) {
             return;
         }
-        if (scoreConfigMaximum === 0 && scoreConfig.getParent() !== undefined) {
-            this.setScoreConfigMaximum(scoreConfig.getParent(), 0);
+        if (scoreConfigMaximum === 0 && scoreConfig.getPrevious() !== undefined) {
+            this.setScoreConfigMaximum(scoreConfig.getPrevious(), 0);
         }
         scoreConfig.setMaximum(scoreConfigMaximum);
     }
 
     isScoreConfigReadOnly(scoreConfig: SportScoreConfig) {
-        if (scoreConfig.getChild() !== undefined && scoreConfig.getChild().getMaximum() === 0) {
+        if (scoreConfig.getNext() !== undefined && scoreConfig.getNext().getMaximum() === 0) {
             return true;
         }
         // if (this.modelConfig.getEnableTime() && scoreConfig.getParent() === undefined) {
@@ -229,7 +249,7 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
         return false;
     }
 
-     getDirectionName(scoreConfig: SportScoreConfig) {
+    getDirectionName(scoreConfig: SportScoreConfig) {
         return scoreConfig.getDirection() === SportScoreConfig.UPWARDS ? 'naar' : 'vanaf';
     }
 }

@@ -26,6 +26,7 @@ import { IAlert } from '../../common/alert';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentService } from '../../lib/tournament/service';
+import { TranslateService } from '../../lib/translate';
 
 
 @Component({
@@ -202,6 +203,11 @@ export class NewComponent implements OnInit {
     const defaultNrOfPoules = nrOfCompetitors !== undefined ? structureService.getDefaultNrOfPoules(nrOfCompetitors) : undefined;
     const sPouleDescr = defaultNrOfPoules > 1 ? 'poules' : 'poule';
     return defaultNrOfPoules + ' ' + sPouleDescr + ' en ';
+  }
+
+  getFieldsDescription(): string {
+    const translate = new TranslateService();
+    return translate.getFieldsName(this.sport);
   }
 
   isLoggedIn() {

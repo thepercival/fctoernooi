@@ -10,6 +10,7 @@ import { Role } from '../../lib/role';
 import { Tournament } from '../../lib/tournament';
 import { TournamentPrintConfig, TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
+import { TranslateService } from '../../lib/translate';
 
 @Component({
     selector: 'app-tournament-home',
@@ -22,6 +23,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     printForm: FormGroup;
     shareForm: FormGroup;
     minDateStruct: NgbDateStruct;
+    translate: TranslateService;
 
     constructor(
         route: ActivatedRoute,
@@ -36,6 +38,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
+        this.translate = new TranslateService();
         const date = new Date();
         this.minDateStruct = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
         this.nameForm = fb.group({
@@ -89,14 +92,22 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         return competitors.some(competitor => competitor.getRegistered()) && !competitors.every(competitor => competitor.getRegistered());
     }
 
+    getFieldDescription(): string {
+        const sports = this.tournament.getCompetition().getSports();
+        return this.translate.getFieldName(sports.length === 1 ? sports[0] : undefined);
+    }
+
+    getFieldsDescription(): string {
+        const sports = this.tournament.getCompetition().getSports();
+        return this.translate.getFieldsName(sports.length === 1 ? sports[0] : undefined);
+    }
+
     getNrOfFieldsDescription() {
         const nrOfFields = this.tournament.getCompetition().getFields().length;
-        if (nrOfFields === 0) {
-            return 'geen velden';
-        } else if (nrOfFields === 1) {
-            return '1 veld';
+        if (nrOfFields === 1) {
+            return '1 ' + this.getFieldDescription();
         }
-        return nrOfFields + ' velden';
+        return nrOfFields + ' ' + this.getFieldsDescription();
     }
 
     getNrOfRefereesDescription() {
@@ -179,7 +190,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         // (<TournamentListRemoveModalComponent>activeModal.componentInstance).place = place;
         activeModal.result.then((result) => {
             if (result === 'print') {
-                const printConfig = {
+                const printConfig: TournamentPrintConfig = {
                     gamenotes: this.printForm.value['gamenotes'],
                     structure: this.printForm.value['structure'],
                     rules: this.printForm.value['rules'],

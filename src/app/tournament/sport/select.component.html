@@ -1,66 +1,65 @@
-<div class="container-fluid">
-  <div class="row justify-content-center">
-    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-      <div>
-        <h2>Sport</h2>
-        <h2 *ngIf="processing" class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-        </h2>
-      </div>
-      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-      <form [formGroup]="radioGroupForm">
-        <div class="btn-group btn-group-toggle mb-3" ngbRadioGroup formControlName="inputtype">
-          <label ngbButtonLabel class="btn btn-outline-secondary">
-            <input ngbButton type="radio" value="select">
-            <fa-icon *ngIf="radioGroupForm.value['inputtype'] === 'select'" [icon]="['fas', 'check-circle']">
-            </fa-icon> selecteren
-          </label>
-          <label ngbButtonLabel class="btn btn-outline-secondary">
-            <input ngbButton type="radio" value="new">
-            <fa-icon *ngIf="radioGroupForm.value['inputtype'] === 'new'" [icon]="['fas', 'check-circle']">
-            </fa-icon> zelf invoeren
-          </label>
-        </div>
-      </form>
+<div>
+  <h2>Sport</h2>
+  <h2 *ngIf="processing" class="text-center">
+    <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  </h2>
+</div>
+<ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+<form [formGroup]="radioGroupForm">
+  <div class="btn-group btn-group-toggle mb-3" ngbRadioGroup formControlName="inputtype">
+    <label ngbButtonLabel class="btn btn-outline-secondary">
+      <input ngbButton type="radio" value="select">
+      <fa-icon *ngIf="radioGroupForm.value['inputtype'] === 'select'" [icon]="['fas', 'check-circle']">
+      </fa-icon> selecteren
+    </label>
+    <label ngbButtonLabel class="btn btn-outline-secondary">
+      <input ngbButton type="radio" value="new">
+      <fa-icon *ngIf="radioGroupForm.value['inputtype'] === 'new'" [icon]="['fas', 'check-circle']">
+      </fa-icon> zelf invoeren
+    </label>
+  </div>
+</form>
 
-      <ul *ngIf="radioGroupForm.value['inputtype'] === 'select'" class="list-group">
-        <li *ngFor="let showableSport of getSortableSports()" class="list-group-item pointer"
-          (click)="sendSportByCustomId(showableSport.customId)">
-          <span class="sport-icon">
-            <app-sport-icon [customId]="showableSport.customId"></app-sport-icon>
-          </span>
-          <span>{{showableSport.name}}</span>
-          <fa-icon [icon]="['fas', 'dot-circle']" class="text-primary" pull="right"></fa-icon>
-        </li>
-      </ul>
-      <form *ngIf="radioGroupForm.value['inputtype'] === 'new'" [formGroup]="form" (ngSubmit)="save()" novalidate>
-        <div class="form-group row">
-          <div class="col-3">
-            <label for="newSportName" class="col-form-label">naam</label>
-          </div>
-          <div class="col-9">
-            <input class="form-control" #newSportName
-              [ngClass]="{ 'is-invalid': form.controls.newSportName.invalid, 'is-valid': form.controls.newSportName.valid }"
-              type="text" formControlName="newSportName" placeholder="naam nieuwe sport" required>
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="team" class="col-3 col-form-label">teamsport</label>
-          <div class="form-check col-9">
-            <label class="custom-control custom-checkbox col-form-label pl-0">
-              <input type="checkbox" class="custom-control-input form-check-input" formControlName="team">
-              <span class="custom-control-indicator"></span>
-            </label>
-          </div>
-        </div>
-        <div class="form-group row justify-content-end">
-          <div class="col-9">
-            <button [disabled]="form.invalid" type="submit" class="btn btn-outline-primary">
-              opslaan
-            </button>
-          </div>
-        </div>
-      </form>
+<div *ngIf="radioGroupForm.value['inputtype'] === 'select'">
+  <label *ngIf="staticInfo" class="text-info font-weight-bold">
+    <fa-icon [icon]="['fas', 'info-circle']"></fa-icon> {{staticInfo}}
+  </label>
+  <ul class="list-group">
+    <li *ngFor="let showableSport of getSortableSports()" class="list-group-item pointer"
+      (click)="sendSportByCustomId(showableSport.customId)">
+      <span class="sport-icon">
+        <app-sport-icon [customId]="showableSport.customId"></app-sport-icon>
+      </span>
+      <span>{{showableSport.name}}</span>
+      <fa-icon [icon]="['fas', 'dot-circle']" class="text-primary" pull="right"></fa-icon>
+    </li>
+  </ul>
+</div>
+<form *ngIf="radioGroupForm.value['inputtype'] === 'new'" [formGroup]="form" (ngSubmit)="save()" novalidate>
+  <div class="form-group row">
+    <div class="col-3">
+      <label for="newSportName" class="col-form-label">naam</label>
+    </div>
+    <div class="col-9">
+      <input class="form-control" #newSportName
+        [ngClass]="{ 'is-invalid': form.controls.newSportName.invalid, 'is-valid': form.controls.newSportName.valid }"
+        type="text" formControlName="newSportName" placeholder="naam nieuwe sport" required>
     </div>
   </div>
-</div>
+  <div class="form-group row">
+    <label for="team" class="col-3 col-form-label">teamsport</label>
+    <div class="form-check col-9">
+      <label class="custom-control custom-checkbox col-form-label pl-0">
+        <input type="checkbox" class="custom-control-input form-check-input" formControlName="team">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="form-group row justify-content-end">
+    <div class="col-9">
+      <button [disabled]="form.invalid" type="submit" class="btn btn-outline-primary">
+        opslaan
+      </button>
+    </div>
+  </div>
+</form>

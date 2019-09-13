@@ -6,6 +6,7 @@ import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentService } from '../../lib/tournament/service';
 import { TournamentComponent } from '../component';
+import { TranslateService } from '../../lib/translate';
 
 @Component({
     selector: 'app-tournament-fields',
@@ -61,6 +62,12 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
 
     linkToEdit(tournament: Tournament, field?: Field) {
         this.router.navigate(['/toernooi/fieldedit', tournament.getId(), field ? field.getNumber() : 0]);
+    }
+
+    getFieldsDescription(): string {
+        const translate = new TranslateService();
+        const sports = this.tournament.getCompetition().getSports();
+        return translate.getFieldsName(sports.length === 1 ? sports[0] : undefined);
     }
 
     removeField(field: Field) {

@@ -14,6 +14,7 @@ import { TranslateService } from '../../lib/translate';
 })
 export class SportSelectComponent implements OnInit {
     @Input() sportConfigs: SportConfig[];
+    @Input() staticInfo: string;
     @Output() sendSport = new EventEmitter<Sport>();
     processing = true;
     form: FormGroup;
@@ -72,7 +73,7 @@ export class SportSelectComponent implements OnInit {
                 this.sendSport.emit(sportRes);
             },
             /* error path */ e => {
-                this.setAlert('danger', 'de toernooi-indeling kon niet worden aangemaakt: ' + e);
+                this.setAlert('danger', 'de sport kon niet worden aangemaakt: ' + e);
                 this.processing = false;
             },
             /* onComplete */() => this.processing = false

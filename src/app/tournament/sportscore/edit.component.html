@@ -8,7 +8,7 @@
           <app-sport-icon *ngIf="sportConfig" [customId]="sportConfig.getSport().getCustomId()"></app-sport-icon>
           <span *ngIf="sportConfig">{{sportConfig.getSport().getName()}} </span>
           <span *ngIf="!sportConfig">sport </span>
-           <small>scoreinstellingen</small>
+          <small>scoreinstellingen</small>
         </h2>
       </div>
       <div>
@@ -19,17 +19,32 @@
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <form *ngIf="!processing && scoreConfig" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
         <div class="form-group row">
-            <label class="col-6 col-form-label">{{translateService.getScoreNameSingle(scoreConfig)}}</label>
-            <label for="scoreMaximum-{{scoreConfig.getId()}}"
-                class="col-2 col-form-label text-right">{{translateService.getScoreDirection(scoreConfig.getDirection())}}</label>
-            <div class="col-4">
-            <input type="number" [ngClass]="{ 'is-invalid': form.controls.max.invalid, 'is-valid': form.controls.max.valid}"
-                        formControlName="max" 
-                        [maxlength]="2" class="form-control"/>
+          <label class="col-5 col-form-label">{{translateService.getScoreNameMultiple(scoreConfig)}}</label>
+          <label for="max"
+            class="col-2 col-form-label text-right">{{translateService.getScoreDirection(scoreConfig.getDirection())}}</label>
+          <div class="col-5">
+            <input type="number"
+              [ngClass]="{ 'is-invalid': form.controls.max.invalid, 'is-valid': form.controls.max.valid}"
+              formControlName="max" [maxlength]="2" class="form-control" />
           </div>
-        </div>  
+        </div>
+        <div *ngIf="scoreConfig && scoreConfig.getNext()" class="form-group row">
+          <label class="col-5 col-form-label">{{translateService.getScoreNameMultiple(scoreConfig.getNext())}}</label>
+          <label for="maxNext"
+            class="col-2 col-form-label text-right">{{translateService.getScoreDirection(scoreConfig.getNext().getDirection())}}</label>
+          <div class="col-5">
+            <input type="number"
+              [ngClass]="{ 'is-invalid': form.controls.maxNext.invalid, 'is-valid': form.controls.maxNext.valid}"
+              formControlName="maxNext" [maxlength]="2" class="form-control" />
+          </div>
+        </div>
+        <div *ngIf="scoreConfig && scoreConfig.hasNext()" class="form-group row">
+          <label class="col-12 col-form-label text-info">De invoer vindt plaats o.b.v.
+            {{getInput().getName()}}. De berekening vindt plaats o.b.v.
+            {{getCalculate().getName()}}</label>
+        </div>
         <div class="form-group row justify-content-end">
-          <div class="col-4">
+          <div class="col-5">
             <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
               <span>opslaan</span>
             </button>
@@ -40,7 +55,7 @@
   </div>
 </div>
 
-  <!-- <div *ngIf="scoreConfig" class="form-group row">
+<!-- <div *ngIf="scoreConfig" class="form-group row">
       <div class="col-6">
           <label class="col-form-label">{{scoreConfig.getName()}}</label>
       </div>
@@ -59,10 +74,3 @@
       <label class="col-12 col-form-label text-info">{{scoreConfig.getName()}} kan niet
           aangepast worden omdat er o.b.v. tijd gespeeld wordt</label>
   </div> -->
-  
-
-<!-- <div class="form-group row">
-  <label class="col-12 col-form-label text-info">De invoer vindt plaats o.b.v.
-      {{modelConfig.getInputScore().getName()}}. De berekening vindt plaats o.b.v.
-      {{modelConfig.getCalculateScore().getName()}}</label>
-</div> -->

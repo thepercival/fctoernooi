@@ -14,7 +14,7 @@ export class TranslateService {
             case SportCustom.Chess: { return 'schaken'; }
             case SportCustom.Squash: { return 'squash'; }
             case SportCustom.TableTennis: { return 'tafeltennis'; }
-            case SportCustom.Tennis: { return 'darten'; }
+            case SportCustom.Tennis: { return 'tennis'; }
             case SportCustom.Football: { return 'voetbal'; }
             case SportCustom.Voleyball: { return 'volleybal'; }
             case SportCustom.Baseball: { return 'honkbal'; }
@@ -24,7 +24,7 @@ export class TranslateService {
 
     getScoreNameSingle(sportScoreConfig: SportScoreConfig): string {
         const customId = sportScoreConfig.getSport().getCustomId();
-        if (sportScoreConfig.getParent() !== undefined) {
+        if (sportScoreConfig.getPrevious() !== undefined) {
             return this.getScoreSubSingleName(customId);
         }
         switch (customId) {
@@ -53,9 +53,9 @@ export class TranslateService {
         return undefined;
     }
 
-    getScoreNameMultiple(language: string, sportScoreConfig: SportScoreConfig): string {
+    getScoreNameMultiple(sportScoreConfig: SportScoreConfig): string {
         const customId = sportScoreConfig.getSport().getCustomId();
-        if (sportScoreConfig.getParent() !== undefined) {
+        if (sportScoreConfig.getPrevious() !== undefined) {
             return this.getScoreSubSingleName(customId);
         }
         switch (customId) {
@@ -93,8 +93,8 @@ export class TranslateService {
         return undefined;
     }
 
-    getFieldName(sport: Sport): string {
-        const customId = sport.getCustomId();
+    getFieldName(sport?: Sport): string {
+        const customId = sport ? sport.getCustomId() : undefined;
         switch (customId) {
             case SportCustom.Badminton: { return 'veld'; }
             case SportCustom.Basketball: { return 'veld'; }
@@ -110,11 +110,11 @@ export class TranslateService {
             case SportCustom.Voleyball: { return 'veld'; }
             case SportCustom.Baseball: { return 'veld'; }
         }
-        return undefined;
+        return 'veld';
     }
 
-    getFieldsName(sport: Sport): string {
-        const customId = sport.getCustomId();
+    getFieldsName(sport?: Sport): string {
+        const customId = sport ? sport.getCustomId() : undefined;
         switch (customId) {
             case SportCustom.Badminton: { return 'velden'; }
             case SportCustom.Basketball: { return 'velden'; }
@@ -130,6 +130,6 @@ export class TranslateService {
             case SportCustom.Voleyball: { return 'velden'; }
             case SportCustom.Baseball: { return 'velden'; }
         }
-        return undefined;
+        return 'velden';
     }
 }

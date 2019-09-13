@@ -76,27 +76,18 @@
         <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/toernooi/fields', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
-              <i class="fi flaticon-soccer-field"></i> velden</h5>
+              <i class="fi flaticon-soccer-field"></i>
+              {{getFieldsDescription()}}</h5>
             <p class="card-text">{{getNrOfFieldsDescription()}}</p>
           </div>
         </div>
         <div class="card border-secondary pointer mt-3 mx-2" (click)="linkToSportConfig()">
           <div class="card-body">
-            <h5 class="card-title" *ngIf="tournament.getCompetition().hasMultipleSportConfigs()">
-              <fa-icon [icon]="['fas', 'cogs']"></fa-icon> sporten
-            </h5>
-            <h5 class="card-title" *ngIf="!tournament.getCompetition().hasMultipleSportConfigs()">
-              <small>
-                <app-sport-icon [configs]="tournament.getCompetition().getSportConfigs()"></app-sport-icon>
-              </small> {{tournament.getCompetition().getFirstSportConfig().getSport().getName()}}
+            <h5 class="card-title">
+              <fa-icon [icon]="['fas', 'cogs']"></fa-icon> sport(en)
             </h5>
             <p class="card-text">
-              <span *ngIf="!sportConfigsAreDefault()">
-                <fa-icon [icon]="['fas', 'check-circle']"></fa-icon> instellingen aangepast
-              </span>
-              <span *ngIf="sportConfigsAreDefault()">
-                instellingen zijn standaard
-              </span>
+              puntentelling en score
             </p>
           </div>
         </div>
@@ -220,14 +211,14 @@
           <label for="gamenotes" class="col-9 col-form-label">wedstrijdbriefjes</label>
         </div>
         <div class="row">
-            <div class="form-check col-3">
-              <label class="custom-control custom-checkbox col-form-label pl-0">
-                <input type="checkbox" class="custom-control-input form-check-input" formControlName="gamesperpoule">
-                <span class="custom-control-indicator"></span>
-              </label>
-            </div>
-            <label for="gamesperpoule" class="col-8 col-form-label">wedstrijden per poule</label>
+          <div class="form-check col-3">
+            <label class="custom-control custom-checkbox col-form-label pl-0">
+              <input type="checkbox" class="custom-control-input form-check-input" formControlName="gamesperpoule">
+              <span class="custom-control-indicator"></span>
+            </label>
           </div>
+          <label for="gamesperpoule" class="col-8 col-form-label">wedstrijden per poule</label>
+        </div>
         <div class="row">
           <div class="form-check col-3">
             <label class="custom-control custom-checkbox col-form-label pl-0">

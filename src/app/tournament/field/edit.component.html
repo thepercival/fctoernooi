@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
-    <app-tournament-sport-select *ngIf="chooseSport" class="col-xs-12 col-sm-10 col-md-8 col-lg-6"
+    <app-tournament-sport-select *ngIf="chooseSport" class="col-xs-12 col-sm-8 col-md-6 col-lg-4"
       (sendSport)="onGetSport($event)">
     </app-tournament-sport-select>
     <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6" *ngIf="!chooseSport">
@@ -27,15 +27,15 @@
           </div>
         </div>
         <div class="form-group row">
-          <div class="col-3">
-            <label for="sportname" class="col-form-label">sport</label>
-          </div>
-          <div class="col-5">
-            <input class="form-control pointer" [ngClass]="{ 'is-invalid': !sport, 'is-valid': sport }"
-              formControlName="sportname" (click)="chooseSport = true">
-          </div>
-          <div class="col-4">
-            <button type="button" class="btn btn-secondary" (click)="chooseSport = true">kies</button>
+          <label for="sportname" class="col-3 col-form-label">sport</label>
+          <div class="col-9">
+            <div class="input-group pointer">
+              <input class="form-control" [ngClass]="{ 'is-invalid': !sportname, 'is-valid': sportname }"
+                formControlName="sportname">
+              <div *ngIf="!field" class="input-group-append" (click)="chooseSport = true">
+                <span class="input-group-text">kies</span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="form-group row justify-content-end">

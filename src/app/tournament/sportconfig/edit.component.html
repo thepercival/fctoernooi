@@ -22,10 +22,10 @@
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
         <div class="form-group row">
-          <div class="col-8">
+          <div class="col-7">
             <label for="winPoints" class="col-form-label">punten bij overwinning</label>
           </div>
-          <div class="col-4">
+          <div class="col-5">
             <select class="form-control" formControlName="winPoints" required
               [ngClass]="{ 'is-invalid': form.controls.winPoints.invalid, 'is-valid': form.controls.winPoints.valid }">
               <option *ngFor="let winpoints of ranges.winPoints" [ngValue]="winpoints">{{winpoints}}</option>
@@ -33,10 +33,10 @@
           </div>
         </div>
         <div class="form-group row">
-          <div class="col-8">
+          <div class="col-7">
             <label for="drawPoints" class="col-form-label">punten bij gelijkspel</label>
           </div>
-          <div class="col-4">
+          <div class="col-5">
             <select class="form-control" formControlName="drawPoints" required
               [ngClass]="{ 'is-invalid': form.controls.drawPoints.invalid, 'is-valid': form.controls.drawPoints.valid }">
               <option *ngFor="let drawpoints of ranges.drawPoints" [ngValue]="drawpoints">{{drawpoints}}</option>
@@ -45,10 +45,10 @@
         </div>
         <h3><small>na verlenging</small></h3>
         <div class="form-group row">
-          <div class="col-8">
+          <div class="col-7">
             <label for="winPointsExt" class="col-form-label">punten bij overwinning</label>
           </div>
-          <div class="col-4">
+          <div class="col-5">
             <select class="form-control" formControlName="winPointsExt" required
               [ngClass]="{ 'is-invalid': form.controls.winPoints.invalid, 'is-valid': form.controls.winPointsExt.valid }">
               <option *ngFor="let winpointsext of ranges.winPoints" [ngValue]="winpointsext">{{winpointsext}}</option>
@@ -56,10 +56,10 @@
           </div>
         </div>
         <div class="form-group row">
-          <div class="col-8">
+          <div class="col-7">
             <label for="drawPointsExt" class="col-form-label">punten bij gelijkspel</label>
           </div>
-          <div class="col-4">
+          <div class="col-5">
             <select class="form-control" formControlName="drawPointsExt" required
               [ngClass]="{ 'is-invalid': form.controls.drawPointsExt.invalid, 'is-valid': form.controls.drawPointsExt.valid }">
               <option *ngFor="let drawpointsext of ranges.drawPoints" [ngValue]="drawpointsext">{{drawpointsext}}
@@ -68,10 +68,10 @@
           </div>
         </div>
         <div *ngIf="!sportConfig.getId()" class="form-group row">
-          <div class="col-8">
+          <div class="col-7">
             <label for="nrOfFields" class="col-form-label">aantal velden</label>
           </div>
-          <div class="col-4">
+          <div class="col-5">
             <select class="form-control" formControlName="nrOfFields" required
               [ngClass]="{ 'is-invalid': form.controls.nrOfFields.invalid, 'is-valid': form.controls.nrOfFields.valid }">
               <option *ngFor="let nrOfFields of ranges.nrOfFields" [ngValue]="nrOfFields">{{nrOfFields}}
@@ -80,13 +80,13 @@
           </div>
         </div>
         <div class="form-group row">
-          <div class="col-8">
+          <div class="col-7">
             <button *ngIf="this.tournament.getCompetition().getSportConfigs().length === 1"
-            (click)="openMultiSportsModal(multisports)" class="btn btn-outline-secondary">
+              (click)="openMultiSportsModal(multisports)" class="btn btn-outline-secondary">
               <span>meerdere sporten</span>
             </button>
           </div>
-          <div class="col-4">
+          <div class="col-5">
             <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
               <span>opslaan</span>
             </button>
@@ -94,8 +94,9 @@
         </div>
       </form>
     </div>
-    <app-tournament-sport-select *ngIf="!processing && tournament && !sportConfig" class="col-xs-12 col-sm-10 col-md-8 col-lg-6"
-      [sportConfigs]="tournament.getCompetition().getSportConfigs()" (sendSport)="onGetSport($event)">
+    <app-tournament-sport-select *ngIf="!processing && tournament && !sportConfig"
+      class="col-xs-12 col-sm-10 col-md-8 col-lg-6" [sportConfigs]="tournament.getCompetition().getSportConfigs()"
+      (sendSport)="onGetSport($event)">
     </app-tournament-sport-select>
   </div>
 </div>
@@ -108,11 +109,14 @@
     </button>
   </div>
   <div class="modal-body">
-      <ul class="list-group">           
-        <li class="list-group-item">elke deelnemers speelt even vaak tegen andere deelnemers(net zoals bij een enkele sport)</li>
-        <li class="list-group-item">elke deelnemer doet iederee sport in ieder geval 1 keer(of hoeveel velden er voor de sport zijn)</li>
-        <li class="list-group-item">wanneer er meer sporten gedaan moeten worden dan er wedstrijden zijn, dan speelt iedereen vaker tegen elkaar</li>
-      </ul>
+    <ul class="list-group">
+      <li class="list-group-item">elke deelnemers speelt even vaak tegen andere deelnemers(net zoals bij een enkele
+        sport)</li>
+      <li class="list-group-item">elke deelnemer doet iederee sport in ieder geval 1 keer(of hoeveel velden er voor de
+        sport zijn)</li>
+      <li class="list-group-item">wanneer er meer sporten gedaan moeten worden dan er wedstrijden zijn, dan speelt
+        iedereen vaker tegen elkaar</li>
+    </ul>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="modal.close('continue')">doorgaan</button>
