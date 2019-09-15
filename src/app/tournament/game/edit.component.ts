@@ -100,8 +100,8 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         if (scoreConfig.getDirection() === SportScoreConfig.UPWARDS && scoreConfig.getMaximum() > 0) {
             description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
         }
-        // @TODO
-        return description + '@TODO'; // scoreConfig.getName()
+        const translate = new TranslateService();
+        return description + translate.getScoreNameMultiple(scoreConfig);
     }
 
     getInputScoreDescription() {
@@ -110,8 +110,8 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         if (scoreConfig.getDirection() === SportScoreConfig.UPWARDS && scoreConfig.getMaximum() > 0) {
             description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
         }
-        // @TODO
-        return description + '@TODO'; // scoreConfig.getName();
+        const translate = new TranslateService();
+        return description + translate.getScoreNameMultiple(scoreConfig);
     }
 
     aScoreIsInvalid() {
@@ -163,6 +163,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
 
         this.form.controls.played.setValue(this.game.getState() === State.Finished);
         this.form.controls.extratime.setValue(this.game.getScoresMoment() === Game.MOMENT_EXTRATIME);
+
         if (this.calculateAndInputScoreDiffers()) {
             this.calculateScoreControl = new HomeAwayFormControl(0, 0, true);
         }

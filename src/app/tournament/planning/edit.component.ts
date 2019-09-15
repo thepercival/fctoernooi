@@ -37,8 +37,6 @@ export class PlanningEditComponent extends TournamentComponent implements OnInit
     ) {
         super(route, router, tournamentRepository, structureRepository);
 
-        // hier regelset toevoegen @TODO
-
         this.form = fb.group({
             date: ['', Validators.compose([
             ])],

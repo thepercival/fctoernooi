@@ -45,14 +45,10 @@
               type="number">
           </div>
         </div>
-        @TODO
-        <!-- 
         <div *ngFor="let scoreControl of scoreControls; let i = index; let last = last" class="form-group row">
-          <div class="col-3">
-            <label class="col-form-label">
-              <span>{{getInputScoreDescription()}}</span>
-            </label>
-          </div>
+          <label class="col-3 col-form-label">
+            <span>{{getInputScoreDescription()}}</span>
+          </label>
           <div class="col-4">
             <input [formControl]="scoreControl.home" (ngModelChange)="setHome(scoreControl,$event)"
               class="form-control max-width-100 {{getInputClass(scoreControl)}}" type="number">
@@ -84,8 +80,8 @@
           </div>
           <div class="col-9">
             <label class="custom-control custom-checkbox col-form-label pl-0">
-              <input type="checkbox" class="custom-control-input form-check-input"
-                formControlName="extratime" (ngModelChange)="setExtratime($event)">
+              <input type="checkbox" class="custom-control-input form-check-input" formControlName="extratime"
+                (ngModelChange)="setExtratime($event)">
               <span class="custom-control-indicator"></span>
             </label>
           </div>
@@ -96,12 +92,12 @@
           </div>
           <div class="col-9">
             <label class="custom-control custom-checkbox col-form-label pl-0">
-              <input type="checkbox" class="custom-control-input form-check-input"
-                formControlName="played" (ngModelChange)="setPlayed($event)">
+              <input type="checkbox" class="custom-control-input form-check-input" formControlName="played"
+                (ngModelChange)="setPlayed($event)">
               <span class="custom-control-indicator"></span>
             </label>
           </div>
-        </div> -->
+        </div>
         <div *ngIf="planningService.canCalculateStartDateTime(game.getRound().getNumber())" class="form-group row">
           <div class="col-3">
             <label class="col-form-label">start</label>

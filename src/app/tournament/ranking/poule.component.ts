@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, RankedRoundItem, RankingService } from 'ngx-sport';
+import { NameService, Poule, RankedRoundItem, RankingService, SportScoreConfigService } from 'ngx-sport';
 
 import { CSSService } from '../../common/cssservice';
 import { Favorites } from '../../lib/favorites';
@@ -34,9 +34,9 @@ export class PouleRankingComponent implements OnInit {
   }
 
   hasMultipleScoreConfigs() {
-    // @TODO
-    return false;
-    // return this.poule.getRound().getNumber().getConfig().getCalculateScore()
-    //   !== this.poule.getRound().getNumber().getConfig().getInputScore();
+    const sportScoreConfigService = new SportScoreConfigService();
+    return this.poule.getRound().getNumber().getSportScoreConfigs().some(sportScoreConfig => {
+      return sportScoreConfigService.inputAndCalculateDiffers(sportScoreConfig);
+    });
   }
 }
