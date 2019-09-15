@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     Sport,
@@ -16,6 +16,8 @@ import {
     PlanningService,
     SportScoreConfig,
     RoundNumber,
+    JsonSportScoreConfig,
+    SportScoreConfigRepository,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
 import { CSSService } from '../../common/cssservice';
@@ -38,6 +40,7 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
     sportConfigService: SportConfigService;
     private translateService: TranslateService;
     scoreConfig: SportScoreConfig;
+    roundNumber: RoundNumber;
 
     validations: SportScoreValidations = {
         minScore: 0,
@@ -45,7 +48,7 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
     };
 
     constructor(
-        private sportConfigRepository: SportConfigRepository,
+        private sportScoreConfigRepository: SportScoreConfigRepository,
         public cssService: CSSService,
         route: ActivatedRoute,
         router: Router,
@@ -63,11 +66,7 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
                 Validators.required,
                 Validators.min(this.validations.minScore),
                 Validators.max(this.validations.maxScore)
-            ])],
-            maxNext: ['', Validators.compose([
-                Validators.min(this.validations.minScore),
-                Validators.max(this.validations.maxScore)
-            ])],
+            ])]
         });
         this.sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
     }
@@ -102,14 +101,23 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
         this.processing = false;
     }
 
-    setScoreConfig(scoreConfig?: SportScoreConfig) {
-        if (scoreConfig === undefined) {
-            scoreConfig = this.structure.getFirstRoundNumber().getSportScoreConfig(this.sportConfig.getSport());
+    setScoreConfig(roundNumber?: RoundNumber) {
+        if (roundNumber === undefined) {
+            roundNumber = this.structure.getFirstRoundNumber();
         }
-        this.scoreConfig = scoreConfig;
+        this.roundNumber = roundNumber;
+        this.scoreConfig = roundNumber.getValidSportScoreConfig(this.sportConfig.getSport());
+
         this.form.controls.max.setValue(this.scoreConfig.getMaximum());
-        if (scoreConfig.hasNext()) {
-            this.form.controls.maxNext.setValue(this.scoreConfig.getNext().getMaximum());
+        if (this.scoreConfig.hasNext()) {
+            this.form.addControl('maxNext', new FormControl(
+                this.scoreConfig.getNext().getMaximum(),
+                Validators.compose([
+                    Validators.required,
+                    Validators.min(this.validations.minScore),
+                    Validators.max(this.validations.maxScore)
+                ])
+            ));
         }
     }
 
@@ -117,104 +125,82 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
         const modalRef = this.modalService.open(ModalRoundNumbersComponent);
         modalRef.componentInstance.structure = this.structure;
         modalRef.result.then((roundNumber: RoundNumber) => {
-            const scoreConfig = roundNumber.getSportScoreConfig(this.sportConfig.getSport());
-            this.setScoreConfig(scoreConfig);
+            this.setScoreConfig(roundNumber);
         }, (reason) => { this.setScoreConfig(); });
     }
 
-    getInput(): SportScoreConfig {
-        if (!this.scoreConfig.hasNext()) {
-            return this.scoreConfig;
-        }
+    getInputName(): string {
         const max = this.form.value['max'];
         const maxNext = this.form.value['maxNext'];
-        return (maxNext > 0 || max === 0) ? this.scoreConfig.getNext() : this.scoreConfig;
+        const scoreConfig = (maxNext === 0 && max > 0) ? this.scoreConfig : this.scoreConfig.getNext();
+        return this.translateService.getScoreNameMultiple(scoreConfig);
     }
 
-    getCalculate(): SportScoreConfig {
-        if (!this.scoreConfig.hasNext()) {
-            return this.scoreConfig;
-        }
+    getCalculateName(): string {
         const max = this.form.value['max'];
-        const maxNext = this.form.value['maxNext'];
-        return (max > 0 || maxNext === 0) ? this.scoreConfig : this.scoreConfig.getNext();
+        const scoreConfig = (max > 0) ? this.scoreConfig : this.scoreConfig.getNext();
+        return this.translateService.getScoreNameMultiple(scoreConfig);
     }
 
-    // save(): boolean {
-    //     if (this.sportConfig.getId() === undefined) {
-    //         return this.add();
-    //     }
-    //     return this.edit();
-    // }
+    save(): boolean {
+        const scoreConfig = this.roundNumber.getSportScoreConfig(this.sportConfig.getSport());
+        if (scoreConfig === undefined) {
+            return this.add();
+        }
+        return this.edit(scoreConfig);
+    }
 
-    // add(): boolean {
-    //     this.processing = true;
-    //     this.setAlert('info', 'de sport wordt gewijzigd');
+    protected getJson(sport: Sport): JsonSportScoreConfig {
+        const json: JsonSportScoreConfig = {
+            sportId: sport.getId(),
+            direction: SportScoreConfig.UPWARDS,
+            maximum: this.form.value['max']
+        };
+        if (this.form.controls.maxNext !== undefined) {
+            json.next = {
+                sportId: sport.getId(),
+                direction: SportScoreConfig.UPWARDS,
+                maximum: this.form.value['maxNext']
+            };
+        }
+        return json;
+    }
 
-    //     this.sportConfig.setWinPoints(this.form.value['winPoints']);
-    //     this.sportConfig.setDrawPoints(this.form.value['drawPoints']);
-    //     this.sportConfig.setWinPointsExt(this.form.value['winPointsExt']);
-    //     this.sportConfig.setDrawPointsExt(this.form.value['drawPointsExt']);
+    add(): boolean {
+        this.processing = true;
+        this.setAlert('info', 'de score-instellingen worden gewijzigd');
 
-    //     const competition = this.tournament.getCompetition();
+        const sport = this.sportConfig.getSport();
+        const json = this.getJson(sport);
 
-    //     this.sportConfigRepository.createObject(this.sportConfig, competition)
-    //     .subscribe(
-    //     /* happy path */ sportConfigRes => {
+        this.sportScoreConfigRepository.createObject(json, sport, this.roundNumber)
+            .subscribe(
+        /* happy path */ sportConfigRes => {
+                    this.myNavigation.back();
+                },
+        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+        /* onComplete */() => { this.processing = false; }
+            );
+        return false;
+    }
 
-    //         const fieldReposAdds = [];
-    //         for ( let i = 0 ; i < this.form.value['nrOfFields'] ; i++ ) {
-    //             const fieldNr = competition.getFields().length + i + 1;
-    //             const jsonField: JsonField = { number: fieldNr, name: '' + fieldNr, sportId: this.sportConfig.getSport().getId() };
-    //             fieldReposAdds.push(this.fieldRepository.createObject(jsonField, competition));
-    //         }
+    edit(scoreConfig: SportScoreConfig): boolean {
+        this.processing = true;
+        this.setAlert('info', 'de score-instellingen worden gewijzigd');
 
-    //         forkJoin(fieldReposAdds).subscribe(results => {
+        const sport = this.sportConfig.getSport();
+        const json = this.getJson(sport);
 
-    //             const firstRoundNumber = this.structure.getFirstRoundNumber();
-    //             const tournamentService = new TournamentService(this.tournament);
-    //             const planningService = new PlanningService(competition);
-    //             tournamentService.reschedule(planningService, firstRoundNumber);
-    //             this.planningRepository.editObject(firstRoundNumber).subscribe(
-    //                 /* happy path */ gamesRes => {
-    //                     this.linkToSportConfig(); /* niet navigate back van kan van sport komen */
-    //                     this.processing = false;
-    //                 },
-    //                 /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-    //                 /* onComplete */() => this.processing = false
-    //             );
-    //         },
-    //             err => {
-    //                 this.processing = false;
-    //                 this.setAlert('danger', 'de wedstrijd is niet opgeslagen: ' + err);
-    //             }
-    //         );
-    //     },
-    //     /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-    //     /* onComplete */() => { this.processing = false; }
-    //     );
-    //     return false;
-    // }
-
-    // edit(): boolean {
-    //     this.processing = true;
-    //     this.setAlert('info', 'de sport wordt gewijzigd');
-
-    //     this.sportConfig.setWinPoints(this.form.value['winPoints']);
-    //     this.sportConfig.setDrawPoints(this.form.value['drawPoints']);
-    //     this.sportConfig.setWinPointsExt(this.form.value['winPointsExt']);
-    //     this.sportConfig.setDrawPointsExt(this.form.value['drawPointsExt']);
-
-    //     this.sportConfigRepository.editObject(this.sportConfig, this.tournament.getCompetition())
-    //         .subscribe(
-    //         /* happy path */ sportConfigRes => {
-    //                 this.linkToSportConfig(); /* niet navigate back van kan van sport komen */
-    //             },
-    //         /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-    //         /* onComplete */() => { this.processing = false; }
-    //         );
-    //     return false;
-    // }
+        this.sportScoreConfigRepository.editObject(json, scoreConfig)
+            .subscribe(
+        /* happy path */ configRes => {
+                    this.myNavigation.back();
+                },
+        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+        /* onComplete */() => { this.processing = false; }
+            );
+        return false;
+    }
 
     // navigateBack() {
     //     this.myNavigation.back();

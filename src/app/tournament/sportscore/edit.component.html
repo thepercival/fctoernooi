@@ -28,7 +28,7 @@
               formControlName="max" [maxlength]="2" class="form-control" />
           </div>
         </div>
-        <div *ngIf="scoreConfig && scoreConfig.getNext()" class="form-group row">
+        <div *ngIf="form.controls.maxNext" class="form-group row">
           <label class="col-5 col-form-label">{{translateService.getScoreNameMultiple(scoreConfig.getNext())}}</label>
           <label for="maxNext"
             class="col-2 col-form-label text-right">{{translateService.getScoreDirection(scoreConfig.getNext().getDirection())}}</label>
@@ -38,10 +38,10 @@
               formControlName="maxNext" [maxlength]="2" class="form-control" />
           </div>
         </div>
-        <div *ngIf="scoreConfig && scoreConfig.hasNext()" class="form-group row">
+        <div *ngIf="form.controls.maxNext" class="form-group row">
           <label class="col-12 col-form-label text-info">De invoer vindt plaats o.b.v.
-            {{getInput().getName()}}. De berekening vindt plaats o.b.v.
-            {{getCalculate().getName()}}</label>
+            {{getInputName()}}. De berekening vindt plaats o.b.v.
+            {{getCalculateName()}}</label>
         </div>
         <div class="form-group row justify-content-end">
           <div class="col-5">

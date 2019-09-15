@@ -64,6 +64,7 @@ import {
   SportScoreConfigService,
   StructureMapper,
   StructureRepository,
+  SportScoreConfigRepository,
 } from 'ngx-sport';
 
 import { CSSService } from '../common/cssservice';
@@ -186,6 +187,7 @@ library.add(
     PlanningConfigService,
     SportConfigService,
     SportScoreConfigMapper,
+    SportScoreConfigRepository,
     PlaceRepository,
     CompetitorRepository,
     CompetitorMapper,
