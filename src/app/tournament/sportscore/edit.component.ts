@@ -201,43 +201,6 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
             );
         return false;
     }
-
-    // navigateBack() {
-    //     this.myNavigation.back();
-    // }
-
-    // linkToSportConfig() {
-    //     if (!this.tournament.getCompetition().hasMultipleSportConfigs()) {
-    //         this.router.navigate(['/toernooi/sportconfigedit'
-    //             , this.tournament.getId(), this.tournament.getCompetition().getFirstSportConfig().getId()]);
-    //     } else {
-    //         this.router.navigate(['/toernooi/sportconfigs', this.tournament.getId()]);
-    //     }
-    // }
-
-    setScoreConfigMaximum(scoreConfig: SportScoreConfig, scoreConfigMaximum) {
-        if (scoreConfigMaximum > 9999 || scoreConfigMaximum < 0) {
-            return;
-        }
-        if (scoreConfigMaximum === 0 && scoreConfig.getPrevious() !== undefined) {
-            this.setScoreConfigMaximum(scoreConfig.getPrevious(), 0);
-        }
-        scoreConfig.setMaximum(scoreConfigMaximum);
-    }
-
-    isScoreConfigReadOnly(scoreConfig: SportScoreConfig) {
-        if (scoreConfig.getNext() !== undefined && scoreConfig.getNext().getMaximum() === 0) {
-            return true;
-        }
-        // if (this.modelConfig.getEnableTime() && scoreConfig.getParent() === undefined) {
-        //     return true;
-        // }
-        return false;
-    }
-
-    getDirectionName(scoreConfig: SportScoreConfig) {
-        return scoreConfig.getDirection() === SportScoreConfig.UPWARDS ? 'naar' : 'vanaf';
-    }
 }
 
 export interface SportScoreValidations {

@@ -54,23 +54,3 @@
     </div>
   </div>
 </div>
-
-<!-- <div *ngIf="scoreConfig" class="form-group row">
-      <div class="col-6">
-          <label class="col-form-label">{{scoreConfig.getName()}}</label>
-      </div>
-      <label for="scoreMaximum-{{scoreConfig.getId()}}"
-          class="col-2 col-form-label text-right">{{getDirectionName(scoreConfig)}}</label>
-      <div class="col-4">
-          <input type="number" [maxlength]="4" [ngModel]="scoreConfig.getMaximum()"
-              (ngModelChange)="setScoreConfigMaximum(scoreConfig,$event)"
-              id="scoreMaximum-{{scoreConfig.getId()}}"
-              name="scoreMaximum-{{scoreConfig.getId()}}" class="form-control"
-              [disabled]="isScoreConfigReadOnly(scoreConfig)" />
-      </div>
-  </div>
-  <div *ngIf="scoreConfig && isScoreConfigReadOnly(scoreConfig) && scoreConfig === modelConfig.getScore().getRoot()"
-      class="form-group row">
-      <label class="col-12 col-form-label text-info">{{scoreConfig.getName()}} kan niet
-          aangepast worden omdat er o.b.v. tijd gespeeld wordt</label>
-  </div> -->
