@@ -69,7 +69,7 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
   }
 
   getNrOfFields(sport: Sport): number {
-    return this.tournament.getCompetition().getFields().filter(field => field.getSport() === sport).length;
+    return this.tournament.getCompetition().getNrOfFields(sport);
   }
   // addSport() {
   //   this.linkToEdit(this.tournament);

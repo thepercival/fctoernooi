@@ -112,21 +112,21 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     private resetForm(config: PlanningConfig) {
-        this.form.controls.nrOfHeadtohead.setValue( config.getNrOfHeadtohead());
-        this.form.controls.enableTime.setValue( config.getEnableTime());
-        this.form.controls.minutesPerGame.setValue( config.getMinutesPerGame());
-        this.form.controls.minutesPerGameExt.setValue( config.getMinutesPerGameExt());
-        this.form.controls.minutesBetweenGames.setValue( config.getMinutesBetweenGames());
-        this.form.controls.minutesAfter.setValue( config.getMinutesAfter());
-        this.form.controls.selfReferee.setValue( config.getSelfReferee());
-        this.form.controls.teamup.setValue( this.isTeamupAvailable() && config.getTeamup());
-        if ( !this.isTeamupAvailable() ) {
+        this.form.controls.nrOfHeadtohead.setValue(config.getNrOfHeadtohead());
+        this.form.controls.enableTime.setValue(config.getEnableTime());
+        this.form.controls.minutesPerGame.setValue(config.getMinutesPerGame());
+        this.form.controls.minutesPerGameExt.setValue(config.getMinutesPerGameExt());
+        this.form.controls.minutesBetweenGames.setValue(config.getMinutesBetweenGames());
+        this.form.controls.minutesAfter.setValue(config.getMinutesAfter());
+        this.form.controls.selfReferee.setValue(config.getSelfReferee());
+        this.form.controls.teamup.setValue(this.isTeamupAvailable() && config.getTeamup());
+        if (!this.isTeamupAvailable()) {
             this.form.controls.teamup.disable();
         }
     }
 
     isTeamupAvailable(): boolean {
-        return this.tournament.getCompetition().getSports().every( sport => {
+        return this.tournament.getCompetition().getSports().every(sport => {
             return !sport.getTeam();
         });
     }
@@ -157,7 +157,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             minutesBetweenGames: this.form.value['minutesBetweenGames'],
             minutesAfter: this.form.value['minutesAfter'],
             selfReferee: this.form.value['selfReferee'],
-            teamup: this.form.value['teamup']
+            teamup: this.form.controls.teamup.disabled ? false : this.form.value['teamup']
         };
         if (this.roundNumber.getPlanningConfig() !== undefined) {
             this.edit(jsonConfig, this.roundNumber.getPlanningConfig());
