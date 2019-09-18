@@ -38,7 +38,7 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
     form: FormGroup;
     sportConfig: SportConfig;
     sportConfigService: SportConfigService;
-    private translateService: TranslateService;
+    translateService: TranslateService;
     scoreConfig: SportScoreConfig;
     roundNumber: RoundNumber;
 

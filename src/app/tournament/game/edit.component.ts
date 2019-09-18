@@ -162,7 +162,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         // const date = this.game.getStartDateTime();
 
         this.form.controls.played.setValue(this.game.getState() === State.Finished);
-        this.form.controls.extratime.setValue(this.game.getScoresMoment() === Game.MOMENT_EXTRATIME);
+        this.form.controls.extratime.setValue(this.game.getFinalPhase() === Game.PHASE_EXTRATIME);
 
         if (this.calculateAndInputScoreDiffers()) {
             this.calculateScoreControl = new HomeAwayFormControl(0, 0, true);
@@ -235,9 +235,19 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
             let counter = 0;
             this.scoreControls.forEach(scoreControl => {
                 const scoreHomeAway = scoreControl.getScore();
-                const newGameScore = new GameScore(this.game, scoreHomeAway.getHome(), scoreHomeAway.getAway(), ++counter);
+                const newGameScore = new GameScore(this.game, scoreHomeAway.getHome(), scoreHomeAway.getAway(), this.getPhase(), ++counter);
             });
         }
+    }
+
+    protected getPhase(): number {
+        if (this.form.value['extratime']) {
+            return Game.PHASE_EXTRATIME;
+        }
+        if (this.form.value['played']) {
+            return Game.PHASE_REGULARTIME;
+        }
+        return 0;
     }
 
     setHome(scoreControl: HomeAwayFormControl, home) {
@@ -263,7 +273,6 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
             this.updateCalculateScoreControl();
             this.syncGameScores();
         }
-        this.game.setScoresMoment(extratime ? Game.MOMENT_EXTRATIME : Game.MOMENT_FULLTIME);
     }
 
     calculateAndInputScoreDiffers() {
@@ -382,9 +391,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         if (this.game.getState() === State.Finished && this.scoreControls.length === 0) {
             this.scoreControls.push(new HomeAwayFormControl(0, 0));
         }
-        const moment = this.form.controls.extratime.value === true ? Game.MOMENT_EXTRATIME : Game.MOMENT_FULLTIME;
         const state = this.form.controls.played.value === true ? State.Finished : State.Created;
-        this.game.setScoresMoment(moment);
         this.game.setState(state);
         this.syncGameScores(false);
 

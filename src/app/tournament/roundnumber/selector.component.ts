@@ -7,39 +7,39 @@ import { IAlert } from '../../common/alert';
 @Component({
     selector: 'app-ngbd-modal-roundnumbers',
     templateUrl: './selector.component.html',
-  })
+})
 export class ModalRoundNumbersComponent implements OnInit {
     @Input() structure: Structure;
 
     form: FormGroup;
     protected roundNumber: RoundNumber;
-    protected processing = true;
+    processing = true;
 
     constructor(
         public nameService: NameService,
         public activeModal: NgbActiveModal,
         private fb: FormBuilder
-        ) {
+    ) {
         this.form = fb.group({});
     }
 
     ngOnInit() {
-        this.structure.getRoundNumbers().forEach( roundNumber => {
-            this.form.addControl('rn' + roundNumber.getNumber(), this.fb.control( true ));
+        this.structure.getRoundNumbers().forEach(roundNumber => {
+            this.form.addControl('rn' + roundNumber.getNumber(), this.fb.control(true));
         });
         this.onFormChanges();
         this.processing = false;
     }
 
-    selectNext(roundNumber?: RoundNumber ) {
-        if ( roundNumber === undefined ) {
+    selectNext(roundNumber?: RoundNumber) {
+        if (roundNumber === undefined) {
             return;
         }
         this.form.controls['rn' + roundNumber.getNumber()].setValue(true);
     }
 
-    deselectPrevious(roundNumber?: RoundNumber ) {
-        if ( roundNumber === undefined ) {
+    deselectPrevious(roundNumber?: RoundNumber) {
+        if (roundNumber === undefined) {
             return;
         }
         this.form.controls['rn' + roundNumber.getNumber()].setValue(false);
@@ -47,26 +47,26 @@ export class ModalRoundNumbersComponent implements OnInit {
 
 
     getSelectedRoundNumber(): RoundNumber {
-        return this.structure.getRoundNumbers().find( roundNumber => {
+        return this.structure.getRoundNumbers().find(roundNumber => {
             return this.form.value['rn' + roundNumber.getNumber()];
         });
     }
 
     allDeselected(): boolean {
-        return !this.structure.getRoundNumbers().some( roundNumber => {
+        return !this.structure.getRoundNumbers().some(roundNumber => {
             return this.form.value['rn' + roundNumber.getNumber()];
         });
     }
 
     onFormChanges(): void {
-        this.structure.getRoundNumbers().forEach( roundNumber => {
+        this.structure.getRoundNumbers().forEach(roundNumber => {
             this.form.get('rn' + roundNumber.getNumber()).valueChanges.subscribe(val => {
-                if ( val === true ) {
+                if (val === true) {
                     this.selectNext(roundNumber.getNext());
                 } else {
                     this.deselectPrevious(roundNumber.getPrevious());
                 }
-              });
-          });
-      }
-  }
+            });
+        });
+    }
+}

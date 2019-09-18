@@ -152,7 +152,6 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             nrOfHeadtohead: this.form.value['nrOfHeadtohead'],
             enableTime: this.form.value['enableTime'],
             minutesPerGame: this.form.value['minutesPerGame'],
-            hasExtension: this.form.value['minutesPerGameExt'] > 0,
             minutesPerGameExt: this.form.value['minutesPerGameExt'],
             minutesBetweenGames: this.form.value['minutesBetweenGames'],
             minutesAfter: this.form.value['minutesAfter'],

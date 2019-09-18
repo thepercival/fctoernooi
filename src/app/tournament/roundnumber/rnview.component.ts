@@ -62,7 +62,7 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     this.favorites = this.favRepository.getItem(this.tournament);
     // @TODO
     this.hasReferees = this.tournament.getCompetition().getReferees().length > 0
-    || this.roundNumber.getValidPlanningConfig().getSelfReferee();
+      || this.roundNumber.getValidPlanningConfig().getSelfReferee();
 
     // gamedate
     this.roundNumberNeedsRanking = this.roundNumber.needsRanking();
@@ -119,7 +119,7 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   getGameTimeTooltipDescription() {
     const cfg = this.roundNumber.getValidPlanningConfig();
     let descr = 'De wedstrijden duren ' + cfg.getMinutesPerGame() + ' minuten. ';
-    if (cfg.getHasExtension()) {
+    if (cfg.hasExtension()) {
       descr += 'De eventuele verlenging duurt ' + cfg.getMinutesPerGameExt() + ' minuten. ';
     }
     descr += 'Er zit ' + cfg.getMinutesBetweenGames() + ' minuten tussen de wedstrijden.';

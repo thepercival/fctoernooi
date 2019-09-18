@@ -25,7 +25,7 @@ import { TournamentComponent } from '../component';
 export class FieldEditComponent extends TournamentComponent implements OnInit {
     form: FormGroup;
     field: Field;
-    chooseSport: boolean = false;
+    chooseSport = false;
     sport: Sport;
 
     validations: FieldValidations = {

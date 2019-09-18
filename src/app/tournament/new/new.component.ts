@@ -70,7 +70,7 @@ export class NewComponent implements OnInit {
         Validators.minLength(this.validations.minlengthname),
         Validators.maxLength(this.validations.maxlengthname)
       ])],
-      sport: [{ value: '', disabled: true }, Validators.compose([
+      sportname: [{ value: '', disabled: true }, Validators.compose([
         Validators.required
       ])],
       nrofcompetitors: ['', Validators.compose([
@@ -107,7 +107,7 @@ export class NewComponent implements OnInit {
   }
 
   onGetSport(sport: Sport) {
-    this.form.controls.sport.setValue(sport.getName());
+    this.form.controls.sportname.setValue(sport.getName());
     this.sport = sport;
     this.chooseSport = false;
   }
