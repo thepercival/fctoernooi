@@ -88,10 +88,6 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
     }
 
     private postInit(id: number) {
-        this.hasBegun = this.structure.getRootRound().hasBegun();
-        if (this.hasBegun) {
-            this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
-        }
         this.sportConfig = this.getSportConfigById(id);
         if (this.sportConfig === undefined) {
             this.processing = false;
@@ -103,7 +99,6 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
         } else {
             this.setScoreConfig();
         }
-        this.processing = false;
     }
 
     setScoreConfig(roundNumber?: RoundNumber) {
@@ -124,11 +119,13 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
                 ])
             ));
         }
-        if (this.hasBegun) {
+        if (this.roundNumber.hasBegun()) {
             Object.keys(this.form.controls).forEach(key => {
                 this.form.controls[key].disable();
             });
+            this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
         }
+        this.processing = false;
     }
 
     openModal() {

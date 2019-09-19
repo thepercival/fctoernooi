@@ -35,7 +35,6 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         minMinutesPerGame: 1,
         maxMinutesPerGame: 60,
     };
-    private service: PlanningConfigService;
 
     constructor(
         route: ActivatedRoute,
@@ -95,7 +94,6 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     initConfig(roundNumberAsValue: number) {
-        this.service = new PlanningConfigService();
         const roundNumber = this.structure.getRoundNumber(roundNumberAsValue);
         this.changeRoundNumber(roundNumber);
         this.initRanges();

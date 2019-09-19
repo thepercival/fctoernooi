@@ -26,8 +26,8 @@
                         <th>sport</th>
                         <th>naam</th>
                         <th class="text-right">
-                            <button *ngIf="!hasBegun()" type="button" class="btn btn-sm btn-primary"
-                                (click)="addField()" [disabled]="processing">
+                            <button *ngIf="!hasBegun" type="button" class="btn btn-sm btn-primary" (click)="addField()"
+                                [disabled]="processing">
                                 <fa-icon [icon]="['fas', 'plus']"></fa-icon>
                             </button>
                         </th>
@@ -36,8 +36,8 @@
                 <tbody>
                     <tr *ngFor="let field of fields">
                         <td>
-                            <button *ngIf="!hasBegun()" type="button" class="btn btn-sm btn-primary"
-                                [disabled]="processing" (click)="editField(field)">
+                            <button type="button" class="btn btn-sm btn-primary" [disabled]="processing"
+                                (click)="editField(field)">
                                 <fa-icon [icon]="['fas', 'pencil-alt' ]"></fa-icon>
                             </button>
                         </td>
@@ -49,7 +49,7 @@
                             <span>{{field.getName()}}</span>
                         </td>
                         <td class="text-right">
-                            <button *ngIf="!hasBegun()" type="button" class="btn btn-sm btn-danger"
+                            <button *ngIf="!hasBegun" type="button" class="btn btn-sm btn-danger"
                                 [disabled]="processing" (click)="removeField(field);">
                                 <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
                             </button>

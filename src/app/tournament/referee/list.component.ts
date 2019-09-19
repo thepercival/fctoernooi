@@ -18,6 +18,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   referees: Referee[];
   public selfReferee: boolean;
   alertSelfReferee: IAlert;
+  hasBegun: boolean;
 
   validations: any = {
     'minlengthname': Referee.MIN_LENGTH_NAME,
@@ -42,14 +43,11 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   initReferees() {
     this.createRefereesList();
     this.planningService = new PlanningService(this.tournament.getCompetition());
-    this.processing = false;
-    if (this.hasBegun()) {
-      this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
+    this.hasBegun = this.structure.getRootRound().hasBegun();
+    if (this.hasBegun) {
+      this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen en verwijderen');
     }
-  }
-
-  hasBegun() {
-    return this.structure.getRootRound().hasBegun();
+    this.processing = false;
   }
 
   createRefereesList() {
@@ -57,24 +55,15 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   }
 
   addReferee() {
-    this.linkToEdit(this.tournament);
+    this.linkToEdit();
   }
 
   editReferee(referee: Referee) {
-    this.linkToEdit(this.tournament, referee);
+    this.linkToEdit(referee);
   }
 
-  linkToEdit(tournament: Tournament, referee?: Referee) {
-    this.router.navigate(['/toernooi/refereeedit', tournament.getId(), referee ? referee.getInitials() : '']);
-  }
-
-  linkToRoundSettings() {
-    this.router.navigate(
-      ['/toernooi/roundssettings', this.tournament.getId(), this.structure.getFirstRoundNumber().getNumber()],
-      {
-        queryParams: { category: '3' }
-      }
-    );
+  linkToEdit(referee?: Referee) {
+    this.router.navigate(['/toernooi/refereeedit', this.tournament.getId(), referee ? referee.getInitials() : '']);
   }
 
   removeReferee(referee: Referee) {

@@ -18,6 +18,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
     public disableEditButtons = false;
     private planningService: PlanningService;
     fields: Field[];
+    hasBegun: boolean;
 
     validations: any = {
         'minlengthname': Field.MIN_LENGTH_NAME,
@@ -42,14 +43,11 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
     initFields() {
         this.fields = this.tournament.getCompetition().getFields();
         this.planningService = new PlanningService(this.tournament.getCompetition());
-        this.processing = false;
-        if (this.hasBegun()) {
-            this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
+        this.hasBegun = this.structure.getRootRound().hasBegun();
+        if (this.hasBegun) {
+            this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen en verwijderen');
         }
-    }
-
-    hasBegun() {
-        return this.structure.getRootRound().hasBegun();
+        this.processing = false;
     }
 
     addField() {
