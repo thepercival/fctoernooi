@@ -2,18 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  Sport,
-  SportConfig,
-  SportConfigRepository,
-  SportConfigService,
-  SportCustom,
-  SportPlanningConfigService,
-  SportScoreConfigService,
-  StructureRepository,
-  FieldRepository,
-  JsonField,
-  PlanningRepository,
-  PlanningService,
+    Sport,
+    SportConfig,
+    SportConfigRepository,
+    SportConfigService,
+    SportCustom,
+    SportPlanningConfigService,
+    SportScoreConfigService,
+    StructureRepository,
+    FieldRepository,
+    JsonField,
+    PlanningRepository,
+    PlanningService,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
 import { CSSService } from '../../common/cssservice';
@@ -33,7 +33,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
     sportConfig: SportConfig;
     sportConfigService: SportConfigService;
     ranges: any = {};
-
+    hasBegun: boolean;
     validations: SportValidations = {
         minWinPoints: 1,
         maxWinPoints: 10,
@@ -129,6 +129,10 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
     }
 
     private postInit(id: number) {
+        this.hasBegun = this.structure.getRootRound().hasBegun();
+        if (this.hasBegun) {
+            this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
+        }
         this.sportConfig = this.getSportConfigById(id);
         if (this.sportConfig === undefined) {
             this.processing = false;
@@ -145,6 +149,11 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         this.form.controls.winPointsExt.setValue(this.sportConfig.getWinPointsExt());
         this.form.controls.drawPointsExt.setValue(this.sportConfig.getDrawPointsExt());
         this.form.controls.nrOfFields.setValue(1);
+        if (this.hasBegun) {
+            Object.keys(this.form.controls).forEach(key => {
+                this.form.controls[key].disable();
+            });
+        }
     }
 
     onGetSport(sport: Sport) {
@@ -171,40 +180,40 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         const competition = this.tournament.getCompetition();
 
         this.sportConfigRepository.createObject(this.sportConfig, competition)
-        .subscribe(
+            .subscribe(
         /* happy path */ sportConfigRes => {
 
-            const fieldReposAdds = [];
-            for ( let i = 0 ; i < this.form.value['nrOfFields'] ; i++ ) {
-                const fieldNr = competition.getFields().length + i + 1;
-                const jsonField: JsonField = { number: fieldNr, name: '' + fieldNr, sportId: this.sportConfig.getSport().getId() };
-                fieldReposAdds.push(this.fieldRepository.createObject(jsonField, competition));
-            }
+                    const fieldReposAdds = [];
+                    for (let i = 0; i < this.form.value['nrOfFields']; i++) {
+                        const fieldNr = competition.getFields().length + i + 1;
+                        const jsonField: JsonField = { number: fieldNr, name: '' + fieldNr, sportId: this.sportConfig.getSport().getId() };
+                        fieldReposAdds.push(this.fieldRepository.createObject(jsonField, competition));
+                    }
 
-            forkJoin(fieldReposAdds).subscribe(results => {
+                    forkJoin(fieldReposAdds).subscribe(results => {
 
-                const firstRoundNumber = this.structure.getFirstRoundNumber();
-                const tournamentService = new TournamentService(this.tournament);
-                const planningService = new PlanningService(competition);
-                tournamentService.reschedule(planningService, firstRoundNumber);
-                this.planningRepository.editObject(firstRoundNumber).subscribe(
+                        const firstRoundNumber = this.structure.getFirstRoundNumber();
+                        const tournamentService = new TournamentService(this.tournament);
+                        const planningService = new PlanningService(competition);
+                        tournamentService.reschedule(planningService, firstRoundNumber);
+                        this.planningRepository.editObject(firstRoundNumber).subscribe(
                     /* happy path */ gamesRes => {
-                        this.linkToSportConfig(); /* niet navigate back van kan van sport komen */
-                        this.processing = false;
-                    },
+                                this.linkToSportConfig(); /* niet navigate back van kan van sport komen */
+                                this.processing = false;
+                            },
                     /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
                     /* onComplete */() => this.processing = false
-                );
-            },
-                err => {
-                    this.processing = false;
-                    this.setAlert('danger', 'de wedstrijd is niet opgeslagen: ' + err);
-                }
-            );
-        },
+                        );
+                    },
+                        err => {
+                            this.processing = false;
+                            this.setAlert('danger', 'de wedstrijd is niet opgeslagen: ' + err);
+                        }
+                    );
+                },
         /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
         /* onComplete */() => { this.processing = false; }
-        );
+            );
         return false;
     }
 
@@ -243,11 +252,11 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
 
     openMultiSportsModal(content) {
         this.modalService.open(content, { ariaLabelledBy: 'modal-multisports' }).result.then((result) => {
-          if (result === 'continue') {
-            this.router.navigate(['/toernooi/sportconfigs', this.tournament.getId()]);
-          }
-        }, (reason) => {});
-      }
+            if (result === 'continue') {
+                this.router.navigate(['/toernooi/sportconfigs', this.tournament.getId()]);
+            }
+        }, (reason) => { });
+    }
 }
 
 export interface SportValidations {

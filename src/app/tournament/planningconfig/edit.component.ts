@@ -107,7 +107,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.resetForm(roundNumber.getValidPlanningConfig());
         this.setAlert('info', 'instellingen gelden ook voor volgende ronden');
         if (this.roundNumber.hasBegun()) {
-            this.setAlert('info', 'deze ronde heeft al gespeelde wedstrijden, kies een andere ronde');
+            this.setAlert('warning', 'er zijn wedstrijden gespeeld voor deze ronde, je kunt niet meer wijzigen');
         }
     }
 
@@ -122,6 +122,11 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.form.controls.teamup.setValue(this.isTeamupAvailable() && config.getTeamup());
         if (!this.isTeamupAvailable()) {
             this.form.controls.teamup.disable();
+        }
+        if (this.roundNumber.hasBegun()) {
+            Object.keys(this.form.controls).forEach(key => {
+                this.form.controls[key].disable();
+            });
         }
     }
 

@@ -1,108 +1,109 @@
-<div class="row justify-content-center no-gutters">
-    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-        <app-tournament-title [tournament]="tournament">
-        </app-tournament-title>
-        <h2 *ngIf="!processing">
-            <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellingen
-            <span [innerHTML]="nameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
-        </h2>
-        <h2 *ngIf="processing" class="text-center">
-            <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-        </h2>
-        <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-        <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate> 
-            <div class="form-group row">
-                <label for="nrOfHeadtohead" class="col-8 col-form-label">aantal onderlinge duels</label>
-                <div class="col-4">
-                    <select class="form-control" formControlName="nrOfHeadtohead" required
-                    [ngClass]="{ 'is-invalid': form.controls.nrOfHeadtohead.invalid, 'is-valid': form.controls.nrOfHeadtohead.valid }">
-                    <option *ngFor="let n of ranges.nrOfHeadtohead" [ngValue]="n">{{n}}</option>
-                    </select>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+            <app-tournament-title [tournament]="tournament">
+            </app-tournament-title>
+            <h2 *ngIf="!processing">
+                <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellingen
+                <span [innerHTML]="nameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
+            </h2>
+            <h2 *ngIf="processing" class="text-center">
+                <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+            </h2>
+            <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+            <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+                <div class="form-group row">
+                    <label for="nrOfHeadtohead" class="col-8 col-form-label">aantal onderlinge duels</label>
+                    <div class="col-4">
+                        <select class="form-control" formControlName="nrOfHeadtohead" required
+                            [ngClass]="{ 'is-invalid': form.controls.nrOfHeadtohead.invalid, 'is-valid': form.controls.nrOfHeadtohead.valid }">
+                            <option *ngFor="let n of ranges.nrOfHeadtohead" [ngValue]="n">{{n}}</option>
+                        </select>
+                    </div>
                 </div>
-            </div>            
-            <div class="form-group row">
-                <label for="enableTime" class="col-8 col-form-label pointer">plannen o.b.v. tijd</label>
-                <div class="form-check col-4">
-                    <label class="custom-control custom-checkbox col-form-label pl-0">
-                        <input type="checkbox" class="custom-control-input form-check-input"
-                        formControlName="enableTime">
-                        <span class="custom-control-indicator"></span>
+                <div class="form-group row">
+                    <label for="enableTime" class="col-8 col-form-label pointer">plannen o.b.v. tijd</label>
+                    <div class="form-check col-4">
+                        <label class="custom-control custom-checkbox col-form-label pl-0">
+                            <input type="checkbox" class="custom-control-input form-check-input"
+                                formControlName="enableTime">
+                            <span class="custom-control-indicator"></span>
+                        </label>
+                    </div>
+                </div>
+                <div *ngIf="form.value['enableTime']" class="form-group row">
+                    <label for="minutesPerGame" class="col-8 col-form-label">minuten per wedstrijd</label>
+                    <div class="col-4">
+                        <input type="number"
+                            [ngClass]="{ 'is-invalid': form.controls.minutesPerGame.invalid, 'is-valid': form.controls.minutesPerGame.valid}"
+                            formControlName="minutesPerGame" [maxlength]="2" class="form-control" />
+                    </div>
+                </div>
+                <div *ngIf="form.value['enableTime']" class="form-group row">
+                    <label for="minutesPerGameExt" class="col-8 col-form-label">minuten verlenging</label>
+                    <div class="col-4">
+                        <input type="number"
+                            [ngClass]="{ 'is-invalid': form.controls.minutesPerGameExt.invalid, 'is-valid': form.controls.minutesPerGameExt.valid}"
+                            formControlName="minutesPerGameExt" [maxlength]="2" class="form-control" />
+                    </div>
+                </div>
+                <div *ngIf="form.value['enableTime']" class="form-group row">
+                    <label for="minutesBetweenGames" class="col-8 col-form-label">minuten tussen
+                        wedstrijden</label>
+                    <div class="col-4">
+                        <input type="number"
+                            [ngClass]="{ 'is-invalid': form.controls.minutesBetweenGames.invalid, 'is-valid': form.controls.minutesBetweenGames.valid}"
+                            formControlName="minutesBetweenGames" [maxlength]="2" class="form-control" />
+                    </div>
+                </div>
+                <div *ngIf="form.value['enableTime'] && roundNumber.hasNext()" class="form-group row">
+                    <label for="minutesAfterNoAction" class="col-8 col-form-label pointer" container="body"
+                        placement="top"
+                        ngbPopover="minuten tussen einde van deze ronde en het begin van de volgende ronde">minuten
+                        pauze na de ronde
+                        <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
                     </label>
+                    <div class="col-4">
+                        <input type="number"
+                            [ngClass]="{ 'is-invalid': form.controls.minutesAfter.invalid, 'is-valid': form.controls.minutesAfter.valid}"
+                            formControlName="minutesAfter" [maxlength]="3" class="form-control" />
+                    </div>
                 </div>
-            </div>
-            <div *ngIf="form.value['enableTime']" class="form-group row">
-                <label for="minutesPerGame" class="col-8 col-form-label">minuten per wedstrijd</label>
-                <div class="col-4">                    
-                    <input type="number" [ngClass]="{ 'is-invalid': form.controls.minutesPerGame.invalid, 'is-valid': form.controls.minutesPerGame.valid}"
-                    formControlName="minutesPerGame" 
-                    [maxlength]="2" class="form-control"/>
-                </div>
-            </div>
-            <div *ngIf="form.value['enableTime']" class="form-group row">
-                <label for="minutesPerGameExt" class="col-8 col-form-label">minuten verlenging</label>
-                <div class="col-4">
-                    <input type="number" [ngClass]="{ 'is-invalid': form.controls.minutesPerGameExt.invalid, 'is-valid': form.controls.minutesPerGameExt.valid}"
-                        formControlName="minutesPerGameExt" 
-                        [maxlength]="2" class="form-control"/>
-                </div>
-            </div>
-            <div *ngIf="form.value['enableTime']" class="form-group row">
-                <label for="minutesBetweenGames" class="col-8 col-form-label">minuten tussen
-                    wedstrijden</label>
-                <div class="col-4">
-                    <input type="number" [ngClass]="{ 'is-invalid': form.controls.minutesBetweenGames.invalid, 'is-valid': form.controls.minutesBetweenGames.valid}"
-                        formControlName="minutesBetweenGames" 
-                        [maxlength]="2" class="form-control"/>
-                </div>
-            </div>
-            <div *ngIf="form.value['enableTime'] && roundNumber.hasNext()" class="form-group row">
-                <label for="minutesAfterNoAction" class="col-8 col-form-label pointer" container="body"
-                    placement="top"
-                    ngbPopover="minuten tussen einde van deze ronde en het begin van de volgende ronde">minuten
-                    pauze na de ronde
-                    <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
-                </label>
-                <div class="col-4">
-                    <input type="number" [ngClass]="{ 'is-invalid': form.controls.minutesAfter.invalid, 'is-valid': form.controls.minutesAfter.valid}"
-                        formControlName="minutesAfter" 
-                        [maxlength]="3" class="form-control"/>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="selfrefereenoaction" class="col-8 col-form-label pointer" container="body"
-                    placement="top" ngbPopover="de planning kan uitlopen door deze instelling">deelnemers
-                    als
-                    scheidsrechters
-                    <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
-                </label>
-                <div class="form-check col-4">
-                    <label class="custom-control custom-checkbox col-form-label pl-0">
-                        <input type="checkbox" class="custom-control-input form-check-input"
-                            formControlName="selfReferee">
-                        <span class="custom-control-indicator"></span>
+                <div class="form-group row">
+                    <label for="selfrefereenoaction" class="col-8 col-form-label pointer" container="body"
+                        placement="top" ngbPopover="de planning kan uitlopen door deze instelling">deelnemers
+                        als
+                        scheidsrechters
+                        <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
                     </label>
+                    <div class="form-check col-4">
+                        <label class="custom-control custom-checkbox col-form-label pl-0">
+                            <input type="checkbox" class="custom-control-input form-check-input"
+                                formControlName="selfReferee">
+                            <span class="custom-control-indicator"></span>
+                        </label>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label for="teamupnoaction" class="col-8 col-form-label pointer" container="body"
-                    placement="top" ngbPopover="deze optie geldt alleen voor poules van 4-6 deelnemers en niet voor teamsporten">met
-                    en tegen elkaar(duo's)
-                    <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
-                </label>
-                <div class="form-check col-4">
-                    <label class="custom-control custom-checkbox col-form-label pl-0">
-                        <input type="checkbox" class="custom-control-input form-check-input"
-                        formControlName="teamup">
-                        <span class="custom-control-indicator"></span>
+                <div class="form-group row">
+                    <label for="teamupnoaction" class="col-8 col-form-label pointer" container="body" placement="top"
+                        ngbPopover="deze optie geldt alleen voor poules van 4-6 deelnemers en niet voor teamsporten">met
+                        en tegen elkaar(duo's)
+                        <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
                     </label>
+                    <div class="form-check col-4">
+                        <label class="custom-control custom-checkbox col-form-label pl-0">
+                            <input type="checkbox" class="custom-control-input form-check-input"
+                                formControlName="teamup">
+                            <span class="custom-control-indicator"></span>
+                        </label>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row justify-content-end">
-                <div class="col-4">
-                    <button type="submit" class="btn btn-primary"
-                    [disabled]="form.invalid || roundNumber.hasBegun()">opslaan</button>
+                <div *ngIf="!roundNumber.hasBegun()" class="form-group row justify-content-end">
+                    <div class="col-4">
+                        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">opslaan</button>
+                    </div>
                 </div>
-            </div>                   
-        </form>
+            </form>
+        </div>
     </div>
 </div>

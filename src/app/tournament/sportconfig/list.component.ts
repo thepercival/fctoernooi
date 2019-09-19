@@ -26,6 +26,7 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
   sportConfigs: SportConfig[];
   private planningService: PlanningService;
   translateService: TranslateService;
+  hasBegun: boolean;
 
   validations: any = {
     'minlengthname': Sport.MIN_LENGTH_NAME,
@@ -54,14 +55,11 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
     this.createSportConfigsList();
     this.planningService = new PlanningService(this.tournament.getCompetition());
     // this.planningService = new PlanningService(this.tournament.getCompetition());
+    this.hasBegun = this.structure.getRootRound().hasBegun();
     this.processing = false;
-    if (this.hasBegun()) {
+    if (this.hasBegun) {
       this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
     }
-  }
-
-  hasBegun() {
-    return this.structure.getRootRound().hasBegun();
   }
 
   createSportConfigsList() {

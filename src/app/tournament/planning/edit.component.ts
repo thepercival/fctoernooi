@@ -73,6 +73,9 @@ export class PlanningEditComponent extends TournamentComponent implements OnInit
         this.form.controls.togglebreak.setValue(this.tournament.hasBreak());
         this.toggleBreak(this.tournament.hasBreak(), this.tournament.getBreakDuration(), this.tournament.getBreakStartDateTime());
 
+        if (this.hasBegun) {
+            this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
+        }
         this.processing = false;
     }
 
@@ -86,7 +89,7 @@ export class PlanningEditComponent extends TournamentComponent implements OnInit
             return false;
         }
         if (this.structure.getRootRound().hasBegun()) {
-            this.setAlert('info', 'de startdatum kan niet meer gewijzigd worden, omdat er al gespeelde wedstrijden zijn');
+            this.setAlert('info', 'de startdatum kan niet meer gewijzigd worden, omdat er al wedstrijden zijn gespeeld');
         }
         return true;
     }
