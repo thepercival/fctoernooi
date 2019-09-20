@@ -125,7 +125,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         if (id === undefined || id === 0) {
             return undefined;
         }
-        return this.tournament.getCompetition().getSportConfigs().find(sportConfig => id === sportConfig.getId());
+        return this.competition.getSportConfigs().find(sportConfig => id === sportConfig.getId());
     }
 
     private postInit(id: number) {
@@ -157,7 +157,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
     }
 
     onGetSport(sport: Sport) {
-        this.sportConfig = this.sportConfigService.createDefault(sport, this.tournament.getCompetition(), this.structure);
+        this.sportConfig = this.sportConfigService.createDefault(sport, this.competition, this.structure);
         this.initForm();
     }
 
@@ -177,24 +177,21 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         this.sportConfig.setWinPointsExt(this.form.value['winPointsExt']);
         this.sportConfig.setDrawPointsExt(this.form.value['drawPointsExt']);
 
-        const competition = this.tournament.getCompetition();
-
-        this.sportConfigRepository.createObject(this.sportConfig, competition)
+        this.sportConfigRepository.createObject(this.sportConfig, this.competition)
             .subscribe(
-        /* happy path */ sportConfigRes => {
-
+                /* happy path */ sportConfigRes => {
                     const fieldReposAdds = [];
                     for (let i = 0; i < this.form.value['nrOfFields']; i++) {
-                        const fieldNr = competition.getFields().length + i + 1;
+                        const fieldNr = this.competition.getFields().length + i + 1;
                         const jsonField: JsonField = { number: fieldNr, name: '' + fieldNr, sportId: this.sportConfig.getSport().getId() };
-                        fieldReposAdds.push(this.fieldRepository.createObject(jsonField, competition));
+                        fieldReposAdds.push(this.fieldRepository.createObject(jsonField, this.competition));
                     }
 
                     forkJoin(fieldReposAdds).subscribe(results => {
 
                         const firstRoundNumber = this.structure.getFirstRoundNumber();
                         const tournamentService = new TournamentService(this.tournament);
-                        const planningService = new PlanningService(competition);
+                        const planningService = new PlanningService(this.competition);
                         tournamentService.reschedule(planningService, firstRoundNumber);
                         this.planningRepository.editObject(firstRoundNumber).subscribe(
                     /* happy path */ gamesRes => {
@@ -226,7 +223,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         this.sportConfig.setWinPointsExt(this.form.value['winPointsExt']);
         this.sportConfig.setDrawPointsExt(this.form.value['drawPointsExt']);
 
-        this.sportConfigRepository.editObject(this.sportConfig, this.tournament.getCompetition())
+        this.sportConfigRepository.editObject(this.sportConfig, this.competition)
             .subscribe(
             /* happy path */ sportConfigRes => {
                     this.linkToSportConfig(); /* niet navigate back van kan van sport komen */
@@ -242,9 +239,9 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
     }
 
     linkToSportConfig() {
-        if (!this.tournament.getCompetition().hasMultipleSportConfigs()) {
+        if (!this.competition.hasMultipleSportConfigs()) {
             this.router.navigate(['/toernooi/sportconfigedit'
-                , this.tournament.getId(), this.tournament.getCompetition().getFirstSportConfig().getId()]);
+                , this.tournament.getId(), this.competition.getFirstSportConfig().getId()]);
         } else {
             this.router.navigate(['/toernooi/sportconfigs', this.tournament.getId()]);
         }

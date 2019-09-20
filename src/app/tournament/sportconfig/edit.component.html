@@ -82,8 +82,8 @@
         </div>
         <div *ngIf="!hasBegun" class="form-group row">
           <div class="col-7">
-            <button *ngIf="this.tournament.getCompetition().getSportConfigs().length === 1"
-              (click)="openMultiSportsModal(multisports)" class="btn btn-outline-secondary">
+            <button *ngIf="competition.getSportConfigs().length === 1" (click)="openMultiSportsModal(multisports)"
+              class="btn btn-outline-secondary">
               <span>meerdere sporten</span>
             </button>
           </div>

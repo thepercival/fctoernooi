@@ -271,11 +271,11 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   protected saveStructure(message: string) {
-    this.structureRepository.editObject(this.structure, this.tournament.getCompetition())
+    this.structureRepository.editObject(this.structure, this.competition)
       .subscribe(
           /* happy path */(structure: Structure) => {
           this.structure = structure;
-          const planningService = new PlanningService(this.tournament.getCompetition());
+          const planningService = new PlanningService(this.competition);
           const tournamentService = new TournamentService(this.tournament);
           tournamentService.create(planningService, this.structure.getFirstRoundNumber());
           this.planningRepository.createObject(this.structure.getFirstRoundNumber())

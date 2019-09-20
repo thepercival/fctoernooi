@@ -74,20 +74,20 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
 
     ngOnInit() {
         this.route.params.subscribe(params => {
-            super.myNgOnInit(() => this.postInit(params.initials));
+            super.myNgOnInit(() => this.postInit(+params.rank));
         });
     }
 
-    private getReferee(initials: string): Referee {
-        if (initials === undefined || initials.length === 0) {
+    private getReferee(rank: number): Referee {
+        if (rank === undefined) {
             this.processing = false;
             return;
         }
-        return this.tournament.getCompetition().getReferee(initials);
+        return this.competition.getReferee(rank);
     }
 
-    private postInit(initials: string) {
-        this.referee = this.getReferee(initials);
+    private postInit(rank: number) {
+        this.referee = this.getReferee(rank);
         if (this.referee === undefined) {
             this.processing = false;
             return;
@@ -122,16 +122,17 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
             return;
         }
         const ref: JsonReferee = {
+            rank: this.competition.getReferees().length + 1,
             initials: initials,
             name: name ? name : undefined,
             emailaddress: emailaddress ? emailaddress : undefined,
             info: info ? info : undefined
         };
-        this.refereeRepository.createObject(ref, this.tournament.getCompetition()).subscribe(
+        this.refereeRepository.createObject(ref, this.competition).subscribe(
             /* happy path */ refereeRes => {
                 const firstRoundNumber = this.structure.getFirstRoundNumber();
                 const tournamentService = new TournamentService(this.tournament);
-                tournamentService.reschedule(new PlanningService(this.tournament.getCompetition()), firstRoundNumber);
+                tournamentService.reschedule(new PlanningService(this.competition), firstRoundNumber);
                 this.planningRepository.editObject(firstRoundNumber).subscribe(
                 /* happy path */ gamesRes => {
                         this.tournamentRepository.syncRefereeRoles(this.tournament).subscribe(
@@ -168,7 +169,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
         const emailaddressChanged = emailaddress !== this.referee.getEmailaddress();
         this.referee.setEmailaddress(emailaddress ? emailaddress : undefined);
         this.referee.setInfo(info ? info : undefined);
-        this.refereeRepository.editObject(this.referee, this.tournament.getCompetition())
+        this.refereeRepository.editObject(this.referee, this.competition)
             .subscribe(
             /* happy path */ refereeRes => {
                     if (!emailaddressChanged) {
@@ -193,7 +194,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
     }
 
     isInitialsDuplicate(initials: string, referee?: Referee): boolean {
-        const referees = this.tournament.getCompetition().getReferees();
+        const referees = this.competition.getReferees();
         return referees.find(refereeIt => {
             return (initials === refereeIt.getInitials() && (referee === undefined || refereeIt.getId() === undefined));
         }) !== undefined;

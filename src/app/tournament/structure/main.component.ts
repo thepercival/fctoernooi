@@ -59,7 +59,7 @@ export class StructureComponent extends TournamentComponent implements OnInit {
   }
 
   processUnusedCompetitors(rootRound: Round) {
-    const unusedCompetitors = this.competitorRepository.getUnusedCompetitors(this.tournament.getCompetition());
+    const unusedCompetitors = this.competitorRepository.getUnusedCompetitors(this.competition);
     const oldCompetitors = this.originalCompetitors;
     const newCompetitors = rootRound.getCompetitors();
 
@@ -105,7 +105,7 @@ export class StructureComponent extends TournamentComponent implements OnInit {
 
     this.processUnusedCompetitors(this.clonedStructure.getRootRound());
 
-    this.structureRepository.editObject(this.clonedStructure, this.tournament.getCompetition())
+    this.structureRepository.editObject(this.clonedStructure, this.competition)
       .subscribe(
           /* happy path */ structureRes => {
           // if (this.changedRoundNumber === undefined) {
@@ -133,7 +133,7 @@ export class StructureComponent extends TournamentComponent implements OnInit {
     // first better test creating planning in php!!
     const changedRoundNumber = structure.getFirstRoundNumber();
 
-    const planningService = new PlanningService(this.tournament.getCompetition());
+    const planningService = new PlanningService(this.competition);
     const tournamentService = new TournamentService(this.tournament);
     tournamentService.create(planningService, changedRoundNumber);
     this.planningRepository.createObject(changedRoundNumber)

@@ -84,7 +84,7 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
         if (id === undefined || id === 0) {
             return undefined;
         }
-        return this.tournament.getCompetition().getSportConfigs().find(sportConfig => id === sportConfig.getId());
+        return this.competition.getSportConfigs().find(sportConfig => id === sportConfig.getId());
     }
 
     private postInit(id: number) {

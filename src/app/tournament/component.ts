@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Structure, StructureRepository, StructureService } from 'ngx-sport';
+import { Structure, StructureRepository, StructureService, Competition } from 'ngx-sport';
 
 import { IAlert } from '../common/alert';
 import { Tournament } from '../lib/tournament';
@@ -11,6 +11,7 @@ import { TournamentRepository } from '../lib/tournament/repository';
 export class TournamentComponent {
 
     public tournament: Tournament;
+    public competition: Competition;
     protected route: ActivatedRoute;
     protected router: Router;
     protected tournamentRepository: TournamentRepository;
@@ -42,6 +43,7 @@ export class TournamentComponent {
             .subscribe(
                     /* happy path */(tournament: Tournament) => {
                     this.tournament = tournament;
+                    this.competition = tournament.getCompetition()
                     if (noStructure === true) {
                         if (callback !== undefined) {
                             callback();

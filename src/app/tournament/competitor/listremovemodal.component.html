@@ -11,7 +11,7 @@
                 <ngb-alert [type]="'warning'" [dismissible]="false">Alle deelnemers gaan door naar de volgende ronde.
                     Om
                     een pouleplek te kunnen verwijderen, moet de
-                    "Indeling" aangepast worden.</ngb-alert>
+                    "Indeling" gewijzigd worden.</ngb-alert>
                 <ngb-alert *ngIf="allPlacesHaveCompetitor()" [type]="'info'" [dismissible]="false">Wanneer je een
                     pouleplek bij de indeling verwijderd,
                     wordt de laatste
@@ -21,12 +21,12 @@
             </div>
             <div *ngIf="hasMinimumNrOfPlacesPerPoule()" class="">
                 <ngb-alert [type]="'warning'" [dismissible]="false">Het minimaal aantal deelnemers aan een poule is 2.
-                    Om een deelnemer te kunnen verwijderen, moet de "Indeling" aangepast worden.</ngb-alert>
+                    Om een deelnemer te kunnen verwijderen, moet de "Indeling" gewijzigd worden.</ngb-alert>
             </div>
         </div>
         <div *ngIf="!hasMinimumNrOfPlacesPerPoule() && !allCompetitorsQualifyForNextRound()" class="row">
             <ngb-alert [type]="'info'" [dismissible]="false">Bij het verwijderen van de pouleplek worden de indeling en
-                de wedstrijden automatisch aangepast.</ngb-alert>
+                de wedstrijden automatisch gewijzigd.</ngb-alert>
         </div>
     </div>
 </div>

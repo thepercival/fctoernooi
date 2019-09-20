@@ -76,7 +76,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
 
     postNgOnInit() {
         const date = new Date();
-        this.nameForm.controls.name.setValue(this.tournament.getCompetition().getLeague().getName());
+        this.nameForm.controls.name.setValue(this.competition.getLeague().getName());
         this.copyForm.controls.date.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
         this.shareForm.controls.url.setValue('https://www.fctoernooi.nl/' + this.tournament.getId());
         this.shareForm.controls.public.setValue(this.tournament.getPublic());
@@ -93,17 +93,17 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     getFieldDescription(): string {
-        const sports = this.tournament.getCompetition().getSports();
+        const sports = this.competition.getSports();
         return this.translate.getFieldName(sports.length === 1 ? sports[0] : undefined);
     }
 
     getFieldsDescription(): string {
-        const sports = this.tournament.getCompetition().getSports();
+        const sports = this.competition.getSports();
         return this.translate.getFieldsName(sports.length === 1 ? sports[0] : undefined);
     }
 
     getNrOfFieldsDescription() {
-        const nrOfFields = this.tournament.getCompetition().getFields().length;
+        const nrOfFields = this.competition.getFields().length;
         if (nrOfFields === 1) {
             return '1 ' + this.getFieldDescription();
         }
@@ -111,7 +111,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     getNrOfRefereesDescription() {
-        const nrOfReferees = this.tournament.getCompetition().getReferees().length;
+        const nrOfReferees = this.competition.getReferees().length;
         if (nrOfReferees === 0) {
             return 'geen scheidsrechters';
         } else if (nrOfReferees === 1) {
@@ -131,7 +131,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     sportConfigsAreDefault() {
-        return this.tournament.getCompetition().getSportConfigs().every(sportConfig => {
+        return this.competition.getSportConfigs().every(sportConfig => {
             return this.sportConfigService.isDefault(sportConfig);
         });
     }
@@ -256,9 +256,9 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     linkToSportConfig() {
-        if (!this.tournament.getCompetition().hasMultipleSportConfigs()) {
+        if (!this.competition.hasMultipleSportConfigs()) {
             this.router.navigate(['/toernooi/sportconfigedit'
-                , this.tournament.getId(), this.tournament.getCompetition().getFirstSportConfig().getId()]);
+                , this.tournament.getId(), this.competition.getFirstSportConfig().getId()]);
         } else {
             this.router.navigate(['/toernooi/sportconfigs', this.tournament.getId()]);
         }
@@ -275,8 +275,8 @@ export class HomeComponent extends TournamentComponent implements OnInit {
             this.copyForm.controls.date.value.year,
             this.copyForm.controls.date.value.month - 1,
             this.copyForm.controls.date.value.day,
-            this.tournament.getCompetition().getStartDateTime().getHours(),
-            this.tournament.getCompetition().getStartDateTime().getMinutes(),
+            this.competition.getStartDateTime().getHours(),
+            this.competition.getStartDateTime().getMinutes(),
         );
 
         this.processing = true;
@@ -323,7 +323,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         this.setAlert('info', 'de naam wordt opgeslagen');
 
         this.processing = true;
-        this.tournament.getCompetition().getLeague().setName(this.nameForm.controls.name.value);
+        this.competition.getLeague().setName(this.nameForm.controls.name.value);
         this.tournamentRepository.editObject(this.tournament)
             .subscribe(
                 /* happy path */(tournamentRes: Tournament) => {

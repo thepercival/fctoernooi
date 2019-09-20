@@ -2,26 +2,26 @@
   <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
     <app-tournament-title [tournament]="tournament" [admin]="true">
     </app-tournament-title>
-    <div>
+    <div class="d-flex justify-content-between mr-1">
       <h2>
         <i class="fi flaticon-referee"></i> scheidsrechters
       </h2>
-      <h2 *ngIf="processing" class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-      </h2>
+      <button *ngIf="tournament" type="button" class="btn btn-sm btn-outline-secondary"
+        (click)="openHelpModal(contentInfo)">
+        <fa-icon [icon]=" ['fas', 'info-circle' ]"></fa-icon> info
+      </button>
     </div>
+    <h2 *ngIf="processing" class="text-center">
+      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    </h2>
     <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{alert.message}}</ngb-alert>
-    <div *ngIf="!processing && !hasBegun && !structure.getFirstRoundNumber().getValidPlanningConfig().getSelfReferee()"
-      class="text-info">
-      "deelnemers als scheidsrechter" kun je aanzetten onder <a
-        [routerLink]="['/toernooi/planningconfig', tournament.getId(), structure.getFirstRoundNumber().getNumber()]">
-        <fa-icon [icon]="['fas', 'cogs']"></fa-icon> <span>instellingen</span>
-      </a>
-    </div>
     <table *ngIf="!processing" class="table">
       <thead>
         <tr>
           <th></th>
+          <th class="text-center">
+            <fa-icon *ngIf="tournament.getCompetition().getReferees().length > 1" [icon]="['fas', 'sort']"></fa-icon>
+          </th>
           <th>initialen</th>
           <th class="d-none d-sm-table-cell">naam</th>
           <th class="text-right">
@@ -37,6 +37,12 @@
           <td>
             <button type="button" class="btn btn-sm btn-primary" [disabled]="processing" (click)="editReferee(referee)">
               <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+            </button>
+          </td>
+          <td class="text-center">
+            <button *ngIf="referee.getRank() > 1" type="button" class="btn btn-sm btn-outline-secondary"
+              [disabled]="processing" (click)="upgradeRank(referee)">
+              <fa-icon [icon]="['fas', 'level-up-alt']"></fa-icon>
             </button>
           </td>
           <td>
@@ -56,3 +62,29 @@
     </table>
   </div>
 </div>
+
+<ng-template #contentInfo let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">toernooinaam</h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container-fluid">
+      <ul class="list-group">
+        <li class="list-group-item">Scheidsrechters kunnen zelf uitslagen invoeren wanneer hun emailadres is ingevoerd
+          en ze ingelogd zijn.</li>
+        <li class="list-group-item">De scheidsrechter bovenaan de lijst krijgt als eerste een wedstrijd toegekend.</li>
+        <li class="list-group-item">Onder plannings-instellingen kun je instellen dat de deelnemers zelf scheidsrechter
+          zijn. Deelnemers zijn dan bij voorkeur scheidsrechters van wedstrijden in poules waar ze zelf niet aan
+          deelnemen.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="modal-footer justify-content-around">
+    <button type="submit" class="btn btn-primary" data-dismiss="modal"
+      (click)="modal.close('linkToPlanningConfig')">naar plannings-instellingen</button>
+    <button type="submit" class="btn btn-primary" data-dismiss="modal" (click)="modal.dismiss('close')">sluiten</button>
+  </div>
+</ng-template>

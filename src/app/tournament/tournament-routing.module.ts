@@ -45,7 +45,7 @@ const routes: Routes = [
   { path: 'fields/:id', component: FieldListComponent, canActivate: [AuthguardService] },
   { path: 'fieldedit/:id/:number', component: FieldEditComponent, canActivate: [AuthguardService] },
   { path: 'referees/:id', component: RefereeListComponent, canActivate: [AuthguardService] },
-  { path: 'refereeedit/:id/:initials', component: RefereeEditComponent, canActivate: [AuthguardService] },
+  { path: 'refereeedit/:id/:rank', component: RefereeEditComponent, canActivate: [AuthguardService] },
   { path: 'sponsors/:id', component: SponsorListComponent, canActivate: [AuthguardService] },
   { path: 'sponsoredit/:id/:sponsorId', component: SponsorEditComponent, canActivate: [AuthguardService] },
   { path: 'competitoredit/:id/:placeId', component: CompetitorEditComponent, canActivate: [AuthguardService] }

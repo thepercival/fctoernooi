@@ -41,8 +41,8 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
     }
 
     initFields() {
-        this.fields = this.tournament.getCompetition().getFields();
-        this.planningService = new PlanningService(this.tournament.getCompetition());
+        this.fields = this.competition.getFields();
+        this.planningService = new PlanningService(this.competition);
         this.hasBegun = this.structure.getRootRound().hasBegun();
         if (this.hasBegun) {
             this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen en verwijderen');
@@ -64,7 +64,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
 
     getFieldsDescription(): string {
         const translate = new TranslateService();
-        const sports = this.tournament.getCompetition().getSports();
+        const sports = this.competition.getSports();
         return translate.getFieldsName(sports.length === 1 ? sports[0] : undefined);
     }
 
@@ -72,7 +72,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
         this.setAlert('info', 'het veld wordt verwijderd');
         this.processing = true;
 
-        this.fieldRepository.removeObject(field, this.tournament.getCompetition())
+        this.fieldRepository.removeObject(field, this.competition)
             .subscribe(
             /* happy path */ fieldRes => {
                     const tournamentService = new TournamentService(this.tournament);

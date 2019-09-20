@@ -98,7 +98,7 @@ export class FilterComponent extends TournamentComponent implements OnInit {
     }
 
     hasReferees() {
-        return this.tournament.getCompetition().getReferees().length > 0;
+        return this.competition.getReferees().length > 0;
     }
 
     navigateBack() {

@@ -32,7 +32,7 @@
             <div class="input-group pointer">
               <input class="form-control" [ngClass]="{ 'is-invalid': !sport, 'is-valid': sport }"
                 formControlName="sportname">
-              <div *ngIf="!field" class="input-group-append" (click)="chooseSport = true">
+              <div *ngIf="!field && hasMultipleSports()" class="input-group-append" (click)="chooseSport = true">
                 <span class="input-group-text">kies</span>
               </div>
             </div>

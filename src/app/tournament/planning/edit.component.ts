@@ -61,7 +61,7 @@ export class PlanningEditComponent extends TournamentComponent implements OnInit
 
     initFields() {
         this.hasBegun = this.structure.getRootRound().hasBegun();
-        const date = this.tournament.getCompetition().getStartDateTime();
+        const date = this.competition.getStartDateTime();
 
         const now = new Date();
         const minDate = date > now ? now : date;
@@ -80,7 +80,7 @@ export class PlanningEditComponent extends TournamentComponent implements OnInit
     }
 
     shouldReschedule(startDateTime: Date, breakStartDateTime: Date, breakDration: number): boolean {
-        if (startDateTime.getTime() === this.tournament.getCompetition().getStartDateTime().getTime()
+        if (startDateTime.getTime() === this.competition.getStartDateTime().getTime()
             && (breakStartDateTime === undefined && this.tournament.getBreakStartDateTime() === undefined
                 || (breakStartDateTime !== undefined && this.tournament.getBreakStartDateTime() !== undefined
                     && breakStartDateTime.getTime() === this.tournament.getBreakStartDateTime().getTime()))
@@ -103,7 +103,7 @@ export class PlanningEditComponent extends TournamentComponent implements OnInit
         let breakDuration = 0;
 
         if (breakX === true) {
-            const date = this.tournament.getCompetition().getStartDateTime();
+            const date = this.competition.getStartDateTime();
             if (breakDateTime === undefined) {
                 breakDateTime = new Date(date.getTime());
                 breakDateTime.setHours(date.getHours() + 2);
@@ -143,7 +143,7 @@ export class PlanningEditComponent extends TournamentComponent implements OnInit
         try {
             const reschedule = this.shouldReschedule(startDateTime, breakStartDateTime, breakDuration);
             if (reschedule === true) {
-                this.tournament.getCompetition().setStartDateTime(startDateTime);
+                this.competition.setStartDateTime(startDateTime);
                 this.tournament.setBreakStartDateTime(undefined);
                 this.tournament.setBreakDuration(0);
                 if (this.form.controls.togglebreak.value) {
@@ -151,7 +151,7 @@ export class PlanningEditComponent extends TournamentComponent implements OnInit
                     this.tournament.setBreakDuration(breakDuration);
                 }
                 const tournamentService = new TournamentService(this.tournament);
-                tournamentService.reschedule(new PlanningService(this.tournament.getCompetition()), firstRoundNumber);
+                tournamentService.reschedule(new PlanningService(this.competition), firstRoundNumber);
             }
 
             this.tournamentRepository.editObject(this.tournament)

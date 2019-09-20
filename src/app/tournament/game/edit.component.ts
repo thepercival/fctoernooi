@@ -177,7 +177,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         //     this.model.startdate = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
         //     this.model.starttime = { hour: date.getHours(), minute: date.getMinutes() };
         // }
-        this.planningService = new PlanningService(this.tournament.getCompetition());
+        this.planningService = new PlanningService(this.competition);
         this.processing = false;
     }
 
@@ -314,7 +314,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         }
 
         const round = poule.getRound();
-        const ranking = new RankingService(round, this.tournament.getCompetition().getRuleSet());
+        const ranking = new RankingService(round, this.competition.getRuleSet());
         const pouleRankingItems = ranking.getItemsForPoule(this.game.getPoule());
         const equalPouleItems = this.getEqualPouleRankingItemsWithQualifyRules(pouleRankingItems);
         const postFix = '(' + this.nameService.getPouleName(this.game.getPoule(), true) + ')';
@@ -413,7 +413,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
                     this.game = gameRes;
                     const poule = this.game.getPoule();
                     const round = poule.getRound();
-                    const qualifyService = new QualifyService(round, this.tournament.getCompetition().getRuleSet());
+                    const qualifyService = new QualifyService(round, this.competition.getRuleSet());
                     if (!this.shouldQualifiersBeCalculated(poule)) {
                         return this.navigateBack();
                     }

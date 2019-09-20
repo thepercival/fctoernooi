@@ -129,7 +129,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     isTeamupAvailable(): boolean {
-        return this.tournament.getCompetition().getSports().every(sport => {
+        return this.competition.getSports().every(sport => {
             return !sport.getTeam();
         });
     }
@@ -207,7 +207,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     private savePlanning() {
         const tournamentService = new TournamentService(this.tournament);
-        const planningService = new PlanningService(this.tournament.getCompetition());
+        const planningService = new PlanningService(this.competition);
         if (this.needsRecreating()) {
             tournamentService.create(planningService, this.roundNumber);
             this.planningRepository.createObject(this.roundNumber)

@@ -53,8 +53,8 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
 
   initSports() {
     this.createSportConfigsList();
-    this.planningService = new PlanningService(this.tournament.getCompetition());
-    // this.planningService = new PlanningService(this.tournament.getCompetition());
+    this.planningService = new PlanningService(this.competition);
+    // this.planningService = new PlanningService(this.competition);
     this.hasBegun = this.structure.getRootRound().hasBegun();
     this.processing = false;
     if (this.hasBegun) {
@@ -63,11 +63,11 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
   }
 
   createSportConfigsList() {
-    this.sportConfigs = this.tournament.getCompetition().getSportConfigs();
+    this.sportConfigs = this.competition.getSportConfigs();
   }
 
   getNrOfFields(sport: Sport): number {
-    return this.tournament.getCompetition().getNrOfFields(sport);
+    return this.competition.getNrOfFields(sport);
   }
   // addSport() {
   //   this.linkToEdit(this.tournament);
@@ -106,7 +106,7 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
 
     this.sportConfigService.remove(sportConfig, this.structure);
 
-    this.sportConfigRepository.removeObject(sportConfig, this.tournament.getCompetition(), this.structure)
+    this.sportConfigRepository.removeObject(sportConfig, this.competition, this.structure)
       .subscribe(
         /* happy path */ refereeRes => {
           const firstRoundNumber = this.structure.getFirstRoundNumber();

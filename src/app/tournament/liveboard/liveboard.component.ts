@@ -23,7 +23,7 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     private screens: any[] = [];
     private maxLines = 8;
     public refreshAfterSeconds = 15;
-    public toggleProgress: boolean = false;
+    public toggleProgress = false;
     private screenfilter: string;
 
     constructor(
@@ -52,7 +52,7 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     processScreens() {
         const link: NavBarTournamentLiveboardLink = { showIcon: false, tournamentId: this.tournament.getId(), link: 'wim' };
         this.globalEventsManager.toggleLiveboardIconInNavBar.emit(link);
-        this.planningService = new PlanningService(this.tournament.getCompetition());
+        this.planningService = new PlanningService(this.competition);
         const liveBoard = new Liveboard(this.tournament, this.structure, this.maxLines, this.planningService);
         this.screens = liveBoard.getScreens(this.screenfilter);
         this.executeScheduledTask();

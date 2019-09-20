@@ -7,6 +7,8 @@ import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentService } from '../../lib/tournament/service';
 import { TournamentComponent } from '../component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Observable, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-tournament-referee',
@@ -28,6 +30,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   constructor(
     route: ActivatedRoute,
     router: Router,
+    private modalService: NgbModal,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     private refereeRepository: RefereeRepository,
@@ -42,7 +45,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
 
   initReferees() {
     this.createRefereesList();
-    this.planningService = new PlanningService(this.tournament.getCompetition());
+    this.planningService = new PlanningService(this.competition);
     this.hasBegun = this.structure.getRootRound().hasBegun();
     if (this.hasBegun) {
       this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen en verwijderen');
@@ -51,7 +54,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   }
 
   createRefereesList() {
-    this.referees = this.tournament.getCompetition().getReferees();
+    this.referees = this.competition.getReferees();
   }
 
   addReferee() {
@@ -63,14 +66,61 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   }
 
   linkToEdit(referee?: Referee) {
-    this.router.navigate(['/toernooi/refereeedit', this.tournament.getId(), referee ? referee.getInitials() : '']);
+    this.router.navigate(['/toernooi/refereeedit', this.tournament.getId(), referee ? referee.getRank() : '']);
+  }
+
+  openHelpModal(modalContent) {
+    const activeModal = this.modalService.open(modalContent);
+    activeModal.result.then((result) => {
+      if (result === 'linkToPlanningConfig') {
+        this.router.navigate(['/toernooi/planningconfig', this.tournament.getId(), this.structure.getFirstRoundNumber().getNumber()]);
+      }
+    }, (reason) => {
+    });
+  }
+
+  upgradeRank(referee: Referee) {
+    const downgrade = this.competition.getReferee(referee.getRank() - 1);
+    referee.setRank(downgrade.getRank());
+    downgrade.setRank(downgrade.getRank() + 1);
+    // doe sortering en backend
+
+    this.setAlert('info', 'de belangrijkheid van de scheidsrechters wordt gewijzigd');
+    this.processing = true;
+
+    const reposUpdates: Observable<Referee>[] = [
+      this.refereeRepository.editObject(referee, this.competition),
+      this.refereeRepository.editObject(downgrade, this.competition)
+    ];
+    this.upgradeRankHelper(reposUpdates);
+  }
+
+  protected upgradeRankHelper(reposUpdates: Observable<Referee>[]) {
+    forkJoin(reposUpdates).subscribe(results => {
+      this.referees.sort((refA, refB) => refA.getRank() - refB.getRank());
+      const firstRoundNumber = this.structure.getFirstRoundNumber();
+      const tournamentService = new TournamentService(this.tournament);
+      tournamentService.reschedule(this.planningService, firstRoundNumber);
+      this.planningRepository.editObject(firstRoundNumber).subscribe(
+            /* happy path */ gamesdRes => {
+          this.setAlert('success', 'de belangrijkheid van de scheidsrechters is gewijzigd');
+        },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+            /* onComplete */() => this.processing = false
+      );
+    },
+      err => {
+        this.setAlert('danger', 'de belangrijkheid van de scheidsrechters is niet gewijzigd: ' + err);
+        this.processing = false;
+      }
+    );
   }
 
   removeReferee(referee: Referee) {
     this.setAlert('info', 'de scheidsrechter wordt verwijderd');
     this.processing = true;
 
-    this.refereeRepository.removeObject(referee, this.tournament.getCompetition())
+    this.refereeRepository.removeObject(referee, this.competition)
       .subscribe(
             /* happy path */ refereeRes => {
           const firstRoundNumber = this.structure.getFirstRoundNumber();

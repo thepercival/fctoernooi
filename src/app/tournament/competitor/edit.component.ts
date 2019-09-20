@@ -105,7 +105,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
             this.processing = false;
             return;
         }
-        const association = this.tournament.getCompetition().getLeague().getAssociation();
+        const association = this.competition.getLeague().getAssociation();
         const competitor: JsonCompetitor = {
             name: name,
             registered: this.form.controls.registered.value,

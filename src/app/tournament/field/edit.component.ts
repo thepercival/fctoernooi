@@ -74,13 +74,13 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
             this.processing = false;
             return;
         }
-        return this.tournament.getCompetition().getField(number);
+        return this.competition.getField(number);
     }
 
     private postInit(number: number) {
         this.field = this.getField(number);
         if (this.field === undefined) {
-            this.form.controls.name.setValue(this.tournament.getCompetition().getFields().length + 1);
+            this.form.controls.name.setValue(this.competition.getFields().length + 1);
             this.processing = false;
             return;
         }
@@ -88,6 +88,10 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
         this.form.controls.sportname.setValue(this.field.getSport().getName());
         this.sport = this.field.getSport();
         this.processing = false;
+    }
+
+    hasMultipleSports(): boolean {
+        return this.competition.hasMultipleSportConfigs();
     }
 
     onGetSport(sport: Sport) {
@@ -111,20 +115,18 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
         const name = this.form.controls.name.value;
 
         const field: JsonField = {
-            number: this.tournament.getCompetition().getFields().length + 1,
+            number: this.competition.getFields().length + 1,
             name: name,
             sportId: this.sport.getId()
         };
 
-        // als sportConfig nog niet bestaat dan toevoegen aan ..... 
-        this.sportConfigService.createDefault(this.sport, this.tournament.getCompetition(), this.structure);
-        // @TODO deze ook opslaan in db!!
+        this.sportConfigService.createDefault(this.sport, this.competition, this.structure);
 
-        this.fieldRepository.createObject(field, this.tournament.getCompetition()).subscribe(
+        this.fieldRepository.createObject(field, this.competition).subscribe(
             /* happy path */ fieldRes => {
                 const firstRoundNumber = this.structure.getFirstRoundNumber();
                 const tournamentService = new TournamentService(this.tournament);
-                tournamentService.reschedule(new PlanningService(this.tournament.getCompetition()), firstRoundNumber);
+                tournamentService.reschedule(new PlanningService(this.competition), firstRoundNumber);
                 this.planningRepository.editObject(firstRoundNumber).subscribe(
                 /* happy path */ gamesRes => {
                         this.tournamentRepository.syncRefereeRoles(this.tournament).subscribe(
@@ -152,7 +154,7 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
         const sportChanged = this.sport !== this.field.getSport();
         this.field.setSport(this.sport);
 
-        this.fieldRepository.editObject(this.field, this.tournament.getCompetition())
+        this.fieldRepository.editObject(this.field, this.competition)
             .subscribe(
             /* happy path */ refereeRes => {
                     if (!sportChanged) {
@@ -178,7 +180,7 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
     }
 
     // isInitialsDuplicate(initials: string, referee?: Referee): boolean {
-    //     const referees = this.tournament.getCompetition().getReferees();
+    //     const referees = this.competition.getReferees();
     //     return referees.find(refereeIt => {
     //         return (initials === refereeIt.getInitials() && (referee === undefined || refereeIt.getId() === undefined));
     //     }) !== undefined;
@@ -194,7 +196,7 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
     //         sportId: 12 /* @TODO */
     //     };
 
-    //     this.fieldRepository.createObject(jsonField, this.tournament.getCompetition())
+    //     this.fieldRepository.createObject(jsonField, this.competition)
     //         .subscribe(
     //         /* happy path */ fieldRes => {
     //                 const fieldItem: IFieldListItem = { field: fieldRes, editable: false };
@@ -220,7 +222,7 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
     //     this.setAlert('info', 'de veldnaam wordt gewijzigd');
     //     this.processing = true;
 
-    //     this.fieldRepository.editObject(fieldItem.field, this.tournament.getCompetition())
+    //     this.fieldRepository.editObject(fieldItem.field, this.competition)
     //         .subscribe(
     //         /* happy path */ fieldRes => {
     //                 this.setAlert('success', 'de veldnaam is gewijzigd');

@@ -21,7 +21,7 @@ export class ViewComponent extends TournamentComponent implements OnInit, OnDest
     public refreshAfterSeconds = 60;
     private refreshAtCountDown = true;
     userRefereeId: number;
-    toggleProgress: boolean = false;
+    toggleProgress = false;
     shouldShowEndRanking: boolean;
 
     constructor(
@@ -38,9 +38,10 @@ export class ViewComponent extends TournamentComponent implements OnInit, OnDest
 
     ngOnInit() {
         super.myNgOnInit(() => {
-            this.shouldShowEndRanking = (this.structure.getFirstRoundNumber().hasNext() || this.structure.getRootRound().getPoules().length === 1);
+            this.shouldShowEndRanking = (this.structure.getFirstRoundNumber().hasNext()
+                || this.structure.getRootRound().getPoules().length === 1);
             this.initLiveboardLink();
-            this.planningService = new PlanningService(this.tournament.getCompetition());
+            this.planningService = new PlanningService(this.competition);
             this.tournamentRepository.getUserRefereeId(this.tournament).subscribe(
                 /* happy path */ userRefereeIdRes => {
                     this.userRefereeId = userRefereeIdRes;
@@ -61,7 +62,7 @@ export class ViewComponent extends TournamentComponent implements OnInit, OnDest
             return;
         }
         this.setData(this.tournament.getId(), () => {
-            this.planningService = new PlanningService(this.tournament.getCompetition());
+            this.planningService = new PlanningService(this.competition);
             this.toggleProgress = !this.toggleProgress;
         });
     }
