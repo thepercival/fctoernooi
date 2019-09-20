@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { JsonSport, Sport, SportConfig, SportCustom, SportRepository } from 'ngx-sport';
 
 import { IAlert } from '../../common/alert';
@@ -13,8 +12,12 @@ import { TranslateService } from '../../lib/translate';
     styleUrls: ['./select.component.css']
 })
 export class SportSelectComponent implements OnInit {
+    static readonly SELECT = 1;
+    static readonly NEW = 2;
+
     @Input() sportConfigs: SportConfig[];
     @Input() staticInfo: string;
+    @Input() inputSelectOnly: boolean;
     @Output() sendSport = new EventEmitter<Sport>();
     processing = true;
     form: FormGroup;
@@ -25,8 +28,6 @@ export class SportSelectComponent implements OnInit {
     constructor(
         public cssService: CSSService,
         private sportRepository: SportRepository,
-        route: ActivatedRoute,
-        router: Router,
         fb: FormBuilder
     ) {
         this.form = fb.group({
@@ -37,19 +38,38 @@ export class SportSelectComponent implements OnInit {
             ])],
             team: true
         });
-        this.radioGroupForm = fb.group({
-            inputtype: 'select'
-        });
+        this.radioGroupForm = fb.group({ inputtype: SportSelectComponent.SELECT });
         this.translateService = new TranslateService();
     }
 
     ngOnInit() {
+
+        console.log(this.sportConfigs);
         this.processing = false;
     }
 
-    getSortableSports(): SortableSport[] {
+    getInputSelect(): number { return SportSelectComponent.SELECT; }
+    getInputNew(): number { return SportSelectComponent.NEW; }
+
+    isInputTypeSelect(): boolean {
+        return this.isInputTypeHelper(this.getInputSelect());
+    }
+
+    isInputTypeNew(): boolean {
+        return this.isInputTypeHelper(this.getInputNew());
+    }
+
+    protected isInputTypeHelper(inputType: number): boolean {
+        return (inputType & this.radioGroupForm.value['inputtype']) === inputType;
+    }
+
+    showInputTypeChoice() {
+        return this.inputSelectOnly !== true;
+    }
+
+    getSortedSports(): SortableSport[] {
         return SportCustom.get().filter(customId => {
-            return !this.sportConfigs || !this.sportConfigs.some(sportConfig => sportConfig.getSport().getCustomId() === customId);
+            return !this.sportConfigs || this.sportConfigs.some(sportConfig => sportConfig.getSport().getCustomId() === customId);
         }).map(customId => {
             return { customId: customId, name: this.translate(customId) };
         }).sort((s1, s2) => {

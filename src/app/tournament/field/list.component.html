@@ -7,7 +7,7 @@
                 <h2 *ngIf="tournament">
                     <i class="fi flaticon-soccer-field"></i> {{getFieldsDescription()}}
                 </h2>
-                <button *ngIf="tournament && tournament.getCompetition().hasMultipleSportConfigs()" type="button"
+                <button *ngIf="competition && competition.hasMultipleSportConfigs()" type="button"
                     class="btn btn-sm btn-outline-secondary mr-0"
                     [routerLink]="['/toernooi/sportconfigs', tournament.getId()]">
                     naar sporten
@@ -50,7 +50,8 @@
                         </td>
                         <td class="text-right">
                             <button *ngIf="!hasBegun" type="button" class="btn btn-sm btn-danger"
-                                [disabled]="processing" (click)="removeField(field);">
+                                [disabled]="processing || competition.getFields().length === 1"
+                                (click)="removeField(field);">
                                 <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
                             </button>
                         </td>

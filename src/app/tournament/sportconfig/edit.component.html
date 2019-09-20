@@ -95,9 +95,8 @@
         </div>
       </form>
     </div>
-    <app-tournament-sport-select *ngIf="!processing && tournament && !sportConfig"
-      class="col-xs-12 col-sm-10 col-md-8 col-lg-6" [sportConfigs]="tournament.getCompetition().getSportConfigs()"
-      (sendSport)="onGetSport($event)">
+    <app-tournament-sport-select *ngIf="!processing && competition && !sportConfig"
+      class="col-xs-12 col-sm-10 col-md-8 col-lg-6" (sendSport)="onGetSport($event)">
     </app-tournament-sport-select>
   </div>
 </div>

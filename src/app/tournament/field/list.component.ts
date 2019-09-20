@@ -69,6 +69,10 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
     }
 
     removeField(field: Field) {
+        if (this.competition.getNrOfFields(field.getSport()) === 1) {
+            this.setAlert('warning', 'een sport moet minimaal 1 veld houden, verwijder eventueel de sport');
+            return;
+        }
         this.setAlert('info', 'het veld wordt verwijderd');
         this.processing = true;
 

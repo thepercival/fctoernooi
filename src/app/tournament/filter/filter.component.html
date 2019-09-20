@@ -53,8 +53,8 @@
             <td class="text-right">
               <fa-icon *ngIf="place.getCompetitor()" class="text-primary pointer"
                 (click)="toggleFavoriteCompetitor(place.getCompetitor())"
-                [icon]="['far', (favorites.hasCompetitor(place.getCompetitor()) ? 'check-' : '') + 'square']"
-                size="2x"></fa-icon>
+                [icon]="['far', (favorites.hasCompetitor(place.getCompetitor()) ? 'check-' : '') + 'square']" size="2x">
+              </fa-icon>
             </td>
           </tr>
         </tbody>
@@ -75,7 +75,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let referee of tournament.getCompetition().getReferees()">
+          <tr *ngFor="let referee of competition.getReferees()">
             <td>
               <span>{{referee.getInitials()}}</span>
             </td>

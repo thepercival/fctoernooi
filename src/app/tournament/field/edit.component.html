@@ -1,6 +1,7 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
-    <app-tournament-sport-select *ngIf="chooseSport" class="col-xs-12 col-sm-8 col-md-6 col-lg-4"
+    <app-tournament-sport-select *ngIf="chooseSport" [inputSelectOnly]="true"
+      [sportConfigs]="competition.getSportConfigs()" class="col-xs-12 col-sm-8 col-md-6 col-lg-4"
       (sendSport)="onGetSport($event)">
     </app-tournament-sport-select>
     <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6" *ngIf="!chooseSport">
@@ -8,7 +9,7 @@
       </app-tournament-title>
       <div>
         <h2>
-          <i class="fi flaticon-soccer-field"></i> veld
+          <i class=" fi flaticon-soccer-field"></i> veld
         </h2>
         <h2 *ngIf="processing" class="text-center">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>

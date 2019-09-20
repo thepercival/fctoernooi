@@ -81,6 +81,11 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
         this.field = this.getField(number);
         if (this.field === undefined) {
             this.form.controls.name.setValue(this.competition.getFields().length + 1);
+            if (!this.hasMultipleSports()) {
+                this.sport = this.competition.getFirstSportConfig().getSport();
+                this.form.controls.sportname.setValue(this.sport.getName());
+                this.form.controls.sportname.disable();
+            }
             this.processing = false;
             return;
         }

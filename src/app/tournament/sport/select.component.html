@@ -6,26 +6,26 @@
 </div>
 <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
 <form [formGroup]="radioGroupForm">
-  <div class="btn-group btn-group-toggle mb-3" ngbRadioGroup formControlName="inputtype">
+  <div *ngIf="showInputTypeChoice()" class="btn-group btn-group-toggle mb-3" ngbRadioGroup formControlName="inputtype">
     <label ngbButtonLabel class="btn btn-outline-secondary">
-      <input ngbButton type="radio" value="select">
-      <fa-icon *ngIf="radioGroupForm.value['inputtype'] === 'select'" [icon]="['fas', 'check-circle']">
+      <input ngbButton type="radio" [value]="getInputSelect()">
+      <fa-icon *ngIf="isInputTypeSelect()" [icon]="['fas', 'check-circle']">
       </fa-icon> selecteren
     </label>
     <label ngbButtonLabel class="btn btn-outline-secondary">
-      <input ngbButton type="radio" value="new">
-      <fa-icon *ngIf="radioGroupForm.value['inputtype'] === 'new'" [icon]="['fas', 'check-circle']">
+      <input ngbButton type="radio" [value]="getInputNew()">
+      <fa-icon *ngIf="isInputTypeNew()" [icon]="['fas', 'check-circle']">
       </fa-icon> zelf invoeren
     </label>
   </div>
 </form>
 
-<div *ngIf="radioGroupForm.value['inputtype'] === 'select'">
+<div *ngIf="isInputTypeSelect()">
   <label *ngIf="staticInfo" class="text-info font-weight-bold">
     <fa-icon [icon]="['fas', 'info-circle']"></fa-icon> {{staticInfo}}
   </label>
   <ul class="list-group">
-    <li *ngFor="let showableSport of getSortableSports()" class="list-group-item pointer"
+    <li *ngFor="let showableSport of getSortedSports()" class="list-group-item pointer"
       (click)="sendSportByCustomId(showableSport.customId)">
       <span class="sport-icon">
         <app-sport-icon [customId]="showableSport.customId"></app-sport-icon>
@@ -35,7 +35,7 @@
     </li>
   </ul>
 </div>
-<form *ngIf="radioGroupForm.value['inputtype'] === 'new'" [formGroup]="form" (ngSubmit)="save()" novalidate>
+<form *ngIf="isInputTypeNew()" [formGroup]="form" (ngSubmit)="save()" novalidate>
   <div class="form-group row">
     <div class="col-3">
       <label for="newSportName" class="col-form-label">naam</label>
