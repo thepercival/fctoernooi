@@ -2,15 +2,15 @@
 
 <table class="table">
   <thead>
-  <tr>
-    <th>naam</th>
-    <th>email</th>
-  </tr>
+    <tr>
+      <th>naam</th>
+      <th>email</th>
+    </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let user of users" [class.selected]="user === selectedUser" (click)="onSelect(user)">
-    <td>{{user.name}}</td>
-    <td>{{user.emailaddress}}</td>
-  </tr>
+    <tr *ngFor="let user of users" [class.selected]="user === selectedUser" (click)="onSelect(user)">
+      <td>{{user.getName()}}</td>
+      <td>{{user.getEmailaddress()}}</td>
+    </tr>
   </tbody>
 </table>

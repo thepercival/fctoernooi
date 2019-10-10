@@ -10,6 +10,7 @@ import {
   RoundNumber,
   SportScoreConfigService,
   State,
+  Round,
 } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
@@ -244,4 +245,5 @@ interface GameData {
 interface PouleData {
   name: string;
   needsRanking: boolean;
+  round: Round;
 }

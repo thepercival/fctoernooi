@@ -3,9 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faAngleDoubleDown,
   faBasketballBall,
@@ -35,6 +33,7 @@ import {
   faUserFriends,
   faUserShield,
   faVolleyballBall,
+  fas,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   NgbAlertModule,
@@ -86,12 +85,7 @@ import { TournamentShellRepository } from './lib/tournament/shell/repository';
 import { UserMapper } from './lib/user/mapper';
 import { NavComponent } from './nav/nav.component';
 import { UserModule } from './user/user.module';
-
-library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave,
-  faSignInAlt, faSignOutAlt, faPlusCircle, faPlus, faTv, faFutbol, faTableTennis, faSearch,
-  faMobileAlt, faEnvelope, faTwitter, faCopyright, faEye, faShareAlt, faClipboardCheck,
-  faGamepad, faBasketballBall, faChess, faVolleyballBall, faUserShield, faUserFriends, faCalendarAlt,
-  faAngleDoubleDown);
+import { faTwitter, fab } from '@fortawesome/free-brands-svg-icons';
 
 @NgModule({
   declarations: [
@@ -148,4 +142,16 @@ library.add(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave
   bootstrap: [AppComponent]
 })
 export class AppModule {
+  constructor(library: FaIconLibrary) {
+    library.addIconPacks(fas, fab);
+    library.addIcons(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave,
+      faSignInAlt, faSignOutAlt, faPlusCircle, faPlus, faTv, faFutbol, faTableTennis, faSearch,
+      faMobileAlt, faEnvelope, faCopyright, faEye, faShareAlt, faClipboardCheck,
+      faGamepad, faBasketballBall, faChess, faVolleyballBall, faUserShield, faUserFriends, faCalendarAlt,
+      faAngleDoubleDown);
+    library.addIcons(
+      faTwitter
+    );
+  }
+
 }

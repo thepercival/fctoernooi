@@ -25,7 +25,7 @@
           <div class="col-5">
             <input type="number"
               [ngClass]="{ 'is-invalid': form.controls.max.invalid, 'is-valid': form.controls.max.valid}"
-              formControlName="max" [maxlength]="2" class="form-control" />
+              formControlName="max" maxlength="2" class="form-control" />
           </div>
         </div>
         <div *ngIf="form.controls.maxNext" class="form-group row">
@@ -35,7 +35,7 @@
           <div class="col-5">
             <input type="number"
               [ngClass]="{ 'is-invalid': form.controls.maxNext.invalid, 'is-valid': form.controls.maxNext.valid}"
-              formControlName="maxNext" [maxlength]="2" class="form-control" />
+              formControlName="maxNext" maxlength="2" class="form-control" />
           </div>
         </div>
         <div *ngIf="form.controls.maxNext" class="form-group row">

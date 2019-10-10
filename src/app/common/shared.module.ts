@@ -1,14 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faUsers } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faUsers, fas } from '@fortawesome/free-solid-svg-icons';
 
 import { SportIconComponent } from './sport/icon.component';
-
-library.add(
-  faUsers
-);
 
 @NgModule({
   declarations: [
@@ -22,4 +17,9 @@ library.add(
     SportIconComponent
   ]
 })
-export class CommonSharedModule { }
+export class CommonSharedModule {
+  constructor(library: FaIconLibrary) {
+    library.addIconPacks(fas);
+    library.addIcons(faUsers);
+  }
+}

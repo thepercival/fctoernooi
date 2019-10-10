@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faKey, faLevelUpAlt } from '@fortawesome/free-solid-svg-icons';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -12,8 +11,6 @@ import { PasswordchangeComponent } from './passwordchange/passwordchange.compone
 import { PasswordresetComponent } from './passwordreset/passwordreset.component';
 import { RegisterComponent } from './register/register.component';
 import { UserRoutingModule } from './user-routing.module';
-
-library.add(faLevelUpAlt, faKey);
 
 @NgModule({
   imports: [
@@ -25,4 +22,9 @@ library.add(faLevelUpAlt, faKey);
   ],
   declarations: [LoginComponent, LogoutComponent, RegisterComponent, PasswordresetComponent, PasswordchangeComponent]
 })
-export class UserModule { }
+export class UserModule {
+  constructor(library: FaIconLibrary) {
+    // library.addIconPacks(fas);
+    library.addIcons(faLevelUpAlt, faKey);
+  }
+}

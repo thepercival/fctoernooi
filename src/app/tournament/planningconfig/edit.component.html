@@ -36,7 +36,7 @@
                     <div class="col-4">
                         <input type="number"
                             [ngClass]="{ 'is-invalid': form.controls.minutesPerGame.invalid, 'is-valid': form.controls.minutesPerGame.valid}"
-                            formControlName="minutesPerGame" [maxlength]="2" class="form-control" />
+                            formControlName="minutesPerGame" maxlength="2" class="form-control" />
                     </div>
                 </div>
                 <div *ngIf="form.value['enableTime']" class="form-group row">
@@ -44,7 +44,7 @@
                     <div class="col-4">
                         <input type="number"
                             [ngClass]="{ 'is-invalid': form.controls.minutesPerGameExt.invalid, 'is-valid': form.controls.minutesPerGameExt.valid}"
-                            formControlName="minutesPerGameExt" [maxlength]="2" class="form-control" />
+                            formControlName="minutesPerGameExt" maxlength="2" class="form-control" />
                     </div>
                 </div>
                 <div *ngIf="form.value['enableTime']" class="form-group row">
@@ -53,7 +53,7 @@
                     <div class="col-4">
                         <input type="number"
                             [ngClass]="{ 'is-invalid': form.controls.minutesBetweenGames.invalid, 'is-valid': form.controls.minutesBetweenGames.valid}"
-                            formControlName="minutesBetweenGames" [maxlength]="2" class="form-control" />
+                            formControlName="minutesBetweenGames" maxlength="2" class="form-control" />
                     </div>
                 </div>
                 <div *ngIf="form.value['enableTime'] && roundNumber.hasNext()" class="form-group row">
@@ -66,7 +66,7 @@
                     <div class="col-4">
                         <input type="number"
                             [ngClass]="{ 'is-invalid': form.controls.minutesAfter.invalid, 'is-valid': form.controls.minutesAfter.valid}"
-                            formControlName="minutesAfter" [maxlength]="3" class="form-control" />
+                            formControlName="minutesAfter" maxlength="3" class="form-control" />
                     </div>
                 </div>
                 <div class="form-group row">

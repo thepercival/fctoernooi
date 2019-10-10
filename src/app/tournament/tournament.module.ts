@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faProductHunt } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faProductHunt, fab } from '@fortawesome/free-brands-svg-icons';
 import { faCheckSquare, faSquare } from '@fortawesome/free-regular-svg-icons';
 import {
   faCheckCircle,
@@ -27,6 +26,7 @@ import {
   faUnlink,
   faUsers,
   faUserTag,
+  fas,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   NgbAlertModule,
@@ -110,12 +110,6 @@ import { ViewComponent } from './view/view.component';
 import { SportScoreEditComponent } from './sportscore/edit.component';
 import { ModalRoundNumbersComponent } from './roundnumber/selector.component';
 
-library.add(
-  faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
-  faUnlink, faPrint, faSort, faRandom, faSquare, faCheckSquare, faUserTag, faInfoCircle, faMedal,
-  faProductHunt, faLink, faUsers, faQrcode, faCopy, faDotCircle
-);
-
 @NgModule({
   imports: [
     ClipboardModule,
@@ -198,4 +192,18 @@ library.add(
     SportPlanningConfigMapper
   ]
 })
-export class TournamentModule { }
+export class TournamentModule {
+  constructor(library: FaIconLibrary) {
+    library.addIconPacks(fas, fab);
+    library.addIcons(
+      faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
+      faUnlink, faPrint, faSort, faRandom, faSquare, faCheckSquare, faUserTag, faInfoCircle, faMedal,
+      faLink, faUsers, faQrcode, faCopy, faDotCircle
+    );
+    library.addIcons(
+      faProductHunt
+    );
+  }
+}
+
+
