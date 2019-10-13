@@ -25,6 +25,7 @@ export class TournamentMapper {
         }
         tournament.setBreakDuration(json.breakDuration);
         tournament.setPublic(json.public);
+        tournament.setUpdated(json.updated);
         return tournament;
     }
 
@@ -37,6 +38,7 @@ export class TournamentMapper {
             breakStartDateTime: tournament.getBreakStartDateTime() ? tournament.getBreakStartDateTime().toISOString() : undefined,
             breakDuration: tournament.getBreakDuration(),
             public: tournament.getPublic(),
+            updated: tournament.getUpdated()
         };
     }
 }
@@ -49,4 +51,5 @@ export interface JsonTournament {
     public: boolean;
     roles: JsonRole[];
     sponsors: JsonSponsor[];
+    updated: boolean;
 }

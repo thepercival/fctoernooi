@@ -21,9 +21,9 @@
 </form>
 
 <div *ngIf="isInputTypeSelect()">
-  <label *ngIf="staticInfo" class="text-info font-weight-bold">
+  <!-- <label *ngIf="staticInfo" class="text-info font-weight-bold">
     <fa-icon [icon]="['fas', 'info-circle']"></fa-icon> {{staticInfo}}
-  </label>
+  </label> -->
   <ul class="list-group">
     <li *ngFor="let showableSport of getSortedSports()" class="list-group-item pointer"
       (click)="sendSportByCustomId(showableSport.customId)">

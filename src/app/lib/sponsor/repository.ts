@@ -75,7 +75,7 @@ export class SponsorRepository extends APIRepository {
         let httpParams = new HttpParams();
         httpParams = httpParams.set('tournamentid', tournament.getId().toString());
         httpParams = httpParams.set('sponsorid', sponsorId.toString());
-        let headers = new HttpHeaders({ 'X-Api-Version': '2' });
+        let headers = new HttpHeaders({ 'X-Api-Version': '17' });
         const token = APIConfig.getToken();
         if (token !== undefined) {
             headers = headers.append('Authorization', 'Bearer ' + token);

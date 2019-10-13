@@ -18,6 +18,7 @@ export class Tournament {
     protected breakStartDateTime: Date;
     protected breakDuration: number;
     protected public: boolean;
+    protected updated: boolean;
 
     constructor(competition: Competition) {
         this.setCompetition(competition);
@@ -87,6 +88,14 @@ export class Tournament {
 
     setPublic(publicX: boolean): void {
         this.public = publicX;
+    }
+
+    getUpdated(): boolean {
+        return this.updated;
+    }
+
+    setUpdated(updated: boolean): void {
+        this.updated = updated;
     }
 
     hasBreak(): boolean {

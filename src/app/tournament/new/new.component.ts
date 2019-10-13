@@ -150,6 +150,7 @@ export class NewComponent implements OnInit {
       }
       tournament = new Tournament(competition);
       tournament.setPublic(this.form.controls.public.value);
+      tournament.setUpdated(true);
     }
 
     this.tournamentRepository.createObject(tournament)
