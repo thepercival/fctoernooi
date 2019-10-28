@@ -134,13 +134,11 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         });
     }
 
-    private needsRecreating(): boolean {
-        const config = this.roundNumber.getValidPlanningConfig();
+    private needsRecreating(config: PlanningConfig): boolean {
         return this.form.value['nrOfHeadtohead'] !== config.getNrOfHeadtohead() || this.form.value['teamup'] !== config.getTeamup();
     }
 
-    private needsRescheduling(): boolean {
-        const config = this.roundNumber.getValidPlanningConfig();
+    private needsRescheduling(config: PlanningConfig): boolean {
         return this.form.value['enableTime'] !== config.getEnableTime()
             || this.form.value['minutesPerGame'] !== config.getMinutesPerGame()
             || this.form.value['minutesPerGameExt'] !== config.getMinutesPerGameExt()
@@ -176,7 +174,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.configRepository.createObject(jsonConfig, this.roundNumber)
             .subscribe(
                 /* happy path */ configRes => {
-                    this.savePlanning();
+                    this.savePlanning(true, false);
                 },
                 /* error path */ e => {
                     this.setAlert('danger', 'de instellingen zijn niet opgeslagen: ' + e);
@@ -190,11 +188,13 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     edit(jsonConfig: JsonPlanningConfig, config: PlanningConfig) {
         this.setAlert('info', 'instellingen worden opgeslagen');
         this.processing = true;
+        const needsRecreating = this.needsRecreating(config);
+        const needsRescheduling = this.needsRescheduling(config);
 
         this.configRepository.editObject(jsonConfig, config)
             .subscribe(
                 /* happy path */ configRes => {
-                    this.savePlanning();
+                    this.savePlanning(needsRecreating, needsRescheduling);
                 },
                 /* error path */ e => {
                     this.setAlert('danger', 'de instellingen zijn niet opgeslagen: ' + e);
@@ -205,10 +205,10 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     }
 
-    private savePlanning() {
+    private savePlanning(needsRecreating: boolean, needsRescheduling: boolean) {
         const tournamentService = new TournamentService(this.tournament);
         const planningService = new PlanningService(this.competition);
-        if (this.needsRecreating()) {
+        if (needsRecreating) {
             tournamentService.create(planningService, this.roundNumber);
             this.planningRepository.createObject(this.roundNumber)
                 .subscribe(
@@ -221,7 +221,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
                     },
                     /* onComplete */() => this.processing = false
                 );
-        } else if (this.needsRescheduling()) {
+        } else if (needsRescheduling) {
             tournamentService.reschedule(planningService, this.roundNumber);
             this.planningRepository.editObject(this.roundNumber)
                 .subscribe(
