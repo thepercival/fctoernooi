@@ -10,7 +10,6 @@ import {
     NameService,
     Place,
     PlaceRepository,
-    PlanningService,
     Poule,
     QualifyRuleMultiple,
     QualifyService,
@@ -31,6 +30,24 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { TranslateService } from '../../lib/translate';
 import { TournamentComponent } from '../component';
 
+class HomeAwayFormControl {
+    home: FormControl;
+    away: FormControl;
+
+    constructor(
+        home: number,
+        away: number,
+        disabled?: boolean
+    ) {
+        this.home = new FormControl({ value: home, disabled: disabled === true });
+        this.away = new FormControl({ value: away, disabled: disabled === true });
+    }
+
+    getScore(): GameScoreHomeAway {
+        return new GameScoreHomeAway(this.home.value, this.away.value);
+    }
+}
+
 @Component({
     selector: 'app-tournament-game-edit',
     templateUrl: './edit.component.html',
@@ -38,7 +55,6 @@ import { TournamentComponent } from '../component';
 })
 export class GameEditComponent extends TournamentComponent implements OnInit {
     game: Game;
-    planningService: PlanningService;
     sportScoreConfigService: SportScoreConfigService;
     form: FormGroup;
     scoreControls: HomeAwayFormControl[] = [];
@@ -177,7 +193,6 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         //     this.model.startdate = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
         //     this.model.starttime = { hour: date.getHours(), minute: date.getMinutes() };
         // }
-        this.planningService = new PlanningService(this.competition);
         this.processing = false;
     }
 
@@ -395,7 +410,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         this.game.setState(state);
         this.syncGameScores(false);
 
-        // if (this.planningService.canCalculateStartDateTime(this.game.getRound().getNumber())) {
+        // if (this.game.getRound().getNumber().getValidPlanningConfig().getEnableTime()) {
         //     const startdate = new Date(
         //         this.model.startdate.year,
         //         this.model.startdate.month - 1,
@@ -501,22 +516,4 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
     //     return one && two && two.year === one.year && two.month === one.month && two.day === one.day;
     // }
     // isSelected = date => this.equals(date, this.model.startdate);
-}
-
-class HomeAwayFormControl {
-    home: FormControl;
-    away: FormControl;
-
-    constructor(
-        home: number,
-        away: number,
-        disabled?: boolean
-    ) {
-        this.home = new FormControl({ value: home, disabled: disabled === true });
-        this.away = new FormControl({ value: away, disabled: disabled === true });
-    }
-
-    getScore(): GameScoreHomeAway {
-        return new GameScoreHomeAway(this.home.value, this.away.value);
-    }
 }

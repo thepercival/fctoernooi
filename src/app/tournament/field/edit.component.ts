@@ -6,7 +6,6 @@ import {
     FieldRepository,
     JsonField,
     PlanningRepository,
-    PlanningService,
     Sport,
     SportConfigService,
     StructureRepository,
@@ -14,7 +13,6 @@ import {
 
 import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
-import { TournamentService } from '../../lib/tournament/service';
 import { TournamentComponent } from '../component';
 
 @Component({
@@ -130,9 +128,7 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
         this.fieldRepository.createObject(field, this.competition).subscribe(
             /* happy path */ fieldRes => {
                 const firstRoundNumber = this.structure.getFirstRoundNumber();
-                const tournamentService = new TournamentService(this.tournament);
-                tournamentService.reschedule(new PlanningService(this.competition), firstRoundNumber);
-                this.planningRepository.editObject(firstRoundNumber).subscribe(
+                this.planningRepository.createObject(firstRoundNumber, this.tournament.getBreak()).subscribe(
                 /* happy path */ gamesRes => {
                         this.tournamentRepository.syncRefereeRoles(this.tournament).subscribe(
                         /* happy path */ allRolesRes => {
@@ -206,9 +202,7 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
     //         /* happy path */ fieldRes => {
     //                 const fieldItem: IFieldListItem = { field: fieldRes, editable: false };
     //                 this.fieldsList.push(fieldItem);
-    //                 const tournamentService = new TournamentService(this.tournament);
-    //                 tournamentService.reschedule(this.planningService, this.structure.getFirstRoundNumber());
-    //                 this.planningRepository.editObject(this.structure.getFirstRoundNumber())
+    //                 this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament.getBreak())
     //                     .subscribe(
     //                     /* happy path */ gamesRes => {
     //                             this.processing = false;

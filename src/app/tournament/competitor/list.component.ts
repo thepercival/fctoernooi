@@ -9,7 +9,6 @@ import {
   PlaceLocation,
   PlaceRepository,
   PlanningRepository,
-  PlanningService,
   QualifyGroup,
   Round,
   Structure,
@@ -21,7 +20,6 @@ import { IAlert } from '../../common/alert';
 import { MyNavigation } from '../../common/navigation';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
-import { TournamentService } from '../../lib/tournament/service';
 import { TournamentComponent } from '../component';
 import { CompetitorListRemoveModalComponent } from './listremovemodal.component';
 
@@ -248,8 +246,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   /**
-   * 
-   * @param place 
+   * @param place
    */
   removePlaceFromRootRound(place: Place): void {
     this.processing = true;
@@ -275,10 +272,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
       .subscribe(
           /* happy path */(structure: Structure) => {
           this.structure = structure;
-          const planningService = new PlanningService(this.competition);
-          const tournamentService = new TournamentService(this.tournament);
-          tournamentService.create(planningService, this.structure.getFirstRoundNumber());
-          this.planningRepository.createObject(this.structure.getFirstRoundNumber())
+          this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament.getBreak())
             .subscribe(
                     /* happy path */ games => {
                 this.initPlaces();

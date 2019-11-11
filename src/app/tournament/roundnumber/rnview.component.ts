@@ -4,13 +4,13 @@ import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import {
   Game,
   NameService,
-  PlanningService,
   Poule,
   RankingService,
   RoundNumber,
   SportScoreConfigService,
   State,
   Round,
+  PlanningConfig
 } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
@@ -29,7 +29,6 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
 
   @Input() tournament: Tournament;
   @Input() roundNumber: RoundNumber;
-  @Input() planningService: PlanningService;
   @Input() parentReturnAction: string;
   @Input() userRefereeId: number;
   @Input() canEditSettings: boolean;
@@ -45,7 +44,7 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   private sportScoreConfigService: SportScoreConfigService;
   // game data
   roundNumberNeedsRanking: boolean;
-  canCalculateStartDateTime: boolean;
+  planningConfig: PlanningConfig;
 
   constructor(
     private router: Router,
@@ -59,15 +58,15 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   }
 
   ngOnInit() {
+    this.planningConfig = this.roundNumber.getValidPlanningConfig();
     this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.GAMERESULTADMIN);
     this.favorites = this.favRepository.getItem(this.tournament);
     // @TODO
-    this.hasReferees = this.tournament.getCompetition().getReferees().length > 0
-      || this.roundNumber.getValidPlanningConfig().getSelfReferee();
+    this.hasReferees = this.tournament.getCompetition().getReferees().length > 0 || this.planningConfig.getSelfReferee();
 
     // gamedate
     this.roundNumberNeedsRanking = this.roundNumber.needsRanking();
-    this.canCalculateStartDateTime = this.planningService.canCalculateStartDateTime(this.roundNumber);
+
     this.gameDatas = this.getGameData();
     this.sameDay = this.gameDatas.length > 1 ? this.isSameDay(this.gameDatas[0], this.gameDatas[this.gameDatas.length - 1]) : true;
   }
@@ -84,7 +83,7 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   private getGameData() {
     const gameDatas: GameData[] = [];
     const pouleDatas = this.getPouleDatas();
-    this.planningService.getGamesForRoundNumber(this.roundNumber, Game.ORDER_RESOURCEBATCH).forEach(game => {
+    this.roundNumber.getGames(Game.ORDER_BY_BATCH).forEach(game => {
       const aPlaceHasACompetitor = this.hasAPlaceACompetitor(game);
       if (!(!this.favorites.hasItems() || this.favorites.hasGameItem(game) || !aPlaceHasACompetitor)) {
         return;

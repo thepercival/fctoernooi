@@ -7,13 +7,11 @@ import {
     SportConfigRepository,
     SportConfigService,
     SportCustom,
-    SportPlanningConfigService,
     SportScoreConfigService,
     StructureRepository,
     FieldRepository,
     JsonField,
     PlanningRepository,
-    PlanningService,
     SportScoreConfig,
     RoundNumber,
     JsonSportScoreConfig,
@@ -24,7 +22,6 @@ import { CSSService } from '../../common/cssservice';
 import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
-import { TournamentService } from '../../lib/tournament/service';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '../../lib/translate';
 import { ModalRoundNumbersComponent } from '../roundnumber/selector.component';
@@ -69,7 +66,7 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
                 Validators.max(this.validations.maxScore)
             ])]
         });
-        this.sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
+        this.sportConfigService = new SportConfigService(new SportScoreConfigService());
     }
 
     ngOnInit() {

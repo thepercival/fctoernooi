@@ -43,7 +43,7 @@ export class TournamentComponent {
             .subscribe(
                     /* happy path */(tournament: Tournament) => {
                     this.tournament = tournament;
-                    this.competition = tournament.getCompetition()
+                    this.competition = tournament.getCompetition();
                     if (noStructure === true) {
                         if (callback !== undefined) {
                             callback();

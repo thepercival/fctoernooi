@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NameService, PlanningService, StructureRepository } from 'ngx-sport';
+import { NameService, StructureRepository } from 'ngx-sport';
 
 import { CSSService } from '../../common/cssservice';
 import { GlobalEventsManager } from '../../common/eventmanager';
@@ -17,8 +17,6 @@ import { TournamentComponent } from '../component';
     styleUrls: ['./liveboard.component.scss']
 })
 export class LiveboardComponent extends TournamentComponent implements OnInit, OnDestroy {
-
-    public planningService: PlanningService;
     public activeScreen: any;
     private screens: any[] = [];
     private maxLines = 8;
@@ -52,8 +50,7 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     processScreens() {
         const link: NavBarTournamentLiveboardLink = { showIcon: false, tournamentId: this.tournament.getId(), link: 'wim' };
         this.globalEventsManager.toggleLiveboardIconInNavBar.emit(link);
-        this.planningService = new PlanningService(this.competition);
-        const liveBoard = new Liveboard(this.tournament, this.structure, this.maxLines, this.planningService);
+        const liveBoard = new Liveboard(this.tournament, this.structure, this.maxLines);
         this.screens = liveBoard.getScreens(this.screenfilter);
         this.executeScheduledTask();
         this.processing = false;

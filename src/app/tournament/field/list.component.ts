@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Field, FieldRepository, PlanningRepository, PlanningService, StructureRepository } from 'ngx-sport';
+import { Field, FieldRepository, PlanningRepository, StructureRepository } from 'ngx-sport';
 
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
-import { TournamentService } from '../../lib/tournament/service';
 import { TournamentComponent } from '../component';
 import { TranslateService } from '../../lib/translate';
 
@@ -16,7 +15,6 @@ import { TranslateService } from '../../lib/translate';
 export class FieldListComponent extends TournamentComponent implements OnInit {
 
     public disableEditButtons = false;
-    private planningService: PlanningService;
     fields: Field[];
     hasBegun: boolean;
 
@@ -42,7 +40,6 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
 
     initFields() {
         this.fields = this.competition.getFields();
-        this.planningService = new PlanningService(this.competition);
         this.hasBegun = this.structure.getRootRound().hasBegun();
         if (this.hasBegun) {
             this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen en verwijderen');
@@ -79,9 +76,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
         this.fieldRepository.removeObject(field, this.competition)
             .subscribe(
             /* happy path */ fieldRes => {
-                    const tournamentService = new TournamentService(this.tournament);
-                    tournamentService.reschedule(this.planningService, this.structure.getFirstRoundNumber());
-                    this.planningRepository.editObject(this.structure.getFirstRoundNumber())
+                    this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament.getBreak())
                         .subscribe(
                         /* happy path */ gamesRes => {
                                 this.processing = false;

@@ -9,8 +9,7 @@
           <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
         </th>
         <th *ngIf="showDateTime()" title="starttijd" class="width-10">
-          {{planningService.calculateStartDateTime(getRoundNumber()).toLocaleString("nl",
-          {"month":"short","day":"2-digit"})}}
+          {{getRoundNumber().getFirstStartDateTime().toLocaleString("nl",{"month":"short","day":"2-digit"})}}
         </th>
         <th *ngIf="isCreatedAndInplay()" title="veld" class="width-8">
           <i class="fi flaticon-soccer-field"></i>

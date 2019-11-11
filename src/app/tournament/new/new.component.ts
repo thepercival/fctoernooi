@@ -8,12 +8,10 @@ import {
   Field,
   League,
   PlanningRepository,
-  PlanningService,
   RankingService,
   Season,
   Sport,
   SportConfigService,
-  SportPlanningConfigService,
   SportScoreConfigService,
   Structure,
   StructureMapper,
@@ -25,7 +23,6 @@ import { AuthService } from '../../auth/auth.service';
 import { IAlert } from '../../common/alert';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
-import { TournamentService } from '../../lib/tournament/service';
 import { TranslateService } from '../../lib/translate';
 
 
@@ -140,7 +137,7 @@ export class NewComponent implements OnInit {
       const competition = new Competition(league, season);
       competition.setStartDateTime(startDateTime);
       competition.setRuleSet(RankingService.RULESSET_WC);
-      const sportConfigService = new SportConfigService(new SportScoreConfigService(), new SportPlanningConfigService());
+      const sportConfigService = new SportConfigService(new SportScoreConfigService());
       sportConfigService.createDefault(this.sport, competition);
 
       for (let fieldNumber = 1; fieldNumber <= nroffields; fieldNumber++) {
@@ -161,10 +158,7 @@ export class NewComponent implements OnInit {
           this.structureRepository.editObject(structure, tournamentOut.getCompetition())
             .subscribe(
             /* happy path */(structureOut: Structure) => {
-                const planningService = new PlanningService(tournamentOut.getCompetition());
-                const tournamentService = new TournamentService(tournamentOut);
-                tournamentService.create(planningService, structureOut.getFirstRoundNumber());
-                this.planningRepository.createObject(structureOut.getFirstRoundNumber())
+                this.planningRepository.createObject(structureOut.getFirstRoundNumber(), tournamentOut.getBreak())
                   .subscribe(
                     /* happy path */ games => {
                       this.router.navigate(['/toernooi', tournamentOut.getId()]);

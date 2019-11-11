@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Game, NameService, PlanningService, Round, RoundNumber, SportScoreConfigService, State } from 'ngx-sport';
+import { Game, NameService, Round, RoundNumber, SportScoreConfigService, State } from 'ngx-sport';
 
 import { CreatedAndInplayGamesScreen, GamesScreen } from '../../lib/liveboard/screens';
 
@@ -13,7 +13,6 @@ export class LiveboardGamesComponent {
     private sportScoreConfigService: SportScoreConfigService;
 
     @Input() screen: GamesScreen;
-    @Input() planningService: PlanningService;
 
     constructor(
         public nameService: NameService
@@ -30,9 +29,7 @@ export class LiveboardGamesComponent {
 
     showDateTime(game?: Game): boolean {
         const roundNumber = this.getRoundNumber(game);
-        return this.isCreatedAndInplay()
-            && roundNumber.getValidPlanningConfig().getEnableTime()
-            && this.planningService.canCalculateStartDateTime(roundNumber);
+        return this.isCreatedAndInplay() && roundNumber.getValidPlanningConfig().getEnableTime();
     }
 
     getRoundNumber(game?: Game): RoundNumber {

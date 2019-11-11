@@ -1,4 +1,4 @@
-import { Game, NameService, PlanningService, Poule, RoundNumber, State, Structure } from 'ngx-sport';
+import { Game, NameService, Poule, RoundNumber, State, Structure } from 'ngx-sport';
 
 import {
     CreatedAndInplayGamesScreen,
@@ -14,8 +14,8 @@ export class Liveboard {
     constructor(
         private tournament: Tournament,
         private structure: Structure,
-        private maxLines: number,
-        private planningService: PlanningService) { }
+        private maxLines: number
+    ) { }
 
     getScreens(screenfilter: string): Screen[] {
         let screens: Screen[] = [];
@@ -80,7 +80,7 @@ export class Liveboard {
         // create a list with competitors
         // remove competitors from games unit there are no competitors left, than stop
         // and divide games over one or more screens
-        let games: Game[] = this.planningService.getGamesForRoundNumber(roundNumber, Game.ORDER_RESOURCEBATCH);
+        let games: Game[] = roundNumber.getGames(Game.ORDER_BY_BATCH);
         const now = new Date();
         games = games.filter(game => game.getState() !== State.Finished &&
             (!roundNumber.getValidPlanningConfig().getEnableTime() || game.getStartDateTime() > now)
@@ -157,7 +157,7 @@ export class Liveboard {
     }
 
     getPlayedGamesHelper(roundNumber: RoundNumber): Game[] {
-        let games: Game[] = this.planningService.getGamesForRoundNumber(roundNumber, Game.ORDER_RESOURCEBATCH);
+        let games: Game[] = roundNumber.getGames(Game.ORDER_BY_BATCH);
         games = games.reverse().filter(game => game.getState() === State.Finished);
         if (games.length < this.maxLines && roundNumber.hasPrevious()) {
             games = games.concat(this.getPlayedGamesHelper(roundNumber.getPrevious()));

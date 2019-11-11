@@ -5,7 +5,6 @@ import {
   Competitor,
   CompetitorRepository,
   PlanningRepository,
-  PlanningService,
   Round,
   RoundNumber,
   Structure,
@@ -14,7 +13,6 @@ import {
 
 import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
-import { TournamentService } from '../../lib/tournament/service';
 import { TournamentComponent } from '../component';
 
 @Component({
@@ -132,11 +130,7 @@ export class StructureComponent extends TournamentComponent implements OnInit {
 
     // first better test creating planning in php!!
     const changedRoundNumber = structure.getFirstRoundNumber();
-
-    const planningService = new PlanningService(this.competition);
-    const tournamentService = new TournamentService(this.tournament);
-    tournamentService.create(planningService, changedRoundNumber);
-    this.planningRepository.createObject(changedRoundNumber)
+    this.planningRepository.createObject(changedRoundNumber, this.tournament.getBreak())
       .subscribe(
           /* happy path */ games => this.completeSave(structure),
           /* error path */ e => { this.setAlert('danger', e); this.processing = false; },

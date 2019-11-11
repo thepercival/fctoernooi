@@ -43,7 +43,7 @@
   <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
 
   <!-- scheduled games and results screen -->
-  <app-tournament-liveboard-games *ngIf="isGamesScreen()" [screen]="activeScreen" [planningService]="planningService">
+  <app-tournament-liveboard-games *ngIf="isGamesScreen()" [screen]="activeScreen">
   </app-tournament-liveboard-games>
 
   <!-- pouleranking screen -->

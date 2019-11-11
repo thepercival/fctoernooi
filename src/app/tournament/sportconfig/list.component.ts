@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   PlanningRepository,
-  PlanningService,
   Sport,
   SportConfig,
   SportConfigRepository,
@@ -13,7 +12,6 @@ import {
 
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
-import { TournamentService } from '../../lib/tournament/service';
 import { TranslateService } from '../../lib/translate';
 import { TournamentComponent } from '../component';
 
@@ -24,7 +22,6 @@ import { TournamentComponent } from '../component';
 })
 export class SportConfigListComponent extends TournamentComponent implements OnInit {
   sportConfigs: SportConfig[];
-  private planningService: PlanningService;
   translateService: TranslateService;
   hasBegun: boolean;
 
@@ -53,8 +50,6 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
 
   initSports() {
     this.createSportConfigsList();
-    this.planningService = new PlanningService(this.competition);
-    // this.planningService = new PlanningService(this.competition);
     this.hasBegun = this.structure.getRootRound().hasBegun();
     this.processing = false;
     if (this.hasBegun) {
@@ -110,9 +105,7 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
       .subscribe(
         /* happy path */ refereeRes => {
           const firstRoundNumber = this.structure.getFirstRoundNumber();
-          const tournamentService = new TournamentService(this.tournament);
-          tournamentService.reschedule(this.planningService, firstRoundNumber);
-          this.planningRepository.editObject(firstRoundNumber).subscribe(
+          this.planningRepository.createObject(firstRoundNumber, this.tournament.getBreak()).subscribe(
             /* happy path */ gamesRes => {
               this.setAlert('success', 'de sport is verwijderd');
             },

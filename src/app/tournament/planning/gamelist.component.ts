@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlanningService, StructureRepository } from 'ngx-sport';
+import { StructureRepository } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
 import { MyNavigation } from '../../common/navigation';
@@ -14,8 +14,6 @@ import { TournamentComponent } from '../component';
   styleUrls: ['./gamelist.component.css']
 })
 export class GameListComponent extends TournamentComponent implements OnInit {
-
-  planningService: PlanningService;
   showPrintBtn: boolean;
   noRefresh = false;
   userIsPlannerOrStructureAdmin: boolean;
@@ -34,22 +32,18 @@ export class GameListComponent extends TournamentComponent implements OnInit {
 
   ngOnInit() {
     super.myNgOnInit(() => {
-      this.setPlanningService();
-      this.shouldShowEndRanking = (this.structure.getFirstRoundNumber().hasNext() || this.structure.getRootRound().getPoules().length === 1);
+      const hasNext = this.structure.getFirstRoundNumber().hasNext();
+      this.shouldShowEndRanking = (hasNext || this.structure.getRootRound().getPoules().length === 1);
+      this.userIsPlannerOrStructureAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(),
+        Role.STRUCTUREADMIN + Role.PLANNER);
+
+      this.processing = false;
     });
     this.showPrintBtn = true;
   }
 
   scroll() {
     this.myNavigation.scroll();
-  }
-
-  setPlanningService() {
-    this.planningService = new PlanningService(this.competition);
-    this.userIsPlannerOrStructureAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(),
-      Role.STRUCTUREADMIN + Role.PLANNER);
-
-    this.processing = false;
   }
 
   linkToStructure() {

@@ -1,4 +1,4 @@
-import { Competition } from 'ngx-sport';
+import { Competition, PlanningPeriod } from 'ngx-sport';
 
 import { Role } from './role';
 import { Sponsor } from './sponsor';
@@ -100,5 +100,14 @@ export class Tournament {
 
     hasBreak(): boolean {
         return this.breakStartDateTime !== undefined;
+    }
+
+    getBreak(): PlanningPeriod {
+        if (this.getBreakStartDateTime() === undefined) {
+            return undefined;
+        }
+        const breakEndDateTime = new Date(this.getBreakStartDateTime().getTime());
+        breakEndDateTime.setMinutes(breakEndDateTime.getMinutes() + this.getBreakDuration());
+        return { start: this.getBreakStartDateTime(), end: breakEndDateTime };
     }
 }

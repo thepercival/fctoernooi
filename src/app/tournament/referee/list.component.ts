@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlanningRepository, PlanningService, Referee, RefereeRepository, StructureRepository } from 'ngx-sport';
+import { PlanningRepository, Referee, RefereeRepository, StructureRepository } from 'ngx-sport';
 
 import { IAlert } from '../../common/alert';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
-import { TournamentService } from '../../lib/tournament/service';
 import { TournamentComponent } from '../component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, forkJoin } from 'rxjs';
@@ -16,7 +15,6 @@ import { Observable, forkJoin } from 'rxjs';
   styles: ['./list.component.scss']
 })
 export class RefereeListComponent extends TournamentComponent implements OnInit {
-  private planningService: PlanningService;
   referees: Referee[];
   public selfReferee: boolean;
   alertSelfReferee: IAlert;
@@ -45,7 +43,6 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
 
   initReferees() {
     this.createRefereesList();
-    this.planningService = new PlanningService(this.competition);
     this.hasBegun = this.structure.getRootRound().hasBegun();
     if (this.hasBegun) {
       this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen en verwijderen');
@@ -99,10 +96,8 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     forkJoin(reposUpdates).subscribe(results => {
       this.referees.sort((refA, refB) => refA.getRank() - refB.getRank());
       const firstRoundNumber = this.structure.getFirstRoundNumber();
-      const tournamentService = new TournamentService(this.tournament);
-      tournamentService.reschedule(this.planningService, firstRoundNumber);
-      this.planningRepository.editObject(firstRoundNumber).subscribe(
-            /* happy path */ gamesdRes => {
+      this.planningRepository.createObject(firstRoundNumber, this.tournament.getBreak()).subscribe(
+            /* happy path */ gamesRes => {
           this.setAlert('success', 'de belangrijkheid van de scheidsrechters is gewijzigd');
         },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
@@ -124,9 +119,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
       .subscribe(
             /* happy path */ refereeRes => {
           const firstRoundNumber = this.structure.getFirstRoundNumber();
-          const tournamentService = new TournamentService(this.tournament);
-          tournamentService.reschedule(this.planningService, firstRoundNumber);
-          this.planningRepository.editObject(firstRoundNumber).subscribe(
+          this.planningRepository.createObject(firstRoundNumber, this.tournament.getBreak()).subscribe(
             /* happy path */ gamesdRes => {
               if (referee.getEmailaddress() === undefined || referee.getEmailaddress().length === 0) {
                 this.processing = false;

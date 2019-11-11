@@ -3,9 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
     NameService,
     PlanningRepository,
-    PlanningService,
     RoundNumber,
     StructureRepository,
+    PlanningConfig,
     PlanningConfigService,
     PlanningConfigMapper,
     PlanningConfigRepository,
@@ -15,9 +15,7 @@ import {
 import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
-import { PlanningConfig } from 'ngx-sport/src/planning/config';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { TournamentService } from '../../lib/tournament/service';
 
 @Component({
     selector: 'app-planningconfig-edit',
@@ -206,11 +204,9 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     private savePlanning(needsRecreating: boolean, needsRescheduling: boolean) {
-        const tournamentService = new TournamentService(this.tournament);
-        const planningService = new PlanningService(this.competition);
+        const breakPeriod = this.tournament.getBreak();
         if (needsRecreating) {
-            tournamentService.create(planningService, this.roundNumber);
-            this.planningRepository.createObject(this.roundNumber)
+            this.planningRepository.createObject(this.roundNumber, breakPeriod)
                 .subscribe(
                     /* happy path */ gamesRes => {
                         this.setAlert('success', 'de instellingen zijn opgeslagen');
@@ -222,8 +218,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
                     /* onComplete */() => this.processing = false
                 );
         } else if (needsRescheduling) {
-            tournamentService.reschedule(planningService, this.roundNumber);
-            this.planningRepository.editObject(this.roundNumber)
+            this.planningRepository.editObject(this.roundNumber, breakPeriod)
                 .subscribe(
                     /* happy path */ gamesRes => {
                         this.setAlert('success', 'de instellingen zijn opgeslagen');

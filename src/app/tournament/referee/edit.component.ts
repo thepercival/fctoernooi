@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
     JsonReferee,
     PlanningRepository,
-    PlanningService,
     Referee,
     RefereeRepository,
     StructureRepository,
@@ -12,7 +11,6 @@ import {
 
 import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
-import { TournamentService } from '../../lib/tournament/service';
 import { User } from '../../lib/user';
 import { TournamentComponent } from '../component';
 
@@ -131,9 +129,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
         this.refereeRepository.createObject(ref, this.competition).subscribe(
             /* happy path */ refereeRes => {
                 const firstRoundNumber = this.structure.getFirstRoundNumber();
-                const tournamentService = new TournamentService(this.tournament);
-                tournamentService.reschedule(new PlanningService(this.competition), firstRoundNumber);
-                this.planningRepository.editObject(firstRoundNumber).subscribe(
+                this.planningRepository.createObject(firstRoundNumber, this.tournament.getBreak()).subscribe(
                 /* happy path */ gamesRes => {
                         this.tournamentRepository.syncRefereeRoles(this.tournament).subscribe(
                         /* happy path */ allRolesRes => {

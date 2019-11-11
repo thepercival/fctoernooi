@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlanningService, StructureRepository } from 'ngx-sport';
+import { StructureRepository } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
 import { GlobalEventsManager } from '../../common/eventmanager';
@@ -17,7 +17,6 @@ import { TournamentComponent } from '../component';
 })
 export class ViewComponent extends TournamentComponent implements OnInit, OnDestroy {
     private liveboardLinkSet = false;
-    public planningService: PlanningService;
     public refreshAfterSeconds = 60;
     private refreshAtCountDown = true;
     userRefereeId: number;
@@ -41,7 +40,6 @@ export class ViewComponent extends TournamentComponent implements OnInit, OnDest
             this.shouldShowEndRanking = (this.structure.getFirstRoundNumber().hasNext()
                 || this.structure.getRootRound().getPoules().length === 1);
             this.initLiveboardLink();
-            this.planningService = new PlanningService(this.competition);
             this.tournamentRepository.getUserRefereeId(this.tournament).subscribe(
                 /* happy path */ userRefereeIdRes => {
                     this.userRefereeId = userRefereeIdRes;
@@ -62,7 +60,6 @@ export class ViewComponent extends TournamentComponent implements OnInit, OnDest
             return;
         }
         this.setData(this.tournament.getId(), () => {
-            this.planningService = new PlanningService(this.competition);
             this.toggleProgress = !this.toggleProgress;
         });
     }

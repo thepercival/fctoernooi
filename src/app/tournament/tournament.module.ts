@@ -55,8 +55,6 @@ import {
   SportConfigMapper,
   SportConfigRepository,
   SportConfigService,
-  SportPlanningConfigMapper,
-  SportPlanningConfigService,
   PlanningConfigService,
   PlanningConfigRepository,
   SportRepository,
@@ -177,7 +175,6 @@ import { ModalRoundNumbersComponent } from './roundnumber/selector.component';
     RoundNumberMapper,
     SportConfigMapper,
     SportScoreConfigService,
-    SportPlanningConfigService,
     PlanningConfigService,
     SportConfigService,
     SportScoreConfigMapper,
@@ -189,7 +186,6 @@ import { ModalRoundNumbersComponent } from './roundnumber/selector.component';
     PlanningRepository,
     PlanningConfigRepository,
     CSSService,
-    SportPlanningConfigMapper
   ]
 })
 export class TournamentModule {

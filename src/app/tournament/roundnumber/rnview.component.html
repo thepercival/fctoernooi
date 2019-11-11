@@ -19,7 +19,7 @@
       <colgroup>
         <col *ngIf="roundNumberNeedsRanking">
         <col *ngIf="!roundNumberNeedsRanking">
-        <col *ngIf="canCalculateStartDateTime">
+        <col *ngIf="planningConfig.getEnableTime()">
         <col>
         <col>
         <col>
@@ -35,10 +35,10 @@
           <th *ngIf="!roundNumberNeedsRanking" class="text-center" title="wedstrijd">
             <span>vs</span>
           </th>
-          <th *ngIf="canCalculateStartDateTime" class="pointer text-info" container="body" title="start"
+          <th *ngIf="planningConfig.getEnableTime()" class="pointer text-info" container="body" title="start"
             placement="right" [ngbPopover]="getGameTimeTooltipDescription()">
-            <span *ngIf="!sameDay">{{planningService.calculateStartDateTime(roundNumber).toLocaleString("nl",
-              {"month":"short","day":"2-digit"})}}</span>
+            <span
+              *ngIf="!sameDay">{{roundNumber.getFirstStartDateTime().toLocaleString("nl",{"month":"short","day":"2-digit"})}}</span>
             <span *ngIf="sameDay">start</span>
           </th>
           <th class="text-center" title="veld">
@@ -58,7 +58,7 @@
         <ng-template ngFor let-gmData [ngForOf]="gameDatas">
           <tr *ngIf="isBreakBeforeGame(gmData.game)" class="table-info">
             <td></td>
-            <td *ngIf="canCalculateStartDateTime"></td>
+            <td *ngIf="planningConfig.getEnableTime()"></td>
             <td></td>
             <td class="text-right">PAUZE</td>
             <td></td>
@@ -83,7 +83,7 @@
                 <span>{{gmData.poule.name}}</span>
               </button>
             </td>
-            <td *ngIf="canCalculateStartDateTime">
+            <td *ngIf="planningConfig.getEnableTime()">
               <span *ngIf="!sameDay">{{gmData.game.getStartDateTime().toLocaleString("nl",
                 {"month":"short","day":"2-digit"})}} </span>
               <span>{{gmData.game.getStartDateTime().toLocaleString("nl", {"hour12":
