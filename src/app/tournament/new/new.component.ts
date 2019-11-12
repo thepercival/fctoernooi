@@ -158,9 +158,9 @@ export class NewComponent implements OnInit {
           this.structureRepository.editObject(structure, tournamentOut.getCompetition())
             .subscribe(
             /* happy path */(structureOut: Structure) => {
-                this.planningRepository.createObject(structureOut.getFirstRoundNumber(), tournamentOut.getBreak())
+                this.planningRepository.createObject(structureOut, tournamentOut.getBreak())
                   .subscribe(
-                    /* happy path */ games => {
+                    /* happy path */ structureOut2 => {
                       this.router.navigate(['/toernooi', tournamentOut.getId()]);
                     },
                   /* error path */ e => {

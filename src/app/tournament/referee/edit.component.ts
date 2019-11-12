@@ -128,9 +128,8 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
         };
         this.refereeRepository.createObject(ref, this.competition).subscribe(
             /* happy path */ refereeRes => {
-                const firstRoundNumber = this.structure.getFirstRoundNumber();
-                this.planningRepository.createObject(firstRoundNumber, this.tournament.getBreak()).subscribe(
-                /* happy path */ gamesRes => {
+                this.planningRepository.createObject(this.structure, this.tournament.getBreak()).subscribe(
+                /* happy path */ structureOut => {
                         this.tournamentRepository.syncRefereeRoles(this.tournament).subscribe(
                         /* happy path */ allRolesRes => {
                                 this.processing = false;
