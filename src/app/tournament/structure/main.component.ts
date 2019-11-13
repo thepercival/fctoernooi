@@ -129,10 +129,10 @@ export class StructureComponent extends TournamentComponent implements OnInit {
     // }
 
     // first better test creating planning in php!!
-    // const changedRoundNumber = structure.getFirstRoundNumber();
-    this.planningRepository.createObject(structure, this.tournament.getBreak())
+    const changedRoundNumber = structure.getFirstRoundNumber();
+    this.planningRepository.createObject(changedRoundNumber, this.tournament.getBreak())
       .subscribe(
-          /* happy path */ structureOut => this.completeSave(structure),
+          /* happy path */ roundNumberOut => this.completeSave(structure),
           /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
           /* onComplete */() => this.processing = false
       );

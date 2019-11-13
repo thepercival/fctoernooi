@@ -127,8 +127,8 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
 
         this.fieldRepository.createObject(field, this.competition).subscribe(
             /* happy path */ fieldRes => {
-                this.planningRepository.createObject(this.structure, this.tournament.getBreak()).subscribe(
-                /* happy path */ structureOut => {
+                this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament.getBreak()).subscribe(
+                /* happy path */ roundNumberOut => {
                         this.tournamentRepository.syncRefereeRoles(this.tournament).subscribe(
                         /* happy path */ allRolesRes => {
                                 this.processing = false;

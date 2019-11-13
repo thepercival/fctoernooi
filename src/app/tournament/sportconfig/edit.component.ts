@@ -186,8 +186,8 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
 
                     forkJoin(fieldReposAdds).subscribe(results => {
                         const firstRoundNumber = this.structure.getFirstRoundNumber();
-                        this.planningRepository.createObject(this.structure, this.tournament.getBreak()).subscribe(
-                    /* happy path */ structureOut => {
+                        this.planningRepository.createObject(firstRoundNumber, this.tournament.getBreak()).subscribe(
+                    /* happy path */ roundNumberOut => {
                                 this.linkToSportConfig(); /* niet navigate back van kan van sport komen */
                                 this.processing = false;
                             },

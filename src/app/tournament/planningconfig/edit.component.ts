@@ -206,9 +206,9 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     private savePlanning(needsRecreating: boolean, needsRescheduling: boolean) {
         const breakPeriod = this.tournament.getBreak();
         if (needsRecreating) {
-            this.planningRepository.createObject(this.structure, breakPeriod)
+            this.planningRepository.createObject(this.roundNumber, breakPeriod)
                 .subscribe(
-                    /* happy path */ structureOut => {
+                    /* happy path */ roundNumberOut => {
                         this.setAlert('success', 'de instellingen zijn opgeslagen');
                         this.myNavigation.back();
                     },

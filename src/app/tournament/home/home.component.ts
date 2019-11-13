@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { League, SportConfigService, StructureRepository } from 'ngx-sport';
+import { League, SportConfigService, StructureRepository, PlanningRepository, RoundNumber } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
 import { CSSService } from '../../common/cssservice';
@@ -17,13 +17,14 @@ import { TranslateService } from '../../lib/translate';
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css']
 })
-export class HomeComponent extends TournamentComponent implements OnInit {
+export class HomeComponent extends TournamentComponent implements OnInit, AfterViewInit {
     nameForm: FormGroup;
     copyForm: FormGroup;
     printForm: FormGroup;
     shareForm: FormGroup;
     minDateStruct: NgbDateStruct;
     translate: TranslateService;
+    betterPlanningWarning: string;
 
     constructor(
         route: ActivatedRoute,
@@ -34,7 +35,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private sportConfigService: SportConfigService,
-
+        private planningRepository: PlanningRepository,
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
@@ -81,6 +82,32 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         this.shareForm.controls.url.setValue('https://www.fctoernooi.nl/' + this.tournament.getId());
         this.shareForm.controls.public.setValue(this.tournament.getPublic());
         this.processing = false;
+
+        const firstRoundNumber = this.structure.getFirstRoundNumber();
+        if (this.shouldCheckBetterPlanning(firstRoundNumber)) {
+            this.planningRepository.isBetterAvailable(firstRoundNumber, true)
+                .subscribe(
+                /* happy path */(isBetterAvailable: boolean) => {
+                        if (isBetterAvailable) {
+                            this.betterPlanningWarning = 'betere planning aanwezig';
+                        } else {
+                            this.betterPlanningWarning = 'betere planning zoeken..';
+                        }
+                    }
+                );
+        }
+    }
+
+    shouldCheckBetterPlanning(roundNumber: RoundNumber): boolean {
+        const shouldCheckBetterPlanning = !roundNumber.hasBestPlanning() && !roundNumber.hasBegun();
+        if (!shouldCheckBetterPlanning || !roundNumber.hasNext()) {
+            return shouldCheckBetterPlanning;
+        }
+        return this.shouldCheckBetterPlanning(roundNumber.getNext());
+    }
+
+    ngAfterViewInit() {
+        console.log('ngAfterViewInit');
     }
 
     competitorsComplete(): boolean {

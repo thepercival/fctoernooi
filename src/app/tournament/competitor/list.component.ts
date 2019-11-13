@@ -272,9 +272,9 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
       .subscribe(
           /* happy path */(structure: Structure) => {
           this.structure = structure;
-          this.planningRepository.createObject(this.structure, this.tournament.getBreak())
+          this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament.getBreak())
             .subscribe(
-                    /* happy path */ structureOut => {
+                    /* happy path */ roundNumberOut => {
                 this.initPlaces();
                 this.setAlert('success', message);
               },
