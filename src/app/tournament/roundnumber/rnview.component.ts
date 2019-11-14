@@ -32,7 +32,9 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   @Input() parentReturnAction: string;
   @Input() userRefereeId: number;
   @Input() canEditSettings: boolean;
-  @Output() popOverIsOpen = new EventEmitter<boolean>(); // kan misschien uit
+  @Output() popOverIsOpen = new EventEmitter<boolean>();
+  @Output() doUpdatePlanning = new EventEmitter<RoundNumber>();
+  private nrOfOpenPopovers = 0;
   @Output() scroll = new EventEmitter<boolean>(); // kan misschien uit
   alert: any;
   sameDay = true;
@@ -199,6 +201,22 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     }
   }
 
+  popoverShown() {
+    this.nrOfOpenPopovers++;
+    if (this.nrOfOpenPopovers !== 1) {
+      return;
+    }
+    this.popOverIsOpen.emit(true);
+  }
+
+  popoverHidden() {
+    this.nrOfOpenPopovers--;
+    if (this.nrOfOpenPopovers !== 0) {
+      return;
+    }
+    this.popOverIsOpen.emit(false);
+  }
+
   protected isSameDay(gameDataOne: GameData, gameDataTwo: GameData): boolean {
     const gameOne = gameDataOne.game;
     const gameTwo = gameDataTwo.game;
@@ -230,6 +248,18 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     const ruleSet = this.tournament.getCompetition().getRuleSet();
     const rankingService = new RankingService(undefined, ruleSet);
     return rankingService.getRuleDescriptions();
+  }
+
+  isTryingPlannings(): boolean {
+    return this.roundNumber.getPlanningState() === RoundNumber.PLANNING_BEST_IS_NOT_AVAILABLE_YET && !this.roundNumber.hasBegun();
+  }
+
+  areAllPlanningsTried(): boolean {
+    return this.roundNumber.getPlanningState() === RoundNumber.PLANNING_BEST_IS_AVAILABLE && !this.roundNumber.hasBegun();
+  }
+
+  updatePlanning() {
+    this.doUpdatePlanning.emit(this.roundNumber);
   }
 }
 

@@ -84,26 +84,24 @@ export class HomeComponent extends TournamentComponent implements OnInit, AfterV
         this.processing = false;
 
         const firstRoundNumber = this.structure.getFirstRoundNumber();
-        if (this.shouldCheckBetterPlanning(firstRoundNumber)) {
-            this.planningRepository.isBetterAvailable(firstRoundNumber, true)
-                .subscribe(
-                /* happy path */(isBetterAvailable: boolean) => {
-                        if (isBetterAvailable) {
-                            this.betterPlanningWarning = 'betere planning aanwezig';
-                        } else {
-                            this.betterPlanningWarning = 'betere planning zoeken..';
-                        }
-                    }
-                );
+        const planningState = this.getPlanningState(firstRoundNumber);
+        if (planningState === RoundNumber.PLANNING_BEST_IS_AVAILABLE) {
+            this.betterPlanningWarning = 'betere planning aanwezig';
+        } else if (planningState === RoundNumber.PLANNING_BEST_IS_NOT_AVAILABLE_YET) {
+            this.betterPlanningWarning = 'betere planning zoeken..';
         }
     }
 
-    shouldCheckBetterPlanning(roundNumber: RoundNumber): boolean {
-        const shouldCheckBetterPlanning = !roundNumber.hasBestPlanning() && !roundNumber.hasBegun();
-        if (!shouldCheckBetterPlanning || !roundNumber.hasNext()) {
-            return shouldCheckBetterPlanning;
+    getPlanningState(roundNumber: RoundNumber): number {
+        let planningState = RoundNumber.PLANNING_ISBEST;
+        if (!roundNumber.hasBegun()) {
+            planningState = roundNumber.getPlanningState();
         }
-        return this.shouldCheckBetterPlanning(roundNumber.getNext());
+
+        if (planningState !== RoundNumber.PLANNING_ISBEST || !roundNumber.hasNext()) {
+            return planningState;
+        }
+        return this.getPlanningState(roundNumber.getNext());
     }
 
     ngAfterViewInit() {

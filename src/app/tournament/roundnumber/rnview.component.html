@@ -13,7 +13,15 @@
       <fa-icon [icon]="['fas', 'cogs']"></fa-icon> ronde instellingen
     </button>
   </div>
-
+  <ngb-alert *ngIf="canEditSettings && isTryingPlannings()" class="mb-0" type="warning" [dismissible]="false">
+    <fa-icon [icon]="['fas', 'info-circle']"></fa-icon> de optimale planning wordt voor je berekend, dit kan enkele
+    minuten duren
+  </ngb-alert>
+  <ngb-alert *ngIf="canEditSettings && areAllPlanningsTried()" class="mb-0 pointer" (click)="updatePlanning()"
+    type="warning" [dismissible]="false">
+    <fa-icon [icon]="['fas', 'info-circle']"></fa-icon> de optimale planning is gevonden, klik hier om de planning te
+    gebruiken
+  </ngb-alert>
   <div class="d-flex justify-content-around">
     <table class="table">
       <colgroup>
@@ -73,7 +81,8 @@
             <td *ngIf="gmData.hasPopover && gmData.poule.needsRanking" class="text-center">
               <button class="btn btn-sm {{cssService.getQualifyRound(gmData.poule.round,'btn-outline-info')}}"
                 container="body" placement="right" [ngbPopover]="popRanking" autoClose="outside" triggers="manual"
-                #p="ngbPopover" (click)="showPouleRanking( p, gmData.game.getPoule() )">
+                #p="ngbPopover" (click)="showPouleRanking( p, gmData.game.getPoule() )" (shown)="popoverShown()"
+                (hidden)="popoverHidden()">
                 <span>{{gmData.poule.name}}</span>
               </button>
             </td>

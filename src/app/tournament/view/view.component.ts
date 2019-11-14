@@ -64,7 +64,7 @@ export class ViewComponent extends TournamentComponent implements OnInit, OnDest
         });
     }
 
-    setNoRefresh(refresh: boolean) {
+    setRefresh(refresh: boolean) {
         this.refreshAtCountDown = refresh;
     }
 
