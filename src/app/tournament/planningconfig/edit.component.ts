@@ -119,6 +119,11 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         if (!this.isTeamupAvailable()) {
             this.form.controls.teamup.disable();
         }
+        this.form.controls.teamup.setValue(this.isSelfRefereeAvailable() && config.getSelfReferee());
+        if (!this.isSelfRefereeAvailable()) {
+            this.form.controls.selfReferee.disable();
+        }
+
         if (this.roundNumber.hasBegun()) {
             Object.keys(this.form.controls).forEach(key => {
                 this.form.controls[key].disable();
@@ -130,6 +135,10 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         return this.competition.getSports().every(sport => {
             return !sport.getTeam();
         });
+    }
+
+    isSelfRefereeAvailable(): boolean {
+        return this.roundNumber.getNrOfPlaces() > 2;
     }
 
     private needsRecreating(config: PlanningConfig): boolean {
@@ -148,14 +157,14 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     save(): boolean {
         const jsonConfig: JsonPlanningConfig = {
-            nrOfHeadtohead: this.form.value['nrOfHeadtohead'],
             enableTime: this.form.value['enableTime'],
             minutesPerGame: this.form.value['minutesPerGame'],
             minutesPerGameExt: this.form.value['minutesPerGameExt'],
             minutesBetweenGames: this.form.value['minutesBetweenGames'],
             minutesAfter: this.form.value['minutesAfter'],
-            selfReferee: this.form.value['selfReferee'],
-            teamup: this.form.controls.teamup.disabled ? false : this.form.value['teamup']
+            teamup: this.form.controls.teamup.disabled ? false : this.form.value['teamup'],
+            selfReferee: this.form.controls.selfReferee.disabled ? false : this.form.value['selfReferee'],
+            nrOfHeadtohead: this.form.value['nrOfHeadtohead']
         };
         if (this.roundNumber.getPlanningConfig() !== undefined) {
             this.edit(jsonConfig, this.roundNumber.getPlanningConfig());

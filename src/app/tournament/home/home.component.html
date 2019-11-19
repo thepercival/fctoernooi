@@ -60,12 +60,13 @@
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> planning
             </h5>
-            <p *ngIf="!betterPlanningWarning" class="card-text">start is {{competition.getStartDateTime().toLocaleString("nl",
+            <p *ngIf="allHavePlannings" class="card-text">start is {{competition.getStartDateTime().toLocaleString("nl",
               {"month":"short","day":"2-digit","hour12":
               false,"hour":"2-digit","minute":"2-digit"})}}
             </p>
-            <p *ngIf="betterPlanningWarning" class="card-text">
-              <fa-icon [icon]="['fas', 'times-circle']" class="text-warning"></fa-icon> {{betterPlanningWarning}}
+            <p *ngIf="!allHavePlannings" class="card-text">
+              <fa-icon [icon]="['fas', 'times-circle']" class="text-warning"></fa-icon> planning zoeken <fa-icon
+                [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
             </p>
           </div>
         </div>

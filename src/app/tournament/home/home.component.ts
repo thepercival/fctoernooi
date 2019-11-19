@@ -24,7 +24,7 @@ export class HomeComponent extends TournamentComponent implements OnInit, AfterV
     shareForm: FormGroup;
     minDateStruct: NgbDateStruct;
     translate: TranslateService;
-    betterPlanningWarning: string;
+    allHavePlannings: boolean;
 
     constructor(
         route: ActivatedRoute,
@@ -84,24 +84,14 @@ export class HomeComponent extends TournamentComponent implements OnInit, AfterV
         this.processing = false;
 
         const firstRoundNumber = this.structure.getFirstRoundNumber();
-        const planningState = this.getPlanningState(firstRoundNumber);
-        if (planningState === RoundNumber.PLANNING_BEST_IS_AVAILABLE) {
-            this.betterPlanningWarning = 'betere planning aanwezig';
-        } else if (planningState === RoundNumber.PLANNING_BEST_IS_NOT_AVAILABLE_YET) {
-            this.betterPlanningWarning = 'betere planning zoeken..';
-        }
+        this.allHavePlannings = this.haveAllPlannings(firstRoundNumber);
     }
 
-    getPlanningState(roundNumber: RoundNumber): number {
-        let planningState = RoundNumber.PLANNING_ISBEST;
-        if (!roundNumber.hasBegun()) {
-            planningState = roundNumber.getPlanningState();
+    haveAllPlannings(roundNumber: RoundNumber): boolean {
+        if (!roundNumber.hasNext() || !roundNumber.getHasPlanning()) {
+            return roundNumber.getHasPlanning();
         }
-
-        if (planningState !== RoundNumber.PLANNING_ISBEST || !roundNumber.hasNext()) {
-            return planningState;
-        }
-        return this.getPlanningState(roundNumber.getNext());
+        return this.haveAllPlannings(roundNumber.getNext());
     }
 
     ngAfterViewInit() {

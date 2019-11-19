@@ -250,14 +250,6 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     return rankingService.getRuleDescriptions();
   }
 
-  isTryingPlannings(): boolean {
-    return this.roundNumber.getPlanningState() === RoundNumber.PLANNING_BEST_IS_NOT_AVAILABLE_YET && !this.roundNumber.hasBegun();
-  }
-
-  areAllPlanningsTried(): boolean {
-    return this.roundNumber.getPlanningState() === RoundNumber.PLANNING_BEST_IS_AVAILABLE && !this.roundNumber.hasBegun();
-  }
-
   updatePlanning() {
     this.doUpdatePlanning.emit(this.roundNumber);
   }
