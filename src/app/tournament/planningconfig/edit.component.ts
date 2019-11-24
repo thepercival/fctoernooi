@@ -119,7 +119,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         if (!this.isTeamupAvailable()) {
             this.form.controls.teamup.disable();
         }
-        this.form.controls.teamup.setValue(this.isSelfRefereeAvailable() && config.getSelfReferee());
+        this.form.controls.selfReferee.setValue(this.isSelfRefereeAvailable() && config.getSelfReferee());
         if (!this.isSelfRefereeAvailable()) {
             this.form.controls.selfReferee.disable();
         }
@@ -142,7 +142,9 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     private needsRecreating(config: PlanningConfig): boolean {
-        return this.form.value['nrOfHeadtohead'] !== config.getNrOfHeadtohead() || this.form.value['teamup'] !== config.getTeamup();
+        return (this.form.value['nrOfHeadtohead'] !== config.getNrOfHeadtohead()) ||
+            (this.isTeamupAvailable() && this.form.value['teamup'] !== config.getTeamup()) ||
+            (this.isSelfRefereeAvailable() && this.form.value['selfreferee'] !== config.getSelfReferee());
     }
 
     private needsRescheduling(config: PlanningConfig): boolean {
@@ -197,6 +199,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.processing = true;
         const needsRecreating = this.needsRecreating(config);
         const needsRescheduling = this.needsRescheduling(config);
+        console.log('needsRecreating: ', needsRecreating);
+        console.log('needsRescheduling: ', needsRescheduling);
 
         this.configRepository.editObject(jsonConfig, config)
             .subscribe(

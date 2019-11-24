@@ -60,13 +60,9 @@
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> planning
             </h5>
-            <p *ngIf="allHavePlannings" class="card-text">start is {{competition.getStartDateTime().toLocaleString("nl",
+            <p class="card-text">start is {{competition.getStartDateTime().toLocaleString("nl",
               {"month":"short","day":"2-digit","hour12":
               false,"hour":"2-digit","minute":"2-digit"})}}
-            </p>
-            <p *ngIf="!allHavePlannings" class="card-text">
-              <fa-icon [icon]="['fas', 'times-circle']" class="text-warning"></fa-icon> planning zoeken <fa-icon
-                [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
             </p>
           </div>
         </div>
@@ -107,7 +103,7 @@
     </div>
   </div>
   <div *ngIf="!processing && structure" class="row d-flex justify-content-center my-3">
-    <div class="card border-secondary mt-3 mx-2">
+    <div *ngIf="hasPlanning()" class="card border-secondary mt-3 mx-2">
       <div class="card-body d-flex justify-content-between">
         <div [routerLink]="['/toernooi/view', tournament.getId()]" class="text-center pointer">
           <div>
@@ -125,13 +121,13 @@
           </div>
           <div><span>live</span><br><span>scorebord</span></div>
         </div>
-        <div (click)="openModalPrint(contentprint)" class="text-center pointer">
+        <div (click)="openModalExport(contentexport)" class="text-center pointer">
           <div>
             <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'print']"></fa-icon>
+              <fa-icon [icon]="['fas', 'file-export']"></fa-icon>
             </h5>
           </div>
-          <div><span>afdrukken</span></div>
+          <div><span>pdf</span><br><span>excel</span></div>
         </div>
       </div>
     </div>
@@ -166,10 +162,10 @@
   </div>
 </div>
 
-<ng-template #contentprint let-modal>
+<ng-template #contentexport let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">
-      <fa-icon [icon]="['fas', 'print']"></fa-icon> afdrukken
+      <fa-icon [icon]="['fas', 'file-export']"></fa-icon> exporteren
     </h4>
     <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
       <span aria-hidden="true">&times;</span>
@@ -177,7 +173,7 @@
   </div>
   <div class="modal-body">
     <div class="container-fluid">
-      <form [formGroup]="printForm">
+      <form [formGroup]="exportForm">
         <div class="row">
           <div class="form-check col-3">
             <label class="custom-control custom-checkbox col-form-label pl-0">
@@ -196,15 +192,6 @@
           </div>
           <label for="planning" class="col-8 col-form-label">wedstrijdschema</label>
         </div>
-        <!-- <div class="row">
-          <div class="form-check col-3">
-            <label class="custom-control custom-checkbox col-form-label pl-0">
-              <input type="checkbox" class="custom-control-input form-check-input" name="rules" [(ngModel)]="printConfig.rules">
-              <span class="custom-control-indicator"></span>
-            </label>
-          </div>
-          <label for="rules" class="col-8 col-form-label">reglement</label>
-        </div> -->
         <div class="row">
           <div class="form-check col-3">
             <label class="custom-control custom-checkbox col-form-label pl-0">
@@ -255,9 +242,15 @@
       </form>
     </div>
   </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary" [disabled]="allPrintOptionsOff()" data-dismiss="modal"
-      (click)="modal.close('print')">afdrukken</button>
+  <div class="modal-footer text-right">
+    <button type="button" class="btn btn-primary" [disabled]="allExportOptionsOff()" data-dismiss="modal"
+      (click)="modal.close('export-pdf')">
+      <fa-icon [icon]="['fas', 'print']"></fa-icon> naar pdf
+    </button>
+    <button type="button" class="btn btn-primary" [disabled]="allExportOptionsOff()" data-dismiss="modal"
+      (click)="modal.close('export-excel')">
+      <fa-icon [icon]="['fas', 'file-excel']"></fa-icon> naar excel
+    </button>
   </div>
 </ng-template>
 

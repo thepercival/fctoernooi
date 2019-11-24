@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -10,7 +10,8 @@ import {
   SportScoreConfigService,
   State,
   Round,
-  PlanningConfig
+  PlanningConfig,
+  PlanningRepository
 } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
@@ -19,13 +20,15 @@ import { Favorites } from '../../lib/favorites';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { Role } from '../../lib/role';
 import { Tournament } from '../../lib/tournament';
+import { Observable, interval, of, Subscription } from 'rxjs';
+import { switchMap, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tournament-roundnumber-view',
   templateUrl: './rnview.component.html',
   styleUrls: ['./rnview.component.scss']
 })
-export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit {
+export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() tournament: Tournament;
   @Input() roundNumber: RoundNumber;
@@ -47,12 +50,14 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   // game data
   roundNumberNeedsRanking: boolean;
   planningConfig: PlanningConfig;
+  private refreshPlanningTimer: Subscription;
 
   constructor(
     private router: Router,
     private authService: AuthService,
     public nameService: NameService,
     public cssService: CSSService,
+    protected planningRepository: PlanningRepository,
     public favRepository: FavoritesRepository) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
     this.resetAlert();
@@ -71,11 +76,41 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
 
     this.gameDatas = this.getGameData();
     this.sameDay = this.gameDatas.length > 1 ? this.isSameDay(this.gameDatas[0], this.gameDatas[this.gameDatas.length - 1]) : true;
+
+    if (this.roundNumber.getHasPlanning() === false) {
+      this.refreshPlanning();
+    }
   }
 
   ngAfterViewInit() {
     if (this.roundNumber.getNext() === undefined) {
       this.scroll.emit(true);
+    }
+  }
+
+  protected refreshPlanning() {
+    this.refreshPlanningTimer = interval(5000) // repeats every 5 seconds
+      .pipe(
+        switchMap(() => this.planningRepository.getObject(this.roundNumber).pipe()),
+        catchError(err => of(null))
+      ).subscribe(
+          /* happy path */(roundNumberOut: RoundNumber) => {
+          this.roundNumber = roundNumberOut;
+          this.gameDatas = this.getGameData();
+          this.sameDay = this.gameDatas.length > 1 ? this.isSameDay(this.gameDatas[0], this.gameDatas[this.gameDatas.length - 1]) : true;
+          if (this.roundNumber.getHasPlanning()) {
+            this.stopPlanningRefresh();
+          }
+        });
+  }
+
+  ngOnDestroy() {
+    this.stopPlanningRefresh();
+  }
+
+  stopPlanningRefresh() {
+    if (this.refreshPlanningTimer !== undefined) {
+      this.refreshPlanningTimer.unsubscribe();
     }
   }
 

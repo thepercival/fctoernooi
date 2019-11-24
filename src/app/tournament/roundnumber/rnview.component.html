@@ -14,10 +14,10 @@
     </button>
   </div>
   <ngb-alert *ngIf="!roundNumber.getHasPlanning()" class="mb-0" type="warning" [dismissible]="false">
-    <fa-icon [icon]="['fas', 'info-circle']"></fa-icon> de planning wordt gezocht, dit duurt enkele
-    seconden tot minuten
+    <fa-icon [icon]="['fas', 'info-circle']"></fa-icon> De planning wordt gezocht, dit duurt enkele
+    seconden tot 2 minuten. Zodra de planning is gevonden, worden de wedstrijden automatisch getoond.
   </ngb-alert>
-  <div class="d-flex justify-content-around">
+  <div *ngIf="roundNumber.getHasPlanning()" class="d-flex justify-content-around">
     <table class="table">
       <colgroup>
         <col *ngIf="roundNumberNeedsRanking">

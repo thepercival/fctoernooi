@@ -16,6 +16,8 @@ import {
   faMedal,
   faMinus,
   faMoneyBillAlt,
+  faFileExcel,
+  faFileExport,
   faPrint,
   faQrcode,
   faRandom,
@@ -48,6 +50,7 @@ import {
   PlaceMapper,
   PlaceRepository,
   PlanningRepository,
+  PlanningMapper,
   PouleMapper,
   RoundMapper,
   RoundNumberMapper,
@@ -184,6 +187,7 @@ import { ModalRoundNumbersComponent } from './roundnumber/selector.component';
     CompetitorMapper,
     GameRepository,
     PlanningRepository,
+    PlanningMapper,
     PlanningConfigRepository,
     CSSService,
   ]
@@ -193,7 +197,7 @@ export class TournamentModule {
     library.addIconPacks(fas, fab);
     library.addIcons(
       faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
-      faUnlink, faPrint, faSort, faRandom, faSquare, faCheckSquare, faUserTag, faInfoCircle, faMedal,
+      faUnlink, faFileExport, faFileExcel, faPrint, faSort, faRandom, faSquare, faCheckSquare, faUserTag, faInfoCircle, faMedal,
       faLink, faUsers, faQrcode, faCopy, faDotCircle
     );
     library.addIcons(

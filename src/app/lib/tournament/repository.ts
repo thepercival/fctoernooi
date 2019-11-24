@@ -104,20 +104,21 @@ export class TournamentRepository extends APIRepository {
         );
     }
 
-    getPrintUrl(tournament: Tournament, printConfig: TournamentPrintConfig): string {
-        return this.getUrl() + '/pdf/' + tournament.getId() +
-            '?gamenotes=' + printConfig.gamenotes +
-            '&structure=' + printConfig.structure +
-            '&rules=' + printConfig.rules +
-            '&gamesperpoule=' + printConfig.gamesperpoule +
-            '&gamesperfield=' + printConfig.gamesperfield +
-            '&planning=' + printConfig.planning +
-            '&poulepivottables=' + printConfig.poulepivottables +
-            '&qrcode=' + printConfig.qrcode;
+    getExportUrl(tournament: Tournament, exportType: string, exportConfig: TournamentExportConfig): string {
+        return this.getUrl() + '/export/' + tournament.getId() +
+            '?gamenotes=' + exportConfig.gamenotes +
+            '&structure=' + exportConfig.structure +
+            '&rules=' + exportConfig.rules +
+            '&gamesperpoule=' + exportConfig.gamesperpoule +
+            '&gamesperfield=' + exportConfig.gamesperfield +
+            '&planning=' + exportConfig.planning +
+            '&poulepivottables=' + exportConfig.poulepivottables +
+            '&qrcode=' + exportConfig.qrcode +
+            '&type=' + exportType;
     }
 }
 
-export interface TournamentPrintConfig {
+export interface TournamentExportConfig {
     gamenotes: boolean;
     structure: boolean;
     rules: boolean;

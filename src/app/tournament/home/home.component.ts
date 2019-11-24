@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -8,7 +8,7 @@ import { AuthService } from '../../auth/auth.service';
 import { CSSService } from '../../common/cssservice';
 import { Role } from '../../lib/role';
 import { Tournament } from '../../lib/tournament';
-import { TournamentPrintConfig, TournamentRepository } from '../../lib/tournament/repository';
+import { TournamentExportConfig, TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
 import { TranslateService } from '../../lib/translate';
 
@@ -17,10 +17,10 @@ import { TranslateService } from '../../lib/translate';
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css']
 })
-export class HomeComponent extends TournamentComponent implements OnInit, AfterViewInit {
+export class HomeComponent extends TournamentComponent implements OnInit {
     nameForm: FormGroup;
     copyForm: FormGroup;
-    printForm: FormGroup;
+    exportForm: FormGroup;
     shareForm: FormGroup;
     minDateStruct: NgbDateStruct;
     translate: TranslateService;
@@ -59,7 +59,7 @@ export class HomeComponent extends TournamentComponent implements OnInit, AfterV
             public: ['', Validators.compose([
             ])]
         });
-        this.printForm = fb.group({
+        this.exportForm = fb.group({
             gamenotes: true,
             structure: false,
             rules: false,
@@ -82,20 +82,17 @@ export class HomeComponent extends TournamentComponent implements OnInit, AfterV
         this.shareForm.controls.url.setValue('https://www.fctoernooi.nl/' + this.tournament.getId());
         this.shareForm.controls.public.setValue(this.tournament.getPublic());
         this.processing = false;
-
-        const firstRoundNumber = this.structure.getFirstRoundNumber();
-        this.allHavePlannings = this.haveAllPlannings(firstRoundNumber);
     }
 
-    haveAllPlannings(roundNumber: RoundNumber): boolean {
+    hasPlanning(): boolean {
+        return this.hasRoundNumberPlanning(this.structure.getFirstRoundNumber());
+    }
+
+    protected hasRoundNumberPlanning(roundNumber: RoundNumber): boolean {
         if (!roundNumber.hasNext() || !roundNumber.getHasPlanning()) {
             return roundNumber.getHasPlanning();
         }
-        return this.haveAllPlannings(roundNumber.getNext());
-    }
-
-    ngAfterViewInit() {
-        console.log('ngAfterViewInit');
+        return this.hasRoundNumberPlanning(roundNumber.getNext());
     }
 
     competitorsComplete(): boolean {
@@ -192,31 +189,31 @@ export class HomeComponent extends TournamentComponent implements OnInit, AfterV
         localStorage.setItem('manualmessageread', JSON.stringify(true));
     }
 
-    allPrintOptionsOff() {
-        return !this.printForm.value['gamenotes']
-            && !this.printForm.value['structure'] && !this.printForm.value['planning']
-            && !this.printForm.value['gamesperpoule'] && !this.printForm.value['gamesperfield'] && !this.printForm.value['rules']
-            && !this.printForm.value['poulepivottables'] && !this.printForm.value['qrcode'];
+    allExportOptionsOff() {
+        return !this.exportForm.value['gamenotes']
+            && !this.exportForm.value['structure'] && !this.exportForm.value['planning']
+            && !this.exportForm.value['gamesperpoule'] && !this.exportForm.value['gamesperfield'] && !this.exportForm.value['rules']
+            && !this.exportForm.value['poulepivottables'] && !this.exportForm.value['qrcode'];
 
     }
 
-    openModalPrint(modalContent) {
+    openModalExport(modalContent) {
         const activeModal = this.modalService.open(modalContent/*, { windowClass: 'border-warning' }*/);
         // (<TournamentListRemoveModalComponent>activeModal.componentInstance).place = place;
-        activeModal.result.then((result) => {
-            if (result === 'print') {
-                const printConfig: TournamentPrintConfig = {
-                    gamenotes: this.printForm.value['gamenotes'],
-                    structure: this.printForm.value['structure'],
-                    rules: this.printForm.value['rules'],
-                    gamesperpoule: this.printForm.value['gamesperpoule'],
-                    gamesperfield: this.printForm.value['gamesperfield'],
-                    planning: this.printForm.value['planning'],
-                    poulepivottables: this.printForm.value['poulepivottables'],
-                    qrcode: this.printForm.value['qrcode']
+        activeModal.result.then((result: string) => {
+            if (result === 'export-pdf' || result === 'export-excel') {
+                const exportConfig: TournamentExportConfig = {
+                    gamenotes: this.exportForm.value['gamenotes'],
+                    structure: this.exportForm.value['structure'],
+                    rules: this.exportForm.value['rules'],
+                    gamesperpoule: this.exportForm.value['gamesperpoule'],
+                    gamesperfield: this.exportForm.value['gamesperfield'],
+                    planning: this.exportForm.value['planning'],
+                    poulepivottables: this.exportForm.value['poulepivottables'],
+                    qrcode: this.exportForm.value['qrcode']
                 };
-
-                const newWindow = window.open(this.tournamentRepository.getPrintUrl(this.tournament, printConfig));
+                const exportType = result.substr(7);
+                const newWindow = window.open(this.tournamentRepository.getExportUrl(this.tournament, exportType, exportConfig));
             }
         }, (reason) => {
         });
