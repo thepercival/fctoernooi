@@ -64,7 +64,7 @@
 
   <div class=" row text-center no-gutters">
     <app-tournament-structureround *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed()" class="mb-2"
-      [ngStyle]="{ 'width': (100/round.getChildren().length) + '%' }" [round]="qualifyGroup.getChildRound()"
+      [ngStyle]="{ 'width': getQualifyGroupWidthPercentage(qualifyGroup) + '%' }" [round]="qualifyGroup.getChildRound()"
       [editable]="editable" (roundNumberChanged)="roundNumberChanged.emit($event)"></app-tournament-structureround>
   </div>
   <div *ngIf="!round.isRoot() && round.getNrOfPlaces() === 2">

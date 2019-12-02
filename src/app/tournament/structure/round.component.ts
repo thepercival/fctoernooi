@@ -137,6 +137,19 @@ export class StructureRoundComponent {
     this.structureService.mergeQualifyGroups(editHorPoule.previous.getQualifyGroup(), editHorPoule.current.getQualifyGroup());
   }
 
+  getQualifyGroupWidthPercentage(qualifyGroup: QualifyGroup): number {
+    const nrOfPoules = qualifyGroup.getChildRound().getPoules().length;
+    return Math.floor((nrOfPoules / this.getNrOfPoulesChildren(qualifyGroup.getRound())) * 100);
+  }
+
+  getNrOfPoulesChildren(round: Round): number {
+    let nrOfChildPoules = 0;
+    round.getQualifyGroups().forEach(qualifyGroup => {
+      nrOfChildPoules += qualifyGroup.getChildRound().getPoules().length;
+    });
+    return nrOfChildPoules;
+  }
+
   // getPlaceNumbers(): number[] {
   //   const losersHorPoule = this.round.getFirstHorizontalPoule(QualifyGroup.LOSERS);
   //   const maxPlaceNumber = losersHorPoule.getFirstPlace().getNumber();
