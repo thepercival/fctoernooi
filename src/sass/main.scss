@@ -54,7 +54,9 @@ app-root {
 footer {
   flex: 1 0 auto;
 }
-
+.batch-striped-row {
+  background-color: #{$table-accent-bg};
+}
 td > .btn.btn-sm, th > .btn.btn-sm {
   padding-top: 0px;
   padding-bottom: 0px;

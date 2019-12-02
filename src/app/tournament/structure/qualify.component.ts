@@ -23,7 +23,7 @@ export class StructureQualifyComponent {
         public nameService: NameService
     ) {
         this.resetAlert();
-        this.structureService = new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
+        this.structureService = new StructureService(Tournament.StructureOptions);
     }
 
     get QualifyGroupWINNERS(): number {

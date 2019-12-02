@@ -1,4 +1,4 @@
-import { Competition, PlanningPeriod } from 'ngx-sport';
+import { Competition, PlanningPeriod, StructureOptions } from 'ngx-sport';
 
 import { Role } from './role';
 import { Sponsor } from './sponsor';
@@ -8,9 +8,11 @@ import { Sponsor } from './sponsor';
  */
 
 export class Tournament {
-    static readonly MINNROFCOMPETITORS = 2;
-    static readonly MAXNROFCOMPETITORS = 40;
-
+    static readonly StructureOptions: StructureOptions = {
+        pouleRange: { min: 1, max: 16 },
+        placeRange: { min: 2, max: 40 },
+        placesPerPouleRange: { min: 2, max: 12 }
+    };
     protected id: number;
     protected competition: Competition;
     protected roles: Role[] = [];

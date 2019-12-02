@@ -40,9 +40,9 @@ export class NewComponent implements OnInit {
   sport: Sport;
   validations: any = {
     minnroffields: 1,
-    maxnroffields: Tournament.MAXNROFCOMPETITORS / 2,
-    minnrofcompetitors: Tournament.MINNROFCOMPETITORS,
-    maxnrofcompetitors: Tournament.MAXNROFCOMPETITORS,
+    minnrofcompetitors: Tournament.StructureOptions.placeRange.min,
+    maxnrofcompetitors: Tournament.StructureOptions.placeRange.max,
+    maxnroffields: Tournament.StructureOptions.placeRange.max / 2,
     minlengthname: League.MIN_LENGTH_NAME,
     maxlengthname: League.MAX_LENGTH_NAME,
     maxlengthsportname: League.MAX_LENGTH_SPORT
@@ -153,7 +153,7 @@ export class NewComponent implements OnInit {
     this.tournamentRepository.createObject(tournament)
       .subscribe(
         /* happy path */ tournamentOut => {
-          const structureService = new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
+          const structureService = new StructureService(Tournament.StructureOptions);
           const structure: Structure = structureService.create(tournamentOut.getCompetition(), nrofcompetitors);
           this.structureRepository.editObject(structure, tournamentOut.getCompetition())
             .subscribe(
@@ -191,13 +191,17 @@ export class NewComponent implements OnInit {
 
   getStructureDescription() {
     const nrOfCompetitors = this.form.controls.nrofcompetitors.value;
-    if (nrOfCompetitors < Tournament.MINNROFCOMPETITORS || nrOfCompetitors > Tournament.MAXNROFCOMPETITORS) {
+    if (nrOfCompetitors !== undefined) {
       return '';
     }
-    const structureService = new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
-    const defaultNrOfPoules = nrOfCompetitors !== undefined ? structureService.getDefaultNrOfPoules(nrOfCompetitors) : undefined;
-    const sPouleDescr = defaultNrOfPoules > 1 ? 'poules' : 'poule';
-    return defaultNrOfPoules + ' ' + sPouleDescr + ' en ';
+    try {
+      const structureService = new StructureService(Tournament.StructureOptions);
+      const defaultNrOfPoules = structureService.getDefaultNrOfPoules(nrOfCompetitors);
+      const sPouleDescr = defaultNrOfPoules > 1 ? 'poules' : 'poule';
+      return defaultNrOfPoules + ' ' + sPouleDescr + ' en ';
+    } catch (e) {
+      return '';
+    }
   }
 
   getFieldsDescription(): string {

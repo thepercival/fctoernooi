@@ -16,6 +16,7 @@ export class SportSelectComponent implements OnInit {
     static readonly NEW = 2;
 
     @Input() sportConfigs: SportConfig[];
+    @Input() filterSportConfigs: SportConfig[];
     @Input() staticInfo: string;
     @Input() inputSelectOnly: boolean;
     @Output() sendSport = new EventEmitter<Sport>();
@@ -43,8 +44,6 @@ export class SportSelectComponent implements OnInit {
     }
 
     ngOnInit() {
-
-        console.log(this.sportConfigs);
         this.processing = false;
     }
 
@@ -69,7 +68,12 @@ export class SportSelectComponent implements OnInit {
 
     getSortedSports(): SortableSport[] {
         return SportCustom.get().filter(customId => {
-            return !this.sportConfigs || this.sportConfigs.some(sportConfig => sportConfig.getSport().getCustomId() === customId);
+            if (this.sportConfigs) {
+                return this.sportConfigs.some(sportConfig => sportConfig.getSport().getCustomId() === customId);
+            } else if (this.filterSportConfigs) {
+                return !this.filterSportConfigs.some(sportConfig => sportConfig.getSport().getCustomId() === customId);
+            }
+            return true;
         }).map(customId => {
             return { customId: customId, name: this.translate(customId) };
         }).sort((s1, s2) => {

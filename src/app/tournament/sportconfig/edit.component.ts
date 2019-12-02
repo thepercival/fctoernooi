@@ -153,7 +153,10 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         }
     }
 
-    onGetSport(sport: Sport) {
+    onGetSport(sport?: Sport) {
+        if (sport === undefined) {
+            return this.navigateBack();
+        }
         this.sportConfig = this.sportConfigService.createDefault(sport, this.competition, this.structure);
         this.initForm();
     }

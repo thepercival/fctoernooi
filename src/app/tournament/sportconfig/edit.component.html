@@ -82,10 +82,10 @@
         </div>
         <div *ngIf="!hasBegun" class="form-group row">
           <div class="col-7">
-            <!-- <button *ngIf="competition.getSportConfigs().length === 1" (click)="openMultiSportsModal(multisports)"
+            <button *ngIf="competition.getSportConfigs().length === 1" (click)="openMultiSportsModal(multisports)"
               class="btn btn-outline-secondary">
               <span>meerdere sporten</span>
-            </button> -->
+            </button>
           </div>
           <div class="col-5">
             <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
@@ -96,7 +96,8 @@
       </form>
     </div>
     <app-tournament-sport-select *ngIf="!processing && competition && !sportConfig"
-      class="col-xs-12 col-sm-10 col-md-8 col-lg-6" (sendSport)="onGetSport($event)">
+      class="col-xs-12 col-sm-10 col-md-8 col-lg-6" (sendSport)="onGetSport($event)"
+      [filterSportConfigs]="tournament.getCompetition().getSportConfigs()">
     </app-tournament-sport-select>
   </div>
 </div>

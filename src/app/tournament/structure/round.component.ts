@@ -23,7 +23,7 @@ export class StructureRoundComponent {
 
   constructor(public nameService: NameService, public cssService: CSSService) {
     this.resetAlert();
-    this.structureService = new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
+    this.structureService = new StructureService(Tournament.StructureOptions);
   }
 
   arrangeAction(action: string) {

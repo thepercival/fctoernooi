@@ -76,7 +76,7 @@ export class TournamentComponent {
     }
 
     protected getStructureService(): StructureService {
-        return new StructureService({ min: Tournament.MINNROFCOMPETITORS, max: Tournament.MAXNROFCOMPETITORS });
+        return new StructureService(Tournament.StructureOptions);
     }
 }
 
