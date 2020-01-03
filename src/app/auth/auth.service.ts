@@ -1,32 +1,24 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { APIRepository } from 'ngx-sport';
 import { Observable, throwError as observableThrowError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { User } from '../lib/user';
 import { UserMapper } from '../lib/user/mapper';
-
+import { APIRepository } from '../lib/repository';
 
 @Injectable()
 export class AuthService extends APIRepository {
 
   private authItem: IAuthItem;
-  private url: string;
 
-  constructor(private http: HttpClient, router: Router, private userMapper: UserMapper) {
-    super(router);
+  constructor(private http: HttpClient, private userMapper: UserMapper) {
+    super();
     const jsonAuth = JSON.parse(localStorage.getItem('auth'));
     this.authItem = {
       token: jsonAuth ? jsonAuth.token : undefined,
       userid: jsonAuth ? jsonAuth.userid : undefined
     };
-    this.url = super.getApiUrl() + this.getUrlpostfix();
-  }
-
-  getUrlpostfix(): string {
-    return 'auth';
   }
 
   isLoggedIn(): boolean {
@@ -37,8 +29,16 @@ export class AuthService extends APIRepository {
     return this.authItem ? this.authItem.userid : undefined;
   }
 
+  getUrl(): string {
+    return super.getApiUrl() + 'auth';
+  }
+  getPublicUrl(): string {
+    return super.getApiUrl() + 'public/auth';
+  }
+
+
   register(newUser: any): Observable<User> {
-    return this.http.post(this.url + '/register', newUser, { headers: super.getHeaders() }).pipe(
+    return this.http.post(this.getPublicUrl() + '/register', newUser, { headers: super.getHeaders() }).pipe(
       map((res: any) => {
         const authItem: IAuthItem = { token: res.token, userid: res.user.id };
         this.setAuthItem(authItem);
@@ -49,7 +49,7 @@ export class AuthService extends APIRepository {
   }
 
   validateToken(): Observable<boolean> {
-    return this.http.post(this.url + '/validatetoken', undefined, { headers: super.getHeaders() }).pipe(
+    return this.http.post(this.getUrl() + '/validatetoken', undefined, { headers: super.getHeaders() }).pipe(
       map((res) => true),
       catchError((err) => observableThrowError(err))
     );
@@ -62,7 +62,7 @@ export class AuthService extends APIRepository {
   // }
 
   login(emailaddress: string, password: string): Observable<boolean> {
-    return this.http.post<IAuthItem>(this.url + '/login', { emailaddress: emailaddress, password: password }).pipe(
+    return this.http.post<IAuthItem>(this.getPublicUrl() + '/login', { emailaddress: emailaddress, password: password }).pipe(
       map((res) => {
         if (res && res.token && res.userid) {
           const authItem: IAuthItem = { token: res.token, userid: res.userid };
@@ -82,7 +82,7 @@ export class AuthService extends APIRepository {
   }
 
   passwordReset(email: string): Observable<boolean> {
-    return this.http.post(this.url + '/passwordreset', { emailaddress: email }).pipe(
+    return this.http.post(this.getPublicUrl() + '/passwordreset', { emailaddress: email }).pipe(
       map((res: any) => {
         return res.retval;
       }),
@@ -91,7 +91,7 @@ export class AuthService extends APIRepository {
   }
 
   passwordChange(emailaddress: string, password: string, code: string): Observable<boolean> {
-    return this.http.post(this.url + '/passwordchange', { emailaddress: emailaddress, password: password, code: code }).pipe(
+    return this.http.post(this.getPublicUrl() + '/passwordchange', { emailaddress: emailaddress, password: password, code: code }).pipe(
       map((res: any) => {
         if (res && res.token && res.userid) {
           const authItem: IAuthItem = { token: res.token, userid: res.userid };
@@ -117,9 +117,6 @@ export class AuthService extends APIRepository {
       errortext = error.error;
     } else if (error.statusText !== undefined) {
       errortext = error.statusText;
-    }
-    if (error.status === 401) {
-      this.router.navigate(['/user/login']);
     }
     return observableThrowError(errortext);
   }

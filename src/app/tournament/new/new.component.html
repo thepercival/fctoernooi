@@ -1,8 +1,11 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <app-tournament-sport-select *ngIf="chooseSport" class="col-xs-12 col-sm-10 col-md-6 col-lg-4"
-      (sendSport)="onGetSport($event)" staticInfo="later kun je meerdere sporten maken">
+      (sendSport)="onGetSport($event)">
     </app-tournament-sport-select>
+    <!-- <app-tournament-sport-select *ngIf="chooseSport" class="col-xs-12 col-sm-10 col-md-6 col-lg-4"
+      (sendSport)="onGetSport($event)" staticInfo="later kun je meerdere sporten maken">
+    </app-tournament-sport-select> -->
     <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6" *ngIf="!chooseSport">
       <div class="d-flex justify-content-between mb-4">
         <h1>nieuw toernooi</h1>

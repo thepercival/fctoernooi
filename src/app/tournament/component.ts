@@ -19,6 +19,7 @@ export class TournamentComponent {
     public structure: Structure;
     public alert: IAlert;
     public processing = true;
+    public oldStructure = false;
 
     constructor(
         route: ActivatedRoute,
@@ -41,7 +42,7 @@ export class TournamentComponent {
     setData(tournamentId: number, callback?: DataProcessCallBack, noStructure?: boolean) {
         this.tournamentRepository.getObject(tournamentId)
             .subscribe(
-                    /* happy path */(tournament: Tournament) => {
+                /* happy path */(tournament: Tournament) => {
                     this.tournament = tournament;
                     this.competition = tournament.getCompetition();
                     if (noStructure === true) {
@@ -52,18 +53,23 @@ export class TournamentComponent {
                     }
                     this.structureRepository.getObject(tournament.getCompetition())
                         .subscribe(
-                                /* happy path */(structure: Structure) => {
+                            /* happy path */(structure: Structure) => {
                                 this.structure = structure;
                                 if (callback !== undefined) {
                                     callback();
                                 }
                             },
-                                /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                                /* onComplete */() => { }
+                            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+                            /* onComplete */() => { }
                         );
                 },
-                    /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                    /* onComplete */() => { }
+                /* error path */(e: string) => {
+                    if (e.endsWith('(-1)')) {
+                        this.oldStructure = true;
+                    }
+                    this.setAlert('danger', e); this.processing = false;
+                },
+                /* onComplete */() => { }
             );
     }
 

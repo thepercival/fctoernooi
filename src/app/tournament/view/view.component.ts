@@ -69,7 +69,7 @@ export class ViewComponent extends TournamentComponent implements OnInit, OnDest
     }
 
     isAdmin(): boolean {
-        return this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.ADMIN);
+        return this.tournament && this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.ADMIN);
     }
 
     initLiveboardLink() {

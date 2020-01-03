@@ -1,9 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { APIConfig, APIRepository } from 'ngx-sport';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { APIRepository } from '../../repository';
 
 /**
  * Created by coen on 1-10-17.
@@ -14,37 +13,24 @@ export class TournamentShellRepository extends APIRepository {
     private url: string;
 
     constructor(
-        private http: HttpClient,
-        router: Router) {
-        super(router);
-        this.url = super.getApiUrl() + this.getUrlpostfix();
+        private http: HttpClient) {
+        super();
     }
 
     getUrlpostfix(): string {
-        return 'tournamentshells';
+        return 'shells';
     }
 
     getUrl(): string {
-        return this.url;
+        return super.getApiUrl() + (this.getToken() === undefined ? 'public/' : '') + this.getUrlpostfix();
     }
 
     getObjects(filter?: TournamentShellFilter): Observable<TournamentShell[]> {
         const options = {
             headers: super.getHeaders(),
-            params: this.getHttpParams(false, filter)
+            params: this.getHttpParams(filter)
         };
-        return this.http.get<TournamentShell[]>(this.url, options).pipe(
-            map((jsonShells: TournamentShell[]) => this.convertObjects(jsonShells)),
-            catchError((err) => this.handleError(err))
-        );
-    }
-
-    getObjectsWithRoles(filter?: TournamentShellFilter): Observable<TournamentShell[]> {
-        const options = {
-            headers: super.getHeaders(),
-            params: this.getHttpParams(true, filter)
-        };
-        return this.http.get<TournamentShell[]>(this.url + 'withroles', options).pipe(
+        return this.http.get<TournamentShell[]>(this.getUrl(), options).pipe(
             map((jsonShells: TournamentShell[]) => this.convertObjects(jsonShells)),
             catchError((err) => this.handleError(err))
         );
@@ -57,11 +43,8 @@ export class TournamentShellRepository extends APIRepository {
         return jsonArray;
     }
 
-    private getHttpParams(withRoles: boolean, filter?: TournamentShellFilter): HttpParams {
+    private getHttpParams(filter?: TournamentShellFilter): HttpParams {
         let httpParams = new HttpParams();
-        if (withRoles && APIConfig.getToken() !== undefined) {
-            httpParams = httpParams.set('withRoles', 'true');
-        }
         if (filter === undefined) {
             return httpParams;
         }
@@ -76,7 +59,6 @@ export class TournamentShellRepository extends APIRepository {
         }
         return httpParams;
     }
-
 }
 
 export interface TournamentShell {

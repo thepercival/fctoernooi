@@ -1,7 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { APIConfig, APIRepository } from 'ngx-sport';
+import { APIConfig } from 'ngx-sport';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -9,7 +8,7 @@ import { Role } from '../role';
 import { JsonRole, RoleMapper } from '../role/mapper';
 import { Tournament } from '../tournament';
 import { JsonTournament, TournamentMapper } from './mapper';
-
+import { APIRepository } from '../repository';
 
 /**
  * Created by coen on 1-10-17.
@@ -22,9 +21,8 @@ export class TournamentRepository extends APIRepository {
     constructor(
         private http: HttpClient,
         private mapper: TournamentMapper,
-        private roleMapper: RoleMapper,
-        router: Router) {
-        super(router);
+        private roleMapper: RoleMapper) {
+        super();
         this.url = super.getApiUrl() + this.getUrlpostfix();
     }
 
@@ -37,9 +35,14 @@ export class TournamentRepository extends APIRepository {
     }
 
     getObject(id: number): Observable<Tournament> {
-        const postUrl = APIConfig.getToken() === undefined ? 'public' : '';
+        const postUrl = APIConfig.getToken() === undefined ? '/public' : '';
         return this.http.get<JsonTournament>(this.url + postUrl + '/' + id, { headers: super.getHeaders() }).pipe(
-            map((jsonTournament: JsonTournament) => this.mapper.toObject(jsonTournament)),
+            map((jsonTournament: JsonTournament) => {
+                if (jsonTournament.updated !== true) {
+                    throw Error('het toernooi heeft een oude structuur (-1)');
+                }
+                return this.mapper.toObject(jsonTournament);
+            }),
             catchError((err) => this.handleError(err))
         );
     }
@@ -81,18 +84,16 @@ export class TournamentRepository extends APIRepository {
 
     copyObject(tournament: Tournament, newStartDateTime: Date): Observable<number> {
         const url = this.url + '/copy/' + tournament.getId();
-        return this.http.post(url, null, this.getOptions(newStartDateTime)).pipe(
+        return this.http.post(url, { startdatetime: newStartDateTime }, this.getOptions()).pipe(
             map((id: number) => id),
             catchError((err) => this.handleError(err))
         );
     }
 
-    protected getOptions(newStartDateTime: Date): { headers: HttpHeaders; params: HttpParams } {
-        let httpParams = new HttpParams();
-        httpParams = httpParams.set('startdatetime', newStartDateTime.toISOString());
+    protected getOptions(): { headers: HttpHeaders; params: HttpParams } {
         return {
             headers: super.getHeaders(),
-            params: httpParams
+            params: new HttpParams()
         };
     }
 
@@ -100,6 +101,14 @@ export class TournamentRepository extends APIRepository {
         const url = this.url + '/syncrefereeroles/' + tournament.getId();
         return this.http.post(url, null, { headers: super.getHeaders() }).pipe(
             map((jsonRoles: JsonRole[]) => jsonRoles.map(jsonRole => this.roleMapper.toObject(jsonRole, tournament))),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+    sendRequestOldStructure(tournamentId: number): Observable<boolean> {
+        const url = this.url + '/sendrequestoldstructure/' + tournamentId;
+        return this.http.post(url, null, { headers: super.getHeaders() }).pipe(
+            map((retVal: boolean) => retVal),
             catchError((err) => this.handleError(err))
         );
     }

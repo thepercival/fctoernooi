@@ -1,0 +1,45 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+
+import { StructureMapper, Structure, JsonStructure } from 'ngx-sport';
+import { APIRepository } from '../../repository';
+import { Tournament } from '../../tournament';
+
+@Injectable()
+export class StructureRepository extends APIRepository {
+
+    constructor(
+        private mapper: StructureMapper,
+        private http: HttpClient) {
+        super();
+    }
+
+    getUrlpostfix(): string {
+        return 'structures';
+    }
+
+    getUrl(tournament: Tournament): string {
+        return super.getApiUrl() + '/tournament' + tournament.getId() + '/' + this.getUrlpostfix();
+    }
+
+    getObject(tournament: Tournament): Observable<Structure> {
+        const options = {
+            headers: super.getHeaders(),
+            params: new HttpParams()
+        };
+        return this.http.get(this.getUrl(tournament), options).pipe(
+            map((json: JsonStructure) => this.mapper.toObject(json, tournament.getCompetition())),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+    editObject(structure: Structure, tournament: Tournament): Observable<Structure> {
+        const options = { headers: super.getHeaders() };
+        return this.http.put(this.getUrl(tournament), this.mapper.toJson(structure), options).pipe(
+            map((jsonRes: JsonStructure) => this.mapper.toObject(jsonRes, tournament.getCompetition())),
+            catchError((err) => this.handleError(err))
+        );
+    }
+}

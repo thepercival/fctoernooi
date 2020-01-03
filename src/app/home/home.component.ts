@@ -79,7 +79,7 @@ export class HomeComponent implements OnInit {
 
     this.authService.validateToken().subscribe(
         /* happy path */ res => {
-        this.tournamentShellRepos.getObjectsWithRoles()
+        this.tournamentShellRepos.getObjects()
           .subscribe(
               /* happy path */ myShells => {
               this.sortShellsByDateDesc(myShells);
@@ -173,7 +173,7 @@ export class HomeComponent implements OnInit {
 
   expandPastDays() {
     const pastHoursToAdd = this.hourRange.start === this.defaultHourRange.start
-    ? this.defaultHourRange.start + this.defaultHourRange.end : -this.hourRange.start;
+      ? this.defaultHourRange.start + this.defaultHourRange.end : -this.hourRange.start;
     this.addToPublicShells(HomeComponent.PAST, pastHoursToAdd);
   }
 

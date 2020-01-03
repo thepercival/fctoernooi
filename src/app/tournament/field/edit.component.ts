@@ -132,12 +132,12 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
                 this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament.getBreak()).subscribe(
                 /* happy path */ roundNumberOut => {
                         this.tournamentRepository.syncRefereeRoles(this.tournament).subscribe(
-                        /* happy path */ allRolesRes => {
+                            /* happy path */ allRolesRes => {
                                 this.processing = false;
                                 this.navigateBack();
                             },
-                        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                        /* onComplete */() => this.processing = false
+                            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+                            /* onComplete */() => this.processing = false
                         );
                     },
                 /* error path */ e => { this.setAlert('danger', e); this.processing = false; },

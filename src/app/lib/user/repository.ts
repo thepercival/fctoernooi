@@ -1,12 +1,11 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { APIRepository } from 'ngx-sport';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { User } from '../user';
 import { JsonUser, UserMapper } from './mapper';
+import { APIRepository } from '../repository';
 
 @Injectable()
 export class UserRepository extends APIRepository {
@@ -14,9 +13,8 @@ export class UserRepository extends APIRepository {
 
   constructor(
     private http: HttpClient,
-    router: Router,
     private mapper: UserMapper) {
-    super(router);
+    super();
     this.url = super.getApiUrl() + this.getUrlpostfix();
   }
 

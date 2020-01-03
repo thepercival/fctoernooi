@@ -25,6 +25,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     minDateStruct: NgbDateStruct;
     translate: TranslateService;
     allHavePlannings: boolean;
+    oldStructureRequested: boolean;
 
     constructor(
         route: ActivatedRoute,
@@ -349,5 +350,19 @@ export class HomeComponent extends TournamentComponent implements OnInit {
                 },
                 /* onComplete */() => { this.processing = false; }
             );
+    }
+
+    sendRequestOldStructure() {
+        this.route.params.subscribe(params => {
+            const tournamentId = +params['id'];
+            this.tournamentRepository.sendRequestOldStructure(tournamentId).subscribe(
+                 /* happy path */ retVal => {
+                    this.processing = false;
+                    this.oldStructureRequested = true;
+                },
+                /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+                /* onComplete */() => this.processing = false
+            );
+        });
     }
 }

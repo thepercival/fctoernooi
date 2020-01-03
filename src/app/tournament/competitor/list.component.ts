@@ -11,8 +11,7 @@ import {
   PlanningRepository,
   QualifyGroup,
   Round,
-  Structure,
-  StructureRepository,
+  Structure
 } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
 
@@ -20,6 +19,7 @@ import { IAlert } from '../../common/alert';
 import { MyNavigation } from '../../common/navigation';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../component';
 import { CompetitorListRemoveModalComponent } from './listremovemodal.component';
 

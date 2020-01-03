@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { JsonSport, Sport, SportConfig, SportCustom, SportRepository } from 'ngx-sport';
+import { JsonSport, Sport, SportConfig, SportCustom } from 'ngx-sport';
 
 import { IAlert } from '../../common/alert';
 import { CSSService } from '../../common/cssservice';
 import { TranslateService } from '../../lib/translate';
+import { SportRepository } from '../../lib/ngx-sport/sport/repository';
 
 @Component({
     selector: 'app-tournament-sport-select',
@@ -91,7 +92,7 @@ export class SportSelectComponent implements OnInit {
 
     save() {
         this.processing = true;
-        const json: JsonSport = { name: this.form.value['newSportName'], team: this.form.value['newSportName'] };
+        const json: JsonSport = { name: this.form.value['newSportName'], team: this.form.value['team'] };
         this.sportRepository.createObject(json).subscribe(
             /* happy path */ sportRes => {
                 this.sendSport.emit(sportRes);

@@ -54,13 +54,11 @@ import {
   PouleMapper,
   RoundMapper,
   RoundNumberMapper,
-  RoundRepository,
   SportConfigMapper,
   SportConfigRepository,
   SportConfigService,
   PlanningConfigService,
   PlanningConfigRepository,
-  SportRepository,
   SportScoreConfigMapper,
   SportScoreConfigService,
   StructureMapper,
@@ -110,6 +108,7 @@ import { RoutingModule } from './tournament-routing.module';
 import { ViewComponent } from './view/view.component';
 import { SportScoreEditComponent } from './sportscore/edit.component';
 import { ModalRoundNumbersComponent } from './roundnumber/selector.component';
+import { SportRepository } from '../lib/ngx-sport/sport/repository';
 
 @NgModule({
   imports: [
@@ -166,7 +165,6 @@ import { ModalRoundNumbersComponent } from './roundnumber/selector.component';
     RoleMapper,
     StructureRepository,
     StructureMapper,
-    RoundRepository,
     RoundMapper,
     PouleMapper,
     PlaceMapper,

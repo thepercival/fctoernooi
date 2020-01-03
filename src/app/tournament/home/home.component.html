@@ -1,9 +1,10 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
-      <div *ngIf="tournament" class="d-flex justify-content-between mb-4">
+      <div class="d-flex justify-content-between mb-4">
         <span></span>
-        <h1 class="text-truncate pointer" (click)="openModalName(contentname)">{{tournament.getName()}}</h1>
+        <h1 *ngIf="tournament" class="text-truncate pointer" (click)="openModalName(contentname)">
+          {{tournament.getName()}}</h1>
         <h1 class="mr-1">
           <button [routerLink]="['']" type="button" class="btn btn-outline-secondary">
             <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
@@ -14,11 +15,25 @@
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
-      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-      <ngb-alert *ngIf="!processing && isAdmin() && !isManualMessageReadOnDevice()" type="info" [dismissible]="true"
-        (close)="manualMessageReadOnDevice()">gedetailleerde
+      <!-- <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert> -->
+      <ngb-alert *ngIf="oldStructure && !oldStructureRequested" type="info" [dismissible]="false">Wanneer je de
+        structuur toch nog wilt bekijken,
+        dan
+        kunnen we de structuur handmatig omzetten.
+      </ngb-alert>
+      <div *ngIf="oldStructure" class="d-flex justify-content-center">
+        <button *ngIf="!oldStructureRequested" (click)="sendRequestOldStructure()"
+          class="btn btn-outline-primary">verstuur aanvraag voor handmatige
+          omzetting</button>
+        <ngb-alert *ngIf="oldStructureRequested" type="success" [dismissible]="false">de aanvraag voor handmatige
+          omzetting is verstuurd
+        </ngb-alert>
+      </div>
+      <ngb-alert *ngIf="!processing && tournament && isAdmin() && !isManualMessageReadOnDevice()" type="info"
+        [dismissible]="true" (close)="manualMessageReadOnDevice()">gedetailleerde
         informatie kun je vinden onderaan de pagina via de handleiding-link</ngb-alert>
-      <ngb-alert *ngIf="!processing && !isAdmin()" type="danger" [dismissible]="false">je hebt geen rechten voor het
+      <ngb-alert *ngIf="!processing && tournament && !isAdmin()" type="danger" [dismissible]="false">je hebt geen
+        rechten voor het
         beheergedeelte, klik
         <a routerLink="['/toernooi/view', tournament.getId()]">hier</a> om naar het toernooi te gaan</ngb-alert>
       <div *ngIf="!processing && structure && isAdmin()" class="row d-flex justify-content-center">

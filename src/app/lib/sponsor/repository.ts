@@ -1,10 +1,10 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { APIConfig, APIRepository } from 'ngx-sport';
+import { APIConfig } from 'ngx-sport';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
+import { APIRepository } from '../repository';
 import { Sponsor } from '../sponsor';
 import { Tournament } from '../tournament';
 import { JsonSponsor, SponsorMapper } from './mapper';
@@ -18,9 +18,8 @@ export class SponsorRepository extends APIRepository {
 
     constructor(
         private http: HttpClient,
-        router: Router,
         private mapper: SponsorMapper) {
-        super(router);
+        super();
         this.url = super.getApiUrl() + this.getUrlpostfix();
     }
 
