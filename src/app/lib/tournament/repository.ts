@@ -1,6 +1,5 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { APIConfig } from 'ngx-sport';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -35,7 +34,7 @@ export class TournamentRepository extends APIRepository {
     }
 
     getObject(id: number): Observable<Tournament> {
-        const postUrl = APIConfig.getToken() === undefined ? '/public' : '';
+        const postUrl = this.getToken() === undefined ? '/public' : '';
         return this.http.get<JsonTournament>(this.url + postUrl + '/' + id, { headers: super.getHeaders() }).pipe(
             map((jsonTournament: JsonTournament) => {
                 if (jsonTournament.updated !== true) {
@@ -48,7 +47,7 @@ export class TournamentRepository extends APIRepository {
     }
 
     getUserRefereeId(tournament: Tournament): Observable<number> {
-        if (APIConfig.getToken() === undefined) {
+        if (this.getToken() === undefined) {
             return of(0);
         }
         return this.http.get<JsonTournament>(this.url + '/userrefereeid/' + tournament.getId(), { headers: super.getHeaders() }).pipe(

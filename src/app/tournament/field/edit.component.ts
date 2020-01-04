@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     Field,
-    FieldRepository,
     JsonField,
     PlanningRepository,
     Sport,
@@ -13,6 +12,7 @@ import {
 
 import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
+import { FieldRepository } from '../../lib/ngx-sport/field/repository';
 import { TournamentComponent } from '../component';
 
 @Component({
@@ -127,7 +127,7 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
 
         this.sportConfigService.createDefault(this.sport, this.competition, this.structure);
 
-        this.fieldRepository.createObject(field, this.competition).subscribe(
+        this.fieldRepository.createObject(field, this.tournament).subscribe(
             /* happy path */ fieldRes => {
                 this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament.getBreak()).subscribe(
                 /* happy path */ roundNumberOut => {
@@ -156,7 +156,7 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
         const sportChanged = this.sport !== this.field.getSport();
         this.field.setSport(this.sport);
 
-        this.fieldRepository.editObject(this.field, this.competition)
+        this.fieldRepository.editObject(this.field, this.tournament)
             .subscribe(
             /* happy path */ refereeRes => {
                     if (!sportChanged) {
@@ -198,7 +198,7 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
     //         sportId: 12 /* @TODO */
     //     };
 
-    //     this.fieldRepository.createObject(jsonField, this.competition)
+    //     this.fieldRepository.createObject(jsonField, this.tournament)
     //         .subscribe(
     //         /* happy path */ fieldRes => {
     //                 const fieldItem: IFieldListItem = { field: fieldRes, editable: false };
@@ -222,7 +222,7 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
     //     this.setAlert('info', 'de veldnaam wordt gewijzigd');
     //     this.processing = true;
 
-    //     this.fieldRepository.editObject(fieldItem.field, this.competition)
+    //     this.fieldRepository.editObject(fieldItem.field, this.tournament)
     //         .subscribe(
     //         /* happy path */ fieldRes => {
     //                 this.setAlert('success', 'de veldnaam is gewijzigd');

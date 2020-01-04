@@ -1,5 +1,5 @@
+import { HttpParams } from '@angular/common/http';
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { Observable, throwError as observableThrowError } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -32,6 +32,13 @@ export class APIRepository {
             return auth.token;
         }
         return undefined;
+    }
+
+    protected getOptions(): { headers: HttpHeaders; params: HttpParams } {
+        return {
+            headers: this.getHeaders(),
+            params: new HttpParams()
+        };
     }
 
     protected handleError(response: HttpErrorResponse): Observable<any> {

@@ -44,11 +44,8 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import {
   AssociationMapper,
-  AssociationRepository,
   CompetitionMapper,
-  CompetitionRepository,
   FieldMapper,
-  FieldRepository,
   LeagueMapper,
   LeagueRepository,
   NameService,
@@ -116,11 +113,9 @@ import { faTwitter, fab } from '@fortawesome/free-brands-svg-icons';
     SponsorMapper,
     RoleMapper,
     UserMapper,
-    CompetitionRepository,
     CompetitionMapper,
     SportMapper,
     PlanningConfigMapper,
-    AssociationRepository,
     AssociationMapper,
     LeagueRepository,
     LeagueMapper,

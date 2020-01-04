@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Field, FieldRepository, PlanningRepository, StructureRepository } from 'ngx-sport';
+import { Field, PlanningRepository, StructureRepository } from 'ngx-sport';
 
+import { FieldRepository } from '../../lib/ngx-sport/field/repository';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
@@ -73,7 +74,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
         this.setAlert('info', 'het veld wordt verwijderd');
         this.processing = true;
 
-        this.fieldRepository.removeObject(field, this.competition)
+        this.fieldRepository.removeObject(field, this.tournament)
             .subscribe(
             /* happy path */ fieldRes => {
                     this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament.getBreak())

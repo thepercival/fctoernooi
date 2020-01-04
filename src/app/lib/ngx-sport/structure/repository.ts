@@ -17,27 +17,22 @@ export class StructureRepository extends APIRepository {
     }
 
     getUrlpostfix(): string {
-        return 'structures';
+        return 'structure';
     }
 
     getUrl(tournament: Tournament): string {
-        return super.getApiUrl() + '/tournament' + tournament.getId() + '/' + this.getUrlpostfix();
+        return super.getApiUrl() + '/tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
     }
 
     getObject(tournament: Tournament): Observable<Structure> {
-        const options = {
-            headers: super.getHeaders(),
-            params: new HttpParams()
-        };
-        return this.http.get(this.getUrl(tournament), options).pipe(
+        return this.http.get(this.getUrl(tournament), this.getOptions()).pipe(
             map((json: JsonStructure) => this.mapper.toObject(json, tournament.getCompetition())),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(structure: Structure, tournament: Tournament): Observable<Structure> {
-        const options = { headers: super.getHeaders() };
-        return this.http.put(this.getUrl(tournament), this.mapper.toJson(structure), options).pipe(
+        return this.http.put(this.getUrl(tournament), this.mapper.toJson(structure), this.getOptions()).pipe(
             map((jsonRes: JsonStructure) => this.mapper.toObject(jsonRes, tournament.getCompetition())),
             catchError((err) => this.handleError(err))
         );

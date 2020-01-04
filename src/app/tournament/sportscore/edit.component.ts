@@ -9,7 +9,6 @@ import {
     SportCustom,
     SportScoreConfigService,
     StructureRepository,
-    FieldRepository,
     JsonField,
     PlanningRepository,
     SportScoreConfig,

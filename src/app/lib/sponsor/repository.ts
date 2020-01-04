@@ -1,6 +1,5 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { APIConfig } from 'ngx-sport';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -14,36 +13,40 @@ import { JsonSponsor, SponsorMapper } from './mapper';
  */
 @Injectable()
 export class SponsorRepository extends APIRepository {
-    private url: string;
 
     constructor(
         private http: HttpClient,
         private mapper: SponsorMapper) {
         super();
-        this.url = super.getApiUrl() + this.getUrlpostfix();
     }
 
     getUrlpostfix(): string {
         return 'sponsors';
     }
 
+
+    getUrl(tournament: Tournament): string {
+        return super.getApiUrl() + '/tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
+    }
+
     createObject(jsonSponsor: JsonSponsor, tournament: Tournament): Observable<Sponsor> {
-        return this.http.post(this.url, jsonSponsor, this.getOptions(tournament)).pipe(
+        return this.http.post(this.getUrl(tournament), jsonSponsor, this.getOptions()).pipe(
             map((res: JsonSponsor) => this.mapper.toObject(res, tournament)),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(sponsor: Sponsor, tournament: Tournament): Observable<Sponsor> {
-        return this.http.put(this.url + '/' + sponsor.getId(), this.mapper.toJson(sponsor), this.getOptions(tournament)).pipe(
+        const url = this.getUrl(tournament) + '/' + sponsor.getId();
+        return this.http.put(url, this.mapper.toJson(sponsor), this.getOptions()).pipe(
             map((res: JsonSponsor) => this.mapper.toObject(res, tournament, sponsor)),
             catchError((err) => this.handleError(err))
         );
     }
 
     removeObject(sponsor: Sponsor, tournament: Tournament): Observable<any> {
-        const url = this.url + '/' + sponsor.getId();
-        return this.http.delete(url, this.getOptions(tournament)).pipe(
+        const url = this.getUrl(tournament) + '/' + sponsor.getId();
+        return this.http.delete(url, this.getOptions()).pipe(
             map((res: any) => {
                 const index = tournament.getSponsors().indexOf(sponsor);
                 if (index > -1) {
@@ -55,34 +58,11 @@ export class SponsorRepository extends APIRepository {
     }
 
     uploadImage(sponsorId: number, tournament: Tournament, formData: FormData): Observable<string> {
-        return this.http.post(this.url + '/upload/', formData, this.getImageUploadOptions(sponsorId, tournament)).pipe(
+        const url = this.getUrl(tournament) + '/' + sponsorId + '/upload';
+        return this.http.post(url, formData, this.getOptions()).pipe(
             map((res: JsonSponsor) => res.logoUrl),
             catchError((err) => this.handleError(err))
         );
-    }
-
-    protected getOptions(tournament: Tournament): { headers: HttpHeaders; params: HttpParams } {
-        let httpParams = new HttpParams();
-        httpParams = httpParams.set('tournamentid', tournament.getId().toString());
-        return {
-            headers: super.getHeaders(),
-            params: httpParams
-        };
-    }
-
-    protected getImageUploadOptions(sponsorId: number, tournament: Tournament): { headers: HttpHeaders; params: HttpParams } {
-        let httpParams = new HttpParams();
-        httpParams = httpParams.set('tournamentid', tournament.getId().toString());
-        httpParams = httpParams.set('sponsorid', sponsorId.toString());
-        let headers = new HttpHeaders({ 'X-Api-Version': '17' });
-        const token = APIConfig.getToken();
-        if (token !== undefined) {
-            headers = headers.append('Authorization', 'Bearer ' + token);
-        }
-        return {
-            headers: headers,
-            params: httpParams
-        };
     }
 }
 

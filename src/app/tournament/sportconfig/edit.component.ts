@@ -9,7 +9,6 @@ import {
     SportCustom,
     SportScoreConfigService,
     StructureRepository,
-    FieldRepository,
     JsonField,
     PlanningRepository,
 } from 'ngx-sport';
@@ -17,6 +16,7 @@ import { forkJoin } from 'rxjs';
 import { CSSService } from '../../common/cssservice';
 import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
+import { FieldRepository } from '../../lib/ngx-sport/field/repository';
 import { TournamentComponent } from '../component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -184,7 +184,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
                     for (let i = 0; i < this.form.value['nrOfFields']; i++) {
                         const fieldNr = this.competition.getFields().length + i + 1;
                         const jsonField: JsonField = { number: fieldNr, name: '' + fieldNr, sportId: this.sportConfig.getSport().getId() };
-                        fieldReposAdds.push(this.fieldRepository.createObject(jsonField, this.competition));
+                        fieldReposAdds.push(this.fieldRepository.createObject(jsonField, this.tournament));
                     }
 
                     forkJoin(fieldReposAdds).subscribe(results => {
