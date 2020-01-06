@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StructureRepository } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
 import { GlobalEventsManager } from '../../common/eventmanager';
 import { MyNavigation } from '../../common/navigation';
 import { Role } from '../../lib/role';
 import { TournamentRepository } from '../../lib/tournament/repository';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { NavBarTournamentLiveboardLink } from '../../nav/nav.component';
 import { TournamentComponent } from '../component';
 

@@ -3,12 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   Competitor,
-  CompetitorRepository,
   NameService,
   Place,
   PlaceLocation,
-  PlaceRepository,
-  PlanningRepository,
   QualifyGroup,
   Round,
   Structure
@@ -20,6 +17,9 @@ import { MyNavigation } from '../../common/navigation';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
+import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository';
+import { PlaceRepository } from '../../lib/ngx-sport/place/repository';
+import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { TournamentComponent } from '../component';
 import { CompetitorListRemoveModalComponent } from './listremovemodal.component';
 
@@ -114,8 +114,8 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     placeToSwap.setCompetitor(tmp);
 
     const reposUpdates: Observable<Place>[] = [];
-    reposUpdates.push(this.placeRepository.editObject(this.placeToSwap, this.placeToSwap.getPoule()));
-    reposUpdates.push(this.placeRepository.editObject(placeToSwap, placeToSwap.getPoule()));
+    reposUpdates.push(this.placeRepository.editObject(this.placeToSwap, this.placeToSwap.getPoule(), this.tournament));
+    reposUpdates.push(this.placeRepository.editObject(placeToSwap, placeToSwap.getPoule(), this.tournament));
 
     this.swapHelper(reposUpdates);
   }
@@ -131,7 +131,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
       placesCopy.splice(placeIndex - 1, 1);
     }
     const reposUpdates: Observable<Place>[] = [];
-    this.places.forEach(placeIt => reposUpdates.push(this.placeRepository.editObject(placeIt, placeIt.getPoule())));
+    this.places.forEach(placeIt => reposUpdates.push(this.placeRepository.editObject(placeIt, placeIt.getPoule(), this.tournament)));
     this.swapHelper(reposUpdates);
   }
 
@@ -217,7 +217,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     competitor.setRegistered(newRegistered);
     const prefix = newRegistered ? 'aan' : 'af';
     this.setAlert('info', 'deelnemer ' + competitor.getName() + ' wordt ' + prefix + 'gemeld');
-    this.competitorRepository.editObject(competitor)
+    this.competitorRepository.editObject(competitor, this.tournament)
       .subscribe(
             /* happy path */ competitorRes => {
           this.setAlert('success', 'deelnemer ' + competitor.getName() + ' is ' + prefix + 'gemeld');
@@ -235,7 +235,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     const competitor = place.getCompetitor() !== undefined ? place.getCompetitor().getName() : '';
     place.setCompetitor(undefined);
     this.setAlert('info', 'deelnemer ' + competitor + ' wordt verwijderd');
-    this.placeRepository.editObject(place, place.getPoule())
+    this.placeRepository.editObject(place, place.getPoule(), this.tournament)
       .subscribe(
             /* happy path */ placeRes => {
           this.setAlert('success', 'deelnemer ' + competitor + ' is verwijderd');
@@ -268,11 +268,11 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   protected saveStructure(message: string) {
-    this.structureRepository.editObject(this.structure, this.competition)
+    this.structureRepository.editObject(this.structure, this.tournament)
       .subscribe(
           /* happy path */(structure: Structure) => {
           this.structure = structure;
-          this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament.getBreak())
+          this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament)
             .subscribe(
                     /* happy path */ roundNumberOut => {
                 this.initPlaces();

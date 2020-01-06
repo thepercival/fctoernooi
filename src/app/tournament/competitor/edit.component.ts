@@ -3,17 +3,17 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     Competitor,
-    CompetitorRepository,
     JsonCompetitor,
     NameService,
     Place,
-    PlaceRepository,
-    StructureRepository,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
+import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository';
 import { TournamentComponent } from '../component';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
+import { PlaceRepository } from '../../lib/ngx-sport/place/repository';
 
 @Component({
     selector: 'app-tournament-competitor-edit',
@@ -112,7 +112,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
             info: info ? info : undefined
         };
 
-        this.competitorRepository.createObject(competitor, association)
+        this.competitorRepository.createObject(competitor, this.tournament)
             .subscribe(
             /* happy path */ competitorRes => {
                     this.assignCompetitor(competitorRes);
@@ -123,7 +123,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
 
     assignCompetitor(competitor: Competitor) {
         this.place.setCompetitor(competitor);
-        this.placeRepository.editObject(this.place, this.place.getPoule())
+        this.placeRepository.editObject(this.place, this.place.getPoule(), this.tournament)
             .subscribe(
                   /* happy path */ placeRes => {
                     this.navigateBack();
@@ -147,7 +147,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         competitor.setName(name);
         competitor.setRegistered(registered);
         competitor.setInfo(info ? info : undefined);
-        this.competitorRepository.editObject(competitor)
+        this.competitorRepository.editObject(competitor, this.tournament)
             .subscribe(
                     /* happy path */ competitorRes => {
                     this.navigateBack();

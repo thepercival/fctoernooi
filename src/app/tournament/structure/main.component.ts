@@ -3,17 +3,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { cloneDeep } from 'lodash';
 import {
   Competitor,
-  CompetitorRepository,
-  PlanningRepository,
   Round,
   RoundNumber,
   Structure,
-  StructureRepository,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
+import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../component';
+import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 
 @Component({
   selector: 'app-tournament-structure',
@@ -103,7 +103,7 @@ export class StructureComponent extends TournamentComponent implements OnInit {
 
     this.processUnusedCompetitors(this.clonedStructure.getRootRound());
 
-    this.structureRepository.editObject(this.clonedStructure, this.competition)
+    this.structureRepository.editObject(this.clonedStructure, this.tournament)
       .subscribe(
           /* happy path */ structureRes => {
           // if (this.changedRoundNumber === undefined) {
@@ -130,7 +130,7 @@ export class StructureComponent extends TournamentComponent implements OnInit {
 
     // first better test creating planning in php!!
     const changedRoundNumber = structure.getFirstRoundNumber();
-    this.planningRepository.createObject(changedRoundNumber, this.tournament.getBreak())
+    this.planningRepository.createObject(changedRoundNumber, this.tournament)
       .subscribe(
           /* happy path */ roundNumberOut => this.completeSave(structure),
           /* error path */ e => { this.setAlert('danger', e); this.processing = false; },

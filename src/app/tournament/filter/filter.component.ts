@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Competitor, NameService, Place, Referee, StructureRepository } from 'ngx-sport';
+import { Competitor, NameService, Place, Referee } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
 import { MyNavigation } from '../../common/navigation';
@@ -9,6 +9,7 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 import { Role } from '../../lib/role';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 
 @Component({
     selector: 'app-tournament-filter',

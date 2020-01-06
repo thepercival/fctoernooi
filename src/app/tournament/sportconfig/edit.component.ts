@@ -4,21 +4,21 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
     Sport,
     SportConfig,
-    SportConfigRepository,
     SportConfigService,
     SportCustom,
     SportScoreConfigService,
-    StructureRepository,
     JsonField,
-    PlanningRepository,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
 import { CSSService } from '../../common/cssservice';
 import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
+import { SportConfigRepository } from '../../lib/ngx-sport/sport/config/repository';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { FieldRepository } from '../../lib/ngx-sport/field/repository';
 import { TournamentComponent } from '../component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 
 @Component({
     selector: 'app-tournament-sportconfig-edit',
@@ -177,7 +177,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         this.sportConfig.setWinPointsExt(this.form.value['winPointsExt']);
         this.sportConfig.setDrawPointsExt(this.form.value['drawPointsExt']);
 
-        this.sportConfigRepository.createObject(this.sportConfig, this.competition)
+        this.sportConfigRepository.createObject(this.sportConfig, this.tournament)
             .subscribe(
                 /* happy path */ sportConfigRes => {
                     const fieldReposAdds = [];
@@ -189,7 +189,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
 
                     forkJoin(fieldReposAdds).subscribe(results => {
                         const firstRoundNumber = this.structure.getFirstRoundNumber();
-                        this.planningRepository.createObject(firstRoundNumber, this.tournament.getBreak()).subscribe(
+                        this.planningRepository.createObject(firstRoundNumber, this.tournament).subscribe(
                     /* happy path */ roundNumberOut => {
                                 this.linkToSportConfig(); /* niet navigate back van kan van sport komen */
                                 this.processing = false;
@@ -219,7 +219,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         this.sportConfig.setWinPointsExt(this.form.value['winPointsExt']);
         this.sportConfig.setDrawPointsExt(this.form.value['drawPointsExt']);
 
-        this.sportConfigRepository.editObject(this.sportConfig, this.competition)
+        this.sportConfigRepository.editObject(this.sportConfig, this.tournament)
             .subscribe(
             /* happy path */ sportConfigRes => {
                     this.linkToSportConfig(); /* niet navigate back van kan van sport komen */

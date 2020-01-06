@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-import { NameService, PlanningRepository, StructureRepository } from 'ngx-sport';
+import { NameService } from 'ngx-sport';
 
 import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
+import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 
 @Component({
     selector: 'app-tournament-planningedit',
@@ -156,7 +158,7 @@ export class PlanningEditComponent extends TournamentComponent implements OnInit
                     /* happy path */ tournamentRes => {
                         this.tournament = tournamentRes;
                         if (reschedule === true) {
-                            this.planningRepository.editObject(firstRoundNumber, this.tournament.getBreak()).subscribe(
+                            this.planningRepository.editObject(firstRoundNumber, this.tournament).subscribe(
                                     /* happy path */ gamesRes => {
                                     this.myNavigation.back();
                                 },

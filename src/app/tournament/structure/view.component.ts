@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StructureRepository } from 'ngx-sport';
 
 import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../component';
 
 @Component({

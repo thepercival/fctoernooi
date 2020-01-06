@@ -1,9 +1,10 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Structure, StructureRepository, StructureService, Competition } from 'ngx-sport';
+import { Structure, StructureService, Competition } from 'ngx-sport';
 
 import { IAlert } from '../common/alert';
 import { Tournament } from '../lib/tournament';
 import { TournamentRepository } from '../lib/tournament/repository';
+import { StructureRepository } from '../lib/ngx-sport/structure/repository';
 
 /**
  * Created by coen on 11-10-17.
@@ -51,7 +52,7 @@ export class TournamentComponent {
                         }
                         return;
                     }
-                    this.structureRepository.getObject(tournament.getCompetition())
+                    this.structureRepository.getObject(tournament)
                         .subscribe(
                             /* happy path */(structure: Structure) => {
                                 this.structure = structure;

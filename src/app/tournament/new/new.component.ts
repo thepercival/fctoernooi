@@ -7,7 +7,6 @@ import {
   Competition,
   Field,
   League,
-  PlanningRepository,
   RankingService,
   Season,
   Sport,
@@ -15,7 +14,6 @@ import {
   SportScoreConfigService,
   Structure,
   StructureMapper,
-  StructureRepository,
   StructureService,
 } from 'ngx-sport';
 
@@ -24,6 +22,8 @@ import { IAlert } from '../../common/alert';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TranslateService } from '../../lib/translate';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
+import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 
 
 @Component({
@@ -155,10 +155,10 @@ export class NewComponent implements OnInit {
         /* happy path */ tournamentOut => {
           const structureService = new StructureService(Tournament.StructureOptions);
           const structure: Structure = structureService.create(tournamentOut.getCompetition(), nrofcompetitors);
-          this.structureRepository.editObject(structure, tournamentOut.getCompetition())
+          this.structureRepository.editObject(structure, tournamentOut)
             .subscribe(
             /* happy path */(structureOut: Structure) => {
-                this.planningRepository.createObject(structureOut.getFirstRoundNumber(), tournamentOut.getBreak())
+                this.planningRepository.createObject(structureOut.getFirstRoundNumber(), tournamentOut)
                   .subscribe(
                     /* happy path */ roundNumberOut => {
                       this.router.navigate(['/toernooi', tournamentOut.getId()]);

@@ -3,13 +3,11 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     Game,
-    GameRepository,
     GameScore,
     GameScoreHomeAway,
     INewQualifier,
     NameService,
     Place,
-    PlaceRepository,
     Poule,
     QualifyRuleMultiple,
     QualifyService,
@@ -19,7 +17,6 @@ import {
     SportScoreConfig,
     SportScoreConfigService,
     State,
-    StructureRepository,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
 
@@ -29,6 +26,9 @@ import { Role } from '../../lib/role';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TranslateService } from '../../lib/translate';
 import { TournamentComponent } from '../component';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
+import { PlaceRepository } from '../../lib/ngx-sport/place/repository';
+import { GameRepository } from '../../lib/ngx-sport/game/repository';
 
 class HomeAwayFormControl {
     home: FormControl;
@@ -422,7 +422,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         // }
 
 
-        this.gameRepository.editObject(this.game, this.game.getPoule())
+        this.gameRepository.editObject(this.game, this.game.getPoule(), this.tournament)
             .subscribe(
                 /* happy path */ gameRes => {
                     this.game = gameRes;
@@ -441,7 +441,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
 
                     const reposUpdates = [];
                     changedPlaces.forEach((changedPlace) => {
-                        reposUpdates.push(this.placeRepository.editObject(changedPlace, changedPlace.getPoule()));
+                        reposUpdates.push(this.placeRepository.editObject(changedPlace, changedPlace.getPoule(), this.tournament));
                     });
 
                     forkJoin(reposUpdates).subscribe(results => {

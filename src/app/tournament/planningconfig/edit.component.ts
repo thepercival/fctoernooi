@@ -2,20 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     NameService,
-    PlanningRepository,
     RoundNumber,
-    StructureRepository,
     PlanningConfig,
     PlanningConfigService,
     PlanningConfigMapper,
-    PlanningConfigRepository,
     JsonPlanningConfig,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../component';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
+import { PlanningConfigRepository } from '../../lib/ngx-sport/planning/config/repository';
 
 @Component({
     selector: 'app-planningconfig-edit',
@@ -180,7 +180,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.setAlert('info', 'instellingen worden opgeslagen');
         this.processing = true;
 
-        this.configRepository.createObject(jsonConfig, this.roundNumber)
+        this.configRepository.createObject(jsonConfig, this.roundNumber, this.tournament)
             .subscribe(
                 /* happy path */ configRes => {
                     this.savePlanning(true, false);
@@ -202,7 +202,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         console.log('needsRecreating: ', needsRecreating);
         console.log('needsRescheduling: ', needsRescheduling);
 
-        this.configRepository.editObject(jsonConfig, config)
+        this.configRepository.editObject(jsonConfig, config, this.tournament)
             .subscribe(
                 /* happy path */ configRes => {
                     this.savePlanning(needsRecreating, needsRescheduling);
@@ -217,9 +217,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     private savePlanning(needsRecreating: boolean, needsRescheduling: boolean) {
-        const breakPeriod = this.tournament.getBreak();
         if (needsRecreating) {
-            this.planningRepository.createObject(this.roundNumber, breakPeriod)
+            this.planningRepository.createObject(this.roundNumber, this.tournament)
                 .subscribe(
                     /* happy path */ roundNumberOut => {
                         this.setAlert('success', 'de instellingen zijn opgeslagen');
@@ -231,7 +230,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
                     /* onComplete */() => this.processing = false
                 );
         } else if (needsRescheduling) {
-            this.planningRepository.editObject(this.roundNumber, breakPeriod)
+            this.planningRepository.editObject(this.roundNumber, this.tournament)
                 .subscribe(
                     /* happy path */ gamesRes => {
                         this.setAlert('success', 'de instellingen zijn opgeslagen');

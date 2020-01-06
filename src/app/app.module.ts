@@ -47,15 +47,11 @@ import {
   CompetitionMapper,
   FieldMapper,
   LeagueMapper,
-  LeagueRepository,
   NameService,
   PlanningConfigMapper,
   RefereeMapper,
-  RefereeRepository,
   SeasonMapper,
-  SeasonRepository,
   SportConfigMapper,
-  SportConfigRepository,
   SportMapper,
 } from 'ngx-sport';
 
@@ -78,6 +74,9 @@ import { SponsorMapper } from './lib/sponsor/mapper';
 import { SponsorRepository } from './lib/sponsor/repository';
 import { TournamentMapper } from './lib/tournament/mapper';
 import { TournamentRepository } from './lib/tournament/repository';
+import { FieldRepository } from './lib/ngx-sport/field/repository';
+import { SportConfigRepository } from './lib/ngx-sport/sport/config/repository';
+import { RefereeRepository } from './lib/ngx-sport/referee/repository';
 import { TournamentShellRepository } from './lib/tournament/shell/repository';
 import { UserMapper } from './lib/user/mapper';
 import { NavComponent } from './nav/nav.component';
@@ -117,9 +116,7 @@ import { faTwitter, fab } from '@fortawesome/free-brands-svg-icons';
     SportMapper,
     PlanningConfigMapper,
     AssociationMapper,
-    LeagueRepository,
     LeagueMapper,
-    SeasonRepository,
     SeasonMapper,
     SponsorRepository,
     FieldRepository,

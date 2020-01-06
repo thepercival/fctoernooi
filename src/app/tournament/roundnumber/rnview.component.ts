@@ -10,8 +10,7 @@ import {
   SportScoreConfigService,
   State,
   Round,
-  PlanningConfig,
-  PlanningRepository
+  PlanningConfig
 } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
@@ -22,6 +21,7 @@ import { Role } from '../../lib/role';
 import { Tournament } from '../../lib/tournament';
 import { Observable, interval, of, Subscription } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
+import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 
 @Component({
   selector: 'app-tournament-roundnumber-view',
@@ -91,7 +91,7 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   protected refreshPlanning() {
     this.refreshPlanningTimer = interval(5000) // repeats every 5 seconds
       .pipe(
-        switchMap(() => this.planningRepository.getObject(this.roundNumber).pipe()),
+        switchMap(() => this.planningRepository.getObject(this.roundNumber, this.tournament).pipe()),
         catchError(err => of(null))
       ).subscribe(
           /* happy path */(roundNumberOut: RoundNumber) => {

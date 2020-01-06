@@ -42,28 +42,20 @@ import {
 import { ClipboardModule } from 'ngx-clipboard';
 import {
   CompetitorMapper,
-  CompetitorRepository,
   GameMapper,
   GamePlaceMapper,
-  GameRepository,
   GameScoreMapper,
   PlaceMapper,
-  PlaceRepository,
-  PlanningRepository,
   PlanningMapper,
   PouleMapper,
   RoundMapper,
   RoundNumberMapper,
   SportConfigMapper,
-  SportConfigRepository,
   SportConfigService,
   PlanningConfigService,
-  PlanningConfigRepository,
   SportScoreConfigMapper,
   SportScoreConfigService,
   StructureMapper,
-  StructureRepository,
-  SportScoreConfigRepository,
 } from 'ngx-sport';
 
 import { CSSService } from '../common/cssservice';
@@ -108,7 +100,15 @@ import { RoutingModule } from './tournament-routing.module';
 import { ViewComponent } from './view/view.component';
 import { SportScoreEditComponent } from './sportscore/edit.component';
 import { ModalRoundNumbersComponent } from './roundnumber/selector.component';
+import { StructureRepository } from '../lib/ngx-sport/structure/repository';
 import { SportRepository } from '../lib/ngx-sport/sport/repository';
+import { SportConfigRepository } from '../lib/ngx-sport/sport/config/repository';
+import { SportScoreConfigRepository } from '../lib/ngx-sport/sport/scoreconfig/repository';
+import { CompetitorRepository } from '../lib/ngx-sport/competitor/repository';
+import { PlaceRepository } from '../lib/ngx-sport/place/repository';
+import { GameRepository } from '../lib/ngx-sport/game/repository';
+import { PlanningRepository } from '../lib/ngx-sport/planning/repository';
+import { PlanningConfigRepository } from '../lib/ngx-sport/planning/config/repository';
 
 @NgModule({
   imports: [

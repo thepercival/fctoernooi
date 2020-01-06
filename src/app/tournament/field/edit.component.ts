@@ -4,16 +4,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
     Field,
     JsonField,
-    PlanningRepository,
     Sport,
     SportConfigService,
-    StructureRepository,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { FieldRepository } from '../../lib/ngx-sport/field/repository';
 import { TournamentComponent } from '../component';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
+import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 
 @Component({
     selector: 'app-tournament-field-edit',
@@ -129,7 +129,7 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
 
         this.fieldRepository.createObject(field, this.tournament).subscribe(
             /* happy path */ fieldRes => {
-                this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament.getBreak()).subscribe(
+                this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament).subscribe(
                 /* happy path */ roundNumberOut => {
                         this.tournamentRepository.syncRefereeRoles(this.tournament).subscribe(
                             /* happy path */ allRolesRes => {
@@ -203,7 +203,7 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
     //         /* happy path */ fieldRes => {
     //                 const fieldItem: IFieldListItem = { field: fieldRes, editable: false };
     //                 this.fieldsList.push(fieldItem);
-    //                 this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament.getBreak())
+    //                 this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament)
     //                     .subscribe(
     //                     /* happy path */ gamesRes => {
     //                             this.processing = false;

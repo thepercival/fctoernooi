@@ -4,25 +4,23 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
     Sport,
     SportConfig,
-    SportConfigRepository,
     SportConfigService,
     SportCustom,
     SportScoreConfigService,
-    StructureRepository,
     JsonField,
-    PlanningRepository,
     SportScoreConfig,
     RoundNumber,
     JsonSportScoreConfig,
-    SportScoreConfigRepository,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
 import { CSSService } from '../../common/cssservice';
 import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../component';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '../../lib/translate';
+import { SportScoreConfigRepository } from '../../lib/ngx-sport/sport/scoreconfig/repository';
 import { ModalRoundNumbersComponent } from '../roundnumber/selector.component';
 
 @Component({
@@ -176,7 +174,7 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
         const sport = this.sportConfig.getSport();
         const json = this.getJson(sport);
 
-        this.sportScoreConfigRepository.createObject(json, sport, this.roundNumber)
+        this.sportScoreConfigRepository.createObject(json, sport, this.roundNumber, this.tournament)
             .subscribe(
         /* happy path */ sportConfigRes => {
                     this.myNavigation.back();
@@ -194,7 +192,7 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
         const sport = this.sportConfig.getSport();
         const json = this.getJson(sport);
 
-        this.sportScoreConfigRepository.editObject(json, scoreConfig)
+        this.sportScoreConfigRepository.editObject(json, scoreConfig, this.tournament)
             .subscribe(
         /* happy path */ configRes => {
                     this.myNavigation.back();

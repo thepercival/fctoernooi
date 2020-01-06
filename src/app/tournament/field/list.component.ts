@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Field, PlanningRepository, StructureRepository } from 'ngx-sport';
+import { Field } from 'ngx-sport';
 
 import { FieldRepository } from '../../lib/ngx-sport/field/repository';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
 import { TranslateService } from '../../lib/translate';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
+import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 
 @Component({
     selector: 'app-tournament-fields',
@@ -77,7 +79,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
         this.fieldRepository.removeObject(field, this.tournament)
             .subscribe(
             /* happy path */ fieldRes => {
-                    this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament.getBreak())
+                    this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament)
                         .subscribe(
                         /* happy path */ roundNumberOut => {
                                 this.processing = false;

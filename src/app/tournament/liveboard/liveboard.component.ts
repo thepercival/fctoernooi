@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NameService, StructureRepository } from 'ngx-sport';
+import { NameService } from 'ngx-sport';
 
 import { CSSService } from '../../common/cssservice';
 import { GlobalEventsManager } from '../../common/eventmanager';
@@ -10,6 +10,7 @@ import { EndRankingScreen, GamesScreen, PoulesRankingScreen, SponsorScreen } fro
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { NavBarTournamentLiveboardLink } from '../../nav/nav.component';
 import { TournamentComponent } from '../component';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 
 @Component({
     selector: 'app-tournament-liveboard',

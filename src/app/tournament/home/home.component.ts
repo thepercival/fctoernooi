@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { League, SportConfigService, StructureRepository, PlanningRepository, RoundNumber } from 'ngx-sport';
+import { League, SportConfigService, RoundNumber } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
 import { CSSService } from '../../common/cssservice';
@@ -11,6 +11,7 @@ import { Tournament } from '../../lib/tournament';
 import { TournamentExportConfig, TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
 import { TranslateService } from '../../lib/translate';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 
 @Component({
     selector: 'app-tournament-home',
@@ -36,7 +37,6 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private sportConfigService: SportConfigService,
-        private planningRepository: PlanningRepository,
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);

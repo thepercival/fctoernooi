@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StructureRepository } from 'ngx-sport';
 
 import { SponsorScreenService } from '../../lib/liveboard/screens';
 import { Sponsor } from '../../lib/sponsor';
 import { SponsorRepository } from '../../lib/sponsor/repository';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';

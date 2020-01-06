@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlanningRepository, Referee, RefereeRepository, StructureRepository } from 'ngx-sport';
+import { Referee } from 'ngx-sport';
 
 import { IAlert } from '../../common/alert';
-import { Tournament } from '../../lib/tournament';
+import { RefereeRepository } from '../../lib/ngx-sport/referee/repository';
 import { TournamentRepository } from '../../lib/tournament/repository';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, forkJoin } from 'rxjs';
+import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 
 @Component({
   selector: 'app-tournament-referee',
@@ -86,8 +88,8 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     this.processing = true;
 
     const reposUpdates: Observable<Referee>[] = [
-      this.refereeRepository.editObject(referee, this.competition),
-      this.refereeRepository.editObject(downgrade, this.competition)
+      this.refereeRepository.editObject(referee, this.tournament),
+      this.refereeRepository.editObject(downgrade, this.tournament)
     ];
     this.upgradeRankHelper(reposUpdates);
   }
@@ -96,7 +98,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     forkJoin(reposUpdates).subscribe(results => {
       this.referees.sort((refA, refB) => refA.getRank() - refB.getRank());
       const firstRoundNumber = this.structure.getFirstRoundNumber();
-      this.planningRepository.createObject(firstRoundNumber, this.tournament.getBreak()).subscribe(
+      this.planningRepository.createObject(firstRoundNumber, this.tournament).subscribe(
             /* happy path */ roundNumberOut => {
           this.setAlert('success', 'de belangrijkheid van de scheidsrechters is gewijzigd');
         },
@@ -115,11 +117,11 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     this.setAlert('info', 'de scheidsrechter wordt verwijderd');
     this.processing = true;
 
-    this.refereeRepository.removeObject(referee, this.competition)
+    this.refereeRepository.removeObject(referee, this.tournament)
       .subscribe(
             /* happy path */ refereeRes => {
           const firstRoundNumber = this.structure.getFirstRoundNumber();
-          this.planningRepository.createObject(firstRoundNumber, this.tournament.getBreak()).subscribe(
+          this.planningRepository.createObject(firstRoundNumber, this.tournament).subscribe(
             /* happy path */ roundNumberOut => {
               if (referee.getEmailaddress() === undefined || referee.getEmailaddress().length === 0) {
                 this.processing = false;

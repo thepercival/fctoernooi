@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StructureRepository } from 'ngx-sport';
 
 import { MyNavigation } from '../../common/navigation';
 import { SponsorScreenService } from '../../lib/liveboard/screens';
@@ -9,6 +8,7 @@ import { Sponsor } from '../../lib/sponsor';
 import { JsonSponsor } from '../../lib/sponsor/mapper';
 import { SponsorRepository } from '../../lib/sponsor/repository';
 import { TournamentRepository } from '../../lib/tournament/repository';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../component';
 
 @Component({

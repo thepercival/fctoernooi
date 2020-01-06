@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StructureRepository, RoundNumber, PlanningRepository } from 'ngx-sport';
+import { RoundNumber } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
 import { MyNavigation } from '../../common/navigation';
 import { Role } from '../../lib/role';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
+import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 
 @Component({
   selector: 'app-tournament-games',
@@ -54,7 +56,7 @@ export class GameListComponent extends TournamentComponent implements OnInit {
   updatePlanning(roundNumber: RoundNumber) {
     console.log('update planning for roundnumber ' + roundNumber.getNumber());
     this.processing = true;
-    this.planningRepository.createObject(roundNumber, this.tournament.getBreak())
+    this.planningRepository.createObject(roundNumber, this.tournament)
       .subscribe(
           /* happy path */ roundNumberOut => roundNumber = roundNumberOut,
           /* error path */ e => { this.setAlert('danger', e); this.processing = false; },

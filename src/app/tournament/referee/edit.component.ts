@@ -3,16 +3,16 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     JsonReferee,
-    PlanningRepository,
     Referee,
-    RefereeRepository,
-    StructureRepository,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { User } from '../../lib/user';
 import { TournamentComponent } from '../component';
+import { RefereeRepository } from '../../lib/ngx-sport/referee/repository';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
+import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 
 @Component({
     selector: 'app-tournament-referee-edit',
@@ -126,9 +126,9 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
             emailaddress: emailaddress ? emailaddress : undefined,
             info: info ? info : undefined
         };
-        this.refereeRepository.createObject(ref, this.competition).subscribe(
+        this.refereeRepository.createObject(ref, this.tournament).subscribe(
             /* happy path */ refereeRes => {
-                this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament.getBreak()).subscribe(
+                this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament).subscribe(
                 /* happy path */ roundNumberOut => {
                         this.tournamentRepository.syncRefereeRoles(this.tournament).subscribe(
                         /* happy path */ allRolesRes => {
@@ -164,7 +164,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
         const emailaddressChanged = emailaddress !== this.referee.getEmailaddress();
         this.referee.setEmailaddress(emailaddress ? emailaddress : undefined);
         this.referee.setInfo(info ? info : undefined);
-        this.refereeRepository.editObject(this.referee, this.competition)
+        this.refereeRepository.editObject(this.referee, this.tournament)
             .subscribe(
             /* happy path */ refereeRes => {
                     if (!emailaddressChanged) {

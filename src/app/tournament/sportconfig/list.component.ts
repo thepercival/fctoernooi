@@ -2,11 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
-  PlanningRepository,
   Sport,
   SportConfig,
-  SportConfigRepository,
-  StructureRepository,
   SportConfigService,
 } from 'ngx-sport';
 
@@ -14,6 +11,9 @@ import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TranslateService } from '../../lib/translate';
 import { TournamentComponent } from '../component';
+import { SportConfigRepository } from '../../lib/ngx-sport/sport/config/repository';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
+import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 
 @Component({
   selector: 'app-tournament-sport',
@@ -101,10 +101,10 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
 
     this.sportConfigService.remove(sportConfig, this.structure);
 
-    this.sportConfigRepository.removeObject(sportConfig, this.competition, this.structure)
+    this.sportConfigRepository.removeObject(sportConfig, this.tournament, this.structure)
       .subscribe(
         /* happy path */ refereeRes => {
-          this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament.getBreak()).subscribe(
+          this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament).subscribe(
             /* happy path */ roundNumberOut => {
               this.setAlert('success', 'de sport is verwijderd');
             },
