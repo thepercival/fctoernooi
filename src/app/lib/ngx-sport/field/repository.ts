@@ -21,7 +21,7 @@ export class FieldRepository extends APIRepository {
     }
 
     getUrl(tournament: Tournament): string {
-        return super.getApiUrl() + '/tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
+        return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
     }
 
     createObject(json: JsonField, tournament: Tournament): Observable<Field> {

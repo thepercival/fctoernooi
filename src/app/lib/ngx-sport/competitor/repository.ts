@@ -11,7 +11,7 @@ import { Tournament } from '../../tournament';
 @Injectable()
 export class CompetitorRepository extends APIRepository {
 
-    private unusedCompetitors: UnusedCompetitors[];
+    private unusedCompetitors: UnusedCompetitors[] = [];
 
     constructor(
         private mapper: CompetitorMapper, private http: HttpClient) {
@@ -23,7 +23,7 @@ export class CompetitorRepository extends APIRepository {
     }
 
     getUrl(tournament: Tournament): string {
-        return super.getApiUrl() + '/tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
+        return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
     }
 
     createObject(json: JsonCompetitor, tournament: Tournament): Observable<Competitor> {

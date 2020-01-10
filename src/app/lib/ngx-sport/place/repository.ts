@@ -21,7 +21,7 @@ export class PlaceRepository extends APIRepository {
     }
 
     getUrl(tournament: Tournament): string {
-        return super.getApiUrl() + '/tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
+        return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
     }
 
     editObject(place: Place, poule: Poule, tournament: Tournament): Observable<Place> {

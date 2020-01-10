@@ -80,7 +80,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         const date = new Date();
         this.nameForm.controls.name.setValue(this.competition.getLeague().getName());
         this.copyForm.controls.date.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
-        this.shareForm.controls.url.setValue('https://www.fctoernooi.nl/' + this.tournament.getId());
+        this.shareForm.controls.url.setValue(location.origin + '/' + this.tournament.getId());
         this.shareForm.controls.public.setValue(this.tournament.getPublic());
         this.processing = false;
     }
@@ -213,8 +213,21 @@ export class HomeComponent extends TournamentComponent implements OnInit {
                     poulepivottables: this.exportForm.value['poulepivottables'],
                     qrcode: this.exportForm.value['qrcode']
                 };
+
                 const exportType = result.substr(7);
-                const newWindow = window.open(this.tournamentRepository.getExportUrl(this.tournament, exportType, exportConfig));
+                this.processing = true;
+                this.tournamentRepository.getExportUrl(this.tournament, exportType, exportConfig)
+                    .subscribe(
+                /* happy path */(url: string) => {
+                            console.log(url);
+                            window.open(url);
+                        },
+                /* error path */ e => {
+                            this.setAlert('danger', 'het exporteren is niet gelukt');
+                            this.processing = false;
+                        },
+                /* onComplete */() => { this.processing = false; }
+                    );
             }
         }, (reason) => {
         });

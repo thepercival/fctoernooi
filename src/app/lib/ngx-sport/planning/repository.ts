@@ -21,7 +21,7 @@ export class PlanningRepository extends APIRepository {
     }
 
     getUrl(tournament: Tournament, roundNumber: RoundNumber): string {
-        return super.getApiUrl() + '/tournaments/' + tournament.getId() + '/' + this.getUrlpostfix() + '/' + roundNumber.getNumber();
+        return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix() + '/' + roundNumber.getNumber();
     }
 
     getObject(roundNumber: RoundNumber, tournament: Tournament): Observable<RoundNumber> {

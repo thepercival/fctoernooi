@@ -17,12 +17,12 @@ export class TournamentShellRepository extends APIRepository {
         super();
     }
 
-    getUrlpostfix(): string {
-        return 'shells';
+    getUrlpostfix(mine: boolean): string {
+        return (mine ? 'my' : '') + 'shells';
     }
 
-    getUrl(): string {
-        return super.getApiUrl() + (this.getToken() === undefined ? 'public/' : '') + this.getUrlpostfix();
+    getUrl(mine: boolean): string {
+        return super.getApiUrl() + (this.getToken() === undefined ? 'public/' : '') + this.getUrlpostfix(mine);
     }
 
     getObjects(filter?: TournamentShellFilter): Observable<TournamentShell[]> {
@@ -30,7 +30,8 @@ export class TournamentShellRepository extends APIRepository {
             headers: super.getHeaders(),
             params: this.getHttpParams(filter)
         };
-        return this.http.get<TournamentShell[]>(this.getUrl(), options).pipe(
+        const mine = filter ? filter.mine : false;
+        return this.http.get<TournamentShell[]>(this.getUrl(mine), options).pipe(
             map((jsonShells: TournamentShell[]) => this.convertObjects(jsonShells)),
             catchError((err) => this.handleError(err))
         );
@@ -74,5 +75,5 @@ export interface TournamentShellFilter {
     startDate?: Date;
     endDate?: Date;
     name?: string;
-    withRoles?: boolean;
+    mine?: boolean;
 }

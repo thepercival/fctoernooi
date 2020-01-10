@@ -21,7 +21,7 @@ export class RefereeRepository extends APIRepository {
     }
 
     getUrl(tournament: Tournament): string {
-        return super.getApiUrl() + '/tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
+        return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
     }
 
     createObject(json: JsonReferee, tournament: Tournament): Observable<Referee> {

@@ -21,7 +21,7 @@ export class SportConfigRepository extends APIRepository {
     }
 
     getUrl(tournament: Tournament): string {
-        return super.getApiUrl() + '/tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
+        return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
     }
 
     createObject(sportConfig: SportConfig, tournament: Tournament): Observable<SportConfig> {

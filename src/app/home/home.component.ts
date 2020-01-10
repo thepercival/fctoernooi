@@ -79,7 +79,8 @@ export class HomeComponent implements OnInit {
 
     this.authService.validateToken().subscribe(
         /* happy path */ res => {
-        this.tournamentShellRepos.getObjects()
+        const filter = { mine: true };
+        this.tournamentShellRepos.getObjects(filter)
           .subscribe(
               /* happy path */ myShells => {
               this.sortShellsByDateDesc(myShells);

@@ -21,7 +21,8 @@ export class StructureRepository extends APIRepository {
     }
 
     getUrl(tournament: Tournament): string {
-        return super.getApiUrl() + '/tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
+        const prefix = this.getToken() ? '' : 'public/';
+        return super.getApiUrl() + prefix + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
     }
 
     getObject(tournament: Tournament): Observable<Structure> {

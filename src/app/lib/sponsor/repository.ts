@@ -26,7 +26,7 @@ export class SponsorRepository extends APIRepository {
 
 
     getUrl(tournament: Tournament): string {
-        return super.getApiUrl() + '/tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
+        return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
     }
 
     createObject(jsonSponsor: JsonSponsor, tournament: Tournament): Observable<Sponsor> {
