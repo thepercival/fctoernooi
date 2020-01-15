@@ -51,9 +51,9 @@ export class Tournament {
     }
 
     hasRole(userId: number, roleValue: number) {
-        return (this.getRoles().find(roleIt => {
+        return this.getRoles().some(roleIt => {
             return (roleIt.getUser().getId() === userId && (roleIt.getValue() & roleValue) === roleIt.getValue());
-        }) !== undefined);
+        });
     }
 
     getName(): string {

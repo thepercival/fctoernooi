@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -36,12 +36,7 @@ export class TournamentRepository extends APIRepository {
     getObject(id: number): Observable<Tournament> {
         const url = super.getApiUrl() + (this.getToken() === undefined ? 'public/' : '') + this.getUrlpostfix() + '/' + id;
         return this.http.get<JsonTournament>(url, { headers: super.getHeaders() }).pipe(
-            map((jsonTournament: JsonTournament) => {
-                if (jsonTournament.updated !== true) {
-                    throw Error('het toernooi heeft een oude structuur (-1)');
-                }
-                return this.mapper.toObject(jsonTournament);
-            }),
+            map((jsonTournament: JsonTournament) => this.mapper.toObject(jsonTournament)),
             catchError((err) => this.handleError(err))
         );
     }

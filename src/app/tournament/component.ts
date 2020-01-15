@@ -45,6 +45,12 @@ export class TournamentComponent {
             .subscribe(
                 /* happy path */(tournament: Tournament) => {
                     this.tournament = tournament;
+                    if (!tournament.getUpdated()) {
+                        this.oldStructure = true;
+                        this.setAlert('danger', 'het toernooi heeft een oude structuur (-1)');
+                        this.processing = false;
+                        return;
+                    }
                     this.competition = tournament.getCompetition();
                     if (noStructure === true) {
                         if (callback !== undefined) {
@@ -65,9 +71,6 @@ export class TournamentComponent {
                         );
                 },
                 /* error path */(e: string) => {
-                    if (e.endsWith('(-1)')) {
-                        this.oldStructure = true;
-                    }
                     this.setAlert('danger', e); this.processing = false;
                 },
                 /* onComplete */() => { }

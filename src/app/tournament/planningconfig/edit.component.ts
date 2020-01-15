@@ -65,12 +65,12 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             ])],
             minutesBetweenGames: ['', Validators.compose([
                 Validators.required,
-                Validators.min(this.validations.minMinutesPerGame),
+                Validators.min(this.validations.minMinutesPerGame - 1),
                 Validators.max(this.validations.maxMinutesPerGame)
             ])],
             minutesAfter: ['', Validators.compose([
                 Validators.required,
-                Validators.min(this.validations.minMinutesPerGame),
+                Validators.min(this.validations.minMinutesPerGame - 1),
                 Validators.max(this.validations.maxMinutesPerGame)
             ])],
             selfReferee: false,

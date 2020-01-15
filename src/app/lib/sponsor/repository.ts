@@ -57,12 +57,28 @@ export class SponsorRepository extends APIRepository {
         );
     }
 
-    uploadImage(sponsorId: number, tournament: Tournament, formData: FormData): Observable<string> {
+    uploadImage(sponsorId: number, tournament: Tournament, input: FormData): Observable<string> {
         const url = this.getUrl(tournament) + '/' + sponsorId + '/upload';
-        return this.http.post(url, formData, this.getOptions()).pipe(
+        return this.http.post(url, input, this.getUploadOptions()).pipe(
             map((res: JsonSponsor) => res.logoUrl),
             catchError((err) => this.handleError(err))
         );
+    }
+
+    protected getUploadOptions() {
+        return {
+            headers: this.getUploadHeaders(),
+            params: new HttpParams()
+        };
+    }
+
+    protected getUploadHeaders(): HttpHeaders {
+        let headers = new HttpHeaders({ 'X-Api-Version': '17' });
+        const token = this.getToken();
+        if (token !== undefined) {
+            headers = headers.append('Authorization', 'Bearer ' + token);
+        }
+        return headers;
     }
 }
 

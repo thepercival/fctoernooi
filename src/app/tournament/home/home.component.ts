@@ -313,7 +313,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
                     this.setAlert('success', 'de nieuwe editie is aangemaakt, je bevindt je nu in de nieuwe editie');
                 },
                 /* error path */ e => {
-                    this.setAlert('danger', 'er kon geen nieuwe editie worden aangemaakt');
+                    this.setAlert('danger', 'er kon geen nieuwe editie worden aangemaakt : ' + e);
                     this.processing = false;
                 },
                 /* onComplete */() => { this.processing = false; }

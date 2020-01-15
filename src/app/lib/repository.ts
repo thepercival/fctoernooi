@@ -48,6 +48,8 @@ export class APIRepository {
             errortext = 'er kan geen internet verbinding gemaakt worden';
         } else if (response.status === 0) {
             errortext = 'er kan geen verbinding met de data-service gemaakt worden, ververs de pagina';
+        } else if (response.error && response.error.message) {
+            errortext = response.error.message;
         }
         return observableThrowError(errortext);
     }

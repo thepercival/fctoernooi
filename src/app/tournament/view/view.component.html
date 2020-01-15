@@ -30,8 +30,8 @@
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-      <ngb-alert *ngIf="oldStructure && isAdmin()" type="info" [dismissible]="false">Ga naar de de
-        beheer-pagina om de structuur handmatig te laten omzetten.
+      <ngb-alert *ngIf="oldStructure && isAdmin()" type="info" [dismissible]="false">Ga naar de
+        beheer-pagina om te vragen om de structuur handmatig om te zetten.
       </ngb-alert>
       <ngb-alert *ngIf="oldStructure && !isAdmin()" type="info" [dismissible]="false">Vraag de toernooi-beheerder om de
         oude structuur te laten omzetten.
