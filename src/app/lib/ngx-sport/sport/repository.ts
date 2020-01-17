@@ -24,7 +24,7 @@ export class SportRepository extends APIRepository {
         return super.getApiUrl() + this.getUrlpostfix();
     }
 
-    getObject(customId: number): Observable<Sport> {
+    getObjectByCustomId(customId: number): Observable<Sport> {
         const url = this.getUrl() + '/' + customId;
         return this.http.get(url, this.getOptions()).pipe(
             map((json: JsonSport) => this.mapper.toObject(json)),

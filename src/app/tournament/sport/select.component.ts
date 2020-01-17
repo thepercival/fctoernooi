@@ -107,7 +107,7 @@ export class SportSelectComponent implements OnInit {
 
     sendSportByCustomId(customId: number) {
         this.processing = true;
-        this.sportRepository.getObject(customId).subscribe(
+        this.sportRepository.getObjectByCustomId(customId).subscribe(
             /* happy path */ sportRes => {
                 this.sendSport.emit(sportRes);
             },
