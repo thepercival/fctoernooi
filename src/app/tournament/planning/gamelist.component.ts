@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RoundNumber } from 'ngx-sport';
+import { Observable, interval, of, Subscription } from 'rxjs';
+import { switchMap, catchError } from 'rxjs/operators';
+import { RoundNumber, Structure } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
 import { MyNavigation } from '../../common/navigation';
@@ -15,11 +17,12 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
   templateUrl: './gamelist.component.html',
   styleUrls: ['./gamelist.component.css']
 })
-export class GameListComponent extends TournamentComponent implements OnInit {
+export class GameListComponent extends TournamentComponent implements OnInit, OnDestroy {
   showPrintBtn: boolean;
-  noRefresh = false;
   userIsPlannerOrStructureAdmin: boolean;
   shouldShowEndRanking: boolean;
+  private refreshPlanningTimer: Subscription;
+  private reload;
 
   constructor(
     route: ActivatedRoute,
@@ -39,9 +42,27 @@ export class GameListComponent extends TournamentComponent implements OnInit {
       this.shouldShowEndRanking = (hasNext || this.structure.getRootRound().getPoules().length === 1);
       this.userIsPlannerOrStructureAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(),
         Role.STRUCTUREADMIN + Role.PLANNER);
+      this.enableRefreshPlanning(this.structure.getFirstRoundNumber());
       this.processing = false;
     });
     this.showPrintBtn = true;
+  }
+
+  private enableRefreshPlanning(roundNumber: RoundNumber) {
+    const roundNumberWithoutPlanning = this.getFirstRoundNumberWithoutPlanning(roundNumber);
+    if (roundNumberWithoutPlanning !== undefined) {
+      this.refreshPlanning(roundNumberWithoutPlanning);
+    }
+  }
+
+  private getFirstRoundNumberWithoutPlanning(roundNumber: RoundNumber): RoundNumber {
+    if (roundNumber.getHasPlanning() === false) {
+      return roundNumber;
+    }
+    if (roundNumber.hasNext() === false) {
+      return undefined;
+    }
+    return this.getFirstRoundNumberWithoutPlanning(roundNumber.getNext());
   }
 
   scroll() {
@@ -53,15 +74,30 @@ export class GameListComponent extends TournamentComponent implements OnInit {
     );
   }
 
-  updatePlanning(roundNumber: RoundNumber) {
-    console.log('update planning for roundnumber ' + roundNumber.getNumber());
-    this.processing = true;
-    this.planningRepository.createObject(roundNumber, this.tournament)
-      .subscribe(
-          /* happy path */ roundNumberOut => roundNumber = roundNumberOut,
-          /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-          /* onComplete */() => this.processing = false
-      );
+  protected refreshPlanning(firstRoundNumberWithoutPlanning: RoundNumber) {
+    this.refreshPlanningTimer = interval(5000) // repeats every 5 seconds
+      .pipe(
+        switchMap(() => this.planningRepository.getObject(firstRoundNumberWithoutPlanning, this.tournament).pipe()),
+        catchError(err => of(null))
+      ).subscribe(
+          /* happy path */(roundNumberOut: RoundNumber) => {
+          if (roundNumberOut.getHasPlanning()) {
+            this.reload = ((this.reload === undefined) ? true : !this.reload);
+            this.stopPlanningRefresh();
+            this.enableRefreshPlanning(roundNumberOut);
+          }
+        });
   }
+
+  ngOnDestroy() {
+    this.stopPlanningRefresh();
+  }
+
+  stopPlanningRefresh() {
+    if (this.refreshPlanningTimer !== undefined) {
+      this.refreshPlanningTimer.unsubscribe();
+    }
+  }
+
 }
 

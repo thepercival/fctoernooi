@@ -18,7 +18,7 @@
       <div *ngIf="!processing">
         <app-tournament-roundnumber-view *ngFor="let roundNumber of structure.getRoundNumbers()"
           [tournament]="tournament" [roundNumber]="roundNumber" [canEditSettings]="userIsPlannerOrStructureAdmin"
-          (scroll)="scroll()" [parentReturnAction]="'/toernooi/games'" (doUpdatePlanning)="updatePlanning($event)">
+          (scroll)="scroll()" [parentReturnAction]="'/toernooi/games'" [reload]="reload">
         </app-tournament-roundnumber-view>
         <div *ngIf="shouldShowEndRanking">
           <div class="d-flex justify-content-between mt-3" id="endranking">

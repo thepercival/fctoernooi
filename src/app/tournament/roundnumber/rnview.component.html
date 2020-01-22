@@ -61,11 +61,12 @@
         <ng-template ngFor let-gmData [ngForOf]="gameDatas">
           <tr *ngIf="isBreakBeforeGame(gmData.game)" class="table-info">
             <td></td>
-            <td *ngIf="planningConfig.getEnableTime()"></td>
+            <td *ngIf="planningConfig.getEnableTime()"><span *ngIf="!sameDay">{{tournamentBreak.start.toLocaleString("nl",
+                            {"month":"short","day":"2-digit"})}} </span>
+              <span>{{tournamentBreak.start.toLocaleString("nl", {"hour12":
+                            false,"hour":"2-digit","minute":"2-digit"})}}</span></td>
             <td></td>
-            <td class="text-right">PAUZE</td>
-            <td></td>
-            <td class=""></td>
+            <td colspan="3" class="text-center">PAUZE</td>
             <td *ngIf="hasReferees" class="d-none d-sm-table-cell"></td>
           </tr>
           <tr [ngClass]="{ 'batch-striped-row': (gmData.game.getBatchNr() % 2) === 0 }"

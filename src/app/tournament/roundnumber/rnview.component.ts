@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -10,7 +10,8 @@ import {
   SportScoreConfigService,
   State,
   Round,
-  PlanningConfig
+  PlanningConfig,
+  PlanningPeriod
 } from 'ngx-sport';
 
 import { AuthService } from '../../auth/auth.service';
@@ -19,8 +20,6 @@ import { Favorites } from '../../lib/favorites';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { Role } from '../../lib/role';
 import { Tournament } from '../../lib/tournament';
-import { Observable, interval, of, Subscription } from 'rxjs';
-import { switchMap, catchError } from 'rxjs/operators';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 
 @Component({
@@ -28,29 +27,27 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
   templateUrl: './rnview.component.html',
   styleUrls: ['./rnview.component.scss']
 })
-export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit, OnDestroy {
+export class TournamentRoundNumberViewComponent implements OnChanges, OnInit, AfterViewInit {
 
   @Input() tournament: Tournament;
   @Input() roundNumber: RoundNumber;
+  @Input() reload: boolean;
   @Input() parentReturnAction: string;
   @Input() userRefereeId: number;
   @Input() canEditSettings: boolean;
   @Output() popOverIsOpen = new EventEmitter<boolean>();
-  @Output() doUpdatePlanning = new EventEmitter<RoundNumber>();
   private nrOfOpenPopovers = 0;
   @Output() scroll = new EventEmitter<boolean>(); // kan misschien uit
   alert: any;
   sameDay = true;
-  previousGameStartDateTime: Date;
+  tournamentBreak: PlanningPeriod;
   userIsGameResultAdmin: boolean;
   favorites: Favorites;
   hasReferees: boolean;
   gameDatas: GameData[];
   private sportScoreConfigService: SportScoreConfigService;
-  // game data
   roundNumberNeedsRanking: boolean;
   planningConfig: PlanningConfig;
-  private refreshPlanningTimer: Subscription;
 
   constructor(
     private router: Router,
@@ -65,21 +62,13 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   }
 
   ngOnInit() {
+    this.tournamentBreak = this.tournament.getBreak();
     this.planningConfig = this.roundNumber.getValidPlanningConfig();
     this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.GAMERESULTADMIN);
     this.favorites = this.favRepository.getItem(this.tournament);
-    // @TODO
-    this.hasReferees = this.tournament.getCompetition().getReferees().length > 0 || this.planningConfig.getSelfReferee();
-
-    // gamedate
     this.roundNumberNeedsRanking = this.roundNumber.needsRanking();
-
-    this.gameDatas = this.getGameData();
-    this.sameDay = this.gameDatas.length > 1 ? this.isSameDay(this.gameDatas[0], this.gameDatas[this.gameDatas.length - 1]) : true;
-
-    if (this.roundNumber.getHasPlanning() === false) {
-      this.refreshPlanning();
-    }
+    this.hasReferees = this.tournament.getCompetition().getReferees().length > 0 || this.planningConfig.getSelfReferee();
+    this.reloadGameData();
   }
 
   ngAfterViewInit() {
@@ -88,30 +77,18 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     }
   }
 
-  protected refreshPlanning() {
-    this.refreshPlanningTimer = interval(5000) // repeats every 5 seconds
-      .pipe(
-        switchMap(() => this.planningRepository.getObject(this.roundNumber, this.tournament).pipe()),
-        catchError(err => of(null))
-      ).subscribe(
-          /* happy path */(roundNumberOut: RoundNumber) => {
-          this.roundNumber = roundNumberOut;
-          this.gameDatas = this.getGameData();
-          this.sameDay = this.gameDatas.length > 1 ? this.isSameDay(this.gameDatas[0], this.gameDatas[this.gameDatas.length - 1]) : true;
-          if (this.roundNumber.getHasPlanning()) {
-            this.stopPlanningRefresh();
-          }
-        });
-  }
-
-  ngOnDestroy() {
-    this.stopPlanningRefresh();
-  }
-
-  stopPlanningRefresh() {
-    if (this.refreshPlanningTimer !== undefined) {
-      this.refreshPlanningTimer.unsubscribe();
+  ngOnChanges(changes: SimpleChanges) {
+    console.log(changes);
+    if (changes.reload && changes.reload.currentValue !== changes.reload.previousValue && changes.reload.currentValue !== undefined) {
+      if (this.gameDatas.length === 0) {
+        this.reloadGameData();
+      }
     }
+  }
+
+  private reloadGameData() {
+    this.gameDatas = this.getGameData();
+    this.sameDay = this.gameDatas.length > 1 ? this.isSameDay(this.gameDatas[0], this.gameDatas[this.gameDatas.length - 1]) : true;
   }
 
   get GameHOME(): boolean { return Game.HOME; }
@@ -195,20 +172,10 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
   }
 
   isBreakBeforeGame(game: Game): boolean {
-    if (!this.tournament.hasBreak()) {
+    if (this.tournamentBreak === undefined) {
       return false;
     }
-    if (this.previousGameStartDateTime === undefined) {
-      if (game.getStartDateTime() !== undefined) {
-        this.previousGameStartDateTime = new Date(game.getStartDateTime().getTime());
-      }
-      return false;
-    }
-    const cfg = this.roundNumber.getValidPlanningConfig();
-    const newStartDateTime = new Date(this.previousGameStartDateTime.getTime());
-    newStartDateTime.setMinutes(newStartDateTime.getMinutes() + cfg.getMaximalNrOfMinutesPerGame() + cfg.getMinutesBetweenGames());
-    this.previousGameStartDateTime = new Date(game.getStartDateTime().getTime());
-    return newStartDateTime < game.getStartDateTime();
+    return game.getStartDateTime().getTime() === this.tournamentBreak.end.getTime();
   }
 
   hasAPlaceACompetitor(game: Game): boolean {
@@ -283,10 +250,6 @@ export class TournamentRoundNumberViewComponent implements OnInit, AfterViewInit
     const ruleSet = this.tournament.getCompetition().getRuleSet();
     const rankingService = new RankingService(undefined, ruleSet);
     return rankingService.getRuleDescriptions();
-  }
-
-  updatePlanning() {
-    this.doUpdatePlanning.emit(this.roundNumber);
   }
 }
 

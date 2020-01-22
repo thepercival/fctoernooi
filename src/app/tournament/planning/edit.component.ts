@@ -137,6 +137,11 @@ export class PlanningEditComponent extends TournamentComponent implements OnInit
                 this.form.controls.breaktime.value.hour,
                 this.form.controls.breaktime.value.minute
             );
+            if (breakStartDateTime.getTime() < startDateTime.getTime()) {
+                this.setAlert('danger', 'de pauze moet na het begin van het toernooi starten');
+                this.processing = false;
+                return;
+            }
         }
         const breakDuration = this.form.controls.breakduration.value;
 

@@ -25,7 +25,7 @@ export class PlanningRepository extends APIRepository {
     }
 
     getObject(roundNumber: RoundNumber, tournament: Tournament): Observable<RoundNumber> {
-        return this.http.get(this.getUrl(tournament, roundNumber), this.getCustomOptions()).pipe(
+        return this.http.get(this.getUrl(tournament, roundNumber), this.getOptions()).pipe(
             map((jsonStructure: JsonStructure) => this.planningMapper.toObject(jsonStructure, roundNumber)),
             catchError((err) => this.handleError(err))
         );
@@ -34,7 +34,7 @@ export class PlanningRepository extends APIRepository {
     createObject(roundNumber: RoundNumber, tournament: Tournament): Observable<RoundNumber> {
         this.removeGames(roundNumber);
         const url = this.getUrl(tournament, roundNumber) + '/create';
-        return this.http.post(url, undefined, this.getCustomOptions(tournament.getBreak())).pipe(
+        return this.http.post(url, undefined, this.getOptions()).pipe(
             map((jsonStructure: JsonStructure) => this.planningMapper.toObject(jsonStructure, roundNumber)),
             catchError((err) => this.handleError(err))
         );
@@ -51,7 +51,7 @@ export class PlanningRepository extends APIRepository {
 
     editObject(roundNumber: RoundNumber, tournament: Tournament): Observable<boolean> {
         const url = this.getUrl(tournament, roundNumber) + '/reschedule';
-        return this.http.post(url, undefined, this.getCustomOptions(tournament.getBreak())).pipe(
+        return this.http.post(url, undefined, this.getOptions()).pipe(
             map((dates: Date[]) => this.reschedule(roundNumber, dates)),
             catchError((err) => this.handleError(err))
         );
@@ -74,21 +74,5 @@ export class PlanningRepository extends APIRepository {
             this.reschedule(roundNumber.getNext(), dates);
         }
         return true;
-    }
-
-    protected getCustomOptions(blockedPeriod?: PlanningPeriod, withNext?: boolean): { headers: HttpHeaders; params: HttpParams } {
-        let httpParams = new HttpParams();
-        if (blockedPeriod !== undefined) {
-            httpParams = httpParams.set('blockedperiodstart', blockedPeriod.start.toISOString());
-            httpParams = httpParams.set('blockedperiodend', blockedPeriod.end.toISOString());
-        }
-        if (withNext !== undefined) {
-            httpParams = httpParams.set('withnext', withNext.toString());
-        }
-
-        return {
-            headers: super.getHeaders(),
-            params: httpParams
-        };
     }
 }
