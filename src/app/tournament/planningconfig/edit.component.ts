@@ -199,8 +199,6 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.processing = true;
         const needsRecreating = this.needsRecreating(config);
         const needsRescheduling = this.needsRescheduling(config);
-        console.log('needsRecreating: ', needsRecreating);
-        console.log('needsRescheduling: ', needsRescheduling);
 
         this.configRepository.editObject(jsonConfig, config, this.tournament)
             .subscribe(

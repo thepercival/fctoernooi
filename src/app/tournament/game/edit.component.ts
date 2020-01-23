@@ -17,6 +17,7 @@ import {
     SportScoreConfig,
     SportScoreConfigService,
     State,
+    QualifyGroup,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
 
@@ -62,6 +63,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
     userRefereeId: number;
     private enablePlayedAtFirstChange;
     private originalPouleState: number;
+    private rankingService: RankingService;
 
     constructor(
         route: ActivatedRoute,
@@ -193,6 +195,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         //     this.model.startdate = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
         //     this.model.starttime = { hour: date.getHours(), minute: date.getMinutes() };
         // }
+
         this.processing = false;
     }
 
@@ -329,8 +332,9 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         }
 
         const round = poule.getRound();
-        const ranking = new RankingService(round, this.competition.getRuleSet());
-        const pouleRankingItems = ranking.getItemsForPoule(this.game.getPoule());
+        this.rankingService = new RankingService(round, this.competition.getRuleSet());
+
+        const pouleRankingItems = this.rankingService.getItemsForPoule(this.game.getPoule());
         const equalPouleItems = this.getEqualPouleRankingItemsWithQualifyRules(pouleRankingItems);
         const postFix = '(' + this.nameService.getPouleName(this.game.getPoule(), true) + ')';
         let warnings: string[] = this.getWarningsForEqualQualifiersHelper(equalPouleItems, postFix);
@@ -344,7 +348,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
                 if (multipleRule === undefined) {
                     return;
                 }
-                const rankedItems = ranking.getItemsForHorizontalPoule(horizontalPoule);
+                const rankedItems = this.rankingService.getItemsForHorizontalPoule(horizontalPoule);
                 const equalRuleItems = this.getEqualRuleRankingItems(multipleRule, rankedItems);
                 const postFixTmp = '(' + this.nameService.getHorizontalPouleName(horizontalPoule) + ')';
                 warnings = warnings.concat(this.getWarningsForEqualQualifiersHelper(equalRuleItems, postFixTmp));
@@ -364,12 +368,29 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
     }
 
     protected getEqualRuleRankingItems(multipleRule: QualifyRuleMultiple, rankingItems: RankedRoundItem[]): RankedRoundItem[][] {
+        if (multipleRule.getWinnersOrLosers() === QualifyGroup.LOSERS) {
+            rankingItems = this.reverseRanking(rankingItems);
+        }
         const equalItemsPerRank = this.getEqualRankedItems(rankingItems);
         const nrToQualify = multipleRule.getToPlaces().length;
         return equalItemsPerRank.filter(equalItems => {
             const equalRank = equalItems[0].getRank();
-            return equalRank <= nrToQualify && ((equalRank + (equalItems.length - 1)) > nrToQualify);
+            const nrToQualifyTmp = nrToQualify - (equalRank - 1);
+            return nrToQualifyTmp > 0 && equalItems.length > nrToQualifyTmp;
         });
+    }
+
+    protected reverseRanking(rankingItems: RankedRoundItem[]): RankedRoundItem[] {
+        const nrOfItems = rankingItems.length;
+        const reversedRankingItems = [];
+        rankingItems.forEach(rankingItem => {
+            const uniqueRank = (nrOfItems + 1) - rankingItem.getUniqueRank();
+            const nrOfEqualRank = this.rankingService.getItemsByRank(rankingItems, rankingItem.getRank()).length;
+            const rank = (nrOfItems + 1) - (rankingItem.getRank() + (nrOfEqualRank - 1));
+            reversedRankingItems.push(new RankedRoundItem(rankingItem.getUnranked(), uniqueRank, rank));
+        });
+        reversedRankingItems.sort((itemA, itemB) => itemA.getUniqueRank() - itemB.getUniqueRank());
+        return reversedRankingItems;
     }
 
     protected getEqualPouleRankingItemsWithQualifyRules(rankingItems: RankedRoundItem[]): RankedRoundItem[][] {
@@ -386,7 +407,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         const equalItems = [];
         const maxRank = rankingItems[rankingItems.length - 1].getRank();
         for (let rank = 1; rank <= maxRank; rank++) {
-            const equalItemsTmp = rankingItems.filter(item => item.getRank() === rank);
+            const equalItemsTmp = this.rankingService.getItemsByRank(rankingItems, rank);
             if (equalItemsTmp.length > 1) {
                 equalItems.push(equalItemsTmp);
             }

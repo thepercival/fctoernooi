@@ -219,7 +219,6 @@ export class HomeComponent extends TournamentComponent implements OnInit {
                 this.tournamentRepository.getExportUrl(this.tournament, exportType, exportConfig)
                     .subscribe(
                 /* happy path */(url: string) => {
-                            console.log(url);
                             window.open(url);
                         },
                 /* error path */ e => {

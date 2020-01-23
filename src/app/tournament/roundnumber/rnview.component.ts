@@ -78,7 +78,6 @@ export class TournamentRoundNumberViewComponent implements OnChanges, OnInit, Af
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
     if (changes.reload && changes.reload.currentValue !== changes.reload.previousValue && changes.reload.currentValue !== undefined) {
       if (this.gameDatas.length === 0) {
         this.reloadGameData();
