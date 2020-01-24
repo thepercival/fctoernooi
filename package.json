@@ -30,7 +30,7 @@
     "@fortawesome/free-brands-svg-icons": "^5.11.2",
     "@fortawesome/free-regular-svg-icons": "^5.11.2",
     "@fortawesome/free-solid-svg-icons": "^5.11.2",
-    "@ng-bootstrap/ng-bootstrap": "^5.1.1",
+    "@ng-bootstrap/ng-bootstrap": "^5.2.1",
     "bootstrap": "^4.4.1",
     "core-js": "^3.2.1",
     "lodash": "^4.17.15",

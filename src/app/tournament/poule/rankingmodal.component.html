@@ -1,0 +1,73 @@
+<div class="modal-header">
+    <h4 class="modal-title"><span>{{nameService.getPouleName(poule, true)}}</span></h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="activeModal.dismiss('close')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+
+
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+        <li [ngbNavItem]="1">
+            <a ngbNavLink>stand</a>
+            <ng-template ngbNavContent>
+                <app-tournament-pouleranking [poule]="poule" [tournament]="tournament">
+                </app-tournament-pouleranking>
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="2">
+            <a ngbNavLink>puntentelling</a>
+            <ng-template ngbNavContent>
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>sport</th>
+                            <th class="">resultaat</th>
+                            <th class="text-right">punten</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-template ngFor let-sportConfig [ngForOf]="poule.getRound().getNumber().getSportConfigs()">
+                            <tr>
+                                <td>{{sportConfig.getSport().getName()}}</td>
+                                <td>overwinning</td>
+                                <td class="text-right">{{sportConfig.getWinPoints()}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{sportConfig.getSport().getName()}}</td>
+                                <td>gelijkspel</td>
+                                <td class="text-right">{{sportConfig.getDrawPoints()}}</td>
+                            </tr>
+                            <tr *ngIf="poule.getRound().getNumber().getValidPlanningConfig().hasExtension()">
+                                <td>{{sportConfig.getSport().getName()}}</td>
+                                <td>overwinning</td>
+                                <td class="text-right">{{sportConfig.getWinPointsExt()}}</td>
+                            </tr>
+                            <tr *ngIf="poule.getRound().getNumber().getValidPlanningConfig().hasExtension()">
+                                <td>{{sportConfig.getSport().getName()}}</td>
+                                <td>gelijkspel</td>
+                                <td class="text-right">{{sportConfig.getDrawPointsExt()}}</td>
+                            </tr>
+                        </ng-template>
+                    </tbody>
+                </table>
+            </ng-template>
+        </li>
+
+        <li [ngbNavItem]="3">
+            <a ngbNavLink>rangschikking</a>
+            <ng-template ngbNavContent>
+                <p class="pt-2">de onderstaande regels bepalen de rangschikking</p>
+                <ul class="list-group">
+                    <li *ngFor="let description of getDescriptionRankingRules(); let index = index"
+                        class="list-group-item">
+                        <span class="badge badge-secondary badge-pill">{{index+1}}</span>
+                        <span class="ml-2">{{description}}</span>
+                    </li>
+                </ul>
+            </ng-template>
+        </li>
+    </ul>
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+</div>

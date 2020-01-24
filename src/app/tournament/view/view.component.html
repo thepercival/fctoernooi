@@ -15,11 +15,8 @@
         </h1>
       </div>
       <div *ngIf="tournament" class="d-flex justify-content-between">
-        <div class="text-info">
-          <ul>
-            <li>Gebruik de paarse pouleletter om de stand te bekijken.</li>
-            <li>Elke minuut worden de uitslagen op deze pagina automatisch bijgewerkt.</li>
-          </ul>
+        <div class="alert alert-info" role="alert">
+          Gebruik de knoppen links om de poulestand te bekijken.
         </div>
         <app-progress [toggleProgress]="toggleProgress" [max]="refreshAfterSeconds"
           (executeAtZero)="executeScheduledTask()"></app-progress>

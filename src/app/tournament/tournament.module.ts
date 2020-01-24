@@ -38,6 +38,7 @@ import {
   NgbModalModule,
   NgbPopoverModule,
   NgbTimepickerModule,
+  NgbNavModule,
 } from '@ng-bootstrap/ng-bootstrap';
 import { ClipboardModule } from 'ngx-clipboard';
 import {
@@ -109,6 +110,8 @@ import { PlaceRepository } from '../lib/ngx-sport/place/repository';
 import { GameRepository } from '../lib/ngx-sport/game/repository';
 import { PlanningRepository } from '../lib/ngx-sport/planning/repository';
 import { PlanningConfigRepository } from '../lib/ngx-sport/planning/config/repository';
+import { PouleRankingModalComponent } from './poule/rankingmodal.component';
+import { NgbNavbar } from '@ng-bootstrap/ng-bootstrap/dropdown/dropdown';
 
 @NgModule({
   imports: [
@@ -116,6 +119,7 @@ import { PlanningConfigRepository } from '../lib/ngx-sport/planning/config/repos
     CommonModule,
     RoutingModule,
     NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule,
+    NgbNavModule,
     ReactiveFormsModule,
     FontAwesomeModule,
     CommonSharedModule
@@ -157,10 +161,11 @@ import { PlanningConfigRepository } from '../lib/ngx-sport/planning/config/repos
     FilterComponent,
     ModalRoundNumbersComponent,
     CompetitorListRemoveModalComponent,
+    PouleRankingModalComponent,
     ProgressComponent,
     EscapeHtmlPipe
   ],
-  entryComponents: [ModalRoundNumbersComponent, CompetitorListRemoveModalComponent],
+  entryComponents: [ModalRoundNumbersComponent, CompetitorListRemoveModalComponent, PouleRankingModalComponent],
   providers: [
     RoleMapper,
     StructureRepository,

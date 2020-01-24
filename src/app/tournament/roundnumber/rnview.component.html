@@ -31,25 +31,26 @@
       </colgroup>
       <thead>
         <tr>
-          <th *ngIf="roundNumberNeedsRanking" class="text-center text-info pointer" title="poule" container="body"
-            autoClose="outside" placement="right" [ngbPopover]="popRules" #p="ngbPopover">
+          <th *ngIf="roundNumberNeedsRanking" class="text-center" title="poule">
             <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
           </th>
           <th *ngIf="!roundNumberNeedsRanking" class="text-center" title="wedstrijd">
             <span>vs</span>
           </th>
           <th *ngIf="planningConfig.getEnableTime()" class="pointer text-info" container="body" title="start"
-            placement="right" [ngbPopover]="getGameTimeTooltipDescription()">
-            <span
-              *ngIf="!sameDay">{{roundNumber.getFirstStartDateTime().toLocaleString("nl",{"month":"short","day":"2-digit"})}}</span>
-            <span *ngIf="sameDay">start</span>
+            placement="right">
+            <button class="btn btn-sm btn-outline-info" (click)="openModal(planningInfo)">
+              <span>start</span>
+            </button>
           </th>
           <th class="text-center" title="veld">
             <i class="fi flaticon-soccer-field"></i>
           </th>
           <th class="text-right">thuis</th>
           <th class="text-center" title="score">
-            <i class="fi flaticon-scoreboard"></i>
+            <button class="btn btn-sm btn-outline-info" (click)="openModal(scoreInfo)">
+              <i class="fi flaticon-scoreboard"></i>
+            </button>
           </th>
           <th>uit</th>
           <th *ngIf="hasReferees" class="d-none d-sm-table-cell text-right" title="scheidsrechter">
@@ -77,9 +78,7 @@
             </td>
             <td *ngIf="gmData.hasPopover && gmData.poule.needsRanking" class="text-center">
               <button class="btn btn-sm {{cssService.getQualifyRound(gmData.poule.round,'btn-outline-info')}}"
-                container="body" placement="right" [ngbPopover]="popRanking" autoClose="outside" triggers="manual"
-                #p="ngbPopover" (click)="showPouleRanking( p, gmData.game.getPoule() )" (shown)="popoverShown()"
-                (hidden)="popoverHidden()">
+                (click)="openModalPouleRank(gmData.game.getPoule())">
                 <span>{{gmData.poule.name}}</span>
               </button>
             </td>
@@ -129,21 +128,75 @@
   </div>
 </div>
 
-<ng-template #popRanking let-poule="poule" let-tournament="tournament">
-  <app-tournament-pouleranking [poule]="poule" [tournament]="tournament"></app-tournament-pouleranking>
+<ng-template #planningInfo let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">
+      <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> planning informatie
+    </h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>de start is op {{tournament.getCompetition().getStartDateTime().toLocaleString("nl",
+          {"month":"short","day":"2-digit"})}} om {{tournament.getCompetition().getStartDateTime().toLocaleString("nl", {"hour12":
+            false,"hour":"2-digit","minute":"2-digit"})}}
+    </p>
+    <p>het aantal onderlinge duels is {{roundNumber.getValidPlanningConfig().getNrOfHeadtohead()}}</p>
+    <p>de wedstrijden duren {{roundNumber.getValidPlanningConfig().getMinutesPerGame()}} minuten</p>
+    <p *ngIf="roundNumber.getValidPlanningConfig().hasExtension()">
+      de eventuele verlenging duurt {{roundNumber.getValidPlanningConfig().getMinutesPerGameExt()}} minuten
+    </p>
+    <p>er zit {{roundNumber.getValidPlanningConfig().getMinutesBetweenGames()}} minuten tussen de wedstrijden</p>
+  </div>
+
 </ng-template>
 
-<ng-template #popRules>
-  <div class="card border-0">
-    <div class="card-header card-header-rules d-flex justify-content-between px-0 pt-2 pb-1">
-      <span>regelvolgorde</span>
-    </div>
-    <div class="card-body card-body-rules p-0">
-      <div class="card-text">
-        <ol class="pl-3 pt-2">
-          <li *ngFor="let ruleDescription of getRankingRuleDescriptions()">{{ruleDescription}}</li>
-        </ol>
-      </div>
-    </div>
+<ng-template #scoreInfo let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fi flaticon-scoreboard"></i> score informatie</h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    Als deelnemer wil je weten tot hoever je moet spelen.
+
+    <table class="table mb-0">
+      <thead>
+        <tr>
+          <th>sport</th>
+          <th>eenheden</th>
+          <th class="">van/naar</th>
+          <th class="text-right">min/max</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-template ngFor let-scoreConfig [ngForOf]="roundNumber.getValidSportScoreConfigs()">
+          <tr>
+            <td>{{scoreConfig.getSport().getName()}}</td>
+            <td>{{translate.getScoreNameMultiple(scoreConfig)}}</td>
+            <td>{{translate.getScoreDirection(scoreConfig.getDirection())}}</td>
+            <td class="text-right">{{scoreConfig.getMaximum()}}</td>
+          </tr>
+          <tr *ngIf="scoreConfig.hasNext()">
+            <td>{{scoreConfig.getNext().getSport().getName()}}</td>
+            <td>{{translate.getScoreNameMultiple(scoreConfig.getNext())}}</td>
+            <td>{{translate.getScoreDirection(scoreConfig.getNext().getDirection())}}</td>
+            <td class="text-right">{{scoreConfig.getNext().getMaximum()}}</td>
+          </tr>
+          <tr *ngIf="scoreConfig.hasNext()">
+            <td>{{scoreConfig.getNext().getSport().getName()}}</td>
+            <td colspan="3">De invoer vindt plaats o.b.v.
+              {{getInputName(scoreConfig)}}. De berekening vindt plaats o.b.v.
+              {{getCalculateName(scoreConfig)}}</td>
+          </tr>
+        </ng-template>
+      </tbody>
+    </table>
+
+
+    als max op 0 dan oneindig of als direction = min dan 0
+
   </div>
 </ng-template>
