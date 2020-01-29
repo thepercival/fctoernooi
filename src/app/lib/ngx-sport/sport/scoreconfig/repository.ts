@@ -27,7 +27,7 @@ export class SportScoreConfigRepository extends APIRepository {
     createObject(
         jsonSportScoreConfig: JsonSportScoreConfig, sport: Sport, roundNumber: RoundNumber, tournament: Tournament
     ): Observable<SportScoreConfig> {
-        const options = this.getCreateOptions(roundNumber, sport);
+        const options = this.getCustomOptions(roundNumber, sport);
         return this.http.post(this.getUrl(tournament), jsonSportScoreConfig, options).pipe(
             map((jsonResult: JsonSportScoreConfig) => this.mapper.toObject(jsonResult, sport, roundNumber)),
             catchError((err) => this.handleError(err))
@@ -36,7 +36,8 @@ export class SportScoreConfigRepository extends APIRepository {
 
     editObject(jsonConfig: JsonSportScoreConfig, config: SportScoreConfig, tournament: Tournament): Observable<SportScoreConfig> {
         const url = this.getUrl(tournament) + '/' + config.getId();
-        return this.http.put(url, jsonConfig, this.getOptions()).pipe(
+        const options = this.getCustomOptions(config.getRoundNumber());
+        return this.http.put(url, jsonConfig, options).pipe(
             map((jsonResult: JsonSportScoreConfig) => {
                 return this.mapper.toObject(jsonResult, config.getSport(), config.getRoundNumber(), config);
             }),
@@ -44,7 +45,7 @@ export class SportScoreConfigRepository extends APIRepository {
         );
     }
 
-    protected getCreateOptions(roundNumber: RoundNumber, sport?: Sport): { headers: HttpHeaders; params: HttpParams } {
+    protected getCustomOptions(roundNumber: RoundNumber, sport?: Sport): { headers: HttpHeaders; params: HttpParams } {
         let httpParams = new HttpParams();
         httpParams = httpParams.set('roundnumber', roundNumber.getNumber().toString());
         if (sport !== undefined) {

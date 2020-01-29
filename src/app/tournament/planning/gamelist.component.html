@@ -15,7 +15,7 @@
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
-      <div *ngIf="!processing">
+      <div *ngIf="!processing && structure">
         <app-tournament-roundnumber-view *ngFor="let roundNumber of structure.getRoundNumbers()"
           [tournament]="tournament" [roundNumber]="roundNumber" [canEditSettings]="userIsPlannerOrStructureAdmin"
           (scroll)="scroll()" [parentReturnAction]="'/toernooi/games'" [reload]="reload">

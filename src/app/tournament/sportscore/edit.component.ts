@@ -57,6 +57,7 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
         super(route, router, tournamentRepository, structureRepository);
         this.translateService = new TranslateService();
         this.form = fb.group({
+            useNext: false,
             max: ['', Validators.compose([
                 Validators.required,
                 Validators.min(this.validations.minScore),
@@ -104,6 +105,7 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
 
         this.form.controls.max.setValue(this.scoreConfig.getMaximum());
         if (this.scoreConfig.hasNext()) {
+            this.form.controls.useNext.setValue(this.scoreConfig.getNext().getEnabled());
             this.form.addControl('maxNext', new FormControl(
                 this.scoreConfig.getNext().getMaximum(),
                 Validators.compose([
@@ -118,8 +120,26 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
                 this.form.controls[key].disable();
             });
             this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
+        } else {
+            this.onChanges();
         }
         this.processing = false;
+    }
+
+    onChanges(): void {
+        this.form.get('useNext').valueChanges.subscribe(val => {
+            this.form.get('max').clearValidators();
+            const minScore = this.validations.minScore + (val ? 1 : 0);
+            this.form.get('max').setValidators(
+                Validators.compose([
+                    Validators.required,
+                    Validators.min(minScore),
+                    Validators.max(this.validations.maxScore)
+                ]));
+            if (this.form.get('max').value === 0) {
+                this.form.get('max').setErrors({ 'invalid': true });
+            }
+        });
     }
 
     openModal() {
@@ -128,19 +148,6 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
         modalRef.result.then((roundNumber: RoundNumber) => {
             this.setScoreConfig(roundNumber);
         }, (reason) => { this.setScoreConfig(); });
-    }
-
-    getInputName(): string {
-        const max = this.form.value['max'];
-        const maxNext = this.form.value['maxNext'];
-        const scoreConfig = (maxNext === 0 && max > 0) ? this.scoreConfig : this.scoreConfig.getNext();
-        return this.translateService.getScoreNameMultiple(scoreConfig);
-    }
-
-    getCalculateName(): string {
-        const max = this.form.value['max'];
-        const scoreConfig = (max > 0) ? this.scoreConfig : this.scoreConfig.getNext();
-        return this.translateService.getScoreNameMultiple(scoreConfig);
     }
 
     save(): boolean {
@@ -155,13 +162,15 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
         const json: JsonSportScoreConfig = {
             sportId: sport.getId(),
             direction: SportScoreConfig.UPWARDS,
-            maximum: this.form.value['max']
+            maximum: this.form.value['max'],
+            enabled: true
         };
         if (this.form.controls.maxNext !== undefined) {
             json.next = {
                 sportId: sport.getId(),
                 direction: SportScoreConfig.UPWARDS,
-                maximum: this.form.value['maxNext']
+                maximum: this.form.value['maxNext'],
+                enabled: this.form.value['useNext']
             };
         }
         return json;

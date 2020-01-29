@@ -14,7 +14,7 @@
           </button>
         </h1>
       </div>
-      <div *ngIf="tournament" class="d-flex justify-content-between">
+      <div *ngIf="tournament && structure" class="d-flex justify-content-between">
         <div class="alert alert-info" role="alert">
           Gebruik de knoppen links om de poulestand te bekijken.
         </div>
@@ -33,7 +33,7 @@
       <ngb-alert *ngIf="oldStructure && !isAdmin()" type="info" [dismissible]="false">Vraag de toernooi-beheerder om de
         oude structuur te laten omzetten.
       </ngb-alert>
-      <div *ngIf="!processing && tournament">
+      <div *ngIf="!processing && tournament && structure">
         <app-tournament-roundnumber-view *ngFor="let roundNumber of structure.getRoundNumbers()"
           [tournament]="tournament" [roundNumber]="roundNumber" [userRefereeId]="userRefereeId"
           [parentReturnAction]="'/toernooi/view'" (scroll)="scroll()" (popOverIsOpen)="setRefresh(!$event)">

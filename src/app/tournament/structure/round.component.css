@@ -12,6 +12,7 @@ app-tournament-structureround {
 
 .place-list-item {
     margin-top: 3px;
+    border-top-width: 1px;
 }
 
 .card.qualification{

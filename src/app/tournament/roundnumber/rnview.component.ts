@@ -24,6 +24,8 @@ import { Tournament } from '../../lib/tournament';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { PouleRankingModalComponent } from '../poule/rankingmodal.component';
 import { TranslateService } from '../../lib/translate';
+import { enableDebugTools } from '@angular/platform-browser';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tournament-roundnumber-view',
@@ -247,8 +249,8 @@ export class TournamentRoundNumberViewComponent implements OnChanges, OnInit, Af
     modalRef.componentInstance.tournament = this.tournament;
   }
 
-  openModal(modalTemplate: NgbModal) {
-    const modalRef = this.modalService.open(modalTemplate, this.getModalOptions());
+  openModal(templateRef) {
+    const modalRef = this.modalService.open(templateRef, this.getModalOptions());
   }
 
   getModalOptions(): NgbModalOptions {
@@ -260,16 +262,17 @@ export class TournamentRoundNumberViewComponent implements OnChanges, OnInit, Af
   }
 
   getInputName(scoreConfig: SportScoreConfig): string {
-    const max = scoreConfig.getMaximum();
-    const maxNext = scoreConfig.hasNext() ? scoreConfig.getNext().getMaximum() : 0;
-    const scoreConfigTmp = (maxNext === 0 && max > 0) ? scoreConfig : scoreConfig.getNext();
-    return this.translate.getScoreNameMultiple(scoreConfigTmp);
+    return '112';
+    // const max = scoreConfig.getMaximum();
+    // const maxNext = scoreConfig.hasNext() ? scoreConfig.getNext().getMaximum() : 0;
+    // const scoreConfigTmp = (maxNext === 0 && max > 0) ? scoreConfig : scoreConfig.getNext();
+    // return this.translate.getScoreNamePlural(getInput.getInput());
   }
 
   getCalculateName(scoreConfig: SportScoreConfig): string {
     const max = scoreConfig.getMaximum();
     const scoreConfigTmp = (max > 0) ? scoreConfig : scoreConfig.getNext();
-    return this.translate.getScoreNameMultiple(scoreConfigTmp);
+    return this.translate.getScoreNamePlural(scoreConfigTmp);
   }
 }
 

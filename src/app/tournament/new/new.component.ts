@@ -206,7 +206,7 @@ export class NewComponent implements OnInit {
 
   getFieldsDescription(): string {
     const translate = new TranslateService();
-    return translate.getFieldsName(this.sport);
+    return translate.getFieldNamePlural(this.sport);
   }
 
   isLoggedIn() {

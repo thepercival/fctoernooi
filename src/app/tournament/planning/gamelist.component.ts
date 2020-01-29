@@ -22,7 +22,7 @@ export class GameListComponent extends TournamentComponent implements OnInit, On
   userIsPlannerOrStructureAdmin: boolean;
   shouldShowEndRanking: boolean;
   private refreshPlanningTimer: Subscription;
-  private reload;
+  reload: boolean;
 
   constructor(
     route: ActivatedRoute,

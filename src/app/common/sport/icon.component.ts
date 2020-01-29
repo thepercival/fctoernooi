@@ -50,7 +50,7 @@ export class SportIconComponent implements OnInit {
             return 'table-tennis';
         } else if (customId === SportCustom.Tennis) {
             return 'fi flaticon-tennis';
-        } else if (customId === SportCustom.Voleyball) {
+        } else if (customId === SportCustom.Volleyball) {
             return 'volleyball-ball';
         }
         return undefined;
@@ -61,7 +61,7 @@ export class SportIconComponent implements OnInit {
             return undefined;
         }
         if (customId === SportCustom.Football || customId === SportCustom.TableTennis || customId === SportCustom.Basketball
-            || customId === SportCustom.Chess || customId === SportCustom.ESports || customId === SportCustom.Voleyball) {
+            || customId === SportCustom.Chess || customId === SportCustom.ESports || customId === SportCustom.Volleyball) {
             return 'fa';
         }
         return 'fi';

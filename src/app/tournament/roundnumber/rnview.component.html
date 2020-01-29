@@ -138,16 +138,16 @@
     </button>
   </div>
   <div class="modal-body">
-    <p>de start is op {{tournament.getCompetition().getStartDateTime().toLocaleString("nl",
-          {"month":"short","day":"2-digit"})}} om {{tournament.getCompetition().getStartDateTime().toLocaleString("nl", {"hour12":
+    <p>de start is op {{roundNumber.getFirstStartDateTime().toLocaleString("nl",
+          {"month":"short","day":"2-digit"})}} om {{roundNumber.getFirstStartDateTime().toLocaleString("nl", {"hour12":
             false,"hour":"2-digit","minute":"2-digit"})}}
     </p>
-    <p>het aantal onderlinge duels is {{roundNumber.getValidPlanningConfig().getNrOfHeadtohead()}}</p>
-    <p>de wedstrijden duren {{roundNumber.getValidPlanningConfig().getMinutesPerGame()}} minuten</p>
-    <p *ngIf="roundNumber.getValidPlanningConfig().hasExtension()">
-      de eventuele verlenging duurt {{roundNumber.getValidPlanningConfig().getMinutesPerGameExt()}} minuten
+    <p>het aantal onderlinge duels is {{planningConfig.getNrOfHeadtohead()}}</p>
+    <p>de wedstrijden duren {{planningConfig.getMinutesPerGame()}} minuten</p>
+    <p *ngIf="planningConfig.hasExtension()">
+      de eventuele verlenging duurt {{planningConfig.getMinutesPerGameExt()}} minuten
     </p>
-    <p>er zit {{roundNumber.getValidPlanningConfig().getMinutesBetweenGames()}} minuten tussen de wedstrijden</p>
+    <p>er zit {{planningConfig.getMinutesBetweenGames()}} minuten tussen de wedstrijden</p>
   </div>
 
 </ng-template>
@@ -160,43 +160,28 @@
     </button>
   </div>
   <div class="modal-body">
-    Als deelnemer wil je weten tot hoever je moet spelen.
-
-    <table class="table mb-0">
-      <thead>
-        <tr>
-          <th>sport</th>
-          <th>eenheden</th>
-          <th class="">van/naar</th>
-          <th class="text-right">min/max</th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-template ngFor let-scoreConfig [ngForOf]="roundNumber.getValidSportScoreConfigs()">
-          <tr>
-            <td>{{scoreConfig.getSport().getName()}}</td>
-            <td>{{translate.getScoreNameMultiple(scoreConfig)}}</td>
-            <td>{{translate.getScoreDirection(scoreConfig.getDirection())}}</td>
-            <td class="text-right">{{scoreConfig.getMaximum()}}</td>
-          </tr>
-          <tr *ngIf="scoreConfig.hasNext()">
-            <td>{{scoreConfig.getNext().getSport().getName()}}</td>
-            <td>{{translate.getScoreNameMultiple(scoreConfig.getNext())}}</td>
-            <td>{{translate.getScoreDirection(scoreConfig.getNext().getDirection())}}</td>
-            <td class="text-right">{{scoreConfig.getNext().getMaximum()}}</td>
-          </tr>
-          <tr *ngIf="scoreConfig.hasNext()">
-            <td>{{scoreConfig.getNext().getSport().getName()}}</td>
-            <td colspan="3">De invoer vindt plaats o.b.v.
-              {{getInputName(scoreConfig)}}. De berekening vindt plaats o.b.v.
-              {{getCalculateName(scoreConfig)}}</td>
-          </tr>
-        </ng-template>
-      </tbody>
-    </table>
-
-
-    als max op 0 dan oneindig of als direction = min dan 0
-
+    <ng-template ngFor let-scoreConfig [ngForOf]="roundNumber.getValidSportScoreConfigs()">
+      <div *ngIf="scoreConfig.hasNext() && scoreConfig.getNext().getEnabled()">
+        <div>
+          <span *ngIf="scoreConfig.getNext().getMaximum() === 0">Behaal zoveel mogelijk
+            {{translate.getScoreNamePlural(scoreConfig.getNext())}}</span>
+          <span *ngIf="scoreConfig.getNext().getMaximum() > 0">Wie het eerst {{scoreConfig.getNext().getMaximum()}}
+            {{translate.getScoreNamePlural(scoreConfig.getNext())}} heeft behaald</span>
+          <span *ngIf="planningConfig.getEnableTime()"> binnen de tijd</span>
+        </div>
+        <div>
+          <span>Per
+            {{translate.getScoreNameSingular(scoreConfig.getNext())}} moet(en) er
+            {{scoreConfig.getMaximum()}} {{translate.getScoreNamePlural(scoreConfig)}} worden behaald</span>
+        </div>
+      </div>
+      <div *ngIf="!scoreConfig.hasNext() || !scoreConfig.getNext().getEnabled()">
+        <span *ngIf="scoreConfig.getMaximum() === 0">Behaal zoveel mogelijk
+          {{translate.getScoreNamePlural(scoreConfig)}}</span>
+        <span *ngIf="scoreConfig.getMaximum() > 0">Wie het eerst {{scoreConfig.getMaximum()}}
+          {{translate.getScoreNamePlural(scoreConfig)}} heeft behaald</span>
+        <span *ngIf="planningConfig.getEnableTime()"> binnen de tijd</span>
+      </div>
+    </ng-template>
   </div>
 </ng-template>

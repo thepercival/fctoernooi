@@ -65,7 +65,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
     getFieldsDescription(): string {
         const translate = new TranslateService();
         const sports = this.competition.getSports();
-        return translate.getFieldsName(sports.length === 1 ? sports[0] : undefined);
+        return translate.getFieldNamePlural(sports.length === 1 ? sports[0] : undefined);
     }
 
     removeField(field: Field) {

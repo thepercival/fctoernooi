@@ -107,12 +107,12 @@ export class HomeComponent extends TournamentComponent implements OnInit {
 
     getFieldDescription(): string {
         const sports = this.competition.getSports();
-        return this.translate.getFieldName(sports.length === 1 ? sports[0] : undefined);
+        return this.translate.getFieldNameSingular(sports.length === 1 ? sports[0] : undefined);
     }
 
     getFieldsDescription(): string {
         const sports = this.competition.getSports();
-        return this.translate.getFieldsName(sports.length === 1 ? sports[0] : undefined);
+        return this.translate.getFieldNamePlural(sports.length === 1 ? sports[0] : undefined);
     }
 
     getNrOfFieldsDescription() {

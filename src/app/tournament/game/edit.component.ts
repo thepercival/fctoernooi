@@ -64,6 +64,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
     private enablePlayedAtFirstChange;
     private originalPouleState: number;
     private rankingService: RankingService;
+    private firstScoreConfig: SportScoreConfig;
 
     constructor(
         route: ActivatedRoute,
@@ -113,23 +114,22 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
     }
 
     getCalculateScoreDescription() {
-        const scoreConfig = this.sportScoreConfigService.getCalculate(this.game.getSportScoreConfig());
+        const scoreConfig = this.firstScoreConfig.getCalculate();
         let description = '';
         if (scoreConfig.getDirection() === SportScoreConfig.UPWARDS && scoreConfig.getMaximum() > 0) {
             description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
         }
         const translate = new TranslateService();
-        return description + translate.getScoreNameMultiple(scoreConfig);
+        return description + translate.getScoreNamePlural(scoreConfig);
     }
 
     getInputScoreDescription() {
-        const scoreConfig = this.sportScoreConfigService.getInput(this.game.getSportScoreConfig());
         let description = '';
-        if (scoreConfig.getDirection() === SportScoreConfig.UPWARDS && scoreConfig.getMaximum() > 0) {
-            description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
+        if (this.firstScoreConfig.getDirection() === SportScoreConfig.UPWARDS && this.firstScoreConfig.getMaximum() > 0) {
+            description = 'eerste bij ' + this.firstScoreConfig.getMaximum() + ' ';
         }
         const translate = new TranslateService();
-        return description + translate.getScoreNameMultiple(scoreConfig);
+        return description + translate.getScoreNamePlural(this.firstScoreConfig);
     }
 
     aScoreIsInvalid() {
@@ -141,11 +141,11 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
     }
 
     isScoreEqual(score: GameScoreHomeAway): boolean {
-        return score.getHome() === score.getAway() && this.calculateAndInputScoreDiffers();
+        return score.getHome() === score.getAway() && (this.firstScoreConfig !== this.firstScoreConfig.getCalculate());
     }
 
     getCalculateClass() {
-        const scoreConfig = this.sportScoreConfigService.getCalculate(this.game.getSportScoreConfig());
+        const scoreConfig = this.game.getSportScoreConfig().getCalculate();
         if (scoreConfig.getDirection() !== SportScoreConfig.UPWARDS || scoreConfig.getMaximum() === 0) {
             return 'is-valid';
         }
@@ -163,7 +163,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         if (this.isScoreValid(score) !== true) {
             return 'is-invalid';
         }
-        const scoreConfig = this.sportScoreConfigService.getInput(this.game.getSportScoreConfig());
+        const scoreConfig = this.firstScoreConfig;
         if (scoreConfig.getDirection() !== SportScoreConfig.UPWARDS || scoreConfig.getMaximum() === 0) {
             return 'is-valid';
         }
@@ -177,12 +177,13 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
 
     setGame(gameId: number) {
         this.game = this.getGameById(gameId, this.structure.getRootRound());
+        this.firstScoreConfig = this.game.getSportScoreConfig();
         // const date = this.game.getStartDateTime();
 
         this.form.controls.played.setValue(this.game.getState() === State.Finished);
         this.form.controls.extratime.setValue(this.game.getFinalPhase() === Game.PHASE_EXTRATIME);
 
-        if (this.calculateAndInputScoreDiffers()) {
+        if (this.firstScoreConfig !== this.firstScoreConfig.getCalculate()) {
             this.calculateScoreControl = new HomeAwayFormControl(0, 0, true);
         }
 
@@ -227,7 +228,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
     }
 
     protected updateCalculateScoreControl() {
-        if (!this.calculateAndInputScoreDiffers()) {
+        if (this.firstScoreConfig === this.firstScoreConfig.getCalculate()) {
             return;
         }
         this.calculateScoreControl.home.setValue(0);
@@ -242,6 +243,10 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
                 this.calculateScoreControl.away.setValue(this.calculateScoreControl.away.value + 1);
             }
         });
+    }
+
+    calculateAndInputScoreDiffers(): boolean {
+        return this.firstScoreConfig !== this.firstScoreConfig.getCalculate();
     }
 
     protected syncGameScores(alwaysAdd: boolean = true) {
@@ -291,12 +296,6 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
             this.updateCalculateScoreControl();
             this.syncGameScores();
         }
-    }
-
-    calculateAndInputScoreDiffers() {
-        const inputScoreConfig = this.sportScoreConfigService.getInput(this.game.getSportScoreConfig());
-        const calculateScoreConfig = this.sportScoreConfigService.getCalculate(this.game.getSportScoreConfig());
-        return inputScoreConfig !== calculateScoreConfig;
     }
 
     addScoreControl(home: number, away: number) {
@@ -416,9 +415,9 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
     }
 
     getCalculateScoreUnitName(game: Game): string {
-        const calculateScore = this.sportScoreConfigService.getCalculate(game.getSportScoreConfig());
+        const calculateScore = game.getSportScoreConfig().getCalculate();
         const translateService = new TranslateService();
-        return translateService.getScoreNameSingle(calculateScore);
+        return translateService.getScoreNameSingular(calculateScore);
     }
 
     save(): boolean {
