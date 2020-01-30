@@ -138,18 +138,28 @@
     </button>
   </div>
   <div class="modal-body">
-    <p>de start is op {{roundNumber.getFirstStartDateTime().toLocaleString("nl",
-          {"month":"short","day":"2-digit"})}} om {{roundNumber.getFirstStartDateTime().toLocaleString("nl", {"hour12":
-            false,"hour":"2-digit","minute":"2-digit"})}}
-    </p>
-    <p>het aantal onderlinge duels is {{planningConfig.getNrOfHeadtohead()}}</p>
-    <p>de wedstrijden duren {{planningConfig.getMinutesPerGame()}} minuten</p>
-    <p *ngIf="planningConfig.hasExtension()">
-      de eventuele verlenging duurt {{planningConfig.getMinutesPerGameExt()}} minuten
-    </p>
-    <p>er zit {{planningConfig.getMinutesBetweenGames()}} minuten tussen de wedstrijden</p>
+    <ul class="list-group">
+      <li class="list-group-item">
+        de start is op {{roundNumber.getFirstStartDateTime().toLocaleString("nl",
+                  {"month":"short","day":"2-digit"})}} om {{roundNumber.getFirstStartDateTime().toLocaleString("nl", {"hour12":
+                    false,"hour":"2-digit","minute":"2-digit"})}}
+      </li>
+      <li class="list-group-item">
+        het aantal onderlinge duels is {{planningConfig.getNrOfHeadtohead()}}
+      </li>
+      <li class="list-group-item">
+        de wedstrijden duren {{planningConfig.getMinutesPerGame()}} minuten
+      </li>
+      <li *ngIf="planningConfig.hasExtension()" class="list-group-item">
+        de eventuele verlenging duurt {{planningConfig.getMinutesPerGameExt()}} minuten
+      </li>
+      <li class="list-group-item">er zit {{planningConfig.getMinutesBetweenGames()}} minuten tussen de wedstrijden</li>
+    </ul>
   </div>
-
+  <div class="modal-footer align-items-end">
+    <button type="submit" class="btn btn-secondary" data-dismiss="modal"
+      (click)="modal.dismiss('close')">sluiten</button>
+  </div>
 </ng-template>
 
 <ng-template #scoreInfo let-modal>
@@ -161,27 +171,30 @@
   </div>
   <div class="modal-body">
     <ng-template ngFor let-scoreConfig [ngForOf]="roundNumber.getValidSportScoreConfigs()">
-      <div *ngIf="scoreConfig.hasNext() && scoreConfig.getNext().getEnabled()">
-        <div>
+      <ul class="list-group">
+        <li *ngIf="scoreConfig.hasNext() && scoreConfig.getNext().getEnabled()" class="list-group-item">
           <span *ngIf="scoreConfig.getNext().getMaximum() === 0">Behaal zoveel mogelijk
             {{translate.getScoreNamePlural(scoreConfig.getNext())}}</span>
           <span *ngIf="scoreConfig.getNext().getMaximum() > 0">Wie het eerst {{scoreConfig.getNext().getMaximum()}}
             {{translate.getScoreNamePlural(scoreConfig.getNext())}} heeft behaald</span>
           <span *ngIf="planningConfig.getEnableTime()"> binnen de tijd</span>
-        </div>
-        <div>
+        </li>
+        <li *ngIf="scoreConfig.hasNext() && scoreConfig.getNext().getEnabled()" class="list-group-item">
           <span>Per
             {{translate.getScoreNameSingular(scoreConfig.getNext())}} moet(en) er
             {{scoreConfig.getMaximum()}} {{translate.getScoreNamePlural(scoreConfig)}} worden behaald</span>
-        </div>
-      </div>
-      <div *ngIf="!scoreConfig.hasNext() || !scoreConfig.getNext().getEnabled()">
-        <span *ngIf="scoreConfig.getMaximum() === 0">Behaal zoveel mogelijk
-          {{translate.getScoreNamePlural(scoreConfig)}}</span>
-        <span *ngIf="scoreConfig.getMaximum() > 0">Wie het eerst {{scoreConfig.getMaximum()}}
-          {{translate.getScoreNamePlural(scoreConfig)}} heeft behaald</span>
-        <span *ngIf="planningConfig.getEnableTime()"> binnen de tijd</span>
-      </div>
+        </li>
+        <li *ngIf="!scoreConfig.hasNext() || !scoreConfig.getNext().getEnabled()" class="list-group-item">
+          <span *ngIf="scoreConfig.getMaximum() === 0">Behaal zoveel mogelijk
+            {{translate.getScoreNamePlural(scoreConfig)}}</span>
+          <span *ngIf="scoreConfig.getMaximum() > 0">Wie het eerst {{scoreConfig.getMaximum()}}
+            {{translate.getScoreNamePlural(scoreConfig)}} heeft behaald</span>
+          <span *ngIf="planningConfig.getEnableTime()"> binnen de tijd</span></li>
+      </ul>
     </ng-template>
+  </div>
+  <div class="modal-footer align-items-end">
+    <button type="submit" class="btn btn-secondary" data-dismiss="modal"
+      (click)="modal.dismiss('close')">sluiten</button>
   </div>
 </ng-template>
