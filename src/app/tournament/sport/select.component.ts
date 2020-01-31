@@ -92,7 +92,11 @@ export class SportSelectComponent implements OnInit {
 
     save() {
         this.processing = true;
-        const json: JsonSport = { name: this.form.value['newSportName'], team: this.form.value['team'] };
+        const json: JsonSport = {
+            name: this.form.value['newSportName'],
+            team: this.form.value['team'],
+            customId: 0
+        };
         this.sportRepository.createObject(json).subscribe(
             /* happy path */ sportRes => {
                 this.sendSport.emit(sportRes);

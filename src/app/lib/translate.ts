@@ -34,17 +34,6 @@ export class TranslateService {
 
     protected getFirstScoreNameSingular(customId: number): string {
         switch (customId) {
-            case SportCustom.Badminton:
-            case SportCustom.Basketball:
-            case SportCustom.ESports:
-            case SportCustom.Korfball:
-            case SportCustom.Chess:
-            case SportCustom.Squash:
-            case SportCustom.TableTennis:
-            case SportCustom.Volleyball:
-            case SportCustom.Baseball: {
-                return 'punt';
-            }
             case SportCustom.Darts: { return 'leg'; }
             case SportCustom.Tennis: { return 'game'; }
             case SportCustom.Football:
@@ -52,7 +41,7 @@ export class TranslateService {
                 return 'goal';
             }
         }
-        return '';
+        return 'punt';
     }
 
     protected getLastScoreNameSingular(customId: number): string {
@@ -81,17 +70,6 @@ export class TranslateService {
 
     protected getFirstScoreNamePlural(customId: number): string {
         switch (customId) {
-            case SportCustom.Badminton:
-            case SportCustom.Basketball:
-            case SportCustom.ESports:
-            case SportCustom.Korfball:
-            case SportCustom.Chess:
-            case SportCustom.Squash:
-            case SportCustom.TableTennis:
-            case SportCustom.Volleyball:
-            case SportCustom.Baseball: {
-                return 'punten';
-            }
             case SportCustom.Darts: { return 'legs'; }
             case SportCustom.Tennis: { return 'games'; }
             case SportCustom.Football:
@@ -99,7 +77,7 @@ export class TranslateService {
                 return 'goals';
             }
         }
-        return '';
+        return 'punten';
     }
 
     protected getLastScoreNamePlural(customId: number): string {
