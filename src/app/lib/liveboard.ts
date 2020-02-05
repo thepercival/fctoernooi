@@ -17,27 +17,21 @@ export class Liveboard {
         private maxLines: number
     ) { }
 
+    // if more than one rank-screen, show schedulescreens in between
     getScreens(screenfilter: string): Screen[] {
         let screens: Screen[] = [];
 
         if (screenfilter === undefined) {
+            const playedGamesScreen = this.getScreenForGamesPlayed();
+            if (playedGamesScreen !== undefined) {
+                screens.push(playedGamesScreen);
+            }
             const createdAndInplayGamesScreens = this.getScreensForGamesCreatedAndInplay();
-            // screens = screens.concat(createdAndInplayGamesScreens);
-
-            // const playedGamesScreen = this.getScreenForGamesPlayed();
-            // if (playedGamesScreen !== undefined) {
-            //     screens.push(playedGamesScreen);
-            // }
+            createdAndInplayGamesScreens.forEach(screenIt => screens.push(screenIt));
             const pouleRankingsScreens = this.getScreensForPouleRankings();
-            let currentNrOfPouleRankingsScreens = 0;
             pouleRankingsScreens.forEach(pouleRankingScreen => {
                 screens.push(pouleRankingScreen);
-                if ((++currentNrOfPouleRankingsScreens % 2) === 0
-                    && createdAndInplayGamesScreens.length > 0
-                    && currentNrOfPouleRankingsScreens < pouleRankingsScreens.length
-                ) {
-                    screens = screens.concat(createdAndInplayGamesScreens);
-                }
+                createdAndInplayGamesScreens.forEach(screenIt => screens.push(screenIt));
             });
             screens = screens.concat(this.getScreensForEndRanking());
         }
@@ -48,58 +42,52 @@ export class Liveboard {
         return screens;
     }
 
+    // minimal current batch and next batch
     getScreensForGamesCreatedAndInplay(): Screen[] {
-        const games: Game[] = this.getGamesCreatedAndInplay();
-        if (games.length === 0) {
+        const firstRoundNuber = this.structure.getFirstRoundNumber();
+        const createdAndInplayGamesScreen = new CreatedAndInplayGamesScreen(this.maxLines);
+        this.fillScreensForGamesCreatedAndInplay(createdAndInplayGamesScreen, firstRoundNuber, 0);
+        if (createdAndInplayGamesScreen.isEmpty()) {
             return [];
         }
-
         const screens: Screen[] = [];
-        // while (games.length > 0) {
-        screens.push(new CreatedAndInplayGamesScreen(games));
-        // }
+        screens.push(createdAndInplayGamesScreen);
+        if (createdAndInplayGamesScreen.hasNext()) {
+            screens.push(createdAndInplayGamesScreen.getNext());
+        }
         return screens;
     }
 
-    getGamesCreatedAndInplay(): Game[] {
-        const firstRoundNuber = this.structure.getFirstRoundNumber();
-        // const maxScreens
-        return this.getGamesCreatedAndInplayHelper(firstRoundNuber);
-    }
-
-
-    getGamesCreatedAndInplayHelper(roundNumber: RoundNumber): Game[] {
-        // if( roundNumber.getState() === State.Finished ) {
-        //     if( roundNumber.hasNext() ) {
-        //         return this.getGamesCreatedAndInplayHelper(roundNumber.getNext());
-        //     }
-        //     return [];
-        // }
-
-        // @TODO every competitor should be listed at least once in one of the scheduled - games - screens
-        // create a list with competitors
-        // remove competitors from games unit there are no competitors left, than stop
-        // and divide games over one or more screens
-        let games: Game[] = roundNumber.getGames(Game.ORDER_BY_BATCH);
+    fillScreensForGamesCreatedAndInplay(screen: CreatedAndInplayGamesScreen, roundNumber: RoundNumber, nrOfBatchesCompleted: number) {
+        const roundGames: Game[] = roundNumber.getGames(Game.ORDER_BY_BATCH);
         const now = new Date();
-        games = games.filter(game => game.getState() !== State.Finished &&
-            (!roundNumber.getValidPlanningConfig().getEnableTime() || game.getStartDateTime() > now)
-        );
+        let game: Game = roundGames.shift();
+        let nextGame: Game = roundGames.shift();
+        while ((nrOfBatchesCompleted < 2 || !screen.isFull()) && game !== undefined) {
+            if (game.getState() === State.Finished ||
+                (roundNumber.getValidPlanningConfig().getEnableTime() && game.getStartDateTime() < now)
+            ) {
+                game = nextGame;
+                nextGame = roundGames.shift();
+                continue;
+            }
 
-        // aantal wedstrijden per rondenummber < this.maxLines
+            screen.addGame(game);
 
+            if (nextGame === undefined || game.getBatchNr() !== nextGame.getBatchNr()) {
+                nrOfBatchesCompleted++;
+            }
 
-        if (games.length < this.maxLines && roundNumber.hasNext()) {
-            games = games.concat(this.getGamesCreatedAndInplayHelper(roundNumber.getNext()));
+            if (screen.isFull() && screen.isFirst() && nrOfBatchesCompleted < 2) {
+                screen = screen.createNext();
+            }
+
+            game = nextGame;
+            nextGame = roundGames.shift();
         }
-
-
-
-
-        if (games.length > this.maxLines) {
-            games = games.splice(0, this.maxLines);
+        if ((nrOfBatchesCompleted < 2 || !screen.isFull()) && roundNumber.hasNext()) {
+            this.fillScreensForGamesCreatedAndInplay(screen, roundNumber.getNext(), nrOfBatchesCompleted);
         }
-        return games;
     }
 
     private getScreensForPouleRankings(): Screen[] {

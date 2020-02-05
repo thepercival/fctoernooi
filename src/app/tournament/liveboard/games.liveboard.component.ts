@@ -32,6 +32,11 @@ export class LiveboardGamesComponent {
         return this.isCreatedAndInplay() && roundNumber.getValidPlanningConfig().getEnableTime();
     }
 
+    showBatch(game?: Game): boolean {
+        const roundNumber = this.getRoundNumber(game);
+        return this.isCreatedAndInplay() && !roundNumber.getValidPlanningConfig().getEnableTime();
+    }
+
     getRoundNumber(game?: Game): RoundNumber {
         if (game === undefined) {
             game = this.screen.getGames()[0];

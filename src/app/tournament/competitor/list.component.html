@@ -2,45 +2,71 @@
   <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
     <app-tournament-title [tournament]="tournament" [admin]="true">
     </app-tournament-title>
-    <div>
+    <div class="d-flex justify-content-between">
       <h2>
         <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
       </h2>
-      <h2 *ngIf="processing" class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-      </h2>
+      <button *ngIf="!processing && !hasBegun && atLeastTwoPlaceHaveCompetitor()" type="button" class="btn btn-sm mr-0"
+        [ngClass]="{ 'btn-outline-secondary': !orderMode, 'btn-primary': orderMode }" (click)="orderMode = !orderMode">
+        <fa-icon [icon]="['fas', 'random']"></fa-icon> volgorde`
+      </button>
     </div>
+    <h2 *ngIf="processing" class="text-center">
+      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    </h2>
     <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">
       {{ alert.message }}</ngb-alert>
-    <!-- <form> -->
-    <table *ngIf="!processing" class="table">
+
+    <table *ngIf="!processing && !orderMode" class="table">
       <thead>
         <tr>
           <th></th>
           <th>plek</th>
-          <th class="text-center d-none d-sm-table-cell">aangemeld</th>
           <th>naam</th>
-          <th class="text-center">
-            <button *ngIf="!hasBegun() && allPlaceHaveCompetitor()" type="button" class="btn btn-sm btn-outline-primary"
-              (click)="swapAll()" [disabled]="processing || placeToSwap !== undefined" title="willekeurige volgorde">
-              <fa-icon [icon]="['fas', 'random']"></fa-icon>
-            </button>
-            <fa-icon *ngIf="!hasBegun() && !allPlaceHaveCompetitor() && showSwap" title="volgorder omwisselen"
-              [icon]="['fas', 'sort']"></fa-icon>
-          </th>
-          <th *ngIf="!hasBegun()" class="text-right"><button type="button" class="btn btn-sm btn-primary"
+          <th class="text-center d-none d-sm-table-cell">aangemeld</th>
+          <th *ngIf="!hasBegun" class="text-right"><button type="button" class="btn btn-sm btn-primary"
               (click)="addPlaceToRootRound()">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button></th>
         </tr>
       </thead>
       <tbody>
-        <app-tournament-competitor-line *ngFor="let place of places" [place]="place" [placeToSwap]="placeToSwap"
-          [nameService]="nameService" [hasBegun]="hasBegun()" [showSwap]="showSwap" (swapPressed)="swapTwo($event)"
-          [focus]="place.getId() === focusId" (editPressed)="editPlace($event)" (removePressed)="preRemove($event)"
-          (registerPressed)="registerCompetitor($event)"></app-tournament-competitor-line>
+        <app-tournament-competitor-line *ngFor="let place of places" [place]="place" [nameService]="nameService"
+          [hasBegun]="hasBegun" [focus]="place.getId() === focusId" (editPressed)="editPlace($event)"
+          (removePressed)="preRemove($event)" (registerPressed)="registerCompetitor($event)">
+        </app-tournament-competitor-line>
       </tbody>
     </table>
-    <!-- </form> -->
+
+    <table *ngIf="!processing && orderMode" class="table">
+      <thead>
+        <th>plek</th>
+        <th>naam</th>
+        <th class="text-center">
+          <button *ngIf="allPlaceHaveCompetitor()" type="button" class="btn btn-sm btn-outline-primary"
+            (click)="swapAll()" [disabled]="processing || placeToSwap !== undefined" title="willekeurige volgorde">
+            <fa-icon [icon]="['fas', 'random']"></fa-icon>
+          </button>
+          <fa-icon *ngIf="!hasBegun && !allPlaceHaveCompetitor()" title="volgorder omwisselen" [icon]="['fas', 'sort']">
+          </fa-icon>
+        </th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let place of places">
+          <td>
+            <span>{{nameService.getPlaceFromName(place, false)}}</span>
+          </td>
+          <td>
+            <span *ngIf="place.getCompetitor()"
+              [ngClass]="{ 'registered-xs': place.getCompetitor().getRegistered() }">{{place.getCompetitor().getName()}}</span>
+          </td>
+          <td class="text-center">
+            <fa-icon *ngIf="place.getCompetitor()" class="text-primary pointer" (click)="swapTwo(place)"
+              [icon]="['far', (placeToSwap === place ? 'check-' : '') + 'square']" size="2x"></fa-icon>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
   </div>
 </div>

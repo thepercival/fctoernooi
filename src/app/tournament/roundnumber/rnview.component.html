@@ -77,7 +77,8 @@
                 class="badge badge-pill badge-rank {{cssService.getQualifyRound(gmData.poule.round)}}">{{gmData.poule.name}}</span>
             </td>
             <td *ngIf="gmData.hasPopover && gmData.poule.needsRanking" class="text-center">
-              <button class="btn btn-sm {{cssService.getQualifyRound(gmData.poule.round,'btn-outline-info')}}"
+              <button
+                class="btn btn-outline-secondary btn-sm {{cssService.getQualifyRound(gmData.poule.round,'btn-outline-info')}}"
                 (click)="openModalPouleRank(gmData.game.getPoule())">
                 <span>{{gmData.poule.name}}</span>
               </button>

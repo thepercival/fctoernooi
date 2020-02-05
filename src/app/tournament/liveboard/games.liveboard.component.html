@@ -8,14 +8,15 @@
         <th class="width-4">
           <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
         </th>
-        <th *ngIf="showDateTime()" title="starttijd" class="width-10">
+        <th *ngIf="showDateTime()" class="width-10">
           {{getRoundNumber().getFirstStartDateTime().toLocaleString("nl",{"month":"short","day":"2-digit"})}}
         </th>
+        <th *ngIf="showBatch()" class="text-center width-10">batch</th>
         <th *ngIf="isCreatedAndInplay()" title="veld" class="width-8">
           <i class="fi flaticon-soccer-field"></i>
         </th>
         <th class="text-right width-25">thuis</th>
-        <th class="text-center" class="width-8">
+        <th class="text-center width-8">
           <i class="fi flaticon-scoreboard"></i>
         </th>
         <th class="text-left width-25">uit</th>
@@ -36,6 +37,7 @@
           <span *ngIf="showDateTime(game)">{{game.getStartDateTime().toLocaleString("nl", {"hour12":
             false,"hour":"2-digit","minute":"2-digit"})}}</span>
         </td>
+        <td *ngIf="showBatch()" class="text-center width-10">{{game.getBatchNr()}}</td>
         <td *ngIf="isCreatedAndInplay()">{{game.getField()?.getName()}}</td>
         <td class="text-right">
           <span>{{nameService.getPlacesFromName(game.getPlaces(GameHOME),true,true)}}</span>

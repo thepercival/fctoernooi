@@ -52,6 +52,14 @@ export class GamesScreen extends Screen {
     getGames(): Game[] {
         return this.games;
     }
+
+    addGame(game: Game) {
+        this.games.push(game);
+    }
+
+    isEmpty(): boolean {
+        return this.games.length === 0;
+    }
 }
 
 export interface IGamesScreen {
@@ -59,14 +67,36 @@ export interface IGamesScreen {
 }
 
 export class CreatedAndInplayGamesScreen extends GamesScreen implements IGamesScreen {
+    protected next: CreatedAndInplayGamesScreen;
 
-    constructor(scheduledGames: Game[]) {
-        super(scheduledGames);
+    constructor(protected maxLines: number, protected previous?: CreatedAndInplayGamesScreen) {
+        super([]);
         this.description = 'programma';
     }
 
     isScheduled(): boolean {
         return true;
+    }
+
+    isFull(): boolean {
+        return this.games.length >= this.maxLines;
+    }
+
+    isFirst(): boolean {
+        return this.previous === undefined;
+    }
+
+    getNext(): CreatedAndInplayGamesScreen {
+        return this.next;
+    }
+
+    hasNext(): boolean {
+        return this.next !== undefined;
+    }
+
+    createNext(): CreatedAndInplayGamesScreen {
+        this.next = new CreatedAndInplayGamesScreen(this.maxLines, this);
+        return this.next;
     }
 }
 

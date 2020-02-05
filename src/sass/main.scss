@@ -151,6 +151,12 @@ ngb-alert {
 .q-w-4 {
   border-color: #00578A !important;
 }
+.q-w-5 {
+  border-color: $gray-600 !important;
+}
+.q-l-5 {
+  border-color: $gray-600 !important;
+}
 .q-l-4 {
   border-color: #FFFF66 !important;
 }
@@ -181,6 +187,14 @@ ngb-alert {
 .q-w-4-double-partial {
   border-left-color: #00578A !important;
   border-top-color: #00578A !important;
+}
+.q-w-5-double-partial {
+  border-left-color: $gray-600 !important;
+  border-top-color: $gray-600 !important;
+}
+.q-l-5-double-partial {
+  border-right-color: $gray-600 !important;
+  border-bottom-color: $gray-600 !important;
 }
 .q-l-4-double-partial {
   border-right-color: #FFFF66 !important;

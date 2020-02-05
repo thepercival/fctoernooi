@@ -1,27 +1,22 @@
 <td id="scroll-place-{{place.getId()}}">
-  <button #btnEdit type="button" class="btn btn-sm btn-primary" [disabled]="placeToSwap !== undefined" (click)="edit()">
+  <button #btnEdit type="button" class="btn btn-sm btn-primary" (click)="edit()">
     <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
   </button>
 </td>
 <td>
   <span>{{nameService.getPlaceFromName(place, false)}}</span>
 </td>
-<td class="text-center d-none d-sm-table-cell">
-  <fa-icon *ngIf="place.getCompetitor()" class="text-primary pointer" (click)="register()"
-    [icon]="['far', (place.getCompetitor().getRegistered() ? 'check-' : '') + 'square']" size="2x"></fa-icon>
-</td>
 <td *ngIf="place.getCompetitor()">
   <span
     [ngClass]="{ 'registered-xs': place.getCompetitor().getRegistered() }">{{place.getCompetitor().getName()}}</span>
 </td>
-<td *ngIf="place.getCompetitor()" class="text-center">
-  <fa-icon *ngIf="showSwap" class="text-primary pointer" (click)="swapTwo()"
-    [icon]="['far', (placeToSwap === place ? 'check-' : '') + 'square']" size="2x"></fa-icon>
-</td>
-<td colspan=2 *ngIf="!place.getCompetitor()">
+<td *ngIf="!place.getCompetitor()">
   <span class="badge badge-warning">vul een naam in</span>
 </td>
-<td *ngIf="!hasBegun" class="text-right"><button type="button" class="btn btn-sm btn-danger" (click)="remove()"
-    [disabled]="placeToSwap !== undefined">
+<td class="text-center d-none d-sm-table-cell">
+  <fa-icon *ngIf="place.getCompetitor()" class="text-primary pointer" (click)="register()"
+    [icon]="['far', (place.getCompetitor().getRegistered() ? 'check-' : '') + 'square']" size="2x"></fa-icon>
+</td>
+<td *ngIf="!hasBegun" class="text-right"><button type="button" class="btn btn-sm btn-danger" (click)="remove()">
     <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
   </button></td>

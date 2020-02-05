@@ -7,15 +7,11 @@ import { Competitor, NameService, Place } from 'ngx-sport';
   styleUrls: ['./listline.component.css']
 })
 export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
-
-  @Input() placeToSwap: Place;
   @Input() place: Place;
   @Input() nameService: NameService;
   @Input() focus: boolean;
   @Input() hasBegun: boolean;
-  @Input() showSwap: boolean;
   @Output() editPressed = new EventEmitter<Place>();
-  @Output() swapPressed = new EventEmitter<Place>();
   @Output() removePressed = new EventEmitter<Place>();
   @Output() registerPressed = new EventEmitter<Competitor>();
 
@@ -34,10 +30,6 @@ export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
 
   remove() {
     this.removePressed.emit(this.place);
-  }
-
-  swapTwo() {
-    this.swapPressed.emit(this.place);
   }
 
   register() {

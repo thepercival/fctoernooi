@@ -24,6 +24,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
     form: FormGroup;
     place: Place;
     private focused = false;
+    hasBegun: boolean;
 
     validations: CompetitorValidations = {
         minlengthname: Competitor.MIN_LENGTH_NAME,
@@ -82,6 +83,8 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         this.form.controls.name.setValue(this.place.getCompetitor() ? this.place.getCompetitor().getName() : undefined);
         this.form.controls.registered.setValue(this.place.getCompetitor() ? this.place.getCompetitor().getRegistered() : false);
         this.form.controls.info.setValue(this.place.getCompetitor() ? this.place.getCompetitor().getInfo() : undefined);
+
+        this.hasBegun = this.structure.getRootRound().hasBegun();
         this.processing = false;
     }
 

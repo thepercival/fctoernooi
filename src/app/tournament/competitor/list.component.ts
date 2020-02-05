@@ -35,6 +35,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   placeToSwap: Place;
   focusId: number;
   showSwap: boolean;
+  orderMode = false;
 
   constructor(
     route: ActivatedRoute,
@@ -65,17 +66,11 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
       }
     });
     this.places = round.getPlaces();
-    const hasBegun = this.hasBegun();
-    this.showSwap = !hasBegun && this.atLeastTwoPlaceHaveCompetitor();
     this.processing = false;
   }
 
   ngAfterViewChecked() {
     this.myNavigation.scroll();
-  }
-
-  hasBegun() {
-    return this.structure.getRootRound().hasBegun();
   }
 
   allPlaceHaveCompetitor() {

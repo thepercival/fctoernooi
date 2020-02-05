@@ -15,18 +15,22 @@ export class CSSService {
             const partialWinners = (qualifyGroupWinners.getNrOfToPlacesTooMuch() > 0 && horizontalPouleWinners.isBorderPoule());
             const partialLosers = (qualifyGroupLosers.getNrOfToPlacesTooMuch() > 0 && horizontalPouleLosers.isBorderPoule());
             if (partialWinners && partialLosers) {
-                return 'q-partial q-w-' + qualifyGroupWinners.getNumber() + '-double-partial q-l-'
-                    + qualifyGroupLosers.getNumber() + '-double-partial';
+                return 'q-partial q-w-' + this.getQualifyGroupNumber(qualifyGroupWinners) + '-double-partial q-l-'
+                    + this.getQualifyGroupNumber(qualifyGroupLosers) + '-double-partial';
             }
             if (!partialWinners) {
-                return 'q-w-' + qualifyGroupWinners.getNumber();
+                return 'q-w-' + this.getQualifyGroupNumber(qualifyGroupWinners);
             }
-            return 'q-l-' + qualifyGroupLosers.getNumber();
+            return 'q-l-' + this.getQualifyGroupNumber(qualifyGroupLosers);
         }
         if (qualifyGroupWinners && !qualifyGroupLosers) {
             return this.getQualifyPoule(horizontalPouleWinners);
         }
         return this.getQualifyPoule(horizontalPouleLosers);
+    }
+
+    protected getQualifyGroupNumber(qualifyGroup: QualifyGroup): number {
+        return qualifyGroup.getNumber() > 4 ? 5 : qualifyGroup.getNumber();
     }
 
     getQualifyPoule(horizontalPoule: HorizontalPoule): string {
@@ -35,7 +39,8 @@ export class CSSService {
             return '';
         }
         const classes = (qualifyGroup.getNrOfToPlacesTooMuch() > 0 && horizontalPoule.isBorderPoule()) ? 'q-partial' : '';
-        return classes + ' q-' + this.getQualifyWinnersOrLosers(qualifyGroup.getWinnersOrLosers()) + '-' + qualifyGroup.getNumber();
+        return classes + ' q-' + this.getQualifyWinnersOrLosers(qualifyGroup.getWinnersOrLosers()) + '-' +
+            this.getQualifyGroupNumber(qualifyGroup);
     }
 
     getQualifyWinnersOrLosers(winnersOrLosers: number): string {
@@ -47,7 +52,8 @@ export class CSSService {
         if (qualifyGroup === undefined) {
             return noQualifyClass;
         }
-        return ' q-' + (qualifyGroup.getWinnersOrLosers() === QualifyGroup.WINNERS ? 'w' : 'l') + '-' + qualifyGroup.getNumber();
+        return ' q-' + (qualifyGroup.getWinnersOrLosers() === QualifyGroup.WINNERS ? 'w' : 'l') + '-' +
+            this.getQualifyGroupNumber(qualifyGroup);
     }
 
     // getWinnersOrLosers(winnersOrLosers: number): string {
