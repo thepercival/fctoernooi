@@ -138,7 +138,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     isSelfRefereeAvailable(): boolean {
-        return this.roundNumber.getNrOfPlaces() > 2;
+        const teamup = this.form.value['teamup'];
+        return this.roundNumber.getNrOfPlaces() > (teamup ? 4 : 2);
     }
 
     private needsRecreating(config: PlanningConfig): boolean {
