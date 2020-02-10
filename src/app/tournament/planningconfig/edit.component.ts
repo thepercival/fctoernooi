@@ -7,6 +7,8 @@ import {
     PlanningConfigService,
     PlanningConfigMapper,
     JsonPlanningConfig,
+    SportService,
+    StructureService,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../common/navigation';
@@ -16,6 +18,7 @@ import { TournamentComponent } from '../component';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { PlanningConfigRepository } from '../../lib/ngx-sport/planning/config/repository';
+import { Tournament } from '../../lib/tournament';
 
 @Component({
     selector: 'app-planningconfig-edit',
@@ -27,6 +30,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     ranges: any = {};
     roundNumber: RoundNumber;
     form: FormGroup;
+    private structureService: StructureService;
     validations: PlanningConfigValidations = {
         minNrOfHeadtohead: 1,
         maxNrOfHeadtohead: 4,
@@ -43,6 +47,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         public nameService: NameService,
         private myNavigation: MyNavigation,
         private planningRepository: PlanningRepository,
+        private sportService: SportService,
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, sructureRepository);
@@ -76,6 +81,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             selfReferee: false,
             teamup: false
         });
+        this.structureService = new StructureService(Tournament.StructureOptions);
     }
 
     private initRanges() {
@@ -114,38 +120,74 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.form.controls.minutesPerGameExt.setValue(config.getMinutesPerGameExt());
         this.form.controls.minutesBetweenGames.setValue(config.getMinutesBetweenGames());
         this.form.controls.minutesAfter.setValue(config.getMinutesAfter());
-        this.form.controls.selfReferee.setValue(config.getSelfReferee());
         this.form.controls.teamup.setValue(this.isTeamupAvailable() && config.getTeamup());
-        if (!this.isTeamupAvailable()) {
-            this.form.controls.teamup.disable();
-        }
         this.form.controls.selfReferee.setValue(this.isSelfRefereeAvailable() && config.getSelfReferee());
-        if (!this.isSelfRefereeAvailable()) {
-            this.form.controls.selfReferee.disable();
-        }
 
         if (this.roundNumber.hasBegun()) {
             Object.keys(this.form.controls).forEach(key => {
                 this.form.controls[key].disable();
             });
+        } else {
+            this.enableDisableTeamup();
+            this.enableDisableSelfReferee();
+        }
+    }
+
+    enableDisableTeamup() {
+        if (this.isTeamupAvailable()) {
+            if (this.form.controls.teamup.disabled) {
+                this.form.controls.teamup.enable();
+            }
+        } else if (this.form.controls.teamup.disabled === false) {
+            this.form.controls.teamup.disable();
+        }
+    }
+
+    enableDisableSelfReferee() {
+        if (this.isSelfRefereeAvailable()) {
+            if (this.form.controls.selfReferee.disabled) {
+                this.form.controls.selfReferee.enable();
+            }
+        } else if (this.form.controls.selfReferee.disabled === false) {
+            this.form.controls.selfReferee.disable();
         }
     }
 
     isTeamupAvailable(): boolean {
-        return this.competition.getSports().every(sport => {
+        const allTeamSports = this.competition.getSports().every(sport => {
             return !sport.getTeam();
         });
+        if (allTeamSports === false) {
+            return false;
+        }
+
+        const nrOfPlaces = this.roundNumber.getNrOfPlaces();
+        const nrOfPoules = this.roundNumber.getPoules().length;
+        const flooredNrOfPoulePlaces = this.structureService.getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules, true);
+        const ceiledNrOfPoulePlaces = this.structureService.getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules, false);
+        if (flooredNrOfPoulePlaces < PlanningConfig.TEAMUP_MIN
+            || ceiledNrOfPoulePlaces > PlanningConfig.TEAMUP_MAX) {
+            return false;
+        }
+        if (nrOfPoules === 1 && flooredNrOfPoulePlaces === PlanningConfig.TEAMUP_MIN && this.form.value['selfReferee']) {
+            return false;
+        }
+        return true;
     }
 
     isSelfRefereeAvailable(): boolean {
-        const teamup = this.form.value['teamup'];
-        return this.roundNumber.getNrOfPlaces() > (teamup ? 4 : 2);
+        return this.roundNumber.getNrOfPlaces() >= this.getNrOfPlacesPerGame();
     }
 
     private needsRecreating(config: PlanningConfig): boolean {
         return (this.form.value['nrOfHeadtohead'] !== config.getNrOfHeadtohead()) ||
             (this.isTeamupAvailable() && this.form.value['teamup'] !== config.getTeamup()) ||
-            (this.isSelfRefereeAvailable() && this.form.value['selfreferee'] !== config.getSelfReferee());
+            (this.isSelfRefereeAvailable() && this.form.value['selfReferee'] !== config.getSelfReferee());
+    }
+
+    getNrOfPlacesPerGame(): number {
+        const nrOfGamePlaces = this.competition.getFirstSportConfig().getNrOfGamePlaces();
+        return this.sportService.getNrOfGamePlaces(nrOfGamePlaces, this.form.value['teamup'], true);
     }
 
     private needsRescheduling(config: PlanningConfig): boolean {

@@ -79,7 +79,7 @@
                     <div class="form-check col-4">
                         <label class="custom-control custom-checkbox col-form-label pl-0">
                             <input type="checkbox" class="custom-control-input form-check-input"
-                                formControlName="selfReferee">
+                                formControlName="selfReferee" (ngModelChange)="enableDisableTeamup()">
                             <span class="custom-control-indicator"></span>
                         </label>
                     </div>
@@ -93,7 +93,7 @@
                     <div class="form-check col-4">
                         <label class="custom-control custom-checkbox col-form-label pl-0">
                             <input type="checkbox" class="custom-control-input form-check-input"
-                                formControlName="teamup">
+                                formControlName="teamup" (ngModelChange)="enableDisableSelfReferee()">
                             <span class="custom-control-indicator"></span>
                         </label>
                     </div>
@@ -111,6 +111,6 @@
 <ng-template #popSelfReferee>
     <ul class="list-group">
         <li class="list-group-item">de planning kan uitlopen door deze instelling</li>
-        <li class="list-group-item">er moeten minimaal drie deelnemers zijn</li>
+        <li class="list-group-item">er moeten minimaal {{getNrOfPlacesPerGame()}} deelnemers zijn</li>
     </ul>
 </ng-template>

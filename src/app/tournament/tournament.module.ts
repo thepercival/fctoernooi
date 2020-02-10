@@ -56,6 +56,7 @@ import {
   PlanningConfigService,
   SportScoreConfigMapper,
   SportScoreConfigService,
+  SportService,
   StructureMapper,
 } from 'ngx-sport';
 
@@ -181,6 +182,7 @@ import { NgbNavbar } from '@ng-bootstrap/ng-bootstrap/dropdown/dropdown';
     RoundNumberMapper,
     SportConfigMapper,
     SportScoreConfigService,
+    SportService,
     PlanningConfigService,
     SportConfigService,
     SportScoreConfigMapper,
