@@ -36,6 +36,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   focusId: number;
   showSwap: boolean;
   orderMode = false;
+  hasBegun: boolean;
 
   constructor(
     route: ActivatedRoute,
@@ -66,6 +67,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
       }
     });
     this.places = round.getPlaces();
+    this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
     this.processing = false;
   }
 

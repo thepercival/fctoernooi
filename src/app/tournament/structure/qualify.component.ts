@@ -4,6 +4,11 @@ import { NameService, QualifyGroup, Round, RoundNumber, StructureService } from 
 import { IAlert } from '../../common/alert';
 import { Tournament } from '../../lib/tournament';
 
+export enum StructureViewType {
+    ROUNDSTRUCTURE = 1,
+    QUALIFYGROUPS = 2
+}
+
 @Component({
     selector: 'app-tournament-structurequalify',
     templateUrl: './qualify.component.html',
@@ -99,7 +104,8 @@ export class StructureQualifyComponent {
     }
 
     switchView() {
-        const newViewType = this.viewType === StructureViewType.QUALIFYGROUPS ? StructureViewType.ROUNDSTRUCTURE : StructureViewType.QUALIFYGROUPS;
+        const newViewType = (this.viewType === StructureViewType.QUALIFYGROUPS)
+            ? StructureViewType.ROUNDSTRUCTURE : StructureViewType.QUALIFYGROUPS;
         this.viewType = newViewType;
         this.viewTypeChanged.emit(this.viewType);
     }
@@ -111,10 +117,4 @@ export class StructureQualifyComponent {
     protected setAlert(type: string, message: string) {
         this.alert = { type: type, message: message };
     }
-}
-
-
-export enum StructureViewType {
-    ROUNDSTRUCTURE = 1,
-    QUALIFYGROUPS = 2
 }

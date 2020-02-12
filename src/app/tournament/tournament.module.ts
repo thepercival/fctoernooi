@@ -11,7 +11,6 @@ import {
   faCopy,
   faDotCircle,
   faInfoCircle,
-  faLink,
   faListUl,
   faMedal,
   faMinus,
@@ -25,7 +24,8 @@ import {
   faTh,
   faTimesCircle,
   faTrashAlt,
-  faUnlink,
+  faCompressAlt,
+  faExpandAlt,
   faUsers,
   faUserTag,
   fas,
@@ -202,8 +202,8 @@ export class TournamentModule {
     library.addIconPacks(fas, fab);
     library.addIcons(
       faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
-      faUnlink, faFileExport, faFileExcel, faPrint, faSort, faRandom, faSquare, faCheckSquare, faUserTag, faInfoCircle, faMedal,
-      faLink, faUsers, faQrcode, faCopy, faDotCircle
+      faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom, faSquare, faCheckSquare,
+      faUserTag, faInfoCircle, faMedal, faUsers, faQrcode, faCopy, faDotCircle
     );
     library.addIcons(
       faProductHunt

@@ -19,7 +19,6 @@ export class StructureRoundComponent {
   viewType: number = StructureViewType.ROUNDSTRUCTURE;
   alert: IAlert;
   private structureService: StructureService;
-  showQualifyInfo = true;
 
   constructor(public nameService: NameService, public cssService: CSSService) {
     this.resetAlert();
@@ -112,7 +111,8 @@ export class StructureRoundComponent {
     const editHorPoules: EditHorPoule[] = [];
     let previous;
     horizontalPoules.forEach(horizontalPoule => {
-      editHorPoules.push({ current: horizontalPoule, previous: previous });
+      const editHorPoule = { current: horizontalPoule, previous: previous };
+      editHorPoules.push(editHorPoule);
       previous = horizontalPoule;
     });
     return editHorPoules;
@@ -212,6 +212,11 @@ export class StructureRoundComponent {
   protected setAlert(type: string, message: string) {
     this.alert = { type: type, message: message };
   }
+
+  // getEditHorPouleDescription(editHorPoule: EditHorPoule): string {
+  //   return this.nameService.getHorizontalPouleName(editHorPoule.previous)
+  //     + ' en ' + this.nameService.getHorizontalPouleName(editHorPoule.current);
+  // }
 }
 
 interface EditHorPoule {
