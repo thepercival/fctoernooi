@@ -16,6 +16,7 @@ export class StructureRoundComponent {
   @Input() round: Round;
   @Output() roundNumberChanged = new EventEmitter<RoundNumber>();
   @Input() editable: boolean;
+  @Input() first: boolean;
   viewType: number = StructureViewType.ROUNDSTRUCTURE;
   alert: IAlert;
   private structureService: StructureService;

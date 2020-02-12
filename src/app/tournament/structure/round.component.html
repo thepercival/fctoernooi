@@ -1,4 +1,4 @@
-<div *ngIf="round" class="col {{round.isRoot() ? 'px-2' : 'px-1'}}">
+<div *ngIf="round" [ngClass]="{ 'pl-1': !first, 'pr-1': round.isRoot() }">
   <div class="card border-secondary round mb-2 {{cssService.getQualifyRound(round)}}"
     *ngIf="round.isRoot() || round.getNrOfPlaces() > 2">
     <div class="card-header px-1">
@@ -77,10 +77,10 @@
     (roundNumberChanged)="roundNumberChanged.emit($event)">
   </app-tournament-structurequalify>
 
-  <div class=" row text-center no-gutters">
-    <app-tournament-structureround *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed()" class="mb-2"
-      [ngStyle]="{ 'width': getQualifyGroupWidthPercentage(qualifyGroup) + '%' }" [round]="qualifyGroup.getChildRound()"
-      [editable]="editable" (roundNumberChanged)="roundNumberChanged.emit($event)"></app-tournament-structureround>
+  <div class="d-flex align-items-stretch text-center">
+    <app-tournament-structureround *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed(); first as first"
+      class="align-self-stretch flex-wrap mb-2" [round]="qualifyGroup.getChildRound()" [editable]="editable"
+      [first]="first" (roundNumberChanged)="roundNumberChanged.emit($event)"></app-tournament-structureround>
   </div>
   <div *ngIf="!round.isRoot() && round.getNrOfPlaces() === 2">
     <div class="card round {{cssService.getQualifyRound(round)}}">
