@@ -32,8 +32,7 @@ import {
   faUserCircle,
   faUserFriends,
   faUserShield,
-  faVolleyballBall,
-  fas,
+  faVolleyballBall
 } from '@fortawesome/free-solid-svg-icons';
 import {
   NgbAlertModule,
@@ -56,7 +55,6 @@ import {
 } from 'ngx-sport';
 
 import { environment } from '../environments/environment';
-import { AdminModule } from './admin/admin.module';
 import { RoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthService } from './auth/auth.service';
@@ -80,8 +78,7 @@ import { RefereeRepository } from './lib/ngx-sport/referee/repository';
 import { TournamentShellRepository } from './lib/tournament/shell/repository';
 import { UserMapper } from './lib/user/mapper';
 import { NavComponent } from './nav/nav.component';
-import { UserModule } from './user/user.module';
-import { faTwitter, fab } from '@fortawesome/free-brands-svg-icons';
+import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 
 @NgModule({
   declarations: [
@@ -97,8 +94,6 @@ import { faTwitter, fab } from '@fortawesome/free-brands-svg-icons';
     RoutingModule,
     ReactiveFormsModule,
     CommonSharedModule,
-    UserModule,
-    AdminModule,
     NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule,
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
     FontAwesomeModule
@@ -135,7 +130,6 @@ import { faTwitter, fab } from '@fortawesome/free-brands-svg-icons';
 })
 export class AppModule {
   constructor(library: FaIconLibrary) {
-    library.addIconPacks(fas, fab);
     library.addIcons(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave,
       faSignInAlt, faSignOutAlt, faPlusCircle, faPlus, faTv, faFutbol, faTableTennis, faSearch,
       faMobileAlt, faEnvelope, faCopyright, faEye, faShareAlt, faClipboardCheck,

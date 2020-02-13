@@ -24,7 +24,6 @@ import { UserRoutingModule } from './user-routing.module';
 })
 export class UserModule {
   constructor(library: FaIconLibrary) {
-    // library.addIconPacks(fas);
     library.addIcons(faLevelUpAlt, faKey);
   }
 }

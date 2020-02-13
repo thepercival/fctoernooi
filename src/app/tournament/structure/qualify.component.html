@@ -4,14 +4,13 @@
 <div class="d-flex flex-wrap justify-content-around mb-2" *ngIf="round.getNrOfPlaces() > 2 && !round.hasBegun()">
     <ng-container *ngTemplateOutlet="modifyQualifiers;context:{$implicit: QualifyGroupWINNERS}">
     </ng-container>
-    <button *ngIf="round.isRoot() || showSwitchView()" type="button" class="btn btn-outline-secondary"
-        (click)="switchView()" [disabled]="viewType !== ViewTypeQualifyGroups && !showSwitchView()">
+    <button *ngIf="round.isRoot() && showSwitchView()" type="button" class="btn btn-secondary" (click)="switchView()"
+        [disabled]="viewType !== ViewTypeQualifyGroups && !showSwitchView()">
         <i *ngIf="viewType !== ViewTypeQualifyGroups" class="fi flaticon-structure"></i>
-        <span *ngIf="round.isRoot() && viewType !== ViewTypeQualifyGroups" class="d-none d-sm-inline-flex">
+        <span *ngIf="viewType !== ViewTypeQualifyGroups" class="d-none d-sm-inline-flex">
             kwalificatiegroepen</span>
         <fa-icon *ngIf="viewType === ViewTypeQualifyGroups" [icon]="['fas', 'th']"></fa-icon> <span
-            *ngIf="round.isRoot() && viewType === ViewTypeQualifyGroups"
-            class="d-none d-sm-inline-flex">&nbsp;ronde-indeling</span>
+            *ngIf="viewType === ViewTypeQualifyGroups" class="d-none d-sm-inline-flex">&nbsp;ronde-indeling</span>
     </button>
     <ng-container *ngTemplateOutlet="modifyQualifiers;context:{$implicit: QualifyGroupLOSERS}">
     </ng-container>

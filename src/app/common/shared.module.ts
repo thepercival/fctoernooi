@@ -19,7 +19,6 @@ import { SportIconComponent } from './sport/icon.component';
 })
 export class CommonSharedModule {
   constructor(library: FaIconLibrary) {
-    library.addIconPacks(fas);
     library.addIcons(faUsers);
   }
 }

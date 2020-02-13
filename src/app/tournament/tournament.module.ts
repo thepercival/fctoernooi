@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faProductHunt, fab } from '@fortawesome/free-brands-svg-icons';
+import { faProductHunt } from '@fortawesome/free-brands-svg-icons';
 import { faCheckSquare, faSquare } from '@fortawesome/free-regular-svg-icons';
 import {
   faCheckCircle,
@@ -28,7 +28,6 @@ import {
   faExpandAlt,
   faUsers,
   faUserTag,
-  fas,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   NgbAlertModule,
@@ -199,7 +198,6 @@ import { NgbNavbar } from '@ng-bootstrap/ng-bootstrap/dropdown/dropdown';
 })
 export class TournamentModule {
   constructor(library: FaIconLibrary) {
-    library.addIconPacks(fas, fab);
     library.addIcons(
       faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
       faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom, faSquare, faCheckSquare,
