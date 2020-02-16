@@ -31,6 +31,7 @@
                 place, false)}}</li>
         </ul>
       </div>
+
       <div *ngIf="editable && viewType === ViewTypeQualifyGroups" class="d-flex flex-wrap justify-content-center mb-3">
         <table>
           <tbody>
@@ -43,7 +44,8 @@
                     class="list-group-item btn-outline-secondary px-2 py-1 place-list-item pointer btn-action-list-item"
                     (click)="splitQualifyGroup(editHorPoule)">
                     <button type="button" class="btn btn-outline-secondary btn-block">
-                      <fa-icon class="rotate-45" [icon]="['fas', 'expand-alt']"></fa-icon><span *ngIf="round.isRoot()">
+                      <fa-icon class="rotate-45" [icon]="['fas', 'expand-alt']"></fa-icon><span
+                        *ngIf="round.getNumber().getRounds().length <= 2">
                         splitsen</span>
                     </button>
                   </li>
@@ -52,7 +54,7 @@
                     (click)="mergeQualifyGroups(editHorPoule)">
                     <button type="button" class="btn btn-outline-secondary btn-block">
                       <fa-icon class="rotate-45" [icon]="['fas', 'compress-alt']"></fa-icon><span
-                        *ngIf="round.isRoot()">
+                        *ngIf="round.getNumber().getRounds().length <= 2">
                         samenvoegen</span>
                     </button>
                   </li>

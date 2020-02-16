@@ -4,7 +4,7 @@
 <div class="d-flex flex-wrap justify-content-around mb-2" *ngIf="round.getNrOfPlaces() > 2 && !round.hasBegun()">
     <ng-container *ngTemplateOutlet="modifyQualifiers;context:{$implicit: QualifyGroupWINNERS}">
     </ng-container>
-    <button *ngIf="round.isRoot() && showSwitchView()" type="button" class="btn btn-secondary" (click)="switchView()"
+    <button *ngIf="showSwitchView()" type="button" class="btn btn-secondary" (click)="switchView()"
         [disabled]="viewType !== ViewTypeQualifyGroups && !showSwitchView()">
         <i *ngIf="viewType !== ViewTypeQualifyGroups" class="fi flaticon-structure"></i>
         <span *ngIf="viewType !== ViewTypeQualifyGroups" class="d-none d-sm-inline-flex">
