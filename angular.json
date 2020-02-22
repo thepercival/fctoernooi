@@ -4,6 +4,18 @@
   "newProjectRoot": "projects",
   "projects": {
     "fctoernooi": {
+      "i18n": {
+        "locales": {
+          "fr": {
+            "translation": "src/locale/messages.nl.xlf",
+            "baseHref": ""
+          },
+          "nl": {
+            "translation": "src/locale/messages.nl.xlf",
+            "baseHref": ""
+          }
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -11,6 +23,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -29,6 +42,12 @@
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -47,6 +66,12 @@
               "serviceWorker": true
             },
             "production-nl": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -64,19 +89,29 @@
               "buildOptimizer": true,
               "outputPath": "dist/my-project-nl/",
               "i18nFile": "src/locale/messages.nl.xlf",
-              "i18nFormat": "xlf",
               "i18nLocale": "fr",
               "i18nMissingTranslation": "error"
             },
             "nl": {
               "aot": true,
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "outputPath": "dist/my-project-nl/",
               "i18nFile": "src/locale/messages.nl.xlf",
-              "i18nFormat": "xlf",
               "i18nLocale": "nl",
               "i18nMissingTranslation": "error"
             },
             "acc": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -175,10 +210,13 @@
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
-      "styleext": "scss"
+      "style": "scss"
     },
     "@schematics/angular:directive": {
       "prefix": "app"
     }
+  },
+  "cli": {
+    "analytics": "bbc98f42-bcb3-4e47-9edd-46b8f92b9590"
   }
 }

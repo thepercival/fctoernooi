@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit {
   static readonly FUTURE: number = 1;
   static readonly PAST: number = 2;
 
-  @ViewChild('inputsearchname', { static: false }) searchElementRef: ElementRef;
+  @ViewChild('inputsearchname') searchElementRef: ElementRef;
 
   shellsWithRole: TournamentShell[];
   shellsWithRoleFromFour: TournamentShell[];

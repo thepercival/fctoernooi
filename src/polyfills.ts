@@ -15,7 +15,7 @@
  */
 import 'zone.js/dist/zone';
 
-// import '@angular/localize/init';
+import '@angular/localize/init';
 
 /***************************************************************************************************
  * BROWSER POLYFILLS
