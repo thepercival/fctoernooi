@@ -1,4 +1,4 @@
-<div *ngIf="max" class="progress" [style.height.px]="length">
+<div *ngIf="max" class="progress" [style.width.px]="length" [style.height.px]="length">
     <svg class="progress__svg" [attr.width.px]="length" [attr.height.px]="length">
         <circle class="progress__meter" [attr.cx]="length / 2" [attr.cy]="length / 2" [attr.r]="radius"
             [style.strokeWidth]="strokeWidth" />

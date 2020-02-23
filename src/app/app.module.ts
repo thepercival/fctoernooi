@@ -41,25 +41,12 @@ import {
   NgbPopoverModule,
   NgbTimepickerModule,
 } from '@ng-bootstrap/ng-bootstrap';
-import {
-  AssociationMapper,
-  CompetitionMapper,
-  FieldMapper,
-  LeagueMapper,
-  NameService,
-  PlanningConfigMapper,
-  RefereeMapper,
-  SeasonMapper,
-  SportConfigMapper,
-  SportMapper,
-} from 'ngx-sport';
 
 import { environment } from '../environments/environment';
 import { RoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthService } from './auth/auth.service';
 import { AuthguardService } from './auth/authguard.service';
-import { CSSService } from './common/cssservice';
 import { GlobalEventsManager } from './common/eventmanager';
 import { MyNavigation } from './common/navigation';
 import { CommonSharedModule } from './common/shared.module';
@@ -68,13 +55,6 @@ import { HomeComponent } from './home/home.component';
 import { HomeShellComponent } from './home/shell.component';
 import { FavoritesRepository } from './lib/favorites/repository';
 import { RoleMapper } from './lib/role/mapper';
-import { SponsorMapper } from './lib/sponsor/mapper';
-import { SponsorRepository } from './lib/sponsor/repository';
-import { TournamentMapper } from './lib/tournament/mapper';
-import { TournamentRepository } from './lib/tournament/repository';
-import { FieldRepository } from './lib/ngx-sport/field/repository';
-import { SportConfigRepository } from './lib/ngx-sport/sport/config/repository';
-import { RefereeRepository } from './lib/ngx-sport/referee/repository';
 import { TournamentShellRepository } from './lib/tournament/shell/repository';
 import { UserMapper } from './lib/user/mapper';
 import { NavComponent } from './nav/nav.component';
@@ -101,30 +81,12 @@ import { faTwitter } from '@fortawesome/free-brands-svg-icons';
   providers: [
     AuthService,
     AuthguardService,
-    TournamentRepository,
-    TournamentMapper,
     TournamentShellRepository,
-    SponsorMapper,
     RoleMapper,
     UserMapper,
-    CompetitionMapper,
-    SportMapper,
-    PlanningConfigMapper,
-    AssociationMapper,
-    LeagueMapper,
-    SeasonMapper,
-    SponsorRepository,
-    FieldRepository,
-    FieldMapper,
-    RefereeRepository,
-    RefereeMapper,
     GlobalEventsManager,
-    CSSService,
     MyNavigation,
-    NameService,
-    FavoritesRepository,
-    SportConfigRepository,
-    SportConfigMapper
+    FavoritesRepository
   ],
   bootstrap: [AppComponent]
 })
@@ -139,5 +101,4 @@ export class AppModule {
       faTwitter
     );
   }
-
 }

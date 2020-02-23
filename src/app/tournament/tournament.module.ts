@@ -41,6 +41,7 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { ClipboardModule } from 'ngx-clipboard';
 import {
+  CompetitionMapper,
   CompetitorMapper,
   GameMapper,
   GamePlaceMapper,
@@ -57,6 +58,14 @@ import {
   SportScoreConfigService,
   SportService,
   StructureMapper,
+  SportMapper,
+  SeasonMapper,
+  RefereeMapper,
+  PlanningConfigMapper,
+  LeagueMapper,
+  FieldMapper,
+  AssociationMapper,
+  NameService,
 } from 'ngx-sport';
 
 import { CSSService } from '../common/cssservice';
@@ -111,7 +120,12 @@ import { GameRepository } from '../lib/ngx-sport/game/repository';
 import { PlanningRepository } from '../lib/ngx-sport/planning/repository';
 import { PlanningConfigRepository } from '../lib/ngx-sport/planning/config/repository';
 import { PouleRankingModalComponent } from './poule/rankingmodal.component';
-import { NgbNavbar } from '@ng-bootstrap/ng-bootstrap/dropdown/dropdown';
+import { RefereeRepository } from '../lib/ngx-sport/referee/repository';
+import { FieldRepository } from '../lib/ngx-sport/field/repository';
+import { TournamentRepository } from '../lib/tournament/repository';
+import { TournamentMapper } from '../lib/tournament/mapper';
+import { SponsorMapper } from '../lib/sponsor/mapper';
+import { SponsorRepository } from '../lib/sponsor/repository';
 
 @NgModule({
   imports: [
@@ -167,33 +181,48 @@ import { NgbNavbar } from '@ng-bootstrap/ng-bootstrap/dropdown/dropdown';
   ],
   entryComponents: [ModalRoundNumbersComponent, CompetitorListRemoveModalComponent, PouleRankingModalComponent],
   providers: [
-    RoleMapper,
-    StructureRepository,
-    StructureMapper,
-    RoundMapper,
-    PouleMapper,
-    PlaceMapper,
+    AssociationMapper,
+    CompetitionMapper,
+    CompetitorRepository,
+    CompetitorMapper,
+    CSSService,
+    FieldMapper,
+    FieldRepository,
+    GameRepository,
     GameMapper,
     GamePlaceMapper,
     GameScoreMapper,
+    LeagueMapper,
+    NameService,
+    PlaceMapper,
+    PlaceRepository,
+    PlanningConfigService,
+    PlanningRepository,
+    PlanningMapper,
+    PlanningConfigMapper,
+    PlanningConfigRepository,
+    PouleMapper,
+    RefereeMapper,
+    RefereeRepository,
+    RoleMapper,
+    RoundMapper,
+    RoundNumberMapper,
+    SeasonMapper,
+    SponsorMapper,
+    SponsorRepository,
+    SportMapper,
     SportConfigRepository,
     SportRepository,
-    RoundNumberMapper,
     SportConfigMapper,
     SportScoreConfigService,
     SportService,
-    PlanningConfigService,
     SportConfigService,
     SportScoreConfigMapper,
     SportScoreConfigRepository,
-    PlaceRepository,
-    CompetitorRepository,
-    CompetitorMapper,
-    GameRepository,
-    PlanningRepository,
-    PlanningMapper,
-    PlanningConfigRepository,
-    CSSService,
+    StructureRepository,
+    StructureMapper,
+    TournamentRepository,
+    TournamentMapper,
   ]
 })
 export class TournamentModule {

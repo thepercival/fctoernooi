@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { CSSService } from '../common/cssservice';
 import { TournamentShell } from '../lib/tournament/shell/repository';
 
 @Component({
@@ -12,9 +11,7 @@ export class HomeShellComponent implements OnInit {
   @Input() shell: TournamentShell;
   @Input() showPublic: boolean;
 
-  constructor(
-    public cssService: CSSService
-  ) {
+  constructor() {
   }
 
   ngOnInit() {

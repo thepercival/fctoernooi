@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { cloneDeep } from 'lodash';
+import * as cloneDeep from 'lodash.clonedeep';
 import {
   Competitor,
   Round,
