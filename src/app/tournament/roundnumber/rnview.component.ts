@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbPopover, NgbModal, NgbModalConfig, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
+import { NgbPopover, NgbModal, NgbModalOptions, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import {
   Game,
   NameService,
@@ -24,8 +24,6 @@ import { Tournament } from '../../lib/tournament';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { PouleRankingModalComponent } from '../poule/rankingmodal.component';
 import { TranslateService } from '../../lib/translate';
-import { enableDebugTools } from '@angular/platform-browser';
-import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tournament-roundnumber-view',
@@ -244,29 +242,13 @@ export class TournamentRoundNumberViewComponent implements OnChanges, OnInit, Af
   }
 
   openModalPouleRank(poule: Poule) {
-    const modalRef = this.modalService.open(PouleRankingModalComponent, this.getModalOptions());
+    const modalRef = this.modalService.open(PouleRankingModalComponent);
     modalRef.componentInstance.poule = poule;
     modalRef.componentInstance.tournament = this.tournament;
   }
 
   openModal(templateRef) {
-    const modalRef = this.modalService.open(templateRef, this.getModalOptions());
-  }
-
-  getModalOptions(): NgbModalOptions {
-    return {
-      centered: true,
-      scrollable: true,
-      size: 'lg'
-    };
-  }
-
-  getInputName(scoreConfig: SportScoreConfig): string {
-    return '112';
-    // const max = scoreConfig.getMaximum();
-    // const maxNext = scoreConfig.hasNext() ? scoreConfig.getNext().getMaximum() : 0;
-    // const scoreConfigTmp = (maxNext === 0 && max > 0) ? scoreConfig : scoreConfig.getNext();
-    // return this.translate.getScoreNamePlural(getInput.getInput());
+    const modalRef = this.modalService.open(templateRef);
   }
 
   getCalculateName(scoreConfig: SportScoreConfig): string {

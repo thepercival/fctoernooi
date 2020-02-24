@@ -199,8 +199,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     openModalExport(modalContent) {
-        const activeModal = this.modalService.open(modalContent/*, { windowClass: 'border-warning' }*/);
-        // (<TournamentListRemoveModalComponent>activeModal.componentInstance).place = place;
+        const activeModal = this.modalService.open(modalContent);
         activeModal.result.then((result: string) => {
             if (result === 'export-pdf' || result === 'export-excel') {
                 const exportConfig: TournamentExportConfig = {
@@ -233,8 +232,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     openModalName(modalContent) {
-        const activeModal = this.modalService.open(modalContent/*, { windowClass: 'border-warning' }*/);
-        // (<TournamentListRemoveModalComponent>activeModal.componentInstance).place = place;
+        const activeModal = this.modalService.open(modalContent);
         activeModal.result.then((result) => {
             if (result === 'save') {
                 this.saveName();
@@ -244,8 +242,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     openModalCopy(modalContent) {
-        const activeModal = this.modalService.open(modalContent/*, { windowClass: 'border-warning' }*/);
-        // (<TournamentListRemoveModalComponent>activeModal.componentInstance).place = place;
+        const activeModal = this.modalService.open(modalContent);
         activeModal.result.then((result) => {
             if (result === 'copy') {
                 this.copy();
@@ -255,8 +252,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     openModalRemove(modalContent) {
-        const activeModal = this.modalService.open(modalContent/*, { windowClass: 'border-warning' }*/);
-        // (<TournamentListRemoveModalComponent>activeModal.componentInstance).place = place;
+        const activeModal = this.modalService.open(modalContent);
         activeModal.result.then((result) => {
             if (result === 'remove') {
                 this.remove();

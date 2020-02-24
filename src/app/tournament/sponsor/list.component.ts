@@ -13,7 +13,7 @@ import { TournamentComponent } from '../component';
 @Component({
   selector: 'app-tournament-sponsor',
   templateUrl: './list.component.html',
-  styles: ['./list.component.scss']
+  styleUrls: ['./list.component.scss']
 })
 export class SponsorListComponent extends TournamentComponent implements OnInit {
   sponsors: Sponsor[];

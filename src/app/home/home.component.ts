@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit {
   alert: IAlert;
   processingWithRole = true;
   publicProcessing = true;
+  public firstTimeVisit;
   private defaultHourRange: HourRange = {
     start: -4, end: 168
   };
@@ -41,6 +42,7 @@ export class HomeComponent implements OnInit {
     private tournamentShellRepos: TournamentShellRepository,
     fb: FormBuilder
   ) {
+    this.checkFirstTimeVisit();
     this.searchForm = fb.group({
       filterName: ['', Validators.compose([
         Validators.required,
@@ -139,6 +141,15 @@ export class HomeComponent implements OnInit {
 
   protected setAlert(type: string, message: string) {
     this.alert = { 'type': type, 'message': message };
+  }
+
+  checkFirstTimeVisit() {
+    if (localStorage.getItem('firsttimevisit') === null) {
+      this.firstTimeVisit = true;
+      localStorage.setItem('firsttimevisit', JSON.stringify(false));
+    } else {
+      this.firstTimeVisit = false;
+    }
   }
 
   isLoggedIn() {

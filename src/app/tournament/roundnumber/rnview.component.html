@@ -130,7 +130,7 @@
 </div>
 
 <ng-template #planningInfo let-modal>
-  <div class="modal-header">
+  <div class="modal-header no-border">
     <h4 class="modal-title">
       <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> planning informatie
     </h4>
@@ -140,31 +140,32 @@
   </div>
   <div class="modal-body">
     <ul class="list-group">
-      <li class="list-group-item">
+      <li class="list-group-item border-info">
         de start is op {{roundNumber.getFirstStartDateTime().toLocaleString("nl",
                   {"month":"short","day":"2-digit"})}} om {{roundNumber.getFirstStartDateTime().toLocaleString("nl", {"hour12":
                     false,"hour":"2-digit","minute":"2-digit"})}}
       </li>
-      <li class="list-group-item">
+      <li class="list-group-item border-info">
         het aantal onderlinge duels is {{planningConfig.getNrOfHeadtohead()}}
       </li>
-      <li class="list-group-item">
+      <li class="list-group-item border-info">
         de wedstrijden duren {{planningConfig.getMinutesPerGame()}} minuten
       </li>
-      <li *ngIf="planningConfig.hasExtension()" class="list-group-item">
+      <li *ngIf="planningConfig.hasExtension()" class="list-group-item border-info">
         de eventuele verlenging duurt {{planningConfig.getMinutesPerGameExt()}} minuten
       </li>
-      <li class="list-group-item">er zit {{planningConfig.getMinutesBetweenGames()}} minuten tussen de wedstrijden</li>
+      <li class="list-group-item border-info">er zit {{planningConfig.getMinutesBetweenGames()}} minuten
+        tussen de wedstrijden</li>
     </ul>
   </div>
-  <div class="modal-footer align-items-end">
-    <button type="submit" class="btn btn-secondary" data-dismiss="modal"
+  <div class="modal-footer align-items-end no-border">
+    <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
       (click)="modal.dismiss('close')">sluiten</button>
   </div>
 </ng-template>
 
 <ng-template #scoreInfo let-modal>
-  <div class="modal-header">
+  <div class="modal-header no-border">
     <h4 class="modal-title"><i class="fi flaticon-scoreboard"></i> score informatie</h4>
     <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
       <span aria-hidden="true">&times;</span>
@@ -173,19 +174,19 @@
   <div class="modal-body">
     <ng-template ngFor let-scoreConfig [ngForOf]="roundNumber.getValidSportScoreConfigs()">
       <ul class="list-group">
-        <li *ngIf="scoreConfig.hasNext() && scoreConfig.getNext().getEnabled()" class="list-group-item">
+        <li *ngIf="scoreConfig.hasNext() && scoreConfig.getNext().getEnabled()" class="list-group-item border-info">
           <span *ngIf="scoreConfig.getNext().getMaximum() === 0">Behaal zoveel mogelijk
             {{translate.getScoreNamePlural(scoreConfig.getNext())}}</span>
           <span *ngIf="scoreConfig.getNext().getMaximum() > 0">Wie het eerst {{scoreConfig.getNext().getMaximum()}}
             {{translate.getScoreNamePlural(scoreConfig.getNext())}} heeft behaald</span>
           <span *ngIf="planningConfig.getEnableTime()"> binnen de tijd</span>
         </li>
-        <li *ngIf="scoreConfig.hasNext() && scoreConfig.getNext().getEnabled()" class="list-group-item">
+        <li *ngIf="scoreConfig.hasNext() && scoreConfig.getNext().getEnabled()" class="list-group-item border-info">
           <span>Per
             {{translate.getScoreNameSingular(scoreConfig.getNext())}} moet(en) er
             {{scoreConfig.getMaximum()}} {{translate.getScoreNamePlural(scoreConfig)}} worden behaald</span>
         </li>
-        <li *ngIf="!scoreConfig.hasNext() || !scoreConfig.getNext().getEnabled()" class="list-group-item">
+        <li *ngIf="!scoreConfig.hasNext() || !scoreConfig.getNext().getEnabled()" class="list-group-item border-info">
           <span *ngIf="scoreConfig.getMaximum() === 0">Behaal zoveel mogelijk
             {{translate.getScoreNamePlural(scoreConfig)}}</span>
           <span *ngIf="scoreConfig.getMaximum() > 0">Wie het eerst {{scoreConfig.getMaximum()}}
@@ -194,8 +195,8 @@
       </ul>
     </ng-template>
   </div>
-  <div class="modal-footer align-items-end">
-    <button type="submit" class="btn btn-secondary" data-dismiss="modal"
+  <div class="modal-footer align-items-end no-border">
+    <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
       (click)="modal.dismiss('close')">sluiten</button>
   </div>
 </ng-template>

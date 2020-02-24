@@ -18,7 +18,7 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 @Component({
   selector: 'app-tournament-sport',
   templateUrl: './list.component.html',
-  styles: ['./list.component.scss']
+  styleUrls: ['./list.component.scss']
 })
 export class SportConfigListComponent extends TournamentComponent implements OnInit {
   sportConfigs: SportConfig[];

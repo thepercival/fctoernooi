@@ -38,6 +38,7 @@ import {
   NgbPopoverModule,
   NgbTimepickerModule,
   NgbNavModule,
+  NgbModalConfig,
 } from '@ng-bootstrap/ng-bootstrap';
 import { ClipboardModule } from 'ngx-clipboard';
 import {
@@ -194,6 +195,7 @@ import { SponsorRepository } from '../lib/sponsor/repository';
     GameScoreMapper,
     LeagueMapper,
     NameService,
+    NgbModalConfig,
     PlaceMapper,
     PlaceRepository,
     PlanningConfigService,
@@ -226,7 +228,7 @@ import { SponsorRepository } from '../lib/sponsor/repository';
   ]
 })
 export class TournamentModule {
-  constructor(library: FaIconLibrary) {
+  constructor(library: FaIconLibrary, modalConfig: NgbModalConfig, ) {
     library.addIcons(
       faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
       faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom, faSquare, faCheckSquare,
@@ -235,6 +237,9 @@ export class TournamentModule {
     library.addIcons(
       faProductHunt
     );
+    modalConfig.centered = true;
+    modalConfig.scrollable = true;
+    modalConfig.size = 'lg';
   }
 }
 

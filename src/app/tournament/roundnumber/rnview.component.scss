@@ -16,6 +16,10 @@ table.fixed {
     margin-top: -8px;
 }
 
+.no-border {
+    border-width: 0em;
+}
+
 // @include media-breakpoint-up(sm) {
 //   .some-class {
 //     display: block;
