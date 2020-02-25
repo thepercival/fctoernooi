@@ -102,6 +102,7 @@ export class TournamentRoundNumberViewComponent implements OnChanges, OnInit, Af
   private getGameData() {
     const gameDatas: GameData[] = [];
     const pouleDatas = this.getPouleDatas();
+    let showBreak = false;
     this.roundNumber.getGames(Game.ORDER_BY_BATCH).forEach(game => {
       const aPlaceHasACompetitor = this.hasAPlaceACompetitor(game);
       if (!(!this.favorites.hasItems() || this.favorites.hasGameItem(game) || !aPlaceHasACompetitor)) {
@@ -109,13 +110,23 @@ export class TournamentRoundNumberViewComponent implements OnChanges, OnInit, Af
       }
       const pouleData: PouleData = pouleDatas[game.getPoule().getId()];
       const hasPopover = pouleData.needsRanking || (!this.roundNumber.isFirst() && aPlaceHasACompetitor);
+      let showBreakIt;
+      if (showBreak) {
+        showBreakIt = false;
+      } else {
+        if (this.isBreakBeforeGame(game)) {
+          showBreakIt = true;
+          showBreak = true;
+        }
+      }
 
       const gameData: GameData = {
         hasEditPermissions: this.hasEditPermissions(game),
         hasACompetitor: aPlaceHasACompetitor,
         hasPopover: hasPopover,
         poule: pouleData,
-        game: game
+        game: game,
+        showBreak: showBreakIt
       };
       gameDatas.push(gameData);
     });
@@ -166,7 +177,7 @@ export class TournamentRoundNumberViewComponent implements OnChanges, OnInit, Af
     return false;
   }
 
-  isBreakBeforeGame(game: Game): boolean {
+  protected isBreakBeforeGame(game: Game): boolean {
     if (this.tournamentBreak === undefined) {
       return false;
     }
@@ -264,6 +275,7 @@ interface GameData {
   hasPopover: boolean;
   poule: PouleData;
   game: Game;
+  showBreak?: boolean;
 }
 
 interface PouleData {

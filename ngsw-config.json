@@ -28,9 +28,7 @@
     {
       "name": "api-freshness",
       "urls": [
-        "https://api.fctoernooi.nl/tournaments",
-        "https://api.fctoernooi.nl/tournamentspublic",
-        "https://api.fctoernooi.nl/voetbal/structures"
+        ""
       ],
       "version": 17,
       "cacheConfig": {
