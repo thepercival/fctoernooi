@@ -242,7 +242,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     openModalCopy(modalContent) {
-        const activeModal = this.modalService.open(modalContent);
+        const activeModal = this.modalService.open(modalContent, { scrollable: false });
         activeModal.result.then((result) => {
             if (result === 'copy') {
                 this.copy();
