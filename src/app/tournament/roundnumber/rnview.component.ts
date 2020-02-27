@@ -1,11 +1,10 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbPopover, NgbModal, NgbModalOptions, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbPopover, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   Game,
   NameService,
   Poule,
-  RankingService,
   RoundNumber,
   SportScoreConfigService,
   State,
@@ -38,8 +37,8 @@ export class TournamentRoundNumberViewComponent implements OnChanges, OnInit, Af
   @Input() parentReturnAction: string;
   @Input() userRefereeId: number;
   @Input() canEditSettings: boolean;
-  @Output() popOverIsOpen = new EventEmitter<boolean>();
-  private nrOfOpenPopovers = 0;
+  @Input() refreshingData: boolean;
+  @Output() refreshData = new EventEmitter();
   @Output() scroll = new EventEmitter<boolean>(); // kan misschien uit
   alert: any;
   sameDay = true;
@@ -207,22 +206,6 @@ export class TournamentRoundNumberViewComponent implements OnChanges, OnInit, Af
       const tournament = this.tournament;
       popOver.open({ poule, tournament });
     }
-  }
-
-  popoverShown() {
-    this.nrOfOpenPopovers++;
-    if (this.nrOfOpenPopovers !== 1) {
-      return;
-    }
-    this.popOverIsOpen.emit(true);
-  }
-
-  popoverHidden() {
-    this.nrOfOpenPopovers--;
-    if (this.nrOfOpenPopovers !== 0) {
-      return;
-    }
-    this.popOverIsOpen.emit(false);
   }
 
   protected isSameDay(gameDataOne: GameData, gameDataTwo: GameData): boolean {

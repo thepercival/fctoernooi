@@ -21,6 +21,7 @@ import {
   faQrcode,
   faRandom,
   faSort,
+  faSync,
   faTh,
   faTimesCircle,
   faTrashAlt,
@@ -232,7 +233,7 @@ export class TournamentModule {
     library.addIcons(
       faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
       faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom, faSquare, faCheckSquare,
-      faUserTag, faInfoCircle, faMedal, faUsers, faQrcode, faCopy, faDotCircle
+      faUserTag, faInfoCircle, faMedal, faUsers, faQrcode, faCopy, faDotCircle, faSync
     );
     library.addIcons(
       faProductHunt

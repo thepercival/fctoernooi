@@ -17,11 +17,9 @@ import { TournamentComponent } from '../component';
 })
 export class ViewComponent extends TournamentComponent implements OnInit, OnDestroy {
     private liveboardLinkSet = false;
-    public refreshAfterSeconds = 60;
-    private refreshAtCountDown = true;
     userRefereeId: number;
-    toggleProgress = false;
     shouldShowEndRanking: boolean;
+    refreshingData = false;
 
     constructor(
         route: ActivatedRoute,
@@ -44,7 +42,6 @@ export class ViewComponent extends TournamentComponent implements OnInit, OnDest
                 /* happy path */ userRefereeIdRes => {
                     this.userRefereeId = userRefereeIdRes;
                     this.processing = false;
-                    this.toggleProgress = !this.toggleProgress;
                 },
                 /* error path */ e => { this.setAlert('danger', e); }
             );
@@ -55,21 +52,17 @@ export class ViewComponent extends TournamentComponent implements OnInit, OnDest
         this.myNavigation.scroll();
     }
 
-    executeScheduledTask() {
-        if (this.refreshAtCountDown !== true) {
-            return;
-        }
-        this.setData(this.tournament.getId(), () => {
-            this.toggleProgress = !this.toggleProgress;
-        });
-    }
-
-    setRefresh(refresh: boolean) {
-        this.refreshAtCountDown = refresh;
-    }
-
     isAdmin(): boolean {
         return this.tournament && this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.ADMIN);
+    }
+
+    refreshData() {
+        this.refreshingData = true;
+        // set processing is true
+        this.setData(this.tournament.getId(), () => {
+            // set processing is false
+            this.refreshingData = false;
+        });
     }
 
     initLiveboardLink() {

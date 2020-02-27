@@ -18,6 +18,6 @@
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
-    "preserveWhiteSpace": false
+    "strictInjectionParameters": true
   }
 }

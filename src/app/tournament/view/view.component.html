@@ -14,13 +14,6 @@
           </button>
         </h1>
       </div>
-      <div *ngIf="tournament && structure" class="d-flex justify-content-between">
-        <div class="alert alert-info" role="alert">
-          Gebruik de knoppen links om de poulestand te bekijken.
-        </div>
-        <app-progress [toggleProgress]="toggleProgress" [max]="refreshAfterSeconds"
-          (executeAtZero)="executeScheduledTask()"></app-progress>
-      </div>
       <div>
         <h2 *ngIf="processing" class="text-center">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
@@ -36,7 +29,8 @@
       <div *ngIf="!processing && tournament && structure">
         <app-tournament-roundnumber-view *ngFor="let roundNumber of structure.getRoundNumbers()"
           [tournament]="tournament" [roundNumber]="roundNumber" [userRefereeId]="userRefereeId"
-          [parentReturnAction]="'/toernooi/view'" (scroll)="scroll()" (popOverIsOpen)="setRefresh(!$event)">
+          [parentReturnAction]="'/toernooi/view'" (scroll)="scroll()" (refreshData)="refreshData()"
+          [refreshingData]="refreshingData">
         </app-tournament-roundnumber-view>
         <div *ngIf="shouldShowEndRanking">
           <div class="d-flex justify-content-between mt-3" id="endranking">

@@ -1,21 +1,28 @@
 <div *ngIf="tournament" id="scroll-roundnumber-{{roundNumber.getNumber()}}">
-  <div class="d-flex justify-content-between mt-3">
-    <h2>
+  <div class="d-flex mt-3">
+    <h2 class="mr-auto">
       <span [innerHTML]="nameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
     </h2>
+    <button *ngIf="!canEditSettings" type="button" class="btn btn-sm btn-outline-secondary mr-2 px-3"
+      (click)="refreshData.emit()" [disabled]="refreshingData">
+      <fa-icon [icon]="['fas', 'sync']" [spin]="refreshingData"></fa-icon>
+    </button>
     <button *ngIf="!canEditSettings" type="button"
-      class="btn btn-sm btn-outline-{{favorites.hasItems() ? 'primary' : 'secondary'}} mr-2"
+      class="btn btn-sm btn-outline-{{favorites.hasItems() ? 'primary' : 'secondary'}}"
       (click)="linkToFilterSettings()">
       <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       <span>filter</span>
     </button>
-    <button type="button" class="btn btn-sm btn-primary mr-0" *ngIf="canEditSettings" (click)="linkToPlanningConfig()">
+    <button type="button" class="btn btn-sm btn-primary" *ngIf="canEditSettings" (click)="linkToPlanningConfig()">
       <fa-icon [icon]="['fas', 'cogs']"></fa-icon> ronde instellingen
     </button>
   </div>
   <ngb-alert *ngIf="!roundNumber.getHasPlanning()" class="mb-0" type="warning" [dismissible]="false">
     <fa-icon [icon]="['fas', 'info-circle']"></fa-icon> De planning wordt gezocht, dit duurt enkele
     seconden tot 1 minuut. Zodra de planning is gevonden, worden de wedstrijden automatisch getoond.
+  </ngb-alert>
+  <ngb-alert *ngIf="refreshingData" type="info" [dismissible]="false">
+    de uitslagen worden vernieuwd
   </ngb-alert>
   <div *ngIf="roundNumber.getHasPlanning()" class="d-flex justify-content-around">
     <table class="table">
