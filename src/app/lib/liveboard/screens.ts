@@ -132,7 +132,7 @@ export class SponsorScreen extends Screen {
 
 export class SponsorScreenService {
     static readonly MAXNROFSPONSORSCREENS: number = 4;
-    static readonly MAXNROFSPONSORSPERSCREEN: number = 9;
+    static readonly MAXNROFSPONSORSPERSCREEN: number = 4;
 
     private screens: SponsorScreen[];
 

@@ -1,25 +1,20 @@
-<div [ngStyle]="{ 'height': viewHeight + 'vh' }">
-  <div *ngFor="let sponsorGroup of sponsorGroups" class="d-flex  justify-content-around"
-    [ngStyle]="{ 'height': getRowViewHeight() + 'vh' }">
-    <div *ngFor="let sponsor of sponsorGroup" [ngClass]="{ 'card-dummy': sponsor === undefined }" class="card mb-3 mx-2"
-      [ngStyle]="{ 'width': getColumnViewWidth(sponsorGroup) + 'vw' }">
-      <div *ngIf="sponsor !== undefined" class="row no-gutters card-body-custom">
-        <div *ngIf="sponsor.getLogoUrl()" class="col-md-5 col-lg-4 col-xl-3">
-          <img src="{{sponsor.getLogoUrl()}}" class="card-img" alt="img">
-        </div>
-        <div *ngIf="sponsor.getLogoUrl()" class="col-md-7 col-lg-8 col-xl-9">
-          <div class="card-body text-center">
-            <span class="card-title" [ngStyle]="{ 'font-size': getTitleFontSize() + 'vh' }">{{sponsor.getName()}}</span>
+<div class="sponsor-wrapper">
+  <div *ngFor="let sponsorRow of sponsorRows" class="container-fluid sponsor-row-{{sponsorRows.length}}">
+    <div class="row py-2 h-100">
+      <div *ngFor="let sponsor of sponsorRow" class="text-center col-{{12 / sponsorRows.length}} sponsor-cell">
+        <div class="card h-100 w-100">
+          <div class="card-header text-white bg-secondary">
+            <span *ngIf="sponsor" class="">{{sponsor.getName()}}</span>
+          </div>
+          <div class="card-body p-1 text-center sponsor-card-body">
+            <img *ngIf="sponsor && sponsor.getLogoUrl()" src="{{sponsor.getLogoUrl()}}" class="sponsor-img" alt="img">
+          </div>
+          <div *ngIf="sponsor && sponsor.getUrl()" class="card-footer">
+            <span *ngIf="sponsor" class="">{{sponsor.getUrl()}}</span>
           </div>
         </div>
-        <div *ngIf="!sponsor.getLogoUrl()" class="col-12">
-          <div class="card-body text-center">
-            <span class="card-title" [ngStyle]="{ 'font-size': getTitleFontSize() + 'vh' }">{{sponsor.getName()}}</span>
-          </div>
-        </div>
+
       </div>
-      <div *ngIf="sponsor !== undefined" class="card-footer" [ngStyle]="{ 'font-size': getFooterFontSize() + 'vh' }">
-        {{sponsor.getUrl()}}</div>
     </div>
   </div>
 </div>

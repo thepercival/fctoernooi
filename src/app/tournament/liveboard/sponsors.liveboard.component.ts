@@ -10,8 +10,8 @@ import { Sponsor } from '../../lib/sponsor';
 })
 export class LiveboardSponsorsComponent implements OnChanges {
     @Input() sponsors: Sponsor[];
-    sponsorGroups: Sponsor[][];
-    maxNrOfSponsorsPerGroup: number;
+    nrOfColumns: number;
+    sponsorRows: Sponsor[][];
     viewHeight: number;
 
     constructor(
@@ -22,55 +22,28 @@ export class LiveboardSponsorsComponent implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.sponsors !== undefined && changes.sponsors.currentValue !== changes.sponsors.previousValue) {
-            this.sponsorGroups = [[]];
-            const nrOfSponsors = this.sponsors.length;
-            this.maxNrOfSponsorsPerGroup = nrOfSponsors < 3 ? 1 : (nrOfSponsors < 7 ? 2 : 3);
-            this.sponsors.forEach(sponsor => {
-                const sponsorGroup = this.getSponsorGroup();
-                sponsorGroup.push(sponsor);
-                this.sponsorGroups.push(sponsorGroup);
-            });
-            this.addDummies();
+            this.initSponsorRows(this.sponsors.length);
         }
     }
 
-    private getSponsorGroup(): Sponsor[] {
-        const sponsorGroup = this.sponsorGroups.pop();
-        if (sponsorGroup.length === this.maxNrOfSponsorsPerGroup) {
-            this.sponsorGroups.push(sponsorGroup);
-            return [];
+    protected initSponsorRows(nrOfSponsors: number) {
+        let nrOfRows;
+        if (nrOfSponsors === 1) {
+            nrOfRows = 1;
+        } else if (nrOfSponsors <= 4) {
+            nrOfRows = 2;
+        } else {
+            nrOfRows = 4;
         }
-        return sponsorGroup;
-    }
+        this.nrOfColumns = nrOfRows;
 
-    // aSponsorHasUrl(): boolean {
-    //     return this.sponsors.some(sponsor => sponsor.getUrl() !== undefined && sponsor.getUrl().length > 0);
-    // }
-
-    private addDummies() {
-        const sponsorGroup = this.sponsorGroups.pop();
-        if (sponsorGroup.length < this.maxNrOfSponsorsPerGroup) {
-            sponsorGroup.push(undefined);
+        this.sponsorRows = [];
+        for (let rowIt = 1; rowIt <= nrOfRows; rowIt++) {
+            const sponsorRow = [];
+            for (let colIt = 1; colIt <= this.nrOfColumns; colIt++) {
+                sponsorRow.push(this.sponsors.shift());
+            }
+            this.sponsorRows.push(sponsorRow);
         }
-        if (sponsorGroup.length < this.maxNrOfSponsorsPerGroup) {
-            sponsorGroup.unshift(undefined);
-        }
-        this.sponsorGroups.push(sponsorGroup);
-    }
-
-    getRowViewHeight() {
-        return this.viewHeight / this.sponsorGroups.length;
-    }
-
-    getColumnViewWidth(sponsorGroup) {
-        return Math.floor(100 / sponsorGroup.length);
-    }
-
-    getTitleFontSize() {
-        return this.getRowViewHeight() * 0.1;
-    }
-
-    getFooterFontSize() {
-        return this.getRowViewHeight() * 0.06;
     }
 }

@@ -11,32 +11,34 @@ h1 > i.smaller {
     font-size: 28px;
 }
 
-.card{
-    /*background-color: black;*/
-    border-color: white;
-    flex-grow: 1;    
+.sponsor-wrapper {
+    height: 85vh;
+}
+.sponsor-row-1 {
+    height: 100%;
+    font-size: 4em;
+}
+.sponsor-row-2 {
+    height: 50%;
+    font-size: 2em;
+}
+.sponsor-url {
+    font-size: 1em;
+}
+.sponsor-cell {
+    height:100%;
 }
 
-.card-dummy {
-    border-color: transparent;
+.sponsor-card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.card-body-custom {
-    height:80%;
-}
-.card-footer {
-    border-top-color: white;
-    height:20%;
-}
-
-img {  
-    display: block;
-    max-width:200px;
-    max-height:200px;
+.sponsor-img {
+    height: 100%;
     width: auto;
-    height: auto;
-}
-
-td.score, td.unitdiff, td.rankingnr {
-    white-space: nowrap;
+    display: block;
+    margin: 0 auto;
 }

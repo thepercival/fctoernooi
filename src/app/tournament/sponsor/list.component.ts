@@ -8,6 +8,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -28,6 +29,7 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
   constructor(
     route: ActivatedRoute,
     router: Router,
+    private modalService: NgbModal,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     private sponsorRepository: SponsorRepository
@@ -43,6 +45,13 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
     this.createSponsorsList();
     this.sponsorScreenService = new SponsorScreenService(this.sponsors);
     this.processing = false;
+  }
+
+  openHelpModal(modalContent) {
+    const activeModal = this.modalService.open(modalContent);
+    activeModal.result.then((result) => {
+    }, (reason) => {
+    });
   }
 
   createSponsorsList() {
