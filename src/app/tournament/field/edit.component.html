@@ -9,7 +9,7 @@
       </app-tournament-title>
       <div>
         <h2>
-          <i class=" fi flaticon-soccer-field"></i> veld
+          <i class=" fi flaticon-soccer-field"></i> {{getFieldDescription()}}
         </h2>
         <h2 *ngIf="processing" class="text-center">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>

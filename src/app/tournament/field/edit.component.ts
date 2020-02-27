@@ -14,6 +14,7 @@ import { FieldRepository } from '../../lib/ngx-sport/field/repository';
 import { TournamentComponent } from '../component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
+import { TranslateService } from '../../lib/translate';
 
 @Component({
     selector: 'app-tournament-field-edit',
@@ -105,6 +106,13 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
         this.chooseSport = false;
     }
 
+
+    getFieldDescription(): string {
+        const translate = new TranslateService();
+        const sports = this.competition.getSports();
+        return translate.getFieldNameSingular(sports.length === 1 ? sports[0] : undefined);
+    }
+
     save(): boolean {
         if (this.field !== undefined) {
             this.edit();
@@ -116,7 +124,7 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
 
     add() {
         this.processing = true;
-        this.setAlert('info', 'het veld wordt toegevoegd');
+        this.setAlert('info', 'het ' + this.getFieldDescription() + ' wordt toegevoegd');
         const name = this.form.controls.name.value;
 
         const field: JsonField = {
@@ -149,7 +157,7 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
 
     edit() {
         this.processing = true;
-        this.setAlert('info', 'het veld wordt gewijzigd');
+        this.setAlert('info', 'het ' + this.getFieldDescription() + ' wordt gewijzigd');
         const name = this.form.controls.name.value;
 
         this.field.setName(name);
@@ -180,57 +188,6 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
     navigateBack() {
         this.myNavigation.back();
     }
-
-    // isInitialsDuplicate(initials: string, referee?: Referee): boolean {
-    //     const referees = this.competition.getReferees();
-    //     return referees.find(refereeIt => {
-    //         return (initials === refereeIt.getInitials() && (referee === undefined || refereeIt.getId() === undefined));
-    //     }) !== undefined;
-    // }
-
-    // addField() {
-    //     this.setAlert('info', 'het veld wordt toegevoegd');
-    //     this.processing = true;
-
-    //     const jsonField: JsonField = {
-    //         number: this.fieldsList.length + 1,
-    //         name: '' + (this.fieldsList.length + 1),
-    //         sportId: 12 /* @TODO */
-    //     };
-
-    //     this.fieldRepository.createObject(jsonField, this.tournament)
-    //         .subscribe(
-    //         /* happy path */ fieldRes => {
-    //                 const fieldItem: IFieldListItem = { field: fieldRes, editable: false };
-    //                 this.fieldsList.push(fieldItem);
-    //                 this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament)
-    //                     .subscribe(
-    //                     /* happy path */ gamesRes => {
-    //                             this.processing = false;
-    //                             this.setAlert('success', 'het veld is toegevoegd');
-    //                         },
-    //             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-    //             /* onComplete */() => this.processing = false
-    //                     );
-    //             },
-    //         /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-
-    //         );
-    // }
-
-    // editField(fieldItem) {
-    //     this.setAlert('info', 'de veldnaam wordt gewijzigd');
-    //     this.processing = true;
-
-    //     this.fieldRepository.editObject(fieldItem.field, this.tournament)
-    //         .subscribe(
-    //         /* happy path */ fieldRes => {
-    //                 this.setAlert('success', 'de veldnaam is gewijzigd');
-    //             },
-    //         /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-    //         /* onComplete */() => { this.processing = false; }
-    //         );
-    // }
 }
 
 export interface FieldValidations {

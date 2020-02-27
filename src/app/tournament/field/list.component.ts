@@ -62,6 +62,12 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
         this.router.navigate(['/toernooi/fieldedit', tournament.getId(), field ? field.getNumber() : 0]);
     }
 
+    getFieldDescription(): string {
+        const translate = new TranslateService();
+        const sports = this.competition.getSports();
+        return translate.getFieldNameSingular(sports.length === 1 ? sports[0] : undefined);
+    }
+
     getFieldsDescription(): string {
         const translate = new TranslateService();
         const sports = this.competition.getSports();
@@ -70,10 +76,10 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
 
     removeField(field: Field) {
         if (this.competition.getNrOfFields(field.getSport()) === 1) {
-            this.setAlert('warning', 'een sport moet minimaal 1 veld houden, verwijder eventueel de sport');
+            this.setAlert('warning', 'een sport moet minimaal 1 ' + this.getFieldDescription() + ' houden, verwijder eventueel de sport');
             return;
         }
-        this.setAlert('info', 'het veld wordt verwijderd');
+        this.setAlert('info', 'het ' + this.getFieldDescription() + ' wordt verwijderd');
         this.processing = true;
 
         this.fieldRepository.removeObject(field, this.tournament)
@@ -83,7 +89,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
                         .subscribe(
                         /* happy path */ roundNumberOut => {
                                 this.processing = false;
-                                this.setAlert('success', 'het veld is verwijderd');
+                                this.setAlert('success', 'het ' + this.getFieldDescription() + ' is verwijderd');
                             },
                 /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
                 /* onComplete */() => this.processing = false

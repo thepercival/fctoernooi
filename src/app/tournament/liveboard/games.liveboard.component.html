@@ -12,7 +12,7 @@
           {{getRoundNumber().getFirstStartDateTime().toLocaleString("nl",{"month":"short","day":"2-digit"})}}
         </th>
         <th *ngIf="showBatch()" class="text-center width-10">batch</th>
-        <th *ngIf="isCreatedAndInplay()" title="veld" class="width-8">
+        <th *ngIf="isCreatedAndInplay()" class="width-8">
           <i class="fi flaticon-soccer-field"></i>
         </th>
         <th class="text-right width-25">thuis</th>
@@ -20,7 +20,7 @@
           <i class="fi flaticon-scoreboard"></i>
         </th>
         <th class="text-left width-25">uit</th>
-        <th *ngIf="isCreatedAndInplay() && hasReferees()" class="width-14 text-right" title="scheidsrechter">
+        <th *ngIf="isCreatedAndInplay() && hasReferees()" class="width-14 text-right">
           <i class="fi flaticon-referee"></i>
         </th>
       </tr>

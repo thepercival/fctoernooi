@@ -107,7 +107,7 @@
         </div>
         <div *ngIf="game.getField()" class="form-group row">
           <div class="col-3">
-            <label class="col-form-label">veld</label>
+            <label class="col-form-label">{{getFieldDescription()}}</label>
           </div>
           <div class="col-9">
             <label class="col-form-label">{{game.getField().getName()}}</label>

@@ -123,6 +123,11 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         return description + translate.getScoreNamePlural(scoreConfig);
     }
 
+    getFieldDescription(): string {
+        const translate = new TranslateService();
+        return translate.getFieldNameSingular(this.firstScoreConfig.getSport());
+    }
+
     getInputScoreDescription() {
         let description = '';
         if (this.firstScoreConfig.getDirection() === SportScoreConfig.UPWARDS && this.firstScoreConfig.getMaximum() > 0) {
