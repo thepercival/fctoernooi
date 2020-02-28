@@ -46,7 +46,6 @@ export class EndRankingScreen extends Screen {
 export class GamesScreen extends Screen {
     constructor(protected games: Game[]) {
         super();
-        this.games = games;
     }
 
     getGames(): Game[] {
@@ -71,7 +70,7 @@ export class CreatedAndInplayGamesScreen extends GamesScreen implements IGamesSc
 
     constructor(protected maxLines: number, protected previous?: CreatedAndInplayGamesScreen) {
         super([]);
-        this.description = 'programma';
+        this.setDescription('programma');
     }
 
     isScheduled(): boolean {
@@ -94,8 +93,14 @@ export class CreatedAndInplayGamesScreen extends GamesScreen implements IGamesSc
         return this.next !== undefined;
     }
 
+    setDescription(description: string) {
+        this.description = description;
+    }
+
     createNext(): CreatedAndInplayGamesScreen {
+        this.setDescription(this.description + ' <span class="text-info">deel 1</span>');
         this.next = new CreatedAndInplayGamesScreen(this.maxLines, this);
+        this.next.setDescription(this.next.description + ' <span class="text-info">deel 2</span>');
         return this.next;
     }
 }
