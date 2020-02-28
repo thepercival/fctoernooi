@@ -46,8 +46,7 @@
             </td>
             <td>
               <span *ngIf="toggledItem === place.getCompetitor()" class="smallfont">
-                <fa-icon *ngIf="this.toggledItemProgress === 10" class="text-success" [icon]="['fas', 'save']"
-                  [size]="(5 + (toggledItemProgress/2)) + 'x'"></fa-icon>
+                <fa-icon class="text-success" [icon]="['fas', 'save']" size="10x"></fa-icon>
               </span>
             </td>
             <td class="text-right">
@@ -84,10 +83,7 @@
             </td>
             <td>
               <span *ngIf="toggledItem === referee" class="smallfont">
-                <fa-icon *ngIf="this.toggledItemProgress < 10" class="text-info" [icon]="['fas', 'save']"
-                  [size]="(5 + (toggledItemProgress/2)) + 'x'"></fa-icon>
-                <fa-icon *ngIf="this.toggledItemProgress === 10" class="text-success" [icon]="['fas', 'check-circle']"
-                  size="10x"></fa-icon>
+                <fa-icon class="text-success" [icon]="['fas', 'check-circle']" size="10x"></fa-icon>
               </span>
             </td>
             <td class="text-right">

@@ -20,7 +20,6 @@ export class FilterComponent extends TournamentComponent implements OnInit {
     places: Place[];
     placeToSwap: Place;
     toggledItem: Competitor | Referee;
-    toggledItemProgress = 0;
     userIsGameResultAdmin: boolean;
     favorites: Favorites;
 
@@ -86,16 +85,7 @@ export class FilterComponent extends TournamentComponent implements OnInit {
     }
 
     private startProgressing(toggledItem: Competitor | Referee) {
-        this.toggledItemProgress = 0;
         this.toggledItem = toggledItem;
-        this.toggledItemProgress = 10;
-        /*const progress = range(1, 10).pipe(
-            filter(number => (number % 2) === 0)
-        );
-        zip(interval(100), progress)
-            .subscribe(fromTo => {
-                this.toggledItemProgress = fromTo[1];
-            });*/
     }
 
     hasReferees() {

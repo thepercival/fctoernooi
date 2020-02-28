@@ -98,9 +98,9 @@ export class CreatedAndInplayGamesScreen extends GamesScreen implements IGamesSc
     }
 
     createNext(): CreatedAndInplayGamesScreen {
-        this.setDescription(this.description + ' <span class="text-info">deel 1</span>');
+        this.setDescription(this.description + ' <span class="badge badge-info">deel 1</span>');
         this.next = new CreatedAndInplayGamesScreen(this.maxLines, this);
-        this.next.setDescription(this.next.description + ' <span class="text-info">deel 2</span>');
+        this.next.setDescription(this.next.description + ' <span class="badge badge-info">deel 2</span>');
         return this.next;
     }
 }

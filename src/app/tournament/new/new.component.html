@@ -59,7 +59,7 @@
             </div>
           </div>
         </div>
-        <div class="form-group row mb-0">
+        <div class="form-group row">
           <label for="nrofcompetitors" class="col-4 col-form-label">deelnemers</label>
           <div class="col-8">
             <input type="number" class="form-control"
@@ -68,8 +68,6 @@
               [max]="validations.maxnrofcompetitors">
           </div>
         </div>
-        <label *ngIf="form.controls.nrofcompetitors.value" class="text-info">{{getStructureDescription()}}
-          1 ronde, pas dit aan onder "Indeling"</label>
         <div class="form-group row">
           <label for="nroffields" class="col-4 col-form-label">{{getFieldsDescription()}}</label>
           <div class="col-8">
@@ -115,10 +113,18 @@
           </div>
         </div>
         <div class="form-group row justify-content-end">
-          <div class="col-8">
+          <div class="col-2">
             <button [disabled]="form.invalid || sport === undefined" type="submit" class="btn btn-primary">
               maken
             </button>
+          </div>
+          <div class="col-6">
+            <ul *ngIf="form.controls.nrofcompetitors.value" class="list-group d-none d-sm-block"
+              style="font-size: 0.9em;">
+              <li class="list-group-item list-group-item-info p-0 text-center">
+                meerdere ronden, kun je<br /> instellen onder "Indeling"
+              </li>
+            </ul>
           </div>
         </div>
       </form>
