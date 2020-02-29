@@ -92,12 +92,12 @@ export class Liveboard {
 
     private getScreensForPouleRankings(): Screen[] {
         const screens: Screen[] = [];
-        const roundNumbers: RoundNumber[] = this.getRoundNumbersForPouleRankings();
+        const roundNumbers: RoundNumber[] = this.getRoundNumbersForPouleRankings().filter(roundNumber => roundNumber.needsRanking());
         if (roundNumbers.length === 0) {
             return screens;
         }
         roundNumbers.forEach(roundNumber => {
-            const poulesForRanking = roundNumber.getPoules();
+            const poulesForRanking = roundNumber.getPoules().filter(poule => poule.needsRanking());
             const nameService = new NameService();
             const roundsDescription = nameService.getRoundNumberName(roundNumber);
             const twoPoules: Poule[] = [];
@@ -174,9 +174,11 @@ export class Liveboard {
             return screens;
         }
         const nrOfItems = this.structure.getRootRound().getNrOfPlaces();
-        for (let currentRank = 0; currentRank + this.maxLines <= nrOfItems; currentRank += this.maxLines) {
-            const endRank = currentRank + this.maxLines > nrOfItems ? nrOfItems : currentRank + this.maxLines;
-            screens.push(new EndRankingScreen(currentRank + 1, endRank));
+        let currentRank = 1;
+        while (currentRank <= nrOfItems) {
+            const endRank = (currentRank - 1) + this.maxLines;
+            screens.push(new EndRankingScreen({ min: currentRank, max: endRank }));
+            currentRank = endRank + 1;
         }
         return screens;
     }

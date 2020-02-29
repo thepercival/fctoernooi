@@ -1,6 +1,7 @@
 import { Game, Poule } from 'ngx-sport';
 
 import { Sponsor } from '../sponsor';
+import { VoetbalRange } from 'ngx-sport/src/range';
 
 export class Screen {
     protected description: string;
@@ -37,7 +38,7 @@ export class PoulesRankingScreen extends Screen {
 }
 
 export class EndRankingScreen extends Screen {
-    constructor(public filterStart: number, public filterEnd: number) {
+    constructor(public range: VoetbalRange) {
         super();
         this.description = 'eindstand';
     }
