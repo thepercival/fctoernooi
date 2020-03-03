@@ -7,8 +7,8 @@
         <h2>
           <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> planning
         </h2>
-        <button *ngIf="tournament" type="button" class="btn btn-sm btn-primary mr-0"
-          [routerLink]="['/toernooi/planningedit', tournament.getId()]">
+        <button *ngIf="tournament && structure && structure.hasPlanning()" type="button"
+          class="btn btn-sm btn-primary mr-0" [routerLink]="['/toernooi/planningedit', tournament.getId()]">
           start & pauze
         </button>
       </div>

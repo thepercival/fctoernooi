@@ -85,17 +85,6 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         this.processing = false;
     }
 
-    hasPlanning(): boolean {
-        return this.hasRoundNumberPlanning(this.structure.getFirstRoundNumber());
-    }
-
-    protected hasRoundNumberPlanning(roundNumber: RoundNumber): boolean {
-        if (!roundNumber.hasNext() || !roundNumber.getHasPlanning()) {
-            return roundNumber.getHasPlanning();
-        }
-        return this.hasRoundNumberPlanning(roundNumber.getNext());
-    }
-
     competitorsComplete(): boolean {
         return this.structure.getFirstRoundNumber().getNrOfCompetitors() === this.structure.getFirstRoundNumber().getNrOfPlaces();
     }

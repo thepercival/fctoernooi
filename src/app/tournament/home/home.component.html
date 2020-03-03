@@ -117,7 +117,7 @@
     </div>
   </div>
   <div *ngIf="!processing && structure" class="row d-flex justify-content-center my-3">
-    <div *ngIf="hasPlanning()" class="card border-secondary mt-3 mx-2">
+    <div *ngIf="structure.hasPlanning()" class="card border-secondary mt-3 mx-2">
       <div class="card-body d-flex justify-content-between">
         <div [routerLink]="['/toernooi/view', tournament.getId()]" class="text-center pointer">
           <div>
