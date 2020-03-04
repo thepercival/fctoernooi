@@ -31,8 +31,10 @@ export class Liveboard {
             const pouleRankingsScreens = this.getScreensForPouleRankings();
             pouleRankingsScreens.forEach(pouleRankingScreen => {
                 screens.push(pouleRankingScreen);
-                createdAndInplayGamesScreens.forEach(screenIt => screens.push(screenIt));
             });
+            if (pouleRankingsScreens.length > 0) {
+                createdAndInplayGamesScreens.forEach(screenIt => screens.push(screenIt));
+            }
             screens = screens.concat(this.getScreensForEndRanking());
         }
         if (screenfilter === undefined || screenfilter === 'sponsors') {
@@ -46,7 +48,7 @@ export class Liveboard {
     getScreensForGamesCreatedAndInplay(): Screen[] {
         const firstRoundNuber = this.structure.getFirstRoundNumber();
         const createdAndInplayGamesScreen = new CreatedAndInplayGamesScreen(this.maxLines);
-        this.fillScreensForGamesCreatedAndInplay(createdAndInplayGamesScreen, firstRoundNuber, 0);
+        this.fillScreensForGamesCreatedAndInplay(createdAndInplayGamesScreen, firstRoundNuber);
         if (createdAndInplayGamesScreen.isEmpty()) {
             return [];
         }
@@ -58,12 +60,39 @@ export class Liveboard {
         return screens;
     }
 
-    fillScreensForGamesCreatedAndInplay(screen: CreatedAndInplayGamesScreen, roundNumber: RoundNumber, nrOfBatchesCompleted: number) {
+    protected getNrOfScreensForGamesCreatedAndInplay(roundGames: Game[]): number {
+        if (roundGames.length <= this.maxLines) {
+            return 1;
+        }
+        let nrOfBatchGames = 0;
+        const initialBatchNr = roundGames[0].getBatchNr();
+
+        roundGames.every((game: Game) => {
+            nrOfBatchGames++;
+            return (initialBatchNr === game.getBatchNr());
+        });
+        return (nrOfBatchGames > this.maxLines) ? 2 : 1;
+    }
+
+    protected screensFilled(screen: CreatedAndInplayGamesScreen, maxNrOfScreens: number): boolean {
+        if (!screen.isFull()) {
+            return false;
+        }
+        if (screen.isFirst() && maxNrOfScreens === 2) {
+            return false;
+        }
+        return true;
+    }
+
+    protected fillScreensForGamesCreatedAndInplay(screen: CreatedAndInplayGamesScreen, roundNumber: RoundNumber) {
         const roundGames: Game[] = roundNumber.getGames(Game.ORDER_BY_BATCH);
+
+        const maxNrOfScreens = this.getNrOfScreensForGamesCreatedAndInplay(roundGames);
+
         const now = new Date();
         let game: Game = roundGames.shift();
         let nextGame: Game = roundGames.shift();
-        while ((nrOfBatchesCompleted < 2 || !screen.isFull()) && game !== undefined) {
+        while (!this.screensFilled(screen, maxNrOfScreens) && game !== undefined) {
             if (game.getState() === State.Finished ||
                 (roundNumber.getValidPlanningConfig().getEnableTime() && game.getStartDateTime() < now)
             ) {
@@ -74,19 +103,15 @@ export class Liveboard {
 
             screen.addGame(game);
 
-            if (nextGame === undefined || game.getBatchNr() !== nextGame.getBatchNr()) {
-                nrOfBatchesCompleted++;
-            }
-
-            if (screen.isFull() && screen.isFirst() && nrOfBatchesCompleted < 2) {
+            if (screen.isFull() && screen.isFirst() && maxNrOfScreens > 1) {
                 screen = screen.createNext();
             }
 
             game = nextGame;
             nextGame = roundGames.shift();
         }
-        if ((nrOfBatchesCompleted < 2 || !screen.isFull()) && roundNumber.hasNext()) {
-            this.fillScreensForGamesCreatedAndInplay(screen, roundNumber.getNext(), nrOfBatchesCompleted);
+        if (roundNumber.hasNext() && this.screensFilled(screen, maxNrOfScreens) === false) {
+            this.fillScreensForGamesCreatedAndInplay(screen, roundNumber.getNext());
         }
     }
 
