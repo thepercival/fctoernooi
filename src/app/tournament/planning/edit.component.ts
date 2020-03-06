@@ -23,7 +23,7 @@ export class PlanningEditComponent extends TournamentComponent implements OnInit
 
     validations: any = {
         minbreakduration: 0,
-        maxbreakduration: 3600
+        maxbreakduration: 60 * 24 * 14
     };
 
     constructor(
