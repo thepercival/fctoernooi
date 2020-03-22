@@ -1,0 +1,11 @@
+.card{
+    width:212px;
+}
+
+.card-body {
+    padding: 1rem;
+}
+
+.input-group-date {
+    width: 170px;
+}

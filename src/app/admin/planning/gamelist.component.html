@@ -1,0 +1,39 @@
+<div class="container-fluid px-0">
+  <div class="row justify-content-around no-gutters">
+    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
+      <app-tournament-title [tournament]="tournament" [admin]="true">
+      </app-tournament-title>
+      <div class="d-flex justify-content-between">
+        <h2>
+          <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> planning
+        </h2>
+        <button *ngIf="tournament && structure && structure.hasPlanning()" type="button"
+          class="btn btn-sm btn-primary mr-0" [routerLink]="['/toernooi/planningedit', tournament.getId()]">
+          start & pauze
+        </button>
+      </div>
+      <h2 *ngIf="processing" class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
+      <div *ngIf="!processing && structure">
+        <app-tournament-roundnumber-planning *ngFor="let roundNumber of structure.getRoundNumbers()"
+          [tournament]="tournament" [roundNumber]="roundNumber" [canEditSettings]="userIsPlannerOrStructureAdmin"
+          (scroll)="scroll()" [parentReturnAction]="'/toernooi/games'" [reload]="reload">
+        </app-tournament-roundnumber-planning>
+        <div *ngIf="shouldShowEndRanking">
+          <div class="d-flex justify-content-between mt-3" id="endranking">
+            <h2>
+              <span>eindstand</span>
+            </h2>
+            <button type="button" class="btn btn-sm btn-secondary mr-2" *ngIf="structure.getRoundNumbers().length > 1"
+              (click)="linkToStructure()">
+              <i class="fi flaticon-structure"></i>
+              <span>indeling</span>
+            </button>
+          </div>
+          <app-tournament-endranking-view [structure]="structure"></app-tournament-endranking-view>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

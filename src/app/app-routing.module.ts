@@ -6,7 +6,8 @@ import { HomeComponent } from './home/home.component';
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'user', loadChildren: () => import('./user/user.module').then(m => m.UserModule) },
-  { path: 'toernooi', loadChildren: () => import('./tournament/tournament.module').then(m => m.TournamentModule) },
+  { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
+  { path: 'public', loadChildren: () => import('./public/public.module').then(m => m.PublicModule) },
   { path: ':id', redirectTo: '/toernooi/view/:id', pathMatch: 'full' },
   /*{ path: '', redirectTo: '/home', pathMatch: 'full' },*/
   // otherwise redirect to home

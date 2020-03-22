@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { AuthService } from '../../auth/auth.service';
-import { IAlert } from '../../common/alert';
+import { AuthService } from '../../lib/auth/auth.service';
+import { IAlert } from '../../shared/common/alert';
 import { User } from '../../lib/user';
 import { PasswordValidation } from '../password-validation';
 
@@ -49,8 +49,8 @@ export class RegisterComponent implements OnInit {
         Validators.maxLength(this.validations.maxlengthpassword)
       ])],
     }, {
-        validator: PasswordValidation.MatchPassword // your validation method
-      });
+      validator: PasswordValidation.MatchPassword // your validation method
+    });
   }
 
   ngOnInit() {

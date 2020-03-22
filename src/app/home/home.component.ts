@@ -2,8 +2,8 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { AuthService } from '../auth/auth.service';
-import { IAlert } from '../common/alert';
+import { AuthService } from '../lib/auth/auth.service';
+import { IAlert } from '../shared/common/alert';
 import { TournamentShell, TournamentShellFilter, TournamentShellRepository } from '../lib/tournament/shell/repository';
 
 @Component({

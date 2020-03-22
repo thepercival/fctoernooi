@@ -45,26 +45,21 @@ import {
 import { environment } from '../environments/environment';
 import { RoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AuthService } from './auth/auth.service';
-import { AuthguardService } from './auth/authguard.service';
-import { GlobalEventsManager } from './common/eventmanager';
-import { MyNavigation } from './common/navigation';
-import { CommonSharedModule } from './common/shared.module';
-import { FooterComponent } from './footer/footer.component';
+import { AuthService } from './lib/auth/auth.service';
+import { AuthguardService } from './lib/auth/authguard.service';
+import { GlobalEventsManager } from './shared/common/eventmanager';
+import { MyNavigation } from './shared/common/navigation';
+import { CommonSharedModule } from './shared/common/shared.module';
 import { HomeComponent } from './home/home.component';
 import { HomeShellComponent } from './home/shell.component';
 import { FavoritesRepository } from './lib/favorites/repository';
 import { RoleMapper } from './lib/role/mapper';
 import { TournamentShellRepository } from './lib/tournament/shell/repository';
 import { UserMapper } from './lib/user/mapper';
-import { NavComponent } from './nav/nav.component';
-import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavComponent,
-    FooterComponent,
     HomeComponent,
     HomeShellComponent,
   ],
@@ -92,13 +87,10 @@ import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 })
 export class AppModule {
   constructor(library: FaIconLibrary) {
-    library.addIcons(faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave,
+    library.addIcons(/*faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave,
       faSignInAlt, faSignOutAlt, faPlusCircle, faPlus, faTv, faFutbol, faTableTennis, faSearch,
       faMobileAlt, faEnvelope, faCopyright, faEye, faShareAlt, faClipboardCheck,
       faGamepad, faBasketballBall, faChess, faVolleyballBall, faUserShield, faUserFriends, faCalendarAlt,
-      faAngleDoubleDown);
-    library.addIcons(
-      faTwitter
-    );
+      faAngleDoubleDown*/);
   }
 }

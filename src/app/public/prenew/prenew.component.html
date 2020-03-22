@@ -1,0 +1,28 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+      <div class="d-flex justify-content-between mb-4">
+        <h1>nieuw toernooi</h1>
+        <h1 class="mr-1">
+          <button [routerLink]="['']" type="button" class="btn btn-outline-secondary">
+            <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+            <span class="ml-1 d-none d-md-inline"> terug</span>
+          </button>
+        </h1>
+      </div>
+      <div>
+        <blockquote class="blockquote my-5">
+          <p>Registreer je of log in om een toernooi aan te maken.</p>
+        </blockquote>
+        <div class="d-flex justify-content-around">
+          <button type="button" class="btn btn-outline-primary" [routerLink]="['/user/register']">
+            <fa-icon [icon]="['fas', 'user-circle']"></fa-icon> registreer
+          </button>
+          <button type="button" class="btn btn-outline-primary" [routerLink]="['/user/login']">
+            <fa-icon [icon]="['fas', 'sign-in-alt']"></fa-icon> inloggen
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
