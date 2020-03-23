@@ -11,11 +11,11 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 
 @Component({
-    selector: 'app-tournament-planningedit',
-    templateUrl: './edit.component.html',
-    styleUrls: ['./edit.component.css']
+    selector: 'app-tournament-startbreak',
+    templateUrl: './startbreak.component.html',
+    styleUrls: ['./startbreak.component.css']
 })
-export class PlanningComponent extends TournamentComponent implements OnInit {
+export class StartBreakComponent extends TournamentComponent implements OnInit {
     form: FormGroup;
     minDateStruct: NgbDateStruct;
     processing = true;
@@ -173,7 +173,7 @@ export class PlanningComponent extends TournamentComponent implements OnInit {
                                 }
                             );
                         } else {
-                            this.router.navigate(['/toernooi', tournamentRes.getId()]);
+                            this.router.navigate(['/admin', tournamentRes.getId()]);
                         }
                     },
                     /* error path */ e => { this.setAlert('danger', 'het toernooi is niet opgeslagen: ' + e); this.processing = false; }

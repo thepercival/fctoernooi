@@ -29,6 +29,7 @@ import {
   faExpandAlt,
   faUsers,
   faUserTag,
+  faListOl,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   NgbAlertModule,
@@ -88,10 +89,14 @@ import { PlanningComponent } from './planning/view.component';
 import { StructureRepository } from '../lib/ngx-sport/structure/repository';
 import { TournamentRepository } from '../lib/tournament/repository';
 import { TournamentModule } from '../shared/tournament/tournament.module';
+import { TournamentMapper } from '../lib/tournament/mapper';
+import { SponsorMapper } from '../lib/sponsor/mapper';
+import { RankingComponent } from './ranking/view.component';
+import { PlanningRepository } from '../lib/ngx-sport/planning/repository';
 
 @NgModule({
   imports: [
-    ClipboardModule,
+    // ClipboardModule,
     CommonModule,
     RoutingModule,
     NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule,
@@ -110,7 +115,8 @@ import { TournamentModule } from '../shared/tournament/tournament.module';
     LiveboardSponsorsComponent,
     LiveboardGamesComponent,
     FilterComponent,
-    ProgressComponent
+    ProgressComponent,
+    RankingComponent
   ],/*
   entryComponents: [PouleRankingModalComponent],*/
   providers: [
@@ -126,6 +132,7 @@ import { TournamentModule } from '../shared/tournament/tournament.module';
     NameService,
     NgbModalConfig,
     PlaceMapper,
+    PlanningRepository,
     PlanningConfigService,
     PlanningMapper,
     PlanningConfigMapper,
@@ -135,6 +142,7 @@ import { TournamentModule } from '../shared/tournament/tournament.module';
     RoundMapper,
     RoundNumberMapper,
     SeasonMapper,
+    SponsorMapper,
     SportMapper,
     SportConfigMapper,
     SportScoreConfigService,
@@ -143,12 +151,14 @@ import { TournamentModule } from '../shared/tournament/tournament.module';
     SportScoreConfigMapper,
     StructureRepository,
     StructureMapper,
-    TournamentRepository
+    TournamentRepository,
+    TournamentMapper
   ]
 })
 export class PublicModule {
   constructor(library: FaIconLibrary, modalConfig: NgbModalConfig, ) {
     library.addIcons(
+      faListOl
       /*faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
       faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom, faSquare, faCheckSquare,
       faUserTag, faInfoCircle, faMedal, faUsers, faQrcode, faCopy, faDotCircle, faSync*/

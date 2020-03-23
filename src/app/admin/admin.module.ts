@@ -29,6 +29,16 @@ import {
   faExpandAlt,
   faUsers,
   faUserTag,
+  faShareAlt,
+  faEye,
+  faBasketballBall,
+  faGamepad,
+  faChess,
+  faTableTennis,
+  faBaseballBall,
+  faHockeyPuck,
+  faVolleyballBall,
+  faClipboardCheck,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   NgbAlertModule,
@@ -82,8 +92,8 @@ import { FieldListComponent } from './field/list.component';
 import { GameEditComponent } from './game/edit.component';
 import { HomeComponent } from './home/home.component';
 import { NewComponent } from './new/new.component';
-import { PlanningComponent } from './planning/edit.component';
-import { GameListComponent } from './planning/gamelist.component';
+import { StartBreakComponent } from './startbreak/startbreak.component';
+import { GameListComponent } from './game/list.component';
 import { PlanningConfigComponent } from './planningconfig/edit.component';
 import { RefereeEditComponent } from './referee/edit.component';
 import { RefereeListComponent } from './referee/list.component';
@@ -144,7 +154,7 @@ import { ModalRoundNumbersComponent } from './roundnumber/selector.component';
     GameEditComponent,
     RefereeEditComponent,
     SponsorEditComponent,
-    PlanningComponent,
+    StartBreakComponent,
     CompetitorListRemoveModalComponent,
     ModalRoundNumbersComponent
   ],
@@ -198,9 +208,14 @@ import { ModalRoundNumbersComponent } from './roundnumber/selector.component';
 export class AdminModule {
   constructor(library: FaIconLibrary, modalConfig: NgbModalConfig, ) {
     library.addIcons(
-      /*faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
-      faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom, faSquare, faCheckSquare,
-      faUserTag, faInfoCircle, faMedal, faUsers, faQrcode, faCopy, faDotCircle, faSync*/
+      /* homescreen */ faMoneyBillAlt, faCheckCircle, faTimesCircle, faShareAlt, faEye, faFileExport, faCopy, faTrashAlt
+      , faQrcode, faPrint, faFileExcel,
+      /* sport select*/ faDotCircle,
+      /* competitors*/ faSquare, faCheckSquare, faRandom, faSort,
+      /* structure*/ faCompressAlt, faExpandAlt, faTh,
+      /* delen */ faClipboardCheck
+      /*faCircle, faListUl, faCogs, faMinus,
+      faUserTag, faInfoCircle, faMedal, faUsers, faSync*/
     );
     library.addIcons(
       faProductHunt

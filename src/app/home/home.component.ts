@@ -156,14 +156,22 @@ export class HomeComponent implements OnInit {
     return this.authService.isLoggedIn();
   }
 
+  linkToNew() {
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/admin/new']);
+    } else {
+      this.router.navigate(['/public/prenew']);
+    }
+  }
+
   linkToView(shell: TournamentShell) {
     this.publicProcessing = true;
-    this.router.navigate(['/toernooi/view', shell.tournamentId]);
+    this.router.navigate(['/public', shell.tournamentId]);
   }
 
   linkToEdit(shell: TournamentShell) {
     this.processingWithRole = true;
-    this.router.navigate(['/toernooi', shell.tournamentId]);
+    this.router.navigate(['/admin', shell.tournamentId]);
   }
 
   enableSearchFilter() {
@@ -174,6 +182,7 @@ export class HomeComponent implements OnInit {
     }, 0);
     this.publicShells = [];
   }
+
 
   disableSearchFilter() {
     this.searchFilterActive = false;

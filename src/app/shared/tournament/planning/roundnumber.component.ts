@@ -34,7 +34,6 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
   @Input() tournament: Tournament;
   @Input() roundNumber: RoundNumber;
   @Input() reload: boolean;
-  @Input() parentReturnAction: string;
   @Input() userRefereeId: number;
   @Input() canEditSettings: boolean;
   @Input() refreshingData: boolean;
@@ -188,15 +187,15 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
   }
 
   linkToGameEdit(game: Game) {
-    this.router.navigate(['/toernooi/gameedit', this.tournament.getId(), game.getId()]);
+    this.router.navigate(['/admin/game', this.tournament.getId(), game.getId()]);
   }
 
   linkToPlanningConfig() {
-    this.router.navigate(['/toernooi/planningconfig', this.tournament.getId(), this.roundNumber.getNumber()]);
+    this.router.navigate(['/admin/planningconfig', this.tournament.getId(), this.roundNumber.getNumber()]);
   }
 
   linkToFilterSettings() {
-    this.router.navigate(['/toernooi/filter', this.tournament.getId()]);
+    this.router.navigate(['/public/filter', this.tournament.getId()]);
   }
 
   showPouleRanking(popOver: NgbPopover, poule: Poule) {

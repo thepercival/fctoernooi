@@ -7,7 +7,7 @@
         sporten
       </h2>
       <button *ngIf="tournament" type="button" class="btn btn-sm btn-outline-secondary mr-0"
-        [routerLink]="['/toernooi/fields', tournament.getId()]">
+        [routerLink]="['/admin/fields', tournament.getId()]">
         naar velden
       </button>
     </div>
@@ -29,7 +29,7 @@
           <th class="d-none d-sm-table-cell" title="aantal"><i class="fi flaticon-soccer-field"></i></th>
           <th class="text-right" *ngIf="!hasBegun">
             <button type="button" class="btn btn-sm btn-primary"
-              [routerLink]="['/toernooi/sportconfigedit', tournament.getId(), undefined]" [disabled]="processing">
+              [routerLink]="['/admin/sportconfig', tournament.getId(), undefined]" [disabled]="processing">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button>
           </th>
@@ -43,7 +43,7 @@
               <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
             </button>
             <button *ngIf="hasBegun" type="button" class="btn btn-sm btn-outline-secondary"
-              [routerLink]="['/toernooi/sportconfigedit', tournament.getId(), sportConfig.getId()]">
+              [routerLink]="['/admin/sportconfig', tournament.getId(), sportConfig.getId()]">
               <fa-icon [icon]="['fas', 'eye']"></fa-icon>
             </button>
           </td>

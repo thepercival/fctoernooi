@@ -32,7 +32,9 @@ import {
   faUserCircle,
   faUserFriends,
   faUserShield,
-  faVolleyballBall
+  faVolleyballBall,
+  faBaseballBall,
+  faHockeyPuck
 } from '@fortawesome/free-solid-svg-icons';
 import {
   NgbAlertModule,
@@ -56,6 +58,7 @@ import { FavoritesRepository } from './lib/favorites/repository';
 import { RoleMapper } from './lib/role/mapper';
 import { TournamentShellRepository } from './lib/tournament/shell/repository';
 import { UserMapper } from './lib/user/mapper';
+import { LayoutModule } from './shared/layout/layout.module';
 
 @NgModule({
   declarations: [
@@ -71,7 +74,8 @@ import { UserMapper } from './lib/user/mapper';
     CommonSharedModule,
     NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule,
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
-    FontAwesomeModule
+    FontAwesomeModule,
+    LayoutModule
   ],
   providers: [
     AuthService,
@@ -87,10 +91,15 @@ import { UserMapper } from './lib/user/mapper';
 })
 export class AppModule {
   constructor(library: FaIconLibrary) {
-    library.addIcons(/*faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt, faSave,
-      faSignInAlt, faSignOutAlt, faPlusCircle, faPlus, faTv, faFutbol, faTableTennis, faSearch,
-      faMobileAlt, faEnvelope, faCopyright, faEye, faShareAlt, faClipboardCheck,
-      faGamepad, faBasketballBall, faChess, faVolleyballBall, faUserShield, faUserFriends, faCalendarAlt,
+    library.addIcons(faPlusCircle, faSpinner, faSearch, faAngleDoubleDown
+      , faUserShield, faUserFriends, faSave
+      /*faLevelUpAlt, faSpinner, faUserCircle, faFilter, faPencilAlt,
+      faSignInAlt, faSignOutAlt, faPlusCircle, faPlus, faTv, faSearch,
+      faMobileAlt, faEnvelope, faCopyright, faEye, faShareAlt,
+      , faCalendarAlt,
       faAngleDoubleDown*/);
+    library.addIcons(
+      faBasketballBall, faGamepad, faFutbol, faChess, faTableTennis, faBaseballBall, faHockeyPuck, faVolleyballBall
+    );
   }
 }

@@ -8,7 +8,7 @@
           <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> planning
         </h2>
         <button *ngIf="tournament && structure && structure.hasPlanning()" type="button"
-          class="btn btn-sm btn-primary mr-0" [routerLink]="['/toernooi/planningedit', tournament.getId()]">
+          class="btn btn-sm btn-primary mr-0" [routerLink]="['/admin/startbreak', tournament.getId()]">
           start & pauze
         </button>
       </div>
@@ -18,7 +18,7 @@
       <div *ngIf="!processing && structure">
         <app-tournament-roundnumber-planning *ngFor="let roundNumber of structure.getRoundNumbers()"
           [tournament]="tournament" [roundNumber]="roundNumber" [canEditSettings]="userIsPlannerOrStructureAdmin"
-          (scroll)="scroll()" [parentReturnAction]="'/toernooi/games'" [reload]="reload">
+          (scroll)="scroll()" [reload]="reload">
         </app-tournament-roundnumber-planning>
         <div *ngIf="shouldShowEndRanking">
           <div class="d-flex justify-content-between mt-3" id="endranking">
@@ -28,7 +28,7 @@
             <button type="button" class="btn btn-sm btn-secondary mr-2" *ngIf="structure.getRoundNumbers().length > 1"
               (click)="linkToStructure()">
               <i class="fi flaticon-structure"></i>
-              <span>indeling</span>
+              <span>opzet</span>
             </button>
           </div>
           <app-tournament-endranking-view [structure]="structure"></app-tournament-endranking-view>

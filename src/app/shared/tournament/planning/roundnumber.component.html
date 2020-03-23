@@ -24,7 +24,7 @@
   <ngb-alert *ngIf="refreshingData" type="info" [dismissible]="false">
     de uitslagen worden vernieuwd
   </ngb-alert>
-  <div *ngIf="roundNumber.getHasPlanning()" class="d-flex justify-content-around">
+  <div *ngIf="roundNumber.getHasPlanning()">
     <table class="table">
       <colgroup>
         <col *ngIf="roundNumberNeedsRanking">
@@ -79,6 +79,7 @@
           </tr>
           <tr [ngClass]="{ 'batch-striped-row': (gmData.game.getBatchNr() % 2) === 0 }"
             id="scroll-game-{{gmData.game.getId()}}">
+            <!-- poule -->
             <td *ngIf="!gmData.hasPopover" class="text-center">
               <span
                 class="badge badge-pill badge-rank {{cssService.getQualifyRound(gmData.poule.round)}}">{{gmData.poule.name}}</span>
@@ -96,18 +97,23 @@
                 <span>{{gmData.poule.name}}</span>
               </button>
             </td>
+            <!-- datetime -->
             <td *ngIf="planningConfig.getEnableTime()">
               <span *ngIf="!sameDay">{{gmData.game.getStartDateTime().toLocaleString("nl",
                 {"month":"short","day":"2-digit"})}} </span>
               <span>{{gmData.game.getStartDateTime().toLocaleString("nl", {"hour12":
                 false,"hour":"2-digit","minute":"2-digit"})}}</span>
             </td>
+            <!-- field -->
             <td class="text-center">{{gmData.game.getField()?.getName()}}</td>
-            <td class="place text-right"
+            <!-- home -->
+
+            <td class="place text-right "
               [ngClass]="{'text-primary': favorites.hasGameCompetitor(gmData.game, GameHOME) }">
               <span>{{nameService.getPlacesFromName(gmData.game.getPlaces( GameHOME ),true,true)}}</span>
             </td>
-            <td nowrap class="score text-center" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
+            <!-- score -->
+            <td nowrap class="text-center" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
               <button *ngIf="gmData.hasEditPermissions" class="btn btn-sm btn-outline-primary"
                 (click)="linkToGameEdit(gmData.game)">
                 <fa-icon *ngIf="!isPlayed(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
@@ -123,9 +129,11 @@
               <span *ngIf="!gmData.hasEditPermissions && !(hasReferees && !isPlayed(gmData.game))"
                 class="d-sm-none">{{getScore(gmData.game)}}</span>
             </td>
+            <!-- away -->
             <td class="place" [ngClass]="{ 'text-primary': favorites.hasGameCompetitor(gmData.game, GameAWAY) }">
               <span>{{nameService.getPlacesFromName(gmData.game.getPlaces( GameAWAY ),true,true)}}</span>
             </td>
+            <!-- referee -->
             <td *ngIf="hasReferees" class="d-none d-sm-table-cell text-right"
               [ngClass]="{'text-primary': favorites.hasGameReferee(gmData.game) }">
               {{nameService.getRefereeName(gmData.game)}}</td>

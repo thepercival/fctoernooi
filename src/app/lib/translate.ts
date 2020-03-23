@@ -10,6 +10,7 @@ export class TranslateService {
             case SportCustom.Darts: { return 'darten'; }
             case SportCustom.ESports: { return 'e-sporten'; }
             case SportCustom.Hockey: { return 'hockey'; }
+            case SportCustom.Baseball: { return 'honkbal'; }
             case SportCustom.Korfball: { return 'korfbal'; }
             case SportCustom.Chess: { return 'schaken'; }
             case SportCustom.Squash: { return 'squash'; }
@@ -17,7 +18,7 @@ export class TranslateService {
             case SportCustom.Tennis: { return 'tennis'; }
             case SportCustom.Football: { return 'voetbal'; }
             case SportCustom.Volleyball: { return 'volleybal'; }
-            case SportCustom.Baseball: { return 'honkbal'; }
+            case SportCustom.IceHockey: { return 'ijshockey'; }
         }
         return undefined;
     }
@@ -111,6 +112,7 @@ export class TranslateService {
             case SportCustom.Darts: { return 'bord'; }
             case SportCustom.ESports: { return 'veld'; }
             case SportCustom.Hockey: { return 'veld'; }
+            case SportCustom.Baseball: { return 'veld'; }
             case SportCustom.Korfball: { return 'veld'; }
             case SportCustom.Chess: { return 'bord'; }
             case SportCustom.Squash: { return 'baan'; }
@@ -118,7 +120,7 @@ export class TranslateService {
             case SportCustom.Tennis: { return 'veld'; }
             case SportCustom.Football: { return 'veld'; }
             case SportCustom.Volleyball: { return 'veld'; }
-            case SportCustom.Baseball: { return 'veld'; }
+            case SportCustom.IceHockey: { return 'veld'; }
         }
         return 'veld';
     }
@@ -131,6 +133,7 @@ export class TranslateService {
             case SportCustom.Darts: { return 'borden'; }
             case SportCustom.ESports: { return 'velden'; }
             case SportCustom.Hockey: { return 'velden'; }
+            case SportCustom.Baseball: { return 'velden'; }
             case SportCustom.Korfball: { return 'velden'; }
             case SportCustom.Chess: { return 'borden'; }
             case SportCustom.Squash: { return 'banen'; }
@@ -138,7 +141,7 @@ export class TranslateService {
             case SportCustom.Tennis: { return 'velden'; }
             case SportCustom.Football: { return 'velden'; }
             case SportCustom.Volleyball: { return 'velden'; }
-            case SportCustom.Baseball: { return 'velden'; }
+            case SportCustom.IceHockey: { return 'velden'; }
         }
         return 'velden';
     }

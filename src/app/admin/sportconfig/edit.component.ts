@@ -226,17 +226,17 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
 
     linkToSportConfig() {
         if (!this.competition.hasMultipleSportConfigs()) {
-            this.router.navigate(['/toernooi/sportconfigedit'
+            this.router.navigate(['/admin/sportconfig'
                 , this.tournament.getId(), this.competition.getFirstSportConfig().getId()]);
         } else {
-            this.router.navigate(['/toernooi/sportconfigs', this.tournament.getId()]);
+            this.router.navigate(['/admin/sportconfigs', this.tournament.getId()]);
         }
     }
 
     openMultiSportsModal(content) {
         this.modalService.open(content, { ariaLabelledBy: 'modal-multisports' }).result.then((result) => {
             if (result === 'continue') {
-                this.router.navigate(['/toernooi/sportconfigs', this.tournament.getId()]);
+                this.router.navigate(['/admin/sportconfigs', this.tournament.getId()]);
             }
         }, (reason) => { });
     }

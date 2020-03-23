@@ -17,9 +17,9 @@
       </h2>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <ngb-alert *ngIf="oldStructure && !oldStructureRequested" type="info" [dismissible]="false">Wanneer je de
-        structuur toch nog wilt bekijken,
+        opzet toch nog wilt bekijken,
         dan
-        kunnen we de structuur handmatig omzetten.
+        kunnen we de opzet handmatig omzetten.
       </ngb-alert>
       <div *ngIf="oldStructure" class="d-flex justify-content-center">
         <button *ngIf="!oldStructureRequested" (click)="sendRequestOldStructure()"
@@ -35,22 +35,21 @@
       <ngb-alert *ngIf="!processing && tournament && !isAdmin()" type="danger" [dismissible]="false">je hebt geen
         rechten voor het
         beheergedeelte, klik
-        <a routerLink="['/toernooi/view', tournament.getId()]">hier</a> om naar het toernooi te gaan</ngb-alert>
+        <a routerLink="['/public', tournament.getId()]">hier</a> om naar het toernooi te gaan</ngb-alert>
       <div *ngIf="!processing && structure && isAdmin()" class="row d-flex justify-content-center">
         <div class="card border-secondary pointer mt-3 mx-2" (click)="linkToStructure()">
           <div class="card-body">
             <h5 class="card-title">
-              <i class="fi flaticon-structure"></i> indeling</h5>
-            <p class="card-text" *ngIf="structure.getRootRound() !== undefined">
-              <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> indeling aanwezig
+              <i class="fi flaticon-structure"></i> opzet</h5>
+            <p class="card-text" *ngIf="!structure.getFirstRoundNumber().hasNext()">
+              1 ronde ingesteld
             </p>
-            <p class="card-text" *ngIf="structure.getRootRound() === undefined">
-              <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> geen indeling aanwezig
+            <p class="card-text" *ngIf="structure.getFirstRoundNumber().hasNext()">
+              meerdere ronde ingesteld
             </p>
           </div>
         </div>
-        <div class="card border-secondary pointer mt-3 mx-2"
-          [routerLink]="['/toernooi/competitors', tournament.getId()]">
+        <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/admin/competitors', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
@@ -69,7 +68,7 @@
             </p>
           </div>
         </div>
-        <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/toernooi/games', tournament.getId()]">
+        <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/admin/games', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> planning
@@ -80,14 +79,14 @@
             </p>
           </div>
         </div>
-        <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/toernooi/referees', tournament.getId()]">
+        <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/admin/referees', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
               <i class="fi flaticon-referee"></i> scheidsrechters</h5>
             <p class="card-text">{{getNrOfRefereesDescription()}}</p>
           </div>
         </div>
-        <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/toernooi/fields', tournament.getId()]">
+        <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/admin/fields', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
               <i class="fi flaticon-soccer-field"></i>
@@ -95,17 +94,28 @@
             <p class="card-text">{{getNrOfFieldsDescription()}}</p>
           </div>
         </div>
-        <div class="card border-secondary pointer mt-3 mx-2" (click)="linkToSportConfig()">
+        <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/admin/lockers', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'cogs']"></fa-icon> sport(en)
+              <fa-icon [icon]="['fas', 'door-closed']"></fa-icon> kleedkamers
+            </h5>
+            <p class="card-text">
+              maak mooi ui
+            </p>
+          </div>
+        </div>
+        <div class="card border-secondary pointer mt-3 mx-2" (click)="linkToSportConfig()">
+          <div class="card-body">
+            <h5 class="card-title text-truncate">
+              <app-sport-icon [configs]="competition.getSportConfigs()"></app-sport-icon>
+              <span> {{competition.getFirstSportConfig().getSport().getName()}}</span>
             </h5>
             <p class="card-text">
               puntentelling en score
             </p>
           </div>
         </div>
-        <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/toernooi/sponsors', tournament.getId()]">
+        <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/admin/sponsors', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon> sponsoren
@@ -119,15 +129,15 @@
   <div *ngIf="!processing && structure" class="row d-flex justify-content-center my-3">
     <div *ngIf="structure.hasPlanning()" class="card border-secondary mt-3 mx-2">
       <div class="card-body d-flex justify-content-between">
-        <div [routerLink]="['/toernooi/view', tournament.getId()]" class="text-center pointer">
+        <div *ngIf="tournament.getPublic()" [routerLink]="['/public', tournament.getId()]" class="text-center pointer">
           <div>
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'eye']"></fa-icon>
             </h5>
           </div>
-          <div><span>bekijken</span></div>
+          <div><span>publiek</span><br><span>gedeelte</span></div>
         </div>
-        <div [routerLink]="['/toernooi/liveboard', tournament.getId()]" class="text-center pointer">
+        <div [routerLink]="['/public/liveboard', tournament.getId()]" class="text-center pointer">
           <div>
             <h5 class="card-title">
               <fa-icon [icon]=" [ 'fas', 'tv'] "></fa-icon>
@@ -195,7 +205,7 @@
               <span class="custom-control-indicator"></span>
             </label>
           </div>
-          <label for="structure" class="col-8 col-form-label">indeling & structuur</label>
+          <label for="structure" class="col-8 col-form-label">opzet & indeling</label>
         </div>
         <div class="row">
           <div class="form-check col-3">

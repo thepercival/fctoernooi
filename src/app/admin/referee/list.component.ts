@@ -65,14 +65,14 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   }
 
   linkToEdit(referee?: Referee) {
-    this.router.navigate(['/toernooi/refereeedit', this.tournament.getId(), referee ? referee.getRank() : '']);
+    this.router.navigate(['/admin/referee', this.tournament.getId(), referee ? referee.getRank() : '']);
   }
 
   openHelpModal(modalContent) {
     const activeModal = this.modalService.open(modalContent);
     activeModal.result.then((result) => {
       if (result === 'linkToPlanningConfig') {
-        this.router.navigate(['/toernooi/planningconfig', this.tournament.getId(), this.structure.getFirstRoundNumber().getNumber()]);
+        this.router.navigate(['/admin/planningconfig', this.tournament.getId(), this.structure.getFirstRoundNumber().getNumber()]);
       }
     }, (reason) => {
     });

@@ -59,7 +59,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
     }
 
     linkToEdit(tournament: Tournament, field?: Field) {
-        this.router.navigate(['/toernooi/fieldedit', tournament.getId(), field ? field.getNumber() : 0]);
+        this.router.navigate(['/admin/field', tournament.getId(), field ? field.getNumber() : 0]);
     }
 
     getFieldDescription(): string {

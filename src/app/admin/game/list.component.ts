@@ -14,8 +14,8 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 
 @Component({
   selector: 'app-tournament-games',
-  templateUrl: './gamelist.component.html',
-  styleUrls: ['./gamelist.component.css']
+  templateUrl: './list.component.html',
+  styleUrls: ['./list.component.css']
 })
 export class GameListComponent extends TournamentComponent implements OnInit, OnDestroy {
   showPrintBtn: boolean;
@@ -70,7 +70,7 @@ export class GameListComponent extends TournamentComponent implements OnInit, On
   }
 
   linkToStructure() {
-    this.router.navigate(['/toernooi/structure', this.tournament.getId()]
+    this.router.navigate(['/admin/structure', this.tournament.getId()]
     );
   }
 

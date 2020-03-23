@@ -18,7 +18,7 @@ export class TitleComponent {
 
   navigateBack() {
     if (this.admin && this.tournament) {
-      this.router.navigate(['/toernooi', this.tournament.getId()]);
+      this.router.navigate(['/admin', this.tournament.getId()]);
     } else {
       this.myNavigation.back();
     }

@@ -5,17 +5,23 @@ import { faSignInAlt, faSignOutAlt, faTv, faCopyright, faMobileAlt, faEnvelope }
 
 import { NavComponent } from './nav/nav.component';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { NgbButtonsModule } from '@ng-bootstrap/ng-bootstrap';
+import { FooterComponent } from './footer/footer.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
-    NavComponent
+    NavComponent,
+    FooterComponent
   ],
   imports: [
     CommonModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    RouterModule
   ],
   exports: [
-    NavComponent
+    NavComponent,
+    FooterComponent
   ]
 })
 export class LayoutModule {

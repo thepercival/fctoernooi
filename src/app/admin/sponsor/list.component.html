@@ -12,7 +12,7 @@
       </button>
 
 
-      <button *ngIf="sponsors.length > 0" [routerLink]="['/toernooi/liveboard', tournament.getId()]"
+      <button *ngIf="sponsors.length > 0" [routerLink]="['/public/liveboard', tournament.getId()]"
         [queryParams]="{screenfilter:'sponsors'}" type="button" class="btn btn-secondary">
         <fa-icon [icon]="['fas', 'eye']"></fa-icon>
         <span> preview</span>

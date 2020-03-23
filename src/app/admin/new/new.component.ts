@@ -161,7 +161,7 @@ export class NewComponent implements OnInit {
                 this.planningRepository.createObject(structureOut.getFirstRoundNumber(), tournamentOut)
                   .subscribe(
                     /* happy path */ roundNumberOut => {
-                      this.router.navigate(['/toernooi', tournamentOut.getId()]);
+                      this.router.navigate(['/admin', tournamentOut.getId()]);
                     },
                   /* error path */ e => {
                       this.setAlert('danger', 'de toernooi-planning kon niet worden aangemaakt: ' + e);
@@ -171,7 +171,7 @@ export class NewComponent implements OnInit {
                   );
               },
             /* error path */ e => {
-                this.setAlert('danger', 'de toernooi-indeling kon niet worden aangemaakt: ' + e);
+                this.setAlert('danger', 'de opzet kon niet worden aangemaakt: ' + e);
                 this.processing = false;
               }
             );

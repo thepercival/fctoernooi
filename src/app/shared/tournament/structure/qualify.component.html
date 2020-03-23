@@ -10,7 +10,7 @@
         <span *ngIf="viewType !== ViewTypeQualifyGroups" class="d-none d-sm-inline-flex">
             kwalificatiegroepen</span>
         <fa-icon *ngIf="viewType === ViewTypeQualifyGroups" [icon]="['fas', 'th']"></fa-icon> <span
-            *ngIf="viewType === ViewTypeQualifyGroups" class="d-none d-sm-inline-flex">&nbsp;ronde-indeling</span>
+            *ngIf="viewType === ViewTypeQualifyGroups" class="d-none d-sm-inline-flex">&nbsp;ronde-opzet</span>
     </button>
     <ng-container *ngTemplateOutlet="modifyQualifiers;context:{$implicit: QualifyGroupLOSERS}">
     </ng-container>

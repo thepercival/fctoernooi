@@ -3,17 +3,16 @@
     <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
       <app-tournament-title [tournament]="tournament">
       </app-tournament-title>
-      <div>
-        <h2>start & pauze</h2>
-        <h2 *ngIf="processing" class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-        </h2>
-      </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+      <h2 *ngIf="processing" class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
+
       <form *ngIf="!processing" name="form" (ngSubmit)="edit()" [formGroup]="form" novalidate>
+        <h2>start</h2>
         <div *ngIf="!hasBegun" class="form-group row">
           <div class="col-3">
-            <label for="dp" class="col-form-label">startdatum</label>
+            <label for="dp" class="col-form-label">datum</label>
           </div>
           <div class="col-9">
             <div class="input-group input-group-date">
@@ -31,7 +30,7 @@
         </div>
         <div *ngIf="!hasBegun" class="form-group row">
           <div class="col-3">
-            <label for="starttime" class="col-form-label">starttijd</label>
+            <label for="starttime" class="col-form-label">tijd</label>
           </div>
           <div class="col-9">
             <ngb-timepicker id="starttime" name="starttime" formControlName="time" [spinners]="false" required>
@@ -40,7 +39,7 @@
         </div>
         <div *ngIf="hasBegun" class="form-group row">
           <div class="col-3">
-            <label for="start" class="col-form-label">start</label>
+            <label for="start" class="col-form-label">datumtijd</label>
           </div>
           <div class="col-9 col-sm-8 col-md-7">
             <input class="form-control" type="text"
@@ -50,7 +49,8 @@
         </div>
         <div *ngIf="!hasBegun && isTimeEnabled() " class="form-group row">
           <div class="col-3">
-            <label for="togglebreak" class="col-form-label">pauze</label>
+            <h2 for="togglebreak">
+              pauze</h2>
           </div>
           <div class="col-2 col-md-1 pr-0">
             <label class="custom-control custom-checkbox pointer col-form-label pl-0">

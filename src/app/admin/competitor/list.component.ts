@@ -89,7 +89,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
 
   linkToEdit(tournament: Tournament, place: Place) {
     this.router.navigate(
-      ['/toernooi/competitoredit', tournament.getId(), place.getId()]
+      ['/admin/competitor', tournament.getId(), place.getId()]
     );
   }
 
@@ -189,7 +189,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
         this.removeCompetitor(place);
       } else if (result === 'to-structure') {
         this.processing = true;
-        this.router.navigate(['/toernooi/structure', this.tournament.getId()]);
+        this.router.navigate(['/admin/structure', this.tournament.getId()]);
       }
     }, (reason) => {
     });

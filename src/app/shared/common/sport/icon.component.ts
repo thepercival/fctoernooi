@@ -30,7 +30,9 @@ export class SportIconComponent implements OnInit {
     }
 
     protected getIconClass(customId: number): string {
-        if (customId === SportCustom.Basketball) {
+        if (customId === SportCustom.Baseball) {
+            return 'baseball-ball';
+        } else if (customId === SportCustom.Basketball) {
             return 'basketball-ball';
         } else if (customId === SportCustom.Badminton) {
             return 'fi flaticon-badminton';
@@ -52,6 +54,8 @@ export class SportIconComponent implements OnInit {
             return 'fi flaticon-tennis';
         } else if (customId === SportCustom.Volleyball) {
             return 'volleyball-ball';
+        } else if (customId === SportCustom.IceHockey) {
+            return 'hockey-puck';
         }
         return undefined;
     }
@@ -61,7 +65,8 @@ export class SportIconComponent implements OnInit {
             return undefined;
         }
         if (customId === SportCustom.Football || customId === SportCustom.TableTennis || customId === SportCustom.Basketball
-            || customId === SportCustom.Chess || customId === SportCustom.ESports || customId === SportCustom.Volleyball) {
+            || customId === SportCustom.Chess || customId === SportCustom.ESports || customId === SportCustom.Volleyball
+            || customId === SportCustom.Baseball || customId === SportCustom.IceHockey) {
             return 'fa';
         }
         return 'fi';

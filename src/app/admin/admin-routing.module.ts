@@ -10,8 +10,8 @@ import { FieldListComponent } from './field/list.component';
 import { GameEditComponent } from './game/edit.component';
 import { HomeComponent } from './home/home.component';
 import { NewComponent } from './new/new.component';
-import { PlanningComponent } from './planning/edit.component';
-import { GameListComponent } from './planning/gamelist.component';
+import { StartBreakComponent } from './startbreak/startbreak.component';
+import { GameListComponent } from './game/list.component';
 import { PlanningConfigComponent } from './planningconfig/edit.component';
 import { RefereeEditComponent } from './referee/edit.component';
 import { RefereeListComponent } from './referee/list.component';
@@ -27,7 +27,7 @@ const routes: Routes = [
   { path: ':id', component: HomeComponent, canActivate: [AuthguardService] },
   { path: 'competitors/:id', component: CompetitorListComponent, canActivate: [AuthguardService] },
   { path: 'structure/:id', component: StructureEditComponent, canActivate: [AuthguardService] },
-  { path: 'planning/:id', component: PlanningComponent, canActivate: [AuthguardService] },
+  { path: 'startbreak/:id', component: StartBreakComponent, canActivate: [AuthguardService] },
   { path: 'games/:id', component: GameListComponent, canActivate: [AuthguardService] },
   { path: 'game/:id/:gameId', component: GameEditComponent, canActivate: [AuthguardService] },
   { path: 'planningconfig/:id/:roundNumber', component: PlanningConfigComponent, canActivate: [AuthguardService] },

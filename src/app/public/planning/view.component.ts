@@ -11,14 +11,13 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { LiveboardLink } from '../../lib/liveboard/link';
 
 @Component({
-    selector: 'app-tournament-view',
+    selector: 'app-tournament-planning',
     templateUrl: './view.component.html',
     styleUrls: ['./view.component.scss']
 })
 export class PlanningComponent extends TournamentComponent implements OnInit, OnDestroy {
     private liveboardLinkSet = false;
     userRefereeId: number;
-    shouldShowEndRanking: boolean;
     refreshingData = false;
 
     constructor(
@@ -35,8 +34,6 @@ export class PlanningComponent extends TournamentComponent implements OnInit, On
 
     ngOnInit() {
         super.myNgOnInit(() => {
-            this.shouldShowEndRanking = (this.structure.getFirstRoundNumber().hasNext()
-                || this.structure.getRootRound().getPoules().length === 1);
             this.initLiveboardLink();
             this.tournamentRepository.getUserRefereeId(this.tournament).subscribe(
                 /* happy path */ userRefereeIdRes => {
@@ -69,7 +66,7 @@ export class PlanningComponent extends TournamentComponent implements OnInit, On
         if (this.liveboardLinkSet === true) {
             return;
         }
-        const link: LiveboardLink = { showIcon: true, tournamentId: this.tournament.getId(), link: '/toernooi/liveboard' };
+        const link: LiveboardLink = { showIcon: true, tournamentId: this.tournament.getId(), link: '/public/liveboard' };
         this.globalEventsManager.toggleLiveboardIconInNavBar.emit(link);
         this.liveboardLinkSet = true;
     }
@@ -79,6 +76,6 @@ export class PlanningComponent extends TournamentComponent implements OnInit, On
     }
 
     linkToStructureView() {
-        this.router.navigate(['/toernooi/structureview', this.tournament.getId()]);
+        this.router.navigate(['/public/structure', this.tournament.getId()]);
     }
 }

@@ -10,7 +10,7 @@
           <span *ngIf="!sportConfig">sport</span>
         </h2>
         <button *ngIf="tournament && sportConfig.getId()" type="button" class="btn btn-sm btn-secondary mr-0 mb-3"
-          [routerLink]="['/toernooi/sportscoreedit', tournament.getId(), sportConfig.getId()]">
+          [routerLink]="['/admin/sportscore', tournament.getId(), sportConfig.getId()]">
           <fa-icon [icon]="['fas', 'cogs']"></fa-icon> scoreinstellingen
         </button>
       </div>

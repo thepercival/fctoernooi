@@ -73,7 +73,7 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
   }
 
   linkToEdit(tournament: Tournament, sportConfig?: SportConfig) {
-    this.router.navigate(['/toernooi/sportconfigedit', tournament.getId(), sportConfig ? sportConfig.getId() : 0]);
+    this.router.navigate(['/admin/sportconfig', tournament.getId(), sportConfig ? sportConfig.getId() : 0]);
   }
 
   openRemoveModal(content, sportConfig: SportConfig) {
@@ -85,15 +85,6 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
 
     });
   }
-
-  // linkToRoundSettings() {
-  //   this.router.navigate(
-  //     ['/toernooi/roundssettings', this.tournament.getId(), this.structure.getFirstRoundNumber().getNumber()],
-  //     {
-  //       queryParams: { category: '3' }
-  //     }
-  //   );
-  // }
 
   remove(sportConfig: SportConfig) {
     this.setAlert('info', 'de sport wordt verwijderd');

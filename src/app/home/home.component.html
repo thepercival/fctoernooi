@@ -5,13 +5,13 @@
         welkom
       </h1>
       <ul class="list-group text-center m-2">
-        <li class="list-group-item border-info text-info">indeling voor meerdere ronden</li>
+        <li class="list-group-item border-info text-info">opzet met meerdere ronden</li>
         <li class="list-group-item border-info text-info">automatische kwalificatie en planning</li>
         <li class="list-group-item border-info text-info">live scorebord</li>
         <li class="list-group-item border-info text-info">export naar pdf en werkblad</li>
       </ul>
       <div class="d-flex justify-content-center">
-        <button name="btn-create-tournament" type="button" class="btn btn-primary" [routerLink]="['/toernooi/new']">zet
+        <button name="btn-create-tournament" type="button" class="btn btn-primary" [routerLink]="['/public/prenew']">zet
           je
           eerste toernooi op</button>
       </div>
@@ -20,7 +20,7 @@
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <div class="d-flex justify-content-between">
         <h2>mijn toernooien</h2>
-        <button name="btn-create-tournament" type="button" class="btn btn-primary" [routerLink]="['/toernooi/new']">
+        <button name="btn-create-tournament" type="button" class="btn btn-primary" (click)="linkToNew()">
           <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon> toernooi opzetten
         </button>
       </div>

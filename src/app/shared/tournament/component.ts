@@ -47,7 +47,7 @@ export class TournamentComponent {
                     this.tournament = tournament;
                     if (!tournament.getUpdated()) {
                         this.oldStructure = true;
-                        this.setAlert('danger', 'het toernooi heeft een oude structuur (-1)');
+                        this.setAlert('danger', 'het toernooi heeft een oude opzet (-1)');
                         this.processing = false;
                         return;
                     }

@@ -14,7 +14,7 @@ import { TranslateService } from '../../lib/translate';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 
 @Component({
-    selector: 'app-tournament-home',
+    selector: 'app-tournament-admin',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css']
 })
@@ -262,15 +262,15 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     linkToStructure() {
-        this.router.navigate(['/toernooi/structure', this.tournament.getId()]);
+        this.router.navigate(['/admin/structure', this.tournament.getId()]);
     }
 
     linkToSportConfig() {
         if (!this.competition.hasMultipleSportConfigs()) {
-            this.router.navigate(['/toernooi/sportconfigedit'
+            this.router.navigate(['/admin/sportconfig'
                 , this.tournament.getId(), this.competition.getFirstSportConfig().getId()]);
         } else {
-            this.router.navigate(['/toernooi/sportconfigs', this.tournament.getId()]);
+            this.router.navigate(['/admin/sportconfigs', this.tournament.getId()]);
         }
     }
 
@@ -293,7 +293,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         this.tournamentRepository.copyObject(this.tournament, startDateTime)
             .subscribe(
                 /* happy path */(newTournamentId: number) => {
-                    this.router.navigate(['/toernooi', newTournamentId]);
+                    this.router.navigate(['/admin', newTournamentId]);
                     this.setAlert('success', 'de nieuwe editie is aangemaakt, je bevindt je nu in de nieuwe editie');
                 },
                 /* error path */ e => {
@@ -318,7 +318,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
             .subscribe(
                 /* happy path */(tournamentRes: Tournament) => {
                     this.tournament = tournamentRes;
-                    // this.router.navigate(['/toernooi', newTournamentId]);
+                    // this.router.navigate(['/admin', newTournamentId]);
                     this.setAlert('success', 'het delen is gewijzigd');
                 },
                 /* error path */ e => {
@@ -338,7 +338,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
             .subscribe(
                 /* happy path */(tournamentRes: Tournament) => {
                     this.tournament = tournamentRes;
-                    // this.router.navigate(['/toernooi', newTournamentId]);
+                    // this.router.navigate(['/admin', newTournamentId]);
                     this.setAlert('success', 'de naam is opgeslagen');
                 },
                 /* error path */ e => {
