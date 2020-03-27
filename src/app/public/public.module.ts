@@ -30,6 +30,8 @@ import {
   faUsers,
   faUserTag,
   faListOl,
+  faChevronDown,
+  faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   NgbAlertModule,
@@ -93,6 +95,7 @@ import { TournamentMapper } from '../lib/tournament/mapper';
 import { SponsorMapper } from '../lib/sponsor/mapper';
 import { RankingComponent } from './ranking/view.component';
 import { PlanningRepository } from '../lib/ngx-sport/planning/repository';
+import { RankingRoundNumberComponent } from './ranking/roundnumber.component';
 
 @NgModule({
   imports: [
@@ -116,7 +119,8 @@ import { PlanningRepository } from '../lib/ngx-sport/planning/repository';
     LiveboardGamesComponent,
     FilterComponent,
     ProgressComponent,
-    RankingComponent
+    RankingComponent,
+    RankingRoundNumberComponent
   ],/*
   entryComponents: [PouleRankingModalComponent],*/
   providers: [
@@ -158,7 +162,7 @@ import { PlanningRepository } from '../lib/ngx-sport/planning/repository';
 export class PublicModule {
   constructor(library: FaIconLibrary, modalConfig: NgbModalConfig, ) {
     library.addIcons(
-      faListOl
+      faListOl, faChevronRight
       /*faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
       faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom, faSquare, faCheckSquare,
       faUserTag, faInfoCircle, faMedal, faUsers, faQrcode, faCopy, faDotCircle, faSync*/

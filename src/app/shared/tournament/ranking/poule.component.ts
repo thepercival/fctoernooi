@@ -15,6 +15,7 @@ export class PouleRankingComponent implements OnInit {
   public rankingItems: RankedRoundItem[];
   @Input() poule: Poule;
   @Input() tournament: Tournament;
+  @Input() header: boolean;
   public showDifferenceDetail = false;
   favorites: Favorites;
   public processing = true;

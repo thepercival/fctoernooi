@@ -9,6 +9,10 @@ app-tournament-pouleranking {
     padding: 0;
 }
 
+.card.notopborder {
+    border-top-width: 0em;
+}
+
 @include media-breakpoint-up(sm) {
     app-tournament-pouleranking {       
         margin: 10px;

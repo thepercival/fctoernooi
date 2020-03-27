@@ -1,21 +1,30 @@
 <div class="container-fluid px-0">
   <div class="row justify-content-around no-gutters">
-    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
+    <div class="col-12 col-lg-10">
       <app-tournament-title [tournament]="tournament">
       </app-tournament-title>
-      <div>
-        <h2 *ngIf="processing" class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-        </h2>
-      </div>
+      <h2 *ngIf="processing" class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <div *ngIf="!processing && tournament && structure">
-        <div *ngIf="shouldShowEndRanking">
-          <h2>
-            <span>eindstand</span>
-          </h2>
-          <app-tournament-endranking-view [structure]="structure"></app-tournament-endranking-view>
-        </div>
+        <ul ngbNav #nav="ngbNav" class="nav-tabs">
+          <li [ngbNavItem]="1">
+            <a ngbNavLink>poulestanden</a>
+            <ng-template ngbNavContent>
+              <app-tournament-ranking-roundnumber [roundNumber]="structure.getFirstRoundNumber()"
+                [tournament]="tournament">
+              </app-tournament-ranking-roundnumber>
+            </ng-template>
+          </li>
+          <li [ngbNavItem]="2">
+            <a ngbNavLink>eindstand</a>
+            <ng-template ngbNavContent>
+              <app-tournament-endranking-view [structure]="structure"></app-tournament-endranking-view>
+            </ng-template>
+          </li>
+        </ul>
+        <div [ngbNavOutlet]="nav"></div>
       </div>
     </div>
   </div>

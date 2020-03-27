@@ -1,4 +1,7 @@
-<div *ngIf="poule" class="card border-0">
+<div *ngIf="poule" class="card border-1">
+    <div *ngIf="header" class="card-header">
+        {{nameService.getPouleName(poule, true)}}
+    </div>
     <div class="card-body p-0">
         <h2 *ngIf="processing" class="text-center">
             <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>

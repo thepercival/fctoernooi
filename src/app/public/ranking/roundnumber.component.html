@@ -1,0 +1,21 @@
+<div *ngIf="getPoules().length > 0" class="card" [ngClass]="{ 'notopborder': notopborder }">
+  <div class="card-header pointer" (click)="show = !show">
+    <div class="d-flex justify-content-between">
+      <h5 class="mb-0" [innerHtml]="nameService.getRoundNumberName(roundNumber) | keepHtml"></h5>
+      <fa-icon [icon]="['fas', 'chevron-right']" [rotate]="show ? 90 : 0"></fa-icon>
+    </div>
+  </div>
+  <div class="card-body card-roundnumber-ranking-body" [ngClass]="{ 'd-none': !show }">
+    <div class="d-flex flex-wrap justify-content-center">
+      <app-tournament-pouleranking *ngFor="let poule of getPoules()" [tournament]="tournament" [poule]="poule"
+        [header]="true">
+      </app-tournament-pouleranking>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="roundNumber.hasNext()">
+  <app-tournament-ranking-roundnumber [roundNumber]="roundNumber.getNext()" [tournament]="tournament"
+    notopborder="true">
+  </app-tournament-ranking-roundnumber>
+</div>

@@ -79,6 +79,17 @@
             </p>
           </div>
         </div>
+        <div *ngIf="structure.getRootRound().hasBegun()" class="card border-secondary pointer mt-3 mx-2"
+          [routerLink]="['/public/ranking', tournament.getId()]">
+          <div class="card-body">
+            <h5 class="card-title">
+              <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> standen
+            </h5>
+            <p class="card-text">
+              poule- en eindstanden
+            </p>
+          </div>
+        </div>
         <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/admin/referees', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
@@ -94,7 +105,7 @@
             <p class="card-text">{{getNrOfFieldsDescription()}}</p>
           </div>
         </div>
-        <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/admin/lockers', tournament.getId()]">
+        <!-- <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/admin/lockers', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'door-closed']"></fa-icon> kleedkamers
@@ -103,7 +114,7 @@
               maak mooi ui
             </p>
           </div>
-        </div>
+        </div> -->
         <div class="card border-secondary pointer mt-3 mx-2" (click)="linkToSportConfig()">
           <div class="card-body">
             <h5 class="card-title text-truncate">
