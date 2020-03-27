@@ -57,6 +57,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
                 Validators.minLength(this.validations.minNrOfHeadtohead),
                 Validators.maxLength(this.validations.maxNrOfHeadtohead)
             ])],
+            extension: false,
             enableTime: true,
             minutesPerGame: ['', Validators.compose([
                 Validators.required,
@@ -113,8 +114,34 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         }
     }
 
+    changeMinutesPerGameExt(minutesPerGameExt: number) {
+        if (minutesPerGameExt === 0 && this.form.controls.extension.value) {
+            console.log('extension => false ');
+            this.form.controls.extension.setValue(false);
+        }
+        if (minutesPerGameExt > 0 && this.form.controls.extension.value === false) {
+            console.log('extension => true ');
+            this.form.controls.extension.setValue(true);
+        }
+    }
+
+    changeExtension(extension: boolean) {
+        if (extension && this.form.controls.minutesPerGameExt.value === 0) {
+            const planningConfigService = new PlanningConfigService();
+            console.log('minutesPerGameExt => default ');
+            this.form.controls.minutesPerGameExt.setValue(
+                planningConfigService.getDefaultMinutesPerGameExt()
+            );
+        }
+        if (!extension && this.form.controls.minutesPerGameExt.value > 0) {
+            console.log('minutesPerGameExt => 0 ');
+            this.form.controls.minutesPerGameExt.setValue(0);
+        }
+    }
+
     private resetForm(config: PlanningConfig) {
         this.form.controls.nrOfHeadtohead.setValue(config.getNrOfHeadtohead());
+        this.form.controls.extension.setValue(config.getExtension());
         this.form.controls.enableTime.setValue(config.getEnableTime());
         this.form.controls.minutesPerGame.setValue(config.getMinutesPerGame());
         this.form.controls.minutesPerGameExt.setValue(config.getMinutesPerGameExt());
@@ -191,7 +218,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     private needsRescheduling(config: PlanningConfig): boolean {
-        return this.form.value['enableTime'] !== config.getEnableTime()
+        return this.form.value['extension'] !== config.getExtension()
+            || this.form.value['enableTime'] !== config.getEnableTime()
             || this.form.value['minutesPerGame'] !== config.getMinutesPerGame()
             || this.form.value['minutesPerGameExt'] !== config.getMinutesPerGameExt()
             || this.form.value['minutesBetweenGames'] !== config.getMinutesBetweenGames()
@@ -202,6 +230,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     save(): boolean {
         const jsonConfig: JsonPlanningConfig = {
+            extension: this.form.value['extension'],
             enableTime: this.form.value['enableTime'],
             minutesPerGame: this.form.value['minutesPerGame'],
             minutesPerGameExt: this.form.value['minutesPerGameExt'],

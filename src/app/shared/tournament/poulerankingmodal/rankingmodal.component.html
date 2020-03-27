@@ -38,15 +38,20 @@
                                 <td>gelijkspel</td>
                                 <td class="text-right">{{sportConfig.getDrawPoints()}}</td>
                             </tr>
-                            <tr *ngIf="poule.getRound().getNumber().getValidPlanningConfig().hasExtension()">
+                            <tr *ngIf="poule.getRound().getNumber().getValidPlanningConfig().getExtension()">
                                 <td>{{sportConfig.getSport().getName()}}</td>
-                                <td>overwinning</td>
+                                <td>overwinning na verlenging</td>
                                 <td class="text-right">{{sportConfig.getWinPointsExt()}}</td>
                             </tr>
-                            <tr *ngIf="poule.getRound().getNumber().getValidPlanningConfig().hasExtension()">
+                            <tr *ngIf="poule.getRound().getNumber().getValidPlanningConfig().getExtension()">
                                 <td>{{sportConfig.getSport().getName()}}</td>
-                                <td>gelijkspel</td>
+                                <td>gelijkspel na verlenging</td>
                                 <td class="text-right">{{sportConfig.getDrawPointsExt()}}</td>
+                            </tr>
+                            <tr *ngIf="poule.getRound().getNumber().getValidPlanningConfig().getExtension()">
+                                <td>{{sportConfig.getSport().getName()}}</td>
+                                <td>verlies na verlenging</td>
+                                <td class="text-right">{{sportConfig.getLosePointsExt()}}</td>
                             </tr>
                         </ng-template>
                     </tbody>

@@ -166,7 +166,7 @@
       <li class="list-group-item border-info">
         de wedstrijden duren {{planningConfig.getMinutesPerGame()}} minuten
       </li>
-      <li *ngIf="planningConfig.hasExtension()" class="list-group-item border-info">
+      <li *ngIf="planningConfig.getExtension()" class="list-group-item border-info">
         de eventuele verlenging duurt {{planningConfig.getMinutesPerGameExt()}} minuten
       </li>
       <li class="list-group-item border-info">er zit {{planningConfig.getMinutesBetweenGames()}} minuten

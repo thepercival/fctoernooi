@@ -31,6 +31,16 @@
                         </label>
                     </div>
                 </div>
+                <div *ngIf="!form.value['enableTime']" class="form-group row">
+                    <label for="extension" class="col-8 col-form-label pointer">met verlenging</label>
+                    <div class="form-check col-4">
+                        <label class="custom-control custom-checkbox col-form-label pl-0">
+                            <input type="checkbox" class="custom-control-input form-check-input"
+                                formControlName="extension" (ngModelChange)="changeExtension($event)">
+                            <span class="custom-control-indicator"></span>
+                        </label>
+                    </div>
+                </div>
                 <div *ngIf="form.value['enableTime']" class="form-group row">
                     <label for="minutesPerGame" class="col-8 col-form-label">minuten per wedstrijd</label>
                     <div class="col-4">
@@ -44,7 +54,8 @@
                     <div class="col-4">
                         <input type="number"
                             [ngClass]="{ 'is-invalid': form.controls.minutesPerGameExt.invalid, 'is-valid': form.controls.minutesPerGameExt.valid}"
-                            formControlName="minutesPerGameExt" maxlength="2" class="form-control" />
+                            formControlName="minutesPerGameExt" maxlength="2" class="form-control"
+                            (ngModelChange)="changeMinutesPerGameExt($event)" />
                     </div>
                 </div>
                 <div *ngIf="form.value['enableTime']" class="form-group row">

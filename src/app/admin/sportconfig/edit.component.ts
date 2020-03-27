@@ -37,6 +37,8 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         maxWinPoints: 10,
         minDrawPoints: 0,
         maxDrawPoints: 5,
+        minLosePoints: 0,
+        maxLosePoints: 5,
         minMinutesPerGame: 0,
         maxMinutesPerGame: 60,
     };
@@ -77,6 +79,11 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
                 Validators.min(this.validations.minDrawPoints),
                 Validators.max(this.validations.maxDrawPoints)
             ])],
+            losePointsExt: ['', Validators.compose([
+                Validators.required,
+                Validators.min(this.validations.minLosePoints),
+                Validators.max(this.validations.maxLosePoints)
+            ])],
             nrOfFields: ['']
         });
         this.sportConfigService = new SportConfigService(new SportScoreConfigService());
@@ -90,6 +97,10 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         this.ranges.drawPoints = [];
         for (let i = this.validations.minDrawPoints; i <= this.validations.maxDrawPoints; i++) {
             this.ranges.drawPoints.push(i);
+        }
+        this.ranges.losePoints = [];
+        for (let i = this.validations.minLosePoints; i <= this.validations.maxLosePoints; i++) {
+            this.ranges.losePoints.push(i);
         }
         const sport = this.sportConfig.getSport();
         if (sport.getCustomId() === SportCustom.Chess) {
@@ -137,6 +148,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         this.form.controls.drawPoints.setValue(this.sportConfig.getDrawPoints());
         this.form.controls.winPointsExt.setValue(this.sportConfig.getWinPointsExt());
         this.form.controls.drawPointsExt.setValue(this.sportConfig.getDrawPointsExt());
+        this.form.controls.losePointsExt.setValue(this.sportConfig.getLosePointsExt());
         this.form.controls.nrOfFields.setValue(1);
         if (this.hasBegun) {
             Object.keys(this.form.controls).forEach(key => {
@@ -168,6 +180,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         this.sportConfig.setDrawPoints(this.form.value['drawPoints']);
         this.sportConfig.setWinPointsExt(this.form.value['winPointsExt']);
         this.sportConfig.setDrawPointsExt(this.form.value['drawPointsExt']);
+        this.sportConfig.setLosePointsExt(this.form.value['losePointsExt']);
 
         this.sportConfigRepository.createObject(this.sportConfig, this.tournament)
             .subscribe(
@@ -214,6 +227,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         this.sportConfig.setDrawPoints(this.form.value['drawPoints']);
         this.sportConfig.setWinPointsExt(this.form.value['winPointsExt']);
         this.sportConfig.setDrawPointsExt(this.form.value['drawPointsExt']);
+        this.sportConfig.setLosePointsExt(this.form.value['losePointsExt']);
 
         this.sportConfigRepository.editObject(this.sportConfig, this.tournament)
             .subscribe(
@@ -239,6 +253,11 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         }
     }
 
+    linkToPlanningConfig() {
+        const roundNumber = this.structure.getFirstRoundNumber().getNumber();
+        this.router.navigate(['/admin/planningconfig', this.tournament.getId(), roundNumber]);
+    }
+
     openMultiSportsModal(content) {
         this.modalService.open(content, { ariaLabelledBy: 'modal-multisports' }).result.then((result) => {
             if (result === 'continue') {
@@ -253,6 +272,8 @@ export interface SportValidations {
     maxWinPoints: number; // 10
     minDrawPoints: number; // 0
     maxDrawPoints: number; // 5
+    minLosePoints: number; // 0
+    maxLosePoints: number; // 5
     minMinutesPerGame: number; // 0
     maxMinutesPerGame: number; // 60
 }
