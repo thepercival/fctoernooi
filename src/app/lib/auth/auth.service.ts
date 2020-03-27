@@ -51,7 +51,7 @@ export class AuthService extends APIRepository {
   validateToken(): Observable<boolean> {
     return this.http.post(this.getUrl() + '/validatetoken', undefined, { headers: super.getHeaders() }).pipe(
       map((res) => true),
-      catchError((err) => observableThrowError(err))
+      catchError((err) => this.handleError(err))
     );
   }
 
@@ -108,17 +108,6 @@ export class AuthService extends APIRepository {
     // clear token remove user from local storage to log user out
     this.authItem = undefined;
     localStorage.removeItem('auth');
-  }
-
-  handleError(error: HttpErrorResponse): Observable<any> {
-    let errortext = 'onbekende fout';
-    console.error(error);
-    if (typeof error.error === 'string') {
-      errortext = error.error;
-    } else if (error.statusText !== undefined) {
-      errortext = error.statusText;
-    }
-    return observableThrowError(errortext);
   }
 }
 

@@ -11,6 +11,7 @@ import {
     SportScoreConfig,
     RoundNumber,
     JsonSportScoreConfig,
+    SportMapper,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
 import { CSSService } from '../../shared/common/cssservice';
@@ -50,6 +51,7 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private myNavigation: MyNavigation,
+        private sportMapper: SportMapper,
         fb: FormBuilder,
         private modalService: NgbModal
     ) {
@@ -160,14 +162,14 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
 
     protected getJson(sport: Sport): JsonSportScoreConfig {
         const json: JsonSportScoreConfig = {
-            sportId: sport.getId(),
+            sport: this.sportMapper.toJson(sport),
             direction: SportScoreConfig.UPWARDS,
             maximum: this.form.value['max'],
             enabled: true
         };
         if (this.form.controls.maxNext !== undefined) {
             json.next = {
-                sportId: sport.getId(),
+                sport: this.sportMapper.toJson(sport),
                 direction: SportScoreConfig.UPWARDS,
                 maximum: this.form.value['maxNext'],
                 enabled: this.form.value['useNext']

@@ -20,7 +20,6 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 export class GameListComponent extends TournamentComponent implements OnInit, OnDestroy {
   showPrintBtn: boolean;
   userIsPlannerOrStructureAdmin: boolean;
-  shouldShowEndRanking: boolean;
   private refreshPlanningTimer: Subscription;
   reload: boolean;
 
@@ -38,8 +37,6 @@ export class GameListComponent extends TournamentComponent implements OnInit, On
 
   ngOnInit() {
     super.myNgOnInit(() => {
-      const hasNext = this.structure.getFirstRoundNumber().hasNext();
-      this.shouldShowEndRanking = (hasNext || this.structure.getRootRound().getPoules().length === 1);
       this.userIsPlannerOrStructureAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(),
         Role.STRUCTUREADMIN + Role.PLANNER);
       this.enableRefreshPlanning(this.structure.getFirstRoundNumber());
@@ -69,15 +66,10 @@ export class GameListComponent extends TournamentComponent implements OnInit, On
     this.myNavigation.scroll();
   }
 
-  linkToStructure() {
-    this.router.navigate(['/admin/structure', this.tournament.getId()]
-    );
-  }
-
   protected refreshPlanning(firstRoundNumberWithoutPlanning: RoundNumber) {
     this.refreshPlanningTimer = interval(5000) // repeats every 5 seconds
       .pipe(
-        switchMap(() => this.planningRepository.getObject(firstRoundNumberWithoutPlanning, this.tournament).pipe()),
+        switchMap(() => this.planningRepository.get(firstRoundNumberWithoutPlanning, this.tournament).pipe()),
         catchError(err => of(null))
       ).subscribe(
           /* happy path */(roundNumberOut: RoundNumber) => {

@@ -40,8 +40,6 @@ export class NewComponent implements OnInit {
   sport: Sport;
   validations: any = {
     minnroffields: 1,
-    minnrofcompetitors: Tournament.StructureOptions.placeRange.min,
-    maxnrofcompetitors: Tournament.StructureOptions.placeRange.max,
     maxnroffields: Tournament.StructureOptions.placeRange.max / 2,
     minlengthname: League.MIN_LENGTH_NAME,
     maxlengthname: League.MAX_LENGTH_NAME,
@@ -70,11 +68,6 @@ export class NewComponent implements OnInit {
       sportname: [{ value: '', disabled: true }, Validators.compose([
         Validators.required
       ])],
-      nrofcompetitors: ['', Validators.compose([
-        Validators.required,
-        Validators.min(this.validations.minnrofcompetitors),
-        Validators.max(this.validations.maxnrofcompetitors)
-      ])],
       nroffields: ['', Validators.compose([
         Validators.required,
         Validators.min(this.validations.minnroffields),
@@ -97,7 +90,6 @@ export class NewComponent implements OnInit {
     }
     this.form.controls.date.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
     this.form.controls.time.setValue({ hour: date.getHours(), minute: date.getMinutes() });
-    this.form.controls.nrofcompetitors.setValue(5);
     this.form.controls.nroffields.setValue(1);
     this.form.controls.public.setValue(true);
     this.processing = false;
@@ -115,7 +107,7 @@ export class NewComponent implements OnInit {
     this.setAlert('info', 'het toernooi wordt aangemaakt');
 
     const name = this.form.controls.name.value;
-    const nrofcompetitors = this.form.controls.nrofcompetitors.value;
+    const nrofcompetitors = 5;
     const nroffields = this.form.controls.nroffields.value;
 
     const startDateTime = new Date(
@@ -158,10 +150,10 @@ export class NewComponent implements OnInit {
           this.structureRepository.editObject(structure, tournamentOut)
             .subscribe(
             /* happy path */(structureOut: Structure) => {
-                this.planningRepository.createObject(structureOut.getFirstRoundNumber(), tournamentOut)
+                this.planningRepository.create(structureOut.getFirstRoundNumber(), tournamentOut)
                   .subscribe(
                     /* happy path */ roundNumberOut => {
-                      this.router.navigate(['/admin', tournamentOut.getId()]);
+                      this.router.navigate(['/admin/structure', tournamentOut.getId()]);
                     },
                   /* error path */ e => {
                       this.setAlert('danger', 'de toernooi-planning kon niet worden aangemaakt: ' + e);
@@ -187,21 +179,6 @@ export class NewComponent implements OnInit {
 
   protected resetAlert(): void {
     this.alert = undefined;
-  }
-
-  getStructureDescription() {
-    const nrOfCompetitors = this.form.controls.nrofcompetitors.value;
-    if (nrOfCompetitors !== undefined) {
-      return '';
-    }
-    try {
-      const structureService = new StructureService(Tournament.StructureOptions);
-      const defaultNrOfPoules = structureService.getDefaultNrOfPoules(nrOfCompetitors);
-      const sPouleDescr = defaultNrOfPoules > 1 ? 'poules' : 'poule';
-      return defaultNrOfPoules + ' ' + sPouleDescr + ' en ';
-    } catch (e) {
-      return '';
-    }
   }
 
   getFieldsDescription(): string {

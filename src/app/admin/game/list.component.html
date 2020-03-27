@@ -20,19 +20,6 @@
           [tournament]="tournament" [roundNumber]="roundNumber" [canEditSettings]="userIsPlannerOrStructureAdmin"
           (scroll)="scroll()" [reload]="reload">
         </app-tournament-roundnumber-planning>
-        <div *ngIf="shouldShowEndRanking">
-          <div class="d-flex justify-content-between mt-3" id="endranking">
-            <h2>
-              <span>eindstand</span>
-            </h2>
-            <button type="button" class="btn btn-sm btn-secondary mr-2" *ngIf="structure.getRoundNumbers().length > 1"
-              (click)="linkToStructure()">
-              <i class="fi flaticon-structure"></i>
-              <span>opzet</span>
-            </button>
-          </div>
-          <app-tournament-endranking-view [structure]="structure"></app-tournament-endranking-view>
-        </div>
       </div>
     </div>
   </div>

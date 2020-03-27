@@ -98,7 +98,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     forkJoin(reposUpdates).subscribe(results => {
       this.referees.sort((refA, refB) => refA.getRank() - refB.getRank());
       const firstRoundNumber = this.structure.getFirstRoundNumber();
-      this.planningRepository.createObject(firstRoundNumber, this.tournament).subscribe(
+      this.planningRepository.create(firstRoundNumber, this.tournament).subscribe(
             /* happy path */ roundNumberOut => {
           this.setAlert('success', 'de belangrijkheid van de scheidsrechters is gewijzigd');
         },
@@ -121,7 +121,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
       .subscribe(
             /* happy path */ refereeRes => {
           const firstRoundNumber = this.structure.getFirstRoundNumber();
-          this.planningRepository.createObject(firstRoundNumber, this.tournament).subscribe(
+          this.planningRepository.create(firstRoundNumber, this.tournament).subscribe(
             /* happy path */ roundNumberOut => {
               if (referee.getEmailaddress() === undefined || referee.getEmailaddress().length === 0) {
                 this.processing = false;

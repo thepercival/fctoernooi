@@ -130,7 +130,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
 
     // first better test creating planning in php!!
     const changedRoundNumber = structure.getFirstRoundNumber();
-    this.planningRepository.createObject(changedRoundNumber, this.tournament)
+    this.planningRepository.create(changedRoundNumber, this.tournament)
       .subscribe(
           /* happy path */ roundNumberOut => this.completeSave(structure),
           /* error path */ e => { this.setAlert('danger', e); this.processing = false; },

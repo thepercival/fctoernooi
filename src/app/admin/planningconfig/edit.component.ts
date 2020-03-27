@@ -259,7 +259,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     private savePlanning(needsRecreating: boolean, needsRescheduling: boolean) {
         if (needsRecreating) {
-            this.planningRepository.createObject(this.roundNumber, this.tournament)
+            this.planningRepository.create(this.roundNumber, this.tournament)
                 .subscribe(
                     /* happy path */ roundNumberOut => {
                         this.setAlert('success', 'de instellingen zijn opgeslagen');
@@ -271,7 +271,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
                     /* onComplete */() => this.processing = false
                 );
         } else if (needsRescheduling) {
-            this.planningRepository.editObject(this.roundNumber, this.tournament)
+            this.planningRepository.reschedule(this.roundNumber, this.tournament)
                 .subscribe(
                     /* happy path */ gamesRes => {
                         this.setAlert('success', 'de instellingen zijn opgeslagen');

@@ -24,14 +24,14 @@ export class PlanningRepository extends APIRepository {
         return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix() + '/' + roundNumber.getNumber();
     }
 
-    getObject(roundNumber: RoundNumber, tournament: Tournament): Observable<RoundNumber> {
+    get(roundNumber: RoundNumber, tournament: Tournament): Observable<RoundNumber> {
         return this.http.get(this.getUrl(tournament, roundNumber), this.getOptions()).pipe(
             map((jsonStructure: JsonStructure) => this.planningMapper.toObject(jsonStructure, roundNumber)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    createObject(roundNumber: RoundNumber, tournament: Tournament): Observable<RoundNumber> {
+    create(roundNumber: RoundNumber, tournament: Tournament): Observable<RoundNumber> {
         this.removeGames(roundNumber);
         const url = this.getUrl(tournament, roundNumber) + '/create';
         return this.http.post(url, undefined, this.getOptions()).pipe(
@@ -49,15 +49,15 @@ export class PlanningRepository extends APIRepository {
         }
     }
 
-    editObject(roundNumber: RoundNumber, tournament: Tournament): Observable<boolean> {
+    reschedule(roundNumber: RoundNumber, tournament: Tournament): Observable<boolean> {
         const url = this.getUrl(tournament, roundNumber) + '/reschedule';
         return this.http.post(url, undefined, this.getOptions()).pipe(
-            map((dates: Date[]) => this.reschedule(roundNumber, dates)),
+            map((dates: Date[]) => this.updateDates(roundNumber, dates)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    private reschedule(roundNumber: RoundNumber, dates: Date[]): boolean {
+    private updateDates(roundNumber: RoundNumber, dates: Date[]): boolean {
         let previousBatchNr, gameDate;
         roundNumber.getGames(Game.ORDER_BY_BATCH).forEach(game => {
             if (previousBatchNr === undefined || previousBatchNr !== game.getBatchNr()) {
@@ -71,7 +71,7 @@ export class PlanningRepository extends APIRepository {
         });
         if (roundNumber.hasNext()) {
             // batchDates
-            this.reschedule(roundNumber.getNext(), dates);
+            this.updateDates(roundNumber.getNext(), dates);
         }
         return true;
     }

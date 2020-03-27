@@ -85,7 +85,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
         this.fieldRepository.removeObject(field, this.tournament)
             .subscribe(
             /* happy path */ fieldRes => {
-                    this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament)
+                    this.planningRepository.create(this.structure.getFirstRoundNumber(), this.tournament)
                         .subscribe(
                         /* happy path */ roundNumberOut => {
                                 this.processing = false;

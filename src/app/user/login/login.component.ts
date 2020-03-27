@@ -83,7 +83,7 @@ export class LoginComponent implements OnInit {
             /* happy path */ p => {
           this.router.navigate(['/']);
         },
-            /* error path */ e => { this.setAlert('danger', 'het inloggen is niet gelukt: ' + e); this.processing = false; },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
             /* onComplete */() => this.processing = false
       );
     return false;

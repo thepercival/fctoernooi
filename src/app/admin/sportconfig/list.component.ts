@@ -95,7 +95,7 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
     this.sportConfigRepository.removeObject(sportConfig, this.tournament, this.structure)
       .subscribe(
         /* happy path */ refereeRes => {
-          this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament).subscribe(
+          this.planningRepository.create(this.structure.getFirstRoundNumber(), this.tournament).subscribe(
             /* happy path */ roundNumberOut => {
               this.setAlert('success', 'de sport is verwijderd');
             },

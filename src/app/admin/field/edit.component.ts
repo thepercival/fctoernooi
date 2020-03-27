@@ -6,6 +6,7 @@ import {
     JsonField,
     Sport,
     SportConfigService,
+    SportMapper,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -41,6 +42,7 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
         structureRepository: StructureRepository,
         private planningRepository: PlanningRepository,
         private myNavigation: MyNavigation,
+        private sportMapper: SportMapper,
         fb: FormBuilder
     ) {
         // EditPermissions, EmailAddresses
@@ -130,14 +132,14 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
         const field: JsonField = {
             number: this.competition.getFields().length + 1,
             name: name,
-            sportId: this.sport.getId()
+            sport: this.sportMapper.toJson(this.sport)
         };
 
         this.sportConfigService.createDefault(this.sport, this.competition, this.structure);
 
         this.fieldRepository.createObject(field, this.tournament).subscribe(
             /* happy path */ fieldRes => {
-                this.planningRepository.createObject(this.structure.getFirstRoundNumber(), this.tournament).subscribe(
+                this.planningRepository.create(this.structure.getFirstRoundNumber(), this.tournament).subscribe(
                 /* happy path */ roundNumberOut => {
                         this.tournamentRepository.syncRefereeRoles(this.tournament).subscribe(
                             /* happy path */ allRolesRes => {

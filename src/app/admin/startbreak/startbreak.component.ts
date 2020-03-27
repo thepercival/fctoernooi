@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-import { NameService } from 'ngx-sport';
+import { NameService, PlanningPeriod } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -21,11 +21,6 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
     processing = true;
     hasBegun: boolean;
 
-    validations: any = {
-        minbreakduration: 0,
-        maxbreakduration: 60 * 24 * 14
-    };
-
     constructor(
         route: ActivatedRoute,
         router: Router,
@@ -39,20 +34,13 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
         super(route, router, tournamentRepository, structureRepository);
 
         this.form = fb.group({
-            date: ['', Validators.compose([
-            ])],
-            time: ['', Validators.compose([
-
-            ])],
-            togglebreak: ['', Validators.compose([
-            ])],
-            breaktime: ['', Validators.compose([
-
-            ])],
-            breakduration: ['', Validators.compose([
-                Validators.min(this.validations.minbreakduration),
-                Validators.max(this.validations.maxbreakduration)
-            ])]
+            date: ['', Validators.compose([])],
+            time: ['', Validators.compose([])],
+            togglebreak: ['', Validators.compose([])],
+            breakstartdate: ['', Validators.compose([])],
+            breakstarttime: ['', Validators.compose([])],
+            breakenddate: ['', Validators.compose([])],
+            breakendtime: ['', Validators.compose([])],
         });
     }
 
@@ -68,11 +56,9 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
         const minDate = date > now ? now : date;
         this.minDateStruct = { year: minDate.getFullYear(), month: minDate.getMonth() + 1, day: minDate.getDate() };
 
-        this.form.controls.date.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
-        this.form.controls.time.setValue({ hour: date.getHours(), minute: date.getMinutes() });
-
+        this.setDate(this.form.controls.date, this.form.controls.time, date);
+        this.setDefaultBreak();
         this.form.controls.togglebreak.setValue(this.tournament.hasBreak());
-        this.toggleBreak(this.tournament.hasBreak(), this.tournament.getBreakDuration(), this.tournament.getBreakStartDateTime());
 
         if (this.hasBegun) {
             this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
@@ -80,101 +66,71 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
         this.processing = false;
     }
 
-    shouldReschedule(startDateTime: Date, breakStartDateTime: Date, breakDration: number): boolean {
-        if (startDateTime.getTime() === this.competition.getStartDateTime().getTime()
-            && (breakStartDateTime === undefined && this.tournament.getBreakStartDateTime() === undefined
-                || (breakStartDateTime !== undefined && this.tournament.getBreakStartDateTime() !== undefined
-                    && breakStartDateTime.getTime() === this.tournament.getBreakStartDateTime().getTime()))
-            && breakDration === this.tournament.getBreakDuration()
-        ) {
-            return false;
-        }
-        if (this.structure.getRootRound().hasBegun()) {
-            this.setAlert('info', 'de startdatum kan niet meer gewijzigd worden, omdat er al wedstrijden zijn gespeeld');
-        }
-        return true;
-    }
-
     isTimeEnabled() {
         return this.structure.getFirstRoundNumber().getPlanningConfig().getEnableTime();
     }
 
-    toggleBreak(breakX: boolean, p_breakDuration: number, breakDateTime?: Date) {
-        let breakTime;
-        let breakDuration = 0;
+    setDefaultBreak() {
+        const breakStartDateTime = this.getDate(this.form.controls.date, this.form.controls.time);
+        breakStartDateTime.setHours(breakStartDateTime.getHours() + 2);
+        const breakEndDateTime = new Date(breakStartDateTime.getTime());
+        breakEndDateTime.setMinutes(breakEndDateTime.getMinutes() + 30);
 
-        if (breakX === true) {
-            const date = this.competition.getStartDateTime();
-            if (breakDateTime === undefined) {
-                breakDateTime = new Date(date.getTime());
-                breakDateTime.setHours(date.getHours() + 2);
-            }
-            breakTime = { hour: breakDateTime.getHours(), minute: breakDateTime.getMinutes() };
-            breakDuration = p_breakDuration > 0 ? p_breakDuration : 60;
-        }
+        this.setDate(this.form.controls.breakstartdate, this.form.controls.breakstarttime, breakStartDateTime);
+        this.setDate(this.form.controls.breakenddate, this.form.controls.breakendtime, breakEndDateTime);
+    }
 
-        this.form.controls.breaktime.setValue(breakTime);
-        this.form.controls.breakduration.setValue(breakDuration);
+    getDate(dateFormControl: AbstractControl, timeFormControl: AbstractControl): Date {
+        return new Date(
+            dateFormControl.value.year,
+            dateFormControl.value.month - 1,
+            dateFormControl.value.day,
+            timeFormControl.value.hour,
+            timeFormControl.value.minute
+        );
+    }
+
+    setDate(dateFormControl: AbstractControl, timeFormControl: AbstractControl, date: Date) {
+        dateFormControl.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
+        timeFormControl.setValue({ hour: date.getHours(), minute: date.getMinutes() });
     }
 
     edit(): boolean {
-        this.processing = true;
         this.setAlert('info', 'het toernooi wordt opgeslagen');
 
-        const startDateTime = new Date(
-            this.form.controls.date.value.year,
-            this.form.controls.date.value.month - 1,
-            this.form.controls.date.value.day,
-            this.form.controls.time.value.hour,
-            this.form.controls.time.value.minute
-        );
-        let breakStartDateTime: Date;
+        const startDateTime = this.getDate(this.form.controls.date, this.form.controls.time);
+        let breakX: PlanningPeriod;
         if (this.form.controls.togglebreak.value) {
-            breakStartDateTime = new Date(
-                this.form.controls.date.value.year,
-                this.form.controls.date.value.month - 1,
-                this.form.controls.date.value.day,
-                this.form.controls.breaktime.value.hour,
-                this.form.controls.breaktime.value.minute
-            );
-            if (breakStartDateTime.getTime() < startDateTime.getTime()) {
-                this.setAlert('danger', 'de pauze moet na het begin van het toernooi starten');
-                this.processing = false;
+            const breakStartDateTime = this.getDate(this.form.controls.breakstartdate, this.form.controls.breakstarttime);
+            const breakEndDateTime = this.getDate(this.form.controls.breakenddate, this.form.controls.breakendtime);
+            breakX = { start: breakStartDateTime, end: breakEndDateTime };
+            const message = this.checkBreakPeriod(startDateTime, breakStartDateTime, breakEndDateTime);
+            if (message !== undefined) {
+                this.setAlert('danger', message);
                 return;
             }
         }
-        const breakDuration = this.form.controls.breakduration.value;
 
+        this.processing = true;
         const firstRoundNumber = this.structure.getFirstRoundNumber();
         try {
-            const reschedule = this.shouldReschedule(startDateTime, breakStartDateTime, breakDuration);
-            if (reschedule === true) {
-                this.competition.setStartDateTime(startDateTime);
-                this.tournament.setBreakStartDateTime(undefined);
-                this.tournament.setBreakDuration(0);
-                if (this.form.controls.togglebreak.value) {
-                    this.tournament.setBreakStartDateTime(breakStartDateTime);
-                    this.tournament.setBreakDuration(breakDuration);
-                }
-            }
+            this.competition.setStartDateTime(startDateTime);
+            this.tournament.setBreakStartDateTime(breakX ? breakX.start : undefined);
+            this.tournament.setBreakEndDateTime(breakX ? breakX.end : undefined);
 
             this.tournamentRepository.editObject(this.tournament)
                 .subscribe(
                     /* happy path */ tournamentRes => {
                         this.tournament = tournamentRes;
-                        if (reschedule === true) {
-                            this.planningRepository.editObject(firstRoundNumber, this.tournament).subscribe(
-                                    /* happy path */ gamesRes => {
-                                    this.myNavigation.back();
-                                },
-                                /* error path */ e => {
-                                    this.setAlert('danger', 'de planning is niet opgeslagen: ' + e);
-                                    this.processing = false;
-                                }
-                            );
-                        } else {
-                            this.router.navigate(['/admin', tournamentRes.getId()]);
-                        }
+                        this.planningRepository.reschedule(firstRoundNumber, this.tournament).subscribe(
+                                /* happy path */ gamesRes => {
+                                this.myNavigation.back();
+                            },
+                            /* error path */ e => {
+                                this.setAlert('danger', 'de planning is niet opgeslagen: ' + e);
+                                this.processing = false;
+                            }
+                        );
                     },
                     /* error path */ e => { this.setAlert('danger', 'het toernooi is niet opgeslagen: ' + e); this.processing = false; }
                 );
@@ -189,4 +145,13 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
         return one && two && two.year === one.year && two.month === one.month && two.day === one.day;
     }
     isSelected = date => this.equals(date, this.form.controls.date.value);
+
+    checkBreakPeriod(startDateTime: Date, breakStartDateTime: Date, breakEndDateTime: Date): string {
+        if (breakStartDateTime.getTime() < startDateTime.getTime()) {
+            return 'de start van de pauze moet na het begin van het toernooi zijn';
+        } else if (breakStartDateTime.getTime() >= breakEndDateTime.getTime()) {
+            return 'het einde van de pauze moet na de start van de pauze zijn';
+        }
+        return undefined;
+    }
 }

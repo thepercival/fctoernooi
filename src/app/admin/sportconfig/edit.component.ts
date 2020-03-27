@@ -8,6 +8,7 @@ import {
     SportCustom,
     SportScoreConfigService,
     JsonField,
+    SportMapper,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
 import { CSSService } from '../../shared/common/cssservice';
@@ -50,6 +51,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         private fieldRepository: FieldRepository,
         private planningRepository: PlanningRepository,
         private myNavigation: MyNavigation,
+        private sportMapper: SportMapper,
         fb: FormBuilder,
         private modalService: NgbModal
     ) {
@@ -173,13 +175,17 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
                     const fieldReposAdds = [];
                     for (let i = 0; i < this.form.value['nrOfFields']; i++) {
                         const fieldNr = this.competition.getFields().length + i + 1;
-                        const jsonField: JsonField = { number: fieldNr, name: '' + fieldNr, sportId: this.sportConfig.getSport().getId() };
+                        const jsonField: JsonField = {
+                            number: fieldNr,
+                            name: '' + fieldNr,
+                            sport: this.sportMapper.toJson(this.sportConfig.getSport())
+                        };
                         fieldReposAdds.push(this.fieldRepository.createObject(jsonField, this.tournament));
                     }
 
                     forkJoin(fieldReposAdds).subscribe(results => {
                         const firstRoundNumber = this.structure.getFirstRoundNumber();
-                        this.planningRepository.createObject(firstRoundNumber, this.tournament).subscribe(
+                        this.planningRepository.create(firstRoundNumber, this.tournament).subscribe(
                     /* happy path */ roundNumberOut => {
                                 this.linkToSportConfig(); /* niet navigate back van kan van sport komen */
                                 this.processing = false;

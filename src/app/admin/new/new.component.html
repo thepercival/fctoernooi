@@ -60,15 +60,6 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="nrofcompetitors" class="col-4 col-form-label">deelnemers</label>
-          <div class="col-8">
-            <input type="number" class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.nrofcompetitors.invalid, 'is-valid': form.controls.nrofcompetitors.valid}"
-              formControlName="nrofcompetitors" [min]="validations.minnrofcompetitors"
-              [max]="validations.maxnrofcompetitors">
-          </div>
-        </div>
-        <div class="form-group row">
           <label for="nroffields" class="col-4 col-form-label">{{getFieldsDescription()}}</label>
           <div class="col-8">
             <input type="number" class="form-control"
@@ -113,18 +104,10 @@
           </div>
         </div>
         <div class="form-group row justify-content-end">
-          <div class="col-2">
+          <div class="col-8">
             <button [disabled]="form.invalid || sport === undefined" type="submit" class="btn btn-primary">
-              maken
+              ga naar de opzet
             </button>
-          </div>
-          <div class="col-6">
-            <ul *ngIf="form.controls.nrofcompetitors.value" class="list-group d-none d-sm-block"
-              style="font-size: 0.9em;">
-              <li class="list-group-item border-info text-info p-0 text-center">
-                meerdere ronden kun je<br /> instellen onder "Opzet"
-              </li>
-            </ul>
           </div>
         </div>
       </form>

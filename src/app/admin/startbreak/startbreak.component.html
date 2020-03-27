@@ -47,47 +47,98 @@
               readonly>
           </div>
         </div>
-        <div *ngIf="!hasBegun && isTimeEnabled() " class="form-group row">
-          <div class="col-3">
-            <h2 for="togglebreak">
-              pauze</h2>
+        <div *ngIf="isTimeEnabled()">
+          <div *ngIf="!hasBegun || this.form.controls.togglebreak.value" class="form-group row">
+            <div class="col-3">
+              <h2 for="togglebreak" class="pt-1">
+                pauze</h2>
+            </div>
+            <div *ngIf="!hasBegun" class="col-9 col-md-1 pr-0">
+              <label class="custom-control custom-checkbox pointer col-form-label pl-0">
+                <input type="checkbox" class="custom-control-input form-check-input" formControlName="togglebreak">
+                <span class="custom-control-indicator"></span>
+                <label class="ml-2 col-form-label">( tijdens een ronde )</label>
+              </label>
+            </div>
           </div>
-          <div class="col-2 col-md-1 pr-0">
-            <label class="custom-control custom-checkbox pointer col-form-label pl-0">
-              <input type="checkbox" class="custom-control-input form-check-input" formControlName="togglebreak"
-                (ngModelChange)="toggleBreak($event,0)">
-              <span class="custom-control-indicator"></span>
-            </label>
-          </div>
-          <div class="col-7 col-md-8 pl-1">
-            <label class="col-form-label">( tijdens een ronde )</label>
-          </div>
-        </div>
-        <div *ngIf="!hasBegun && form.controls.togglebreak.value === true" class="form-group row">
-          <div class="col-3">
-            <label for="breaktime" class="col-form-label">pauzetijd</label>
-          </div>
-          <div class="col-9">
-            <ngb-timepicker id="breaktime" name="breaktime" formControlName="breaktime" [spinners]="false">
-            </ngb-timepicker>
-          </div>
-        </div>
-        <div *ngIf="!hasBegun && form.controls.togglebreak.value" class="form-group row">
-          <div class="col-3">
-            <label for="breakduration" class="col-form-label">pauzeduur</label>
-          </div>
-          <div class="col-6 col-sm-5 ">
-            <div class="input-group">
-              <input type="number" class="form-control"
-                [ngClass]="{ 'is-invalid': form.controls.breakduration.invalid, 'is-valid': form.controls.breakduration.valid}"
-                id="breakduration" name="breakduration" formControlName="breakduration"
-                [min]="validations.minbreakduration" [max]="validations.maxbreakduration">
-              <div class="input-group-append">
-                <span class="input-group-text">min.</span>
+          <div *ngIf="!hasBegun && this.form.controls.togglebreak.value" class="form-group row">
+            <div class="col-3">
+              <label for="dp" class="col-form-label">start</label>
+            </div>
+            <div class="col-9">
+              <div class="input-group input-group-date">
+                <input class="form-control"
+                  [ngClass]="{ 'is-invalid': form.controls.breakstartdate.invalid, 'is-valid': form.controls.breakstartdate.valid }"
+                  placeholder="yyyy-mm-dd" id="dp" name="dp" formControlName="breakstartdate" ngbDatepicker
+                  #d="ngbDatepicker" required [dayTemplate]="t" [minDate]="minDateStruct">
+                <div class="input-group-append">
+                  <span class="input-group-text pointer" (click)="d.toggle()">
+                    <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
+          <div *ngIf="!hasBegun && this.form.controls.togglebreak.value" class="form-group row">
+            <div class="col-3">
+              <label for="breakstarttime" class="col-form-label"></label>
+            </div>
+            <div class="col-9">
+              <ngb-timepicker id="breakstarttime" name="breakstarttime" formControlName="breakstarttime"
+                [spinners]="false" required>
+              </ngb-timepicker>
+            </div>
+          </div>
+          <div *ngIf="hasBegun && tournament.hasBreak()" class="form-group row">
+            <div class="col-3">
+              <label for="start" class="col-form-label">start</label>
+            </div>
+            <div class="col-9 col-sm-8 col-md-7">
+              <input class="form-control" type="text"
+                placeholder="{{tournament.getBreakStartDateTime().toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12': false,'hour':'2-digit','minute':'2-digit'})}}"
+                readonly>
+            </div>
+          </div>
+          <div *ngIf="!hasBegun && this.form.controls.togglebreak.value" class="form-group row">
+            <div class="col-3">
+              <label for="dp" class="col-form-label">eind</label>
+            </div>
+            <div class="col-9">
+              <div class="input-group input-group-date">
+                <input class="form-control"
+                  [ngClass]="{ 'is-invalid': form.controls.breakenddate.invalid, 'is-valid': form.controls.breakenddate.valid }"
+                  placeholder="yyyy-mm-dd" id="dp" name="dp" formControlName="breakenddate" ngbDatepicker
+                  #d="ngbDatepicker" required [dayTemplate]="t" [minDate]="minDateStruct">
+                <div class="input-group-append">
+                  <span class="input-group-text pointer" (click)="d.toggle()">
+                    <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="!hasBegun && this.form.controls.togglebreak.value" class="form-group row">
+            <div class="col-3">
+              <label for="breakendtime" class="col-form-label"></label>
+            </div>
+            <div class="col-9">
+              <ngb-timepicker id="breakendtime" name="breakendtime" formControlName="breakendtime" [spinners]="false"
+                required>
+              </ngb-timepicker>
+            </div>
+          </div>
+          <div *ngIf="hasBegun && tournament.hasBreak()" class="form-group row">
+            <div class="col-3">
+              <label for="end" class="col-form-label">eind</label>
+            </div>
+            <div class="col-9 col-sm-8 col-md-7">
+              <input class="form-control" type="text"
+                placeholder="{{tournament.getBreakEndDateTime().toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12': false,'hour':'2-digit','minute':'2-digit'})}}"
+                readonly>
+            </div>
+          </div>
         </div>
+
         <div *ngIf="!hasBegun" class="form-group row justify-content-end">
           <div class="col-9">
             <button [disabled]="form.invalid" type="submit" class="btn btn-primary">

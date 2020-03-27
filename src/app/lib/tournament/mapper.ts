@@ -23,7 +23,9 @@ export class TournamentMapper {
         if (json.breakStartDateTime !== undefined) {
             tournament.setBreakStartDateTime(new Date(json.breakStartDateTime));
         }
-        tournament.setBreakDuration(json.breakDuration);
+        if (json.breakEndDateTime !== undefined) {
+            tournament.setBreakEndDateTime(new Date(json.breakEndDateTime));
+        }
         tournament.setPublic(json.public);
         tournament.setUpdated(json.updated);
         return tournament;
@@ -36,7 +38,7 @@ export class TournamentMapper {
             roles: tournament.getRoles().map(role => this.roleMapper.toJson(role)),
             sponsors: tournament.getSponsors().map(sponsor => this.sponsorMapper.toJson(sponsor)),
             breakStartDateTime: tournament.getBreakStartDateTime() ? tournament.getBreakStartDateTime().toISOString() : undefined,
-            breakDuration: tournament.getBreakDuration(),
+            breakEndDateTime: tournament.getBreakEndDateTime() ? tournament.getBreakEndDateTime().toISOString() : undefined,
             public: tournament.getPublic(),
             updated: tournament.getUpdated()
         };
@@ -47,7 +49,7 @@ export interface JsonTournament {
     id?: number;
     competition: JsonCompetition;
     breakStartDateTime?: string;
-    breakDuration?: number;
+    breakEndDateTime?: string;
     public: boolean;
     roles: JsonRole[];
     sponsors: JsonSponsor[];

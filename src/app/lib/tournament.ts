@@ -18,7 +18,7 @@ export class Tournament {
     protected roles: Role[] = [];
     protected sponsors: Sponsor[] = [];
     protected breakStartDateTime: Date;
-    protected breakDuration: number;
+    protected breakEndDateTime: Date;
     protected public: boolean;
     protected updated: boolean;
 
@@ -76,12 +76,12 @@ export class Tournament {
         this.breakStartDateTime = breakStartDateTime;
     }
 
-    getBreakDuration(): number {
-        return this.breakDuration;
+    getBreakEndDateTime(): Date {
+        return this.breakEndDateTime;
     }
 
-    setBreakDuration(breakDuration: number): void {
-        this.breakDuration = breakDuration;
+    setBreakEndDateTime(breakEndDateTime: Date): void {
+        this.breakEndDateTime = breakEndDateTime;
     }
 
     getPublic(): boolean {
@@ -105,11 +105,9 @@ export class Tournament {
     }
 
     getBreak(): PlanningPeriod {
-        if (this.getBreakStartDateTime() === undefined) {
+        if (this.getBreakStartDateTime() === undefined || this.getBreakEndDateTime() === undefined) {
             return undefined;
         }
-        const breakEndDateTime = new Date(this.getBreakStartDateTime().getTime());
-        breakEndDateTime.setMinutes(breakEndDateTime.getMinutes() + this.getBreakDuration());
-        return { start: this.getBreakStartDateTime(), end: breakEndDateTime };
+        return { start: this.getBreakStartDateTime(), end: this.getBreakEndDateTime() };
     }
 }
