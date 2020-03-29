@@ -75,14 +75,15 @@
       </div>
     </div>
   </div>
-  <app-tournament-structurequalify *ngIf=" editable" [round]="round" (viewTypeChanged)="viewType = $event"
+  <app-tournament-structurequalify *ngIf="editable" [round]="round" (viewTypeChanged)="viewType = $event"
     (roundNumberChanged)="roundNumberChanged.emit($event)">
   </app-tournament-structurequalify>
 
   <div class="d-flex align-items-stretch text-center">
     <app-tournament-structureround *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed(); first as first"
       class="align-self-stretch flex-wrap mb-2" [round]="qualifyGroup.getChildRound()" [editable]="editable"
-      [first]="first" (roundNumberChanged)="roundNumberChanged.emit($event)"></app-tournament-structureround>
+      [first]="first" (roundNumberChanged)="roundNumberChanged.emit($event)">
+    </app-tournament-structureround>
   </div>
   <div *ngIf="!round.isRoot() && round.getNrOfPlaces() === 2">
     <div class="card round {{cssService.getQualifyRound(round)}}">
@@ -90,5 +91,8 @@
         <span [innerHTML]="nameService.getRoundName(round) | keepHtml"></span>
       </div>
     </div>
+  </div>
+  <div *ngIf="!round.isRoot() && round.getNrOfPlaces() < 2">
+    <ngb-alert [dismissible]="false" type="warning">de ronde heeft geen plaatsen en is dus niet geldig</ngb-alert>
   </div>
 </div>

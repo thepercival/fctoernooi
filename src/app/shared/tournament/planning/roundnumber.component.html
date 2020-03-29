@@ -190,21 +190,21 @@
     <ng-template ngFor let-scoreConfig [ngForOf]="roundNumber.getValidSportScoreConfigs()">
       <ul class="list-group">
         <li *ngIf="scoreConfig.hasNext() && scoreConfig.getNext().getEnabled()" class="list-group-item border-info">
-          <span *ngIf="scoreConfig.getNext().getMaximum() === 0">Behaal zoveel mogelijk
+          <span *ngIf="scoreConfig.getNext().getMaximum() === 0">behaal zoveel mogelijk
             {{translate.getScoreNamePlural(scoreConfig.getNext())}}</span>
-          <span *ngIf="scoreConfig.getNext().getMaximum() > 0">Wie het eerst {{scoreConfig.getNext().getMaximum()}}
+          <span *ngIf="scoreConfig.getNext().getMaximum() > 0">wie het eerst {{scoreConfig.getNext().getMaximum()}}
             {{translate.getScoreNamePlural(scoreConfig.getNext())}} heeft behaald</span>
           <span *ngIf="planningConfig.getEnableTime()"> binnen de tijd</span>
         </li>
         <li *ngIf="scoreConfig.hasNext() && scoreConfig.getNext().getEnabled()" class="list-group-item border-info">
-          <span>Per
+          <span>per
             {{translate.getScoreNameSingular(scoreConfig.getNext())}} moet(en) er
             {{scoreConfig.getMaximum()}} {{translate.getScoreNamePlural(scoreConfig)}} worden behaald</span>
         </li>
         <li *ngIf="!scoreConfig.hasNext() || !scoreConfig.getNext().getEnabled()" class="list-group-item border-info">
-          <span *ngIf="scoreConfig.getMaximum() === 0">Behaal zoveel mogelijk
+          <span *ngIf="scoreConfig.getMaximum() === 0">behaal zoveel mogelijk
             {{translate.getScoreNamePlural(scoreConfig)}}</span>
-          <span *ngIf="scoreConfig.getMaximum() > 0">Wie het eerst {{scoreConfig.getMaximum()}}
+          <span *ngIf="scoreConfig.getMaximum() > 0">wie het eerst {{scoreConfig.getMaximum()}}
             {{translate.getScoreNamePlural(scoreConfig)}} heeft behaald</span>
           <span *ngIf="planningConfig.getEnableTime()"> binnen de tijd</span></li>
       </ul>

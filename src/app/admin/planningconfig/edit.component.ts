@@ -116,11 +116,9 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     changeMinutesPerGameExt(minutesPerGameExt: number) {
         if (minutesPerGameExt === 0 && this.form.controls.extension.value) {
-            console.log('extension => false ');
             this.form.controls.extension.setValue(false);
         }
         if (minutesPerGameExt > 0 && this.form.controls.extension.value === false) {
-            console.log('extension => true ');
             this.form.controls.extension.setValue(true);
         }
     }
@@ -128,13 +126,11 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     changeExtension(extension: boolean) {
         if (extension && this.form.controls.minutesPerGameExt.value === 0) {
             const planningConfigService = new PlanningConfigService();
-            console.log('minutesPerGameExt => default ');
             this.form.controls.minutesPerGameExt.setValue(
                 planningConfigService.getDefaultMinutesPerGameExt()
             );
         }
         if (!extension && this.form.controls.minutesPerGameExt.value > 0) {
-            console.log('minutesPerGameExt => 0 ');
             this.form.controls.minutesPerGameExt.setValue(0);
         }
     }

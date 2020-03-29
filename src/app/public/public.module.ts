@@ -2,49 +2,20 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faProductHunt } from '@fortawesome/free-brands-svg-icons';
-import { faCheckSquare, faSquare } from '@fortawesome/free-regular-svg-icons';
 import {
-  faCheckCircle,
-  faCircle,
-  faCogs,
-  faCopy,
-  faDotCircle,
-  faInfoCircle,
-  faListUl,
-  faMedal,
-  faMinus,
-  faMoneyBillAlt,
-  faFileExcel,
-  faFileExport,
-  faPrint,
-  faQrcode,
-  faRandom,
-  faSort,
-  faSync,
-  faTh,
-  faTimesCircle,
-  faTrashAlt,
-  faCompressAlt,
-  faExpandAlt,
-  faUsers,
-  faUserTag,
   faListOl,
-  faChevronDown,
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   NgbAlertModule,
   NgbButtonsModule,
   NgbCollapseModule,
-  NgbDatepickerModule,
   NgbModalModule,
   NgbPopoverModule,
   NgbTimepickerModule,
   NgbNavModule,
   NgbModalConfig,
 } from '@ng-bootstrap/ng-bootstrap';
-import { ClipboardModule } from 'ngx-clipboard';
 import {
   CompetitionMapper,
   CompetitorMapper,
@@ -85,7 +56,6 @@ import { LiveboardPoulesComponent } from './liveboard/poules.liveboard.component
 import { LiveboardSponsorsComponent } from './liveboard/sponsors.liveboard.component';
 import { PreNewComponent } from './prenew/prenew.component';
 import { StructureViewComponent } from './structure/view.component';
-import { TitleComponent } from '../shared/tournament/title/title.component';
 import { RoutingModule } from './public-routing.module';
 import { PlanningComponent } from './planning/view.component';
 import { StructureRepository } from '../lib/ngx-sport/structure/repository';
@@ -121,7 +91,7 @@ import { RankingRoundNumberComponent } from './ranking/roundnumber.component';
     ProgressComponent,
     RankingComponent,
     RankingRoundNumberComponent
-  ],/*
+  ], /*
   entryComponents: [PouleRankingModalComponent],*/
   providers: [
     AssociationMapper,
