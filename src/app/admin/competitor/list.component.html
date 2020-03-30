@@ -6,8 +6,9 @@
       <h2>
         <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
       </h2>
-      <button *ngIf="!processing && !hasBegun && atLeastTwoPlaceHaveCompetitor()" type="button" class="btn btn-sm mr-0"
-        [ngClass]="{ 'btn-outline-secondary': !orderMode, 'btn-primary': orderMode }" (click)="orderMode = !orderMode">
+      <button *ngIf="!processing && places && !hasBegun && atLeastTwoPlaceHaveCompetitor()" type="button"
+        class="btn btn-sm mr-0" [ngClass]="{ 'btn-outline-secondary': !orderMode, 'btn-primary': orderMode }"
+        (click)="orderMode = !orderMode">
         <fa-icon [icon]="['fas', 'random']"></fa-icon> volgorde`
       </button>
     </div>
@@ -17,7 +18,7 @@
     <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">
       {{ alert.message }}</ngb-alert>
 
-    <table *ngIf="!processing && !orderMode" class="table">
+    <table *ngIf="!processing && places && !orderMode" class="table">
       <thead>
         <tr>
           <th></th>
@@ -38,7 +39,7 @@
       </tbody>
     </table>
 
-    <table *ngIf="!processing && orderMode" class="table">
+    <table *ngIf="!processing && places && orderMode" class="table">
       <thead>
         <th>plek</th>
         <th>naam</th>

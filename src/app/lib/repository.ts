@@ -16,7 +16,7 @@ export class APIRepository {
 
     getHeaders(): HttpHeaders {
         let headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
-        headers = headers.append('X-Api-Version', '17');
+        headers = headers.append('X-Api-Version', '18');
 
         const token = this.getToken();
         if (token !== undefined) {
@@ -48,6 +48,12 @@ export class APIRepository {
             errortext = 'er kan geen internet verbinding gemaakt worden';
         } else if (response.status === 0) {
             errortext = 'er kan geen verbinding met de data-service gemaakt worden, ververs de pagina';
+        } else if (response.status === 401) {
+            if (response.error && response.error.message === 'Expired token') {
+                errortext = 'de sessie is verlopen, log uit en log daarna opnieuw in';
+            } else {
+                errortext = 'je hebt geen rechten om de aanvraag te doen, waarschijnlijk is je sessie verlopen, log dan opnieuw in';
+            }
         } else if (response.error && response.error.message) {
             errortext = response.error.message;
         }

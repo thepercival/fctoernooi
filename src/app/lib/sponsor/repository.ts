@@ -67,18 +67,9 @@ export class SponsorRepository extends APIRepository {
 
     protected getUploadOptions() {
         return {
-            headers: this.getUploadHeaders(),
+            headers: super.getHeaders().delete('Content-Type'),
             params: new HttpParams()
         };
-    }
-
-    protected getUploadHeaders(): HttpHeaders {
-        let headers = new HttpHeaders({ 'X-Api-Version': '17' });
-        const token = this.getToken();
-        if (token !== undefined) {
-            headers = headers.append('Authorization', 'Bearer ' + token);
-        }
-        return headers;
     }
 }
 

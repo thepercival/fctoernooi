@@ -79,33 +79,24 @@ export class HomeComponent implements OnInit {
       return;
     }
 
-    this.authService.validateToken().subscribe(
-        /* happy path */ res => {
-        const filter = { mine: true };
-        this.tournamentShellRepos.getObjects(filter)
-          .subscribe(
-              /* happy path */ myShells => {
-              this.sortShellsByDateDesc(myShells);
-              while (myShells.length > 0) {
-                if (this.shellsWithRole.length < 3) {
-                  this.shellsWithRole.push(myShells.shift());
-                } else {
-                  this.shellsWithRoleFromFour.push(myShells.shift());
-                }
-              }
-              this.processingWithRole = false;
-            },
-              /* error path */ e => { this.setAlert('danger', e); this.processingWithRole = false; },
-              /* onComplete */() => { this.processingWithRole = false; }
-          );
-      },
-        /* error path */ e => {
-        this.authService.logout();
-        this.setAlert('danger', 'de sessie is verlopen, log opnieuw in');
-        this.processingWithRole = false;
-      },
-        /* onComplete */() => { this.processingWithRole = false; }
-    );
+    const filter = { mine: true };
+    this.tournamentShellRepos.getObjects(filter)
+      .subscribe(
+          /* happy path */ myShells => {
+          this.sortShellsByDateDesc(myShells);
+          while (myShells.length > 0) {
+            if (this.shellsWithRole.length < 3) {
+              this.shellsWithRole.push(myShells.shift());
+            } else {
+              this.shellsWithRoleFromFour.push(myShells.shift());
+            }
+          }
+          this.processingWithRole = false;
+          this.authService.extendToken();
+        },
+          /* error path */ e => { this.setAlert('danger', e); this.processingWithRole = false; },
+          /* onComplete */() => { this.processingWithRole = false; }
+      );
   }
 
   addToPublicShells(pastFuture: number, hoursToAdd: number) {
