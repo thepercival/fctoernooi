@@ -93,6 +93,7 @@
     </div>
   </div>
   <div *ngIf="!round.isRoot() && round.getNrOfPlaces() < 2">
-    <ngb-alert [dismissible]="false" type="warning">de ronde heeft geen plaatsen en is dus niet geldig</ngb-alert>
+    <ngb-alert [dismissible]="false" type="warning">fout: los op door bovenstaande ronde opnieuw aan te maken
+    </ngb-alert>
   </div>
 </div>
