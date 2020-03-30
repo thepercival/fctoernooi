@@ -10,6 +10,7 @@
         <li class="list-group-item border-info text-info">live scorebord</li>
         <li class="list-group-item border-info text-info">export naar pdf en werkblad</li>
       </ul>
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <div class="d-flex justify-content-center">
         <button name="btn-create-tournament" type="button" class="btn btn-primary" [routerLink]="['/public/prenew']">zet
           je
