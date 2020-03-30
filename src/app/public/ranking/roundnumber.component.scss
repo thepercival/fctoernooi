@@ -1,5 +1,3 @@
-@import "~bootstrap/scss/bootstrap";
-
 app-tournament-pouleranking {
     min-width:300px;
     max-width:400px;
@@ -11,19 +9,4 @@ app-tournament-pouleranking {
 
 .card.notopborder {
     border-top-width: 0em;
-}
-
-@include media-breakpoint-up(sm) {
-    app-tournament-pouleranking {       
-        margin: 10px;
-    }
-    .card-roundnumber-ranking-body {
-        padding: 10px;
-    }
-}
-
-@include media-breakpoint-only(xs) {
-    app-tournament-pouleranking {       
-        margin-top: 10px;
-    }
 }

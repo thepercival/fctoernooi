@@ -22,6 +22,21 @@ $enable-responsive-font-sizes: true !default;
   }
 }
 
+@include media-breakpoint-up(sm) {
+    app-tournament-pouleranking {       
+        margin: 10px;
+    }
+    .card-roundnumber-ranking-body {
+        padding: 10px;
+    }
+}
+
+@include media-breakpoint-only(xs) {
+    app-tournament-pouleranking {       
+        margin-top: 10px;
+    }
+}
+
 hr {
   border-top: 1px solid rgba(136, 136, 136, 0.30);
 }
