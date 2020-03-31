@@ -37,6 +37,11 @@ $enable-responsive-font-sizes: true !default;
     }
 }
 
+.favitem {
+    @extend .text-primary;
+    @extend .font-weight-bold;
+}
+
 hr {
   border-top: 1px solid rgba(136, 136, 136, 0.30);
 }

@@ -17,13 +17,13 @@
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
       <div class="text-center">
-        <button *ngIf="!processing && isAdmin()" [routerLink]="['/admin', tournament.getId()]" type="button"
-          class="btn btn-outline-secondary w-100">
+        <button *ngIf="!processing && tournament && isAdmin()" [routerLink]="['/admin', tournament.getId()]"
+          type="button" class="btn btn-outline-secondary w-100">
           naar het beheergedeelte
         </button>
       </div>
-      <div *ngIf="!processing" class="row d-flex justify-content-center">
-        <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/public/planning', tournament.getId()]">
+      <div *ngIf="!processing && tournament" class="row d-flex justify-content-center">
+        <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/public/games', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijden
@@ -34,8 +34,7 @@
             </p>
           </div>
         </div>
-        <div *ngIf="structure.getRootRound().hasBegun()" class="card border-secondary pointer mt-3 mx-2"
-          [routerLink]="['/public/ranking', tournament.getId()]">
+        <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/public/ranking', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> standen

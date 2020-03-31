@@ -7,13 +7,13 @@ import { HomeComponent } from './home/home.component';
 import { LiveboardComponent } from '../public/liveboard/liveboard.component';
 import { PreNewComponent } from './prenew/prenew.component';
 import { StructureViewComponent } from '../public/structure/view.component';
-import { PlanningComponent } from './planning/view.component';
+import { GamesComponent } from './games/view.component';
 import { RankingComponent } from './ranking/view.component';
 
 const routes: Routes = [
   { path: 'prenew', component: PreNewComponent },
   { path: ':id', component: HomeComponent },
-  { path: 'planning/:id', component: PlanningComponent },
+  { path: 'games/:id', component: GamesComponent },
   { path: 'ranking/:id', component: RankingComponent },
   { path: 'structure/:id', component: StructureViewComponent },
   { path: 'filter/:id', component: FilterComponent },

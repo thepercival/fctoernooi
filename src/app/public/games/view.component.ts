@@ -11,11 +11,11 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { LiveboardLink } from '../../lib/liveboard/link';
 
 @Component({
-    selector: 'app-tournament-planning',
+    selector: 'app-tournament-games-view',
     templateUrl: './view.component.html',
     styleUrls: ['./view.component.scss']
 })
-export class PlanningComponent extends TournamentComponent implements OnInit, OnDestroy {
+export class GamesComponent extends TournamentComponent implements OnInit, OnDestroy {
     private liveboardLinkSet = false;
     userRefereeId: number;
     refreshingData = false;

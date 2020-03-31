@@ -3,10 +3,12 @@
     <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
       <app-tournament-title [tournament]="tournament">
       </app-tournament-title>
+      <!-- <h2>
+        <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijden
+      </h2> -->
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
-
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <ngb-alert *ngIf="oldStructure && isAdmin()" type="info" [dismissible]="false">Ga naar de
         beheer-pagina om te vragen om de opzet handmatig om te zetten.

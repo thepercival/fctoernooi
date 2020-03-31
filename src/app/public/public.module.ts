@@ -57,7 +57,7 @@ import { LiveboardSponsorsComponent } from './liveboard/sponsors.liveboard.compo
 import { PreNewComponent } from './prenew/prenew.component';
 import { StructureViewComponent } from './structure/view.component';
 import { RoutingModule } from './public-routing.module';
-import { PlanningComponent } from './planning/view.component';
+import { GamesComponent } from './games/view.component';
 import { StructureRepository } from '../lib/ngx-sport/structure/repository';
 import { TournamentRepository } from '../lib/tournament/repository';
 import { TournamentModule } from '../shared/tournament/tournament.module';
@@ -82,7 +82,7 @@ import { RankingRoundNumberComponent } from './ranking/roundnumber.component';
     PreNewComponent,
     HomeComponent,
     StructureViewComponent,
-    PlanningComponent,
+    GamesComponent,
     LiveboardComponent,
     LiveboardPoulesComponent,
     LiveboardSponsorsComponent,
@@ -133,9 +133,9 @@ export class PublicModule {
   constructor(library: FaIconLibrary, modalConfig: NgbModalConfig, ) {
     library.addIcons(
       faListOl, faChevronRight
-      /*faMoneyBillAlt, faTrashAlt, faCircle, faCheckCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
+      /*faMoneyBillAlt, faTrashAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
       faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom, faSquare, faCheckSquare,
-      faUserTag, faInfoCircle, faMedal, faUsers, faQrcode, faCopy, faDotCircle, faSync*/
+      faInfoCircle, faMedal, faUsers, faQrcode, faCopy, faDotCircle, faSync*/
     );
     /*library.addIcons(
       faProductHunt

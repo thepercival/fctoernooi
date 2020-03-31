@@ -5,32 +5,42 @@ import { Favorites } from '../favorites';
 
 @Injectable()
 export class FavoritesRepository {
-    private items: Favorites[];
 
     constructor() { }
 
     getItem(tournament: Tournament): Favorites {
-        if (this.items === undefined) {
-            this.items = this.getFromLocalStorage();
-        }
-        let item = this.items.find(item => item.getTournamentId() === tournament.getId());
+        const item = this.findItem(this.getFromLocalStorage(), tournament);
         if (item !== undefined) {
             return item;
         }
-        item = new Favorites(tournament.getId());
-        this.items.push(item);
-        return item;
+        return new Favorites(tournament.getId());
     }
 
-    itemExists(tournament: Tournament): boolean {
-        return this.getItem(tournament) !== undefined;
+    saveItem(tournament: Tournament, newItem: Favorites) {
+        const items = this.getFromLocalStorage();
+        // remove old item
+        {
+            const oldItem = this.findItem(items, tournament);
+            if (oldItem !== undefined) {
+                const idx = items.indexOf(oldItem);
+                if (idx >= 0) {
+                    items.splice(idx);
+                }
+            }
+        }
+        items.push(newItem);
+        this.writeToLocalStorage(items);
+    }
+
+    protected findItem(items: Favorites[], tournament: Tournament): Favorites {
+        return items.find(itemIt => itemIt.getTournamentId() === tournament.getId());
     }
 
     /**
      * favorites = [ { id: 12, competitorIds: [1,3,4], refereeIds: [1,5,7] }];
      */
-    writeToLocalStorage() {
-        localStorage.setItem('favorites', JSON.stringify(this.items));
+    protected writeToLocalStorage(items: Favorites[]) {
+        localStorage.setItem('favorites', JSON.stringify(items));
     }
 
     protected getFromLocalStorage(): Favorites[] {

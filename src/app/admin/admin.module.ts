@@ -198,8 +198,7 @@ export class AdminModule {
       /* competitors*/ faSquare, faCheckSquare, faRandom, faSort,
       /* structure*/ faCompressAlt, faExpandAlt, faTh,
       /* delen */ faClipboardCheck
-      /*faCircle, faListUl, faCogs, faMinus,
-      faUserTag, faInfoCircle, faMedal, faUsers, faSync*/
+      /*faCircle, faListUl, faCogs, faMinus, faInfoCircle, faMedal, faUsers, faSync*/
     );
     library.addIcons(
       faProductHunt

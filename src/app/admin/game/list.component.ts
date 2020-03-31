@@ -13,7 +13,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 
 @Component({
-  selector: 'app-tournament-games',
+  selector: 'app-tournament-games-edit',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css']
 })

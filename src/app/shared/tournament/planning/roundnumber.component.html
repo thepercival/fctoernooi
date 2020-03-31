@@ -108,8 +108,7 @@
             <td class="text-center">{{gmData.game.getField()?.getName()}}</td>
             <!-- home -->
 
-            <td class="place text-right "
-              [ngClass]="{'text-primary': favorites.hasGameCompetitor(gmData.game, GameHOME) }">
+            <td class="place text-right " [ngClass]="{'favitem': favorites.hasGameCompetitor(gmData.game, GameHOME) }">
               <span>{{nameService.getPlacesFromName(gmData.game.getPlaces( GameHOME ),true,true)}}</span>
             </td>
             <!-- score -->
@@ -123,19 +122,19 @@
               <button *ngIf="!gmData.hasEditPermissions && hasReferees && !isPlayed(gmData.game)"
                 class="btn btn-outline-info btn-sm d-sm-none" placement="top"
                 [ngbPopover]="nameService.getRefereeName(gmData.game)">
-                <span [ngClass]="{'text-primary': favorites.hasGameReferee(gmData.game) }"><i
+                <span [ngClass]="{'favitem': favorites.hasGameReferee(gmData.game) }"><i
                     class="fi flaticon-referee"></i></span>
               </button>
               <span *ngIf="!gmData.hasEditPermissions && !(hasReferees && !isPlayed(gmData.game))"
                 class="d-sm-none">{{getScore(gmData.game)}}</span>
             </td>
             <!-- away -->
-            <td class="place" [ngClass]="{ 'text-primary': favorites.hasGameCompetitor(gmData.game, GameAWAY) }">
+            <td class="place" [ngClass]="{ 'favitem': favorites.hasGameCompetitor(gmData.game, GameAWAY) }">
               <span>{{nameService.getPlacesFromName(gmData.game.getPlaces( GameAWAY ),true,true)}}</span>
             </td>
             <!-- referee -->
             <td *ngIf="hasReferees" class="d-none d-sm-table-cell text-right"
-              [ngClass]="{'text-primary': favorites.hasGameReferee(gmData.game) }">
+              [ngClass]="{'favitem': favorites.hasGameReferee(gmData.game) }">
               {{nameService.getRefereeName(gmData.game)}}</td>
           </tr>
         </ng-template>
