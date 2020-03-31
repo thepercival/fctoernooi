@@ -52,7 +52,7 @@ export class MyNavigation {
         }
     }
 
-    public scrollTo(id: string) {
-        this.viewportScroller.scrollToAnchor(id);
+    public updateScrollPosition() {
+        this.scrollPosition = this.viewportScroller.getScrollPosition();
     }
 }

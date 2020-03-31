@@ -38,7 +38,7 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
   @Input() canEditSettings: boolean;
   @Input() refreshingData: boolean;
   @Output() refreshData = new EventEmitter();
-  @Output() scroll = new EventEmitter<boolean>(); // kan misschien uit
+  @Output() scroll = new EventEmitter();
   alert: any;
   sameDay = true;
   tournamentBreak: PlanningPeriod;
@@ -75,14 +75,14 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
     this.hasReferees = this.tournament.getCompetition().getReferees().length > 0 || this.planningConfig.getSelfReferee();
     const sportConfig = this.roundNumber.getCompetition().getFirstSportConfig();
     if (sportConfig) {
-      this.useSubScoreRound = this.roundNumber.getSportScoreConfig(sportConfig.getSport()).useSubScore();
+      this.useSubScoreRound = this.roundNumber.getValidSportScoreConfig(sportConfig.getSport()).useSubScore();
     }
     this.reloadGameData();
   }
 
   ngAfterViewInit() {
     if (this.roundNumber.getNext() === undefined) {
-      this.scroll.emit(true);
+      this.scroll.emit();
     }
   }
 

@@ -55,9 +55,8 @@ export class GamesComponent extends TournamentComponent implements OnInit, OnDes
 
     refreshData() {
         this.refreshingData = true;
-        // set processing is true
         this.setData(this.tournament.getId(), () => {
-            // set processing is false
+            this.myNavigation.updateScrollPosition();
             this.refreshingData = false;
         });
     }
