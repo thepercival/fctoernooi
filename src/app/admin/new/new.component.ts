@@ -13,11 +13,9 @@ import {
   SportConfigService,
   SportScoreConfigService,
   Structure,
-  StructureMapper,
   StructureService,
 } from 'ngx-sport';
 
-import { AuthService } from '../../lib/auth/auth.service';
 import { IAlert } from '../../shared/common/alert';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -49,11 +47,9 @@ export class NewComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authService: AuthService,
     private tournamentRepository: TournamentRepository,
     private structureRepository: StructureRepository,
     private planningRepository: PlanningRepository,
-    private structureMapper: StructureMapper,
     fb: FormBuilder
   ) {
     const date = new Date();
@@ -96,8 +92,10 @@ export class NewComponent implements OnInit {
   }
 
   onGetSport(sport: Sport) {
-    this.form.controls.sportname.setValue(sport.getName());
-    this.sport = sport;
+    if (sport !== undefined) {
+      this.form.controls.sportname.setValue(sport.getName());
+      this.sport = sport;
+    }
     this.chooseSport = false;
   }
 
@@ -184,10 +182,6 @@ export class NewComponent implements OnInit {
   getFieldsDescription(): string {
     const translate = new TranslateService();
     return translate.getFieldNamePlural(this.sport);
-  }
-
-  isLoggedIn() {
-    return this.authService.isLoggedIn();
   }
 
   equals(one: NgbDateStruct, two: NgbDateStruct) {

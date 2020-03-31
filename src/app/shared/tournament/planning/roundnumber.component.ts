@@ -49,6 +49,7 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
   private sportScoreConfigService: SportScoreConfigService;
   roundNumberNeedsRanking: boolean;
   planningConfig: PlanningConfig;
+  private useSubScoreRound: boolean;
   translate = new TranslateService();
 
   constructor(
@@ -72,6 +73,10 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
     this.favorites = this.favRepository.getItem(this.tournament);
     this.roundNumberNeedsRanking = this.roundNumber.needsRanking();
     this.hasReferees = this.tournament.getCompetition().getReferees().length > 0 || this.planningConfig.getSelfReferee();
+    const sportConfig = this.roundNumber.getCompetition().getFirstSportConfig();
+    if (sportConfig) {
+      this.useSubScoreRound = this.roundNumber.getSportScoreConfig(sportConfig.getSport()).useSubScore();
+    }
     this.reloadGameData();
   }
 
@@ -149,7 +154,8 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
     if (game.getState() !== State.Finished) {
       return sScore;
     }
-    const finalScore = this.sportScoreConfigService.getFinal(game);
+    const useSubScore = this.useSubScoreRound ? this.useSubScoreRound : game.getSportScoreConfig().useSubScore();
+    const finalScore = this.sportScoreConfigService.getFinalScore(game, useSubScore);
     if (finalScore === undefined) {
       return sScore;
     }

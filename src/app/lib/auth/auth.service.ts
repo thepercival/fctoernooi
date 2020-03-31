@@ -80,7 +80,7 @@ export class AuthService extends APIRepository {
 
   passwordChange(emailaddress: string, password: string, code: string): Observable<boolean> {
     const json = { emailaddress: emailaddress, password: password, code: code };
-    return this.http.post(this.getPublicUrl() + '/passwordchange', json).pipe(
+    return this.http.post(this.getPublicUrl() + '/passwordchange', json, this.getOptions()).pipe(
       map((authItem: JsonAuthItem) => this.setAuthItem(authItem)),
       catchError((err) => this.handleError(err))
     );

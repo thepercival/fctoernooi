@@ -49,7 +49,8 @@ export class LiveboardGamesComponent {
         if (game.getState() !== State.Finished) {
             return sScore;
         }
-        const finalScore = this.sportScoreConfigService.getFinal(game);
+        const useSubScore = game.getSportScoreConfig().useSubScore();
+        const finalScore = this.sportScoreConfigService.getFinalScore(game, useSubScore);
         if (finalScore === undefined) {
             return sScore;
         }

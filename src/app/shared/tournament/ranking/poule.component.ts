@@ -34,9 +34,9 @@ export class PouleRankingComponent implements OnInit {
     this.processing = false;
   }
 
-  hasMultipleScoreConfigs() {
+  useSubScore() {
     return this.poule.getRound().getNumber().getSportScoreConfigs().some(sportScoreConfig => {
-      return (sportScoreConfig !== sportScoreConfig.getCalculate());
+      return sportScoreConfig.useSubScore();
     });
   }
 }

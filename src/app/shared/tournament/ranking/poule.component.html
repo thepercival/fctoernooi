@@ -44,7 +44,7 @@
                                 </div>
                                 <div *ngIf="showDifferenceDetail">( {{rankingItem.getUnranked().getScored()}} -
                                     {{rankingItem.getUnranked().getReceived()}} )</div>
-                                <div *ngIf="showDifferenceDetail && hasMultipleScoreConfigs()">(
+                                <div *ngIf="showDifferenceDetail && useSubScore()">(
                                     {{rankingItem.getUnranked().getSubScored()}} -
                                     {{rankingItem.getUnranked().getSubReceived()}} )</div>
                             </td>

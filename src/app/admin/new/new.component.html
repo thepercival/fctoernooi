@@ -16,19 +16,6 @@
           </button>
         </h1>
       </div>
-      <div *ngIf="!isLoggedIn()">
-        <blockquote class="blockquote my-5">
-          <p>Registreer je of log in om een toernooi aan te maken.</p>
-        </blockquote>
-        <div class="d-flex justify-content-around">
-          <button type="button" class="btn btn-outline-primary" [routerLink]="['/user/register']">
-            <fa-icon [icon]="['fas', 'user-circle']"></fa-icon> registreer
-          </button>
-          <button type="button" class="btn btn-outline-primary" [routerLink]="['/user/login']">
-            <fa-icon [icon]="['fas', 'sign-in-alt']"></fa-icon> inloggen
-          </button>
-        </div>
-      </div>
 
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">
         {{ alert.message }}</ngb-alert>
@@ -37,8 +24,7 @@
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
 
-      <form *ngIf="!processing && isLoggedIn()" id="newForm" name="form" (ngSubmit)="create()" [formGroup]="form"
-        novalidate>
+      <form *ngIf="!processing" id="newForm" name="form" (ngSubmit)="create()" [formGroup]="form" novalidate>
         <div class="form-group row">
           <label for="name" class="col-4 col-form-label">naam</label>
           <div class="col-8">

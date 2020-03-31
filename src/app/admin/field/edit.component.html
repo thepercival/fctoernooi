@@ -8,7 +8,7 @@
       <app-tournament-title [tournament]="tournament">
       </app-tournament-title>
       <div>
-        <h2>
+        <h2 *ngIf="!processing && competition">
           <i class=" fi flaticon-soccer-field"></i> {{getFieldDescription()}}
         </h2>
         <h2 *ngIf="processing" class="text-center">
