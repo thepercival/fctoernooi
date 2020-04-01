@@ -154,8 +154,7 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
     if (game.getState() !== State.Finished) {
       return sScore;
     }
-    const useSubScore = this.useSubScoreRound ? this.useSubScoreRound : game.getSportScoreConfig().useSubScore();
-    const finalScore = this.sportScoreConfigService.getFinalScore(game, useSubScore);
+    const finalScore = this.sportScoreConfigService.getFinalScore(game);
     if (finalScore === undefined) {
       return sScore;
     }
