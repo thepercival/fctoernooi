@@ -25,10 +25,10 @@
             <span *ngIf="round.isRoot()">: {{round.getNrOfPlacesChildren(winnersOrLosers)}}</span>
         </button>
         <div class="btn-group" role="group" aria-label="aantal">
-            <button type="button" class="btn btn-outline-secondary" (click)="removeQualifier(winnersOrLosers)">
+            <button type="button" class="btn btn-outline-primary" (click)="removeQualifier(winnersOrLosers)">
                 <fa-icon [icon]="['fas', 'minus']"></fa-icon>
             </button>
-            <button type="button" class="btn btn-outline-secondary" (click)="addQualifier(winnersOrLosers)">
+            <button type="button" class="btn btn-outline-primary" (click)="addQualifier(winnersOrLosers)">
                 <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button>
         </div>
@@ -37,13 +37,13 @@
     <!-- start horizontal-->
     <div *ngIf="round.getNrOfPlaces() >= 4 && round.isRoot()" class="d-none d-sm-inline-flex btn-group" role="group"
         aria-label="aantal">
-        <button type="button" class="btn btn-outline-secondary" (click)="removeQualifier(winnersOrLosers)">
+        <button type="button" class="btn btn-outline-primary" (click)="removeQualifier(winnersOrLosers)">
             <fa-icon [icon]="['fas', 'minus']"></fa-icon>
         </button>
         <button type="button" disabled
             class="btn btn-outline-secondary">{{nameService.getWinnersLosersDescription(winnersOrLosers,true)}}:
             {{round.getNrOfPlacesChildren(winnersOrLosers)}}</button>
-        <button type="button" class="btn btn-outline-secondary" (click)="addQualifier(winnersOrLosers)">
+        <button type="button" class="btn btn-outline-primary" (click)="addQualifier(winnersOrLosers)">
             <fa-icon [icon]="['fas', 'plus']"></fa-icon>
         </button>
     </div>

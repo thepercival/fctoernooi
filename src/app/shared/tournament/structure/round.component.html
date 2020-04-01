@@ -43,7 +43,7 @@
                   <li *ngIf="isQualifyGroupSplittable(editHorPoule)"
                     class="list-group-item btn-outline-secondary px-2 py-1 place-list-item pointer btn-action-list-item"
                     (click)="splitQualifyGroup(editHorPoule)">
-                    <button type="button" class="btn btn-outline-secondary btn-block">
+                    <button type="button" class="btn btn-outline-primary btn-block">
                       <fa-icon class="rotate-45" [icon]="['fas', 'expand-alt']"></fa-icon><span
                         *ngIf="round.getNumber().getRounds().length <= 2">
                         splitsen</span>
@@ -52,7 +52,7 @@
                   <li *ngIf="areQualifyGroupsMergable(editHorPoule)"
                     class="list-group-item btn-outline-secondary px-2 py-1 place-list-item pointer btn-action-list-item"
                     (click)="mergeQualifyGroups(editHorPoule)">
-                    <button type="button" class="btn btn-outline-secondary btn-block">
+                    <button type="button" class="btn btn-outline-primary btn-block">
                       <fa-icon class="rotate-45" [icon]="['fas', 'compress-alt']"></fa-icon><span
                         *ngIf="round.getNumber().getRounds().length <= 2">
                         samenvoegen</span>
