@@ -19,7 +19,7 @@ import { LockerRoomsComponent } from './lockerrooms/lockerrooms.component';
 import { LockerRoomComponent } from './lockerrooms/lockerroom.component';
 import { NameModalComponent } from './namemodal/namemodal.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CompetitorChooseModalComponent } from './competitorchoosemodal/competitorchoosemodal';
+import { CompetitorChooseModalComponent } from './competitorchoosemodal/competitorchoosemodal.component';
 import { RouterModule } from '@angular/router';
 
 

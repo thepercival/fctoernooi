@@ -48,6 +48,10 @@ export class LockerRoom {
         return this.competitors;
     }
 
+    hasCompetitor(competitor: Competitor): boolean {
+        return this.getCompetitors().indexOf(competitor) >= 0;
+    }
+
     setUrl(competitors: Competitor[]): void {
         this.competitors = competitors;
     }

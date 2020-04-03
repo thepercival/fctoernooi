@@ -9,17 +9,25 @@ import { NameService, Competitor, Place, Round } from 'ngx-sport';
 })
 export class CompetitorChooseModalComponent {
     @Input() rootRound: Round;
-    @Input() filter: Competitor[];
-    @Output() competitor = new EventEmitter<Competitor>();
-    places: Place[];
+    @Input() selectedCompetitors: Competitor[];
+
     constructor(public nameService: NameService, public activeModal: NgbActiveModal) {
     }
 
-    //     toon alle deelnemers en filter worden diegene die geselecteerd zijn
-    //     er moet een deelnemers-toevoegen - knop komen
-    // bij opslaan een lijst van deelnemers teruggeven
-
     selectable(place: Place): boolean {
-        return place.getCompetitor() && !(this.filter && this.filter.find(filterIt => filterIt === place.getCompetitor()));
+        return place.getCompetitor() !== undefined;
+    }
+
+    competitorSelected(competitor: Competitor): boolean {
+        return this.selectedCompetitors.indexOf(competitor) >= 0;
+    }
+
+    toggle(competitor: Competitor) {
+        const idx = this.selectedCompetitors.indexOf(competitor);
+        if (idx >= 0) {
+            this.selectedCompetitors.splice(idx, 1);
+        } else {
+            this.selectedCompetitors.push(competitor);
+        }
     }
 }

@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h4 class="modal-title"><span>Kies een deelnemer</span></h4>
+    <h4 class="modal-title"><span>selecteer deelnemers</span></h4>
     <button type="button" class="close" aria-label="sluiten" (click)="activeModal.dismiss('close')">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -8,20 +8,35 @@
     <ngb-alert *ngIf="rootRound.getPlaces().length === 0" type="danger" [dismissible]="false">er zijn geen deelnemers
         meer die je kunt
         kiezen</ngb-alert>
-    <ul *ngIf="rootRound.getPlaces().length > 0" class="list-group">
-        <ng-template ngFor let-place [ngForOf]="rootRound.getPlaces()">
-            <li *ngIf="!selectable(place)" class="list-group-item">
-                <span class="ml-2">{{nameService.getPlaceName(place)}}</span>
-            </li>
-            <li *ngIf="selectable(place)" class="list-group-item pointer"
-                (click)="competitor.emit(place.getCompetitor())">
-                <span class="ml-2">{{nameService.getPlaceName(place)}}</span>
-                <span class="ml-2">{{place.getCompetitor().getName()}}</span>
-            </li>
-        </ng-template>
-    </ul>
+
+    <table *ngIf="rootRound.getPlaces().length > 0" class="table">
+        <thead>
+            <tr>
+                <th>plek</th>
+                <th>naam</th>
+                <th colspan=2></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let place of rootRound.getPlaces()">
+                <td>
+                    <span>{{nameService.getPlaceFromName(place, false)}}</span>
+                </td>
+                <td class="place">
+                    <span *ngIf="place.getCompetitor()">{{place.getCompetitor().getName()}}</span>
+                </td>
+                <td class="text-right">
+                    <fa-icon *ngIf="selectable(place)" class="text-primary pointer"
+                        (click)="toggle(place.getCompetitor())"
+                        [icon]="['far', (competitorSelected(place.getCompetitor()) ? 'check-' : '') + 'square']"
+                        size="2x">
+                    </fa-icon>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 <div class="modal-footer align-items-end">
     <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
-        (click)="activeModal.dismiss('close')">sluiten</button>
+        (click)="activeModal.dismiss(selectedCompetitors)">sluiten</button>
 </div>

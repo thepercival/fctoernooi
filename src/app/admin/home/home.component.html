@@ -115,11 +115,10 @@
                 nog geen indeling
               </span>
               <span *ngIf="lockerRoomsArranged === false">
-                <fa-icon [icon]="['fas', 'times-circle']" class="text-warning"></fa-icon> nog niet alle deelnemers
-                ingedeeld
+                <fa-icon [icon]="['fas', 'times-circle']" class="text-warning"></fa-icon> indeling niet compleet
               </span>
               <span *ngIf="lockerRoomsArranged === true">
-                <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> alle deelnemers ingedeeld
+                <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> deelnemers ingedeeld
               </span>
             </p>
           </div>

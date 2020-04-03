@@ -80,14 +80,21 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     initLockerRoomsArranged() {
-        let nrOfArrangedCompetitors = 0;
-        this.tournament.getLockerRooms().forEach(lockerRoom => {
-            nrOfArrangedCompetitors += lockerRoom.getCompetitors().length;
+        const hasArrangedCompetitors = this.tournament.getLockerRooms().some(lockerRoom => {
+            return lockerRoom.getCompetitors().length > 0;
         });
-        if (nrOfArrangedCompetitors > 0) {
-            const nrOfCompetitors = this.structure.getRootRound().getNrOfCompetitors();
-            this.lockerRoomsArranged = nrOfArrangedCompetitors === nrOfCompetitors;
+
+        if (hasArrangedCompetitors) {
+            this.lockerRoomsArranged = this.allArranged();
         }
+    }
+
+    protected allArranged(): boolean {
+        return this.structure.getRootRound().getCompetitors().every(competitor => {
+            return this.tournament.getLockerRooms().some(lockerRoom => {
+                return lockerRoom.hasCompetitor(competitor);
+            });
+        });
     }
 
     competitorsComplete(): boolean {
