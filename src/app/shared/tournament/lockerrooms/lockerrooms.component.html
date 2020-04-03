@@ -1,0 +1,47 @@
+<div class="row justify-content-center no-gutters">
+  <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+    <app-tournament-title [tournament]="tournament" [admin]="true">
+    </app-tournament-title>
+    <div *ngIf="!processing" class="d-flex justify-content-between mb-3">
+      <h2 class="mr-auto">
+        <fa-icon [icon]="['fas', 'door-closed']"></fa-icon> kleedkamers
+      </h2>
+      <button *ngIf="!processing && isAdmin() && hasCompetitors" role="button" (click)="save()" class="btn btn-primary">
+        <fa-icon [icon]="['fas', 'save']"></fa-icon>
+        <span> opslaan</span>
+      </button>
+    </div>
+    <div *ngIf="processing">
+      <h2 class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
+    </div>
+    <ngb-alert *ngIf="!processing && tournament && !hasCompetitors" type="info" [dismissible]="false">er zijn nog geen
+      deelnemers
+      ingevuld, ga naar
+      <button role="button" class="btn btn-secondary" [routerLink]="['/admin/competitors', tournament.getId()]">
+        <span>
+          <fa-icon [icon]="['fas', 'users']"></fa-icon>deelnemers invullen
+        </span>
+      </button></ngb-alert>
+    <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+    <div *ngIf="hasCompetitors" class="d-flex flex-wrap justify-content-center">
+      <app-tournament-lockerroom *ngFor="let lockerRoom of lockerRooms" [lockerRoom]="lockerRoom"
+        [rootRound]="structure.getRootRound()" editable="isAdmin()" class="m-2" (remove)="remove($event)">
+      </app-tournament-lockerroom>
+    </div>
+    <div *ngIf="!processing && isAdmin() && hasCompetitors" class="d-flex justify-content-center mt-3">
+      <button role="button" (click)="add()" class="btn btn-add btn-outline-primary">
+        <span>kleedkamer toevoegen </span>
+        <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
+      </button>
+    </div>
+
+    <div class="d-flex justify-content-end mt-3">
+      <button *ngIf="!processing && isAdmin() && hasCompetitors" role="button" (click)="save()" class="btn btn-primary">
+        <fa-icon [icon]="['fas', 'save']"></fa-icon>
+        <span> opslaan</span>
+      </button>
+    </div>
+  </div>
+</div>

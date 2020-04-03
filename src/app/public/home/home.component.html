@@ -56,8 +56,8 @@
             </p>
           </div>
         </div>
-        <!--
-        <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/public/lockers', tournament.getId()]">
+        <div *ngIf="tournament.areLockerRoomsArranged()" class="card border-secondary pointer mt-3 mx-2"
+          [routerLink]="['/public/lockerrooms', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'door-closed']"></fa-icon> kleedkamers
@@ -67,7 +67,6 @@
             </p>
           </div>
         </div>
-        -->
       </div>
     </div>
   </div>

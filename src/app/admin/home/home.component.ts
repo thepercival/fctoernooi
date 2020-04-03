@@ -12,6 +12,7 @@ import { TournamentExportConfig, TournamentRepository } from '../../lib/tourname
 import { TournamentComponent } from '../../shared/tournament/component';
 import { TranslateService } from '../../lib/translate';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
+import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
 
 @Component({
     selector: 'app-tournament-admin',
@@ -19,7 +20,6 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
     styleUrls: ['./home.component.css']
 })
 export class HomeComponent extends TournamentComponent implements OnInit {
-    nameForm: FormGroup;
     copyForm: FormGroup;
     exportForm: FormGroup;
     shareForm: FormGroup;
@@ -27,6 +27,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     translate: TranslateService;
     allHavePlannings: boolean;
     oldStructureRequested: boolean;
+    lockerRoomsArranged: boolean;
 
     constructor(
         route: ActivatedRoute,
@@ -43,13 +44,6 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         this.translate = new TranslateService();
         const date = new Date();
         this.minDateStruct = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
-        this.nameForm = fb.group({
-            name: ['', Validators.compose([
-                Validators.required,
-                Validators.minLength(League.MIN_LENGTH_NAME),
-                Validators.maxLength(League.MAX_LENGTH_NAME)
-            ])]
-        });
         this.copyForm = fb.group({
             date: ['', Validators.compose([
             ])]
@@ -78,11 +72,22 @@ export class HomeComponent extends TournamentComponent implements OnInit {
 
     postNgOnInit() {
         const date = new Date();
-        this.nameForm.controls.name.setValue(this.competition.getLeague().getName());
         this.copyForm.controls.date.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
         this.shareForm.controls.url.setValue(location.origin + '/' + this.tournament.getId());
         this.shareForm.controls.public.setValue(this.tournament.getPublic());
+        this.initLockerRoomsArranged();
         this.processing = false;
+    }
+
+    initLockerRoomsArranged() {
+        let nrOfArrangedCompetitors = 0;
+        this.tournament.getLockerRooms().forEach(lockerRoom => {
+            nrOfArrangedCompetitors += lockerRoom.getCompetitors().length;
+        });
+        if (nrOfArrangedCompetitors > 0) {
+            const nrOfCompetitors = this.structure.getRootRound().getNrOfCompetitors();
+            this.lockerRoomsArranged = nrOfArrangedCompetitors === nrOfCompetitors;
+        }
     }
 
     competitorsComplete(): boolean {
@@ -220,12 +225,14 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         });
     }
 
-    openModalName(modalContent) {
-        const activeModal = this.modalService.open(modalContent);
+    openModalName() {
+        const activeModal = this.modalService.open(NameModalComponent);
+        activeModal.componentInstance.header = 'toernooinaam';
+        activeModal.componentInstance.range = { min: League.MIN_LENGTH_NAME, max: League.MAX_LENGTH_NAME };
+        activeModal.componentInstance.name = this.competition.getLeague().getName();
+
         activeModal.result.then((result) => {
-            if (result === 'save') {
-                this.saveName();
-            }
+            this.saveName(result);
         }, (reason) => {
         });
     }
@@ -329,11 +336,11 @@ export class HomeComponent extends TournamentComponent implements OnInit {
             );
     }
 
-    saveName() {
+    saveName(newName: string) {
         this.setAlert('info', 'de naam wordt opgeslagen');
 
         this.processing = true;
-        this.competition.getLeague().setName(this.nameForm.controls.name.value);
+        this.competition.getLeague().setName(newName);
         this.tournamentRepository.editObject(this.tournament)
             .subscribe(
                 /* happy path */(tournamentRes: Tournament) => {

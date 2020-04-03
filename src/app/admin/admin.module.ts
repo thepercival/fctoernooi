@@ -106,6 +106,8 @@ import { SponsorMapper } from '../lib/sponsor/mapper';
 import { SponsorRepository } from '../lib/sponsor/repository';
 import { TournamentModule } from '../shared/tournament/tournament.module';
 import { ModalRoundNumbersComponent } from './roundnumber/selector.component';
+import { LockerRoomsComponent } from '../shared/tournament/lockerrooms/lockerrooms.component';
+import { LockerRoomMapper } from '../lib/lockerroom/mapper';
 
 @NgModule({
   imports: [
@@ -140,7 +142,7 @@ import { ModalRoundNumbersComponent } from './roundnumber/selector.component';
     SponsorEditComponent,
     StartBreakComponent,
     CompetitorListRemoveModalComponent,
-    ModalRoundNumbersComponent
+    ModalRoundNumbersComponent,
   ],
   entryComponents: [CompetitorListRemoveModalComponent, ModalRoundNumbersComponent],
   providers: [
@@ -156,6 +158,7 @@ import { ModalRoundNumbersComponent } from './roundnumber/selector.component';
     GamePlaceMapper,
     GameScoreMapper,
     LeagueMapper,
+    LockerRoomMapper,
     NameService,
     NgbModalConfig,
     PlaceMapper,

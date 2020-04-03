@@ -24,7 +24,7 @@ export class FavoritesRepository {
             if (oldItem !== undefined) {
                 const idx = items.indexOf(oldItem);
                 if (idx >= 0) {
-                    items.splice(idx);
+                    items.splice(idx, 1);
                 }
             }
         }

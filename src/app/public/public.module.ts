@@ -66,6 +66,7 @@ import { SponsorMapper } from '../lib/sponsor/mapper';
 import { RankingComponent } from './ranking/view.component';
 import { PlanningRepository } from '../lib/ngx-sport/planning/repository';
 import { RankingRoundNumberComponent } from './ranking/roundnumber.component';
+import { LockerRoomMapper } from '../lib/lockerroom/mapper';
 
 @NgModule({
   imports: [
@@ -103,6 +104,7 @@ import { RankingRoundNumberComponent } from './ranking/roundnumber.component';
     GamePlaceMapper,
     GameScoreMapper,
     LeagueMapper,
+    LockerRoomMapper,
     NameService,
     NgbModalConfig,
     PlaceMapper,

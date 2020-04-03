@@ -1,0 +1,27 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{header}}</h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="activeModal.dismiss('close')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="container-fluid">
+        <form name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
+            <div class="form-group row">
+                <div class="col-3 col-sm-4 col-md-5">
+                    <label for="name" class="col-form-label">naam</label>
+                </div>
+                <div class="col-9 col-sm-8 col-md-7">
+                    <input class="form-control"
+                        [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }"
+                        type="text" name="name" id="name" formControlName="name" ngbAutofocus
+                        placeholder="max {{range.max}} karakters">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal-footer align-items-end">
+    <button type="submit" [disabled]="form.invalid" class="btn btn-primary" data-dismiss="modal"
+        (click)="activeModal.close(form.controls.name.value)">opslaan</button>
+</div>

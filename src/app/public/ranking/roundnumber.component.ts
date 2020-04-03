@@ -18,7 +18,6 @@ import { Tournament } from '../../lib/tournament';
 export class RankingRoundNumberComponent implements OnInit {
     @Input() tournament: Tournament;
     @Input() roundNumber: RoundNumber;
-    @Input() notopborder: boolean;
     show: boolean;
 
     constructor(

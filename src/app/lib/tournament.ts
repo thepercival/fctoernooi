@@ -2,6 +2,7 @@ import { Competition, PlanningPeriod, StructureOptions } from 'ngx-sport';
 
 import { Role } from './role';
 import { Sponsor } from './sponsor';
+import { LockerRoom } from './lockerroom';
 
 /**
  * Created by coen on 9-10-17.
@@ -17,6 +18,7 @@ export class Tournament {
     protected competition: Competition;
     protected roles: Role[] = [];
     protected sponsors: Sponsor[] = [];
+    protected lockerRooms: LockerRoom[] = [];
     protected breakStartDateTime: Date;
     protected breakEndDateTime: Date;
     protected public: boolean;
@@ -64,8 +66,14 @@ export class Tournament {
         return this.sponsors;
     }
 
-    setSponsors(sponsors: Sponsor[]): void {
-        this.sponsors = sponsors;
+    getLockerRooms(): LockerRoom[] {
+        return this.lockerRooms;
+    }
+
+    areLockerRoomsArranged(): boolean {
+        return this.lockerRooms.length > 0 && this.lockerRooms.some(lockerRoom => {
+            return lockerRoom.getCompetitors().length > 0;
+        });
     }
 
     getBreakStartDateTime(): Date {

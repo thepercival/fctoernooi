@@ -8,6 +8,8 @@ import { JsonRole, RoleMapper } from '../role/mapper';
 import { Tournament } from '../tournament';
 import { JsonTournament, TournamentMapper } from './mapper';
 import { APIRepository } from '../repository';
+import { JsonLockerRoom, LockerRoomMapper } from '../lockerroom/mapper';
+import { LockerRoom } from '../lockerroom';
 
 /**
  * Created by coen on 1-10-17.
@@ -20,7 +22,8 @@ export class TournamentRepository extends APIRepository {
     constructor(
         private http: HttpClient,
         private mapper: TournamentMapper,
-        private roleMapper: RoleMapper) {
+        private roleMapper: RoleMapper,
+        private lockerRoomMapper: LockerRoomMapper) {
         super();
         this.url = super.getApiUrl() + this.getUrlpostfix();
     }
@@ -85,16 +88,24 @@ export class TournamentRepository extends APIRepository {
         );
     }
 
-    protected getOptions(): { headers: HttpHeaders; params: HttpParams } {
-        return {
-            headers: super.getHeaders(),
-            params: new HttpParams()
-        };
+    syncLockerRooms(tournament: Tournament): Observable<LockerRoom[]> {
+        const url = this.getUrl(tournament) + '/lockerrooms';
+
+        const json = tournament.getLockerRooms().map(lockerRoom => this.lockerRoomMapper.toJson(lockerRoom));
+        return this.http.post(url, json, this.getOptions()).pipe(
+            map((jsonLockerRooms: JsonLockerRoom[]) => {
+                const lockerRooms = tournament.getLockerRooms();
+                lockerRooms.splice(0, lockerRooms.length);
+                jsonLockerRooms.map(jsonLockerRoom => this.lockerRoomMapper.toObject(jsonLockerRoom, tournament));
+                return lockerRooms;
+            }),
+            catchError((err) => this.handleError(err))
+        );
     }
 
     syncRefereeRoles(tournament: Tournament): Observable<Role[]> {
         const url = this.getUrl(tournament) + '/syncrefereeroles';
-        return this.http.post(url, null, { headers: super.getHeaders() }).pipe(
+        return this.http.post(url, null, this.getOptions()).pipe(
             map((jsonRoles: JsonRole[]) => jsonRoles.map(jsonRole => this.roleMapper.toObject(jsonRole, tournament))),
             catchError((err) => this.handleError(err))
         );
@@ -102,7 +113,7 @@ export class TournamentRepository extends APIRepository {
 
     sendRequestOldStructure(tournamentId: number): Observable<boolean> {
         const url = this.getUrl() + '/' + tournamentId + '/sendrequestoldstructure';
-        return this.http.post(url, null, { headers: super.getHeaders() }).pipe(
+        return this.http.post(url, null, this.getOptions()).pipe(
             map((retVal: boolean) => retVal),
             catchError((err) => this.handleError(err))
         );
@@ -111,7 +122,7 @@ export class TournamentRepository extends APIRepository {
     getExportUrl(tournament: Tournament, exportType: string, exportConfig: TournamentExportConfig): Observable<string> {
 
         const url = this.getUrl() + '/' + tournament.getId() + '/exportgeneratehash';
-        return this.http.get(url, { headers: super.getHeaders() }).pipe(
+        return this.http.get(url, this.getOptions()).pipe(
             map((jsonHash: TournamentExportHash) => {
                 const exportUrl = super.getApiUrl() + 'public/' + this.getUrlpostfix() + '/' + tournament.getId() + '/export';
                 return exportUrl +

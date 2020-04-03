@@ -4,13 +4,15 @@ import { CompetitionMapper, JsonCompetition } from 'ngx-sport';
 import { JsonRole, RoleMapper } from '../role/mapper';
 import { JsonSponsor, SponsorMapper } from '../sponsor/mapper';
 import { Tournament } from '../tournament';
+import { JsonLockerRoom, LockerRoomMapper } from '../lockerroom/mapper';
 
 @Injectable()
 export class TournamentMapper {
     constructor(
         private csMapper: CompetitionMapper,
         private roleMapper: RoleMapper,
-        private sponsorMapper: SponsorMapper) { }
+        private sponsorMapper: SponsorMapper,
+        private lockerRoomMapper: LockerRoomMapper) { }
 
     toObject(json: JsonTournament): Tournament {
         const competition = this.csMapper.toObject(json.competition);
@@ -18,6 +20,7 @@ export class TournamentMapper {
         const jsonRoles = json.roles !== undefined ? json.roles : [];
         const roles = jsonRoles.map(jsonRole => this.roleMapper.toObject(jsonRole, tournament));
         json.sponsors.map(jsonSponsor => this.sponsorMapper.toObject(jsonSponsor, tournament));
+        json.lockerRooms.map(jsonLockerRoom => this.lockerRoomMapper.toObject(jsonLockerRoom, tournament));
         tournament.setRoles(roles);
         tournament.setId(json.id);
         if (json.breakStartDateTime !== undefined) {
@@ -36,6 +39,7 @@ export class TournamentMapper {
             id: tournament.getId(),
             competition: this.csMapper.toJson(tournament.getCompetition()),
             roles: tournament.getRoles().map(role => this.roleMapper.toJson(role)),
+            lockerRooms: tournament.getLockerRooms().map(lockerRoom => this.lockerRoomMapper.toJson(lockerRoom)),
             sponsors: tournament.getSponsors().map(sponsor => this.sponsorMapper.toJson(sponsor)),
             breakStartDateTime: tournament.getBreakStartDateTime() ? tournament.getBreakStartDateTime().toISOString() : undefined,
             breakEndDateTime: tournament.getBreakEndDateTime() ? tournament.getBreakEndDateTime().toISOString() : undefined,
@@ -52,6 +56,7 @@ export interface JsonTournament {
     breakEndDateTime?: string;
     public: boolean;
     roles: JsonRole[];
+    lockerRooms: JsonLockerRoom[];
     sponsors: JsonSponsor[];
     updated: boolean;
 }

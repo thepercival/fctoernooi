@@ -15,36 +15,49 @@ import { StructureQualifyComponent } from './structure/qualify.component';
 import { StructureRoundComponent } from './structure/round.component';
 import { NgbNavModule, NgbAlertModule, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonSharedModule } from '../common/shared.module';
+import { LockerRoomsComponent } from './lockerrooms/lockerrooms.component';
+import { LockerRoomComponent } from './lockerrooms/lockerroom.component';
+import { NameModalComponent } from './namemodal/namemodal.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CompetitorChooseModalComponent } from './competitorchoosemodal/competitorchoosemodal';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
   declarations: [
     RoundNumberPlanningComponent,
     PouleRankingModalComponent,
+    CompetitorChooseModalComponent,
+    NameModalComponent,
     EndRankingComponent,
     PouleRankingComponent,
     TitleComponent,
-    StructureRoundArrangeComponent, StructureQualifyComponent, StructureRoundComponent
+    StructureRoundArrangeComponent, StructureQualifyComponent, StructureRoundComponent,
+    LockerRoomsComponent, LockerRoomComponent
   ],
   imports: [
     CommonModule,
     FontAwesomeModule,
+    ReactiveFormsModule,
     CommonSharedModule,
+    RouterModule,
     /*NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule*/
     NgbNavModule, NgbAlertModule, NgbPopoverModule
   ],
   exports: [
     RoundNumberPlanningComponent,
     PouleRankingModalComponent,
+    NameModalComponent,
     EndRankingComponent,
     PouleRankingComponent,
     TitleComponent,
-    StructureRoundComponent
+    StructureRoundComponent,
+    LockerRoomsComponent
   ]
 })
 export class TournamentModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt,
-      faMedal, faSpinner, faLevelUpAlt, faMinus, faPlus, faDoorClosed);
+      faMedal, faSpinner, faLevelUpAlt, faMinus, faDoorClosed, faPlus);
   }
 }
