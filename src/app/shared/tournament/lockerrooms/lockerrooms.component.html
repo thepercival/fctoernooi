@@ -1,6 +1,6 @@
 <div class="row justify-content-center no-gutters">
   <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-    <app-tournament-title [tournament]="tournament" [admin]="true">
+    <app-tournament-title [tournament]="tournament">
     </app-tournament-title>
     <div *ngIf="!processing" class="d-flex justify-content-between mb-3">
       <h2 class="mr-auto">
@@ -28,7 +28,7 @@
 
     <div *ngIf="hasCompetitors" class="card-deck flex-wrap d-flex justify-content-center">
       <app-tournament-lockerroom *ngFor="let lockerRoom of lockerRooms" [lockerRoom]="lockerRoom"
-        [rootRound]="structure.getRootRound()" editable="isAdmin()" class="card border-dark m-2"
+        [rootRound]="structure.getRootRound()" [editable]="isAdmin()" class="card border-dark m-2"
         (remove)="remove($event)">
       </app-tournament-lockerroom>
     </div>

@@ -36,7 +36,7 @@ export class LockerRoomComponent implements OnInit {
         activeModal.componentInstance.selectedCompetitors = this.lockerRoom.getCompetitors();
 
         activeModal.result.then((result) => {
-            console.log('121212');
+            // console.log('121212');
             // this.lockerRoom.getCompetitors().push(result);
         }, (reason) => {
         });

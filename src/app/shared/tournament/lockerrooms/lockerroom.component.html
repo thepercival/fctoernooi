@@ -1,7 +1,7 @@
 <div class="card-header pointer p-3">
   <div class="d-flex justify-content-between">
     <h5 class="mb-0 mt-2" (click)="openModalName()">kleedkamer {{lockerRoom.getName()}}</h5>
-    <button class="btn btn-outline-primary ml-1" (click)="remove.emit(lockerRoom)">
+    <button *ngIf="editable" class="btn btn-outline-primary ml-1" (click)="remove.emit(lockerRoom)">
       <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
     </button>
   </div>
@@ -15,7 +15,7 @@
     </li>
   </ul>
 
-  <div class="d-flex justify-content-center mt-3">
+  <div *ngIf="editable" class="d-flex justify-content-center mt-3">
     <button role="button" (click)="selectCompetitors()" class="btn btn-add btn-outline-primary">
       <span *ngIf="!hasCompetitors()" class="mr-1">deelnemers toevoegen</span>
       <fa-icon *ngIf="!hasCompetitors()" [icon]="['fas', 'plus-circle']"></fa-icon>

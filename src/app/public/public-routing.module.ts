@@ -9,6 +9,7 @@ import { PreNewComponent } from './prenew/prenew.component';
 import { StructureViewComponent } from '../public/structure/view.component';
 import { GamesComponent } from './games/view.component';
 import { RankingComponent } from './ranking/view.component';
+import { LockerRoomsComponent } from '../shared/tournament/lockerrooms/lockerrooms.component';
 
 const routes: Routes = [
   { path: 'prenew', component: PreNewComponent },
@@ -17,7 +18,8 @@ const routes: Routes = [
   { path: 'ranking/:id', component: RankingComponent },
   { path: 'structure/:id', component: StructureViewComponent },
   { path: 'filter/:id', component: FilterComponent },
-  { path: 'liveboard/:id', component: LiveboardComponent }
+  { path: 'liveboard/:id', component: LiveboardComponent },
+  { path: 'lockerrooms/:id', component: LockerRoomsComponent }
 ];
 
 @NgModule({
