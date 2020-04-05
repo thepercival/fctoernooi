@@ -271,7 +271,16 @@
           </div>
           <label for="poulepivottables" class="col-8 col-form-label">poule draaitabellen</label>
         </div>
-        <div class="row">
+        <div *ngIf="lockerRoomsArranged !== undefined" class="row">
+          <div class="form-check col-3">
+            <label class="custom-control custom-checkbox col-form-label pl-0">
+              <input type="checkbox" class="custom-control-input form-check-input" formControlName="lockerrooms">
+              <span class="custom-control-indicator"></span>
+            </label>
+          </div>
+          <label for="lockerrooms" class="col-8 col-form-label">kleedkamers</label>
+        </div>
+        <div *ngIf="tournament.getPublic()" class="row">
           <div class="form-check col-3">
             <label class="custom-control custom-checkbox col-form-label pl-0">
               <input type="checkbox" class="custom-control-input form-check-input" formControlName="qrcode">

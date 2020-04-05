@@ -62,6 +62,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
             gamesperfield: false,
             planning: false,
             poulepivottables: false,
+            lockerrooms: false,
             qrcode: true
         });
     }
@@ -195,8 +196,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         return !this.exportForm.value['gamenotes']
             && !this.exportForm.value['structure'] && !this.exportForm.value['planning']
             && !this.exportForm.value['gamesperpoule'] && !this.exportForm.value['gamesperfield'] && !this.exportForm.value['rules']
-            && !this.exportForm.value['poulepivottables'] && !this.exportForm.value['qrcode'];
-
+            && !this.exportForm.value['poulepivottables'] && !this.exportForm.value['lockerrooms'] && !this.exportForm.value['qrcode'];
     }
 
     openModalExport(modalContent) {
@@ -211,6 +211,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
                     gamesperfield: this.exportForm.value['gamesperfield'],
                     planning: this.exportForm.value['planning'],
                     poulepivottables: this.exportForm.value['poulepivottables'],
+                    lockerRooms: this.exportForm.value['lockerrooms'],
                     qrcode: this.exportForm.value['qrcode']
                 };
 

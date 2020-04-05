@@ -105,7 +105,7 @@ export class NewComponent implements OnInit {
     this.setAlert('info', 'het toernooi wordt aangemaakt');
 
     const name = this.form.controls.name.value;
-    const nrofcompetitors = 5;
+    const nrofcompetitors = StructureService.DefaultNrOfPlaces;
     const nroffields = this.form.controls.nroffields.value;
 
     const startDateTime = new Date(

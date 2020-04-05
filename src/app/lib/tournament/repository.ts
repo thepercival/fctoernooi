@@ -133,6 +133,7 @@ export class TournamentRepository extends APIRepository {
                     '&gamesperfield=' + exportConfig.gamesperfield +
                     '&planning=' + exportConfig.planning +
                     '&poulepivottables=' + exportConfig.poulepivottables +
+                    '&lockerRooms=' + exportConfig.lockerRooms +
                     '&qrcode=' + exportConfig.qrcode +
                     '&type=' + exportType +
                     '&hash=' + jsonHash.hash;
@@ -154,5 +155,6 @@ export interface TournamentExportConfig {
     gamesperfield: boolean;
     planning: boolean;
     poulepivottables: boolean;
+    lockerRooms: boolean;
     qrcode: boolean;
 }
