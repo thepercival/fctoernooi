@@ -8,7 +8,7 @@
       </h2>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <div *ngIf="!processing && tournament && structure">
-        <ul ngbNav #nav="ngbNav" class="nav-tabs">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
           <li [ngbNavItem]="1">
             <a ngbNavLink>poulestanden</a>
             <ng-template ngbNavContent>

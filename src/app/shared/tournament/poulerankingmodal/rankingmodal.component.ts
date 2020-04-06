@@ -11,7 +11,7 @@ import { Tournament } from '../../../lib/tournament';
 export class PouleRankingModalComponent {
     poule: Poule;
     tournament: Tournament;
-    active = 1;
+    activeTab = 1;
     constructor(public nameService: NameService, public activeModal: NgbActiveModal) { }
 
     getDescriptionRankingRules(): string[] {

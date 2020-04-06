@@ -6,8 +6,8 @@
       <h2>
         <fa-icon [icon]="['fas', 'filter']"></fa-icon> filter instellen
       </h2>
-      <button *ngIf="!processing" [disabled]="!changed" type="button" class="btn btn-sm mr-0 btn-primary"
-        (click)="save()">
+      <button *ngIf="!processing && (hasCompetitors() || hasReferees())" [disabled]="!changed" type="button"
+        class="btn btn-sm mr-0 btn-primary" (click)="save()">
         opslaan
       </button>
     </div>
@@ -59,8 +59,8 @@
     </div>
 
     <div class="d-flex justify-content-end">
-      <button *ngIf="!processing" [disabled]="!changed" type="button" class="btn btn-sm mr-0 btn-primary"
-        (click)="save()">
+      <button *ngIf="!processing && (hasCompetitors() || hasReferees())" [disabled]="!changed" type="button"
+        class="btn btn-sm mr-0 btn-primary" (click)="save()">
         opslaan
       </button>
     </div>

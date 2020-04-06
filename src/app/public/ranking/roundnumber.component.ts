@@ -27,14 +27,16 @@ export class RankingRoundNumberComponent implements OnInit {
 
     ngOnInit() {
         const state = this.roundNumber.getState();
+        const statePrevious = this.roundNumber.hasPrevious() ? this.roundNumber.getPrevious().getState() : undefined;
         const stateNext = this.roundNumber.hasNext() ? this.roundNumber.getNext().getState() : undefined;
         this.show = false;
         if (state === State.InProgress) {
             this.show = true;
-        } else if ((state === State.Created || state === State.Finished) && (stateNext === undefined || stateNext === State.Created)) {
+        } else if (state === State.Created && (statePrevious === undefined || statePrevious === State.Finished)) {
+            this.show = true;
+        } else if (state === State.Finished && (stateNext === undefined || stateNext === State.Created)) {
             this.show = true;
         }
-
     }
 
     getPoules(): Poule[] {
