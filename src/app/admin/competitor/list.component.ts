@@ -22,6 +22,7 @@ import { PlaceRepository } from '../../lib/ngx-sport/place/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { CompetitorListRemoveModalComponent } from './listremovemodal.component';
+import { LockerRoomValidator } from '../../lib/lockerroom/validator';
 
 @Component({
   selector: 'app-tournament-competitors',
@@ -37,6 +38,8 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   showSwap: boolean;
   orderMode = false;
   hasBegun: boolean;
+  lockerRoomValidator: LockerRoomValidator;
+  areSomeCompetitorsArranged: boolean;
 
   constructor(
     route: ActivatedRoute,
@@ -56,6 +59,9 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   ngOnInit() {
     super.myNgOnInit(() => {
       this.initPlaces();
+      const competitors = this.structure.getFirstRoundNumber().getCompetitors();
+      this.lockerRoomValidator = new LockerRoomValidator(competitors, this.tournament.getLockerRooms());
+      this.areSomeCompetitorsArranged = this.lockerRoomValidator.areSomeArranged(); // caching
     });
   }
 
@@ -83,6 +89,10 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     return this.places.filter(place => place.getCompetitor() !== undefined).length >= 2;
   }
 
+  showLockerRoomNotArranged(competitor: Competitor): boolean {
+    return this.areSomeCompetitorsArranged && this.lockerRoomValidator.isArranged(competitor);
+  }
+
   editPlace(place: Place) {
     this.linkToEdit(this.tournament, place);
   }
@@ -90,6 +100,12 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   linkToEdit(tournament: Tournament, place: Place) {
     this.router.navigate(
       ['/admin/competitor', tournament.getId(), place.getId()]
+    );
+  }
+
+  linkToLockerRooms() {
+    this.router.navigate(
+      ['/admin/lockerrooms', this.tournament.getId()]
     );
   }
 

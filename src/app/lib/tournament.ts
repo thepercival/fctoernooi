@@ -70,12 +70,6 @@ export class Tournament {
         return this.lockerRooms;
     }
 
-    areLockerRoomsArranged(): boolean {
-        return this.lockerRooms.length > 0 && this.lockerRooms.some(lockerRoom => {
-            return lockerRoom.getCompetitors().length > 0;
-        });
-    }
-
     getBreakStartDateTime(): Date {
         return this.breakStartDateTime;
     }

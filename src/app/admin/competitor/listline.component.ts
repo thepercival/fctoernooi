@@ -8,16 +8,18 @@ import { Competitor, NameService, Place } from 'ngx-sport';
 })
 export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
   @Input() place: Place;
-  @Input() nameService: NameService;
   @Input() focus: boolean;
   @Input() hasBegun: boolean;
+  @Input() showLockerRoomNotArranged: boolean;
   @Output() editPressed = new EventEmitter<Place>();
   @Output() removePressed = new EventEmitter<Place>();
   @Output() registerPressed = new EventEmitter<Competitor>();
+  @Output() toLockerRooms = new EventEmitter<void>();
 
   @ViewChild('btnEdit', { static: true }) private elementRef: ElementRef;
 
   constructor(
+    public nameService: NameService
   ) {
   }
 

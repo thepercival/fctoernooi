@@ -9,6 +9,7 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { TranslateService } from '../../lib/translate';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentRepository } from '../../lib/tournament/repository';
+import { LockerRoomValidator } from '../../lib/lockerroom/validator';
 
 @Component({
     selector: 'app-tournament-public',
@@ -18,7 +19,7 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 export class HomeComponent extends TournamentComponent implements OnInit {
     translate: TranslateService;
     allHavePlannings: boolean;
-    oldStructureRequested: boolean;
+    lockerRoomValidator: LockerRoomValidator;
 
     constructor(
         route: ActivatedRoute,
@@ -31,6 +32,8 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     ) {
         super(route, router, tournamentRepository, structureRepository);
         this.translate = new TranslateService();
+        const competitors = this.structure.getFirstRoundNumber().getCompetitors();
+        this.lockerRoomValidator = new LockerRoomValidator(competitors, this.tournament.getLockerRooms());
     }
 
     ngOnInit() {

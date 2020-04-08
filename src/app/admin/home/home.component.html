@@ -111,13 +111,13 @@
               <fa-icon [icon]="['fas', 'door-closed']"></fa-icon> kleedkamers
             </h5>
             <p class="card-text">
-              <span *ngIf="lockerRoomsArranged === undefined">
+              <span *ngIf="!lockerRoomValidator.areSomeArranged()">
                 nog geen indeling
               </span>
-              <span *ngIf="lockerRoomsArranged === false">
+              <span *ngIf="lockerRoomValidator.areSomeArranged()">
                 <fa-icon [icon]="['fas', 'times-circle']" class="text-warning"></fa-icon> indeling niet compleet
               </span>
-              <span *ngIf="lockerRoomsArranged === true">
+              <span *ngIf="lockerRoomValidator.areAllArranged()">
                 <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> deelnemers ingedeeld
               </span>
             </p>
@@ -271,7 +271,7 @@
           </div>
           <label for="poulepivottables" class="col-8 col-form-label">poule draaitabellen</label>
         </div>
-        <div *ngIf="lockerRoomsArranged !== undefined" class="row">
+        <div *ngIf="lockerRoomValidator.areSomeArranged()" class="row">
           <div class="form-check col-3">
             <label class="custom-control custom-checkbox col-form-label pl-0">
               <input type="checkbox" class="custom-control-input form-check-input" formControlName="lockerrooms">

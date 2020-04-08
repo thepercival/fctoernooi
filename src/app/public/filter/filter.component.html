@@ -18,7 +18,7 @@
           <a ngbNavLink>
             <fa-icon [icon]="['fas', 'users']"></fa-icon><span> deelnemers </span>
             <span *ngIf="favorites.hasCompetitors()"
-              class="badge badge-primary badge-pill">{{favorites.getNrOfCompetitors()}}</span>
+              class="badge badge-primary">{{favorites.getNrOfCompetitors()}}</span>
           </a>
           <ng-template ngbNavContent>
             <ng-container *ngTemplateOutlet="competitors">
@@ -28,7 +28,7 @@
         <li [ngbNavItem]="2">
           <a ngbNavLink>
             <i class="fi flaticon-referee"></i><span> scheidsrechters </span><span *ngIf="favorites.hasReferees()"
-              class="badge badge-primary badge-pill">{{favorites.getNrOfReferees()}}</span>
+              class="badge badge-primary">{{favorites.getNrOfReferees()}}</span>
           </a>
           <ng-template ngbNavContent>
             <ng-container *ngTemplateOutlet="referees">
@@ -43,7 +43,7 @@
       <h3>
         <fa-icon [icon]="['fas', 'users']"></fa-icon><span> deelnemers </span>
         <small><span *ngIf="favorites.hasCompetitors()"
-            class="badge badge-primary badge-pill">{{favorites.getNrOfCompetitors()}}</span></small>
+            class="badge badge-primary">{{favorites.getNrOfCompetitors()}}</span></small>
       </h3>
       <ng-container *ngTemplateOutlet="competitors">
       </ng-container>
@@ -52,7 +52,7 @@
     <div *ngIf="!processing && !hasCompetitors() && hasReferees()">
       <h3>
         <i class="fi flaticon-referee"></i><span> scheidsrechters </span><small><span *ngIf="favorites.hasReferees()"
-            class="badge badge-primary badge-pill">{{favorites.getNrOfReferees()}}</span></small>
+            class="badge badge-primary">{{favorites.getNrOfReferees()}}</span></small>
       </h3>
       <ng-container *ngTemplateOutlet="referees">
       </ng-container>

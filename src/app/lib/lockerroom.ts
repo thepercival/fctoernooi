@@ -52,6 +52,10 @@ export class LockerRoom {
         return this.getCompetitors().indexOf(competitor) >= 0;
     }
 
+    hasCompetitors(): boolean {
+        return this.getCompetitors().length > 0;
+    }
+
     setUrl(competitors: Competitor[]): void {
         this.competitors = competitors;
     }

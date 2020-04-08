@@ -1,5 +1,5 @@
 <div class="row justify-content-center no-gutters">
-  <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+  <div class="col-12 col-lg-10">
     <app-tournament-title [tournament]="tournament">
     </app-tournament-title>
     <div *ngIf="!processing" class="d-flex justify-content-between mb-3">
@@ -28,8 +28,8 @@
 
     <div *ngIf="hasCompetitors" class="card-deck flex-wrap d-flex justify-content-center">
       <app-tournament-lockerroom *ngFor="let lockerRoom of lockerRooms" [lockerRoom]="lockerRoom"
-        [rootRound]="structure.getRootRound()" [editable]="isAdmin()" class="card border-dark m-2"
-        (remove)="remove($event)">
+        [validator]="validator" [places]="structure.getFirstRoundNumber().getPlaces()" [editable]="isAdmin()"
+        class="card border-dark m-2" (remove)="remove($event)">
       </app-tournament-lockerroom>
     </div>
     <div *ngIf="!processing && isAdmin() && hasCompetitors" class="d-flex justify-content-center mt-3">
@@ -46,15 +46,18 @@
           <span> opslaan</span>
         </button>
       </div>
-      <div *ngIf="hasCompetitors" class="d-flex justify-content-center">
-        <div *ngIf="!allArranged()" class="card m-2 unarranged-competitors text-center">
+      <div *ngIf="hasCompetitors && !validator.areAllArranged()">
+        <hr />
+      </div>
+      <div *ngIf="hasCompetitors && !validator.areAllArranged()" class="d-flex justify-content-center">
+        <div class="card m-2 unarranged-competitors text-center">
           <div class="card-header p-3">
             <h5>niet ingedeelde deelnemers</h5>
           </div>
           <div class="card-body p-3">
             <ul class="list-group text-center">
-              <ng-template ngFor let-competitor [ngForOf]="structure.getRootRound().getCompetitors()">
-                <li *ngIf="!isArranged(competitor)" class="list-group-item">
+              <ng-template ngFor let-competitor [ngForOf]="validator.getCompetitors()">
+                <li *ngIf="!validator.isArranged(competitor)" class="list-group-item">
                   <span>{{competitor.getName()}}</span>
                 </li>
               </ng-template>

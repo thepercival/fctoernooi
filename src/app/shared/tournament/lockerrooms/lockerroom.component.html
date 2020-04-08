@@ -1,7 +1,9 @@
 <div class="card-header pointer p-3">
   <div class="d-flex justify-content-between">
-    <h5 class="mb-0 mt-2" (click)="openModalName()">kleedkamer {{lockerRoom.getName()}}</h5>
-    <button *ngIf="editable" class="btn btn-outline-primary ml-1" (click)="remove.emit(lockerRoom)">
+    <h5 class="mb-0 mt-2" (click)="openModalName()"><small>kleedkamer </small><span
+        class="font-weight-bold">{{lockerRoom.getName()}}</span>
+    </h5>
+    <button *ngIf="editable" class="btn btn-sm btn-outline-danger ml-1" (click)="remove.emit(lockerRoom)">
       <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
     </button>
   </div>
@@ -10,17 +12,17 @@
   <ul class="list-group text-center">
     <li *ngFor="let competitor of lockerRoom.getCompetitors()" class="list-group-item">
       <span>{{competitor.getName()}}</span>
-      <span *ngIf="nrOfLockerRooms(competitor) > 1" title="ingedeeld in {{nrOfLockerRooms(competitor)}} kleedkamers"
-        class="badge badge-primary badge-pill ml-1">{{nrOfLockerRooms(competitor)}}</span>
+      <span *ngIf="validator.isArrangedMultiple(competitor)"
+        title="ingedeeld in {{validator.nrArranged(competitor)}} kleedkamers"
+        class="badge badge-primary ml-1">{{validator.nrArranged(competitor)}}</span>
     </li>
   </ul>
-
-  <div *ngIf="editable" class="d-flex justify-content-center mt-3">
-    <button role="button" (click)="selectCompetitors()" class="btn btn-add btn-outline-primary">
-      <span *ngIf="!hasCompetitors()" class="mr-1">deelnemers toevoegen</span>
-      <fa-icon *ngIf="!hasCompetitors()" [icon]="['fas', 'plus-circle']"></fa-icon>
-      <span *ngIf="hasCompetitors()" class="mr-1">deelnemers aanpassen</span>
-      <fa-icon *ngIf="hasCompetitors()" [icon]="['fas', 'pencil-alt']"></fa-icon>
-    </button>
-  </div>
+</div>
+<div *ngIf="editable" class="card-footer border-top-0 d-flex justify-content-center">
+  <button role="button" (click)="selectCompetitors()" class="btn btn-small btn-add btn-outline-primary">
+    <span *ngIf="!hasCompetitors()" class="mr-1">deelnemers toevoegen</span>
+    <fa-icon *ngIf="!hasCompetitors()" [icon]="['fas', 'plus-circle']"></fa-icon>
+    <span *ngIf="hasCompetitors()" class="mr-1">aanpassen</span>
+    <fa-icon *ngIf="hasCompetitors()" [icon]="['fas', 'pencil-alt']"></fa-icon>
+  </button>
 </div>

@@ -32,9 +32,10 @@
         </tr>
       </thead>
       <tbody>
-        <app-tournament-competitor-line *ngFor="let place of places" [place]="place" [nameService]="nameService"
-          [hasBegun]="hasBegun" [focus]="place.getId() === focusId" (editPressed)="editPlace($event)"
-          (removePressed)="preRemove($event)" (registerPressed)="registerCompetitor($event)">
+        <app-tournament-competitor-line *ngFor="let place of places" [place]="place"
+          [showLockerRoomNotArranged]="showLockerRoomNotArranged(place.getCompetitor())" [hasBegun]="hasBegun"
+          [focus]="place.getId() === focusId" (editPressed)="editPlace($event)" (removePressed)="preRemove($event)"
+          (registerPressed)="registerCompetitor($event)" (toLockerRooms)="linkToLockerRooms()">
         </app-tournament-competitor-line>
       </tbody>
     </table>

@@ -11,6 +11,7 @@ import { AuthService } from '../../../lib/auth/auth.service';
 import { Role } from '../../../lib/role';
 import { NameModalComponent } from '../namemodal/namemodal.component';
 import { Competitor } from 'ngx-sport';
+import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
 
 
 @Component({
@@ -21,6 +22,7 @@ import { Competitor } from 'ngx-sport';
 export class LockerRoomsComponent extends TournamentComponent implements OnInit {
   lockerRooms: LockerRoom[];
   hasCompetitors = false;
+  validator: LockerRoomValidator;
 
   validations: any = {
     'minlengthname': LockerRoom.MIN_LENGTH_NAME,
@@ -44,16 +46,13 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
   }
 
   initLockerRooms() {
-    const nrOfCompetitors = this.structure.getRootRound().getNrOfCompetitors();
-    this.hasCompetitors = nrOfCompetitors > 0;
+    const competitors = this.structure.getFirstRoundNumber().getCompetitors();
+    this.validator = new LockerRoomValidator(competitors, this.tournament.getLockerRooms());
+    this.hasCompetitors = competitors.length > 0;
 
     this.lockerRooms = this.tournament.getLockerRooms();
 
-    let nrOfArrangedCompetitors = 0;
-    this.lockerRooms.forEach(lockerRoom => {
-      nrOfArrangedCompetitors += lockerRoom.getCompetitors().length;
-    });
-    if (this.hasCompetitors && this.allArranged()) {
+    if (this.hasCompetitors && this.validator.areAllArranged()) {
       this.setAlert('success', 'alle deelnemers zijn ingedeeld');
     }
 
@@ -80,18 +79,6 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
     if (idx >= 0) {
       this.lockerRooms.splice(idx, 1);
     }
-  }
-
-  allArranged(): boolean {
-    return this.structure.getRootRound().getCompetitors().every(competitor => {
-      return this.isArranged(competitor);
-    });
-  }
-
-  isArranged(competitor: Competitor): boolean {
-    return this.lockerRooms.some(lockerRoom => {
-      return lockerRoom.hasCompetitor(competitor);
-    });
   }
 
   save() {

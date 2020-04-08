@@ -82,7 +82,7 @@
             <!-- poule -->
             <td *ngIf="!gmData.hasPopover" class="text-center">
               <span
-                class="badge badge-pill badge-rank {{cssService.getQualifyRound(gmData.poule.round)}}">{{gmData.poule.name}}</span>
+                class="badge badge-rank {{cssService.getQualifyRound(gmData.poule.round)}}">{{gmData.poule.name}}</span>
             </td>
             <td *ngIf="gmData.hasPopover && gmData.poule.needsRanking" class="text-center">
               <button

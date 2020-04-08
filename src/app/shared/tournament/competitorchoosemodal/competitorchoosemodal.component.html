@@ -5,11 +5,10 @@
     </button>
 </div>
 <div class="modal-body">
-    <ngb-alert *ngIf="rootRound.getPlaces().length === 0" type="danger" [dismissible]="false">er zijn geen deelnemers
-        meer die je kunt
-        kiezen</ngb-alert>
+    <ngb-alert *ngIf="!hasSelectableCompetitors()" type="danger" [dismissible]="false">er zijn geen deelnemers
+        die je kunt kiezen</ngb-alert>
 
-    <table *ngIf="rootRound.getPlaces().length > 0" class="table">
+    <table *ngIf="places.length > 0" class="table">
         <thead>
             <tr>
                 <th>plek</th>
@@ -18,25 +17,29 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let place of rootRound.getPlaces()">
-                <td>
-                    <span>{{nameService.getPlaceFromName(place, false)}}</span>
-                </td>
-                <td class="place">
-                    <span *ngIf="place.getCompetitor()">{{place.getCompetitor().getName()}}</span>
-                </td>
-                <td class="text-right">
-                    <fa-icon *ngIf="selectable(place)" class="text-primary pointer"
-                        (click)="toggle(place.getCompetitor())"
-                        [icon]="['far', (competitorSelected(place.getCompetitor()) ? 'check-' : '') + 'square']"
-                        size="2x">
-                    </fa-icon>
-                </td>
-            </tr>
+            <ng-template ngFor let-place [ngForOf]="places">
+                <tr *ngIf="place.getCompetitor()">
+                    <td>{{nameService.getPlaceFromName(place, false)}}</td>
+                    <td>
+                        {{place.getCompetitor().getName()}}
+                        <span *ngIf="validator.isArranged(place.getCompetitor())"
+                            title="ingedeeld in {{validator.nrArranged(place.getCompetitor())}} andere kleedkamers"
+                            class="badge badge-primary ml-1">{{validator.nrArranged(place.getCompetitor())}}</span>
+                    </td>
+                    <td class="text-right">
+                        <fa-icon class="text-primary pointer" (click)="toggle(place.getCompetitor())"
+                            [icon]="['far', (isSelected(place) ? 'check-' : '') + 'square']" size="2x">
+                        </fa-icon>
+                    </td>
+                </tr>
+                <tr *ngIf="!place.getCompetitor()">
+                    <td colspan="3">{{nameService.getPlaceFromName(place, false)}}</td>
+                </tr>
+            </ng-template>
         </tbody>
     </table>
 </div>
 <div class="modal-footer align-items-end">
-    <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
-        (click)="activeModal.dismiss(selectedCompetitors)">sluiten</button>
+    <button type="submit" class="btn btn-outline-primary" data-dismiss="modal"
+        (click)="activeModal.close(selectedCompetitors)">opslaan</button>
 </div>

@@ -6,9 +6,16 @@
 <td>
   <span>{{nameService.getPlaceFromName(place, false)}}</span>
 </td>
-<td *ngIf="place.getCompetitor()">
+<td *ngIf="place.getCompetitor() && !showLockerRoomNotArranged">
   <span
     [ngClass]="{ 'registered-xs': place.getCompetitor().getRegistered() }">{{place.getCompetitor().getName()}}</span>
+</td>
+<!-- show tooltip -->
+<td *ngIf="place.getCompetitor() && showLockerRoomNotArranged" class="pointer" container="body" placement="top"
+  autoClose="outside" [ngbPopover]="popLockerRoom" #p="ngbPopover">
+  <span [ngClass]="{ 'registered-xs': place.getCompetitor().getRegistered() }">{{place.getCompetitor().getName()}}
+  </span>
+  <fa-icon [icon]="['fas', 'door-closed']" class="text-warning"></fa-icon>
 </td>
 <td *ngIf="!place.getCompetitor()">
   <span class="badge badge-warning">vul een naam in</span>
@@ -20,3 +27,12 @@
 <td *ngIf="!hasBegun" class="text-right"><button type="button" class="btn btn-sm btn-danger" (click)="remove()">
     <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
   </button></td>
+
+<ng-template #popLockerRoom>
+  <div class="text-center">
+    de deelnemer is nog niet ingedeeld in een kleedkamer<br /><button type="button"
+      class="btn btn-sm btn-outline-secondary my-1" (click)="toLockerRooms.emit()">
+      naar de kleedkamers
+    </button>
+  </div>
+</ng-template>

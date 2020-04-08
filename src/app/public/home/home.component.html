@@ -56,7 +56,7 @@
             </p>
           </div>
         </div>
-        <div *ngIf="tournament.areLockerRoomsArranged()" class="card border-secondary pointer mt-3 mx-2"
+        <div *ngIf="lockerRoomValidator.areSomeArranged()" class="card border-secondary pointer mt-3 mx-2"
           [routerLink]="['/public/lockerrooms', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
@@ -64,6 +64,7 @@
             </h5>
             <p class="card-text">
               alleen tonen als ingesteld
+              is iedereen ingedeeld, als bezoeker of deelnemer?
             </p>
           </div>
         </div>

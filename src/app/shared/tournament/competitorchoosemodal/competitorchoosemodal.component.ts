@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { NameService, Competitor, Place, Round } from 'ngx-sport';
+import { NameService, Competitor, Place, Round, RoundNumber } from 'ngx-sport';
+import { LockerRoom } from '../../../lib/lockerroom';
+import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
 
 @Component({
     selector: 'app-ngbd-modal-competitor-choose',
@@ -8,18 +10,20 @@ import { NameService, Competitor, Place, Round } from 'ngx-sport';
     styleUrls: ['./competitorchoosemodal.component.scss']
 })
 export class CompetitorChooseModalComponent {
-    @Input() rootRound: Round;
+    @Input() validator: LockerRoomValidator;
+    @Input() places: Place[];
+    @Input() lockerRoom: LockerRoom;
     @Input() selectedCompetitors: Competitor[];
 
     constructor(public nameService: NameService, public activeModal: NgbActiveModal) {
     }
 
-    selectable(place: Place): boolean {
-        return place.getCompetitor() !== undefined;
+    hasSelectableCompetitors(): boolean {
+        return this.validator && this.validator.getCompetitors().length > 0;
     }
 
-    competitorSelected(competitor: Competitor): boolean {
-        return this.selectedCompetitors.indexOf(competitor) >= 0;
+    isSelected(place: Place): boolean {
+        return place.getCompetitor() && this.selectedCompetitors.indexOf(place.getCompetitor()) >= 0;
     }
 
     toggle(competitor: Competitor) {
@@ -30,4 +34,7 @@ export class CompetitorChooseModalComponent {
             this.selectedCompetitors.push(competitor);
         }
     }
+
+
+
 }

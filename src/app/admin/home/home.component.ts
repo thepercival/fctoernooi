@@ -13,6 +13,7 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { TranslateService } from '../../lib/translate';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
+import { LockerRoomValidator } from '../../lib/lockerroom/validator';
 
 @Component({
     selector: 'app-tournament-admin',
@@ -27,7 +28,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     translate: TranslateService;
     allHavePlannings: boolean;
     oldStructureRequested: boolean;
-    lockerRoomsArranged: boolean;
+    lockerRoomValidator: LockerRoomValidator;
 
     constructor(
         route: ActivatedRoute,
@@ -44,6 +45,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         this.translate = new TranslateService();
         const date = new Date();
         this.minDateStruct = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
+
         this.copyForm = fb.group({
             date: ['', Validators.compose([
             ])]
@@ -54,6 +56,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
             public: ['', Validators.compose([
             ])]
         });
+
         this.exportForm = fb.group({
             gamenotes: true,
             structure: false,
@@ -76,18 +79,12 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         this.copyForm.controls.date.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
         this.shareForm.controls.url.setValue(location.origin + '/' + this.tournament.getId());
         this.shareForm.controls.public.setValue(this.tournament.getPublic());
-        this.initLockerRoomsArranged();
+
+        const competitors = this.structure.getFirstRoundNumber().getCompetitors();
+        this.lockerRoomValidator = new LockerRoomValidator(competitors, this.tournament.getLockerRooms());
+        this.exportForm.controls.lockerrooms.setValue(this.lockerRoomValidator.areSomeArranged());
+
         this.processing = false;
-    }
-
-    initLockerRoomsArranged() {
-        const hasArrangedCompetitors = this.tournament.getLockerRooms().some(lockerRoom => {
-            return lockerRoom.getCompetitors().length > 0;
-        });
-
-        if (hasArrangedCompetitors) {
-            this.lockerRoomsArranged = this.allArranged();
-        }
     }
 
     protected allArranged(): boolean {

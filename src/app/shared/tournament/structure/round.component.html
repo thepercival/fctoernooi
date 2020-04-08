@@ -23,7 +23,8 @@
       </p>
       <div *ngIf="viewType !== ViewTypeQualifyGroups" class="d-flex flex-wrap justify-content-around">
         <ul *ngFor="let poule of round.getPoules();" class="list-group mb-3">
-          <li class="list-group-item disabled px-2 py-2">{{nameService.getPouleName( poule, false)}}
+          <li class="list-group-item disabled px-2 py-2">
+            {{nameService.getPouleName( poule, round.isRoot() && round.getPoules().length <= 2)}}
           </li>
           <li *ngFor="let place of poule.getPlaces();"
             class="list-group-item px-2 py-2 place-list-item pointer {{cssService.getQualifyPlace(place)}}"

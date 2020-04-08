@@ -52,7 +52,7 @@ import { RouterModule } from '@angular/router';
     PouleRankingComponent,
     TitleComponent,
     StructureRoundComponent,
-    LockerRoomsComponent
+    LockerRoomsComponent,
   ]
 })
 export class TournamentModule {

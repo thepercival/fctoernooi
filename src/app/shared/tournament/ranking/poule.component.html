@@ -30,7 +30,7 @@
                         <tr>
                             <td class="rankingnr text-right pl-0">
                                 <span
-                                    class="badge badge-pill badge-rank {{cssService.getQualifyPlace(poule.getPlace(rankingItem.getUniqueRank()))}}">{{rankingItem.getUniqueRank()}}</span>
+                                    class="badge badge-rank {{cssService.getQualifyPlace(poule.getPlace(rankingItem.getUniqueRank()))}}">{{rankingItem.getUniqueRank()}}</span>
                             </td>
                             <td class="place pl-0"
                                 [ngClass]="{ 'text-primary': favorites.hasCompetitor(rankingItem.getPlace().getCompetitor()) }">
