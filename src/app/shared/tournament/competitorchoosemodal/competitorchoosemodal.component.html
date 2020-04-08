@@ -24,7 +24,7 @@
                         {{place.getCompetitor().getName()}}
                         <span *ngIf="validator.isArranged(place.getCompetitor())"
                             title="ingedeeld in {{validator.nrArranged(place.getCompetitor())}} andere kleedkamers"
-                            class="badge badge-primary ml-1">{{validator.nrArranged(place.getCompetitor())}}</span>
+                            class="badge badge-info ml-1">{{validator.nrArranged(place.getCompetitor())}}</span>
                     </td>
                     <td class="text-right">
                         <fa-icon class="text-primary pointer" (click)="toggle(place.getCompetitor())"

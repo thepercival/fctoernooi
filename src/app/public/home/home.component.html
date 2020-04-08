@@ -69,6 +69,12 @@
           </div>
         </div>
       </div>
+      <div class="text-center mt-3">
+        <button *ngIf="!processing && tournament" [routerLink]="['/public/filter', tournament.getId()]" type="button"
+          class="btn btn-outline-{{favorites.hasItems() ? 'primary' : 'secondary'}} w-100">
+          filter {{favorites.hasItems() ? 'aanpassen' : 'instellen'}}
+        </button>
+      </div>
     </div>
   </div>
 </div>
