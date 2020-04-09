@@ -1,15 +1,10 @@
-<div *ngIf="tournament" id="scroll-roundnumber-{{roundNumber.getNumber()}}">
+<div *ngIf="tournament">
   <div class="d-flex mt-3">
     <h2 class="mr-auto">
       <span [innerHTML]="nameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
     </h2>
-    <button *ngIf="!canEditSettings" type="button" class="btn btn-sm btn-outline-secondary mr-2 px-3"
-      (click)="refreshData.emit()" [disabled]="refreshingData">
-      <fa-icon [icon]="['fas', 'sync']" [spin]="refreshingData"></fa-icon>
-    </button>
-    <button *ngIf="!canEditSettings" type="button"
-      class="btn btn-sm btn-outline-{{favorites.hasItems() ? 'primary' : 'secondary'}}"
-      (click)="linkToFilterSettings()">
+    <button *ngIf="!canEditSettings && favorites.hasItems()" type="button"
+      class="btn btn-sm btn-outline-{{filterEnabled ? 'primary' : 'secondary'}}" (click)="toggleFilter()">
       <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       <span>filter</span>
     </button>
@@ -38,11 +33,14 @@
       </colgroup>
       <thead>
         <tr>
-          <th *ngIf="roundNumberNeedsRanking" class="text-center" title="poule">
-            <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
-          </th>
-          <th *ngIf="!roundNumberNeedsRanking" class="text-center" title="wedstrijd">
-            <span>vs</span>
+          <th class="text-center">
+            <button *ngIf="!canEditSettings" type="button" class="btn btn-sm btn-outline-secondary"
+              (click)="refreshData.emit()" [disabled]="refreshingData">
+              <fa-icon [icon]="['fas', 'sync']" [spin]="refreshingData"></fa-icon>
+            </button>
+            <fa-icon *ngIf="canEditSettings && roundNumberNeedsRanking" [icon]="['fas', 'list-ul']" title="poule">
+            </fa-icon>
+            <span *ngIf="canEditSettings && roundNumberNeedsRanking" title="wedstrijd">vs</span>
           </th>
           <th *ngIf="planningConfig.getEnableTime()" class="pointer text-info" container="body" title="start"
             placement="right">
@@ -77,8 +75,7 @@
             <td colspan="3" class="text-center">PAUZE</td>
             <td *ngIf="hasReferees" class="d-none d-sm-table-cell"></td>
           </tr>
-          <tr [ngClass]="{ 'batch-striped-row': (gmData.game.getBatchNr() % 2) === 0 }"
-            id="scroll-game-{{gmData.game.getId()}}">
+          <tr [ngClass]="{ 'batch-striped-row': (gmData.game.getBatchNr() % 2) === 0 }">
             <!-- poule -->
             <td *ngIf="!gmData.hasPopover" class="text-center">
               <span
@@ -107,7 +104,6 @@
             <!-- field -->
             <td class="text-center">{{gmData.game.getField()?.getName()}}</td>
             <!-- home -->
-
             <td class="place text-right " [ngClass]="{'favitem': favorites.hasGameCompetitor(gmData.game, GameHOME) }">
               <span>{{nameService.getPlacesFromName(gmData.game.getPlaces( GameHOME ),true,true)}}</span>
             </td>

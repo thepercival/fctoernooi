@@ -15,7 +15,7 @@
   </div>
   <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
   <div *ngIf="!processing" class="row text-center">
-    <app-tournament-structureround [editable]="false" [round]="structure.getRootRound()">
+    <app-tournament-structureround [editable]="false" [round]="structure.getRootRound()" [favorites]="competitors">
     </app-tournament-structureround>
   </div>
 </div>

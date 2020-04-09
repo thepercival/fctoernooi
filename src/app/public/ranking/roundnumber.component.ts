@@ -1,12 +1,5 @@
-import { Component, OnDestroy, OnInit, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, Input } from '@angular/core';
 
-import { AuthService } from '../../lib/auth/auth.service';
-import { MyNavigation } from '../../shared/common/navigation';
-import { Role } from '../../lib/role';
-import { TournamentRepository } from '../../lib/tournament/repository';
-import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
-import { TournamentComponent } from '../../shared/tournament/component';
 import { RoundNumber, Poule, State, NameService } from 'ngx-sport';
 import { Tournament } from '../../lib/tournament';
 
@@ -29,12 +22,13 @@ export class RankingRoundNumberComponent implements OnInit {
         const state = this.roundNumber.getState();
         const statePrevious = this.roundNumber.hasPrevious() ? this.roundNumber.getPrevious().getState() : undefined;
         const stateNext = this.roundNumber.hasNext() ? this.roundNumber.getNext().getState() : undefined;
+        const nextNeedsRanking = this.roundNumber.hasNext() && this.roundNumber.getNext().needsRanking();
         this.show = false;
         if (state === State.InProgress) {
             this.show = true;
         } else if (state === State.Created && (statePrevious === undefined || statePrevious === State.Finished)) {
             this.show = true;
-        } else if (state === State.Finished && (stateNext === undefined || stateNext === State.Created)) {
+        } else if (state === State.Finished && (stateNext === undefined || stateNext === State.Created || !nextNeedsRanking)) {
             this.show = true;
         }
     }

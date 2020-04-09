@@ -1,4 +1,5 @@
 import { Competitor, Game, Referee } from 'ngx-sport';
+import { LockerRoom } from './lockerroom';
 
 export class Favorites {
     constructor(
@@ -21,6 +22,9 @@ export class Favorites {
         return this.hasGameReferee(game) || this.hasGameCompetitor(game);
     }
 
+    getCompetitorIds(): number[] {
+        return this.competitorIds;
+    }
 
     hasCompetitors(): boolean {
         return this.competitorIds.length > 0;
@@ -55,6 +59,15 @@ export class Favorites {
         this.competitorIds.splice(this.competitorIds.indexOf(competitor.getId()), 1);
     }
 
+    filterLockerRooms(lockerRooms: LockerRoom[]): LockerRoom[] {
+        return lockerRooms.filter(lockerRoom => {
+            return lockerRoom.getCompetitors().some(competitor => this.hasCompetitor(competitor));
+        });
+    }
+
+    filterCompetitors(competitors: Competitor[]): Competitor[] {
+        return competitors.filter(competitor => this.hasCompetitor(competitor));
+    }
 
     hasReferees(): boolean {
         return this.refereeIds.length > 0;
@@ -88,5 +101,9 @@ export class Favorites {
             return;
         }
         this.refereeIds.splice(this.refereeIds.indexOf(referee.getId()), 1);
+    }
+
+    filterReferees(referees: Referee[]): Referee[] {
+        return referees.filter(referee => this.hasReferee(referee));
     }
 }

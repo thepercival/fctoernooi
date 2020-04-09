@@ -12,6 +12,7 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { LockerRoomValidator } from '../../lib/lockerroom/validator';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { Favorites } from '../../lib/favorites';
+import { Competitor } from 'ngx-sport';
 
 @Component({
     selector: 'app-tournament-public',
@@ -22,6 +23,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     translate: TranslateService;
     allHavePlannings: boolean;
     lockerRoomValidator: LockerRoomValidator;
+    private competitors: Competitor[];
     favorites: Favorites;
 
     constructor(
@@ -43,13 +45,47 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     postNgOnInit() {
-        const competitors = this.structure.getFirstRoundNumber().getCompetitors();
-        this.lockerRoomValidator = new LockerRoomValidator(competitors, this.tournament.getLockerRooms());
+        this.competitors = this.structure.getFirstRoundNumber().getCompetitors();
+        this.lockerRoomValidator = new LockerRoomValidator(this.competitors, this.tournament.getLockerRooms());
         this.favorites = this.favRepository.getItem(this.tournament);
         this.processing = false;
     }
 
     isAdmin(): boolean {
         return this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.ADMIN);
+    }
+
+    lockerRoomDescription(): string {
+        if (this.favorites.getNrOfCompetitors() === 0) {
+            return 'geen deelnemer ingesteld';
+        }
+        const lockerRooms = this.favorites.filterLockerRooms(this.tournament.getLockerRooms());
+        if (lockerRooms.length <= 2) {
+            const name = lockerRooms.length === 1 ? '' : 's';
+            return 'kleedkamer' + name + ' ' + lockerRooms.map(lockerRoom => lockerRoom.getName()).join(' & ');
+        }
+        return 'meerdere kleedkamers';
+    }
+
+    filterDescription(): string {
+
+        if (!this.favorites.hasItems()) {
+            return 'deelnemer' + (this.tournament.getCompetition().getReferees().length > 0 ? ' of scheidsrechter' : '') + ' instellen';
+        }
+        if (this.favorites.hasCompetitors() && this.favorites.hasReferees()) {
+            return 'meerdere filters ingesteld';
+        }
+        if (this.favorites.hasCompetitors()) {
+            const competitors = this.favorites.filterCompetitors(this.competitors);
+            if (competitors.length === 1) {
+                return 'deelnemer <span class="font-weight-bold">' + competitors.pop().getName() + '</span> ingesteld';
+            }
+            return 'meerdere deelnemers ingesteld';
+        }
+        const referees = this.favorites.filterReferees(this.competition.getReferees());
+        if (referees.length === 1) {
+            return 'scheidsrechter <span class="font-weight-bold">' + referees.pop().getInitials() + '</span> ingesteld';
+        }
+        return 'meerdere scheidsrechters ingesteld';
     }
 }

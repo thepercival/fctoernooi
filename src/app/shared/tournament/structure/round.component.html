@@ -28,8 +28,10 @@
           </li>
           <li *ngFor="let place of poule.getPlaces();"
             class="list-group-item px-2 py-2 place-list-item pointer {{cssService.getQualifyPlace(place)}}"
-            placement="top" ngbPopover="{{nameService.getPlaceFromName(place,false,true)}}">{{nameService.getPlaceFromName(
-                place, false)}}</li>
+            placement="top" ngbPopover="{{nameService.getPlaceFromName(place,true,true)}}">
+            <span
+              [ngClass]="{'favitem': isFavorite(place.getCompetitor()) }">{{nameService.getPlaceFromName(place, false)}}</span>
+          </li>
         </ul>
       </div>
 
@@ -83,7 +85,7 @@
   <div class="d-flex align-items-stretch text-center">
     <app-tournament-structureround *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed(); first as first"
       class="align-self-stretch flex-wrap mb-2" [round]="qualifyGroup.getChildRound()" [editable]="editable"
-      [first]="first" (roundNumberChanged)="roundNumberChanged.emit($event)">
+      [favorites]="favorites" [first]="first" (roundNumberChanged)="roundNumberChanged.emit($event)">
     </app-tournament-structureround>
   </div>
   <div *ngIf="!round.isRoot() && round.getNrOfPlaces() === 2">

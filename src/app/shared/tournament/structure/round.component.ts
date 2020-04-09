@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { HorizontalPoule, NameService, QualifyGroup, Round, RoundNumber, StructureService } from 'ngx-sport';
+import { HorizontalPoule, NameService, QualifyGroup, Round, RoundNumber, StructureService, Competitor } from 'ngx-sport';
 
 import { IAlert } from '../../common/alert';
 import { CSSService } from '../../common/cssservice';
@@ -17,6 +17,7 @@ export class StructureRoundComponent {
   @Output() roundNumberChanged = new EventEmitter<RoundNumber>();
   @Input() editable: boolean;
   @Input() first: boolean;
+  @Input() favorites: Competitor[];
   viewType: number = StructureViewType.ROUNDSTRUCTURE;
   alert: IAlert;
   private structureService: StructureService;
@@ -151,60 +152,12 @@ export class StructureRoundComponent {
     return nrOfChildPoules;
   }
 
-  // getPlaceNumbers(): number[] {
-  //   const losersHorPoule = this.round.getFirstHorizontalPoule(QualifyGroup.LOSERS);
-  //   const maxPlaceNumber = losersHorPoule.getFirstPlace().getNumber();
-  //   const placeNumbers = [];
-  //   for (let placeNumber = 1; placeNumber <= 6; placeNumber++) {
-  //     placeNumbers.push(placeNumber);
-  //   }
-  //   return placeNumbers;
-  // }
-
-  // private getStructureService(): StructureService {
-  //   return this.structureService;
-  // }
-
-  // getWinnersLosersDescription(winnersOrLosers: number): string {
-  //   return this.nameService.getWinnersLosersDescription(winnersOrLosers, true);
-  // }
-
-  // canExpand(): boolean {
-  //   return (this.round.getNrOfPlaces() / (this.round.getPoules().length + 1)) >= 2;
-  // }
-
-  // canRemovePlace(round: Round) {
-  //   return !this.hasMinimumNrOfPlacesPerPoule(round);
-  // }
-
-  // hasMinimumNrOfPlacesPerPoule(round: Round) {
-  //   return (round.getPoules().length * 2) === round.getNrOfPlaces();
-  // }
-
-  // getPlaceNumbers(round: Round): number[] {
-  //   const placeNumbers: number[] = [];
-  //   const nrOfPlacesPerPoule = this.structureService.getNrOfPlacesPerPoule(round.getNrOfPlaces(), round.getPoules().length);
-  //   for (let placeNr = 0; placeNr < nrOfPlacesPerPoule; placeNr++) {
-  //     placeNumbers.push(placeNr);
-  //   }
-  //   return placeNumbers;
-  // }
-
-
-  // getDivisionClasses(round: Round): string {
-  //   const nrOfRounds = round.getNumber().getRounds().length;
-  //   let classes = '';
-  //   if (nrOfRounds > 2) {
-  //     classes += 'more-than-two-rounds';
-  //   }
-  //   if (nrOfRounds > 4) {
-  //     classes += ' more-than-four-rounds';
-  //   }
-  //   if (nrOfRounds > 8) {
-  //     classes += ' more-than-eight-rounds';
-  //   }
-  //   return classes;
-  // }
+  isFavorite(competitor: Competitor) {
+    if (competitor === undefined) {
+      return false;
+    }
+    return this.favorites && this.favorites.indexOf(competitor) >= 0;
+  }
 
   protected resetAlert(): void {
     this.alert = undefined;
@@ -213,11 +166,6 @@ export class StructureRoundComponent {
   protected setAlert(type: string, message: string) {
     this.alert = { type: type, message: message };
   }
-
-  // getEditHorPouleDescription(editHorPoule: EditHorPoule): string {
-  //   return this.nameService.getHorizontalPouleName(editHorPoule.previous)
-  //     + ' en ' + this.nameService.getHorizontalPouleName(editHorPoule.current);
-  // }
 }
 
 interface EditHorPoule {

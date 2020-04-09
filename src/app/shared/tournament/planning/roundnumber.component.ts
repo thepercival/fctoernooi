@@ -44,6 +44,7 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
   tournamentBreak: PlanningPeriod;
   userIsGameResultAdmin: boolean;
   favorites: Favorites;
+  filterEnabled = false;
   hasReferees: boolean;
   gameDatas: GameData[];
   private sportScoreConfigService: SportScoreConfigService;
@@ -103,7 +104,7 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
     let showBreak = false;
     this.roundNumber.getGames(Game.ORDER_BY_BATCH).forEach(game => {
       const aPlaceHasACompetitor = this.hasAPlaceACompetitor(game);
-      if (!(!this.favorites.hasItems() || this.favorites.hasGameItem(game) || !aPlaceHasACompetitor)) {
+      if (this.filterEnabled && !(!this.favorites.hasItems() || this.favorites.hasGameItem(game) || !aPlaceHasACompetitor)) {
         return;
       }
       const pouleData: PouleData = pouleDatas[game.getPoule().getId()];
@@ -129,6 +130,11 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
       gameDatas.push(gameData);
     });
     return gameDatas;
+  }
+
+  toggleFilter() {
+    this.filterEnabled = !this.filterEnabled;
+    this.reloadGameData();
   }
 
   private getPouleDatas(): any {
@@ -192,10 +198,6 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
 
   linkToPlanningConfig() {
     this.router.navigate(['/admin/planningconfig', this.tournament.getId(), this.roundNumber.getNumber()]);
-  }
-
-  linkToFilterSettings() {
-    this.router.navigate(['/public/filter', this.tournament.getId()]);
   }
 
   showPouleRanking(popOver: NgbPopover, poule: Poule) {

@@ -1,15 +1,18 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { EndRankingService, EndRankingItem, RankingService, Structure } from 'ngx-sport';
+import { EndRankingService, EndRankingItem, RankingService, Structure, Competitor } from 'ngx-sport';
 import { VoetbalRange } from 'ngx-sport/src/range';
+import { Favorites } from '../../../lib/favorites';
+import { CompetitorListComponent } from '../../../admin/competitor/list.component';
 
 @Component({
-  selector: 'app-tournament-endranking-view',
+  selector: 'app-tournament-endranking',
   templateUrl: './end.component.html',
   styleUrls: ['./end.component.scss']
 })
 export class EndRankingComponent implements OnInit, OnChanges {
 
   @Input() structure: Structure;
+  @Input() favorites: Competitor[];
   @Input() range: VoetbalRange;
 
   public items: EndRankingItem[];
@@ -45,5 +48,9 @@ export class EndRankingComponent implements OnInit, OnChanges {
 
   getMedalColor(rank: number): string {
     return 'text-' + (rank === 1 ? 'gold' : (rank === 2 ? 'silver' : 'bronze'));
+  }
+
+  isFavorite(competitorName: string) {
+    return this.favorites && this.favorites.some(competitor => competitor.getName() === competitorName);
   }
 }

@@ -90,7 +90,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   showLockerRoomNotArranged(competitor: Competitor): boolean {
-    return this.areSomeCompetitorsArranged && this.lockerRoomValidator.isArranged(competitor);
+    return this.areSomeCompetitorsArranged && !this.lockerRoomValidator.isArranged(competitor);
   }
 
   editPlace(place: Place) {

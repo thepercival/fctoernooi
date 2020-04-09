@@ -20,7 +20,7 @@
           <li [ngbNavItem]="2">
             <a ngbNavLink>eindstand</a>
             <ng-template ngbNavContent>
-              <app-tournament-endranking-view [structure]="structure"></app-tournament-endranking-view>
+              <app-tournament-endranking [favorites]="competitors" [structure]="structure"></app-tournament-endranking>
             </ng-template>
           </li>
         </ul>

@@ -62,18 +62,19 @@
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'door-closed']"></fa-icon> kleedkamers
             </h5>
-            <p class="card-text">
-              alleen tonen als ingesteld
-              is iedereen ingedeeld, als bezoeker of deelnemer?
+            <p *ngIf="favorites.hasCompetitors()" class="card-text text-primary">
+              {{lockerRoomDescription()}}
+            </p>
+            <p *ngIf="!favorites.hasCompetitors()" class="card-text">
+              bekijk de indeling
             </p>
           </div>
         </div>
       </div>
       <div class="text-center mt-3">
         <button *ngIf="!processing && tournament" [routerLink]="['/public/filter', tournament.getId()]" type="button"
-          class="btn btn-outline-{{favorites.hasItems() ? 'primary' : 'secondary'}} w-100">
-          filter {{favorites.hasItems() ? 'aanpassen' : 'instellen'}}
-        </button>
+          class="btn btn-outline-{{favorites.hasItems() ? 'primary' : 'secondary'}} w-100"
+          [innerHTML]="filterDescription() | keepHtml"></button>
       </div>
     </div>
   </div>

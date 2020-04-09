@@ -30,7 +30,7 @@
     <table *ngIf="!processingWithRole && shellsWithRole.length > 0" class="table">
       <tbody>
         <app-home-shell class="pointer" (click)="linkToEdit(shell)" *ngFor="let shell of shellsWithRole" [shell]="shell"
-          [showPublic]="true" id="scroll-{{shell.tournamentId}}"></app-home-shell>
+          [showPublic]="true"></app-home-shell>
         <tr *ngIf="!showingAllWithRole && shellsWithRoleFromFour.length > 0"
           (click)="showingAllWithRole = !showingAllWithRole" class="pointer">
           <td colspan="4" class="text-center">
@@ -41,7 +41,7 @@
         </tr>
         <ng-template ngFor let-shell [ngForOf]="shellsWithRoleFromFour">
           <app-home-shell *ngIf="showingAllWithRole" class="pointer" (click)="linkToEdit(shell)" [shell]="shell"
-            [showPublic]="true" id="scroll-{{shell.tournamentId}}">
+            [showPublic]="true">
           </app-home-shell>
         </ng-template>
       </tbody>
@@ -77,7 +77,7 @@
           </td>
         </tr>
         <app-home-shell class="pointer" (click)="linkToView(shell)" *ngFor="let shell of publicShells" [shell]="shell"
-          [showPublic]="false" id="scroll-{{shell.tournamentId}}"></app-home-shell>
+          [showPublic]="false"></app-home-shell>
         <tr *ngIf="!searchFilterActive" (click)="expandFutureDays()" class="pointer">
           <td colspan="3" class="text-center">
             <fa-icon [icon]="['fas', 'angle-double-down']"></fa-icon>
