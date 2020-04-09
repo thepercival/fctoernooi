@@ -14,11 +14,11 @@ export class LockerRoomValidator {
     }
 
     areAllArranged(): boolean {
-        return this.competitors.every(competitor => this.isArranged(competitor));
+        return this.competitors.length > 0 && this.competitors.every(competitor => this.isArranged(competitor));
     }
 
     areSomeArranged(): boolean {
-        return this.competitors.some(competitor => this.isArranged(competitor));
+        return this.competitors.length > 0 && this.competitors.some(competitor => this.isArranged(competitor));
     }
 
     isArranged(competitor): boolean {

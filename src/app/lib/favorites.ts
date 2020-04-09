@@ -18,6 +18,15 @@ export class Favorites {
         return this.hasCompetitors() || this.hasReferees();
     }
 
+    removeNonExisting(competitors: Competitor[], referees: Referee[]) {
+        this.competitorIds = this.competitorIds.filter(competitorId => {
+            return competitors.some(competitor => competitor.getId() === competitorId);
+        });
+        this.refereeIds = this.refereeIds.filter(refereeId => {
+            return referees.some(referee => referee.getId() === refereeId);
+        });
+    }
+
     hasGameItem(game: Game): boolean {
         return this.hasGameReferee(game) || this.hasGameCompetitor(game);
     }

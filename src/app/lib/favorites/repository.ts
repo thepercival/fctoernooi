@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Tournament } from '../../lib/tournament';
 import { Favorites } from '../favorites';
+import { Referee, Competitor } from 'ngx-sport';
 
 @Injectable()
 export class FavoritesRepository {
@@ -29,6 +30,17 @@ export class FavoritesRepository {
             }
         }
         items.push(newItem);
+        this.writeToLocalStorage(items);
+    }
+
+    removeNonExisting(tournament: Tournament, competitors: Competitor[], referees: Referee[]) {
+        const items = this.getFromLocalStorage();
+        // update item
+        const item = this.findItem(items, tournament);
+        if (item === undefined) {
+            return;
+        }
+        item.removeNonExisting(competitors, referees);
         this.writeToLocalStorage(items);
     }
 

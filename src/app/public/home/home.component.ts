@@ -47,6 +47,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     postNgOnInit() {
         this.competitors = this.structure.getFirstRoundNumber().getCompetitors();
         this.lockerRoomValidator = new LockerRoomValidator(this.competitors, this.tournament.getLockerRooms());
+        this.favRepository.removeNonExisting(this.tournament, this.competitors, this.competition.getReferees());
         this.favorites = this.favRepository.getItem(this.tournament);
         this.processing = false;
     }
