@@ -16,44 +16,7 @@
         <li [ngbNavItem]="2">
             <a ngbNavLink>puntentelling</a>
             <ng-template ngbNavContent>
-                <table class="table mb-0">
-                    <thead>
-                        <tr>
-                            <th>sport</th>
-                            <th class="">resultaat</th>
-                            <th class="text-right">punten</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <ng-template ngFor let-sportConfig [ngForOf]="poule.getRound().getNumber().getSportConfigs()">
-                            <tr>
-                                <td>{{sportConfig.getSport().getName()}}</td>
-                                <td>overwinning</td>
-                                <td class="text-right">{{sportConfig.getWinPoints()}}</td>
-                            </tr>
-                            <tr>
-                                <td>{{sportConfig.getSport().getName()}}</td>
-                                <td>gelijkspel</td>
-                                <td class="text-right">{{sportConfig.getDrawPoints()}}</td>
-                            </tr>
-                            <tr *ngIf="poule.getRound().getNumber().getValidPlanningConfig().getExtension()">
-                                <td>{{sportConfig.getSport().getName()}}</td>
-                                <td>overwinning na verlenging</td>
-                                <td class="text-right">{{sportConfig.getWinPointsExt()}}</td>
-                            </tr>
-                            <tr *ngIf="poule.getRound().getNumber().getValidPlanningConfig().getExtension()">
-                                <td>{{sportConfig.getSport().getName()}}</td>
-                                <td>gelijkspel na verlenging</td>
-                                <td class="text-right">{{sportConfig.getDrawPointsExt()}}</td>
-                            </tr>
-                            <tr *ngIf="poule.getRound().getNumber().getValidPlanningConfig().getExtension()">
-                                <td>{{sportConfig.getSport().getName()}}</td>
-                                <td>verlies na verlenging</td>
-                                <td class="text-right">{{sportConfig.getLosePointsExt()}}</td>
-                            </tr>
-                        </ng-template>
-                    </tbody>
-                </table>
+                <app-score-rules [roundNumber]="poule.getRound().getNumber()"></app-score-rules>
             </ng-template>
         </li>
 
@@ -61,13 +24,7 @@
             <a ngbNavLink>rangschikking</a>
             <ng-template ngbNavContent>
                 <p class="pt-2">de onderstaande regels bepalen de rangschikking</p>
-                <ul class="list-group">
-                    <li *ngFor="let description of getDescriptionRankingRules(); let index = index"
-                        class="list-group-item">
-                        <span class="badge badge-secondary">{{index+1}}</span>
-                        <span class="ml-2">{{description}}</span>
-                    </li>
-                </ul>
+                <app-ranking-rules [tournament]="tournament"></app-ranking-rules>
             </ng-template>
         </li>
     </ul>

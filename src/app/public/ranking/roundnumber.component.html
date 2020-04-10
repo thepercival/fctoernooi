@@ -1,8 +1,13 @@
 <div *ngIf="getPoules().length > 0" class="card border-dark mb-3">
-  <div class="card-header pointer" (click)="show = !show">
+  <div class="card-header p-0">
     <div class="d-flex justify-content-between">
-      <h5 class="mb-0" [innerHtml]="nameService.getRoundNumberName(roundNumber) | keepHtml"></h5>
-      <fa-icon [icon]="['fas', 'chevron-right']" [rotate]="show ? 90 : 0"></fa-icon>
+      <h5 class="mb-0 ml-3 mt-3" [innerHtml]="nameService.getRoundNumberName(roundNumber) | keepHtml"></h5>
+      <button class="btn btn-sm btn-outline-info my-2" (click)="openModal(contentScoreRules)">
+        <i class="fi flaticon-scoreboard"></i>
+      </button>
+      <fa-icon class="pointer px-3 pt-3" (click)="show=!show" [icon]="['fas', 'chevron-right']"
+        [rotate]="show ? 90 : 0">
+      </fa-icon>
     </div>
   </div>
   <div class="card-body card-deck-wrapper" [ngClass]="{ 'd-none': !show }">
@@ -18,3 +23,21 @@
   <app-tournament-ranking-roundnumber [roundNumber]="roundNumber.getNext()" [tournament]="tournament">
   </app-tournament-ranking-roundnumber>
 </div>
+
+<ng-template #contentScoreRules let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">
+      puntentelling
+    </h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-score-rules [roundNumber]="roundNumber"></app-score-rules>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+      (click)="modal.dismiss('close')">sluiten</button>
+  </div>
+</ng-template>

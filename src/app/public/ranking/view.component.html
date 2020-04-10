@@ -23,6 +23,15 @@
               <app-tournament-endranking [favorites]="competitors" [structure]="structure"></app-tournament-endranking>
             </ng-template>
           </li>
+          <li [ngbNavItem]="3">
+            <a ngbNavLink>regels</a>
+            <ng-template ngbNavContent>
+              <div class="m-3">
+                <h4>rangschikking</h4>
+                <app-ranking-rules [tournament]="tournament"></app-ranking-rules>
+              </div>
+            </ng-template>
+          </li>
         </ul>
         <div [ngbNavOutlet]="nav"></div>
       </div>

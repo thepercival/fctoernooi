@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 
 import { RoundNumber, Poule, State, NameService } from 'ngx-sport';
 import { Tournament } from '../../lib/tournament';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-tournament-ranking-roundnumber',
@@ -14,7 +15,8 @@ export class RankingRoundNumberComponent implements OnInit {
     show: boolean;
 
     constructor(
-        public nameService: NameService
+        public nameService: NameService,
+        private modalService: NgbModal
     ) {
     }
 
@@ -31,6 +33,10 @@ export class RankingRoundNumberComponent implements OnInit {
         } else if (state === State.Finished && (stateNext === undefined || stateNext === State.Created || !nextNeedsRanking)) {
             this.show = true;
         }
+    }
+
+    openModal(templateRef) {
+        const modalRef = this.modalService.open(templateRef);
     }
 
     getPoules(): Poule[] {

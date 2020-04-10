@@ -18,6 +18,7 @@ export class LockerRoomComponent implements OnInit {
     @Input() lockerRoom: LockerRoom;
     @Input() editable: boolean;
     @Output() remove = new EventEmitter<LockerRoom>();
+    @Output() change = new EventEmitter();
 
     constructor(
         private modalService: NgbModal
@@ -38,9 +39,9 @@ export class LockerRoomComponent implements OnInit {
         activeModal.componentInstance.lockerRoom = this.lockerRoom;
         activeModal.componentInstance.selectedCompetitors = this.lockerRoom.getCompetitors().slice();
         activeModal.result.then((result: Competitor[]) => {
-            console.log(result);
             this.lockerRoom.getCompetitors().splice(0);
             result.forEach((competitor: Competitor) => this.lockerRoom.getCompetitors().push(competitor));
+            this.change.emit();
         }, (reason) => { });
     }
 

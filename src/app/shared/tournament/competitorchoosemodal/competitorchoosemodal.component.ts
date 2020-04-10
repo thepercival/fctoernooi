@@ -14,6 +14,7 @@ export class CompetitorChooseModalComponent {
     @Input() places: Place[];
     @Input() lockerRoom: LockerRoom;
     @Input() selectedCompetitors: Competitor[];
+    changed = false;
 
     constructor(public nameService: NameService, public activeModal: NgbActiveModal) {
     }
@@ -33,8 +34,6 @@ export class CompetitorChooseModalComponent {
         } else {
             this.selectedCompetitors.push(competitor);
         }
+        this.changed = true;
     }
-
-
-
 }

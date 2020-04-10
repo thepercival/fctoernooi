@@ -1,0 +1,38 @@
+<table class="table mb-0">
+    <thead>
+        <tr>
+            <th>sport</th>
+            <th class="">resultaat</th>
+            <th class="text-right">punten</th>
+        </tr>
+    </thead>
+    <tbody>
+        <ng-template ngFor let-sportConfig [ngForOf]="roundNumber.getSportConfigs()">
+            <tr>
+                <td>{{sportConfig.getSport().getName()}}</td>
+                <td>overwinning</td>
+                <td class="text-right">{{sportConfig.getWinPoints()}}</td>
+            </tr>
+            <tr>
+                <td>{{sportConfig.getSport().getName()}}</td>
+                <td>gelijkspel</td>
+                <td class="text-right">{{sportConfig.getDrawPoints()}}</td>
+            </tr>
+            <tr *ngIf="roundNumber.getValidPlanningConfig().getExtension()">
+                <td>{{sportConfig.getSport().getName()}}</td>
+                <td>overwinning na verlenging</td>
+                <td class="text-right">{{sportConfig.getWinPointsExt()}}</td>
+            </tr>
+            <tr *ngIf="roundNumber.getValidPlanningConfig().getExtension()">
+                <td>{{sportConfig.getSport().getName()}}</td>
+                <td>gelijkspel na verlenging</td>
+                <td class="text-right">{{sportConfig.getDrawPointsExt()}}</td>
+            </tr>
+            <tr *ngIf="roundNumber.getValidPlanningConfig().getExtension()">
+                <td>{{sportConfig.getSport().getName()}}</td>
+                <td>verlies na verlenging</td>
+                <td class="text-right">{{sportConfig.getLosePointsExt()}}</td>
+            </tr>
+        </ng-template>
+    </tbody>
+</table>

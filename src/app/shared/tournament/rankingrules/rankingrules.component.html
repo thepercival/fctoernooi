@@ -1,0 +1,6 @@
+<ul class="list-group">
+    <li *ngFor="let description of getDescription(); let index = index" class="list-group-item">
+        <span class="badge badge-secondary">{{index+1}}</span>
+        <span class="ml-2">{{description}}</span>
+    </li>
+</ul>

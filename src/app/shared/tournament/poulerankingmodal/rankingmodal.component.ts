@@ -13,10 +13,4 @@ export class PouleRankingModalComponent {
     tournament: Tournament;
     activeTab = 1;
     constructor(public nameService: NameService, public activeModal: NgbActiveModal) { }
-
-    getDescriptionRankingRules(): string[] {
-        const ruleSet = this.tournament.getCompetition().getRuleSet();
-        const rankingService = new RankingService(undefined, ruleSet);
-        return rankingService.getRuleDescriptions();
-    }
 }

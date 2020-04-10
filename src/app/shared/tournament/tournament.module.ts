@@ -21,6 +21,8 @@ import { NameModalComponent } from './namemodal/namemodal.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CompetitorChooseModalComponent } from './competitorchoosemodal/competitorchoosemodal.component';
 import { RouterModule } from '@angular/router';
+import { RankingRulesComponent } from './rankingrules/rankingrules.component';
+import { ScoreRulesComponent } from './scorerules/scorerules.component';
 
 
 @NgModule({
@@ -33,7 +35,8 @@ import { RouterModule } from '@angular/router';
     PouleRankingComponent,
     TitleComponent,
     StructureRoundArrangeComponent, StructureQualifyComponent, StructureRoundComponent,
-    LockerRoomsComponent, LockerRoomComponent
+    LockerRoomsComponent, LockerRoomComponent,
+    RankingRulesComponent, ScoreRulesComponent
   ],
   imports: [
     CommonModule,
@@ -53,6 +56,7 @@ import { RouterModule } from '@angular/router';
     TitleComponent,
     StructureRoundComponent,
     LockerRoomsComponent,
+    RankingRulesComponent, ScoreRulesComponent
   ]
 })
 export class TournamentModule {

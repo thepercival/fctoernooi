@@ -23,6 +23,7 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
   lockerRooms: LockerRoom[];
   hasCompetitors = false;
   validator: LockerRoomValidator;
+  changed = false;
 
   validations: any = {
     'minlengthname': LockerRoom.MIN_LENGTH_NAME,
@@ -70,6 +71,7 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
 
     activeModal.result.then((result) => {
       const tmp = new LockerRoom(this.tournament, result);
+      this.changed = true;
     }, (reason) => {
     });
   }
@@ -78,6 +80,7 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
     const idx = this.lockerRooms.indexOf(lockerRoom);
     if (idx >= 0) {
       this.lockerRooms.splice(idx, 1);
+      this.changed = true;
     }
   }
 
