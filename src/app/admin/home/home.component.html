@@ -340,12 +340,6 @@
   </div>
 </ng-template>
 
-<ng-template #t let-date="date" let-focused="focused" let-disabled="disabled">
-  <span class="custom-day" [class.focused]="focused" [class.selected]="isSelected(date)" [class.text-muted]="disabled">
-    {{ date.day }}
-  </span>
-</ng-template>
-
 <ng-template #contentremove let-modal>
   <div class="modal-header">
     <h4 class="modal-title">toernooi weggooien</h4>

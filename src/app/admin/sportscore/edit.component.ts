@@ -32,7 +32,6 @@ import { ModalRoundNumbersComponent } from '../roundnumber/selector.component';
 export class SportScoreEditComponent extends TournamentComponent implements OnInit {
     form: FormGroup;
     sportConfig: SportConfig;
-    sportConfigService: SportConfigService;
     translateService: TranslateService;
     scoreConfig: SportScoreConfig;
     roundNumber: RoundNumber;
@@ -51,6 +50,7 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private myNavigation: MyNavigation,
+        public sportConfigService: SportConfigService,
         private sportMapper: SportMapper,
         fb: FormBuilder,
         private modalService: NgbModal
@@ -66,7 +66,6 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
                 Validators.max(this.validations.maxScore)
             ])]
         });
-        this.sportConfigService = new SportConfigService(new SportScoreConfigService());
     }
 
     ngOnInit() {
