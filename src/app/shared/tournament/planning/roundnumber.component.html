@@ -40,7 +40,7 @@
             </button>
             <fa-icon *ngIf="canEditSettings && roundNumberNeedsRanking" [icon]="['fas', 'list-ul']" title="poule">
             </fa-icon>
-            <span *ngIf="canEditSettings && roundNumberNeedsRanking" title="wedstrijd">vs</span>
+            <span *ngIf="canEditSettings && !roundNumberNeedsRanking" title="wedstrijd">vs</span>
           </th>
           <th *ngIf="planningConfig.getEnableTime()" class="pointer text-info" container="body" title="start"
             placement="right">

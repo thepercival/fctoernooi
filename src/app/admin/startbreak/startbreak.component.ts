@@ -141,11 +141,6 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
         return false;
     }
 
-    equals(one: NgbDateStruct, two: NgbDateStruct) {
-        return one && two && two.year === one.year && two.month === one.month && two.day === one.day;
-    }
-    isSelected = date => this.equals(date, this.form.controls.date.value);
-
     checkBreakPeriod(startDateTime: Date, breakStartDateTime: Date, breakEndDateTime: Date): string {
         if (breakStartDateTime.getTime() < startDateTime.getTime()) {
             return 'de start van de pauze moet na het begin van het toernooi zijn';

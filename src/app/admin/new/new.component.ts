@@ -14,6 +14,9 @@ import {
   SportScoreConfigService,
   Structure,
   StructureService,
+  State,
+  JsonField,
+  SportMapper,
 } from 'ngx-sport';
 
 import { IAlert } from '../../shared/common/alert';
@@ -22,6 +25,7 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { TranslateService } from '../../lib/translate';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
+import { JsonTournament } from '../../lib/tournament/mapper';
 
 
 @Component({
@@ -50,6 +54,8 @@ export class NewComponent implements OnInit {
     private tournamentRepository: TournamentRepository,
     private structureRepository: StructureRepository,
     private planningRepository: PlanningRepository,
+    private sportConfigService: SportConfigService,
+    private sportMapper: SportMapper,
     fb: FormBuilder
   ) {
     const date = new Date();
@@ -108,7 +114,7 @@ export class NewComponent implements OnInit {
     const nrofcompetitors = StructureService.DefaultNrOfPlaces;
     const nroffields = this.form.controls.nroffields.value;
 
-    const startDateTime = new Date(
+    const startDateTime: Date = new Date(
       this.form.controls.date.value.year,
       this.form.controls.date.value.month - 1,
       this.form.controls.date.value.day,
@@ -116,42 +122,52 @@ export class NewComponent implements OnInit {
       this.form.controls.time.value.minute
     );
 
-    let tournament;
-    {
-      const association = new Association('username'); // dummy
-      const league = new League(name);
-      league.setAssociation(association);
-      const season = new Season('123'); // dummy
-      season.setStartDateTime(new Date());
-      season.setEndDateTime(new Date());
-      const competition = new Competition(league, season);
-      competition.setStartDateTime(startDateTime);
-      competition.setRuleSet(RankingService.RULESSET_WC);
-      const sportConfigService = new SportConfigService(new SportScoreConfigService());
-      sportConfigService.createDefault(this.sport, competition);
-
-      for (let fieldNumber = 1; fieldNumber <= nroffields; fieldNumber++) {
-        const field = new Field(competition, fieldNumber);
-        field.setName(String(fieldNumber));
-        field.setSport(this.sport);
-      }
-      tournament = new Tournament(competition);
-      tournament.setPublic(this.form.controls.public.value);
-      tournament.setUpdated(true);
+    const fields: JsonField[] = [];
+    for (let fieldNumber = 1; fieldNumber <= nroffields; fieldNumber++) {
+      fields.push({
+        number: fieldNumber,
+        name: String(fieldNumber),
+        sport: this.sportMapper.toJson(this.sport)
+      });
     }
 
-    this.tournamentRepository.createObject(tournament)
+    const jsonTournament: JsonTournament = {
+      public: this.form.controls.public.value,
+      updated: true,
+      competition: {
+        league: {
+          name: name,
+          association: { name: 'username' }
+        },
+        season: {
+          name: name,
+          startDateTime: (new Date()).toISOString(),
+          endDateTime: (new Date()).toISOString(),
+        },
+        ruleSet: RankingService.RULESSET_WC,
+        startDateTime: startDateTime.toISOString(),
+        fields,
+        referees: [],
+        state: State.Created,
+        sportConfigs: [this.sportConfigService.createDefaultJson(this.sport)]
+      },
+      lockerRooms: [],
+      roles: [],
+      sponsors: []
+    };
+
+    this.tournamentRepository.createObject(jsonTournament)
       .subscribe(
-        /* happy path */ tournamentOut => {
+        /* happy path */ tournament => {
           const structureService = new StructureService(Tournament.StructureOptions);
-          const structure: Structure = structureService.create(tournamentOut.getCompetition(), nrofcompetitors);
-          this.structureRepository.editObject(structure, tournamentOut)
+          const structure: Structure = structureService.create(tournament.getCompetition(), nrofcompetitors);
+          this.structureRepository.editObject(structure, tournament)
             .subscribe(
             /* happy path */(structureOut: Structure) => {
-                this.planningRepository.create(structureOut.getFirstRoundNumber(), tournamentOut)
+                this.planningRepository.create(structureOut.getFirstRoundNumber(), tournament)
                   .subscribe(
                     /* happy path */ roundNumberOut => {
-                      this.router.navigate(['/admin/structure', tournamentOut.getId()]);
+                      this.router.navigate(['/admin/structure', tournament.getId()]);
                     },
                   /* error path */ e => {
                       this.setAlert('danger', 'de toernooi-planning kon niet worden aangemaakt: ' + e);
@@ -183,10 +199,4 @@ export class NewComponent implements OnInit {
     const translate = new TranslateService();
     return translate.getFieldNamePlural(this.sport);
   }
-
-  equals(one: NgbDateStruct, two: NgbDateStruct) {
-    return one && two && two.year === one.year && two.month === one.month && two.day === one.day;
-  }
-  isSelected = date => this.equals(date, this.form.controls.date.value);
-
 }

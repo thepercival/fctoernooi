@@ -536,9 +536,4 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
     navigateBack() {
         this.myNavigation.back();
     }
-
-    // equals(one: NgbDateStruct, two: NgbDateStruct) {
-    //     return one && two && two.year === one.year && two.month === one.month && two.day === one.day;
-    // }
-    // isSelected = date => this.equals(date, this.model.startdate);
 }

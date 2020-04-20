@@ -316,11 +316,6 @@ export class HomeComponent extends TournamentComponent implements OnInit {
             );
     }
 
-    equals(one: NgbDateStruct, two: NgbDateStruct) {
-        return one && two && two.year === one.year && two.month === one.month && two.day === one.day;
-    }
-    isSelected = date => this.equals(date, this.copyForm.controls.date.value);
-
     share() {
         this.setAlert('info', 'het delen wordt gewijzigd');
 

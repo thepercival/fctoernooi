@@ -29,7 +29,6 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 export class SportConfigEditComponent extends TournamentComponent implements OnInit {
     form: FormGroup;
     sportConfig: SportConfig;
-    sportConfigService: SportConfigService;
     ranges: any = {};
     hasBegun: boolean;
     validations: SportValidations = {
@@ -50,6 +49,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
+        public sportConfigService: SportConfigService,
         private fieldRepository: FieldRepository,
         private planningRepository: PlanningRepository,
         private myNavigation: MyNavigation,
@@ -86,7 +86,6 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
             ])],
             nrOfFields: ['']
         });
-        this.sportConfigService = new SportConfigService(new SportScoreConfigService());
     }
 
     initRanges() {

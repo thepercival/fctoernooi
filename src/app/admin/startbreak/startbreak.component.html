@@ -12,14 +12,14 @@
         <h2>start</h2>
         <div *ngIf="!hasBegun" class="form-group row">
           <div class="col-3">
-            <label for="dp" class="col-form-label">datum</label>
+            <label for="date" class="col-form-label">datum</label>
           </div>
           <div class="col-9">
             <div class="input-group input-group-date">
               <input class="form-control"
                 [ngClass]="{ 'is-invalid': form.controls.date.invalid, 'is-valid': form.controls.date.valid }"
-                placeholder="yyyy-mm-dd" id="dp" name="dp" formControlName="date" ngbDatepicker #d="ngbDatepicker"
-                required [dayTemplate]="t" [minDate]="minDateStruct">
+                placeholder="yyyy-mm-dd" formControlName="date" ngbDatepicker #d="ngbDatepicker" required
+                [minDate]="minDateStruct">
               <div class="input-group-append">
                 <span class="input-group-text pointer" (click)="d.toggle()">
                   <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
@@ -63,16 +63,16 @@
           </div>
           <div *ngIf="!hasBegun && this.form.controls.togglebreak.value" class="form-group row">
             <div class="col-3">
-              <label for="dp" class="col-form-label">start</label>
+              <label for="breakstartdate" class="col-form-label">start</label>
             </div>
             <div class="col-9">
               <div class="input-group input-group-date">
                 <input class="form-control"
                   [ngClass]="{ 'is-invalid': form.controls.breakstartdate.invalid, 'is-valid': form.controls.breakstartdate.valid }"
-                  placeholder="yyyy-mm-dd" id="dp" name="dp" formControlName="breakstartdate" ngbDatepicker
-                  #d="ngbDatepicker" required [dayTemplate]="t" [minDate]="minDateStruct">
+                  placeholder="yyyy-mm-dd" formControlName="breakstartdate" ngbDatepicker #dBreakStart="ngbDatepicker"
+                  required [minDate]="minDateStruct">
                 <div class="input-group-append">
-                  <span class="input-group-text pointer" (click)="d.toggle()">
+                  <span class="input-group-text pointer" (click)="dBreakStart.toggle()">
                     <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
                   </span>
                 </div>
@@ -101,16 +101,16 @@
           </div>
           <div *ngIf="!hasBegun && this.form.controls.togglebreak.value" class="form-group row">
             <div class="col-3">
-              <label for="dp" class="col-form-label">eind</label>
+              <label for="breakenddate" class="col-form-label">eind</label>
             </div>
             <div class="col-9">
               <div class="input-group input-group-date">
                 <input class="form-control"
                   [ngClass]="{ 'is-invalid': form.controls.breakenddate.invalid, 'is-valid': form.controls.breakenddate.valid }"
-                  placeholder="yyyy-mm-dd" id="dp" name="dp" formControlName="breakenddate" ngbDatepicker
-                  #d="ngbDatepicker" required [dayTemplate]="t" [minDate]="minDateStruct">
+                  placeholder="yyyy-mm-dd" formControlName="breakenddate" ngbDatepicker #dBreakEnd="ngbDatepicker"
+                  required [minDate]="minDateStruct">
                 <div class="input-group-append">
-                  <span class="input-group-text pointer" (click)="d.toggle()">
+                  <span class="input-group-text pointer" (click)="dBreakEnd.toggle()">
                     <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
                   </span>
                 </div>
@@ -150,8 +150,3 @@
     </div>
   </div>
 </div>
-<ng-template #t let-date="date" let-focused="focused" let-disabled="disabled">
-  <span class="custom-day" [class.focused]="focused" [class.selected]="isSelected(date)" [class.text-muted]="disabled">
-    {{ date.day }}
-  </span>
-</ng-template>

@@ -59,8 +59,8 @@
             <div class="input-group input-group-date">
               <input class="form-control"
                 [ngClass]="{ 'is-invalid': form.controls.date.invalid, 'is-valid': form.controls.date.valid }"
-                placeholder="yyyy-mm-dd" id="dp" name="dp" formControlName="date" ngbDatepicker #d="ngbDatepicker"
-                [dayTemplate]="t" [minDate]="minDateStruct">
+                placeholder="yyyy-mm-dd" formControlName="date" ngbDatepicker #d="ngbDatepicker"
+                [minDate]="minDateStruct">
               <div class="input-group-append">
                 <span class="input-group-text pointer" (click)="d.toggle()">
                   <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
@@ -100,9 +100,3 @@
     </div>
   </div>
 </div>
-
-<ng-template #t let-date="date" let-focused="focused" let-disabled="disabled">
-  <span class="custom-day" [class.focused]="focused" [class.selected]="isSelected(date)" [class.text-muted]="disabled">
-    {{ date.day }}
-  </span>
-</ng-template>

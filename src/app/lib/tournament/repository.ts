@@ -55,9 +55,9 @@ export class TournamentRepository extends APIRepository {
         );
     }
 
-    createObject(tournament: Tournament): Observable<Tournament> {
-        return this.http.post(this.url, this.mapper.toJson(tournament), { headers: super.getHeaders() }).pipe(
-            map((res: JsonTournament) => this.mapper.toObject(res)),
+    createObject(json: JsonTournament): Observable<Tournament> {
+        return this.http.post(this.url, json, { headers: super.getHeaders() }).pipe(
+            map((jsonTournament: JsonTournament) => this.mapper.toObject(jsonTournament)),
             catchError((err) => this.handleError(err))
         );
     }
