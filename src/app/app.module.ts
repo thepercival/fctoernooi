@@ -50,7 +50,7 @@ import { LayoutModule } from './shared/layout/layout.module';
     HomeShellComponent,
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     HttpClientModule,
     RoutingModule,
     ReactiveFormsModule,
