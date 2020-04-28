@@ -220,6 +220,10 @@
             "production": {
               "browserTarget": "fctoernooi:build:production",
               "serverTarget": "fctoernooi:server:production"
+            },
+            "acc": {
+              "browserTarget": "fctoernooi:build:acc",
+              "serverTarget": "fctoernooi:server:acc"
             }
           }
         },
