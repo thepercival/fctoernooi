@@ -25,9 +25,6 @@ import {
 import {
   NgbAlertModule,
   NgbCollapseModule,
-  NgbDatepickerModule,
-  NgbPopoverModule,
-  NgbTimepickerModule,
 } from '@ng-bootstrap/ng-bootstrap';
 
 import { environment } from '../environments/environment';
@@ -58,7 +55,7 @@ import { LayoutModule } from './shared/layout/layout.module';
     RoutingModule,
     ReactiveFormsModule,
     CommonSharedModule,
-    NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule,
+    NgbAlertModule, NgbCollapseModule,
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
     FontAwesomeModule,
     LayoutModule

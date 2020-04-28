@@ -70,7 +70,6 @@ import { LockerRoomMapper } from '../lib/lockerroom/mapper';
 
 @NgModule({
   imports: [
-    // ClipboardModule,
     CommonModule,
     RoutingModule,
     NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule,
