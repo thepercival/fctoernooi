@@ -16,6 +16,7 @@
     "dev:ssr": "ng run fctoernooi:serve-ssr",
     "serve:ssr": "node dist/fctoernooi/server/main.js",
     "build:ssr": "ng build --prod && ng run fctoernooi:server:production",
+    "build:ssr:acc": "ng build --prod --configuration=acc && ng run fctoernooi:server:acc",
     "prerender": "ng run fctoernooi:prerender"
   },
   "private": true,

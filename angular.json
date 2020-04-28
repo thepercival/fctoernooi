@@ -196,6 +196,17 @@
               ],
               "sourceMap": false,
               "optimization": true
+            },
+            "acc": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.acc.ts"
+                }
+              ],
+              "sourceMap": false,
+              "optimization": true
             }
           }
         },
