@@ -41,7 +41,8 @@
         <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/public/structure', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
-              <i class="fi flaticon-structure"></i> opzet</h5>
+              <fa-icon [icon]="['fac', 'structure']"></fa-icon> opzet
+            </h5>
             <p class="card-text" *ngIf="!structure.getFirstRoundNumber().hasNext()">
               1 ronde ingesteld
             </p>

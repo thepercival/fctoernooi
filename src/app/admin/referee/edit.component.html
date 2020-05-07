@@ -5,7 +5,7 @@
       </app-tournament-title>
       <div>
         <h2>
-          <i class="fi flaticon-referee"></i> scheidsrechter
+          <fa-icon [icon]="['fac', 'referee']"></fa-icon> scheidsrechter
         </h2>
         <h2 *ngIf="processing" class="text-center">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
@@ -61,7 +61,7 @@
         <div class="form-group row justify-content-end">
           <div class="col-9">
             <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
-              <i class="fi flaticon-referee" title="scheidsrechter"></i>
+              <fa-icon [icon]="['fac', 'referee']"></fa-icon>
               <span>{{referee ? 'wijzigen' : 'toevoegen'}}</span>
             </button>
           </div>

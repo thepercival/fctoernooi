@@ -140,7 +140,7 @@ export class NewComponent implements OnInit {
           association: { name: 'username' }
         },
         season: {
-          name: name,
+          name: 'dummy',
           startDateTime: (new Date()).toISOString(),
           endDateTime: (new Date()).toISOString(),
         },

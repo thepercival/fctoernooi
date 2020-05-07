@@ -23,8 +23,8 @@
         </li>
         <li [ngbNavItem]="2">
           <a ngbNavLink>
-            <i class="fi flaticon-referee"></i><span> scheidsrechters </span><span *ngIf="favorites.hasReferees()"
-              class="badge badge-primary">{{favorites.getNrOfReferees()}}</span>
+            <fa-icon [icon]="['fac', 'referee']"></fa-icon><span> scheidsrechters </span><span
+              *ngIf="favorites.hasReferees()" class="badge badge-primary">{{favorites.getNrOfReferees()}}</span>
           </a>
           <ng-template ngbNavContent>
             <ng-container *ngTemplateOutlet="referees">
@@ -53,8 +53,8 @@
     <div *ngIf="!processing && !hasCompetitors() && hasReferees()">
       <div class="d-flex justify-content-between mb-2">
         <h3>
-          <i class="fi flaticon-referee"></i><span> scheidsrechters </span><small><span *ngIf="favorites.hasReferees()"
-              class="badge badge-primary">{{favorites.getNrOfReferees()}}</span></small>
+          <fa-icon [icon]="['fac', 'referee']"></fa-icon><span> scheidsrechters </span><small><span
+              *ngIf="favorites.hasReferees()" class="badge badge-primary">{{favorites.getNrOfReferees()}}</span></small>
         </h3>
         <button [disabled]="!changed" type="button" class="btn btn-sm mr-0 btn-primary" (click)="save()">
           opslaan

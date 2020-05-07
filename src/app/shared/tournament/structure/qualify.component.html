@@ -6,7 +6,7 @@
     </ng-container>
     <button *ngIf="showSwitchView()" type="button" class="btn btn-secondary" (click)="switchView()"
         [disabled]="viewType !== ViewTypeQualifyGroups && !showSwitchView()">
-        <i *ngIf="viewType !== ViewTypeQualifyGroups" class="fi flaticon-structure"></i>
+        <fa-icon *ngIf="viewType !== ViewTypeQualifyGroups" [icon]="['fac', 'structure']"></fa-icon>
         <span *ngIf="viewType !== ViewTypeQualifyGroups" class="d-none d-sm-inline-flex">
             kwalificatiegroepen</span>
         <fa-icon *ngIf="viewType === ViewTypeQualifyGroups" [icon]="['fas', 'th']"></fa-icon> <span

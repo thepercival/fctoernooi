@@ -26,7 +26,9 @@
         <tr>
           <th></th>
           <th>naam</th>
-          <th class="d-none d-sm-table-cell" title="aantal"><i class="fi flaticon-soccer-field"></i></th>
+          <th class="d-none d-sm-table-cell" title="aantal">
+            <fa-icon [icon]="['fac', 'soccer-field']"></fa-icon>
+          </th>
           <th class="text-right" *ngIf="!hasBegun">
             <button type="button" class="btn btn-sm btn-primary"
               [routerLink]="['/admin/sportconfig', tournament.getId(), undefined]" [disabled]="processing">

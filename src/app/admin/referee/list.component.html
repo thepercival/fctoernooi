@@ -4,7 +4,7 @@
     </app-tournament-title>
     <div class="d-flex justify-content-between mr-1">
       <h2>
-        <i class="fi flaticon-referee"></i> scheidsrechters
+        <fa-icon [icon]="['fac', 'referee']"></fa-icon> scheidsrechters
       </h2>
       <button *ngIf="tournament" type="button" class="btn btn-sm btn-outline-info" (click)="openHelpModal(contentInfo)">
         <fa-icon [icon]=" ['fas', 'info-circle' ]"></fa-icon> info

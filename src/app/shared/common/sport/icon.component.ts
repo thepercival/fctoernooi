@@ -11,7 +11,7 @@ export class SportIconComponent implements OnInit {
     @Input() customId: number;
 
     public show = false;
-    public type: string;
+    public prefix: string;
     public class: string;
 
     constructor() {
@@ -19,14 +19,23 @@ export class SportIconComponent implements OnInit {
     }
 
     ngOnInit() {
+        let customId;
         if (this.customId !== undefined) {
-            this.type = this.getIconType(this.customId);
-            this.class = this.getIconClass(this.customId);
+            customId = this.customId;
         } else if (this.configs !== undefined && this.configs.length === 1) {
-            this.type = this.getIconType(this.configs[0].getSport().getCustomId());
-            this.class = this.getIconClass(this.configs[0].getSport().getCustomId());
+            customId = this.configs[0].getSport().getCustomId();
         }
+        this.prefix = this.getIconPrefix(customId);
+        this.class = this.getIconClass(customId);
         this.show = this.class !== undefined;
+    }
+
+    protected getIconPrefix(customId: number): string {
+        if (customId === SportCustom.Darts || customId === SportCustom.Tennis || customId === SportCustom.Badminton
+            || customId === SportCustom.Hockey || customId === SportCustom.Squash || customId === SportCustom.Korfball) {
+            return 'fac';
+        }
+        return 'fas';
     }
 
     protected getIconClass(customId: number): string {
@@ -35,40 +44,30 @@ export class SportIconComponent implements OnInit {
         } else if (customId === SportCustom.Basketball) {
             return 'basketball-ball';
         } else if (customId === SportCustom.Badminton) {
-            return 'fi flaticon-badminton';
+            return 'badminton';
         } else if (customId === SportCustom.Chess) {
             return 'chess';
         } else if (customId === SportCustom.Darts) {
-            return 'fi flaticon-darts';
+            return 'darts';
         } else if (customId === SportCustom.ESports) {
             return 'gamepad';
         } else if (customId === SportCustom.Football) {
             return 'futbol';
         } else if (customId === SportCustom.Hockey) {
-            return 'fi flaticon-hockey';
+            return 'hockey';
+        } else if (customId === SportCustom.Korfball) {
+            return 'korfball';
         } else if (customId === SportCustom.Squash) {
-            return 'fi flaticon-squash';
+            return 'squash';
         } else if (customId === SportCustom.TableTennis) {
             return 'table-tennis';
         } else if (customId === SportCustom.Tennis) {
-            return 'fi flaticon-tennis';
+            return 'tennis-custom';
         } else if (customId === SportCustom.Volleyball) {
             return 'volleyball-ball';
         } else if (customId === SportCustom.IceHockey) {
             return 'hockey-puck';
         }
         return undefined;
-    }
-
-    protected getIconType(customId: number): string {
-        if (customId < 1 || customId === SportCustom.Korfball) {
-            return undefined;
-        }
-        if (customId === SportCustom.Football || customId === SportCustom.TableTennis || customId === SportCustom.Basketball
-            || customId === SportCustom.Chess || customId === SportCustom.ESports || customId === SportCustom.Volleyball
-            || customId === SportCustom.Baseball || customId === SportCustom.IceHockey) {
-            return 'fa';
-        }
-        return 'fi';
     }
 }

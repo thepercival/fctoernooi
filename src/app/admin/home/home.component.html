@@ -40,7 +40,8 @@
         <div class="card border-secondary pointer mt-3 mx-2" (click)="linkToStructure()">
           <div class="card-body">
             <h5 class="card-title">
-              <i class="fi flaticon-structure"></i> opzet</h5>
+              <fa-icon [icon]="['fac', 'structure']"></fa-icon> opzet
+            </h5>
             <p class="card-text" *ngIf="!structure.getFirstRoundNumber().hasNext()">
               1 ronde ingesteld
             </p>
@@ -93,15 +94,17 @@
         <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/admin/referees', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
-              <i class="fi flaticon-referee"></i> scheidsrechters</h5>
+              <fa-icon [icon]="['fac', 'referee']"></fa-icon> scheidsrechters
+            </h5>
             <p class="card-text">{{getNrOfRefereesDescription()}}</p>
           </div>
         </div>
         <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/admin/fields', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
-              <i class="fi flaticon-soccer-field"></i>
-              {{getFieldsDescription()}}</h5>
+              <fa-icon [icon]="['fac', 'soccer-field']"></fa-icon>
+              {{getFieldsDescription()}}
+            </h5>
             <p class="card-text">{{getNrOfFieldsDescription()}}</p>
           </div>
         </div>

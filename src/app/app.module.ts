@@ -42,6 +42,7 @@ import { RoleMapper } from './lib/role/mapper';
 import { TournamentShellRepository } from './lib/tournament/shell/repository';
 import { UserMapper } from './lib/user/mapper';
 import { LayoutModule } from './shared/layout/layout.module';
+import { facDarts, facSoccerField, facTennis, facBadminton, facHockey, facSquash, facKorfball, facStructure, facReferee, facScoreboard, facFavicon } from './lib/icons';
 
 @NgModule({
   declarations: [
@@ -75,12 +76,10 @@ import { LayoutModule } from './shared/layout/layout.module';
 export class AppModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(faPlusCircle, faSpinner, faSearch, faAngleDoubleDown
-      , faUserShield, faUserFriends, faSave, faUserCircle
-      /*faLevelUpAlt, faSpinner, faFilter, faPencilAlt,
-      faSignInAlt, faSignOutAlt, faPlusCircle, faPlus, faTv, faSearch,
-      faMobileAlt, faEnvelope, faCopyright, faEye, faShareAlt,
-      , faCalendarAlt,
-      faAngleDoubleDown*/);
+      , faUserShield, faUserFriends, faSave, faUserCircle,
+      facDarts, facSoccerField, facTennis, facBadminton, facHockey, facSquash, facKorfball,
+      facStructure, facReferee, facScoreboard, facFavicon
+    );
     library.addIcons(
       faBasketballBall, faGamepad, faFutbol, faChess, faTableTennis, faBaseballBall, faHockeyPuck, faVolleyballBall
     );

@@ -34,7 +34,7 @@
     class="modal-footer justify-content-around">
     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
         (click)="activeModal.close('to-structure')">naar
-        <i class="fi flaticon-structure"></i> opzet</button>
+        <fa-icon [icon]="['fac', 'structure']"></fa-icon> opzet</button>
     <button *ngIf="place.getCompetitor() !== undefined" type="button" class="btn btn-outline-secondary"
         data-dismiss="modal" (click)="activeModal.close('remove-competitor')">
         <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon> <span> deelnemer</span>

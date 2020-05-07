@@ -49,17 +49,17 @@
             </button>
           </th>
           <th class="text-center" title="veld">
-            <i class="fi flaticon-soccer-field"></i>
+            <fa-icon [icon]="['fac', 'soccer-field']"></fa-icon>
           </th>
           <th class="text-right">thuis</th>
           <th class="text-center" title="score">
             <button class="btn btn-sm btn-outline-info" (click)="openModal(scoreInfo)">
-              <i class="fi flaticon-scoreboard"></i>
+              <fa-icon [icon]="['fac', 'scoreboard']"></fa-icon>
             </button>
           </th>
           <th>uit</th>
           <th *ngIf="hasReferees" class="d-none d-sm-table-cell text-right" title="scheidsrechter">
-            <i class="fi flaticon-referee"></i>
+            <fa-icon [icon]="['fac', 'referee']"></fa-icon>
           </th>
         </tr>
       </thead>
@@ -118,8 +118,9 @@
               <button *ngIf="!gmData.hasEditPermissions && hasReferees && !isPlayed(gmData.game)"
                 class="btn btn-outline-info btn-sm d-sm-none" placement="top"
                 [ngbPopover]="nameService.getRefereeName(gmData.game)">
-                <span [ngClass]="{'favitem': favorites.hasGameReferee(gmData.game) }"><i
-                    class="fi flaticon-referee"></i></span>
+                <span [ngClass]="{'favitem': favorites.hasGameReferee(gmData.game) }">
+                  <fa-icon [icon]="['fac', 'referee']"></fa-icon>
+                </span>
               </button>
               <span *ngIf="!gmData.hasEditPermissions && !(hasReferees && !isPlayed(gmData.game))"
                 class="d-sm-none">{{getScore(gmData.game)}}</span>
@@ -176,7 +177,9 @@
 
 <ng-template #scoreInfo let-modal>
   <div class="modal-header no-border">
-    <h4 class="modal-title"><i class="fi flaticon-scoreboard"></i> score informatie</h4>
+    <h4 class="modal-title">
+      <fa-icon [icon]="['fac', 'scoreboard']"></fa-icon> score informatie
+    </h4>
     <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
       <span aria-hidden="true">&times;</span>
     </button>

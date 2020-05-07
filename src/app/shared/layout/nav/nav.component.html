@@ -1,7 +1,7 @@
 <nav *ngIf="tournamentLiveboardLink.showIcon !== false" class="navbar navbar-dark bg-primary">
   <a class="navbar-brand" tabindex="-1" [routerLink]="['/']">
-    <i class="fi flaticon-favicon"></i> {{title}}</a>
-
+    <fa-icon [icon]=" [ 'fac', 'favicon'] "></fa-icon> {{title}}
+  </a>
   <button *ngIf="tournamentLiveboardLink.showIcon === true"
     [routerLink]="[tournamentLiveboardLink.link, tournamentLiveboardLink.tournamentId]" routerLinkActive="active"
     class="btn btn-outline-secondary d-none d-lg-block" type="button" tabindex="-1">

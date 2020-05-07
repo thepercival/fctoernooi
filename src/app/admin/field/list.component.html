@@ -5,7 +5,7 @@
             </app-tournament-title>
             <div class="d-flex justify-content-between">
                 <h2 *ngIf="tournament">
-                    <i class="fi flaticon-soccer-field"></i> {{getFieldsDescription()}}
+                    <fa-icon [icon]="['fac', 'soccer-field']"></fa-icon> {{getFieldsDescription()}}
                 </h2>
                 <button *ngIf="competition && competition.hasMultipleSportConfigs()" type="button"
                     class="btn btn-sm btn-outline-secondary mr-0"
