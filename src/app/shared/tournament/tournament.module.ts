@@ -23,7 +23,7 @@ import { CompetitorChooseModalComponent } from './competitorchoosemodal/competit
 import { RouterModule } from '@angular/router';
 import { RankingRulesComponent } from './rankingrules/rankingrules.component';
 import { ScoreRulesComponent } from './scorerules/scorerules.component';
-
+import { facStructure, facReferee, facScoreboard } from './icons';
 
 @NgModule({
   declarations: [
@@ -62,6 +62,7 @@ import { ScoreRulesComponent } from './scorerules/scorerules.component';
 export class TournamentModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt,
-      faMedal, faSpinner, faLevelUpAlt, faMinus, faDoorClosed, faPlus);
+      faMedal, faSpinner, faLevelUpAlt, faMinus, faDoorClosed, faPlus,
+      facStructure, facReferee, facScoreboard);
   }
 }

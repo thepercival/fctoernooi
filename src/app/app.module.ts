@@ -37,18 +37,19 @@ import { MyNavigation } from './shared/common/navigation';
 import { CommonSharedModule } from './shared/common/shared.module';
 import { HomeComponent } from './home/home.component';
 import { HomeShellComponent } from './home/shell.component';
-import { FavoritesRepository } from './lib/favorites/repository';
 import { RoleMapper } from './lib/role/mapper';
 import { TournamentShellRepository } from './lib/tournament/shell/repository';
 import { UserMapper } from './lib/user/mapper';
 import { LayoutModule } from './shared/layout/layout.module';
-import { facDarts, facSoccerField, facTennis, facBadminton, facHockey, facSquash, facKorfball, facStructure, facReferee, facScoreboard, facFavicon } from './lib/icons';
+import { facDarts, facSoccerField, facTennis, facBadminton, facHockey, facSquash, facKorfball, facFavicon } from './lib/icons';
+import { SportIconCustomComponent } from './home/sport/customicon.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     HomeShellComponent,
+    SportIconCustomComponent
   ],
   imports: [
     BrowserModule,
@@ -68,8 +69,7 @@ import { facDarts, facSoccerField, facTennis, facBadminton, facHockey, facSquash
     RoleMapper,
     UserMapper,
     GlobalEventsManager,
-    MyNavigation,
-    FavoritesRepository
+    MyNavigation
   ],
   bootstrap: [AppComponent]
 })
@@ -78,7 +78,7 @@ export class AppModule {
     library.addIcons(faPlusCircle, faSpinner, faSearch, faAngleDoubleDown
       , faUserShield, faUserFriends, faSave, faUserCircle,
       facDarts, facSoccerField, facTennis, facBadminton, facHockey, facSquash, facKorfball,
-      facStructure, facReferee, facScoreboard, facFavicon
+      facFavicon
     );
     library.addIcons(
       faBasketballBall, faGamepad, faFutbol, faChess, faTableTennis, faBaseballBall, faHockeyPuck, faVolleyballBall
