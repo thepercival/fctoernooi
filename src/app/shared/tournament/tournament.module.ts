@@ -24,6 +24,7 @@ import { RouterModule } from '@angular/router';
 import { RankingRulesComponent } from './rankingrules/rankingrules.component';
 import { ScoreRulesComponent } from './scorerules/scorerules.component';
 import { facStructure, facReferee, facScoreboard } from './icons';
+import { FavoritesRepository } from '../../lib/favorites/repository';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,9 @@ import { facStructure, facReferee, facScoreboard } from './icons';
     RouterModule,
     /*NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule*/
     NgbNavModule, NgbAlertModule, NgbPopoverModule
+  ],
+  providers: [
+    FavoritesRepository
   ],
   exports: [
     RoundNumberPlanningComponent,

@@ -61,10 +61,13 @@ export class HomeComponent extends TournamentComponent implements OnInit {
             return 'geen deelnemer ingesteld';
         }
         const lockerRooms = this.favorites.filterLockerRooms(this.tournament.getLockerRooms());
-        if (lockerRooms.length <= 2) {
+        if (lockerRooms.length == 0) {
+            return 'nog niet ingedeeld';
+        } else if (lockerRooms.length <= 2) {
             const name = lockerRooms.length === 1 ? '' : 's';
             return 'kleedkamer' + name + ' ' + lockerRooms.map(lockerRoom => lockerRoom.getName()).join(' & ');
         }
+
         return 'meerdere kleedkamers';
     }
 
