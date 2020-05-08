@@ -51,7 +51,7 @@ import { facDarts, facSoccerField, facTennis, facBadminton, facHockey, facSquash
     HomeShellComponent,
   ],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'serverApp' }),
+    BrowserModule,
     HttpClientModule,
     RoutingModule,
     ReactiveFormsModule,
