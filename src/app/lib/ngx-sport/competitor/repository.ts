@@ -36,9 +36,8 @@ export class CompetitorRepository extends APIRepository {
 
     editObject(competitor: Competitor, tournament: Tournament): Observable<Competitor> {
         const url = this.getUrl(tournament) + '/' + competitor.getId();
-        const association = tournament.getCompetition().getLeague().getAssociation();
         return this.http.put(url, this.mapper.toJson(competitor), this.getOptions()).pipe(
-            map((jsonCompetitor: JsonCompetitor) => this.mapper.toObject(jsonCompetitor, association, competitor)),
+            map((jsonCompetitor: JsonCompetitor) => this.mapper.updateObject(jsonCompetitor, competitor)),
             catchError((err) => this.handleError(err))
         );
     }

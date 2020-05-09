@@ -9,13 +9,13 @@ import { JsonLockerRoom, LockerRoomMapper } from '../lockerroom/mapper';
 @Injectable()
 export class TournamentMapper {
     constructor(
-        private csMapper: CompetitionMapper,
+        private competitionMapper: CompetitionMapper,
         private roleMapper: RoleMapper,
         private sponsorMapper: SponsorMapper,
         private lockerRoomMapper: LockerRoomMapper) { }
 
     toObject(json: JsonTournament): Tournament {
-        const competition = this.csMapper.toObject(json.competition);
+        const competition = this.competitionMapper.toObject(json.competition);
         const tournament = new Tournament(competition);
         const jsonRoles = json.roles !== undefined ? json.roles : [];
         const roles = jsonRoles.map(jsonRole => this.roleMapper.toObject(jsonRole, tournament));
@@ -37,7 +37,7 @@ export class TournamentMapper {
     toJson(tournament: Tournament): JsonTournament {
         return {
             id: tournament.getId(),
-            competition: this.csMapper.toJson(tournament.getCompetition()),
+            competition: this.competitionMapper.toJson(tournament.getCompetition()),
             roles: tournament.getRoles().map(role => this.roleMapper.toJson(role)),
             lockerRooms: tournament.getLockerRooms().map(lockerRoom => this.lockerRoomMapper.toJson(lockerRoom)),
             sponsors: tournament.getSponsors().map(sponsor => this.sponsorMapper.toJson(sponsor)),
