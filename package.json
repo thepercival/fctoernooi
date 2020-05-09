@@ -10,6 +10,7 @@
     "build-acc": "ng build --configuration=acc",
     "build-dev": "ng build",
     "build-dev-nl": "ng build --configuration=production-nl",
+    "cr2": "cat dist/index.html | critical --base dist/ --inline > dist/index.html",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
@@ -64,6 +65,7 @@
     "typescript": "~3.8.3",
     "typescript-eslint": "0.0.1-alpha.0",
     "webpack-bundle-analyzer": "^3.7.0",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^3.11.0",
+    "critical": "^1.3.9"
   }
 }
