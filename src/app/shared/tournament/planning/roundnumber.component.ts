@@ -44,6 +44,7 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
   tournamentBreak: PlanningPeriod;
   userIsGameResultAdmin: boolean;
   favorites: Favorites;
+  gameOrder = Game.ORDER_BY_BATCH;
   filterEnabled = false;
   hasReferees: boolean;
   gameDatas: GameData[];
@@ -102,7 +103,7 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
     const gameDatas: GameData[] = [];
     const pouleDatas = this.getPouleDatas();
     let showBreak = false;
-    this.roundNumber.getGames(Game.ORDER_BY_BATCH).forEach(game => {
+    this.roundNumber.getGames(this.gameOrder).forEach(game => {
       const aPlaceHasACompetitor = this.hasAPlaceACompetitor(game);
       if (this.filterEnabled && !(!this.favorites.hasItems() || this.favorites.hasGameItem(game) || !aPlaceHasACompetitor)) {
         return;
@@ -207,6 +208,12 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
       const tournament = this.tournament;
       popOver.open({ poule, tournament });
     }
+  }
+
+
+  sortGames() {
+    this.gameOrder = this.gameOrder ? undefined : Game.ORDER_BY_BATCH;
+    this.reloadGameData();
   }
 
   protected isSameDay(gameDataOne: GameData, gameDataTwo: GameData): boolean {
