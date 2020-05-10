@@ -46,9 +46,6 @@
         </ng-template>
       </tbody>
     </table>
-    <!-- <h2 *ngIf="processingWithRole" class="text-center">
-      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-    </h2>
     <div class="d-flex justify-content-between mt-5">
       <h2>publieke toernooien</h2>
       <button *ngIf="!searchFilterActive" type="button" name="btn-search-tournaments" id="btn-search-tournaments"
@@ -62,7 +59,7 @@
         <span class="ml-1 d-none d-sm-inline"> herstel</span>
       </button>
     </div>
-    
+
     <form *ngIf="searchFilterActive" (ngSubmit)="false" [formGroup]="searchForm" novalidate>
       <input type="text" class="form-control form-control-search" formControlName="filterName" #inputsearchname
         aria-labelledby="btn-search-tournaments" placeholder="zoek op toernooinaam">
@@ -93,6 +90,6 @@
 
     <ngb-alert
       *ngIf="searchFilterActive && ( searchForm.value['filterName'] === undefined || searchForm.value['filterName'].length < 2)"
-      type="info" [dismissible]="false">voer minimaal 2 karakters in</ngb-alert> -->
+      type="info" [dismissible]="false">voer minimaal 2 karakters in</ngb-alert>
   </div>
 </div>

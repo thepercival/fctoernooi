@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -11,7 +11,7 @@ import { TournamentShell, TournamentShellFilter, TournamentShellRepository } fro
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
   static readonly FUTURE: number = 1;
   static readonly PAST: number = 2;
 
@@ -54,14 +54,16 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.disableSearchFilter();
-    this.setShellsWithRole();
-
     this.route.queryParams.subscribe(params => {
       if (params.type !== undefined && params.message !== undefined) {
         this.alert = { type: params['type'], message: params['message'] };
       }
     });
+  }
+
+  ngAfterViewInit() {
+    this.disableSearchFilter();
+    this.setShellsWithRole();
   }
 
   onSearchChanges(): void {
@@ -100,7 +102,6 @@ export class HomeComponent implements OnInit {
   }
 
   addToPublicShells(pastFuture: number, hoursToAdd: number) {
-    return;
     this.publicProcessing = true;
     const searchFilter = this.extendHourRange(pastFuture, hoursToAdd);
     this.tournamentShellRepos.getObjects(searchFilter)
