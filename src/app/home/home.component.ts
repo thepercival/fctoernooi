@@ -100,6 +100,7 @@ export class HomeComponent implements OnInit {
   }
 
   addToPublicShells(pastFuture: number, hoursToAdd: number) {
+    return;
     this.publicProcessing = true;
     const searchFilter = this.extendHourRange(pastFuture, hoursToAdd);
     this.tournamentShellRepos.getObjects(searchFilter)
