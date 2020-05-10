@@ -10,7 +10,7 @@
     "build-acc": "ng build --configuration=acc",
     "build-dev": "ng build",
     "build-dev-nl": "ng build --configuration=production-nl",
-    "cr2": "cat dist/index.html | critical --base dist/ --inline > dist/index.html",
+    "split-critical-css": "cat dist/index.html | critical --base dist/ --inline > dist/index.html",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
