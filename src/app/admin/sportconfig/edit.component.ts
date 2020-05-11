@@ -258,7 +258,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
     }
 
     openMultiSportsModal(content) {
-        this.modalService.open(content, { ariaLabelledBy: 'modal-multisports' }).result.then((result) => {
+        this.modalService.open(content).result.then((result) => {
             if (result === 'continue') {
                 this.router.navigate(['/admin/sportconfigs', this.tournament.getId()]);
             }

@@ -23,7 +23,7 @@ import { PlaceRepository } from '../../lib/ngx-sport/place/repository';
 export class CompetitorEditComponent extends TournamentComponent implements OnInit {
     form: FormGroup;
     place: Place;
-    private focused = false;
+    competitor: Competitor;
     hasBegun: boolean;
 
     validations: CompetitorValidations = {
@@ -80,18 +80,21 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
             this.processing = false;
             return;
         }
-        this.form.controls.name.setValue(this.place.getCompetitor() ? this.place.getCompetitor().getName() : undefined);
-        this.form.controls.registered.setValue(this.place.getCompetitor() ? this.place.getCompetitor().getRegistered() : false);
-        this.form.controls.info.setValue(this.place.getCompetitor() ? this.place.getCompetitor().getInfo() : undefined);
+        this.competitor = this.place.getCompetitor();
+
+        this.form.controls.name.setValue(this.competitor?.getName());
+        this.form.controls.registered.setValue(this.competitor ? this.competitor.getRegistered() : false);
+        this.form.controls.info.setValue(this.competitor?.getInfo());
 
         this.hasBegun = this.structure.getRootRound().hasBegun();
+
         this.processing = false;
     }
 
     save(): boolean {
         this.processing = true;
         this.setAlert('info', 'de deelnemer wordt opgeslagen');
-        if (this.place.getCompetitor() !== undefined) {
+        if (this.competitor !== undefined) {
             this.edit();
         } else {
             this.add();

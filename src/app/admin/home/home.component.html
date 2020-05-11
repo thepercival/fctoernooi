@@ -324,8 +324,8 @@
           </div>
           <div class="col-7">
             <div class="input-group input-group-date">
-              <input class="form-control" id="dp" name="dp" formControlName="date" ngbDatepicker #d="ngbDatepicker"
-                required [minDate]="minDateStruct">
+              <input class="form-control" formControlName="date" ngbDatepicker #d="ngbDatepicker" required
+                [minDate]="minDateStruct">
               <div class="input-group-append">
                 <span class="input-group-text pointer" (click)="d.toggle()">
                   <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
@@ -378,8 +378,7 @@
         </label>
         <div class="form-check col-8">
           <label class="custom-control custom-checkbox col-form-label pl-0">
-            <input type="checkbox" class="custom-control-input form-check-input" id="public" name="public"
-              formControlName="public">
+            <input type="checkbox" class="custom-control-input form-check-input" formControlName="public">
             <span class="custom-control-indicator"></span>
           </label>
         </div>
@@ -389,7 +388,7 @@
           <label for="url" class="col-form-label">url</label>
         </div>
         <div class="col-8">
-          <input type="text" class="form-control" name="url" id="url" formControlName="url">
+          <input type="text" class="form-control" formControlName="url">
         </div>
       </div>
     </form>

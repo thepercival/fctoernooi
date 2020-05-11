@@ -24,7 +24,7 @@
           <div class="col-9">
             <input class="form-control"
               [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
-              name="name" id="name" formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
+              formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
         </div>
         <div class="form-group row">

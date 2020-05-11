@@ -5,11 +5,13 @@ import { faUsers } from '@fortawesome/free-solid-svg-icons';
 
 import { SportIconComponent } from './sport/icon.component';
 import { EscapeHtmlPipe } from './escapehtmlpipe';
+import { FocusDirective } from './focus';
 
 @NgModule({
   declarations: [
     SportIconComponent,
-    EscapeHtmlPipe
+    EscapeHtmlPipe,
+    FocusDirective
   ],
   imports: [
     CommonModule,
@@ -17,7 +19,8 @@ import { EscapeHtmlPipe } from './escapehtmlpipe';
   ],
   exports: [
     SportIconComponent,
-    EscapeHtmlPipe
+    EscapeHtmlPipe,
+    FocusDirective
   ]
 })
 export class CommonSharedModule {

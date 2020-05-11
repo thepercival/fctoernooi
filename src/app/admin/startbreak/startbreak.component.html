@@ -33,7 +33,7 @@
             <label for="starttime" class="col-form-label">tijd</label>
           </div>
           <div class="col-9">
-            <ngb-timepicker id="starttime" name="starttime" formControlName="time" [spinners]="false" required>
+            <ngb-timepicker formControlName="time" [spinners]="false" required>
             </ngb-timepicker>
           </div>
         </div>
@@ -53,11 +53,11 @@
               <h2 for="togglebreak" class="pt-1">
                 pauze</h2>
             </div>
-            <div *ngIf="!hasBegun" class="col-9 col-md-1 pr-0">
+            <div *ngIf="!hasBegun" class="col-9 pr-0">
               <label class="custom-control custom-checkbox pointer col-form-label pl-0">
                 <input type="checkbox" class="custom-control-input form-check-input" formControlName="togglebreak">
                 <span class="custom-control-indicator"></span>
-                <label class="ml-2 col-form-label">( tijdens een ronde )</label>
+                <label class="ml-2 col-form-label" nowrap>( tijdens een ronde )</label>
               </label>
             </div>
           </div>
@@ -84,8 +84,7 @@
               <label for="breakstarttime" class="col-form-label"></label>
             </div>
             <div class="col-9">
-              <ngb-timepicker id="breakstarttime" name="breakstarttime" formControlName="breakstarttime"
-                [spinners]="false" required>
+              <ngb-timepicker formControlName="breakstarttime" [spinners]="false" required>
               </ngb-timepicker>
             </div>
           </div>
@@ -122,8 +121,7 @@
               <label for="breakendtime" class="col-form-label"></label>
             </div>
             <div class="col-9">
-              <ngb-timepicker id="breakendtime" name="breakendtime" formControlName="breakendtime" [spinners]="false"
-                required>
+              <ngb-timepicker formControlName="breakendtime" [spinners]="false" required>
               </ngb-timepicker>
             </div>
           </div>

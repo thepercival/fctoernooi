@@ -35,7 +35,7 @@
           <div class="col-9">
             <input class="form-control"
               [ngClass]="{ 'is-invalid': form.controls.emailaddress.invalid, 'is-valid': form.controls.emailaddress.valid }"
-              type="text" name="emailaddress" id="emailaddress" formControlName="emailaddress"
+              type="text" formControlName="emailaddress"
               placeholder="max. {{validations.maxlengthemailaddress}} karakters">
           </div>
         </div>
@@ -46,8 +46,7 @@
           <div class="col-9">
             <input class="form-control"
               [ngClass]="{ 'is-invalid': form.controls.password.invalid, 'is-valid': form.controls.password.valid }"
-              type="password" name="password" id="password" formControlName="password"
-              placeholder="min. {{validations.minlengthpassword}} karakters">
+              type="password" formControlName="password" placeholder="min. {{validations.minlengthpassword}} karakters">
           </div>
         </div>
         <div class="form-group row">
@@ -57,7 +56,7 @@
           <div class="col-9">
             <input class="form-control"
               [ngClass]="{ 'is-invalid': form.controls.passwordRepeat.invalid, 'is-valid': form.controls.passwordRepeat.valid }"
-              type="password" name="passwordRepeat" id="passwordRepeat" formControlName="passwordRepeat"
+              type="password" formControlName="passwordRepeat"
               placeholder="min. {{validations.minlengthpassword}} karakters">
           </div>
         </div>

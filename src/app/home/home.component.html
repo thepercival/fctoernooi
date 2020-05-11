@@ -48,13 +48,13 @@
     </table>
     <div class="d-flex justify-content-between mt-5">
       <h2>publieke toernooien</h2>
-      <button *ngIf="!searchFilterActive" type="button" name="btn-search-tournaments" id="btn-search-tournaments"
-        class="btn btn-secondary" (click)="enableSearchFilter()" aria-label="search tournaments">
+      <button *ngIf="!searchFilterActive" type="button" class="btn btn-secondary" (click)="enableSearchFilter()"
+        aria-label="search tournaments">
         <fa-icon [icon]="['fas', 'search']"></fa-icon>
         <span class="ml-1 d-none d-sm-inline"> zoeken</span>
       </button>
-      <button *ngIf="searchFilterActive" type="button" name="btn-search-tournaments" id="btn-search-tournaments"
-        class="btn btn-secondary" (click)="disableSearchFilter()" aria-label="reset search tournaments">
+      <button *ngIf="searchFilterActive" type="button" class="btn btn-secondary" (click)="disableSearchFilter()"
+        aria-label="reset search tournaments">
         <fa-icon [icon]="['fas', 'search']"></fa-icon>
         <span class="ml-1 d-none d-sm-inline"> herstel</span>
       </button>

@@ -14,8 +14,7 @@
                 <div class="col-9 col-sm-8 col-md-7">
                     <input class="form-control"
                         [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }"
-                        type="text" name="name" id="name" formControlName="name" ngbAutofocus
-                        placeholder="max {{range.max}} karakters">
+                        type="text" formControlName="name" ngbAutofocus placeholder="max {{range.max}} karakters">
                 </div>
             </div>
         </form>

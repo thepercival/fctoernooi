@@ -20,7 +20,7 @@
           <div class="col-9">
             <input class="form-control"
               [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
-              name="name" id="name" formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
+              formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
         </div>
         <div class="form-group row">
@@ -30,7 +30,7 @@
           <div class="col-9">
             <input class="form-control"
               [ngClass]="{ 'is-invalid': form.controls.url.invalid, 'is-valid': form.controls.url.valid }" type="text"
-              name="url" id="url" formControlName="url" placeholder="max. {{validations.maxlengthurl}} karakters">
+              formControlName="url" placeholder="max. {{validations.maxlengthurl}} karakters">
           </div>
         </div>
         <!-- <div class="form-group row">
@@ -55,7 +55,7 @@
           <div class="col-9">
             <input class="form-control"
               [ngClass]="{ 'is-invalid': form.controls.logourl.invalid, 'is-valid': form.controls.logourl.valid }"
-              type="text" name="logourl" id="logourl" formControlName="logourl"
+              type="text" formControlName="logourl"
               placeholder="max. {{validations.maxlengthurl}} karakters">
           </div>
         </div> -->
@@ -68,8 +68,7 @@
           </div>
           <div class="col-9">
             <div class="custom-file">
-              <input type="file" accept='image/*' class="custom-file-input" id="logoupload"
-                (change)="onFileChange($event)" #fileInput>
+              <input type="file" accept='image/*' class="custom-file-input" (change)="onFileChange($event)" #fileInput>
               <label class="custom-file-label" for="logoupload">kies plaatje</label>
             </div>
           </div>
@@ -79,7 +78,7 @@
             <label for="screennr" class="col-form-label">scherm nummer</label>
           </div>
           <div class="col-9">
-            <select formControlName="screennr" id="screennr" name="screennr" class="form-control"
+            <select formControlName="screennr" class="form-control"
               [ngClass]="{ 'is-invalid': form.controls.screennr.invalid, 'is-valid': form.controls.screennr.valid }"
               required>
               <option *ngFor="let screenNr of rangeScreenNrs" [ngValue]="screenNr">

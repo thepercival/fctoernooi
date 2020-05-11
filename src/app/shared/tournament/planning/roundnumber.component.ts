@@ -50,6 +50,7 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
   gameDatas: GameData[];
   private sportScoreConfigService: SportScoreConfigService;
   roundNumberNeedsRanking: boolean;
+  hasMultiplePoules: boolean;
   planningConfig: PlanningConfig;
   translate = new TranslateService();
 
@@ -73,6 +74,7 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
     this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.GAMERESULTADMIN);
     this.favorites = this.favRepository.getItem(this.tournament);
     this.roundNumberNeedsRanking = this.roundNumber.needsRanking();
+    this.hasMultiplePoules = this.roundNumber.getPoules().length > 1;
     this.hasReferees = this.tournament.getCompetition().getReferees().length > 0 || this.planningConfig.getSelfReferee();
     this.reloadGameData();
   }

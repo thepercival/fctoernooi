@@ -20,8 +20,8 @@
           <div class="col-9">
             <input class="form-control"
               [ngClass]="{ 'is-invalid': form.controls.initials.invalid, 'is-valid': form.controls.initials.valid }"
-              type="text" name="initials" id="initials" formControlName="initials"
-              placeholder="max. {{validations.maxlengthinitials}} karakters">
+              type="text" formControlName="initials" placeholder="max. {{validations.maxlengthinitials}} karakters"
+              [focuMe]="referee === undefined">
           </div>
         </div>
         <div class="form-group row">
@@ -31,7 +31,7 @@
           <div class="col-9">
             <input class="form-control"
               [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
-              name="name" id="name" formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
+              formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
         </div>
         <div class="form-group row">
@@ -44,7 +44,7 @@
           <div class="col-9">
             <input class="form-control"
               [ngClass]="{ 'is-invalid': form.controls.emailaddress.invalid, 'is-valid': form.controls.emailaddress.valid }"
-              type="text" name="emailaddress" id="emailaddress" formControlName="emailaddress"
+              type="text" formControlName="emailaddress"
               placeholder="max. {{validations.maxlengthemailaddress}} karakters">
           </div>
         </div>
@@ -54,8 +54,8 @@
           </div>
           <div class="col-9">
             <textarea class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.info.invalid, 'is-valid': form.controls.info.valid }" name="info"
-              id="info" formControlName="info" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
+              [ngClass]="{ 'is-invalid': form.controls.info.invalid, 'is-valid': form.controls.info.valid }"
+              formControlName="info" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>
         <div class="form-group row justify-content-end">

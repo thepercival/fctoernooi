@@ -13,7 +13,6 @@
       <app-tournament-structureround-arrange *ngIf="editable && viewType !== ViewTypeQualifyGroups" [round]="round"
         (arrangeAction)="arrangeAction($event)">
       </app-tournament-structureround-arrange>
-
       <p *ngIf="editable && round.hasBegun()">
         <ngb-alert [dismissible]="false" type="warning">de ronde heeft al gespeelde wedstrijden, je kunt niet meer
           wijzigen</ngb-alert>
@@ -84,8 +83,9 @@
 
   <div class="d-flex align-items-stretch text-center">
     <app-tournament-structureround *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed(); first as first"
-      class="align-self-stretch flex-wrap mb-2" [round]="qualifyGroup.getChildRound()" [editable]="editable"
-      [favorites]="favorites" [first]="first" (roundNumberChanged)="roundNumberChanged.emit($event)">
+      class="align-self-stretch flex-wrap mb-2" [round]="qualifyGroup.getChildRound()"
+      [editable]="editable && !round.hasBegun()" [favorites]="favorites" [first]="first"
+      (roundNumberChanged)="roundNumberChanged.emit($event)">
     </app-tournament-structureround>
   </div>
   <div *ngIf="!round.isRoot() && round.getNrOfPlaces() === 2">

@@ -77,7 +77,7 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
   }
 
   openRemoveModal(content, sportConfig: SportConfig) {
-    this.modalService.open(content, { ariaLabelledBy: 'modal-remove' }).result.then((result) => {
+    this.modalService.open(content).result.then((result) => {
       if (result === 'remove') {
         this.remove(sportConfig);
       }

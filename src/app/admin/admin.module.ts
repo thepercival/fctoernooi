@@ -108,6 +108,7 @@ import { TournamentModule } from '../shared/tournament/tournament.module';
 import { ModalRoundNumbersComponent } from './roundnumber/selector.component';
 import { LockerRoomsComponent } from '../shared/tournament/lockerrooms/lockerrooms.component';
 import { LockerRoomMapper } from '../lib/lockerroom/mapper';
+import { FocusDirective } from '../shared/common/focus';
 
 @NgModule({
   imports: [
@@ -142,7 +143,7 @@ import { LockerRoomMapper } from '../lib/lockerroom/mapper';
     SponsorEditComponent,
     StartBreakComponent,
     CompetitorListRemoveModalComponent,
-    ModalRoundNumbersComponent,
+    ModalRoundNumbersComponent
   ],
   entryComponents: [CompetitorListRemoveModalComponent, ModalRoundNumbersComponent],
   providers: [

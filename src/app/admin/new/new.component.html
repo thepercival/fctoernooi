@@ -24,7 +24,7 @@
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
 
-      <form *ngIf="!processing" id="newForm" name="form" (ngSubmit)="create()" [formGroup]="form" novalidate>
+      <form *ngIf="!processing" name="form" (ngSubmit)="create()" [formGroup]="form" novalidate>
         <div class="form-group row">
           <label for="name" class="col-4 col-form-label">naam</label>
           <div class="col-8">
