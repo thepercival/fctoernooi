@@ -42,6 +42,11 @@
             "styles": [
               "src/sass/main.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "./node_modules/bootstrap/scss"
+              ]
+            },
             "scripts": []
           },
           "configurations": {
@@ -163,6 +168,11 @@
             "styles": [
               "src/sass/main.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "../../node_modules/bootstrap/scss"
+              ]
+            },
             "assets": [
               "src/assets",
               "src//assets/favicon/favicon.ico",

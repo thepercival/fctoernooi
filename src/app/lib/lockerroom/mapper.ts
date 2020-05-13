@@ -27,7 +27,7 @@ export class LockerRoomMapper {
         return {
             id: lockerRoom.getId(),
             name: lockerRoom.getName(),
-            competitorIds: lockerRoom.getCompetitors().map(competitor => competitor.getId())
+            competitorIds: lockerRoom.getCompetitors().map(competitor => +competitor.getId())
         };
     }
 }

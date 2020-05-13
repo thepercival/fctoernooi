@@ -20,7 +20,7 @@ export class Favorites {
 
     removeNonExisting(competitors: Competitor[], referees: Referee[]) {
         this.competitorIds = this.competitorIds.filter(competitorId => {
-            return competitors.some(competitor => competitor.getId() === competitorId);
+            return competitors.some(competitor => (+competitor.getId()) === competitorId);
         });
         this.refereeIds = this.refereeIds.filter(refereeId => {
             return referees.some(referee => referee.getId() === refereeId);
@@ -58,14 +58,14 @@ export class Favorites {
         if (this.hasCompetitor(competitor)) {
             return;
         }
-        this.competitorIds.push(competitor.getId());
+        this.competitorIds.push(+competitor.getId());
     }
 
     removeCompetitor(competitor: Competitor) {
         if (this.hasCompetitor(competitor) === false) {
             return;
         }
-        this.competitorIds.splice(this.competitorIds.indexOf(competitor.getId()), 1);
+        this.competitorIds.splice(this.competitorIds.indexOf(+competitor.getId()), 1);
     }
 
     filterLockerRooms(lockerRooms: LockerRoom[]): LockerRoom[] {

@@ -2,7 +2,7 @@
 
 $enable-responsive-font-sizes: true !default;
 @import "./bootswatch/variables";
-@import "~bootstrap/scss/bootstrap";
+@import "./bootstrap-custom-components";
 @import "./bootswatch/bootswatch";
 
 @include media-breakpoint-up(sm) {

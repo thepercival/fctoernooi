@@ -139,7 +139,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
     }
 
     edit() {
-        if (this.isNameDuplicate(this.form.controls.name.value, this.place.getCompetitor().getId())) {
+        if (this.isNameDuplicate(this.form.controls.name.value, +this.place.getCompetitor().getId())) {
             this.setAlert('danger', 'de naam bestaat al voor dit toernooi');
             this.processing = false;
             return;
