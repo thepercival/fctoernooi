@@ -7,16 +7,6 @@ import {
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import {
-  NgbAlertModule,
-  NgbButtonsModule,
-  NgbCollapseModule,
-  NgbModalModule,
-  NgbPopoverModule,
-  NgbTimepickerModule,
-  NgbNavModule,
-  NgbModalConfig,
-} from '@ng-bootstrap/ng-bootstrap';
-import {
   CompetitionMapper,
   CompetitorMapper,
   GameMapper,
@@ -72,11 +62,10 @@ import { LockerRoomMapper } from '../lib/lockerroom/mapper';
   imports: [
     CommonModule,
     RoutingModule,
-    NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule,
-    NgbNavModule,
     ReactiveFormsModule,
     FontAwesomeModule,
-    CommonSharedModule, TournamentModule
+    CommonSharedModule,
+    TournamentModule
   ],
   declarations: [
     PreNewComponent,
@@ -105,7 +94,6 @@ import { LockerRoomMapper } from '../lib/lockerroom/mapper';
     LeagueMapper,
     LockerRoomMapper,
     NameService,
-    NgbModalConfig,
     PlaceMapper,
     PlanningRepository,
     PlanningConfigService,
@@ -131,7 +119,7 @@ import { LockerRoomMapper } from '../lib/lockerroom/mapper';
   ]
 })
 export class PublicModule {
-  constructor(library: FaIconLibrary, modalConfig: NgbModalConfig, ) {
+  constructor(library: FaIconLibrary) {
     library.addIcons(
       faListOl, faChevronRight
       /*faMoneyBillAlt, faTrashAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
@@ -141,9 +129,6 @@ export class PublicModule {
     /*library.addIcons(
       faProductHunt
     );*/
-    modalConfig.centered = true;
-    modalConfig.scrollable = true;
-    modalConfig.size = 'lg';
   }
 }
 

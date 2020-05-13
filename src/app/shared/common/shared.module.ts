@@ -23,8 +23,12 @@ import { FocusDirective } from './focus';
     FocusDirective
   ]
 })
+
 export class CommonSharedModule {
-  constructor(library: FaIconLibrary) {
+  constructor(library: FaIconLibrary/*, modalConfig: NgbModalConfig,*/) {
     library.addIcons(faUsers);
+    /*modalConfig.centered = true;
+    modalConfig.scrollable = true;
+    modalConfig.size = 'lg';*/
   }
 }

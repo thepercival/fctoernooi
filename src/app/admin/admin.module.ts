@@ -24,17 +24,6 @@ import {
   faEye,
   faClipboardCheck,
 } from '@fortawesome/free-solid-svg-icons';
-import {
-  NgbAlertModule,
-  NgbButtonsModule,
-  NgbCollapseModule,
-  NgbDatepickerModule,
-  NgbModalModule,
-  NgbPopoverModule,
-  NgbTimepickerModule,
-  NgbNavModule,
-  NgbModalConfig,
-} from '@ng-bootstrap/ng-bootstrap';
 import { ClipboardModule } from 'ngx-clipboard';
 import {
   CompetitionMapper,
@@ -106,17 +95,13 @@ import { SponsorMapper } from '../lib/sponsor/mapper';
 import { SponsorRepository } from '../lib/sponsor/repository';
 import { TournamentModule } from '../shared/tournament/tournament.module';
 import { ModalRoundNumbersComponent } from './roundnumber/selector.component';
-import { LockerRoomsComponent } from '../shared/tournament/lockerrooms/lockerrooms.component';
 import { LockerRoomMapper } from '../lib/lockerroom/mapper';
-import { FocusDirective } from '../shared/common/focus';
 
 @NgModule({
   imports: [
     ClipboardModule,
     CommonModule,
     RoutingModule,
-    NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule,
-    NgbNavModule,
     ReactiveFormsModule,
     FontAwesomeModule,
     CommonSharedModule, TournamentModule
@@ -161,7 +146,6 @@ import { FocusDirective } from '../shared/common/focus';
     LeagueMapper,
     LockerRoomMapper,
     NameService,
-    NgbModalConfig,
     PlaceMapper,
     PlaceRepository,
     PlanningConfigService,
@@ -194,7 +178,7 @@ import { FocusDirective } from '../shared/common/focus';
   ]
 })
 export class AdminModule {
-  constructor(library: FaIconLibrary, modalConfig: NgbModalConfig, ) {
+  constructor(library: FaIconLibrary) {
     library.addIcons(
       /* homescreen */ faMoneyBillAlt, faCheckCircle, faTimesCircle, faShareAlt, faEye, faFileExport, faCopy, faTrashAlt
       , faQrcode, faPrint, faFileExcel,
@@ -207,9 +191,6 @@ export class AdminModule {
     library.addIcons(
       faProductHunt
     );
-    modalConfig.centered = true;
-    modalConfig.scrollable = true;
-    modalConfig.size = 'lg';
   }
 }
 

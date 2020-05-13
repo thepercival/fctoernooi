@@ -22,10 +22,6 @@ import {
   faBaseballBall,
   faHockeyPuck
 } from '@fortawesome/free-solid-svg-icons';
-import {
-  NgbAlertModule,
-  NgbCollapseModule,
-} from '@ng-bootstrap/ng-bootstrap';
 
 import { environment } from '../environments/environment';
 import { RoutingModule } from './app-routing.module';
@@ -57,7 +53,6 @@ import { SportIconCustomComponent } from './home/sport/customicon.component';
     RoutingModule,
     ReactiveFormsModule,
     CommonSharedModule,
-    NgbAlertModule, NgbCollapseModule,
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
     FontAwesomeModule,
     LayoutModule

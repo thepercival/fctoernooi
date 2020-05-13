@@ -13,7 +13,7 @@ import { TitleComponent } from './title/title.component';
 import { StructureRoundArrangeComponent } from './structure/round/arrange.component';
 import { StructureQualifyComponent } from './structure/qualify.component';
 import { StructureRoundComponent } from './structure/round.component';
-import { NgbNavModule, NgbAlertModule, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavModule, NgbAlertModule, NgbPopoverModule, NgbDatepickerModule, NgbTimepickerModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { CommonSharedModule } from '../common/shared.module';
 import { LockerRoomsComponent } from './lockerrooms/lockerrooms.component';
 import { LockerRoomComponent } from './lockerrooms/lockerroom.component';
@@ -45,8 +45,8 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     ReactiveFormsModule,
     CommonSharedModule,
     RouterModule,
-    /*NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule*/
-    NgbNavModule, NgbAlertModule, NgbPopoverModule
+    NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule,
+    NgbNavModule,
   ],
   providers: [
     FavoritesRepository
@@ -60,13 +60,18 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     TitleComponent,
     StructureRoundComponent,
     LockerRoomsComponent,
-    RankingRulesComponent, ScoreRulesComponent
+    RankingRulesComponent, ScoreRulesComponent,
+    NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule,
+    NgbNavModule
   ]
 })
 export class TournamentModule {
-  constructor(library: FaIconLibrary) {
+  constructor(library: FaIconLibrary, modalConfig: NgbModalConfig) {
     library.addIcons(faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt,
       faMedal, faSpinner, faLevelUpAlt, faMinus, faDoorClosed, faPlus,
       facStructure, facReferee, facScoreboard);
+    modalConfig.centered = true;
+    modalConfig.scrollable = true;
+    modalConfig.size = 'lg';
   }
 }
