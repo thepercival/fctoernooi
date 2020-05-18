@@ -62,8 +62,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // this.disableSearchFilter();
-    // this.setShellsWithRole();
+    this.disableSearchFilter();
+    this.setShellsWithRole();
   }
 
   onSearchChanges(): void {
