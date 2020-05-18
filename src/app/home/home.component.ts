@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+// import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../lib/auth/auth.service';
@@ -31,26 +31,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
   };
   private hourRange: HourRange;
   searchFilterActive = false;
-  searchForm: FormGroup;
-  /* searchFilterName: string; */
+  searchFilterName: string;
   hasSearched = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private tournamentShellRepos: TournamentShellRepository,
-    fb: FormBuilder
+    private tournamentShellRepos: TournamentShellRepository
   ) {
     this.checkFirstTimeVisit();
-    this.searchForm = fb.group({
-      filterName: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(0),
-        Validators.maxLength(20)
-      ])],
-    });
-    this.onSearchChanges();
   }
 
   ngOnInit() {
@@ -67,9 +57,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   onSearchChanges(): void {
-    this.searchForm.get('filterName').valueChanges.subscribe(val => {
-      this.changeSearchFilterName(val);
-    });
+    this.changeSearchFilterName(this.searchElementRef.nativeElement.value);
   }
 
   setShellsWithRole() {
@@ -181,7 +169,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.searchFilterActive = false;
     this.publicShells = [];
     this.hourRange = { start: this.defaultHourRange.start, end: this.defaultHourRange.start };
-    this.searchForm.controls.filterName.setValue(undefined);
+    // this.searchForm.controls.filterName.setValue(undefined);
     this.addToPublicShells(HomeComponent.FUTURE, this.defaultHourRange.end - this.defaultHourRange.start);
   }
 
