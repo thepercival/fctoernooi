@@ -38,21 +38,17 @@
               type="password" formControlName="password" placeholder="min. {{validations.minlengthpassword}} karakters">
           </div>
         </div>
-        <div class="form-group row justify-content-end">
-          <div class="col-9">
+        <div class="form-group row">
+          <div class="col-4 offset-3">
             <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
               inloggen
             </button>
           </div>
         </div>
-        <div class="form-group row justify-content-end my-5">
-          <div class="col-9">
-            <a routerLink="/user/register">registreren</a>
-          </div>
-        </div>
-        <div class="form-group row justify-content-end mt-5">
-          <div class="col-9">
-            <a routerLink="/user/passwordreset">wachtwoord vergeten</a>
+        <div class="form-group row">
+          <div class="offset-3 col-9">
+            <button routerLink="/user/register" class="btn btn-outline-secondary mr-2 mt-4">registreren</button>
+            <button routerLink="/user/passwordreset" class="btn btn-outline-secondary mt-4">wachtwoord vergeten</button>
           </div>
         </div>
       </form>
