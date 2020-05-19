@@ -18,7 +18,7 @@
   <fa-icon [icon]="['fas', 'door-closed']" class="text-warning"></fa-icon>
 </td>
 <td *ngIf="!place.getCompetitor()">
-  <span class="badge badge-warning">vul een naam in</span>
+  <button #btnEdit type="button" class="btn btn-sm btn-outline-warning" (click)="edit()">vul een naam in</button>
 </td>
 <td class="text-center d-none d-sm-table-cell">
   <fa-icon *ngIf="place.getCompetitor()" class="text-primary pointer" (click)="register()"
