@@ -32,10 +32,6 @@
       <ngb-alert *ngIf="!processing && tournament && isAdmin() && !isManualMessageReadOnDevice()" type="info"
         [dismissible]="true" (close)="manualMessageReadOnDevice()">gedetailleerde
         informatie kun je vinden onderaan de pagina via de handleiding-link</ngb-alert>
-      <ngb-alert *ngIf="!processing && tournament && !isAdmin()" type="danger" [dismissible]="false">je hebt geen
-        rechten voor het
-        beheergedeelte, klik
-        <a routerLink="['/public', tournament.getId()]">hier</a> om naar het toernooi te gaan</ngb-alert>
       <div *ngIf="!processing && structure && isAdmin()" class="row d-flex justify-content-center">
         <div class="card border-secondary pointer mt-3 mx-2" (click)="linkToStructure()">
           <div class="card-body">
@@ -148,7 +144,7 @@
       </div>
     </div>
   </div>
-  <div *ngIf="!processing && tournament.getPublic()" class="text-center mt-3">
+  <div *ngIf="!processing && tournament && tournament.getPublic()" class="text-center mt-3">
     <button [routerLink]="['/public', tournament.getId()]" type="button" class="btn btn-outline-secondary w-100">
       naar het publieke gedeelte <fa-icon [icon]="['fas', 'eye']"></fa-icon>
     </button>

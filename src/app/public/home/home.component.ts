@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -13,13 +13,16 @@ import { LockerRoomValidator } from '../../lib/lockerroom/validator';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { Favorites } from '../../lib/favorites';
 import { Competitor } from 'ngx-sport';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { LiveboardLink } from '../../lib/liveboard/link';
 
 @Component({
     selector: 'app-tournament-public',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css']
 })
-export class HomeComponent extends TournamentComponent implements OnInit {
+export class HomeComponent extends TournamentComponent implements OnInit, OnDestroy {
+    private liveboardLinkSet = false;
     translate: TranslateService;
     allHavePlannings: boolean;
     lockerRoomValidator: LockerRoomValidator;
@@ -34,7 +37,8 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         private authService: AuthService,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
-        public favRepository: FavoritesRepository
+        public favRepository: FavoritesRepository,
+        private globalEventsManager: GlobalEventsManager
     ) {
         super(route, router, tournamentRepository, structureRepository);
         this.translate = new TranslateService();
@@ -49,6 +53,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         this.lockerRoomValidator = new LockerRoomValidator(this.competitors, this.tournament.getLockerRooms());
         this.favRepository.removeNonExisting(this.tournament, this.competitors, this.competition.getReferees());
         this.favorites = this.favRepository.getItem(this.tournament);
+        this.initLiveboardLink();
         this.processing = false;
     }
 
@@ -91,5 +96,18 @@ export class HomeComponent extends TournamentComponent implements OnInit {
             return 'scheidsrechter <span class="font-weight-bold">' + referees.pop().getInitials() + '</span> ingesteld';
         }
         return 'meerdere scheidsrechters ingesteld';
+    }
+
+    ngOnDestroy() {
+        this.globalEventsManager.toggleLiveboardIconInNavBar.emit({});
+    }
+
+    initLiveboardLink() {
+        if (this.liveboardLinkSet === true) {
+            return;
+        }
+        const link: LiveboardLink = { showIcon: true, tournamentId: this.tournament.getId(), link: '/public/liveboard' };
+        this.globalEventsManager.toggleLiveboardIconInNavBar.emit(link);
+        this.liveboardLinkSet = true;
     }
 }

@@ -53,7 +53,11 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         this.globalEventsManager.toggleLiveboardIconInNavBar.emit(link);
         const liveBoard = new Liveboard(this.tournament, this.structure, this.maxLines);
         this.screens = liveBoard.getScreens(this.screenfilter);
-        this.executeScheduledTask();
+        if (this.screens.length > 0) {
+            this.executeScheduledTask();
+        } else {
+            this.setAlert('danger', 'voor dit toernooi zijn er geen schermen beschikbaar, pas eventueel de tijden aan');
+        }
         this.processing = false;
     }
 

@@ -26,7 +26,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let game of screen.getGames()">
+      <tr *ngFor="let game of screen.getGames()" [ngClass]="{ 'batch-striped-row': (game.getBatchNr() % 2) === 0 }">
         <td class="d-none d-xl-table-cell">
           <span [innerHtml]="getRoundAbbreviation(game.getRound()) | keepHtml"></span>
         </td>
