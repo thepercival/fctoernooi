@@ -6,6 +6,8 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { State, Competitor } from 'ngx-sport';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { AuthService } from '../../lib/auth/auth.service';
+import { Role } from '../../lib/role';
 
 @Component({
     selector: 'app-tournament-ranking',
@@ -21,7 +23,8 @@ export class RankingComponent extends TournamentComponent implements OnInit {
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
-        protected favRepository: FavoritesRepository
+        protected favRepository: FavoritesRepository,
+        protected authService: AuthService
     ) {
         super(route, router, tournamentRepository, structureRepository);
     }
@@ -37,5 +40,9 @@ export class RankingComponent extends TournamentComponent implements OnInit {
             }
             this.processing = false;
         });
+    }
+
+    isAdmin(): boolean {
+        return this.tournament.getUser(this.authService.getUser())?.hasRoles(Role.ADMIN);
     }
 }

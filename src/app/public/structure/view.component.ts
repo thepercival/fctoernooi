@@ -8,6 +8,8 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { Competitor } from 'ngx-sport';
 import { Favorites } from '../../lib/favorites';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { AuthService } from '../../lib/auth/auth.service';
+import { Role } from '../../lib/role';
 
 @Component({
   selector: 'app-tournament-structure-view',
@@ -24,7 +26,8 @@ export class StructureViewComponent extends TournamentComponent implements OnIni
     tournamentRepository: TournamentRepository,
     private myNavigation: MyNavigation,
     structureRepository: StructureRepository,
-    public favRepository: FavoritesRepository
+    public favRepository: FavoritesRepository,
+    private authService: AuthService
   ) {
     super(route, router, tournamentRepository, structureRepository);
   }
@@ -42,5 +45,9 @@ export class StructureViewComponent extends TournamentComponent implements OnIni
 
   navigateBack() {
     this.myNavigation.back();
+  }
+
+  isAdmin(): boolean {
+    return this.tournament.getUser(this.authService.getUser())?.hasRoles(Role.ADMIN);
   }
 }

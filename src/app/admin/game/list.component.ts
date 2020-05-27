@@ -19,7 +19,6 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 })
 export class GameListComponent extends TournamentComponent implements OnInit, OnDestroy {
   showPrintBtn: boolean;
-  userIsPlannerOrStructureAdmin: boolean;
   private refreshPlanningTimer: Subscription;
   reload: boolean;
 
@@ -37,8 +36,6 @@ export class GameListComponent extends TournamentComponent implements OnInit, On
 
   ngOnInit() {
     super.myNgOnInit(() => {
-      this.userIsPlannerOrStructureAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(),
-        Role.STRUCTUREADMIN + Role.PLANNER);
       this.enableRefreshPlanning(this.structure.getFirstRoundNumber());
       this.processing = false;
     });

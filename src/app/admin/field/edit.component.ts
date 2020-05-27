@@ -141,14 +141,8 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
             /* happy path */ fieldRes => {
                 this.planningRepository.create(this.structure.getFirstRoundNumber(), this.tournament).subscribe(
                 /* happy path */ roundNumberOut => {
-                        this.tournamentRepository.syncRefereeRoles(this.tournament).subscribe(
-                            /* happy path */ allRolesRes => {
-                                this.processing = false;
-                                this.navigateBack();
-                            },
-                            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                            /* onComplete */() => this.processing = false
-                        );
+                        this.processing = false;
+                        this.navigateBack();
                     },
                 /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
                 );
@@ -163,24 +157,13 @@ export class FieldEditComponent extends TournamentComponent implements OnInit {
         const name = this.form.controls.name.value;
 
         this.field.setName(name);
-        const sportChanged = this.sport !== this.field.getSport();
         this.field.setSport(this.sport);
 
         this.fieldRepository.editObject(this.field, this.tournament)
             .subscribe(
-            /* happy path */ refereeRes => {
-                    if (!sportChanged) {
-                        this.navigateBack();
-                        return;
-                    }
-                    // doe planning berekenen! @TODO
-                    // this.tournamentRepository.syncRefereeRoles(this.tournament).subscribe(
-                    //     /* happy path */ allRolesRes => {
-                    //         this.navigateBack();
-                    //     },
-                    //     /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                    //     /* onComplete */() => this.processing = false
-                    // );
+            /* happy path */ fieldRes => {
+                    this.navigateBack();
+                    // @TODO MULTISPORTS planning opnieuw, als de sport is gewijzigd,                    
                 },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
             /* onComplete */() => { this.processing = false; }

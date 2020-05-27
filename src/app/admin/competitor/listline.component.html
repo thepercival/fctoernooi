@@ -21,8 +21,11 @@
   <button #btnEdit type="button" class="btn btn-sm btn-outline-warning" (click)="edit()">vul een naam in</button>
 </td>
 <td class="text-center d-none d-sm-table-cell">
-  <fa-icon *ngIf="place.getCompetitor()" class="text-primary pointer" (click)="register()"
-    [icon]="['far', (place.getCompetitor().getRegistered() ? 'check-' : '') + 'square']" size="2x"></fa-icon>
+  <label *ngIf="place.getCompetitor()" class="custom-control custom-checkbox col-form-label pointer pl-0">
+    <input type="checkbox" class="custom-control-input form-check-input"
+      [checked]="place.getCompetitor().getRegistered()" (change)="register()">
+    <span class="custom-control-indicator"></span>
+  </label>
 </td>
 <td *ngIf="!hasBegun" class="text-right"><button type="button" class="btn btn-sm btn-danger" (click)="remove()">
     <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>

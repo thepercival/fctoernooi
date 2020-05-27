@@ -2,14 +2,13 @@ import { Injectable } from '@angular/core';
 
 import { Sponsor } from '../sponsor';
 import { Tournament } from '../tournament';
-import { UserMapper } from '../user/mapper';
 
 /**
  * Created by coen on 10-10-17.
  */
 @Injectable()
 export class SponsorMapper {
-    constructor(private userMapper: UserMapper) { }
+    constructor() { }
 
     toObject(json: JsonSponsor, tournament: Tournament, sponsor?: Sponsor): Sponsor {
         if (sponsor === undefined) {

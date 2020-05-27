@@ -11,7 +11,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class NameModalComponent implements OnInit {
     @Input() header: string;
     @Input() range: VoetbalRange;
-    @Input() name: string;
+    @Input() initialName: string;
+    @Input() labelName: string;
+    @Input() buttonName: string;
+    @Input() buttonOutline: boolean;
     form: FormGroup;
 
     constructor(public activeModal: NgbActiveModal, private fb: FormBuilder) {
@@ -27,6 +30,6 @@ export class NameModalComponent implements OnInit {
                 Validators.minLength(this.range.min),
                 Validators.maxLength(this.range.max)
             ]));
-        this.form.controls.name.setValue(this.name);
+        this.form.controls.name.setValue(this.initialName);
     }
 }

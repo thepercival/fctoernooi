@@ -7,6 +7,7 @@ import { Role } from '../../lib/role';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
+import { FavoritesRepository } from '../../lib/favorites/repository';
 
 @Component({
     selector: 'app-tournament-games-view',
@@ -23,7 +24,8 @@ export class GamesComponent extends TournamentComponent implements OnInit {
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private myNavigation: MyNavigation,
-        private authService: AuthService
+        private authService: AuthService,
+        public favRepository: FavoritesRepository
     ) {
         super(route, router, tournamentRepository, structureRepository);
     }
@@ -45,7 +47,7 @@ export class GamesComponent extends TournamentComponent implements OnInit {
     }
 
     isAdmin(): boolean {
-        return this.tournament && this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.ADMIN);
+        return this.tournament.getUser(this.authService.getUser())?.hasRoles(Role.GAMERESULTADMIN);
     }
 
     refreshData() {

@@ -6,7 +6,7 @@
       </h1>
       <ul class="list-group text-center m-2">
         <li class="list-group-item border-info text-info">opzet met meerdere ronden</li>
-        <li class="list-group-item border-info text-info">automatische kwalificatie en planning</li>
+        <li class="list-group-item border-info text-info">automatische kwalificatie en wedstrijdplanning</li>
         <li class="list-group-item border-info text-info">live scorebord</li>
         <li class="list-group-item border-info text-info">export naar pdf en werkblad</li>
       </ul>
@@ -29,8 +29,8 @@
 
     <table *ngIf="!processingWithRole && shellsWithRole.length > 0" class="table">
       <tbody>
-        <app-home-shell class="pointer" (click)="linkToEdit(shell)" *ngFor="let shell of shellsWithRole" [shell]="shell"
-          [showPublic]="true"></app-home-shell>
+        <app-home-shell class="pointer" (click)="linkToTournament(shell)" *ngFor="let shell of shellsWithRole"
+          [shell]="shell" [showPublic]="true"></app-home-shell>
         <tr *ngIf="!showingAllWithRole && shellsWithRoleFromFour.length > 0"
           (click)="showingAllWithRole = !showingAllWithRole" class="pointer">
           <td colspan="4" class="text-center">
@@ -40,7 +40,7 @@
           </td>
         </tr>
         <ng-template ngFor let-shell [ngForOf]="shellsWithRoleFromFour">
-          <app-home-shell *ngIf="showingAllWithRole" class="pointer" (click)="linkToEdit(shell)" [shell]="shell"
+          <app-home-shell *ngIf="showingAllWithRole" class="pointer" (click)="linkToTournament(shell)" [shell]="shell"
             [showPublic]="true">
           </app-home-shell>
         </ng-template>

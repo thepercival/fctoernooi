@@ -105,14 +105,6 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
     get GameHOME(): boolean { return Game.HOME; }
     get GameAWAY(): boolean { return Game.AWAY; }
 
-    hasAllEditPermissions() {
-        const loggedInUserId = this.authService.getLoggedInUserId();
-        if (this.tournament.hasRole(loggedInUserId, Role.GAMERESULTADMIN)) {
-            return true;
-        }
-        return false;
-    }
-
     getCalculateScoreDescription() {
         const scoreConfig = this.firstScoreConfig.getCalculate();
         let description = '';

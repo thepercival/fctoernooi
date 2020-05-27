@@ -152,7 +152,7 @@ export class NewComponent implements OnInit {
         sportConfigs: [this.sportConfigService.createDefaultJson(this.sport)]
       },
       lockerRooms: [],
-      roles: [],
+      users: [],
       sponsors: []
     };
 
@@ -170,7 +170,7 @@ export class NewComponent implements OnInit {
                       this.router.navigate(['/admin/structure', tournament.getId()]);
                     },
                   /* error path */ e => {
-                      this.setAlert('danger', 'de toernooi-planning kon niet worden aangemaakt: ' + e);
+                      this.setAlert('danger', 'de wedstrijdplanning kon niet worden aangemaakt: ' + e);
                       this.processing = false;
                     },
                   /* onComplete */() => { this.processing = false; }

@@ -9,31 +9,51 @@ import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
     templateUrl: './competitorchoosemodal.component.html',
     styleUrls: ['./competitorchoosemodal.component.scss']
 })
-export class CompetitorChooseModalComponent {
+export class CompetitorChooseModalComponent implements OnInit {
     @Input() validator: LockerRoomValidator;
     @Input() places: Place[];
     @Input() lockerRoom: LockerRoom;
     @Input() selectedCompetitors: Competitor[];
-    changed = false;
+    public competitorListItems: CompetitorListItem[] = [];
+    public changed = false;
 
     constructor(public nameService: NameService, public activeModal: NgbActiveModal) {
+    }
+
+    ngOnInit() {
+        this.places.forEach((place: Place) => {
+            this.competitorListItems.push({
+                placeName: this.nameService.getPlaceFromName(place, false),
+                competitor: place.getCompetitor(),
+                selected: this.isSelected(place.getCompetitor()),
+                nrOtherLockerRooms: this.validator.nrArranged(place.getCompetitor(), this.lockerRoom)
+            });
+        });
+        console.log(this.competitorListItems);
     }
 
     hasSelectableCompetitors(): boolean {
         return this.validator && this.validator.getCompetitors().length > 0;
     }
 
-    isSelected(place: Place): boolean {
-        return place.getCompetitor() && this.selectedCompetitors.indexOf(place.getCompetitor()) >= 0;
+    private isSelected(competitor?: Competitor): boolean {
+        return competitor && this.selectedCompetitors.indexOf(competitor) >= 0;
     }
 
-    toggle(competitor: Competitor) {
-        const idx = this.selectedCompetitors.indexOf(competitor);
-        if (idx >= 0) {
-            this.selectedCompetitors.splice(idx, 1);
-        } else {
-            this.selectedCompetitors.push(competitor);
-        }
+    toggle(competitorListItem: CompetitorListItem) {
+        console.log(competitorListItem)
+        competitorListItem.selected = !competitorListItem.selected;
         this.changed = true;
     }
+
+    getSelectedCompetitors(): Competitor[] {
+        return this.competitorListItems.filter(competitorListItem => competitorListItem.selected).map(competitorListItem => competitorListItem.competitor);
+    }
+}
+
+interface CompetitorListItem {
+    placeName: string;
+    competitor: Competitor;
+    selected: boolean;
+    nrOtherLockerRooms: number;
 }

@@ -17,7 +17,6 @@ import {
 import { AuthService } from '../../../lib/auth/auth.service';
 import { CSSService } from '../../common/cssservice';
 import { Favorites } from '../../../lib/favorites';
-import { FavoritesRepository } from '../../../lib/favorites/repository';
 import { Role } from '../../../lib/role';
 import { Tournament } from '../../../lib/tournament';
 import { PlanningRepository } from '../../../lib/ngx-sport/planning/repository';
@@ -35,15 +34,15 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
   @Input() roundNumber: RoundNumber;
   @Input() reload: boolean;
   @Input() userRefereeId: number;
-  @Input() canEditSettings: boolean;
+  @Input() editMode: boolean;
+  @Input() favorites: Favorites;
   @Input() refreshingData: boolean;
   @Output() refreshData = new EventEmitter();
   @Output() scroll = new EventEmitter();
   alert: any;
   sameDay = true;
   tournamentBreak: PlanningPeriod;
-  userIsGameResultAdmin: boolean;
-  favorites: Favorites;
+  userIsAdmin: boolean;
   gameOrder = Game.ORDER_BY_BATCH;
   filterEnabled = false;
   hasReferees: boolean;
@@ -60,8 +59,7 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
     public nameService: NameService,
     public cssService: CSSService,
     private modalService: NgbModal,
-    protected planningRepository: PlanningRepository,
-    public favRepository: FavoritesRepository) {
+    protected planningRepository: PlanningRepository) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
     this.resetAlert();
     this.sportScoreConfigService = new SportScoreConfigService();
@@ -71,8 +69,7 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
     this.translate = new TranslateService();
     this.tournamentBreak = this.tournament.getBreak();
     this.planningConfig = this.roundNumber.getValidPlanningConfig();
-    this.userIsGameResultAdmin = this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.GAMERESULTADMIN);
-    this.favorites = this.favRepository.getItem(this.tournament);
+    this.userIsAdmin = this.tournament.getUser(this.authService.getUser())?.hasRoles(Role.GAMERESULTADMIN);
     this.roundNumberNeedsRanking = this.roundNumber.needsRanking();
     this.hasMultiplePoules = this.roundNumber.getPoules().length > 1;
     this.hasReferees = this.tournament.getCompetition().getReferees().length > 0 || this.planningConfig.getSelfReferee();
@@ -107,7 +104,7 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
     let showBreak = false;
     this.roundNumber.getGames(this.gameOrder).forEach(game => {
       const aPlaceHasACompetitor = this.hasAPlaceACompetitor(game);
-      if (this.filterEnabled && !(!this.favorites.hasItems() || this.favorites.hasGameItem(game) || !aPlaceHasACompetitor)) {
+      if (this.filterEnabled && this.favorites?.hasItems() && !this.favorites?.hasGameItem(game)) {
         return;
       }
       const pouleData: PouleData = pouleDatas[game.getPoule().getId()];
@@ -123,7 +120,7 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
       }
 
       const gameData: GameData = {
-        hasEditPermissions: this.hasEditPermissions(game),
+        canChangeResult: this.canChangeResult(game),
         hasACompetitor: aPlaceHasACompetitor,
         hasPopover: hasPopover,
         poule: pouleData,
@@ -169,19 +166,16 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
     return game.getState() === State.Finished;
   }
 
-  hasEditPermissions(game: Game): boolean {
-    if (this.userIsGameResultAdmin) {
-      return true;
+  canChangeResult(game: Game): boolean {
+    if (this.editMode) {
+      return this.userIsAdmin;
     }
     if (game.getReferee() === undefined) {
       return false;
     }
-    if (this.userRefereeId !== undefined
-      && this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.REFEREE)
-      && this.userRefereeId === game.getReferee().getId()) {
-      return true;
-    }
-    return false;
+    return this.userRefereeId !== undefined
+      && this.tournament?.getUser(this.authService.getUser())?.hasRoles(Role.REFEREE)
+      && this.userRefereeId === game.getReferee().getId();
   }
 
   protected isBreakBeforeGame(game: Game): boolean {
@@ -263,7 +257,7 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
 }
 
 interface GameData {
-  hasEditPermissions: boolean;
+  canChangeResult: boolean;
   hasACompetitor: boolean;
   hasPopover: boolean;
   poule: PouleData;

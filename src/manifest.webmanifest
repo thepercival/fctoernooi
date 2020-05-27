@@ -1,7 +1,7 @@
 {
   "name": "FCToernooi",
   "short_name": "FCToernooi",
-  "description": "met FCToernooi kun je een toernooi opzetten. Er is onder andere een live scorebord en automatische kwalificatie en planning",
+  "description": "met FCToernooi kun je een toernooi opzetten. Er is onder andere een live scorebord en automatische kwalificatie en wedstrijdplanning",
   "theme_color": "#3e3f3a",
   "background_color": "#3e3f3a",
   "display": "fullscreen",

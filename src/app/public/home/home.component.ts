@@ -57,8 +57,8 @@ export class HomeComponent extends TournamentComponent implements OnInit, OnDest
         this.processing = false;
     }
 
-    isAdmin(): boolean {
-        return this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.ADMIN);
+    isAnAdmin(): boolean {
+        return this.tournament.getUser(this.authService.getUser())?.hasARole(Role.ADMIN + Role.GAMERESULTADMIN);
     }
 
     lockerRoomDescription(): string {

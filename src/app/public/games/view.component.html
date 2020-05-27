@@ -9,17 +9,25 @@
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
+      <div class="text-center">
+        <button *ngIf="!processing && tournament && isAdmin()" [routerLink]="['/admin', tournament.getId()]"
+          type="button" class="btn btn-warning w-100">
+          naar het beheergedeelte
+        </button>
+      </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
       <ngb-alert *ngIf="oldStructure && isAdmin()" type="info" [dismissible]="false">Ga naar de
         beheer-pagina om te vragen om de opzet handmatig om te zetten.
       </ngb-alert>
-      <ngb-alert *ngIf="oldStructure && !isAdmin()" type="info" [dismissible]="false">Vraag de toernooi-beheerder om de
+      <ngb-alert *ngIf="oldStructure && !isAdmin()" type="info" [dismissible]="false">Vraag de toernooi-beheerder om
+        de
         oude opzet te laten omzetten.
       </ngb-alert>
       <div *ngIf="!processing && tournament && structure">
         <app-tournament-roundnumber-planning *ngFor="let roundNumber of structure.getRoundNumbers()"
-          [tournament]="tournament" [roundNumber]="roundNumber" [userRefereeId]="userRefereeId" (scroll)="scroll()"
-          (refreshData)="refreshData()" [refreshingData]="refreshingData">
+          [tournament]="tournament" [roundNumber]="roundNumber" [favorites]="favRepository.getItem(tournament)"
+          [userRefereeId]="userRefereeId" (scroll)="scroll()" (refreshData)="refreshData()"
+          [refreshingData]="refreshingData">
         </app-tournament-roundnumber-planning>
       </div>
     </div>

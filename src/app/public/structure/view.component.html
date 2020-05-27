@@ -14,6 +14,12 @@
     </div>
   </div>
   <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+  <div class="text-center">
+    <button *ngIf="!processing && tournament && isAdmin()" [routerLink]="['/admin', tournament.getId()]" type="button"
+      class="btn btn-warning w-100 mb-3">
+      naar het beheergedeelte
+    </button>
+  </div>
   <div *ngIf="!processing" class="row text-center">
     <app-tournament-structureround [editable]="false" [round]="structure.getRootRound()" [favorites]="competitors">
     </app-tournament-structureround>

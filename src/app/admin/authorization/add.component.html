@@ -1,0 +1,87 @@
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+            <app-tournament-title [tournament]="tournament"></app-tournament-title>
+            <div class="d-flex justify-content-between mr-1 mb-3">
+                <h2>
+                    <fa-icon [icon]="['fas', 'user-friends']"></fa-icon> rol toevoegen
+                </h2>
+                <button type="button" class="btn btn-sm btn-outline-info" (click)="openHelpModal(contentInfo)">
+                    <fa-icon [icon]=" ['fas', 'info-circle' ]"></fa-icon> info
+                </button>
+            </div>
+            <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+            <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+                <div class="form-group row">
+                    <div class="col-3 col-sm-6">
+                        <label for="emailaddress" class="col-form-label">emailadres</label>
+                    </div>
+                    <div class="col-9 col-sm-6">
+                        <input class="form-control"
+                            [ngClass]="{ 'is-invalid': form.controls.emailaddress.invalid, 'is-valid': form.controls.emailaddress.valid }"
+                            type="email" formControlName="emailaddress"
+                            placeholder="max. {{validations.maxlengthemailaddress}} karakters">
+                    </div>
+                </div>
+
+                <div *ngFor="let roleItem of roleItems" class="form-group row">
+                    <label for="role{{roleItem.value}}" class="col-3 col-sm-6 col-form-label">
+                        <span>{{getRoleDescription(roleItem.value)}}</span></label>
+                    <div class="form-check col-9 col-sm-6">
+                        <label class="custom-control custom-checkbox col-form-label pl-0">
+                            <input type="checkbox" class="custom-control-input form-check-input"
+                                formControlName="role{{roleItem.value}}" [checked]="roleItem.selected"
+                                (ngModelChange)="toggleRoleItem(roleItem)">
+                            <span class="custom-control-indicator"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="sendinvitation" class="col-3 col-sm-6 col-form-label">verstuur uitnodiging</label>
+                    <div class="form-check col-9 col-sm-6">
+                        <label class="custom-control custom-checkbox col-form-label pl-0">
+                            <input type="checkbox" class="custom-control-input form-check-input"
+                                formControlName="sendinvitation">
+                            <span class="custom-control-indicator"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group row justify-content-end">
+                    <div class="col-9 col-sm-6">
+                        <button [disabled]="form.invalid || !hasSomeRoleSelected()" type="submit"
+                            class="btn btn-primary">
+                            <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon> toevoegen
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<ng-template #contentInfo let-modal>
+    <div class="modal-header no-border">
+        <h4 class="modal-title">uitleg rol toevoegen</h4>
+        <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <ul class="list-group">
+            <li class="list-group-item border-info">Wanneer je een rol toevoegt voor een emailadres, die nog
+                niet bekend is bij fctoernooi, dan kun je een email laten versturen door de optie "verstuur uitnodiging"
+                aan te zetten.
+            </li>
+            <li class="list-group-item border-info">De rol "scheidsrechter" kun je aanzetten door bij de desbetreffende
+                scheidsrechter het emailadres in te vullen.</li>
+        </ul>
+    </div>
+    <div class="modal-footer justify-content-reverse no-border">
+        <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
+            (click)="modal.close('linkToReferees')">
+            <fa-icon [icon]=" ['fac', 'referee' ]"></fa-icon> naar scheidsrechters
+        </button>
+        <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
+            (click)="modal.dismiss('close')">sluiten</button>
+    </div>
+</ng-template>

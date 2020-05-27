@@ -17,12 +17,12 @@ export class TournamentShellRepository extends APIRepository {
         super();
     }
 
-    getUrlpostfix(mine: boolean): string {
-        return (mine ? 'my' : '') + 'shells';
+    getUrlpostfix(withRole: boolean): string {
+        return 'shells' + (withRole ? 'withrole' : '');
     }
 
-    getUrl(mine: boolean): string {
-        return super.getApiUrl() + (this.getToken() === undefined ? 'public/' : '') + this.getUrlpostfix(mine);
+    getUrl(withRole: boolean): string {
+        return super.getApiUrl() + (this.getToken() === undefined ? 'public/' : '') + this.getUrlpostfix(withRole);
     }
 
     getObjects(filter?: TournamentShellFilter): Observable<TournamentShell[]> {
@@ -30,8 +30,8 @@ export class TournamentShellRepository extends APIRepository {
             headers: super.getHeaders(),
             params: this.getHttpParams(filter)
         };
-        const mine = filter ? filter.mine : false;
-        return this.http.get<TournamentShell[]>(this.getUrl(mine), options).pipe(
+        const withRole: boolean = filter ? filter.roles > 0 : false;
+        return this.http.get<TournamentShell[]>(this.getUrl(withRole), options).pipe(
             map((jsonShells: TournamentShell[]) => this.convertObjects(jsonShells)),
             catchError((err) => this.handleError(err))
         );
@@ -58,6 +58,9 @@ export class TournamentShellRepository extends APIRepository {
         if (filter.name !== undefined) {
             httpParams = httpParams.set('name', filter.name);
         }
+        if (filter.roles !== undefined) {
+            httpParams = httpParams.set('roles', '' + filter.roles);
+        }
         return httpParams;
     }
 }
@@ -67,7 +70,7 @@ export interface TournamentShell {
     sportCustomId: number;
     name: string;
     startDateTime: Date;
-    hasEditPermissions: boolean;
+    roles: number;
     public: boolean;
 }
 
@@ -75,5 +78,5 @@ export interface TournamentShellFilter {
     startDate?: Date;
     endDate?: Date;
     name?: string;
-    mine?: boolean;
+    roles?: number;
 }

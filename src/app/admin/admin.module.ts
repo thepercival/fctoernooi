@@ -54,7 +54,7 @@ import {
 } from 'ngx-sport';
 
 import { CSSService } from '../shared/common/cssservice';
-import { RoleMapper } from '../lib/role/mapper';
+import { TournamentUserMapper } from '../lib/tournamentuser/mapper';
 import { CommonSharedModule } from '../shared/common/shared.module';
 import { CompetitorEditComponent } from './competitor/edit.component';
 import { CompetitorListComponent } from './competitor/list.component';
@@ -96,6 +96,11 @@ import { SponsorRepository } from '../lib/sponsor/repository';
 import { TournamentModule } from '../shared/tournament/tournament.module';
 import { ModalRoundNumbersComponent } from './roundnumber/selector.component';
 import { LockerRoomMapper } from '../lib/lockerroom/mapper';
+import { TournamentUserRepository } from '../lib/tournamentuser/repository';
+import { TournamentInvitationRepository } from '../lib/tournament/invitation/repository';
+import { TournamentInvitationMapper } from '../lib/tournament/invitation/mapper';
+import { AuthorizationListComponent } from './authorization/list.component';
+import { AuthorizationAddComponent } from './authorization/add.component';
 
 @NgModule({
   imports: [
@@ -128,7 +133,9 @@ import { LockerRoomMapper } from '../lib/lockerroom/mapper';
     SponsorEditComponent,
     StartBreakComponent,
     CompetitorListRemoveModalComponent,
-    ModalRoundNumbersComponent
+    ModalRoundNumbersComponent,
+    AuthorizationListComponent,
+    AuthorizationAddComponent
   ],
   entryComponents: [CompetitorListRemoveModalComponent, ModalRoundNumbersComponent],
   providers: [
@@ -156,7 +163,6 @@ import { LockerRoomMapper } from '../lib/lockerroom/mapper';
     PouleMapper,
     RefereeMapper,
     RefereeRepository,
-    RoleMapper,
     RoundMapper,
     RoundNumberMapper,
     SeasonMapper,
@@ -175,6 +181,10 @@ import { LockerRoomMapper } from '../lib/lockerroom/mapper';
     StructureMapper,
     TournamentRepository,
     TournamentMapper,
+    TournamentUserRepository,
+    TournamentUserMapper,
+    TournamentInvitationRepository,
+    TournamentInvitationMapper,
   ]
 })
 export class AdminModule {

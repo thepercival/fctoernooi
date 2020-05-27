@@ -4,26 +4,28 @@ import { User } from '../user';
 
 @Injectable()
 export class UserMapper {
+    protected static users = {};
     constructor() { }
 
     toObject(json: JsonUser): User {
-        const user = new User(json.emailaddress);
-        user.setId(json.id);
-        user.setName(json.name);
+        let user = UserMapper.users[json.id];
+        if (user === undefined) {
+            user = new User(json.id);
+            UserMapper.users[user.getId()] = user;
+        }
+        user.setEmailaddress(json.emailaddress)
         return user;
     }
 
     toJson(user: User): JsonUser {
         return {
             id: user.getId(),
-            emailaddress: user.getEmailaddress(),
-            name: user.getName()
+            emailaddress: user.getEmailaddress()
         };
     }
 }
 
 export interface JsonUser {
-    id?: number;
-    emailaddress: string;
-    name?: string;
+    id: number;
+    emailaddress?: string;
 }

@@ -29,8 +29,11 @@ export class LockerRoomValidator {
         return this.nrArranged(competitor) > 1;
     }
 
-    nrArranged(competitor): number {
+    nrArranged(competitor, filterLockerRoom?: LockerRoom): number {
         return this.lockerRooms.filter(lockerRoom => {
+            if (filterLockerRoom && filterLockerRoom === lockerRoom) {
+                return false;
+            }
             return lockerRoom.getCompetitors().indexOf(competitor) >= 0;
         }).length;
     }

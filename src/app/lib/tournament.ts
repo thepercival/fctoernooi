@@ -3,6 +3,8 @@ import { Competition, PlanningPeriod, StructureOptions } from 'ngx-sport';
 import { Role } from './role';
 import { Sponsor } from './sponsor';
 import { LockerRoom } from './lockerroom';
+import { TournamentUser } from './tournamentuser';
+import { User } from './user';
 
 /**
  * Created by coen on 9-10-17.
@@ -16,7 +18,7 @@ export class Tournament {
     };
     protected id: number;
     protected competition: Competition;
-    protected roles: Role[] = [];
+    protected users: TournamentUser[] = [];
     protected sponsors: Sponsor[] = [];
     protected lockerRooms: LockerRoom[] = [];
     protected breakStartDateTime: Date;
@@ -44,19 +46,20 @@ export class Tournament {
         this.competition = competition;
     }
 
-    getRoles(): Role[] {
-        return this.roles;
+    getUsers(): TournamentUser[] {
+        return this.users;
     }
 
-    setRoles(roles: Role[]): void {
-        this.roles = roles;
+    getUser(user?: User): TournamentUser {
+        if (user === undefined) {
+            return undefined;
+        }
+        return this.getUsers().find(tournamentUser => tournamentUser.getUser() === user);
     }
 
-    hasRole(userId: number, roleValue: number) {
-        return this.getRoles().some(roleIt => {
-            return (roleIt.getUser().getId() === userId && (roleIt.getValue() & roleValue) === roleIt.getValue());
-        });
-    }
+    // setRoles(roles: Role[]): void {
+    //     this.roles = roles;
+    // }
 
     getName(): string {
         return this.getCompetition().getLeague().getName();

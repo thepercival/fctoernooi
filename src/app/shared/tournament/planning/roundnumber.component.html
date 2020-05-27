@@ -2,23 +2,23 @@
   <div class="d-flex mt-3">
     <h2 class="mr-auto">
       <span [innerHTML]="nameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
-      <button *ngIf="!canEditSettings" type="button" class="btn btn-sm btn-outline-secondary ml-1"
-        (click)="refreshData.emit()" [disabled]="refreshingData">
+      <button *ngIf="!editMode" type="button" class="btn btn-sm btn-outline-secondary ml-1" (click)="refreshData.emit()"
+        [disabled]="refreshingData">
         <fa-icon [icon]="['fas', 'sync']" [spin]="refreshingData"></fa-icon>
       </button>
     </h2>
-    <button *ngIf="!canEditSettings && favorites.hasItems()" type="button"
+    <button *ngIf="!editMode && favorites?.hasItems()" type="button"
       class="btn btn-sm btn-outline-{{filterEnabled ? 'primary' : 'secondary'}}" (click)="toggleFilter()">
       <fa-icon [icon]="['fas', 'filter']"></fa-icon>
-      <span>filter</span>
+      <span> filter</span>
     </button>
-    <button type="button" class="btn btn-sm btn-primary" *ngIf="canEditSettings" (click)="linkToPlanningConfig()">
+    <button type="button" class="btn btn-sm btn-primary" *ngIf="editMode" (click)="linkToPlanningConfig()">
       <fa-icon [icon]="['fas', 'cogs']"></fa-icon> ronde instellingen
     </button>
   </div>
   <ngb-alert *ngIf="!roundNumber.getHasPlanning()" class="mb-0" type="warning" [dismissible]="false">
-    <fa-icon [icon]="['fas', 'info-circle']"></fa-icon> De planning wordt gezocht, dit duurt enkele
-    seconden tot 1 minuut. Zodra de planning is gevonden, worden de wedstrijden automatisch getoond.
+    <fa-icon [icon]="['fas', 'info-circle']"></fa-icon> De wedstrijdplanning wordt gezocht, dit duurt enkele
+    seconden tot 1 minuut. Zodra de wedstrijdplanning is gevonden, worden de wedstrijden automatisch getoond.
   </ngb-alert>
   <ngb-alert *ngIf="refreshingData" type="info" [dismissible]="false">
     de uitslagen worden vernieuwd
@@ -110,34 +110,34 @@
             <!-- field -->
             <td class="text-center">{{gmData.game.getField()?.getName()}}</td>
             <!-- home -->
-            <td class="place text-right " [ngClass]="{'favitem': favorites.hasGameCompetitor(gmData.game, GameHOME) }">
+            <td class="place text-right " [ngClass]="{'favitem': favorites?.hasGameCompetitor(gmData.game, GameHOME) }">
               <span>{{nameService.getPlacesFromName(gmData.game.getPlaces( GameHOME ),true,true)}}</span>
             </td>
             <!-- score -->
-            <td nowrap class="text-center" [ngClass]="{ 'toGameEdit': userIsGameResultAdmin }">
-              <button *ngIf="gmData.hasEditPermissions" class="btn btn-sm btn-outline-primary"
+            <td nowrap class="text-center">
+              <button *ngIf="gmData.canChangeResult" class="btn btn-sm btn-outline-primary"
                 (click)="linkToGameEdit(gmData.game)">
                 <fa-icon *ngIf="!isPlayed(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
                 <span *ngIf="isPlayed(gmData.game)">{{getScore(gmData.game)}}</span>
               </button>
-              <span *ngIf="!gmData.hasEditPermissions" class="d-none d-sm-inline">{{getScore(gmData.game)}}</span>
-              <button *ngIf="!gmData.hasEditPermissions && hasReferees && !isPlayed(gmData.game)"
+              <span *ngIf="!gmData.canChangeResult" class="d-none d-sm-inline">{{getScore(gmData.game)}}</span>
+              <button *ngIf="!gmData.canChangeResult && hasReferees && !isPlayed(gmData.game)"
                 class="btn btn-outline-info btn-sm d-sm-none" placement="top"
                 [ngbPopover]="nameService.getRefereeName(gmData.game)">
-                <span [ngClass]="{'favitem': favorites.hasGameReferee(gmData.game) }">
+                <span [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
                   <fa-icon [icon]="['fac', 'referee']"></fa-icon>
                 </span>
               </button>
-              <span *ngIf="!gmData.hasEditPermissions && !(hasReferees && !isPlayed(gmData.game))"
+              <span *ngIf="!gmData.canChangeResult && !(hasReferees && !isPlayed(gmData.game))"
                 class="d-sm-none">{{getScore(gmData.game)}}</span>
             </td>
             <!-- away -->
-            <td class="place" [ngClass]="{ 'favitem': favorites.hasGameCompetitor(gmData.game, GameAWAY) }">
+            <td class="place" [ngClass]="{ 'favitem': favorites?.hasGameCompetitor(gmData.game, GameAWAY) }">
               <span>{{nameService.getPlacesFromName(gmData.game.getPlaces( GameAWAY ),true,true)}}</span>
             </td>
             <!-- referee -->
             <td *ngIf="hasReferees" class="d-none d-sm-table-cell text-right"
-              [ngClass]="{'favitem': favorites.hasGameReferee(gmData.game) }">
+              [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
               {{nameService.getRefereeName(gmData.game)}}</td>
           </tr>
         </ng-template>
@@ -149,7 +149,7 @@
 <ng-template #planningInfo let-modal>
   <div class="modal-header no-border">
     <h4 class="modal-title">
-      <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> planning informatie
+      <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijdplanning
     </h4>
     <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
       <span aria-hidden="true">&times;</span>

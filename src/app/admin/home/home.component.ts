@@ -149,7 +149,19 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     isAdmin(): boolean {
-        return this.tournament.hasRole(this.authService.getLoggedInUserId(), Role.ADMIN);
+        return this.isAdminHelper(Role.ADMIN);
+    }
+
+    isRoleAdmin(): boolean {
+        return this.isAdminHelper(Role.ROLEADMIN);
+    }
+
+    isGameResultAdmin(): boolean {
+        return this.isAdminHelper(Role.GAMERESULTADMIN);
+    }
+
+    protected isAdminHelper(roles: number) {
+        return this.tournament.getUser(this.authService.getUser())?.hasRoles(roles);
     }
 
     remove() {
@@ -234,7 +246,9 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         const activeModal = this.modalService.open(NameModalComponent);
         activeModal.componentInstance.header = 'toernooinaam';
         activeModal.componentInstance.range = { min: League.MIN_LENGTH_NAME, max: League.MAX_LENGTH_NAME };
-        activeModal.componentInstance.name = this.competition.getLeague().getName();
+        activeModal.componentInstance.initialName = this.competition.getLeague().getName();
+        activeModal.componentInstance.labelName = this.competition.getLeague().getName();
+        activeModal.componentInstance.buttonName = 'wijzigen';
 
         activeModal.result.then((result) => {
             this.saveName(result);

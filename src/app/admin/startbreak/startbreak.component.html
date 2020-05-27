@@ -19,7 +19,7 @@
               <input class="form-control"
                 [ngClass]="{ 'is-invalid': form.controls.date.invalid, 'is-valid': form.controls.date.valid }"
                 placeholder="yyyy-mm-dd" formControlName="date" ngbDatepicker #d="ngbDatepicker" required
-                [minDate]="minDateStruct">
+                [minDate]="minDateStruct" container="body">
               <div class="input-group-append">
                 <span class="input-group-text pointer" (click)="d.toggle()">
                   <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>

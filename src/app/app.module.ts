@@ -32,7 +32,7 @@ import { MyNavigation } from './shared/common/navigation';
 import { CommonSharedModule } from './shared/common/shared.module';
 import { HomeComponent } from './home/home.component';
 import { HomeShellComponent } from './home/shell.component';
-import { RoleMapper } from './lib/role/mapper';
+import { TournamentUserMapper } from './lib/tournamentuser/mapper';
 import { TournamentShellRepository } from './lib/tournament/shell/repository';
 import { UserMapper } from './lib/user/mapper';
 import { LayoutModule } from './shared/layout/layout.module';
@@ -59,7 +59,7 @@ import { SportIconCustomComponent } from './home/sport/customicon.component';
     AuthService,
     AuthguardService,
     TournamentShellRepository,
-    RoleMapper,
+    TournamentUserMapper,
     UserMapper,
     GlobalEventsManager,
     MyNavigation

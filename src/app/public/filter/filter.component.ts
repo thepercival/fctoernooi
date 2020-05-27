@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Competitor, NameService, Place, Referee } from 'ngx-sport';
 
-import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/common/navigation';
 import { Favorites } from '../../lib/favorites';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
+import { AuthService } from '../../lib/auth/auth.service';
+import { Role } from '../../lib/role';
 
 @Component({
     selector: 'app-tournament-filter',
@@ -27,7 +28,8 @@ export class FilterComponent extends TournamentComponent implements OnInit {
         sructureRepository: StructureRepository,
         public nameService: NameService,
         private myNavigation: MyNavigation,
-        public favRepository: FavoritesRepository
+        public favRepository: FavoritesRepository,
+        protected authService: AuthService
     ) {
         super(route, router, tournamentRepository, sructureRepository);
         this.resetAlert();
@@ -39,6 +41,10 @@ export class FilterComponent extends TournamentComponent implements OnInit {
             this.favorites = this.favRepository.getItem(this.tournament);
             this.processing = false;
         });
+    }
+
+    isAdmin(): boolean {
+        return this.tournament.getUser(this.authService.getUser())?.hasRoles(Role.ADMIN);
     }
 
     initPlaces() {

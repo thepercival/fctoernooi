@@ -4,13 +4,15 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../repository';
+import { UserMapper } from '../user/mapper';
+import { User } from '../user';
 
 @Injectable()
 export class AuthService extends APIRepository {
 
   private authItem: JsonAuthItem;
 
-  constructor(private http: HttpClient) {
+  constructor(private userMapper: UserMapper, private http: HttpClient) {
     super();
     const jsonAuth = JSON.parse(localStorage.getItem('auth'));
     this.authItem = jsonAuth ? {
@@ -23,8 +25,8 @@ export class AuthService extends APIRepository {
     return this.authItem !== undefined;
   }
 
-  getLoggedInUserId(): number {
-    return this.authItem ? this.authItem.userId : undefined;
+  getUser(): User {
+    return this.authItem ? this.userMapper.toObject({ id: this.authItem.userId }) : undefined;
   }
 
   getUrl(): string {

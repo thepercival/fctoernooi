@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CompetitionMapper, JsonCompetition } from 'ngx-sport';
 
-import { JsonRole, RoleMapper } from '../role/mapper';
+import { TournamentUserMapper, JsonTournamentUser } from '../tournamentuser/mapper';
 import { JsonSponsor, SponsorMapper } from '../sponsor/mapper';
 import { Tournament } from '../tournament';
 import { JsonLockerRoom, LockerRoomMapper } from '../lockerroom/mapper';
@@ -10,18 +10,18 @@ import { JsonLockerRoom, LockerRoomMapper } from '../lockerroom/mapper';
 export class TournamentMapper {
     constructor(
         private competitionMapper: CompetitionMapper,
-        private roleMapper: RoleMapper,
+        private tournamentUserMapper: TournamentUserMapper,
         private sponsorMapper: SponsorMapper,
         private lockerRoomMapper: LockerRoomMapper) { }
 
     toObject(json: JsonTournament): Tournament {
         const competition = this.competitionMapper.toObject(json.competition);
         const tournament = new Tournament(competition);
-        const jsonRoles = json.roles !== undefined ? json.roles : [];
-        const roles = jsonRoles.map(jsonRole => this.roleMapper.toObject(jsonRole, tournament));
+        if (json.users) {
+            json.users.map(jsonUser => this.tournamentUserMapper.toObject(jsonUser, tournament));
+        }
         json.sponsors.map(jsonSponsor => this.sponsorMapper.toObject(jsonSponsor, tournament));
         json.lockerRooms.map(jsonLockerRoom => this.lockerRoomMapper.toObject(jsonLockerRoom, tournament));
-        tournament.setRoles(roles);
         tournament.setId(json.id);
         if (json.breakStartDateTime !== undefined) {
             tournament.setBreakStartDateTime(new Date(json.breakStartDateTime));
@@ -38,7 +38,7 @@ export class TournamentMapper {
         return {
             id: tournament.getId(),
             competition: this.competitionMapper.toJson(tournament.getCompetition()),
-            roles: tournament.getRoles().map(role => this.roleMapper.toJson(role)),
+            users: tournament.getUsers().map(tournamentUser => this.tournamentUserMapper.toJson(tournamentUser)),
             lockerRooms: tournament.getLockerRooms().map(lockerRoom => this.lockerRoomMapper.toJson(lockerRoom)),
             sponsors: tournament.getSponsors().map(sponsor => this.sponsorMapper.toJson(sponsor)),
             breakStartDateTime: tournament.getBreakStartDateTime() ? tournament.getBreakStartDateTime().toISOString() : undefined,
@@ -55,7 +55,7 @@ export interface JsonTournament {
     breakStartDateTime?: string;
     breakEndDateTime?: string;
     public: boolean;
-    roles: JsonRole[];
+    users: JsonTournamentUser[];
     lockerRooms: JsonLockerRoom[];
     sponsors: JsonSponsor[];
     updated: boolean;

@@ -5,20 +5,14 @@ export class User {
     static readonly MAX_LENGTH_PASSWORD = 50;
 
     protected id: number;
-    protected name: string;
     protected emailaddress: string;
 
-    // constructor
-    constructor(emailaddress: string) {
-        this.setEmailaddress(emailaddress);
+    constructor(id: number) {
+        this.id = id;
     }
 
     getId(): number {
         return this.id;
-    }
-
-    setId(id: number): void {
-        this.id = id;
     }
 
     getEmailaddress(): string {
@@ -27,13 +21,5 @@ export class User {
 
     setEmailaddress(emailaddress: string): void {
         this.emailaddress = emailaddress;
-    }
-
-    getName(): string {
-        return this.name;
-    }
-
-    setName(name: string): void {
-        this.name = name;
     }
 }

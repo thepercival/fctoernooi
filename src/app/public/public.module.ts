@@ -35,7 +35,7 @@ import {
 } from 'ngx-sport';
 
 import { CSSService } from '../shared/common/cssservice';
-import { RoleMapper } from '../lib/role/mapper';
+import { TournamentUserMapper } from '../lib/tournamentuser/mapper';
 import { CommonSharedModule } from '../shared/common/shared.module';
 import { FilterComponent } from './filter/filter.component';
 import { HomeComponent } from './home/home.component';
@@ -101,7 +101,7 @@ import { LockerRoomMapper } from '../lib/lockerroom/mapper';
     PlanningConfigMapper,
     PouleMapper,
     RefereeMapper,
-    RoleMapper,
+    TournamentUserMapper,
     RoundMapper,
     RoundNumberMapper,
     SeasonMapper,

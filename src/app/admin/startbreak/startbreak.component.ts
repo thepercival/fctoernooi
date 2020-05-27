@@ -127,7 +127,7 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
                                 this.myNavigation.back();
                             },
                             /* error path */ e => {
-                                this.setAlert('danger', 'de planning is niet opgeslagen: ' + e);
+                                this.setAlert('danger', 'de wedstrijdplanning is niet opgeslagen: ' + e);
                                 this.processing = false;
                             }
                         );

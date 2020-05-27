@@ -17,29 +17,28 @@
             </tr>
         </thead>
         <tbody>
-            <ng-template ngFor let-place [ngForOf]="places">
-                <tr *ngIf="place.getCompetitor()">
-                    <td>{{nameService.getPlaceFromName(place, false)}}</td>
+            <ng-template ngFor let-competitorListItem [ngForOf]="competitorListItems">
+                <tr *ngIf="competitorListItem.competitor">
+                    <td>{{competitorListItem.placeName}}</td>
                     <td>
-                        {{place.getCompetitor().getName()}}
-                        <span *ngIf="validator.isArranged(place.getCompetitor())"
-                            title="ingedeeld in {{validator.nrArranged(place.getCompetitor())}} andere kleedkamers"
-                            class="badge badge-info ml-1">{{validator.nrArranged(place.getCompetitor())}}</span>
+                        {{competitorListItem.competitor.getName()}}
                     </td>
                     <td class="text-right">
-                        <fa-icon class="text-primary pointer" (click)="toggle(place.getCompetitor())"
-                            [icon]="['far', (isSelected(place) ? 'check-' : '') + 'square']" size="2x">
+                        <fa-icon
+                            class="text-{{competitorListItem.nrOtherLockerRooms > 0 ? 'warning' : 'primary'}} pointer"
+                            (click)="toggle(competitorListItem)"
+                            [icon]="['far', (competitorListItem.selected ? 'check-' : '') + 'square']" size="2x">
                         </fa-icon>
                     </td>
                 </tr>
-                <tr *ngIf="!place.getCompetitor()">
-                    <td colspan="3">{{nameService.getPlaceFromName(place, false)}}</td>
+                <tr *ngIf="!competitorListItem.competitor">
+                    <td colspan="3">{{competitorListItem.placeName}}</td>
                 </tr>
             </ng-template>
         </tbody>
     </table>
 </div>
 <div class="modal-footer align-items-end">
-    <button [disabled]="!changed" type="submit" class="btn btn-outline-primary" data-dismiss="modal"
-        (click)="activeModal.close(selectedCompetitors)">wijzigen</button>
+    <button type="submit" class="btn btn-outline-primary" data-dismiss="modal"
+        (click)="activeModal.close(getSelectedCompetitors())">wijzigen</button>
 </div>

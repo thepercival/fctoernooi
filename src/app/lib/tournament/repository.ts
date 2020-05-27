@@ -1,10 +1,8 @@
-import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { Role } from '../role';
-import { JsonRole, RoleMapper } from '../role/mapper';
 import { Tournament } from '../tournament';
 import { JsonTournament, TournamentMapper } from './mapper';
 import { APIRepository } from '../repository';
@@ -22,7 +20,6 @@ export class TournamentRepository extends APIRepository {
     constructor(
         private http: HttpClient,
         private mapper: TournamentMapper,
-        private roleMapper: RoleMapper,
         private lockerRoomMapper: LockerRoomMapper) {
         super();
         this.url = super.getApiUrl() + this.getUrlpostfix();
@@ -99,14 +96,6 @@ export class TournamentRepository extends APIRepository {
                 jsonLockerRooms.map(jsonLockerRoom => this.lockerRoomMapper.toObject(jsonLockerRoom, tournament));
                 return lockerRooms;
             }),
-            catchError((err) => this.handleError(err))
-        );
-    }
-
-    syncRefereeRoles(tournament: Tournament): Observable<Role[]> {
-        const url = this.getUrl(tournament) + '/syncrefereeroles';
-        return this.http.post(url, null, this.getOptions()).pipe(
-            map((jsonRoles: JsonRole[]) => jsonRoles.map(jsonRole => this.roleMapper.toObject(jsonRole, tournament))),
             catchError((err) => this.handleError(err))
         );
     }

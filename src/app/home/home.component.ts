@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../lib/auth/auth.service';
 import { IAlert } from '../shared/common/alert';
 import { TournamentShell, TournamentShellFilter, TournamentShellRepository } from '../lib/tournament/shell/repository';
+import { Role } from '../lib/role';
+import { resolveSanitizationFn } from '@angular/compiler/src/render3/view/template';
 
 @Component({
   selector: 'app-home',
@@ -69,7 +71,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const filter = { mine: true };
+    const filter = { roles: Role.ALL };
     this.tournamentShellRepos.getObjects(filter)
       .subscribe(
           /* happy path */ myShells => {
@@ -150,9 +152,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/public', shell.tournamentId]);
   }
 
-  linkToEdit(shell: TournamentShell) {
+  linkToTournament(shell: TournamentShell) {
     this.processingWithRole = true;
-    this.router.navigate(['/admin', shell.tournamentId]);
+    const module = shell.roles === Role.REFEREE ? '/public' : '/admin';
+    this.router.navigate([module, shell.tournamentId]);
   }
 
   enableSearchFilter() {

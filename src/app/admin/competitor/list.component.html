@@ -7,7 +7,7 @@
         <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
       </h2>
       <button *ngIf="!processing && places && !hasBegun && atLeastTwoPlaceHaveCompetitor()" type="button"
-        class="btn btn-sm mr-0" [ngClass]="{ 'btn-outline-secondary': !orderMode, 'btn-primary': orderMode }"
+        class="btn btn-sm mr-0" [ngClass]="{ 'btn-outline-secondary': !orderMode, 'btn-outline-primary': orderMode }"
         (click)="orderMode = !orderMode">
         <fa-icon [icon]="['fas', 'random']"></fa-icon> volgorde`
       </button>
