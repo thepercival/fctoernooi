@@ -92,12 +92,15 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
             super.myNgOnInit(() => {
                 this.setGame(+params.gameId);
                 this.originalPouleState = this.game.getPoule().getState();
-                this.tournamentRepository.getUserRefereeId(this.tournament).subscribe(
-                /* happy path */ userRefereeIdRes => {
-                        this.userRefereeId = userRefereeIdRes;
-                    },
-                /* error path */ e => { this.setAlert('danger', e); }
-                );
+                const tournamentUser = this.tournament.getUser(this.authService.getUser());
+                if (tournamentUser && tournamentUser.hasRoles(Role.REFEREE)) {
+                    this.tournamentRepository.getUserRefereeId(this.tournament).subscribe(
+                        /* happy path */ userRefereeIdRes => {
+                            this.userRefereeId = userRefereeIdRes;
+                        },
+                        /* error path */ e => { this.setAlert('danger', e); }
+                    );
+                }
             });
         });
     }

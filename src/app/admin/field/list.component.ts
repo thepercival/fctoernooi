@@ -95,7 +95,7 @@ export class FieldListComponent extends TournamentComponent implements OnInit {
                 /* onComplete */() => this.processing = false
                         );
                 },
-            /* error path */ e => { this.setAlert('danger', 'X' + e); this.processing = false; },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
             );
     }
 }

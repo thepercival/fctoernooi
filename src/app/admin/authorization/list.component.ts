@@ -11,13 +11,17 @@ import { TournamentInvitationRepository } from '../../lib/tournament/invitation/
 import { TournamentInvitation } from '../../lib/tournament/invitation';
 import { TournamentUser } from '../../lib/tournamentuser';
 import { RoleItem } from './add.component';
+import { JsonTournamentInvitation } from '../../lib/tournament/invitation/mapper';
+import { JsonTournamentUser } from '../../lib/tournamentuser/mapper';
+import { JsonTournament } from '../../lib/tournament/mapper';
 @Component({
     selector: 'app-tournament-authorization-list',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss']
 })
 export class AuthorizationListComponent extends TournamentComponent implements OnInit {
-    public authAdminItems: AuthAdminItem[] = [];
+    public invitations: TournamentInvitation[] = [];
+    public actionprocessing: boolean = false;
 
     constructor(
         route: ActivatedRoute,
@@ -36,39 +40,17 @@ export class AuthorizationListComponent extends TournamentComponent implements O
     }
 
     initAuthorizations() {
-        this.authAdminItems = this.tournament.getUsers().map((user) => {
-            return this.createAuthItemByUser(user);
-        });
-
         this.invitationRepository.getObjects(this.tournament)
             .subscribe(
             /* happy path */ invitations => {
-                    invitations.forEach((invitation) => {
-                        this.authAdminItems.push(this.createAuthItemByInvitation(invitation));
-                    });
+                    this.invitations = invitations
                     this.processing = false;
                 },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
             );
     }
 
-    createAuthItemByUser(tournamentUser: TournamentUser): AuthAdminItem {
-        return {
-            emailaddress: tournamentUser.getUser().getEmailaddress(),
-            invitation: false,
-            roleItems: this.createRoleItems(tournamentUser.getRoles())
-        };
-    }
-
-    createAuthItemByInvitation(invitation: TournamentInvitation): AuthAdminItem {
-        return {
-            emailaddress: invitation.getEmailaddress(),
-            invitation: true,
-            roleItems: this.createRoleItems(invitation.getRoles())
-        };
-    }
-
-    createRoleItems(roles: number): RoleItem[] {
+    getRoleItems(roles: number): RoleItem[] {
         return [
             {
                 value: Role.ADMIN,
@@ -90,38 +72,67 @@ export class AuthorizationListComponent extends TournamentComponent implements O
     }
 
     getNrOfRoles(role: number): number {
-        return this.authAdminItems.filter(authAdminItem => {
-            return !authAdminItem.invitation && this.hasRole(authAdminItem, role);
+        return this.tournament.getUsers().filter(tournamentUser => {
+            return tournamentUser.hasRoles(role);
         }).length
     }
 
-    hasRole(authAdminItem: AuthAdminItem, role: number): boolean {
-        return authAdminItem.roleItems.some(roleItem => roleItem.value === role);
+    canToggleRole(roleItem: RoleItem) {
+        return !(roleItem.value === Role.ROLEADMIN && roleItem.selected && this.getNrOfRoles(Role.ROLEADMIN) < 2);
     }
 
-    toggleRole(roleItem: RoleItem) {
-        this.resetAlert();
-        if (roleItem.value === Role.ROLEADMIN && roleItem.selected && this.getNrOfRoles(Role.ROLEADMIN) < 2) {
-            this.setAlert('warning', 'er moet minimaal 1 "' + this.getRoleDescription(Role.ROLEADMIN) + '" zijn');
-            return;
-        }
-        roleItem.selected = !roleItem.selected
+    toggleRoleTournamentUser(tournamentUser: TournamentUser, roleItem: RoleItem) {
+        this.actionprocessing = true;
+
+        tournamentUser.setRoles(tournamentUser.getRoles() + (roleItem.selected ? roleItem.value : -roleItem.value));
+        this.tournamentUserRepository.editObject(tournamentUser)
+            .subscribe(
+                /* happy path */ res => {
+                    roleItem.selected = !roleItem.selected
+                    this.actionprocessing = false;
+                },
+                /* error path */ e => { this.setAlert('danger', e); this.actionprocessing = false; }
+            );
     }
 
-    removeAuthAdmin(authAdminItem: AuthAdminItem) {
-        const idx = this.authAdminItems.indexOf(authAdminItem);
-        if (idx >= 0) {
-            this.authAdminItems.splice(idx, 1);
-        }
+    toggleRoleInvitation(invitation: TournamentInvitation, roleItem: RoleItem) {
+        this.actionprocessing = true;
+
+        invitation.setRoles(invitation.getRoles() + (roleItem.selected ? roleItem.value : -roleItem.value));
+        this.invitationRepository.editObject(invitation)
+            .subscribe(
+                    /* happy path */ res => {
+                    roleItem.selected = !roleItem.selected
+                    this.actionprocessing = false;
+                },
+                    /* error path */ e => { this.setAlert('danger', e); this.actionprocessing = false; }
+            );
     }
 
-    canAuthAdminBeRemoved(authAdminItem: AuthAdminItem) {
-        return authAdminItem.invitation || !this.hasRole(authAdminItem, Role.ROLEADMIN) || this.getNrOfRoles(Role.ROLEADMIN) > 1;
-    }
-}
+    removeTournamentUser(tournamentUser: TournamentUser) {
+        this.actionprocessing = true;
+        this.tournamentUserRepository.removeObject(tournamentUser)
+            .subscribe(
+                /* happy path */ res => {
+                    this.actionprocessing = false;
+                },
+                /* error path */ e => { this.setAlert('danger', e); this.actionprocessing = false; }
+            );
 
-export interface AuthAdminItem {
-    emailaddress: string;
-    invitation: boolean;
-    roleItems: RoleItem[];
+    }
+
+    removeInvitation(invitation: TournamentInvitation) {
+        this.actionprocessing = true;
+        this.invitationRepository.removeObject(invitation)
+            .subscribe(
+                /* happy path */ res => {
+                    this.actionprocessing = false;
+                },
+                /* error path */ e => { this.setAlert('danger', e); this.actionprocessing = false; }
+            );
+    }
+
+    canBeRemoved(tournamentUser: TournamentUser) {
+        return !tournamentUser.hasRoles(Role.ROLEADMIN) || this.getNrOfRoles(Role.ROLEADMIN) > 1;
+    }
 }

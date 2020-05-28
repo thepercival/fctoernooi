@@ -8,6 +8,7 @@ import { Tournament } from '../../tournament';
 import { TournamentInvitationMapper, JsonTournamentInvitation } from './mapper';
 import { TournamentInvitation } from '.';
 import { TournamentUser } from '../../tournamentuser';
+import { JsonTournament } from '../mapper';
 
 @Injectable()
 export class TournamentInvitationRepository extends APIRepository {
@@ -52,11 +53,11 @@ export class TournamentInvitationRepository extends APIRepository {
         );
     }
 
-    removeObject(invitation: TournamentInvitation): Observable<any> {
+    removeObject(invitation: TournamentInvitation): Observable<JsonTournamentInvitation> {
         const tournament = invitation.getTournament();
         const url = this.getUrl(tournament) + '/' + invitation.getId();
         return this.http.delete(url, this.getOptions()).pipe(
-            map((res: any) => { }),
+            map((res: JsonTournamentInvitation) => res),
             catchError((err) => this.handleError(err))
         );
     }

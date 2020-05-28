@@ -36,15 +36,17 @@ export class TournamentUserRepository extends APIRepository {
         );
     }
 
-    removeObject(tournamentUser: TournamentUser): Observable<any> {
+    removeObject(tournamentUser: TournamentUser): Observable<JsonTournamentUser> {
         const tournament = tournamentUser.getTournament();
         const url = this.getUrl(tournament) + '/' + tournamentUser.getId();
         return this.http.delete(url, this.getOptions()).pipe(
-            map((res: any) => {
-                const index = tournamentUser.getTournament().getUsers().indexOf(tournamentUser);
+            map((res: JsonTournamentUser) => {
+                const index = tournament.getUsers().indexOf(tournamentUser);
                 if (index > -1) {
                     tournament.getUsers().splice(index, 1);
                 }
+
+                return res;
             }),
             catchError((err) => this.handleError(err))
         );

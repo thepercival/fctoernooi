@@ -115,17 +115,6 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
 
     toggleRoleItem(roleItem: RoleItem) {
         roleItem.selected = !roleItem.selected;
-        if (roleItem.selected && roleItem.value === Role.ROLEADMIN) {
-            const adminRoleItem = this.roleItems.find(roleItemIt => roleItemIt.value === Role.ADMIN);
-            if (!adminRoleItem.selected) {
-                adminRoleItem.selected = true;
-            }
-        } else if (!roleItem.selected && roleItem.value === Role.ADMIN) {
-            const roleAdminRoleItem = this.roleItems.find(roleItemIt => roleItemIt.value === Role.ROLEADMIN);
-            if (roleAdminRoleItem.selected) {
-                roleAdminRoleItem.selected = false;
-            }
-        }
     }
 
     navigateBack() {
