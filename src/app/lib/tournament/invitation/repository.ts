@@ -7,8 +7,6 @@ import { APIRepository } from '../../repository';
 import { Tournament } from '../../tournament';
 import { TournamentInvitationMapper, JsonTournamentInvitation } from './mapper';
 import { TournamentInvitation } from '.';
-import { TournamentUser } from '../../tournamentuser';
-import { JsonTournament } from '../mapper';
 
 @Injectable()
 export class TournamentInvitationRepository extends APIRepository {

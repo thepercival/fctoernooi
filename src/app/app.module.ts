@@ -32,7 +32,7 @@ import { MyNavigation } from './shared/common/navigation';
 import { CommonSharedModule } from './shared/common/shared.module';
 import { HomeComponent } from './home/home.component';
 import { HomeShellComponent } from './home/shell.component';
-import { TournamentUserMapper } from './lib/tournamentuser/mapper';
+import { TournamentUserMapper } from './lib/tournament/user/mapper';
 import { TournamentShellRepository } from './lib/tournament/shell/repository';
 import { UserMapper } from './lib/user/mapper';
 import { LayoutModule } from './shared/layout/layout.module';

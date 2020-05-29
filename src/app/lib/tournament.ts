@@ -1,10 +1,9 @@
 import { Competition, PlanningPeriod, StructureOptions } from 'ngx-sport';
 
-import { Role } from './role';
 import { Sponsor } from './sponsor';
 import { LockerRoom } from './lockerroom';
-import { TournamentUser } from './tournamentuser';
 import { User } from './user';
+import { TournamentUser } from './tournament/user';
 
 /**
  * Created by coen on 9-10-17.

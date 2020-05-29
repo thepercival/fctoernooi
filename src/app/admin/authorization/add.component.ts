@@ -11,6 +11,7 @@ import { TournamentInvitationRepository } from '../../lib/tournament/invitation/
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MyNavigation } from '../../shared/common/navigation';
 import { JsonTournamentInvitation } from '../../lib/tournament/invitation/mapper';
+import { AuthorizationExplanationModalComponent } from './infomodal.component';
 
 @Component({
     selector: 'app-tournament-authorization-add',
@@ -95,8 +96,9 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
         );
     }
 
-    openHelpModal(modalContent) {
-        const activeModal = this.modalService.open(modalContent);
+    openHelpModal() {
+        const activeModal = this.modalService.open(AuthorizationExplanationModalComponent);
+        activeModal.componentInstance.header = 'uitleg rol toevoegen';
         activeModal.result.then((result) => {
             if (result === 'linkToReferees') {
                 this.router.navigate(['/admin/referees', this.tournament.getId()]);
@@ -105,8 +107,10 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
         });
     }
 
-    getRoleDescription(role: number): string {
-        return Role.getDescription(role);
+
+
+    getRoleName(role: number): string {
+        return Role.getName(role);
     }
 
     hasSomeRoleSelected(): boolean {
@@ -127,7 +131,7 @@ export interface AdminAuthValidations {
     maxlengthemailaddress: number;
 }
 
-export interface RoleItem {
+interface RoleItem {
     value: number;
     selected: boolean;
 }

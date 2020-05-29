@@ -54,7 +54,7 @@ import {
 } from 'ngx-sport';
 
 import { CSSService } from '../shared/common/cssservice';
-import { TournamentUserMapper } from '../lib/tournamentuser/mapper';
+import { TournamentUserMapper } from '../lib/tournament/user/mapper';
 import { CommonSharedModule } from '../shared/common/shared.module';
 import { CompetitorEditComponent } from './competitor/edit.component';
 import { CompetitorListComponent } from './competitor/list.component';
@@ -96,11 +96,13 @@ import { SponsorRepository } from '../lib/sponsor/repository';
 import { TournamentModule } from '../shared/tournament/tournament.module';
 import { ModalRoundNumbersComponent } from './roundnumber/selector.component';
 import { LockerRoomMapper } from '../lib/lockerroom/mapper';
-import { TournamentUserRepository } from '../lib/tournamentuser/repository';
+import { TournamentUserRepository } from '../lib/tournament/user/repository';
 import { TournamentInvitationRepository } from '../lib/tournament/invitation/repository';
 import { TournamentInvitationMapper } from '../lib/tournament/invitation/mapper';
 import { AuthorizationListComponent } from './authorization/list.component';
 import { AuthorizationAddComponent } from './authorization/add.component';
+import { RoleItemComponent } from './authorization/roleitem.component';
+import { AuthorizationExplanationModalComponent } from './authorization/infomodal.component';
 
 @NgModule({
   imports: [
@@ -135,9 +137,11 @@ import { AuthorizationAddComponent } from './authorization/add.component';
     CompetitorListRemoveModalComponent,
     ModalRoundNumbersComponent,
     AuthorizationListComponent,
-    AuthorizationAddComponent
+    AuthorizationAddComponent,
+    RoleItemComponent,
+    AuthorizationExplanationModalComponent
   ],
-  entryComponents: [CompetitorListRemoveModalComponent, ModalRoundNumbersComponent],
+  entryComponents: [AuthorizationExplanationModalComponent, CompetitorListRemoveModalComponent, ModalRoundNumbersComponent],
   providers: [
     AssociationMapper,
     CompetitionMapper,

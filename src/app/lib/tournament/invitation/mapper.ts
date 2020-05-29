@@ -16,7 +16,7 @@ export class TournamentInvitationMapper {
         return invitation;
     }
 
-    toJson(invitation: TournamentInvitation): any {
+    toJson(invitation: TournamentInvitation): JsonTournamentInvitation {
         return {
             id: invitation.getId(),
             emailaddress: invitation.getEmailaddress(),

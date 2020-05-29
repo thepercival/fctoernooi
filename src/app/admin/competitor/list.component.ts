@@ -197,7 +197,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
 
   preRemove(place: Place) {
     const activeModal = this.modalService.open(CompetitorListRemoveModalComponent);
-    (<CompetitorListRemoveModalComponent>activeModal.componentInstance).place = place;
+    activeModal.componentInstance.place = place;
     activeModal.result.then((result) => {
       if (result === 'remove-place') {
         this.removePlaceFromRootRound(place);

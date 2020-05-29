@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CompetitionMapper, JsonCompetition } from 'ngx-sport';
 
-import { TournamentUserMapper, JsonTournamentUser } from '../tournamentuser/mapper';
+import { TournamentUserMapper, JsonTournamentUser } from './user/mapper';
 import { JsonSponsor, SponsorMapper } from '../sponsor/mapper';
 import { Tournament } from '../tournament';
 import { JsonLockerRoom, LockerRoomMapper } from '../lockerroom/mapper';

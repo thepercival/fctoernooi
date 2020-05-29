@@ -5,13 +5,15 @@ export class Role {
     static readonly REFEREE = 8;
     static readonly ALL = 15;
 
-    static getDescription(role: number): string {
+    static getName(role: number): string {
         if (role === Role.ADMIN) {
             return 'beheerder algemeen';
         } else if (role === Role.GAMERESULTADMIN) {
             return 'beheerder uitslagen';
         } else if (role === Role.ROLEADMIN) {
             return 'beheerder rollen';
+        } else if (role === Role.REFEREE) {
+            return 'scheidsrechter';
         }
         return 'onbekend';
     }

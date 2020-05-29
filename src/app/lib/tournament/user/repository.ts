@@ -1,14 +1,13 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { APIRepository } from '../repository';
-import { Role } from '../role';
-import { Tournament } from '../tournament';
+import { APIRepository } from '../../repository';
+import { Tournament } from '../../tournament';
 import { TournamentUserMapper, JsonTournamentUser } from './mapper';
-import { TournamentUser } from '../tournamentuser';
-import { JsonTournament } from '../tournament/mapper';
+import { TournamentUser } from '../user';
+
 @Injectable()
 export class TournamentUserRepository extends APIRepository {
 

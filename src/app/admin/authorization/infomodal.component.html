@@ -1,0 +1,30 @@
+<div class="modal-header no-border">
+    <h4 class="modal-title">{{header}}</h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="activeModal.dismiss('close')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <ul class="list-group">
+        <!-- add -->
+        <li *ngIf="showAdd" class="list-group-item border-info">Wanneer je een rol toevoegt voor een emailadres, die nog
+            niet bekend is bij fctoernooi, dan kun je een email laten versturen door de optie "verstuur uitnodiging"
+            aan te zetten.
+        </li>
+    </ul>
+    <table class="table">
+        <tr *ngFor="let roleDefinition of roleDefinitions">
+            <td class="font-weight-bold">{{roleDefinition.name}}</td>
+            <td>{{roleDefinition.description}}</td>
+        </tr>
+    </table>
+
+</div>
+<div class="modal-footer justify-content-reverse no-border">
+    <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
+        (click)="activeModal.close('linkToReferees')">
+        <fa-icon [icon]=" ['fac', 'referee' ]"></fa-icon> naar scheidsrechters
+    </button>
+    <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
+        (click)="activeModal.dismiss('close')">sluiten</button>
+</div>

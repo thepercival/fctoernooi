@@ -1,20 +1,9 @@
-import { Tournament } from './tournament';
-import { User } from './user';
+import { Tournament } from '../tournament';
 
-/**
- * Created by coen on 9-10-17.
- */
-
-export class TournamentUser {
+export class TournamentAuthorization {
     protected id: number;
-    protected roles: number;
 
-    constructor(private tournament: Tournament, private user: User, roles?: number) {
-        if (roles === undefined) {
-            roles = 0;
-        }
-        this.roles = roles;;
-        tournament.getUsers().push(this);
+    constructor(private tournament: Tournament, protected roles: number) {
     }
 
     getId(): number {
@@ -27,10 +16,6 @@ export class TournamentUser {
 
     getTournament(): Tournament {
         return this.tournament;
-    }
-
-    getUser(): User {
-        return this.user;
     }
 
     getRoles(): number {

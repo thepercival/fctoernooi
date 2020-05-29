@@ -35,7 +35,7 @@ import {
 } from 'ngx-sport';
 
 import { CSSService } from '../shared/common/cssservice';
-import { TournamentUserMapper } from '../lib/tournamentuser/mapper';
+import { TournamentUserMapper } from '../lib/tournament/user/mapper';
 import { CommonSharedModule } from '../shared/common/shared.module';
 import { FilterComponent } from './filter/filter.component';
 import { HomeComponent } from './home/home.component';

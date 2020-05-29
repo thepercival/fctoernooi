@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { Tournament } from '../tournament';
-import { JsonUser, UserMapper } from '../user/mapper';
-import { TournamentUser } from '../tournamentuser';
+import { Tournament } from '../../tournament';
+import { JsonUser, UserMapper } from '../../user/mapper';
+import { TournamentUser } from '../user';
 
 /**
  * Created by coen on 10-10-17.
@@ -21,7 +21,7 @@ export class TournamentUserMapper {
         return tournamentUser;
     }
 
-    toJson(tournamentUser: TournamentUser): any {
+    toJson(tournamentUser: TournamentUser): JsonTournamentUser {
         return {
             id: tournamentUser.getId(),
             user: this.userMapper.toJson(tournamentUser.getUser()),
