@@ -22,6 +22,7 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 export class RefereeEditComponent extends TournamentComponent implements OnInit {
     form: FormGroup;
     referee: Referee;
+    addAndInvite: boolean = false;
 
     validations: RefValidations = {
         minlengthinitials: Referee.MIN_LENGTH_INITIALS,
@@ -126,7 +127,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
             emailaddress: emailaddress ? emailaddress : undefined,
             info: info ? info : undefined
         };
-        this.refereeRepository.createObject(ref, this.tournament).subscribe(
+        this.refereeRepository.createObject(ref, this.tournament, this.addAndInvite).subscribe(
             /* happy path */ refereeRes => {
                 this.planningRepository.create(this.structure.getFirstRoundNumber(), this.tournament).subscribe(
                 /* happy path */ roundNumberOut => {

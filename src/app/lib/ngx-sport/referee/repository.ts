@@ -24,8 +24,9 @@ export class RefereeRepository extends APIRepository {
         return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
     }
 
-    createObject(json: JsonReferee, tournament: Tournament): Observable<Referee> {
-        return this.http.post(this.getUrl(tournament), json, this.getOptions()).pipe(
+    createObject(json: JsonReferee, tournament: Tournament, invite: boolean): Observable<Referee> {
+        const inviteSuffix = '/invite/' + (invite ? 'true' : 'false');
+        return this.http.post(this.getUrl(tournament) + inviteSuffix, json, this.getOptions()).pipe(
             map((jsonRes: JsonReferee) => this.mapper.toObject(jsonRes, tournament.getCompetition())),
             catchError((err) => this.handleError(err))
         );
