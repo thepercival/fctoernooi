@@ -89,6 +89,11 @@ input.is-warning {
     border-left: 5px solid #{$warning};
 }
 
+.modal-content-info .modal-content {
+  border: 5px;
+  @extend .border-info;
+}
+
 .progress {
   background-color:#{$body-bg};
 }

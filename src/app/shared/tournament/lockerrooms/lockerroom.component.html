@@ -8,18 +8,15 @@
     </button>
   </div>
 </div>
-<div class="card-body p-3">
-  <ul class="list-group text-center">
-    <li *ngFor="let competitor of lockerRoom.getCompetitors()" class="list-group-item">
-      <span [ngClass]="{ 'favitem': favorites && favorites.hasCompetitor(competitor) }">{{competitor.getName()}}</span>
-      <span *ngIf="validator.isArrangedMultiple(competitor)"
-        title="ingedeeld in {{validator.nrArranged(competitor)}} kleedkamers"
-        class="badge badge-info ml-1">{{validator.nrArranged(competitor)}}</span>
-    </li>
-  </ul>
-</div>
-<div *ngIf="editable" class="card-footer border-top-0 d-flex justify-content-center">
-  <button role="button" (click)="changeCompetitors.emit(lockerRoom)" class="btn btn-small btn-add btn-outline-primary">
-    <fa-icon [icon]="['fas', 'users']"></fa-icon><span> deelnemers aanpassen</span>
-  </button>
+<ul class="card-body list-group list-group-flush text-center p-0">
+  <li *ngFor="let competitor of lockerRoom.getCompetitors()" class="list-group-item">
+    <span [ngClass]="{ 'favitem': favorites && favorites.hasCompetitor(competitor) }">{{competitor.getName()}}</span>
+    <span *ngIf="validator.isArrangedMultiple(competitor)"
+      title="ingedeeld in {{validator.nrArranged(competitor)}} kleedkamers"
+      class="badge badge-info ml-1">{{validator.nrArranged(competitor)}}</span>
+  </li>
+</ul>
+<div *ngIf="editable" (click)="changeCompetitors.emit(lockerRoom)"
+  class="card-footer text-primary border-primary pointer text-center">
+  <fa-icon [icon]="['fas', 'users']"></fa-icon><span> deelnemers selecteren</span>
 </div>

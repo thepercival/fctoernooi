@@ -26,7 +26,7 @@ export class HomeComponent extends TournamentComponent implements OnInit, OnDest
     translate: TranslateService;
     allHavePlannings: boolean;
     lockerRoomValidator: LockerRoomValidator;
-    private competitors: Competitor[];
+    competitors: Competitor[];
     favorites: Favorites;
 
     constructor(

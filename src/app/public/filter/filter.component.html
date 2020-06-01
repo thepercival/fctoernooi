@@ -12,8 +12,6 @@
     <div *ngIf="!processing && hasCompetitors() && hasReferees()">
       <div class="d-flex justify-content-between mb-2">
         <h2>Instellen</h2>
-        <button [disabled]="!changed" type="button" class="btn btn-sm mr-0 btn-primary"
-          (click)="save()">opslaan</button>
       </div>
       <ul ngbNav #nav="ngbNav" class="nav-tabs">
         <li [ngbNavItem]="1">
@@ -48,9 +46,6 @@
           <small><span *ngIf="favorites.hasCompetitors()"
               class="badge badge-primary">{{favorites.getNrOfCompetitors()}}</span></small>
         </h3>
-        <button [disabled]="!changed" type="button" class="btn btn-sm mr-0 btn-primary" (click)="save()">
-          opslaan
-        </button>
       </div>
       <ng-container *ngTemplateOutlet="competitors">
       </ng-container>
@@ -62,19 +57,9 @@
           <fa-icon [icon]="['fac', 'referee']"></fa-icon><span> scheidsrechters </span><small><span
               *ngIf="favorites.hasReferees()" class="badge badge-primary">{{favorites.getNrOfReferees()}}</span></small>
         </h3>
-        <button [disabled]="!changed" type="button" class="btn btn-sm mr-0 btn-primary" (click)="save()">
-          opslaan
-        </button>
       </div>
       <ng-container *ngTemplateOutlet="referees">
       </ng-container>
-    </div>
-
-    <div class="d-flex justify-content-end">
-      <button *ngIf="!processing && (hasCompetitors() || hasReferees())" [disabled]="!changed" type="button"
-        class="btn btn-sm mr-0 btn-primary" (click)="save()">
-        opslaan
-      </button>
     </div>
   </div>
 </div>
@@ -97,10 +82,16 @@
           <span *ngIf="place.getCompetitor()">{{place.getCompetitor().getName()}}</span>
         </td>
         <td class="text-right">
-          <fa-icon *ngIf="place.getCompetitor()" class="text-primary pointer"
-            (click)="toggleFavoriteCompetitor(place.getCompetitor())"
-            [icon]="['far', (favorites.hasCompetitor(place.getCompetitor()) ? 'check-' : '') + 'square']" size="2x">
+          <fa-icon class="my-2" *ngIf="place.getCompetitor() && processingItem === place.getCompetitor()"
+            [icon]="['fas', 'spinner']" [spin]="true">
           </fa-icon>
+          <label *ngIf="place.getCompetitor() && processingItem !== place.getCompetitor()"
+            class="custom-control custom-checkbox col-form-label pl-0">
+            <input type="checkbox" class="custom-control-input form-check-input"
+              [checked]="favorites.hasCompetitor(place.getCompetitor())"
+              (change)="toggleFavoriteCompetitor(place.getCompetitor())">
+            <span class="custom-control-indicator"></span>
+          </label>
         </td>
       </tr>
     </tbody>
@@ -109,26 +100,20 @@
 
 <ng-template #referees>
   <table class="table">
-    <thead>
-      <tr>
-        <th>
-          initialen
-        </th>
-        <th>naam</th>
-        <th></th>
-      </tr>
-    </thead>
     <tbody>
       <tr *ngFor="let referee of competition.getReferees()">
         <td>
           <span>{{referee.getInitials()}}</span>
-        </td>
-        <td>
-          <span>{{referee.getName()}}</span>
+          <span *ngIf="referee.getName()"> - {{referee.getName()}}</span>
         </td>
         <td class="text-right">
-          <fa-icon class="text-primary pointer" (click)="toggleFavoriteReferee(referee)"
-            [icon]="['far', (favorites.hasReferee(referee) ? 'check-' : '') + 'square']" size="2x"></fa-icon>
+          <fa-icon class="my-2" *ngIf="processingItem === referee" [icon]="['fas', 'spinner']" [spin]="true">
+          </fa-icon>
+          <label *ngIf="processingItem !== referee" class="custom-control custom-checkbox col-form-label pl-0">
+            <input type="checkbox" class="custom-control-input form-check-input"
+              [checked]="favorites.hasReferee(referee)" (change)="toggleFavoriteReferee(referee)">
+            <span class="custom-control-indicator"></span>
+          </label>
         </td>
     </tbody>
   </table>

@@ -15,6 +15,7 @@ import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
 import { CompetitorChooseModalComponent } from '../competitorchoosemodal/competitorchoosemodal.component';
 import { FavoritesRepository } from '../../../lib/favorites/repository';
 import { Favorites } from '../../../lib/favorites';
+import { LockerRoomRepository } from '../../../lib/lockerroom/repository';
 
 
 
@@ -24,11 +25,9 @@ import { Favorites } from '../../../lib/favorites';
   styleUrls: ['./lockerrooms.component.scss']
 })
 export class LockerRoomsComponent extends TournamentComponent implements OnInit {
-  lockerRooms: LockerRoom[];
   hasCompetitors = false;
   validator: LockerRoomValidator;
   favorites: Favorites;
-  changed = false;
   editMode: boolean = true;
 
   validations: any = {
@@ -42,7 +41,7 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
     private modalService: NgbModal,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
-    private myNavigation: MyNavigation,
+    private lockerRoomRepository: LockerRoomRepository,
     private authService: AuthService,
     public favRepository: FavoritesRepository
   ) {
@@ -61,13 +60,6 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
     const competitors = this.structure.getFirstRoundNumber().getCompetitors();
     this.validator = new LockerRoomValidator(competitors, this.tournament.getLockerRooms());
     this.hasCompetitors = competitors.length > 0;
-
-    this.lockerRooms = this.tournament.getLockerRooms();
-
-    if (this.hasCompetitors && this.validator.areAllArranged()) {
-      this.setAlert('success', 'alle deelnemers zijn ingedeeld');
-    }
-
     this.processing = false;
   }
 
@@ -76,69 +68,72 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
   }
 
   add() {
-    const modal = this.getChangeNameModel();
-    modal.result.then((result) => {
-      const lockerRoom = new LockerRoom(this.tournament, result);
-      this.changeCompetitors(lockerRoom);
+    const modal = this.getChangeNameModel('naar "deelnemers selecteren"');
+    modal.result.then((resName: string) => {
+      this.processing = true;
+      const jsonLockerRoom = { name: resName, competitorIds: [] };
+      this.lockerRoomRepository.createObject(jsonLockerRoom, this.tournament)
+        .subscribe(
+        /* happy path */ lockerRoomRes => {
+            this.changeCompetitors(lockerRoomRes);
+          },
+        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+        /* onComplete */() => { this.processing = false; }
+        );
     }, (reason) => {
     });
   }
 
   remove(lockerRoom: LockerRoom) {
-    const idx = this.lockerRooms.indexOf(lockerRoom);
-    if (idx >= 0) {
-      this.lockerRooms.splice(idx, 1);
-      this.changed = true;
-    }
+    this.processing = true;
+    this.lockerRoomRepository.removeObject(lockerRoom, this.tournament)
+      .subscribe(
+        /* happy path */ lockerRoomRes => {
+        },
+        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+        /* onComplete */() => { this.processing = false; }
+      );
   }
 
   changeName(lockerRoom: LockerRoom) {
-    const modal = this.getChangeNameModel();
-    modal.componentInstance.name = lockerRoom.getName();
+    const modal = this.getChangeNameModel('wijzigen');
+    modal.componentInstance.initialName = lockerRoom.getName();
     modal.result.then((result) => {
       lockerRoom.setName(result);
-      this.changed = true;
-    });
+      this.processing = true;
+      this.lockerRoomRepository.editObject(lockerRoom, this.tournament)
+        .subscribe(
+        /* happy path */ lockerRoomRes => { },
+        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+        /* onComplete */() => { this.processing = false; }
+        );
+    }, (reason) => { });
   }
 
-  getChangeNameModel(): NgbModalRef {
+  getChangeNameModel(buttonLabel: string): NgbModalRef {
     const activeModal = this.modalService.open(NameModalComponent);
     activeModal.componentInstance.header = 'kleedkamernaam';
     activeModal.componentInstance.range = { min: LockerRoom.MIN_LENGTH_NAME, max: LockerRoom.MAX_LENGTH_NAME };
-    activeModal.componentInstance.buttonName = 'naar deelnemers toevoegen';
+    activeModal.componentInstance.buttonName = buttonLabel;
     activeModal.componentInstance.labelName = 'naam';
     activeModal.componentInstance.buttonOutline = true;
     return activeModal;
   }
 
   changeCompetitors(lockerRoom: LockerRoom) {
-    console.log(this.validator.getCompetitors());
     const activeModal = this.modalService.open(CompetitorChooseModalComponent);
     activeModal.componentInstance.validator = this.validator;
     activeModal.componentInstance.places = this.structure.getFirstRoundNumber().getPlaces();
     activeModal.componentInstance.lockerRoom = lockerRoom;
     activeModal.componentInstance.selectedCompetitors = lockerRoom.getCompetitors().slice();
     activeModal.result.then((selectedCompetitors: Competitor[]) => {
-      console.log(selectedCompetitors);
-      console.log(lockerRoom.getCompetitors());
-      lockerRoom.getCompetitors().splice(0);
-      selectedCompetitors.forEach((selectedCompetito: Competitor) => lockerRoom.getCompetitors().push(selectedCompetito));
-      this.changed = true;
-    }, (reason) => { });
-  }
-
-
-  save() {
-    this.setAlert('info', 'de kleedkamers worden opgeslagen');
-    this.processing = true;
-
-    this.tournamentRepository.syncLockerRooms(this.tournament)
-      .subscribe(
-        /* happy path */ lockerRoomRes => {
-          this.myNavigation.back();
-        },
+      this.processing = true;
+      this.lockerRoomRepository.syncCompetitors(lockerRoom, selectedCompetitors)
+        .subscribe(
+        /* happy path */ lockerRoomRes => { },
         /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-        /* onComplete */() => { this.setAlert('success', 'de kleedkamers zijn opgeslagen'); this.processing = false; }
-      );
+        /* onComplete */() => { this.processing = false; }
+        );
+    }, (reason) => { });
   }
 }

@@ -29,7 +29,6 @@ export class CompetitorChooseModalComponent implements OnInit {
                 nrOtherLockerRooms: this.validator.nrArranged(place.getCompetitor(), this.lockerRoom)
             });
         });
-        console.log(this.competitorListItems);
     }
 
     hasSelectableCompetitors(): boolean {
@@ -41,7 +40,6 @@ export class CompetitorChooseModalComponent implements OnInit {
     }
 
     toggle(competitorListItem: CompetitorListItem) {
-        console.log(competitorListItem)
         competitorListItem.selected = !competitorListItem.selected;
         this.changed = true;
     }

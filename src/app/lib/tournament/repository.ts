@@ -85,21 +85,6 @@ export class TournamentRepository extends APIRepository {
         );
     }
 
-    syncLockerRooms(tournament: Tournament): Observable<LockerRoom[]> {
-        const url = this.getUrl(tournament) + '/lockerrooms';
-
-        const json = tournament.getLockerRooms().map(lockerRoom => this.lockerRoomMapper.toJson(lockerRoom));
-        return this.http.post(url, json, this.getOptions()).pipe(
-            map((jsonLockerRooms: JsonLockerRoom[]) => {
-                const lockerRooms = tournament.getLockerRooms();
-                lockerRooms.splice(0, lockerRooms.length);
-                jsonLockerRooms.map(jsonLockerRoom => this.lockerRoomMapper.toObject(jsonLockerRoom, tournament));
-                return lockerRooms;
-            }),
-            catchError((err) => this.handleError(err))
-        );
-    }
-
     sendRequestOldStructure(tournamentId: number): Observable<boolean> {
         const url = this.getUrl() + '/' + tournamentId + '/sendrequestoldstructure';
         return this.http.post(url, null, this.getOptions()).pipe(

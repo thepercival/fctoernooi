@@ -3,14 +3,13 @@
     <div class="col-12 col-lg-10">
       <app-tournament-title [tournament]="tournament">
       </app-tournament-title>
-      <div *ngIf="!processing" class="d-flex justify-content-between mb-3">
+      <div class="d-flex justify-content-between mb-3">
         <h2 class="mr-auto">
           <fa-icon [icon]="['fas', 'door-closed']"></fa-icon> kleedkamers
         </h2>
-        <button [disabled]="!changed" *ngIf="!processing && editMode && hasCompetitors" role="button" (click)="save()"
-          class="btn btn-primary">
-          <fa-icon [icon]="['fas', 'save']"></fa-icon>
-          <span> opslaan</span>
+        <button *ngIf="!processing && editMode && hasCompetitors" role="button" (click)="add()"
+          class="btn btn-add btn-outline-primary">
+          <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon><span> toevoegen</span>
         </button>
       </div>
       <div *ngIf="processing">
@@ -34,43 +33,27 @@
         </button></ngb-alert>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
 
-      <div *ngIf="hasCompetitors" class="card-deck flex-wrap d-flex justify-content-center mx-0">
-        <app-tournament-lockerroom *ngFor="let lockerRoom of lockerRooms" [lockerRoom]="lockerRoom"
-          [validator]="validator" [editable]="editMode" class="card border-dark m-2" [favorites]="favorites"
+      <div *ngIf="!processing && hasCompetitors" class="card-deck flex-wrap d-flex justify-content-center mx-0">
+        <app-tournament-lockerroom *ngFor="let lockerRoom of tournament.getLockerRooms()" [lockerRoom]="lockerRoom"
+          [validator]="validator" [editable]="editMode" class="card m-2" [favorites]="favorites"
           (remove)="remove($event)" (changeName)="changeName($event)" (changeCompetitors)="changeCompetitors($event)">
         </app-tournament-lockerroom>
       </div>
-      <div *ngIf="!processing && editMode && hasCompetitors" class="d-flex justify-content-center mt-3">
-        <button role="button" (click)="add()" class="btn btn-add btn-outline-primary">
-          <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon><span> kleedkamer toevoegen</span>
-        </button>
-      </div>
-
-      <div *ngIf="!processing && editMode && hasCompetitors">
-        <div *ngIf="hasCompetitors && !validator.areAllArranged()">
-          <hr />
-        </div>
-        <div class="mt-3 text-center">
-          <button [disabled]="!changed" role="button" (click)="save()" class="btn btn-primary">
-            <fa-icon [icon]="['fas', 'save']"></fa-icon>
-            <span> opslaan</span>
-          </button>
-        </div>
-        <div *ngIf="hasCompetitors && !validator.areAllArranged()" class="d-flex justify-content-center">
-          <div class="card m-2 unarranged-competitors text-center">
-            <div class="card-header p-3">
-              <h5>niet ingedeelde deelnemers</h5>
+      <div *ngIf="validator && !validator.areAllArranged() && hasCompetitors">
+        <hr />
+        <div *ngIf="!validator.areAllArranged()" class="d-flex justify-content-center">
+          <div class="card border-info m-2 unarranged-competitors text-center">
+            <div class="card-header">
+              <h5 class="mb-0">niet ingedeelde deelnemers</h5>
             </div>
-            <div class="card-body p-3">
-              <ul class="list-group text-center">
-                <ng-template ngFor let-competitor [ngForOf]="validator.getCompetitors()">
-                  <li *ngIf="!validator.isArranged(competitor)" class="list-group-item"
-                    [ngClass]="{ 'favitem': favorites && favorites.hasCompetitor(competitor) }">
-                    <span>{{competitor.getName()}}</span>
-                  </li>
-                </ng-template>
-              </ul>
-            </div>
+            <ul class="list-group list-group-flush text-center">
+              <ng-template ngFor let-competitor [ngForOf]="validator.getCompetitors()">
+                <li *ngIf="!validator.isArranged(competitor)" class="list-group-item"
+                  [ngClass]="{ 'favitem': favorites && favorites.hasCompetitor(competitor) }">
+                  <span>{{competitor.getName()}}</span>
+                </li>
+              </ng-template>
+            </ul>
           </div>
         </div>
       </div>

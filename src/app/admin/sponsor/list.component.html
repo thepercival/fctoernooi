@@ -68,7 +68,7 @@
 </div>
 
 <ng-template #contentInfo let-modal>
-  <div class="modal-header no-border">
+  <div class="modal-header border-bottom-0">
     <h4 class="modal-title">sponsoren info</h4>
     <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
       <span aria-hidden="true">&times;</span>
@@ -84,7 +84,7 @@
       </li>
     </ul>
   </div>
-  <div class="modal-footer justify-content-reverse no-border">
+  <div class="modal-footer justify-content-reverse border-top-0">
     <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
       (click)="modal.dismiss('close')">sluiten</button>
   </div>

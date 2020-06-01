@@ -18,8 +18,8 @@ import { Role } from '../../lib/role';
 })
 export class FilterComponent extends TournamentComponent implements OnInit {
     places: Place[];
-    changed = false;
     favorites: Favorites;
+    processingItem: Referee | Place;
 
     constructor(
         route: ActivatedRoute,
@@ -60,8 +60,6 @@ export class FilterComponent extends TournamentComponent implements OnInit {
     }
 
     save() {
-        this.favRepository.saveItem(this.tournament, this.favorites);
-        this.changed = false;
         this.myNavigation.back();
     }
 
@@ -71,7 +69,7 @@ export class FilterComponent extends TournamentComponent implements OnInit {
         } else {
             this.favorites.addCompetitor(competitor);
         }
-        this.changed = true;
+        this.favRepository.saveItem(this.tournament, this.favorites);
     }
 
     toggleFavoriteReferee(referee: Referee) {
@@ -80,7 +78,7 @@ export class FilterComponent extends TournamentComponent implements OnInit {
         } else {
             this.favorites.addReferee(referee);
         }
-        this.changed = true;
+        this.favRepository.saveItem(this.tournament, this.favorites);
     }
 
     hasReferees() {

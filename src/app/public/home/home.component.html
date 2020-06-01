@@ -73,7 +73,8 @@
         </div>
       </div>
       <div class="text-center mt-3">
-        <button *ngIf="!processing && tournament" [routerLink]="['/public/filter', tournament.getId()]" type="button"
+        <button *ngIf="!processing && tournament && ( competitors.length > 0 || competition.getReferees().length > 0)"
+          [routerLink]="['/public/filter', tournament.getId()]" type="button"
           class="btn btn-outline-{{favorites.hasItems() ? 'primary' : 'secondary'}} w-100"
           [innerHTML]="filterDescription() | keepHtml"></button>
       </div>

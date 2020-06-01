@@ -1,4 +1,4 @@
-<div class="modal-header no-border">
+<div class="modal-header border-bottom-0">
     <h4 class="modal-title">{{header}}</h4>
     <button type="button" class="close" aria-label="sluiten" (click)="activeModal.dismiss('close')">
         <span aria-hidden="true">&times;</span>
@@ -20,7 +20,7 @@
     </table>
 
 </div>
-<div class="modal-footer justify-content-reverse no-border">
+<div class="modal-footer justify-content-reverse border-top-0">
     <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
         (click)="activeModal.close('linkToReferees')">
         <fa-icon [icon]=" ['fac', 'referee' ]"></fa-icon> naar scheidsrechters

@@ -25,6 +25,7 @@ import { RankingRulesComponent } from './rankingrules/rankingrules.component';
 import { ScoreRulesComponent } from './scorerules/scorerules.component';
 import { facStructure, facReferee, facScoreboard } from './icons';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { LockerRoomRepository } from '../../lib/lockerroom/repository';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     NgbNavModule,
   ],
   providers: [
-    FavoritesRepository
+    FavoritesRepository,
+    LockerRoomRepository
   ],
   exports: [
     RoundNumberPlanningComponent,

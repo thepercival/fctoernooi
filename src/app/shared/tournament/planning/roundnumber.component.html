@@ -147,7 +147,7 @@
 </div>
 
 <ng-template #planningInfo let-modal>
-  <div class="modal-header no-border">
+  <div class="modal-header border-bottom-0">
     <h4 class="modal-title">
       <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijdplanning
     </h4>
@@ -175,14 +175,14 @@
         tussen de wedstrijden</li>
     </ul>
   </div>
-  <div class="modal-footer align-items-end no-border">
+  <div class="modal-footer align-items-end border-top-0">
     <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
       (click)="modal.dismiss('close')">sluiten</button>
   </div>
 </ng-template>
 
 <ng-template #scoreInfo let-modal>
-  <div class="modal-header no-border">
+  <div class="modal-header border-bottom-0">
     <h4 class="modal-title">
       <fa-icon [icon]="['fac', 'scoreboard']"></fa-icon> score informatie
     </h4>
@@ -214,7 +214,7 @@
       </ul>
     </ng-template>
   </div>
-  <div class="modal-footer align-items-end no-border">
+  <div class="modal-footer align-items-end border-top-0">
     <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
       (click)="modal.dismiss('close')">sluiten</button>
   </div>
