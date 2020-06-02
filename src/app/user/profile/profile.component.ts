@@ -6,6 +6,7 @@ import { IAlert } from '../../shared/common/alert';
 import { User } from '../../lib/user';
 import { PasswordValidation } from '../password-validation';
 import { UserRepository } from '../../lib/user/repository';
+import { AuthService } from '../../lib/auth/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -26,6 +27,7 @@ export class ProfileComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private authService: AuthService,
     private userRepository: UserRepository,
     fb: FormBuilder
   ) {
@@ -49,7 +51,7 @@ export class ProfileComponent implements OnInit {
             this.form.controls.emailaddress.setValue(this.user.getEmailaddress());
             // this.processing = false;
           },
-            /* error path */ e => { this.setAlert('danger', 'het opslaan is niet gelukt: ' + e); this.processing = false; },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
             /* onComplete */() => this.processing = false
         );
     });
@@ -86,6 +88,7 @@ export class ProfileComponent implements OnInit {
     this.userRepository.removeObject(this.user.getId())
       .subscribe(
             /* happy path */() => {
+          this.authService.logout();
           this.router.navigate(['']);
           // this.processing = false;
         },

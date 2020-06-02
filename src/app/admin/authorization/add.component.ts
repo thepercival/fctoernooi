@@ -72,12 +72,6 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
     save(): boolean {
         this.processing = true;
         this.setAlert('info', 'de deelnemer wordt opgeslagen');
-        this.add();
-        return false;
-    }
-
-    add() {
-        this.processing = true;
         let roles = 0;
         this.roleItems.forEach(roleItem => roles += roleItem.selected ? roleItem.value : 0);
         const json: JsonTournamentInvitation = {
@@ -94,6 +88,7 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
             },
             /* onComplete */() => this.processing = false
         );
+        return false;
     }
 
     openHelpModal() {
@@ -106,8 +101,6 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
         }, (reason) => {
         });
     }
-
-
 
     getRoleName(role: number): string {
         return Role.getName(role);

@@ -9,16 +9,13 @@ import { User } from '../user';
 
 @Injectable()
 export class AuthService extends APIRepository {
-
+  private user: User
   private authItem: JsonAuthItem;
 
   constructor(private userMapper: UserMapper, private http: HttpClient) {
     super();
-    const jsonAuth = JSON.parse(localStorage.getItem('auth'));
-    this.authItem = jsonAuth ? {
-      token: jsonAuth.token,
-      userId: jsonAuth.userId
-    } : undefined;
+    const authItem = JSON.parse(localStorage.getItem('auth'));
+    authItem ? this.setAuthItem(authItem) : this.clearAuthItem();
   }
 
   isLoggedIn(): boolean {
@@ -26,8 +23,23 @@ export class AuthService extends APIRepository {
   }
 
   getUser(): User {
-    return this.authItem ? this.userMapper.toObject({ id: this.authItem.userId }) : undefined;
+    return this.user;
   }
+
+  protected clearAuthItem() {
+    this.authItem = undefined;
+    this.user = undefined;
+    localStorage.removeItem('auth');
+  }
+
+  setAuthItem(authItem: JsonAuthItem): boolean {
+    this.authItem = authItem;
+    this.user = this.userMapper.toObject({ id: this.authItem.userId });
+    localStorage.setItem('auth', JSON.stringify(authItem));
+    return true;
+  }
+
+
 
   getUrl(): string {
     return super.getApiUrl() + 'auth';
@@ -65,12 +77,6 @@ export class AuthService extends APIRepository {
     );
   }
 
-  setAuthItem(authItem: JsonAuthItem): boolean {
-    this.authItem = authItem;
-    localStorage.setItem('auth', JSON.stringify(authItem));
-    return true;
-  }
-
   passwordReset(email: string): Observable<boolean> {
     const json = { emailaddress: email };
     return this.http.post(this.getPublicUrl() + '/passwordreset', json, this.getOptions()).pipe(
@@ -90,9 +96,7 @@ export class AuthService extends APIRepository {
   }
 
   logout(): void {
-    // clear token remove user from local storage to log user out
-    this.authItem = undefined;
-    localStorage.removeItem('auth');
+    this.clearAuthItem();
   }
 }
 

@@ -12,7 +12,7 @@
   <button *ngIf="!authService.isLoggedIn()" routerLink="/user/login" routerLinkActive="active"
     class="btn btn-outline-secondary" role="button" aria-label="inloggen " tabindex="-1">
     <fa-icon [icon]=" [ 'fas', 'sign-in-alt'] "></fa-icon>
-    <span class="d-none d-sm-inline "> inloggen</span>
+    <span class="ml-1">inloggen</span>
   </button>
   <button *ngIf="authService.isLoggedIn()" [routerLink]="['/user/profile', authService.getUser().getId()]"
     class="btn btn-outline-secondary border-0 p-0" role="button" tabindex="-1" aria-label="account">

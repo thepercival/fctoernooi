@@ -36,16 +36,12 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="card-body p-1">
-                            <ul class="list-group list-group-flush w-100">
-                                <app-tournament-authorization-role
-                                    *ngFor="let role of getAssignableRoles(tournamentUser)" [role]="role"
-                                    [disabled]="!canToggleRole(tournamentUser, role.role)"
-                                    [processing]="rolesAreEqual(roleProcessing, role)"
-                                    (toggleRole)="toggleRole($event)">
-                                </app-tournament-authorization-role>
-                            </ul>
-                        </div>
+                        <ul class="list-group list-group-flush w-100">
+                            <app-tournament-authorization-role *ngFor="let role of getAssignableRoles(tournamentUser)"
+                                [role]="role" [disabled]="!canToggleRole(tournamentUser, role.role)"
+                                [processing]="rolesAreEqual(roleProcessing, role)" (toggleRole)="toggleRole($event)">
+                            </app-tournament-authorization-role>
+                        </ul>
                     </div>
 
                     <div *ngFor="let invitation of invitations" class="card border-secondary mt-3 mx-2">
