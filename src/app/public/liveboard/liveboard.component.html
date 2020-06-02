@@ -21,7 +21,7 @@
     </h4>
     <!-- center -->
     <div *ngIf="tournament">
-      <h1 style="display:inline-block">
+      <h1 class="d-inline-block">
         <small>
           <app-sport-icon [configs]="competition.getSportConfigs()"></app-sport-icon>
         </small>
@@ -31,7 +31,7 @@
           <span [innerHTML]="activeScreen.getDescription() | keepHtml"></span>
         </small>
       </h1>
-      <app-progress style="display:inline-block" [toggleProgress]="toggleProgress" [max]="refreshAfterSeconds"
+      <app-progress class="d-inline-block" [toggleProgress]="toggleProgress" [max]="refreshAfterSeconds"
         (executeAtZero)="executeScheduledTask()">
       </app-progress>
     </div>

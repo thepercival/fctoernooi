@@ -1,4 +1,4 @@
-<nav *ngIf="tournamentLiveboardLink.showIcon !== false" class="navbar navbar-dark bg-primary">
+<nav *ngIf="tournamentLiveboardLink.showIcon !== false" class="navbar navbar-dark bg-primary py-1">
   <a class="navbar-brand" tabindex="-1" [routerLink]="['/']">
     <fa-icon [icon]=" [ 'fac', 'favicon'] "></fa-icon> {{title}}
   </a>
@@ -15,7 +15,7 @@
     <span class="ml-1">inloggen</span>
   </button>
   <button *ngIf="authService.isLoggedIn()" [routerLink]="['/user/profile', authService.getUser().getId()]"
-    class="btn btn-outline-secondary border-0 p-0" role="button" tabindex="-1" aria-label="account">
+    class="btn btn-outline-secondary border-0 p-0 pt-1" role="button" tabindex="-1" aria-label="account">
     <fa-icon [icon]="[ 'fas', 'user-circle']" size="3x"></fa-icon>
   </button>
 
