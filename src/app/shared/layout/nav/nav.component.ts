@@ -17,7 +17,7 @@ export class NavComponent implements OnInit {
   tournamentLiveboardLink: LiveboardLink = {};
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private globalEventsManager: GlobalEventsManager
   ) {
     this.globalEventsManager.toggleLiveboardIconInNavBar.subscribe((tournamentLiveboardLink: LiveboardLink) => {
@@ -27,10 +27,4 @@ export class NavComponent implements OnInit {
 
   ngOnInit() {
   }
-
-  isLoggedIn() {
-
-    return this.authService.isLoggedIn();
-  }
-
 }

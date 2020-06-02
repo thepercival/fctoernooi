@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../repository';
-import { UserMapper } from '../user/mapper';
+import { UserMapper, JsonUser } from '../user/mapper';
 import { User } from '../user';
 
 @Injectable()
@@ -32,6 +32,7 @@ export class AuthService extends APIRepository {
   getUrl(): string {
     return super.getApiUrl() + 'auth';
   }
+
   getPublicUrl(): string {
     return super.getApiUrl() + 'public/auth';
   }

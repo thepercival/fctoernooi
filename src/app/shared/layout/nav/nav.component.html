@@ -9,15 +9,14 @@
     <span> live scorebord</span>
   </button>
 
-  <button *ngIf="!isLoggedIn()" routerLink="/user/login" routerLinkActive="active" class="btn btn-outline-secondary"
-    role="button" aria-label="inloggen " tabindex="-1">
+  <button *ngIf="!authService.isLoggedIn()" routerLink="/user/login" routerLinkActive="active"
+    class="btn btn-outline-secondary" role="button" aria-label="inloggen " tabindex="-1">
     <fa-icon [icon]=" [ 'fas', 'sign-in-alt'] "></fa-icon>
     <span class="d-none d-sm-inline "> inloggen</span>
   </button>
-  <button *ngIf="isLoggedIn()" routerLink="/user/logout" routerLinkActive="active" class="btn btn-outline-secondary"
-    role="button" tabindex="-1">
-    <fa-icon [icon]="[ 'fas', 'sign-out-alt'] "></fa-icon>
-    <span class="d-none d-sm-inline " aria-label="uitloggen "> uitloggen</span>
+  <button *ngIf="authService.isLoggedIn()" [routerLink]="['/user/profile', authService.getUser().getId()]"
+    class="btn btn-outline-secondary border-0 p-0" role="button" tabindex="-1" aria-label="account">
+    <fa-icon [icon]="[ 'fas', 'user-circle']" size="3x"></fa-icon>
   </button>
 
   <!-- <button class="navbar-toggler navbar-toggler-right pointer" type="button" data-toggle="collapse

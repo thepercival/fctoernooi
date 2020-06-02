@@ -6,6 +6,8 @@ import { LogoutComponent } from './logout/logout.component';
 import { PasswordchangeComponent } from './passwordchange/passwordchange.component';
 import { PasswordresetComponent } from './passwordreset/passwordreset.component';
 import { RegisterComponent } from './register/register.component';
+import { ProfileComponent } from './profile/profile.component';
+import { AuthguardService } from '../lib/auth/authguard.service';
 
 // import { ActivateComponent }  from './user/activate.component';
 const routes: Routes = [
@@ -15,6 +17,7 @@ const routes: Routes = [
   { path: 'passwordreset', component: PasswordresetComponent },
   { path: 'passwordchange', component: PasswordchangeComponent },
   { path: 'logout', component: LogoutComponent },
+  { path: 'profile/:id', component: ProfileComponent, canActivate: [AuthguardService] }
 ];
 
 @NgModule({

@@ -9,37 +9,39 @@ import { APIRepository } from '../repository';
 
 @Injectable()
 export class UserRepository extends APIRepository {
-  private url: string;
 
   constructor(
     private http: HttpClient,
     private mapper: UserMapper) {
     super();
-    this.url = super.getApiUrl() + this.getUrlpostfix();
   }
 
   getUrlpostfix(): string {
     return 'users';
   }
 
-  getObjects(): Observable<User[]> {
-    return this.http.get<Array<JsonUser>>(this.url, this.getOptions()).pipe(
-      map((jsonUsers: JsonUser[]) => jsonUsers.map(jsonUser => this.mapper.toObject(jsonUser))),
-      catchError((err) => this.handleError(err))
-    );
+  getUrl(id: number): string {
+    return super.getApiUrl() + this.getUrlpostfix() + '/' + id;
   }
 
   getObject(id: number): Observable<User> {
-    const url = `${this.url}/${id}`;
-    return this.http.get(url).pipe(
-      map((res: JsonUser) => this.mapper.toObject(res)),
+    return this.http.get<JsonUser>(this.getUrl(id), this.getOptions()).pipe(
+      map((jsonUser: JsonUser) => this.mapper.toObject(jsonUser)),
       catchError((err) => this.handleError(err))
     );
   }
 
-  createObject(jsonObject: any): Observable<User> {
-    return this.http.post(this.url, jsonObject, this.getOptions()).pipe(
-      map((res: JsonUser) => this.mapper.toObject(res)),
+  editObject(json: JsonUser): Observable<void> {
+    const url = this.getUrl(json.id);
+    return this.http.put(url, json, { headers: super.getHeaders() }).pipe(
+      catchError((err) => this.handleError(err))
+    );
+  }
+
+  removeObject(id: number): Observable<void> {
+    const url = this.getUrl(id);
+    return this.http.delete(url, this.getOptions()).pipe(
+      map((res) => { }),
       catchError((err) => this.handleError(err))
     );
   }

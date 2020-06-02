@@ -11,6 +11,8 @@ import { PasswordchangeComponent } from './passwordchange/passwordchange.compone
 import { PasswordresetComponent } from './passwordreset/passwordreset.component';
 import { RegisterComponent } from './register/register.component';
 import { UserRoutingModule } from './user-routing.module';
+import { ProfileComponent } from './profile/profile.component';
+import { UserRepository } from '../lib/user/repository';
 
 @NgModule({
   imports: [
@@ -20,7 +22,8 @@ import { UserRoutingModule } from './user-routing.module';
     NgbAlertModule,
     FontAwesomeModule
   ],
-  declarations: [LoginComponent, LogoutComponent, RegisterComponent, PasswordresetComponent, PasswordchangeComponent]
+  declarations: [LoginComponent, LogoutComponent, RegisterComponent, PasswordresetComponent, PasswordchangeComponent, ProfileComponent],
+  providers: [UserRepository]
 })
 export class UserModule {
   constructor(library: FaIconLibrary) {
