@@ -156,12 +156,12 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         return this.isAdminHelper(Role.ROLEADMIN);
     }
 
-    isGameResultAdmin(): boolean {
-        return this.isAdminHelper(Role.GAMERESULTADMIN);
+    isRefereeOrGameResultAdmin(): boolean {
+        return this.isAdminHelper(Role.GAMERESULTADMIN + Role.REFEREE);
     }
 
     protected isAdminHelper(roles: number) {
-        return this.tournament.getUser(this.authService.getUser())?.hasRoles(roles);
+        return this.tournament.getUser(this.authService.getUser())?.hasARole(roles);
     }
 
     remove() {

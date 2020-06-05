@@ -35,7 +35,7 @@
       <ngb-alert *ngIf="!processing && tournament && isAdmin() && !isManualMessageReadOnDevice()" type="info"
         [dismissible]="true" (close)="manualMessageReadOnDevice()">gedetailleerde
         informatie kun je vinden onderaan de pagina via de handleiding-link</ngb-alert>
-      <div *ngIf="!processing && structure && ( isAdmin() || isGameResultAdmin() )"
+      <div *ngIf="!processing && structure && ( isAdmin() || isRefereeOrGameResultAdmin() )"
         class="row d-flex justify-content-center">
         <div *ngIf="isAdmin()" class="card border-secondary pointer mt-3 mx-2" (click)="linkToStructure()">
           <div class="card-body">
@@ -70,8 +70,7 @@
             </p>
           </div>
         </div>
-        <div *ngIf="isGameResultAdmin()" class="card border-secondary pointer mt-3 mx-2"
-          [routerLink]="['/admin/games', tournament.getId()]">
+        <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/admin/games', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijdplanning
@@ -188,8 +187,8 @@
         </div>
       </div>
     </div>
-    <div class="card border-secondary mt-3 mx-2">
-      <div *ngIf="isAdmin() || isRoleAdmin()" class="card-body d-flex justify-content-between">
+    <div *ngIf="isAdmin() || isRoleAdmin()" class="card border-secondary mt-3 mx-2">
+      <div class="card-body d-flex justify-content-between">
         <div *ngIf="isRoleAdmin()" [routerLink]="['/admin/authorizations', tournament.getId()]"
           class="text-center pointer">
           <div>

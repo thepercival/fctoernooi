@@ -28,13 +28,12 @@ import { TranslateService } from '../../../lib/translate';
   templateUrl: './roundnumber.component.html',
   styleUrls: ['./roundnumber.component.scss']
 })
-export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterViewInit {
+export class RoundNumberPlanningComponent implements OnInit, AfterViewInit {
 
   @Input() tournament: Tournament;
   @Input() roundNumber: RoundNumber;
-  @Input() reload: boolean;
   @Input() userRefereeId: number;
-  @Input() editMode: boolean;
+  @Input() roles: number;
   @Input() favorites: Favorites;
   @Input() refreshingData: boolean;
   @Output() refreshData = new EventEmitter();
@@ -79,14 +78,6 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
   ngAfterViewInit() {
     if (this.roundNumber.getNext() === undefined) {
       this.scroll.emit();
-    }
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.reload && changes.reload.currentValue !== changes.reload.previousValue && changes.reload.currentValue !== undefined) {
-      if (this.gameDatas.length === 0) {
-        this.reloadGameData();
-      }
     }
   }
 
@@ -167,17 +158,26 @@ export class RoundNumberPlanningComponent implements OnChanges, OnInit, AfterVie
   }
 
   canChangeResult(game: Game): boolean {
-    if (this.editMode) {
-      return this.userIsAdmin;
+    if (this.hasRole(Role.GAMERESULTADMIN)) {
+      return true;
     }
     if (game.getReferee() === undefined) {
       return false;
     }
-    return this.userRefereeId !== undefined
-      && this.tournament?.getUser(this.authService.getUser())?.hasRoles(Role.REFEREE)
-      && this.userRefereeId === game.getReferee().getId();
+    return this.hasRole(Role.REFEREE) && this.userRefereeId === game.getReferee().getId();
   }
 
+  hasAdminRole(): boolean {
+    return this.hasRole(Role.ADMIN);
+  }
+
+  canFilter(): boolean {
+    return !this.hasRole(Role.ADMIN + Role.GAMERESULTADMIN);
+  }
+
+  protected hasRole(role: number): boolean {
+    return (this.roles & role) === role;
+  }
   protected isBreakBeforeGame(game: Game): boolean {
     if (this.tournamentBreak === undefined) {
       return false;

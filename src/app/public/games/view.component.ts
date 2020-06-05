@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -8,6 +8,8 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { TournamentUser } from '../../lib/tournament/user';
+import { Observable, of } from 'rxjs';
 
 @Component({
     selector: 'app-tournament-games-view',
@@ -16,6 +18,7 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 })
 export class GamesComponent extends TournamentComponent implements OnInit {
     userRefereeId: number;
+    roles: number;
     refreshingData = false;
 
     constructor(
@@ -32,19 +35,23 @@ export class GamesComponent extends TournamentComponent implements OnInit {
 
     ngOnInit() {
         super.myNgOnInit(() => {
-            const tournamentUser = this.tournament.getUser(this.authService.getUser());
-            if (tournamentUser && tournamentUser.hasRoles(Role.REFEREE)) {
-                this.tournamentRepository.getUserRefereeId(this.tournament).subscribe(
-                    /* happy path */ userRefereeIdRes => {
-                        this.userRefereeId = userRefereeIdRes;
-                        this.processing = false;
-                    },
-                    /* error path */ e => { this.setAlert('danger', e); }
-                );
-            } else {
-                this.processing = false;
-            }
+            const tournamentUser = this.tournament.getUser(this.authService.getUser())
+            this.roles = tournamentUser?.getRoles();
+            this.getUserRefereeId(tournamentUser).subscribe(
+                userRefereeIdRes => {
+                    this.userRefereeId = userRefereeIdRes;
+                    this.processing = false;
+                },
+                e => { this.processing = false; }
+            );
         });
+    }
+
+    getUserRefereeId(tournamentUser: TournamentUser): Observable<number> {
+        if (!tournamentUser?.hasRoles(Role.REFEREE)) {
+            return of(undefined);
+        }
+        return this.tournamentRepository.getUserRefereeId(this.tournament);
     }
 
     scroll() {
@@ -52,7 +59,7 @@ export class GamesComponent extends TournamentComponent implements OnInit {
     }
 
     isAdmin(): boolean {
-        return this.tournament.getUser(this.authService.getUser())?.hasRoles(Role.GAMERESULTADMIN);
+        return this.tournament.getUser(this.authService.getUser())?.hasRoles(Role.ADMIN);
     }
 
     refreshData() {
@@ -61,9 +68,5 @@ export class GamesComponent extends TournamentComponent implements OnInit {
             this.myNavigation.updateScrollPosition();
             this.refreshingData = false;
         });
-    }
-
-    linkToStructureView() {
-        this.router.navigate(['/public/structure', this.tournament.getId()]);
     }
 }

@@ -154,7 +154,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   linkToTournament(shell: TournamentShell) {
     this.processingWithRole = true;
-    const module = shell.roles === Role.REFEREE ? '/public' : '/admin';
+    const module = shell.public ? '/public' : '/admin';
     this.router.navigate([module, shell.tournamentId]);
   }
 
