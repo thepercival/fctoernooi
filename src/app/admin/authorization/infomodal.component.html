@@ -5,17 +5,12 @@
     </button>
 </div>
 <div class="modal-body">
-    <ul class="list-group">
-        <!-- add -->
-        <li *ngIf="showAdd" class="list-group-item border-info">Wanneer je een rol toevoegt voor een emailadres, die nog
-            niet bekend is bij fctoernooi, dan kun je een email laten versturen door de optie "verstuur uitnodiging"
-            aan te zetten.
-        </li>
-    </ul>
+    <ngb-alert *ngIf="showAdd" type="info" [dismissible]="false">De uitnodigings-email wordt alleen verstuurd,
+        wanneer het emailadres onbekend is bij fctoernooi.</ngb-alert>
     <table class="table">
         <tr *ngFor="let roleDefinition of roleDefinitions">
-            <td class="font-weight-bold">{{roleDefinition.name}}</td>
-            <td>{{roleDefinition.description}}</td>
+            <td class="font-weight-bold border-info">{{roleDefinition.name}}</td>
+            <td class="border-info">{{roleDefinition.description}}</td>
         </tr>
     </table>
 

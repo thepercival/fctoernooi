@@ -19,7 +19,7 @@ export class AuthorizationExplanationModalComponent implements OnInit {
     ngOnInit() {
         this.roleDefinitions = [
             { name: Role.getName(Role.ADMIN), description: 'kan alles behalve wat de andere rollen kunnen' },
-            { name: Role.getName(Role.ROLEADMIN), description: 'kan de gebruikers-rollen aanpassen' },
+            { name: Role.getName(Role.ROLEADMIN), description: 'kan de gebruikers-rollen aanpassen, er moet minimaal 1 rolbeheerder zijn' },
             { name: Role.getName(Role.GAMERESULTADMIN), description: 'kan de scores van alle wedstrijden aanpassen' },
             { name: Role.getName(Role.REFEREE), description: 'kan de scores van eigen wedstrijden aanpassen, je deelt deze rol uit door bij de scheidsrechter het emailadres in te vullen' },
         ]

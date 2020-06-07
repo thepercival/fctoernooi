@@ -94,6 +94,7 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
     openHelpModal() {
         const activeModal = this.modalService.open(AuthorizationExplanationModalComponent);
         activeModal.componentInstance.header = 'uitleg rol toevoegen';
+        activeModal.componentInstance.showAdd = true;
         activeModal.result.then((result) => {
             if (result === 'linkToReferees') {
                 this.router.navigate(['/admin/referees', this.tournament.getId()]);

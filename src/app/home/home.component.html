@@ -27,7 +27,7 @@
       </div>
     </div>
 
-    <table *ngIf="!processingWithRole && shellsWithRole.length > 0" class="table">
+    <table *ngIf="!processingWithRole && shellsWithRole.length > 0" class="table mt-2">
       <tbody>
         <app-home-shell class="pointer" (click)="linkToTournament(shell)" *ngFor="let shell of shellsWithRole"
           [shell]="shell" [showPublic]="true"></app-home-shell>

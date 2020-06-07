@@ -101,6 +101,32 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
                         /* error path */ e => { this.setAlert('danger', e); }
                     );
                 }
+                // @TODO CHECK HERE IF USER IS AUTHORISED, IF NOT GIVE MESSAGE BEFORE ENTER SCORE!!
+                // SOMETHING LIKE "je bent geen scheidsrechter voor deze wedstrijd of uitslagen-invoerder voor dit toernooi"
+
+                // if ($tournamentUser -> hasRoles(Role:: GAMERESULTADMIN)) {
+                //     return;
+                // }
+
+                // if ($tournamentUser -> hasRoles(Role:: REFEREE) === false) {
+                //     throw new \Exception("je bent geen ".Role:: getName(Role:: REFEREE). " of ".Role:: getName(Role:: GAMERESULTADMIN). " voor dit toernooi", E_ERROR);
+                // }
+                // $gameId = $this -> getGameId($request);
+                // if ($gameId === null) {
+                //     throw new \Exception("de wedstrijd is niet gevonden", E_ERROR);
+                // }
+                // $game = $this -> gameRepos -> find($gameId);
+                // if ($game === null) {
+                //     throw new \Exception("de wedstrijd is niet gevonden", E_ERROR);
+                // }
+                // if ($game -> getReferee() === null) {
+                //     throw new \Exception("bij de wedstrijd is geen scheidsrechter gevonden", E_ERROR);
+                // }
+                // if ($game -> getReferee() -> getEmailaddress() !== $tournamentUser -> getUser() -> getEmailaddress()) {
+                //     throw new \Exception("voor deze wedstrijd ben je geen ".Role:: getName(Role:: REFEREE), E_ERROR);
+                // }
+
+                // blabla, je emailadres moet door de beheerder gekoppeld zijn de scheidsrechter van deze wedstrijd
             });
         });
     }
@@ -468,14 +494,11 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
                         this.navigateBack();
                         this.processing = false;
                     },
-                        err => {
-                            this.processing = false;
-                            this.setAlert('danger', 'de wedstrijd is niet opgeslagen: ' + err);
-                        }
+                        e => { this.processing = false; this.setAlert('danger', e); }
                     );
 
                 },
-             /* error path */ e => { this.setAlert('danger', 'de wedstrijd kan niet worden opgeslagen: ' + e); this.processing = false; },
+             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
                 // /* onComplete */() => {
                 //     if (!stateChanged && !scoreChanged) {
                 //             this.processing = false;

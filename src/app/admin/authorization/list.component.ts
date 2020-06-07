@@ -21,6 +21,7 @@ import { AuthorizationExplanationModalComponent } from './infomodal.component';
 export class AuthorizationListComponent extends TournamentComponent implements OnInit {
     public invitations: TournamentInvitation[] = [];
     public roleProcessing: TournamentAuthorizationRole;
+    public removeWithRefereeRoleDescription: boolean;
 
     constructor(
         route: ActivatedRoute,
@@ -67,11 +68,21 @@ export class AuthorizationListComponent extends TournamentComponent implements O
         return !(role === Role.ROLEADMIN && tournamentUser.hasRoles(role) && this.getNrOfRoles(Role.ROLEADMIN) < 2);
     }
 
-    toggleRole(authorizationRole: TournamentAuthorizationRole) {
-        this.roleProcessing = authorizationRole;
+    toggleRole(authorizationRole: TournamentAuthorizationRole, modalContent) {
         const role = authorizationRole.role;
         const authorization = authorizationRole.authorization;
-        const newRole = (authorizationRole.authorization.hasRoles(role) ? -role : role);
+        const roleDelta = (authorization.hasRoles(role) ? -role : role);
+        const roleNew = authorization.getRoles() + roleDelta;
+        console.log(roleDelta);
+        if (roleNew === Role.REFEREE || roleNew === 0) {
+            this.openModalRemove(modalContent, authorization, roleNew === Role.REFEREE);
+        } else {
+            this.roleProcessing = authorizationRole;
+            this.editRole(authorization, roleDelta);
+        }
+    }
+
+    editRole(authorization: TournamentAuthorization, newRole: number) {
         authorization.setRoles(authorization.getRoles() + newRole);
         if (authorization instanceof TournamentUser) {
             this.tournamentUserRepository.editObject(<TournamentUser>authorization)
@@ -138,9 +149,9 @@ export class AuthorizationListComponent extends TournamentComponent implements O
         });
     }
 
-    openModalRemove(modalContent, authorization: TournamentAuthorization) {
+    openModalRemove(modalContent, authorization: TournamentAuthorization, removeWithRefereeRoleDescription?: boolean) {
+        this.removeWithRefereeRoleDescription = removeWithRefereeRoleDescription;
         const activeModal = this.modalService.open(modalContent);
-        authorization
         activeModal.result.then((result) => {
             if (result === 'remove') {
                 this.remove(authorization);

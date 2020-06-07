@@ -66,7 +66,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
             planning: false,
             poulepivottables: false,
             lockerrooms: false,
-            qrcode: true
+            qrcode: false
         });
     }
 
@@ -83,6 +83,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         const competitors = this.structure.getFirstRoundNumber().getCompetitors();
         this.lockerRoomValidator = new LockerRoomValidator(competitors, this.tournament.getLockerRooms());
         this.exportForm.controls.lockerrooms.setValue(this.lockerRoomValidator.areSomeArranged());
+        this.exportForm.controls.qrcode.setValue(this.tournament.getPublic());
 
         this.processing = false;
     }

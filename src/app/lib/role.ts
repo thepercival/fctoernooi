@@ -7,11 +7,11 @@ export class Role {
 
     static getName(role: number): string {
         if (role === Role.ADMIN) {
-            return 'beheerder algemeen';
+            return 'algemeen-beheerder';
         } else if (role === Role.GAMERESULTADMIN) {
-            return 'beheerder uitslagen';
+            return 'uitslagen-invoerder';
         } else if (role === Role.ROLEADMIN) {
-            return 'beheerder rollen';
+            return 'rollen-beheerder';
         } else if (role === Role.REFEREE) {
             return 'scheidsrechter';
         }

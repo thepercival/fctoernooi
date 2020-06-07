@@ -13,25 +13,17 @@ export class TournamentComponent {
 
     public tournament: Tournament;
     public competition: Competition;
-    protected route: ActivatedRoute;
-    protected router: Router;
-    protected tournamentRepository: TournamentRepository;
-    protected structureRepository: StructureRepository;
     public structure: Structure;
     public alert: IAlert;
     public processing = true;
     public oldStructure = false;
 
     constructor(
-        route: ActivatedRoute,
-        router: Router,
-        tournamentRepository: TournamentRepository,
-        structureRepository: StructureRepository
+        protected route: ActivatedRoute,
+        protected router: Router,
+        protected tournamentRepository: TournamentRepository,
+        protected structureRepository: StructureRepository
     ) {
-        this.route = route;
-        this.router = router;
-        this.tournamentRepository = tournamentRepository;
-        this.structureRepository = structureRepository;
     }
 
     myNgOnInit(callback?: DataProcessCallBack, noStructure?: boolean) {

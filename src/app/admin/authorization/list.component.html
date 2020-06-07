@@ -5,23 +5,22 @@
             </app-tournament-title>
             <div class="d-flex justify-content-between mx-2">
                 <h2>
-                    <fa-icon [icon]="['fas', 'user-friends']"></fa-icon> rollen
+                    <fa-icon [icon]="['fas', 'user-friends']"></fa-icon> gebruikers
                 </h2>
                 <div *ngIf="!processing">
                     <button type="button" class="btn btn-sm btn-outline-info" (click)="openHelpModal()">
-                        <fa-icon [icon]=" ['fas', 'info-circle' ]"></fa-icon> info
+                        <fa-icon [icon]=" ['fas', 'info-circle' ]"></fa-icon><span class="d-none d-sm-inline">
+                            info</span>
                     </button>
                     <button type="button" class="btn btn-sm ml-2 mr-0 btn-outline-primary"
                         [routerLink]="['/admin/authorization', tournament.getId()]">
-                        rol toevoegen
+                        <span class="d-none d-sm-inline">gebruiker</span>toevoegen
                     </button>
                 </div>
             </div>
-
             <h2 *ngIf="processing" class="text-center">
                 <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
             </h2>
-
             <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
             <ul *ngIf="!processing" class="list-unstyled">
                 <li>
@@ -39,7 +38,8 @@
                         <ul class="list-group list-group-flush w-100">
                             <app-tournament-authorization-role *ngFor="let role of getAssignableRoles(tournamentUser)"
                                 [role]="role" [disabled]="!canToggleRole(tournamentUser, role.role)"
-                                [processing]="rolesAreEqual(roleProcessing, role)" (toggleRole)="toggleRole($event)">
+                                [processing]="rolesAreEqual(roleProcessing, role)"
+                                (toggleRole)="toggleRole($event,contentremove)">
                             </app-tournament-authorization-role>
                         </ul>
                     </div>
@@ -59,7 +59,7 @@
                             <ul class="list-group list-group-flush w-100">
                                 <app-tournament-authorization-role *ngFor="let role of getAssignableRoles(invitation)"
                                     [role]="role" [processing]="rolesAreEqual(roleProcessing, role)"
-                                    (toggleRole)="toggleRole($event)"></app-tournament-authorization-role>
+                                    (toggleRole)="toggleRole($event,contentremove)"></app-tournament-authorization-role>
                             </ul>
                         </div>
                     </div>
@@ -71,13 +71,16 @@
 
 <ng-template #contentremove let-modal>
     <div class="modal-header">
-        <h4 class="modal-title">rol verwijderen</h4>
+        <h4 class="modal-title">gebruiker verwijderen</h4>
         <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="modal-body">
-        <p>Weet je zeker dat je de rol wilt verwijderen?</p>
+        <p>Weet je zeker dat je de gebruiker wilt verwijderen? <span *ngIf="removeWithRefereeRoleDescription">De
+                gebruiker
+                blijft wel
+                scheidsrechter.</span></p>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="modal.close('remove')">nu
