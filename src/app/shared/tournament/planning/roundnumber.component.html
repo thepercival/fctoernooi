@@ -7,7 +7,7 @@
         <fa-icon [icon]="['fas', 'sync']" [spin]="refreshingData"></fa-icon>
       </button>
     </h2>
-    <button *ngIf="!canFilter() && favorites?.hasItems()" type="button"
+    <button *ngIf="canFilter() && favorites?.hasItems()" type="button"
       class="btn btn-sm btn-outline-{{filterEnabled ? 'primary' : 'secondary'}}" (click)="toggleFilter()">
       <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       <span> filter</span>

@@ -19,7 +19,7 @@ import {
     State,
     QualifyGroup,
 } from 'ngx-sport';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/common/navigation';
@@ -30,6 +30,8 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlaceRepository } from '../../lib/ngx-sport/place/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
+import { TournamentUser } from '../../lib/tournament/user';
+import { map } from 'rxjs/operators';
 
 class HomeAwayFormControl {
     home: FormControl;
@@ -60,7 +62,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
     form: FormGroup;
     scoreControls: HomeAwayFormControl[] = [];
     calculateScoreControl: HomeAwayFormControl;
-    userRefereeId: number;
+    hasAuthorization: boolean = false;
     private enablePlayedAtFirstChange;
     private originalPouleState: number;
     private rankingService: RankingService;
@@ -90,45 +92,38 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
     ngOnInit() {
         this.route.params.subscribe(params => {
             super.myNgOnInit(() => {
-                this.setGame(+params.gameId);
-                this.originalPouleState = this.game.getPoule().getState();
-                const tournamentUser = this.tournament.getUser(this.authService.getUser());
-                if (tournamentUser && tournamentUser.hasRoles(Role.REFEREE)) {
-                    this.tournamentRepository.getUserRefereeId(this.tournament).subscribe(
-                        /* happy path */ userRefereeIdRes => {
-                            this.userRefereeId = userRefereeIdRes;
-                        },
-                        /* error path */ e => { this.setAlert('danger', e); }
+                try {
+                    this.setGame(+params.gameId);
+                    this.originalPouleState = this.game.getPoule().getState();
+                    const tournamentUser = this.tournament.getUser(this.authService.getUser());
+                    this.getAuthorization(tournamentUser).subscribe(
+                            /* happy path */ hasAuthorization => {
+                            this.hasAuthorization = hasAuthorization;
+                            if (!this.hasAuthorization) {
+                                this.setAlert('danger', 'je bent geen scheidsrechter voor deze wedstrijd of uitslagen-invoerder voor dit toernooi, je emailadres moet door de beheerder gekoppeld zijn');
+                            }
+                        }
                     );
+                } catch (e) {
+                    this.setAlert('danger', e);
                 }
-                // @TODO CHECK HERE IF USER IS AUTHORISED, IF NOT GIVE MESSAGE BEFORE ENTER SCORE!!
-                // SOMETHING LIKE "je bent geen scheidsrechter voor deze wedstrijd of uitslagen-invoerder voor dit toernooi"
-
-                // if ($tournamentUser -> hasRoles(Role:: GAMERESULTADMIN)) {
-                //     return;
-                // }
-
-                // if ($tournamentUser -> hasRoles(Role:: REFEREE) === false) {
-                //     throw new \Exception("je bent geen ".Role:: getName(Role:: REFEREE). " of ".Role:: getName(Role:: GAMERESULTADMIN). " voor dit toernooi", E_ERROR);
-                // }
-                // $gameId = $this -> getGameId($request);
-                // if ($gameId === null) {
-                //     throw new \Exception("de wedstrijd is niet gevonden", E_ERROR);
-                // }
-                // $game = $this -> gameRepos -> find($gameId);
-                // if ($game === null) {
-                //     throw new \Exception("de wedstrijd is niet gevonden", E_ERROR);
-                // }
-                // if ($game -> getReferee() === null) {
-                //     throw new \Exception("bij de wedstrijd is geen scheidsrechter gevonden", E_ERROR);
-                // }
-                // if ($game -> getReferee() -> getEmailaddress() !== $tournamentUser -> getUser() -> getEmailaddress()) {
-                //     throw new \Exception("voor deze wedstrijd ben je geen ".Role:: getName(Role:: REFEREE), E_ERROR);
-                // }
-
-                // blabla, je emailadres moet door de beheerder gekoppeld zijn de scheidsrechter van deze wedstrijd
             });
         });
+    }
+
+    protected getAuthorization(tournamentUser?: TournamentUser): Observable<boolean> {
+        if (!tournamentUser) {
+            return of(false);
+        }
+        if (tournamentUser.hasRoles(Role.GAMERESULTADMIN)) {
+            return of(true);
+        }
+        if (!tournamentUser.hasRoles(Role.REFEREE) || !this.game.getReferee()) {
+            return of(false);
+        }
+        return this.tournamentRepository.getUserRefereeId(this.tournament).pipe(
+            map((userRefereeId: number) => this.game.getReferee().getId() === userRefereeId)
+        );
     }
 
     get GameHOME(): boolean { return Game.HOME; }
@@ -203,6 +198,9 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
 
     setGame(gameId: number) {
         this.game = this.getGameById(gameId, this.structure.getRootRound());
+        if (this.game === undefined) {
+            throw new Error('de wedstrijd kan niet gevonden worden');
+        }
         this.firstScoreConfig = this.game.getSportScoreConfig();
         // const date = this.game.getStartDateTime();
 

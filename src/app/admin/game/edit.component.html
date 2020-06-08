@@ -7,7 +7,8 @@
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing && tournament" [formGroup]="form" (ngSubmit)="save()" #f="ngForm" novalidate>
+      <form *ngIf="!processing && tournament && hasAuthorization" [formGroup]="form" (ngSubmit)="save()" #f="ngForm"
+        novalidate>
         <div class="form-group row">
           <div class="col-3">
             <label class="col-form-label">poule</label>
