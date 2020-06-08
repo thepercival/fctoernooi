@@ -21,7 +21,7 @@ import { AuthorizationExplanationModalComponent } from './infomodal.component';
 export class AuthorizationListComponent extends TournamentComponent implements OnInit {
     public invitations: TournamentInvitation[] = [];
     public roleProcessing: TournamentAuthorizationRole;
-    public removeWithRefereeRoleDescription: boolean;
+    public removeWithRefereeRole: boolean;
 
     constructor(
         route: ActivatedRoute,
@@ -58,6 +58,10 @@ export class AuthorizationListComponent extends TournamentComponent implements O
         ];
     }
 
+    getValidTournamentUsers(): TournamentUser[] {
+        return this.tournament.getUsers().filter(tournamentUser => !this.hasUnassignableRoles(tournamentUser.getRoles()));
+    }
+
     getNrOfRoles(role: number): number {
         return this.tournament.getUsers().filter(tournamentUser => {
             return tournamentUser.hasRoles(role);
@@ -68,13 +72,18 @@ export class AuthorizationListComponent extends TournamentComponent implements O
         return !(role === Role.ROLEADMIN && tournamentUser.hasRoles(role) && this.getNrOfRoles(Role.ROLEADMIN) < 2);
     }
 
+    get RoleReferee(): number { return Role.REFEREE; }
+
+    hasUnassignableRoles(roles: number): boolean {
+        return roles === Role.REFEREE || roles === 0;
+    }
+
     toggleRole(authorizationRole: TournamentAuthorizationRole, modalContent) {
         const role = authorizationRole.role;
         const authorization = authorizationRole.authorization;
         const roleDelta = (authorization.hasRoles(role) ? -role : role);
         const roleNew = authorization.getRoles() + roleDelta;
-        console.log(roleDelta);
-        if (roleNew === Role.REFEREE || roleNew === 0) {
+        if (this.hasUnassignableRoles(roleNew)) {
             this.openModalRemove(modalContent, authorization, roleNew === Role.REFEREE);
         } else {
             this.roleProcessing = authorizationRole;
@@ -104,7 +113,8 @@ export class AuthorizationListComponent extends TournamentComponent implements O
     }
 
     remove(authorization: TournamentAuthorization) {
-        this.processing = true;
+        if (authorization.getRoles() === Role.REFEREE)
+            this.processing = true;
         if (authorization instanceof TournamentUser) {
             this.tournamentUserRepository.removeObject(<TournamentUser>authorization)
                 .subscribe(
@@ -149,12 +159,18 @@ export class AuthorizationListComponent extends TournamentComponent implements O
         });
     }
 
-    openModalRemove(modalContent, authorization: TournamentAuthorization, removeWithRefereeRoleDescription?: boolean) {
-        this.removeWithRefereeRoleDescription = removeWithRefereeRoleDescription;
+    openModalRemove(modalContent, authorization: TournamentAuthorization, removeWithRefereeRole?: boolean) {
+        this.removeWithRefereeRole = removeWithRefereeRole;
         const activeModal = this.modalService.open(modalContent);
         activeModal.result.then((result) => {
             if (result === 'remove') {
-                this.remove(authorization);
+                if (removeWithRefereeRole) {
+                    authorization.setRoles(0);
+                    this.editRole(authorization, Role.REFEREE);
+                } else {
+                    this.remove(authorization);
+                }
+
             }
         }, (reason) => {
         });

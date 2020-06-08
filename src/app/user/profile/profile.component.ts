@@ -7,6 +7,7 @@ import { User } from '../../lib/user';
 import { PasswordValidation } from '../password-validation';
 import { UserRepository } from '../../lib/user/repository';
 import { AuthService } from '../../lib/auth/auth.service';
+import { MyNavigation } from '../../shared/common/navigation';
 
 @Component({
   selector: 'app-profile',
@@ -29,6 +30,7 @@ export class ProfileComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private userRepository: UserRepository,
+    public myNavigation: MyNavigation,
     fb: FormBuilder
   ) {
     this.form = fb.group({
