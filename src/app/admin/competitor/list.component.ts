@@ -81,6 +81,11 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.myNavigation.scroll();
   }
 
+  toggleView() {
+    this.orderMode = !this.orderMode;
+    this.resetAlert();
+  }
+
   allPlaceHaveCompetitor() {
     return !this.places.some(place => place.getCompetitor() === undefined);
   }
@@ -113,7 +118,6 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.resetAlert();
     if (this.placeToSwap === undefined) {
       this.placeToSwap = placeToSwap;
-      this.setAlert('info', 'selecteer tweede deelnemer om volgorde te wijzigen');
       return;
     }
     if (this.placeToSwap === placeToSwap) {

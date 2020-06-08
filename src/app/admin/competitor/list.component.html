@@ -8,15 +8,16 @@
       </h2>
       <button *ngIf="!processing && places && !hasBegun && atLeastTwoPlaceHaveCompetitor()" type="button"
         class="btn btn-sm mr-0" [ngClass]="{ 'btn-outline-secondary': !orderMode, 'btn-outline-primary': orderMode }"
-        (click)="orderMode = !orderMode">
-        <fa-icon [icon]="['fas', 'random']"></fa-icon> volgorde`
+        (click)="toggleView()">
+        <fa-icon [icon]="['fas', 'random']"></fa-icon> volgorde
       </button>
     </div>
     <h2 *ngIf="processing" class="text-center">
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
-    <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">
-      {{ alert.message }}</ngb-alert>
+
+    <ngb-alert [ngClass]="{ invisible: !alert}" class="m-0" [type]="alert?.type" [dismissible]="false">
+      {{ alert?.message }}</ngb-alert>
 
     <table *ngIf="!processing && places && !orderMode" class="table">
       <thead>
@@ -46,8 +47,8 @@
         <th>naam</th>
         <th class="text-center">
           <button *ngIf="allPlaceHaveCompetitor()" type="button" class="btn btn-sm btn-outline-primary"
-            (click)="swapAll()" [disabled]="processing || placeToSwap !== undefined" title="willekeurige volgorde">
-            <fa-icon [icon]="['fas', 'random']"></fa-icon>
+            (click)="swapAll()" [disabled]="processing || placeToSwap" title="willekeurige volgorde">
+            <fa-icon [icon]="['fas', 'random']"></fa-icon> willekeurig
           </button>
           <fa-icon *ngIf="!hasBegun && !allPlaceHaveCompetitor()" title="volgorder omwisselen" [icon]="['fas', 'sort']">
           </fa-icon>
@@ -64,7 +65,9 @@
           </td>
           <td class="text-center">
             <fa-icon *ngIf="place.getCompetitor()" class="text-primary pointer" (click)="swapTwo(place)"
-              [icon]="['far', (placeToSwap === place ? 'check-' : '') + 'square']" size="2x"></fa-icon>
+              [icon]="['far', (placeToSwap === place ? 'check-' : '') + 'square']" size="2x"
+              popoverClass="popover-small" container="body" ngbPopover="selecteer tweede deelnemer
+              om ze te wisselen van plaats"></fa-icon>
           </td>
         </tr>
       </tbody>
