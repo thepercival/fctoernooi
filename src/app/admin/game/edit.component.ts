@@ -64,7 +64,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
     calculateScoreControl: HomeAwayFormControl;
     hasAuthorization: boolean = false;
     private enablePlayedAtFirstChange;
-    private originalPouleState: number;
+    // private originalPouleState: number;
     private rankingService: RankingService;
     private firstScoreConfig: SportScoreConfig;
 
@@ -81,7 +81,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
-        this.originalPouleState = State.Created;
+        // this.originalPouleState = State.Created;
         this.sportScoreConfigService = new SportScoreConfigService();
         this.form = fb.group({
             played: [''],
@@ -94,7 +94,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
             super.myNgOnInit(() => {
                 try {
                     this.setGame(+params.gameId);
-                    this.originalPouleState = this.game.getPoule().getState();
+                    // this.originalPouleState = this.game.getPoule().getState();
                     const tournamentUser = this.tournament.getUser(this.authService.getUser());
                     this.getAuthorization(tournamentUser).subscribe(
                             /* happy path */ hasAuthorization => {
@@ -454,55 +454,12 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         this.game.setState(state);
         this.syncGameScores(false);
 
-        // if (this.game.getRound().getNumber().getValidPlanningConfig().getEnableTime()) {
-        //     const startdate = new Date(
-        //         this.model.startdate.year,
-        //         this.model.startdate.month - 1,
-        //         this.model.startdate.day,
-        //         this.model.starttime.hour,
-        //         this.model.starttime.minute
-        //     );
-        //     this.game.setStartDateTime(startdate);
-        // }
-
-
         this.gameRepository.editObject(this.game, this.game.getPoule(), this.tournament)
             .subscribe(
                 /* happy path */ gameRes => {
-                    this.game = gameRes;
-                    const poule = this.game.getPoule();
-                    const round = poule.getRound();
-                    const qualifyService = new QualifyService(round, this.competition.getRuleSet());
-                    if (!this.shouldQualifiersBeCalculated(poule)) {
-                        return this.navigateBack();
-                    }
-                    const pouleToFilter = this.shouldQualifiersBeCalculatedForRound(poule) ? undefined : poule;
-                    const changedPlaces = qualifyService.setQualifiers(pouleToFilter);
-                    if (changedPlaces.length === 0) {
-                        this.navigateBack();
-                        this.processing = false;
-                    }
-
-                    const reposUpdates = [];
-                    changedPlaces.forEach((changedPlace) => {
-                        reposUpdates.push(this.placeRepository.editObject(changedPlace, changedPlace.getPoule(), this.tournament));
-                    });
-
-                    forkJoin(reposUpdates).subscribe(results => {
-                        this.navigateBack();
-                        this.processing = false;
-                    },
-                        e => { this.processing = false; this.setAlert('danger', e); }
-                    );
-
+                    this.navigateBack();
                 },
-             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                // /* onComplete */() => {
-                //     if (!stateChanged && !scoreChanged) {
-                //             this.processing = false;
-                //             this.setAlert('success', 'de wedstrijd is opgeslagen');
-                //         }
-                //     }
+             /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
             );
         return false;
     }
@@ -539,14 +496,6 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
             }
         });
         return changedPlaces;
-    }
-
-    protected shouldQualifiersBeCalculated(poule: Poule): boolean {
-        return !(this.originalPouleState !== State.Finished && poule.getState() !== State.Finished);
-    }
-
-    shouldQualifiersBeCalculatedForRound(poule: Poule): boolean {
-        return poule.getRound().getQualifyGroups().some(qualifyGroup => qualifyGroup.getNrOfToPlacesTooMuch() > 0);
     }
 
     navigateBack() {

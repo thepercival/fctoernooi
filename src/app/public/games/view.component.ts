@@ -54,6 +54,10 @@ export class GamesComponent extends TournamentComponent implements OnInit {
         return this.tournamentRepository.getUserRefereeId(this.tournament);
     }
 
+    filterRefereeRole(): number {
+        return this.roles & Role.REFEREE;
+    }
+
     scroll() {
         this.myNavigation.scroll();
     }
