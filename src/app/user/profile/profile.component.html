@@ -16,8 +16,8 @@
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing && user" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
-        <div class="form-group row">
+      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+        <div *ngIf="user" class="form-group row">
           <div class="col-3">
             <label for="emailaddress" class="col-form-label">emailadres</label>
           </div>
@@ -28,7 +28,7 @@
               placeholder="max. {{validations.maxlengthemailaddress}} karakters">
           </div>
         </div>
-        <div class="form-group row justify-content-end">
+        <div *ngIf="user" class="form-group row justify-content-end">
           <div class="col-9">
             <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
               opslaan
@@ -42,7 +42,7 @@
             </button>
           </div>
         </div>
-        <div class="card border-danger">
+        <div *ngIf="user" class="card border-danger">
           <div class="card-body">
             <h5 class="card-title">account verwijderen</h5>
             <p class="card-text">Het account en je toernooi-rollen zullen verwijderd worden. Wanneer je je weer

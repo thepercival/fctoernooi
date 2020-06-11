@@ -92,31 +92,20 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit {
   private getGameData() {
     const gameDatas: GameData[] = [];
     const pouleDatas = this.getPouleDatas();
-    let showBreak = false;
     this.roundNumber.getGames(this.gameOrder).forEach(game => {
       const aPlaceHasACompetitor = this.hasAPlaceACompetitor(game);
       if (this.filterEnabled && this.favorites?.hasItems() && !this.favorites?.hasGameItem(game)) {
         return;
       }
       const pouleData: PouleData = pouleDatas[game.getPoule().getId()];
-      const hasPopover = pouleData.needsRanking || (!this.roundNumber.isFirst() && aPlaceHasACompetitor);
-      let showBreakIt;
-      if (showBreak) {
-        showBreakIt = false;
-      } else {
-        if (this.isBreakBeforeGame(game)) {
-          showBreakIt = true;
-          showBreak = true;
-        }
-      }
 
       const gameData: GameData = {
         canChangeResult: this.canChangeResult(game),
         hasACompetitor: aPlaceHasACompetitor,
-        hasPopover: hasPopover,
         poule: pouleData,
+        hasPopover: pouleData.needsRanking || (!this.roundNumber.isFirst() && aPlaceHasACompetitor),
         game: game,
-        showBreak: showBreakIt
+        showBreak: this.isBreakBeforeGame(game)
       };
       gameDatas.push(gameData);
     });
@@ -179,7 +168,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit {
     return (this.roles & role) === role;
   }
   protected isBreakBeforeGame(game: Game): boolean {
-    if (this.tournamentBreak === undefined) {
+    if (this.tournamentBreak === undefined || !this.planningConfig.getEnableTime() || !this.gameOrder) {
       return false;
     }
     return game.getStartDateTime().getTime() === this.tournamentBreak.end.getTime();
@@ -259,8 +248,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit {
 interface GameData {
   canChangeResult: boolean;
   hasACompetitor: boolean;
-  hasPopover: boolean;
   poule: PouleData;
+  hasPopover: boolean;
   game: Game;
   showBreak?: boolean;
 }
