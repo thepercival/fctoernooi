@@ -19,7 +19,7 @@
       <div *ngIf="!processing && structure">
         <app-tournament-roundnumber-planning *ngFor="let roundNumber of structure.getRoundNumbers()"
           [tournament]="tournament" [roundNumber]="roundNumber" [roles]="roles" [userRefereeId]="userRefereeId"
-          (scroll)="scroll()">
+          [reload]="reload" (scroll)="scroll()">
         </app-tournament-roundnumber-planning>
       </div>
     </div>

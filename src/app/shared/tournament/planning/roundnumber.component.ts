@@ -28,11 +28,12 @@ import { TranslateService } from '../../../lib/translate';
   templateUrl: './roundnumber.component.html',
   styleUrls: ['./roundnumber.component.scss']
 })
-export class RoundNumberPlanningComponent implements OnInit, AfterViewInit {
+export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnChanges {
 
   @Input() tournament: Tournament;
   @Input() roundNumber: RoundNumber;
   @Input() userRefereeId: number;
+  @Input() reload: boolean;
   @Input() roles: number;
   @Input() favorites: Favorites;
   @Input() refreshingData: boolean;
@@ -78,6 +79,14 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     if (this.roundNumber.getNext() === undefined) {
       this.scroll.emit();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.reload && changes.reload.currentValue !== changes.reload.previousValue && changes.reload.currentValue !== undefined) {
+      if (this.gameDatas.length === 0) {
+        this.reloadGameData();
+      }
     }
   }
 
