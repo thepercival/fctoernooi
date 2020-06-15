@@ -284,7 +284,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     private savePlanning(needsRecreating: boolean, needsRescheduling: boolean) {
         if (needsRecreating) {
-            this.planningRepository.create(this.roundNumber, this.tournament)
+            this.planningRepository.create(this.structure, this.tournament, this.roundNumber.getNumber())
                 .subscribe(
                     /* happy path */ roundNumberOut => {
                         this.setAlert('success', 'de instellingen zijn opgeslagen');

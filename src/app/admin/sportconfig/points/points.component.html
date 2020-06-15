@@ -1,0 +1,105 @@
+<h2 *ngIf="processing" class="text-center">
+    <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</h2>
+<ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+
+<form *ngIf="sportConfig" name="form" (ngSubmit)="edit()" [formGroup]="form" novalidate>
+    <div class="form-group row">
+        <div class="col-7">
+            <label for="winPoints" class="col-form-label">punten bij overwinning</label>
+        </div>
+        <div class="col-5">
+            <select class="form-control" formControlName="winPoints" required
+                [ngClass]="{ 'is-invalid': form.controls.winPoints.invalid, 'is-valid': form.controls.winPoints.valid }">
+                <option *ngFor="let winpoints of ranges.winPoints" [ngValue]="winpoints">{{winpoints}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-7">
+            <label for="drawPoints" class="col-form-label">punten bij gelijkspel</label>
+        </div>
+        <div class="col-5">
+            <select class="form-control" formControlName="drawPoints" required
+                [ngClass]="{ 'is-invalid': form.controls.drawPoints.invalid, 'is-valid': form.controls.drawPoints.valid }">
+                <option *ngFor="let drawpoints of ranges.drawPoints" [ngValue]="drawpoints">{{drawpoints}}</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="d-flex col-form-label pointer" container="body" placement="top" autoClose="outside"
+        [ngbPopover]="popExtension" #p="ngbPopover">
+        <h3><small>na verlenging</small></h3>
+        <span class="ml-1 mt-1">
+            <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
+        </span>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-7">
+            <label for="winPointsExt" class="col-form-label">punten bij overwinning</label>
+        </div>
+        <div class="col-5">
+            <select class="form-control" formControlName="winPointsExt" required
+                [ngClass]="{ 'is-invalid': form.controls.winPoints.invalid, 'is-valid': form.controls.winPointsExt.valid }">
+                <option *ngFor="let winpointsext of ranges.winPoints" [ngValue]="winpointsext">{{winpointsext}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-7">
+            <label for="drawPointsExt" class="col-form-label">punten bij gelijkspel</label>
+        </div>
+        <div class="col-5">
+            <select class="form-control" formControlName="drawPointsExt" required
+                [ngClass]="{ 'is-invalid': form.controls.drawPointsExt.invalid, 'is-valid': form.controls.drawPointsExt.valid }">
+                <option *ngFor="let drawpointsext of ranges.drawPoints" [ngValue]="drawpointsext">{{drawpointsext}}
+                </option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-7">
+            <label for="losePointsExt" class="col-form-label">punten bij verlies</label>
+        </div>
+        <div class="col-5">
+            <select class="form-control" formControlName="losePointsExt" required
+                [ngClass]="{ 'is-invalid': form.controls.losePointsExt.invalid, 'is-valid': form.controls.losePointsExt.valid }">
+                <option *ngFor="let losepointsext of ranges.losePoints" [ngValue]="losepointsext">{{losepointsext}}
+                </option>
+            </select>
+        </div>
+    </div>
+    <div *ngIf="!sportConfig.getId()" class="form-group row">
+        <div class="col-7">
+            <label for="nrOfFields" class="col-form-label">aantal velden</label>
+        </div>
+        <div class="col-5">
+            <select class="form-control" formControlName="nrOfFields" required
+                [ngClass]="{ 'is-invalid': form.controls.nrOfFields.invalid, 'is-valid': form.controls.nrOfFields.valid }">
+                <option *ngFor="let nrOfFields of ranges.nrOfFields" [ngValue]="nrOfFields">{{nrOfFields}}
+                </option>
+            </select>
+        </div>
+    </div>
+    <div *ngIf="!hasBegun" class="form-group row">
+        <div class="col-7">
+        </div>
+        <div class="col-5">
+            <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
+                <span>opslaan</span>
+            </button>
+        </div>
+    </div>
+</form>
+
+<ng-template #popExtension>
+    <div class="text-center">
+        het aan- of uitzetten van de verlenging kan bij<br /><button type="button"
+            class="btn btn-sm btn-outline-secondary my-1" (click)="linkToPlanningConfig()">
+            wedstrijdplanning
+        </button><br />
+        Wanneer je "tijd" aan hebt staan, dan kun je de verlenging aanzetten door simpelweg
+        een aantal minuten in te voeren bij de verlenging
+    </div>
+</ng-template>

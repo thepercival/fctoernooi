@@ -79,13 +79,10 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
     this.sponsorRepository.removeObject(sponsor, this.tournament)
       .subscribe(
         /* happy path */ sponsorRes => {
-          const index = this.sponsors.indexOf(sponsor);
-          if (index > -1) {
-            this.sponsors.splice(index, 1);
-          }
+          this.setAlert('success', 'de sponsor is verwijderd');
         },
         /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-        /* onComplete */() => { this.setAlert('success', 'de sponsor is verwijderd'); this.processing = false; }
+        /* onComplete */() => { this.processing = false; }
       );
   }
 }

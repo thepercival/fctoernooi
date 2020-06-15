@@ -121,7 +121,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
             return;
         }
         const ref: JsonReferee = {
-            rank: this.competition.getReferees().length + 1,
+            priority: this.competition.getReferees().length + 1,
             initials: initials,
             name: name ? name : undefined,
             emailaddress: emailaddress ? emailaddress : undefined,
@@ -129,7 +129,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
         };
         this.refereeRepository.createObject(ref, this.tournament, this.addAndInvite).subscribe(
             /* happy path */ refereeRes => {
-                this.planningRepository.create(this.structure.getFirstRoundNumber(), this.tournament).subscribe(
+                this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
                 /* happy path */ roundNumberOut => {
                         this.processing = false;
                         this.navigateBack();

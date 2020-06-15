@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -12,6 +12,7 @@ import {
     RoundNumber,
     JsonSportScoreConfig,
     SportMapper,
+    Structure,
 } from 'ngx-sport';
 import { forkJoin } from 'rxjs';
 import { CSSService } from '../../shared/common/cssservice';
@@ -23,19 +24,27 @@ import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '../../lib/translate';
 import { SportScoreConfigRepository } from '../../lib/ngx-sport/sport/scoreconfig/repository';
 import { ModalRoundNumbersComponent } from '../roundnumber/selector.component';
+import { Tournament } from '../../lib/tournament';
+import { IAlert } from '../../shared/common/alert';
 
 @Component({
     selector: 'app-tournament-sportscore-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css']
 })
-export class SportScoreEditComponent extends TournamentComponent implements OnInit {
+export class SportScoreEditComponent implements OnInit {
+
+    alert: IAlert;
+    processing: boolean;
+    @Input() tournament: Tournament;
+    @Input() structure: Structure;
+    @Input() sportConfig: SportConfig;
+    @Input() hasBegun: boolean;
+
     form: FormGroup;
-    sportConfig: SportConfig;
     translateService: TranslateService;
     scoreConfig: SportScoreConfig;
     roundNumber: RoundNumber;
-    hasBegun: boolean;
 
     validations: SportScoreValidations = {
         minScore: 0,
@@ -45,18 +54,12 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
     constructor(
         private sportScoreConfigRepository: SportScoreConfigRepository,
         public cssService: CSSService,
-        route: ActivatedRoute,
-        router: Router,
-        tournamentRepository: TournamentRepository,
-        structureRepository: StructureRepository,
         private myNavigation: MyNavigation,
         public sportConfigService: SportConfigService,
         private sportMapper: SportMapper,
         fb: FormBuilder,
         private modalService: NgbModal
     ) {
-
-        super(route, router, tournamentRepository, structureRepository);
         this.translateService = new TranslateService();
         this.form = fb.group({
             useNext: false,
@@ -69,27 +72,6 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
     }
 
     ngOnInit() {
-        this.route.params.subscribe(params => {
-            if (params.sportConfigId !== undefined) {
-                super.myNgOnInit(() => this.postInit(+params.sportConfigId), false);
-            }
-        });
-    }
-
-    private getSportConfigById(id: number): SportConfig {
-        if (id === undefined || id === 0) {
-            return undefined;
-        }
-        return this.competition.getSportConfigs().find(sportConfig => id === sportConfig.getId());
-    }
-
-    private postInit(id: number) {
-        this.sportConfig = this.getSportConfigById(id);
-        if (this.sportConfig === undefined) {
-            this.processing = false;
-            return;
-        }
-
         if (this.structure.getFirstRoundNumber().hasNext()) {
             this.openModal();
         } else {
@@ -120,10 +102,12 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
             Object.keys(this.form.controls).forEach(key => {
                 this.form.controls[key].disable();
             });
-            this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
+            this.alert = { type: 'warning', message: 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen' };
         } else {
+            this.alert = { type: 'info', message: 'instellingen gelden ook voor x-ste ronde en verder' };
             this.onChanges();
         }
+
         this.processing = false;
     }
 
@@ -179,7 +163,6 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
 
     add(): boolean {
         this.processing = true;
-        this.setAlert('info', 'de score-instellingen worden gewijzigd');
 
         const sport = this.sportConfig.getSport();
         const json = this.getJson(sport);
@@ -189,7 +172,7 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
         /* happy path */ sportConfigRes => {
                     this.myNavigation.back();
                 },
-        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+        /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
         /* onComplete */() => { this.processing = false; }
             );
         return false;
@@ -197,7 +180,6 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
 
     edit(scoreConfig: SportScoreConfig): boolean {
         this.processing = true;
-        this.setAlert('info', 'de score-instellingen worden gewijzigd');
 
         const sport = this.sportConfig.getSport();
         const json = this.getJson(sport);
@@ -207,7 +189,7 @@ export class SportScoreEditComponent extends TournamentComponent implements OnIn
         /* happy path */ configRes => {
                     this.myNavigation.back();
                 },
-        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+        /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
         /* onComplete */() => { this.processing = false; }
             );
         return false;

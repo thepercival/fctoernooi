@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { PlanningMapper, JsonStructure, RoundNumber, PlanningPeriod, Game } from 'ngx-sport';
+import { PlanningMapper, JsonStructure, RoundNumber, PlanningPeriod, Game, Structure } from 'ngx-sport';
 import { APIRepository } from '../../repository';
 import { Tournament } from '../../tournament';
 
@@ -24,18 +24,20 @@ export class PlanningRepository extends APIRepository {
         return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix() + '/' + roundNumber.getNumber();
     }
 
-    get(roundNumber: RoundNumber, tournament: Tournament): Observable<RoundNumber> {
+    get(structure: Structure, tournament: Tournament, startRoundNumber: number): Observable<RoundNumber> {
+        const roundNumber = structure.getRoundNumber(startRoundNumber);
         return this.http.get(this.getUrl(tournament, roundNumber), this.getOptions()).pipe(
-            map((jsonStructure: JsonStructure) => this.planningMapper.toObject(jsonStructure, roundNumber)),
+            map((jsonStructure: JsonStructure) => this.planningMapper.toObject(jsonStructure, structure, startRoundNumber)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    create(roundNumber: RoundNumber, tournament: Tournament): Observable<RoundNumber> {
+    create(structure: Structure, tournament: Tournament, startRoundNumber: number): Observable<RoundNumber> {
+        const roundNumber = structure.getRoundNumber(startRoundNumber);
         this.removeGames(roundNumber);
         const url = this.getUrl(tournament, roundNumber) + '/create';
         return this.http.post(url, undefined, this.getOptions()).pipe(
-            map((jsonStructure: JsonStructure) => this.planningMapper.toObject(jsonStructure, roundNumber)),
+            map((jsonStructure: JsonStructure) => this.planningMapper.toObject(jsonStructure, structure, startRoundNumber)),
             catchError((err) => this.handleError(err))
         );
     }

@@ -135,6 +135,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         this.sponsorRepository.createObject(ref, this.tournament)
             .subscribe(
             /* happy path */ sponsorRes => {
+                    this.sponsor = sponsorRes;
                     this.processLogoAndNavigateBack(sponsorRes.getId());
                 },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },

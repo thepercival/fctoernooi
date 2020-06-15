@@ -60,8 +60,7 @@ import { CompetitorEditComponent } from './competitor/edit.component';
 import { CompetitorListComponent } from './competitor/list.component';
 import { CompetitorListLineComponent } from './competitor/listline.component';
 import { CompetitorListRemoveModalComponent } from './competitor/listremovemodal.component';
-import { FieldEditComponent } from './field/edit.component';
-import { FieldListComponent } from './field/list.component';
+import { FieldListComponent } from './sportconfig/field/fieldlist.component';
 import { GameEditComponent } from './game/edit.component';
 import { HomeComponent } from './home/home.component';
 import { NewComponent } from './new/new.component';
@@ -103,6 +102,7 @@ import { AuthorizationListComponent } from './authorization/list.component';
 import { AuthorizationAddComponent } from './authorization/add.component';
 import { RoleItemComponent } from './authorization/roleitem.component';
 import { AuthorizationExplanationModalComponent } from './authorization/infomodal.component';
+import { PointsEditComponent } from './sportconfig/points/points.component';
 
 @NgModule({
   imports: [
@@ -123,13 +123,13 @@ import { AuthorizationExplanationModalComponent } from './authorization/infomoda
     RefereeListComponent,
     SportConfigListComponent,
     SportConfigEditComponent,
+    PointsEditComponent,
     SportScoreEditComponent,
     SportSelectComponent,
     SponsorListComponent,
     CompetitorEditComponent,
     PlanningConfigComponent,
     FieldListComponent,
-    FieldEditComponent,
     GameEditComponent,
     RefereeEditComponent,
     SponsorEditComponent,

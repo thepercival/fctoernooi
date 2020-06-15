@@ -20,6 +20,7 @@ import { FieldRepository } from '../../lib/ngx-sport/field/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
+import { TranslateService } from '../../lib/translate';
 
 @Component({
     selector: 'app-tournament-sportconfig-edit',
@@ -27,89 +28,25 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
     styleUrls: ['./edit.component.css']
 })
 export class SportConfigEditComponent extends TournamentComponent implements OnInit {
-    form: FormGroup;
+
     sportConfig: SportConfig;
-    ranges: any = {};
+
+    activeTab = 1;
     hasBegun: boolean;
-    validations: SportValidations = {
-        minWinPoints: 1,
-        maxWinPoints: 10,
-        minDrawPoints: 0,
-        maxDrawPoints: 5,
-        minLosePoints: 0,
-        maxLosePoints: 5,
-        minMinutesPerGame: 0,
-        maxMinutesPerGame: 60,
-    };
+
 
     constructor(
-        private sportConfigRepository: SportConfigRepository,
         public cssService: CSSService,
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         public sportConfigService: SportConfigService,
-        private fieldRepository: FieldRepository,
-        private planningRepository: PlanningRepository,
         private myNavigation: MyNavigation,
-        private sportMapper: SportMapper,
         fb: FormBuilder,
         private modalService: NgbModal
     ) {
         super(route, router, tournamentRepository, structureRepository);
-        this.form = fb.group({
-            winPoints: ['', Validators.compose([
-                Validators.required,
-                Validators.min(this.validations.minWinPoints),
-                Validators.max(this.validations.maxWinPoints)
-            ])],
-            drawPoints: ['', Validators.compose([
-                Validators.required,
-                Validators.min(this.validations.minDrawPoints),
-                Validators.max(this.validations.maxDrawPoints)
-            ])],
-            winPointsExt: ['', Validators.compose([
-                Validators.required,
-                Validators.min(this.validations.minWinPoints),
-                Validators.max(this.validations.maxWinPoints)
-            ])],
-            drawPointsExt: ['', Validators.compose([
-                Validators.required,
-                Validators.min(this.validations.minDrawPoints),
-                Validators.max(this.validations.maxDrawPoints)
-            ])],
-            losePointsExt: ['', Validators.compose([
-                Validators.required,
-                Validators.min(this.validations.minLosePoints),
-                Validators.max(this.validations.maxLosePoints)
-            ])],
-            nrOfFields: ['']
-        });
-    }
-
-    initRanges() {
-        this.ranges.winPoints = [];
-        for (let i = this.validations.minWinPoints; i <= this.validations.maxWinPoints; i++) {
-            this.ranges.winPoints.push(i);
-        }
-        this.ranges.drawPoints = [];
-        for (let i = this.validations.minDrawPoints; i <= this.validations.maxDrawPoints; i++) {
-            this.ranges.drawPoints.push(i);
-        }
-        this.ranges.losePoints = [];
-        for (let i = this.validations.minLosePoints; i <= this.validations.maxLosePoints; i++) {
-            this.ranges.losePoints.push(i);
-        }
-        const sport = this.sportConfig.getSport();
-        if (sport.getCustomId() === SportCustom.Chess) {
-            this.ranges.drawPoints.push(0.5);
-            this.ranges.drawPoints.sort();
-        }
-        this.ranges.nrOfFields = [];
-        for (let i = 0; i <= 5; i++) {
-            this.ranges.nrOfFields.push(i);
-        }
     }
 
     ngOnInit() {
@@ -137,107 +74,58 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
             this.processing = false;
             return;
         }
-        this.initForm();
         this.processing = false;
     }
 
-    initForm() {
-        this.initRanges();
-        this.form.controls.winPoints.setValue(this.sportConfig.getWinPoints());
-        this.form.controls.drawPoints.setValue(this.sportConfig.getDrawPoints());
-        this.form.controls.winPointsExt.setValue(this.sportConfig.getWinPointsExt());
-        this.form.controls.drawPointsExt.setValue(this.sportConfig.getDrawPointsExt());
-        this.form.controls.losePointsExt.setValue(this.sportConfig.getLosePointsExt());
-        this.form.controls.nrOfFields.setValue(1);
-        if (this.hasBegun) {
-            Object.keys(this.form.controls).forEach(key => {
-                this.form.controls[key].disable();
-            });
-        }
-    }
+    // onGetSport(sport?: Sport) {
+    //     if (sport === undefined) {
+    //         return this.navigateBack();
+    //     }
+    //     this.sportConfig = this.sportConfigService.createDefault(sport, this.competition, this.structure);
+    //     this.initForm();
+    // }
 
-    onGetSport(sport?: Sport) {
-        if (sport === undefined) {
-            return this.navigateBack();
-        }
-        this.sportConfig = this.sportConfigService.createDefault(sport, this.competition, this.structure);
-        this.initForm();
-    }
 
-    save(): boolean {
-        if (this.sportConfig.getId() === undefined) {
-            return this.add();
-        }
-        return this.edit();
-    }
+    // add(): boolean {
+    //     this.processing = true;
+    //     this.setAlert('info', 'de sport wordt gewijzigd');
 
-    add(): boolean {
-        this.processing = true;
-        this.setAlert('info', 'de sport wordt gewijzigd');
+    //     this.sportConfig.setWinPoints(this.form.value['winPoints']);
+    //     this.sportConfig.setDrawPoints(this.form.value['drawPoints']);
+    //     this.sportConfig.setWinPointsExt(this.form.value['winPointsExt']);
+    //     this.sportConfig.setDrawPointsExt(this.form.value['drawPointsExt']);
+    //     this.sportConfig.setLosePointsExt(this.form.value['losePointsExt']);
 
-        this.sportConfig.setWinPoints(this.form.value['winPoints']);
-        this.sportConfig.setDrawPoints(this.form.value['drawPoints']);
-        this.sportConfig.setWinPointsExt(this.form.value['winPointsExt']);
-        this.sportConfig.setDrawPointsExt(this.form.value['drawPointsExt']);
-        this.sportConfig.setLosePointsExt(this.form.value['losePointsExt']);
+    //     this.sportConfigRepository.createObject(this.sportConfig, this.tournament)
+    //         .subscribe(
+    //             /* happy path */ sportConfigRes => {
+    //                 const fieldReposAdds = [];
+    //                 for (let priority = 1; priority <= this.form.value['nrOfFields']; priority++) {
+    //                     const jsonField: JsonField = { priority, name: String(priority) };
+    //                     fieldReposAdds.push(this.fieldRepository.createObject(jsonField, this.sportConfig, this.tournament));
+    //                 }
 
-        this.sportConfigRepository.createObject(this.sportConfig, this.tournament)
-            .subscribe(
-                /* happy path */ sportConfigRes => {
-                    const fieldReposAdds = [];
-                    for (let i = 0; i < this.form.value['nrOfFields']; i++) {
-                        const fieldNr = this.competition.getFields().length + i + 1;
-                        const jsonField: JsonField = {
-                            number: fieldNr,
-                            name: '' + fieldNr,
-                            sport: this.sportMapper.toJson(this.sportConfig.getSport())
-                        };
-                        fieldReposAdds.push(this.fieldRepository.createObject(jsonField, this.tournament));
-                    }
-
-                    forkJoin(fieldReposAdds).subscribe(results => {
-                        const firstRoundNumber = this.structure.getFirstRoundNumber();
-                        this.planningRepository.create(firstRoundNumber, this.tournament).subscribe(
-                    /* happy path */ roundNumberOut => {
-                                this.linkToSportConfig(); /* niet navigate back van kan van sport komen */
-                                this.processing = false;
-                            },
-                    /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                    /* onComplete */() => this.processing = false
-                        );
-                    },
-                        err => {
-                            this.processing = false;
-                            this.setAlert('danger', 'de wedstrijd is niet opgeslagen: ' + err);
-                        }
-                    );
-                },
-        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-        /* onComplete */() => { this.processing = false; }
-            );
-        return false;
-    }
-
-    edit(): boolean {
-        this.processing = true;
-        this.setAlert('info', 'de sport wordt gewijzigd');
-
-        this.sportConfig.setWinPoints(this.form.value['winPoints']);
-        this.sportConfig.setDrawPoints(this.form.value['drawPoints']);
-        this.sportConfig.setWinPointsExt(this.form.value['winPointsExt']);
-        this.sportConfig.setDrawPointsExt(this.form.value['drawPointsExt']);
-        this.sportConfig.setLosePointsExt(this.form.value['losePointsExt']);
-
-        this.sportConfigRepository.editObject(this.sportConfig, this.tournament)
-            .subscribe(
-            /* happy path */ sportConfigRes => {
-                    this.linkToSportConfig(); /* niet navigate back van kan van sport komen */
-                },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => { this.processing = false; }
-            );
-        return false;
-    }
+    //                 forkJoin(fieldReposAdds).subscribe(results => {
+    //                     this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
+    //                 /* happy path */ roundNumberOut => {
+    //                             this.linkToSportConfig(); /* niet navigate back van kan van sport komen */
+    //                             this.processing = false;
+    //                         },
+    //                 /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+    //                 /* onComplete */() => this.processing = false
+    //                     );
+    //                 },
+    //                     err => {
+    //                         this.processing = false;
+    //                         this.setAlert('danger', 'de wedstrijd is niet opgeslagen: ' + err);
+    //                     }
+    //                 );
+    //             },
+    //     /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+    //     /* onComplete */() => { this.processing = false; }
+    //         );
+    //     return false;
+    // }
 
     navigateBack() {
         this.myNavigation.back();
@@ -252,27 +140,18 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         }
     }
 
-    linkToPlanningConfig() {
-        const roundNumber = this.structure.getFirstRoundNumber().getNumber();
-        this.router.navigate(['/admin/planningconfig', this.tournament.getId(), roundNumber]);
-    }
+    // openMultiSportsModal(content) {
+    //     this.modalService.open(content).result.then((result) => {
+    //         if (result === 'continue') {
+    //             this.router.navigate(['/admin/sportconfigs', this.tournament.getId()]);
+    //         }
+    //     }, (reason) => { });
+    // }
 
-    openMultiSportsModal(content) {
-        this.modalService.open(content).result.then((result) => {
-            if (result === 'continue') {
-                this.router.navigate(['/admin/sportconfigs', this.tournament.getId()]);
-            }
-        }, (reason) => { });
+    getFieldsDescription(): string {
+        const translate = new TranslateService();
+        return translate.getFieldNamePlural(this.sportConfig.getSport());
     }
 }
 
-export interface SportValidations {
-    minWinPoints: number; // 1
-    maxWinPoints: number; // 10
-    minDrawPoints: number; // 0
-    maxDrawPoints: number; // 5
-    minLosePoints: number; // 0
-    maxLosePoints: number; // 5
-    minMinutesPerGame: number; // 0
-    maxMinutesPerGame: number; // 60
-}
+

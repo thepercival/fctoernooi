@@ -52,7 +52,7 @@
           <td>
             <span>{{sportConfig.getSport().getName()}}</span>
           </td>
-          <td class="d-none d-sm-table-cell">{{getNrOfFields(sportConfig.getSport())}}</td>
+          <td class="d-none d-sm-table-cell">{{sportConfig.getFields().length}}</td>
           <td class="text-right" *ngIf="!hasBegun && sportConfigs.length > 1">
             <button type="button" class="btn btn-sm btn-danger" [disabled]="processing"
               (click)="openRemoveModal(content, sportConfig)">

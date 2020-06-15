@@ -65,7 +65,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   }
 
   linkToEdit(referee?: Referee) {
-    this.router.navigate(['/admin/referee', this.tournament.getId(), referee ? referee.getRank() : '']);
+    this.router.navigate(['/admin/referee', this.tournament.getId(), referee ? referee.getPriority() : '']);
   }
 
   openHelpModal(modalContent) {
@@ -79,9 +79,9 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   }
 
   upgradeRank(referee: Referee) {
-    const downgrade = this.competition.getReferee(referee.getRank() - 1);
-    referee.setRank(downgrade.getRank());
-    downgrade.setRank(downgrade.getRank() + 1);
+    const downgrade = this.competition.getReferee(referee.getPriority() - 1);
+    referee.setPriority(downgrade.getPriority());
+    downgrade.setPriority(downgrade.getPriority() + 1);
     // doe sortering en backend
 
     this.setAlert('info', 'de belangrijkheid van de scheidsrechters wordt gewijzigd');
@@ -96,9 +96,8 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
 
   protected upgradeRankHelper(reposUpdates: Observable<Referee>[]) {
     forkJoin(reposUpdates).subscribe(results => {
-      this.referees.sort((refA, refB) => refA.getRank() - refB.getRank());
-      const firstRoundNumber = this.structure.getFirstRoundNumber();
-      this.planningRepository.create(firstRoundNumber, this.tournament).subscribe(
+      this.referees.sort((refA, refB) => refA.getPriority() - refB.getPriority());
+      this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
             /* happy path */ roundNumberOut => {
           this.setAlert('success', 'de belangrijkheid van de scheidsrechters is gewijzigd');
         },
@@ -120,8 +119,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     this.refereeRepository.removeObject(referee, this.tournament)
       .subscribe(
             /* happy path */ refereeRes => {
-          const firstRoundNumber = this.structure.getFirstRoundNumber();
-          this.planningRepository.create(firstRoundNumber, this.tournament).subscribe(
+          this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
             /* happy path */ roundNumberOut => {
               this.processing = false;
               this.setAlert('success', 'de scheidsrechter is verwijderd');

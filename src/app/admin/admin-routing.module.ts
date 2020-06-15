@@ -5,8 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthguardService } from '../lib/auth/authguard.service';
 import { CompetitorEditComponent } from './competitor/edit.component';
 import { CompetitorListComponent } from './competitor/list.component';
-import { FieldEditComponent } from './field/edit.component';
-import { FieldListComponent } from './field/list.component';
+import { FieldListComponent } from './sportconfig/field/fieldlist.component';
 import { GameEditComponent } from './game/edit.component';
 import { HomeComponent } from './home/home.component';
 import { NewComponent } from './new/new.component';
@@ -33,7 +32,6 @@ const routes: Routes = [
   { path: 'games/:id', component: GameListComponent, canActivate: [AuthguardService] }, // GAMERESULTADMIN
   { path: 'game/:id/:gameId', component: GameEditComponent, canActivate: [AuthguardService] }, // GAMERESULTADMIN
   { path: 'fields/:id', component: FieldListComponent, canActivate: [AuthguardService] }, // ADMIN
-  { path: 'field/:id/:number', component: FieldEditComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'lockerrooms/:id', component: LockerRoomsComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'planningconfig/:id/:roundNumber', component: PlanningConfigComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'referees/:id', component: RefereeListComponent, canActivate: [AuthguardService] }, // ADMIN

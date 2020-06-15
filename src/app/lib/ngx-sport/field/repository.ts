@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../repository';
-import { Field, FieldMapper, JsonField } from 'ngx-sport';
+import { Field, FieldMapper, JsonField, SportConfig } from 'ngx-sport';
 import { Tournament } from '../../tournament';
 
 
@@ -20,30 +20,34 @@ export class FieldRepository extends APIRepository {
         return 'fields';
     }
 
-    getUrl(tournament: Tournament): string {
-        return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
+    getUrl(tournament: Tournament, sportConfig: SportConfig): string {
+        return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/sportconfigs/' + sportConfig.getId() + '/' + this.getUrlpostfix();
     }
 
-    createObject(json: JsonField, tournament: Tournament): Observable<Field> {
-        return this.http.post(this.getUrl(tournament), json, this.getOptions()).pipe(
-            map((jsonRes: JsonField) => this.mapper.toObject(jsonRes, tournament.getCompetition())),
+    createObject(json: JsonField, sportConfig: SportConfig, tournament: Tournament): Observable<Field> {
+        return this.http.post(this.getUrl(tournament, sportConfig), json, this.getOptions()).pipe(
+            map((jsonRes: JsonField) => this.mapper.toObject(jsonRes, sportConfig)),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(field: Field, tournament: Tournament): Observable<Field> {
-        const url = this.getUrl(tournament) + '/' + field.getId();
+        const url = this.getUrl(tournament, field.getSportConfig()) + '/' + field.getId();
         return this.http.put(url, this.mapper.toJson(field), this.getOptions()).pipe(
-            map((res: JsonField) => this.mapper.toObject(res, tournament.getCompetition(), field)),
+            map((res: JsonField) => this.mapper.toObject(res, field.getSportConfig(), field)),
             catchError((err) => this.handleError(err))
         );
     }
 
     removeObject(field: Field, tournament: Tournament): Observable<void> {
-        const url = this.getUrl(tournament) + '/' + field.getId();
+        const sportConfig = field.getSportConfig();
+        const url = this.getUrl(tournament, sportConfig) + '/' + field.getId();
         return this.http.delete(url, this.getOptions()).pipe(
             map((res) => {
-                field.getCompetition().removeField(field);
+                const index = sportConfig.getFields().indexOf(field);
+                if (index > -1) {
+                    sportConfig.getFields().splice(index, 1);
+                }
             }),
             catchError((err) => this.handleError(err))
         );

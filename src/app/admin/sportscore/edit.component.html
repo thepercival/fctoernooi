@@ -1,66 +1,47 @@
-<div class="container-fluid">
-  <div class="row justify-content-center">
-    <div *ngIf="sportConfig" class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-      <app-tournament-title [tournament]="tournament">
-      </app-tournament-title>
-      <div>
-        <h2 class="text-truncate">
-          <app-sport-icon *ngIf="sportConfig" [customId]="sportConfig.getSport().getCustomId()"></app-sport-icon>
-          <span *ngIf="sportConfig">{{sportConfig.getSport().getName()}} </span>
-          <span *ngIf="!sportConfig">sport </span>
-          <small>scoreinstellingen</small>
-        </h2>
-      </div>
-      <div>
-        <h2 *ngIf="processing" class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-        </h2>
-      </div>
-      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing && scoreConfig" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
-        <div *ngIf="scoreConfig.hasNext()" class="form-group row">
-          <label for="useNext" class="col-7 col-form-label pointer">gebruik sets</label>
-          <div class="form-check col-5">
-            <label class="custom-control custom-checkbox col-form-label pl-0">
-              <input type="checkbox" class="custom-control-input form-check-input" formControlName="useNext">
-              <span class="custom-control-indicator"></span>
-            </label>
-          </div>
-        </div>
-        <label class="text-info offset-8 col-4 px-0">0 = zoveel mogelijk</label>
-        <div *ngIf="form.value['useNext']" class="form-group row">
-          <label class="col-5 col-form-label">{{translateService.getScoreNamePlural(scoreConfig.getNext())}}</label>
-          <label for="maxNext"
-            class="col-2 col-form-label text-right">{{translateService.getScoreDirection(scoreConfig.getNext().getDirection())}}</label>
-          <div class="col-5">
-            <input type="number"
-              [ngClass]="{ 'is-invalid': form.controls.maxNext.invalid, 'is-valid': form.controls.maxNext.valid}"
-              formControlName="maxNext" maxlength="2" class="form-control" />
-          </div>
-        </div>
-        <div class="form-group row">
-          <label *ngIf="form.value['useNext']"
-            class="col-7 col-form-label">{{translateService.getScoreNamePlural(scoreConfig)}} per
-            {{translateService.getScoreNameSingular(scoreConfig.getNext())}}
-          </label>
-          <label *ngIf="!form.value['useNext']"
-            class="col-5 col-form-label">{{translateService.getScoreNamePlural(scoreConfig)}}</label>
-          <label *ngIf="!form.value['useNext']" for="max"
-            class="col-2 col-form-label text-right">{{translateService.getScoreDirection(scoreConfig.getDirection())}}</label>
-          <div class="col-5">
-            <input type="number"
-              [ngClass]="{ 'is-invalid': form.controls.max.invalid, 'is-valid': form.controls.max.valid}"
-              formControlName="max" maxlength="2" class="form-control" />
-          </div>
-        </div>
-        <div *ngIf="!roundNumber.hasBegun()" class="form-group row justify-content-end">
-          <div class="col-5">
-            <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
-              <span>opslaan</span>
-            </button>
-          </div>
-        </div>
-      </form>
+<h2 *ngIf="processing" class="text-center">
+  <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</h2>
+<ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+<form *ngIf="!processing && scoreConfig" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+  <div *ngIf="scoreConfig.hasNext()" class="form-group row">
+    <label for="useNext" class="col-7 col-form-label pointer">gebruik sets</label>
+    <div class="form-check col-5">
+      <label class="custom-control custom-checkbox col-form-label pl-0">
+        <input type="checkbox" class="custom-control-input form-check-input" formControlName="useNext">
+        <span class="custom-control-indicator"></span>
+      </label>
     </div>
   </div>
-</div>
+  <label class="text-info offset-8 col-4 px-0">0 = zoveel mogelijk</label>
+  <div *ngIf="form.value['useNext']" class="form-group row">
+    <label class="col-5 col-form-label">{{translateService.getScoreNamePlural(scoreConfig.getNext())}}</label>
+    <label for="maxNext"
+      class="col-2 col-form-label text-right">{{translateService.getScoreDirection(scoreConfig.getNext().getDirection())}}</label>
+    <div class="col-5">
+      <input type="number"
+        [ngClass]="{ 'is-invalid': form.controls.maxNext.invalid, 'is-valid': form.controls.maxNext.valid}"
+        formControlName="maxNext" maxlength="2" class="form-control" />
+    </div>
+  </div>
+  <div class="form-group row">
+    <label *ngIf="form.value['useNext']"
+      class="col-7 col-form-label">{{translateService.getScoreNamePlural(scoreConfig)}} per
+      {{translateService.getScoreNameSingular(scoreConfig.getNext())}}
+    </label>
+    <label *ngIf="!form.value['useNext']"
+      class="col-5 col-form-label">{{translateService.getScoreNamePlural(scoreConfig)}}</label>
+    <label *ngIf="!form.value['useNext']" for="max"
+      class="col-2 col-form-label text-right">{{translateService.getScoreDirection(scoreConfig.getDirection())}}</label>
+    <div class="col-5">
+      <input type="number" [ngClass]="{ 'is-invalid': form.controls.max.invalid, 'is-valid': form.controls.max.valid}"
+        formControlName="max" maxlength="2" class="form-control" />
+    </div>
+  </div>
+  <div *ngIf="!roundNumber.hasBegun()" class="form-group row justify-content-end">
+    <div class="col-5">
+      <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
+        <span>opslaan</span>
+      </button>
+    </div>
+  </div>
+</form>

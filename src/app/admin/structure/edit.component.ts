@@ -123,14 +123,11 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   }
 
   protected syncPlanning(structure: Structure, roundNumberToSync: number) {
-    // let changedRoundNumber = structure.getRoundNumber(roundNumberToSync);
-    // if (changedRoundNumber === undefined) {
-    //   return this.completeSave(structure);
-    // }
-
-    // @TODO first better test creating planning in php!!
-    const changedRoundNumber = structure.getFirstRoundNumber();
-    this.planningRepository.create(changedRoundNumber, this.tournament)
+    let changedRoundNumber = structure.getRoundNumber(roundNumberToSync);
+    if (changedRoundNumber === undefined) {
+      return this.completeSave(structure);
+    }
+    this.planningRepository.create(structure, this.tournament, roundNumberToSync)
       .subscribe(
           /* happy path */ roundNumberOut => this.completeSave(structure),
           /* error path */ e => { this.setAlert('danger', e); this.processing = false; },

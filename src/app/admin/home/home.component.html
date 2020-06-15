@@ -92,6 +92,20 @@
             </p>
           </div>
         </div>
+        <div *ngIf="isAdmin()" class="card border-secondary pointer mt-3 mx-2" (click)="linkToSportConfig()">
+          <div class="card-body">
+            <h5 *ngIf="!competition.hasMultipleSportConfigs()" class="card-title text-truncate">
+              <app-sport-icon [configs]="competition.getSportConfigs()"></app-sport-icon>
+              <span> {{competition.getFirstSportConfig().getSport().getName()}}</span>
+            </h5>
+            <h5 *ngIf="competition.hasMultipleSportConfigs()" class="card-title text-truncate">
+              <span>sporten</span>
+            </h5>
+            <p class="card-text">
+              {{getFieldsDescription()}}, punten en score
+            </p>
+          </div>
+        </div>
         <div *ngIf="isAdmin()" class="card border-secondary pointer mt-3 mx-2"
           [routerLink]="['/admin/referees', tournament.getId()]">
           <div class="card-body">
@@ -99,16 +113,6 @@
               <fa-icon [icon]="['fac', 'referee']"></fa-icon> scheidsrechters
             </h5>
             <p class="card-text">{{getNrOfRefereesDescription()}}</p>
-          </div>
-        </div>
-        <div *ngIf="isAdmin()" class="card border-secondary pointer mt-3 mx-2"
-          [routerLink]="['/admin/fields', tournament.getId()]">
-          <div class="card-body">
-            <h5 class="card-title">
-              <fa-icon [icon]="['fac', 'soccer-field']"></fa-icon>
-              {{getFieldsDescription()}}
-            </h5>
-            <p class="card-text">{{getNrOfFieldsDescription()}}</p>
           </div>
         </div>
         <div *ngIf="isAdmin()" class="card border-secondary pointer mt-3 mx-2"
@@ -127,17 +131,6 @@
               <span *ngIf="lockerRoomValidator.areAllArranged()">
                 <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> deelnemers ingedeeld
               </span>
-            </p>
-          </div>
-        </div>
-        <div *ngIf="isAdmin()" class="card border-secondary pointer mt-3 mx-2" (click)="linkToSportConfig()">
-          <div class="card-body">
-            <h5 class="card-title text-truncate">
-              <app-sport-icon [configs]="competition.getSportConfigs()"></app-sport-icon>
-              <span> {{competition.getFirstSportConfig().getSport().getName()}}</span>
-            </h5>
-            <p class="card-text">
-              puntentelling en score
             </p>
           </div>
         </div>

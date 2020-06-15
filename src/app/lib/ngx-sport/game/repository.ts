@@ -27,10 +27,11 @@ export class GameRepository extends APIRepository {
     editObject(game: Game, poule: Poule, tournament: Tournament): Observable<Game> {
         const url = this.getUrl(tournament) + '/' + game.getId();
         return this.http.put(url, this.mapper.toJson(game), this.getCustomOptions(poule)).pipe(
-            map((jsonGame: JsonGame) => this.mapper.toObject(jsonGame, game.getPoule(), game)),
+            map((jsonGame: JsonGame) => this.mapper.toExistingObject(jsonGame, game)),
             catchError((err) => this.handleError(err))
         );
     }
+
 
     protected getCustomOptions(poule: Poule): { headers: HttpHeaders; params: HttpParams } {
         let httpParams = new HttpParams();

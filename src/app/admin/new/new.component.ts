@@ -123,12 +123,8 @@ export class NewComponent implements OnInit {
     );
 
     const fields: JsonField[] = [];
-    for (let fieldNumber = 1; fieldNumber <= nroffields; fieldNumber++) {
-      fields.push({
-        number: fieldNumber,
-        name: String(fieldNumber),
-        sport: this.sportMapper.toJson(this.sport)
-      });
+    for (let priority = 1; priority <= nroffields; priority++) {
+      fields.push({ priority, name: String(priority) });
     }
 
     const jsonTournament: JsonTournament = {
@@ -146,10 +142,9 @@ export class NewComponent implements OnInit {
         },
         ruleSet: RankingService.RULESSET_WC,
         startDateTime: startDateTime.toISOString(),
-        fields,
         referees: [],
         state: State.Created,
-        sportConfigs: [this.sportConfigService.createDefaultJson(this.sport)]
+        sportConfigs: [this.sportConfigService.createDefaultJson(this.sport, fields)]
       },
       lockerRooms: [],
       users: [],
@@ -164,7 +159,7 @@ export class NewComponent implements OnInit {
           this.structureRepository.editObject(structure, tournament)
             .subscribe(
             /* happy path */(structureOut: Structure) => {
-                this.planningRepository.create(structureOut.getFirstRoundNumber(), tournament)
+                this.planningRepository.create(structureOut, tournament, 1)
                   .subscribe(
                     /* happy path */ roundNumberOut => {
                       this.router.navigate(['/admin/structure', tournament.getId()]);

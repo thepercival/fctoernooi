@@ -87,7 +87,7 @@ export class GameListComponent extends TournamentComponent implements OnInit {
   protected refreshPlanning(firstRoundNumberWithoutPlanning: RoundNumber) {
     this.refreshPlanningTimer = interval(5000) // repeats every 5 seconds
       .pipe(
-        switchMap(() => this.planningRepository.get(firstRoundNumberWithoutPlanning, this.tournament).pipe()),
+        switchMap(() => this.planningRepository.get(this.structure, this.tournament, firstRoundNumberWithoutPlanning.getNumber()).pipe()),
         catchError(err => of(null))
       ).subscribe(
           /* happy path */(roundNumberOut: RoundNumber) => {

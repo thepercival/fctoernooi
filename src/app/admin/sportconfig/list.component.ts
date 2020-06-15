@@ -61,9 +61,6 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
     this.sportConfigs = this.competition.getSportConfigs();
   }
 
-  getNrOfFields(sport: Sport): number {
-    return this.competition.getNrOfFields(sport);
-  }
   // addSport() {
   //   this.linkToEdit(this.tournament);
   // }
@@ -95,7 +92,7 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
     this.sportConfigRepository.removeObject(sportConfig, this.tournament, this.structure)
       .subscribe(
         /* happy path */ refereeRes => {
-          this.planningRepository.create(this.structure.getFirstRoundNumber(), this.tournament).subscribe(
+          this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
             /* happy path */ roundNumberOut => {
               this.setAlert('success', 'de sport is verwijderd');
             },
