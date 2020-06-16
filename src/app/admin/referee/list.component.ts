@@ -78,57 +78,31 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     });
   }
 
-  upgradeRank(referee: Referee) {
-    const downgrade = this.competition.getReferee(referee.getPriority() - 1);
-    referee.setPriority(downgrade.getPriority());
-    downgrade.setPriority(downgrade.getPriority() + 1);
-    // doe sortering en backend
-
-    this.setAlert('info', 'de belangrijkheid van de scheidsrechters wordt gewijzigd');
+  upgradePriority(referee: Referee) {
     this.processing = true;
-
-    const reposUpdates: Observable<Referee>[] = [
-      this.refereeRepository.editObject(referee, this.tournament),
-      this.refereeRepository.editObject(downgrade, this.tournament)
-    ];
-    this.upgradeRankHelper(reposUpdates);
-  }
-
-  protected upgradeRankHelper(reposUpdates: Observable<Referee>[]) {
-    forkJoin(reposUpdates).subscribe(results => {
-      this.referees.sort((refA, refB) => refA.getPriority() - refB.getPriority());
-      this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
-            /* happy path */ roundNumberOut => {
-          this.setAlert('success', 'de belangrijkheid van de scheidsrechters is gewijzigd');
-        },
+    this.refereeRepository.upgradeObject(referee, this.tournament)
+      .subscribe(
+            /* happy path */() => this.updatePlanning(),
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => this.processing = false
       );
-    },
-      err => {
-        this.setAlert('danger', 'de belangrijkheid van de scheidsrechters is niet gewijzigd: ' + err);
-        this.processing = false;
-      }
-    );
   }
 
   removeReferee(referee: Referee) {
-    this.setAlert('info', 'de scheidsrechter wordt verwijderd');
     this.processing = true;
-
     this.refereeRepository.removeObject(referee, this.tournament)
       .subscribe(
-            /* happy path */ refereeRes => {
-          this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
-            /* happy path */ roundNumberOut => {
-              this.processing = false;
-              this.setAlert('success', 'de scheidsrechter is verwijderd');
-            },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => this.processing = false
-          );
-        },
+            /* happy path */ refereeRes => this.updatePlanning(),
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
       );
+  }
+
+  protected updatePlanning() {
+    this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
+            /* happy path */ roundNumberOut => {
+        // this.processing = false;
+      },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+            /* onComplete */() => this.processing = false
+    );
   }
 }

@@ -16,19 +16,13 @@ import { Tournament } from '../../../lib/tournament';
 })
 export class FieldListComponent implements OnInit {
 
-    // public disableEditButtons = false;
-    // fields: Field[];
     alert: IAlert;
     processing: boolean;
     @Input() tournament: Tournament;
     @Input() structure: Structure;
     @Input() sportConfig: SportConfig;
     @Input() hasBegun: boolean;
-
-    // validations: any = {
-    //     'minlengthname': Field.MIN_LENGTH_NAME,
-    //     'maxlengthname': Field.MAX_LENGTH_NAME
-    // };
+    prioritizable: boolean;
 
     constructor(
         private fieldRepository: FieldRepository,
@@ -43,6 +37,7 @@ export class FieldListComponent implements OnInit {
         if (this.hasBegun) {
             this.alert = { type: 'warning', message: 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen en verwijderen' };
         }
+        this.prioritizable = !this.sportConfig.getCompetition().hasMultipleSportConfigs();
         this.processing = false;
     }
 
@@ -71,15 +66,8 @@ export class FieldListComponent implements OnInit {
                 name: resName
             };
             this.fieldRepository.createObject(jsonField, this.sportConfig, this.tournament).subscribe(
-                /* happy path */ fieldRes => {
-                    this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
-                    /* happy path */ roundNumberOut => {
-                            this.processing = false;
-                        },
-                    /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
-                    );
-                },
-            /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
+                /* happy path */(fieldRes) => this.updatePlanning(),
+                /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
             );
         }, (reason) => {
         });
@@ -92,8 +80,7 @@ export class FieldListComponent implements OnInit {
             field.setName(resName);
             this.fieldRepository.editObject(field, this.tournament)
                 .subscribe(
-            /* happy path */ fieldRes => {
-                    },
+            /* happy path */() => { },
             /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
             /* onComplete */() => { this.processing = false; }
                 );
@@ -101,31 +88,32 @@ export class FieldListComponent implements OnInit {
         });
     }
 
+    upgradePriority(field: Field) {
+        this.processing = true;
+        this.fieldRepository.upgradeObject(field, this.tournament)
+            .subscribe(
+            /* happy path */() => this.updatePlanning(),
+            /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
+            );
+    }
+
     removeField(field: Field) {
-        if (this.sportConfig.getFields().length === 1) {
-            this.alert = { type: 'warning', message: 'een sport moet minimaal 1 ' + this.getFieldDescription() + ' houden, verwijder eventueel de sport' };
-            return;
-        }
         this.processing = true;
 
         this.fieldRepository.removeObject(field, this.tournament)
             .subscribe(
-            /* happy path */ fieldRes => {
-                    this.planningRepository.create(this.structure, this.tournament, 1)
-                        .subscribe(
-                        /* happy path */ roundNumberOut => {
-                                this.processing = false;
-                            },
-                /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
-                /* onComplete */() => this.processing = false
-                        );
-                },
+            /* happy path */() => this.updatePlanning(),
             /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
             );
     }
-}
 
-export interface FieldValidations {
-    minlengthname: number;
-    maxlengthname: number;
+    protected updatePlanning() {
+        this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
+            /* happy path */ roundNumberOut => {
+                // this.processing = false;
+            },
+            /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
+            /* onComplete */() => this.processing = false
+        );
+    }
 }

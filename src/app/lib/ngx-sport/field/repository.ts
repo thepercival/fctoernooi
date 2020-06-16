@@ -39,6 +39,21 @@ export class FieldRepository extends APIRepository {
         );
     }
 
+    upgradeObject(field: Field, tournament: Tournament): Observable<void> {
+        const sportConfig = field.getSportConfig();
+        const url = this.getUrl(tournament, sportConfig) + '/' + field.getId() + '/priorityup';
+        return this.http.post(url, undefined, this.getOptions()).pipe(
+            map(() => {
+                const downgrade = sportConfig.getField(field.getPriority() - 1);
+                field.setPriority(downgrade.getPriority());
+                downgrade.setPriority(downgrade.getPriority() + 1);
+                sportConfig.getFields().sort((fieldA, fieldB) => fieldA.getPriority() - fieldB.getPriority());
+            }),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+
     removeObject(field: Field, tournament: Tournament): Observable<void> {
         const sportConfig = field.getSportConfig();
         const url = this.getUrl(tournament, sportConfig) + '/' + field.getId();

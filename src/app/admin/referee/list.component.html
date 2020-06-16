@@ -40,8 +40,8 @@
             </button>
           </td>
           <td class="text-center">
-            <button *ngIf="referee.getRank() > 1" type="button" class="btn btn-sm btn-outline-secondary"
-              [disabled]="processing" (click)="upgradeRank(referee)">
+            <button *ngIf="referee.getPriority() > 1" type="button" class="btn btn-sm btn-outline-secondary"
+              [disabled]="processing" (click)="upgradePriority(referee)">
               <fa-icon [icon]="['fas', 'level-up-alt']"></fa-icon>
             </button>
           </td>

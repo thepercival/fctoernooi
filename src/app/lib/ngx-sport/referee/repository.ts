@@ -40,6 +40,20 @@ export class RefereeRepository extends APIRepository {
         );
     }
 
+    upgradeObject(referee: Referee, tournament: Tournament): Observable<void> {
+        const url = this.getUrl(tournament) + '/' + referee.getId() + '/priorityup';
+        return this.http.post(url, undefined, this.getOptions()).pipe(
+            map(() => {
+                const competition = referee.getCompetition();
+                const downgrade = competition.getReferee(referee.getPriority() - 1);
+                referee.setPriority(downgrade.getPriority());
+                downgrade.setPriority(downgrade.getPriority() + 1);
+                competition.getReferees().sort((refA, refB) => refA.getPriority() - refB.getPriority());
+            }),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
     removeObject(referee: Referee, tournament: Tournament): Observable<void> {
         const url = this.getUrl(tournament) + '/' + referee.getId();
         return this.http.delete(url, this.getOptions()).pipe(
