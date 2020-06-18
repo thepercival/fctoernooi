@@ -23,7 +23,7 @@
 
       <div *ngIf="!processing">
         <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs nav-fill">
-          <li [ngbNavItem]="1">
+          <li [ngbNavItem]="SportConfigTabFields">
             <a ngbNavLink>velden</a>
             <ng-template ngbNavContent>
               <app-tournament-fields [sportConfig]="sportConfig" [hasBegun]="hasBegun" [tournament]="tournament"
@@ -31,7 +31,7 @@
               </app-tournament-fields>
             </ng-template>
           </li>
-          <li [ngbNavItem]="2">
+          <li [ngbNavItem]="SportConfigTabScore">
             <a ngbNavLink>score-regels</a>
             <ng-template ngbNavContent>
               <app-tournament-sportscore-edit [sportConfig]="sportConfig" [hasBegun]="hasBegun"
@@ -39,7 +39,7 @@
               </app-tournament-sportscore-edit>
             </ng-template>
           </li>
-          <li [ngbNavItem]="3">
+          <li [ngbNavItem]="SportConfigTabPoints">
             <a ngbNavLink>puntentelling</a>
             <ng-template ngbNavContent>
               <app-tournament-points-edit [sportConfig]="sportConfig" [hasBegun]="hasBegun" [tournament]="tournament"

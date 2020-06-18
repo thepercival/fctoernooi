@@ -8,7 +8,6 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, forkJoin } from 'rxjs';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 
 @Component({
@@ -72,7 +71,9 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     const activeModal = this.modalService.open(modalContent);
     activeModal.result.then((result) => {
       if (result === 'linkToPlanningConfig') {
-        this.router.navigate(['/admin/planningconfig', this.tournament.getId(), this.structure.getFirstRoundNumber().getNumber()]);
+        this.router.navigate(['/admin/planningconfig', this.tournament.getId(),
+          this.structure.getFirstRoundNumber().getNumber()
+        ]);
       }
     }, (reason) => {
     });

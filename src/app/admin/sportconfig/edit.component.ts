@@ -21,6 +21,7 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { TranslateService } from '../../lib/translate';
+import { SportConfigTabOrder } from '../../shared/tournament/sportconfigtaborder';
 
 @Component({
     selector: 'app-tournament-sportconfig-edit',
@@ -28,12 +29,9 @@ import { TranslateService } from '../../lib/translate';
     styleUrls: ['./edit.component.css']
 })
 export class SportConfigEditComponent extends TournamentComponent implements OnInit {
-
     sportConfig: SportConfig;
-
-    activeTab = 1;
+    activeTab: number;
     hasBegun: boolean;
-
 
     constructor(
         public cssService: CSSService,
@@ -52,6 +50,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
     ngOnInit() {
         this.route.params.subscribe(params => {
             if (params.sportConfigId !== undefined) {
+                this.activeTab = +params.tabId;
                 super.myNgOnInit(() => this.postInit(+params.sportConfigId), false);
             }
         });
@@ -76,6 +75,10 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         }
         this.processing = false;
     }
+
+    get SportConfigTabFields(): number { return SportConfigTabOrder.Fields; }
+    get SportConfigTabScore(): number { return SportConfigTabOrder.Score; }
+    get SportConfigTabPoints(): number { return SportConfigTabOrder.Points; }
 
     // onGetSport(sport?: Sport) {
     //     if (sport === undefined) {
@@ -131,14 +134,14 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         this.myNavigation.back();
     }
 
-    linkToSportConfig() {
+    /*linkToSportConfig() {
         if (!this.competition.hasMultipleSportConfigs()) {
             this.router.navigate(['/admin/sportconfig'
                 , this.tournament.getId(), this.competition.getFirstSportConfig().getId()]);
         } else {
             this.router.navigate(['/admin/sportconfigs', this.tournament.getId()]);
         }
-    }
+    }*/
 
     // openMultiSportsModal(content) {
     //     this.modalService.open(content).result.then((result) => {

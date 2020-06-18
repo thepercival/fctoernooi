@@ -108,7 +108,6 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     changeRoundNumber(roundNumber: RoundNumber) {
         this.roundNumber = roundNumber;
         this.resetForm(roundNumber.getValidPlanningConfig());
-        this.setAlert('info', 'instellingen gelden ook voor volgende ronden');
         if (this.roundNumber.hasBegun()) {
             this.setAlert('warning', 'er zijn wedstrijden gespeeld voor deze ronde, je kunt niet meer wijzigen');
         }

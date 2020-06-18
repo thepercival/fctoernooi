@@ -6,6 +6,7 @@ import { IAlert } from '../../../shared/common/alert';
 import { Tournament } from '../../../lib/tournament';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { SportConfigRepository } from '../../../lib/ngx-sport/sport/config/repository';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-tournament-points-edit',
@@ -37,6 +38,7 @@ export class PointsEditComponent implements OnInit {
     constructor(
         private sportConfigRepository: SportConfigRepository,
         fb: FormBuilder,
+        private router: Router
     ) {
         this.processing = true;
 
@@ -138,8 +140,9 @@ export class PointsEditComponent implements OnInit {
     }
 
     linkToPlanningConfig() {
-        const roundNumber = this.structure.getFirstRoundNumber().getNumber();
-        // this.router.navigate(['/admin/planningconfig', this.tournament.getId(), roundNumber]);
+        this.router.navigate(['/admin/planningconfig', this.tournament.getId(),
+            this.structure.getFirstRoundNumber().getNumber()
+        ]);
     }
 }
 

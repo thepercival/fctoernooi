@@ -26,6 +26,7 @@ import { ScoreRulesComponent } from './sportconfigpoints/info.component';
 import { facStructure, facReferee, facScoreboard } from './icons';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { LockerRoomRepository } from '../../lib/lockerroom/repository';
+import { SportConfigRouter } from './sportconfig.router';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { LockerRoomRepository } from '../../lib/lockerroom/repository';
   providers: [
     FavoritesRepository,
     LockerRoomRepository,
+    SportConfigRouter
   ],
   exports: [
     RoundNumberPlanningComponent,

@@ -2,8 +2,8 @@
   <div class="d-flex mt-3">
     <h2 class="mr-auto">
       <span [innerHTML]="nameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
-      <button *ngIf="refreshingData !== undefined" type="button" class="btn btn-sm btn-outline-secondary ml-1"
-        (click)="refreshData.emit()" [disabled]="refreshingData">
+      <button *ngIf="refreshingData !== undefined && roundNumber.getHasPlanning()" type="button"
+        class="btn btn-sm btn-outline-secondary ml-1" (click)="refreshData.emit()" [disabled]="refreshingData">
         <fa-icon [icon]="['fas', 'sync']" [spin]="refreshingData"></fa-icon>
       </button>
     </h2>
@@ -13,7 +13,7 @@
       <span> filter</span>
     </button>
     <button type="button" class="btn btn-sm btn-primary" *ngIf="hasAdminRole()" (click)="linkToPlanningConfig()">
-      <fa-icon [icon]="['fas', 'cogs']"></fa-icon> ronde instellingen
+      <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellingen
     </button>
   </div>
   <ngb-alert *ngIf="!roundNumber.getHasPlanning()" class="mb-0" type="warning" [dismissible]="false">
@@ -48,24 +48,40 @@
             </span>
             <span *ngIf="!roundNumberNeedsRanking" title="wedstrijd">vs</span>
           </th>
-          <th *ngIf="planningConfig.getEnableTime()" class="pointer text-info" container="body" title="start"
-            placement="right">
-            <button class="btn btn-sm btn-outline-info" (click)="openModal(planningInfo)">
+          <th *ngIf="planningConfig.getEnableTime()">
+            <button *ngIf="userIsAdmin" title="wijzig planningsinstellingen" class="btn btn-sm btn-outline-primary"
+              (click)="linkToPlanningConfig()">
+              <span>start</span>
+            </button>
+            <button *ngIf="!userIsAdmin" class="btn btn-sm btn-outline-info" (click)="openModal(planningInfo)">
               <span>start</span>
             </button>
           </th>
-          <th class="text-center" title="veld">
-            <fa-icon [icon]="['fac', 'soccer-field']"></fa-icon>
+          <th class="text-center">
+            <button *ngIf="userIsAdmin" title="wijzig velden" class="btn btn-sm btn-outline-primary"
+              (click)="linkToSportConfig(SportConfigTabFields)">
+              <fa-icon [icon]="['fac', 'soccer-field']"></fa-icon>
+            </button>
+            <fa-icon *ngIf="!userIsAdmin" title="veld" [icon]="['fac', 'soccer-field']"></fa-icon>
           </th>
           <th class="text-right">thuis</th>
-          <th class="text-center" title="score">
-            <button class="btn btn-sm btn-outline-info" (click)="openModal(scoreInfo)">
+          <th class="text-center">
+            <button *ngIf="userIsAdmin" title="wijzig score-regels" class="btn btn-sm btn-outline-primary"
+              (click)="linkToSportConfig(SportConfigTabScore)">
+              <fa-icon [icon]="['fac', 'scoreboard']"></fa-icon>
+            </button>
+            <button *ngIf="!userIsAdmin" title="score" class="btn btn-sm btn-outline-info"
+              (click)="openModal(scoreInfo)">
               <fa-icon [icon]="['fac', 'scoreboard']"></fa-icon>
             </button>
           </th>
           <th>uit</th>
           <th *ngIf="hasReferees" class="d-none d-sm-table-cell text-right" title="scheidsrechter">
-            <fa-icon [icon]="['fac', 'referee']"></fa-icon>
+            <button *ngIf="userIsAdmin" title="wijzig scheidsrechters" class="btn btn-sm btn-outline-primary"
+              (click)="linkToReferee()">
+              <fa-icon [icon]="['fac', 'referee']"></fa-icon>
+            </button>
+            <fa-icon *ngIf="!userIsAdmin" [icon]="['fac', 'referee']"></fa-icon>
           </th>
         </tr>
       </thead>

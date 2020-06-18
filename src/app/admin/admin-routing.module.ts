@@ -42,8 +42,8 @@ const routes: Routes = [
   { path: 'sponsors/:id', component: SponsorListComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'sponsor/:id/:sponsorId', component: SponsorEditComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'sportconfigs/:id', component: SportConfigListComponent, canActivate: [AuthguardService] }, // ADMIN
-  { path: 'sportconfig/:id/:sportConfigId', component: SportConfigEditComponent, canActivate: [AuthguardService] }, // ADMIN
-  { path: 'sportscore/:id/:sportConfigId', component: SportScoreEditComponent, canActivate: [AuthguardService] }, // ADMIN
+  { path: 'sportconfig/:id/:sportConfigId/:tabId', component: SportConfigEditComponent, canActivate: [AuthguardService] }, // ADMIN
+  { path: 'sportconfig/:id/:sportConfigId/:tabId/:roundNumber', component: SportConfigEditComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'startbreak/:id', component: StartBreakComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'structure/:id', component: StructureEditComponent, canActivate: [AuthguardService] }, // ADMIN
 ];

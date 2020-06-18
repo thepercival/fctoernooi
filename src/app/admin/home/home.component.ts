@@ -14,6 +14,7 @@ import { TranslateService } from '../../lib/translate';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
 import { LockerRoomValidator } from '../../lib/lockerroom/validator';
+import { SportConfigRouter } from '../../shared/tournament/sportconfig.router';
 
 @Component({
     selector: 'app-tournament-admin',
@@ -32,6 +33,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
 
     constructor(
         route: ActivatedRoute,
+        private sportConfigRouter: SportConfigRouter,
         private modalService: NgbModal,
         public cssService: CSSService,
         router: Router,
@@ -293,12 +295,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     linkToSportConfig() {
-        if (!this.competition.hasMultipleSportConfigs()) {
-            this.router.navigate(['/admin/sportconfig'
-                , this.tournament.getId(), this.competition.getFirstSportConfig().getId()]);
-        } else {
-            this.router.navigate(['/admin/sportconfigs', this.tournament.getId()]);
-        }
+        this.sportConfigRouter.navigate(this.tournament);
     }
 
     getCurrentYear() {

@@ -11,7 +11,8 @@ import {
   Round,
   PlanningConfig,
   PlanningPeriod,
-  SportScoreConfig
+  SportScoreConfig,
+  Referee
 } from 'ngx-sport';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -22,6 +23,8 @@ import { Tournament } from '../../../lib/tournament';
 import { PlanningRepository } from '../../../lib/ngx-sport/planning/repository';
 import { PouleRankingModalComponent } from '../poulerankingmodal/rankingmodal.component';
 import { TranslateService } from '../../../lib/translate';
+import { SportConfigTabOrder } from '../sportconfigtaborder';
+import { SportConfigRouter } from '../sportconfig.router';
 
 @Component({
   selector: 'app-tournament-roundnumber-planning',
@@ -55,6 +58,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
 
   constructor(
     private router: Router,
+    public sportConfigRouter: SportConfigRouter,
     private authService: AuthService,
     public nameService: NameService,
     public cssService: CSSService,
@@ -69,7 +73,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     this.translate = new TranslateService();
     this.tournamentBreak = this.tournament.getBreak();
     this.planningConfig = this.roundNumber.getValidPlanningConfig();
-    this.userIsAdmin = this.tournament.getUser(this.authService.getUser())?.hasRoles(Role.GAMERESULTADMIN);
+    this.userIsAdmin = this.tournament.getUser(this.authService.getUser())?.hasRoles(Role.ADMIN);
     this.roundNumberNeedsRanking = this.roundNumber.needsRanking();
     this.hasMultiplePoules = this.roundNumber.getPoules().length > 1;
     this.hasReferees = this.tournament.getCompetition().getReferees().length > 0 || this.planningConfig.getSelfReferee();
@@ -97,6 +101,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
 
   get GameHOME(): boolean { return Game.HOME; }
   get GameAWAY(): boolean { return Game.AWAY; }
+  get SportConfigTabFields(): number { return SportConfigTabOrder.Fields; }
+  get SportConfigTabScore(): number { return SportConfigTabOrder.Score; }
 
   private getGameData() {
     const gameDatas: GameData[] = [];
@@ -195,6 +201,14 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     this.router.navigate(['/admin/planningconfig', this.tournament.getId(), this.roundNumber.getNumber()]);
   }
 
+  linkToSportConfig(tabOrder: SportConfigTabOrder) {
+    this.sportConfigRouter.navigate(this.tournament, tabOrder, this.roundNumber);
+  }
+
+  linkToReferee() {
+    this.router.navigate(['/admin/referees', this.tournament.getId()]);
+  }
+
   showPouleRanking(popOver: NgbPopover, poule: Poule) {
     if (popOver.isOpen()) {
       popOver.close();
@@ -203,7 +217,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
       popOver.open({ poule, tournament });
     }
   }
-
 
   sortGames() {
     this.gameOrder = this.gameOrder ? undefined : Game.ORDER_BY_BATCH;

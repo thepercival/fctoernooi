@@ -4,8 +4,7 @@
             <app-tournament-title [tournament]="tournament">
             </app-tournament-title>
             <h2 *ngIf="!processing">
-                <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellingen
-                <span [innerHTML]="nameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
+                <fa-icon [icon]="['fas', 'cogs']"></fa-icon> planningsinstellingen
             </h2>
             <h2 *ngIf="processing" class="text-center">
                 <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
@@ -108,7 +107,13 @@
                         </label>
                     </div>
                 </div>
-                <div *ngIf="!roundNumber.hasBegun()" class="form-group row justify-content-end">
+                <div *ngIf="!roundNumber.hasBegun()" class="form-group row">
+                    <div class="col-8 d-flex justify-content-end">
+                        <button *ngIf="roundNumber.hasNext() && !roundNumber.getNext().hasBegun()" type="submit"
+                            class="btn btn-outline-primary">
+                            vanaf <span [innerHTML]="nameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
+                        </button>
+                    </div>
                     <div class="col-4">
                         <button type="submit" class="btn btn-primary" [disabled]="form.invalid">opslaan</button>
                     </div>
