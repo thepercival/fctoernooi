@@ -1,28 +1,20 @@
 <div class="modal-header">
-  <h4 class="modal-title">kies rondes</h4>
+  <h4 class="modal-title">vanaf-ronde kiezen</h4>
   <button type="button" class="close" aria-label="sluiten" (click)="activeModal.dismiss('cancel')">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body">
-  <h5 class="mb-3">Voor welke rondes wil je de score-regels wijzigen?</h5>
-  <form *ngIf="!processing" name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
-    <div *ngFor="let roundNumber of structure.getRoundNumbers()" class="form-group row">
-      <label for="rn{{roundNumber.getNumber()}}" class="col-9 col-form-label">
-        <span [innerHTML]="nameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
-      </label>
-      <div class="form-check col-3">
-        <label class="custom-control custom-checkbox col-form-label pl-0">
-          <input type="checkbox" class="custom-control-input form-check-input"
-            formControlName="rn{{roundNumber.getNumber()}}">
-          <span class="custom-control-indicator"></span>
-        </label>
-      </div>
-    </div>
-  </form>
-  <ngb-alert *ngIf="allDeselected()" type="info" [dismissible]="false">kies minimaal 1 rondenummer</ngb-alert>
+  <h5 *ngIf="subject" class="mb-3">Voor welke rondes wil je {{subject}} wijzigen?</h5>
+  <ul class="list-group">
+    <li *ngFor="let roundNumber of structure.getRoundNumbers()" class="list-group-item border-primary pointer"
+      (click)="activeModal.close(roundNumber)">
+      <span [innerHTML]="nameService.getRoundNumbersName( roundNumber ) | keepHtml"></span>
+      <span *ngIf="roundNumber.hasBegun()" class="badge badge-warning ml-1" pull="left">begonnen</span>
+      <fa-icon [icon]="['fas', 'dot-circle']" class="text-primary" pull="right"></fa-icon>
+    </li>
+  </ul>
 </div>
-<div class="modal-footer">
-  <button type="button" class="btn btn-outline-primary" [disabled]="allDeselected()"
-    (click)="activeModal.close(getSelectedRoundNumber())">doorgaan</button>
+<div class="modal-footer border-top-0">
+
 </div>

@@ -33,7 +33,7 @@ const routes: Routes = [
   { path: 'game/:id/:gameId', component: GameEditComponent, canActivate: [AuthguardService] }, // GAMERESULTADMIN
   { path: 'fields/:id', component: FieldListComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'lockerrooms/:id', component: LockerRoomsComponent, canActivate: [AuthguardService] }, // ADMIN
-  { path: 'planningconfig/:id/:roundNumber', component: PlanningConfigComponent, canActivate: [AuthguardService] }, // ADMIN
+  { path: 'planningconfig/:id/:startRoundNumber', component: PlanningConfigComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'referees/:id', component: RefereeListComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'referee/:id/:rank', component: RefereeEditComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'referees/:id', component: RefereeListComponent, canActivate: [AuthguardService] }, // ADMIN
@@ -43,7 +43,7 @@ const routes: Routes = [
   { path: 'sponsor/:id/:sponsorId', component: SponsorEditComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'sportconfigs/:id', component: SportConfigListComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'sportconfig/:id/:sportConfigId/:tabId', component: SportConfigEditComponent, canActivate: [AuthguardService] }, // ADMIN
-  { path: 'sportconfig/:id/:sportConfigId/:tabId/:roundNumber', component: SportConfigEditComponent, canActivate: [AuthguardService] }, // ADMIN
+  { path: 'sportconfig/:id/:sportConfigId/:tabId/:startRoundNumber', component: SportConfigEditComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'startbreak/:id', component: StartBreakComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'structure/:id', component: StructureEditComponent, canActivate: [AuthguardService] }, // ADMIN
 ];

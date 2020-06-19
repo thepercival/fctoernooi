@@ -26,8 +26,8 @@
   <div *ngIf="roundNumber.getHasPlanning()">
     <table class="table">
       <colgroup>
-        <col *ngIf="roundNumberNeedsRanking">
-        <col *ngIf="!roundNumberNeedsRanking">
+        <col *ngIf="needsRanking">
+        <col *ngIf="!needsRanking">
         <col *ngIf="planningConfig.getEnableTime()">
         <col>
         <col>
@@ -37,36 +37,43 @@
       </colgroup>
       <thead>
         <tr>
+          <!-- poule -->
           <th class="text-center">
-            <button *ngIf="roundNumberNeedsRanking && hasMultiplePoules" type="button"
+            <button *ngIf="needsRanking && hasMultiplePoules" type="button"
               class="btn btn-sm btn-outline-{{ gameOrder ? 'secondary' : 'primary' }}" (click)="sortGames()">
               <fa-icon [icon]="['fas', 'list-ul']" title="poule">
               </fa-icon>
             </button>
-            <span *ngIf="roundNumberNeedsRanking && !hasMultiplePoules">
+            <span *ngIf="needsRanking && !hasMultiplePoules">
               <fa-icon [icon]="['fas', 'list-ul']" title="poule"></fa-icon>
             </span>
-            <span *ngIf="!roundNumberNeedsRanking" title="wedstrijd">vs</span>
+            <span *ngIf="!needsRanking" title="wedstrijd">vs</span>
           </th>
+          <!-- start -->
           <th *ngIf="planningConfig.getEnableTime()">
-            <button *ngIf="userIsAdmin" title="wijzig planningsinstellingen" class="btn btn-sm btn-outline-primary"
-              (click)="linkToPlanningConfig()">
+            <button *ngIf="userIsAdmin && !hasBegun" title="wijzig planningsinstellingen"
+              class="btn btn-sm btn-outline-primary" (click)="linkToPlanningConfig()">
               <span>start</span>
             </button>
-            <button *ngIf="!userIsAdmin" class="btn btn-sm btn-outline-info" (click)="openModal(planningInfo)">
+            <button *ngIf="!userIsAdmin || hasBegun" class="btn btn-sm btn-outline-info"
+              (click)="openModal(planningInfo)">
               <span>start</span>
             </button>
           </th>
+          <!-- field -->
           <th class="text-center">
-            <button *ngIf="userIsAdmin" title="wijzig velden" class="btn btn-sm btn-outline-primary"
+            <button *ngIf="userIsAdmin" title="wijzig velden"
+              class="btn btn-sm btn-outline-{{tournamentHasBegun ? 'warning' : 'primary'}}"
               (click)="linkToSportConfig(SportConfigTabFields)">
               <fa-icon [icon]="['fac', 'soccer-field']"></fa-icon>
             </button>
             <fa-icon *ngIf="!userIsAdmin" title="veld" [icon]="['fac', 'soccer-field']"></fa-icon>
           </th>
           <th class="text-right">thuis</th>
+          <!-- score -->
           <th class="text-center">
-            <button *ngIf="userIsAdmin" title="wijzig score-regels" class="btn btn-sm btn-outline-primary"
+            <button *ngIf="userIsAdmin" title="wijzig score-regels"
+              class="btn btn-sm btn-outline-{{hasBegun ? 'warning' : 'primary'}}"
               (click)="linkToSportConfig(SportConfigTabScore)">
               <fa-icon [icon]="['fac', 'scoreboard']"></fa-icon>
             </button>
@@ -76,9 +83,10 @@
             </button>
           </th>
           <th>uit</th>
+          <!-- referee -->
           <th *ngIf="hasReferees" class="d-none d-sm-table-cell text-right" title="scheidsrechter">
-            <button *ngIf="userIsAdmin" title="wijzig scheidsrechters" class="btn btn-sm btn-outline-primary"
-              (click)="linkToReferee()">
+            <button *ngIf="userIsAdmin" title="wijzig scheidsrechters"
+              class="btn btn-sm btn-outline-{{tournamentHasBegun ? 'warning' : 'primary'}}" (click)="linkToReferee()">
               <fa-icon [icon]="['fac', 'referee']"></fa-icon>
             </button>
             <fa-icon *ngIf="!userIsAdmin" [icon]="['fac', 'referee']"></fa-icon>

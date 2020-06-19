@@ -49,9 +49,11 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   gameOrder = Game.ORDER_BY_BATCH;
   filterEnabled = false;
   hasReferees: boolean;
+  hasBegun: boolean;
+  tournamentHasBegun: boolean;
   gameDatas: GameData[];
   private sportScoreConfigService: SportScoreConfigService;
-  roundNumberNeedsRanking: boolean;
+  needsRanking: boolean;
   hasMultiplePoules: boolean;
   planningConfig: PlanningConfig;
   translate = new TranslateService();
@@ -74,9 +76,11 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     this.tournamentBreak = this.tournament.getBreak();
     this.planningConfig = this.roundNumber.getValidPlanningConfig();
     this.userIsAdmin = this.tournament.getUser(this.authService.getUser())?.hasRoles(Role.ADMIN);
-    this.roundNumberNeedsRanking = this.roundNumber.needsRanking();
+    this.needsRanking = this.roundNumber.needsRanking();
     this.hasMultiplePoules = this.roundNumber.getPoules().length > 1;
     this.hasReferees = this.tournament.getCompetition().getReferees().length > 0 || this.planningConfig.getSelfReferee();
+    this.hasBegun = this.roundNumber.hasBegun();
+    this.tournamentHasBegun = this.roundNumber.getFirst().hasBegun();
     this.reloadGameData();
   }
 

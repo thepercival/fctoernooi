@@ -19,6 +19,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { PlanningConfigRepository } from '../../lib/ngx-sport/planning/config/repository';
 import { Tournament } from '../../lib/tournament';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalRoundNumbersComponent } from '../roundnumber/selector.component';
 
 @Component({
     selector: 'app-planningconfig-edit',
@@ -28,7 +30,7 @@ import { Tournament } from '../../lib/tournament';
 export class PlanningConfigComponent extends TournamentComponent implements OnInit {
 
     ranges: any = {};
-    roundNumber: RoundNumber;
+    startRoundNumber: RoundNumber;
     form: FormGroup;
     private structureService: StructureService;
     validations: PlanningConfigValidations = {
@@ -48,6 +50,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         private myNavigation: MyNavigation,
         private planningRepository: PlanningRepository,
         private sportService: SportService,
+        private modalService: NgbModal,
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, sructureRepository);
@@ -94,21 +97,22 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     ngOnInit() {
         this.route.params.subscribe(params => {
-            super.myNgOnInit(() => this.initConfig(+params.roundNumber));
+            super.myNgOnInit(() => this.initConfig(+params.startRoundNumber));
         });
     }
 
-    initConfig(roundNumberAsValue: number) {
-        const roundNumber = this.structure.getRoundNumber(roundNumberAsValue);
-        this.changeRoundNumber(roundNumber);
+    initConfig(startRoundNumberAsValue: number) {
+        const startRoundNumber = this.structure.getRoundNumber(startRoundNumberAsValue);
+        this.changeStartRoundNumber(startRoundNumber);
         this.initRanges();
         this.processing = false;
     }
 
-    changeRoundNumber(roundNumber: RoundNumber) {
-        this.roundNumber = roundNumber;
-        this.resetForm(roundNumber.getValidPlanningConfig());
-        if (this.roundNumber.hasBegun()) {
+    changeStartRoundNumber(startRoundNumber: RoundNumber) {
+        this.startRoundNumber = startRoundNumber;
+        this.resetForm(startRoundNumber.getValidPlanningConfig());
+        this.resetAlert();
+        if (this.startRoundNumber.hasBegun()) {
             this.setAlert('warning', 'er zijn wedstrijden gespeeld voor deze ronde, je kunt niet meer wijzigen');
         }
     }
@@ -145,8 +149,9 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.form.controls.teamup.setValue(this.isTeamupAvailable() && config.getTeamup());
         this.form.controls.selfReferee.setValue(this.isSelfRefereeAvailable() && config.getSelfReferee());
 
-        if (this.roundNumber.hasBegun()) {
+        if (this.startRoundNumber.hasBegun()) {
             Object.keys(this.form.controls).forEach(key => {
+                console.log('disable ' + key);
                 this.form.controls[key].disable();
             });
         } else {
@@ -183,8 +188,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             return false;
         }
 
-        const nrOfPlaces = this.roundNumber.getNrOfPlaces();
-        const nrOfPoules = this.roundNumber.getPoules().length;
+        const nrOfPlaces = this.startRoundNumber.getNrOfPlaces();
+        const nrOfPoules = this.startRoundNumber.getPoules().length;
         const flooredNrOfPoulePlaces = this.structureService.getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules, true);
         const ceiledNrOfPoulePlaces = this.structureService.getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules, false);
         if (flooredNrOfPoulePlaces < PlanningConfig.TEAMUP_MIN
@@ -198,7 +203,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     isSelfRefereeAvailable(): boolean {
-        return this.roundNumber.getNrOfPlaces() >= this.getNrOfPlacesPerGame();
+        return this.startRoundNumber.getNrOfPlaces() >= this.getNrOfPlacesPerGame();
     }
 
     private needsRecreating(config: PlanningConfig): boolean {
@@ -235,8 +240,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             selfReferee: this.form.controls.selfReferee.disabled ? false : this.form.value['selfReferee'],
             nrOfHeadtohead: this.form.value['nrOfHeadtohead']
         };
-        if (this.roundNumber.getPlanningConfig() !== undefined) {
-            this.edit(jsonConfig, this.roundNumber.getPlanningConfig());
+        if (this.startRoundNumber.getPlanningConfig() !== undefined) {
+            this.edit(jsonConfig, this.startRoundNumber.getPlanningConfig());
         } else {
             this.add(jsonConfig);
         }
@@ -247,7 +252,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.setAlert('info', 'instellingen worden opgeslagen');
         this.processing = true;
 
-        this.configRepository.createObject(jsonConfig, this.roundNumber, this.tournament)
+        this.configRepository.createObject(jsonConfig, this.startRoundNumber, this.tournament)
             .subscribe(
                 /* happy path */ configRes => {
                     this.savePlanning(true, false);
@@ -283,7 +288,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     private savePlanning(needsRecreating: boolean, needsRescheduling: boolean) {
         if (needsRecreating) {
-            this.planningRepository.create(this.structure, this.tournament, this.roundNumber.getNumber())
+            this.planningRepository.create(this.structure, this.tournament, this.startRoundNumber.getNumber())
                 .subscribe(
                     /* happy path */ roundNumberOut => {
                         this.setAlert('success', 'de instellingen zijn opgeslagen');
@@ -295,7 +300,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
                     /* onComplete */() => this.processing = false
                 );
         } else if (needsRescheduling) {
-            this.planningRepository.reschedule(this.roundNumber, this.tournament)
+            this.planningRepository.reschedule(this.startRoundNumber, this.tournament)
                 .subscribe(
                     /* happy path */ gamesRes => {
                         this.setAlert('success', 'de instellingen zijn opgeslagen');
@@ -310,6 +315,15 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             this.processing = false;
             this.setAlert('success', 'de instellingen zijn opgeslagen');
         }
+    }
+
+    openModalSelectStartRoundNumber() {
+        const modalRef = this.modalService.open(ModalRoundNumbersComponent);
+        modalRef.componentInstance.structure = this.structure;
+        modalRef.componentInstance.subject = 'de score-regels';
+        modalRef.result.then((startRoundNumber: RoundNumber) => {
+            this.changeStartRoundNumber(startRoundNumber);
+        }, (reason) => { });
     }
 }
 

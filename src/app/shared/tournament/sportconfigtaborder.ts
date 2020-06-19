@@ -1,3 +1,3 @@
 export enum SportConfigTabOrder {
-    Fields, Score, Points
+    Fields = 1, Score = 2, Points = 3
 }

@@ -66,7 +66,7 @@
                             formControlName="minutesBetweenGames" maxlength="2" class="form-control" />
                     </div>
                 </div>
-                <div *ngIf="form.value['enableTime'] && roundNumber.hasNext()" class="form-group row">
+                <div *ngIf="form.value['enableTime'] && startRoundNumber.hasNext()" class="form-group row">
                     <label for="minutesAfterNoAction" class="col-8 col-form-label pointer" container="body"
                         placement="top"
                         ngbPopover="minuten tussen einde van deze ronde en het begin van de volgende ronde">minuten
@@ -107,14 +107,14 @@
                         </label>
                     </div>
                 </div>
-                <div *ngIf="!roundNumber.hasBegun()" class="form-group row">
+                <div class="form-group row">
                     <div class="col-8 d-flex justify-content-end">
-                        <button *ngIf="roundNumber.hasNext() && !roundNumber.getNext().hasBegun()" type="submit"
-                            class="btn btn-outline-primary">
-                            vanaf <span [innerHTML]="nameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
+                        <button *ngIf="startRoundNumber.hasNext() || startRoundNumber.hasPrevious()" type="button"
+                            (click)="openModalSelectStartRoundNumber()" class="btn btn-outline-primary">
+                            <span [innerHTML]="nameService.getRoundNumbersName( startRoundNumber ) | keepHtml"></span>
                         </button>
                     </div>
-                    <div class="col-4">
+                    <div *ngIf="!startRoundNumber.hasBegun()" class="col-4">
                         <button type="submit" class="btn btn-primary" [disabled]="form.invalid">opslaan</button>
                     </div>
                 </div>

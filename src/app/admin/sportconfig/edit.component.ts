@@ -1,25 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    Sport,
     SportConfig,
     SportConfigService,
-    SportCustom,
-    SportScoreConfigService,
-    JsonField,
-    SportMapper,
+    RoundNumber,
 } from 'ngx-sport';
-import { forkJoin } from 'rxjs';
 import { CSSService } from '../../shared/common/cssservice';
 import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
-import { SportConfigRepository } from '../../lib/ngx-sport/sport/config/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
-import { FieldRepository } from '../../lib/ngx-sport/field/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { TranslateService } from '../../lib/translate';
 import { SportConfigTabOrder } from '../../shared/tournament/sportconfigtaborder';
 
@@ -32,6 +23,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
     sportConfig: SportConfig;
     activeTab: number;
     hasBegun: boolean;
+    startRoundNumber: RoundNumber;
 
     constructor(
         public cssService: CSSService,
@@ -40,9 +32,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         public sportConfigService: SportConfigService,
-        private myNavigation: MyNavigation,
-        fb: FormBuilder,
-        private modalService: NgbModal
+        private myNavigation: MyNavigation
     ) {
         super(route, router, tournamentRepository, structureRepository);
     }
@@ -51,7 +41,7 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         this.route.params.subscribe(params => {
             if (params.sportConfigId !== undefined) {
                 this.activeTab = +params.tabId;
-                super.myNgOnInit(() => this.postInit(+params.sportConfigId), false);
+                super.myNgOnInit(() => this.postInit(+params.sportConfigId, +params.startRoundNumber), false);
             }
         });
     }
@@ -63,10 +53,12 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
         return this.competition.getSportConfigs().find(sportConfig => id === sportConfig.getId());
     }
 
-    private postInit(id: number) {
+    private postInit(id: number, startRoundNumber: number) {
         this.hasBegun = this.structure.getRootRound().hasBegun();
-        if (this.hasBegun) {
-            this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
+        console.log(this.activeTab);
+        if (this.activeTab === this.SportConfigTabScore) {
+            this.startRoundNumber = this.structure.getRoundNumber(startRoundNumber)
+            console.log(this.startRoundNumber);
         }
         this.sportConfig = this.getSportConfigById(id);
         if (this.sportConfig === undefined) {

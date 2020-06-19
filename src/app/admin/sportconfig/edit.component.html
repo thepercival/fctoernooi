@@ -34,8 +34,8 @@
           <li [ngbNavItem]="SportConfigTabScore">
             <a ngbNavLink>score-regels</a>
             <ng-template ngbNavContent>
-              <app-tournament-sportscore-edit [sportConfig]="sportConfig" [hasBegun]="hasBegun"
-                [tournament]="tournament" [structure]="structure">
+              <app-tournament-sportscore-edit [sportConfig]="sportConfig" [tournament]="tournament"
+                [structure]="structure" [startRoundNumber]="startRoundNumber">
               </app-tournament-sportscore-edit>
             </ng-template>
           </li>
@@ -45,7 +45,6 @@
               <app-tournament-points-edit [sportConfig]="sportConfig" [hasBegun]="hasBegun" [tournament]="tournament"
                 [structure]="structure">
               </app-tournament-points-edit>
-              <!-- <app-sportconfig-points-info [roundNumber]="poule.getRound().getNumber()"></app-sportconfig-points-info> -->
             </ng-template>
           </li>
         </ul>

@@ -5,22 +5,16 @@ import {
     Sport,
     SportConfig,
     SportConfigService,
-    SportCustom,
-    SportScoreConfigService,
-    JsonField,
+    NameService,
     SportScoreConfig,
     RoundNumber,
     JsonSportScoreConfig,
     SportMapper,
     Structure,
 } from 'ngx-sport';
-import { forkJoin } from 'rxjs';
 import { CSSService } from '../../shared/common/cssservice';
 import { MyNavigation } from '../../shared/common/navigation';
-import { TournamentRepository } from '../../lib/tournament/repository';
-import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
-import { TournamentComponent } from '../../shared/tournament/component';
-import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '../../lib/translate';
 import { SportScoreConfigRepository } from '../../lib/ngx-sport/sport/scoreconfig/repository';
 import { ModalRoundNumbersComponent } from '../roundnumber/selector.component';
@@ -39,12 +33,12 @@ export class SportScoreEditComponent implements OnInit {
     @Input() tournament: Tournament;
     @Input() structure: Structure;
     @Input() sportConfig: SportConfig;
-    @Input() hasBegun: boolean;
+    @Input() startRoundNumber: RoundNumber;
+    public hasBegun: boolean;
 
     form: FormGroup;
     translateService: TranslateService;
     scoreConfig: SportScoreConfig;
-    roundNumber: RoundNumber;
 
     validations: SportScoreValidations = {
         minScore: 0,
@@ -56,6 +50,7 @@ export class SportScoreEditComponent implements OnInit {
         public cssService: CSSService,
         private myNavigation: MyNavigation,
         public sportConfigService: SportConfigService,
+        public nameService: NameService,
         private sportMapper: SportMapper,
         fb: FormBuilder,
         private modalService: NgbModal
@@ -69,22 +64,21 @@ export class SportScoreEditComponent implements OnInit {
                 Validators.max(this.validations.maxScore)
             ])]
         });
+        this.onChanges();
     }
 
     ngOnInit() {
-        if (this.structure.getFirstRoundNumber().hasNext()) {
-            this.openModal();
-        } else {
-            this.setScoreConfig();
-        }
+        this.changeStartRoundNumber(this.startRoundNumber);
     }
 
-    setScoreConfig(roundNumber?: RoundNumber) {
-        if (roundNumber === undefined) {
-            roundNumber = this.structure.getFirstRoundNumber();
+    changeStartRoundNumber(startRoundNumber?: RoundNumber) {
+        this.alert = undefined;
+        if (startRoundNumber === undefined) {
+            startRoundNumber = this.structure.getFirstRoundNumber();
         }
-        this.roundNumber = roundNumber;
-        this.scoreConfig = roundNumber.getValidSportScoreConfig(this.sportConfig.getSport());
+        this.startRoundNumber = startRoundNumber;
+        this.hasBegun = this.startRoundNumber.hasBegun();
+        this.scoreConfig = startRoundNumber.getValidSportScoreConfig(this.sportConfig.getSport());
 
         this.form.controls.max.setValue(this.scoreConfig.getMaximum());
         if (this.scoreConfig.hasNext()) {
@@ -98,15 +92,14 @@ export class SportScoreEditComponent implements OnInit {
                 ])
             ));
         }
-        if (this.roundNumber.hasBegun()) {
-            Object.keys(this.form.controls).forEach(key => {
-                this.form.controls[key].disable();
-            });
+
+        if (this.hasBegun) {
             this.alert = { type: 'warning', message: 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen' };
-        } else {
-            this.alert = { type: 'info', message: 'instellingen gelden ook voor x-ste ronde en verder' };
-            this.onChanges();
         }
+        Object.keys(this.form.controls).forEach(key => {
+            const control = this.form.controls[key];
+            this.hasBegun ? control.disable() : control.enable();
+        });
 
         this.processing = false;
     }
@@ -127,16 +120,17 @@ export class SportScoreEditComponent implements OnInit {
         });
     }
 
-    openModal() {
+    openModalSelectStartRoundNumber() {
         const modalRef = this.modalService.open(ModalRoundNumbersComponent);
         modalRef.componentInstance.structure = this.structure;
-        modalRef.result.then((roundNumber: RoundNumber) => {
-            this.setScoreConfig(roundNumber);
-        }, (reason) => { this.setScoreConfig(); });
+        modalRef.componentInstance.subject = 'de score-regels';
+        modalRef.result.then((startRoundNumber: RoundNumber) => {
+            this.changeStartRoundNumber(startRoundNumber);
+        }, (reason) => { });
     }
 
     save(): boolean {
-        const scoreConfig = this.roundNumber.getSportScoreConfig(this.sportConfig.getSport());
+        const scoreConfig = this.startRoundNumber.getSportScoreConfig(this.sportConfig.getSport());
         if (scoreConfig === undefined) {
             return this.add();
         }
@@ -167,7 +161,7 @@ export class SportScoreEditComponent implements OnInit {
         const sport = this.sportConfig.getSport();
         const json = this.getJson(sport);
 
-        this.sportScoreConfigRepository.createObject(json, sport, this.roundNumber, this.tournament)
+        this.sportScoreConfigRepository.createObject(json, sport, this.startRoundNumber, this.tournament)
             .subscribe(
         /* happy path */ sportConfigRes => {
                     this.myNavigation.back();

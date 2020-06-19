@@ -37,11 +37,16 @@
         formControlName="max" maxlength="2" class="form-control" />
     </div>
   </div>
-  <div *ngIf="!roundNumber.hasBegun()" class="form-group row justify-content-end">
-    <div class="col-5">
-      <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
-        <span>opslaan</span>
+  <div class="form-group row">
+    <div class="col-7 d-flex justify-content-end">
+      <button *ngIf="startRoundNumber.hasNext() || startRoundNumber.hasPrevious()" type="button"
+        (click)="openModalSelectStartRoundNumber()" class="btn btn-outline-primary">
+        <span [innerHTML]="nameService.getRoundNumbersName( startRoundNumber ) | keepHtml"></span>
       </button>
     </div>
+    <div *ngIf="!hasBegun" class="col-5">
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">opslaan</button>
+    </div>
   </div>
+
 </form>
