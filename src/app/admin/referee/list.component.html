@@ -18,7 +18,7 @@
       <thead>
         <tr>
           <th></th>
-          <th class="text-center">
+          <th *ngIf="!hasBegun" class="text-center">
             <fa-icon *ngIf="competition.getReferees().length > 1" [icon]="['fas', 'sort']"></fa-icon>
           </th>
           <th>initialen</th>
@@ -39,7 +39,7 @@
               <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
             </button>
           </td>
-          <td class="text-center">
+          <td *ngIf="!hasBegun" class="text-center">
             <button *ngIf="referee.getPriority() > 1" type="button" class="btn btn-sm btn-outline-secondary"
               [disabled]="processing" (click)="upgradePriority(referee)">
               <fa-icon [icon]="['fas', 'level-up-alt']"></fa-icon>
@@ -89,7 +89,7 @@
     </ul>
   </div>
   <div class="modal-footer justify-content-reverse border-top-0">
-    <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
+    <button type="submit" *ngIf="firstRoundNumberNotBegun" class="btn btn-outline-secondary" data-dismiss="modal"
       (click)="modal.close('linkToPlanningConfig')">naar wedstrijdplanning</button>
     <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
       (click)="modal.dismiss('close')">sluiten</button>

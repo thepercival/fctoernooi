@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Referee } from 'ngx-sport';
+import { Referee, RoundNumber } from 'ngx-sport';
 
 import { IAlert } from '../../shared/common/alert';
 import { RefereeRepository } from '../../lib/ngx-sport/referee/repository';
@@ -20,6 +20,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   public selfReferee: boolean;
   alertSelfReferee: IAlert;
   hasBegun: boolean;
+  firstRoundNumberNotBegun: RoundNumber;
 
   validations: any = {
     'minlengthname': Referee.MIN_LENGTH_NAME,
@@ -33,7 +34,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     private refereeRepository: RefereeRepository,
-    private planningRepository: PlanningRepository
+    private planningRepository: PlanningRepository,
   ) {
     super(route, router, tournamentRepository, sructureRepository);
   }
@@ -44,7 +45,9 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
 
   initReferees() {
     this.createRefereesList();
-    this.hasBegun = this.structure.getRootRound().hasBegun();
+
+    this.firstRoundNumberNotBegun = this.getFirstRoundNumberNotBegun(this.structure.getFirstRoundNumber());
+    this.hasBegun = this.firstRoundNumberNotBegun === undefined;
     if (this.hasBegun) {
       this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen en verwijderen');
     }
@@ -71,12 +74,26 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     const activeModal = this.modalService.open(modalContent);
     activeModal.result.then((result) => {
       if (result === 'linkToPlanningConfig') {
+        let firstRoundNumberNotBegun = this.getFirstRoundNumberNotBegun(this.structure.getFirstRoundNumber());
+        if (firstRoundNumberNotBegun === undefined) {
+          firstRoundNumberNotBegun = this.structure.getFirstRoundNumber()
+        }
         this.router.navigate(['/admin/planningconfig', this.tournament.getId(),
-          this.structure.getFirstRoundNumber().getNumber()
+          firstRoundNumberNotBegun.getNumber()
         ]);
       }
     }, (reason) => {
     });
+  }
+
+  getFirstRoundNumberNotBegun(roundNumber?: RoundNumber): RoundNumber {
+    if (!roundNumber.hasBegun()) {
+      return roundNumber;
+    }
+    if (!roundNumber.hasNext()) {
+      return undefined;
+    }
+    return this.getFirstRoundNumberNotBegun(roundNumber.getNext());
   }
 
   upgradePriority(referee: Referee) {

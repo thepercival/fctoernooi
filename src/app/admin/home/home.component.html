@@ -81,17 +81,6 @@
             </p>
           </div>
         </div>
-        <div *ngIf="structure.getRootRound().hasBegun()" class="card border-secondary pointer mt-3 mx-2"
-          [routerLink]="['/public/ranking', tournament.getId()]">
-          <div class="card-body">
-            <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> standen
-            </h5>
-            <p class="card-text">
-              poule- en eindstanden
-            </p>
-          </div>
-        </div>
         <div *ngIf="isAdmin()" class="card border-secondary pointer mt-3 mx-2" (click)="linkToSportConfig()">
           <div class="card-body">
             <h5 *ngIf="!competition.hasMultipleSportConfigs()" class="card-title text-truncate">
@@ -102,7 +91,7 @@
               <span>sporten</span>
             </h5>
             <p class="card-text">
-              {{getFieldsDescription()}}, punten en score
+              {{getNrOfFieldsDescription()}}, punten en score
             </p>
           </div>
         </div>
@@ -113,6 +102,17 @@
               <fa-icon [icon]="['fac', 'referee']"></fa-icon> scheidsrechters
             </h5>
             <p class="card-text">{{getNrOfRefereesDescription()}}</p>
+          </div>
+        </div>
+        <div *ngIf="structure.getRootRound().hasBegun()" class="card border-secondary pointer mt-3 mx-2"
+          [routerLink]="['/public/ranking', tournament.getId()]">
+          <div class="card-body">
+            <h5 class="card-title">
+              <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> standen
+            </h5>
+            <p class="card-text">
+              poule- en eindstanden
+            </p>
           </div>
         </div>
         <div *ngIf="isAdmin()" class="card border-secondary pointer mt-3 mx-2"

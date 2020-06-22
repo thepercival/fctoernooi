@@ -31,6 +31,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     ranges: any = {};
     startRoundNumber: RoundNumber;
+    hasBegun: boolean;
     form: FormGroup;
     private structureService: StructureService;
     validations: PlanningConfigValidations = {
@@ -110,9 +111,10 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     changeStartRoundNumber(startRoundNumber: RoundNumber) {
         this.startRoundNumber = startRoundNumber;
+        this.hasBegun = this.startRoundNumber.hasBegun()
         this.resetForm(startRoundNumber.getValidPlanningConfig());
         this.resetAlert();
-        if (this.startRoundNumber.hasBegun()) {
+        if (this.hasBegun) {
             this.setAlert('warning', 'er zijn wedstrijden gespeeld voor deze ronde, je kunt niet meer wijzigen');
         }
     }
@@ -149,20 +151,18 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.form.controls.teamup.setValue(this.isTeamupAvailable() && config.getTeamup());
         this.form.controls.selfReferee.setValue(this.isSelfRefereeAvailable() && config.getSelfReferee());
 
-        if (this.startRoundNumber.hasBegun()) {
-            Object.keys(this.form.controls).forEach(key => {
-                console.log('disable ' + key);
-                this.form.controls[key].disable();
-            });
-        } else {
-            this.enableDisableTeamup();
-            this.enableDisableSelfReferee();
-        }
+        Object.keys(this.form.controls).forEach(key => {
+            const control = this.form.controls[key];
+            this.hasBegun ? control.disable() : control.enable();
+        });
+
+        this.enableDisableTeamup();
+        this.enableDisableSelfReferee();
     }
 
     enableDisableTeamup() {
         if (this.isTeamupAvailable()) {
-            if (this.form.controls.teamup.disabled) {
+            if (this.form.controls.teamup.disabled && !this.hasBegun) {
                 this.form.controls.teamup.enable();
             }
         } else if (this.form.controls.teamup.disabled === false) {
@@ -172,7 +172,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     enableDisableSelfReferee() {
         if (this.isSelfRefereeAvailable()) {
-            if (this.form.controls.selfReferee.disabled) {
+            if (this.form.controls.selfReferee.disabled && !this.hasBegun) {
                 this.form.controls.selfReferee.enable();
             }
         } else if (this.form.controls.selfReferee.disabled === false) {

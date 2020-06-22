@@ -55,10 +55,8 @@ export class SportConfigEditComponent extends TournamentComponent implements OnI
 
     private postInit(id: number, startRoundNumber: number) {
         this.hasBegun = this.structure.getRootRound().hasBegun();
-        console.log(this.activeTab);
         if (this.activeTab === this.SportConfigTabScore) {
-            this.startRoundNumber = this.structure.getRoundNumber(startRoundNumber)
-            console.log(this.startRoundNumber);
+            this.startRoundNumber = this.structure.getRoundNumber(startRoundNumber);
         }
         this.sportConfig = this.getSportConfigById(id);
         if (this.sportConfig === undefined) {

@@ -282,7 +282,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
             let counter = 0;
             this.scoreControls.forEach(scoreControl => {
                 const scoreHomeAway = scoreControl.getScore();
-                const newGameScore = new GameScore(this.game, scoreHomeAway.getHome(), scoreHomeAway.getAway(), this.getPhase(), ++counter);
+                new GameScore(this.game, +scoreHomeAway.getHome(), +scoreHomeAway.getAway(), this.getPhase(), ++counter);
             });
         }
     }

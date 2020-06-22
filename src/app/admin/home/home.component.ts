@@ -118,11 +118,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     getNrOfFieldsDescription() {
-        const nrOfFields = this.competition.getFields().length;
-        if (nrOfFields === 1) {
-            return '1 ' + this.getFieldDescription();
-        }
-        return nrOfFields + ' ' + this.getFieldsDescription();
+        return this.getFieldsDescription() + '( ' + this.competition.getFields().length + ' )';
     }
 
     getNrOfRefereesDescription() {

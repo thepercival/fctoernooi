@@ -133,10 +133,12 @@ export class StructureRoundComponent {
 
   splitQualifyGroup(editHorPoule: EditHorPoule) {
     this.structureService.splitQualifyGroup(editHorPoule.previous.getQualifyGroup(), editHorPoule.previous, editHorPoule.current);
+    this.roundNumberChanged.emit(this.round.getNumber());
   }
 
   mergeQualifyGroups(editHorPoule: EditHorPoule) {
     this.structureService.mergeQualifyGroups(editHorPoule.previous.getQualifyGroup(), editHorPoule.current.getQualifyGroup());
+    this.roundNumberChanged.emit(this.round.getNumber());
   }
 
   getQualifyGroupWidthPercentage(qualifyGroup: QualifyGroup): number {

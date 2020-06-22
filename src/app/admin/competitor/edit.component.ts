@@ -106,8 +106,9 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         const name = this.form.controls.name.value;
         const info = this.form.controls.info.value;
 
-        if (this.isNameDuplicate(this.form.controls.name.value)) {
-            this.setAlert('danger', 'de naam bestaat al voor dit toernooi');
+        const message = this.validateName(this.form.controls.name.value);
+        if (message) {
+            this.setAlert('danger', message);
             this.processing = false;
             return;
         }
@@ -138,9 +139,11 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
             );
     }
 
+
     edit() {
-        if (this.isNameDuplicate(this.form.controls.name.value, +this.place.getCompetitor().getId())) {
-            this.setAlert('danger', 'de naam bestaat al voor dit toernooi');
+        const message = this.validateName(this.form.controls.name.value, +this.place.getCompetitor().getId());
+        if (message) {
+            this.setAlert('danger', message);
             this.processing = false;
             return;
         }
@@ -165,6 +168,16 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
 
     navigateBack() {
         this.myNavigation.back();
+    }
+
+    protected validateName(name: string, competitorId?: number): string {
+        if (this.isNameDuplicate(name, competitorId)) {
+            return 'de naam bestaat al voor dit toernooi';
+        }
+        if (name.length > 20 && (name.indexOf(' ') > 20 || name.indexOf(' ') < 0)) {
+            return 'de naam moet minimaal een spatie bevatten na 20 karakters';
+        }
+        return undefined;
     }
 
     isNameDuplicate(name: string, competitorId?: number): boolean {
