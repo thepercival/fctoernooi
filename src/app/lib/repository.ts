@@ -16,7 +16,7 @@ export class APIRepository {
 
     getHeaders(): HttpHeaders {
         let headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
-        headers = headers.append('X-Api-Version', '22');
+        headers = headers.append('X-Api-Version', '23');
 
         const token = this.getToken();
         if (token !== undefined) {

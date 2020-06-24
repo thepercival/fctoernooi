@@ -85,11 +85,11 @@
           <th>uit</th>
           <!-- referee -->
           <th *ngIf="hasReferees" class="d-none d-sm-table-cell text-right" title="scheidsrechter">
-            <button *ngIf="userIsAdmin" title="wijzig scheidsrechters"
+            <button *ngIf="userIsAdmin && !planningConfig.getSelfReferee()" title="wijzig scheidsrechters"
               class="btn btn-sm btn-outline-{{tournamentHasBegun ? 'warning' : 'primary'}}" (click)="linkToReferee()">
               <fa-icon [icon]="['fac', 'referee']"></fa-icon>
             </button>
-            <fa-icon *ngIf="!userIsAdmin" [icon]="['fac', 'referee']"></fa-icon>
+            <fa-icon *ngIf="!userIsAdmin || planningConfig.getSelfReferee()" [icon]="['fac', 'referee']"></fa-icon>
           </th>
         </tr>
       </thead>
