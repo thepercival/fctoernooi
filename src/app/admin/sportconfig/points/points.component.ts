@@ -121,7 +121,7 @@ export class PointsEditComponent implements OnInit {
 
     edit(): boolean {
         this.processing = true;
-
+        this.alert = undefined;
         this.sportConfig.setWinPoints(this.form.value['winPoints']);
         this.sportConfig.setDrawPoints(this.form.value['drawPoints']);
         this.sportConfig.setWinPointsExt(this.form.value['winPointsExt']);

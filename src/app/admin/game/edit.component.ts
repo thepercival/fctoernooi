@@ -18,6 +18,7 @@ import {
     SportScoreConfigService,
     State,
     QualifyGroup,
+    RoundNumber,
 } from 'ngx-sport';
 import { forkJoin, Observable, of } from 'rxjs';
 
@@ -92,21 +93,26 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
     ngOnInit() {
         this.route.params.subscribe(params => {
             super.myNgOnInit(() => {
-                try {
-                    this.setGame(+params.gameId);
-                    // this.originalPouleState = this.game.getPoule().getState();
-                    const tournamentUser = this.tournament.getUser(this.authService.getUser());
-                    this.getAuthorization(tournamentUser).subscribe(
-                            /* happy path */ hasAuthorization => {
-                            this.hasAuthorization = hasAuthorization;
-                            if (!this.hasAuthorization) {
-                                this.setAlert('danger', 'je bent geen scheidsrechter voor deze wedstrijd of uitslagen-invoerder voor dit toernooi, je emailadres moet door de beheerder gekoppeld zijn');
-                            }
-                        }
-                    );
-                } catch (e) {
-                    this.setAlert('danger', e);
+                this.game = this.getGameById(+params.gameId, this.structure.getRootRound());
+                if (this.game === undefined) {
+                    this.setAlert('danger', 'de wedstrijd kan niet gevonden worden');
+                    this.processing = false;
+                    return;
                 }
+
+                this.initGame();
+                // this.originalPouleState = this.game.getPoule().getState();
+                const tournamentUser = this.tournament.getUser(this.authService.getUser());
+                this.getAuthorization(tournamentUser).subscribe(
+                        /* happy path */ hasAuthorization => {
+                        this.hasAuthorization = hasAuthorization;
+                        if (!this.hasAuthorization) {
+                            this.setAlert('danger', 'je bent geen scheidsrechter voor deze wedstrijd of uitslagen-invoerder voor dit toernooi, je emailadres moet door de beheerder gekoppeld zijn');
+                        }
+                        this.processing = false;
+                    }
+                );
+
             });
         });
     }
@@ -196,11 +202,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         return 'is-warning';
     }
 
-    setGame(gameId: number) {
-        this.game = this.getGameById(gameId, this.structure.getRootRound());
-        if (this.game === undefined) {
-            throw new Error('de wedstrijd kan niet gevonden worden');
-        }
+    protected initGame() {
         this.firstScoreConfig = this.game.getSportScoreConfig();
         // const date = this.game.getStartDateTime();
 
@@ -211,6 +213,10 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
             this.calculateScoreControl = new HomeAwayFormControl(0, 0, true);
         }
 
+        if (this.scoreChangesNextRoundNumber(this.game.getRound().getNumber())) {
+            this.setAlert('warning', 'het aanpassen van de score kan gevolgen hebben voor de al begonnen volgende ronde');
+        }
+
         this.initScores(this.game);
         this.updateCalculateScoreControl();
 
@@ -219,9 +225,17 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         // if (date !== undefined) {
         //     this.model.startdate = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
         //     this.model.starttime = { hour: date.getHours(), minute: date.getMinutes() };
-        // }
+        // }        
+    }
 
-        this.processing = false;
+    protected scoreChangesNextRoundNumber(roundNumber: RoundNumber): boolean {
+        if (!roundNumber.hasNext()) {
+            return false;
+        }
+        if (roundNumber.getNext().hasBegun()) {
+            return true;
+        }
+        return this.scoreChangesNextRoundNumber(roundNumber.getNext());
     }
 
     protected getGameById(id: number, round: Round): Game {

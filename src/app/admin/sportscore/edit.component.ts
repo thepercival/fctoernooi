@@ -13,7 +13,6 @@ import {
     Structure,
 } from 'ngx-sport';
 import { CSSService } from '../../shared/common/cssservice';
-import { MyNavigation } from '../../shared/common/navigation';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '../../lib/translate';
 import { SportScoreConfigRepository } from '../../lib/ngx-sport/sport/scoreconfig/repository';
@@ -48,7 +47,6 @@ export class SportScoreEditComponent implements OnInit {
     constructor(
         private sportScoreConfigRepository: SportScoreConfigRepository,
         public cssService: CSSService,
-        private myNavigation: MyNavigation,
         public sportConfigService: SportConfigService,
         public nameService: NameService,
         private sportMapper: SportMapper,
@@ -130,6 +128,7 @@ export class SportScoreEditComponent implements OnInit {
     }
 
     save(): boolean {
+        this.alert = undefined;
         const scoreConfig = this.startRoundNumber.getSportScoreConfig(this.sportConfig.getSport());
         if (scoreConfig === undefined) {
             return this.add();
@@ -164,7 +163,6 @@ export class SportScoreEditComponent implements OnInit {
         this.sportScoreConfigRepository.createObject(json, sport, this.startRoundNumber, this.tournament)
             .subscribe(
         /* happy path */ sportConfigRes => {
-                    this.myNavigation.back();
                 },
         /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
         /* onComplete */() => { this.processing = false; }
@@ -181,7 +179,6 @@ export class SportScoreEditComponent implements OnInit {
         this.sportScoreConfigRepository.editObject(json, scoreConfig, this.tournament)
             .subscribe(
         /* happy path */ configRes => {
-                    this.myNavigation.back();
                 },
         /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
         /* onComplete */() => { this.processing = false; }

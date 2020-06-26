@@ -58,6 +58,7 @@ export class FieldListComponent implements OnInit {
     }
 
     addField() {
+        this.alert = undefined;
         const modal = this.getChangeNameModel('toevoegen');
         modal.result.then((resName: string) => {
             this.processing = true;
@@ -74,6 +75,7 @@ export class FieldListComponent implements OnInit {
     }
 
     editField(field: Field) {
+        this.alert = undefined;
         const modal = this.getChangeNameModel('wijzigen', field.getName());
         modal.result.then((resName: string) => {
             this.processing = true;

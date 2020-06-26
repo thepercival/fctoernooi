@@ -174,10 +174,17 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         if (this.isNameDuplicate(name, competitorId)) {
             return 'de naam bestaat al voor dit toernooi';
         }
-        if (name.length > 20 && (name.indexOf(' ') > 20 || name.indexOf(' ') < 0)) {
-            return 'de naam moet minimaal een spatie bevatten na 20 karakters';
-        }
-        return undefined;
+        let checkName = (name: string): string => {
+            if (name.length <= 20) {
+                return undefined;
+            }
+            let pos = name.indexOf(' ');
+            if (pos < 0 || pos >= 20) {
+                return 'de naam mag maximaal 20 aaneengesloten karakters bevatten(liefst 15), gebruik een spatie';
+            }
+            return checkName(name.substring(pos + 1));
+        };
+        return checkName(name);
     }
 
     isNameDuplicate(name: string, competitorId?: number): boolean {

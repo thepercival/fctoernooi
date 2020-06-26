@@ -45,6 +45,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   alert: any;
   sameDay = true;
   tournamentBreak: PlanningPeriod;
+  breakShown: boolean;
   userIsAdmin: boolean;
   gameOrder = Game.ORDER_BY_BATCH;
   filterEnabled = false;
@@ -187,10 +188,11 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     return (this.roles & role) === role;
   }
   protected isBreakBeforeGame(game: Game): boolean {
-    if (this.tournamentBreak === undefined || !this.planningConfig.getEnableTime() || !this.gameOrder) {
+    if (this.tournamentBreak === undefined || this.breakShown || !this.planningConfig.getEnableTime() || !this.gameOrder) {
       return false;
     }
-    return game.getStartDateTime().getTime() === this.tournamentBreak.end.getTime();
+    this.breakShown = game.getStartDateTime().getTime() === this.tournamentBreak.end.getTime();
+    return this.breakShown;
   }
 
   hasAPlaceACompetitor(game: Game): boolean {
