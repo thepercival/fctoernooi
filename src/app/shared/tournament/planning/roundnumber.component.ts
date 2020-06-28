@@ -162,6 +162,10 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     return finalScore.getHome() + sScore + finalScore.getAway();
   }
 
+  getScoreFinalPhase(game: Game): string {
+    return game.getFinalPhase() === Game.PHASE_EXTRATIME ? '*' : '';
+  }
+
   isPlayed(game: Game): boolean {
     return game.getState() === State.Finished;
   }

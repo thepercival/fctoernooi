@@ -143,8 +143,11 @@
                 (click)="linkToGameEdit(gmData.game)">
                 <fa-icon *ngIf="!isPlayed(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
                 <span *ngIf="isPlayed(gmData.game)">{{getScore(gmData.game)}}</span>
+                <span *ngIf="isPlayed(gmData.game)" class="font-weight-bold">{{getScoreFinalPhase(gmData.game)}}</span>
               </button>
               <span *ngIf="!gmData.canChangeResult" class="d-none d-sm-inline">{{getScore(gmData.game)}}</span>
+              <span *ngIf="!gmData.canChangeResult"
+                class="d-none d-sm-inline font-weight-bold">{{getScoreFinalPhase(gmData.game)}}</span>
               <button *ngIf="!gmData.canChangeResult && hasReferees && !isPlayed(gmData.game)"
                 class="btn btn-outline-info btn-sm d-sm-none" placement="top"
                 [ngbPopover]="nameService.getRefereeName(gmData.game)">
@@ -153,7 +156,9 @@
                 </span>
               </button>
               <span *ngIf="!gmData.canChangeResult && !(hasReferees && !isPlayed(gmData.game))"
-                class="d-sm-none">{{getScore(gmData.game)}}</span>
+                class="d-sm-none font-weight-bold">{{getScore(gmData.game)}}</span>
+              <span *ngIf="!gmData.canChangeResult && !(hasReferees && !isPlayed(gmData.game))"
+                class="d-sm-none">{{getScoreFinalPhase(gmData.game)}}</span>
             </td>
             <!-- away -->
             <td class="place" [ngClass]="{ 'favitem': favorites?.hasGameCompetitor(gmData.game, GameAWAY) }">
