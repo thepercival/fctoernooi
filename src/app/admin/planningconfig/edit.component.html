@@ -16,7 +16,7 @@
                     <div class="col-4">
                         <select class="form-control" formControlName="nrOfHeadtohead" required
                             [ngClass]="{ 'is-invalid': form.controls.nrOfHeadtohead.invalid, 'is-valid': form.controls.nrOfHeadtohead.valid }">
-                            <option *ngFor="let n of ranges.nrOfHeadtohead" [ngValue]="n">{{n}}</option>
+                            <option *ngFor="let n of headtoheadRange" [ngValue]="n">{{n}}</option>
                         </select>
                     </div>
                 </div>
@@ -79,7 +79,7 @@
                             formControlName="minutesAfter" maxlength="3" class="form-control" />
                     </div>
                 </div>
-                <div class="form-group row">
+                <div *ngIf="isSelfRefereeAvailable()" class="form-group row">
                     <label for="selfrefereenoaction" class="col-8 col-form-label pointer" container="body"
                         placement="top" autoClose="outside" [ngbPopover]="popSelfReferee" #p="ngbPopover">
                         deelnemers zijn scheidsrechters
@@ -88,7 +88,19 @@
                     <div class="form-check col-4">
                         <label class="custom-control custom-checkbox col-form-label pl-0">
                             <input type="checkbox" class="custom-control-input form-check-input"
-                                formControlName="selfReferee" (ngModelChange)="enableDisableTeamup()">
+                                formControlName="selfReferee" (ngModelChange)="changeSelfReferee()">
+                            <span class="custom-control-indicator"></span>
+                        </label>
+                    </div>
+                </div>
+                <div *ngIf="bothSelfRefereeAvailable() && form.value['selfReferee']" class="form-group row">
+                    <label for="selfrefereenoaction" class="col-8 col-form-label">
+                        schedisrechter in eigen poule
+                    </label>
+                    <div class="form-check col-4">
+                        <label class="custom-control custom-checkbox col-form-label pl-0">
+                            <input type="checkbox" class="custom-control-input form-check-input"
+                                formControlName="selfRefereeSamePoule">
                             <span class="custom-control-indicator"></span>
                         </label>
                     </div>
@@ -124,8 +136,5 @@
 </div>
 
 <ng-template #popSelfReferee>
-    <ul class="list-group">
-        <li class="list-group-item">de wedstrijdplanning kan uitlopen door deze instelling</li>
-        <li class="list-group-item">er moeten minimaal {{getNrOfPlacesPerGame()}} deelnemers zijn</li>
-    </ul>
+    de wedstrijdplanning kan uitlopen door deze instelling
 </ng-template>

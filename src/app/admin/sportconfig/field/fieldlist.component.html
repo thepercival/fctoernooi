@@ -6,9 +6,9 @@
     <thead>
         <tr>
             <th></th>
-            <!-- <th *ngIf="prioritizable" class="text-center">
+            <th *ngIf="prioritizable" class="text-center">
                 <fa-icon [icon]="['fas', 'sort']"></fa-icon>
-            </th> -->
+            </th>
             <th>naam</th>
             <th class="text-right">
                 <button *ngIf="!hasBegun" type="button" class="btn btn-sm btn-primary" (click)="addField()"
@@ -25,12 +25,12 @@
                     <fa-icon [icon]="['fas', 'pencil-alt' ]"></fa-icon>
                 </button>
             </td>
-            <!-- <td *ngIf="prioritizable" class="text-center">
+            <td *ngIf="prioritizable" class="text-center">
                 <button *ngIf="field.getPriority() > 1" type="button" class="btn btn-sm btn-outline-secondary"
                     [disabled]="processing" (click)="upgradePriority(field)">
                     <fa-icon [icon]="['fas', 'level-up-alt']"></fa-icon>
                 </button>
-            </td> -->
+            </td>
             <td>
                 <span>{{field.getName()}}</span>
             </td>

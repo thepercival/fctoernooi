@@ -79,7 +79,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     this.userIsAdmin = this.tournament.getUser(this.authService.getUser())?.hasRoles(Role.ADMIN);
     this.needsRanking = this.roundNumber.needsRanking();
     this.hasMultiplePoules = this.roundNumber.getPoules().length > 1;
-    this.hasReferees = this.tournament.getCompetition().getReferees().length > 0 || this.planningConfig.getSelfReferee();
+    this.hasReferees = this.tournament.getCompetition().getReferees().length > 0
+      || this.planningConfig.getSelfReferee() !== PlanningConfig.SELFREFEREE_DISABLED;
     this.hasBegun = this.roundNumber.hasBegun();
     this.tournamentHasBegun = this.roundNumber.getFirst().hasBegun();
     this.reloadGameData();

@@ -1,10 +1,9 @@
-<p *ngIf="alert">
-    <ngb-alert [dismissible]="true" (close)="alert = undefined" [type]="alert.type">{{ alert.message }}</ngb-alert>
-</p>
 <div class="d-flex flex-wrap justify-content-around mb-2" *ngIf="round.getNrOfPlaces() > 2 && !round.hasBegun()">
     <ng-container *ngTemplateOutlet="modifyQualifiers;context:{$implicit: QualifyGroupWINNERS}">
     </ng-container>
-    <button *ngIf="showSwitchView()" type="button" class="btn btn-secondary" (click)="switchView()"
+    <button *ngIf="showSwitchView() || round.isRoot()"
+        [ngClass]="{ 'visible': showSwitchView(), 'invisible': !showSwitchView() }" type="button"
+        class="btn btn-secondary" (click)="switchView()"
         [disabled]="viewType !== ViewTypeQualifyGroups && !showSwitchView()">
         <fa-icon *ngIf="viewType !== ViewTypeQualifyGroups" [icon]="['fac', 'structure']"></fa-icon>
         <span *ngIf="viewType !== ViewTypeQualifyGroups" class="d-none d-sm-inline-flex">
@@ -15,7 +14,9 @@
     <ng-container *ngTemplateOutlet="modifyQualifiers;context:{$implicit: QualifyGroupLOSERS}">
     </ng-container>
 </div>
-
+<p *ngIf="alert">
+    <ngb-alert [dismissible]="true" (close)="alert = undefined" [type]="alert.type">{{ alert.message }}</ngb-alert>
+</p>
 <ng-template #modifyQualifiers let-winnersOrLosers>
     <!-- start vertical-->
     <div *ngIf="round.getNrOfPlaces() >= 4" class=" btn-group-vertical" [ngClass]="{ 'd-sm-none': round.isRoot() }"

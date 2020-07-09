@@ -7,8 +7,9 @@ import {
     PlanningConfigService,
     PlanningConfigMapper,
     JsonPlanningConfig,
-    SportService,
+    SportConfigService,
     StructureService,
+    SportConfig,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -28,8 +29,7 @@ import { ModalRoundNumbersComponent } from '../roundnumber/selector.component';
     styleUrls: ['./edit.component.css']
 })
 export class PlanningConfigComponent extends TournamentComponent implements OnInit {
-
-    ranges: any = {};
+    headtoheadRange: number[];
     startRoundNumber: RoundNumber;
     hasBegun: boolean;
     form: FormGroup;
@@ -46,11 +46,12 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         router: Router,
         tournamentRepository: TournamentRepository,
         sructureRepository: StructureRepository,
+        private planningConfigService: PlanningConfigService,
         private configRepository: PlanningConfigRepository,
         public nameService: NameService,
         private myNavigation: MyNavigation,
         private planningRepository: PlanningRepository,
-        private sportService: SportService,
+        private sportConfigService: SportConfigService,
         private modalService: NgbModal,
         fb: FormBuilder
     ) {
@@ -84,15 +85,16 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
                 Validators.max(this.validations.maxMinutesPerGame)
             ])],
             selfReferee: false,
+            selfRefereeSamePoule: false,
             teamup: false
         });
         this.structureService = new StructureService(Tournament.StructureOptions);
     }
 
     private initRanges() {
-        this.ranges.nrOfHeadtohead = [];
+        this.headtoheadRange = [];
         for (let i = this.validations.minNrOfHeadtohead; i <= this.validations.maxNrOfHeadtohead; i++) {
-            this.ranges.nrOfHeadtohead.push(i);
+            this.headtoheadRange.push(i);
         }
     }
 
@@ -149,18 +151,65 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.form.controls.minutesBetweenGames.setValue(config.getMinutesBetweenGames());
         this.form.controls.minutesAfter.setValue(config.getMinutesAfter());
         this.form.controls.teamup.setValue(this.isTeamupAvailable() && config.getTeamup());
-        this.form.controls.selfReferee.setValue(this.isSelfRefereeAvailable() && config.getSelfReferee());
+
+        const selfRefee = this.getSelfReferee(config.getSelfReferee());
+        this.form.controls.selfReferee.setValue(selfRefee !== PlanningConfig.SELFREFEREE_DISABLED);
+        const selfRefeeSamePoule = !(selfRefee && config.getSelfReferee() === PlanningConfig.SELFREFEREE_OTHERPOULES);
+        this.form.controls.selfRefereeSamePoule.setValue(selfRefeeSamePoule);
 
         Object.keys(this.form.controls).forEach(key => {
             const control = this.form.controls[key];
             this.hasBegun ? control.disable() : control.enable();
         });
 
-        this.enableDisableTeamup();
+        this.changeSelfReferee();
         this.enableDisableSelfReferee();
     }
 
-    enableDisableTeamup() {
+    protected getSelfReferee(currentSelfReferee: number): number {
+        const selfRefereeAvailable = this.getSelfRefereeAvailable();
+        if ((currentSelfReferee & selfRefereeAvailable) === currentSelfReferee) {
+            return currentSelfReferee;
+        }
+        if (currentSelfReferee === PlanningConfig.SELFREFEREE_OTHERPOULES
+            && (selfRefereeAvailable & PlanningConfig.SELFREFEREE_SAMEPOULE) === PlanningConfig.SELFREFEREE_SAMEPOULE) {
+            return PlanningConfig.SELFREFEREE_SAMEPOULE;
+        }
+        if (currentSelfReferee === PlanningConfig.SELFREFEREE_SAMEPOULE
+            && (selfRefereeAvailable & PlanningConfig.SELFREFEREE_OTHERPOULES) === PlanningConfig.SELFREFEREE_OTHERPOULES) {
+            return PlanningConfig.SELFREFEREE_OTHERPOULES;
+        }
+        return PlanningConfig.SELFREFEREE_DISABLED;
+    }
+
+    bothSelfRefereeAvailable(): boolean {
+        const selfRefereeAvailable = this.getSelfRefereeAvailable();
+        console.log('bothSelfRefereeAvailable', selfRefereeAvailable === (PlanningConfig.SELFREFEREE_OTHERPOULES + PlanningConfig.SELFREFEREE_SAMEPOULE));
+        console.log('selfRefereeAvailable', selfRefereeAvailable);
+        return selfRefereeAvailable === (PlanningConfig.SELFREFEREE_OTHERPOULES + PlanningConfig.SELFREFEREE_SAMEPOULE);
+    }
+
+    protected getSelfRefereeAvailable(): number {
+        const sportConfigs = this.competition.getSportConfigs();
+        const nrOfPoules = this.startRoundNumber.getPoules().length;
+        const nrOfPlaces = this.startRoundNumber.getNrOfPlaces();
+
+        let selfRefereeAvailable = PlanningConfig.SELFREFEREE_DISABLED;
+
+        const maxNrOfGamePlaces = this.sportConfigService.getMaxNrOfGamePlaces(sportConfigs, this.form.value['teamup'], false);
+        const otherPoulesAvailable = this.planningConfigService.selfRefereeOtherPoulesAvailable(nrOfPoules);
+        if (otherPoulesAvailable) {
+            selfRefereeAvailable += PlanningConfig.SELFREFEREE_OTHERPOULES;
+        }
+        console.log('maxNrOfGamePlaces', maxNrOfGamePlaces);
+        const samePouleAvailable = this.planningConfigService.selfRefereeSamePouleAvailable(nrOfPoules, nrOfPlaces, maxNrOfGamePlaces);
+        if (samePouleAvailable) {
+            selfRefereeAvailable += PlanningConfig.SELFREFEREE_SAMEPOULE;
+        }
+        return selfRefereeAvailable;
+    }
+
+    changeSelfReferee() {
         if (this.isTeamupAvailable()) {
             if (this.form.controls.teamup.disabled && !this.hasBegun) {
                 this.form.controls.teamup.enable();
@@ -203,7 +252,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     isSelfRefereeAvailable(): boolean {
-        return this.startRoundNumber.getNrOfPlaces() >= this.getNrOfPlacesPerGame();
+        return this.getSelfRefereeAvailable() !== PlanningConfig.SELFREFEREE_DISABLED;
     }
 
     private needsRecreating(config: PlanningConfig): boolean {
@@ -213,8 +262,9 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     getNrOfPlacesPerGame(): number {
-        const nrOfGamePlaces = this.competition.getFirstSportConfig().getNrOfGamePlaces();
-        return this.sportService.getNrOfGamePlaces(nrOfGamePlaces, this.form.value['teamup'], true);
+        const sportConfigs = this.competition.getSportConfigs();
+        return this.sportConfigService.getMaxNrOfGamePlaces(
+            sportConfigs, this.form.value['teamup'], this.form.value['selfReferee']);
     }
 
     private needsRescheduling(config: PlanningConfig): boolean {
@@ -237,9 +287,11 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             minutesBetweenGames: this.form.value['minutesBetweenGames'],
             minutesAfter: this.form.value['minutesAfter'],
             teamup: this.form.controls.teamup.disabled ? false : this.form.value['teamup'],
-            selfReferee: this.form.controls.selfReferee.disabled ? false : this.form.value['selfReferee'],
+            selfReferee: (this.form.controls.selfReferee.disabled || !this.form.value['selfReferee']) ? PlanningConfig.SELFREFEREE_DISABLED :
+                (this.form.value['selfRefereeSamePoule'] ? PlanningConfig.SELFREFEREE_SAMEPOULE : PlanningConfig.SELFREFEREE_OTHERPOULES),
             nrOfHeadtohead: this.form.value['nrOfHeadtohead']
         };
+        console.log(jsonConfig.selfReferee);
         if (this.startRoundNumber.getPlanningConfig() !== undefined) {
             this.edit(jsonConfig, this.startRoundNumber.getPlanningConfig());
         } else {
