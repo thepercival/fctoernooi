@@ -57,7 +57,7 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
         this.minDateStruct = { year: minDate.getFullYear(), month: minDate.getMonth() + 1, day: minDate.getDate() };
 
         this.setDate(this.form.controls.date, this.form.controls.time, date);
-        this.setDefaultBreak();
+        this.setBreak();
         this.form.controls.togglebreak.setValue(this.tournament.hasBreak());
 
         if (this.hasBegun) {
@@ -70,12 +70,17 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
         return this.structure.getFirstRoundNumber().getPlanningConfig().getEnableTime();
     }
 
-    setDefaultBreak() {
-        const breakStartDateTime = this.getDate(this.form.controls.date, this.form.controls.time);
-        breakStartDateTime.setHours(breakStartDateTime.getHours() + 2);
-        const breakEndDateTime = new Date(breakStartDateTime.getTime());
-        breakEndDateTime.setMinutes(breakEndDateTime.getMinutes() + 30);
-
+    setBreak() {
+        let breakStartDateTime, breakEndDateTime;
+        if (this.tournament.hasBreak()) {
+            breakStartDateTime = new Date(this.tournament.getBreakStartDateTime().getTime());
+            breakEndDateTime = new Date(this.tournament.getBreakEndDateTime().getTime());
+        } else {
+            breakStartDateTime = this.getDate(this.form.controls.date, this.form.controls.time);
+            breakStartDateTime.setHours(breakStartDateTime.getHours() + 2);
+            breakEndDateTime = new Date(breakStartDateTime.getTime());
+            breakEndDateTime.setMinutes(breakEndDateTime.getMinutes() + 30);
+        }
         this.setDate(this.form.controls.breakstartdate, this.form.controls.breakstarttime, breakStartDateTime);
         this.setDate(this.form.controls.breakenddate, this.form.controls.breakendtime, breakEndDateTime);
     }
