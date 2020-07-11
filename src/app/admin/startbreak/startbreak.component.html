@@ -70,7 +70,7 @@
                 <input class="form-control"
                   [ngClass]="{ 'is-invalid': form.controls.breakstartdate.invalid, 'is-valid': form.controls.breakstartdate.valid }"
                   placeholder="yyyy-mm-dd" formControlName="breakstartdate" ngbDatepicker #dBreakStart="ngbDatepicker"
-                  required [minDate]="minDateStruct">
+                  required [minDate]="minDateStruct" container="body">
                 <div class="input-group-append">
                   <span class="input-group-text pointer" (click)="dBreakStart.toggle()">
                     <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
@@ -107,7 +107,7 @@
                 <input class="form-control"
                   [ngClass]="{ 'is-invalid': form.controls.breakenddate.invalid, 'is-valid': form.controls.breakenddate.valid }"
                   placeholder="yyyy-mm-dd" formControlName="breakenddate" ngbDatepicker #dBreakEnd="ngbDatepicker"
-                  required [minDate]="minDateStruct">
+                  required [minDate]="minDateStruct" container="body">
                 <div class="input-group-append">
                   <span class="input-group-text pointer" (click)="dBreakEnd.toggle()">
                     <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
