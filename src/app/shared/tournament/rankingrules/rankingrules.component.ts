@@ -8,12 +8,12 @@ import { Tournament } from '../../../lib/tournament';
     styleUrls: ['./rankingrules.component.scss']
 })
 export class RankingRulesComponent {
-    @Input() tournament: Tournament;
+    @Input() ruleSet: number;
+
     constructor() { }
 
     getDescription(): string[] {
-        const ruleSet = this.tournament.getCompetition().getRuleSet();
-        const rankingService = new RankingService(undefined, ruleSet);
+        const rankingService = new RankingService(undefined, this.ruleSet);
         return rankingService.getRuleDescriptions();
     }
 }

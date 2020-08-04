@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { SportConfig, Structure, SportCustom } from 'ngx-sport';
+import { SportConfig, Structure, SportCustom, RankingService, PlanningConfigMapper, PlanningConfig, PlanningConfigService } from 'ngx-sport';
 
 import { IAlert } from '../../../shared/common/alert';
 
@@ -7,6 +7,10 @@ import { Tournament } from '../../../lib/tournament';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { SportConfigRepository } from '../../../lib/ngx-sport/sport/config/repository';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { TournamentRepository } from '../../../lib/tournament/repository';
+import { PlanningConfigRepository } from '../../../lib/ngx-sport/planning/config/repository';
+import { PlanningRepository } from '../../../lib/ngx-sport/planning/repository';
 
 @Component({
     selector: 'app-tournament-points-edit',
@@ -21,6 +25,7 @@ export class PointsEditComponent implements OnInit {
     @Input() structure: Structure;
     @Input() sportConfig: SportConfig;
     @Input() hasBegun: boolean;
+    ruleSet: number;
 
     form: FormGroup;
     ranges: any = {};
@@ -37,7 +42,13 @@ export class PointsEditComponent implements OnInit {
 
     constructor(
         private sportConfigRepository: SportConfigRepository,
+        private planningConfigRepository: PlanningConfigRepository,
+        private planningRepository: PlanningRepository,
+        private tournamentRepository: TournamentRepository,
+        private planningConfigMapper: PlanningConfigMapper,
+        private planningConfigService: PlanningConfigService,
         fb: FormBuilder,
+        private modalService: NgbModal,
         private router: Router
     ) {
         this.processing = true;
@@ -53,6 +64,7 @@ export class PointsEditComponent implements OnInit {
                 Validators.min(this.validations.minDrawPoints),
                 Validators.max(this.validations.maxDrawPoints)
             ])],
+            extension: false,
             winPointsExt: ['', Validators.compose([
                 Validators.required,
                 Validators.min(this.validations.minWinPoints),
@@ -106,8 +118,10 @@ export class PointsEditComponent implements OnInit {
 
     initForm() {
         this.initRanges();
+        const planningConfig = this.structure.getFirstRoundNumber().getValidPlanningConfig();
         this.form.controls.winPoints.setValue(this.sportConfig.getWinPoints());
         this.form.controls.drawPoints.setValue(this.sportConfig.getDrawPoints());
+        this.form.controls.extension.setValue(planningConfig.getExtension());
         this.form.controls.winPointsExt.setValue(this.sportConfig.getWinPointsExt());
         this.form.controls.drawPointsExt.setValue(this.sportConfig.getDrawPointsExt());
         this.form.controls.losePointsExt.setValue(this.sportConfig.getLosePointsExt());
@@ -131,7 +145,7 @@ export class PointsEditComponent implements OnInit {
         this.sportConfigRepository.editObject(this.sportConfig, this.tournament)
             .subscribe(
             /* happy path */ sportConfigRes => {
-
+                    this.saveExtension();
                 },
             /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
             /* onComplete */() => { this.processing = false; }
@@ -143,6 +157,72 @@ export class PointsEditComponent implements OnInit {
         this.router.navigate(['/admin/planningconfig', this.tournament.getId(),
             this.structure.getFirstRoundNumber().getNumber()
         ]);
+    }
+
+    openModalRuleset(modalContent) {
+        this.ruleSet = this.tournament.getCompetition().getRuleSet();
+        const activeModal = this.modalService.open(modalContent/*, { windowClass: 'border-warning' }*/);
+        // (activeModal.componentInstance).copied = false;
+        activeModal.result.then((result) => {
+            if (result === 'save') {
+                this.saveRuleset();
+            }
+        }, (reason) => {
+        });
+    }
+
+    updateRuleset() {
+        if (this.ruleSet === RankingService.RULESSET_WC) {
+            this.ruleSet = RankingService.RULESSET_EC;
+        } else {
+            this.ruleSet = RankingService.RULESSET_WC;
+        }
+    }
+
+    saveRuleset() {
+        this.processing = true;
+        this.alert = undefined;
+
+        this.tournament.getCompetition().setRuleSet(this.ruleSet);
+
+        this.tournamentRepository.editObject(this.tournament)
+            .subscribe(
+            /* happy path */ tournamentRes => {
+                },
+            /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
+            /* onComplete */() => { this.processing = false; }
+            );
+        return false;
+    }
+
+    saveExtension() {
+        const firstRoundNumber = this.structure.getFirstRoundNumber();
+        const planningConfig = firstRoundNumber.getValidPlanningConfig();
+
+        if (this.form.value['extension'] === planningConfig.getExtension()) {
+            this.processing = false;
+            return;
+        }
+
+        planningConfig.setExtension(this.form.value['extension']);
+        if (planningConfig.getExtension() && planningConfig.getMinutesPerGameExt() === 0) {
+            planningConfig.setMinutesPerGameExt(this.planningConfigService.getDefaultMinutesPerGameExt());
+        } else if (!planningConfig.getExtension() && planningConfig.getMinutesPerGameExt() > 0) {
+            planningConfig.setMinutesPerGameExt(0);
+        }
+
+        const json = this.planningConfigMapper.toJson(planningConfig)
+        this.planningConfigRepository.editObject(json, planningConfig, this.tournament)
+            .subscribe(
+                /* happy path */ planningConfigRes => {
+                    this.planningRepository.reschedule(firstRoundNumber, this.tournament).subscribe(
+                        /* happy path */ gamesRes => { },
+                        /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
+                        /* onComplete */() => this.processing = false
+                    );
+                },
+                /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
+            );
     }
 }
 

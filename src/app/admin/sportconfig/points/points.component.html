@@ -3,7 +3,7 @@
 </h2>
 <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
 
-<form *ngIf="sportConfig" name="form" (ngSubmit)="edit()" [formGroup]="form" novalidate>
+<form *ngIf="sportConfig" name="form" (ngSubmit)="edit()" [formGroup]="form" novalidate class="mt-3">
     <div class="form-group row">
         <div class="col-7">
             <label for="winPoints" class="col-form-label">punten bij overwinning</label>
@@ -27,15 +27,17 @@
         </div>
     </div>
 
-    <div class="d-flex col-form-label pointer" container="body" placement="top" autoClose="outside"
-        [ngbPopover]="popExtension" #p="ngbPopover">
-        <h3><small>na verlenging</small></h3>
-        <span class="ml-1 mt-1">
-            <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
-        </span>
+    <div class="form-group row">
+        <label for="extension" class="col-7 col-form-label pointer">met verlenging</label>
+        <div class="form-check col-5">
+            <label class="custom-control custom-checkbox col-form-label pl-0">
+                <input type="checkbox" class="custom-control-input form-check-input" formControlName="extension">
+                <span class="custom-control-indicator"></span>
+            </label>
+        </div>
     </div>
 
-    <div class="form-group row">
+    <div *ngIf="form.value['extension']" class="form-group row">
         <div class="col-7">
             <label for="winPointsExt" class="col-form-label">punten bij overwinning</label>
         </div>
@@ -46,7 +48,7 @@
             </select>
         </div>
     </div>
-    <div class="form-group row">
+    <div *ngIf="form.value['extension']" class="form-group row">
         <div class="col-7">
             <label for="drawPointsExt" class="col-form-label">punten bij gelijkspel</label>
         </div>
@@ -58,7 +60,7 @@
             </select>
         </div>
     </div>
-    <div class="form-group row">
+    <div *ngIf="form.value['extension']" class="form-group row">
         <div class="col-7">
             <label for="losePointsExt" class="col-form-label">punten bij verlies</label>
         </div>
@@ -83,7 +85,10 @@
         </div>
     </div>
     <div *ngIf="!hasBegun" class="form-group row">
-        <div class="col-7">
+        <div class="col-7 d-flex justify-content-end">
+            <button type="button" (click)="openModalRuleset(contentRuleset)" class="btn btn-outline-primary">
+                rangschikking
+            </button>
         </div>
         <div class="col-5">
             <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
@@ -93,13 +98,20 @@
     </div>
 </form>
 
-<ng-template #popExtension>
-    <div class="text-center">
-        het aan- of uitzetten van de verlenging kan bij<br /><button type="button"
-            class="btn btn-sm btn-outline-secondary my-1" (click)="linkToPlanningConfig()">
-            planningsinstellingen
-        </button><br />
-        Wanneer je "tijd" aan hebt staan, dan kun je de verlenging aanzetten door simpelweg
-        een aantal minuten in te voeren bij de verlenging
+<ng-template #contentRuleset let-modal>
+    <div class="modal-header border-bottom-0">
+        <h4 class="modal-title">rankschikking wijzigen</h4>
+        <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <app-ranking-rules [ruleSet]="ruleSet"></app-ranking-rules>
+    </div>
+    <div class="modal-footer d-flex justify-content-between border-top-0">
+        <button type="button" class="btn btn-outline-primary" (click)="updateRuleset()">"onderling resultaat"
+            verplaatsen</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal"
+            (click)="modal.close('save')">opslaan</button>
     </div>
 </ng-template>

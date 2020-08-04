@@ -75,22 +75,21 @@
   </div>
   <div class="modal-body">
     <ul class="list-group">
-      <li class="list-group-item border-info">De scheidsrechter bovenaan de lijst krijgt de laatste
-        wedstrijd toegekend,
-        zodat hij/zij vanaf de tweede ronde de belangrijkste wedstrijd krijgt toegekend.
+      <li class="list-group-item border-info">
+        De scheidsrechter bovenaan de lijst krijgt de eerste (laatste vanaf de tweede ronde) wedstrijd toegekend.
       </li>
       <li class="list-group-item border-info">Scheidsrechters kunnen zelf uitslagen invoeren wanneer hun
         emailadres is ingevoerd
         en ze ingelogd zijn.</li>
-      <li class="list-group-item border-info">Onder planningsinstellingen kun je instellen dat de
-        deelnemers zelf scheidsrechter
-        zijn. Deelnemers zijn dan bij voorkeur scheidsrechters van wedstrijden in poules waar ze zelf niet aan
-        deelnemen.</li>
+      <li class="list-group-item border-info">
+        Onder <button type="submit" *ngIf="firstRoundNumberNotBegun" class="btn btn-outline-secondary"
+          data-dismiss="modal" (click)="modal.close('linkToPlanningConfig')">planningsinstellingen</button> kun je
+        "deelnemers zijn scheidsrechter " instellen.
+      </li>
     </ul>
   </div>
   <div class="modal-footer justify-content-reverse border-top-0">
-    <button type="submit" *ngIf="firstRoundNumberNotBegun" class="btn btn-outline-secondary" data-dismiss="modal"
-      (click)="modal.close('linkToPlanningConfig')">naar planningsinstellingen</button>
+
     <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
       (click)="modal.dismiss('close')">sluiten</button>
   </div>

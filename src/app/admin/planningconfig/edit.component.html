@@ -80,11 +80,8 @@
                     </div>
                 </div>
                 <div *ngIf="isSelfRefereeAvailable()" class="form-group row">
-                    <label for="selfrefereenoaction" class="col-8 col-form-label pointer" container="body"
-                        placement="top" autoClose="outside" [ngbPopover]="popSelfReferee" #p="ngbPopover">
-                        deelnemers zijn scheidsrechters
-                        <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
-                    </label>
+                    <label for="selfrefereenoaction" class="col-8 col-form-label pointer">deelnemers zijn
+                        scheidsrechter</label>
                     <div class="form-check col-4">
                         <label class="custom-control custom-checkbox col-form-label pl-0">
                             <input type="checkbox" class="custom-control-input form-check-input"
@@ -95,7 +92,7 @@
                 </div>
                 <div *ngIf="bothSelfRefereeAvailable() && form.value['selfReferee']" class="form-group row">
                     <label for="selfrefereenoaction" class="col-8 col-form-label">
-                        schedisrechter in eigen poule
+                        scheidsrechter in eigen poule
                     </label>
                     <div class="form-check col-4">
                         <label class="custom-control custom-checkbox col-form-label pl-0">
@@ -134,7 +131,3 @@
         </div>
     </div>
 </div>
-
-<ng-template #popSelfReferee>
-    de wedstrijdplanning kan uitlopen door deze instelling
-</ng-template>

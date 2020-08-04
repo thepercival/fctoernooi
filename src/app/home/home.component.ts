@@ -19,8 +19,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   @ViewChild('inputsearchname') private searchElementRef: ElementRef;
 
-  shellsWithRole: TournamentShell[];
-  shellsWithRoleFromFour: TournamentShell[];
+  shellsWithRoleTillX: TournamentShell[];
+  shellsWithRoleFromX: TournamentShell[];
+  shellsWithRoleX = 5;
+  linethroughDate: Date;
   showingAllWithRole = false;
   publicShells: TournamentShell[];
   showingFuture = false;
@@ -43,6 +45,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private tournamentShellRepos: TournamentShellRepository
   ) {
     this.checkFirstTimeVisit();
+    this.linethroughDate = new Date();
+    this.linethroughDate.setHours(this.linethroughDate.getHours() + this.defaultHourRange.start);
   }
 
   ngOnInit() {
@@ -63,8 +67,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   setShellsWithRole() {
-    this.shellsWithRole = [];
-    this.shellsWithRoleFromFour = [];
+    this.shellsWithRoleTillX = [];
+    this.shellsWithRoleFromX = [];
 
     if (!this.authService.isLoggedIn()) {
       this.processingWithRole = false;
@@ -77,10 +81,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
           /* happy path */ myShells => {
           this.sortShellsByDateDesc(myShells);
           while (myShells.length > 0) {
-            if (this.shellsWithRole.length < 3) {
-              this.shellsWithRole.push(myShells.shift());
+            if (this.shellsWithRoleTillX.length < this.shellsWithRoleX) {
+              this.shellsWithRoleTillX.push(myShells.shift());
             } else {
-              this.shellsWithRoleFromFour.push(myShells.shift());
+              this.shellsWithRoleFromX.push(myShells.shift());
             }
           }
           this.processingWithRole = false;

@@ -24,7 +24,7 @@
             <a ngbNavLink>rangschikking</a>
             <ng-template ngbNavContent>
                 <p class="pt-2">de onderstaande regels bepalen de rangschikking</p>
-                <app-ranking-rules [tournament]="tournament"></app-ranking-rules>
+                <app-ranking-rules [ruleSet]="tournament.getCompetition().getRuleSet()"></app-ranking-rules>
             </ng-template>
         </li>
     </ul>

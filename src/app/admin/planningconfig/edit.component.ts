@@ -47,7 +47,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         tournamentRepository: TournamentRepository,
         sructureRepository: StructureRepository,
         private planningConfigService: PlanningConfigService,
-        private configRepository: PlanningConfigRepository,
+        private planningConfigRepository: PlanningConfigRepository,
         public nameService: NameService,
         private myNavigation: MyNavigation,
         private planningRepository: PlanningRepository,
@@ -184,8 +184,6 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     bothSelfRefereeAvailable(): boolean {
         const selfRefereeAvailable = this.getSelfRefereeAvailable();
-        console.log('bothSelfRefereeAvailable', selfRefereeAvailable === (PlanningConfig.SELFREFEREE_OTHERPOULES + PlanningConfig.SELFREFEREE_SAMEPOULE));
-        console.log('selfRefereeAvailable', selfRefereeAvailable);
         return selfRefereeAvailable === (PlanningConfig.SELFREFEREE_OTHERPOULES + PlanningConfig.SELFREFEREE_SAMEPOULE);
     }
 
@@ -201,7 +199,6 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         if (otherPoulesAvailable) {
             selfRefereeAvailable += PlanningConfig.SELFREFEREE_OTHERPOULES;
         }
-        console.log('maxNrOfGamePlaces', maxNrOfGamePlaces);
         const samePouleAvailable = this.planningConfigService.selfRefereeSamePouleAvailable(nrOfPoules, nrOfPlaces, maxNrOfGamePlaces);
         if (samePouleAvailable) {
             selfRefereeAvailable += PlanningConfig.SELFREFEREE_SAMEPOULE;
@@ -291,7 +288,6 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
                 (this.form.value['selfRefereeSamePoule'] ? PlanningConfig.SELFREFEREE_SAMEPOULE : PlanningConfig.SELFREFEREE_OTHERPOULES),
             nrOfHeadtohead: this.form.value['nrOfHeadtohead']
         };
-        console.log(jsonConfig.selfReferee);
         if (this.startRoundNumber.getPlanningConfig() !== undefined) {
             this.edit(jsonConfig, this.startRoundNumber.getPlanningConfig());
         } else {
@@ -304,7 +300,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.setAlert('info', 'instellingen worden opgeslagen');
         this.processing = true;
 
-        this.configRepository.createObject(jsonConfig, this.startRoundNumber, this.tournament)
+        this.planningConfigRepository.createObject(jsonConfig, this.startRoundNumber, this.tournament)
             .subscribe(
                 /* happy path */ configRes => {
                     this.savePlanning(true, false);
@@ -324,7 +320,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         const needsRecreating = this.needsRecreating(config);
         const needsRescheduling = this.needsRescheduling(config);
 
-        this.configRepository.editObject(jsonConfig, config, this.tournament)
+        this.planningConfigRepository.editObject(jsonConfig, config, this.tournament)
             .subscribe(
                 /* happy path */ configRes => {
                     this.savePlanning(needsRecreating, needsRescheduling);

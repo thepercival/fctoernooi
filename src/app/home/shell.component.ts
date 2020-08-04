@@ -10,10 +10,15 @@ import { TournamentShell } from '../lib/tournament/shell/repository';
 export class HomeShellComponent implements OnInit {
   @Input() shell: TournamentShell;
   @Input() showPublic: boolean;
+  @Input() linethroughDate: Date;
 
   constructor() {
   }
 
   ngOnInit() {
+  }
+
+  inPast(date: Date): boolean {
+    return this.linethroughDate.getTime() > date.getTime();
   }
 }

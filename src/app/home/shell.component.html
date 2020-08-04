@@ -1,7 +1,12 @@
 <td *ngIf="showPublic" [title]="shell.public ? 'publiek' : 'prive' ">
   <fa-icon [icon]="['fas', shell.public ? 'user-friends' : 'user-shield']"></fa-icon>
 </td>
-<td [title]="shell.startDateTime.getFullYear()">
+<td *ngIf="inPast(shell.startDateTime)">
+  <span
+    style="text-decoration: line-through;">{{shell.startDateTime.toLocaleString("nl",{"month":"short","day":"2-digit"})}}
+    {{shell.startDateTime.getFullYear()}}</span>
+</td>
+<td *ngIf="!inPast(shell.startDateTime)" [title]="shell.startDateTime.getFullYear()">
   {{shell.startDateTime.toLocaleString("nl",{"month":"short","day":"2-digit","hour12": false,"hour":"2-digit","minute":"2-digit"})}}
 </td>
 <td>

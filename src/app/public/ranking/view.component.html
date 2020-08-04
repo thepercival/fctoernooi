@@ -34,7 +34,7 @@
             <ng-template ngbNavContent>
               <div class="m-3">
                 <h4>rangschikking</h4>
-                <app-ranking-rules [tournament]="tournament"></app-ranking-rules>
+                <app-ranking-rules [ruleSet]="tournament.getCompetition().getRuleSet()"></app-ranking-rules>
               </div>
             </ng-template>
           </li>
