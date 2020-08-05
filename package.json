@@ -40,7 +40,7 @@
     "core-js": "^3.6.5",
     "lodash.clonedeep": "^4.5.0",
     "ngx-clipboard": "^13.0.1",
-    "ngx-sport": "^1.0.2",
+    "ngx-sport": "^1.0.7",
     "rxjs": "^6.6.2",
     "tslib": "^1.13.0",
     "zone.js": "~0.10.3"

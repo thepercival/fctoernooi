@@ -1,20 +1,15 @@
-import { Competition, PlanningPeriod, StructureOptions } from 'ngx-sport';
+import { Competition, PlanningPeriod, PlaceRange } from 'ngx-sport';
 
 import { Sponsor } from './sponsor';
 import { LockerRoom } from './lockerroom';
 import { User } from './user';
 import { TournamentUser } from './tournament/user';
 
-/**
- * Created by coen on 9-10-17.
- */
-
 export class Tournament {
-    static readonly StructureOptions: StructureOptions = {
-        pouleRange: { min: 1, max: 16 },
-        placeRange: { min: 2, max: 40 },
-        placesPerPouleRange: { min: 2, max: 12 }
-    };
+    static readonly PlaceRanges: PlaceRange[] = [
+        { min: 2, max: 40, placesPerPoule: { min: 2, max: 12 } },
+        { min: 41, max: 128, placesPerPoule: { min: 2, max: 8 } }
+    ];
     protected id: number;
     protected competition: Competition;
     protected users: TournamentUser[] = [];

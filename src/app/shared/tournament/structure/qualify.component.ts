@@ -28,7 +28,7 @@ export class StructureQualifyComponent {
         public nameService: NameService
     ) {
         this.resetAlert();
-        this.structureService = new StructureService(Tournament.StructureOptions);
+        this.structureService = new StructureService(Tournament.PlaceRanges);
     }
 
     get QualifyGroupWINNERS(): number {

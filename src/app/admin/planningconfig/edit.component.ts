@@ -88,7 +88,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             selfRefereeSamePoule: false,
             teamup: false
         });
-        this.structureService = new StructureService(Tournament.StructureOptions);
+        this.structureService = new StructureService(Tournament.PlaceRanges);
     }
 
     private initRanges() {

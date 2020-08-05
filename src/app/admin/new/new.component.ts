@@ -42,7 +42,7 @@ export class NewComponent implements OnInit {
   sport: Sport;
   validations: any = {
     minnroffields: 1,
-    maxnroffields: Tournament.StructureOptions.placeRange.max / 2,
+    maxnroffields: 64,
     minlengthname: League.MIN_LENGTH_NAME,
     maxlengthname: League.MAX_LENGTH_NAME,
     maxlengthsportname: League.MAX_LENGTH_SPORT
@@ -154,7 +154,7 @@ export class NewComponent implements OnInit {
     this.tournamentRepository.createObject(jsonTournament)
       .subscribe(
         /* happy path */ tournament => {
-          const structureService = new StructureService(Tournament.StructureOptions);
+          const structureService = new StructureService(Tournament.PlaceRanges);
           const structure: Structure = structureService.create(tournament.getCompetition(), nrofcompetitors);
           this.structureRepository.editObject(structure, tournament)
             .subscribe(

@@ -24,7 +24,7 @@ export class StructureRoundComponent {
 
   constructor(public nameService: NameService, public cssService: CSSService) {
     this.resetAlert();
-    this.structureService = new StructureService(Tournament.StructureOptions);
+    this.structureService = new StructureService(Tournament.PlaceRanges);
   }
 
   arrangeAction(action: string) {

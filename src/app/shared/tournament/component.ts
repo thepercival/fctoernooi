@@ -78,7 +78,7 @@ export class TournamentComponent {
     }
 
     protected getStructureService(): StructureService {
-        return new StructureService(Tournament.StructureOptions);
+        return new StructureService(Tournament.PlaceRanges);
     }
 }
 
