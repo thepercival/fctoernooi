@@ -12,12 +12,13 @@ export class ModalRoundNumbersComponent implements OnInit {
     @Input() structure: Structure;
     @Input() subject: string;
     protected roundNumber: RoundNumber;
+    public nameService: NameService;
     processing = true;
 
     constructor(
-        public nameService: NameService,
         public activeModal: NgbActiveModal
     ) {
+        this.nameService = new NameService(undefined);
     }
 
     ngOnInit() {

@@ -16,6 +16,7 @@ import { CompetitorChooseModalComponent } from '../competitorchoosemodal/competi
 import { FavoritesRepository } from '../../../lib/favorites/repository';
 import { Favorites } from '../../../lib/favorites';
 import { LockerRoomRepository } from '../../../lib/lockerroom/repository';
+import { TournamentCompetitor } from '../../../lib/competitor';
 
 
 
@@ -54,10 +55,10 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
 
   initLockerRooms() {
     if (this.router.url.indexOf('/public') === 0) {
-      this.favorites = this.favRepository.getItem(this.tournament);
+      this.favorites = this.favRepository.getObject(this.tournament);
       this.editMode = false;
     }
-    const competitors = this.structure.getFirstRoundNumber().getCompetitors();
+    const competitors = this.tournament.getCompetitors();
     this.validator = new LockerRoomValidator(competitors, this.tournament.getLockerRooms());
     this.hasCompetitors = competitors.length > 0;
     this.processing = false;
@@ -124,9 +125,10 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
     const activeModal = this.modalService.open(CompetitorChooseModalComponent);
     activeModal.componentInstance.validator = this.validator;
     activeModal.componentInstance.places = this.structure.getFirstRoundNumber().getPlaces();
+    activeModal.componentInstance.competitors = this.tournament.getCompetitors();
     activeModal.componentInstance.lockerRoom = lockerRoom;
     activeModal.componentInstance.selectedCompetitors = lockerRoom.getCompetitors().slice();
-    activeModal.result.then((selectedCompetitors: Competitor[]) => {
+    activeModal.result.then((selectedCompetitors: TournamentCompetitor[]) => {
       this.processing = true;
       this.lockerRoomRepository.syncCompetitors(lockerRoom, selectedCompetitors)
         .subscribe(

@@ -8,7 +8,8 @@ import {
   PlaceLocation,
   QualifyGroup,
   Round,
-  Structure
+  Structure,
+  PlaceLocationMap
 } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
 
@@ -18,11 +19,11 @@ import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository';
-import { PlaceRepository } from '../../lib/ngx-sport/place/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { CompetitorListRemoveModalComponent } from './listremovemodal.component';
 import { LockerRoomValidator } from '../../lib/lockerroom/validator';
+import { TournamentCompetitor } from '../../lib/competitor';
 
 @Component({
   selector: 'app-tournament-competitors',
@@ -33,13 +34,15 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
 
   places: Place[];
   alert: IAlert;
-  placeToSwap: Place;
+  swapPlace: Place;
   focusId: number;
   showSwap: boolean;
   orderMode = false;
   hasBegun: boolean;
   lockerRoomValidator: LockerRoomValidator;
   areSomeCompetitorsArranged: boolean;
+  private placeLocationMap: PlaceLocationMap
+  public nameService: NameService;
 
   constructor(
     route: ActivatedRoute,
@@ -47,9 +50,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     private planningRepository: PlanningRepository,
-    private placeRepository: PlaceRepository,
     private competitorRepository: CompetitorRepository,
-    public nameService: NameService,
     private modalService: NgbModal,
     private myNavigation: MyNavigation
   ) {
@@ -58,8 +59,10 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
 
   ngOnInit() {
     super.myNgOnInit(() => {
+      const competitors = this.tournament.getCompetitors();
+      this.placeLocationMap = new PlaceLocationMap(competitors);
+      this.nameService = new NameService(this.placeLocationMap);
       this.initPlaces();
-      const competitors = this.structure.getFirstRoundNumber().getCompetitors();
       this.lockerRoomValidator = new LockerRoomValidator(competitors, this.tournament.getLockerRooms());
       this.areSomeCompetitorsArranged = this.lockerRoomValidator.areSomeArranged(); // caching
     });
@@ -68,7 +71,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   initPlaces() {
     const round = this.structure.getRootRound();
     round.getPlaces().forEach(place => {
-      if (place.getCompetitor() === undefined && this.focusId === undefined) {
+      if (!this.hasCompetitor(place) && this.focusId === undefined) {
         this.focusId = place.getId();
       }
     });
@@ -86,12 +89,20 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.resetAlert();
   }
 
+  getCompetitor(place: Place) {
+    return this.placeLocationMap.getCompetitor(place);
+  }
+
+  private hasCompetitor(place: Place): boolean {
+    return this.getCompetitor(place) === undefined;
+  }
+
   allPlaceHaveCompetitor() {
-    return !this.places.some(place => place.getCompetitor() === undefined);
+    return !this.places.some(place => !this.hasCompetitor(place));
   }
 
   atLeastTwoPlaceHaveCompetitor() {
-    return this.places.filter(place => place.getCompetitor() !== undefined).length >= 2;
+    return this.places.filter(place => this.hasCompetitor(place)).length >= 2;
   }
 
   showLockerRoomNotArranged(competitor: Competitor): boolean {
@@ -104,7 +115,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
 
   linkToEdit(tournament: Tournament, place: Place) {
     this.router.navigate(
-      ['/admin/competitor', tournament.getId(), place.getId()]
+      ['/admin/competitor', tournament.getId(), place.getPouleNr(), place.getPlaceNr()]
     );
   }
 
@@ -114,53 +125,65 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     );
   }
 
-  swapTwo(placeToSwap: Place) {
+  swapTwo(swapPlaceTwo: Place) {
     this.resetAlert();
-    if (this.placeToSwap === undefined) {
-      this.placeToSwap = placeToSwap;
+    if (this.swapPlace === undefined) {
+      this.swapPlace = swapPlaceTwo;
       return;
     }
-    if (this.placeToSwap === placeToSwap) {
-      this.placeToSwap = undefined;
+    if (this.swapPlace === swapPlaceTwo) {
+      this.swapPlace = undefined;
       return;
     }
     this.processing = true;
     this.setAlert('info', 'volgorde wordt gewijzigd');
-    const tmp = this.placeToSwap.getCompetitor();
-    this.placeToSwap.setCompetitor(placeToSwap.getCompetitor());
-    placeToSwap.setCompetitor(tmp);
-
-    const reposUpdates: Observable<Place>[] = [];
-    reposUpdates.push(this.placeRepository.editObject(this.placeToSwap, this.placeToSwap.getPoule(), this.tournament));
-    reposUpdates.push(this.placeRepository.editObject(placeToSwap, placeToSwap.getPoule(), this.tournament));
-
+    const swapCompetitor = <TournamentCompetitor>this.placeLocationMap.getCompetitor(this.swapPlace);
+    const swapCompetitorTwo = <TournamentCompetitor>this.placeLocationMap.getCompetitor(swapPlaceTwo);
+    const reposUpdates: Observable<Competitor>[] = [];
+    reposUpdates.push(this.competitorRepository.editObject(swapCompetitor, this.tournament));
+    reposUpdates.push(this.competitorRepository.editObject(swapCompetitorTwo, this.tournament));
     this.swapHelper(reposUpdates);
   }
 
   swapAll() {
     this.processing = true;
     this.setAlert('info', 'volgorde wordt willekeurig gewijzigd');
-    const placesCopy = this.places.slice();
-    const competitors = this.structure.getRootRound().getCompetitors();
-    while (competitors.length > 0) {
-      const placeIndex = Math.floor(Math.random() * placesCopy.length) + 1;
-      placesCopy[placeIndex - 1].setCompetitor(competitors.pop());
-      placesCopy.splice(placeIndex - 1, 1);
+
+    const reposUpdates: Observable<Competitor>[] = [];
+    const competitors = this.tournament.getCompetitors();
+    let swapCompetitor;
+    while (competitors.length > 1) {
+      const idx = Math.floor(Math.random() * competitors.length) + 1;
+      if (swapCompetitor) {
+        this.swap(swapCompetitor, competitors[idx]);
+        reposUpdates.push(this.competitorRepository.editObject(swapCompetitor, this.tournament));
+        reposUpdates.push(this.competitorRepository.editObject(competitors[idx], this.tournament));
+        swapCompetitor = undefined;
+      } else {
+        swapCompetitor = competitors[idx];
+      }
     }
-    const reposUpdates: Observable<Place>[] = [];
-    this.places.forEach(placeIt => reposUpdates.push(this.placeRepository.editObject(placeIt, placeIt.getPoule(), this.tournament)));
     this.swapHelper(reposUpdates);
   }
 
-  protected swapHelper(reposUpdates: Observable<Place>[]) {
+  protected swap(competitorOne: TournamentCompetitor, competitorTwo: TournamentCompetitor) {
+    const tmpPouleNr = competitorOne.getPouleNr();
+    competitorOne.setPouleNr(competitorTwo.getPouleNr());
+    competitorTwo.setPouleNr(tmpPouleNr);
+    const tmpPlaceNr = competitorOne.getPlaceNr();
+    competitorOne.setPlaceNr(competitorTwo.getPlaceNr());
+    competitorTwo.setPlaceNr(tmpPlaceNr);
+  }
+
+  protected swapHelper(reposUpdates: Observable<Competitor>[]) {
     forkJoin(reposUpdates).subscribe(results => {
       this.setAlert('success', 'volgorde gewijzigd');
-      this.placeToSwap = undefined;
+      this.swapPlace = undefined;
       this.processing = false;
     },
       err => {
         this.setAlert('danger', 'volgorde niet gewijzigd: ' + err);
-        this.placeToSwap = undefined;
+        this.swapPlace = undefined;
         this.processing = false;
       }
     );
@@ -171,37 +194,20 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.setAlert('info', 'er wordt een pouleplek toegevoegd');
     try {
       const rootRound = this.structure.getRootRound();
-      const competitorLocations = this.getCompetitorLocations(rootRound);
       const structureService = this.getStructureService();
       const addedPlace = structureService.addPlaceToRootRound(rootRound);
-      this.setCompetitors(rootRound, competitorLocations);
       this.saveStructure('pouleplek ' + this.nameService.getPlaceName(addedPlace) + ' is toegevoegd');
     } catch (e) {
       this.setAlert('danger', e.message);
     }
   }
 
-  getCompetitorLocations(rootRound: Round): CompetitorLocation[] {
-    const competitorLocations: CompetitorLocation[] = [];
-    rootRound.getPlaces().forEach(place => {
-      competitorLocations.push({ placeLocation: place.getLocation(), competitor: place.getCompetitor() });
-    });
-    return competitorLocations;
-  }
-
-  setCompetitors(rootRound: Round, competitorLocations: CompetitorLocation[]) {
-    competitorLocations.forEach(competitorLocation => {
-      const poule = rootRound.getPoule(competitorLocation.placeLocation.getPouleNr());
-      const place = poule.getPlace(competitorLocation.placeLocation.getPlaceNr());
-      if (place !== undefined) { // can be undefined if place is removed
-        place.setCompetitor(competitorLocation.competitor);
-      }
-    });
-  }
-
   preRemove(place: Place) {
     const activeModal = this.modalService.open(CompetitorListRemoveModalComponent);
     activeModal.componentInstance.place = place;
+    activeModal.componentInstance.competitor = this.getCompetitor(place);
+    activeModal.componentInstance.allPlacesAssigned = this.tournament.getCompetitors().length === place.getRound().getNrOfPlaces();
+
     activeModal.result.then((result) => {
       if (result === 'remove-place') {
         this.removePlaceFromRootRound(place);
@@ -228,7 +234,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   /**
    * verwijder de deelnemer van de pouleplek
    */
-  registerCompetitor(competitor: Competitor): void {
+  registerCompetitor(competitor: TournamentCompetitor): void {
     this.processing = true;
     const newRegistered = competitor.getRegistered() === true ? false : true;
     competitor.setRegistered(newRegistered);
@@ -249,10 +255,9 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
    */
   removeCompetitor(place: Place): void {
     this.processing = true;
-    const competitor = place.getCompetitor() !== undefined ? place.getCompetitor().getName() : '';
-    place.setCompetitor(undefined);
-    this.setAlert('info', 'deelnemer ' + competitor + ' wordt verwijderd');
-    this.placeRepository.editObject(place, place.getPoule(), this.tournament)
+    const competitor = this.placeLocationMap.getCompetitor(place);
+    this.setAlert('info', 'deelnemer ' + competitor.getName() + ' wordt verwijderd');
+    this.competitorRepository.removeObject(competitor, this.tournament)
       .subscribe(
             /* happy path */ placeRes => {
           this.setAlert('success', 'deelnemer ' + competitor + ' is verwijderd');
@@ -262,21 +267,18 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
       );
   }
 
-  /**
-   * @param place
-   */
   removePlaceFromRootRound(place: Place): void {
     this.processing = true;
     const rootRound = this.structure.getRootRound();
-    const competitor = place.getCompetitor() !== undefined ? ' en deelnemer ' + place.getCompetitor().getName() : '';
-    const singledoubleWill = place.getCompetitor() !== undefined ? 'worden' : 'wordt';
+    const competitor = this.placeLocationMap.getCompetitor(place);
+    const suffix = competitor ? ' en deelnemer ' + competitor.getName() : '';
+    const singledoubleWill = competitor ? 'worden' : 'wordt';
     this.setAlert('info', 'een pouleplek' + competitor + ' ' + singledoubleWill + ' verwijderd');
     try {
-      place.setCompetitor(rootRound.getFirstPlace(QualifyGroup.LOSERS).getCompetitor());
-      const competitorLocations = this.getCompetitorLocations(rootRound);
+
       this.getStructureService().removePlaceFromRootRound(rootRound);
-      this.setCompetitors(rootRound, competitorLocations);
-      const singledoubleIs = place.getCompetitor() !== undefined ? 'zijn' : 'is';
+
+      const singledoubleIs = competitor ? 'zijn' : 'is';
       this.saveStructure('een pouleplek' + competitor + ' ' + singledoubleIs + ' verwijderd');
     } catch (e) {
       this.processing = false;

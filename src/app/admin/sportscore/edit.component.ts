@@ -11,6 +11,7 @@ import {
     JsonSportScoreConfig,
     SportMapper,
     Structure,
+    PlaceLocationMap,
 } from 'ngx-sport';
 import { CSSService } from '../../shared/common/cssservice';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -34,6 +35,7 @@ export class SportScoreEditComponent implements OnInit {
     @Input() sportConfig: SportConfig;
     @Input() startRoundNumber: RoundNumber;
     public hasBegun: boolean;
+    public nameService: NameService;
 
     form: FormGroup;
     translateService: TranslateService;
@@ -48,7 +50,6 @@ export class SportScoreEditComponent implements OnInit {
         private sportScoreConfigRepository: SportScoreConfigRepository,
         public cssService: CSSService,
         public sportConfigService: SportConfigService,
-        public nameService: NameService,
         private sportMapper: SportMapper,
         fb: FormBuilder,
         private modalService: NgbModal
@@ -66,6 +67,7 @@ export class SportScoreEditComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.nameService = new NameService(new PlaceLocationMap(this.tournament.getCompetitors()));
         this.changeStartRoundNumber(this.startRoundNumber);
     }
 

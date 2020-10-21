@@ -12,7 +12,7 @@
                     Om
                     een pouleplek te kunnen verwijderen, moet de
                     "Opzet" gewijzigd worden.</ngb-alert>
-                <ngb-alert *ngIf="allPlacesHaveCompetitor()" [type]="'info'" [dismissible]="false">Wanneer je een
+                <ngb-alert *ngIf="allPlacesAssigned" [type]="'info'" [dismissible]="false">Wanneer je een
                     pouleplek bij de opzet verwijderd,
                     wordt de laatste
                     pouleplek verwijderd. Verplaats daarom eventueel eerst de te verwijderen deelnemer naar de laatste
@@ -35,13 +35,13 @@
     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
         (click)="activeModal.close('to-structure')">naar
         <fa-icon [icon]="['fac', 'structure']"></fa-icon> opzet</button>
-    <button *ngIf="place.getCompetitor() !== undefined" type="button" class="btn btn-outline-secondary"
-        data-dismiss="modal" (click)="activeModal.close('remove-competitor')">
+    <button *ngIf="competitor" type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+        (click)="activeModal.close('remove-competitor')">
         <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon> <span> deelnemer</span>
         <span class="d-none d-sm-inline"> verwijderen</span>
     </button>
-    <button *ngIf="place.getCompetitor() === undefined" type="button" class="btn btn-outline-secondary"
-        data-dismiss="modal" (click)="activeModal.close('close')">sluiten</button>
+    <button *ngIf="competitor === undefined" type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+        (click)="activeModal.close('close')">sluiten</button>
 </div>
 
 <div *ngIf="!hasMinimumNrOfPlacesPerPoule() && !allCompetitorsQualifyForNextRound()"
@@ -51,11 +51,11 @@
         <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon><span> pouleplek</span>
         <span class="d-none d-sm-inline"> verwijderen</span>
     </button>
-    <button *ngIf="place.getCompetitor() !== undefined" type="button" class="btn btn-outline-secondary"
-        data-dismiss="modal" (click)="activeModal.close('remove-competitor')">
+    <button *ngIf="competitor" type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+        (click)="activeModal.close('remove-competitor')">
         <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon> <span> deelnemer</span>
         <span class="d-none d-sm-inline"> verwijderen</span>
     </button>
-    <button *ngIf="place.getCompetitor() === undefined" type="button" class="btn btn-outline-secondary"
-        data-dismiss="modal" (click)="activeModal.close('close')">sluiten</button>
+    <button *ngIf="competitor === undefined" type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+        (click)="activeModal.close('close')">sluiten</button>
 </div>

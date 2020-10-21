@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Competitor, NameService, Place, Referee } from 'ngx-sport';
+import { Competitor, NameService, Place, Referee, PlaceLocationMap } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
 import { Favorites } from '../../lib/favorites';
@@ -20,13 +20,14 @@ export class FilterComponent extends TournamentComponent implements OnInit {
     places: Place[];
     favorites: Favorites;
     processingItem: Referee | Place;
+    public placeLocationMap: PlaceLocationMap;
+    public nameService: NameService;
 
     constructor(
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
         sructureRepository: StructureRepository,
-        public nameService: NameService,
         private myNavigation: MyNavigation,
         public favRepository: FavoritesRepository,
         protected authService: AuthService
@@ -37,8 +38,10 @@ export class FilterComponent extends TournamentComponent implements OnInit {
 
     ngOnInit() {
         super.myNgOnInit(() => {
+            this.placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
+            this.nameService = new NameService(this.placeLocationMap);
             this.initPlaces();
-            this.favorites = this.favRepository.getItem(this.tournament);
+            this.favorites = this.favRepository.getObject(this.tournament);
             this.processing = false;
         });
     }
@@ -56,7 +59,11 @@ export class FilterComponent extends TournamentComponent implements OnInit {
     }
 
     hasCompetitors() {
-        return this.places.some(place => place.getCompetitor() !== undefined);
+        return this.tournament.getCompetitors().length > 0;
+    }
+
+    getCompetitor(place: Place): Competitor {
+        return this.placeLocationMap.getCompetitor(place);
     }
 
     save() {
@@ -69,7 +76,7 @@ export class FilterComponent extends TournamentComponent implements OnInit {
         } else {
             this.favorites.addCompetitor(competitor);
         }
-        this.favRepository.saveItem(this.tournament, this.favorites);
+        this.favRepository.editObject(this.favorites);
     }
 
     toggleFavoriteReferee(referee: Referee) {
@@ -78,7 +85,7 @@ export class FilterComponent extends TournamentComponent implements OnInit {
         } else {
             this.favorites.addReferee(referee);
         }
-        this.favRepository.saveItem(this.tournament, this.favorites);
+        this.favRepository.editObject(this.favorites);
     }
 
     hasReferees() {

@@ -56,7 +56,7 @@
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
             </h5>
-            <p class="card-text" *ngIf="competitorsComplete()">
+            <p class="card-text" *ngIf="allPlacesAssigned()">
               <span *ngIf="!someCompetitorsRegistered()">
                 <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> alle namen ingevuld
               </span>
@@ -64,9 +64,9 @@
                 <fa-icon [icon]="['fas', 'check-circle']" class="text-warning"></fa-icon> deelnemers aanmelden
               </span>
             </p>
-            <p class="card-text" *ngIf="!competitorsComplete()">
+            <p class="card-text" *ngIf="!allPlacesAssigned()">
               <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> vul de namen in
-              ({{structure.getFirstRoundNumber().getNrOfCompetitors()}}/{{structure.getFirstRoundNumber().getNrOfPlaces()}})
+              ({{getNrOfCompetitors()}}/{{getNrOfPlaces()}})
             </p>
           </div>
         </div>

@@ -6,11 +6,11 @@ import {
   Round,
   RoundNumber,
   Structure,
+  PlaceLocationMap,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
-import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
@@ -24,6 +24,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   changedRoundNumber: RoundNumber;
   originalCompetitors: Competitor[];
   clonedStructure: Structure;
+  public placeLocationMap: PlaceLocationMap;
 
   uiSliderConfigExample: any = {
     behaviour: 'drag',
@@ -38,7 +39,6 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     tournamentRepository: TournamentRepository,
     structureRepository: StructureRepository,
     private planningRepository: PlanningRepository,
-    private competitorRepository: CompetitorRepository,
     private myNavigation: MyNavigation
   ) {
     super(route, router, tournamentRepository, structureRepository);
@@ -46,47 +46,15 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
 
   ngOnInit() {
     super.myNgOnInit(() => {
+      this.placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
       this.clonedStructure = this.createClonedStructure(this.structure);
       this.processing = false;
     });
   }
 
   createClonedStructure(structure: Structure): Structure {
-    this.originalCompetitors = structure.getFirstRoundNumber().getCompetitors();
+    this.originalCompetitors = this.tournament.getCompetitors();
     return cloneDeep(structure);
-  }
-
-  processUnusedCompetitors(rootRound: Round) {
-    const unusedCompetitors = this.competitorRepository.getUnusedCompetitors(this.competition);
-    const oldCompetitors = this.originalCompetitors;
-    const newCompetitors = rootRound.getCompetitors();
-
-    // add competitors which are not used anymore to unusedcompetitors
-    oldCompetitors.forEach(oldCompetitor => {
-      if (newCompetitors.find(newCompetitor => newCompetitor.getId() === oldCompetitor.getId()) === undefined
-        && unusedCompetitors.find(unusedCompetitor => unusedCompetitor.getId() === oldCompetitor.getId()) === undefined
-      ) {
-        unusedCompetitors.push(oldCompetitor);
-      }
-    });
-
-    // remove competitors which are used again
-    unusedCompetitors.forEach(unusedCompetitor => {
-      if (newCompetitors.find(newCompetitor => newCompetitor.getId() === unusedCompetitor.getId()) !== undefined) {
-        const index = unusedCompetitors.indexOf(unusedCompetitor);
-        if (index > -1) {
-          unusedCompetitors.splice(index, 1);
-        }
-      }
-    });
-
-    // add an unused Competitor if there are places without a Competitor
-    const places = rootRound.getPlaces();
-    places.forEach((place) => {
-      if (place.getCompetitor() === undefined) {
-        place.setCompetitor(unusedCompetitors.shift());
-      }
-    });
   }
 
   setChangedRoundNumber(changedRoundNumber: RoundNumber) {
@@ -100,8 +68,6 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   saveStructure() {
     this.processing = true;
     this.setAlert('info', 'wijzigingen worden opgeslagen');
-
-    this.processUnusedCompetitors(this.clonedStructure.getRootRound());
 
     this.structureRepository.editObject(this.clonedStructure, this.tournament)
       .subscribe(

@@ -13,9 +13,9 @@ export class LiveboardGamesComponent {
     private sportScoreConfigService: SportScoreConfigService;
 
     @Input() screen: GamesScreen;
+    @Input() nameService: NameService;
 
     constructor(
-        public nameService: NameService
     ) {
         this.sportScoreConfigService = new SportScoreConfigService();
     }

@@ -12,9 +12,9 @@ import { PoulesRankingScreen } from '../../lib/liveboard/screens';
 export class LiveboardPoulesComponent {
     @Input() screen: PoulesRankingScreen;
     @Input() ruleSet: number;
+    @Input() nameService: NameService;
 
     constructor(
-        public nameService: NameService,
         public cssService: CSSService
     ) {
     }

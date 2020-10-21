@@ -21,7 +21,8 @@
     </button>
   </div>
   <div *ngIf="!processing" class="row text-center">
-    <app-tournament-structureround [editable]="false" [round]="structure.getRootRound()" [favorites]="competitors">
+    <app-tournament-structureround [editable]="false" [round]="structure.getRootRound()" [favorites]="competitors"
+      [placeLocationMap]="placeLocationMap">
     </app-tournament-structureround>
   </div>
 </div>

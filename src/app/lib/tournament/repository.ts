@@ -4,10 +4,10 @@ import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { Tournament } from '../tournament';
-import { JsonTournament, TournamentMapper } from './mapper';
+import { TournamentMapper } from './mapper';
 import { APIRepository } from '../repository';
-import { JsonLockerRoom, LockerRoomMapper } from '../lockerroom/mapper';
-import { LockerRoom } from '../lockerroom';
+import { LockerRoomMapper } from '../lockerroom/mapper';
+import { JsonTournament } from './json';
 
 /**
  * Created by coen on 1-10-17.

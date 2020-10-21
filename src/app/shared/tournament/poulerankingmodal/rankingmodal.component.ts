@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Poule, NameService, RankingService } from 'ngx-sport';
+import { Poule, NameService } from 'ngx-sport';
 import { Tournament } from '../../../lib/tournament';
 
 @Component({
@@ -12,5 +12,8 @@ export class PouleRankingModalComponent {
     poule: Poule;
     tournament: Tournament;
     activeTab = 1;
-    constructor(public nameService: NameService, public activeModal: NgbActiveModal) { }
+    public nameService: NameService
+    constructor(public activeModal: NgbActiveModal) {
+        this.nameService = new NameService(undefined);
+    }
 }

@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 
 import { Tournament } from '../tournament';
-import { CompetitorMapper } from 'ngx-sport';
 import { LockerRoom } from '../lockerroom';
+import { CompetitorMapper } from '../competitor/mapper';
+import { TournamentCompetitor } from '../competitor';
+import { JsonLockerRoom } from './json';
 
 /**
  * Created by coen on 10-10-17.
@@ -16,9 +18,11 @@ export class LockerRoomMapper {
             lockerRoom = new LockerRoom(tournament, json.name);
         }
         lockerRoom.setId(json.id);
-        const association = tournament.getCompetition().getLeague().getAssociation();
         json.competitorIds.forEach(competitorId => {
-            lockerRoom.getCompetitors().push((this.competitorMapper.toObject({ id: competitorId }, association)));
+            const competitor = tournament.getCompetitors().find((competitorIt: TournamentCompetitor) => {
+                return competitorIt.getId() === competitorId;
+            });
+            lockerRoom.getCompetitors().push(competitor);
         });
         return lockerRoom;
     }
@@ -30,10 +34,4 @@ export class LockerRoomMapper {
             competitorIds: lockerRoom.getCompetitors().map(competitor => +competitor.getId())
         };
     }
-}
-
-export interface JsonLockerRoom {
-    id?: number;
-    name: string;
-    competitorIds: number[];
 }

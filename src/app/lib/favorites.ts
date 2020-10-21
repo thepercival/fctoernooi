@@ -1,71 +1,79 @@
-import { Competitor, Game, Referee } from 'ngx-sport';
+import { Game, Referee, Competitor, Place } from 'ngx-sport';
 import { LockerRoom } from './lockerroom';
+import { PlaceLocationMap } from 'ngx-sport';
+import { Tournament } from './tournament';
 
 export class Favorites {
-    constructor(
-        private tournamentId: number,
-        private competitorIds: number[] = [],
-        private refereeIds: number[] = []
-    ) {
 
+    protected placeLocationMap: PlaceLocationMap;
+
+    constructor(
+        private tournament: Tournament,
+        private competitors: Competitor[] = [],
+        private referees: Referee[] = []
+    ) {
+        this.placeLocationMap = new PlaceLocationMap(tournament.getCompetitors());
     }
 
-    getTournamentId(): number {
-        return this.tournamentId;
+    getTournament(): Tournament {
+        return this.tournament;
     }
 
     hasItems(): boolean {
         return this.hasCompetitors() || this.hasReferees();
     }
 
-    removeNonExisting(competitors: Competitor[], referees: Referee[]) {
-        this.competitorIds = this.competitorIds.filter(competitorId => {
-            return competitors.some(competitor => (+competitor.getId()) === competitorId);
-        });
-        this.refereeIds = this.refereeIds.filter(refereeId => {
-            return referees.some(referee => referee.getId() === refereeId);
-        });
-    }
+    // removeNonExisting(tournamentCompetitors: Competitor[], referees: Referee[]) {
+    //     this.competitors = this.competitors.filter(competitor => {
+    //         return tournamentCompetitors.some(tournamentCompetitor => (+competitor.getId()) === competitorId);
+    //     });
+    //     this.refereeIds = this.refereeIds.filter(refereeId => {
+    //         return referees.some(referee => referee.getId() === refereeId);
+    //     });
+    // }
 
     hasGameItem(game: Game): boolean {
         return this.hasGameReferee(game) || this.hasGameCompetitor(game);
     }
 
-    getCompetitorIds(): number[] {
-        return this.competitorIds;
-    }
+    // getCompetitorIds(): number[] {
+    //     return this.competitorIds;
+    // }
 
     hasCompetitors(): boolean {
-        return this.competitorIds.length > 0;
+        return this.competitors.length > 0;
     }
 
     hasCompetitor(competitor: Competitor): boolean {
         if (competitor === undefined) {
             return false;
         }
-        return this.competitorIds.find(competitorId => competitorId === competitor.getId()) !== undefined;
+        return this.competitors.find(competitorIt => competitorIt === competitor) !== undefined;
     }
 
     getNrOfCompetitors(): number {
-        return this.competitorIds.length;
+        return this.competitors.length;
     }
 
     hasGameCompetitor(game: Game, homeaway?: boolean): boolean {
-        return game.getPlaces(homeaway).some(gamePlace => this.hasCompetitor(gamePlace.getPlace().getCompetitor()));
+        return game.getPlaces(homeaway).some(gamePlace => {
+            const competitor = this.placeLocationMap.getCompetitor(gamePlace.getPlace().getStartLocation());
+            return competitor && this.hasCompetitor(competitor);
+        });
     }
 
     addCompetitor(competitor: Competitor) {
         if (this.hasCompetitor(competitor)) {
             return;
         }
-        this.competitorIds.push(+competitor.getId());
+        this.competitors.push(competitor);
     }
 
     removeCompetitor(competitor: Competitor) {
         if (this.hasCompetitor(competitor) === false) {
             return;
         }
-        this.competitorIds.splice(this.competitorIds.indexOf(+competitor.getId()), 1);
+        this.competitors.splice(this.competitors.indexOf(competitor), 1);
     }
 
     filterLockerRooms(lockerRooms: LockerRoom[]): LockerRoom[] {
@@ -79,15 +87,15 @@ export class Favorites {
     }
 
     hasReferees(): boolean {
-        return this.refereeIds.length > 0;
+        return this.referees.length > 0;
     }
 
     hasReferee(referee: Referee): boolean {
-        return this.refereeIds.find(refereeId => refereeId === referee.getId()) !== undefined;
+        return this.referees.find(refereeIt => refereeIt === referee) !== undefined;
     }
 
     getNrOfReferees(): number {
-        return this.refereeIds.length;
+        return this.referees.length;
     }
 
     hasGameReferee(game: Game): boolean {
@@ -95,21 +103,29 @@ export class Favorites {
         if (referee !== undefined) {
             return this.hasReferee(referee);
         }
-        return game.getRefereePlace() ? this.hasCompetitor(game.getRefereePlace().getCompetitor()) : false;
+        const competitor = this.getCompetitorFromPlace(game.getRefereePlace());
+        return competitor ? this.hasCompetitor(competitor) : false;
+    }
+
+    protected getCompetitorFromPlace(place: Place): Competitor {
+        if (!place) {
+            return undefined;
+        }
+        return this.placeLocationMap.getCompetitor(place.getStartLocation());
     }
 
     addReferee(referee: Referee) {
         if (this.hasReferee(referee)) {
             return;
         }
-        this.refereeIds.push(referee.getId());
+        this.referees.push(referee);
     }
 
     removeReferee(referee: Referee) {
         if (this.hasReferee(referee) === false) {
             return;
         }
-        this.refereeIds.splice(this.refereeIds.indexOf(referee.getId()), 1);
+        this.referees.splice(this.referees.indexOf(referee), 1);
     }
 
     filterReferees(referees: Referee[]): Referee[] {

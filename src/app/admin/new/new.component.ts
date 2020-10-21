@@ -25,7 +25,7 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { TranslateService } from '../../lib/translate';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
-import { JsonTournament } from '../../lib/tournament/mapper';
+import { JsonTournament } from '../../lib/tournament/json';
 
 
 @Component({
@@ -146,6 +146,7 @@ export class NewComponent implements OnInit {
         state: State.Created,
         sportConfigs: [this.sportConfigService.createDefaultJson(this.sport, fields)]
       },
+      competitors: [],
       lockerRooms: [],
       users: [],
       sponsors: []

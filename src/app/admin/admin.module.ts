@@ -28,7 +28,6 @@ import {
 import { ClipboardModule } from 'ngx-clipboard';
 import {
   CompetitionMapper,
-  CompetitorMapper,
   GameMapper,
   GamePlaceMapper,
   GameScoreMapper,
@@ -49,8 +48,7 @@ import {
   PlanningConfigMapper,
   LeagueMapper,
   FieldMapper,
-  AssociationMapper,
-  NameService,
+  AssociationMapper
 } from 'ngx-sport';
 
 import { CSSService } from '../shared/common/cssservice';
@@ -82,7 +80,6 @@ import { SportRepository } from '../lib/ngx-sport/sport/repository';
 import { SportConfigRepository } from '../lib/ngx-sport/sport/config/repository';
 import { SportScoreConfigRepository } from '../lib/ngx-sport/sport/scoreconfig/repository';
 import { CompetitorRepository } from '../lib/ngx-sport/competitor/repository';
-import { PlaceRepository } from '../lib/ngx-sport/place/repository';
 import { GameRepository } from '../lib/ngx-sport/game/repository';
 import { PlanningRepository } from '../lib/ngx-sport/planning/repository';
 import { PlanningConfigRepository } from '../lib/ngx-sport/planning/config/repository';
@@ -103,6 +100,7 @@ import { AuthorizationAddComponent } from './authorization/add.component';
 import { RoleItemComponent } from './authorization/roleitem.component';
 import { AuthorizationExplanationModalComponent } from './authorization/infomodal.component';
 import { PointsEditComponent } from './sportconfig/points/points.component';
+import { CompetitorMapper } from '../lib/competitor/mapper';
 
 @NgModule({
   imports: [
@@ -144,9 +142,9 @@ import { PointsEditComponent } from './sportconfig/points/points.component';
   entryComponents: [AuthorizationExplanationModalComponent, CompetitorListRemoveModalComponent, ModalRoundNumbersComponent],
   providers: [
     AssociationMapper,
+    CompetitorMapper,
     CompetitionMapper,
     CompetitorRepository,
-    CompetitorMapper,
     CSSService,
     FieldMapper,
     FieldRepository,
@@ -156,9 +154,7 @@ import { PointsEditComponent } from './sportconfig/points/points.component';
     GameScoreMapper,
     LeagueMapper,
     LockerRoomMapper,
-    NameService,
     PlaceMapper,
-    PlaceRepository,
     PlanningConfigService,
     PlanningRepository,
     PlanningMapper,

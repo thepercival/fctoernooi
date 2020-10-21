@@ -123,7 +123,7 @@ export class Liveboard {
         }
         roundNumbers.forEach(roundNumber => {
             const poulesForRanking = roundNumber.getPoules().filter(poule => poule.needsRanking());
-            const nameService = new NameService();
+            const nameService = new NameService(undefined);
             const roundsDescription = nameService.getRoundNumberName(roundNumber);
             const twoPoules: Poule[] = [];
             poulesForRanking.forEach(poule => {

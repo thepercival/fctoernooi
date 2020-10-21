@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    Competitor,
     JsonCompetitor,
     NameService,
-    Place,
+    PlaceLocationMap,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -13,7 +12,7 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
-import { PlaceRepository } from '../../lib/ngx-sport/place/repository';
+import { TournamentCompetitor } from '../../lib/competitor';
 
 @Component({
     selector: 'app-tournament-competitor-edit',
@@ -22,14 +21,16 @@ import { PlaceRepository } from '../../lib/ngx-sport/place/repository';
 })
 export class CompetitorEditComponent extends TournamentComponent implements OnInit {
     form: FormGroup;
-    place: Place;
-    competitor: Competitor;
+    competitor: TournamentCompetitor;
     hasBegun: boolean;
+    public nameService: NameService;
+    pouleNr: number;
+    placeNr: number;
 
     validations: CompetitorValidations = {
-        minlengthname: Competitor.MIN_LENGTH_NAME,
-        maxlengthname: Competitor.MAX_LENGTH_NAME,
-        maxlengthinfo: Competitor.MAX_LENGTH_INFO
+        minlengthname: TournamentCompetitor.MIN_LENGTH_NAME,
+        maxlengthname: TournamentCompetitor.MAX_LENGTH_NAME,
+        maxlengthinfo: TournamentCompetitor.MAX_LENGTH_INFO
     };
 
     constructor(
@@ -38,8 +39,6 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
-        private placeRepository: PlaceRepository,
-        public nameService: NameService,
         private myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
@@ -65,29 +64,32 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
 
     ngOnInit() {
         this.route.params.subscribe(params => {
-            super.myNgOnInit(() => this.postInit(+params.placeId));
+            super.myNgOnInit(() => this.postInit(+params.pouleNr, +params.placeNr));
         });
     }
 
-    private postInit(placeId: number) {
-        if (placeId === undefined || placeId < 1) {
+    private postInit(pouleNr: number, placeNr: number) {
+        this.pouleNr = pouleNr;
+        this.placeNr = placeNr;
+        this.hasBegun = this.structure.getRootRound().hasBegun();
+        this.nameService = new NameService(new PlaceLocationMap(this.tournament.getCompetitors()));
+
+        if (pouleNr === undefined || pouleNr < 1) {
             this.processing = false;
             return;
         }
-        const places = this.structure.getRootRound().getPlaces();
-        this.place = places.find(placeIt => placeId === placeIt.getId());
-        if (this.place === undefined) {
+
+        this.competitor = this.tournament.getCompetitors().find(competitorIt => {
+            return competitorIt.getPouleNr() === pouleNr && competitorIt.getPlaceNr() === placeNr;
+        });
+        if (this.competitor === undefined) {
             this.processing = false;
             return;
         }
-        this.competitor = this.place.getCompetitor();
 
         this.form.controls.name.setValue(this.competitor?.getName());
         this.form.controls.registered.setValue(this.competitor ? this.competitor.getRegistered() : false);
         this.form.controls.info.setValue(this.competitor?.getInfo());
-
-        this.hasBegun = this.structure.getRootRound().hasBegun();
-
         this.processing = false;
     }
 
@@ -112,51 +114,40 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
             this.processing = false;
             return;
         }
-        const association = this.competition.getLeague().getAssociation();
-        const competitor: JsonCompetitor = {
+        const jsonCompetitor: JsonCompetitor = {
             name: name,
             registered: this.form.controls.registered.value,
-            info: info ? info : undefined
+            info: info ? info : undefined,
+            pouleNr: this.pouleNr,
+            placeNr: this.placeNr
         };
 
-        this.competitorRepository.createObject(competitor, this.tournament)
+        this.competitorRepository.createObject(jsonCompetitor, this.tournament)
             .subscribe(
             /* happy path */ competitorRes => {
-                    this.assignCompetitor(competitorRes);
+                    this.navigateBack();
                 },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
             );
     }
 
-    assignCompetitor(competitor: Competitor) {
-        this.place.setCompetitor(competitor);
-        this.placeRepository.editObject(this.place, this.place.getPoule(), this.tournament)
-            .subscribe(
-                  /* happy path */ placeRes => {
-                    this.navigateBack();
-                },
-                  /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
-            );
-    }
-
 
     edit() {
-        const message = this.validateName(this.form.controls.name.value, +this.place.getCompetitor().getId());
+        const message = this.validateName(this.form.controls.name.value, this.competitor);
         if (message) {
             this.setAlert('danger', message);
             this.processing = false;
             return;
         }
 
-        const competitor = this.place.getCompetitor();
         const name = this.form.controls.name.value;
         const registered = this.form.controls.registered.value;
         const info = this.form.controls.info.value;
 
-        competitor.setName(name);
-        competitor.setRegistered(registered);
-        competitor.setInfo(info ? info : undefined);
-        this.competitorRepository.editObject(competitor, this.tournament)
+        this.competitor.setName(name);
+        this.competitor.setRegistered(registered);
+        this.competitor.setInfo(info ? info : undefined);
+        this.competitorRepository.editObject(this.competitor, this.tournament)
             .subscribe(
                     /* happy path */ competitorRes => {
                     this.navigateBack();
@@ -170,8 +161,8 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         this.myNavigation.back();
     }
 
-    protected validateName(name: string, competitorId?: number): string {
-        if (this.isNameDuplicate(name, competitorId)) {
+    protected validateName(name: string, competitor?: TournamentCompetitor): string {
+        if (this.isNameDuplicate(name, competitor)) {
             return 'de naam bestaat al voor dit toernooi';
         }
         let checkName = (name: string): string => {
@@ -187,11 +178,9 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         return checkName(name);
     }
 
-    isNameDuplicate(name: string, competitorId?: number): boolean {
-        const places = this.structure.getRootRound().getPlaces();
-        return places.find(placeIt => {
-            const competitorName = placeIt.getCompetitor() ? placeIt.getCompetitor().getName() : undefined;
-            return (name === competitorName && (competitorId === undefined || placeIt.getCompetitor().getId() === undefined));
+    isNameDuplicate(name: string, competitor: TournamentCompetitor): boolean {
+        return this.tournament.getCompetitors().find((competitorIt: TournamentCompetitor) => {
+            return (name === competitorIt.getName() && (competitor === undefined || competitor !== competitorIt));
         }) !== undefined;
     }
 

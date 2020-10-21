@@ -79,17 +79,17 @@
           <span>{{nameService.getPlaceFromName(place, false)}}</span>
         </td>
         <td class="place">
-          <span *ngIf="place.getCompetitor()">{{place.getCompetitor().getName()}}</span>
+          <span *ngIf="getCompetitor(place)">{{getCompetitor(place).getName()}}</span>
         </td>
         <td class="text-right">
-          <fa-icon class="my-2" *ngIf="place.getCompetitor() && processingItem === place.getCompetitor()"
-            [icon]="['fas', 'spinner']" [spin]="true">
+          <fa-icon class="my-2" *ngIf="getCompetitor(place) && processingItem === place" [icon]="['fas', 'spinner']"
+            [spin]="true">
           </fa-icon>
-          <label *ngIf="place.getCompetitor() && processingItem !== place.getCompetitor()"
+          <label *ngIf="getCompetitor(place) && processingItem !== place"
             class="custom-control custom-checkbox col-form-label pl-0">
             <input type="checkbox" class="custom-control-input form-check-input"
-              [checked]="favorites.hasCompetitor(place.getCompetitor())"
-              (change)="toggleFavoriteCompetitor(place.getCompetitor())">
+              [checked]="favorites.hasCompetitor(getCompetitor(place))"
+              (change)="toggleFavoriteCompetitor(getCompetitor(place))">
             <span class="custom-control-indicator"></span>
           </label>
         </td>

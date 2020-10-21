@@ -34,8 +34,9 @@
       </thead>
       <tbody>
         <app-tournament-competitor-line *ngFor="let place of places" [place]="place"
-          [showLockerRoomNotArranged]="showLockerRoomNotArranged(place.getCompetitor())" [hasBegun]="hasBegun"
-          [focus]="place.getId() === focusId" (editPressed)="editPlace($event)" (removePressed)="preRemove($event)"
+          [showLockerRoomNotArranged]="showLockerRoomNotArranged(this.getCompetitor(place))" [hasBegun]="hasBegun"
+          [competitor]="this.getCompetitor(place)" [nameService]="nameService" [focus]="place.getId() === focusId"
+          (editPressed)="editPlace($event)" (removePressed)="preRemove($event)"
           (registerPressed)="registerCompetitor($event)" (toLockerRooms)="linkToLockerRooms()">
         </app-tournament-competitor-line>
       </tbody>
@@ -47,7 +48,7 @@
         <th>naam</th>
         <th class="text-center">
           <button *ngIf="allPlaceHaveCompetitor()" type="button" class="btn btn-sm btn-outline-primary"
-            (click)="swapAll()" [disabled]="processing || placeToSwap" title="willekeurige volgorde">
+            (click)="swapAll()" [disabled]="processing || swapPlace" title="willekeurige volgorde">
             <fa-icon [icon]="['fas', 'random']"></fa-icon> willekeurig
           </button>
           <fa-icon *ngIf="!hasBegun && !allPlaceHaveCompetitor()" title="volgorder omwisselen" [icon]="['fas', 'sort']">
@@ -60,13 +61,13 @@
             <span>{{nameService.getPlaceFromName(place, false)}}</span>
           </td>
           <td>
-            <span *ngIf="place.getCompetitor()"
-              [ngClass]="{ 'registered-xs': place.getCompetitor().getRegistered() }">{{place.getCompetitor().getName()}}</span>
+            <span *ngIf="getCompetitor(place)"
+              [ngClass]="{ 'registered-xs': getCompetitor(place).getRegistered() }">{{getCompetitor(place).getName()}}</span>
           </td>
           <td class="text-center">
-            <fa-icon *ngIf="place.getCompetitor()" class="text-primary pointer" (click)="swapTwo(place)"
-              [icon]="['far', (placeToSwap === place ? 'check-' : '') + 'square']" size="2x"
-              popoverClass="popover-small" container="body" ngbPopover="selecteer tweede deelnemer
+            <fa-icon *ngIf="getCompetitor(place)" class="text-primary pointer" (click)="swapTwo(place)"
+              [icon]="['far', (swapPlace === place ? 'check-' : '') + 'square']" size="2x" popoverClass="popover-small"
+              container="body" ngbPopover="selecteer tweede deelnemer
               om ze te wisselen van plaats"></fa-icon>
           </td>
         </tr>

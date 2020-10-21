@@ -25,7 +25,7 @@
       </ngb-alert>
       <div *ngIf="!processing && tournament && structure">
         <app-tournament-roundnumber-planning *ngFor="let roundNumber of structure.getRoundNumbers()"
-          [tournament]="tournament" [roundNumber]="roundNumber" [favorites]="favRepository.getItem(tournament)"
+          [tournament]="tournament" [roundNumber]="roundNumber" [favorites]="favRepository.getObject(tournament)"
           [roles]="filterRefereeRole()" [userRefereeId]="userRefereeId" (scroll)="scroll()"
           (refreshData)="refreshData()" [refreshingData]="refreshingData">
         </app-tournament-roundnumber-planning>

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-import { RoundNumber, Poule, State, NameService } from 'ngx-sport';
+import { RoundNumber, Poule, State, NameService, PlaceLocationMap } from 'ngx-sport';
 import { Tournament } from '../../lib/tournament';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -12,15 +12,16 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class RankingRoundNumberComponent implements OnInit {
     @Input() tournament: Tournament;
     @Input() roundNumber: RoundNumber;
+    public nameService: NameService;
     show: boolean;
 
     constructor(
-        public nameService: NameService,
         private modalService: NgbModal
     ) {
     }
 
     ngOnInit() {
+        this.nameService = new NameService(undefined);
         const state = this.roundNumber.getState();
         const statePrevious = this.roundNumber.hasPrevious() ? this.roundNumber.getPrevious().getState() : undefined;
         const stateNext = this.roundNumber.hasNext() ? this.roundNumber.getNext().getState() : undefined;

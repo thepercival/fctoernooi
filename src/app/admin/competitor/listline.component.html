@@ -6,24 +6,23 @@
 <td>
   <span>{{nameService.getPlaceFromName(place, false)}}</span>
 </td>
-<td *ngIf="place.getCompetitor() && !showLockerRoomNotArranged">
-  <span
-    [ngClass]="{ 'registered-xs': place.getCompetitor().getRegistered() }">{{place.getCompetitor().getName()}}</span>
+<td *ngIf="competitor && !showLockerRoomNotArranged">
+  <span [ngClass]="{ 'registered-xs': competitor.getRegistered() }">{{competitor.getName()}}</span>
 </td>
 <!-- show tooltip -->
-<td *ngIf="place.getCompetitor() && showLockerRoomNotArranged" class="pointer" container="body" placement="top"
-  autoClose="outside" [ngbPopover]="popLockerRoom" #p="ngbPopover">
-  <span [ngClass]="{ 'registered-xs': place.getCompetitor().getRegistered() }">{{place.getCompetitor().getName()}}
+<td *ngIf="competitor && showLockerRoomNotArranged" class="pointer" container="body" placement="top" autoClose="outside"
+  [ngbPopover]="popLockerRoom" #p="ngbPopover">
+  <span [ngClass]="{ 'registered-xs': competitor.getRegistered() }">{{competitor.getName()}}
   </span>
   <fa-icon [icon]="['fas', 'door-closed']" class="text-warning"></fa-icon>
 </td>
-<td *ngIf="!place.getCompetitor()">
+<td *ngIf="!competitor">
   <button #btnEdit type="button" class="btn btn-sm btn-outline-warning" (click)="edit()">vul een naam in</button>
 </td>
 <td class="text-center d-none d-sm-table-cell">
-  <label *ngIf="place.getCompetitor()" class="custom-control custom-checkbox col-form-label pointer pl-0">
-    <input type="checkbox" class="custom-control-input form-check-input"
-      [checked]="place.getCompetitor().getRegistered()" (change)="register()">
+  <label *ngIf="competitor" class="custom-control custom-checkbox col-form-label pointer pl-0">
+    <input type="checkbox" class="custom-control-input form-check-input" [checked]="competitor.getRegistered()"
+      (change)="register()">
     <span class="custom-control-indicator"></span>
   </label>
 </td>

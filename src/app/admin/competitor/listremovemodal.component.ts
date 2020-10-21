@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Place } from 'ngx-sport';
+import { Place, Competitor } from 'ngx-sport';
 
 @Component({
     selector: 'app-ngbd-modal-listremove',
@@ -9,6 +9,8 @@ import { Place } from 'ngx-sport';
 })
 export class CompetitorListRemoveModalComponent {
     place: Place;
+    competitor: Competitor;
+    allPlacesAssigned: boolean;
 
     constructor(public activeModal: NgbActiveModal) { }
 
@@ -20,10 +22,5 @@ export class CompetitorListRemoveModalComponent {
     allCompetitorsQualifyForNextRound() {
         const rootRound = this.place.getPoule().getRound();
         return rootRound.getNrOfPlaces() <= rootRound.getNrOfPlacesChildren();
-    }
-
-    allPlacesHaveCompetitor() {
-        const rootRound = this.place.getPoule().getRound();
-        return rootRound.getPlaces().every(place => place.getCompetitor() !== undefined);
     }
 }

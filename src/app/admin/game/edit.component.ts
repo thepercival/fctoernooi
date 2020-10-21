@@ -19,6 +19,7 @@ import {
     State,
     QualifyGroup,
     RoundNumber,
+    PlaceLocationMap,
 } from 'ngx-sport';
 import { forkJoin, Observable, of } from 'rxjs';
 
@@ -29,7 +30,6 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { TranslateService } from '../../lib/translate';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
-import { PlaceRepository } from '../../lib/ngx-sport/place/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { TournamentUser } from '../../lib/tournament/user';
 import { map } from 'rxjs/operators';
@@ -68,6 +68,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
     // private originalPouleState: number;
     private rankingService: RankingService;
     private firstScoreConfig: SportScoreConfig;
+    public nameService: NameService;
 
     constructor(
         route: ActivatedRoute,
@@ -76,8 +77,6 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private gameRepository: GameRepository,
-        private placeRepository: PlaceRepository,
-        public nameService: NameService,
         private myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
@@ -93,6 +92,7 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
     ngOnInit() {
         this.route.params.subscribe(params => {
             super.myNgOnInit(() => {
+                this.nameService = new NameService(new PlaceLocationMap(this.tournament.getCompetitors()));
                 this.game = this.getGameById(+params.gameId, this.structure.getRootRound());
                 if (this.game === undefined) {
                     this.setAlert('danger', 'de wedstrijd kan niet gevonden worden');
@@ -498,18 +498,6 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
             }
         });
         return originalGameScoresTmp.length > 0;
-    }
-
-    protected setCompetitors(newQualifiers: INewQualifier[], places: Place[]): Place[] {
-        const changedPlaces: Place[] = [];
-        newQualifiers.forEach(newQualifier => {
-            const place = places.find(placeIt => newQualifier.place === placeIt);
-            if (place.getCompetitor() !== newQualifier.competitor) {
-                place.setCompetitor(newQualifier.competitor);
-                changedPlaces.push(place);
-            }
-        });
-        return changedPlaces;
     }
 
     navigateBack() {

@@ -1,5 +1,4 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { NameService } from 'ngx-sport';
 
 import { Sponsor } from '../../lib/sponsor';
 
@@ -14,9 +13,7 @@ export class LiveboardSponsorsComponent implements OnChanges {
     sponsorRows: Sponsor[][];
     viewHeight: number;
 
-    constructor(
-        public nameService: NameService
-    ) {
+    constructor() {
         this.viewHeight = 90;
     }
 

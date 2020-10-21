@@ -6,8 +6,11 @@ import { catchError, map } from 'rxjs/operators';
 import { APIRepository } from '../repository';
 import { LockerRoom } from '../lockerroom';
 import { Tournament } from '../tournament';
-import { JsonLockerRoom, LockerRoomMapper } from './mapper';
-import { Competitor, CompetitorMapper, JsonCompetitor } from 'ngx-sport';
+import { LockerRoomMapper } from './mapper';
+import { JsonCompetitor } from 'ngx-sport';
+import { TournamentCompetitor } from '../competitor';
+import { CompetitorMapper } from '../competitor/mapper';
+import { JsonLockerRoom } from './json';
 
 @Injectable()
 export class LockerRoomRepository extends APIRepository {
@@ -56,14 +59,14 @@ export class LockerRoomRepository extends APIRepository {
         );
     }
 
-    syncCompetitors(lockerRoom: LockerRoom, newCompetitors: Competitor[]): Observable<any> {
+    syncCompetitors(lockerRoom: LockerRoom, newCompetitors: TournamentCompetitor[]): Observable<any> {
         const url = this.getUrl(lockerRoom.getTournament()) + '/' + lockerRoom.getId() + '/synccompetitors';
 
-        const json = newCompetitors.map(newCompetitor => this.competitorMapper.toJson(newCompetitor));
+        const json = newCompetitors.map(newCompetitorIt => this.competitorMapper.toJson(newCompetitorIt));
         return this.http.post(url, json, this.getOptions()).pipe(
             map((any) => {
                 lockerRoom.getCompetitors().splice(0);
-                newCompetitors.forEach((newCompetitor: Competitor) => (lockerRoom.getCompetitors().push(newCompetitor)));
+                newCompetitors.forEach((newCompetitorIt: TournamentCompetitor) => (lockerRoom.getCompetitors().push(newCompetitorIt)));
             }),
             catchError((err) => this.handleError(err))
         );

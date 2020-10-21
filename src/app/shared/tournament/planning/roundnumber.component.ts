@@ -12,7 +12,9 @@ import {
   PlanningConfig,
   PlanningPeriod,
   SportScoreConfig,
-  Referee
+  Referee,
+  PlaceLocationMap,
+  Place
 } from 'ngx-sport';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -58,12 +60,13 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   hasMultiplePoules: boolean;
   planningConfig: PlanningConfig;
   translate = new TranslateService();
+  private placeLocationMap: PlaceLocationMap;
+  nameService: NameService;
 
   constructor(
     private router: Router,
     public sportConfigRouter: SportConfigRouter,
     private authService: AuthService,
-    public nameService: NameService,
     public cssService: CSSService,
     private modalService: NgbModal,
     protected planningRepository: PlanningRepository) {
@@ -74,6 +77,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
 
   ngOnInit() {
     this.translate = new TranslateService();
+    this.placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
+    this.nameService = new NameService(this.placeLocationMap);
     this.tournamentBreak = this.tournament.getBreak();
     this.planningConfig = this.roundNumber.getValidPlanningConfig();
     this.userIsAdmin = this.tournament.getUser(this.authService.getUser())?.hasRoles(Role.ADMIN);
@@ -200,8 +205,16 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     return this.breakShown;
   }
 
+  getCompetitor(place: Place) {
+    return this.placeLocationMap.getCompetitor(place.getStartLocation());
+  }
+
+  private hasCompetitor(place: Place): boolean {
+    return this.getCompetitor(place) === undefined;
+  }
+
   hasAPlaceACompetitor(game: Game): boolean {
-    return game.getPlaces().some(gamePlace => gamePlace.getPlace().getCompetitor() !== undefined);
+    return game.getPlaces().some(gamePlace => this.hasCompetitor(gamePlace.getPlace()));
   }
 
   linkToGameEdit(game: Game) {

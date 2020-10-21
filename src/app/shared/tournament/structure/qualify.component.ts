@@ -21,14 +21,13 @@ export class StructureQualifyComponent {
     @Output() roundNumberChanged = new EventEmitter<RoundNumber>();
     viewType: number = StructureViewType.ROUNDSTRUCTURE;
     alert: IAlert;
+    public nameService: NameService;
     private structureService: StructureService;
 
-    constructor(
-        // public cssService: CSSService
-        public nameService: NameService
-    ) {
+    constructor() {
         this.resetAlert();
         this.structureService = new StructureService(Tournament.PlaceRanges);
+        this.nameService = new NameService(undefined);
     }
 
     get QualifyGroupWINNERS(): number {

@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { NameService, Competitor, Place, Round, RoundNumber } from 'ngx-sport';
+import { NameService, Competitor, Place, Round, RoundNumber, PlaceLocationMap } from 'ngx-sport';
 import { LockerRoom } from '../../../lib/lockerroom';
 import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
 
@@ -12,21 +12,27 @@ import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
 export class CompetitorChooseModalComponent implements OnInit {
     @Input() validator: LockerRoomValidator;
     @Input() places: Place[];
+    @Input() competitors: Competitor[];
     @Input() lockerRoom: LockerRoom;
     @Input() selectedCompetitors: Competitor[];
     public competitorListItems: CompetitorListItem[] = [];
+    public nameService: NameService;
+    public placeLocationMap: PlaceLocationMap;
     public changed = false;
 
-    constructor(public nameService: NameService, public activeModal: NgbActiveModal) {
+    constructor(public activeModal: NgbActiveModal) {
+        this.placeLocationMap = new PlaceLocationMap(this.competitors);
+        this.nameService = new NameService(this.placeLocationMap);
     }
 
     ngOnInit() {
         this.places.forEach((place: Place) => {
+            const competitor = this.placeLocationMap.getCompetitor(place);
             this.competitorListItems.push({
                 placeName: this.nameService.getPlaceFromName(place, false),
-                competitor: place.getCompetitor(),
-                selected: this.isSelected(place.getCompetitor()),
-                nrOtherLockerRooms: this.validator.nrArranged(place.getCompetitor(), this.lockerRoom)
+                competitor: competitor,
+                selected: this.isSelected(competitor),
+                nrOtherLockerRooms: this.validator.nrArranged(competitor, this.lockerRoom)
             });
         });
     }

@@ -4,6 +4,7 @@ import { Sponsor } from './sponsor';
 import { LockerRoom } from './lockerroom';
 import { User } from './user';
 import { TournamentUser } from './tournament/user';
+import { TournamentCompetitor } from './competitor';
 
 export class Tournament {
     static readonly PlaceRanges: PlaceRange[] = [
@@ -14,6 +15,7 @@ export class Tournament {
     protected competition: Competition;
     protected users: TournamentUser[] = [];
     protected sponsors: Sponsor[] = [];
+    protected competitors: TournamentCompetitor[] = [];
     protected lockerRooms: LockerRoom[] = [];
     protected breakStartDateTime: Date;
     protected breakEndDateTime: Date;
@@ -61,6 +63,14 @@ export class Tournament {
 
     getSponsors(): Sponsor[] {
         return this.sponsors;
+    }
+
+    getCompetitors(): TournamentCompetitor[] {
+        return this.competitors;
+    }
+
+    getCompetitorNames(): string[] {
+        return this.getCompetitors().map(competitor => competitor.getName());
     }
 
     getLockerRooms(): LockerRoom[] {

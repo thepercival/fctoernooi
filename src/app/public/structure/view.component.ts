@@ -5,7 +5,7 @@ import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { Competitor } from 'ngx-sport';
+import { Competitor, PlaceLocationMap } from 'ngx-sport';
 import { Favorites } from '../../lib/favorites';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { AuthService } from '../../lib/auth/auth.service';
@@ -19,6 +19,7 @@ import { Role } from '../../lib/role';
 export class StructureViewComponent extends TournamentComponent implements OnInit {
   competitors: Competitor[] = [];
   private favorites: Favorites;
+  public placeLocationMap: PlaceLocationMap;
 
   constructor(
     route: ActivatedRoute,
@@ -34,9 +35,10 @@ export class StructureViewComponent extends TournamentComponent implements OnIni
 
   ngOnInit() {
     super.myNgOnInit(() => {
-      this.favorites = this.favRepository.getItem(this.tournament);
+      this.placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
+      this.favorites = this.favRepository.getObject(this.tournament);
       if (this.favorites.hasCompetitors()) {
-        const competitors = this.structure.getFirstRoundNumber().getCompetitors();
+        const competitors = this.tournament.getCompetitors();
         this.competitors = this.favorites.filterCompetitors(competitors);
       }
       this.processing = false;

@@ -4,8 +4,10 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../repository';
-import { Competitor, CompetitorMapper, JsonCompetitor, Competition } from 'ngx-sport';
+import { Competitor, JsonCompetitor, Competition } from 'ngx-sport';
 import { Tournament } from '../../tournament';
+import { CompetitorMapper } from '../../competitor/mapper';
+import { TournamentCompetitor } from '../../competitor';
 
 
 @Injectable()
@@ -27,14 +29,13 @@ export class CompetitorRepository extends APIRepository {
     }
 
     createObject(json: JsonCompetitor, tournament: Tournament): Observable<Competitor> {
-        const association = tournament.getCompetition().getLeague().getAssociation();
         return this.http.post(this.getUrl(tournament), json, this.getOptions()).pipe(
-            map((jsonCompetitor: JsonCompetitor) => this.mapper.toObject(jsonCompetitor, association)),
+            map((jsonCompetitor: JsonCompetitor) => this.mapper.toObject(jsonCompetitor, tournament)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    editObject(competitor: Competitor, tournament: Tournament): Observable<Competitor> {
+    editObject(competitor: TournamentCompetitor, tournament: Tournament): Observable<Competitor> {
         const url = this.getUrl(tournament) + '/' + competitor.getId();
         return this.http.put(url, this.mapper.toJson(competitor), this.getOptions()).pipe(
             map((jsonCompetitor: JsonCompetitor) => this.mapper.updateObject(jsonCompetitor, competitor)),
@@ -50,40 +51,21 @@ export class CompetitorRepository extends APIRepository {
         }
         return unusedCompetitors.competitors;
     }
+
+    removeObject(competitor: Competitor, tournament: Tournament): Observable<void> {
+        const url = this.getUrl(tournament) + '/' + competitor.getId();
+        return this.http.delete(url, this.getOptions()).pipe(
+            map((jsonCompetitor: JsonCompetitor) => {
+                const index = tournament.getCompetitors().indexOf(<TournamentCompetitor>competitor);
+                if (index > -1) {
+                    tournament.getCompetitors().splice(index, 1);
+                }
+            }),
+            catchError((err) => this.handleError(err))
+        );
+    }
 }
-/**
-    createObject(json: JsonCompetitor, association: Association): Observable<Competitor> {
-        const options = this.getOptions(association);
-        return this.http.post(this.url, json, options).pipe(
-            map((jsonRes: JsonCompetitor) => this.mapper.toObject(jsonRes, association)),
-            catchError((err) => this.handleError(err))
-        );
-    }
 
-    editObject(competitor: Competitor): Observable<Competitor> {
-        const options = this.getOptions(competitor.getAssociation());
-        return this.http.put(this.url + '/' + competitor.getId(), this.mapper.toJson(competitor), options).pipe(
-            map((json: JsonCompetitor) => this.mapper.toObject(json, competitor.getAssociation(), competitor)),
-            catchError((err) => this.handleError(err))
-        );
-    }
-
-    protected getOptions(association: Association, name?: string): { headers: HttpHeaders; params: HttpParams } {
-
-        let httpParams = new HttpParams();
-        httpParams = httpParams.set('associationid', association.getId().toString());
-        if (name !== undefined) {
-            httpParams = httpParams.set('name', name);
-        }
-        return {
-            headers: super.getHeaders(),
-            params: httpParams
-        };
-    }
-
-
-
-*/
 
 export interface UnusedCompetitors {
     competition: Competition;

@@ -50,11 +50,11 @@
   <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
 
   <!-- scheduled games and results screen -->
-  <app-tournament-liveboard-games *ngIf="isGamesScreen()" [screen]="activeScreen">
+  <app-tournament-liveboard-games *ngIf="isGamesScreen()" [screen]="activeScreen" [nameService]="nameService">
   </app-tournament-liveboard-games>
 
   <!-- pouleranking screen -->
-  <app-tournament-liveboard-poules *ngIf="isPoulesRankingScreen()" [screen]="activeScreen"
+  <app-tournament-liveboard-poules *ngIf="isPoulesRankingScreen()" [screen]="activeScreen" [nameService]="nameService"
     [ruleSet]="competition.getRuleSet()">
   </app-tournament-liveboard-poules>
 

@@ -12,9 +12,9 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { LockerRoomValidator } from '../../lib/lockerroom/validator';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { Favorites } from '../../lib/favorites';
-import { Competitor } from 'ngx-sport';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { LiveboardLink } from '../../lib/liveboard/link';
+import { TournamentCompetitor } from '../../lib/competitor';
 
 @Component({
     selector: 'app-tournament-public',
@@ -26,7 +26,7 @@ export class HomeComponent extends TournamentComponent implements OnInit, OnDest
     translate: TranslateService;
     allHavePlannings: boolean;
     lockerRoomValidator: LockerRoomValidator;
-    competitors: Competitor[];
+    competitors: TournamentCompetitor[];
     favorites: Favorites;
 
     constructor(
@@ -49,10 +49,9 @@ export class HomeComponent extends TournamentComponent implements OnInit, OnDest
     }
 
     postNgOnInit() {
-        this.competitors = this.structure.getFirstRoundNumber().getCompetitors();
+        this.competitors = this.tournament.getCompetitors();
         this.lockerRoomValidator = new LockerRoomValidator(this.competitors, this.tournament.getLockerRooms());
-        this.favRepository.removeNonExisting(this.tournament, this.competitors, this.competition.getReferees());
-        this.favorites = this.favRepository.getItem(this.tournament);
+        this.favorites = this.favRepository.getObject(this.tournament);
         this.initLiveboardLink();
         this.processing = false;
     }

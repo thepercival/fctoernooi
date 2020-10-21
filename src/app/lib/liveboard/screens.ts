@@ -1,7 +1,7 @@
 import { Game, Poule } from 'ngx-sport';
 
 import { Sponsor } from '../sponsor';
-import { VoetbalRange } from 'ngx-sport/src/range';
+import { VoetbalRange } from 'ngx-sport';
 
 export class Screen {
     protected description: string;

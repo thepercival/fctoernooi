@@ -5,11 +5,11 @@ import {
     RoundNumber,
     PlanningConfig,
     PlanningConfigService,
-    PlanningConfigMapper,
     JsonPlanningConfig,
     SportConfigService,
     StructureService,
-    SportConfig,
+    PlaceLocationMap,
+    PouleStructure,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -33,7 +33,9 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     startRoundNumber: RoundNumber;
     hasBegun: boolean;
     form: FormGroup;
+    private pouleStructure: PouleStructure;
     private structureService: StructureService;
+    public nameService: NameService;
     validations: PlanningConfigValidations = {
         minNrOfHeadtohead: 1,
         maxNrOfHeadtohead: 4,
@@ -48,7 +50,6 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         sructureRepository: StructureRepository,
         private planningConfigService: PlanningConfigService,
         private planningConfigRepository: PlanningConfigRepository,
-        public nameService: NameService,
         private myNavigation: MyNavigation,
         private planningRepository: PlanningRepository,
         private sportConfigService: SportConfigService,
@@ -108,11 +109,13 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         const startRoundNumber = this.structure.getRoundNumber(startRoundNumberAsValue);
         this.changeStartRoundNumber(startRoundNumber);
         this.initRanges();
+        this.nameService = new NameService(new PlaceLocationMap(this.tournament.getCompetitors()));
         this.processing = false;
     }
 
     changeStartRoundNumber(startRoundNumber: RoundNumber) {
         this.startRoundNumber = startRoundNumber;
+        this.pouleStructure = startRoundNumber.createPouleStructure();
         this.hasBegun = this.startRoundNumber.hasBegun()
         this.resetForm(startRoundNumber.getValidPlanningConfig());
         this.resetAlert();
@@ -189,17 +192,15 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     protected getSelfRefereeAvailable(): number {
         const sportConfigs = this.competition.getSportConfigs();
-        const nrOfPoules = this.startRoundNumber.getPoules().length;
-        const nrOfPlaces = this.startRoundNumber.getNrOfPlaces();
 
         let selfRefereeAvailable = PlanningConfig.SELFREFEREE_DISABLED;
 
         const maxNrOfGamePlaces = this.sportConfigService.getMaxNrOfGamePlaces(sportConfigs, this.form.value['teamup'], false);
-        const otherPoulesAvailable = this.planningConfigService.selfRefereeOtherPoulesAvailable(nrOfPoules);
+        const otherPoulesAvailable = this.planningConfigService.selfRefereeOtherPoulesAvailable(this.pouleStructure);
         if (otherPoulesAvailable) {
             selfRefereeAvailable += PlanningConfig.SELFREFEREE_OTHERPOULES;
         }
-        const samePouleAvailable = this.planningConfigService.selfRefereeSamePouleAvailable(nrOfPoules, nrOfPlaces, maxNrOfGamePlaces);
+        const samePouleAvailable = this.planningConfigService.selfRefereeSamePouleAvailable(this.pouleStructure, maxNrOfGamePlaces);
         if (samePouleAvailable) {
             selfRefereeAvailable += PlanningConfig.SELFREFEREE_SAMEPOULE;
         }

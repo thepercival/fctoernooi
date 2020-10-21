@@ -31,8 +31,8 @@ export class RankingComponent extends TournamentComponent implements OnInit {
 
     ngOnInit() {
         super.myNgOnInit(() => {
-            const competitors = this.structure.getFirstRoundNumber().getCompetitors();
-            this.competitors = this.favRepository.getItem(this.tournament).filterCompetitors(competitors);
+            const competitors = this.tournament.getCompetitors();
+            this.competitors = this.favRepository.getObject(this.tournament).filterCompetitors(competitors);
 
             this.activeTab = 1;
             if (this.structure.getLastRoundNumber().getState() === State.Finished) {

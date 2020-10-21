@@ -8,7 +8,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import {
   CompetitionMapper,
-  CompetitorMapper,
   GameMapper,
   GamePlaceMapper,
   GameScoreMapper,
@@ -29,8 +28,7 @@ import {
   PlanningConfigMapper,
   LeagueMapper,
   FieldMapper,
-  AssociationMapper,
-  NameService,
+  AssociationMapper
 } from 'ngx-sport';
 
 import { CSSService } from '../shared/common/cssservice';
@@ -84,7 +82,6 @@ import { LockerRoomMapper } from '../lib/lockerroom/mapper';
   providers: [
     AssociationMapper,
     CompetitionMapper,
-    CompetitorMapper,
     CSSService,
     FieldMapper,
     GameMapper,
@@ -92,7 +89,6 @@ import { LockerRoomMapper } from '../lib/lockerroom/mapper';
     GameScoreMapper,
     LeagueMapper,
     LockerRoomMapper,
-    NameService,
     PlaceMapper,
     PlanningRepository,
     PlanningConfigService,

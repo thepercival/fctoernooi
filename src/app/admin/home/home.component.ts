@@ -82,8 +82,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         this.shareForm.controls.url.setValue(location.origin + '/' + this.tournament.getId());
         this.shareForm.controls.public.setValue(this.tournament.getPublic());
 
-        const competitors = this.structure.getFirstRoundNumber().getCompetitors();
-        this.lockerRoomValidator = new LockerRoomValidator(competitors, this.tournament.getLockerRooms());
+        this.lockerRoomValidator = new LockerRoomValidator(this.tournament.getCompetitors(), this.tournament.getLockerRooms());
         this.exportForm.controls.lockerrooms.setValue(this.lockerRoomValidator.areSomeArranged());
         this.exportForm.controls.qrcode.setValue(this.tournament.getPublic());
 
@@ -91,19 +90,27 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     protected allArranged(): boolean {
-        return this.structure.getRootRound().getCompetitors().every(competitor => {
+        return this.tournament.getCompetitors().every(competitor => {
             return this.tournament.getLockerRooms().some(lockerRoom => {
                 return lockerRoom.hasCompetitor(competitor);
             });
         });
     }
 
-    competitorsComplete(): boolean {
-        return this.structure.getFirstRoundNumber().getNrOfCompetitors() === this.structure.getFirstRoundNumber().getNrOfPlaces();
+    getNrOfCompetitors(): number {
+        return this.tournament.getCompetitors().length;
+    }
+
+    getNrOfPlaces(): number {
+        return this.structure.getFirstRoundNumber().getNrOfPlaces();
+    }
+
+    allPlacesAssigned(): boolean {
+        return this.getNrOfCompetitors() === this.getNrOfPlaces();
     }
 
     someCompetitorsRegistered(): boolean {
-        const competitors = this.structure.getFirstRoundNumber().getCompetitors();
+        const competitors = this.tournament.getCompetitors();
         return competitors.some(competitor => competitor.getRegistered()) && !competitors.every(competitor => competitor.getRegistered());
     }
 

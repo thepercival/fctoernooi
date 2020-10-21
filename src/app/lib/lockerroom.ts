@@ -2,8 +2,7 @@
  * Created by coen on 9-10-17.
  */
 import { Tournament } from './tournament';
-import { Competitor } from 'ngx-sport';
-
+import { TournamentCompetitor } from './competitor';
 
 export class LockerRoom {
     static readonly MIN_LENGTH_NAME = 1;
@@ -11,7 +10,7 @@ export class LockerRoom {
 
     protected id: number;
     protected name: string;
-    protected competitors: Competitor[] = [];
+    protected competitors: TournamentCompetitor[] = [];
     protected tournament: Tournament;
 
     constructor(tournament: Tournament, name: string) {
@@ -44,11 +43,11 @@ export class LockerRoom {
         this.name = name;
     }
 
-    getCompetitors(): Competitor[] {
+    getCompetitors(): TournamentCompetitor[] {
         return this.competitors;
     }
 
-    hasCompetitor(competitor: Competitor): boolean {
+    hasCompetitor(competitor: TournamentCompetitor): boolean {
         return this.getCompetitors().indexOf(competitor) >= 0;
     }
 
@@ -56,7 +55,7 @@ export class LockerRoom {
         return this.getCompetitors().length > 0;
     }
 
-    setUrl(competitors: Competitor[]): void {
+    setUrl(competitors: TournamentCompetitor[]): void {
         this.competitors = competitors;
     }
 }

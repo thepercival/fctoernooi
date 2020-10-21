@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { EndRankingService, EndRankingItem, RankingService, Structure, Competitor } from 'ngx-sport';
-import { VoetbalRange } from 'ngx-sport/src/range';
+import { VoetbalRange } from 'ngx-sport';
 
 @Component({
   selector: 'app-tournament-endranking',

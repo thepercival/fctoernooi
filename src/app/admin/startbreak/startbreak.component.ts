@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-import { NameService, PlanningPeriod } from 'ngx-sport';
+import { PlanningPeriod } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -27,7 +27,6 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private planningRepository: PlanningRepository,
-        public nameService: NameService,
         private myNavigation: MyNavigation,
         fb: FormBuilder
     ) {

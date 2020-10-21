@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { HorizontalPoule, NameService, QualifyGroup, Round, RoundNumber, StructureService, Competitor } from 'ngx-sport';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { HorizontalPoule, NameService, QualifyGroup, Round, RoundNumber, StructureService, Competitor, PlaceLocationMap } from 'ngx-sport';
 
 import { IAlert } from '../../common/alert';
 import { CSSService } from '../../common/cssservice';
@@ -11,20 +11,26 @@ import { StructureViewType } from './qualify.component';
   templateUrl: './round.component.html',
   styleUrls: ['./round.component.css']
 })
-export class StructureRoundComponent {
+export class StructureRoundComponent implements OnInit {
 
   @Input() round: Round;
   @Output() roundNumberChanged = new EventEmitter<RoundNumber>();
   @Input() editable: boolean;
   @Input() first: boolean;
   @Input() favorites: Competitor[];
+  @Input() placeLocationMap: PlaceLocationMap;
   viewType: number = StructureViewType.ROUNDSTRUCTURE;
   alert: IAlert;
+  public nameService: NameService;
   private structureService: StructureService;
 
-  constructor(public nameService: NameService, public cssService: CSSService) {
+  constructor(public cssService: CSSService) {
     this.resetAlert();
     this.structureService = new StructureService(Tournament.PlaceRanges);
+  }
+
+  ngOnInit() {
+    this.nameService = new NameService(this.placeLocationMap);
   }
 
   arrangeAction(action: string) {
