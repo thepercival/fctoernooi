@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../repository';
-import { Game, GameMapper, JsonGame, Poule } from 'ngx-sport';
+import { AgainstGame, Game, GameMapper, JsonAgainstGame, JsonTogetherGame, Poule, TogetherGame } from 'ngx-sport';
 import { Tournament } from '../../tournament';
 
 
@@ -24,10 +24,25 @@ export class GameRepository extends APIRepository {
         return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
     }
 
-    editObject(game: Game, poule: Poule, tournament: Tournament): Observable<Game> {
+    editObject(game: AgainstGame | TogetherGame, poule: Poule, tournament: Tournament): Observable<Game> {
+        if (game instanceof AgainstGame) {
+            return this.editAgainst(game, poule, tournament);
+        }
+        return this.editTogether(game, poule, tournament);
+    }
+
+    private editAgainst(game: AgainstGame, poule: Poule, tournament: Tournament): Observable<AgainstGame> {
         const url = this.getUrl(tournament) + '/' + game.getId();
-        return this.http.put(url, this.mapper.toJson(game), this.getCustomOptions(poule)).pipe(
-            map((jsonGame: JsonGame) => this.mapper.toExistingObject(jsonGame, game)),
+        return this.http.put(url, this.mapper.toJsonAgainst(game), this.getCustomOptions(poule)).pipe(
+            map((jsonGame: JsonAgainstGame) => this.mapper.toExistingAgainst(jsonGame, game)),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+    private editTogether(game: TogetherGame, poule: Poule, tournament: Tournament): Observable<Game> {
+        const url = this.getUrl(tournament) + '/' + game.getId();
+        return this.http.put(url, this.mapper.toJsonTogether(game), this.getCustomOptions(poule)).pipe(
+            map((jsonGame: JsonTogetherGame) => this.mapper.toExistingTogether(jsonGame, game)),
             catchError((err) => this.handleError(err))
         );
     }

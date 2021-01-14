@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Game, NameService, Round, RoundNumber, SportScoreConfigService, State } from 'ngx-sport';
+import { AgainstGame, Game, NameService, Round, RoundNumber, ScoreConfigService, State } from 'ngx-sport';
 
 import { CreatedAndInplayGamesScreen, GamesScreen } from '../../lib/liveboard/screens';
 
@@ -10,18 +10,18 @@ import { CreatedAndInplayGamesScreen, GamesScreen } from '../../lib/liveboard/sc
 })
 export class LiveboardGamesComponent {
 
-    private sportScoreConfigService: SportScoreConfigService;
+    private ScoreConfigService: ScoreConfigService;
 
     @Input() screen: GamesScreen;
     @Input() nameService: NameService;
 
     constructor(
     ) {
-        this.sportScoreConfigService = new SportScoreConfigService();
+        this.ScoreConfigService = new ScoreConfigService();
     }
 
-    get GameHOME(): boolean { return Game.HOME; }
-    get GameAWAY(): boolean { return Game.AWAY; }
+    get GameHOME(): boolean { return AgainstGame.Home; }
+    get GameAWAY(): boolean { return AgainstGame.Away; }
 
     isCreatedAndInplay(): boolean {
         return this.screen instanceof CreatedAndInplayGamesScreen;
@@ -49,11 +49,13 @@ export class LiveboardGamesComponent {
         if (game.getState() !== State.Finished) {
             return sScore;
         }
-        const finalScore = this.sportScoreConfigService.getFinalScore(game);
-        if (finalScore === undefined) {
-            return sScore;
-        }
-        return finalScore.getHome() + sScore + finalScore.getAway();
+        // TODOSPORT
+        // const finalScore = this.ScoreConfigService.getFinalScore(game);
+        // if (finalScore === undefined) {
+        //     return sScore;
+        // }
+        // return finalScore.getHome() + sScore + finalScore.getAway();
+        return '';
     }
 
     hasReferees() {

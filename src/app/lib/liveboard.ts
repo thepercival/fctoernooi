@@ -85,7 +85,7 @@ export class Liveboard {
     }
 
     protected fillScreensForGamesCreatedAndInplay(screen: CreatedAndInplayGamesScreen, roundNumber: RoundNumber) {
-        const roundGames: Game[] = roundNumber.getGames(Game.ORDER_BY_BATCH);
+        const roundGames: Game[] = roundNumber.getGames(Game.Order_By_Batch);
 
         const maxNrOfScreens = this.getNrOfScreensForGamesCreatedAndInplay(roundGames);
 
@@ -170,7 +170,7 @@ export class Liveboard {
     }
 
     getPlayedGamesHelper(roundNumber: RoundNumber): Game[] {
-        let games: Game[] = roundNumber.getGames(Game.ORDER_BY_BATCH);
+        let games: Game[] = roundNumber.getGames(Game.Order_By_Batch);
         games = games.reverse().filter(game => game.getState() === State.Finished);
         if (games.length < this.maxLines && roundNumber.hasPrevious()) {
             games = games.concat(this.getPlayedGamesHelper(roundNumber.getPrevious()));

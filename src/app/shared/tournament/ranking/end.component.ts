@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { EndRankingService, EndRankingItem, RankingService, Structure, Competitor } from 'ngx-sport';
+import { EndRankingService, EndRankingItem, RankingService, Structure, Competitor, RankingRuleSet } from 'ngx-sport';
 import { VoetbalRange } from 'ngx-sport';
 
 @Component({
@@ -33,7 +33,7 @@ export class EndRankingComponent implements OnInit, OnChanges {
   }
 
   protected updateItems() {
-    const endRankingService = new EndRankingService(this.structure, RankingService.RULESSET_WC);
+    const endRankingService = new EndRankingService(this.structure);
     this.items = endRankingService.getItems();
     if (this.range !== undefined) {
       this.items = this.items.filter(item => item.getUniqueRank() >= this.range.min && item.getUniqueRank() <= this.range.max);

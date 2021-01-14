@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-import { PlanningPeriod } from 'ngx-sport';
+import { Period } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -103,11 +103,11 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
         this.setAlert('info', 'het toernooi wordt opgeslagen');
 
         const startDateTime = this.getDate(this.form.controls.date, this.form.controls.time);
-        let breakX: PlanningPeriod;
+        let breakX: Period;
         if (this.form.controls.togglebreak.value) {
             const breakStartDateTime = this.getDate(this.form.controls.breakstartdate, this.form.controls.breakstarttime);
             const breakEndDateTime = this.getDate(this.form.controls.breakenddate, this.form.controls.breakendtime);
-            breakX = { start: breakStartDateTime, end: breakEndDateTime };
+            breakX = new Period(breakStartDateTime, breakEndDateTime);
             const message = this.checkBreakPeriod(startDateTime, breakStartDateTime, breakEndDateTime);
             if (message !== undefined) {
                 this.setAlert('danger', message);
@@ -119,8 +119,8 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
         const firstRoundNumber = this.structure.getFirstRoundNumber();
         try {
             this.competition.setStartDateTime(startDateTime);
-            this.tournament.setBreakStartDateTime(breakX ? breakX.start : undefined);
-            this.tournament.setBreakEndDateTime(breakX ? breakX.end : undefined);
+            this.tournament.setBreakStartDateTime(breakX?.getStartDateTime());
+            this.tournament.setBreakEndDateTime(breakX?.getEndDateTime());
 
             this.tournamentRepository.editObject(this.tournament)
                 .subscribe(

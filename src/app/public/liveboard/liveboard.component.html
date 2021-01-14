@@ -20,7 +20,8 @@
       </small>
     </h4>
     <!-- center -->
-    <div *ngIf="tournament">
+    <!-- TODOSPORTS -->
+    <!-- <div *ngIf="tournament">
       <h1 class="d-inline-block">
         <small>
           <app-sport-icon [configs]="competition.getSportConfigs()"></app-sport-icon>
@@ -34,7 +35,7 @@
       <app-progress class="d-inline-block" [toggleProgress]="toggleProgress" [max]="refreshAfterSeconds"
         (executeAtZero)="executeScheduledTask()">
       </app-progress>
-    </div>
+    </div> -->
 
     <!-- right -->
     <button *ngIf="tournament" (click)="navigateBack()" class="btn btn-outline-secondary" type="button">
@@ -55,7 +56,7 @@
 
   <!-- pouleranking screen -->
   <app-tournament-liveboard-poules *ngIf="isPoulesRankingScreen()" [screen]="activeScreen" [nameService]="nameService"
-    [ruleSet]="competition.getRuleSet()">
+    [ruleSet]="competition.getRankingRuleSet()">
   </app-tournament-liveboard-poules>
 
   <!-- endranking screen -->

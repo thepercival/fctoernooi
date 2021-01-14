@@ -19,8 +19,8 @@ export class LiveboardPoulesComponent {
     ) {
     }
 
-    getRankingItems(poule: Poule): RankedRoundItem[] {
-        const ranking = new RankingService(poule.getRound(), this.ruleSet);
-        return ranking.getItemsForPoule(poule);
-    }
+    // getRankingItems(poule: Poule): RankedRoundItem[] {
+    //     const ranking = new RankingService(this.ruleSet);
+    //     return ranking.getItemsForPoule(poule);
+    // }
 }

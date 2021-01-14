@@ -32,14 +32,15 @@ export class PouleRankingComponent implements OnInit {
     this.placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
     this.nameService = new NameService(this.placeLocationMap);
     this.favorites = this.favRepository.getObject(this.tournament);
-    const ranking = new RankingService(this.poule.getRound(), this.tournament.getCompetition().getRuleSet());
-    this.rankingItems = ranking.getItemsForPoule(this.poule);
+    // TODOSPORT
+    // const ranking = new RankingService(this.tournament.getCompetition().getRuleSet());
+    // this.rankingItems = ranking.getItemsForPoule(this.poule);
     this.processing = false;
   }
 
-  useSubScore() {
-    return this.poule.getRound().getNumber().getValidSportScoreConfigs().some(sportScoreConfig => {
-      return sportScoreConfig.useSubScore();
-    });
-  }
+  // useSubScore() {
+  //   return this.poule.getRound().getNumber().getValidScoreConfigs().some(scoreConfig => {
+  //     return scoreConfig.useSubScore();
+  //   });
+  // }
 }

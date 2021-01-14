@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Field, SportConfig, JsonField, Structure } from 'ngx-sport';
+import { Field, CompetitionSport, JsonField, Structure } from 'ngx-sport';
 
 import { FieldRepository } from '../../../lib/ngx-sport/field/repository';
 import { PlanningRepository } from '../../../lib/ngx-sport/planning/repository';
@@ -20,7 +20,7 @@ export class FieldListComponent implements OnInit {
     processing: boolean;
     @Input() tournament: Tournament;
     @Input() structure: Structure;
-    @Input() sportConfig: SportConfig;
+    @Input() competitionSport: CompetitionSport;
     @Input() hasBegun: boolean;
     prioritizable: boolean;
 
@@ -37,13 +37,13 @@ export class FieldListComponent implements OnInit {
         if (this.hasBegun) {
             this.alert = { type: 'warning', message: 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen en verwijderen' };
         }
-        this.prioritizable = !this.sportConfig.getCompetition().hasMultipleSportConfigs();
+        this.prioritizable = !this.competitionSport.getCompetition().hasMultipleSportConfigs();
         this.processing = false;
     }
 
     getFieldDescription(): string {
         const translate = new TranslateService();
-        return translate.getFieldNameSingular(this.sportConfig.getSport());
+        return translate.getFieldNameSingular(this.competitionSport.getSport());
     }
 
     getChangeNameModel(buttonLabel: string, initialName?: string): NgbModalRef {
@@ -63,10 +63,11 @@ export class FieldListComponent implements OnInit {
         modal.result.then((resName: string) => {
             this.processing = true;
             const jsonField: JsonField = {
-                priority: this.sportConfig.getCompetition().getFields().length + 1,
+                id: 0,
+                priority: this.competitionSport.getCompetition().getFields().length + 1,
                 name: resName
             };
-            this.fieldRepository.createObject(jsonField, this.sportConfig, this.tournament).subscribe(
+            this.fieldRepository.createObject(jsonField, this.competitionSport, this.tournament).subscribe(
                 /* happy path */(fieldRes) => this.updatePlanning(),
                 /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
             );

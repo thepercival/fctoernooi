@@ -56,10 +56,12 @@ export class Favorites {
     }
 
     hasGameCompetitor(game: Game, homeaway?: boolean): boolean {
-        return game.getPlaces(homeaway).some(gamePlace => {
-            const competitor = this.placeLocationMap.getCompetitor(gamePlace.getPlace().getStartLocation());
-            return competitor && this.hasCompetitor(competitor);
-        });
+        // TODOSPORT
+        return false;
+        // return game.getPlaces(homeaway).some(gamePlace => {
+        //     const competitor = this.placeLocationMap.getCompetitor(gamePlace.getPlace().getStartLocation());
+        //     return competitor && this.hasCompetitor(competitor);
+        // });
     }
 
     addCompetitor(competitor: Competitor) {

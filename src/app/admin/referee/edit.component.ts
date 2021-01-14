@@ -121,6 +121,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
             return;
         }
         const ref: JsonReferee = {
+            id: 0,
             priority: this.competition.getReferees().length + 1,
             initials: initials,
             name: name ? name : undefined,

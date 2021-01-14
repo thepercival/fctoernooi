@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<!-- <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
       <app-tournament-title [tournament]="tournament">
@@ -9,10 +9,10 @@
           <span *ngIf="sportConfig"> {{sportConfig.getSport().getName()}}</span>
           <span *ngIf="!sportConfig">sport</span>
         </h2>
-        <!-- <button *ngIf="competition.getSportConfigs().length === 1" (click)="openMultiSportsModal(multisports)"
+        <button *ngIf="competition.getSportConfigs().length === 1" (click)="openMultiSportsModal(multisports)"
           class="btn btn-outline-secondary">
           <span>meerdere sporten</span>
-        </button> -->
+        </button>
       </div>
 
       <h2 *ngIf="processing" class="text-center">
@@ -34,9 +34,9 @@
           <li [ngbNavItem]="SportConfigTabScore">
             <a ngbNavLink>score-regels</a>
             <ng-template ngbNavContent>
-              <app-tournament-sportscore-edit [sportConfig]="sportConfig" [tournament]="tournament"
+              <app-tournament-scoreconfig-edit [sportConfig]="sportConfig" [tournament]="tournament"
                 [structure]="structure" [startRoundNumber]="startRoundNumber">
-              </app-tournament-sportscore-edit>
+              </app-tournament-scoreconfig-edit>
             </ng-template>
           </li>
           <li [ngbNavItem]="SportConfigTabPoints">
@@ -50,10 +50,10 @@
         </ul>
         <div [ngbNavOutlet]="nav" class="mt-2"></div>
       </div>
-      <!-- <app-tournament-sport-select *ngIf="!processing && competition && !sportConfig"
+      <app-tournament-sport-select *ngIf="!processing && competition && !sportConfig"
       class="col-xs-12 col-sm-10 col-md-8 col-lg-6" (sendSport)="onGetSport($event)"
       [filterSportConfigs]="tournament.getCompetition().getSportConfigs()">
-    </app-tournament-sport-select> -->
+    </app-tournament-sport-select>
     </div>
   </div>
 
@@ -77,4 +77,4 @@
     <div class="modal-footer">
       <button type="button" class="btn btn-primary" (click)="modal.close('continue')">doorgaan</button>
     </div>
-  </ng-template>
+  </ng-template> -->

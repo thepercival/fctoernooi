@@ -30,17 +30,16 @@ import {
   CompetitionMapper,
   GameMapper,
   GamePlaceMapper,
-  GameScoreMapper,
+  ScoreMapper,
   PlaceMapper,
   PlanningMapper,
   PouleMapper,
   RoundMapper,
   RoundNumberMapper,
-  SportConfigMapper,
-  SportConfigService,
-  PlanningConfigService,
-  SportScoreConfigMapper,
-  SportScoreConfigService,
+  CompetitionSportMapper,
+  CompetitionSportService,
+  ScoreConfigMapper,
+  ScoreConfigService,
   StructureMapper,
   SportMapper,
   SeasonMapper,
@@ -58,7 +57,7 @@ import { CompetitorEditComponent } from './competitor/edit.component';
 import { CompetitorListComponent } from './competitor/list.component';
 import { CompetitorListLineComponent } from './competitor/listline.component';
 import { CompetitorListRemoveModalComponent } from './competitor/listremovemodal.component';
-import { FieldListComponent } from './sportconfig/field/fieldlist.component';
+import { FieldListComponent } from './competitionSport/field/fieldlist.component';
 import { GameEditComponent } from './game/edit.component';
 import { HomeComponent } from './home/home.component';
 import { NewComponent } from './new/new.component';
@@ -70,15 +69,15 @@ import { RefereeListComponent } from './referee/list.component';
 import { SponsorEditComponent } from './sponsor/edit.component';
 import { SponsorListComponent } from './sponsor/list.component';
 import { SportSelectComponent } from './sport/select.component';
-import { SportConfigEditComponent } from './sportconfig/edit.component';
-import { SportConfigListComponent } from './sportconfig/list.component';
+import { CompetitionSportEditComponent } from './competitionSport/edit.component';
+import { CompetitionSportListComponent } from './competitionSport/list.component';
 import { StructureEditComponent } from './structure/edit.component';
 import { RoutingModule } from './admin-routing.module';
-import { SportScoreEditComponent } from './sportscore/edit.component';
+import { ScoreConfigEditComponent } from './scoreConfig/edit.component';
 import { StructureRepository } from '../lib/ngx-sport/structure/repository';
 import { SportRepository } from '../lib/ngx-sport/sport/repository';
 import { SportConfigRepository } from '../lib/ngx-sport/sport/config/repository';
-import { SportScoreConfigRepository } from '../lib/ngx-sport/sport/scoreconfig/repository';
+import { ScoreConfigRepository } from '../lib/ngx-sport/sport/scoreconfig/repository';
 import { CompetitorRepository } from '../lib/ngx-sport/competitor/repository';
 import { GameRepository } from '../lib/ngx-sport/game/repository';
 import { PlanningRepository } from '../lib/ngx-sport/planning/repository';
@@ -99,7 +98,7 @@ import { AuthorizationListComponent } from './authorization/list.component';
 import { AuthorizationAddComponent } from './authorization/add.component';
 import { RoleItemComponent } from './authorization/roleitem.component';
 import { AuthorizationExplanationModalComponent } from './authorization/infomodal.component';
-import { PointsEditComponent } from './sportconfig/points/points.component';
+import { PointsEditComponent } from './competitionSport/points/points.component';
 import { CompetitorMapper } from '../lib/competitor/mapper';
 
 @NgModule({
@@ -119,10 +118,10 @@ import { CompetitorMapper } from '../lib/competitor/mapper';
     CompetitorListComponent,
     CompetitorListLineComponent,
     RefereeListComponent,
-    SportConfigListComponent,
-    SportConfigEditComponent,
+    CompetitionSportListComponent,
+    CompetitionSportEditComponent,
     PointsEditComponent,
-    SportScoreEditComponent,
+    ScoreConfigEditComponent,
     SportSelectComponent,
     SponsorListComponent,
     CompetitorEditComponent,
@@ -137,9 +136,10 @@ import { CompetitorMapper } from '../lib/competitor/mapper';
     AuthorizationListComponent,
     AuthorizationAddComponent,
     RoleItemComponent,
-    AuthorizationExplanationModalComponent
+    AuthorizationExplanationModalComponent,
+    CompetitorListRemoveModalComponent,
+    ModalRoundNumbersComponent
   ],
-  entryComponents: [AuthorizationExplanationModalComponent, CompetitorListRemoveModalComponent, ModalRoundNumbersComponent],
   providers: [
     AssociationMapper,
     CompetitorMapper,
@@ -151,11 +151,10 @@ import { CompetitorMapper } from '../lib/competitor/mapper';
     GameRepository,
     GameMapper,
     GamePlaceMapper,
-    GameScoreMapper,
+    ScoreMapper,
     LeagueMapper,
     LockerRoomMapper,
     PlaceMapper,
-    PlanningConfigService,
     PlanningRepository,
     PlanningMapper,
     PlanningConfigMapper,
@@ -171,11 +170,11 @@ import { CompetitorMapper } from '../lib/competitor/mapper';
     SportMapper,
     SportConfigRepository,
     SportRepository,
-    SportConfigMapper,
-    SportScoreConfigService,
-    SportConfigService,
-    SportScoreConfigMapper,
-    SportScoreConfigRepository,
+    CompetitionSportMapper,
+    CompetitionSportService,
+    ScoreConfigMapper,
+    ScoreConfigService,
+    ScoreConfigRepository,
     StructureRepository,
     StructureMapper,
     TournamentRepository,

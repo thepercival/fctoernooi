@@ -32,7 +32,7 @@ export class PlanningConfigRepository extends APIRepository {
         );
     }
 
-    editObject(json: JsonPlanningConfig, config: PlanningConfig, tournament: Tournament): Observable<PlanningConfig> {
+    editObject(json: JsonPlanningConfig, config: PlanningConfig, tournament: Tournament): Observable<void> {
         const roundNumber = config.getRoundNumber();
         const url = this.getUrl(tournament, roundNumber) + '/' + config.getId();
         return this.http.put(url, json, this.getOptions()).pipe(

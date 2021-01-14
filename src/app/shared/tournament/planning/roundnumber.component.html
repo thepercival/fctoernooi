@@ -97,10 +97,12 @@
         <ng-template ngFor let-gmData [ngForOf]="gameDatas">
           <tr *ngIf="gmData.showBreak" class="table-info">
             <td></td>
-            <td *ngIf="planningConfig.getEnableTime()"><span *ngIf="!sameDay">{{tournamentBreak.start.toLocaleString("nl",
-                            {"month":"short","day":"2-digit"})}} </span>
-              <span>{{tournamentBreak.start.toLocaleString("nl", {"hour12":
-                            false,"hour":"2-digit","minute":"2-digit"})}}</span></td>
+            <td *ngIf="planningConfig.getEnableTime()"><span
+                *ngIf="!sameDay">{{tournamentBreak.getStartDateTime().toLocaleString("nl",
+                {"month":"short","day":"2-digit"})}} </span>
+              <span>{{tournamentBreak.getStartDateTime().toLocaleString("nl", {"hour12":
+                false,"hour":"2-digit","minute":"2-digit"})}}</span>
+            </td>
             <td></td>
             <td colspan="3" class="text-center">PAUZE</td>
             <td *ngIf="hasReferees" class="d-none d-sm-table-cell"></td>
@@ -185,11 +187,12 @@
     </button>
   </div>
   <div class="modal-body">
-    <ul class="list-group">
+    <!-- TODOSPORT -->
+    <!-- <ul class="list-group">
       <li class="list-group-item border-info">
         de start is op {{roundNumber.getFirstStartDateTime().toLocaleString("nl",
-                  {"month":"short","day":"2-digit"})}} om {{roundNumber.getFirstStartDateTime().toLocaleString("nl", {"hour12":
-                    false,"hour":"2-digit","minute":"2-digit"})}}
+        {"month":"short","day":"2-digit"})}} om {{roundNumber.getFirstStartDateTime().toLocaleString("nl", {"hour12":
+        false,"hour":"2-digit","minute":"2-digit"})}}
       </li>
       <li class="list-group-item border-info">
         het aantal onderlinge duels is {{planningConfig.getNrOfHeadtohead()}}
@@ -202,7 +205,7 @@
       </li>
       <li class="list-group-item border-info">er zit {{planningConfig.getMinutesBetweenGames()}} minuten
         tussen de wedstrijden</li>
-    </ul>
+    </ul> -->
   </div>
   <div class="modal-footer align-items-end border-top-0">
     <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
@@ -220,7 +223,8 @@
     </button>
   </div>
   <div class="modal-body">
-    <ng-template ngFor let-scoreConfig [ngForOf]="roundNumber.getValidSportScoreConfigs()">
+    <!-- TODOSPORT -->
+    <!-- <ng-template ngFor let-scoreConfig [ngForOf]="roundNumber.getValidScoreConfigs()">
       <ul class="list-group">
         <li *ngIf="scoreConfig.hasNext() && scoreConfig.getNext().getEnabled()" class="list-group-item border-info">
           <span *ngIf="scoreConfig.getNext().getMaximum() === 0">behaal zoveel mogelijk
@@ -239,9 +243,10 @@
             {{translate.getScoreNamePlural(scoreConfig)}}</span>
           <span *ngIf="scoreConfig.getMaximum() > 0">wie het eerst {{scoreConfig.getMaximum()}}
             {{translate.getScoreNamePlural(scoreConfig)}} heeft behaald</span>
-          <span *ngIf="planningConfig.getEnableTime()"> binnen de tijd</span></li>
+          <span *ngIf="planningConfig.getEnableTime()"> binnen de tijd</span>
+        </li>
       </ul>
-    </ng-template>
+    </ng-template> -->
   </div>
   <div class="modal-footer align-items-end border-top-0">
     <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"

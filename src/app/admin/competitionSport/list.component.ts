@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   Sport,
-  SportConfig,
-  SportConfigService,
+  CompetitionSport,
+  CompetitionSportService,
 } from 'ngx-sport';
 
 import { Tournament } from '../../lib/tournament';
@@ -20,8 +20,8 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class SportConfigListComponent extends TournamentComponent implements OnInit {
-  sportConfigs: SportConfig[];
+export class CompetitionSportListComponent extends TournamentComponent implements OnInit {
+  competitionSports: CompetitionSport[];
   translateService: TranslateService;
   hasBegun: boolean;
 
@@ -33,7 +33,7 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
   constructor(
     route: ActivatedRoute,
     router: Router,
-    private sportConfigService: SportConfigService,
+    private competitionSportService: CompetitionSportService,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     private sportConfigRepository: SportConfigRepository,
@@ -49,7 +49,7 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
   }
 
   initSports() {
-    this.createSportConfigsList();
+    this.createCompetitionSportsList();
     this.hasBegun = this.structure.getRootRound().hasBegun();
     this.processing = false;
     if (this.hasBegun) {
@@ -57,50 +57,51 @@ export class SportConfigListComponent extends TournamentComponent implements OnI
     }
   }
 
-  createSportConfigsList() {
-    this.sportConfigs = this.competition.getSportConfigs();
+  createCompetitionSportsList() {
+    this.competitionSports = this.competition.getSports();
   }
 
   // addSport() {
   //   this.linkToEdit(this.tournament);
   // }
 
-  editSportConfig(sportConfig: SportConfig) {
-    this.linkToEdit(this.tournament, sportConfig);
+  editCompetitionSport(competitionSport: CompetitionSport) {
+    this.linkToEdit(this.tournament, competitionSport);
   }
 
-  linkToEdit(tournament: Tournament, sportConfig?: SportConfig) {
-    this.router.navigate(['/admin/sportconfig', tournament.getId(), sportConfig ? sportConfig.getId() : 0]);
+  linkToEdit(tournament: Tournament, competitionSport?: CompetitionSport) {
+    this.router.navigate(['/admin/competitionsport', tournament.getId(), competitionSport ? competitionSport.getId() : 0]);
   }
 
-  openRemoveModal(content, sportConfig: SportConfig) {
+  openRemoveModal(content, competitionSport: CompetitionSport) {
     this.modalService.open(content).result.then((result) => {
       if (result === 'remove') {
-        this.remove(sportConfig);
+        this.remove(competitionSport);
       }
     }, (reason) => {
 
     });
   }
 
-  remove(sportConfig: SportConfig) {
+  remove(competitionSport: CompetitionSport) {
     this.setAlert('info', 'de sport wordt verwijderd');
     this.processing = true;
 
-    this.sportConfigService.remove(sportConfig, this.structure);
+    // TODOSPORT
+    // this.competitionSportService.remove(competitionSport, this.structure);
 
-    this.sportConfigRepository.removeObject(sportConfig, this.tournament, this.structure)
-      .subscribe(
-        /* happy path */ refereeRes => {
-          this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
-            /* happy path */ roundNumberOut => {
-              this.setAlert('success', 'de sport is verwijderd');
-            },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => this.processing = false
-          );
-        },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-      );
+    // this.competitionSportRepository.removeObject(competitionSport, this.tournament, this.structure)
+    //   .subscribe(
+    //     /* happy path */ refereeRes => {
+    //       this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
+    //         /* happy path */ roundNumberOut => {
+    //           this.setAlert('success', 'de sport is verwijderd');
+    //         },
+    //         /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+    //         /* onComplete */() => this.processing = false
+    //       );
+    //     },
+    //         /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+    //   );
   }
 }

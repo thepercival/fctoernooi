@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../repository';
-import { Field, FieldMapper, JsonField, SportConfig } from 'ngx-sport';
+import { Field, FieldMapper, JsonField, CompetitionSport } from 'ngx-sport';
 import { Tournament } from '../../tournament';
 
 
@@ -20,27 +20,27 @@ export class FieldRepository extends APIRepository {
         return 'fields';
     }
 
-    getUrl(tournament: Tournament, sportConfig: SportConfig): string {
-        return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/sportconfigs/' + sportConfig.getId() + '/' + this.getUrlpostfix();
+    getUrl(tournament: Tournament, competitionSport: CompetitionSport): string {
+        return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/sportconfigs/' + competitionSport.getId() + '/' + this.getUrlpostfix();
     }
 
-    createObject(json: JsonField, sportConfig: SportConfig, tournament: Tournament): Observable<Field> {
-        return this.http.post(this.getUrl(tournament, sportConfig), json, this.getOptions()).pipe(
-            map((jsonRes: JsonField) => this.mapper.toObject(jsonRes, sportConfig)),
+    createObject(json: JsonField, competitionSport: CompetitionSport, tournament: Tournament): Observable<Field> {
+        return this.http.post(this.getUrl(tournament, competitionSport), json, this.getOptions()).pipe(
+            map((jsonRes: JsonField) => this.mapper.toObject(jsonRes, competitionSport)),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(field: Field, tournament: Tournament): Observable<Field> {
-        const url = this.getUrl(tournament, field.getSportConfig()) + '/' + field.getId();
+        const url = this.getUrl(tournament, field.getCompetitionSport()) + '/' + field.getId();
         return this.http.put(url, this.mapper.toJson(field), this.getOptions()).pipe(
-            map((res: JsonField) => this.mapper.toObject(res, field.getSportConfig(), field)),
+            map((res: JsonField) => this.mapper.toObject(res, field.getCompetitionSport(), field)),
             catchError((err) => this.handleError(err))
         );
     }
 
     upgradeObject(field: Field, tournament: Tournament): Observable<void> {
-        const sportConfig = field.getSportConfig();
+        const sportConfig = field.getCompetitionSport();
         const url = this.getUrl(tournament, sportConfig) + '/' + field.getId() + '/priorityup';
         return this.http.post(url, undefined, this.getOptions()).pipe(
             map(() => {
@@ -55,7 +55,7 @@ export class FieldRepository extends APIRepository {
 
 
     removeObject(field: Field, tournament: Tournament): Observable<void> {
-        const sportConfig = field.getSportConfig();
+        const sportConfig = field.getCompetitionSport();
         const url = this.getUrl(tournament, sportConfig) + '/' + field.getId();
         return this.http.delete(url, this.getOptions()).pipe(
             map((res) => {

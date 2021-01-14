@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { JsonSport, Sport, SportConfig, SportCustom } from 'ngx-sport';
+import { CompetitionSport, JsonSport, Sport, SportCustom } from 'ngx-sport';
 
 import { IAlert } from '../../shared/common/alert';
 import { CSSService } from '../../shared/common/cssservice';
@@ -16,8 +16,8 @@ export class SportSelectComponent implements OnInit {
     static readonly SELECT = 1;
     static readonly NEW = 2;
 
-    @Input() sportConfigs: SportConfig[];
-    @Input() filterSportConfigs: SportConfig[];
+    @Input() competitionSports: CompetitionSport[];
+    @Input() filterCompetitions: CompetitionSport[];
     @Input() staticInfo: string;
     @Input() inputSelectOnly: boolean;
     @Output() sendSport = new EventEmitter<Sport>();
@@ -69,10 +69,10 @@ export class SportSelectComponent implements OnInit {
 
     getSortedSports(): SortableSport[] {
         return SportCustom.get().filter(customId => {
-            if (this.sportConfigs) {
-                return this.sportConfigs.some(sportConfig => sportConfig.getSport().getCustomId() === customId);
-            } else if (this.filterSportConfigs) {
-                return !this.filterSportConfigs.some(sportConfig => sportConfig.getSport().getCustomId() === customId);
+            if (this.competitionSports) {
+                return this.competitionSports.some(competitionSport => competitionSport.getSport().getCustomId() === customId);
+            } else if (this.filterCompetitions) {
+                return !this.filterCompetitions.some(competitionSport => competitionSport.getSport().getCustomId() === customId);
             }
             return true;
         }).map(customId => {
@@ -92,21 +92,23 @@ export class SportSelectComponent implements OnInit {
 
     save() {
         this.processing = true;
-        const json: JsonSport = {
-            name: this.form.value['newSportName'],
-            team: this.form.value['team'],
-            customId: 0
-        };
-        this.sportRepository.createObject(json).subscribe(
-            /* happy path */ sportRes => {
-                this.sendSport.emit(sportRes);
-            },
-            /* error path */ e => {
-                this.setAlert('danger', 'de sport kon niet worden aangemaakt: ' + e);
-                this.processing = false;
-            },
-            /* onComplete */() => this.processing = false
-        );
+        // TODOSPORT
+        // const json: JsonSport = {
+        //     id: 0,
+        //     name: this.form.value['newSportName'],
+        //     team: this.form.value['team'],
+        //     customId: 0
+        // };
+        // this.sportRepository.createObject(json).subscribe(
+        //     /* happy path */ sportRes => {
+        //         this.sendSport.emit(sportRes);
+        //     },
+        //     /* error path */ e => {
+        //         this.setAlert('danger', 'de sport kon niet worden aangemaakt: ' + e);
+        //         this.processing = false;
+        //     },
+        //     /* onComplete */() => this.processing = false
+        // );
     }
 
     sendSportByCustomId(customId: number) {

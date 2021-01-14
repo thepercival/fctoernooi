@@ -4,12 +4,11 @@ import {
     NameService,
     RoundNumber,
     PlanningConfig,
-    PlanningConfigService,
     JsonPlanningConfig,
-    SportConfigService,
     StructureService,
     PlaceLocationMap,
     PouleStructure,
+    SelfReferee,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -22,6 +21,7 @@ import { PlanningConfigRepository } from '../../lib/ngx-sport/planning/config/re
 import { Tournament } from '../../lib/tournament';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalRoundNumbersComponent } from '../roundnumber/selector.component';
+import { SportDefaultService } from '../../lib/ngx-sport/defaultService';
 
 @Component({
     selector: 'app-planningconfig-edit',
@@ -48,11 +48,9 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         router: Router,
         tournamentRepository: TournamentRepository,
         sructureRepository: StructureRepository,
-        private planningConfigService: PlanningConfigService,
         private planningConfigRepository: PlanningConfigRepository,
         private myNavigation: MyNavigation,
         private planningRepository: PlanningRepository,
-        private sportConfigService: SportConfigService,
         private modalService: NgbModal,
         fb: FormBuilder
     ) {
@@ -117,7 +115,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.startRoundNumber = startRoundNumber;
         this.pouleStructure = startRoundNumber.createPouleStructure();
         this.hasBegun = this.startRoundNumber.hasBegun()
-        this.resetForm(startRoundNumber.getValidPlanningConfig());
+        // TODOSPORT this.resetForm(startRoundNumber.getValidPlanningConfig());
         this.resetAlert();
         if (this.hasBegun) {
             this.setAlert('warning', 'er zijn wedstrijden gespeeld voor deze ronde, je kunt niet meer wijzigen');
@@ -135,245 +133,241 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     changeExtension(extension: boolean) {
         if (extension && this.form.controls.minutesPerGameExt.value === 0) {
-            const planningConfigService = new PlanningConfigService();
-            this.form.controls.minutesPerGameExt.setValue(
-                planningConfigService.getDefaultMinutesPerGameExt()
-            );
+            this.form.controls.minutesPerGameExt.setValue(SportDefaultService.MinutesPerGameExt);
         }
         if (!extension && this.form.controls.minutesPerGameExt.value > 0) {
             this.form.controls.minutesPerGameExt.setValue(0);
         }
     }
+    // TODOSPORT
+    // private resetForm(config: PlanningConfig) {
+    //     this.form.controls.nrOfHeadtohead.setValue(config.getNrOfHeadtohead());
+    //     this.form.controls.extension.setValue(config.getExtension());
+    //     this.form.controls.enableTime.setValue(config.getEnableTime());
+    //     this.form.controls.minutesPerGame.setValue(config.getMinutesPerGame());
+    //     this.form.controls.minutesPerGameExt.setValue(config.getMinutesPerGameExt());
+    //     this.form.controls.minutesBetweenGames.setValue(config.getMinutesBetweenGames());
+    //     this.form.controls.minutesAfter.setValue(config.getMinutesAfter());
+    //     this.form.controls.teamup.setValue(this.isTeamupAvailable() && config.getTeamup());
 
-    private resetForm(config: PlanningConfig) {
-        this.form.controls.nrOfHeadtohead.setValue(config.getNrOfHeadtohead());
-        this.form.controls.extension.setValue(config.getExtension());
-        this.form.controls.enableTime.setValue(config.getEnableTime());
-        this.form.controls.minutesPerGame.setValue(config.getMinutesPerGame());
-        this.form.controls.minutesPerGameExt.setValue(config.getMinutesPerGameExt());
-        this.form.controls.minutesBetweenGames.setValue(config.getMinutesBetweenGames());
-        this.form.controls.minutesAfter.setValue(config.getMinutesAfter());
-        this.form.controls.teamup.setValue(this.isTeamupAvailable() && config.getTeamup());
+    //     const selfRefee = this.getSelfReferee(config.getSelfReferee());
+    //     this.form.controls.selfReferee.setValue(selfRefee !== PlanningConfig.SelfReferee_Disabled);
+    //     const selfRefeeSamePoule = !(selfRefee && config.getSelfReferee() === PlanningConfig.SelfReferee_Poule_Other);
+    //     this.form.controls.selfRefereeSamePoule.setValue(selfRefeeSamePoule);
 
-        const selfRefee = this.getSelfReferee(config.getSelfReferee());
-        this.form.controls.selfReferee.setValue(selfRefee !== PlanningConfig.SELFREFEREE_DISABLED);
-        const selfRefeeSamePoule = !(selfRefee && config.getSelfReferee() === PlanningConfig.SELFREFEREE_OTHERPOULES);
-        this.form.controls.selfRefereeSamePoule.setValue(selfRefeeSamePoule);
+    //     Object.keys(this.form.controls).forEach(key => {
+    //         const control = this.form.controls[key];
+    //         this.hasBegun ? control.disable() : control.enable();
+    //     });
 
-        Object.keys(this.form.controls).forEach(key => {
-            const control = this.form.controls[key];
-            this.hasBegun ? control.disable() : control.enable();
-        });
+    //     this.changeSelfReferee();
+    //     this.enableDisableSelfReferee();
+    // }
 
-        this.changeSelfReferee();
-        this.enableDisableSelfReferee();
-    }
+    // protected getSelfReferee(currentSelfReferee: number): number {
+    //     const selfRefereeAvailable = this.getSelfRefereeAvailable();
+    //     if ((currentSelfReferee & selfRefereeAvailable) === currentSelfReferee) {
+    //         return currentSelfReferee;
+    //     }
+    //     if (currentSelfReferee === SelfReferee.OtherPoules
+    //         && (selfRefereeAvailable & SelfReferee.SamePoule) === SelfReferee.SamePoule) {
+    //         return SelfReferee.SamePoule;
+    //     }
+    //     if (currentSelfReferee === SelfReferee.SamePoule
+    //         && (selfRefereeAvailable & SelfReferee.OtherPoules) === SelfReferee.OtherPoules) {
+    //         return SelfReferee.OtherPoules;
+    //     }
+    //     return SelfReferee.Disabled;
+    // }
 
-    protected getSelfReferee(currentSelfReferee: number): number {
-        const selfRefereeAvailable = this.getSelfRefereeAvailable();
-        if ((currentSelfReferee & selfRefereeAvailable) === currentSelfReferee) {
-            return currentSelfReferee;
-        }
-        if (currentSelfReferee === PlanningConfig.SELFREFEREE_OTHERPOULES
-            && (selfRefereeAvailable & PlanningConfig.SELFREFEREE_SAMEPOULE) === PlanningConfig.SELFREFEREE_SAMEPOULE) {
-            return PlanningConfig.SELFREFEREE_SAMEPOULE;
-        }
-        if (currentSelfReferee === PlanningConfig.SELFREFEREE_SAMEPOULE
-            && (selfRefereeAvailable & PlanningConfig.SELFREFEREE_OTHERPOULES) === PlanningConfig.SELFREFEREE_OTHERPOULES) {
-            return PlanningConfig.SELFREFEREE_OTHERPOULES;
-        }
-        return PlanningConfig.SELFREFEREE_DISABLED;
-    }
+    // bothSelfRefereeAvailable(): boolean {
+    //     const selfRefereeAvailable = this.getSelfRefereeAvailable();
+    //     return selfRefereeAvailable === (SelfReferee.OtherPoules + SelfReferee.SamePoule);
+    // }
 
-    bothSelfRefereeAvailable(): boolean {
-        const selfRefereeAvailable = this.getSelfRefereeAvailable();
-        return selfRefereeAvailable === (PlanningConfig.SELFREFEREE_OTHERPOULES + PlanningConfig.SELFREFEREE_SAMEPOULE);
-    }
+    // protected getSelfRefereeAvailable(): number {
+    //     const sportConfigs = this.competition.getSportConfigs();
 
-    protected getSelfRefereeAvailable(): number {
-        const sportConfigs = this.competition.getSportConfigs();
+    //     let selfRefereeAvailable = SelfReferee.Disabled;
 
-        let selfRefereeAvailable = PlanningConfig.SELFREFEREE_DISABLED;
+    //     const maxNrOfGamePlaces = this.sportConfigService.getMaxNrOfGamePlaces(sportConfigs, this.form.value['teamup'], false);
+    //     const otherPoulesAvailable = this.pouleStructure.selfRefereeOtherPoulesAvailable();
+    //     if (otherPoulesAvailable) {
+    //         selfRefereeAvailable += SelfReferee.OtherPoules;
+    //     }
+    //     const samePouleAvailable = this.pouleStructure.selfRefereeSamePouleAvailable(maxNrOfGamePlaces);
+    //     if (samePouleAvailable) {
+    //         selfRefereeAvailable += SelfReferee.SamePoule;
+    //     }
+    //     return selfRefereeAvailable;
+    // }
 
-        const maxNrOfGamePlaces = this.sportConfigService.getMaxNrOfGamePlaces(sportConfigs, this.form.value['teamup'], false);
-        const otherPoulesAvailable = this.planningConfigService.selfRefereeOtherPoulesAvailable(this.pouleStructure);
-        if (otherPoulesAvailable) {
-            selfRefereeAvailable += PlanningConfig.SELFREFEREE_OTHERPOULES;
-        }
-        const samePouleAvailable = this.planningConfigService.selfRefereeSamePouleAvailable(this.pouleStructure, maxNrOfGamePlaces);
-        if (samePouleAvailable) {
-            selfRefereeAvailable += PlanningConfig.SELFREFEREE_SAMEPOULE;
-        }
-        return selfRefereeAvailable;
-    }
+    // changeSelfReferee() {
+    //     if (this.isTeamupAvailable()) {
+    //         if (this.form.controls.teamup.disabled && !this.hasBegun) {
+    //             this.form.controls.teamup.enable();
+    //         }
+    //     } else if (this.form.controls.teamup.disabled === false) {
+    //         this.form.controls.teamup.disable();
+    //     }
+    // }
 
-    changeSelfReferee() {
-        if (this.isTeamupAvailable()) {
-            if (this.form.controls.teamup.disabled && !this.hasBegun) {
-                this.form.controls.teamup.enable();
-            }
-        } else if (this.form.controls.teamup.disabled === false) {
-            this.form.controls.teamup.disable();
-        }
-    }
+    // enableDisableSelfReferee() {
+    //     if (this.isSelfRefereeAvailable()) {
+    //         if (this.form.controls.selfReferee.disabled && !this.hasBegun) {
+    //             this.form.controls.selfReferee.enable();
+    //         }
+    //     } else if (this.form.controls.selfReferee.disabled === false) {
+    //         this.form.controls.selfReferee.disable();
+    //     }
+    // }
 
-    enableDisableSelfReferee() {
-        if (this.isSelfRefereeAvailable()) {
-            if (this.form.controls.selfReferee.disabled && !this.hasBegun) {
-                this.form.controls.selfReferee.enable();
-            }
-        } else if (this.form.controls.selfReferee.disabled === false) {
-            this.form.controls.selfReferee.disable();
-        }
-    }
+    // isTeamupAvailable(): boolean {
+    //     const allTeamSports = this.competition.getSports().every(sport => {
+    //         return !sport.getTeam();
+    //     });
+    //     if (allTeamSports === false) {
+    //         return false;
+    //     }
 
-    isTeamupAvailable(): boolean {
-        const allTeamSports = this.competition.getSports().every(sport => {
-            return !sport.getTeam();
-        });
-        if (allTeamSports === false) {
-            return false;
-        }
+    //     const nrOfPlaces = this.startRoundNumber.getNrOfPlaces();
+    //     const nrOfPoules = this.startRoundNumber.getPoules().length;
+    //     const flooredNrOfPoulePlaces = this.structureService.getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules, true);
+    //     const ceiledNrOfPoulePlaces = this.structureService.getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules, false);
+    //     if (flooredNrOfPoulePlaces < PlanningConfig.Teamup_Min
+    //         || ceiledNrOfPoulePlaces > PlanningConfig.Teamup_Max) {
+    //         return false;
+    //     }
+    //     if (nrOfPoules === 1 && flooredNrOfPoulePlaces === PlanningConfig.Teamup_Min && this.form.value['selfReferee']) {
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
-        const nrOfPlaces = this.startRoundNumber.getNrOfPlaces();
-        const nrOfPoules = this.startRoundNumber.getPoules().length;
-        const flooredNrOfPoulePlaces = this.structureService.getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules, true);
-        const ceiledNrOfPoulePlaces = this.structureService.getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules, false);
-        if (flooredNrOfPoulePlaces < PlanningConfig.TEAMUP_MIN
-            || ceiledNrOfPoulePlaces > PlanningConfig.TEAMUP_MAX) {
-            return false;
-        }
-        if (nrOfPoules === 1 && flooredNrOfPoulePlaces === PlanningConfig.TEAMUP_MIN && this.form.value['selfReferee']) {
-            return false;
-        }
-        return true;
-    }
+    // isSelfRefereeAvailable(): boolean {
+    //     return this.getSelfRefereeAvailable() !== SelfReferee.Disabled;
+    // }
 
-    isSelfRefereeAvailable(): boolean {
-        return this.getSelfRefereeAvailable() !== PlanningConfig.SELFREFEREE_DISABLED;
-    }
+    // private needsRecreating(config: PlanningConfig): boolean {
+    //     return (this.form.value['nrOfHeadtohead'] !== config.getNrOfHeadtohead()) ||
+    //         (this.isTeamupAvailable() && this.form.value['teamup'] !== config.getTeamup()) ||
+    //         (this.isSelfRefereeAvailable() && this.form.value['selfReferee'] !== config.getSelfReferee());
+    // }
 
-    private needsRecreating(config: PlanningConfig): boolean {
-        return (this.form.value['nrOfHeadtohead'] !== config.getNrOfHeadtohead()) ||
-            (this.isTeamupAvailable() && this.form.value['teamup'] !== config.getTeamup()) ||
-            (this.isSelfRefereeAvailable() && this.form.value['selfReferee'] !== config.getSelfReferee());
-    }
+    // getNrOfPlacesPerGame(): number {
+    //     const sportConfigs = this.competition.getSportConfigs();
+    //     return this.sportConfigService.getMaxNrOfGamePlaces(
+    //         sportConfigs, this.form.value['teamup'], this.form.value['selfReferee']);
+    // }
 
-    getNrOfPlacesPerGame(): number {
-        const sportConfigs = this.competition.getSportConfigs();
-        return this.sportConfigService.getMaxNrOfGamePlaces(
-            sportConfigs, this.form.value['teamup'], this.form.value['selfReferee']);
-    }
+    // private needsRescheduling(config: PlanningConfig): boolean {
+    //     return this.form.value['extension'] !== config.getExtension()
+    //         || this.form.value['enableTime'] !== config.getEnableTime()
+    //         || this.form.value['minutesPerGame'] !== config.getMinutesPerGame()
+    //         || this.form.value['minutesPerGameExt'] !== config.getMinutesPerGameExt()
+    //         || this.form.value['minutesBetweenGames'] !== config.getMinutesBetweenGames()
+    //         || this.form.value['minutesAfter'] !== config.getMinutesAfter()
+    //         || this.form.value['selfReferee'] !== config.getSelfReferee
+    //         ;
+    // }
 
-    private needsRescheduling(config: PlanningConfig): boolean {
-        return this.form.value['extension'] !== config.getExtension()
-            || this.form.value['enableTime'] !== config.getEnableTime()
-            || this.form.value['minutesPerGame'] !== config.getMinutesPerGame()
-            || this.form.value['minutesPerGameExt'] !== config.getMinutesPerGameExt()
-            || this.form.value['minutesBetweenGames'] !== config.getMinutesBetweenGames()
-            || this.form.value['minutesAfter'] !== config.getMinutesAfter()
-            || this.form.value['selfReferee'] !== config.getSelfReferee
-            ;
-    }
+    // save(): boolean {
+    //     const jsonConfig: JsonPlanningConfig = {
+    //         id: 0,
+    //         extension: this.form.value['extension'],
+    //         enableTime: this.form.value['enableTime'],
+    //         minutesPerGame: this.form.value['minutesPerGame'],
+    //         minutesPerGameExt: this.form.value['minutesPerGameExt'],
+    //         minutesBetweenGames: this.form.value['minutesBetweenGames'],
+    //         minutesAfter: this.form.value['minutesAfter'],
+    //         selfReferee: (this.form.controls.selfReferee.disabled || !this.form.value['selfReferee']) ? SelfReferee.Disabled :
+    //             (this.form.value['selfRefereeSamePoule'] ? SelfReferee.SamePoule : SelfReferee.OtherPoules)
+    //     };
+    //     if (this.startRoundNumber.getPlanningConfig() !== undefined) {
+    //         this.edit(jsonConfig, this.startRoundNumber.getPlanningConfig());
+    //     } else {
+    //         this.add(jsonConfig);
+    //     }
+    //     return false;
+    // }
 
-    save(): boolean {
-        const jsonConfig: JsonPlanningConfig = {
-            extension: this.form.value['extension'],
-            enableTime: this.form.value['enableTime'],
-            minutesPerGame: this.form.value['minutesPerGame'],
-            minutesPerGameExt: this.form.value['minutesPerGameExt'],
-            minutesBetweenGames: this.form.value['minutesBetweenGames'],
-            minutesAfter: this.form.value['minutesAfter'],
-            teamup: this.form.controls.teamup.disabled ? false : this.form.value['teamup'],
-            selfReferee: (this.form.controls.selfReferee.disabled || !this.form.value['selfReferee']) ? PlanningConfig.SELFREFEREE_DISABLED :
-                (this.form.value['selfRefereeSamePoule'] ? PlanningConfig.SELFREFEREE_SAMEPOULE : PlanningConfig.SELFREFEREE_OTHERPOULES),
-            nrOfHeadtohead: this.form.value['nrOfHeadtohead']
-        };
-        if (this.startRoundNumber.getPlanningConfig() !== undefined) {
-            this.edit(jsonConfig, this.startRoundNumber.getPlanningConfig());
-        } else {
-            this.add(jsonConfig);
-        }
-        return false;
-    }
+    // add(jsonConfig: JsonPlanningConfig) {
+    //     this.setAlert('info', 'instellingen worden opgeslagen');
+    //     this.processing = true;
 
-    add(jsonConfig: JsonPlanningConfig) {
-        this.setAlert('info', 'instellingen worden opgeslagen');
-        this.processing = true;
+    //     this.planningConfigRepository.createObject(jsonConfig, this.startRoundNumber, this.tournament)
+    //         .subscribe(
+    //             /* happy path */ configRes => {
+    //                 this.savePlanning(true, false);
+    //             },
+    //             /* error path */ e => {
+    //                 this.setAlert('danger', 'de instellingen zijn niet opgeslagen: ' + e);
+    //                 this.processing = false;
+    //             } // ,
+    //             // /* onComplete */() => /*this.processing = false*/
+    //         );
 
-        this.planningConfigRepository.createObject(jsonConfig, this.startRoundNumber, this.tournament)
-            .subscribe(
-                /* happy path */ configRes => {
-                    this.savePlanning(true, false);
-                },
-                /* error path */ e => {
-                    this.setAlert('danger', 'de instellingen zijn niet opgeslagen: ' + e);
-                    this.processing = false;
-                } // ,
-                // /* onComplete */() => /*this.processing = false*/
-            );
+    // }
 
-    }
+    // edit(jsonConfig: JsonPlanningConfig, config: PlanningConfig) {
+    //     this.setAlert('info', 'instellingen worden opgeslagen');
+    //     this.processing = true;
+    //     const needsRecreating = this.needsRecreating(config);
+    //     const needsRescheduling = this.needsRescheduling(config);
 
-    edit(jsonConfig: JsonPlanningConfig, config: PlanningConfig) {
-        this.setAlert('info', 'instellingen worden opgeslagen');
-        this.processing = true;
-        const needsRecreating = this.needsRecreating(config);
-        const needsRescheduling = this.needsRescheduling(config);
+    //     this.planningConfigRepository.editObject(jsonConfig, config, this.tournament)
+    //         .subscribe(
+    //             /* happy path */ configRes => {
+    //                 this.savePlanning(needsRecreating, needsRescheduling);
+    //             },
+    //             /* error path */ e => {
+    //                 this.setAlert('danger', 'de instellingen zijn niet opgeslagen: ' + e);
+    //                 this.processing = false;
+    //             } // ,
+    //             // /* onComplete */() => /*this.processing = false*/
+    //         );
 
-        this.planningConfigRepository.editObject(jsonConfig, config, this.tournament)
-            .subscribe(
-                /* happy path */ configRes => {
-                    this.savePlanning(needsRecreating, needsRescheduling);
-                },
-                /* error path */ e => {
-                    this.setAlert('danger', 'de instellingen zijn niet opgeslagen: ' + e);
-                    this.processing = false;
-                } // ,
-                // /* onComplete */() => /*this.processing = false*/
-            );
+    // }
 
-    }
+    // private savePlanning(needsRecreating: boolean, needsRescheduling: boolean) {
+    //     if (needsRecreating) {
+    //         this.planningRepository.create(this.structure, this.tournament, this.startRoundNumber.getNumber())
+    //             .subscribe(
+    //                 /* happy path */ roundNumberOut => {
+    //                     this.setAlert('success', 'de instellingen zijn opgeslagen');
+    //                     this.myNavigation.back();
+    //                 },
+    //                 /* error path */ e => {
+    //                     this.setAlert('danger', 'de instellingen zijn niet opgeslagen: ' + e); this.processing = false;
+    //                 },
+    //                 /* onComplete */() => this.processing = false
+    //             );
+    //     } else if (needsRescheduling) {
+    //         this.planningRepository.reschedule(this.startRoundNumber, this.tournament)
+    //             .subscribe(
+    //                 /* happy path */ gamesRes => {
+    //                     this.setAlert('success', 'de instellingen zijn opgeslagen');
+    //                     this.myNavigation.back();
+    //                 },
+    //                 /* error path */ e => {
+    //                     this.setAlert('danger', 'de instellingen zijn niet opgeslagen: ' + e); this.processing = false;
+    //                 },
+    //                     /* onComplete */() => this.processing = false
+    //             );
+    //     } else {
+    //         this.processing = false;
+    //         this.setAlert('success', 'de instellingen zijn opgeslagen');
+    //     }
+    // }
 
-    private savePlanning(needsRecreating: boolean, needsRescheduling: boolean) {
-        if (needsRecreating) {
-            this.planningRepository.create(this.structure, this.tournament, this.startRoundNumber.getNumber())
-                .subscribe(
-                    /* happy path */ roundNumberOut => {
-                        this.setAlert('success', 'de instellingen zijn opgeslagen');
-                        this.myNavigation.back();
-                    },
-                    /* error path */ e => {
-                        this.setAlert('danger', 'de instellingen zijn niet opgeslagen: ' + e); this.processing = false;
-                    },
-                    /* onComplete */() => this.processing = false
-                );
-        } else if (needsRescheduling) {
-            this.planningRepository.reschedule(this.startRoundNumber, this.tournament)
-                .subscribe(
-                    /* happy path */ gamesRes => {
-                        this.setAlert('success', 'de instellingen zijn opgeslagen');
-                        this.myNavigation.back();
-                    },
-                    /* error path */ e => {
-                        this.setAlert('danger', 'de instellingen zijn niet opgeslagen: ' + e); this.processing = false;
-                    },
-                        /* onComplete */() => this.processing = false
-                );
-        } else {
-            this.processing = false;
-            this.setAlert('success', 'de instellingen zijn opgeslagen');
-        }
-    }
-
-    openModalSelectStartRoundNumber() {
-        const modalRef = this.modalService.open(ModalRoundNumbersComponent);
-        modalRef.componentInstance.structure = this.structure;
-        modalRef.componentInstance.subject = 'de score-regels';
-        modalRef.result.then((startRoundNumber: RoundNumber) => {
-            this.changeStartRoundNumber(startRoundNumber);
-        }, (reason) => { });
-    }
+    // openModalSelectStartRoundNumber() {
+    //     const modalRef = this.modalService.open(ModalRoundNumbersComponent);
+    //     modalRef.componentInstance.structure = this.structure;
+    //     modalRef.componentInstance.subject = 'de score-regels';
+    //     modalRef.result.then((startRoundNumber: RoundNumber) => {
+    //         this.changeStartRoundNumber(startRoundNumber);
+    //     }, (reason) => { });
+    // }
 }
 
 export interface PlanningConfigValidations {

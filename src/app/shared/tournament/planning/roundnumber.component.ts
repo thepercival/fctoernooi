@@ -6,15 +6,16 @@ import {
   NameService,
   Poule,
   RoundNumber,
-  SportScoreConfigService,
+  ScoreConfigService,
   State,
   Round,
   PlanningConfig,
-  PlanningPeriod,
-  SportScoreConfig,
-  Referee,
+  ScoreConfig,
   PlaceLocationMap,
-  Place
+  Place,
+  Period,
+  AgainstGame,
+  SelfReferee
 } from 'ngx-sport';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -46,16 +47,16 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   @Output() scroll = new EventEmitter();
   alert: any;
   sameDay = true;
-  tournamentBreak: PlanningPeriod;
+  tournamentBreak: Period;
   breakShown: boolean;
   userIsAdmin: boolean;
-  gameOrder = Game.ORDER_BY_BATCH;
+  gameOrder = Game.Order_By_Batch;
   filterEnabled = false;
   hasReferees: boolean;
   hasBegun: boolean;
   tournamentHasBegun: boolean;
   gameDatas: GameData[];
-  private sportScoreConfigService: SportScoreConfigService;
+  private ScoreConfigService: ScoreConfigService;
   needsRanking: boolean;
   hasMultiplePoules: boolean;
   planningConfig: PlanningConfig;
@@ -72,7 +73,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     protected planningRepository: PlanningRepository) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
     this.resetAlert();
-    this.sportScoreConfigService = new SportScoreConfigService();
+    this.ScoreConfigService = new ScoreConfigService();
   }
 
   ngOnInit() {
@@ -85,7 +86,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     this.needsRanking = this.roundNumber.needsRanking();
     this.hasMultiplePoules = this.roundNumber.getPoules().length > 1;
     this.hasReferees = this.tournament.getCompetition().getReferees().length > 0
-      || this.planningConfig.getSelfReferee() !== PlanningConfig.SELFREFEREE_DISABLED;
+      || this.planningConfig.getSelfReferee() !== SelfReferee.Disabled;
     this.hasBegun = this.roundNumber.hasBegun();
     this.tournamentHasBegun = this.roundNumber.getFirst().hasBegun();
     this.reloadGameData();
@@ -110,8 +111,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     this.sameDay = this.gameDatas.length > 1 ? this.isSameDay(this.gameDatas[0], this.gameDatas[this.gameDatas.length - 1]) : true;
   }
 
-  get GameHOME(): boolean { return Game.HOME; }
-  get GameAWAY(): boolean { return Game.AWAY; }
+  get GameHOME(): boolean { return AgainstGame.Home; }
+  get GameAWAY(): boolean { return AgainstGame.Away; }
   get SportConfigTabFields(): number { return SportConfigTabOrder.Fields; }
   get SportConfigTabScore(): number { return SportConfigTabOrder.Score; }
 
@@ -157,19 +158,23 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   }
 
   getScore(game: Game): string {
-    const sScore = ' - ';
-    if (game.getState() !== State.Finished) {
-      return sScore;
-    }
-    const finalScore = this.sportScoreConfigService.getFinalScore(game);
-    if (finalScore === undefined) {
-      return sScore;
-    }
-    return finalScore.getHome() + sScore + finalScore.getAway();
+    // TODOSPORT
+    return '';
+    // const sScore = ' - ';
+    // if (game.getState() !== State.Finished) {
+    //   return sScore;
+    // }
+    // const finalScore = this.ScoreConfigService.getFinalScore(game);
+    // if (finalScore === undefined) {
+    //   return sScore;
+    // }
+    // return finalScore.getHome() + sScore + finalScore.getAway();
   }
 
   getScoreFinalPhase(game: Game): string {
-    return game.getFinalPhase() === Game.PHASE_EXTRATIME ? '*' : '';
+    // TODOSPORT
+    // return game.getFinalPhase() === Game.Phase_ExtraTime ? '*' : '';
+    return '';
   }
 
   isPlayed(game: Game): boolean {
@@ -201,7 +206,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     if (this.tournamentBreak === undefined || this.breakShown || !this.planningConfig.getEnableTime() || !this.gameOrder) {
       return false;
     }
-    this.breakShown = game.getStartDateTime().getTime() === this.tournamentBreak.end.getTime();
+    this.breakShown = game.getStartDateTime().getTime() === this.tournamentBreak.getEndDateTime().getTime();
     return this.breakShown;
   }
 
@@ -243,7 +248,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   }
 
   sortGames() {
-    this.gameOrder = this.gameOrder ? undefined : Game.ORDER_BY_BATCH;
+    this.gameOrder = this.gameOrder ? undefined : Game.Order_By_Batch;
     this.reloadGameData();
   }
 
@@ -269,9 +274,11 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     return (type === 'success');
   }
 
-  getGameQualificationDescription(game: Game) {
-    return this.nameService.getPlacesFromName(game.getPlaces(Game.HOME), false, true)
-      + ' - ' + this.nameService.getPlacesFromName(game.getPlaces(Game.AWAY), false, true);
+  getGameQualificationDescription(game: Game): string {
+    // TODOSPORT
+    // return this.nameService.getPlacesFromName(game.getPlaces(AgainstGame.Home), false, true)
+    //   + ' - ' + this.nameService.getPlacesFromName(game.getPlaces(AgainstGame.Away), false, true);
+    return '';
   }
 
   openModalPouleRank(poule: Poule) {
@@ -284,7 +291,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     const modalRef = this.modalService.open(templateRef);
   }
 
-  getCalculateName(scoreConfig: SportScoreConfig): string {
+  getCalculateName(scoreConfig: ScoreConfig): string {
     const max = scoreConfig.getMaximum();
     const scoreConfigTmp = (max > 0) ? scoreConfig : scoreConfig.getNext();
     return this.translate.getScoreNamePlural(scoreConfigTmp);

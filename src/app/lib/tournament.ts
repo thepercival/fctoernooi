@@ -1,4 +1,4 @@
-import { Competition, PlanningPeriod, PlaceRange } from 'ngx-sport';
+import { Competition, Period, PlaceRange } from 'ngx-sport';
 
 import { Sponsor } from './sponsor';
 import { LockerRoom } from './lockerroom';
@@ -113,10 +113,10 @@ export class Tournament {
         return this.breakStartDateTime !== undefined;
     }
 
-    getBreak(): PlanningPeriod {
+    getBreak(): Period {
         if (this.getBreakStartDateTime() === undefined || this.getBreakEndDateTime() === undefined) {
             return undefined;
         }
-        return { start: this.getBreakStartDateTime(), end: this.getBreakEndDateTime() };
+        return new Period(this.getBreakStartDateTime(), this.getBreakEndDateTime());
     }
 }

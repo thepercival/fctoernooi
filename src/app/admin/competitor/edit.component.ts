@@ -115,6 +115,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
             return;
         }
         const jsonCompetitor: JsonCompetitor = {
+            id: 0,
             name: name,
             registered: this.form.controls.registered.value,
             info: info ? info : undefined,

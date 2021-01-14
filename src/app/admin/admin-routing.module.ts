@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthguardService } from '../lib/auth/authguard.service';
 import { CompetitorEditComponent } from './competitor/edit.component';
 import { CompetitorListComponent } from './competitor/list.component';
-import { FieldListComponent } from './sportconfig/field/fieldlist.component';
+import { FieldListComponent } from './competitionSport/field/fieldlist.component';
 import { GameEditComponent } from './game/edit.component';
 import { HomeComponent } from './home/home.component';
 import { NewComponent } from './new/new.component';
@@ -16,10 +16,10 @@ import { RefereeEditComponent } from './referee/edit.component';
 import { RefereeListComponent } from './referee/list.component';
 import { SponsorEditComponent } from './sponsor/edit.component';
 import { SponsorListComponent } from './sponsor/list.component';
-import { SportConfigEditComponent } from './sportconfig/edit.component';
-import { SportConfigListComponent } from './sportconfig/list.component';
+// import { CompetitionSportConfigEditComponent } from './sportconfig/edit.component';
+import { CompetitionSportListComponent } from './competitionSport/list.component';
 import { StructureEditComponent } from './structure/edit.component';
-import { SportScoreEditComponent } from './sportscore/edit.component';
+import { ScoreConfigEditComponent } from './scoreConfig/edit.component';
 import { LockerRoomsComponent } from '../shared/tournament/lockerrooms/lockerrooms.component';
 import { AuthorizationListComponent } from './authorization/list.component';
 import { AuthorizationAddComponent } from './authorization/add.component';
@@ -41,9 +41,10 @@ const routes: Routes = [
   { path: 'authorization/:id', component: AuthorizationAddComponent, canActivate: [AuthguardService] }, // ROLEADMIN
   { path: 'sponsors/:id', component: SponsorListComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'sponsor/:id/:sponsorId', component: SponsorEditComponent, canActivate: [AuthguardService] }, // ADMIN
-  { path: 'sportconfigs/:id', component: SportConfigListComponent, canActivate: [AuthguardService] }, // ADMIN
-  { path: 'sportconfig/:id/:sportConfigId/:tabId', component: SportConfigEditComponent, canActivate: [AuthguardService] }, // ADMIN
-  { path: 'sportconfig/:id/:sportConfigId/:tabId/:startRoundNumber', component: SportConfigEditComponent, canActivate: [AuthguardService] }, // ADMIN
+  // TODOSPORT
+  // { path: 'sportconfigs/:id', component: CompetitionSportListComponent, canActivate: [AuthguardService] }, // ADMIN
+  // { path: 'sportconfig/:id/:sportConfigId/:tabId', component: SportConfigEditComponent, canActivate: [AuthguardService] }, // ADMIN
+  // { path: 'sportconfig/:id/:sportConfigId/:tabId/:startRoundNumber', component: SportConfigEditComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'startbreak/:id', component: StartBreakComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'structure/:id', component: StructureEditComponent, canActivate: [AuthguardService] }, // ADMIN
 ];

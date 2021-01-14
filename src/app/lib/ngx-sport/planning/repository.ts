@@ -1,9 +1,9 @@
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { PlanningMapper, JsonStructure, RoundNumber, PlanningPeriod, Game, Structure } from 'ngx-sport';
+import { PlanningMapper, JsonStructure, RoundNumber, Game, Structure } from 'ngx-sport';
 import { APIRepository } from '../../repository';
 import { Tournament } from '../../tournament';
 
@@ -61,7 +61,7 @@ export class PlanningRepository extends APIRepository {
 
     private updateDates(roundNumber: RoundNumber, dates: Date[]): boolean {
         let previousBatchNr, gameDate;
-        roundNumber.getGames(Game.ORDER_BY_BATCH).forEach(game => {
+        roundNumber.getGames(Game.Order_By_Batch).forEach(game => {
             if (previousBatchNr === undefined || previousBatchNr !== game.getBatchNr()) {
                 previousBatchNr = game.getBatchNr();
                 if (dates.length === 0) {

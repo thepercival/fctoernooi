@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { League, SportConfigService, RoundNumber } from 'ngx-sport';
+import { League, CompetitionSportService, RoundNumber } from 'ngx-sport';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { CSSService } from '../../shared/common/cssservice';
@@ -40,7 +40,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         private authService: AuthService,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
-        private sportConfigService: SportConfigService,
+        private competitionSportService: CompetitionSportService,
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
@@ -115,13 +115,13 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     getFieldDescription(): string {
-        const sports = this.competition.getSports();
-        return this.translate.getFieldNameSingular(sports.length === 1 ? sports[0] : undefined);
+        const sport = this.competition.hasMultipleSportConfigs() ? undefined : this.competition.getSports()[0].getSport();
+        return this.translate.getFieldNameSingular(sport);
     }
 
     getFieldsDescription(): string {
-        const sports = this.competition.getSports();
-        return this.translate.getFieldNamePlural(sports.length === 1 ? sports[0] : undefined);
+        const sport = this.competition.hasMultipleSportConfigs() ? undefined : this.competition.getSports()[0].getSport();
+        return this.translate.getFieldNamePlural(sport);
     }
 
     getNrOfFieldsDescription() {
@@ -152,10 +152,12 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         return nrOfSponsors + ' sponsors';
     }
 
-    sportConfigsAreDefault() {
-        return this.competition.getSportConfigs().every(sportConfig => {
-            return this.sportConfigService.isDefault(sportConfig);
-        });
+    sportConfigsAreDefault(): boolean {
+        return true;
+        // TODOSPORT USE APPLICATION SPECIFIC CODE HERE
+        // return this.competition.getSports().every(competitionSport => {
+        //     return this.competitionSportService.isDefault(competitionSport);
+        // });
     }
 
     isAdmin(): boolean {

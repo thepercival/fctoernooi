@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { SportConfig, SportCustom } from 'ngx-sport';
+import { CompetitionSport, SportCustom } from 'ngx-sport';
 
 @Component({
     selector: 'app-sport-icon',
@@ -7,7 +7,7 @@ import { SportConfig, SportCustom } from 'ngx-sport';
     styleUrls: ['./icon.component.scss']
 })
 export class SportIconComponent implements OnInit {
-    @Input() configs: SportConfig[];
+    @Input() competitionSports: CompetitionSport[];
     @Input() customId: number;
 
     public show = false;
@@ -22,8 +22,8 @@ export class SportIconComponent implements OnInit {
         let customId;
         if (this.customId !== undefined) {
             customId = this.customId;
-        } else if (this.configs !== undefined && this.configs.length === 1) {
-            customId = this.configs[0].getSport().getCustomId();
+        } else if (this.competitionSports !== undefined && this.competitionSports.length === 1) {
+            customId = this.competitionSports[0].getSport().getCustomId();
         }
         this.prefix = this.getIconPrefix(customId);
         this.class = this.getIconClass(customId);

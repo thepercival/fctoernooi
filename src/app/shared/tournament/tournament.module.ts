@@ -39,7 +39,7 @@ import { SportConfigRouter } from './sportconfig.router';
     TitleComponent,
     StructureRoundArrangeComponent, StructureQualifyComponent, StructureRoundComponent,
     LockerRoomsComponent, LockerRoomComponent,
-    RankingRulesComponent, ScoreRulesComponent
+    RankingRulesComponent/* TODOSPORT, ScoreRulesComponent*/
   ],
   imports: [
     CommonModule,
@@ -64,7 +64,7 @@ import { SportConfigRouter } from './sportconfig.router';
     TitleComponent,
     StructureRoundComponent,
     LockerRoomsComponent,
-    RankingRulesComponent, ScoreRulesComponent,
+    RankingRulesComponent/* TODOSPORT, ScoreRulesComponent*/,
     NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule,
     NgbNavModule
   ]

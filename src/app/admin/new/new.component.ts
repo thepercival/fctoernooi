@@ -10,13 +10,14 @@ import {
   RankingService,
   Season,
   Sport,
-  SportConfigService,
-  SportScoreConfigService,
+  CompetitionSportService,
+  ScoreConfigService,
   Structure,
   StructureService,
   State,
   JsonField,
   SportMapper,
+  RankingRuleSet,
 } from 'ngx-sport';
 
 import { IAlert } from '../../shared/common/alert';
@@ -54,7 +55,7 @@ export class NewComponent implements OnInit {
     private tournamentRepository: TournamentRepository,
     private structureRepository: StructureRepository,
     private planningRepository: PlanningRepository,
-    private sportConfigService: SportConfigService,
+    private competitionSportService: CompetitionSportService,
     private sportMapper: SportMapper,
     fb: FormBuilder
   ) {
@@ -124,62 +125,66 @@ export class NewComponent implements OnInit {
 
     const fields: JsonField[] = [];
     for (let priority = 1; priority <= nroffields; priority++) {
-      fields.push({ priority, name: String(priority) });
+      fields.push({ id: priority, priority, name: String(priority) });
     }
 
-    const jsonTournament: JsonTournament = {
-      public: this.form.controls.public.value,
-      updated: true,
-      competition: {
-        league: {
-          name: name,
-          association: { name: 'username' }
-        },
-        season: {
-          name: 'dummy',
-          startDateTime: (new Date()).toISOString(),
-          endDateTime: (new Date()).toISOString(),
-        },
-        ruleSet: RankingService.RULESSET_WC,
-        startDateTime: startDateTime.toISOString(),
-        referees: [],
-        state: State.Created,
-        sportConfigs: [this.sportConfigService.createDefaultJson(this.sport, fields)]
-      },
-      competitors: [],
-      lockerRooms: [],
-      users: [],
-      sponsors: []
-    };
+    // TODOSPORT
+    // const jsonTournament: JsonTournament = {
+    //   public: this.form.controls.public.value,
+    //   updated: true,
+    //   competition: {
+    //     id: 0,
+    //     league: {
+    //       id: 0,
+    //       name: name,
+    //       association: { id: 0, name: 'username' }
+    //     },
+    //     season: {
+    //       id: 0,
+    //       name: 'dummy',
+    //       start: (new Date()).toISOString(),
+    //       end: (new Date()).toISOString(),
+    //     },
+    //     rankingRuleSet: RankingRuleSet.WC,
+    //     startDateTime: startDateTime.toISOString(),
+    //     referees: [],
+    //     state: State.Created,
+    //     sports: [this.competitionSportService.createDefaultJson(this.sport, fields)]
+    //   },
+    //   competitors: [],
+    //   lockerRooms: [],
+    //   users: [],
+    //   sponsors: []
+    // };
 
-    this.tournamentRepository.createObject(jsonTournament)
-      .subscribe(
-        /* happy path */ tournament => {
-          const structureService = new StructureService(Tournament.PlaceRanges);
-          const structure: Structure = structureService.create(tournament.getCompetition(), nrofcompetitors);
-          this.structureRepository.editObject(structure, tournament)
-            .subscribe(
-            /* happy path */(structureOut: Structure) => {
-                this.planningRepository.create(structureOut, tournament, 1)
-                  .subscribe(
-                    /* happy path */ roundNumberOut => {
-                      this.router.navigate(['/admin/structure', tournament.getId()]);
-                    },
-                  /* error path */ e => {
-                      this.setAlert('danger', 'de wedstrijdplanning kon niet worden aangemaakt: ' + e);
-                      this.processing = false;
-                    },
-                  /* onComplete */() => { this.processing = false; }
-                  );
-              },
-            /* error path */ e => {
-                this.setAlert('danger', 'de opzet kon niet worden aangemaakt: ' + e);
-                this.processing = false;
-              }
-            );
-        },
-            /* error path */ e => { this.setAlert('danger', 'het toernooi kon niet worden aangemaakt: ' + e); this.processing = false; }
-      );
+    // this.tournamentRepository.createObject(jsonTournament)
+    //   .subscribe(
+    //     /* happy path */ tournament => {
+    //       const structureService = new StructureService(Tournament.PlaceRanges);
+    //       const structure: Structure = structureService.create(tournament.getCompetition(), nrofcompetitors);
+    //       this.structureRepository.editObject(structure, tournament)
+    //         .subscribe(
+    //         /* happy path */(structureOut: Structure) => {
+    //             this.planningRepository.create(structureOut, tournament, 1)
+    //               .subscribe(
+    //                 /* happy path */ roundNumberOut => {
+    //                   this.router.navigate(['/admin/structure', tournament.getId()]);
+    //                 },
+    //               /* error path */ e => {
+    //                   this.setAlert('danger', 'de wedstrijdplanning kon niet worden aangemaakt: ' + e);
+    //                   this.processing = false;
+    //                 },
+    //               /* onComplete */() => { this.processing = false; }
+    //               );
+    //           },
+    //         /* error path */ e => {
+    //             this.setAlert('danger', 'de opzet kon niet worden aangemaakt: ' + e);
+    //             this.processing = false;
+    //           }
+    //         );
+    //     },
+    //         /* error path */ e => { this.setAlert('danger', 'het toernooi kon niet worden aangemaakt: ' + e); this.processing = false; }
+    //   );
     return false;
   }
 

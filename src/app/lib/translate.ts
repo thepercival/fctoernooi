@@ -1,4 +1,4 @@
-import { Sport, SportCustom, SportScoreConfig } from 'ngx-sport';
+import { Sport, SportCustom, ScoreConfig } from 'ngx-sport';
 
 export class TranslateService {
     static readonly language = 'nl';
@@ -23,11 +23,11 @@ export class TranslateService {
         return undefined;
     }
 
-    getScoreNameSingular(sportScoreConfig: SportScoreConfig): string {
-        const customId = sportScoreConfig.getSport().getCustomId();
-        if (sportScoreConfig.isFirst()) {
+    getScoreNameSingular(scoreConfig: ScoreConfig): string {
+        const customId = scoreConfig.getSport().getCustomId();
+        if (scoreConfig.isFirst()) {
             return this.getFirstScoreNameSingular(customId);
-        } else if (sportScoreConfig.isLast()) {
+        } else if (scoreConfig.isLast()) {
             return this.getLastScoreNameSingular(customId);
         }
         return '';
@@ -59,11 +59,11 @@ export class TranslateService {
         return '';
     }
 
-    getScoreNamePlural(sportScoreConfig: SportScoreConfig): string {
-        const customId = sportScoreConfig.getSport().getCustomId();
-        if (sportScoreConfig.isFirst()) {
+    getScoreNamePlural(scoreConfig: ScoreConfig): string {
+        const customId = scoreConfig.getSport().getCustomId();
+        if (scoreConfig.isFirst()) {
             return this.getFirstScoreNamePlural(customId);
-        } else if (sportScoreConfig.isLast()) {
+        } else if (scoreConfig.isLast()) {
             return this.getLastScoreNamePlural(customId);
         }
         return '';
@@ -98,8 +98,8 @@ export class TranslateService {
 
     getScoreDirection(direction: number): string {
         switch (direction) {
-            case SportScoreConfig.UPWARDS: { return 'naar'; }
-            case SportScoreConfig.DOWNWARDS: { return 'vanaf'; }
+            case ScoreConfig.UPWARDS: { return 'naar'; }
+            case ScoreConfig.DOWNWARDS: { return 'vanaf'; }
         }
         return undefined;
     }

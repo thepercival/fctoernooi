@@ -14,14 +14,14 @@ export class SportConfigRouter {
     }
 
     navigate(tournament: Tournament, tabOrder?: SportConfigTabOrder, roundNumber?: RoundNumber) {
-        let url = this.adminUrl + '/sportconfig';
+        let url = this.adminUrl + '/competitionsport';
         let params: any[] = [tournament.getId()];
         const competition = tournament.getCompetition();
         if (competition.hasMultipleSportConfigs()) {
             params.push(roundNumber.getNumber());
         } else {
-            const sportConfig = competition.getFirstSportConfig();
-            params.push(sportConfig.getId());
+            const competitionSport = competition.getSports()[0];
+            params.push(competitionSport.getId());
             params.push(tabOrder ? tabOrder : SportConfigTabOrder.Fields);
             if (tabOrder === SportConfigTabOrder.Score) {
                 params.push(roundNumber.getNumber());
