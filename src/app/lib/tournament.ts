@@ -5,8 +5,9 @@ import { LockerRoom } from './lockerroom';
 import { User } from './user';
 import { TournamentUser } from './tournament/user';
 import { TournamentCompetitor } from './competitor';
+import { Identifiable } from 'ngx-sport';
 
-export class Tournament {
+export class Tournament extends Identifiable {
     static readonly PlaceRanges: PlaceRange[] = [
         { min: 2, max: 40, placesPerPoule: { min: 2, max: 12 } },
         { min: 41, max: 128, placesPerPoule: { min: 2, max: 8 } }
@@ -23,15 +24,8 @@ export class Tournament {
     protected updated: boolean;
 
     constructor(competition: Competition) {
+        super();
         this.setCompetition(competition);
-    }
-
-    getId(): number {
-        return this.id;
-    }
-
-    setId(id: number): void {
-        this.id = id;
     }
 
     getCompetition(): Competition {
@@ -99,14 +93,6 @@ export class Tournament {
 
     setPublic(publicX: boolean): void {
         this.public = publicX;
-    }
-
-    getUpdated(): boolean {
-        return this.updated;
-    }
-
-    setUpdated(updated: boolean): void {
-        this.updated = updated;
     }
 
     hasBreak(): boolean {

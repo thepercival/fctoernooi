@@ -27,6 +27,7 @@ import { TranslateService } from '../../lib/translate';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { JsonTournament } from '../../lib/tournament/json';
+import { SportDefaultService } from '../../lib/ngx-sport/defaultService';
 
 
 @Component({
@@ -56,7 +57,7 @@ export class NewComponent implements OnInit {
     private structureRepository: StructureRepository,
     private planningRepository: PlanningRepository,
     private competitionSportService: CompetitionSportService,
-    private sportMapper: SportMapper,
+    private sportDefaultService: SportDefaultService,
     fb: FormBuilder
   ) {
     const date = new Date();
@@ -112,8 +113,7 @@ export class NewComponent implements OnInit {
     this.setAlert('info', 'het toernooi wordt aangemaakt');
 
     const name = this.form.controls.name.value;
-    const nrofcompetitors = StructureService.DefaultNrOfPlaces;
-    const nroffields = this.form.controls.nroffields.value;
+    const nrOfFields = this.form.controls.nroffields.value;
 
     const startDateTime: Date = new Date(
       this.form.controls.date.value.year,
@@ -123,68 +123,66 @@ export class NewComponent implements OnInit {
       this.form.controls.time.value.minute
     );
 
-    const fields: JsonField[] = [];
-    for (let priority = 1; priority <= nroffields; priority++) {
-      fields.push({ id: priority, priority, name: String(priority) });
-    }
+    const jsonTournament: JsonTournament = {
+      id: 0,
+      public: this.form.controls.public.value,
+      competition: {
+        id: 0,
+        league: {
+          id: 0,
+          name: name,
+          association: { id: 0, name: 'username' }
+        },
+        season: {
+          id: 0,
+          name: 'dummy',
+          start: (new Date()).toISOString(),
+          end: (new Date()).toISOString(),
+        },
+        rankingRuleSet: SportDefaultService.RankingRuleSet,
+        startDateTime: startDateTime.toISOString(),
+        referees: [],
+        state: State.Created,
+        sports: [this.sportDefaultService.getJsonCompetitionSport(this.sport, nrOfFields)]
+      },
+      competitors: [],
+      lockerRooms: [],
+      users: [],
+      sponsors: []
+    };
 
-    // TODOSPORT
-    // const jsonTournament: JsonTournament = {
-    //   public: this.form.controls.public.value,
-    //   updated: true,
-    //   competition: {
-    //     id: 0,
-    //     league: {
-    //       id: 0,
-    //       name: name,
-    //       association: { id: 0, name: 'username' }
-    //     },
-    //     season: {
-    //       id: 0,
-    //       name: 'dummy',
-    //       start: (new Date()).toISOString(),
-    //       end: (new Date()).toISOString(),
-    //     },
-    //     rankingRuleSet: RankingRuleSet.WC,
-    //     startDateTime: startDateTime.toISOString(),
-    //     referees: [],
-    //     state: State.Created,
-    //     sports: [this.competitionSportService.createDefaultJson(this.sport, fields)]
-    //   },
-    //   competitors: [],
-    //   lockerRooms: [],
-    //   users: [],
-    //   sponsors: []
-    // };
-
-    // this.tournamentRepository.createObject(jsonTournament)
-    //   .subscribe(
-    //     /* happy path */ tournament => {
-    //       const structureService = new StructureService(Tournament.PlaceRanges);
-    //       const structure: Structure = structureService.create(tournament.getCompetition(), nrofcompetitors);
-    //       this.structureRepository.editObject(structure, tournament)
-    //         .subscribe(
-    //         /* happy path */(structureOut: Structure) => {
-    //             this.planningRepository.create(structureOut, tournament, 1)
-    //               .subscribe(
-    //                 /* happy path */ roundNumberOut => {
-    //                   this.router.navigate(['/admin/structure', tournament.getId()]);
-    //                 },
-    //               /* error path */ e => {
-    //                   this.setAlert('danger', 'de wedstrijdplanning kon niet worden aangemaakt: ' + e);
-    //                   this.processing = false;
-    //                 },
-    //               /* onComplete */() => { this.processing = false; }
-    //               );
-    //           },
-    //         /* error path */ e => {
-    //             this.setAlert('danger', 'de opzet kon niet worden aangemaakt: ' + e);
-    //             this.processing = false;
-    //           }
-    //         );
-    //     },
-    //         /* error path */ e => { this.setAlert('danger', 'het toernooi kon niet worden aangemaakt: ' + e); this.processing = false; }
-    //   );
+    this.tournamentRepository.createObject(jsonTournament)
+      .subscribe(
+        /* happy path */ tournament => {
+          const structureService = new StructureService(Tournament.PlaceRanges);
+          const jsonPlanningConfig = this.sportDefaultService.getJsonPlanningConfig(this.sport.getGameMode());
+          const structure: Structure = structureService.create(
+            tournament.getCompetition(),
+            jsonPlanningConfig,
+            StructureService.DefaultNrOfPlaces);
+          this.structureRepository.editObject(structure, tournament)
+            .subscribe(
+            /* happy path */(structureOut: Structure) => {
+                this.planningRepository.create(structureOut, tournament, 1)
+                  .subscribe(
+                    /* happy path */ roundNumberOut => {
+                      this.router.navigate(['/admin/structure', tournament.getId()]);
+                    },
+                  /* error path */ e => {
+                      this.setAlert('danger', 'de wedstrijdplanning kon niet worden aangemaakt: ' + e);
+                      this.processing = false;
+                    },
+                  /* onComplete */() => { this.processing = false; }
+                  );
+              },
+            /* error path */ e => {
+                this.setAlert('danger', 'de opzet kon niet worden aangemaakt: ' + e);
+                this.processing = false;
+              }
+            );
+        },
+            /* error path */ e => { this.setAlert('danger', 'het toernooi kon niet worden aangemaakt: ' + e); this.processing = false; }
+      );
     return false;
   }
 

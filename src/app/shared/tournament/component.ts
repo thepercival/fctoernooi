@@ -32,17 +32,11 @@ export class TournamentComponent {
         });
     }
 
-    setData(tournamentId: number, callback?: DataProcessCallBack, noStructure?: boolean) {
+    setData(tournamentId: number | string, callback?: DataProcessCallBack, noStructure?: boolean) {
         this.tournamentRepository.getObject(tournamentId)
             .subscribe(
                 /* happy path */(tournament: Tournament) => {
                     this.tournament = tournament;
-                    if (!tournament.getUpdated()) {
-                        this.oldStructure = true;
-                        this.setAlert('danger', 'het toernooi heeft een oude opzet (-1)');
-                        this.processing = false;
-                        return;
-                    }
                     this.competition = tournament.getCompetition();
                     if (noStructure === true) {
                         if (callback !== undefined) {

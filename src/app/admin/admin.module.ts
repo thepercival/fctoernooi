@@ -36,7 +36,6 @@ import {
   PouleMapper,
   RoundMapper,
   RoundNumberMapper,
-  CompetitionSportMapper,
   CompetitionSportService,
   ScoreConfigMapper,
   ScoreConfigService,
@@ -100,6 +99,7 @@ import { RoleItemComponent } from './authorization/roleitem.component';
 import { AuthorizationExplanationModalComponent } from './authorization/infomodal.component';
 import { PointsEditComponent } from './competitionSport/points/points.component';
 import { CompetitorMapper } from '../lib/competitor/mapper';
+import { SportDefaultService } from '../lib/ngx-sport/defaultService';
 
 @NgModule({
   imports: [
@@ -145,6 +145,7 @@ import { CompetitorMapper } from '../lib/competitor/mapper';
     CompetitorMapper,
     CompetitionMapper,
     CompetitorRepository,
+    CompetitionSportService,
     CSSService,
     FieldMapper,
     FieldRepository,
@@ -167,11 +168,10 @@ import { CompetitorMapper } from '../lib/competitor/mapper';
     SeasonMapper,
     SponsorMapper,
     SponsorRepository,
+    SportDefaultService,
     SportMapper,
     SportConfigRepository,
     SportRepository,
-    CompetitionSportMapper,
-    CompetitionSportService,
     ScoreConfigMapper,
     ScoreConfigService,
     ScoreConfigRepository,

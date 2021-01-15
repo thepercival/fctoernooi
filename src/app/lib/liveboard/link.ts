@@ -1,5 +1,5 @@
 export class LiveboardLink {
     showIcon?: boolean;
-    tournamentId?: number;
+    tournamentId?: number | string;
     link?: string;
 }

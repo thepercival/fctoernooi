@@ -35,7 +35,6 @@ export class TournamentMapper {
             tournament.setBreakEndDateTime(new Date(json.breakEndDateTime));
         }
         tournament.setPublic(json.public);
-        tournament.setUpdated(json.updated);
         return tournament;
     }
 
@@ -49,8 +48,7 @@ export class TournamentMapper {
             sponsors: tournament.getSponsors().map(sponsor => this.sponsorMapper.toJson(sponsor)),
             breakStartDateTime: tournament.getBreakStartDateTime() ? tournament.getBreakStartDateTime().toISOString() : undefined,
             breakEndDateTime: tournament.getBreakEndDateTime() ? tournament.getBreakEndDateTime().toISOString() : undefined,
-            public: tournament.getPublic(),
-            updated: tournament.getUpdated()
+            public: tournament.getPublic()
         };
     }
 }

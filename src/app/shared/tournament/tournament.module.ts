@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt, faMedal, faSpinner,
@@ -27,6 +27,7 @@ import { facStructure, facReferee, facScoreboard } from './icons';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { LockerRoomRepository } from '../../lib/lockerroom/repository';
 import { SportConfigRouter } from './sportconfig.router';
+import { TournamentMapper } from '../../lib/tournament/mapper';
 
 @NgModule({
   declarations: [
@@ -78,4 +79,13 @@ export class TournamentModule {
     modalConfig.scrollable = true;
     modalConfig.size = 'lg';
   }
+
+  /*static forRoot(): ModuleWithProviders<TournamentModule> {
+    return {
+      ngModule: TournamentModule,
+      providers: [
+        { provide: CompetitionSportMapper }
+      ]
+    };
+  }*/
 }

@@ -38,6 +38,7 @@ import { UserMapper } from './lib/user/mapper';
 import { LayoutModule } from './shared/layout/layout.module';
 import { facDarts, facSoccerField, facTennis, facBadminton, facHockey, facSquash, facKorfball, facFavicon } from './lib/icons';
 import { SportIconCustomComponent } from './home/sport/customicon.component';
+// import { TournamentModule } from './shared/tournament/tournament.module';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { SportIconCustomComponent } from './home/sport/customicon.component';
     CommonSharedModule,
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
     FontAwesomeModule,
-    LayoutModule
+    LayoutModule/*,
+    TournamentModule.forRoot(),*/
   ],
   providers: [
     AuthService,

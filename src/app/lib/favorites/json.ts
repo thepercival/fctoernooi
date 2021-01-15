@@ -1,5 +1,5 @@
 export interface JsonFavorites {
-    tournamentId: number;
+    tournamentId: number | string;
     competitorIds: number[];
     refereeIds: number[];
 }

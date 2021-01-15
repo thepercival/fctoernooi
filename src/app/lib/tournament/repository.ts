@@ -33,7 +33,7 @@ export class TournamentRepository extends APIRepository {
         return this.url + (tournament ? ('/' + tournament.getId()) : '');
     }
 
-    getObject(id: number): Observable<Tournament> {
+    getObject(id: number | string): Observable<Tournament> {
         const url = super.getApiUrl() + (this.getToken() === undefined ? 'public/' : '') + this.getUrlpostfix() + '/' + id;
         return this.http.get<JsonTournament>(url, { headers: super.getHeaders() }).pipe(
             map((jsonTournament: JsonTournament) => this.mapper.toObject(jsonTournament)),

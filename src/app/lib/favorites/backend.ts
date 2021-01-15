@@ -31,7 +31,7 @@ export class FavoritesBackEnd {
         this.writeAll();
     }
 
-    remove(tournamentId: number) {
+    remove(tournamentId: number | string) {
         this.readAll();
 
         const oldItem = this.find(tournamentId);
@@ -46,7 +46,7 @@ export class FavoritesBackEnd {
         this.writeAll();
     }
 
-    protected find(tournamentId: number): JsonFavorites {
+    protected find(tournamentId: number | string): JsonFavorites {
         return this.json.find(jsonFavorites => jsonFavorites.tournamentId === tournamentId);
     }
 

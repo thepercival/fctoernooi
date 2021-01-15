@@ -2,9 +2,9 @@ import { JsonCompetition, JsonCompetitor } from 'ngx-sport';
 import { JsonTournamentUser } from './user/mapper';
 import { JsonLockerRoom } from '../lockerroom/json';
 import { JsonSponsor } from '../sponsor/mapper';
+import { JsonIdentifiable } from 'ngx-sport';
 
-export interface JsonTournament {
-    id?: number;
+export interface JsonTournament extends JsonIdentifiable {
     competition: JsonCompetition;
     breakStartDateTime?: string;
     breakEndDateTime?: string;
@@ -13,5 +13,4 @@ export interface JsonTournament {
     competitors: JsonCompetitor[];
     lockerRooms: JsonLockerRoom[];
     sponsors: JsonSponsor[];
-    updated: boolean;
 }
