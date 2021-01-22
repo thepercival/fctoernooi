@@ -16,13 +16,13 @@ import { RefereeEditComponent } from './referee/edit.component';
 import { RefereeListComponent } from './referee/list.component';
 import { SponsorEditComponent } from './sponsor/edit.component';
 import { SponsorListComponent } from './sponsor/list.component';
-// import { CompetitionSportConfigEditComponent } from './sportconfig/edit.component';
 import { CompetitionSportListComponent } from './competitionSport/list.component';
 import { StructureEditComponent } from './structure/edit.component';
 import { ScoreConfigEditComponent } from './scoreConfig/edit.component';
 import { LockerRoomsComponent } from '../shared/tournament/lockerrooms/lockerrooms.component';
 import { AuthorizationListComponent } from './authorization/list.component';
 import { AuthorizationAddComponent } from './authorization/add.component';
+import { CompetitionSportEditComponent } from './competitionSport/edit.component';
 
 const routes: Routes = [
   { path: 'new', component: NewComponent }, // ALL ROLES
@@ -41,10 +41,8 @@ const routes: Routes = [
   { path: 'authorization/:id', component: AuthorizationAddComponent, canActivate: [AuthguardService] }, // ROLEADMIN
   { path: 'sponsors/:id', component: SponsorListComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'sponsor/:id/:sponsorId', component: SponsorEditComponent, canActivate: [AuthguardService] }, // ADMIN
-  // TODOSPORT
-  // { path: 'sportconfigs/:id', component: CompetitionSportListComponent, canActivate: [AuthguardService] }, // ADMIN
-  // { path: 'sportconfig/:id/:sportConfigId/:tabId', component: SportConfigEditComponent, canActivate: [AuthguardService] }, // ADMIN
-  // { path: 'sportconfig/:id/:sportConfigId/:tabId/:startRoundNumber', component: SportConfigEditComponent, canActivate: [AuthguardService] }, // ADMIN
+  { path: 'competitionsports/:id', component: CompetitionSportListComponent, canActivate: [AuthguardService] }, // ADMIN
+  { path: 'competitionsport/:id/:competitionSportId/:tabId', component: CompetitionSportEditComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'startbreak/:id', component: StartBreakComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'structure/:id', component: StructureEditComponent, canActivate: [AuthguardService] }, // ADMIN
 ];

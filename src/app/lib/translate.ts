@@ -1,4 +1,4 @@
-import { Sport, SportCustom, ScoreConfig } from 'ngx-sport';
+import { Sport, SportCustom, ScoreConfig, JsonScoreConfig } from 'ngx-sport';
 
 export class TranslateService {
     static readonly language = 'nl';
@@ -23,14 +23,12 @@ export class TranslateService {
         return undefined;
     }
 
-    getScoreNameSingular(scoreConfig: ScoreConfig): string {
-        const customId = scoreConfig.getSport().getCustomId();
-        if (scoreConfig.isFirst()) {
+    getScoreNameSingular(jsonScoreConfig: JsonScoreConfig): string {
+        const customId = jsonScoreConfig.competitionSport.sport.customId;
+        if (jsonScoreConfig.next) {
             return this.getFirstScoreNameSingular(customId);
-        } else if (scoreConfig.isLast()) {
-            return this.getLastScoreNameSingular(customId);
         }
-        return '';
+        return this.getLastScoreNameSingular(customId);
     }
 
     protected getFirstScoreNameSingular(customId: number): string {
@@ -59,14 +57,12 @@ export class TranslateService {
         return '';
     }
 
-    getScoreNamePlural(scoreConfig: ScoreConfig): string {
-        const customId = scoreConfig.getSport().getCustomId();
-        if (scoreConfig.isFirst()) {
+    getScoreNamePlural(jsonScoreConfig: JsonScoreConfig): string {
+        const customId = jsonScoreConfig.competitionSport.sport.customId;
+        if (jsonScoreConfig.next) {
             return this.getFirstScoreNamePlural(customId);
-        } else if (scoreConfig.isLast()) {
-            return this.getLastScoreNamePlural(customId);
         }
-        return '';
+        return this.getLastScoreNamePlural(customId);
     }
 
     protected getFirstScoreNamePlural(customId: number): string {

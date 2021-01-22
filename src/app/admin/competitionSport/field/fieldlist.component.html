@@ -1,8 +1,8 @@
-<!-- <h2 *ngIf="processing" class="text-center">
+<h2 *ngIf="processing" class="text-center">
     <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </h2>
 <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-<table *ngIf="sportConfig" class="table">
+<table *ngIf="competitionSport" class="table">
     <thead>
         <tr>
             <th></th>
@@ -19,7 +19,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let field of sportConfig.getFields()">
+        <tr *ngFor="let field of competitionSport.getFields()">
             <td>
                 <button type="button" class="btn btn-sm btn-primary" [disabled]="processing" (click)="editField(field)">
                     <fa-icon [icon]="['fas', 'pencil-alt' ]"></fa-icon>
@@ -36,10 +36,10 @@
             </td>
             <td class="text-right">
                 <button *ngIf="!hasBegun" type="button" class="btn btn-sm btn-danger"
-                    [disabled]="processing || sportConfig.getFields().length === 1" (click)="removeField(field);">
+                    [disabled]="processing || competitionSport.getFields().length === 1" (click)="removeField(field);">
                     <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
                 </button>
             </td>
         </tr>
     </tbody>
-</table> -->
+</table>

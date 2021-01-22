@@ -17,7 +17,7 @@ export class SportSelectComponent implements OnInit {
     static readonly NEW = 2;
 
     @Input() competitionSports: CompetitionSport[];
-    @Input() filterCompetitions: CompetitionSport[];
+    @Input() filterCompetitionSports: CompetitionSport[];
     @Input() staticInfo: string;
     @Input() inputSelectOnly: boolean;
     @Output() sendSport = new EventEmitter<Sport>();
@@ -71,8 +71,8 @@ export class SportSelectComponent implements OnInit {
         return SportCustom.get().filter(customId => {
             if (this.competitionSports) {
                 return this.competitionSports.some(competitionSport => competitionSport.getSport().getCustomId() === customId);
-            } else if (this.filterCompetitions) {
-                return !this.filterCompetitions.some(competitionSport => competitionSport.getSport().getCustomId() === customId);
+            } else if (this.filterCompetitionSports) {
+                return !this.filterCompetitionSports.some(competitionSport => competitionSport.getSport().getCustomId() === customId);
             }
             return true;
         }).map(customId => {

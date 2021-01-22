@@ -21,8 +21,7 @@
         <fa-icon [icon]="['fas', 'cogs']"></fa-icon> <span>instellingen</span>
       </a>
     </div> -->
-    <!-- TODOSPORT -->
-    <!-- <table *ngIf="!processing" class="table">
+    <table *ngIf="!processing" class="table">
       <thead>
         <tr>
           <th></th>
@@ -32,37 +31,37 @@
           </th>
           <th class="text-right" *ngIf="!hasBegun">
             <button type="button" class="btn btn-sm btn-primary"
-              [routerLink]="['/admin/sportconfig', tournament.getId(), undefined]" [disabled]="processing">
+              [routerLink]="['/admin/competitionsport', tournament.getId()]" [disabled]="processing">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button>
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let sportConfig of sportConfigs; let last = last;">
+        <tr *ngFor="let competitionSport of competitionSports; let last = last;">
           <td>
             <button *ngIf="!hasBegun" type="button" class="btn btn-sm btn-primary" [disabled]="processing"
-              (click)="editSportConfig(sportConfig)">
+              (click)="editCompetitionSport(competitionSport)">
               <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
             </button>
             <button *ngIf="hasBegun" type="button" class="btn btn-sm btn-outline-secondary"
-              [routerLink]="['/admin/sportconfig', tournament.getId(), sportConfig.getId()]">
+              [routerLink]="['/admin/competitionsport', tournament.getId(), competitionSport.getId()]">
               <fa-icon [icon]="['fas', 'eye']"></fa-icon>
             </button>
           </td>
           <td>
-            <span>{{sportConfig.getSport().getName()}}</span>
+            <span>{{competitionSport.getSport().getName()}}</span>
           </td>
-          <td class="d-none d-sm-table-cell">{{sportConfig.getFields().length}}</td>
-          <td class="text-right" *ngIf="!hasBegun && sportConfigs.length > 1">
+          <td class="d-none d-sm-table-cell">{{competitionSport.getFields().length}}</td>
+          <td class="text-right" *ngIf="!hasBegun && competitionSports.length > 1">
             <button type="button" class="btn btn-sm btn-danger" [disabled]="processing"
-              (click)="openRemoveModal(content, sportConfig)">
+              (click)="openRemoveModal(content, competitionSport)">
               <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
             </button>
           </td>
         </tr>
       </tbody>
-    </table> -->
+    </table>
   </div>
 </div>
 

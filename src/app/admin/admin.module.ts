@@ -88,7 +88,8 @@ import { TournamentMapper } from '../lib/tournament/mapper';
 import { SponsorMapper } from '../lib/sponsor/mapper';
 import { SponsorRepository } from '../lib/sponsor/repository';
 import { TournamentModule } from '../shared/tournament/tournament.module';
-import { ModalRoundNumbersComponent } from './roundnumber/selector.component';
+import { RoundNumbersSelectorModalComponent } from './roundnumber/selector.component';
+import { RoundsSelectorModalComponent } from './rounds/selector.component';
 import { LockerRoomMapper } from '../lib/lockerroom/mapper';
 import { TournamentUserRepository } from '../lib/tournament/user/repository';
 import { TournamentInvitationRepository } from '../lib/tournament/invitation/repository';
@@ -100,6 +101,7 @@ import { AuthorizationExplanationModalComponent } from './authorization/infomoda
 import { PointsEditComponent } from './competitionSport/points/points.component';
 import { CompetitorMapper } from '../lib/competitor/mapper';
 import { SportDefaultService } from '../lib/ngx-sport/defaultService';
+import { StructureSelectRoundComponent } from './rounds/round.component';
 
 @NgModule({
   imports: [
@@ -132,13 +134,14 @@ import { SportDefaultService } from '../lib/ngx-sport/defaultService';
     SponsorEditComponent,
     StartBreakComponent,
     CompetitorListRemoveModalComponent,
-    ModalRoundNumbersComponent,
     AuthorizationListComponent,
     AuthorizationAddComponent,
     RoleItemComponent,
     AuthorizationExplanationModalComponent,
     CompetitorListRemoveModalComponent,
-    ModalRoundNumbersComponent
+    RoundNumbersSelectorModalComponent,
+    RoundsSelectorModalComponent,
+    StructureSelectRoundComponent
   ],
   providers: [
     AssociationMapper,

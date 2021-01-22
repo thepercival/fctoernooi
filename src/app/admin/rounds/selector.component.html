@@ -1,0 +1,16 @@
+<div class="modal-header">
+  <h4 class="modal-title">selecteer ronden</h4>
+  <button type="button" class="close" aria-label="sluiten" (click)="activeModal.dismiss('cancel')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <app-tournament-select-round [toggleRound]="toggleRound" [first]="false" [hasOwnConfig]="hasOwnConfig"
+    (checkRoundsSelected)="checkRoundsSelected()">
+  </app-tournament-select-round>
+</div>
+<div class="modal-footer border-top-0">
+  <button type="button" [disabled]="!someRoundSelected" class="btn btn-primary" data-dismiss="modal"
+    (click)="close()">ga
+    verder</button>
+</div>

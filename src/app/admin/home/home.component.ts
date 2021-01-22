@@ -14,7 +14,7 @@ import { TranslateService } from '../../lib/translate';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
 import { LockerRoomValidator } from '../../lib/lockerroom/validator';
-import { SportConfigRouter } from '../../shared/tournament/sportconfig.router';
+import { CompetitionSportRouter } from '../../shared/tournament/competitionSport.router';
 
 @Component({
     selector: 'app-tournament-admin',
@@ -33,7 +33,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
 
     constructor(
         route: ActivatedRoute,
-        private sportConfigRouter: SportConfigRouter,
+        private competitionSportRouter: CompetitionSportRouter,
         private modalService: NgbModal,
         public cssService: CSSService,
         router: Router,
@@ -115,12 +115,12 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     getFieldDescription(): string {
-        const sport = this.competition.hasMultipleSportConfigs() ? undefined : this.competition.getSports()[0].getSport();
+        const sport = this.competition.hasMultipleSports() ? undefined : this.competition.getSports()[0].getSport();
         return this.translate.getFieldNameSingular(sport);
     }
 
     getFieldsDescription(): string {
-        const sport = this.competition.hasMultipleSportConfigs() ? undefined : this.competition.getSports()[0].getSport();
+        const sport = this.competition.hasMultipleSports() ? undefined : this.competition.getSports()[0].getSport();
         return this.translate.getFieldNamePlural(sport);
     }
 
@@ -150,14 +150,6 @@ export class HomeComponent extends TournamentComponent implements OnInit {
             return '1 sponsor';
         }
         return nrOfSponsors + ' sponsors';
-    }
-
-    sportConfigsAreDefault(): boolean {
-        return true;
-        // TODOSPORT USE APPLICATION SPECIFIC CODE HERE
-        // return this.competition.getSports().every(competitionSport => {
-        //     return this.competitionSportService.isDefault(competitionSport);
-        // });
     }
 
     isAdmin(): boolean {
@@ -303,8 +295,8 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         this.router.navigate(['/admin/structure', this.tournament.getId()]);
     }
 
-    linkToSportConfig() {
-        this.sportConfigRouter.navigate(this.tournament);
+    linkToCompetitionSport() {
+        this.competitionSportRouter.navigate(this.tournament);
     }
 
     getCurrentYear() {

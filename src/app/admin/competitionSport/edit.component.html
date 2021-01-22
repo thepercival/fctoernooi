@@ -1,16 +1,17 @@
-<!-- <div class="container-fluid">
+<div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
       <app-tournament-title [tournament]="tournament">
       </app-tournament-title>
       <div class="d-flex justify-content-between">
         <h2 class="text-truncate">
-          <app-sport-icon *ngIf="sportConfig" [customId]="sportConfig.getSport().getCustomId()"></app-sport-icon>
-          <span *ngIf="sportConfig"> {{sportConfig.getSport().getName()}}</span>
-          <span *ngIf="!sportConfig">sport</span>
+          <app-sport-icon *ngIf="competitionSport" [customId]="competitionSport.getSport().getCustomId()">
+          </app-sport-icon>
+          <span *ngIf="competitionSport"> {{competitionSport.getSport().getName()}}</span>
+          <span *ngIf="!competitionSport">sport</span>
         </h2>
-        <button *ngIf="competition.getSportConfigs().length === 1" (click)="openMultiSportsModal(multisports)"
-          class="btn btn-outline-secondary">
+        <button *ngIf="competitionSport && competition.getSports().length === 1"
+          (click)="openMultiSportsModal(multisports)" class="mb-2 btn btn-outline-secondary btn-sm">
           <span>meerdere sporten</span>
         </button>
       </div>
@@ -23,37 +24,36 @@
 
       <div *ngIf="!processing">
         <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs nav-fill">
-          <li [ngbNavItem]="SportConfigTabFields">
+          <li [ngbNavItem]="TabFields">
             <a ngbNavLink>velden</a>
             <ng-template ngbNavContent>
-              <app-tournament-fields [sportConfig]="sportConfig" [hasBegun]="hasBegun" [tournament]="tournament"
-                [structure]="structure">
+              <app-tournament-fields [competitionSport]="competitionSport" [hasBegun]="hasBegun"
+                [tournament]="tournament" [structure]="structure">
               </app-tournament-fields>
             </ng-template>
           </li>
-          <li [ngbNavItem]="SportConfigTabScore">
+          <li [ngbNavItem]="TabScore">
             <a ngbNavLink>score-regels</a>
             <ng-template ngbNavContent>
-              <app-tournament-scoreconfig-edit [sportConfig]="sportConfig" [tournament]="tournament"
-                [structure]="structure" [startRoundNumber]="startRoundNumber">
+              <app-tournament-scoreconfig-edit [competitionSport]="competitionSport" [tournament]="tournament"
+                [structure]="structure">
               </app-tournament-scoreconfig-edit>
             </ng-template>
           </li>
-          <li [ngbNavItem]="SportConfigTabPoints">
+          <li [ngbNavItem]="TabPoints">
             <a ngbNavLink>puntentelling</a>
             <ng-template ngbNavContent>
-              <app-tournament-points-edit [sportConfig]="sportConfig" [hasBegun]="hasBegun" [tournament]="tournament"
-                [structure]="structure">
+              <app-tournament-points-edit [hasBegun]="hasBegun" [tournament]="tournament" [structure]="structure">
               </app-tournament-points-edit>
             </ng-template>
           </li>
         </ul>
         <div [ngbNavOutlet]="nav" class="mt-2"></div>
       </div>
-      <app-tournament-sport-select *ngIf="!processing && competition && !sportConfig"
-      class="col-xs-12 col-sm-10 col-md-8 col-lg-6" (sendSport)="onGetSport($event)"
-      [filterSportConfigs]="tournament.getCompetition().getSportConfigs()">
-    </app-tournament-sport-select>
+      <app-tournament-sport-select *ngIf="!processing && competition && !competitionSport"
+        class="col-xs-12 col-sm-10 col-md-8 col-lg-6" (sendSport)="onGetSport($event)"
+        [filterCompetitionSports]="tournament.getCompetition().getSports()">
+      </app-tournament-sport-select>
     </div>
   </div>
 
@@ -77,4 +77,4 @@
     <div class="modal-footer">
       <button type="button" class="btn btn-primary" (click)="modal.close('continue')">doorgaan</button>
     </div>
-  </ng-template> -->
+  </ng-template>

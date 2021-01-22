@@ -1,0 +1,15 @@
+.card.round{
+    width:100%;
+}
+
+.card.round>.card-body{
+    padding-bottom:0;
+}
+
+app-tournament-select-round {
+    width: 100%;
+}
+
+.card.qualification{
+    width:100%;
+}

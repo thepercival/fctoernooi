@@ -1,11 +1,10 @@
 <div class="modal-header">
-  <h4 class="modal-title">vanaf-ronde kiezen</h4>
+  <h4 class="modal-title">rondenummer(s) kiezen</h4>
   <button type="button" class="close" aria-label="sluiten" (click)="activeModal.dismiss('cancel')">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body">
-  <h5 *ngIf="subject" class="mb-3">Voor welke rondes wil je {{subject}} wijzigen?</h5>
   <ul class="list-group">
     <li *ngFor="let roundNumber of structure.getRoundNumbers()" class="list-group-item border-primary pointer"
       (click)="activeModal.close(roundNumber)">

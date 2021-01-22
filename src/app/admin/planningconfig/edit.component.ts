@@ -20,7 +20,7 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { PlanningConfigRepository } from '../../lib/ngx-sport/planning/config/repository';
 import { Tournament } from '../../lib/tournament';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ModalRoundNumbersComponent } from '../roundnumber/selector.component';
+import { RoundNumbersSelectorModalComponent } from '../roundnumber/selector.component';
 import { SportDefaultService } from '../../lib/ngx-sport/defaultService';
 
 @Component({

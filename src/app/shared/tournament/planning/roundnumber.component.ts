@@ -26,8 +26,8 @@ import { Tournament } from '../../../lib/tournament';
 import { PlanningRepository } from '../../../lib/ngx-sport/planning/repository';
 import { PouleRankingModalComponent } from '../poulerankingmodal/rankingmodal.component';
 import { TranslateService } from '../../../lib/translate';
-import { SportConfigTabOrder } from '../sportconfigtaborder';
-import { SportConfigRouter } from '../sportconfig.router';
+import { CompetitionSportRouter } from '../competitionSport.router';
+import { CompetitionSportTabOrder } from '../competitionSportTabOrder';
 
 @Component({
   selector: 'app-tournament-roundnumber-planning',
@@ -66,7 +66,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
 
   constructor(
     private router: Router,
-    public sportConfigRouter: SportConfigRouter,
+    public competitionSportRouter: CompetitionSportRouter,
     private authService: AuthService,
     public cssService: CSSService,
     private modalService: NgbModal,
@@ -113,8 +113,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
 
   get GameHOME(): boolean { return AgainstGame.Home; }
   get GameAWAY(): boolean { return AgainstGame.Away; }
-  get SportConfigTabFields(): number { return SportConfigTabOrder.Fields; }
-  get SportConfigTabScore(): number { return SportConfigTabOrder.Score; }
+  get SportConfigTabFields(): number { return CompetitionSportTabOrder.Fields; }
+  get SportConfigTabScore(): number { return CompetitionSportTabOrder.Score; }
 
   private getGameData() {
     const gameDatas: GameData[] = [];
@@ -230,8 +230,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     this.router.navigate(['/admin/planningconfig', this.tournament.getId(), this.roundNumber.getNumber()]);
   }
 
-  linkToSportConfig(tabOrder: SportConfigTabOrder) {
-    this.sportConfigRouter.navigate(this.tournament, tabOrder, this.roundNumber);
+  linkToSportConfig(tabOrder: CompetitionSportTabOrder) {
+    this.competitionSportRouter.navigate(this.tournament, tabOrder, this.roundNumber);
   }
 
   linkToReferee() {
@@ -289,12 +289,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
 
   openModal(templateRef) {
     const modalRef = this.modalService.open(templateRef);
-  }
-
-  getCalculateName(scoreConfig: ScoreConfig): string {
-    const max = scoreConfig.getMaximum();
-    const scoreConfigTmp = (max > 0) ? scoreConfig : scoreConfig.getNext();
-    return this.translate.getScoreNamePlural(scoreConfigTmp);
   }
 }
 

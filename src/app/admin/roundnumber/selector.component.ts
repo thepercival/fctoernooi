@@ -8,7 +8,7 @@ import { IAlert } from '../../shared/common/alert';
     selector: 'app-ngbd-modal-roundnumbers',
     templateUrl: './selector.component.html',
 })
-export class ModalRoundNumbersComponent implements OnInit {
+export class RoundNumbersSelectorModalComponent implements OnInit {
     @Input() structure: Structure;
     @Input() subject: string;
     protected roundNumber: RoundNumber;

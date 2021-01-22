@@ -37,7 +37,7 @@ export class FieldListComponent implements OnInit {
         if (this.hasBegun) {
             this.alert = { type: 'warning', message: 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen en verwijderen' };
         }
-        this.prioritizable = !this.competitionSport.getCompetition().hasMultipleSportConfigs();
+        this.prioritizable = !this.competitionSport.getCompetition().hasMultipleSports();
         this.processing = false;
     }
 

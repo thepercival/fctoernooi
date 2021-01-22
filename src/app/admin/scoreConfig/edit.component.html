@@ -1,52 +1,55 @@
-<!-- <h2 *ngIf="processing" class="text-center">
+<h2 *ngIf="processing" class="text-center">
   <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </h2>
 <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-<form *ngIf="!processing && scoreConfig" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
-  <div *ngIf="scoreConfig.hasNext()" class="form-group row">
-    <label for="useNext" class="col-7 col-form-label pointer">gebruik sets</label>
-    <div class="form-check col-5">
-      <label class="custom-control custom-checkbox col-form-label pl-0">
-        <input type="checkbox" class="custom-control-input form-check-input" formControlName="useNext">
-        <span class="custom-control-indicator"></span>
-      </label>
+<form *ngIf="!processing && jsonScoreConfig" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+  <div *ngIf="jsonScoreConfig.next" class="form-group row">
+    <label for="useNext" class="col-7 col-form-label">gebruik sets</label>
+    <div class="col-5">
+      <div class="form-control custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="useNext" formControlName="useNext">
+        <label class="custom-control-label" for="useNext"></label>
+      </div>
     </div>
   </div>
-  <label class="text-info offset-8 col-4 px-0">0 = zoveel mogelijk</label>
   <div *ngIf="form.value['useNext']" class="form-group row">
-    <label class="col-5 col-form-label">{{translateService.getScoreNamePlural(scoreConfig.getNext())}}</label>
+    <label class="col-5 col-form-label">{{translateService.getScoreNamePlural(jsonScoreConfig.next)}}</label>
     <label for="maxNext"
-      class="col-2 col-form-label text-right">{{translateService.getScoreDirection(scoreConfig.getNext().getDirection())}}</label>
+      class="col-2 col-form-label text-right">{{translateService.getScoreDirection(jsonScoreConfig.next.direction)}}</label>
     <div class="col-5">
-      <input type="number"
+      <input type="number" aria-describedby="zeroHelp"
         [ngClass]="{ 'is-invalid': form.controls.maxNext.invalid, 'is-valid': form.controls.maxNext.valid}"
         formControlName="maxNext" maxlength="2" class="form-control" />
+      <small *ngIf="form.value['useNext']" id="zeroHelp" class="form-text text-info">0 = zoveel mogelijk</small>
     </div>
   </div>
   <div class="form-group row">
     <label *ngIf="form.value['useNext']"
-      class="col-7 col-form-label">{{translateService.getScoreNamePlural(scoreConfig)}} per
-      {{translateService.getScoreNameSingular(scoreConfig.getNext())}}
+      class="col-7 col-form-label">{{translateService.getScoreNamePlural(jsonScoreConfig)}} per
+      {{translateService.getScoreNameSingular(jsonScoreConfig.next)}}
     </label>
     <label *ngIf="!form.value['useNext']"
-      class="col-5 col-form-label">{{translateService.getScoreNamePlural(scoreConfig)}}</label>
+      class="col-5 col-form-label">{{translateService.getScoreNamePlural(jsonScoreConfig)}}</label>
     <label *ngIf="!form.value['useNext']" for="max"
-      class="col-2 col-form-label text-right">{{translateService.getScoreDirection(scoreConfig.getDirection())}}</label>
+      class="col-2 col-form-label text-right">{{translateService.getScoreDirection(jsonScoreConfig.direction)}}</label>
     <div class="col-5">
-      <input type="number" [ngClass]="{ 'is-invalid': form.controls.max.invalid, 'is-valid': form.controls.max.valid}"
+      <input type="number" aria-describedby="zeroHelpNext"
+        [ngClass]="{ 'is-invalid': form.controls.max.invalid, 'is-valid': form.controls.max.valid}"
         formControlName="max" maxlength="2" class="form-control" />
+      <small *ngIf="!form.value['useNext']" id="zeroHelpNext" class="form-text text-info">0 = zoveel mogelijk</small>
     </div>
   </div>
   <div class="form-group row">
     <div class="col-7 d-flex justify-content-end">
-      <button *ngIf="startRoundNumber.hasNext() || startRoundNumber.hasPrevious()" type="button"
-        (click)="openModalSelectStartRoundNumber()" class="btn btn-outline-primary">
-        <span [innerHTML]="nameService.getRoundNumbersName( startRoundNumber ) | keepHtml"></span>
+      <button *ngIf="structure.getRootRound().getChildren().length" type="button" (click)="openSelectRoundsModal()"
+        class="btn btn-outline-primary">
+        selecteer ronden
       </button>
     </div>
-    <div *ngIf="!hasBegun" class="col-5">
+    <div *ngIf="!readonly" class="col-5">
       <button type="submit" class="btn btn-primary" [disabled]="form.invalid">opslaan</button>
     </div>
+
   </div>
 
-</form> -->
+</form>
