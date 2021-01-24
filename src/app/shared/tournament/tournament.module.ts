@@ -28,6 +28,7 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 import { LockerRoomRepository } from '../../lib/lockerroom/repository';
 import { TournamentMapper } from '../../lib/tournament/mapper';
 import { CompetitionSportRouter } from './competitionSport.router';
+import { InfoModalComponent } from './infomodal/infomodal.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { CompetitionSportRouter } from './competitionSport.router';
     PouleRankingModalComponent,
     CompetitorChooseModalComponent,
     NameModalComponent,
+    InfoModalComponent,
     EndRankingComponent,
     PouleRankingComponent,
     TitleComponent,
@@ -60,6 +62,7 @@ import { CompetitionSportRouter } from './competitionSport.router';
     RoundNumberPlanningComponent,
     PouleRankingModalComponent,
     NameModalComponent,
+    InfoModalComponent,
     EndRankingComponent,
     PouleRankingComponent,
     TitleComponent,

@@ -94,6 +94,18 @@ input.is-warning {
   @extend .border-info;
 }
 
+.info-modal .modal-content{
+  border: 5px;
+  @extend .bg-info;
+  @extend .text-white;
+}
+
+.info-modal .list-group-item {
+  @extend .bg-info;
+  @extend .text-white;
+  @extend .border-white;
+}
+
 .progress {
   background-color:#{$body-bg};
 }

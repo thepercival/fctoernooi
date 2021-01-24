@@ -8,6 +8,7 @@ import { TournamentMapper } from './mapper';
 import { APIRepository } from '../repository';
 import { LockerRoomMapper } from '../lockerroom/mapper';
 import { JsonTournament } from './json';
+import { TournamentExportAction } from '../../admin/home/exportmodal.component';
 
 /**
  * Created by coen on 1-10-17.
@@ -93,24 +94,13 @@ export class TournamentRepository extends APIRepository {
         );
     }
 
-    getExportUrl(tournament: Tournament, exportType: string, exportConfig: TournamentExportConfig): Observable<string> {
+    getExportUrl(tournament: Tournament, exportAction: TournamentExportAction): Observable<string> {
 
         const url = this.getUrl() + '/' + tournament.getId() + '/exportgeneratehash';
         return this.http.get(url, this.getOptions()).pipe(
             map((jsonHash: TournamentExportHash) => {
                 const exportUrl = super.getApiUrl() + 'public/' + this.getUrlpostfix() + '/' + tournament.getId() + '/export';
-                return exportUrl +
-                    '?gamenotes=' + exportConfig.gamenotes +
-                    '&structure=' + exportConfig.structure +
-                    '&rules=' + exportConfig.rules +
-                    '&gamesperpoule=' + exportConfig.gamesperpoule +
-                    '&gamesperfield=' + exportConfig.gamesperfield +
-                    '&planning=' + exportConfig.planning +
-                    '&poulepivottables=' + exportConfig.poulepivottables +
-                    '&lockerrooms=' + exportConfig.lockerRooms +
-                    '&qrcode=' + exportConfig.qrcode +
-                    '&type=' + exportType +
-                    '&hash=' + jsonHash.hash;
+                return exportUrl + '?subjects=' + exportAction.subjects + '&format=' + exportAction.format + '&hash=' + jsonHash.hash;
             }),
             catchError((err) => this.handleError(err))
         );
@@ -121,14 +111,15 @@ export interface TournamentExportHash {
     hash: string;
 }
 
-export interface TournamentExportConfig {
-    gamenotes: boolean;
-    structure: boolean;
-    rules: boolean;
-    gamesperpoule: boolean;
-    gamesperfield: boolean;
-    planning: boolean;
-    poulepivottables: boolean;
-    lockerRooms: boolean;
-    qrcode: boolean;
+export enum TournamentExportConfig {
+    gameNotes = 1,
+    structure = 2,
+    gamesPerPoule = 4,
+    gamesPerField = 8,
+    planning = 16,
+    poulePivotTables = 32,
+    lockerRooms = 64,
+    qrCode = 128
 }
+
+export enum TournamentExportFormat { Pdf, Excel }

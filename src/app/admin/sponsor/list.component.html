@@ -3,15 +3,10 @@
     <app-tournament-title [tournament]="tournament" [admin]="true">
     </app-tournament-title>
     <div *ngIf="!processing" class="d-flex justify-content-between">
-      <h2 class="mr-auto">
-        <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon> sponsoren
+      <h2 (click)="openHelpModal(contentInfo)" class="pointer mr-auto">
+        <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon> sponsoren <fa-icon class="text-info"
+          [icon]=" ['fas', 'info-circle' ]"></fa-icon>
       </h2>
-
-      <button *ngIf="tournament" type="button" class="btn btn-outline-info mr-2" (click)="openHelpModal(contentInfo)">
-        <fa-icon [icon]=" ['fas', 'info-circle' ]"></fa-icon> info
-      </button>
-
-
       <button *ngIf="sponsors.length > 0" [routerLink]="['/public/liveboard', tournament.getId()]"
         [queryParams]="{screenfilter:'sponsors'}" type="button" class="btn btn-secondary">
         <fa-icon [icon]="['fas', 'eye']"></fa-icon>
@@ -68,24 +63,14 @@
 </div>
 
 <ng-template #contentInfo let-modal>
-  <div class="modal-header border-bottom-0">
-    <h4 class="modal-title">sponsoren info</h4>
-    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <ul class="list-group">
-      <li class="list-group-item border-info">Het aantal sponsoren dat getoond wordt per scherm is 1 of 4.
-      </li>
-      <li class="list-group-item border-info">Het maximum aantal schermen is 4.
-      </li>
-      <li class="list-group-item border-info">Op het live scorebord worden per cyclus alle sponsorenschermen getoond.
-      </li>
-    </ul>
-  </div>
-  <div class="modal-footer justify-content-reverse border-top-0">
-    <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
-      (click)="modal.dismiss('close')">sluiten</button>
-  </div>
+  <ul class="list-group">
+    <li class="list-group-item">Het aantal sponsoren dat getoond wordt per scherm is 1
+      of 4.
+    </li>
+    <li class="list-group-item">Het maximum aantal schermen is 4.
+    </li>
+    <li class="list-group-item">Op het live scorebord worden per cyclus alle
+      sponsorenschermen getoond.
+    </li>
+  </ul>
 </ng-template>

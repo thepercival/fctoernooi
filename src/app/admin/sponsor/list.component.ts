@@ -9,6 +9,7 @@ import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 
 
 @Component({
@@ -48,7 +49,9 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
   }
 
   openHelpModal(modalContent) {
-    const activeModal = this.modalService.open(modalContent);
+    const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
+    activeModal.componentInstance.header = 'uitleg sponsoren';
+    activeModal.componentInstance.modalContent = modalContent;
     activeModal.result.then((result) => {
     }, (reason) => {
     });

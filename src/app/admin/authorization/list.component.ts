@@ -149,7 +149,7 @@ export class AuthorizationListComponent extends TournamentComponent implements O
     }
 
     openHelpModal() {
-        const activeModal = this.modalService.open(AuthorizationExplanationModalComponent);
+        const activeModal = this.modalService.open(AuthorizationExplanationModalComponent, { windowClass: 'info-modal' });
         activeModal.componentInstance.header = 'uitleg rollen';
         activeModal.result.then((result) => {
             if (result === 'linkToReferees') {

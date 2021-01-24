@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { League, CompetitionSportService, RoundNumber } from 'ngx-sport';
+import { League } from 'ngx-sport';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { CSSService } from '../../shared/common/cssservice';
@@ -15,6 +15,8 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
 import { LockerRoomValidator } from '../../lib/lockerroom/validator';
 import { CompetitionSportRouter } from '../../shared/tournament/competitionSport.router';
+import { ExportModalComponent, TournamentExportAction } from './exportmodal.component';
+import { ShareModalComponent } from './sharemodal.component';
 
 @Component({
     selector: 'app-tournament-admin',
@@ -23,8 +25,6 @@ import { CompetitionSportRouter } from '../../shared/tournament/competitionSport
 })
 export class HomeComponent extends TournamentComponent implements OnInit {
     copyForm: FormGroup;
-    exportForm: FormGroup;
-    shareForm: FormGroup;
     minDateStruct: NgbDateStruct;
     translate: TranslateService;
     allHavePlannings: boolean;
@@ -40,7 +40,6 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         private authService: AuthService,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
-        private competitionSportService: CompetitionSportService,
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
@@ -52,24 +51,6 @@ export class HomeComponent extends TournamentComponent implements OnInit {
             date: ['', Validators.compose([
             ])]
         });
-        this.shareForm = fb.group({
-            url: [{ value: '', disabled: true }, Validators.compose([
-            ])],
-            public: ['', Validators.compose([
-            ])]
-        });
-
-        this.exportForm = fb.group({
-            gamenotes: true,
-            structure: false,
-            rules: false,
-            gamesperpoule: false,
-            gamesperfield: false,
-            planning: false,
-            poulepivottables: false,
-            lockerrooms: false,
-            qrcode: false
-        });
     }
 
     ngOnInit() {
@@ -77,15 +58,9 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     postNgOnInit() {
+        this.lockerRoomValidator = new LockerRoomValidator(this.tournament.getCompetitors(), this.tournament.getLockerRooms());
         const date = new Date();
         this.copyForm.controls.date.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
-        this.shareForm.controls.url.setValue(location.origin + '/' + this.tournament.getId());
-        this.shareForm.controls.public.setValue(this.tournament.getPublic());
-
-        this.lockerRoomValidator = new LockerRoomValidator(this.tournament.getCompetitors(), this.tournament.getLockerRooms());
-        this.exportForm.controls.lockerrooms.setValue(this.lockerRoomValidator.areSomeArranged());
-        this.exportForm.controls.qrcode.setValue(this.tournament.getPublic());
-
         this.processing = false;
     }
 
@@ -205,43 +180,30 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         localStorage.setItem('manualmessageread', JSON.stringify(true));
     }
 
-    allExportOptionsOff() {
-        return !this.exportForm.value['gamenotes']
-            && !this.exportForm.value['structure'] && !this.exportForm.value['planning']
-            && !this.exportForm.value['gamesperpoule'] && !this.exportForm.value['gamesperfield'] && !this.exportForm.value['rules']
-            && !this.exportForm.value['poulepivottables'] && !this.exportForm.value['lockerrooms'] && !this.exportForm.value['qrcode'];
-    }
-
-    openModalExport(modalContent) {
-        const activeModal = this.modalService.open(modalContent);
-        activeModal.result.then((result: string) => {
-            if (result === 'export-pdf' || result === 'export-excel') {
-                const exportConfig: TournamentExportConfig = {
-                    gamenotes: this.exportForm.value['gamenotes'],
-                    structure: this.exportForm.value['structure'],
-                    rules: this.exportForm.value['rules'],
-                    gamesperpoule: this.exportForm.value['gamesperpoule'],
-                    gamesperfield: this.exportForm.value['gamesperfield'],
-                    planning: this.exportForm.value['planning'],
-                    poulepivottables: this.exportForm.value['poulepivottables'],
-                    lockerRooms: this.exportForm.value['lockerrooms'],
-                    qrcode: this.exportForm.value['qrcode']
-                };
-
-                const exportType = result.substr(7);
-                this.processing = true;
-                this.tournamentRepository.getExportUrl(this.tournament, exportType, exportConfig)
-                    .subscribe(
+    openModalExport() {
+        const activeModal = this.modalService.open(ExportModalComponent);
+        let enabled = TournamentExportConfig.gameNotes;
+        if (this.lockerRoomValidator.areSomeArranged()) {
+            enabled += TournamentExportConfig.lockerRooms;
+        }
+        if (this.tournament.getPublic()) {
+            enabled += TournamentExportConfig.qrCode;
+        }
+        activeModal.componentInstance.enabled = enabled;
+        activeModal.componentInstance.fieldDescription = this.getFieldDescription();
+        activeModal.result.then((exportAction: TournamentExportAction) => {
+            this.processing = true;
+            this.tournamentRepository.getExportUrl(this.tournament, exportAction)
+                .subscribe(
                 /* happy path */(url: string) => {
-                            window.open(url);
-                        },
+                        window.open(url);
+                    },
                 /* error path */ e => {
-                            this.setAlert('danger', 'het exporteren is niet gelukt');
-                            this.processing = false;
-                        },
+                        this.setAlert('danger', 'het exporteren is niet gelukt');
+                        this.processing = false;
+                    },
                 /* onComplete */() => { this.processing = false; }
-                    );
-            }
+                );
         }, (reason) => {
         });
     }
@@ -280,13 +242,11 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         });
     }
 
-    openModalShare(modalContent) {
-        const activeModal = this.modalService.open(modalContent/*, { windowClass: 'border-warning' }*/);
-        // (activeModal.componentInstance).copied = false;
-        activeModal.result.then((result) => {
-            if (result === 'share') {
-                this.share();
-            }
+    openModalShare() {
+        const activeModal = this.modalService.open(ShareModalComponent/*, { windowClass: 'border-warning' }*/);
+        activeModal.componentInstance.tournament = this.tournament;
+        activeModal.result.then((publicEnabled: boolean) => {
+            this.share(publicEnabled);
         }, (reason) => {
         });
     }
@@ -329,11 +289,11 @@ export class HomeComponent extends TournamentComponent implements OnInit {
             );
     }
 
-    share() {
+    share(publicEnabled: boolean) {
         this.setAlert('info', 'het delen wordt gewijzigd');
 
         this.processing = true;
-        this.tournament.setPublic(this.shareForm.controls.public.value);
+        this.tournament.setPublic(publicEnabled);
         this.tournamentRepository.editObject(this.tournament)
             .subscribe(
                 /* happy path */(tournamentRes: Tournament) => {

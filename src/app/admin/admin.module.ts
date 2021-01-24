@@ -102,6 +102,8 @@ import { PointsEditComponent } from './competitionSport/points/points.component'
 import { CompetitorMapper } from '../lib/competitor/mapper';
 import { SportDefaultService } from '../lib/ngx-sport/defaultService';
 import { StructureSelectRoundComponent } from './rounds/round.component';
+import { ExportModalComponent } from './home/exportmodal.component';
+import { ShareModalComponent } from './home/sharemodal.component';
 
 @NgModule({
   imports: [
@@ -141,7 +143,9 @@ import { StructureSelectRoundComponent } from './rounds/round.component';
     CompetitorListRemoveModalComponent,
     RoundNumbersSelectorModalComponent,
     RoundsSelectorModalComponent,
-    StructureSelectRoundComponent
+    StructureSelectRoundComponent,
+    ExportModalComponent,
+    ShareModalComponent
   ],
   providers: [
     AssociationMapper,

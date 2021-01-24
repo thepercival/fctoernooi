@@ -10,6 +10,8 @@ import { SponsorRepository } from '../../lib/sponsor/repository';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 
 @Component({
     selector: 'app-tournament-sponsor-edit',
@@ -39,6 +41,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         private sponsorRepository: SponsorRepository,
         route: ActivatedRoute,
         router: Router,
+        private modalService: NgbModal,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private myNavigation: MyNavigation,
@@ -219,6 +222,15 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
     getLogoUploadDescription() {
         return 'het plaatje wordt geschaald naar een hoogte van 200px. De beeldverhouding moet liggen tussen '
             + (1 - this.LOGO_ASPECTRATIO_THRESHOLD).toFixed(2) + ' en ' + (1 + this.LOGO_ASPECTRATIO_THRESHOLD).toFixed(2);
+    }
+
+    openInfoModal(modalContent) {
+        const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
+        activeModal.componentInstance.header = 'uitleg upload logo';
+        activeModal.componentInstance.modalContent = modalContent;
+        activeModal.result.then((result) => {
+        }, (reason) => {
+        });
     }
 }
 

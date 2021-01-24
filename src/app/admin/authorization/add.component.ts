@@ -92,7 +92,7 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
     }
 
     openHelpModal() {
-        const activeModal = this.modalService.open(AuthorizationExplanationModalComponent);
+        const activeModal = this.modalService.open(AuthorizationExplanationModalComponent, { windowClass: 'info-modal' });
         activeModal.componentInstance.header = 'uitleg rol toevoegen';
         activeModal.componentInstance.showAdd = true;
         activeModal.result.then((result) => {

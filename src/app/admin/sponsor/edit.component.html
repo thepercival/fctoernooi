@@ -33,36 +33,9 @@
               formControlName="url" placeholder="max. {{validations.maxlengthurl}} karakters">
           </div>
         </div>
-        <!-- <div class="form-group row">
-          <div class="col-3">
-            <label for="logo" class="col-form-label">logo</label>
-          </div>
-          <div class="col-9">
-            <div class="btn-group" role="group">
-              <button type="button" (click)="toggleLogoInput()" class="btn btn-outline-secondary">
-                <fa-icon *ngIf="logoInput === logoInputUrl" [icon]="['fas', 'check-circle']"></fa-icon> via url
-              </button>
-              <button type="button" (click)="toggleLogoInput()" class="btn btn-outline-secondary">
-                <fa-icon *ngIf="logoInput === logoInputUpload" [icon]="['fas', 'check-circle']"></fa-icon> via upload
-              </button>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="logoInput === logoInputUrl" class="form-group row">
-          <div class="col-3">
-            <label for="log">via url</label>
-          </div>
-          <div class="col-9">
-            <input class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.logourl.invalid, 'is-valid': form.controls.logourl.valid }"
-              type="text" formControlName="logourl"
-              placeholder="max. {{validations.maxlengthurl}} karakters">
-          </div>
-        </div> -->
         <div *ngIf="logoInput === logoInputUpload" class="form-group row">
           <div class="col-3">
-            <label for="logouploadother" popoverClass="popover-small" class="pointer" container="body" placement="right"
-              [ngbPopover]="getLogoUploadDescription()">logo
+            <label for="logouploadother" (click)="openInfoModal(contentInfo)" class="pointer">logo
               <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
             </label>
           </div>
@@ -109,3 +82,7 @@
     </div>
   </div>
 </div>
+
+<ng-template #contentInfo>
+  {{getLogoUploadDescription()}}
+</ng-template>

@@ -2,23 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-import {
-  Association,
-  Competition,
-  Field,
-  League,
-  RankingService,
-  Season,
-  Sport,
-  CompetitionSportService,
-  ScoreConfigService,
-  Structure,
-  StructureService,
-  State,
-  JsonField,
-  SportMapper,
-  RankingRuleSet,
-} from 'ngx-sport';
 
 import { IAlert } from '../../shared/common/alert';
 import { Tournament } from '../../lib/tournament';
@@ -28,6 +11,8 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { JsonTournament } from '../../lib/tournament/json';
 import { SportDefaultService } from '../../lib/ngx-sport/defaultService';
+import { League, Sport, State, Structure, StructureService } from 'ngx-sport';
+import { RankingRuleSet } from 'ngx-sport/src/ranking/ruleSet';
 
 
 @Component({
@@ -56,7 +41,6 @@ export class NewComponent implements OnInit {
     private tournamentRepository: TournamentRepository,
     private structureRepository: StructureRepository,
     private planningRepository: PlanningRepository,
-    private competitionSportService: CompetitionSportService,
     private sportDefaultService: SportDefaultService,
     fb: FormBuilder
   ) {
@@ -143,7 +127,7 @@ export class NewComponent implements OnInit {
         startDateTime: startDateTime.toISOString(),
         referees: [],
         state: State.Created,
-        sports: [this.sportDefaultService.getJsonCompetitionSport(this.sport, nrOfFields)]
+        sports: [this.sportDefaultService.getJsonCompetitionSport(this.sport, nrOfFields)],
       },
       competitors: [],
       lockerRooms: [],

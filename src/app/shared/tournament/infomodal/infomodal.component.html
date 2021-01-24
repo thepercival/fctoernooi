@@ -1,0 +1,14 @@
+<div class="modal-header text-white bg-info border-bottom-0">
+    <h4 class="modal-title"><span>{{header}}</span></h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="activeModal.dismiss('close')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body text-white bg-info">
+    <ng-container *ngTemplateOutlet="modalContent">
+    </ng-container>
+</div>
+
+<ng-template #defaultInfoContent>
+    <div>test</div>
+</ng-template>

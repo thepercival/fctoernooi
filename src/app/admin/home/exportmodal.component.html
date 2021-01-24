@@ -1,0 +1,36 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+        <fa-icon [icon]="['fas', 'file-export']"></fa-icon> exporteren
+    </h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="activeModal.dismiss('close')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="container-fluid">
+        <form [formGroup]="form">
+            <div class="form-group row" *ngFor="let exportOption of exportOptions">
+                <label for="{{exportOption.key}}" class="col-9 col-form-label pointer">{{exportOption.label}}
+                    <fa-icon *ngIf="exportOption.iconId" [icon]="['fas', exportOption.iconId]"></fa-icon>
+                </label>
+                <div class="form-check col-3">
+                    <div class="form-control custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="{{exportOption.key}}"
+                            formControlName="{{exportOption.key}}">
+                        <label class="custom-control-label" for="{{exportOption.key}}"></label>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal-footer text-right">
+    <button type="button" class="btn btn-outline-primary" [disabled]="noneSelected()" data-dismiss="modal"
+        (click)="closePdf()">
+        <fa-icon [icon]="['fas', 'print']"></fa-icon> naar pdf
+    </button>
+    <button type="button" class="btn btn-outline-primary" [disabled]="noneSelected()" data-dismiss="modal"
+        (click)="closeExcel()">
+        <fa-icon [icon]="['fas', 'file-excel']"></fa-icon> naar excel
+    </button>
+</div>

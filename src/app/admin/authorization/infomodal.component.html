@@ -7,19 +7,17 @@
 <div class="modal-body">
     <ngb-alert *ngIf="showAdd" type="info" [dismissible]="false">De uitnodigings-email wordt alleen verstuurd,
         wanneer het emailadres onbekend is bij fctoernooi.</ngb-alert>
-    <table class="table">
+    <table class="table text-white">
         <tr *ngFor="let roleDefinition of roleDefinitions">
             <td class="font-weight-bold border-info">{{roleDefinition.name}}</td>
-            <td class="border-info">{{roleDefinition.description}}</td>
+            <td class="border-info bg-info">{{roleDefinition.description}}</td>
         </tr>
     </table>
-
 </div>
 <div class="modal-footer justify-content-reverse border-top-0">
-    <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
-        (click)="activeModal.close('linkToReferees')">
+    <button type="submit" class="btn btn-secondary" data-dismiss="modal" (click)="activeModal.close('linkToReferees')">
         <fa-icon [icon]=" ['fac', 'referee' ]"></fa-icon> naar scheidsrechters
     </button>
-    <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
+    <button type="submit" class="btn btn-secondary" data-dismiss="modal"
         (click)="activeModal.dismiss('close')">sluiten</button>
 </div>

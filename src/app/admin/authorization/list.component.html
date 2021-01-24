@@ -4,17 +4,14 @@
             <app-tournament-title [tournament]="tournament" [admin]="true">
             </app-tournament-title>
             <div class="d-flex justify-content-between mx-2">
-                <h2>
-                    <fa-icon [icon]="['fas', 'user-friends']"></fa-icon> gebruikers
+                <h2 (click)="openHelpModal()" class="pointer">
+                    <fa-icon [icon]="['fas', 'user-friends']"></fa-icon> gebruikers <fa-icon class="text-info"
+                        [icon]=" ['fas', 'info-circle' ]"></fa-icon>
                 </h2>
                 <div *ngIf="!processing">
-                    <button type="button" class="btn btn-sm btn-outline-info" (click)="openHelpModal()">
-                        <fa-icon [icon]=" ['fas', 'info-circle' ]"></fa-icon><span class="d-none d-sm-inline">
-                            info</span>
-                    </button>
                     <button type="button" class="btn btn-sm ml-2 mr-0 btn-outline-primary"
                         [routerLink]="['/admin/authorization', tournament.getId()]">
-                        <span class="d-none d-sm-inline">gebruiker</span>toevoegen
+                        <fa-icon [icon]=" ['fas', 'plus-circle' ]"></fa-icon> toevoegen
                     </button>
                 </div>
             </div>
@@ -56,13 +53,11 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="card-body p-1">
-                            <ul class="list-group list-group-flush w-100">
-                                <app-tournament-authorization-role *ngFor="let role of getAssignableRoles(invitation)"
-                                    [role]="role" [processing]="rolesAreEqual(roleProcessing, role)"
-                                    (toggleRole)="toggleRole($event,contentremove)"></app-tournament-authorization-role>
-                            </ul>
-                        </div>
+                        <ul class="list-group list-group-flush w-100">
+                            <app-tournament-authorization-role *ngFor="let role of getAssignableRoles(invitation)"
+                                [role]="role" [processing]="rolesAreEqual(roleProcessing, role)"
+                                (toggleRole)="toggleRole($event,contentremove)"></app-tournament-authorization-role>
+                        </ul>
                     </div>
                 </li>
             </ul>
