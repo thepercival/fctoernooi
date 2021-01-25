@@ -17,7 +17,7 @@ import {
 import { CSSService } from '../../shared/common/cssservice';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '../../lib/translate';
-import { ScoreConfigRepository } from '../../lib/ngx-sport/sport/scoreconfig/repository';
+import { ScoreConfigRepository } from '../../lib/ngx-sport/scoreConfig/repository';
 import { Tournament } from '../../lib/tournament';
 import { IAlert } from '../../shared/common/alert';
 import { RoundsSelectorModalComponent, ToggleRound } from '../rounds/selector.component';
@@ -241,7 +241,7 @@ export class ScoreConfigEditComponent implements OnInit {
  * wanneer 1 van deze ronden een eigen config heeft, dan meteen de gebruiker laten kiezen
  * wanneer het toernooi is afgelopen, selecteer dan de rootround
  */
-class ToggleRoundInittializer {
+export class ToggleRoundInittializer {
     constructor(
         private competitionSport: CompetitionSport,
         private hasOwnConfig: Function
@@ -320,7 +320,7 @@ class ToggleRoundInittializer {
     }
 }
 
-class ToggleRoundConverter {
+export class ToggleRoundConverter {
     constructor(
     ) {
     }
@@ -362,12 +362,12 @@ export interface RoundsSelection {
     rootRounds: Round[],
     unchangedDescendants: Round[]
 }
-export interface ScoreValidations {
+interface ScoreValidations {
     minScore: number;
     maxScore: number;
 }
 
-export interface ValidScoreConfigOfUnchangedChildRound {
+interface ValidScoreConfigOfUnchangedChildRound {
     unchangedChildRound: Round;
     scoreConfig: JsonScoreConfig;
 }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { League } from 'ngx-sport';
+import { GameMode, League, RankingRuleSet, RoundNumber } from 'ngx-sport';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { CSSService } from '../../shared/common/cssservice';
@@ -17,6 +17,8 @@ import { LockerRoomValidator } from '../../lib/lockerroom/validator';
 import { CompetitionSportRouter } from '../../shared/tournament/competitionSport.router';
 import { ExportModalComponent, TournamentExportAction } from './exportmodal.component';
 import { ShareModalComponent } from './sharemodal.component';
+import { RankingRuleSetModalComponent } from './rankingrulesetmodal.component';
+import { TournamentMapper } from '../../lib/tournament/mapper';
 
 @Component({
     selector: 'app-tournament-admin',
@@ -37,6 +39,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         private modalService: NgbModal,
         public cssService: CSSService,
         router: Router,
+        private tournamentMapper: TournamentMapper,
         private authService: AuthService,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
@@ -243,12 +246,34 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     openModalShare() {
-        const activeModal = this.modalService.open(ShareModalComponent/*, { windowClass: 'border-warning' }*/);
+        const activeModal = this.modalService.open(ShareModalComponent);
         activeModal.componentInstance.tournament = this.tournament;
         activeModal.result.then((publicEnabled: boolean) => {
             this.share(publicEnabled);
         }, (reason) => {
         });
+    }
+
+    openModalRankingRuleSet() {
+        const activeModal = this.modalService.open(RankingRuleSetModalComponent);
+        activeModal.componentInstance.rankingRuleSet = this.tournament.getCompetition().getRankingRuleSet();
+        console.log(this.tournament.getCompetition().getRankingRuleSet());
+        activeModal.result.then((rankingRuleSet: RankingRuleSet) => {
+            this.processing = true;
+            const json = this.tournamentMapper.toJson(this.tournament);
+            json.competition.rankingRuleSet = rankingRuleSet;
+            this.tournamentRepository.editObject(json)
+                .subscribe(
+                /* happy path */(tournament: Tournament) => { this.tournament = tournament; },
+                /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
+                /* onComplete */() => { this.processing = false; }
+                );
+        }, (reason) => {
+        });
+    }
+
+    openGuide() {
+
     }
 
     linkToStructure() {
@@ -262,6 +287,19 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     getCurrentYear() {
         const date = new Date();
         return date.getFullYear();
+    }
+
+    hasGameModeAgainst(): boolean {
+        const hasGameModeAgainst = (roundNumber: RoundNumber): boolean => {
+            if (roundNumber.getValidPlanningConfig().getGameMode() === GameMode.Against) {
+                return true;
+            }
+            if (!roundNumber.hasNext()) {
+                return false;
+            }
+            return hasGameModeAgainst(roundNumber.getNext());
+        };
+        return hasGameModeAgainst(this.structure.getFirstRoundNumber());
     }
 
     copy() {
@@ -293,11 +331,12 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         this.setAlert('info', 'het delen wordt gewijzigd');
 
         this.processing = true;
-        this.tournament.setPublic(publicEnabled);
-        this.tournamentRepository.editObject(this.tournament)
+        const json = this.tournamentMapper.toJson(this.tournament);
+        json.public = publicEnabled;
+        this.tournamentRepository.editObject(json)
             .subscribe(
-                /* happy path */(tournamentRes: Tournament) => {
-                    this.tournament = tournamentRes;
+                /* happy path */(tournament: Tournament) => {
+                    this.tournament = tournament;
                     // this.router.navigate(['/admin', newTournamentId]);
                     this.setAlert('success', 'het delen is gewijzigd');
                 },
@@ -313,11 +352,12 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         this.setAlert('info', 'de naam wordt opgeslagen');
 
         this.processing = true;
-        this.competition.getLeague().setName(newName);
-        this.tournamentRepository.editObject(this.tournament)
+        const json = this.tournamentMapper.toJson(this.tournament);
+        json.competition.league.name = newName;
+        this.tournamentRepository.editObject(json)
             .subscribe(
-                /* happy path */(tournamentRes: Tournament) => {
-                    this.tournament = tournamentRes;
+                /* happy path */(tournament: Tournament) => {
+                    this.tournament = tournament;
                     // this.router.navigate(['/admin', newTournamentId]);
                     this.setAlert('success', 'de naam is opgeslagen');
                 },
@@ -327,19 +367,5 @@ export class HomeComponent extends TournamentComponent implements OnInit {
                 },
                 /* onComplete */() => { this.processing = false; }
             );
-    }
-
-    sendRequestOldStructure() {
-        this.route.params.subscribe(params => {
-            const tournamentId = +params['id'];
-            this.tournamentRepository.sendRequestOldStructure(tournamentId).subscribe(
-                 /* happy path */ retVal => {
-                    this.processing = false;
-                    this.oldStructureRequested = true;
-                },
-                /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                /* onComplete */() => this.processing = false
-            );
-        });
     }
 }

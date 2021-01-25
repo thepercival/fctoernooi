@@ -9,6 +9,8 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
+import { TournamentMapper } from '../../lib/tournament/mapper';
+import { Tournament } from '../../lib/tournament';
 
 @Component({
     selector: 'app-tournament-startbreak',
@@ -27,6 +29,7 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private planningRepository: PlanningRepository,
+        private tournamentMapper: TournamentMapper,
         private myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
@@ -118,14 +121,15 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
         this.processing = true;
         const firstRoundNumber = this.structure.getFirstRoundNumber();
         try {
-            this.competition.setStartDateTime(startDateTime);
-            this.tournament.setBreakStartDateTime(breakX?.getStartDateTime());
-            this.tournament.setBreakEndDateTime(breakX?.getEndDateTime());
+            const json = this.tournamentMapper.toJson(this.tournament);
+            json.competition.startDateTime = startDateTime.toISOString();
+            json.breakStartDateTime = breakX?.getStartDateTime().toISOString();
+            json.breakEndDateTime = breakX?.getEndDateTime().toISOString();
 
-            this.tournamentRepository.editObject(this.tournament)
+            this.tournamentRepository.editObject(json)
                 .subscribe(
-                    /* happy path */ tournamentRes => {
-                        this.tournament = tournamentRes;
+                    /* happy path */(tournament: Tournament) => {
+                        this.tournament = tournament;
                         this.planningRepository.reschedule(firstRoundNumber, this.tournament).subscribe(
                                 /* happy path */ gamesRes => {
                                 this.myNavigation.back();

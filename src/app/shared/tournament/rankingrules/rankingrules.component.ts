@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { RankingService } from 'ngx-sport';
+import { GameMode, RankingService } from 'ngx-sport';
 import { Tournament } from '../../../lib/tournament';
 
 @Component({
@@ -13,7 +13,7 @@ export class RankingRulesComponent {
     constructor() { }
 
     getDescription(): string[] {
-        const rankingService = new RankingService(undefined, this.ruleSet);
+        const rankingService = new RankingService(GameMode.Against, this.ruleSet);
         return rankingService.getRuleDescriptions();
     }
 }

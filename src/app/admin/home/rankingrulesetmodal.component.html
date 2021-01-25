@@ -1,0 +1,20 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+        rankschikking wijzigen
+    </h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="activeModal.dismiss('close')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="container-fluid">
+        <app-ranking-rules [ruleSet]="rankingRuleSet"></app-ranking-rules>
+    </div>
+</div>
+
+<div class="modal-footer d-flex justify-content-between border-top-0">
+    <button type="button" class="btn btn-outline-primary" (click)="updateRuleset()">"onderling resultaat"
+        verplaatsen</button>
+    <button type="button" class="btn btn-primary" data-dismiss="modal"
+        (click)="activeModal.close(rankingRuleSet)">opslaan</button>
+</div>

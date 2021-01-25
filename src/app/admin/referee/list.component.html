@@ -3,12 +3,10 @@
     <app-tournament-title [tournament]="tournament" [admin]="true">
     </app-tournament-title>
     <div class="d-flex justify-content-between mr-1">
-      <h2>
-        <fa-icon [icon]="['fac', 'referee']"></fa-icon> scheidsrechters
+      <h2 (click)="openHelpModal(contentInfo)" class="pointer mr-auto">
+        <fa-icon [icon]="['fac', 'referee']"></fa-icon> scheidsrechters <fa-icon class="text-info"
+          [icon]=" ['fas', 'info-circle' ]"></fa-icon>
       </h2>
-      <button *ngIf="tournament" type="button" class="btn btn-sm btn-outline-info" (click)="openHelpModal(contentInfo)">
-        <fa-icon [icon]=" ['fas', 'info-circle' ]"></fa-icon> info
-      </button>
     </div>
     <h2 *ngIf="processing" class="text-center">
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
@@ -66,31 +64,18 @@
   </div>
 </div>
 
-<ng-template #contentInfo let-modal>
-  <div class="modal-header border-bottom-0">
-    <h4 class="modal-title">scheidsrechters info</h4>
-    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <ul class="list-group">
-      <li class="list-group-item border-info">
-        De scheidsrechter bovenaan de lijst krijgt de eerste (laatste vanaf de tweede ronde) wedstrijd toegekend.
-      </li>
-      <li class="list-group-item border-info">Scheidsrechters kunnen zelf uitslagen invoeren wanneer hun
-        emailadres is ingevoerd
-        en ze ingelogd zijn.</li>
-      <li class="list-group-item border-info">
-        Onder <button type="submit" *ngIf="firstRoundNumberNotBegun" class="btn btn-outline-secondary"
-          data-dismiss="modal" (click)="modal.close('linkToPlanningConfig')">planningsinstellingen</button> kun je
-        "deelnemers zijn scheidsrechter " instellen.
-      </li>
-    </ul>
-  </div>
-  <div class="modal-footer justify-content-reverse border-top-0">
-
-    <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
-      (click)="modal.dismiss('close')">sluiten</button>
-  </div>
+<ng-template #contentInfo>
+  <ul class="list-group">
+    <li class="list-group-item border-info">
+      De scheidsrechter bovenaan de lijst krijgt de eerste (laatste vanaf de tweede ronde) wedstrijd toegekend.
+    </li>
+    <li class="list-group-item border-info">Scheidsrechters kunnen zelf uitslagen invoeren wanneer hun
+      emailadres is ingevoerd
+      en ze ingelogd zijn.</li>
+    <li class="list-group-item border-info">
+      Onder <button type="submit" *ngIf="firstRoundNumberNotBegun" class="btn btn-secondary" data-dismiss="modal"
+        (click)="linkToPlanningConfig()">planningsinstellingen</button> kun je
+      "deelnemers zijn scheidsrechter " instellen.
+    </li>
+  </ul>
 </ng-template>

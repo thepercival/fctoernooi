@@ -1,4 +1,4 @@
-<!-- <div class="container-fluid">
+<div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
             <app-tournament-title [tournament]="tournament">
@@ -12,14 +12,20 @@
             <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
             <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
                 <div class="form-group row">
-                    <label for="nrOfHeadtohead" class="col-8 col-form-label">aantal onderlinge duels</label>
-                    <div class="col-4">
-                        <select class="form-control" formControlName="nrOfHeadtohead" required
-                            [ngClass]="{ 'is-invalid': form.controls.nrOfHeadtohead.invalid, 'is-valid': form.controls.nrOfHeadtohead.valid }">
-                            <option *ngFor="let n of headtoheadRange" [ngValue]="n">{{n}}</option>
+                    <label for="gameMode" class="col-4 col-form-label pointer"
+                        (click)="openInfoModal(contentInfoGameMode)">wedstrijd-modus
+                        <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
+                    </label>
+                    <div class="form-check col-8">
+                        <select class="form-control" formControlName="gameMode" required>
+                            <option *ngFor="let gameModeOption of getGameModeOptions()" [ngValue]="gameModeOption">
+                                {{gameModeOption.name}}</option>
                         </select>
                     </div>
                 </div>
+                <app-tournament-gameamountconfigs-edit [formControls]="form.controls.gameAmountConfigs"
+                    [gameMode]="form.value['gameMode']">
+                </app-tournament-gameamountconfigs-edit>
                 <div class="form-group row">
                     <label for="enableTime" class="col-8 col-form-label pointer">plannen o.b.v. tijd</label>
                     <div class="form-check col-4">
@@ -103,17 +109,16 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="teamupnoaction" class="col-8 col-form-label pointer" container="body" placement="top"
-                        ngbPopover="deze optie geldt alleen voor poules van 4-6 deelnemers en niet voor teamsporten">met
-                        en tegen elkaar(duo's)
+                    <label for="teamupnotthesame" class="col-4 col-form-label pointer"
+                        (click)="openInfoModal(contentInfoTeamup)">met en tegen elkaar(duo's)
                         <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
                     </label>
-                    <div class="form-check col-4">
-                        <label class="custom-control custom-checkbox col-form-label pl-0">
-                            <input type="checkbox" class="custom-control-input form-check-input"
-                                formControlName="teamup" (ngModelChange)="enableDisableSelfReferee()">
-                            <span class="custom-control-indicator"></span>
-                        </label>
+                    <div class="form-check col-8">
+                        <div class="form-control custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="teamup" formControlName="teamup"
+                                (ngModelChange)="enableDisableSelfReferee()">
+                            <label class="custom-control-label" for="teamup"></label>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -130,4 +135,8 @@
             </form>
         </div>
     </div>
-</div> -->
+</div>
+
+<ng-template #contentInfoTeamup>
+    deze optie geldt alleen voor poules van 4-6 deelnemers en niet voor teamsporten
+</ng-template>

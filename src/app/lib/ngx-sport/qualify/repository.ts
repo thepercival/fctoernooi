@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { APIRepository } from '../../../repository';
+import { APIRepository } from '../../repository';
 import { ScoreConfig, ScoreConfigMapper, JsonScoreConfig, Round, CompetitionSport, CompetitionSportMapper, JsonCompetitionSport } from 'ngx-sport';
-import { Tournament } from '../../../tournament';
+import { Tournament } from '../../tournament';
 
 
 @Injectable()

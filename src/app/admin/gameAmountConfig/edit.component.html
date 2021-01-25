@@ -1,0 +1,33 @@
+<ng-container *ngIf="formControls.length === 1">
+  <div class="form-group row">
+    <label for="nrOfHeadtohead" class="col-8 col-form-label">{{getGamesDescription()}}</label>
+    <div class="col-4">
+      <select class="form-control" formControlName="nrOfHeadtohead" required
+        [ngClass]="{ 'is-invalid': form.controls.nrOfHeadtohead.invalid, 'is-valid': form.controls.nrOfHeadtohead.valid }">
+        <option *ngFor="let n of headtoheadRange" [ngValue]="n">{{n}}</option>
+      </select>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="formControls.length > 1">
+  <div class="form-group row">
+    <label for="nrOfHeadtohead" class="col-8 col-form-label">{{getGamesDescription()}}</label>
+    <div class="col-4">
+      <select class="form-control" formControlName="nrOfHeadtohead" required
+        [ngClass]="{ 'is-invalid': form.controls.nrOfHeadtohead.invalid, 'is-valid': form.controls.nrOfHeadtohead.valid }">
+        <option *ngFor="let n of headtoheadRange" [ngValue]="n">{{n}}</option>
+      </select>
+    </div>
+  </div>
+</ng-container>
+
+<!-- <div class="form-group row">
+  <label for="nrOfHeadtohead" class="col-8 col-form-label">aantal onderlinge duels</label>
+  <div class="col-4">
+    <select class="form-control" formControlName="nrOfHeadtohead" required
+      [ngClass]="{ 'is-invalid': form.controls.nrOfHeadtohead.invalid, 'is-valid': form.controls.nrOfHeadtohead.valid }">
+      <option *ngFor="let n of headtoheadRange" [ngValue]="n">{{n}}</option>
+    </select>
+  </div>
+</div> -->

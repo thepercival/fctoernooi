@@ -46,7 +46,8 @@ import {
   PlanningConfigMapper,
   LeagueMapper,
   FieldMapper,
-  AssociationMapper
+  AssociationMapper,
+  QualifyAgainstConfigMapper
 } from 'ngx-sport';
 
 import { CSSService } from '../shared/common/cssservice';
@@ -76,7 +77,7 @@ import { ScoreConfigEditComponent } from './scoreConfig/edit.component';
 import { StructureRepository } from '../lib/ngx-sport/structure/repository';
 import { SportRepository } from '../lib/ngx-sport/sport/repository';
 import { SportConfigRepository } from '../lib/ngx-sport/sport/config/repository';
-import { ScoreConfigRepository } from '../lib/ngx-sport/sport/scoreconfig/repository';
+import { ScoreConfigRepository } from '../lib/ngx-sport/scoreConfig/repository';
 import { CompetitorRepository } from '../lib/ngx-sport/competitor/repository';
 import { GameRepository } from '../lib/ngx-sport/game/repository';
 import { PlanningRepository } from '../lib/ngx-sport/planning/repository';
@@ -98,12 +99,14 @@ import { AuthorizationListComponent } from './authorization/list.component';
 import { AuthorizationAddComponent } from './authorization/add.component';
 import { RoleItemComponent } from './authorization/roleitem.component';
 import { AuthorizationExplanationModalComponent } from './authorization/infomodal.component';
-import { PointsEditComponent } from './competitionSport/points/points.component';
 import { CompetitorMapper } from '../lib/competitor/mapper';
 import { SportDefaultService } from '../lib/ngx-sport/defaultService';
 import { StructureSelectRoundComponent } from './rounds/round.component';
 import { ExportModalComponent } from './home/exportmodal.component';
 import { ShareModalComponent } from './home/sharemodal.component';
+import { QualifyAgainstConfigEditComponent } from './qualifyAgainstConfig/edit.component';
+import { QualifyAgainstConfigRepository } from '../lib/ngx-sport/qualify/againstConfig/repository';
+import { RankingRuleSetModalComponent } from './home/rankingrulesetmodal.component';
 
 @NgModule({
   imports: [
@@ -115,37 +118,37 @@ import { ShareModalComponent } from './home/sharemodal.component';
     CommonSharedModule, TournamentModule
   ],
   declarations: [
-    NewComponent,
-    HomeComponent,
-    StructureEditComponent,
-    GameListComponent,
-    CompetitorListComponent,
-    CompetitorListLineComponent,
-    RefereeListComponent,
+    AuthorizationAddComponent,
+    AuthorizationExplanationModalComponent,
+    AuthorizationListComponent,
     CompetitionSportListComponent,
     CompetitionSportEditComponent,
-    PointsEditComponent,
-    ScoreConfigEditComponent,
-    SportSelectComponent,
-    SponsorListComponent,
     CompetitorEditComponent,
-    PlanningConfigComponent,
+    CompetitorListComponent,
+    CompetitorListLineComponent,
+    CompetitorListRemoveModalComponent,
+    ExportModalComponent,
     FieldListComponent,
     GameEditComponent,
-    RefereeEditComponent,
+    GameListComponent,
+    HomeComponent,
+    NewComponent,
+    RefereeListComponent,
+    ScoreConfigEditComponent,
     SponsorEditComponent,
+    SponsorListComponent,
+    SportSelectComponent,
     StartBreakComponent,
-    CompetitorListRemoveModalComponent,
-    AuthorizationListComponent,
-    AuthorizationAddComponent,
+    StructureEditComponent,
+    PlanningConfigComponent,
+    QualifyAgainstConfigEditComponent,
+    RankingRuleSetModalComponent,
+    RefereeEditComponent,
     RoleItemComponent,
-    AuthorizationExplanationModalComponent,
-    CompetitorListRemoveModalComponent,
     RoundNumbersSelectorModalComponent,
     RoundsSelectorModalComponent,
+    ShareModalComponent,
     StructureSelectRoundComponent,
-    ExportModalComponent,
-    ShareModalComponent
   ],
   providers: [
     AssociationMapper,
@@ -168,6 +171,8 @@ import { ShareModalComponent } from './home/sharemodal.component';
     PlanningConfigMapper,
     PlanningConfigRepository,
     PouleMapper,
+    QualifyAgainstConfigRepository,
+    QualifyAgainstConfigMapper,
     RefereeMapper,
     RefereeRepository,
     RoundMapper,

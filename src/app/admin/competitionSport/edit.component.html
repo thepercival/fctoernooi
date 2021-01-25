@@ -43,8 +43,9 @@
           <li [ngbNavItem]="TabPoints">
             <a ngbNavLink>puntentelling</a>
             <ng-template ngbNavContent>
-              <app-tournament-points-edit [hasBegun]="hasBegun" [tournament]="tournament" [structure]="structure">
-              </app-tournament-points-edit>
+              <app-tournament-qualifyagainstconfig-edit [competitionSport]="competitionSport" [tournament]="tournament"
+                [structure]="structure">
+              </app-tournament-qualifyagainstconfig-edit>
             </ng-template>
           </li>
         </ul>

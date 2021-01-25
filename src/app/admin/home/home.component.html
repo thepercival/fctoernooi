@@ -3,10 +3,7 @@
     <div class="col-12 col-lg-10">
       <div class="d-flex justify-content-between mb-4">
         <span></span>
-        <h1 *ngIf="tournament" class="text-truncate pointer" (click)="openModalName()">
-          <button *ngIf="isAdmin()" type="button" class="btn btn-outline-secondary btn-sm mr-1">
-            <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
-          </button>
+        <h1 *ngIf="tournament" class="text-truncate">
           <span>{{tournament.getName()}}</span>
         </h1>
         <h1 class="mr-1">
@@ -25,14 +22,6 @@
         dan
         kunnen we de opzet handmatig omzetten.
       </ngb-alert>
-      <div *ngIf="oldStructure" class="d-flex justify-content-center">
-        <button *ngIf="!oldStructureRequested" (click)="sendRequestOldStructure()"
-          class="btn btn-outline-primary">verstuur aanvraag voor handmatige
-          omzetting</button>
-        <ngb-alert *ngIf="oldStructureRequested" type="success" [dismissible]="false">de aanvraag voor handmatige
-          omzetting is verstuurd
-        </ngb-alert>
-      </div>
       <ngb-alert *ngIf="!processing && tournament && isAdmin() && !isManualMessageReadOnDevice()" type="info"
         [dismissible]="true" (close)="manualMessageReadOnDevice()">gedetailleerde
         informatie kun je vinden onderaan de pagina via de handleiding-link</ngb-alert>
@@ -152,6 +141,7 @@
       naar het publieke gedeelte <fa-icon [icon]="['fas', 'eye']"></fa-icon>
     </button>
   </div>
+  <!-- option block 1 -->
   <div *ngIf="!processing && structure" class="row d-flex justify-content-center">
     <div *ngIf="structure.hasPlanning() && (isAdmin() || isRoleAdmin())" class="card border-secondary mt-3 mx-2">
       <div class="card-body d-flex justify-content-between">
@@ -181,6 +171,37 @@
         </div>
       </div>
     </div>
+    <!-- option block 2 -->
+    <div *ngIf="structure.hasPlanning() && !structure.getRootRound().hasBegun()"
+      class="card border-secondary mt-3 mx-2">
+      <div class="card-body d-flex justify-content-between">
+        <div (click)="openModalName()" class="text-center pointer">
+          <div>
+            <h5 class="card-title">
+              <fa-icon [icon]=" [ 'fas', 'pencil-alt'] "></fa-icon>
+            </h5>
+          </div>
+          <div><span>naam</span><br><span>wijzigen</span></div>
+        </div>
+        <div *ngIf="hasGameModeAgainst()" (click)="openModalRankingRuleSet()" class="text-center pointer">
+          <div>
+            <h5 class="card-title">
+              <fa-icon [icon]="['fas', 'list-ol']"></fa-icon>
+            </h5>
+          </div>
+          <div><span>rangschikking</span><br><span>regels</span></div>
+        </div>
+        <!-- <div (click)="openGuide()" class="text-center pointer">
+          <div>
+            <h5 class="card-title">
+              <fa-icon [icon]="['fas', 'share-alt']"></fa-icon>
+            </h5>
+          </div>
+          <div><span>programma</span><br><span>boekje</span></div>
+        </div> -->
+      </div>
+    </div>
+    <!-- option block 3 -->
     <div *ngIf="isAdmin() || isRoleAdmin()" class="card border-secondary mt-3 mx-2">
       <div class="card-body d-flex justify-content-between">
         <div *ngIf="isRoleAdmin()" [routerLink]="['/admin/authorizations', tournament.getId()]"
@@ -212,7 +233,7 @@
     </div>
   </div>
 </div>
-
+<!-- copy modal -->
 <ng-template #contentcopy let-modal>
   <div class="modal-header">
     <h4 class="modal-title">
@@ -249,7 +270,7 @@
       editie</button>
   </div>
 </ng-template>
-
+<!-- remove modal -->
 <ng-template #contentremove let-modal>
   <div class="modal-header">
     <h4 class="modal-title">toernooi verwijderen</h4>

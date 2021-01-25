@@ -1,0 +1,80 @@
+<h2 *ngIf="processing" class="text-center">
+  <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</h2>
+<ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+<form *ngIf="!processing && selectedAgainstGameMode()" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+  <div class="form-group row">
+    <div class="col-7">
+      <label for="winPoints" class="col-form-label">punten bij overwinning</label>
+    </div>
+    <div class="col-5">
+      <select class="form-control" formControlName="winPoints" required
+        [ngClass]="{ 'is-invalid': form.controls.winPoints.invalid, 'is-valid': form.controls.winPoints.valid }">
+        <option *ngFor="let winpoints of ranges.winPoints" [ngValue]="winpoints">{{winpoints}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-7">
+      <label for="drawPoints" class="col-form-label">punten bij gelijkspel</label>
+    </div>
+    <div class="col-5">
+      <select class="form-control" formControlName="drawPoints" required
+        [ngClass]="{ 'is-invalid': form.controls.drawPoints.invalid, 'is-valid': form.controls.drawPoints.valid }">
+        <option *ngFor="let drawpoints of ranges.drawPoints" [ngValue]="drawpoints">{{drawpoints}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <label class="col-form-label"><span class="font-weight-bold">na verlenging</span><small> (als
+          ingesteld is)</small></label>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-7">
+      <label for="winPointsExt" class="col-form-label">punten bij overwinning</label>
+    </div>
+    <div class="col-5">
+      <select class="form-control" formControlName="winPointsExt" required
+        [ngClass]="{ 'is-invalid': form.controls.winPoints.invalid, 'is-valid': form.controls.winPointsExt.valid }">
+        <option *ngFor="let winpointsext of ranges.winPoints" [ngValue]="winpointsext">{{winpointsext}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-7">
+      <label for="drawPointsExt" class="col-form-label">punten bij gelijkspel</label>
+    </div>
+    <div class="col-5">
+      <select class="form-control" formControlName="drawPointsExt" required
+        [ngClass]="{ 'is-invalid': form.controls.drawPointsExt.invalid, 'is-valid': form.controls.drawPointsExt.valid }">
+        <option *ngFor="let drawpointsext of ranges.drawPoints" [ngValue]="drawpointsext">{{drawpointsext}}
+        </option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-7">
+      <label for="losePointsExt" class="col-form-label">punten bij verlies</label>
+    </div>
+    <div class="col-5">
+      <select class="form-control" formControlName="losePointsExt" required
+        [ngClass]="{ 'is-invalid': form.controls.losePointsExt.invalid, 'is-valid': form.controls.losePointsExt.valid }">
+        <option *ngFor="let losepointsext of ranges.losePoints" [ngValue]="losepointsext">{{losepointsext}}
+        </option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-7 d-flex justify-content-end">
+      <button *ngIf="structure.getRootRound().getChildren().length" type="button" (click)="openSelectRoundsModal()"
+        class="btn btn-outline-primary">
+        selecteer ronden
+      </button>
+    </div>
+    <div *ngIf="!readonly" class="col-5">
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">opslaan</button>
+    </div>
+  </div>
+</form>

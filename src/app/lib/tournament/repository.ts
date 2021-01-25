@@ -30,8 +30,8 @@ export class TournamentRepository extends APIRepository {
         return 'tournaments';
     }
 
-    getUrl(tournament?: Tournament): string {
-        return this.url + (tournament ? ('/' + tournament.getId()) : '');
+    getUrl(tournamentId?: string | number): string {
+        return this.url + (tournamentId ? ('/' + tournamentId) : '');
     }
 
     getObject(id: number | string): Observable<Tournament> {
@@ -46,7 +46,7 @@ export class TournamentRepository extends APIRepository {
         if (this.getToken() === undefined) {
             return of(0);
         }
-        const url = this.getUrl(tournament) + '/userrefereeid';
+        const url = this.getUrl(tournament.getId()) + '/userrefereeid';
         return this.http.get<JsonTournament>(url, { headers: super.getHeaders() }).pipe(
             // map((userRefereeId: number) => userRefereeId),
             catchError((err) => this.handleError(err))
@@ -60,9 +60,9 @@ export class TournamentRepository extends APIRepository {
         );
     }
 
-    editObject(tournament: Tournament): Observable<Tournament> {
-        const url = this.getUrl(tournament);
-        return this.http.put(url, this.mapper.toJson(tournament), { headers: super.getHeaders() }).pipe(
+    editObject(json: JsonTournament): Observable<Tournament> {
+        const url = this.getUrl(json.id);
+        return this.http.put(url, json, { headers: super.getHeaders() }).pipe(
             map((res: JsonTournament) => {
                 return this.mapper.toObject(res);
             }),
@@ -71,7 +71,7 @@ export class TournamentRepository extends APIRepository {
     }
 
     removeObject(tournament: Tournament): Observable<boolean> {
-        const url = this.getUrl(tournament);
+        const url = this.getUrl(tournament.getId());
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
             map((res) => true),
             catchError((err) => this.handleError(err))
@@ -79,17 +79,9 @@ export class TournamentRepository extends APIRepository {
     }
 
     copyObject(tournament: Tournament, newStartDateTime: Date): Observable<number> {
-        const url = this.getUrl(tournament) + '/copy';
+        const url = this.getUrl(tournament.getId()) + '/copy';
         return this.http.post(url, { startdatetime: newStartDateTime }, this.getOptions()).pipe(
             map((id: number) => id),
-            catchError((err) => this.handleError(err))
-        );
-    }
-
-    sendRequestOldStructure(tournamentId: number): Observable<boolean> {
-        const url = this.getUrl() + '/' + tournamentId + '/sendrequestoldstructure';
-        return this.http.post(url, null, this.getOptions()).pipe(
-            map((retVal: boolean) => retVal),
             catchError((err) => this.handleError(err))
         );
     }

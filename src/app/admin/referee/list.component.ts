@@ -9,6 +9,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
+import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 
 @Component({
   selector: 'app-tournament-referee',
@@ -70,19 +71,27 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     this.router.navigate(['/admin/referee', this.tournament.getId(), referee ? referee.getPriority() : '']);
   }
 
+  linkToPlanningConfig() {
+    let firstRoundNumberNotBegun = this.getFirstRoundNumberNotBegun(this.structure.getFirstRoundNumber());
+    if (firstRoundNumberNotBegun === undefined) {
+      firstRoundNumberNotBegun = this.structure.getFirstRoundNumber()
+    }
+    this.router.navigate(['/admin/planningconfig', this.tournament.getId(),
+      firstRoundNumberNotBegun.getNumber()
+    ]);
+  }
+
   openHelpModal(modalContent) {
-    const activeModal = this.modalService.open(modalContent);
+    const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
+    activeModal.componentInstance.header = 'uitleg scheidsrechters';
+    activeModal.componentInstance.modalContent = modalContent;
     activeModal.result.then((result) => {
-      if (result === 'linkToPlanningConfig') {
-        let firstRoundNumberNotBegun = this.getFirstRoundNumberNotBegun(this.structure.getFirstRoundNumber());
-        if (firstRoundNumberNotBegun === undefined) {
-          firstRoundNumberNotBegun = this.structure.getFirstRoundNumber()
-        }
-        this.router.navigate(['/admin/planningconfig', this.tournament.getId(),
-          firstRoundNumberNotBegun.getNumber()
-        ]);
-      }
+      // if (result === 'linkToPlanningConfig') {
+      //   console.log(123);
+      //   this.linkToPlanningConfig();
+      // }
     }, (reason) => {
+      this.linkToPlanningConfig();
     });
   }
 
