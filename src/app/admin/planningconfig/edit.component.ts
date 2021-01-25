@@ -11,6 +11,8 @@ import {
     SelfReferee,
     GameMode,
     CompetitionSport,
+    CompetitionSportMapper,
+    VoetbalRange,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -38,6 +40,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     private pouleStructure: PouleStructure;
     private structureService: StructureService;
     public nameService: NameService;
+    gameAmountRange: VoetbalRange;
     validations: PlanningConfigValidations = {
         minMinutesPerGame: 1,
         maxMinutesPerGame: 60
@@ -88,8 +91,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
                 Validators.max(this.validations.maxMinutesPerGame)
             ])],
             selfReferee: false,
-            selfRefereeSamePoule: false,
-            teamup: false
+            selfRefereeSamePoule: false
         });
         this.structureService = new StructureService(Tournament.PlaceRanges);
     }
@@ -109,25 +111,31 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     initGameAmountConfigs(startRoundNumber: RoundNumber) {
+        this.setGameAmountRange(startRoundNumber);
+        startRoundNumber.getValidGameAmountConfigs().forEach((gameAmountConfig: GameAmountConfig) => {
+            this.form.addControl('' + gameAmountConfig.getCompetitionSport().getId(), new FormControl(
+                gameAmountConfig.getAmount(),
+                Validators.compose([Validators.required, Validators.min(this.gameAmountRange.min), Validators.max(this.gameAmountRange.max)])
+            ));
+        });
+        this.processing = false;
+    }
+
+    setGameAmountRange(startRoundNumber: RoundNumber) {
         let min = this.gameAmountValidations.minNrOfGames;
         let max = this.gameAmountValidations.maxNrOfGames;
         if (startRoundNumber.getValidPlanningConfig().getGameMode() === GameMode.Against) {
             min = this.gameAmountValidations.minNrOfHeadtohead;
             max = this.gameAmountValidations.maxNrOfHeadtohead;
         }
-        startRoundNumber.getValidGameAmountConfigs().forEach((gameAmountConfig: GameAmountConfig) => {
-            this.form.addControl('' + gameAmountConfig.getCompetitionSport().getId(), new FormControl(
-                gameAmountConfig.getAmount(),
-                Validators.compose([Validators.required, Validators.min(min), Validators.max(max)])
-            ));
-        });
-        this.processing = false;
+        this.gameAmountRange = { min, max };
     }
 
     changeStartRoundNumber(startRoundNumber: RoundNumber) {
         this.startRoundNumber = startRoundNumber;
         this.pouleStructure = startRoundNumber.createPouleStructure();
         this.hasBegun = this.startRoundNumber.hasBegun()
+        this.setGameAmountRange(this.startRoundNumber);
         this.resetForm(startRoundNumber.getValidPlanningConfig());
         this.resetAlert();
         if (this.hasBegun) {
@@ -177,9 +185,11 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.form.controls.minutesPerGameExt.setValue(config.getMinutesPerGameExt());
         this.form.controls.minutesBetweenGames.setValue(config.getMinutesBetweenGames());
         this.form.controls.minutesAfter.setValue(config.getMinutesAfter());
-        this.form.controls.teamup.setValue(this.isTeamupAvailable() && config.getTeamup());
         this.startRoundNumber.getValidGameAmountConfigs().forEach((gameAmountConfig: GameAmountConfig) => {
             const id = '' + gameAmountConfig.getCompetitionSport().getId();
+            this.form.controls[id].setValidators(
+                Validators.compose([Validators.required, Validators.min(this.gameAmountRange.min), Validators.max(this.gameAmountRange.max)])
+            );
             this.form.controls[id].setValue(gameAmountConfig.getAmount());
         });
 
@@ -192,8 +202,6 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             const control = this.form.controls[key];
             this.hasBegun ? control.disable() : control.enable();
         });
-
-        this.changeSelfReferee();
         this.enableDisableSelfReferee();
     }
 
@@ -219,11 +227,11 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     protected getSelfRefereeAvailable(): number {
-        const sportConfigs = this.competition.getSportConfigs();
+        const competitionSports = this.competition.getSports();
 
         let selfRefereeAvailable = SelfReferee.Disabled;
 
-        const maxNrOfGamePlaces = this.sportConfigService.getMaxNrOfGamePlaces(sportConfigs, this.form.value['teamup'], false);
+        const maxNrOfGamePlaces = this.getMaxNrOfGamePlaces(competitionSports);
         const otherPoulesAvailable = this.pouleStructure.selfRefereeOtherPoulesAvailable();
         if (otherPoulesAvailable) {
             selfRefereeAvailable += SelfReferee.OtherPoules;
@@ -235,14 +243,15 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         return selfRefereeAvailable;
     }
 
-    changeSelfReferee() {
-        if (this.isTeamupAvailable()) {
-            if (this.form.controls.teamup.disabled && !this.hasBegun) {
-                this.form.controls.teamup.enable();
+    public getMaxNrOfGamePlaces(competitionSports: CompetitionSport[]): number {
+        let maxNrOfGamePlaces = 0;
+        competitionSports.forEach((competitionSport: CompetitionSport) => {
+            const nrOfGamePlaces = competitionSport.getSport().getNrOfGamePlaces();
+            if (nrOfGamePlaces > maxNrOfGamePlaces) {
+                maxNrOfGamePlaces = nrOfGamePlaces;
             }
-        } else if (this.form.controls.teamup.disabled === false) {
-            this.form.controls.teamup.disable();
-        }
+        });
+        return maxNrOfGamePlaces;
     }
 
     enableDisableSelfReferee() {
@@ -255,43 +264,14 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         }
     }
 
-    isTeamupAvailable(): boolean {
-        const allTeamSports = this.competition.getSports().every((competitionSport: CompetitionSport): boolean => {
-            return !competitionSport.getSport().getTeam();
-        });
-        if (allTeamSports === false) {
-            return false;
-        }
-
-        const nrOfPlaces = this.startRoundNumber.getNrOfPlaces();
-        const nrOfPoules = this.startRoundNumber.getPoules().length;
-        const flooredNrOfPoulePlaces = this.structureService.getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules, true);
-        const ceiledNrOfPoulePlaces = this.structureService.getNrOfPlacesPerPoule(nrOfPlaces, nrOfPoules, false);
-        if (flooredNrOfPoulePlaces < PlanningConfig.Teamup_Min
-            || ceiledNrOfPoulePlaces > PlanningConfig.Teamup_Max) {
-            return false;
-        }
-        if (nrOfPoules === 1 && flooredNrOfPoulePlaces === PlanningConfig.Teamup_Min && this.form.value['selfReferee']) {
-            return false;
-        }
-        return true;
-    }
-
     isSelfRefereeAvailable(): boolean {
         return this.getSelfRefereeAvailable() !== SelfReferee.Disabled;
     }
 
     // TODOSPORT
     // private needsRecreating(config: PlanningConfig): boolean {
-    //     return (this.form.value['nrOfHeadtohead'] !== config.getNrOfHeadtohead()) ||
-    //         (this.isTeamupAvailable() && this.form.value['teamup'] !== config.getTeamup()) ||
+    //     return (this.form.value['nrOfHeadtohead'] !== config.getNrOfHeadtohead()) ||            
     //         (this.isSelfRefereeAvailable() && this.form.value['selfReferee'] !== config.getSelfReferee());
-    // }
-
-    // getNrOfPlacesPerGame(): number {
-    //     const sportConfigs = this.competition.getSportConfigs();
-    //     return this.sportConfigService.getMaxNrOfGamePlaces(
-    //         sportConfigs, this.form.value['teamup'], this.form.value['selfReferee']);
     // }
 
     // private needsRescheduling(config: PlanningConfig): boolean {
@@ -305,25 +285,25 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     //         ;
     // }
 
-    // save(): boolean {
-    //     const jsonConfig: JsonPlanningConfig = {
-    //         id: 0,
-    //         extension: this.form.value['extension'],
-    //         enableTime: this.form.value['enableTime'],
-    //         minutesPerGame: this.form.value['minutesPerGame'],
-    //         minutesPerGameExt: this.form.value['minutesPerGameExt'],
-    //         minutesBetweenGames: this.form.value['minutesBetweenGames'],
-    //         minutesAfter: this.form.value['minutesAfter'],
-    //         selfReferee: (this.form.controls.selfReferee.disabled || !this.form.value['selfReferee']) ? SelfReferee.Disabled :
-    //             (this.form.value['selfRefereeSamePoule'] ? SelfReferee.SamePoule : SelfReferee.OtherPoules)
-    //     };
-    //     if (this.startRoundNumber.getPlanningConfig() !== undefined) {
-    //         this.edit(jsonConfig, this.startRoundNumber.getPlanningConfig());
-    //     } else {
-    //         this.add(jsonConfig);
-    //     }
-    //     return false;
-    // }
+    save(): boolean {
+        //     const jsonConfig: JsonPlanningConfig = {
+        //         id: 0,
+        //         extension: this.form.value['extension'],
+        //         enableTime: this.form.value['enableTime'],
+        //         minutesPerGame: this.form.value['minutesPerGame'],
+        //         minutesPerGameExt: this.form.value['minutesPerGameExt'],
+        //         minutesBetweenGames: this.form.value['minutesBetweenGames'],
+        //         minutesAfter: this.form.value['minutesAfter'],
+        //         selfReferee: (this.form.controls.selfReferee.disabled || !this.form.value['selfReferee']) ? SelfReferee.Disabled :
+        //             (this.form.value['selfRefereeSamePoule'] ? SelfReferee.SamePoule : SelfReferee.OtherPoules)
+        //     };
+        //     if (this.startRoundNumber.getPlanningConfig() !== undefined) {
+        //         this.edit(jsonConfig, this.startRoundNumber.getPlanningConfig());
+        //     } else {
+        //         this.add(jsonConfig);
+        //     }
+        return false;
+    }
 
     // add(jsonConfig: JsonPlanningConfig) {
     //     this.setAlert('info', 'instellingen worden opgeslagen');
@@ -394,14 +374,14 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     //     }
     // }
 
-    // openModalSelectStartRoundNumber() {
-    //     const modalRef = this.modalService.open(ModalRoundNumbersComponent);
-    //     modalRef.componentInstance.structure = this.structure;
-    //     modalRef.componentInstance.subject = 'de score-regels';
-    //     modalRef.result.then((startRoundNumber: RoundNumber) => {
-    //         this.changeStartRoundNumber(startRoundNumber);
-    //     }, (reason) => { });
-    // }
+    openModalSelectStartRoundNumber() {
+        const modalRef = this.modalService.open(RoundNumbersSelectorModalComponent);
+        modalRef.componentInstance.structure = this.structure;
+        modalRef.componentInstance.subject = 'de score-regels';
+        modalRef.result.then((startRoundNumber: RoundNumber) => {
+            this.changeStartRoundNumber(startRoundNumber);
+        }, (reason) => { });
+    }
 }
 
 export interface PlanningConfigValidations {

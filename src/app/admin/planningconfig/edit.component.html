@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 <app-tournament-gameamountconfigs-edit [formControls]="form.controls.gameAmountConfigs"
-                    [gameMode]="form.value['gameMode']">
+                    [gameMode]="form.value['gameMode']" [gameAmountRange]="gameAmountRange">
                 </app-tournament-gameamountconfigs-edit>
                 <div class="form-group row">
                     <label for="enableTime" class="col-8 col-form-label pointer">plannen o.b.v. tijd</label>
@@ -109,19 +109,6 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="teamupnotthesame" class="col-4 col-form-label pointer"
-                        (click)="openInfoModal(contentInfoTeamup)">met en tegen elkaar(duo's)
-                        <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
-                    </label>
-                    <div class="form-check col-8">
-                        <div class="form-control custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="teamup" formControlName="teamup"
-                                (ngModelChange)="enableDisableSelfReferee()">
-                            <label class="custom-control-label" for="teamup"></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group row">
                     <div class="col-8 d-flex justify-content-end">
                         <button *ngIf="startRoundNumber.hasNext() || startRoundNumber.hasPrevious()" type="button"
                             (click)="openModalSelectStartRoundNumber()" class="btn btn-outline-primary">
@@ -137,6 +124,6 @@
     </div>
 </div>
 
-<ng-template #contentInfoTeamup>
-    deze optie geldt alleen voor poules van 4-6 deelnemers en niet voor teamsporten
+<ng-template #contentInfoGameMode>
+    gameModeUitleg
 </ng-template>

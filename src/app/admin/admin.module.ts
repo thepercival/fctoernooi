@@ -107,6 +107,7 @@ import { ShareModalComponent } from './home/sharemodal.component';
 import { QualifyAgainstConfigEditComponent } from './qualifyAgainstConfig/edit.component';
 import { QualifyAgainstConfigRepository } from '../lib/ngx-sport/qualify/againstConfig/repository';
 import { RankingRuleSetModalComponent } from './home/rankingrulesetmodal.component';
+import { GameAmountConfigEditComponent } from './gameAmountConfig/edit.component';
 
 @NgModule({
   imports: [
@@ -129,6 +130,7 @@ import { RankingRuleSetModalComponent } from './home/rankingrulesetmodal.compone
     CompetitorListRemoveModalComponent,
     ExportModalComponent,
     FieldListComponent,
+    GameAmountConfigEditComponent,
     GameEditComponent,
     GameListComponent,
     HomeComponent,

@@ -1,7 +1,6 @@
-import { AfterViewChecked, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { GameMode, JsonGameAmountConfig, NameService, Place } from 'ngx-sport';
-import { TournamentCompetitor } from '../../lib/competitor';
+import { GameMode, VoetbalRange } from 'ngx-sport';
 
 @Component({
   selector: 'app-tournament-gameamountconfigs-edit',
@@ -11,10 +10,9 @@ import { TournamentCompetitor } from '../../lib/competitor';
 export class GameAmountConfigEditComponent implements OnInit {
   @Input() gameMode: GameMode;
   @Input() formControls: FormControl[] = [];
-  @Input() validations: GameAmountConfigValidations;
-  @Input() hasBegun: boolean;
+  @Input() gameAmountRange: VoetbalRange;
 
-  headtoheadRange: number[];
+  ramge: number[];
 
   ngOnInit() {
     this.initRange();
@@ -25,9 +23,9 @@ export class GameAmountConfigEditComponent implements OnInit {
   }
 
   private initRange() {
-    this.headtoheadRange = [];
-    for (let i = this.validations.minNrOfHeadtohead; i <= this.validations.maxNrOfHeadtohead; i++) {
-      this.headtoheadRange.push(i);
+    this.ramge = [];
+    for (let i = this.gameAmountRange.min; i <= this.gameAmountRange.max; i++) {
+      this.ramge.push(i);
     }
   }
 }
