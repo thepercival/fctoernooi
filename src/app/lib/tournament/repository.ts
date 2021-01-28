@@ -6,22 +6,19 @@ import { catchError, map } from 'rxjs/operators';
 import { Tournament } from '../tournament';
 import { TournamentMapper } from './mapper';
 import { APIRepository } from '../repository';
-import { LockerRoomMapper } from '../lockerroom/mapper';
 import { JsonTournament } from './json';
 import { TournamentExportAction } from '../../admin/home/exportmodal.component';
 
-/**
- * Created by coen on 1-10-17.
- */
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class TournamentRepository extends APIRepository {
 
     private url: string;
 
     constructor(
         private http: HttpClient,
-        private mapper: TournamentMapper,
-        private lockerRoomMapper: LockerRoomMapper) {
+        private mapper: TournamentMapper) {
         super();
         this.url = super.getApiUrl() + this.getUrlpostfix();
     }

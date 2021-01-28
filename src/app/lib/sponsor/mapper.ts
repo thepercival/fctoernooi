@@ -3,10 +3,9 @@ import { Injectable } from '@angular/core';
 import { Sponsor } from '../sponsor';
 import { Tournament } from '../tournament';
 
-/**
- * Created by coen on 10-10-17.
- */
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class SponsorMapper {
     constructor() { }
 

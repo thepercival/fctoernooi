@@ -7,34 +7,13 @@ import {
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import {
-  CompetitionMapper,
-  GameMapper,
-  GamePlaceMapper,
-  ScoreMapper,
-  PlaceMapper,
-  PlanningMapper,
-  PouleMapper,
-  RoundMapper,
-  RoundNumberMapper,
-  ScoreConfigMapper,
   ScoreConfigService,
-  StructureMapper,
-  SportMapper,
-  SeasonMapper,
-  RefereeMapper,
-  PlanningConfigMapper,
-  LeagueMapper,
-  FieldMapper,
-  AssociationMapper,
   CompetitionSportService,
-  GameAmountConfigMapper,
   QualifyAgainstConfigService,
-  QualifyAgainstConfigMapper,
   GameAmountConfigService
 } from 'ngx-sport';
 
 import { CSSService } from '../shared/common/cssservice';
-import { TournamentUserMapper } from '../lib/tournament/user/mapper';
 import { CommonSharedModule } from '../shared/common/shared.module';
 import { FilterComponent } from './filter/filter.component';
 import { HomeComponent } from './home/home.component';
@@ -47,15 +26,9 @@ import { PreNewComponent } from './prenew/prenew.component';
 import { StructureViewComponent } from './structure/view.component';
 import { RoutingModule } from './public-routing.module';
 import { GamesComponent } from './games/view.component';
-import { StructureRepository } from '../lib/ngx-sport/structure/repository';
-import { TournamentRepository } from '../lib/tournament/repository';
 import { TournamentModule } from '../shared/tournament/tournament.module';
-import { TournamentMapper } from '../lib/tournament/mapper';
-import { SponsorMapper } from '../lib/sponsor/mapper';
 import { RankingComponent } from './ranking/view.component';
-import { PlanningRepository } from '../lib/ngx-sport/planning/repository';
 import { RankingRoundNumberComponent } from './ranking/roundnumber.component';
-import { LockerRoomMapper } from '../lib/lockerroom/mapper';
 
 @NgModule({
   imports: [
@@ -81,39 +54,11 @@ import { LockerRoomMapper } from '../lib/lockerroom/mapper';
     RankingRoundNumberComponent
   ],
   providers: [
-    AssociationMapper,
-    CompetitionMapper,
     CompetitionSportService,
     CSSService,
-    FieldMapper,
-    GameMapper,
-    GamePlaceMapper,
-    ScoreMapper,
-    LeagueMapper,
-    LockerRoomMapper,
-    PlaceMapper,
-    PlanningRepository,
-    PlanningMapper,
-    GameAmountConfigMapper,
-    PlanningConfigMapper,
-    PouleMapper,
-    RefereeMapper,
-    TournamentUserMapper,
-    RoundMapper,
-    RoundNumberMapper,
-    SeasonMapper,
-    SponsorMapper,
-    SportMapper,
-    ScoreConfigService,
-    ScoreConfigMapper,
-    QualifyAgainstConfigService,
-    QualifyAgainstConfigMapper,
     GameAmountConfigService,
-    GameAmountConfigMapper,
-    StructureRepository,
-    StructureMapper,
-    TournamentRepository,
-    TournamentMapper
+    QualifyAgainstConfigService,
+    ScoreConfigService
   ]
 })
 export class PublicModule {

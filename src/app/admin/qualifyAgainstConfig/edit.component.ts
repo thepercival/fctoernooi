@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
     Sport,
     NameService,
@@ -16,16 +15,17 @@ import {
     CompetitionSportMapper,
     SportCustom,
     GameMode,
+    PointsCalculation,
 } from 'ngx-sport';
 import { CSSService } from '../../shared/common/cssservice';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { TranslateService } from '../../lib/translate';
 import { Tournament } from '../../lib/tournament';
 import { IAlert } from '../../shared/common/alert';
 import { RoundsSelectorModalComponent, ToggleRound } from '../rounds/selector.component';
 import { forkJoin, Observable } from 'rxjs';
 import { QualifyAgainstConfigRepository } from '../../lib/ngx-sport/qualify/againstConfig/repository';
 import { ToggleRoundConverter, ToggleRoundInittializer } from '../scoreConfig/edit.component';
+import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 
 @Component({
     selector: 'app-tournament-qualifyagainstconfig-edit',
@@ -42,6 +42,7 @@ export class QualifyAgainstConfigEditComponent implements OnInit {
     public nameService: NameService;
     form: FormGroup;
     protected toggleRound: ToggleRound;
+    pointsCalculations: PointsCalculation[] = [];
     readonly: boolean = true;
     ranges: any = {};
     validations: QualifyAgainstValidations = {
@@ -62,6 +63,9 @@ export class QualifyAgainstConfigEditComponent implements OnInit {
         private modalService: NgbModal
     ) {
         this.form = fb.group({
+            pointsCalculation: ['', Validators.compose([
+                Validators.required
+            ])],
             winPoints: ['', Validators.compose([
                 Validators.required,
                 Validators.min(this.validations.minWinPoints),
@@ -102,6 +106,7 @@ export class QualifyAgainstConfigEditComponent implements OnInit {
             (round: Round, competitionSport: CompetitionSport) => {
                 return round.getQualifyAgainstConfig(competitionSport);
             });
+        this.pointsCalculations = [PointsCalculation.AgainstGamePoints, PointsCalculation.Scores, PointsCalculation.Both];
         this.toggleRound = toggleRoundInittializer.createToggleRound(this.structure.getRootRound());
         this.postToggleRoundChange();
     }
@@ -169,6 +174,7 @@ export class QualifyAgainstConfigEditComponent implements OnInit {
     }
 
     protected jsonToForm(json: JsonQualifyAgainstConfig) {
+        this.form.controls.pointsCalculation.setValue(json.pointsCalculation);
         this.form.controls.winPoints.setValue(json.winPoints);
         this.form.controls.drawPoints.setValue(json.drawPoints);
         this.form.controls.winPointsExt.setValue(json.winPointsExt);
@@ -187,6 +193,25 @@ export class QualifyAgainstConfigEditComponent implements OnInit {
             losePointsExt: this.form.value['losePointsExt'],
             pointsCalculation: this.form.value['pointsCalculation']
         };
+    }
+
+    openInfoModal(header: string, modalContent) {
+        const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
+        activeModal.componentInstance.header = header;
+        activeModal.componentInstance.modalContent = modalContent;
+        activeModal.result.then((result) => {
+        }, (reason) => {
+        });
+    }
+
+    getPointsCalculationDescription(pointsCalculation: PointsCalculation): string {
+        switch (pointsCalculation) {
+            case PointsCalculation.AgainstGamePoints:
+                return 'alleen de punten van de wedstrijden worden opgeteld';
+            case PointsCalculation.Scores:
+                return 'alleen de score van de wedstrijden worden opgeteld';
+        }
+        return 'de punten en de score van de wedstrijden worden bij elkaar opgeteld ';
     }
 
     openSelectRoundsModal() {

@@ -22,11 +22,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CompetitorChooseModalComponent } from './competitorchoosemodal/competitorchoosemodal.component';
 import { RouterModule } from '@angular/router';
 import { RankingRulesComponent } from './rankingrules/rankingrules.component';
-import { ScoreRulesComponent } from './sportconfigpoints/info.component';
 import { facStructure, facReferee, facScoreboard } from './icons';
-import { FavoritesRepository } from '../../lib/favorites/repository';
-import { LockerRoomRepository } from '../../lib/lockerroom/repository';
-import { TournamentMapper } from '../../lib/tournament/mapper';
 import { CompetitionSportRouter } from './competitionSport.router';
 import { InfoModalComponent } from './infomodal/infomodal.component';
 
@@ -54,8 +50,6 @@ import { InfoModalComponent } from './infomodal/infomodal.component';
     NgbNavModule
   ],
   providers: [
-    FavoritesRepository,
-    LockerRoomRepository,
     CompetitionSportRouter
   ],
   exports: [

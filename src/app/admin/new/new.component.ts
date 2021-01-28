@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { IAlert } from '../../shared/common/alert';
 import { Tournament } from '../../lib/tournament';
@@ -13,6 +13,7 @@ import { JsonTournament } from '../../lib/tournament/json';
 import { SportDefaultService } from '../../lib/ngx-sport/defaultService';
 import { League, Sport, State, Structure, StructureService } from 'ngx-sport';
 import { RankingRuleSet } from 'ngx-sport/src/ranking/ruleSet';
+import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 
 
 @Component({
@@ -42,6 +43,7 @@ export class NewComponent implements OnInit {
     private structureRepository: StructureRepository,
     private planningRepository: PlanningRepository,
     private sportDefaultService: SportDefaultService,
+    private modalService: NgbModal,
     fb: FormBuilder
   ) {
     const date = new Date();
@@ -181,5 +183,15 @@ export class NewComponent implements OnInit {
   getFieldsDescription(): string {
     const translate = new TranslateService();
     return translate.getFieldNamePlural(this.sport);
+  }
+
+  openInfoModal(header: string, modalContent) {
+    const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
+    activeModal.componentInstance.header = header;
+    activeModal.componentInstance.modalContent = modalContent;
+    activeModal.result.then((result) => {
+    }, (reason) => {
+
+    });
   }
 }

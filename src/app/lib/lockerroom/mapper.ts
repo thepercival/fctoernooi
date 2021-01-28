@@ -6,10 +6,9 @@ import { CompetitorMapper } from '../competitor/mapper';
 import { TournamentCompetitor } from '../competitor';
 import { JsonLockerRoom } from './json';
 
-/**
- * Created by coen on 10-10-17.
- */
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class LockerRoomMapper {
     constructor(private competitorMapper: CompetitorMapper) { }
 

@@ -1,33 +1,45 @@
-<ng-container *ngIf="formControls.length === 1">
-  <div class="form-group row">
-    <label for="nrOfHeadtohead" class="col-8 col-form-label">{{getGamesDescription()}}</label>
-    <div class="col-4">
-      <select class="form-control" formControlName="nrOfHeadtohead" required
-        [ngClass]="{ 'is-invalid': form.controls.nrOfHeadtohead.invalid, 'is-valid': form.controls.nrOfHeadtohead.valid }">
-        <option *ngFor="let n of ramge" [ngValue]="n">{{n}}</option>
+<ng-container *ngIf="gameAmountControls.length === 1" [formGroup]="form">
+  <div class="form-group row" *ngFor="let gameAmountControl of gameAmountControls">
+    <label [for]="gameAmountControl.json.id" class="col-7 col-form-label">{{getGamesDescription()}}</label>
+    <div class="col-5">
+      <select class="form-control" [formControlName]="gameAmountControl.json.id" required>
+        <option *ngFor="let n of range" [ngValue]="n">{{n}}</option>
       </select>
     </div>
   </div>
 </ng-container>
 
-<ng-container *ngIf="formControls.length > 1">
-  <div class="form-group row">
-    <label for="nrOfHeadtohead" class="col-8 col-form-label">{{getGamesDescription()}}</label>
-    <div class="col-4">
-      <select class="form-control" formControlName="nrOfHeadtohead" required
-        [ngClass]="{ 'is-invalid': form.controls.nrOfHeadtohead.invalid, 'is-valid': form.controls.nrOfHeadtohead.valid }">
-        <option *ngFor="let n of ramge" [ngValue]="n">{{n}}</option>
-      </select>
+<div class="form-group row" *ngIf="gameAmountControls.length === 0">
+  <label class="col-7 col-form-label">{{getGamesDescription()}}</label>
+  <div class="col-5">
+    <button type="button" (click)="openModal(gameAmountModal)" class="btn btn-sm btn-outline-secondary">
+      instellen
+    </button>
+  </div>
+</div>
+
+<ng-template #gameAmountModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">
+      {{getGamesDescription()}}
+    </h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" [formGroup]="form">
+    <div class="form-group row" *ngFor="let gameAmountControl of gameAmountControls">
+      <label [for]="gameAmountControl.json.id"
+        class="col-8 col-form-label">{{gameAmountControl.json.competitionSport.sport.name}}</label>
+      <div class="col-4">
+        <select class="form-control" [formControlName]="gameAmountControl.json.id" required>
+          <option *ngFor="let n of range" [ngValue]="n">{{n}}</option>
+        </select>
+      </div>
     </div>
   </div>
-</ng-container>
-
-<!-- <div class="form-group row">
-  <label for="nrOfHeadtohead" class="col-8 col-form-label">aantal onderlinge duels</label>
-  <div class="col-4">
-    <select class="form-control" formControlName="nrOfHeadtohead" required
-      [ngClass]="{ 'is-invalid': form.controls.nrOfHeadtohead.invalid, 'is-valid': form.controls.nrOfHeadtohead.valid }">
-      <option *ngFor="let n of headtoheadRange" [ngValue]="n">{{n}}</option>
-    </select>
+  <div class="modal-footer d-flex justify-content-reverse border-top-0">
+    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" (click)="modal.dismiss()">
+      sluiten</button>
   </div>
-</div> -->
+</ng-template>

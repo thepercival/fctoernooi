@@ -34,7 +34,7 @@ export class FieldRepository extends APIRepository {
     editObject(field: Field, tournament: Tournament): Observable<Field> {
         const url = this.getUrl(tournament, field.getCompetitionSport()) + '/' + field.getId();
         return this.http.put(url, this.mapper.toJson(field), this.getOptions()).pipe(
-            map((res: JsonField) => this.mapper.toObject(res, field.getCompetitionSport(), field)),
+            map((res: JsonField) => this.mapper.toObject(res, field.getCompetitionSport(), true)),
             catchError((err) => this.handleError(err))
         );
     }

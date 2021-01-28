@@ -12,51 +12,53 @@
             <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
             <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
                 <div class="form-group row">
-                    <label for="gameMode" class="col-4 col-form-label pointer"
-                        (click)="openInfoModal(contentInfoGameMode)">wedstrijd-modus
+                    <label for="gameMode" class="col-7 col-form-label pointer"
+                        (click)="openInfoModal('wedstrijd-modus', contentInfoGameMode)">wedstrijd-modus
                         <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
                     </label>
-                    <div class="form-check col-8">
-                        <select class="form-control" formControlName="gameMode" required>
-                            <option *ngFor="let gameModeOption of getGameModeOptions()" [ngValue]="gameModeOption">
-                                {{gameModeOption.name}}</option>
+                    <div class="col-5">
+                        <select class="form-control" formControlName="gameMode" (ngModelChange)="changeGameMode($event)"
+                            required>
+                            <option *ngFor="let gameMode of gameModes" [ngValue]="gameMode">
+                                {{nameService.getGameModeName(gameMode)}}</option>
                         </select>
                     </div>
                 </div>
-                <app-tournament-gameamountconfigs-edit [formControls]="form.controls.gameAmountConfigs"
-                    [gameMode]="form.value['gameMode']" [gameAmountRange]="gameAmountRange">
+                <app-tournament-gameamountconfigs-edit [gameAmountControls]="gameAmountConfigControls"
+                    [gameMode]="form.value['gameMode']" [gameAmountRange]="gameAmountRange" [form]="form">
                 </app-tournament-gameamountconfigs-edit>
                 <div class="form-group row">
-                    <label for="enableTime" class="col-8 col-form-label pointer">plannen o.b.v. tijd</label>
-                    <div class="form-check col-4">
-                        <label class="custom-control custom-checkbox col-form-label pl-0">
-                            <input type="checkbox" class="custom-control-input form-check-input"
+                    <label class="col-7 col-form-label">plannen o.b.v. tijd</label>
+                    <div class="col-5">
+                        <div class="form-control custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="enableTime"
                                 formControlName="enableTime">
-                            <span class="custom-control-indicator"></span>
-                        </label>
+                            <label class="custom-control-label" for="enableTime"></label>
+                        </div>
                     </div>
                 </div>
+
                 <div *ngIf="!form.value['enableTime']" class="form-group row">
-                    <label for="extension" class="col-8 col-form-label pointer">met verlenging</label>
-                    <div class="form-check col-4">
-                        <label class="custom-control custom-checkbox col-form-label pl-0">
-                            <input type="checkbox" class="custom-control-input form-check-input"
+                    <label for="extension" class="col-7 col-form-label pointer">met verlenging</label>
+                    <div class="col-5">
+                        <div class="form-control custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="extension"
                                 formControlName="extension" (ngModelChange)="changeExtension($event)">
-                            <span class="custom-control-indicator"></span>
-                        </label>
+                            <label class="custom-control-label" for="extension"></label>
+                        </div>
                     </div>
                 </div>
                 <div *ngIf="form.value['enableTime']" class="form-group row">
-                    <label for="minutesPerGame" class="col-8 col-form-label">minuten per wedstrijd</label>
-                    <div class="col-4">
+                    <label for="minutesPerGame" class="col-7 col-form-label">minuten per wedstrijd</label>
+                    <div class="col-5">
                         <input type="number"
                             [ngClass]="{ 'is-invalid': form.controls.minutesPerGame.invalid, 'is-valid': form.controls.minutesPerGame.valid}"
                             formControlName="minutesPerGame" maxlength="2" class="form-control" />
                     </div>
                 </div>
                 <div *ngIf="form.value['enableTime']" class="form-group row">
-                    <label for="minutesPerGameExt" class="col-8 col-form-label">minuten verlenging</label>
-                    <div class="col-4">
+                    <label for="minutesPerGameExt" class="col-7 col-form-label">minuten verlenging</label>
+                    <div class="col-5">
                         <input type="number"
                             [ngClass]="{ 'is-invalid': form.controls.minutesPerGameExt.invalid, 'is-valid': form.controls.minutesPerGameExt.valid}"
                             formControlName="minutesPerGameExt" maxlength="2" class="form-control"
@@ -64,43 +66,42 @@
                     </div>
                 </div>
                 <div *ngIf="form.value['enableTime']" class="form-group row">
-                    <label for="minutesBetweenGames" class="col-8 col-form-label">minuten tussen
+                    <label for="minutesBetweenGames" class="col-7 col-form-label">minuten tussen
                         wedstrijden</label>
-                    <div class="col-4">
+                    <div class="col-5">
                         <input type="number"
                             [ngClass]="{ 'is-invalid': form.controls.minutesBetweenGames.invalid, 'is-valid': form.controls.minutesBetweenGames.valid}"
                             formControlName="minutesBetweenGames" maxlength="2" class="form-control" />
                     </div>
                 </div>
                 <div *ngIf="form.value['enableTime'] && startRoundNumber.hasNext()" class="form-group row">
-                    <label for="minutesAfterNoAction" class="col-8 col-form-label pointer" container="body"
-                        placement="top"
-                        ngbPopover="minuten tussen einde van deze ronde en het begin van de volgende ronde">minuten
+                    <label for="minutesAfter" class="col-7 col-form-label pointer"
+                        (click)="openInfoModal('minuten pauze na de ronde', contentInfoMinutesAfter)">minuten
                         pauze na de ronde
                         <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
                     </label>
-                    <div class="col-4">
+                    <div class="col-5">
                         <input type="number"
                             [ngClass]="{ 'is-invalid': form.controls.minutesAfter.invalid, 'is-valid': form.controls.minutesAfter.valid}"
                             formControlName="minutesAfter" maxlength="3" class="form-control" />
                     </div>
                 </div>
                 <div *ngIf="isSelfRefereeAvailable()" class="form-group row">
-                    <label for="selfrefereenoaction" class="col-8 col-form-label pointer">deelnemers zijn
+                    <label for="selfReferee" class="col-7 col-form-label">deelnemers zijn
                         scheidsrechter</label>
-                    <div class="form-check col-4">
-                        <label class="custom-control custom-checkbox col-form-label pl-0">
-                            <input type="checkbox" class="custom-control-input form-check-input"
-                                formControlName="selfReferee" (ngModelChange)="changeSelfReferee()">
-                            <span class="custom-control-indicator"></span>
-                        </label>
+                    <div class="col-5">
+                        <div class="form-control custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="selfReferee"
+                                formControlName="selfReferee">
+                            <label class="custom-control-label" for="selfReferee"></label>
+                        </div>
                     </div>
                 </div>
                 <div *ngIf="bothSelfRefereeAvailable() && form.value['selfReferee']" class="form-group row">
-                    <label for="selfrefereenoaction" class="col-8 col-form-label">
+                    <label for="selfrefereenoaction" class="col-7 col-form-label">
                         scheidsrechter in eigen poule
                     </label>
-                    <div class="form-check col-4">
+                    <div class="col-5">
                         <label class="custom-control custom-checkbox col-form-label pl-0">
                             <input type="checkbox" class="custom-control-input form-check-input"
                                 formControlName="selfRefereeSamePoule">
@@ -109,13 +110,13 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <div class="col-8 d-flex justify-content-end">
+                    <div class="col-7 d-flex justify-content-end">
                         <button *ngIf="startRoundNumber.hasNext() || startRoundNumber.hasPrevious()" type="button"
                             (click)="openModalSelectStartRoundNumber()" class="btn btn-outline-primary">
                             <span [innerHTML]="nameService.getRoundNumbersName( startRoundNumber ) | keepHtml"></span>
                         </button>
                     </div>
-                    <div *ngIf="!startRoundNumber.hasBegun()" class="col-4">
+                    <div *ngIf="!startRoundNumber.hasBegun()" class="col-5">
                         <button type="submit" class="btn btn-primary" [disabled]="form.invalid">opslaan</button>
                     </div>
                 </div>
@@ -125,5 +126,14 @@
 </div>
 
 <ng-template #contentInfoGameMode>
-    gameModeUitleg
+    <table class="table text-white">
+        <tr *ngFor="let gameModeDefinition of gameModeDefinitions">
+            <td class="font-weight-bold border-info">{{nameService.getGameModeName(gameModeDefinition.value)}}</td>
+            <td class="border-info bg-info">{{gameModeDefinition.name}}</td>
+        </tr>
+    </table>
+</ng-template>
+
+<ng-template #contentInfoMinutesAfter>
+    <span class="lead">minuten tussen einde van deze ronde en het begin van de volgende ronde</span>
 </ng-template>

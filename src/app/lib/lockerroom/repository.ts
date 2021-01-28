@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -7,12 +7,13 @@ import { APIRepository } from '../repository';
 import { LockerRoom } from '../lockerroom';
 import { Tournament } from '../tournament';
 import { LockerRoomMapper } from './mapper';
-import { JsonCompetitor } from 'ngx-sport';
 import { TournamentCompetitor } from '../competitor';
 import { CompetitorMapper } from '../competitor/mapper';
 import { JsonLockerRoom } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class LockerRoomRepository extends APIRepository {
 
     constructor(

@@ -55,10 +55,10 @@ export class Favorites {
         return this.competitors.length;
     }
 
-    hasGameCompetitor(game: Game, homeaway?: boolean): boolean {
+    hasGameCompetitor(game: Game, homeAway?: boolean): boolean {
         // TODOSPORT
         return false;
-        // return game.getPlaces(homeaway).some(gamePlace => {
+        // return game.getPlaces(homeAway).some(gamePlace => {
         //     const competitor = this.placeLocationMap.getCompetitor(gamePlace.getPlace().getStartLocation());
         //     return competitor && this.hasCompetitor(competitor);
         // });

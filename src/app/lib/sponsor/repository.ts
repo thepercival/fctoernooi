@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -8,10 +8,9 @@ import { Sponsor } from '../sponsor';
 import { Tournament } from '../tournament';
 import { JsonSponsor, SponsorMapper } from './mapper';
 
-/**
- * Created by coen on 10-10-17.
- */
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class SponsorRepository extends APIRepository {
 
     constructor(

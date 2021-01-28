@@ -4,7 +4,9 @@ import { Tournament } from '../tournament';
 import { TournamentCompetitor } from '../competitor';
 import { Competitor, JsonCompetitor } from 'ngx-sport';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class CompetitorMapper {
     constructor() { }
 

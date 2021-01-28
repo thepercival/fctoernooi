@@ -135,37 +135,13 @@
             </td>
             <!-- field -->
             <td class="text-center">{{gmData.game.getField()?.getName()}}</td>
-            <!-- home -->
-            <td class="place text-right " [ngClass]="{'favitem': favorites?.hasGameCompetitor(gmData.game, GameHOME) }">
-              <span>{{nameService.getPlacesFromName(gmData.game.getPlaces( GameHOME ),true,true)}}</span>
-            </td>
-            <!-- score -->
-            <td nowrap class="text-center">
-              <button *ngIf="gmData.canChangeResult" class="btn btn-sm btn-outline-primary"
-                (click)="linkToGameEdit(gmData.game)">
-                <fa-icon *ngIf="!isPlayed(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
-                <span *ngIf="isPlayed(gmData.game)">{{getScore(gmData.game)}}</span>
-                <span *ngIf="isPlayed(gmData.game)" class="font-weight-bold">{{getScoreFinalPhase(gmData.game)}}</span>
-              </button>
-              <span *ngIf="!gmData.canChangeResult" class="d-none d-sm-inline">{{getScore(gmData.game)}}</span>
-              <span *ngIf="!gmData.canChangeResult"
-                class="d-none d-sm-inline font-weight-bold">{{getScoreFinalPhase(gmData.game)}}</span>
-              <button *ngIf="!gmData.canChangeResult && hasReferees && !isPlayed(gmData.game)"
-                class="btn btn-outline-info btn-sm d-sm-none" placement="top"
-                [ngbPopover]="nameService.getRefereeName(gmData.game)">
-                <span [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
-                  <fa-icon [icon]="['fac', 'referee']"></fa-icon>
-                </span>
-              </button>
-              <span *ngIf="!gmData.canChangeResult && !(hasReferees && !isPlayed(gmData.game))"
-                class="d-sm-none font-weight-bold">{{getScore(gmData.game)}}</span>
-              <span *ngIf="!gmData.canChangeResult && !(hasReferees && !isPlayed(gmData.game))"
-                class="d-sm-none">{{getScoreFinalPhase(gmData.game)}}</span>
-            </td>
-            <!-- away -->
-            <td class="place" [ngClass]="{ 'favitem': favorites?.hasGameCompetitor(gmData.game, GameAWAY) }">
-              <span>{{nameService.getPlacesFromName(gmData.game.getPlaces( GameAWAY ),true,true)}}</span>
-            </td>
+            <!-- gamePlaces -->
+            <ng-container *ngIf="planningConfig.getGameMode() === GameModeAgainst">
+              <ng-container *ngTemplateOutlet="againstGamePlaces;context:{$implicit: gmData}"></ng-container>
+            </ng-container>
+            <ng-container *ngIf="planningConfig.getGameMode() === GameModeTogether">
+              <ng-container *ngTemplateOutlet="togetherGamePlaces;context:{$implicit: gmData}"></ng-container>
+            </ng-container>
             <!-- referee -->
             <td *ngIf="hasReferees" class="d-none d-sm-table-cell text-right"
               [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
@@ -176,6 +152,68 @@
     </table>
   </div>
 </div>
+
+<ng-template #againstGamePlaces let-gmData>
+  <!-- homePlaces -->
+  <td class="place text-right " [ngClass]="{'favitem': favorites?.hasGameCompetitor(gmData.game, GameHOME) }">
+    <span>{{nameService.getPlacesFromName(gmData.game.getHomeAwayPlaces( GameHOME ),true,true)}}</span>
+  </td>
+  <!-- score -->
+  <td nowrap class="text-center">
+    <button *ngIf="gmData.canChangeResult" class="btn btn-sm btn-outline-primary" (click)="linkToGameEdit(gmData.game)">
+      <fa-icon *ngIf="!isPlayed(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
+      <span *ngIf="isPlayed(gmData.game)">{{getScore(gmData.game)}}</span>
+      <span *ngIf="isPlayed(gmData.game)" class="font-weight-bold">{{getScoreFinalPhase(gmData.game)}}</span>
+    </button>
+    <span *ngIf="!gmData.canChangeResult" class="d-none d-sm-inline">{{getScore(gmData.game)}}</span>
+    <span *ngIf="!gmData.canChangeResult"
+      class="d-none d-sm-inline font-weight-bold">{{getScoreFinalPhase(gmData.game)}}</span>
+    <button *ngIf="!gmData.canChangeResult && hasReferees && !isPlayed(gmData.game)"
+      class="btn btn-outline-info btn-sm d-sm-none" placement="top"
+      [ngbPopover]="nameService.getRefereeName(gmData.game)">
+      <span [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
+        <fa-icon [icon]="['fac', 'referee']"></fa-icon>
+      </span>
+    </button>
+    <span *ngIf="!gmData.canChangeResult && !(hasReferees && !isPlayed(gmData.game))"
+      class="d-sm-none font-weight-bold">{{getScore(gmData.game)}}</span>
+    <span *ngIf="!gmData.canChangeResult && !(hasReferees && !isPlayed(gmData.game))"
+      class="d-sm-none">{{getScoreFinalPhase(gmData.game)}}</span>
+  </td>
+  <!-- awayPlaces -->
+  <td class="place" [ngClass]="{ 'favitem': favorites?.hasGameCompetitor(gmData.game, GameAWAY) }">
+    <span>{{nameService.getPlacesFromName(gmData.game.getHomeAwayPlaces( GameAWAY ),true,true)}}</span>
+  </td>
+</ng-template>
+
+<ng-template #togetherGamePlaces let-gmData>
+  <!-- places -->
+  <td class="place" [ngClass]="{'favitem': favorites?.hasGameCompetitor(gmData.game, GameHOME) }">
+    <span>{{nameService.getPlacesFromName(gmData.game.getTogetherPlaces(),true,true)}}</span>
+  </td>
+  <!-- score -->
+  <td nowrap class="text-center">
+    <button *ngIf="gmData.canChangeResult" class="btn btn-sm btn-outline-primary" (click)="linkToGameEdit(gmData.game)">
+      <fa-icon *ngIf="!isPlayed(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
+      <span *ngIf="isPlayed(gmData.game)">{{getScore(gmData.game)}}</span>
+      <span *ngIf="isPlayed(gmData.game)" class="font-weight-bold">{{getScoreFinalPhase(gmData.game)}}</span>
+    </button>
+    <span *ngIf="!gmData.canChangeResult" class="d-none d-sm-inline">{{getScore(gmData.game)}}</span>
+    <span *ngIf="!gmData.canChangeResult"
+      class="d-none d-sm-inline font-weight-bold">{{getScoreFinalPhase(gmData.game)}}</span>
+    <button *ngIf="!gmData.canChangeResult && hasReferees && !isPlayed(gmData.game)"
+      class="btn btn-outline-info btn-sm d-sm-none" placement="top"
+      [ngbPopover]="nameService.getRefereeName(gmData.game)">
+      <span [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
+        <fa-icon [icon]="['fac', 'referee']"></fa-icon>
+      </span>
+    </button>
+    <span *ngIf="!gmData.canChangeResult && !(hasReferees && !isPlayed(gmData.game))"
+      class="d-sm-none font-weight-bold">{{getScore(gmData.game)}}</span>
+    <span *ngIf="!gmData.canChangeResult && !(hasReferees && !isPlayed(gmData.game))"
+      class="d-sm-none">{{getScoreFinalPhase(gmData.game)}}</span>
+  </td>
+</ng-template>
 
 <ng-template #planningInfo let-modal>
   <div class="modal-header border-bottom-0">

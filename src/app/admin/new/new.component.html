@@ -77,12 +77,10 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="publicnotthesame" class="col-4 col-form-label pointer" popoverClass="popover-small"
-            container="newForm" placement="right" ngbPopover="Publieke toernooien zijn te bekijken door anderen. Standen, uitslagen, etc. zijn live te bekijken, 
-            niet publieke toernooien zijn alleen voor jou beschikbaar.">publiek
+          <label class="col-4 col-form-label pointer" (click)="openInfoModal('publiek', contentInfo)">publiek
             <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
           </label>
-          <div class="form-check col-8">
+          <div class="col-8">
             <div class="form-control custom-control custom-switch">
               <input type="checkbox" class="custom-control-input" id="public" formControlName="public">
               <label class="custom-control-label" for="public"></label>
@@ -100,3 +98,10 @@
     </div>
   </div>
 </div>
+
+<ng-template #contentInfo>
+  <p class="lead">Publieke toernooien zijn te bekijken door anderen. Standen, uitslagen, etc. zijn live te bekijken,
+    niet publieke
+    toernooien zijn alleen voor jou beschikbaar.
+  </p>
+</ng-template>

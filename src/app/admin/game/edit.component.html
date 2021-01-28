@@ -27,7 +27,7 @@
           <div class="col-4 font-weight-bold text-break">
             {{nameService.getPlacesFromName(game.getPlaces( GameHOME ), true, true)}}
           </div>
-          <div class="col-1 homeaway-splitter">-</div>
+          <div class="col-1 homeAway-splitter">-</div>
           <div class="col-4 font-weight-bold text-break">
             {{nameService.getPlacesFromName(game.getPlaces( GameAWAY ), true, true)}}</div>
         </div>
@@ -39,7 +39,7 @@
             <input [formControl]="calculateScoreControl.home" class="form-control max-width-100 {{getCalculateClass()}}"
               type="number">
           </div>
-          <div class="col-1 homeaway-splitter">-</div>
+          <div class="col-1 homeAway-splitter">-</div>
           <div class="col-4">
             <input [formControl]="calculateScoreControl.away" class="form-control max-width-100 {{getCalculateClass()}}"
               type="number">
@@ -53,8 +53,8 @@
             <input [formControl]="scoreControl.home" (ngModelChange)="setHome(scoreControl,$event)"
               class="form-control max-width-100 {{getInputClass(scoreControl)}}" type="number">
           </div>
-          <div *ngIf="!(last && calculateAndInputScoreDiffers())" class="col-1 homeaway-splitter">-</div>
-          <div *ngIf="last && calculateAndInputScoreDiffers()" class="col-1 homeaway-splitter">
+          <div *ngIf="!(last && calculateAndInputScoreDiffers())" class="col-1 homeAway-splitter">-</div>
+          <div *ngIf="last && calculateAndInputScoreDiffers()" class="col-1 homeAway-splitter">
             <button type="button" class="btn btn-sm btn-outline-secondary" (click)="removeScoreControl(scoreControl)">
               <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
             </button>

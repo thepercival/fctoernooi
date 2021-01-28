@@ -15,7 +15,8 @@ import {
   Place,
   Period,
   AgainstGame,
-  SelfReferee
+  SelfReferee,
+  GameMode
 } from 'ngx-sport';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -111,6 +112,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     this.sameDay = this.gameDatas.length > 1 ? this.isSameDay(this.gameDatas[0], this.gameDatas[this.gameDatas.length - 1]) : true;
   }
 
+  get GameModeAgainst(): GameMode { return GameMode.Against; }
+  get GameModeTogether(): GameMode { return GameMode.Together; }
   get GameHOME(): boolean { return AgainstGame.Home; }
   get GameAWAY(): boolean { return AgainstGame.Away; }
   get SportConfigTabFields(): number { return CompetitionSportTabOrder.Fields; }
