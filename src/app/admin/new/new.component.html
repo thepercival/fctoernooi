@@ -1,12 +1,9 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
-    <app-tournament-sport-select *ngIf="chooseSport" class="col-xs-12 col-sm-10 col-md-6 col-lg-4"
-      (sendSport)="onGetSport($event)">
-    </app-tournament-sport-select>
-    <!-- <app-tournament-sport-select *ngIf="chooseSport" class="col-xs-12 col-sm-10 col-md-6 col-lg-4"
-      (sendSport)="onGetSport($event)" staticInfo="later kun je meerdere sporten maken">
-    </app-tournament-sport-select> -->
-    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6" *ngIf="!chooseSport">
+    <app-tournament-sports-selector *ngIf="showSelectSports" class="col-xs-12 col-sm-10 col-md-6 col-lg-4"
+      [selectedSports]="sports" (selected)="selectedSports($event)">
+    </app-tournament-sports-selector>
+    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6" *ngIf="!showSelectSports">
       <div class="d-flex justify-content-between mb-4">
         <h1>nieuw toernooi</h1>
         <h1 class="mr-1">
@@ -34,11 +31,12 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="sportname" class="col-4 col-form-label">sport</label>
+          <label for="sportsName" class="col-4 col-form-label">sport(en)</label>
           <div class="col-8">
-            <div class="input-group pointer" (click)="chooseSport = true">
-              <input class="form-control" [ngClass]="{ 'is-invalid': !sport, 'is-valid': sport }"
-                formControlName="sportname">
+            <div class="input-group pointer" (click)="showSelectSports = true">
+              <input class="form-control"
+                [ngClass]="{ 'is-invalid': sports.length === 0, 'is-valid': sports.length > 0 }"
+                formControlName="sportsName">
               <div class="input-group-append">
                 <span class="input-group-text">kies</span>
               </div>
@@ -89,7 +87,7 @@
         </div>
         <div class="form-group row justify-content-end">
           <div class="col-8">
-            <button [disabled]="form.invalid || sport === undefined" type="submit" class="btn btn-primary">
+            <button [disabled]="form.invalid || sports.length === 0" type="submit" class="btn btn-primary">
               ga naar de opzet
             </button>
           </div>

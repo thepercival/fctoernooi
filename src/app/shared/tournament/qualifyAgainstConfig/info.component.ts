@@ -1,13 +1,13 @@
 import { Component, Input } from '@angular/core';
 
-import { RoundNumber } from 'ngx-sport';
+import { Round } from 'ngx-sport';
 
 @Component({
-    selector: 'app-sportconfig-points-info',
+    selector: 'app-qualifyagainstconfig-info',
     templateUrl: './info.component.html',
     styleUrls: ['./info.component.scss']
 })
-export class ScoreRulesComponent {
-    @Input() roundNumber: RoundNumber;
+export class QualifyAgainstInfoComponent {
+    @Input() round: Round;
     constructor() { }
 }

@@ -3,10 +3,9 @@ import { Injectable } from '@angular/core';
 import { Tournament } from '../../tournament';
 import { TournamentInvitation } from '.';
 
-/**
- * Created by coen on 10-10-17.
- */
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class TournamentInvitationMapper {
     constructor() { }
 

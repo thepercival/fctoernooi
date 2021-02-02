@@ -1,22 +1,22 @@
-<!-- <div class="modal-header border-bottom-0">
-    <h4 class="modal-title"><span>{{nameService.getPouleName(poule, true)}}</span></h4>
+<div class="modal-header border-bottom-0">
+    <h4 class="modal-title"><span>{{getHeader()}}</span></h4>
     <button type="button" class="close" aria-label="sluiten" (click)="activeModal.dismiss('close')">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
-<div class="modal-body">
+<div *ngIf="gameMode === Against" class="modal-body">
     <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
         <li [ngbNavItem]="1">
             <a ngbNavLink>stand</a>
             <ng-template ngbNavContent>
-                <app-tournament-pouleranking [poule]="poule" [tournament]="tournament">
-                </app-tournament-pouleranking>
+                <app-tournament-pouleranking-against [poule]="poule" [tournament]="tournament">
+                </app-tournament-pouleranking-against>
             </ng-template>
         </li>
         <li [ngbNavItem]="2">
             <a ngbNavLink>puntentelling</a>
             <ng-template ngbNavContent>
-                <app-sportconfig-points-info [roundNumber]="poule.getRound().getNumber()"></app-sportconfig-points-info>
+                <app-qualifyagainstconfig-info [round]="poule.getRound()"></app-qualifyagainstconfig-info>
             </ng-template>
         </li>
 
@@ -24,13 +24,17 @@
             <a ngbNavLink>rangschikking</a>
             <ng-template ngbNavContent>
                 <p class="pt-2">de onderstaande regels bepalen de rangschikking</p>
-                <app-ranking-rules [ruleSet]="tournament.getCompetition().getRuleSet()"></app-ranking-rules>
+                <app-ranking-rules [ruleSet]="tournament.getCompetition().getRankingRuleSet()"></app-ranking-rules>
             </ng-template>
         </li>
     </ul>
     <div [ngbNavOutlet]="nav" class="mt-2"></div>
 </div>
+<div *ngIf="gameMode === Together" class="modal-body">
+    <app-tournament-pouleranking-together [poule]="poule" [tournament]="tournament">
+    </app-tournament-pouleranking-together>
+</div>
 <div class="modal-footer align-items-end border-top-0">
     <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
         (click)="activeModal.dismiss('close')">sluiten</button>
-</div> -->
+</div>

@@ -6,7 +6,9 @@ import { catchError, map } from 'rxjs/operators';
 import { APIRepository } from '../../repository';
 import { JsonSport, SportMapper, Sport } from 'ngx-sport';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class SportRepository extends APIRepository {
 
     constructor(
@@ -21,6 +23,15 @@ export class SportRepository extends APIRepository {
 
     getUrl(): string {
         return super.getApiUrl() + this.getUrlpostfix();
+    }
+
+    getObjects(): Observable<Sport[]> {
+        return this.http.get(this.getUrl(), this.getOptions()).pipe(
+            map((jsonSports: JsonSport[]) => jsonSports.map((jsonSport: JsonSport) => {
+                return this.mapper.toObject(jsonSport);
+            })),
+            catchError((err) => this.handleError(err))
+        );
     }
 
     getObjectByCustomId(customId: number): Observable<Sport> {

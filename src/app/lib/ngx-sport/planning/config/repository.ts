@@ -7,7 +7,9 @@ import { PlanningConfigMapper, RoundNumber, JsonPlanningConfig, PlanningConfig }
 import { APIRepository } from '../../../repository';
 import { Tournament } from '../../../tournament';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class PlanningConfigRepository extends APIRepository {
 
     constructor(

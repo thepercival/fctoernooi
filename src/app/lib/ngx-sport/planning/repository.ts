@@ -7,7 +7,9 @@ import { PlanningMapper, JsonStructure, RoundNumber, Game, Structure } from 'ngx
 import { APIRepository } from '../../repository';
 import { Tournament } from '../../tournament';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class PlanningRepository extends APIRepository {
 
     constructor(

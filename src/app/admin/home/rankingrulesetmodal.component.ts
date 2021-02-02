@@ -17,7 +17,6 @@ export class RankingRuleSetModalComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.rankingRuleSet);
     }
 
     updateRuleset() {

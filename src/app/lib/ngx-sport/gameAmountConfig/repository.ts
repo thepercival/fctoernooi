@@ -4,11 +4,12 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../repository';
-import { Round, CompetitionSport, CompetitionSportMapper, JsonCompetitionSport, RoundNumber, GameAmountConfigMapper, JsonGameAmountConfig, GameAmountConfig } from 'ngx-sport';
+import { CompetitionSport, CompetitionSportMapper, JsonCompetitionSport, RoundNumber, GameAmountConfigMapper, JsonGameAmountConfig, GameAmountConfig } from 'ngx-sport';
 import { Tournament } from '../../tournament';
 
-
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class GameAmountConfigRepository extends APIRepository {
 
     constructor(

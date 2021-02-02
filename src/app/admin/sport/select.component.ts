@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CompetitionSport, JsonSport, Sport, SportCustom } from 'ngx-sport';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { CompetitionSport, GameMode, JsonSport, Sport, SportCustom } from 'ngx-sport';
 
 import { IAlert } from '../../shared/common/alert';
 import { CSSService } from '../../shared/common/cssservice';
@@ -8,22 +8,18 @@ import { TranslateService } from '../../lib/translate';
 import { SportRepository } from '../../lib/ngx-sport/sport/repository';
 
 @Component({
-    selector: 'app-tournament-sport-select',
+    selector: 'app-tournament-sports-selector',
     templateUrl: './select.component.html',
     styleUrls: ['./select.component.css']
 })
-export class SportSelectComponent implements OnInit {
-    static readonly SELECT = 1;
-    static readonly NEW = 2;
-
-    @Input() competitionSports: CompetitionSport[];
-    @Input() filterCompetitionSports: CompetitionSport[];
-    @Input() staticInfo: string;
-    @Input() inputSelectOnly: boolean;
-    @Output() sendSport = new EventEmitter<Sport>();
+export class SportSelectComponent implements OnInit, OnChanges {
+    @Input() sports: Sport[];
+    @Input() selectedSports: Sport[] = [];
+    @Output() selected = new EventEmitter<Sport[]>();
     processing = true;
+    private originalSelectedSports: Sport[] = [];
+    inputType: SportInputType = SportInputType.Select;
     form: FormGroup;
-    public radioGroupForm: FormGroup;
     public alert: IAlert;
     translateService: TranslateService;
 
@@ -32,99 +28,149 @@ export class SportSelectComponent implements OnInit {
         private sportRepository: SportRepository,
         fb: FormBuilder
     ) {
-        this.form = fb.group({
-            newSportName: ['', Validators.compose([
-                Validators.required,
-                Validators.minLength(Sport.MIN_LENGTH_NAME),
-                Validators.maxLength(Sport.MAX_LENGTH_NAME)
-            ])],
-            team: true
-        });
-        this.radioGroupForm = fb.group({ inputtype: SportSelectComponent.SELECT });
+        this.form = fb.group({});
         this.translateService = new TranslateService();
     }
 
     ngOnInit() {
-        this.processing = false;
+        this.processing = true;
+        this.originalSelectedSports = this.selectedSports.slice();
+        this.sportRepository.getObjects().subscribe(
+            /* happy path */(sports: Sport[]) => {
+                this.sort(sports).forEach((sport: Sport) => {
+                    this.form.addControl('sport-' + sport.getId(), new FormControl(
+                        this.isSelected(sport)
+                    ));
+                });
+                this.sports = sports;
+                this.processing = false;
+            },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+            /* onComplete */() => this.processing = false
+        );
     }
 
-    getInputSelect(): number { return SportSelectComponent.SELECT; }
-    getInputNew(): number { return SportSelectComponent.NEW; }
+    ngOnChanges() {
 
-    isInputTypeSelect(): boolean {
-        return this.isInputTypeHelper(this.getInputSelect());
+
     }
 
-    isInputTypeNew(): boolean {
-        return this.isInputTypeHelper(this.getInputNew());
+    protected addControl() {
+
     }
 
-    protected isInputTypeHelper(inputType: number): boolean {
-        return (inputType & this.radioGroupForm.value['inputtype']) === inputType;
-    }
-
-    showInputTypeChoice() {
-        return this.inputSelectOnly !== true;
-    }
-
-    getSortedSports(): SortableSport[] {
-        return SportCustom.get().filter(customId => {
-            if (this.competitionSports) {
-                return this.competitionSports.some(competitionSport => competitionSport.getSport().getCustomId() === customId);
-            } else if (this.filterCompetitionSports) {
-                return !this.filterCompetitionSports.some(competitionSport => competitionSport.getSport().getCustomId() === customId);
-            }
-            return true;
-        }).map(customId => {
-            return { customId: customId, name: this.translate(customId) };
-        }).sort((s1, s2) => {
-            return (s1.name > s2.name ? 1 : -1);
+    sort(sports: Sport[]): Sport[] {
+        sports.sort((s1, s2) => {
+            return (this.translate(s1) > this.translate(s2) ? 1 : -1);
         });
+        return sports;
     }
 
-    translate(sportCustomId: number): string {
-        return this.translateService.getSportName(sportCustomId);
+    get inputTypeSelect(): SportInputType { return SportInputType.Select; }
+    get inputTypeNew(): SportInputType { return SportInputType.New; }
+
+    createdSport(sport: Sport) {
+        if (this.sports.indexOf(sport) < 0) {
+            this.sports.unshift(sport);
+            this.form.addControl('sport-' + sport.getId(), new FormControl(true));
+        }
+        this.form.controls['sport-' + sport.getId()].setValue(true);
+
+        if (this.selectedSports.indexOf(sport) < 0) {
+            this.selectedSports.unshift(sport);
+        }
+        this.inputType = this.inputTypeSelect;
+    }
+
+    isSelected(sport: Sport): boolean {
+        return this.selectedSports.indexOf(sport) >= 0;
+    }
+
+    toggle(toggle: boolean, sport: Sport) {
+        if (toggle) {
+            this.selectedSports.push(sport);
+        } else {
+            this.selectedSports.splice(this.selectedSports.indexOf(sport), 1);
+        }
+    }
+
+    navigateBack() {
+        this.selected.emit(this.originalSelectedSports);
+    }
+
+    save() {
+        this.selected.emit(this.selectedSports);
+    }
+
+    bothGameModeSelected(): boolean {
+        return this.hasGameModeSelected(GameMode.Against) && this.hasGameModeSelected(GameMode.Together);
+    }
+
+    hasGameModeSelected(gameMode: GameMode): boolean {
+        return this.selectedSports.some((sportIt: Sport) => sportIt.getGameMode() === gameMode);
+    }
+
+    hasOtherGameMode(sport: Sport): boolean {
+        const opposite = sport.getGameMode() === GameMode.Against ? GameMode.Together : GameMode.Against;
+        return this.hasGameModeSelected(opposite);
+    }
+
+
+
+    // protected isInputTypeHelper(inputType: number): boolean {
+    //     return (inputType & this.radioGroupForm.value['inputtype']) === inputType;
+    // }
+
+    // showInputTypeChoice() {
+    //     return this.inputSelectOnly !== true;
+    // }
+
+    translate(sport: Sport): string {
+        if (sport.getCustomId() > 0) {
+            return this.translateService.getSportName(sport.getCustomId());
+        }
+        return sport.getName();
     }
 
     protected setAlert(type: string, message: string) {
         this.alert = { 'type': type, 'message': message };
     }
 
-    save() {
-        this.processing = true;
-        // TODOSPORT
-        // const json: JsonSport = {
-        //     id: 0,
-        //     name: this.form.value['newSportName'],
-        //     team: this.form.value['team'],
-        //     customId: 0
-        // };
-        // this.sportRepository.createObject(json).subscribe(
-        //     /* happy path */ sportRes => {
-        //         this.sendSport.emit(sportRes);
-        //     },
-        //     /* error path */ e => {
-        //         this.setAlert('danger', 'de sport kon niet worden aangemaakt: ' + e);
-        //         this.processing = false;
-        //     },
-        //     /* onComplete */() => this.processing = false
-        // );
-    }
+    // save() {
+    //this.processing = true;
+    // TODOSPORT
+    // const json: JsonSport = {
+    //     id: 0,
+    //     name: this.form.value['newSportName'],
+    //     team: this.form.value['team'],
+    //     customId: 0
+    // };
+    // this.sportRepository.createObject(json).subscribe(
+    //     /* happy path */ sportRes => {
+    //         this.sendSport.emit(sportRes);
+    //     },
+    //     /* error path */ e => {
+    //         this.setAlert('danger', 'de sport kon niet worden aangemaakt: ' + e);
+    //         this.processing = false;
+    //     },
+    //     /* onComplete */() => this.processing = false
+    // );
+    // }
 
-    sendSportByCustomId(customId: number) {
-        this.processing = true;
-        this.sportRepository.getObjectByCustomId(customId).subscribe(
-            /* happy path */ sportRes => {
-                this.sendSport.emit(sportRes);
-            },
-            /* error path */ e => {
-                this.setAlert('danger', 'de sport kan niet gevonden worden: ' + e);
-                this.processing = false;
-            },
-            /* onComplete */() => this.processing = false
-        );
+    // sendSportByCustomId(customId: number) {
+    //     this.processing = true;
+    //     this.sportRepository.getObjectByCustomId(customId).subscribe(
+    //         /* happy path */ sportRes => {
+    //             this.sendSport.emit(sportRes);
+    //         },
+    //         /* error path */ e => {
+    //             this.setAlert('danger', 'de sport kan niet gevonden worden: ' + e);
+    //             this.processing = false;
+    //         },
+    //         /* onComplete */() => this.processing = false
+    //     );
 
-    }
+    // }
 
     // private postInit(id: number) {
 
@@ -132,7 +178,5 @@ export class SportSelectComponent implements OnInit {
     //     // sports is filter for list
 }
 
-interface SortableSport {
-    customId: number;
-    name: string;
-}
+enum SportInputType { Select, New };
+

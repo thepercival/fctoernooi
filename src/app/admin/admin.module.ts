@@ -61,13 +61,13 @@ import { AuthorizationListComponent } from './authorization/list.component';
 import { AuthorizationAddComponent } from './authorization/add.component';
 import { RoleItemComponent } from './authorization/roleitem.component';
 import { AuthorizationExplanationModalComponent } from './authorization/infomodal.component';
-import { SportDefaultService } from '../lib/ngx-sport/defaultService';
 import { StructureSelectRoundComponent } from './rounds/round.component';
 import { ExportModalComponent } from './home/exportmodal.component';
 import { ShareModalComponent } from './home/sharemodal.component';
 import { QualifyAgainstConfigEditComponent } from './qualifyAgainstConfig/edit.component';
 import { RankingRuleSetModalComponent } from './home/rankingrulesetmodal.component';
 import { GameAmountConfigEditComponent } from './gameAmountConfig/edit.component';
+import { SportNewComponent } from './sport/new.component';
 
 @NgModule({
   imports: [
@@ -100,6 +100,7 @@ import { GameAmountConfigEditComponent } from './gameAmountConfig/edit.component
     SponsorEditComponent,
     SponsorListComponent,
     SportSelectComponent,
+    SportNewComponent,
     StartBreakComponent,
     StructureEditComponent,
     PlanningConfigComponent,
@@ -115,7 +116,6 @@ import { GameAmountConfigEditComponent } from './gameAmountConfig/edit.component
   providers: [
     CompetitionSportService,
     CSSService,
-    SportDefaultService,
     ScoreConfigService
   ]
 })

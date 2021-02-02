@@ -51,7 +51,7 @@
           </th>
           <!-- start -->
           <th *ngIf="planningConfig.getEnableTime()">
-            <button *ngIf="userIsAdmin && !hasBegun" title="wijzig planningsinstellingen"
+            <button *ngIf="userIsAdmin && !hasBegun" title="wijzig plannings-instellingen"
               class="btn btn-sm btn-outline-primary" (click)="linkToPlanningConfig()">
               <span>start</span>
             </button>
@@ -69,7 +69,8 @@
             </button>
             <fa-icon *ngIf="!userIsAdmin" title="veld" [icon]="['fac', 'soccer-field']"></fa-icon>
           </th>
-          <th class="text-right">thuis</th>
+          <th *ngIf="planningConfig.getGameMode() === GameModeAgainst" class="text-right">thuis</th>
+          <th *ngIf="planningConfig.getGameMode() === GameModeTogether">deelnemer(s)</th>
           <!-- score -->
           <th class="text-center">
             <button *ngIf="userIsAdmin" title="wijzig score-regels"
@@ -82,7 +83,7 @@
               <fa-icon [icon]="['fac', 'scoreboard']"></fa-icon>
             </button>
           </th>
-          <th>uit</th>
+          <th *ngIf="planningConfig.getGameMode() === GameModeAgainst">uit</th>
           <!-- referee -->
           <th *ngIf="hasReferees" class="d-none d-sm-table-cell text-right" title="scheidsrechter">
             <button *ngIf="userIsAdmin && !planningConfig.getSelfReferee()" title="wijzig scheidsrechters"

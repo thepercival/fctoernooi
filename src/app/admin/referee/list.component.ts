@@ -87,7 +87,6 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     activeModal.componentInstance.modalContent = modalContent;
     activeModal.result.then((result) => {
       // if (result === 'linkToPlanningConfig') {
-      //   console.log(123);
       //   this.linkToPlanningConfig();
       // }
     }, (reason) => {

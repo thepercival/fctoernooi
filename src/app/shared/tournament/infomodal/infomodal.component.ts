@@ -22,8 +22,4 @@ export class InfoModalComponent implements OnInit {
     close(value: string) {
         this.activeModal.close(value);
     }
-
-    linkToPlanningConfig() {
-        console.log('dialog linkToPlanningConfig');
-    }
 }

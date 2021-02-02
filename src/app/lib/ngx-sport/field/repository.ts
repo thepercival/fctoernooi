@@ -8,7 +8,9 @@ import { Field, FieldMapper, JsonField, CompetitionSport } from 'ngx-sport';
 import { Tournament } from '../../tournament';
 
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class FieldRepository extends APIRepository {
 
     constructor(

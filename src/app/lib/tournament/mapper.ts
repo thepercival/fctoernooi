@@ -2,11 +2,10 @@ import { Injectable } from '@angular/core';
 import { CompetitionMapper } from 'ngx-sport';
 
 import { TournamentUserMapper } from './user/mapper';
-import { JsonSponsor, SponsorMapper } from '../sponsor/mapper';
+import { SponsorMapper } from '../sponsor/mapper';
 import { Tournament } from '../tournament';
 import { LockerRoomMapper } from '../lockerroom/mapper';
 import { JsonTournament } from './json';
-import { TournamentCompetitor } from '../competitor';
 import { CompetitorMapper } from '../competitor/mapper';
 
 @Injectable({

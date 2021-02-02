@@ -207,7 +207,6 @@ export class ScoreConfigEditComponent implements OnInit {
 
         // 2 verwijder en voeg de scoreregels toe van de rootRounds
         const reposUpdates: Observable<ScoreConfig>[] = roundsSelection.rootRounds.map((round: Round) => {
-            console.log('saving root ' + this.nameService.getRoundName(round));
             return this.scoreConfigRepository.saveObject(this.jsonScoreConfig, round, this.tournament);
         });
         forkJoin(reposUpdates).subscribe(results => {
@@ -217,7 +216,6 @@ export class ScoreConfigEditComponent implements OnInit {
             }
             // 3 voeg de scoreregels toe van de unchangedChildRounds
             const reposChildUpdates: Observable<ScoreConfig>[] = validScoreConfigs.map((validScoreConfig: ValidScoreConfigOfUnchangedChildRound) => {
-                console.log('saving unchanged ' + this.nameService.getRoundName(validScoreConfig.unchangedChildRound));
                 return this.scoreConfigRepository.saveObject(validScoreConfig.scoreConfig, validScoreConfig.unchangedChildRound, this.tournament);
             });
             forkJoin(reposChildUpdates).subscribe(results => {
@@ -326,13 +324,11 @@ export class ToggleRoundConverter {
     }
 
     createRoundsSelection(toggleRound: ToggleRound): RoundsSelection {
-        console.log(toggleRound);
         const selection: RoundsSelection = {
             rootRounds: [],
             unchangedDescendants: []
         }
         this.updateRoundsSelection(toggleRound, selection);
-        console.log(selection);
         return selection;
     }
 

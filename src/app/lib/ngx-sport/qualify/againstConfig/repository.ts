@@ -7,8 +7,9 @@ import { APIRepository } from '../../../repository';
 import { QualifyAgainstConfig, QualifyAgainstConfigMapper, JsonQualifyAgainstConfig, Round, CompetitionSport, CompetitionSportMapper, JsonCompetitionSport } from 'ngx-sport';
 import { Tournament } from '../../../tournament';
 
-
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class QualifyAgainstConfigRepository extends APIRepository {
 
     constructor(

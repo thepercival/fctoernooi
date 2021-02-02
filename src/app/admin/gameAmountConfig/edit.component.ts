@@ -46,7 +46,6 @@ export class GameAmountConfigEditComponent implements OnInit, OnChanges {
   }
 
   private setRange() {
-    console.log('new gameamountrange', this.gameAmountRange);
     this.range = [];
     for (let i = this.gameAmountRange.min; i <= this.gameAmountRange.max; i++) {
       this.range.push(i);

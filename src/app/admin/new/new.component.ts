@@ -11,7 +11,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { JsonTournament } from '../../lib/tournament/json';
 import { SportDefaultService } from '../../lib/ngx-sport/defaultService';
-import { League, Sport, State, Structure, StructureService } from 'ngx-sport';
+import { JsonCompetitionSport, JsonField, League, Sport, SportMapper, State, Structure, StructureService } from 'ngx-sport';
 import { RankingRuleSet } from 'ngx-sport/src/ranking/ruleSet';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 
@@ -26,8 +26,8 @@ export class NewComponent implements OnInit {
   processing = true;
   alert: IAlert;
   minDateStruct: NgbDateStruct;
-  chooseSport = false;
-  sport: Sport;
+  showSelectSports: boolean = false;
+  sports: Sport[] = [];
   validations: any = {
     minnroffields: 1,
     maxnroffields: 64,
@@ -43,6 +43,7 @@ export class NewComponent implements OnInit {
     private structureRepository: StructureRepository,
     private planningRepository: PlanningRepository,
     private sportDefaultService: SportDefaultService,
+    private sportMapper: SportMapper,
     private modalService: NgbModal,
     fb: FormBuilder
   ) {
@@ -55,7 +56,7 @@ export class NewComponent implements OnInit {
         Validators.minLength(this.validations.minlengthname),
         Validators.maxLength(this.validations.maxlengthname)
       ])],
-      sportname: [{ value: '', disabled: true }, Validators.compose([
+      sportsName: [{ value: '', disabled: true }, Validators.compose([
         Validators.required
       ])],
       nroffields: ['', Validators.compose([
@@ -85,12 +86,23 @@ export class NewComponent implements OnInit {
     this.processing = false;
   }
 
-  onGetSport(sport: Sport) {
-    if (sport !== undefined) {
-      this.form.controls.sportname.setValue(sport.getName());
-      this.sport = sport;
+  selectedSports(sports: Sport[]) {
+    this.sports = sports;
+    const sportsName = this.sports.map((sport: Sport) => sport.getName()).join(',');
+    this.form.controls.sportsName.setValue(sportsName);
+    this.showSelectSports = false;
+  }
+
+  getJsonCompetitionSport(sport: Sport, nrOfFields: number): JsonCompetitionSport {
+    const fields: JsonField[] = [];
+    for (let priority = 1; priority <= nrOfFields; priority++) {
+      fields.push({ id: priority, priority, name: String(priority) });
     }
-    this.chooseSport = false;
+    return {
+      id: 0,
+      sport: this.sportMapper.toJson(sport),
+      fields
+    }
   }
 
   create(): boolean {
@@ -129,7 +141,7 @@ export class NewComponent implements OnInit {
         startDateTime: startDateTime.toISOString(),
         referees: [],
         state: State.Created,
-        sports: [this.sportDefaultService.getJsonCompetitionSport(this.sport, nrOfFields)],
+        sports: this.sports.map(sport => this.getJsonCompetitionSport(sport, nrOfFields)),
       },
       competitors: [],
       lockerRooms: [],
@@ -141,7 +153,7 @@ export class NewComponent implements OnInit {
       .subscribe(
         /* happy path */ tournament => {
           const structureService = new StructureService(Tournament.PlaceRanges);
-          const jsonPlanningConfig = this.sportDefaultService.getJsonPlanningConfig(this.sport.getGameMode());
+          const jsonPlanningConfig = this.sportDefaultService.getJsonPlanningConfig(this.sports[0].getGameMode());
           const structure: Structure = structureService.create(
             tournament.getCompetition(),
             jsonPlanningConfig,
@@ -182,7 +194,7 @@ export class NewComponent implements OnInit {
 
   getFieldsDescription(): string {
     const translate = new TranslateService();
-    return translate.getFieldNamePlural(this.sport);
+    return translate.getFieldNamePlural(this.sports[0]);
   }
 
   openInfoModal(header: string, modalContent) {

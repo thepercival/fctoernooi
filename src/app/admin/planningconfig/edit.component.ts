@@ -3,15 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
     NameService,
     RoundNumber,
-    PlanningConfig,
     JsonPlanningConfig,
-    StructureService,
     PlaceLocationMap,
     PouleStructure,
     SelfReferee,
     GameMode,
     CompetitionSport,
-    CompetitionSportMapper,
     VoetbalRange,
     GameAmountConfigMapper,
     PlanningConfigMapper,
@@ -22,10 +19,9 @@ import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { FormGroup, FormBuilder, Validators, FormControl, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { PlanningConfigRepository } from '../../lib/ngx-sport/planning/config/repository';
-import { Tournament } from '../../lib/tournament';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RoundNumbersSelectorModalComponent } from '../roundnumber/selector.component';
 import { SportDefaultService } from '../../lib/ngx-sport/defaultService';
@@ -49,10 +45,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     gameAmountRange: VoetbalRange;
     gameAmountConfigControls: GameAmountConfigControl[] = [];
     gameModes: GameMode[] = [GameMode.Against, GameMode.Together];
-    validations: PlanningConfigValidations = {
-        minMinutesPerGame: 1,
-        maxMinutesPerGame: 60
-    };
+    validations: PlanningConfigValidations = { minMinutes: 1, maxMinutes: 10080 };
     gameAmountValidations: GameAmountConfigValidations = {
         minNrOfHeadtohead: 1,
         maxNrOfHeadtohead: 4,
@@ -83,23 +76,23 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             enableTime: true,
             minutesPerGame: ['', Validators.compose([
                 Validators.required,
-                Validators.min(this.validations.minMinutesPerGame),
-                Validators.max(this.validations.maxMinutesPerGame)
+                Validators.min(this.validations.minMinutes),
+                Validators.max(this.validations.maxMinutes)
             ])],
             minutesPerGameExt: ['', Validators.compose([
                 Validators.required,
-                Validators.min(this.validations.minMinutesPerGame - 1),
-                Validators.max(this.validations.maxMinutesPerGame)
+                Validators.min(this.validations.minMinutes - 1),
+                Validators.max(this.validations.maxMinutes)
             ])],
             minutesBetweenGames: ['', Validators.compose([
                 Validators.required,
-                Validators.min(this.validations.minMinutesPerGame - 1),
-                Validators.max(this.validations.maxMinutesPerGame)
+                Validators.min(this.validations.minMinutes - 1),
+                Validators.max(this.validations.maxMinutes)
             ])],
             minutesAfter: ['', Validators.compose([
                 Validators.required,
-                Validators.min(this.validations.minMinutesPerGame - 1),
-                Validators.max(this.validations.maxMinutesPerGame)
+                Validators.min(this.validations.minMinutes - 1),
+                Validators.max(this.validations.maxMinutes)
             ])],
             selfReferee: false,
             selfRefereeSamePoule: false
@@ -310,8 +303,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     get gameModeDefinitions(): GameModeOption[] {
         return [
-            { value: GameMode.Against, name: 'Het aantal wedstrijden worden bepaald door de grootte van de poule en het aantal onderlinge duels.' },
-            { value: GameMode.Together, name: 'Het aantal wedstrijden worden ingesteld door de gebruiker.' }
+            { value: GameMode.Against, name: 'Het aantal wedstrijden worden bepaald door de grootte van de poule en het aantal onderlinge duels(in te stellen). Voorbeelden zijn tennis en voetbal' },
+            { value: GameMode.Together, name: 'Het aantal wedstrijden worden ingesteld door de gebruiker. Voorbeelden zijn sjoelen en wielrennen' }
         ];
     }
 
@@ -440,8 +433,8 @@ class PlanningActionCalculator {
 }
 
 export interface PlanningConfigValidations {
-    minMinutesPerGame: number;
-    maxMinutesPerGame: number;
+    minMinutes: number;
+    maxMinutes: number;
 }
 
 export interface GameAmountConfigValidations {
@@ -451,7 +444,7 @@ export interface GameAmountConfigValidations {
     maxNrOfGames: number;
 }
 
-interface GameModeOption {
+export interface GameModeOption {
     value: GameMode;
     name: string;
 }

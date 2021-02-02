@@ -257,7 +257,6 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     openModalRankingRuleSet() {
         const activeModal = this.modalService.open(RankingRuleSetModalComponent);
         activeModal.componentInstance.rankingRuleSet = this.tournament.getCompetition().getRankingRuleSet();
-        console.log(this.tournament.getCompetition().getRankingRuleSet());
         activeModal.result.then((rankingRuleSet: RankingRuleSet) => {
             this.processing = true;
             const json = this.tournamentMapper.toJson(this.tournament);

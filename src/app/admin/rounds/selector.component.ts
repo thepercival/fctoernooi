@@ -39,7 +39,6 @@ export class RoundsSelectorModalComponent implements OnInit {
     }
 
     close() {
-        console.log('close()', this.toggleRound);
         return this.activeModal.close(this.toggleRound);
     }
 }

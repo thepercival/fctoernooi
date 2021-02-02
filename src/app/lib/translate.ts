@@ -19,6 +19,7 @@ export class TranslateService {
             case SportCustom.Football: { return 'voetbal'; }
             case SportCustom.Volleyball: { return 'volleybal'; }
             case SportCustom.IceHockey: { return 'ijshockey'; }
+            case SportCustom.Sjoelen: { return 'sjoelen'; }
         }
         return undefined;
     }
@@ -117,6 +118,7 @@ export class TranslateService {
             case SportCustom.Football: { return 'veld'; }
             case SportCustom.Volleyball: { return 'veld'; }
             case SportCustom.IceHockey: { return 'veld'; }
+            case SportCustom.Sjoelen: { return 'bak'; }
         }
         return 'veld';
     }
@@ -138,6 +140,7 @@ export class TranslateService {
             case SportCustom.Football: { return 'velden'; }
             case SportCustom.Volleyball: { return 'velden'; }
             case SportCustom.IceHockey: { return 'velden'; }
+            case SportCustom.Sjoelen: { return 'bakken'; }
         }
         return 'velden';
     }

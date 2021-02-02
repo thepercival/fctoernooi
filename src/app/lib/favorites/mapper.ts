@@ -1,7 +1,11 @@
+import { Injectable } from '@angular/core';
 import { Favorites } from '../favorites';
 import { Tournament } from '../tournament';
 import { JsonFavorites } from './json';
 
+@Injectable({
+    providedIn: 'root'
+})
 export class FavoritesMapper {
     constructor() { }
 

@@ -26,6 +26,7 @@ import { forkJoin, Observable } from 'rxjs';
 import { QualifyAgainstConfigRepository } from '../../lib/ngx-sport/qualify/againstConfig/repository';
 import { ToggleRoundConverter, ToggleRoundInittializer } from '../scoreConfig/edit.component';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-tournament-qualifyagainstconfig-edit',
@@ -59,8 +60,9 @@ export class QualifyAgainstConfigEditComponent implements OnInit {
         public cssService: CSSService,
         private competitionSportMapper: CompetitionSportMapper,
         private mapper: QualifyAgainstConfigMapper,
-        fb: FormBuilder,
-        private modalService: NgbModal
+        private router: Router,
+        private modalService: NgbModal,
+        fb: FormBuilder
     ) {
         this.form = fb.group({
             pointsCalculation: ['', Validators.compose([
@@ -121,15 +123,21 @@ export class QualifyAgainstConfigEditComponent implements OnInit {
     protected postToggleRoundChange() {
         this.readonly = this.allSelectedToggleRoundsBegun(this.toggleRound);
         this.alert = undefined;
-        if (!this.selectedAgainstGameMode()) {
-            this.alert = { type: 'info', message: 'er zijn geen ronden met wedstrijd-modus "tegen elkaar" geselecteerd. De puntentelling is daarom niet van toepassing. De scores worden altijd opgeteld. De wedstrijd-modus kun je instellen onder "knop wedstrijdplanning"' }
-        } else if (this.readonly) {
-            this.alert = { type: 'danger', message: 'alle gekozen ronden zijn al begonnen' }
-        } else if (this.someSelectedToggleRoundsBegun(this.toggleRound)) {
-            this.alert = { type: 'warning', message: 'sommige gekozen ronden zijn al begonnen en de de qualifyagainst-regels hiervoor worden niet opgeslagn' }
+        if (this.selectedAgainstGameMode()) {
+            if (this.readonly) {
+                this.alert = { type: 'danger', message: 'alle gekozen ronden zijn al begonnen' }
+            } else if (this.someSelectedToggleRoundsBegun(this.toggleRound)) {
+                this.alert = { type: 'warning', message: 'sommige gekozen ronden zijn al begonnen en de de qualifyagainst-regels hiervoor worden niet opgeslagen' }
+            }
         }
         const json = this.getInputJson(this.getFirstSelectedToggleRound(this.toggleRound).round);
         this.jsonToForm(json);
+    }
+
+    linkToPlanningConfig() {
+        this.router.navigate(['/admin/planningconfig', this.tournament.getId(),
+            this.structure.getFirstRoundNumber().getNumber()
+        ]);
     }
 
     selectedAgainstGameMode(): boolean {
@@ -267,7 +275,6 @@ export class QualifyAgainstConfigEditComponent implements OnInit {
 
         // 2 verwijder en voeg de qualifyagainstregels toe van de rootRounds
         const reposUpdates: Observable<QualifyAgainstConfig>[] = roundsSelection.rootRounds.map((round: Round) => {
-            console.log('saving root ' + this.nameService.getRoundName(round));
             return this.qualifyAgainstConfigRepository.saveObject(this.formToJson(), round, this.tournament);
         });
         forkJoin(reposUpdates).subscribe(results => {
@@ -277,7 +284,6 @@ export class QualifyAgainstConfigEditComponent implements OnInit {
             }
             // 3 voeg de qualifyagainstregels toe van de unchangedChildRounds
             const reposChildUpdates: Observable<QualifyAgainstConfig>[] = validQualifyAgainstConfigs.map((validQualifyAgainstConfig: ValidQualifyAgainstConfigOfUnchangedChildRound) => {
-                console.log('saving unchanged ' + this.nameService.getRoundName(validQualifyAgainstConfig.unchangedChildRound));
                 return this.qualifyAgainstConfigRepository.saveObject(validQualifyAgainstConfig.qualifyagainstConfig, validQualifyAgainstConfig.unchangedChildRound, this.tournament);
             });
             forkJoin(reposChildUpdates).subscribe(results => {

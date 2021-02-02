@@ -106,6 +106,10 @@ input.is-warning {
   @extend .border-white;
 }
 
+.custom-control-label-warning:before {
+  @extend .border-warning;
+}
+
 .progress {
   background-color:#{$body-bg};
 }

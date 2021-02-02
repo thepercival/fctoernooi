@@ -8,7 +8,9 @@ import { Tournament } from '../../tournament';
 import { TournamentUserMapper, JsonTournamentUser } from './mapper';
 import { TournamentUser } from '../user';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class TournamentUserRepository extends APIRepository {
 
     constructor(

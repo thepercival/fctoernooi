@@ -11,7 +11,6 @@ import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TranslateService } from '../../lib/translate';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { SportConfigRepository } from '../../lib/ngx-sport/sport/config/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 
@@ -36,7 +35,6 @@ export class CompetitionSportListComponent extends TournamentComponent implement
     private competitionSportService: CompetitionSportService,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
-    private sportConfigRepository: SportConfigRepository,
     private planningRepository: PlanningRepository,
     private modalService: NgbModal
   ) {

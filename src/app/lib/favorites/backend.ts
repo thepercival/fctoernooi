@@ -3,7 +3,9 @@ import { Injectable } from '@angular/core';
 import { Tournament } from '../../lib/tournament';
 import { JsonFavorites } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class FavoritesBackEnd {
 
     protected json: JsonFavorites[];

@@ -1,27 +1,27 @@
 import { Injectable } from "@angular/core";
-import { GameMode, JsonCompetitionSport, JsonField, JsonPlanningConfig, RankingRuleSet, SelfReferee, Sport, SportMapper } from "ngx-sport";
-@Injectable()
+import { GameMode, JsonPlanningConfig, JsonSport, RankingRuleSet, SelfReferee } from "ngx-sport";
+@Injectable({
+    providedIn: 'root'
+})
 export class SportDefaultService {
     static readonly MinutesPerGame: number = 20;
     static readonly MinutesPerGameExt: number = 5;
     static readonly MinutesBetweenGames: number = 5;
     static readonly MinutesAfter: number = 5;
-    static readonly RankingRuleSet: RankingRuleSet = RankingRuleSet.WC
+    static readonly RankingRuleSet: RankingRuleSet = RankingRuleSet.WC;
 
-    constructor(
-        private sportMapper: SportMapper) {
+    constructor() {
     }
 
-    getJsonCompetitionSport(sport: Sport, nrOfFields: number): JsonCompetitionSport {
-        const fields: JsonField[] = [];
-        for (let priority = 1; priority <= nrOfFields; priority++) {
-            fields.push({ id: priority, priority, name: String(priority) });
-        }
+    getJsonSport(): JsonSport {
         return {
             id: 0,
-            sport: this.sportMapper.toJson(sport),
-            fields
-        }
+            name: '',
+            team: false,
+            gameMode: GameMode.Against,
+            nrOfGamePlaces: 2,
+            customId: undefined
+        };
     }
 
     getJsonPlanningConfig(gameMode: GameMode): JsonPlanningConfig {
@@ -30,8 +30,8 @@ export class SportDefaultService {
             gameMode: gameMode,
             extension: false,
             enableTime: true,
-            minutesPerGame: SportDefaultService.MinutesPerGameExt,
-            minutesPerGameExt: SportDefaultService.MinutesPerGame,
+            minutesPerGame: SportDefaultService.MinutesPerGame,
+            minutesPerGameExt: 0,
             minutesBetweenGames: SportDefaultService.MinutesBetweenGames,
             minutesAfter: SportDefaultService.MinutesAfter,
             selfReferee: SelfReferee.Disabled

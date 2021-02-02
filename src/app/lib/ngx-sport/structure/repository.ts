@@ -7,7 +7,9 @@ import { StructureMapper, Structure, JsonStructure } from 'ngx-sport';
 import { APIRepository } from '../../repository';
 import { Tournament } from '../../tournament';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class StructureRepository extends APIRepository {
 
     constructor(

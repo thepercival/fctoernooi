@@ -4,10 +4,9 @@ import { Tournament } from '../../tournament';
 import { JsonUser, UserMapper } from '../../user/mapper';
 import { TournamentUser } from '../user';
 
-/**
- * Created by coen on 10-10-17.
- */
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class TournamentUserMapper {
     constructor(private userMapper: UserMapper) { }
 

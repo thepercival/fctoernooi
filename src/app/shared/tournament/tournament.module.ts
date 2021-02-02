@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt, faMedal, faSpinner,
@@ -8,7 +8,6 @@ import {
 import { RoundNumberPlanningComponent } from './planning/roundnumber.component';
 import { PouleRankingModalComponent } from './poulerankingmodal/rankingmodal.component';
 import { EndRankingComponent } from './ranking/end.component';
-import { PouleRankingComponent } from './ranking/poule.component';
 import { TitleComponent } from './title/title.component';
 import { StructureRoundArrangeComponent } from './structure/round/arrange.component';
 import { StructureQualifyComponent } from './structure/qualify.component';
@@ -25,6 +24,9 @@ import { RankingRulesComponent } from './rankingrules/rankingrules.component';
 import { facStructure, facReferee, facScoreboard } from './icons';
 import { CompetitionSportRouter } from './competitionSport.router';
 import { InfoModalComponent } from './infomodal/infomodal.component';
+import { QualifyAgainstInfoComponent } from './qualifyAgainstConfig/info.component';
+import { PouleRankingAgainstComponent } from './ranking/pouleagainst.component';
+import { PouleRankingTogetherComponent } from './ranking/pouletogether.component';
 
 @NgModule({
   declarations: [
@@ -34,11 +36,13 @@ import { InfoModalComponent } from './infomodal/infomodal.component';
     NameModalComponent,
     InfoModalComponent,
     EndRankingComponent,
-    PouleRankingComponent,
+    PouleRankingAgainstComponent,
+    PouleRankingTogetherComponent,
     TitleComponent,
     StructureRoundArrangeComponent, StructureQualifyComponent, StructureRoundComponent,
     LockerRoomsComponent, LockerRoomComponent,
-    RankingRulesComponent/* TODOSPORT, ScoreRulesComponent*/
+    RankingRulesComponent,
+    QualifyAgainstInfoComponent
   ],
   imports: [
     CommonModule,
@@ -58,11 +62,13 @@ import { InfoModalComponent } from './infomodal/infomodal.component';
     NameModalComponent,
     InfoModalComponent,
     EndRankingComponent,
-    PouleRankingComponent,
+    PouleRankingAgainstComponent,
+    PouleRankingTogetherComponent,
     TitleComponent,
     StructureRoundComponent,
     LockerRoomsComponent,
-    RankingRulesComponent/* TODOSPORT, ScoreRulesComponent*/,
+    RankingRulesComponent,
+    QualifyAgainstInfoComponent,
     NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule,
     NgbNavModule
   ]

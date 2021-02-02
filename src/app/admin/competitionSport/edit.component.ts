@@ -58,6 +58,9 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
         this.processing = false;
     }
 
+    getSports(): Sport[] {
+        return this.tournament.getCompetition().getSports().map(sport => sport.getSport());
+    }
 
     private getCompetitionSportById(id: string | number): CompetitionSport {
         if (id === undefined || id === 0) {
@@ -70,10 +73,10 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
     get TabScore(): number { return CompetitionSportTabOrder.Score; }
     get TabPoints(): number { return CompetitionSportTabOrder.Points; }
 
-    onGetSport(sport?: Sport) {
-        if (sport === undefined) {
-            return this.navigateBack();
-        }
+    selectedSports(sports: Sport[]) {
+        // if (sport === undefined) {
+        //     return this.navigateBack();
+        // }
         // this.competitionSportService = this.competitionSportService.createDefault(sport, this.competition, this.structure);
         // this.initForm();
     }

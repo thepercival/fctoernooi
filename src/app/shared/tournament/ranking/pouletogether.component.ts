@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, RankedRoundItem, RankingService, PlaceLocationMap } from 'ngx-sport';
+import { NameService, Poule, RankedRoundItem, RankingService, PlaceLocationMap, GameMode, GameAmountConfig } from 'ngx-sport';
 
 import { CSSService } from '../../common/cssservice';
 import { Favorites } from '../../../lib/favorites';
@@ -7,19 +7,19 @@ import { FavoritesRepository } from '../../../lib/favorites/repository';
 import { Tournament } from '../../../lib/tournament';
 
 @Component({
-  selector: 'app-tournament-pouleranking',
-  templateUrl: './poule.component.html',
-  styleUrls: ['./poule.component.scss']
+  selector: 'app-tournament-pouleranking-together',
+  templateUrl: './pouletogether.component.html',
+  styleUrls: ['./pouletogether.component.scss']
 })
-export class PouleRankingComponent implements OnInit {
+export class PouleRankingTogetherComponent implements OnInit {
   public rankingItems: RankedRoundItem[];
   @Input() poule: Poule;
   @Input() tournament: Tournament;
   @Input() header: boolean;
   public placeLocationMap: PlaceLocationMap;
   public nameService: NameService;
-  public showDifferenceDetail = false;
   favorites: Favorites;
+  gameAmountConfigs: GameAmountConfig[];
   public processing = true;
 
   constructor(
@@ -32,11 +32,12 @@ export class PouleRankingComponent implements OnInit {
     this.placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
     this.nameService = new NameService(this.placeLocationMap);
     this.favorites = this.favRepository.getObject(this.tournament);
-    // TODOSPORT
-    // const ranking = new RankingService(this.tournament.getCompetition().getRuleSet());
-    // this.rankingItems = ranking.getItemsForPoule(this.poule);
+    const ranking = new RankingService(GameMode.Together, this.tournament.getCompetition().getRankingRuleSet());
+    this.rankingItems = ranking.getItemsForPoule(this.poule);
+    this.gameAmountConfigs = this.poule.getRound().getNumber().getValidGameAmountConfigs();
     this.processing = false;
   }
+
 
   // useSubScore() {
   //   return this.poule.getRound().getNumber().getValidScoreConfigs().some(scoreConfig => {

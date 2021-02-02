@@ -9,8 +9,9 @@ import { Tournament } from '../../tournament';
 import { CompetitorMapper } from '../../competitor/mapper';
 import { TournamentCompetitor } from '../../competitor';
 
-
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class CompetitorRepository extends APIRepository {
 
     private unusedCompetitors: UnusedCompetitors[] = [];

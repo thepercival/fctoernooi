@@ -5,7 +5,9 @@ import { Favorites } from '../favorites';
 import { FavoritesMapper } from './mapper';
 import { FavoritesBackEnd } from './backend';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class FavoritesRepository {
 
     protected backend: FavoritesBackEnd;

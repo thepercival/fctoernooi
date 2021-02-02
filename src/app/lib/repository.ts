@@ -42,7 +42,6 @@ export class APIRepository {
     }
 
     protected handleError(response: HttpErrorResponse): Observable<any> {
-        console.log(response);
         let errortext;
         if (!navigator.onLine) {
             errortext = 'er kan geen internet verbinding gemaakt worden';
