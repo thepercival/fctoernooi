@@ -1,0 +1,126 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-xs-12 col-lg-9 col-xl-7">
+      <app-tournament-title [tournament]="tournament">
+      </app-tournament-title>
+      <h2 *ngIf="processing" class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+      <form *ngIf="!processing && tournament && hasAuthorization" [formGroup]="form" (ngSubmit)="save()" #f="ngForm"
+        novalidate>
+        <div class="form-group row">
+          <div class="col-3">
+            <label class="col-form-label">poule</label>
+          </div>
+          <div class="col-9">
+            <label class="col-form-label" [innerHTML]="nameService.getRoundName( game.getRound() ) | keepHtml"></label>
+            <label class="mx-1">-</label>
+            <label class="col-form-label"
+              [innerHTML]="nameService.getPouleName( game.getPoule(), true) | keepHtml"></label>
+          </div>
+        </div>
+        <div *ngIf="planningConfig.getEnableTime()" class="form-group row">
+          <div class="col-3">
+            <label class="col-form-label">start</label>
+          </div>
+          <div class="col-9">
+            <label class="col-form-label">{{game.getStartDateTime().toLocaleString("nl",
+              {"month":"short","day":"2-digit"})}} {{game.getStartDateTime().toLocaleString("nl",
+              {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}</label>
+          </div>
+        </div>
+        <div *ngIf="game.getField()" class="form-group row">
+          <div class="col-3">
+            <label class="col-form-label">{{getFieldDescription()}}</label>
+          </div>
+          <div class="col-9">
+            <label class="col-form-label">{{game.getField().getName()}}</label>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-3">
+            <label for="competitors" class="col-form-label">deelnemers</label>
+          </div>
+          <div class="col-4 font-weight-bold text-break">
+            {{nameService.getPlacesFromName(game.getHomeAwayPlaces( GameHOME ), true, true)}}
+          </div>
+          <div class="col-1 homeAway-splitter">-</div>
+          <div class="col-4 font-weight-bold text-break">
+            {{nameService.getPlacesFromName(game.getHomeAwayPlaces( GameAWAY ), true, true)}}</div>
+        </div>
+        <div *ngFor="let scoreControl of scoreControls" class="form-group row">
+          <label class="col-3 col-form-label">
+            <span>{{getInputScoreDescription()}}</span>
+          </label>
+          <div class="col-4">
+            <input [formControl]="scoreControl.home" (ngModelChange)="postScoreControlUpdate()"
+              class="form-control max-width-100 {{scoreControl.getValidateClass()}}" type="number">
+          </div>
+          <div class="col-1 homeAway-splitter">-</div>
+          <div class="col-4">
+            <input [formControl]="scoreControl.away" (ngModelChange)="postScoreControlUpdate()"
+              class="form-control max-width-100 {{scoreControl.getValidateClass()}}" type="number">
+          </div>
+        </div>
+        <div *ngIf="firstScoreConfig !== firstScoreConfig.getCalculate()" class="form-group row">
+          <div class="col-3">
+          </div>
+          <div class="col-9">
+            <button type="button" class="btn btn-outline-secondary" [disabled]="aScoreIsInvalid()"
+              (click)="addScoreControl(0,0)">
+              <span>voeg {{getCalculateScoreUnitName(game)}} toe</span>
+            </button>
+            <button *ngIf="scoreControls.length > 0" type="button" class="btn btn-sm btn-outline-secondary"
+              (click)="removeScoreControl()">
+              <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+            </button>
+          </div>
+        </div>
+        <div *ngIf="calculateScoreControl" class="form-group row">
+          <div class="col-3">
+            <label class="col-form-label">{{getCalculateScoreDescription()}}</label>
+          </div>
+          <div class="col-4">
+            <input [formControl]="calculateScoreControl.home"
+              class="form-control max-width-100 {{calculateScoreControl.getValidateClass()}}" type="number">
+          </div>
+          <div class="col-1 homeAway-splitter">-</div>
+          <div class="col-4">
+            <input [formControl]="calculateScoreControl.away"
+              class="form-control max-width-100 {{calculateScoreControl.getValidateClass()}}" type="number">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="played" class="col-3 col-form-label">gespeeld</label>
+          <div class="col-9">
+            <div class="form-control custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="played" formControlName="played"
+                (ngModelChange)="setPlayed($event)">
+              <label class="custom-control-label" for="played"></label>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="game.getRound().getNumber().getValidPlanningConfig().getExtension()" class="form-group row">
+          <label for="extratime" class="col-3 col-form-label">na verlenging</label>
+          <div class="col-9">
+            <div class="form-control custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="extratime" formControlName="extratime"
+                (ngModelChange)="setExtratime($event)">
+              <label class="custom-control-label" for="extratime"></label>
+            </div>
+          </div>
+        </div>
+
+        <div *ngFor="let warning of warningsForEqualQualifiers" class="alert alert-warning">{{warning}}</div>
+        <div class="form-group row justify-content-end">
+          <div class="col-9">
+            <button type="submit" [disabled]="form.invalid || aScoreIsInvalid()" class="btn btn-outline-primary">wijzig
+              wedstrijd</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

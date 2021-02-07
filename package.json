@@ -6,7 +6,7 @@
     "ng": "ng",
     "start": "ng serve",
     "start:nl": "ng serve --configuration=nl",
-    "build": "ng build --prod && npm run split-critical-css",
+    "build": "ng build --prod",
     "build-acc": "ng build --configuration=acc && npm run split-critical-css",
     "build-dev": "ng build",
     "build-dev-nl": "ng build --configuration=production-nl",

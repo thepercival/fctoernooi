@@ -15,6 +15,7 @@
                     <col>
                 </colgroup>
                 <thead *ngIf="gameAmountConfigs.length > 1">
+                    <!-- maak hoe doe je het multiple sports om te bepalen -->
                     <!-- <tr>
                         <th class="text-right pl-0">pl rowspan=2</th>
                         <th class="place pl-0">deelnemer</th>
@@ -33,11 +34,17 @@
                         <th class="text-right pl-0">pl</th>
                         <th class="place pl-0">
                             <span>deelnemer</span>
-                            <span *ngIf="firstActiveGameRound === mminGameRound">back button</span>
+                            <!-- <span *ngIf="activeGameRound > 1">back</span> -->
                         </th>
-                        <th *ngFor="let gameRound of gameRounds" class="text-right pl-0">{{gameRound}}</th>
+                        <ng-template ngFor let-gameAmountConfig [ngForOf]="gameAmountConfigs">
+                            <th *ngFor="let gameRound of getGameRounds(gameAmountConfig.getCompetitionSport())"
+                                class="text-right pl-0 {{getViewPortClass(gameRound)}}">
+                                {{gameRound}}</th>
+                        </ng-template>
+                        <!-- <th *ngFor="let gameRound of gameRounds" class="text-right pl-0">{{gameRound}}</th> -->
                         <th class="text-right pl-0" title="totaal">
-                            <span *ngIf="lastActiveGameRound === maxGameRound">t</span>
+                            <!-- <span *ngIf="activeGameRound < nrOfGameRounds">forward</span> -->
+                            <span>t</span>
                         </th>
                     </tr>
                 </thead>
@@ -52,8 +59,11 @@
                                 [ngClass]="{ 'favitem': favorites.hasCompetitor(placeLocationMap.getCompetitor(rankingItem.getPlace())) }">
                                 {{nameService.getPlaceFromName(rankingItem.getPlace(), true)}}
                             </td>
-                            <td *ngFor="let gameRound of gameRounds" class="text-right pl-0">
-                                {{rankingItem.getUnranked().getGames()}}</td>
+                            <ng-template ngFor let-gameAmountConfig [ngForOf]="gameAmountConfigs">
+                                <td *ngFor="let gameRound of getGameRounds(gameAmountConfig.getCompetitionSport())"
+                                    class="text-right pl-0 {{getViewPortClass(gameRound)}}">
+                                    {{getScore(rankingItem.getPlace(), gameAmountConfig, gameRound+1 )}}</td>
+                            </ng-template>
                             <td class="text-right pl-0">{{rankingItem.getUnranked().getPoints()}}</td>
                         </tr>
                     </ng-template>

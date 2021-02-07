@@ -4,7 +4,7 @@
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
-<div *ngIf="gameMode === Against" class="modal-body">
+<div *ngIf="gameMode === Against" class="modal-body px-0">
     <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
         <li [ngbNavItem]="1">
             <a ngbNavLink>stand</a>
@@ -30,7 +30,7 @@
     </ul>
     <div [ngbNavOutlet]="nav" class="mt-2"></div>
 </div>
-<div *ngIf="gameMode === Together" class="modal-body">
+<div *ngIf="gameMode === Together" class="modal-body px-0">
     <app-tournament-pouleranking-together [poule]="poule" [tournament]="tournament">
     </app-tournament-pouleranking-together>
 </div>

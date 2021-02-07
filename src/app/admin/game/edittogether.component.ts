@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     Game,
-    INewQualifier,
     NameService,
     Place,
     Poule,
@@ -18,6 +17,7 @@ import {
     PlaceLocationMap,
     ScoreConfigService,
     ScoreConfig,
+    AgainstGame,
 } from 'ngx-sport';
 import { forkJoin, Observable, of } from 'rxjs';
 
@@ -31,74 +31,68 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { TournamentUser } from '../../lib/tournament/user';
 import { map } from 'rxjs/operators';
+import { Tournament } from '../../lib/tournament';
 
-class HomeAwayFormControl {
-    home: FormControl;
-    away: FormControl;
+// class HomeAwayFormControl {
+//     home: FormControl;
+//     away: FormControl;
 
-    constructor(
-        home: number,
-        away: number,
-        disabled?: boolean
-    ) {
-        this.home = new FormControl({ value: home, disabled: disabled === true });
-        this.away = new FormControl({ value: away, disabled: disabled === true });
-    }
+//     constructor(
+//         home: number,
+//         away: number,
+//         disabled?: boolean
+//     ) {
+//         this.home = new FormControl({ value: home, disabled: disabled === true });
+//         this.away = new FormControl({ value: away, disabled: disabled === true });
+//     }
 
-    // getScore(): GameScoreHomeAway {
-    //     return new GameScoreHomeAway(this.home.value, this.away.value);
-    // }
-}
+//     // getScore(): GameScoreHomeAway {
+//     //     return new GameScoreHomeAway(this.home.value, this.away.value);
+//     // }
+// }
 
 @Component({
-    selector: 'app-tournament-game-edit',
-    templateUrl: './edit.component.html',
-    styleUrls: ['./edit.component.css']
+    selector: 'app-tournament-togethergame-edit',
+    templateUrl: './edittogether.component.html',
+    styleUrls: ['./edittogether.component.scss']
 })
-export class GameEditComponent extends TournamentComponent implements OnInit {
-    game: Game;
-    scoreConfigService: ScoreConfigService;
-    form: FormGroup;
-    scoreControls: HomeAwayFormControl[] = [];
-    calculateScoreControl: HomeAwayFormControl;
-    hasAuthorization: boolean = false;
-    private enablePlayedAtFirstChange;
-    // private originalPouleState: number;
-    private rankingService: RankingService;
-    private firstScoreConfig: ScoreConfig;
+export class GameTogetherEditComponent implements OnInit {
+    @Input() game: AgainstGame;
+    @Input() tournament: Tournament;
+    @Input() form: FormGroup;
+    // scoreConfigService: ScoreConfigService;
+    // form: FormGroup;
+    // scoreControls: HomeAwayFormControl[] = [];
+    // calculateScoreControl: HomeAwayFormControl;
+    // hasAuthorization: boolean = false;
+    // private enablePlayedAtFirstChange;
+    // // private originalPouleState: number;
+    // private rankingService: RankingService;
+    // private firstScoreConfig: ScoreConfig;
     public nameService: NameService;
 
     constructor(
-        route: ActivatedRoute,
-        router: Router,
-        private authService: AuthService,
-        tournamentRepository: TournamentRepository,
-        structureRepository: StructureRepository,
-        private gameRepository: GameRepository,
-        private myNavigation: MyNavigation,
-        fb: FormBuilder
+        // route: ActivatedRoute,
+        // router: Router,
+        // private authService: AuthService,
+        // tournamentRepository: TournamentRepository,
+        // structureRepository: StructureRepository,
+        // private gameRepository: GameRepository,
+        // private myNavigation: MyNavigation,
+        // fb: FormBuilder
     ) {
-        super(route, router, tournamentRepository, structureRepository);
-        // this.originalPouleState = State.Created;
-        this.scoreConfigService = new ScoreConfigService();
-        this.form = fb.group({
-            played: [''],
-            extratime: ['']
-        });
+        // super(route, router, tournamentRepository, structureRepository);
+        // // this.originalPouleState = State.Created;
+        // this.scoreConfigService = new ScoreConfigService();
+        // this.form = fb.group({
+        //     played: [''],
+        //     extratime: ['']
+        // });
     }
 
     ngOnInit() {
         // TODOSPORT
-        // this.route.params.subscribe(params => {
-        //     super.myNgOnInit(() => {
-        //         this.nameService = new NameService(new PlaceLocationMap(this.tournament.getCompetitors()));
-        //         this.game = this.getGameById(+params.gameId, this.structure.getRootRound());
-        //         if (this.game === undefined) {
-        //             this.setAlert('danger', 'de wedstrijd kan niet gevonden worden');
-        //             this.processing = false;
-        //             return;
-        //         }
-
+        this.nameService = new NameService(new PlaceLocationMap(this.tournament.getCompetitors()));
         //         this.initGame();
         //         // this.originalPouleState = this.game.getPoule().getState();
         //         const tournamentUser = this.tournament.getUser(this.authService.getUser());
@@ -111,9 +105,6 @@ export class GameEditComponent extends TournamentComponent implements OnInit {
         //                 this.processing = false;
         //             }
         //         );
-
-        //     });
-        // });
     }
 
     // TODOSPORT

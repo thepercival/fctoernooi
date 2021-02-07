@@ -25,25 +25,25 @@ export class GameRepository extends APIRepository {
         return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
     }
 
-    editObject(game: AgainstGame | TogetherGame, poule: Poule, tournament: Tournament): Observable<Game> {
+    editObject(jsonGame: JsonAgainstGame | JsonTogetherGame, game: AgainstGame | TogetherGame, poule: Poule, tournament: Tournament): Observable<Game> {
         if (game instanceof AgainstGame) {
-            return this.editAgainst(game, poule, tournament);
+            return this.editAgainst(<JsonAgainstGame>jsonGame, game, poule, tournament);
         }
-        return this.editTogether(game, poule, tournament);
+        return this.editTogether(<JsonTogetherGame>jsonGame, game, poule, tournament);
     }
 
-    private editAgainst(game: AgainstGame, poule: Poule, tournament: Tournament): Observable<AgainstGame> {
+    private editAgainst(jsonGame: JsonAgainstGame, game: AgainstGame, poule: Poule, tournament: Tournament): Observable<AgainstGame> {
         const url = this.getUrl(tournament) + '/' + game.getId();
-        return this.http.put(url, this.mapper.toJsonAgainst(game), this.getCustomOptions(poule)).pipe(
-            map((jsonGame: JsonAgainstGame) => this.mapper.toExistingAgainst(jsonGame, game)),
+        return this.http.put(url, jsonGame, this.getCustomOptions(poule)).pipe(
+            map((jsonGameRes: JsonAgainstGame) => this.mapper.toExistingAgainst(jsonGameRes, game)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    private editTogether(game: TogetherGame, poule: Poule, tournament: Tournament): Observable<Game> {
+    private editTogether(jsonGame: JsonTogetherGame, game: TogetherGame, poule: Poule, tournament: Tournament): Observable<Game> {
         const url = this.getUrl(tournament) + '/' + game.getId();
-        return this.http.put(url, this.mapper.toJsonTogether(game), this.getCustomOptions(poule)).pipe(
-            map((jsonGame: JsonTogetherGame) => this.mapper.toExistingTogether(jsonGame, game)),
+        return this.http.put(url, jsonGame, this.getCustomOptions(poule)).pipe(
+            map((jsonGameRes: JsonTogetherGame) => this.mapper.toExistingTogether(jsonGameRes, game)),
             catchError((err) => this.handleError(err))
         );
     }

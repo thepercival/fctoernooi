@@ -38,7 +38,6 @@ import { CompetitorListComponent } from './competitor/list.component';
 import { CompetitorListLineComponent } from './competitor/listline.component';
 import { CompetitorListRemoveModalComponent } from './competitor/listremovemodal.component';
 import { FieldListComponent } from './competitionSport/field/fieldlist.component';
-import { GameEditComponent } from './game/edit.component';
 import { HomeComponent } from './home/home.component';
 import { NewComponent } from './new/new.component';
 import { StartBreakComponent } from './startbreak/startbreak.component';
@@ -68,6 +67,8 @@ import { QualifyAgainstConfigEditComponent } from './qualifyAgainstConfig/edit.c
 import { RankingRuleSetModalComponent } from './home/rankingrulesetmodal.component';
 import { GameAmountConfigEditComponent } from './gameAmountConfig/edit.component';
 import { SportNewComponent } from './sport/new.component';
+import { GameTogetherEditComponent } from './game/edittogether.component';
+import { GameAgainstEditComponent } from './game/editagainst.component';
 
 @NgModule({
   imports: [
@@ -91,8 +92,9 @@ import { SportNewComponent } from './sport/new.component';
     ExportModalComponent,
     FieldListComponent,
     GameAmountConfigEditComponent,
-    GameEditComponent,
+    GameAgainstEditComponent,
     GameListComponent,
+    GameTogetherEditComponent,
     HomeComponent,
     NewComponent,
     RefereeListComponent,

@@ -16,7 +16,8 @@ import {
   Period,
   AgainstGame,
   SelfReferee,
-  GameMode
+  GameMode,
+  TogetherGame
 } from 'ngx-sport';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -57,7 +58,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   hasBegun: boolean;
   tournamentHasBegun: boolean;
   gameDatas: GameData[];
-  private ScoreConfigService: ScoreConfigService;
+  private scoreConfigService: ScoreConfigService;
   needsRanking: boolean;
   hasMultiplePoules: boolean;
   planningConfig: PlanningConfig;
@@ -74,7 +75,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     protected planningRepository: PlanningRepository) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
     this.resetAlert();
-    this.ScoreConfigService = new ScoreConfigService();
+    this.scoreConfigService = new ScoreConfigService();
   }
 
   ngOnInit() {
@@ -160,18 +161,16 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     return pouleDatas;
   }
 
-  getScore(game: Game): string {
-    // TODOSPORT
-    return '';
-    // const sScore = ' - ';
-    // if (game.getState() !== State.Finished) {
-    //   return sScore;
-    // }
-    // const finalScore = this.ScoreConfigService.getFinalScore(game);
-    // if (finalScore === undefined) {
-    //   return sScore;
-    // }
-    // return finalScore.getHome() + sScore + finalScore.getAway();
+  getAgainstScore(game: AgainstGame): string {
+    const sScore = ' - ';
+    if (game.getState() !== State.Finished) {
+      return sScore;
+    }
+    const finalScore = this.scoreConfigService.getFinalAgainstScore(game);
+    if (finalScore === undefined) {
+      return sScore;
+    }
+    return finalScore.getHome() + sScore + finalScore.getAway();
   }
 
   getScoreFinalPhase(game: Game): string {
@@ -225,8 +224,9 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     return game.getPlaces().some(gamePlace => this.hasCompetitor(gamePlace.getPlace()));
   }
 
-  linkToGameEdit(game: Game) {
-    this.router.navigate(['/admin/game', this.tournament.getId(), game.getId()]);
+  linkToGameEdit(game: AgainstGame | TogetherGame) {
+    const suffix = ((game instanceof AgainstGame) ? 'against' : 'together')
+    this.router.navigate(['/admin/game' + suffix, this.tournament.getId(), game.getId()]);
   }
 
   linkToPlanningConfig() {
@@ -285,7 +285,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   }
 
   openModalPouleRank(poule: Poule) {
-    const modalRef = this.modalService.open(PouleRankingModalComponent);
+    const modalRef = this.modalService.open(PouleRankingModalComponent, { size: 'xl' });
     modalRef.componentInstance.poule = poule;
     modalRef.componentInstance.tournament = this.tournament;
   }
