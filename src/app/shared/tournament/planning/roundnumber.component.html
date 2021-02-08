@@ -64,7 +64,7 @@
           <th class="text-center">
             <button *ngIf="userIsAdmin" title="wijzig velden"
               class="btn btn-sm btn-outline-{{tournamentHasBegun ? 'warning' : 'primary'}}"
-              (click)="linkToSportConfig(SportConfigTabFields)">
+              (click)="linkToCompetitionSport(SportConfigTabFields)">
               <fa-icon [icon]="['fac', 'soccer-field']"></fa-icon>
             </button>
             <fa-icon *ngIf="!userIsAdmin" title="veld" [icon]="['fac', 'soccer-field']"></fa-icon>
@@ -75,7 +75,7 @@
           <th class="text-center">
             <button *ngIf="userIsAdmin" title="wijzig score-regels"
               class="btn btn-sm btn-outline-{{hasBegun ? 'warning' : 'primary'}}"
-              (click)="linkToSportConfig(SportConfigTabScore)">
+              (click)="linkToCompetitionSport(SportConfigTabScore)">
               <fa-icon [icon]="['fac', 'scoreboard']"></fa-icon>
             </button>
             <button *ngIf="!userIsAdmin" title="score" class="btn btn-sm btn-outline-info"

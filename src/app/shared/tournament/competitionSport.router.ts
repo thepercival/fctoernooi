@@ -13,20 +13,13 @@ export class CompetitionSportRouter {
     ) {
     }
 
-    navigate(tournament: Tournament, tabOrder?: CompetitionSportTabOrder, roundNumber?: RoundNumber) {
+    navigate(tournament: Tournament, tabOrder?: CompetitionSportTabOrder) {
         let url = this.adminUrl + '/competitionsport';
         let params: any[] = [tournament.getId()];
         const competition = tournament.getCompetition();
-        if (competition.hasMultipleSports()) {
-            params.push(roundNumber.getNumber());
-        } else {
-            const competitionSport = competition.getSports()[0];
-            params.push(competitionSport.getId());
-            params.push(tabOrder ? tabOrder : CompetitionSportTabOrder.Fields);
-            if (tabOrder === CompetitionSportTabOrder.Score) {
-                params.push(roundNumber.getNumber());
-            }
-        }
+        const competitionSport = competition.getSports()[0];
+        params.push(competitionSport.getId());
+        params.push(tabOrder ? tabOrder : CompetitionSportTabOrder.Fields);
         this.router.navigate([url].concat(params));
     }
 }

@@ -92,9 +92,9 @@ export class ScoreConfigEditComponent implements OnInit {
     protected postToggleRoundChange() {
         this.readonly = this.allSelectedToggleRoundsBegun(this.toggleRound);
         if (this.readonly) {
-            this.alert = { type: 'danger', message: 'alle gekozen ronden zijn al begonnen' }
+            this.alert = { type: 'warning', message: 'er zijn wedstrijden gespeeld voor gekozen ronden, je kunt niet meer wijzigen' };
         } else if (this.someSelectedToggleRoundsBegun(this.toggleRound)) {
-            this.alert = { type: 'danger', message: 'sommige gekozen ronden zijn al begonnen en de de score-regels hiervoor worden niet opgeslagn' }
+            this.alert = { type: 'warning', message: 'er zijn wedstrijden gespeeld voor sommige gekozen ronden, de score-regels hiervoor worden niet opgeslagen' };
         }
         this.jsonScoreConfig = this.getInputJson(this.getFirstSelectedToggleRound(this.toggleRound).round);
         this.jsonToForm();
@@ -112,8 +112,6 @@ export class ScoreConfigEditComponent implements OnInit {
     }
 
     protected jsonToForm() {
-        this.alert = undefined;
-
         this.form.controls.max.setValue(this.jsonScoreConfig.maximum);
         if (this.jsonScoreConfig.next) {
             this.form.controls.useNext.setValue(this.jsonScoreConfig.next.enabled);

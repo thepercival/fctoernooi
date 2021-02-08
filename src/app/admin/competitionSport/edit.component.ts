@@ -50,10 +50,7 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
     }
 
     private postInit(id: number) {
-        // this.hasBegun = this.structure.getRootRound().hasBegun();
-        // if (this.activeTab === this.SportConfigTabScore) {
-        //     this.startRoundNumber = this.structure.getRoundNumber(startRoundNumber);
-        // }
+        this.hasBegun = this.structure.getRootRound().hasBegun();
         this.competitionSport = this.getCompetitionSportById(id);
         this.processing = false;
     }

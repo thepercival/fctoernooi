@@ -35,7 +35,7 @@ export class FieldListComponent implements OnInit {
 
     ngOnInit() {
         if (this.hasBegun) {
-            this.alert = { type: 'warning', message: 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen en verwijderen' };
+            this.alert = { type: 'warning', message: 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen of verwijderen' };
         }
         this.prioritizable = !this.competitionSport.getCompetition().hasMultipleSports();
         this.processing = false;

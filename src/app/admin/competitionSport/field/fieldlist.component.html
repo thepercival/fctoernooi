@@ -6,7 +6,7 @@
     <thead>
         <tr>
             <th></th>
-            <th *ngIf="prioritizable" class="text-center">
+            <th *ngIf="!hasBegun && prioritizable" class="text-center">
                 <fa-icon [icon]="['fas', 'sort']"></fa-icon>
             </th>
             <th>naam</th>
@@ -25,7 +25,7 @@
                     <fa-icon [icon]="['fas', 'pencil-alt' ]"></fa-icon>
                 </button>
             </td>
-            <td *ngIf="prioritizable" class="text-center">
+            <td *ngIf="!hasBegun && prioritizable" class="text-center">
                 <button *ngIf="field.getPriority() > 1" type="button" class="btn btn-sm btn-outline-secondary"
                     [disabled]="processing" (click)="upgradePriority(field)">
                     <fa-icon [icon]="['fas', 'level-up-alt']"></fa-icon>

@@ -125,9 +125,9 @@ export class QualifyAgainstConfigEditComponent implements OnInit {
         this.alert = undefined;
         if (this.selectedAgainstGameMode()) {
             if (this.readonly) {
-                this.alert = { type: 'danger', message: 'alle gekozen ronden zijn al begonnen' }
+                this.alert = { type: 'warning', message: 'er zijn wedstrijden gespeeld voor gekozen ronden, je kunt niet meer wijzigen' }
             } else if (this.someSelectedToggleRoundsBegun(this.toggleRound)) {
-                this.alert = { type: 'warning', message: 'sommige gekozen ronden zijn al begonnen en de de qualifyagainst-regels hiervoor worden niet opgeslagen' }
+                this.alert = { type: 'warning', message: 'er zijn wedstrijden gespeeld voor sommige gekozen ronden, de score-regels hiervoor worden niet opgeslagen' }
             }
         }
         const json = this.getInputJson(this.getFirstSelectedToggleRound(this.toggleRound).round);

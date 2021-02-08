@@ -78,7 +78,7 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
         this.scoreConfigService = new ScoreConfigService();
         this.form = fb.group({
             played: [''],
-            extratime: ['']
+            extension: ['']
         });
     }
 
@@ -92,7 +92,7 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
                     this.processing = false;
                     return;
                 }
-                this.equalQualifiersChecker = new EqualQualifiersChecker(this.game, this.nameService);
+                this.equalQualifiersChecker = new EqualQualifiersChecker(this.game, this.nameService, this.mapper);
                 this.initGame();
                 // this.originalPouleState = this.game.getPoule().getState();
                 const tournamentUser = this.tournament.getUser(this.authService.getUser());
@@ -161,7 +161,6 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
 
     protected initScoreControls(onlyReset?: boolean) {
         this.scoreControls = [];
-        console.log(this.scoreControls);
         if (onlyReset !== true) {
             this.game.getScores().forEach(score => {
                 this.addScoreControl(score.getHome(), score.getAway());
@@ -195,8 +194,9 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
         if (this.pristineScore && this.game.getScores().length === 0) {
             this.form.controls.played.setValue(true);
         }
-        this.updateCalculateScoreControl();
         this.pristineScore = false;
+        this.warningsForEqualQualifiers = this.equalQualifiersChecker.getWarnings(this.formToJson());
+        console.log(this.warningsForEqualQualifiers);
     }
 
     allScoresAreInvalid(): boolean {
@@ -204,10 +204,11 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
 
     }
 
-    setExtratime(extratime: boolean) {
+    setExtension(extension: boolean) {
         if (this.game.getScores().length === 0) {
             this.updateCalculateScoreControl();
         }
+        this.warningsForEqualQualifiers = this.equalQualifiersChecker.getWarnings(this.formToJson());
     }
 
     addScoreControl(home: number, away: number) {
@@ -222,12 +223,13 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
 
     setPlayed(played: boolean) {
         if (played === false) {
-            this.form.controls.extratime.setValue(false);
+            this.form.controls.extension.setValue(false);
             this.initScoreControls(true);
             this.updateCalculateScoreControl();
         } else if (this.game.getScores().length === 0) {
             this.updateCalculateScoreControl();
         }
+        this.warningsForEqualQualifiers = this.equalQualifiersChecker.getWarnings(this.formToJson());
     }
 
     getCalculateScoreUnitName(game: Game): string {
@@ -260,14 +262,6 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
     //     return description + translate.getScoreNamePlural(this.firstScoreConfig);
     // }
 
-    // aScoreIsInvalid() {
-    //     return this.scoreControls.some(scoreControl => !this.isScoreValid(scoreControl.getScore()));
-    // }
-
-    // isScoreValid(score: GameScoreHomeAway): boolean {
-    //     return score.getHome() >= 0 && score.getAway() >= 0;
-    // }
-
     // isScoreEqual(score: GameScoreHomeAway): boolean {
     //     return score.getHome() === score.getAway() && (this.firstScoreConfig !== this.firstScoreConfig.getCalculate());
     // }
@@ -279,18 +273,12 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
         }
         this.planningConfig = roundNumber.getValidPlanningConfig();
         this.firstScoreConfig = this.game.getScoreConfig();
-
-        this.firstScoreConfig = this.game.getScoreConfig();
-        //     this.form.controls.played.setValue(this.game.getState() === State.Finished);
-        //     this.form.controls.extratime.setValue(this.game.getFinalPhase() === Game.Phase_ExtraTime);
         if (this.firstScoreConfig !== this.firstScoreConfig.getCalculate()) {
             this.calculateScoreControl = new AgainstScoreFormControl(this.firstScoreConfig.getCalculate(), 0, 0, true);
         }
-        this.initScoreControls();
-        //     this.updateCalculateScoreControl();
-        //     this.enablePlayedAtFirstChange = this.game.getScores().length === 0 && this.game.getState() !== State.Finished;
-
         this.form.controls.played.setValue(this.game.getState() === State.Finished);
+        //     this.form.controls.extension.setValue(this.game.getFinalPhase() === Game.Phase_ExtraTime);
+        this.initScoreControls();
     }
 
     protected nextRoundNumberBegun(roundNumber: RoundNumber): boolean {
@@ -353,17 +341,13 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
     // }
 
     protected getPhase(): number {
-        if (this.form.value['extratime']) {
+        if (this.form.value['extension']) {
             return Game.Phase_ExtraTime;
         }
         if (this.form.value['played']) {
             return Game.Phase_RegularTime;
         }
         return 0;
-    }
-
-    postScoreChanged() {
-        this.warningsForEqualQualifiers = this.equalQualifiersChecker.getWarnings();
     }
 
     formToJson(): JsonAgainstGame {
@@ -437,17 +421,23 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
 class EqualQualifiersChecker {
 
     private rankingService: RankingService;
+    private jsonOriginalGame: JsonAgainstGame | JsonTogetherGame;
 
     constructor(
-        private game: Game,
+        private game: AgainstGame | TogetherGame,
         private nameService: NameService,
+        private gameMapper: GameMapper
     ) {
         const roundNumber = game.getRound().getNumber();
         const gameMode = roundNumber.getValidPlanningConfig().getGameMode();
         this.rankingService = new RankingService(gameMode, roundNumber.getCompetition().getRankingRuleSet());
+        this.rankingService.disableCache();
+        this.jsonOriginalGame = this.gameMapper.toJson(game);
     }
 
-    getWarnings(): string[] {
+    getWarnings(jsonGame: JsonAgainstGame | JsonTogetherGame): string[] {
+        this.game = this.gameMapper.toExisting(jsonGame, this.game);
+
         const poule = this.game.getPoule();
         if (poule.getState() !== State.Finished) {
             return [];
@@ -456,6 +446,7 @@ class EqualQualifiersChecker {
 
         const pouleRankingItems = this.rankingService.getItemsForPoule(this.game.getPoule());
         const equalPouleItems = this.getEqualPouleRankingItemsWithQualifyRules(pouleRankingItems);
+        console.log(equalPouleItems);
         const postFix = '(' + this.nameService.getPouleName(this.game.getPoule(), true) + ')';
         let warnings: string[] = this.getWarningsForEqualQualifiersHelper(equalPouleItems, postFix);
 
@@ -475,6 +466,7 @@ class EqualQualifiersChecker {
             });
         });
 
+        this.game = this.gameMapper.toExisting(this.jsonOriginalGame, this.game);
         return warnings;
     }
 
@@ -559,7 +551,9 @@ class AgainstScoreFormControl {
     }
 
     getValidateClass(): string {
-
+        if (!this.isScoreValid()) {
+            return 'is-invalid';
+        }
         if (this.scoreConfig.getDirection() !== ScoreConfig.UPWARDS || this.scoreConfig.getMaximum() === 0) {
             return 'is-valid';
         }

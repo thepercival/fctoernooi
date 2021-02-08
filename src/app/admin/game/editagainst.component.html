@@ -103,12 +103,12 @@
           </div>
         </div>
         <div *ngIf="game.getRound().getNumber().getValidPlanningConfig().getExtension()" class="form-group row">
-          <label for="extratime" class="col-3 col-form-label">na verlenging</label>
+          <label for="extension" class="col-3 col-form-label">na verlenging</label>
           <div class="col-9">
             <div class="form-control custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="extratime" formControlName="extratime"
-                (ngModelChange)="setExtratime($event)">
-              <label class="custom-control-label" for="extratime"></label>
+              <input type="checkbox" class="custom-control-input" id="extratime" formControlName="extension"
+                (ngModelChange)="setExtension($event)">
+              <label class="custom-control-label" for="extension"></label>
             </div>
           </div>
         </div>

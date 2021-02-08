@@ -233,8 +233,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     this.router.navigate(['/admin/planningconfig', this.tournament.getId(), this.roundNumber.getNumber()]);
   }
 
-  linkToSportConfig(tabOrder: CompetitionSportTabOrder) {
-    this.competitionSportRouter.navigate(this.tournament, tabOrder, this.roundNumber);
+  linkToCompetitionSport(tabOrder: CompetitionSportTabOrder) {
+    this.competitionSportRouter.navigate(this.tournament, tabOrder);
   }
 
   linkToReferee() {
