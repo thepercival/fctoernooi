@@ -83,7 +83,6 @@ export class PouleRankingTogetherComponent implements OnInit {
         if (finalScore && gameRound > activeGameRound) {
           activeGameRound = gameRound;
         }
-        console.log(finalScore);
         scoreMap.set(gameRound, finalScore);
       });
     });
@@ -101,7 +100,6 @@ export class PouleRankingTogetherComponent implements OnInit {
       const range = gameRound === 0 ? { min: 1, max: nrOfColumns } : { min: gameRound - nrOfColumns + 1, max: gameRound };
       viewPortRangeMap.set(viewPort, range);
     }
-    console.log('viewPortRangeMap', viewPortRangeMap);
     this.viewPortRangeMap = viewPortRangeMap;
   }
 
@@ -112,14 +110,12 @@ export class PouleRankingTogetherComponent implements OnInit {
       }
       const viewPort = <ViewPort>propertyValue;
       const viewPortRange = this.viewPortRangeMap.get(viewPort);
-      console.log(propertyKey, viewPortRange);
       if (gameRound < viewPortRange.min || gameRound > viewPortRange.max) {
         continue;
       }
       if (viewPort === ViewPort.xs) {
         return '';
       }
-      console.log('d-none d-' + propertyKey + '-table-cell');
       return 'd-none d-' + propertyKey + '-table-cell';
     }
     return 'd-none';
@@ -146,7 +142,6 @@ export class PouleRankingTogetherComponent implements OnInit {
       startGameRound += gameAmountConfig.getAmount();
     });
     this.nrOfGameRounds = startGameRound - 1;
-    console.log(this.gameRoundMap);
   }
 
   getGameRounds(competitionSport: CompetitionSport): number[] {

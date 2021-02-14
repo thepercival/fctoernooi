@@ -4,31 +4,22 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
     Game,
     NameService,
-    Place,
-    Poule,
-    QualifyRuleMultiple,
-    QualifyService,
-    RankedRoundItem,
-    RankingService,
     Round,
     State,
-    QualifyGroup,
     RoundNumber,
     PlaceLocationMap,
     ScoreConfigService,
     ScoreConfig,
     AgainstGame,
     GameMode,
-    PlanningConfigMapper,
     PlanningConfig,
     TogetherGame,
     GameMapper,
     JsonAgainstGame,
-    JsonTogetherGame,
     ScoreConfigMapper,
     AgainstScoreHelper,
 } from 'ngx-sport';
-import { forkJoin, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/common/navigation';
@@ -40,6 +31,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { TournamentUser } from '../../lib/tournament/user';
 import { map } from 'rxjs/operators';
+import { EqualQualifiersChecker } from '../../lib/ngx-sport/ranking/equalQualifiersChecker';
 
 @Component({
     selector: 'app-tournament-againstgame-edit',
@@ -93,8 +85,13 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
                     return;
                 }
                 this.equalQualifiersChecker = new EqualQualifiersChecker(this.game, this.nameService, this.mapper);
-                this.initGame();
-                // this.originalPouleState = this.game.getPoule().getState();
+                const roundNumber = this.game.getRound().getNumber();
+                if (this.nextRoundNumberBegun(roundNumber)) {
+                    this.setAlert('warning', 'het aanpassen van de score kan gevolgen hebben voor de al begonnen volgende ronde');
+                }
+                this.planningConfig = roundNumber.getValidPlanningConfig();
+                this.firstScoreConfig = this.game.getScoreConfig();
+                this.initForm();
                 const tournamentUser = this.tournament.getUser(this.authService.getUser());
                 this.getAuthorization(tournamentUser).subscribe(
                         /* happy path */ hasAuthorization => {
@@ -108,6 +105,15 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
 
             });
         });
+    }
+
+    protected initForm() {
+        if (this.firstScoreConfig !== this.firstScoreConfig.getCalculate()) {
+            this.calculateScoreControl = new AgainstScoreFormControl(this.firstScoreConfig.getCalculate(), 0, 0, true);
+        }
+        this.form.controls.played.setValue(this.game.getState() === State.Finished);
+        //     this.form.controls.extension.setValue(this.game.getFinalPhase() === Game.Phase_ExtraTime);
+        this.initScoreControls();
     }
 
     protected getAuthorization(tournamentUser?: TournamentUser): Observable<boolean> {
@@ -124,9 +130,6 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
             map((userRefereeId: number) => this.game.getReferee().getId() === userRefereeId)
         );
     }
-
-    get Against(): GameMode { return GameMode.Against; }
-    get Together(): GameMode { return GameMode.Together; }
 
     get GameHOME(): boolean { return AgainstGame.Home; }
     get GameAWAY(): boolean { return AgainstGame.Away; }
@@ -159,13 +162,18 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
         return this.scoreControls.some(scoreControl => !scoreControl.isScoreValid());
     }
 
-    protected initScoreControls(onlyReset?: boolean) {
+    protected initScoreControls() {
         this.scoreControls = [];
-        if (onlyReset !== true) {
-            this.game.getScores().forEach(score => {
-                this.addScoreControl(score.getHome(), score.getAway());
-            });
+        this.game.getScores().forEach(score => {
+            this.addScoreControl(score.getHome(), score.getAway());
+        });
+        if (this.scoreControls.length === 0) {
+            this.scoreControls.push(new AgainstScoreFormControl(this.firstScoreConfig, 0, 0));
         }
+    }
+
+    protected resetScoreControls() {
+        this.scoreControls = [];
         if (this.scoreControls.length === 0) {
             this.scoreControls.push(new AgainstScoreFormControl(this.firstScoreConfig, 0, 0));
         }
@@ -196,7 +204,6 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
         }
         this.pristineScore = false;
         this.warningsForEqualQualifiers = this.equalQualifiersChecker.getWarnings(this.formToJson());
-        console.log(this.warningsForEqualQualifiers);
     }
 
     allScoresAreInvalid(): boolean {
@@ -224,7 +231,7 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
     setPlayed(played: boolean) {
         if (played === false) {
             this.form.controls.extension.setValue(false);
-            this.initScoreControls(true);
+            this.resetScoreControls();
             this.updateCalculateScoreControl();
         } else if (this.game.getScores().length === 0) {
             this.updateCalculateScoreControl();
@@ -232,8 +239,8 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
         this.warningsForEqualQualifiers = this.equalQualifiersChecker.getWarnings(this.formToJson());
     }
 
-    getCalculateScoreUnitName(game: Game): string {
-        const calculateScore = game.getScoreConfig().getCalculate();
+    getCalculateScoreUnitName(): string {
+        const calculateScore = this.firstScoreConfig.getCalculate();
         const translateService = new TranslateService();
         return translateService.getScoreNameSingular(this.scoreConfigMapper.toJson(calculateScore));
     }
@@ -265,21 +272,6 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
     // isScoreEqual(score: GameScoreHomeAway): boolean {
     //     return score.getHome() === score.getAway() && (this.firstScoreConfig !== this.firstScoreConfig.getCalculate());
     // }
-
-    protected initGame() {
-        const roundNumber = this.game.getRound().getNumber();
-        if (this.nextRoundNumberBegun(roundNumber)) {
-            this.setAlert('warning', 'het aanpassen van de score kan gevolgen hebben voor de al begonnen volgende ronde');
-        }
-        this.planningConfig = roundNumber.getValidPlanningConfig();
-        this.firstScoreConfig = this.game.getScoreConfig();
-        if (this.firstScoreConfig !== this.firstScoreConfig.getCalculate()) {
-            this.calculateScoreControl = new AgainstScoreFormControl(this.firstScoreConfig.getCalculate(), 0, 0, true);
-        }
-        this.form.controls.played.setValue(this.game.getState() === State.Finished);
-        //     this.form.controls.extension.setValue(this.game.getFinalPhase() === Game.Phase_ExtraTime);
-        this.initScoreControls();
-    }
 
     protected nextRoundNumberBegun(roundNumber: RoundNumber): boolean {
         if (!roundNumber.hasNext()) {
@@ -415,116 +407,6 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
 
     navigateBack() {
         this.myNavigation.back();
-    }
-}
-
-class EqualQualifiersChecker {
-
-    private rankingService: RankingService;
-    private jsonOriginalGame: JsonAgainstGame | JsonTogetherGame;
-
-    constructor(
-        private game: AgainstGame | TogetherGame,
-        private nameService: NameService,
-        private gameMapper: GameMapper
-    ) {
-        const roundNumber = game.getRound().getNumber();
-        const gameMode = roundNumber.getValidPlanningConfig().getGameMode();
-        this.rankingService = new RankingService(gameMode, roundNumber.getCompetition().getRankingRuleSet());
-        this.rankingService.disableCache();
-        this.jsonOriginalGame = this.gameMapper.toJson(game);
-    }
-
-    getWarnings(jsonGame: JsonAgainstGame | JsonTogetherGame): string[] {
-        this.game = this.gameMapper.toExisting(jsonGame, this.game);
-
-        const poule = this.game.getPoule();
-        if (poule.getState() !== State.Finished) {
-            return [];
-        }
-        const round = poule.getRound();
-
-        const pouleRankingItems = this.rankingService.getItemsForPoule(this.game.getPoule());
-        const equalPouleItems = this.getEqualPouleRankingItemsWithQualifyRules(pouleRankingItems);
-        console.log(equalPouleItems);
-        const postFix = '(' + this.nameService.getPouleName(this.game.getPoule(), true) + ')';
-        let warnings: string[] = this.getWarningsForEqualQualifiersHelper(equalPouleItems, postFix);
-
-        if (round.getState() !== State.Finished) {
-            return warnings;
-        }
-        round.getQualifyGroups().forEach(qualifyGroup => {
-            qualifyGroup.getHorizontalPoules().forEach(horizontalPoule => {
-                const multipleRule = horizontalPoule.getQualifyRuleMultiple();
-                if (multipleRule === undefined) {
-                    return;
-                }
-                const rankedItems = this.rankingService.getItemsForHorizontalPoule(horizontalPoule);
-                const equalRuleItems = this.getEqualRuleRankingItems(multipleRule, rankedItems);
-                const postFixTmp = '(' + this.nameService.getHorizontalPouleName(horizontalPoule) + ')';
-                warnings = warnings.concat(this.getWarningsForEqualQualifiersHelper(equalRuleItems, postFixTmp));
-            });
-        });
-
-        this.game = this.gameMapper.toExisting(this.jsonOriginalGame, this.game);
-        return warnings;
-    }
-
-    protected getWarningsForEqualQualifiersHelper(equalItemsPerRank: RankedRoundItem[][], postFix: string): string[] {
-        return equalItemsPerRank.map(equalItems => {
-            const names: string[] = equalItems.map(equalItem => {
-                return this.nameService.getPlaceName(equalItem.getPlace(), true, true);
-            });
-            return names.join(' & ') + ' zijn precies gelijk geëindigd' + postFix;
-        });
-    }
-
-    protected getEqualRuleRankingItems(multipleRule: QualifyRuleMultiple, rankingItems: RankedRoundItem[]): RankedRoundItem[][] {
-        if (multipleRule.getWinnersOrLosers() === QualifyGroup.LOSERS) {
-            rankingItems = this.reverseRanking(rankingItems);
-        }
-        const equalItemsPerRank = this.getEqualRankedItems(rankingItems);
-        const nrToQualify = multipleRule.getToPlaces().length;
-        return equalItemsPerRank.filter(equalItems => {
-            const equalRank = equalItems[0].getRank();
-            const nrToQualifyTmp = nrToQualify - (equalRank - 1);
-            return nrToQualifyTmp > 0 && equalItems.length > nrToQualifyTmp;
-        });
-    }
-
-    protected reverseRanking(rankingItems: RankedRoundItem[]): RankedRoundItem[] {
-        const nrOfItems = rankingItems.length;
-        const reversedRankingItems = [];
-        rankingItems.forEach(rankingItem => {
-            const uniqueRank = (nrOfItems + 1) - rankingItem.getUniqueRank();
-            const nrOfEqualRank = this.rankingService.getItemsByRank(rankingItems, rankingItem.getRank()).length;
-            const rank = (nrOfItems + 1) - (rankingItem.getRank() + (nrOfEqualRank - 1));
-            reversedRankingItems.push(new RankedRoundItem(rankingItem.getUnranked(), uniqueRank, rank));
-        });
-        reversedRankingItems.sort((itemA, itemB) => itemA.getUniqueRank() - itemB.getUniqueRank());
-        return reversedRankingItems;
-    }
-
-    protected getEqualPouleRankingItemsWithQualifyRules(rankingItems: RankedRoundItem[]): RankedRoundItem[][] {
-        const equalItemsPerRank = this.getEqualRankedItems(rankingItems);
-        return equalItemsPerRank.filter(equalItems => {
-            return equalItems.some(item => {
-                const place = item.getPlace();
-                return place.getToQualifyRules().length > 0;
-            });
-        });
-    }
-
-    protected getEqualRankedItems(rankingItems: RankedRoundItem[]): RankedRoundItem[][] {
-        const equalItems = [];
-        const maxRank = rankingItems[rankingItems.length - 1].getRank();
-        for (let rank = 1; rank <= maxRank; rank++) {
-            const equalItemsTmp = this.rankingService.getItemsByRank(rankingItems, rank);
-            if (equalItemsTmp.length > 1) {
-                equalItems.push(equalItemsTmp);
-            }
-        }
-        return equalItems;
     }
 }
 

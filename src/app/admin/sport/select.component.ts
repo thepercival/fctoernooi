@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { CompetitionSport, GameMode, JsonSport, Sport, SportCustom } from 'ngx-sport';
+import { GameMode, Sport } from 'ngx-sport';
 
 import { IAlert } from '../../shared/common/alert';
 import { CSSService } from '../../shared/common/cssservice';
 import { TranslateService } from '../../lib/translate';
 import { SportRepository } from '../../lib/ngx-sport/sport/repository';
-
+import { GameModeInfoModalComponent } from '../../shared/tournament/gameMode/infomodal.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
     selector: 'app-tournament-sports-selector',
     templateUrl: './select.component.html',
@@ -26,6 +27,7 @@ export class SportSelectComponent implements OnInit, OnChanges {
     constructor(
         public cssService: CSSService,
         private sportRepository: SportRepository,
+        private modalService: NgbModal,
         fb: FormBuilder
     ) {
         this.form = fb.group({});
@@ -115,7 +117,9 @@ export class SportSelectComponent implements OnInit, OnChanges {
         return this.hasGameModeSelected(opposite);
     }
 
-
+    getGameModeClass(sport: Sport): string {
+        return sport.getGameMode() === GameMode.Against ? 'against' : 'together';
+    }
 
     // protected isInputTypeHelper(inputType: number): boolean {
     //     return (inputType & this.radioGroupForm.value['inputtype']) === inputType;
@@ -130,6 +134,12 @@ export class SportSelectComponent implements OnInit, OnChanges {
             return this.translateService.getSportName(sport.getCustomId());
         }
         return sport.getName();
+    }
+
+    get Against(): GameMode { return GameMode.Against; }
+
+    openGameModeInfoModal() {
+        this.modalService.open(GameModeInfoModalComponent, { windowClass: 'info-modal' });
     }
 
     protected setAlert(type: string, message: string) {

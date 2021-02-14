@@ -1,0 +1,47 @@
+<div class="card mx-3 mb-3">
+  <div class="card-header">
+    <span class="font-weight-bold text-break">{{nameService.getPlaceFromName(gamePlace.getPlace(),true,
+      true)}}</span>
+  </div>
+  <div class="card-body pb-0" [formGroup]="form">
+    <div formArrayName="scores">
+      <div *ngFor="let inputControl of getScoreControls().controls; index as idx" class="form-group row">
+        <label class="col-6 col-form-label">
+          <span>{{getInputScoreDescription()}}</span>
+        </label>
+        <div class="col-6">
+          <input [formControlName]="idx" (ngModelChange)="postUpdate()"
+            class="form-control {{getValidateClass(inputControl, firstScoreConfig)}}" type="number">
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="form.controls.calculate" class="form-group row">
+      <div class="col-6">
+        <label class="col-form-label">{{getCalculateScoreDescription()}}</label>
+      </div>
+      <div class="col-6">
+        <input formControlName="calculate"
+          class="form-control {{getValidateClass(form.controls.calculate, firstScoreConfig.getCalculate())}}"
+          type="number">
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="form.controls.calculate" class="card-footer text-primary border-primary pointer text-center">
+    <div class="form-group row">
+      <div class="col-3">
+      </div>
+      <div class="col-9">
+        <button type="button" class="btn btn-outline-secondary" [disabled]="!allScoresValid()"
+          (click)="addScoreControl()">
+          <span>voeg {{getCalculateScoreUnitName()}} toe</span>
+        </button>
+        <button *ngIf="getScoreControls().length > 0" type="button" class="btn btn-sm btn-outline-secondary"
+          (click)="removeScoreControl()">
+          <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

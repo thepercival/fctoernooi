@@ -20,13 +20,14 @@ export class TranslateService {
             case SportCustom.Volleyball: { return 'volleybal'; }
             case SportCustom.IceHockey: { return 'ijshockey'; }
             case SportCustom.Sjoelen: { return 'sjoelen'; }
+            case SportCustom.Klaverjassen: { return 'klaverjassen'; }
         }
         return undefined;
     }
 
     getScoreNameSingular(jsonScoreConfig: JsonScoreConfig): string {
         const customId = jsonScoreConfig.competitionSport.sport.customId;
-        if (jsonScoreConfig.next) {
+        if (jsonScoreConfig.isFirst) {
             return this.getFirstScoreNameSingular(customId);
         }
         return this.getLastScoreNameSingular(customId);
@@ -60,7 +61,7 @@ export class TranslateService {
 
     getScoreNamePlural(jsonScoreConfig: JsonScoreConfig): string {
         const customId = jsonScoreConfig.competitionSport.sport.customId;
-        if (jsonScoreConfig.next) {
+        if (jsonScoreConfig.isFirst) {
             return this.getFirstScoreNamePlural(customId);
         }
         return this.getLastScoreNamePlural(customId);
@@ -104,44 +105,38 @@ export class TranslateService {
     getFieldNameSingular(sport?: Sport): string {
         const customId = sport ? sport.getCustomId() : undefined;
         switch (customId) {
-            case SportCustom.Badminton: { return 'veld'; }
-            case SportCustom.Basketball: { return 'veld'; }
-            case SportCustom.Darts: { return 'bord'; }
-            case SportCustom.ESports: { return 'veld'; }
-            case SportCustom.Hockey: { return 'veld'; }
-            case SportCustom.Baseball: { return 'veld'; }
-            case SportCustom.Korfball: { return 'veld'; }
-            case SportCustom.Chess: { return 'bord'; }
-            case SportCustom.Squash: { return 'baan'; }
-            case SportCustom.TableTennis: { return 'tafel'; }
-            case SportCustom.Tennis: { return 'veld'; }
-            case SportCustom.Football: { return 'veld'; }
-            case SportCustom.Volleyball: { return 'veld'; }
-            case SportCustom.IceHockey: { return 'veld'; }
-            case SportCustom.Sjoelen: { return 'bak'; }
+            case SportCustom.Darts:
+            case SportCustom.Chess:
+                {
+                    return 'bord';
+                }
+            case SportCustom.Squash:
+            case SportCustom.Tennis:
+                {
+                    return 'baan';
+                }
+            case SportCustom.TableTennis:
+            case SportCustom.Klaverjassen:
+                {
+                    return 'tafel';
+                }
+            case SportCustom.Sjoelen:
+                {
+                    return 'bak';
+                }
         }
         return 'veld';
     }
 
     getFieldNamePlural(sport?: Sport): string {
-        const customId = sport ? sport.getCustomId() : undefined;
-        switch (customId) {
-            case SportCustom.Badminton: { return 'velden'; }
-            case SportCustom.Basketball: { return 'velden'; }
-            case SportCustom.Darts: { return 'borden'; }
-            case SportCustom.ESports: { return 'velden'; }
-            case SportCustom.Hockey: { return 'velden'; }
-            case SportCustom.Baseball: { return 'velden'; }
-            case SportCustom.Korfball: { return 'velden'; }
-            case SportCustom.Chess: { return 'borden'; }
-            case SportCustom.Squash: { return 'banen'; }
-            case SportCustom.TableTennis: { return 'tafels'; }
-            case SportCustom.Tennis: { return 'velden'; }
-            case SportCustom.Football: { return 'velden'; }
-            case SportCustom.Volleyball: { return 'velden'; }
-            case SportCustom.IceHockey: { return 'velden'; }
-            case SportCustom.Sjoelen: { return 'bakken'; }
+        const single = this.getFieldNameSingular(sport);
+        switch (single) {
+            case 'veld': { return 'velden'; }
+            case 'bord': { return 'borden'; }
+            case 'baan': { return 'banen'; }
+            case 'tafel': { return 'tafels'; }
+            case 'bak': { return 'bakken'; }
         }
-        return 'velden';
+        return '';
     }
 }

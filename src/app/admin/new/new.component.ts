@@ -10,9 +10,8 @@ import { TranslateService } from '../../lib/translate';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { JsonTournament } from '../../lib/tournament/json';
-import { SportDefaultService } from '../../lib/ngx-sport/defaultService';
-import { JsonCompetitionSport, JsonField, League, Sport, SportMapper, State, Structure, StructureService } from 'ngx-sport';
-import { RankingRuleSet } from 'ngx-sport/src/ranking/ruleSet';
+import { DefaultService } from '../../lib/ngx-sport/defaultService';
+import { JsonCompetitionSport, JsonField, League, PouleStructure, Sport, SportMapper, State, Structure, StructureService } from 'ngx-sport';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 
 
@@ -42,7 +41,7 @@ export class NewComponent implements OnInit {
     private tournamentRepository: TournamentRepository,
     private structureRepository: StructureRepository,
     private planningRepository: PlanningRepository,
-    private sportDefaultService: SportDefaultService,
+    private defaultService: DefaultService,
     private sportMapper: SportMapper,
     private modalService: NgbModal,
     fb: FormBuilder
@@ -137,7 +136,7 @@ export class NewComponent implements OnInit {
           start: (new Date()).toISOString(),
           end: (new Date()).toISOString(),
         },
-        rankingRuleSet: SportDefaultService.RankingRuleSet,
+        rankingRuleSet: DefaultService.RankingRuleSet,
         startDateTime: startDateTime.toISOString(),
         referees: [],
         state: State.Created,
@@ -153,11 +152,11 @@ export class NewComponent implements OnInit {
       .subscribe(
         /* happy path */ tournament => {
           const structureService = new StructureService(Tournament.PlaceRanges);
-          const jsonPlanningConfig = this.sportDefaultService.getJsonPlanningConfig(this.sports[0].getGameMode());
+          const jsonPlanningConfig = this.defaultService.getJsonPlanningConfig(this.sports);
           const structure: Structure = structureService.create(
             tournament.getCompetition(),
             jsonPlanningConfig,
-            StructureService.DefaultNrOfPlaces);
+            this.defaultService.getPouleStructure(this.sports, nrOfFields));
           this.structureRepository.editObject(structure, tournament)
             .subscribe(
             /* happy path */(structureOut: Structure) => {

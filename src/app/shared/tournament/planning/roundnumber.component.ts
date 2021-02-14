@@ -173,10 +173,23 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     return finalScore.getHome() + sScore + finalScore.getAway();
   }
 
-  getScoreFinalPhase(game: Game): string {
+  getTogetherSingleScore(game: TogetherGame): string {
+    const sScore = ' - ';
+    if (game.getState() !== State.Finished) {
+      return sScore;
+    }
+    const finalScore = this.scoreConfigService.getFinalTogetherScore(game.getTogetherPlaces()[0]);
+    return finalScore === undefined ? sScore : '' + finalScore;
+  }
+
+  getScoreFinalPhase(game: TogetherGame | AgainstGame): string {
     // TODOSPORT
     // return game.getFinalPhase() === Game.Phase_ExtraTime ? '*' : '';
     return '';
+  }
+
+  getTogetherScoreButtonClass(game: Game): string {
+    return game.getState() === State.Finished ? 'success' : 'primary';
   }
 
   isPlayed(game: Game): boolean {

@@ -13,6 +13,7 @@ import {
     GameAmountConfigMapper,
     PlanningConfigMapper,
     JsonGameAmountConfig,
+    Sport,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -24,12 +25,14 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { PlanningConfigRepository } from '../../lib/ngx-sport/planning/config/repository';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RoundNumbersSelectorModalComponent } from '../roundnumber/selector.component';
-import { SportDefaultService } from '../../lib/ngx-sport/defaultService';
+import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { GameAmountConfig } from 'ngx-sport/src/planning/gameAmountConfig';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { GameAmountConfigControl } from '../gameAmountConfig/edit.component';
 import { GameAmountConfigRepository } from '../../lib/ngx-sport/gameAmountConfig/repository';
 import { forkJoin, Observable } from 'rxjs';
+import { GameModeInfoModalComponent } from '../../shared/tournament/gameMode/infomodal.component';
+import { SportService } from '../../lib/ngx-sport/sport/service';
 
 @Component({
     selector: 'app-planningconfig-edit',
@@ -63,6 +66,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         private myNavigation: MyNavigation,
         private planningRepository: PlanningRepository,
         private mapper: PlanningConfigMapper,
+        private sportService: SportService,
         private gameAmountConfigMapper: GameAmountConfigMapper,
         private modalService: NgbModal,
         fb: FormBuilder
@@ -168,11 +172,15 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     changeExtension(extension: boolean) {
         if (extension && this.form.controls.minutesPerGameExt.value === 0) {
-            this.form.controls.minutesPerGameExt.setValue(SportDefaultService.MinutesPerGameExt);
+            this.form.controls.minutesPerGameExt.setValue(DefaultService.MinutesPerGameExt);
         }
         if (!extension && this.form.controls.minutesPerGameExt.value > 0) {
             this.form.controls.minutesPerGameExt.setValue(0);
         }
+    }
+
+    openGameModeInfoModal() {
+        this.modalService.open(GameModeInfoModalComponent, { windowClass: 'info-modal' });
     }
 
     openInfoModal(header: string, modalContent) {
@@ -264,7 +272,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
         let selfRefereeAvailable = SelfReferee.Disabled;
 
-        const maxNrOfGamePlaces = this.getMaxNrOfGamePlaces(competitionSports);
+        const sports = competitionSports.map((competitionSport: CompetitionSport): Sport => competitionSport.getSport());
+        const maxNrOfGamePlaces = this.sportService.getMaxNrOfGamePlaces(sports);
         const otherPoulesAvailable = this.pouleStructure.selfRefereeOtherPoulesAvailable();
         if (otherPoulesAvailable) {
             selfRefereeAvailable += SelfReferee.OtherPoules;
@@ -276,16 +285,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         return selfRefereeAvailable;
     }
 
-    public getMaxNrOfGamePlaces(competitionSports: CompetitionSport[]): number {
-        let maxNrOfGamePlaces = 0;
-        competitionSports.forEach((competitionSport: CompetitionSport) => {
-            const nrOfGamePlaces = competitionSport.getSport().getNrOfGamePlaces();
-            if (nrOfGamePlaces > maxNrOfGamePlaces) {
-                maxNrOfGamePlaces = nrOfGamePlaces;
-            }
-        });
-        return maxNrOfGamePlaces;
-    }
+
 
     enableDisableSelfReferee() {
         if (this.isSelfRefereeAvailable()) {
@@ -301,12 +301,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         return this.getSelfRefereeAvailable() !== SelfReferee.Disabled;
     }
 
-    get gameModeDefinitions(): GameModeOption[] {
-        return [
-            { value: GameMode.Against, name: 'Het aantal wedstrijden worden bepaald door de grootte van de poule en het aantal onderlinge duels(in te stellen). Voorbeelden zijn tennis en voetbal' },
-            { value: GameMode.Together, name: 'Het aantal wedstrijden worden ingesteld door de gebruiker. Voorbeelden zijn sjoelen en wielrennen' }
-        ];
-    }
+
 
     save(): boolean {
         this.setAlert('info', 'instellingen worden opgeslagen');
@@ -442,11 +437,6 @@ export interface GameAmountConfigValidations {
     maxNrOfHeadtohead: number;
     minNrOfGames: number;
     maxNrOfGames: number;
-}
-
-export interface GameModeOption {
-    value: GameMode;
-    name: string;
 }
 
 enum PlanningAction {

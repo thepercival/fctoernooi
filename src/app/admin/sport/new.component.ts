@@ -6,10 +6,9 @@ import { IAlert } from '../../shared/common/alert';
 import { CSSService } from '../../shared/common/cssservice';
 import { TranslateService } from '../../lib/translate';
 import { SportRepository } from '../../lib/ngx-sport/sport/repository';
-import { SportDefaultService } from '../../lib/ngx-sport/defaultService';
+import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
-import { GameModeOption } from '../planningconfig/edit.component';
+import { GameModeInfoModalComponent } from '../../shared/tournament/gameMode/infomodal.component';
 
 @Component({
     selector: 'app-tournament-sport-new',
@@ -30,11 +29,11 @@ export class SportNewComponent implements OnInit {
     constructor(
         public cssService: CSSService,
         private sportRepository: SportRepository,
-        private sportDefaultService: SportDefaultService,
+        private defaultService: DefaultService,
         private modalService: NgbModal,
         fb: FormBuilder
     ) {
-        this.jsonDefaultSport = this.sportDefaultService.getJsonSport();
+        this.jsonDefaultSport = this.defaultService.getJsonSport();
         this.form = fb.group({
             name: ['', Validators.compose([
                 Validators.required,
@@ -88,13 +87,6 @@ export class SportNewComponent implements OnInit {
         };
     }
 
-    get gameModeDefinitions(): GameModeOption[] {
-        return [
-            { value: GameMode.Against, name: 'Het aantal wedstrijden worden bepaald door de grootte van de poule en het aantal onderlinge duels(in te stellen). Voorbeelden zijn tennis en voetbal' },
-            { value: GameMode.Together, name: 'Het aantal wedstrijden worden ingesteld door de gebruiker. Voorbeelden zijn sjoelen en wielrennen' }
-        ];
-    }
-
     protected setAlert(type: string, message: string) {
         this.alert = { 'type': type, 'message': message };
     }
@@ -110,14 +102,8 @@ export class SportNewComponent implements OnInit {
     //     this.nrOfGamePlacesOptions = this.getNrOfGamePlacesOptions(this.form.controls.gameMode.value);
     // }
 
-    openInfoModal(header: string, modalContent) {
-        const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-        activeModal.componentInstance.header = header;
-        activeModal.componentInstance.modalContent = modalContent;
-        activeModal.result.then((result) => {
-        }, (reason) => {
-
-        });
+    openGameModeInfoModal() {
+        this.modalService.open(GameModeInfoModalComponent, { windowClass: 'info-modal' });
     }
 
     add() {

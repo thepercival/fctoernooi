@@ -70,7 +70,7 @@
           <div class="col-9">
             <button type="button" class="btn btn-outline-secondary" [disabled]="aScoreIsInvalid()"
               (click)="addScoreControl(0,0)">
-              <span>voeg {{getCalculateScoreUnitName(game)}} toe</span>
+              <span>voeg {{getCalculateScoreUnitName()}} toe</span>
             </button>
             <button *ngIf="scoreControls.length > 0" type="button" class="btn btn-sm btn-outline-secondary"
               (click)="removeScoreControl()">

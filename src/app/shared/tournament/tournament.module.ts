@@ -27,6 +27,7 @@ import { InfoModalComponent } from './infomodal/infomodal.component';
 import { QualifyAgainstInfoComponent } from './qualifyAgainstConfig/info.component';
 import { PouleRankingAgainstComponent } from './ranking/pouleagainst.component';
 import { PouleRankingTogetherComponent } from './ranking/pouletogether.component';
+import { GameModeInfoModalComponent } from './gameMode/infomodal.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { PouleRankingTogetherComponent } from './ranking/pouletogether.component
     PouleRankingModalComponent,
     CompetitorChooseModalComponent,
     NameModalComponent,
+    GameModeInfoModalComponent,
     InfoModalComponent,
     EndRankingComponent,
     PouleRankingAgainstComponent,
@@ -60,6 +62,7 @@ import { PouleRankingTogetherComponent } from './ranking/pouletogether.component
     RoundNumberPlanningComponent,
     PouleRankingModalComponent,
     NameModalComponent,
+    GameModeInfoModalComponent,
     InfoModalComponent,
     EndRankingComponent,
     PouleRankingAgainstComponent,

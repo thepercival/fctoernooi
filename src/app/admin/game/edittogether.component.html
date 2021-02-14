@@ -1,6 +1,6 @@
-<!-- <div class="container-fluid">
+<div class="container-fluid">
   <div class="row justify-content-center">
-    <div class="col-xs-12 col-lg-9 col-xl-7">
+    <div class="col-xs-12 col-xl-9">
       <app-tournament-title [tournament]="tournament">
       </app-tournament-title>
       <h2 *ngIf="processing" class="text-center">
@@ -20,85 +20,7 @@
               [innerHTML]="nameService.getPouleName( game.getPoule(), true) | keepHtml"></label>
           </div>
         </div>
-        <div class="form-group row">
-          <div class="col-3">
-            <label for="competitors" class="col-form-label">deelnemers</label>
-          </div>
-          <div class="col-4 font-weight-bold text-break">
-            {{nameService.getPlacesFromName(game.getPlaces( GameHOME ), true, true)}}
-          </div>
-          <div class="col-1 homeAway-splitter">-</div>
-          <div class="col-4 font-weight-bold text-break">
-            {{nameService.getPlacesFromName(game.getPlaces( GameAWAY ), true, true)}}</div>
-        </div>
-        <div *ngIf="calculateScoreControl" class="form-group row">
-          <div class="col-3">
-            <label class="col-form-label">{{getCalculateScoreDescription()}}</label>
-          </div>
-          <div class="col-4">
-            <input [formControl]="calculateScoreControl.home" class="form-control max-width-100 {{getCalculateClass()}}"
-              type="number">
-          </div>
-          <div class="col-1 homeAway-splitter">-</div>
-          <div class="col-4">
-            <input [formControl]="calculateScoreControl.away" class="form-control max-width-100 {{getCalculateClass()}}"
-              type="number">
-          </div>
-        </div>
-        <div *ngFor="let scoreControl of scoreControls; let i = index; let last = last" class="form-group row">
-          <label class="col-3 col-form-label">
-            <span>{{getInputScoreDescription()}}</span>
-          </label>
-          <div class="col-4">
-            <input [formControl]="scoreControl.home" (ngModelChange)="setHome(scoreControl,$event)"
-              class="form-control max-width-100 {{getInputClass(scoreControl)}}" type="number">
-          </div>
-          <div *ngIf="!(last && calculateAndInputScoreDiffers())" class="col-1 homeAway-splitter">-</div>
-          <div *ngIf="last && calculateAndInputScoreDiffers()" class="col-1 homeAway-splitter">
-            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="removeScoreControl(scoreControl)">
-              <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
-            </button>
-          </div>
-          <div class="col-4">
-            <input [formControl]="scoreControl.away" (ngModelChange)="setAway(scoreControl,$event)"
-              class="form-control max-width-100 {{getInputClass(scoreControl)}}" type="number">
-          </div>
-        </div>
-        <div *ngIf="calculateAndInputScoreDiffers()" class="form-group row">
-          <div class="col-3">
-          </div>
-          <div class="col-9">
-            <button type="button" class="btn btn-outline-secondary" [disabled]="aScoreIsInvalid()"
-              (click)="addScoreControl(0,0)">
-              <span>voeg {{getCalculateScoreUnitName(game)}} toe</span>
-            </button>
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-3">
-            <label for="played" class="col-form-label">gespeeld</label>
-          </div>
-          <div class="col-9">
-            <label class="custom-control custom-checkbox col-form-label pl-0">
-              <input type="checkbox" class="custom-control-input form-check-input" formControlName="played"
-                (ngModelChange)="setPlayed($event)">
-              <span class="custom-control-indicator"></span>
-            </label>
-          </div>
-        </div>
-        <div *ngIf="game.getRound().getNumber().getValidPlanningConfig().getExtension()" class="form-group row">
-          <div class="col-3">
-            <label for="extratime" class="col-form-label">na verlenging</label>
-          </div>
-          <div class="col-9">
-            <label class="custom-control custom-checkbox col-form-label pl-0">
-              <input type="checkbox" class="custom-control-input form-check-input" formControlName="extratime"
-                (ngModelChange)="setExtratime($event)">
-              <span class="custom-control-indicator"></span>
-            </label>
-          </div>
-        </div>
-        <div *ngIf="game.getRound().getNumber().getValidPlanningConfig().getEnableTime()" class="form-group row">
+        <div *ngIf="planningConfig.getEnableTime()" class="form-group row">
           <div class="col-3">
             <label class="col-form-label">start</label>
           </div>
@@ -116,14 +38,41 @@
             <label class="col-form-label">{{game.getField().getName()}}</label>
           </div>
         </div>
-        <div *ngFor="let warning of getWarningsForEqualQualifiers()" class="alert alert-warning">{{warning}}</div>
+
+        <div class="form-group row">
+          <div class="col-3">
+            <label class="col-form-label">deelnemers</label>
+          </div>
+          <div class="col-9">
+            <div formGroupName="gamePlaces" class="card-deck flex-wrap d-flex">
+              <app-tournament-togetherscorecard *ngFor="let gamePlace of game.getPlaces()" [gamePlace]="gamePlace"
+                [form]="getFormGroupGamePlace(gamePlace.getId())" [nameService]="nameService"
+                (afterEdit)="postScoreControlUpdate()">
+              </app-tournament-togetherscorecard>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="form-group row">
+          <label for="played" class="col-3 col-form-label">gespeeld</label>
+          <div class="col-9">
+            <div class="form-control custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="played" formControlName="played"
+                (ngModelChange)="setPlayed($event)">
+              <label class="custom-control-label" for="played"></label>
+            </div>
+          </div>
+        </div>
+
+        <div *ngFor="let warning of warningsForEqualQualifiers" class="alert alert-warning">{{warning}}</div>
         <div class="form-group row justify-content-end">
           <div class="col-9">
-            <button type="submit" [disabled]="form.invalid || aScoreIsInvalid()" class="btn btn-outline-primary">wijzig
+            <button type="submit" [disabled]="form.invalid || !allScoresValid" class="btn btn-outline-primary">wijzig
               wedstrijd</button>
           </div>
         </div>
       </form>
     </div>
   </div>
-</div> -->
+</div>

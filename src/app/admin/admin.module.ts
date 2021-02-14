@@ -69,6 +69,7 @@ import { GameAmountConfigEditComponent } from './gameAmountConfig/edit.component
 import { SportNewComponent } from './sport/new.component';
 import { GameTogetherEditComponent } from './game/edittogether.component';
 import { GameAgainstEditComponent } from './game/editagainst.component';
+import { ScoreTogetherCardComponent } from './game/togetherscorecard.component';
 
 @NgModule({
   imports: [
@@ -112,6 +113,7 @@ import { GameAgainstEditComponent } from './game/editagainst.component';
     RoleItemComponent,
     RoundNumbersSelectorModalComponent,
     RoundsSelectorModalComponent,
+    ScoreTogetherCardComponent,
     ShareModalComponent,
     StructureSelectRoundComponent,
   ],

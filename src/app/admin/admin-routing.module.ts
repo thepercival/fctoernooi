@@ -22,6 +22,7 @@ import { AuthorizationListComponent } from './authorization/list.component';
 import { AuthorizationAddComponent } from './authorization/add.component';
 import { CompetitionSportEditComponent } from './competitionSport/edit.component';
 import { GameAgainstEditComponent } from './game/editagainst.component';
+import { GameTogetherEditComponent } from './game/edittogether.component';
 
 const routes: Routes = [
   { path: 'new', component: NewComponent }, // ALL ROLES
@@ -30,7 +31,7 @@ const routes: Routes = [
   { path: 'competitor/:id/:pouleNr/:placeNr', component: CompetitorEditComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'games/:id', component: GameListComponent, canActivate: [AuthguardService] }, // GAMERESULTADMIN
   { path: 'gameagainst/:id/:gameId', component: GameAgainstEditComponent, canActivate: [AuthguardService] }, // GAMERESULTADMIN
-  // { path: 'gametogether/:id/:gameId', component: GameTogetherEditComponent, canActivate: [AuthguardService] }, // GAMERESULTADMIN
+  { path: 'gametogether/:id/:gameId', component: GameTogetherEditComponent, canActivate: [AuthguardService] }, // GAMERESULTADMIN
   { path: 'fields/:id', component: FieldListComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'lockerrooms/:id', component: LockerRoomsComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'planningconfig/:id/:startRoundNumber', component: PlanningConfigComponent, canActivate: [AuthguardService] }, // ADMIN

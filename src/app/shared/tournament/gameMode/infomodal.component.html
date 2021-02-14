@@ -1,0 +1,40 @@
+<div class="modal-header border-bottom-0">
+    <h4 class="modal-title">wedstrijdmodi</h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="activeModal.dismiss('close')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <table class="table fixed text-white">
+        <colgroup>
+            <col class="w-25">
+            <col>
+            <col class="w-25">
+        </colgroup>
+        <tr>
+            <th></th>
+            <th *ngFor="let def of gameModeDefinitions" class="font-weight-bold border-info">
+                <span class="badge bg-{{getClass(def.value)}} mr-1">{{getAbbreviation(def.value)}}</span>
+                <span>{{getName(def.value)}}</span>
+            </th>
+        </tr>
+        <tr>
+            <td>voorbeelden</td>
+            <td *ngFor="let def of gameModeDefinitions">
+                {{def.examples}}
+            </td>
+        </tr>
+        <tr>
+            <td>punten-telling</td>
+            <td *ngFor="let def of gameModeDefinitions">
+                {{def.scoreConfig}}
+            </td>
+        </tr>
+        <tr>
+            <td>aantal wedstrijden</td>
+            <td *ngFor="let def of gameModeDefinitions">
+                {{def.gameAmount}}
+            </td>
+        </tr>
+    </table>
+</div>

@@ -12,29 +12,30 @@
 
 <form [formGroup]="form" name="form" (ngSubmit)="save()" novalidate>
   <div *ngIf="!processing && inputType === inputTypeSelect">
-    <div class="d-flex justify-content-around mb-3">
+    <div class="d-flex justify-content-between mb-3">
+      <button type="button" (click)="openGameModeInfoModal()" class="btn btn-outline-info">
+        <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
+        <span class="ml-1 d-none d-sm-inline"> wedstrijdmodi</span>
+      </button>
       <button type="button" (click)="inputType = inputTypeNew" class="btn btn-outline-secondary">
         zelf invoeren
       </button>
       <button type="submit" class="btn btn-primary"
         [disabled]="form.invalid || selectedSports.length === 0">opslaan</button>
     </div>
-    <ngb-alert *ngIf="bothGameModeSelected()" type="warning" [dismissible]="false">Er zijn sporten met verschillende
-      wedstrijd-modi geselecteerd. De wedstrijd-modus "met elkaar" zal worden ingesteld. Dit is later aan te passen per
-      rondenummer.</ngb-alert>
+    <ngb-alert *ngIf="bothGameModeSelected()" type="warning" [dismissible]="false">De wedstrijd-modus voor de sporten is
+      ingesteld op "met elkaar".</ngb-alert>
     <ul class="list-group">
-      <li *ngFor="let sport of sports" class="list-group-item pointer">
-        <!-- <span class="sport-icon">
-        <app-sport-icon [customId]="sport.getId()"></app-sport-icon>
-      </span> -->
-
+      <li *ngFor="let sport of sports" class="list-group-item">
+        <app-sport-icon class="float-left mr-1" [customId]="sport.getCustomId()"></app-sport-icon>
         <div class="d-flex justify-content-between">
           <!-- <label class="custom-control-label" for="sport-{{sport.getId()}}">123</label> -->
           <!-- <label for="sport-{{sport.getId()}}">{{translate(sport.getCustomId())}}</label> -->
-          <div>
-            {{translate(sport)}}
-          </div>
-          <div class="custom-control custom-switch">
+          <label for="sport-{{sport.getId()}}" class="pointer mb-0">
+            <span>{{translate(sport)}}</span>
+            <small *ngIf="sport.getGameMode() === Against"> (tegen elkaar)</small>
+          </label>
+          <div class="custom-control custom-switch custom-switch-{{getGameModeClass(sport)}}">
             <input type="checkbox" class="custom-control-input" id="sport-{{sport.getId()}}"
               formControlName="sport-{{sport.getId()}}" (ngModelChange)="toggle($event,sport)">
             <label class="custom-control-label " for="sport-{{sport.getId()}}"
@@ -43,18 +44,6 @@
         </div>
       </li>
     </ul>
-    <!-- 
-  <label class="col-4 col-form-label pointer" (click)="openInfoModal('publiek', contentInfo)">publiek
-    <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
-  </label>
-  <div class="col-8">
-    <div class="form-control custom-control custom-switch">
-      <input type="checkbox" class="custom-control-input" id="public" formControlName="public">
-      <label class="custom-control-label" for="public"></label>
-    </div>
-  </div> -->
-
-
   </div>
 </form>
 <app-tournament-sport-new *ngIf="!processing && inputType === inputTypeNew" (created)="createdSport($event)">

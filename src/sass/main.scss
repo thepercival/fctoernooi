@@ -110,6 +110,19 @@ input.is-warning {
   @extend .border-warning;
 }
 
+.bg-against {
+  background-color: purple;
+}
+.bg-together {
+  background-color: pink;
+}
+.custom-switch-against .custom-control-label::after {
+  @extend .bg-against;
+}
+.custom-switch-together .custom-control-label::after {
+  @extend .bg-together;
+}
+
 .progress {
   background-color:#{$body-bg};
 }

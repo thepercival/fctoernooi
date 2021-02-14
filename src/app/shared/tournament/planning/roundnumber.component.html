@@ -166,20 +166,21 @@
       <span *ngIf="isPlayed(gmData.game)">{{getAgainstScore(gmData.game)}}</span>
       <span *ngIf="isPlayed(gmData.game)" class="font-weight-bold">{{getScoreFinalPhase(gmData.game)}}</span>
     </button>
-    <span *ngIf="!gmData.canChangeResult" class="d-none d-sm-inline">{{getAgainstScore(gmData.game)}}</span>
-    <span *ngIf="!gmData.canChangeResult"
-      class="d-none d-sm-inline font-weight-bold">{{getScoreFinalPhase(gmData.game)}}</span>
-    <button *ngIf="!gmData.canChangeResult && hasReferees && !isPlayed(gmData.game)"
-      class="btn btn-outline-info btn-sm d-sm-none" placement="top"
-      [ngbPopover]="nameService.getRefereeName(gmData.game)">
-      <span [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
-        <fa-icon [icon]="['fac', 'referee']"></fa-icon>
-      </span>
-    </button>
-    <span *ngIf="!gmData.canChangeResult && !(hasReferees && !isPlayed(gmData.game))"
-      class="d-sm-none font-weight-bold">{{getAgainstScore(gmData.game)}}</span>
-    <span *ngIf="!gmData.canChangeResult && !(hasReferees && !isPlayed(gmData.game))"
-      class="d-sm-none">{{getScoreFinalPhase(gmData.game)}}</span>
+    <!-- no auth -->
+    <ng-template *ngIf="!gmData.canChangeResult">
+      <span class="d-none d-sm-inline">{{getAgainstScore(gmData.game)}}</span>
+      <span class="d-none d-sm-inline font-weight-bold">{{getScoreFinalPhase(gmData.game)}}</span>
+      <button *ngIf="hasReferees && !isPlayed(gmData.game)" class="btn btn-outline-info btn-sm d-sm-none"
+        placement="top" [ngbPopover]="nameService.getRefereeName(gmData.game)">
+        <span [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
+          <fa-icon [icon]="['fac', 'referee']"></fa-icon>
+        </span>
+      </button>
+      <span *ngIf="!(hasReferees && !isPlayed(gmData.game))"
+        class="d-sm-none font-weight-bold">{{getAgainstScore(gmData.game)}}</span>
+      <span *ngIf="!(hasReferees && !isPlayed(gmData.game))"
+        class="d-sm-none">{{getScoreFinalPhase(gmData.game)}}</span>
+    </ng-template>
   </td>
   <!-- awayPlaces -->
   <td class="place" [ngClass]="{ 'favitem': favorites?.hasGameCompetitor(gmData.game, GameAWAY) }">
@@ -192,16 +193,36 @@
   <td class="place" [ngClass]="{'favitem': favorites?.hasGameCompetitor(gmData.game, GameHOME) }">
     <span>{{nameService.getPlacesFromName(gmData.game.getTogetherPlaces(),true,true)}}</span>
   </td>
-  <!-- score -->
-  <td nowrap class="text-center">
+  <!-- score 1 place -->
+  <td *ngIf="gmData.game.getPlaces().length === 1" nowrap class="text-center">
     <button *ngIf="gmData.canChangeResult" class="btn btn-sm btn-outline-primary" (click)="linkToGameEdit(gmData.game)">
       <fa-icon *ngIf="!isPlayed(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
-      <span *ngIf="isPlayed(gmData.game)">{{getAgainstScore(gmData.game)}}</span>
+      <span *ngIf="isPlayed(gmData.game)">{{getTogetherSingleScore(gmData.game)}}</span>
       <span *ngIf="isPlayed(gmData.game)" class="font-weight-bold">{{getScoreFinalPhase(gmData.game)}}</span>
     </button>
-    <span *ngIf="!gmData.canChangeResult" class="d-none d-sm-inline">{{getAgainstScore(gmData.game)}}</span>
-    <span *ngIf="!gmData.canChangeResult"
-      class="d-none d-sm-inline font-weight-bold">{{getScoreFinalPhase(gmData.game)}}</span>
+    <!-- no auth -->
+    <ng-template *ngIf="!gmData.canChangeResult">
+      <span class="d-none d-sm-inline">{{getTogetherSingleScore(gmData.game)}}</span>
+      <span class="d-none d-sm-inline font-weight-bold">{{getScoreFinalPhase(gmData.game)}}</span>
+      <button *ngIf="hasReferees && !isPlayed(gmData.game)" class="btn btn-outline-info btn-sm d-sm-none"
+        placement="top" [ngbPopover]="nameService.getRefereeName(gmData.game)">
+        <span [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
+          <fa-icon [icon]="['fac', 'referee']"></fa-icon>
+        </span>
+      </button>
+      <span *ngIf="!(hasReferees && !isPlayed(gmData.game))"
+        class="d-sm-none font-weight-bold">{{getTogetherSingleScore(gmData.game)}}</span>
+      <span *ngIf="!(hasReferees && !isPlayed(gmData.game))"
+        class="d-sm-none">{{getScoreFinalPhase(gmData.game)}}</span>
+    </ng-template>
+  </td>
+  <!-- score multiple place -->
+  <td *ngIf="gmData.game.getPlaces().length !== 1" nowrap class="text-center">
+    <button *ngIf="gmData.canChangeResult" class="btn btn-sm btn-outline-{{getTogetherScoreButtonClass(gmData.game)}}"
+      (click)="linkToGameEdit(gmData.game)">
+      <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+    </button>
+    <!-- no auth -->
     <button *ngIf="!gmData.canChangeResult && hasReferees && !isPlayed(gmData.game)"
       class="btn btn-outline-info btn-sm d-sm-none" placement="top"
       [ngbPopover]="nameService.getRefereeName(gmData.game)">
@@ -209,10 +230,6 @@
         <fa-icon [icon]="['fac', 'referee']"></fa-icon>
       </span>
     </button>
-    <span *ngIf="!gmData.canChangeResult && !(hasReferees && !isPlayed(gmData.game))"
-      class="d-sm-none font-weight-bold">{{getAgainstScore(gmData.game)}}</span>
-    <span *ngIf="!gmData.canChangeResult && !(hasReferees && !isPlayed(gmData.game))"
-      class="d-sm-none">{{getScoreFinalPhase(gmData.game)}}</span>
   </td>
 </ng-template>
 

@@ -13,7 +13,7 @@
             <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
                 <div class="form-group row">
                     <label for="gameMode" class="col-7 col-form-label pointer"
-                        (click)="openInfoModal('wedstrijd-modus', contentInfoGameMode)">wedstrijd-modus
+                        (click)="openGameModeInfoModal()">wedstrijd-modus
                         <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
                     </label>
                     <div class="col-5">
@@ -126,12 +126,7 @@
 </div>
 
 <ng-template #contentInfoGameMode>
-    <table class="table text-white">
-        <tr *ngFor="let gameModeDefinition of gameModeDefinitions">
-            <td class="font-weight-bold border-info">{{nameService.getGameModeName(gameModeDefinition.value)}}</td>
-            <td class="border-info bg-info">{{gameModeDefinition.name}}</td>
-        </tr>
-    </table>
+
 </ng-template>
 
 <ng-template #contentInfoMinutesAfter>
