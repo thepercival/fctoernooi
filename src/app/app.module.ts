@@ -37,7 +37,6 @@ import { UserMapper } from './lib/user/mapper';
 import { LayoutModule } from './shared/layout/layout.module';
 import { facDarts, facSoccerField, facTennis, facBadminton, facHockey, facSquash, facKorfball, facFavicon } from './lib/icons';
 import { SportIconCustomComponent } from './home/sport/customicon.component';
-// import { TournamentModule } from './shared/tournament/tournament.module';
 
 @NgModule({
   declarations: [
@@ -53,8 +52,7 @@ import { SportIconCustomComponent } from './home/sport/customicon.component';
     CommonSharedModule,
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
     FontAwesomeModule,
-    LayoutModule/*,
-    TournamentModule.forRoot(),*/
+    LayoutModule
   ],
   providers: [
     AuthService,
@@ -62,7 +60,13 @@ import { SportIconCustomComponent } from './home/sport/customicon.component';
     TournamentShellRepository,
     UserMapper,
     GlobalEventsManager,
-    MyNavigation
+    MyNavigation,
+    {
+      provide: 'placeRanges', useValue: [
+        { min: 2, max: 40, placesPerPoule: { min: 2, max: 12 } },
+        { min: 41, max: 128, placesPerPoule: { min: 2, max: 8 } }
+      ]
+    }
   ],
   bootstrap: [AppComponent]
 })

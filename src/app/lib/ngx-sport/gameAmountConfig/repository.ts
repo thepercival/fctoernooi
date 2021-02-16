@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../repository';
-import { CompetitionSport, CompetitionSportMapper, JsonCompetitionSport, RoundNumber, GameAmountConfigMapper, JsonGameAmountConfig, GameAmountConfig } from 'ngx-sport';
+import { CompetitionSportMapper, JsonCompetitionSport, RoundNumber, GameAmountConfigMapper, JsonGameAmountConfig, GameAmountConfig, GameAmountConfigService } from 'ngx-sport';
 import { Tournament } from '../../tournament';
 
 @Injectable({
@@ -13,7 +13,10 @@ import { Tournament } from '../../tournament';
 export class GameAmountConfigRepository extends APIRepository {
 
     constructor(
-        private mapper: GameAmountConfigMapper, private competitionSportMapper: CompetitionSportMapper, private http: HttpClient) {
+        private service: GameAmountConfigService,
+        private mapper: GameAmountConfigMapper,
+        private competitionSportMapper: CompetitionSportMapper,
+        private http: HttpClient) {
         super();
     }
 
@@ -35,21 +38,11 @@ export class GameAmountConfigRepository extends APIRepository {
             map((jsonResult: JsonGameAmountConfig) => {
                 const competitionSport = this.competitionSportMapper.toObject(jsonResult.competitionSport, tournament.getCompetition());
                 if (roundNumber.hasNext()) {
-                    this.remove(roundNumber.getNext(), competitionSport);
+                    this.service.removeFromRoundNumber(competitionSport, roundNumber.getNext());
                 }
                 return this.mapper.toObject(jsonResult, roundNumber, roundNumber.getGameAmountConfig(competitionSport));
             }),
             catchError((err) => this.handleError(err))
         );
-    }
-
-    remove(roundNumber: RoundNumber, competitionSport: CompetitionSport) {
-        const gameAmountConfig = roundNumber.getGameAmountConfig(competitionSport);
-        if (gameAmountConfig) {
-            roundNumber.getGameAmountConfigs().splice(roundNumber.getGameAmountConfigs().indexOf(gameAmountConfig), 1);
-        }
-        if (roundNumber.hasNext()) {
-            this.remove(roundNumber.getNext(), competitionSport);
-        }
     }
 }

@@ -8,10 +8,6 @@ import { TournamentCompetitor } from './competitor';
 import { Identifiable } from 'ngx-sport';
 
 export class Tournament extends Identifiable {
-    static readonly PlaceRanges: PlaceRange[] = [
-        { min: 2, max: 40, placesPerPoule: { min: 2, max: 12 } },
-        { min: 41, max: 128, placesPerPoule: { min: 2, max: 8 } }
-    ];
     protected id: number;
     protected competition: Competition;
     protected users: TournamentUser[] = [];

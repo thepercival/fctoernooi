@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt, faMedal, faSpinner,
@@ -56,7 +56,7 @@ import { GameModeInfoModalComponent } from './gameMode/infomodal.component';
     NgbNavModule
   ],
   providers: [
-    CompetitionSportRouter
+    CompetitionSportRouter,
   ],
   exports: [
     RoundNumberPlanningComponent,
@@ -85,13 +85,4 @@ export class TournamentModule {
     modalConfig.scrollable = true;
     modalConfig.size = 'lg';
   }
-
-  /*static forRoot(): ModuleWithProviders<TournamentModule> {
-    return {
-      ngModule: TournamentModule,
-      providers: [
-        { provide: CompetitionSportMapper }
-      ]
-    };
-  }*/
 }

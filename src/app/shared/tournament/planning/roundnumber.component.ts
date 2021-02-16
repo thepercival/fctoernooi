@@ -29,7 +29,7 @@ import { PlanningRepository } from '../../../lib/ngx-sport/planning/repository';
 import { PouleRankingModalComponent } from '../poulerankingmodal/rankingmodal.component';
 import { TranslateService } from '../../../lib/translate';
 import { CompetitionSportRouter } from '../competitionSport.router';
-import { CompetitionSportTabOrder } from '../competitionSportTabOrder';
+import { CompetitionSportTab } from '../competitionSportTab';
 
 @Component({
   selector: 'app-tournament-roundnumber-planning',
@@ -117,8 +117,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   get GameModeTogether(): GameMode { return GameMode.Together; }
   get GameHOME(): boolean { return AgainstGame.Home; }
   get GameAWAY(): boolean { return AgainstGame.Away; }
-  get SportConfigTabFields(): number { return CompetitionSportTabOrder.Fields; }
-  get SportConfigTabScore(): number { return CompetitionSportTabOrder.Score; }
+  get SportConfigTabFields(): number { return CompetitionSportTab.Fields; }
+  get SportConfigTabScore(): number { return CompetitionSportTab.Score; }
 
   private getGameData() {
     const gameDatas: GameData[] = [];
@@ -246,8 +246,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     this.router.navigate(['/admin/planningconfig', this.tournament.getId(), this.roundNumber.getNumber()]);
   }
 
-  linkToCompetitionSport(tabOrder: CompetitionSportTabOrder) {
-    this.competitionSportRouter.navigate(this.tournament, tabOrder);
+  linkToCompetitionSport(tab: CompetitionSportTab) {
+    this.competitionSportRouter.navigate(this.tournament, tab);
   }
 
   linkToReferee() {

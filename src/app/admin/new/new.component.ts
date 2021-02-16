@@ -41,6 +41,7 @@ export class NewComponent implements OnInit {
     private tournamentRepository: TournamentRepository,
     private structureRepository: StructureRepository,
     private planningRepository: PlanningRepository,
+    private structureService: StructureService,
     private defaultService: DefaultService,
     private sportMapper: SportMapper,
     private modalService: NgbModal,
@@ -151,9 +152,8 @@ export class NewComponent implements OnInit {
     this.tournamentRepository.createObject(jsonTournament)
       .subscribe(
         /* happy path */ tournament => {
-          const structureService = new StructureService(Tournament.PlaceRanges);
           const jsonPlanningConfig = this.defaultService.getJsonPlanningConfig(this.sports);
-          const structure: Structure = structureService.create(
+          const structure: Structure = this.structureService.create(
             tournament.getCompetition(),
             jsonPlanningConfig,
             this.defaultService.getPouleStructure(this.sports, nrOfFields));
@@ -193,6 +193,9 @@ export class NewComponent implements OnInit {
 
   getFieldsDescription(): string {
     const translate = new TranslateService();
+    if (this.sports.length > 0) {
+      return translate.getFieldNamePlural(undefined) + ' per sport';
+    }
     return translate.getFieldNamePlural(this.sports[0]);
   }
 

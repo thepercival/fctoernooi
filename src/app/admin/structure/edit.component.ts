@@ -18,7 +18,7 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 @Component({
   selector: 'app-tournament-structure',
   templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.css']
+  styleUrls: ['./edit.component.css'],
 })
 export class StructureEditComponent extends TournamentComponent implements OnInit {
   changedRoundNumber: RoundNumber;

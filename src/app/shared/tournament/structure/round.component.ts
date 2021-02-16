@@ -22,11 +22,9 @@ export class StructureRoundComponent implements OnInit {
   viewType: number = StructureViewType.ROUNDSTRUCTURE;
   alert: IAlert;
   public nameService: NameService;
-  private structureService: StructureService;
 
-  constructor(public cssService: CSSService) {
+  constructor(private structureService: StructureService, public cssService: CSSService) {
     this.resetAlert();
-    this.structureService = new StructureService(Tournament.PlaceRanges);
   }
 
   ngOnInit() {

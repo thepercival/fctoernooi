@@ -70,6 +70,7 @@ import { SportNewComponent } from './sport/new.component';
 import { GameTogetherEditComponent } from './game/edittogether.component';
 import { GameAgainstEditComponent } from './game/editagainst.component';
 import { ScoreTogetherCardComponent } from './game/togetherscorecard.component';
+import { Tournament } from '../lib/tournament';
 
 @NgModule({
   imports: [

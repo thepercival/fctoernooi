@@ -13,7 +13,7 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { TranslateService } from '../../lib/translate';
-import { CompetitionSportTabOrder } from '../../shared/tournament/competitionSportTabOrder';
+import { CompetitionSportTab } from '../../shared/tournament/competitionSportTab';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -66,9 +66,9 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
         return this.competition.getSports().find(competitionSport => id === competitionSport.getId());
     }
 
-    get TabFields(): number { return CompetitionSportTabOrder.Fields; }
-    get TabScore(): number { return CompetitionSportTabOrder.Score; }
-    get TabPoints(): number { return CompetitionSportTabOrder.Points; }
+    get TabFields(): number { return CompetitionSportTab.Fields; }
+    get TabScore(): number { return CompetitionSportTab.Score; }
+    get TabPoints(): number { return CompetitionSportTab.Points; }
 
     selectedSports(sports: Sport[]) {
         // if (sport === undefined) {
@@ -133,12 +133,8 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
         }
     }
 
-    openMultiSportsModal(content) {
-        this.modalService.open(content).result.then((result) => {
-            if (result === 'continue') {
-                this.router.navigate(['/admin/competitionsports', this.tournament.getId()]);
-            }
-        }, (reason) => { });
+    linkToSports() {
+        this.router.navigate(['/admin/competitionsports', this.tournament.getId()]);
     }
 
     // getFieldsDescription(): string {

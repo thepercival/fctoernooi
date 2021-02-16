@@ -9,7 +9,8 @@ import {
   QualifyGroup,
   Round,
   Structure,
-  PlaceLocationMap
+  PlaceLocationMap,
+  StructureService
 } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
 
@@ -49,6 +50,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     router: Router,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
+    private structureService: StructureService,
     private planningRepository: PlanningRepository,
     private competitorRepository: CompetitorRepository,
     private modalService: NgbModal,
@@ -194,8 +196,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.setAlert('info', 'er wordt een pouleplek toegevoegd');
     try {
       const rootRound = this.structure.getRootRound();
-      const structureService = this.getStructureService();
-      const addedPlace = structureService.addPlaceToRootRound(rootRound);
+      const addedPlace = this.structureService.addPlaceToRootRound(rootRound);
       this.saveStructure('pouleplek ' + this.nameService.getPlaceName(addedPlace) + ' is toegevoegd');
     } catch (e) {
       this.setAlert('danger', e.message);
@@ -276,7 +277,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.setAlert('info', 'een pouleplek' + competitor + ' ' + singledoubleWill + ' verwijderd');
     try {
 
-      this.getStructureService().removePlaceFromRootRound(rootRound);
+      this.structureService.removePlaceFromRootRound(rootRound);
 
       const singledoubleIs = competitor ? 'zijn' : 'is';
       this.saveStructure('een pouleplek' + competitor + ' ' + singledoubleIs + ' verwijderd');

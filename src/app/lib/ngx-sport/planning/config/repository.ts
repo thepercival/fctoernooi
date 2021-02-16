@@ -34,18 +34,18 @@ export class PlanningConfigRepository extends APIRepository {
         const url = this.getUrl(tournament, roundNumber);
         return this.http.post(url, json, this.getOptions()).pipe(
             map((jsonResult: JsonPlanningConfig) => {
-                this.removeDescandants(roundNumber);
+                this.removeNext(roundNumber);
                 return this.planningConfigMapper.toObject(jsonResult, roundNumber);
             }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    removeDescandants(roundNumber: RoundNumber) {
+    private removeNext(roundNumber: RoundNumber) {
         if (!roundNumber.hasNext()) {
             return;
         }
         roundNumber.getNext().setPlanningConfig(undefined);
-        this.removeDescandants(roundNumber.getNext());
+        this.removeNext(roundNumber.getNext());
     }
 }

@@ -6,10 +6,6 @@
       <h2>
         sporten
       </h2>
-      <button *ngIf="tournament" type="button" class="btn btn-sm btn-outline-secondary mr-0"
-        [routerLink]="['/admin/fields', tournament.getId()]">
-        naar velden
-      </button>
     </div>
 
     <h2 *ngIf="processing" class="text-center">
@@ -27,7 +23,7 @@
           <th></th>
           <th>naam</th>
           <th class="d-none d-sm-table-cell" title="aantal">
-            <fa-icon [icon]="['fac', 'soccer-field']"></fa-icon>
+            <fa-icon [icon]="['fac', 'soccer-field']"></fa-icon> velden
           </th>
           <th class="text-right" *ngIf="!hasBegun">
             <button type="button" class="btn btn-sm btn-primary"
@@ -40,13 +36,9 @@
       <tbody>
         <tr *ngFor="let competitionSport of competitionSports; let last = last;">
           <td>
-            <button *ngIf="!hasBegun" type="button" class="btn btn-sm btn-primary" [disabled]="processing"
-              (click)="editCompetitionSport(competitionSport)">
+            <button type="button" class="btn btn-sm btn-outline-primary"
+              [routerLink]="['/admin/competitionsport', tournament.getId(), competitionSport.getId(), TabFields]">
               <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
-            </button>
-            <button *ngIf="hasBegun" type="button" class="btn btn-sm btn-outline-secondary"
-              [routerLink]="['/admin/competitionsport', tournament.getId(), competitionSport.getId()]">
-              <fa-icon [icon]="['fas', 'eye']"></fa-icon>
             </button>
           </td>
           <td>

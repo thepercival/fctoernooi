@@ -10,8 +10,8 @@
           <span *ngIf="competitionSport"> {{competitionSport.getSport().getName()}}</span>
           <span *ngIf="!competitionSport">sport</span>
         </h2>
-        <button *ngIf="competitionSport && competition.getSports().length === 1"
-          (click)="openMultiSportsModal(multisports)" class="mb-2 btn btn-outline-secondary btn-sm">
+        <button *ngIf="competitionSport && competition.getSports().length === 1" (click)="linkToSports()"
+          class="mb-2 btn btn-outline-secondary btn-sm">
           <span>meerdere sporten</span>
         </button>
       </div>
@@ -57,25 +57,3 @@
       </app-tournament-sports-selector>
     </div>
   </div>
-
-  <ng-template #multisports let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title">planning meerdere sporten</h4>
-      <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('cancel')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <ul class="list-group">
-        <li class="list-group-item">elke deelnemers speelt even vaak tegen andere deelnemers(net zoals bij 1 sport)</li>
-        <li class="list-group-item">elke deelnemer doet iedere sport in ieder geval 1 keer(of hoeveel velden er voor de
-          sport zijn)</li>
-        <li class="list-group-item">wanneer er meer sporten gedaan moeten worden dan er wedstrijden voor de deelnemer
-          zijn, dan speelt
-          iedereen vaker tegen elkaar</li>
-      </ul>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-primary" (click)="modal.close('continue')">doorgaan</button>
-    </div>
-  </ng-template>

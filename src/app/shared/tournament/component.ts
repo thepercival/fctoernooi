@@ -70,10 +70,6 @@ export class TournamentComponent {
     protected resetAlert(): void {
         this.alert = undefined;
     }
-
-    protected getStructureService(): StructureService {
-        return new StructureService(Tournament.PlaceRanges);
-    }
 }
 
 type DataProcessCallBack = () => void;
