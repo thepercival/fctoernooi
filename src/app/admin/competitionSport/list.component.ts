@@ -15,6 +15,8 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { CompetitionSportTab } from '../../shared/tournament/competitionSportTab';
 import { CompetitionSportRepository } from '../../lib/ngx-sport/competitionSport/repository';
+import { SportSelectMode } from '../sport/select.component';
+import { forkJoin, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-tournament-sport',
@@ -24,6 +26,7 @@ import { CompetitionSportRepository } from '../../lib/ngx-sport/competitionSport
 export class CompetitionSportListComponent extends TournamentComponent implements OnInit {
   competitionSports: CompetitionSport[];
   translateService: TranslateService;
+  showSelectSports = false;
   hasBegun: boolean;
 
   validations: any = {
@@ -61,7 +64,36 @@ export class CompetitionSportListComponent extends TournamentComponent implement
     this.competitionSports = this.competition.getSports();
   }
 
+  get SportSelectModeAdd(): SportSelectMode { return SportSelectMode.Add; }
+
   get TabFields(): CompetitionSportTab { return CompetitionSportTab.Fields; }
+
+  getSports(): Sport[] {
+    return this.competitionSports.map((competitionSport: CompetitionSport) => competitionSport.getSport());
+  }
+
+  selectedSports(sports: Sport[]) {
+    // const sportsName = this.sports.map((sport: Sport) => sport.getName()).join(',');
+    // this.form.controls.sportsName.setValue(sportsName);
+    this.showSelectSports = false;
+    if (sports.length === 0) {
+      return;
+    }
+
+    this.setAlert('info', 'de sport(en) worden toegevoegd');
+    this.processing = true;
+
+    const reposUpdates: Observable<CompetitionSport>[] = sports.map((sport: Sport) => {
+      return this.competitionSportRepository.createObject(sport, this.tournament, this.structure);
+    });
+    forkJoin(reposUpdates).subscribe(results => {
+      this.processing = false;
+    },
+      e => {
+        this.alert = { type: 'danger', message: 'de wedstrijd-aantallen zijn niet opgeslagen: ' + e };
+        this.processing = false;
+      });
+  }
 
   // addSport() {
   //   this.linkToEdit(this.tournament);

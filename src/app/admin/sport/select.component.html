@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-between mb-4">
-  <h1 class="text-truncate">sport(en) kiezen</h1>
+  <h1 class="text-truncate">sport(en) {{getHeader()}}</h1>
   <h1 class="mr-1">
     <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary">
       <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
@@ -26,7 +26,7 @@
     <ngb-alert *ngIf="bothGameModeSelected()" type="warning" [dismissible]="false">De wedstrijd-modus voor de sporten is
       ingesteld op "met elkaar".</ngb-alert>
     <ul class="list-group">
-      <li *ngFor="let sport of sports" class="list-group-item">
+      <li *ngFor="let sport of selectableSports" class="list-group-item">
         <app-sport-icon class="float-left mr-1" [customId]="sport.getCustomId()"></app-sport-icon>
         <div class="d-flex justify-content-between">
           <!-- <label class="custom-control-label" for="sport-{{sport.getId()}}">123</label> -->
@@ -37,7 +37,7 @@
           </label>
           <div class="custom-control custom-switch custom-switch-{{getGameModeClass(sport)}}">
             <input type="checkbox" class="custom-control-input" id="sport-{{sport.getId()}}"
-              formControlName="sport-{{sport.getId()}}" (ngModelChange)="toggle($event,sport)">
+              formControlName="sport-{{sport.getId()}}">
             <label class="custom-control-label " for="sport-{{sport.getId()}}"
               [ngClass]="{ 'custom-control-label-warning': hasOtherGameMode(sport) }"></label>
           </div>

@@ -91,17 +91,6 @@ export class SportNewComponent implements OnInit {
         this.alert = { 'type': type, 'message': message };
     }
 
-    // changedGameMode() {
-    //     this.updateNrOfGamePlacesControl();
-    // }
-
-    // updateNrOfGamePlacesControl() {
-    //     if ((this.form.controls.nrOfGamePlaces.value % 2) === 1 && this.form.controls.gameMode.value === GameMode.Against) {
-    //         this.form.controls.nrOfGamePlaces.setValue(this.jsonDefaultSport.nrOfGamePlaces);
-    //     }
-    //     this.nrOfGamePlacesOptions = this.getNrOfGamePlacesOptions(this.form.controls.gameMode.value);
-    // }
-
     openGameModeInfoModal() {
         this.modalService.open(GameModeInfoModalComponent, { windowClass: 'info-modal' });
     }
@@ -120,26 +109,6 @@ export class SportNewComponent implements OnInit {
             /* onComplete */() => this.processing = false
         );
     }
-
-    // sendSportByCustomId(customId: number) {
-    //     this.processing = true;
-    //     this.sportRepository.getObjectByCustomId(customId).subscribe(
-    //         /* happy path */ sportRes => {
-    //             this.sendSport.emit(sportRes);
-    //         },
-    //         /* error path */ e => {
-    //             this.setAlert('danger', 'de sport kan niet gevonden worden: ' + e);
-    //             this.processing = false;
-    //         },
-    //         /* onComplete */() => this.processing = false
-    //     );
-
-    // }
-
-    // private postInit(id: number) {
-
-    //     const sports = this.tournament.getCompetition().getSports();
-    //     // sports is filter for list
 }
 
 interface NrOfGamePlacesOption {

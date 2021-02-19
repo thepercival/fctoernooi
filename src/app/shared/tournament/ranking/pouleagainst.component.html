@@ -45,10 +45,9 @@
                                 </div>
                                 <div *ngIf="showDifferenceDetail">( {{rankingItem.getUnranked().getScored()}} -
                                     {{rankingItem.getUnranked().getReceived()}} )</div>
-                                <!-- TODOSPORT -->
-                                <!-- <div *ngIf="showDifferenceDetail && useSubScore()">(
+                                <div *ngIf="showDifferenceDetail && useSubScore()">(
                                     {{rankingItem.getUnranked().getSubScored()}} -
-                                    {{rankingItem.getUnranked().getSubReceived()}} )</div> -->
+                                    {{rankingItem.getUnranked().getSubReceived()}} )</div>
                             </td>
                         </tr>
                     </ng-template>

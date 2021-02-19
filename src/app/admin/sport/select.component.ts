@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { GameMode, Sport } from 'ngx-sport';
 
@@ -13,15 +13,15 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
     templateUrl: './select.component.html',
     styleUrls: ['./select.component.css']
 })
-export class SportSelectComponent implements OnInit, OnChanges {
-    @Input() sports: Sport[];
+export class SportSelectComponent implements OnInit {
     @Input() selectedSports: Sport[] = [];
+    @Input() editMode: SportSelectMode;
     @Output() selected = new EventEmitter<Sport[]>();
     processing = true;
-    private originalSelectedSports: Sport[] = [];
     inputType: SportInputType = SportInputType.Select;
     form: FormGroup;
     public alert: IAlert;
+    public selectableSports: Sport[];
     translateService: TranslateService;
 
     constructor(
@@ -36,15 +36,14 @@ export class SportSelectComponent implements OnInit, OnChanges {
 
     ngOnInit() {
         this.processing = true;
-        this.originalSelectedSports = this.selectedSports.slice();
         this.sportRepository.getObjects().subscribe(
             /* happy path */(sports: Sport[]) => {
-                this.sort(sports).forEach((sport: Sport) => {
-                    this.form.addControl('sport-' + sport.getId(), new FormControl(
-                        this.isSelected(sport)
+                this.selectableSports = this.initSelectableSports(sports);
+                this.selectableSports.forEach((sport: Sport) => {
+                    this.form.addControl(this.getControlId(sport), new FormControl(
+                        { value: this.isInSelected(sport), disabled: this.isDisabled(sport) }
                     ));
                 });
-                this.sports = sports;
                 this.processing = false;
             },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
@@ -52,56 +51,61 @@ export class SportSelectComponent implements OnInit, OnChanges {
         );
     }
 
-    ngOnChanges() {
-
-
-    }
-
-    protected addControl() {
-
-    }
-
-    sort(sports: Sport[]): Sport[] {
-        sports.sort((s1, s2) => {
+    protected initSelectableSports(sports: Sport[]): Sport[] {
+        sports.sort((s1: Sport, s2: Sport) => {
             return (this.translate(s1) > this.translate(s2) ? 1 : -1);
         });
         return sports;
+    }
+
+    getControlId(sport: Sport): string {
+        return 'sport-' + sport.getId();
+    }
+
+    isInSelected(sport: Sport): boolean {
+        return this.selectedSports.indexOf(sport) >= 0;
+    }
+
+    isDisabled(sport: Sport): boolean {
+        return this.editMode === SportSelectMode.Add && this.isInSelected(sport);
+    }
+
+    getHeader(): string {
+        return this.editMode === SportSelectMode.AddRemove ? 'kiezen' : 'toevoegen';
     }
 
     get inputTypeSelect(): SportInputType { return SportInputType.Select; }
     get inputTypeNew(): SportInputType { return SportInputType.New; }
 
     createdSport(sport: Sport) {
-        if (this.sports.indexOf(sport) < 0) {
-            this.sports.unshift(sport);
-            this.form.addControl('sport-' + sport.getId(), new FormControl(true));
-        }
-        this.form.controls['sport-' + sport.getId()].setValue(true);
-
-        if (this.selectedSports.indexOf(sport) < 0) {
-            this.selectedSports.unshift(sport);
+        if (this.selectableSports.indexOf(sport) < 0) {
+            this.selectableSports.unshift(sport);
+            this.form.addControl(this.getControlId(sport), new FormControl(true));
+        } else {
+            this.form.controls[this.getControlId(sport)].setValue(true);
         }
         this.inputType = this.inputTypeSelect;
     }
 
-    isSelected(sport: Sport): boolean {
-        return this.selectedSports.indexOf(sport) >= 0;
-    }
-
-    toggle(toggle: boolean, sport: Sport) {
-        if (toggle) {
-            this.selectedSports.push(sport);
-        } else {
-            this.selectedSports.splice(this.selectedSports.indexOf(sport), 1);
-        }
-    }
-
     navigateBack() {
-        this.selected.emit(this.originalSelectedSports);
+        if (this.editMode === SportSelectMode.Add) {
+            return this.selected.emit([]);
+        }
+        this.selected.emit(this.selectedSports);
     }
 
     save() {
-        this.selected.emit(this.selectedSports);
+        if (this.editMode === SportSelectMode.AddRemove) {
+            return this.selected.emit(this.selectedSports);
+        }
+        const sports = this.getSelectedFormSports().filter((sport: Sport) => this.selectedSports.indexOf(sport) < 0);
+        this.selected.emit(sports);
+    }
+
+    protected getSelectedFormSports(): Sport[] {
+        return this.selectableSports.filter((sport: Sport) => {
+            return this.form.controls[this.getControlId(sport)].value;
+        });
     }
 
     bothGameModeSelected(): boolean {
@@ -109,7 +113,7 @@ export class SportSelectComponent implements OnInit, OnChanges {
     }
 
     hasGameModeSelected(gameMode: GameMode): boolean {
-        return this.selectedSports.some((sportIt: Sport) => sportIt.getGameMode() === gameMode);
+        return this.getSelectedFormSports().some((sportIt: Sport) => sportIt.getGameMode() === gameMode)
     }
 
     hasOtherGameMode(sport: Sport): boolean {
@@ -120,14 +124,6 @@ export class SportSelectComponent implements OnInit, OnChanges {
     getGameModeClass(sport: Sport): string {
         return sport.getGameMode() === GameMode.Against ? 'against' : 'together';
     }
-
-    // protected isInputTypeHelper(inputType: number): boolean {
-    //     return (inputType & this.radioGroupForm.value['inputtype']) === inputType;
-    // }
-
-    // showInputTypeChoice() {
-    //     return this.inputSelectOnly !== true;
-    // }
 
     translate(sport: Sport): string {
         if (sport.getCustomId() > 0) {
@@ -145,48 +141,8 @@ export class SportSelectComponent implements OnInit, OnChanges {
     protected setAlert(type: string, message: string) {
         this.alert = { 'type': type, 'message': message };
     }
-
-    // save() {
-    //this.processing = true;
-    // TODOSPORT
-    // const json: JsonSport = {
-    //     id: 0,
-    //     name: this.form.value['newSportName'],
-    //     team: this.form.value['team'],
-    //     customId: 0
-    // };
-    // this.sportRepository.createObject(json).subscribe(
-    //     /* happy path */ sportRes => {
-    //         this.sendSport.emit(sportRes);
-    //     },
-    //     /* error path */ e => {
-    //         this.setAlert('danger', 'de sport kon niet worden aangemaakt: ' + e);
-    //         this.processing = false;
-    //     },
-    //     /* onComplete */() => this.processing = false
-    // );
-    // }
-
-    // sendSportByCustomId(customId: number) {
-    //     this.processing = true;
-    //     this.sportRepository.getObjectByCustomId(customId).subscribe(
-    //         /* happy path */ sportRes => {
-    //             this.sendSport.emit(sportRes);
-    //         },
-    //         /* error path */ e => {
-    //             this.setAlert('danger', 'de sport kan niet gevonden worden: ' + e);
-    //             this.processing = false;
-    //         },
-    //         /* onComplete */() => this.processing = false
-    //     );
-
-    // }
-
-    // private postInit(id: number) {
-
-    //     const sports = this.tournament.getCompetition().getSports();
-    //     // sports is filter for list
 }
 
 enum SportInputType { Select, New };
 
+export enum SportSelectMode { AddRemove, Add }

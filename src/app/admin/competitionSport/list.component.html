@@ -1,5 +1,8 @@
 <div class="row justify-content-center no-gutters">
-  <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+  <app-tournament-sports-selector *ngIf="showSelectSports" class="col-xs-12 col-sm-10 col-md-6 col-lg-4"
+    [selectedSports]="getSports()" [editMode]="SportSelectModeAdd" (selected)="selectedSports($event)">
+  </app-tournament-sports-selector>
+  <div *ngIf="!showSelectSports" class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
     <app-tournament-title [tournament]="tournament" [admin]="true">
     </app-tournament-title>
     <div class="d-flex justify-content-between">
@@ -26,8 +29,8 @@
             <fa-icon [icon]="['fac', 'soccer-field']"></fa-icon> velden
           </th>
           <th class="text-right" *ngIf="!hasBegun">
-            <button type="button" class="btn btn-sm btn-primary"
-              [routerLink]="['/admin/competitionsport', tournament.getId()]" [disabled]="processing">
+            <button type="button" class="btn btn-sm btn-primary" (click)="showSelectSports = true"
+              [disabled]="processing">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button>
           </th>

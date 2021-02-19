@@ -13,6 +13,7 @@ import { JsonTournament } from '../../lib/tournament/json';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { JsonCompetitionSport, JsonField, League, PouleStructure, Sport, SportMapper, State, Structure, StructureService } from 'ngx-sport';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
+import { SportSelectMode } from '../sport/select.component';
 
 
 @Component({
@@ -92,6 +93,8 @@ export class NewComponent implements OnInit {
     this.form.controls.sportsName.setValue(sportsName);
     this.showSelectSports = false;
   }
+
+  get SportSelectModeAddRemove(): SportSelectMode { return SportSelectMode.AddRemove; }
 
   getJsonCompetitionSport(sport: Sport, nrOfFields: number): JsonCompetitionSport {
     const fields: JsonField[] = [];

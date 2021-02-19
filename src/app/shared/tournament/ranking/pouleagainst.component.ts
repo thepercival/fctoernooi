@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, RankedRoundItem, RankingService, PlaceLocationMap, GameMode } from 'ngx-sport';
+import { NameService, Poule, RankedRoundItem, RankingService, PlaceLocationMap, GameMode, ScoreConfig } from 'ngx-sport';
 
 import { CSSService } from '../../common/cssservice';
 import { Favorites } from '../../../lib/favorites';
@@ -37,9 +37,9 @@ export class PouleRankingAgainstComponent implements OnInit {
     this.processing = false;
   }
 
-  // useSubScore() {
-  //   return this.poule.getRound().getNumber().getValidScoreConfigs().some(scoreConfig => {
-  //     return scoreConfig.useSubScore();
-  //   });
-  // }
+  useSubScore() {
+    return this.poule.getRound().getValidScoreConfigs().some((scoreConfig: ScoreConfig) => {
+      return scoreConfig.useSubScore();
+    });
+  }
 }
