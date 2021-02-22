@@ -1,13 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   Sport,
   CompetitionSport,
-  CompetitionSportService,
 } from 'ngx-sport';
 
-import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TranslateService } from '../../lib/translate';
 import { TournamentComponent } from '../../shared/tournament/component';
@@ -24,10 +22,10 @@ import { forkJoin, Observable } from 'rxjs';
   styleUrls: ['./list.component.scss']
 })
 export class CompetitionSportListComponent extends TournamentComponent implements OnInit {
-  competitionSports: CompetitionSport[];
+  competitionSports: CompetitionSport[] = [];
   translateService: TranslateService;
   showSelectSports = false;
-  hasBegun: boolean;
+  hasBegun!: boolean;
 
   validations: any = {
     'minlengthname': Sport.MIN_LENGTH_NAME,
@@ -99,7 +97,7 @@ export class CompetitionSportListComponent extends TournamentComponent implement
   //   this.linkToEdit(this.tournament);
   // }
 
-  openRemoveModal(content, competitionSport: CompetitionSport) {
+  openRemoveModal(content: TemplateRef<any>, competitionSport: CompetitionSport) {
     this.modalService.open(content).result.then((result) => {
       if (result === 'remove') {
         this.remove(competitionSport);

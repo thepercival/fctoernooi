@@ -5,7 +5,7 @@
   <div>
     <button *ngIf="tournament" (click)="navigateBack()" routerLinkActive="active" class="btn btn-outline-secondary"
       type="button">
-      <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+      <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
       <span> terug</span>
     </button>
   </div>
@@ -20,11 +20,10 @@
       </small>
     </h4>
     <!-- center -->
-    <!-- TODOSPORTS -->
-    <!-- <div *ngIf="tournament">
+    <div *ngIf="tournament">
       <h1 class="d-inline-block">
         <small>
-          <app-sport-icon [configs]="competition.getSportConfigs()"></app-sport-icon>
+          <app-sport-icon [competitionSports]="competition.getSports()"></app-sport-icon>
         </small>
         <span class="smaller text-truncate">{{tournament.getName()}}</span>
         <small *ngIf="activeScreen">
@@ -39,7 +38,7 @@
 
     <!-- right -->
     <button *ngIf="tournament" (click)="navigateBack()" class="btn btn-outline-secondary" type="button">
-      <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+      <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
       <span> terug</span>
     </button>
   </div>

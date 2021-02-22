@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Sponsor } from '../sponsor';
 import { Tournament } from '../tournament';
+import { JsonSponsor } from './json';
 
 @Injectable({
     providedIn: 'root'
@@ -14,9 +15,9 @@ export class SponsorMapper {
             sponsor = new Sponsor(tournament, json.name);
         }
         sponsor.setId(json.id);
-        sponsor.setUrl(json.url);
-        sponsor.setLogoUrl(json.logoUrl);
-        sponsor.setScreenNr(json.screenNr);
+        if (json.url) { sponsor.setUrl(json.url) };
+        if (json.logoUrl) { sponsor.setLogoUrl(json.logoUrl) };
+        if (json.screenNr) { sponsor.setScreenNr(json.screenNr) };
         return sponsor;
     }
 
@@ -31,10 +32,3 @@ export class SponsorMapper {
     }
 }
 
-export interface JsonSponsor {
-    id?: number;
-    name: string;
-    url?: string;
-    logoUrl?: string;
-    screenNr?: number;
-}

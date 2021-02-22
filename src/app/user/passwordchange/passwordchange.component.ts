@@ -13,8 +13,7 @@ import { PasswordValidation } from '../password-validation';
   styleUrls: ['./passwordchange.component.css']
 })
 export class PasswordchangeComponent implements OnInit {
-
-  alert: IAlert;
+  alert: IAlert | undefined;
   passwordChanged = false;
   processing = true;
   form: FormGroup;
@@ -25,7 +24,7 @@ export class PasswordchangeComponent implements OnInit {
     minlengthpassword: User.MIN_LENGTH_PASSWORD,
     maxlengthpassword: User.MAX_LENGTH_PASSWORD
   };
-  private emailaddress;
+  private emailaddress: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -57,7 +56,7 @@ export class PasswordchangeComponent implements OnInit {
 
   ngOnInit() {
     this.route.queryParamMap.subscribe(params => {
-      this.emailaddress = params.get('emailaddress');
+      this.emailaddress = params.get('emailaddress') ?? '';
     });
     this.processing = false;
   }

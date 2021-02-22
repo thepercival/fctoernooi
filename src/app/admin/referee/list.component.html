@@ -4,7 +4,7 @@
     </app-tournament-title>
     <div class="d-flex justify-content-between mr-1">
       <h2 (click)="openHelpModal(contentInfo)" class="pointer mr-auto">
-        <fa-icon [icon]="['fac', 'referee']"></fa-icon> scheidsrechters <fa-icon class="text-info"
+        <app-tournament-icon name="referee"></app-tournament-icon> scheidsrechters <fa-icon class="text-info"
           [icon]=" ['fas', 'info-circle' ]"></fa-icon>
       </h2>
     </div>
@@ -73,7 +73,7 @@
       emailadres is ingevoerd
       en ze ingelogd zijn.</li>
     <li class="list-group-item border-info">
-      Onder <button type="submit" *ngIf="firstRoundNumberNotBegun" class="btn btn-secondary" data-dismiss="modal"
+      Onder <button type="submit" *ngIf="!hasBegun" class="btn btn-secondary" data-dismiss="modal"
         (click)="linkToPlanningConfig()">plannings-instellingen</button> kun je
       "deelnemers zijn scheidsrechter " instellen.
     </li>

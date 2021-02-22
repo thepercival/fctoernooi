@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GameMode, JsonGameAmountConfig, VoetbalRange } from 'ngx-sport';
@@ -9,12 +9,12 @@ import { GameMode, JsonGameAmountConfig, VoetbalRange } from 'ngx-sport';
   styleUrls: ['./edit.component.css']
 })
 export class GameAmountConfigEditComponent implements OnInit, OnChanges {
-  @Input() gameMode: GameMode;
-  @Input() gameAmountControls: GameAmountConfigControl[];
-  @Input() gameAmountRange: VoetbalRange;
-  @Input() form: FormGroup;
+  @Input() gameMode!: GameMode;
+  @Input() gameAmountControls!: GameAmountConfigControl[];
+  @Input() gameAmountRange!: VoetbalRange;
+  @Input() form!: FormGroup;
 
-  range: number[];
+  range: number[] = [];
 
 
   constructor(
@@ -56,7 +56,7 @@ export class GameAmountConfigEditComponent implements OnInit, OnChanges {
     return this.gameMode === GameMode.Against ? 'aantal onderlinge duels' : 'aantal wedstrijden';
   }
 
-  openModal(modalContent) {
+  openModal(modalContent: TemplateRef<any>) {
     const activeModal = this.modalService.open(modalContent);
     activeModal.result.then(() => {
     }, (reason) => {

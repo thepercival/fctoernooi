@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Tournament } from '../../tournament';
 import { TournamentInvitation } from '.';
+import { JsonIdentifiable } from 'ngx-sport';
 
 @Injectable({
     providedIn: 'root'
@@ -24,8 +25,7 @@ export class TournamentInvitationMapper {
     }
 }
 
-export interface JsonTournamentInvitation {
-    id?: number;
+export interface JsonTournamentInvitation extends JsonIdentifiable {
     emailaddress: string;
     roles: number;
 }

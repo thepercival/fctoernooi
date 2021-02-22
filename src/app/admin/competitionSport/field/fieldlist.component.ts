@@ -16,13 +16,13 @@ import { Tournament } from '../../../lib/tournament';
 })
 export class FieldListComponent implements OnInit {
 
-    alert: IAlert;
+    alert: IAlert | undefined;
     processing: boolean;
-    @Input() tournament: Tournament;
-    @Input() structure: Structure;
-    @Input() competitionSport: CompetitionSport;
-    @Input() hasBegun: boolean;
-    prioritizable: boolean;
+    @Input() tournament!: Tournament;
+    @Input() structure!: Structure;
+    @Input() competitionSport!: CompetitionSport;
+    @Input() hasBegun!: boolean;
+    prioritizable!: boolean;
 
     constructor(
         private fieldRepository: FieldRepository,
@@ -57,16 +57,20 @@ export class FieldListComponent implements OnInit {
         return activeModal;
     }
 
+    formToJson(name: string, field?: Field): JsonField {
+        return {
+            id: field ? field.getId() : 0,
+            priority: this.competitionSport.getCompetition().getFields().length + 1,
+            name: name
+        };
+    }
+
     addField() {
         this.alert = undefined;
         const modal = this.getChangeNameModel('toevoegen');
         modal.result.then((resName: string) => {
             this.processing = true;
-            const jsonField: JsonField = {
-                id: 0,
-                priority: this.competitionSport.getCompetition().getFields().length + 1,
-                name: resName
-            };
+            const jsonField = this.formToJson(resName);
             this.fieldRepository.createObject(jsonField, this.competitionSport, this.tournament).subscribe(
                 /* happy path */(fieldRes) => this.updatePlanning(),
                 /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
@@ -80,8 +84,8 @@ export class FieldListComponent implements OnInit {
         const modal = this.getChangeNameModel('wijzigen', field.getName());
         modal.result.then((resName: string) => {
             this.processing = true;
-            field.setName(resName);
-            this.fieldRepository.editObject(field, this.tournament)
+            const jsonField = this.formToJson(resName, field);
+            this.fieldRepository.editObject(jsonField, field, this.tournament)
                 .subscribe(
             /* happy path */() => { },
             /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },

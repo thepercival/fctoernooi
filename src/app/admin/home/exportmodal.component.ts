@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentExportConfig, TournamentExportFormat } from '../../lib/tournament/repository';
 
@@ -9,8 +10,8 @@ import { TournamentExportConfig, TournamentExportFormat } from '../../lib/tourna
     styleUrls: ['./exportmodal.component.scss']
 })
 export class ExportModalComponent implements OnInit {
-    @Input() enabled: number;
-    @Input() fieldDescription: string;
+    @Input() enabled!: number;
+    @Input() fieldDescription!: string;
     form: FormGroup;
     exportOptions: ExportOption[] = [];
 
@@ -28,7 +29,7 @@ export class ExportModalComponent implements OnInit {
                 value: +propertyValue,
                 label: this.getLabel(+propertyValue),
                 enabled: (this.enabled & +propertyValue) > 0,
-                iconId: TournamentExportConfig.qrCode === +propertyValue ? 'qrcode' : undefined
+                iconName: TournamentExportConfig.qrCode === +propertyValue ? 'qrcode' : undefined
             };
             this.exportOptions.push(exportOption);
             this.form.addControl(exportOption.key, this.formBuilder.control(exportOption.enabled));
@@ -90,5 +91,5 @@ interface ExportOption {
     label: string;
     enabled: boolean;
     value: number;
-    iconId: string | undefined;
+    iconName: IconName | undefined;
 }

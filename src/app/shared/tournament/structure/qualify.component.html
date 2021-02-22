@@ -5,7 +5,7 @@
         [ngClass]="{ 'visible': showSwitchView(), 'invisible': !showSwitchView() }" type="button"
         class="btn btn-secondary" (click)="switchView()"
         [disabled]="viewType !== ViewTypeQualifyGroups && !showSwitchView()">
-        <fa-icon *ngIf="viewType !== ViewTypeQualifyGroups" [icon]="['fac', 'structure']"></fa-icon>
+        <fa-icon *ngIf="viewType !== ViewTypeQualifyGroups" [icon]="IconStructure"></fa-icon>
         <span *ngIf="viewType !== ViewTypeQualifyGroups" class="d-none d-sm-inline-flex">
             kwalificatiegroepen</span>
         <fa-icon *ngIf="viewType === ViewTypeQualifyGroups" [icon]="['fas', 'th']"></fa-icon> <span

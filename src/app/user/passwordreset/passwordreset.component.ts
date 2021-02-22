@@ -12,8 +12,7 @@ import { User } from '../../lib/user';
   styleUrls: ['./passwordreset.component.css']
 })
 export class PasswordresetComponent implements OnInit {
-
-  alert: IAlert;
+  alert: IAlert | undefined;
   codeSend = false;
   processing = true;
   form: FormGroup;

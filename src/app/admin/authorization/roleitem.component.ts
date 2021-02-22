@@ -8,11 +8,11 @@ import { TournamentAuthorizationRole } from './list.component';
     styleUrls: ['./roleitem.component.scss']
 })
 export class RoleItemComponent implements OnInit {
-    @Input() role: TournamentAuthorizationRole;
+    @Input() role!: TournamentAuthorizationRole;
     @Input() processing: boolean = false;
-    @Input() disabled: boolean;
+    @Input() disabled: boolean = false;
     @Output() toggleRole = new EventEmitter<TournamentAuthorizationRole>();
-    description: string;
+    description!: string;
 
     constructor(
 

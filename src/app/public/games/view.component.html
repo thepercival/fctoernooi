@@ -16,13 +16,6 @@
         </button>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-      <ngb-alert *ngIf="oldStructure && isAdmin()" type="info" [dismissible]="false">Ga naar de
-        beheer-pagina om te vragen om de opzet handmatig om te zetten.
-      </ngb-alert>
-      <ngb-alert *ngIf="oldStructure && !isAdmin()" type="info" [dismissible]="false">Vraag de toernooi-beheerder om
-        de
-        oude opzet te laten omzetten.
-      </ngb-alert>
       <div *ngIf="!processing && tournament && structure">
         <app-tournament-roundnumber-planning *ngFor="let roundNumber of structure.getRoundNumbers()"
           [tournament]="tournament" [roundNumber]="roundNumber" [favorites]="favRepository.getObject(tournament)"

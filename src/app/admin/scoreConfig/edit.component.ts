@@ -29,17 +29,17 @@ import { forkJoin, Observable } from 'rxjs';
     styleUrls: ['./edit.component.scss']
 })
 export class ScoreConfigEditComponent implements OnInit {
-    @Input() tournament: Tournament;
-    @Input() structure: Structure;
-    @Input() competitionSport: CompetitionSport;
+    @Input() tournament!: Tournament;
+    @Input() structure!: Structure;
+    @Input() competitionSport!: CompetitionSport;
 
-    alert: IAlert;
-    processing: boolean;
-    public nameService: NameService;
-    form: FormGroup;
-    translateService: TranslateService;
-    protected toggleRound: ToggleRound;
-    jsonScoreConfig: JsonScoreConfig;
+    public alert: IAlert | undefined;
+    public processing: boolean = true;
+    public nameService!: NameService;
+    public form: FormGroup;
+    public translateService: TranslateService;
+    protected toggleRound!: ToggleRound;
+    jsonScoreConfig!: JsonScoreConfig;
     readonly: boolean = true;
 
     validations: ScoreValidations = {
@@ -182,9 +182,13 @@ export class ScoreConfigEditComponent implements OnInit {
         if (toggleRound.selected) {
             return toggleRound;
         }
-        return toggleRound.children.find(child => {
+        const selected = toggleRound.children.find(child => {
             return this.getFirstSelectedToggleRound(child);
         });
+        if (selected === undefined) {
+            throw Error('at least one round should be selected');
+        }
+        return selected;
     }
 
     save(): boolean {

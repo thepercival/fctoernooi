@@ -1,50 +1,26 @@
-/**
- * Created by coen on 9-10-17.
- */
+import { Identifiable } from 'ngx-sport';
 import { Tournament } from './tournament';
 
-
-export class Sponsor {
+export class Sponsor extends Identifiable {
     static readonly MIN_LENGTH_NAME = 2;
     static readonly MAX_LENGTH_NAME = 30;
     static readonly MAX_LENGTH_URL = 100;
 
-    protected id: number;
-    protected name: string;
-    protected url: string;
-    protected logoUrl: string;
-    protected screenNr: number;
-    protected tournament: Tournament;
+    protected url: string = '';
+    protected logoUrl: string = '';
+    protected screenNr: number = 0;
 
-    // constructor
-    constructor(tournament: Tournament, name: string) {
-        this.setTournament(tournament);
-        this.setName(name);
-    }
-
-    getId(): number {
-        return this.id;
-    }
-
-    setId(id: number): void {
-        this.id = id;
+    constructor(protected tournament: Tournament, protected name: string) {
+        super();
+        this.tournament.getSponsors().push(this);
     }
 
     getTournament(): Tournament {
         return this.tournament;
     }
 
-    setTournament(tournament: Tournament): void {
-        this.tournament = tournament;
-        this.tournament.getSponsors().push(this);
-    }
-
     getName(): string {
         return this.name;
-    }
-
-    setName(name: string): void {
-        this.name = name;
     }
 
     getUrl(): string {

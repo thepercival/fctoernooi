@@ -24,10 +24,10 @@ import { TournamentCompetitor } from '../../lib/competitor';
 export class HomeComponent extends TournamentComponent implements OnInit, OnDestroy {
     private liveboardLinkSet = false;
     translate: TranslateService;
-    allHavePlannings: boolean;
-    lockerRoomValidator: LockerRoomValidator;
-    competitors: TournamentCompetitor[];
-    favorites: Favorites;
+    allHavePlannings!: boolean;
+    lockerRoomValidator!: LockerRoomValidator;
+    competitors: TournamentCompetitor[] = [];
+    favorites!: Favorites;
 
     constructor(
         route: ActivatedRoute,
@@ -57,7 +57,7 @@ export class HomeComponent extends TournamentComponent implements OnInit, OnDest
     }
 
     isAnAdmin(): boolean {
-        return this.tournament.getUser(this.authService.getUser())?.hasARole(Role.ADMIN + Role.ROLEADMIN + Role.GAMERESULTADMIN);
+        return this.hasRole(this.authService, Role.ADMIN + Role.ROLEADMIN + Role.GAMERESULTADMIN);
     }
 
     lockerRoomDescription(): string {
@@ -86,13 +86,13 @@ export class HomeComponent extends TournamentComponent implements OnInit, OnDest
         if (this.favorites.hasCompetitors()) {
             const competitors = this.favorites.filterCompetitors(this.competitors);
             if (competitors.length === 1) {
-                return 'deelnemer <span class="font-weight-bold">' + competitors.pop().getName() + '</span> ingesteld';
+                return 'deelnemer <span class="font-weight-bold">' + competitors.pop()?.getName() + '</span> ingesteld';
             }
             return 'meerdere deelnemers ingesteld';
         }
         const referees = this.favorites.filterReferees(this.competition.getReferees());
         if (referees.length === 1) {
-            return 'scheidsrechter <span class="font-weight-bold">' + referees.pop().getInitials() + '</span> ingesteld';
+            return 'scheidsrechter <span class="font-weight-bold">' + referees.pop()?.getInitials() + '</span> ingesteld';
         }
         return 'meerdere scheidsrechters ingesteld';
     }

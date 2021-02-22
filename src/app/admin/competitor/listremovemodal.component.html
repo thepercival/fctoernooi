@@ -34,7 +34,8 @@
     class="modal-footer justify-content-around">
     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
         (click)="activeModal.close('to-structure')">naar
-        <fa-icon [icon]="['fac', 'structure']"></fa-icon> opzet</button>
+        <app-tournament-icon name="structure"></app-tournament-icon> opzet
+    </button>
     <button *ngIf="competitor" type="button" class="btn btn-outline-secondary" data-dismiss="modal"
         (click)="activeModal.close('remove-competitor')">
         <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon> <span> deelnemer</span>

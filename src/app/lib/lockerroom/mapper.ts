@@ -21,7 +21,9 @@ export class LockerRoomMapper {
             const competitor = tournament.getCompetitors().find((competitorIt: TournamentCompetitor) => {
                 return competitorIt.getId() === competitorId;
             });
-            lockerRoom.getCompetitors().push(competitor);
+            if (lockerRoom && competitor) {
+                lockerRoom.getCompetitors().push(competitor);
+            }
         });
         return lockerRoom;
     }

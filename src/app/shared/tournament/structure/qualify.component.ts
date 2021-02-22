@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NameService, QualifyGroup, Round, RoundNumber, StructureService } from 'ngx-sport';
+import { HorizontalPoule, NameService, QualifyGroup, Round, RoundNumber, StructureService } from 'ngx-sport';
 
 import { IAlert } from '../../common/alert';
 import { Tournament } from '../../../lib/tournament';
+import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
+import { facStructure } from '../icons';
 
 export enum StructureViewType {
     ROUNDSTRUCTURE = 1,
@@ -16,11 +18,11 @@ export enum StructureViewType {
 })
 export class StructureQualifyComponent {
 
-    @Input() round: Round;
+    @Input() round!: Round;
     @Output() viewTypeChanged = new EventEmitter<number>();
     @Output() roundNumberChanged = new EventEmitter<RoundNumber>();
     viewType: number = StructureViewType.ROUNDSTRUCTURE;
-    alert: IAlert;
+    alert: IAlert | undefined;
     public nameService: NameService;
 
     constructor(private structureService: StructureService) {
@@ -39,6 +41,8 @@ export class StructureQualifyComponent {
     get ViewTypeQualifyGroups(): number {
         return StructureViewType.QUALIFYGROUPS;
     }
+
+    get IconStructure(): [IconPrefix, IconName] { return [facStructure.prefix, facStructure.iconName]; }
 
     removeQualifier(winnersOrLosers: number) {
         this.resetAlert();
@@ -73,9 +77,9 @@ export class StructureQualifyComponent {
         }
         // can some merge
         const mergable = [QualifyGroup.WINNERS, QualifyGroup.LOSERS].some(winnersOrLosers => {
-            let previous;
-            return this.round.getQualifyGroups(winnersOrLosers).some(qualifyGroup => {
-                if (this.structureService.areQualifyGroupsMergable(previous, qualifyGroup)) {
+            let previous: QualifyGroup | undefined;
+            return this.round.getQualifyGroups(winnersOrLosers).some((qualifyGroup: QualifyGroup) => {
+                if (previous && this.structureService.areQualifyGroupsMergable(previous, qualifyGroup)) {
                     return true;
                 };
                 previous = qualifyGroup;
@@ -88,9 +92,9 @@ export class StructureQualifyComponent {
         // can some split
         return [QualifyGroup.WINNERS, QualifyGroup.LOSERS].some(winnersOrLosers => {
             return this.round.getQualifyGroups(winnersOrLosers).some(qualifyGroup => {
-                let previous;
-                return qualifyGroup.getHorizontalPoules().some(horizontalPoule => {
-                    if (this.structureService.isQualifyGroupSplittable(previous, horizontalPoule)) {
+                let previous: HorizontalPoule | undefined;
+                return qualifyGroup.getHorizontalPoules().some((horizontalPoule: HorizontalPoule) => {
+                    if (previous && this.structureService.isQualifyGroupSplittable(previous, horizontalPoule)) {
                         return true;
                     };
                     previous = horizontalPoule;

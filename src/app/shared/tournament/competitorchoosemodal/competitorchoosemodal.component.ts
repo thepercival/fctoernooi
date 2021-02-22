@@ -10,11 +10,11 @@ import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
     styleUrls: ['./competitorchoosemodal.component.scss']
 })
 export class CompetitorChooseModalComponent implements OnInit {
-    @Input() validator: LockerRoomValidator;
-    @Input() places: Place[];
-    @Input() competitors: Competitor[];
-    @Input() lockerRoom: LockerRoom;
-    @Input() selectedCompetitors: Competitor[];
+    @Input() validator!: LockerRoomValidator;
+    @Input() places: Place[] = [];
+    @Input() competitors: Competitor[] = [];
+    @Input() lockerRoom!: LockerRoom;
+    @Input() selectedCompetitors: Competitor[] = [];
     public competitorListItems: CompetitorListItem[] = [];
     public nameService: NameService;
     public placeLocationMap: PlaceLocationMap;
@@ -42,7 +42,7 @@ export class CompetitorChooseModalComponent implements OnInit {
     }
 
     private isSelected(competitor?: Competitor): boolean {
-        return competitor && this.selectedCompetitors.indexOf(competitor) >= 0;
+        return competitor !== undefined && this.selectedCompetitors.indexOf(competitor) >= 0;
     }
 
     toggle(competitorListItem: CompetitorListItem) {

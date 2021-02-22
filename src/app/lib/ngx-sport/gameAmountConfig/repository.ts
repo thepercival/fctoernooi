@@ -34,11 +34,12 @@ export class GameAmountConfigRepository extends APIRepository {
 
     saveObject(jsonGameAmountConfig: JsonGameAmountConfig, roundNumber: RoundNumber, tournament: Tournament): Observable<GameAmountConfig> {
         const url = this.getUrl(tournament, roundNumber, jsonGameAmountConfig.competitionSport);
-        return this.http.post(url, jsonGameAmountConfig, this.getOptions()).pipe(
+        return this.http.post<JsonGameAmountConfig>(url, jsonGameAmountConfig, this.getOptions()).pipe(
             map((jsonResult: JsonGameAmountConfig) => {
                 const competitionSport = this.competitionSportMapper.toObject(jsonResult.competitionSport, tournament.getCompetition());
-                if (roundNumber.hasNext()) {
-                    this.service.removeFromRoundNumber(competitionSport, roundNumber.getNext());
+                const nextRoundNumber = roundNumber.getNext();
+                if (nextRoundNumber) {
+                    this.service.removeFromRoundNumber(competitionSport, nextRoundNumber);
                 }
                 return this.mapper.toObject(jsonResult, roundNumber, roundNumber.getGameAmountConfig(competitionSport));
             }),

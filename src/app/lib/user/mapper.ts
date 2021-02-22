@@ -1,19 +1,24 @@
 import { Injectable } from '@angular/core';
+import { JsonIdentifiable } from 'ngx-sport';
 
 import { User } from '../user';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class UserMapper {
-    protected static users = {};
+    protected cache: UserMap = {};
     constructor() { }
 
     toObject(json: JsonUser): User {
-        let user = UserMapper.users[json.id];
+        let user = this.cache[json.id];
         if (user === undefined) {
             user = new User(json.id);
-            UserMapper.users[user.getId()] = user;
+            this.cache[user.getId()] = user;
         }
-        user.setEmailaddress(json.emailaddress)
+        if (json.emailaddress !== undefined) {
+            user.setEmailaddress(json.emailaddress)
+        }
         return user;
     }
 
@@ -25,7 +30,10 @@ export class UserMapper {
     }
 }
 
-export interface JsonUser {
-    id: number;
+export interface JsonUser extends JsonIdentifiable {
     emailaddress?: string;
+}
+
+interface UserMap {
+    [key: string]: User;
 }

@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { GameMode, RankingService } from 'ngx-sport';
-import { Tournament } from '../../../lib/tournament';
 
 @Component({
     selector: 'app-ranking-rules',
@@ -8,7 +7,7 @@ import { Tournament } from '../../../lib/tournament';
     styleUrls: ['./rankingrules.component.scss']
 })
 export class RankingRulesComponent {
-    @Input() ruleSet: number;
+    @Input() ruleSet!: number;
 
     constructor() { }
 

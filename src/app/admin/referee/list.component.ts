@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Referee, RoundNumber } from 'ngx-sport';
+import { Referee } from 'ngx-sport';
 
 import { IAlert } from '../../shared/common/alert';
 import { RefereeRepository } from '../../lib/ngx-sport/referee/repository';
@@ -17,11 +17,9 @@ import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.
   styleUrls: ['./list.component.scss']
 })
 export class RefereeListComponent extends TournamentComponent implements OnInit {
-  referees: Referee[];
-  public selfReferee: boolean;
-  alertSelfReferee: IAlert;
-  hasBegun: boolean;
-  firstRoundNumberNotBegun: RoundNumber;
+  referees: Referee[] = [];
+  alertSelfReferee: IAlert | undefined;
+  hasBegun: boolean = true;
 
   validations: any = {
     'minlengthname': Referee.MIN_LENGTH_NAME,
@@ -47,8 +45,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   initReferees() {
     this.createRefereesList();
 
-    this.firstRoundNumberNotBegun = this.getFirstRoundNumberNotBegun(this.structure.getFirstRoundNumber());
-    this.hasBegun = this.firstRoundNumberNotBegun === undefined;
+    this.hasBegun = this.structure.getRootRound().hasBegun();
     if (this.hasBegun) {
       this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen en verwijderen');
     }
@@ -72,36 +69,19 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   }
 
   linkToPlanningConfig() {
-    let firstRoundNumberNotBegun = this.getFirstRoundNumberNotBegun(this.structure.getFirstRoundNumber());
-    if (firstRoundNumberNotBegun === undefined) {
-      firstRoundNumberNotBegun = this.structure.getFirstRoundNumber()
-    }
     this.router.navigate(['/admin/planningconfig', this.tournament.getId(),
-      firstRoundNumberNotBegun.getNumber()
+      this.structure.getFirstRoundNumber().getNumber()
     ]);
   }
 
-  openHelpModal(modalContent) {
+  openHelpModal(modalContent: TemplateRef<any>) {
     const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
     activeModal.componentInstance.header = 'uitleg scheidsrechters';
     activeModal.componentInstance.modalContent = modalContent;
     activeModal.result.then((result) => {
-      // if (result === 'linkToPlanningConfig') {
-      //   this.linkToPlanningConfig();
-      // }
     }, (reason) => {
       this.linkToPlanningConfig();
     });
-  }
-
-  getFirstRoundNumberNotBegun(roundNumber?: RoundNumber): RoundNumber {
-    if (!roundNumber.hasBegun()) {
-      return roundNumber;
-    }
-    if (!roundNumber.hasNext()) {
-      return undefined;
-    }
-    return this.getFirstRoundNumberNotBegun(roundNumber.getNext());
   }
 
   upgradePriority(referee: Referee) {

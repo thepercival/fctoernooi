@@ -22,12 +22,12 @@ export class TranslateService {
             case SportCustom.Sjoelen: { return 'sjoelen'; }
             case SportCustom.Klaverjassen: { return 'klaverjassen'; }
         }
-        return undefined;
+        return '?';
     }
 
-    getScoreNameSingular(jsonScoreConfig: JsonScoreConfig): string {
-        const customId = jsonScoreConfig.competitionSport.sport.customId;
-        if (jsonScoreConfig.isFirst) {
+    getScoreNameSingular(scoreConfig: ScoreConfig): string {
+        const customId = scoreConfig.getCompetitionSport().getSport().getCustomId();
+        if (scoreConfig.isFirst()) {
             return this.getFirstScoreNameSingular(customId);
         }
         return this.getLastScoreNameSingular(customId);
@@ -59,9 +59,15 @@ export class TranslateService {
         return '';
     }
 
-    getScoreNamePlural(jsonScoreConfig: JsonScoreConfig): string {
-        const customId = jsonScoreConfig.competitionSport.sport.customId;
-        if (jsonScoreConfig.isFirst) {
+    getScoreNamePlural(scoreConfig: ScoreConfig | JsonScoreConfig): string {
+        const isFirst = (scoreConfig instanceof ScoreConfig) ? scoreConfig.isFirst() : scoreConfig.isFirst;
+        const customId = (scoreConfig instanceof ScoreConfig) ? scoreConfig.getCompetitionSport().getSport().getCustomId()
+            : scoreConfig.competitionSport.sport.customId;
+        return this.getScoreNamePluralHelper(isFirst, customId);
+    }
+
+    protected getScoreNamePluralHelper(isFirst: boolean, customId: number): string {
+        if (isFirst) {
             return this.getFirstScoreNamePlural(customId);
         }
         return this.getLastScoreNamePlural(customId);
@@ -99,7 +105,7 @@ export class TranslateService {
             case ScoreConfig.UPWARDS: { return 'naar'; }
             case ScoreConfig.DOWNWARDS: { return 'vanaf'; }
         }
-        return undefined;
+        return '?';
     }
 
     getFieldNameSingular(sport?: Sport): string {

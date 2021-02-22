@@ -12,7 +12,7 @@ import { LiveboardLink } from '../../../lib/liveboard/link';
 export class NavComponent implements OnInit {
 
   @Input()
-  title: string;
+  title!: string;
   navbarCollapsed = true;
   tournamentLiveboardLink: LiveboardLink = {};
 

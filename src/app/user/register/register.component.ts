@@ -13,8 +13,7 @@ import { PasswordValidation } from '../password-validation';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-
-  alert: IAlert;
+  alert: IAlert | undefined;
   registered = false;
   processing = true;
   form: FormGroup;

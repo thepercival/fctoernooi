@@ -40,6 +40,7 @@ export class TournamentMapper {
     }
 
     toJson(tournament: Tournament): JsonTournament {
+        const breakX = tournament.getBreak();
         return {
             id: tournament.getId(),
             competition: this.competitionMapper.toJson(tournament.getCompetition()),
@@ -47,8 +48,8 @@ export class TournamentMapper {
             competitors: tournament.getCompetitors().map(competitor => this.competitorMapper.toJson(competitor)),
             lockerRooms: tournament.getLockerRooms().map(lockerRoom => this.lockerRoomMapper.toJson(lockerRoom)),
             sponsors: tournament.getSponsors().map(sponsor => this.sponsorMapper.toJson(sponsor)),
-            breakStartDateTime: tournament.getBreakStartDateTime() ? tournament.getBreakStartDateTime().toISOString() : undefined,
-            breakEndDateTime: tournament.getBreakEndDateTime() ? tournament.getBreakEndDateTime().toISOString() : undefined,
+            breakStartDateTime: breakX ? breakX.getStartDateTime().toISOString() : undefined,
+            breakEndDateTime: breakX ? breakX.getEndDateTime().toISOString() : undefined,
             public: tournament.getPublic()
         };
     }

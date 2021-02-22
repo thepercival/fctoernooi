@@ -19,10 +19,10 @@ import { switchMap, catchError } from 'rxjs/operators';
   styleUrls: ['./list.component.css']
 })
 export class GameListComponent extends TournamentComponent implements OnInit {
-  userRefereeId: number;
-  roles: number;
-  private refreshPlanningTimer: Subscription;
-  reload: boolean;
+  userRefereeId: number | string | undefined;
+  roles: number = 0;
+  private refreshPlanningTimer: Subscription | undefined;
+  reload: boolean | undefined;
 
   constructor(
     route: ActivatedRoute,
@@ -39,11 +39,16 @@ export class GameListComponent extends TournamentComponent implements OnInit {
   ngOnInit() {
     super.myNgOnInit(() => {
       this.enableRefreshPlanning(this.structure.getFirstRoundNumber());
-      const tournamentUser = this.tournament.getUser(this.authService.getUser())
-      this.roles = tournamentUser?.getRoles();
+      const authUser = this.authService.getUser();
+      const tournamentUser = authUser ? this.tournament.getUser(authUser) : undefined;
+      if (tournamentUser === undefined) {
+        this.processing = false;
+        return;
+      }
+      this.roles = tournamentUser ? tournamentUser.getRoles() : 0;
       this.getUserRefereeId(tournamentUser).subscribe(
-        userRefereeIdRes => {
-          this.userRefereeId = userRefereeIdRes;
+        (userRefereeId: string | number | undefined) => {
+          this.userRefereeId = userRefereeId;
           this.processing = false;
         },
         e => { this.processing = false; }
@@ -55,9 +60,9 @@ export class GameListComponent extends TournamentComponent implements OnInit {
     return (this.roles & Role.ADMIN) === Role.ADMIN;
   }
 
-  getUserRefereeId(tournamentUser: TournamentUser): Observable<number> {
-    if (!tournamentUser?.hasRoles(Role.REFEREE)) {
-      return of(undefined);
+  getUserRefereeId(tournamentUser: TournamentUser): Observable<string | number | undefined> {
+    if (!tournamentUser.hasRoles(Role.REFEREE)) {
+      return of(0);
     }
     return this.tournamentRepository.getUserRefereeId(this.tournament);
   }
@@ -74,14 +79,12 @@ export class GameListComponent extends TournamentComponent implements OnInit {
     }
   }
 
-  private getFirstRoundNumberWithoutPlanning(roundNumber: RoundNumber): RoundNumber {
+  private getFirstRoundNumberWithoutPlanning(roundNumber: RoundNumber): RoundNumber | undefined {
     if (roundNumber.getHasPlanning() === false) {
       return roundNumber;
     }
-    if (roundNumber.hasNext() === false) {
-      return undefined;
-    }
-    return this.getFirstRoundNumberWithoutPlanning(roundNumber.getNext());
+    const nextRoundNumber = roundNumber.getNext();
+    return nextRoundNumber ? this.getFirstRoundNumberWithoutPlanning(nextRoundNumber) : undefined;
   }
 
   protected refreshPlanning(firstRoundNumberWithoutPlanning: RoundNumber) {
@@ -90,8 +93,8 @@ export class GameListComponent extends TournamentComponent implements OnInit {
         switchMap(() => this.planningRepository.get(this.structure, this.tournament, firstRoundNumberWithoutPlanning.getNumber()).pipe()),
         catchError(err => of(null))
       ).subscribe(
-          /* happy path */(roundNumberOut: RoundNumber) => {
-          if (roundNumberOut.getHasPlanning()) {
+          /* happy path */(roundNumberOut: RoundNumber | null) => {
+          if (roundNumberOut && roundNumberOut.getHasPlanning()) {
             this.reload = ((this.reload === undefined) ? true : !this.reload);
             this.stopPlanningRefresh();
             this.enableRefreshPlanning(roundNumberOut);

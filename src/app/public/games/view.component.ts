@@ -17,8 +17,8 @@ import { Observable, of } from 'rxjs';
     styleUrls: ['./view.component.scss']
 })
 export class GamesComponent extends TournamentComponent implements OnInit {
-    userRefereeId: number;
-    roles: number;
+    userRefereeId: number | string | undefined;
+    roles: number = 0;
     refreshingData = false;
 
     constructor(
@@ -35,22 +35,24 @@ export class GamesComponent extends TournamentComponent implements OnInit {
 
     ngOnInit() {
         super.myNgOnInit(() => {
-            const tournamentUser = this.tournament.getUser(this.authService.getUser())
-            this.roles = tournamentUser?.getRoles();
-            this.getUserRefereeId(tournamentUser).subscribe(
-                userRefereeIdRes => {
-                    this.userRefereeId = userRefereeIdRes;
-                    this.processing = false;
-                },
-                e => { this.processing = false; }
-            );
+            const authUser = this.authService.getUser();
+            const tournamentUser = authUser ? this.tournament.getUser(authUser) : undefined;
+            if (tournamentUser && tournamentUser.hasRoles(Role.REFEREE)) {
+                this.roles = tournamentUser.getRoles();
+                this.getUserRefereeId(tournamentUser).subscribe(
+                    (userRefereeId: number | string) => {
+                        this.userRefereeId = userRefereeId;
+                        this.processing = false;
+                    },
+                    e => { this.processing = false; }
+                );
+            } else {
+                this.processing = false;
+            }
         });
     }
 
-    getUserRefereeId(tournamentUser: TournamentUser): Observable<number> {
-        if (!tournamentUser?.hasRoles(Role.REFEREE)) {
-            return of(undefined);
-        }
+    getUserRefereeId(tournamentUser: TournamentUser): Observable<string | number> {
         return this.tournamentRepository.getUserRefereeId(this.tournament);
     }
 
@@ -63,7 +65,7 @@ export class GamesComponent extends TournamentComponent implements OnInit {
     }
 
     isAdmin(): boolean {
-        return this.tournament.getUser(this.authService.getUser())?.hasRoles(Role.ADMIN);
+        return this.hasRole(this.authService, Role.ADMIN);
     }
 
     refreshData() {

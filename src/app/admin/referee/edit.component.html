@@ -5,7 +5,7 @@
       </app-tournament-title>
       <div>
         <h2>
-          <fa-icon [icon]="['fac', 'referee']"></fa-icon> scheidsrechter
+          <app-tournament-icon name="referee"></app-tournament-icon> scheidsrechter
         </h2>
         <h2 *ngIf="processing" class="text-center">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
@@ -61,11 +61,12 @@
         <div class="form-group row">
           <div class="offset-3 col-9">
             <button [disabled]="form.invalid" type="submit" class="btn btn-primary mr-2 mt-4">
-              <fa-icon [icon]="['fac', 'referee']"></fa-icon> <span>{{referee ? 'wijzigen' : 'toevoegen'}}</span>
+              <app-tournament-icon name="referee"></app-tournament-icon> <span>{{referee ? 'wijzigen' :
+                'toevoegen'}}</span>
             </button>
             <button *ngIf="!referee && form.controls.emailaddress.value" [disabled]="form.invalid" type="submit"
               class="btn btn-primary mt-4" (click)="addAndInvite=true">
-              <fa-icon [icon]="['fac', 'referee']"></fa-icon> toevoegen & uitnodigen
+              <app-tournament-icon name="referee"></app-tournament-icon> toevoegen & uitnodigen
             </button>
           </div>
         </div>

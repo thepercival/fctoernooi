@@ -12,8 +12,7 @@ import { User } from '../../lib/user';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-
-  alert: IAlert;
+  alert: IAlert | undefined;
   registered = false;
   processing = true;
   form: FormGroup;

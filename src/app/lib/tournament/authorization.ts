@@ -1,17 +1,10 @@
+import { Identifiable } from 'ngx-sport';
 import { Tournament } from '../tournament';
 
-export class TournamentAuthorization {
-    protected id: number;
+export class TournamentAuthorization extends Identifiable {
 
     constructor(private tournament: Tournament, protected roles: number) {
-    }
-
-    getId(): number {
-        return this.id;
-    }
-
-    setId(id: number): void {
-        this.id = id;
+        super();
     }
 
     getTournament(): Tournament {

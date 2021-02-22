@@ -15,13 +15,13 @@ export class CompetitorMapper {
             competitor = new TournamentCompetitor(tournament, json.pouleNr, json.placeNr, json.name);
         }
         competitor.setId(json.id);
-        this.updateObject(json, competitor);
-        return competitor;
+        return this.updateObject(json, competitor);
     }
 
-    updateObject(json: JsonCompetitor, competitor: TournamentCompetitor) {
-        competitor.setRegistered(json.registered);
-        competitor.setInfo(json.info);
+    updateObject(json: JsonCompetitor, competitor: TournamentCompetitor): TournamentCompetitor {
+        if (json.registered !== undefined) { competitor.setRegistered(json.registered) };
+        if (json.info !== undefined) { competitor.setInfo(json.info) };
+        return competitor;
     }
 
     toJson(competitor: Competitor): JsonCompetitor {

@@ -8,18 +8,18 @@ import { TournamentCompetitor } from '../../lib/competitor';
   styleUrls: ['./listline.component.css']
 })
 export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
-  @Input() place: Place;
-  @Input() competitor: TournamentCompetitor;
-  @Input() focus: boolean;
-  @Input() hasBegun: boolean;
-  @Input() showLockerRoomNotArranged: boolean;
-  @Input() nameService: NameService;
+  @Input() place!: Place;
+  @Input() competitor!: TournamentCompetitor;
+  @Input() focus!: boolean;
+  @Input() hasBegun!: boolean;
+  @Input() showLockerRoomNotArranged!: boolean;
+  @Input() nameService!: NameService;
   @Output() editPressed = new EventEmitter<Place>();
   @Output() removePressed = new EventEmitter<Place>();
   @Output() registerPressed = new EventEmitter<TournamentCompetitor>();
   @Output() toLockerRooms = new EventEmitter<void>();
 
-  @ViewChild('btnEdit', { static: true }) private elementRef: ElementRef;
+  @ViewChild('btnEdit', { static: true }) private elementRef: ElementRef | undefined;
 
   ngOnInit() {
   }
@@ -37,7 +37,7 @@ export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked() {
-    if (this.focus) {
+    if (this.focus && this.elementRef) {
       this.elementRef.nativeElement.focus();
     }
   }

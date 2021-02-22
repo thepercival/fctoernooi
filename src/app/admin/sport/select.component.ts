@@ -15,13 +15,13 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class SportSelectComponent implements OnInit {
     @Input() selectedSports: Sport[] = [];
-    @Input() editMode: SportSelectMode;
+    @Input() editMode!: SportSelectMode;
     @Output() selected = new EventEmitter<Sport[]>();
     processing = true;
     inputType: SportInputType = SportInputType.Select;
     form: FormGroup;
-    public alert: IAlert;
-    public selectableSports: Sport[];
+    public alert: IAlert | undefined;
+    public selectableSports: Sport[] = [];
     translateService: TranslateService;
 
     constructor(
@@ -95,15 +95,21 @@ export class SportSelectComponent implements OnInit {
     }
 
     save() {
-        if (this.editMode === SportSelectMode.AddRemove) {
-            return this.selected.emit(this.selectedSports);
+        let sports = this.getSelectedFormSports();
+        if (this.editMode === SportSelectMode.Add) {
+            sports = sports.filter((sport: Sport) => this.selectedSports.indexOf(sport) < 0);
         }
-        const sports = this.getSelectedFormSports().filter((sport: Sport) => this.selectedSports.indexOf(sport) < 0);
         this.selected.emit(sports);
     }
 
-    protected getSelectedFormSports(): Sport[] {
+    getSelectedFormSports(): Sport[] {
         return this.selectableSports.filter((sport: Sport) => {
+            return this.form.controls[this.getControlId(sport)].value;
+        });
+    }
+
+    someSportSelected(): boolean {
+        return this.selectableSports.some((sport: Sport) => {
             return this.form.controls[this.getControlId(sport)].value;
         });
     }

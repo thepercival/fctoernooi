@@ -22,9 +22,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
     styleUrls: ['./edit.component.css']
 })
 export class CompetitionSportEditComponent extends TournamentComponent implements OnInit {
-    competitionSport: CompetitionSport | undefined;
-    activeTab: number;
-    hasBegun: boolean;
+    competitionSport!: CompetitionSport;
+    activeTab!: number;
+    hasBegun!: boolean;
     // startRoundNumber: RoundNumber;
 
     constructor(
@@ -51,7 +51,12 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
 
     private postInit(id: number) {
         this.hasBegun = this.structure.getRootRound().hasBegun();
-        this.competitionSport = this.getCompetitionSportById(id);
+        const competitionSport = this.getCompetitionSportById(id);
+        if (competitionSport === undefined) {
+            this.setAlert('danger', 'de sport kan niet gevonden worden');
+            return;
+        }
+        this.competitionSport = competitionSport;
         this.processing = false;
     }
 
@@ -59,8 +64,8 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
         return this.tournament.getCompetition().getSports().map(sport => sport.getSport());
     }
 
-    private getCompetitionSportById(id: string | number): CompetitionSport {
-        if (id === undefined || id === 0) {
+    private getCompetitionSportById(id: string | number): CompetitionSport | undefined {
+        if (id === 0) {
             return undefined;
         }
         return this.competition.getSports().find(competitionSport => id === competitionSport.getId());

@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MyNavigation } from '../../shared/common/navigation';
 import { SponsorScreenService } from '../../lib/liveboard/screens';
 import { Sponsor } from '../../lib/sponsor';
-import { JsonSponsor } from '../../lib/sponsor/mapper';
+import { JsonSponsor } from '../../lib/sponsor/json';
 import { SponsorRepository } from '../../lib/sponsor/repository';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
@@ -20,16 +20,16 @@ import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.
 })
 export class SponsorEditComponent extends TournamentComponent implements OnInit {
     form: FormGroup;
-    sponsor: Sponsor;
-    base64Logo: string | ArrayBuffer;
+    base64Logo!: string | ArrayBuffer | null;
 
-    private sponsorScreenService: SponsorScreenService;
-    rangeScreenNrs: number[];
+    private sponsorScreenService!: SponsorScreenService;
+    rangeScreenNrs: number[] = [];
     logoInput: number;
     logoInputUpload = 1;
     logoInputUrl = 2;
     newLogoUploaded: boolean;
     private readonly LOGO_ASPECTRATIO_THRESHOLD = 0.34;
+    private originalSponsor: Sponsor | undefined;
 
     validations: RefValidations = {
         minlengthname: Sponsor.MIN_LENGTH_NAME,
@@ -81,103 +81,74 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         });
     }
 
-    private postInit(id: number) {
+    private postInit(id: number | string) {
         this.sponsorScreenService = new SponsorScreenService(this.tournament.getSponsors());
-
-        if (id !== undefined && id > 0) {
-            this.sponsor = this.tournament.getSponsors().find(sponsorIt => sponsorIt.getId() === id);
-        }
+        this.originalSponsor = this.tournament.getSponsors().find(sponsorIt => sponsorIt.getId() === id);
 
         this.rangeScreenNrs = [];
         for (let screenNr = 1; screenNr <= SponsorScreenService.MAXNROFSPONSORSCREENS; screenNr++) {
             const screen = this.sponsorScreenService.getScreen(screenNr);
             if (screen !== undefined && (screen.getSponsors().length > SponsorScreenService.MAXNROFSPONSORSPERSCREEN
                 || (screen.getSponsors().length === SponsorScreenService.MAXNROFSPONSORSPERSCREEN
-                    && !(this.sponsor !== undefined && this.sponsor.getScreenNr() === screenNr)))) {
+                    && !(this.originalSponsor !== undefined && this.originalSponsor.getScreenNr() === screenNr)))) {
                 continue;
             }
             this.rangeScreenNrs.push(screenNr);
         }
-        if (this.sponsor === undefined) {
+        if (this.originalSponsor === undefined) {
             const currentScreenNr = this.rangeScreenNrs.length > 0 ? this.rangeScreenNrs[0] : undefined;
             this.form.controls.screennr.setValue(currentScreenNr);
             this.processing = false;
             return;
         }
 
-        this.form.controls.name.setValue(this.sponsor.getName());
-        this.form.controls.url.setValue(this.sponsor.getUrl());
-        this.form.controls.logourl.setValue(this.sponsor.getLogoUrl());
-        this.form.controls.screennr.setValue(this.sponsor.getScreenNr());
+        this.form.controls.name.setValue(this.originalSponsor.getName());
+        this.form.controls.url.setValue(this.originalSponsor.getUrl());
+        this.form.controls.logourl.setValue(this.originalSponsor.getLogoUrl());
+        this.form.controls.screennr.setValue(this.originalSponsor.getScreenNr());
         this.processing = false;
     }
 
     save(): boolean {
         this.processing = true;
         this.setAlert('info', 'de sponsor wordt opgeslagen');
-        if (this.sponsor !== undefined) {
-            this.edit();
-        } else {
-            this.add();
-        }
+
+        const reposCall = this.originalSponsor ? this.sponsorRepository.editObject(this.formToJson(), this.originalSponsor, this.tournament) : this.sponsorRepository.createObject(this.formToJson(), this.tournament);
+
+        reposCall.subscribe(
+            /* happy path */(sponsor: Sponsor) => {
+                this.originalSponsor = sponsor;
+                this.processLogoAndNavigateBack(sponsor);
+            },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+            /* onComplete */() => this.processing = false
+        );
         return false;
     }
 
-    add() {
-        const name = this.form.controls.name.value;
+    formToJson(): JsonSponsor {
         const url = this.form.controls.url.value;
         const logoUrl = this.logoInput === this.logoInputUrl ? this.form.controls.logourl.value : undefined;
-        const screennr = this.form.controls.screennr.value;
-
-        const ref: JsonSponsor = {
-            name: name,
+        return {
+            id: this.originalSponsor ? this.originalSponsor.getId() : 0,
+            name: this.form.controls.name.value,
             url: url ? url : undefined,
             logoUrl: logoUrl,
-            screenNr: screennr
-        };
-        this.sponsorRepository.createObject(ref, this.tournament)
-            .subscribe(
-            /* happy path */ sponsorRes => {
-                    this.sponsor = sponsorRes;
-                    this.processLogoAndNavigateBack(sponsorRes.getId());
-                },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => this.processing = false
-            );
+            screenNr: this.form.controls.screennr.value
+        }
     }
 
-    edit() {
-        const name = this.form.controls.name.value;
-        const url = this.form.controls.url.value;
-
-        const logoUrl = (this.newLogoUploaded !== true || this.logoInput === this.logoInputUrl) ?
-            this.form.controls.logourl.value : undefined;
-
-        this.sponsor.setName(name);
-        this.sponsor.setUrl(url ? url : undefined);
-        this.sponsor.setLogoUrl(logoUrl);
-        this.sponsor.setScreenNr(this.form.controls.screennr.value);
-        this.sponsorRepository.editObject(this.sponsor, this.tournament)
-            .subscribe(
-            /* happy path */ sponsorRes => {
-                    this.processLogoAndNavigateBack(sponsorRes.getId());
-                },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => { this.processing = false; }
-            );
-    }
-
-    processLogoAndNavigateBack(sponsorId: number) {
+    processLogoAndNavigateBack(sponsor: Sponsor) {
         if (this.logoInput === this.logoInputUrl || this.newLogoUploaded !== true) {
             this.processing = false;
             this.navigateBack();
             return;
         }
         const input = new FormData();
-        input.append('logostream', this.form.get('logoupload').value);
-        this.sponsorRepository.uploadImage(sponsorId, this.tournament, input)
+        input.append('logostream', this.form.get('logoupload')?.value);
+        this.sponsorRepository.uploadImage(input, sponsor, this.tournament)
             .subscribe(
-                        /* happy path */ logoUrlRes => {
+                        /* happy path */() => {
                     this.processing = false;
                     this.navigateBack();
                 },
@@ -186,7 +157,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
             );
     }
 
-    onFileChange(event) {
+    onFileChange(event: { target: { files: string | any[]; }; }) {
         if (event.target.files.length === 0) {
             return;
         }
@@ -202,7 +173,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         reader.onload = (_event) => {
             this.base64Logo = reader.result;
         };
-        this.form.get('logoupload').setValue(file);
+        this.form.controls.logoupload.setValue(file);
 
         this.newLogoUploaded = true;
     }
@@ -224,13 +195,10 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
             + (1 - this.LOGO_ASPECTRATIO_THRESHOLD).toFixed(2) + ' en ' + (1 + this.LOGO_ASPECTRATIO_THRESHOLD).toFixed(2);
     }
 
-    openInfoModal(modalContent) {
+    openInfoModal(modalContent: TemplateRef<any>) {
         const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
         activeModal.componentInstance.header = 'uitleg upload logo';
         activeModal.componentInstance.modalContent = modalContent;
-        activeModal.result.then((result) => {
-        }, (reason) => {
-        });
     }
 }
 

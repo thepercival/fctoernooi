@@ -4,7 +4,7 @@ import { Sponsor } from '../sponsor';
 import { VoetbalRange } from 'ngx-sport';
 
 export class Screen {
-    protected description: string;
+    protected description: string = '';
 
     getDescription() {
         return this.description;
@@ -14,7 +14,7 @@ export class Screen {
 export class PoulesRankingScreen extends Screen {
     constructor(
         private pouleOne: Poule,
-        private pouleTwo: Poule,
+        private pouleTwo: Poule | undefined,
         roundsDescription: string) {
         super();
         this.description = 'stand - ' + roundsDescription;
@@ -24,7 +24,7 @@ export class PoulesRankingScreen extends Screen {
         return this.pouleOne;
     }
 
-    getLastPoule(): Poule {
+    getLastPoule(): Poule | undefined {
         return this.pouleTwo;
     }
 
@@ -67,7 +67,7 @@ export interface IGamesScreen {
 }
 
 export class CreatedAndInplayGamesScreen extends GamesScreen implements IGamesScreen {
-    protected next: CreatedAndInplayGamesScreen;
+    protected next: CreatedAndInplayGamesScreen | undefined;
 
     constructor(protected maxLines: number, protected previous?: CreatedAndInplayGamesScreen) {
         super([]);
@@ -86,7 +86,7 @@ export class CreatedAndInplayGamesScreen extends GamesScreen implements IGamesSc
         return this.previous === undefined;
     }
 
-    getNext(): CreatedAndInplayGamesScreen {
+    getNext(): CreatedAndInplayGamesScreen | undefined {
         return this.next;
     }
 
@@ -107,7 +107,7 @@ export class CreatedAndInplayGamesScreen extends GamesScreen implements IGamesSc
 }
 
 export class PlayedGamesScreen extends GamesScreen implements IGamesScreen {
-    playedGames: Game[];
+    // playedGames: Game[];
 
     constructor(playedGames: Game[]) {
         super(playedGames);
@@ -122,16 +122,16 @@ export class PlayedGamesScreen extends GamesScreen implements IGamesScreen {
 export class SponsorScreen extends Screen {
     private sponsors: Sponsor[] = [];
 
-    constructor(private number) {
+    constructor(private number: number) {
         super();
         this.description = 'sponsoren';
     }
 
-    getNumber() {
+    getNumber(): number {
         return this.number;
     }
 
-    getSponsors() {
+    getSponsors(): Sponsor[] {
         return this.sponsors;
     }
 }
@@ -140,21 +140,20 @@ export class SponsorScreenService {
     static readonly MAXNROFSPONSORSCREENS: number = 4;
     static readonly MAXNROFSPONSORSPERSCREEN: number = 4;
 
-    private screens: SponsorScreen[];
+    private screens: SponsorScreen[] = [];
 
-    constructor(private sponsors: Sponsor[]) {
+    constructor(sponsors: Sponsor[]) {
         this.initScreens(sponsors);
     }
 
     private initScreens(sponsors: Sponsor[]) {
-        this.screens = [];
         sponsors.forEach(sponsor => {
             let screen = this.getScreen(sponsor.getScreenNr());
             if (screen === undefined && this.screens.length < SponsorScreenService.MAXNROFSPONSORSCREENS) {
                 screen = new SponsorScreen(sponsor.getScreenNr());
                 this.screens.push(screen);
             }
-            if (screen.getSponsors().length < SponsorScreenService.MAXNROFSPONSORSPERSCREEN) {
+            if (screen && screen.getSponsors().length < SponsorScreenService.MAXNROFSPONSORSPERSCREEN) {
                 screen.getSponsors().push(sponsor);
             }
         });
@@ -167,7 +166,7 @@ export class SponsorScreenService {
         return this.screens;
     }
 
-    getScreen(screenNr: number): SponsorScreen {
+    getScreen(screenNr: number): SponsorScreen | undefined {
         return this.screens.find(screen => screen.getNumber() === screenNr);
     }
 

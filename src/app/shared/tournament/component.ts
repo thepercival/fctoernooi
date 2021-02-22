@@ -1,22 +1,19 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Structure, StructureService, Competition } from 'ngx-sport';
+import { Structure, Competition } from 'ngx-sport';
 
 import { IAlert } from '../common/alert';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
+import { AuthService } from '../../lib/auth/auth.service';
 
-/**
- * Created by coen on 11-10-17.
- */
 export class TournamentComponent {
 
-    public tournament: Tournament;
-    public competition: Competition;
-    public structure: Structure;
-    public alert: IAlert;
+    public tournament!: Tournament;
+    public competition!: Competition;
+    public structure!: Structure;
+    public alert: IAlert | undefined;
     public processing = true;
-    public oldStructure = false;
 
     constructor(
         protected route: ActivatedRoute,
@@ -69,6 +66,12 @@ export class TournamentComponent {
 
     protected resetAlert(): void {
         this.alert = undefined;
+    }
+
+    hasRole(authService: AuthService, roles: number): boolean {
+        const authUser = authService.getUser();
+        const tournamentUser = authUser ? this.tournament.getUser(authUser) : undefined;
+        return tournamentUser ? tournamentUser.hasARole(roles) : false;
     }
 }
 

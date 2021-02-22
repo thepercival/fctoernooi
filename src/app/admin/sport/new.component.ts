@@ -17,13 +17,13 @@ import { GameModeInfoModalComponent } from '../../shared/tournament/gameMode/inf
 })
 export class SportNewComponent implements OnInit {
     @Output() created = new EventEmitter<Sport>();
-    processing = true;
-    form: FormGroup;
-    public alert: IAlert;
-    translateService: TranslateService;
-    gameModes: GameMode[] = [GameMode.Against, GameMode.Together];
-    nrOfGamePlacesOptions: NrOfGamePlacesOption[] = [];
-    nameService: NameService;
+    public processing = true;
+    public form: FormGroup;
+    public alert: IAlert | undefined;
+    public translateService: TranslateService;
+    public gameModes: GameMode[] = [GameMode.Against, GameMode.Together];
+    public nrOfGamePlacesOptions: NrOfGamePlacesOption[] = [];
+    public nameService!: NameService;
     private jsonDefaultSport: JsonSport;
 
     constructor(

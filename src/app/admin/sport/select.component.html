@@ -2,7 +2,7 @@
   <h1 class="text-truncate">sport(en) {{getHeader()}}</h1>
   <h1 class="mr-1">
     <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary">
-      <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+      <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
       <span class="ml-1 d-none d-sm-inline"> terug</span>
     </button>
   </h1>
@@ -20,8 +20,7 @@
       <button type="button" (click)="inputType = inputTypeNew" class="btn btn-outline-secondary">
         zelf invoeren
       </button>
-      <button type="submit" class="btn btn-primary"
-        [disabled]="form.invalid || selectedSports.length === 0">opslaan</button>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid || !someSportSelected()">opslaan</button>
     </div>
     <ngb-alert *ngIf="bothGameModeSelected()" type="warning" [dismissible]="false">De wedstrijd-modus voor de sporten is
       ingesteld op "met elkaar".</ngb-alert>

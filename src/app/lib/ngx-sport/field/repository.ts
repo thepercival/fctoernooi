@@ -27,16 +27,16 @@ export class FieldRepository extends APIRepository {
     }
 
     createObject(json: JsonField, competitionSport: CompetitionSport, tournament: Tournament): Observable<Field> {
-        return this.http.post(this.getUrl(tournament, competitionSport), json, this.getOptions()).pipe(
-            map((jsonRes: JsonField) => this.mapper.toObject(jsonRes, competitionSport, true)),
+        return this.http.post<JsonField>(this.getUrl(tournament, competitionSport), json, this.getOptions()).pipe(
+            map((jsonRes: JsonField) => this.mapper.toNewObject(jsonRes, competitionSport)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    editObject(field: Field, tournament: Tournament): Observable<Field> {
+    editObject(jsonField: JsonField, field: Field, tournament: Tournament): Observable<Field> {
         const url = this.getUrl(tournament, field.getCompetitionSport()) + '/' + field.getId();
-        return this.http.put(url, this.mapper.toJson(field), this.getOptions()).pipe(
-            map((jsonRes: JsonField) => this.mapper.toObject(jsonRes, field.getCompetitionSport())),
+        return this.http.put<JsonField>(url, jsonField, this.getOptions()).pipe(
+            map((jsonRes: JsonField) => this.mapper.toExistingObject(jsonRes)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -47,6 +47,9 @@ export class FieldRepository extends APIRepository {
         return this.http.post(url, undefined, this.getOptions()).pipe(
             map(() => {
                 const downgrade = sportConfig.getField(field.getPriority() - 1);
+                if (downgrade === undefined) {
+                    throw new Error('field does not exist');
+                }
                 field.setPriority(downgrade.getPriority());
                 downgrade.setPriority(downgrade.getPriority() + 1);
                 sportConfig.getFields().sort((fieldA, fieldB) => fieldA.getPriority() - fieldB.getPriority());

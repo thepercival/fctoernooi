@@ -10,12 +10,12 @@ import { ToggleRound } from './selector.component';
   styleUrls: ['./round.component.css']
 })
 export class StructureSelectRoundComponent implements OnInit {
-  @Input() toggleRound: ToggleRound;
-  @Input() first: boolean;
-  @Input() hasOwnConfig: Function;
+  @Input() toggleRound!: ToggleRound;
+  @Input() first!: boolean;
+  @Input() hasOwnConfig!: Function;
   @Output() checkRoundsSelected = new EventEmitter<void>();
   form: FormGroup;
-  public nameService: NameService;
+  public nameService!: NameService;
 
   constructor(public cssService: CSSService, fb: FormBuilder
   ) {
@@ -29,7 +29,7 @@ export class StructureSelectRoundComponent implements OnInit {
     this.form.controls.selected.setValue(this.toggleRound.selected);
   }
 
-  toggleSelection(select: boolean) {
+  toggleSelection() {
     this.toggleRound.selected = this.form.controls.selected.value;
     this.toggleRound.children = this.setSelectedChildren(this.toggleRound.children, this.toggleRound);
     this.emitRoundsSelected();
@@ -45,13 +45,13 @@ export class StructureSelectRoundComponent implements OnInit {
 
   protected setSelectedChildren(children: ToggleRound[], parent: ToggleRound): ToggleRound[] {
     return children.map((child: ToggleRound) => {
-      const newChild = {
+      const newChild: ToggleRound = {
         parent: parent,
         round: child.round,
         selected: this.toggleRound.selected,
         children: []
       };
-      newChild.children = this.setSelectedChildren(child.children, newChild)
+      newChild.children = this.setSelectedChildren(child.children, newChild);
       return newChild;
     });
   }

@@ -8,7 +8,7 @@
         </h1>
         <h1 class="mr-1">
           <button [routerLink]="['']" type="button" class="btn btn-outline-secondary">
-            <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+            <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
             <span class="ml-1 d-none d-md-inline"> terug</span>
           </button>
         </h1>
@@ -17,11 +17,6 @@
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
       <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-      <ngb-alert *ngIf="oldStructure && !oldStructureRequested" type="info" [dismissible]="false">Wanneer je de
-        opzet toch nog wilt bekijken,
-        dan
-        kunnen we de opzet handmatig omzetten.
-      </ngb-alert>
       <ngb-alert *ngIf="!processing && tournament && isAdmin() && !isManualMessageReadOnDevice()" type="info"
         [dismissible]="true" (close)="manualMessageReadOnDevice()">gedetailleerde
         informatie kun je vinden onderaan de pagina via de handleiding-link</ngb-alert>
@@ -30,7 +25,7 @@
         <div *ngIf="isAdmin()" class="card border-secondary pointer mt-3 mx-2" (click)="linkToStructure()">
           <div class="card-body">
             <h5 class="card-title">
-              <fa-icon [icon]="['fac', 'structure']"></fa-icon> opzet
+              <app-tournament-icon name="structure"></app-tournament-icon> opzet
             </h5>
             <p class="card-text" *ngIf="!structure.getFirstRoundNumber().hasNext()">
               1 ronde ingesteld
@@ -89,7 +84,7 @@
           [routerLink]="['/admin/referees', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
-              <fa-icon [icon]="['fac', 'referee']"></fa-icon> scheidsrechters
+              <app-tournament-icon name="referee"></app-tournament-icon> scheidsrechters
             </h5>
             <p class="card-text">{{getNrOfRefereesDescription()}}</p>
           </div>

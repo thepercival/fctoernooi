@@ -28,14 +28,14 @@ export class StructureRepository extends APIRepository {
     }
 
     getObject(tournament: Tournament): Observable<Structure> {
-        return this.http.get(this.getUrl(tournament), this.getOptions()).pipe(
+        return this.http.get<JsonStructure>(this.getUrl(tournament), this.getOptions()).pipe(
             map((json: JsonStructure) => this.mapper.toObject(json, tournament.getCompetition())),
             catchError((err) => this.handleError(err))
         );
     }
 
     editObject(structure: Structure, tournament: Tournament): Observable<Structure> {
-        return this.http.put(this.getUrl(tournament), this.mapper.toJson(structure), this.getOptions()).pipe(
+        return this.http.put<JsonStructure>(this.getUrl(tournament), this.mapper.toJson(structure), this.getOptions()).pipe(
             map((jsonRes: JsonStructure) => this.mapper.toObject(jsonRes, tournament.getCompetition())),
             catchError((err) => this.handleError(err))
         );

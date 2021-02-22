@@ -52,9 +52,6 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
     const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
     activeModal.componentInstance.header = 'uitleg sponsoren';
     activeModal.componentInstance.modalContent = modalContent;
-    activeModal.result.then((result) => {
-    }, (reason) => {
-    });
   }
 
   createSponsorsList() {

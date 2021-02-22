@@ -34,7 +34,7 @@ export class GameRepository extends APIRepository {
 
     private editAgainst(jsonGame: JsonAgainstGame, game: AgainstGame, poule: Poule, tournament: Tournament): Observable<AgainstGame> {
         const url = this.getUrl(tournament, 'against') + '/' + game.getId();
-        return this.http.put(url, jsonGame, this.getCustomOptions(poule)).pipe(
+        return this.http.put<JsonAgainstGame>(url, jsonGame, this.getCustomOptions(poule)).pipe(
             map((jsonGameRes: JsonAgainstGame) => this.mapper.toExistingAgainst(jsonGameRes, game)),
             catchError((err) => this.handleError(err))
         );
@@ -42,7 +42,7 @@ export class GameRepository extends APIRepository {
 
     private editTogether(jsonGame: JsonTogetherGame, game: TogetherGame, poule: Poule, tournament: Tournament): Observable<Game> {
         const url = this.getUrl(tournament, 'together') + '/' + game.getId();
-        return this.http.put(url, jsonGame, this.getCustomOptions(poule)).pipe(
+        return this.http.put<JsonTogetherGame>(url, jsonGame, this.getCustomOptions(poule)).pipe(
             map((jsonGameRes: JsonTogetherGame) => this.mapper.toExistingTogether(jsonGameRes, game)),
             catchError((err) => this.handleError(err))
         );

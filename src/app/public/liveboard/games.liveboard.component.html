@@ -13,15 +13,15 @@
         </th>
         <th *ngIf="showBatch()" class="text-center width-10">batch</th>
         <th *ngIf="isCreatedAndInplay()" class="width-8">
-          <fa-icon [icon]="['fac', 'soccer-field']"></fa-icon>
+          <app-tournament-icon name="soccer-field"></app-tournament-icon>
         </th>
         <th class="text-right width-25">thuis</th>
         <th class="text-center width-8">
-          <fa-icon [icon]="['fac', 'scoreboard']"></fa-icon>
+          <app-tournament-icon name="scoreboard"></app-tournament-icon>
         </th>
         <th class="text-left width-25">uit</th>
         <th *ngIf="isCreatedAndInplay() && hasReferees()" class="width-14 text-right">
-          <fa-icon [icon]="['fac', 'referee']"></fa-icon>
+          <app-tournament-icon name="referee"></app-tournament-icon>
         </th>
       </tr>
     </thead>

@@ -30,15 +30,15 @@ export class CompetitorRepository extends APIRepository {
     }
 
     createObject(json: JsonCompetitor, tournament: Tournament): Observable<Competitor> {
-        return this.http.post(this.getUrl(tournament), json, this.getOptions()).pipe(
+        return this.http.post<JsonCompetitor>(this.getUrl(tournament), json, this.getOptions()).pipe(
             map((jsonCompetitor: JsonCompetitor) => this.mapper.toObject(jsonCompetitor, tournament)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    editObject(competitor: TournamentCompetitor, tournament: Tournament): Observable<Competitor> {
+    editObject(jsonCompetitor: JsonCompetitor, competitor: TournamentCompetitor, tournament: Tournament): Observable<TournamentCompetitor> {
         const url = this.getUrl(tournament) + '/' + competitor.getId();
-        return this.http.put(url, this.mapper.toJson(competitor), this.getOptions()).pipe(
+        return this.http.put<JsonCompetitor>(url, jsonCompetitor, this.getOptions()).pipe(
             map((jsonCompetitor: JsonCompetitor) => this.mapper.updateObject(jsonCompetitor, competitor)),
             catchError((err) => this.handleError(err))
         );
@@ -53,11 +53,11 @@ export class CompetitorRepository extends APIRepository {
         return unusedCompetitors.competitors;
     }
 
-    removeObject(competitor: Competitor, tournament: Tournament): Observable<void> {
+    removeObject(competitor: TournamentCompetitor, tournament: Tournament): Observable<void> {
         const url = this.getUrl(tournament) + '/' + competitor.getId();
         return this.http.delete(url, this.getOptions()).pipe(
-            map((jsonCompetitor: JsonCompetitor) => {
-                const index = tournament.getCompetitors().indexOf(<TournamentCompetitor>competitor);
+            map(() => {
+                const index = tournament.getCompetitors().indexOf(competitor);
                 if (index > -1) {
                     tournament.getCompetitors().splice(index, 1);
                 }

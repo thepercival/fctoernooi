@@ -8,6 +8,6 @@ import { Round } from 'ngx-sport';
     styleUrls: ['./info.component.scss']
 })
 export class QualifyAgainstInfoComponent {
-    @Input() round: Round;
+    @Input() round!: Round;
     constructor() { }
 }

@@ -1,4 +1,4 @@
-import { Game, NameService, Poule, RoundNumber, State, Structure } from 'ngx-sport';
+import { AgainstGame, Game, NameService, Poule, RoundNumber, State, Structure, TogetherGame } from 'ngx-sport';
 
 import {
     CreatedAndInplayGamesScreen,
@@ -54,8 +54,9 @@ export class Liveboard {
         }
         const screens: Screen[] = [];
         screens.push(createdAndInplayGamesScreen);
-        if (createdAndInplayGamesScreen.hasNext()) {
-            screens.push(createdAndInplayGamesScreen.getNext());
+        const nextScreen = createdAndInplayGamesScreen.getNext();
+        if (nextScreen) {
+            screens.push(nextScreen);
         }
         return screens;
     }
@@ -85,16 +86,16 @@ export class Liveboard {
     }
 
     protected fillScreensForGamesCreatedAndInplay(screen: CreatedAndInplayGamesScreen, roundNumber: RoundNumber) {
-        const roundGames: Game[] = roundNumber.getGames(Game.Order_By_Batch);
+        const roundGames: (AgainstGame | TogetherGame)[] = roundNumber.getGames(Game.Order_By_Batch);
 
         const maxNrOfScreens = this.getNrOfScreensForGamesCreatedAndInplay(roundGames);
 
         const now = new Date();
-        let game: Game = roundGames.shift();
-        let nextGame: Game = roundGames.shift();
+        let game: AgainstGame | TogetherGame | undefined = roundGames.shift();
+        let nextGame: AgainstGame | TogetherGame | undefined = roundGames.shift();
         while (!this.screensFilled(screen, maxNrOfScreens) && game !== undefined) {
-            if (game.getState() === State.Finished ||
-                (roundNumber.getValidPlanningConfig().getEnableTime() && game.getStartDateTime() < now)
+            const start = game.getStartDateTime();
+            if (game.getState() === State.Finished || (roundNumber.getValidPlanningConfig().getEnableTime() && start && start < now)
             ) {
                 game = nextGame;
                 nextGame = roundGames.shift();
@@ -110,8 +111,9 @@ export class Liveboard {
             game = nextGame;
             nextGame = roundGames.shift();
         }
-        if (roundNumber.hasNext() && this.screensFilled(screen, maxNrOfScreens) === false) {
-            this.fillScreensForGamesCreatedAndInplay(screen, roundNumber.getNext());
+        const nextRoundNumber = roundNumber.getNext();
+        if (nextRoundNumber && this.screensFilled(screen, maxNrOfScreens) === false) {
+            this.fillScreensForGamesCreatedAndInplay(screen, nextRoundNumber);
         }
     }
 
@@ -131,10 +133,10 @@ export class Liveboard {
                 if (twoPoules.length < 2) {
                     return;
                 }
-                screens.push(new PoulesRankingScreen(twoPoules.shift(), twoPoules.shift(), roundsDescription));
+                screens.push(new PoulesRankingScreen(<Poule>twoPoules.shift(), <Poule>twoPoules.shift(), roundsDescription));
             });
             if (twoPoules.length === 1) {
-                screens.push(new PoulesRankingScreen(twoPoules.shift(), undefined, roundsDescription));
+                screens.push(new PoulesRankingScreen(<Poule>twoPoules.shift(), undefined, roundsDescription));
             }
         });
         return screens;
@@ -148,16 +150,17 @@ export class Liveboard {
         if (roundNumber.getState() === State.Created || roundNumber.getState() === State.InProgress) {
             return [roundNumber];
         }
-        if (!roundNumber.hasNext()) {
+        const nextRoundNumber = roundNumber.getNext();
+        if (nextRoundNumber === undefined) {
             return [roundNumber];
         }
-        if (roundNumber.getNext().getState() === State.Created) {
-            return [roundNumber, roundNumber.getNext()];
+        if (nextRoundNumber.getState() === State.Created) {
+            return [roundNumber, nextRoundNumber];
         }
-        return this.getRoundNumbersForPouleRankingsHelper(roundNumber.getNext());
+        return this.getRoundNumbersForPouleRankingsHelper(nextRoundNumber);
     }
 
-    private getScreenForGamesPlayed(): Screen {
+    private getScreenForGamesPlayed(): Screen | undefined {
         const games: Game[] = this.getPlayedGames();
         if (games.length === 0) {
             return undefined;
@@ -172,8 +175,11 @@ export class Liveboard {
     getPlayedGamesHelper(roundNumber: RoundNumber): Game[] {
         let games: Game[] = roundNumber.getGames(Game.Order_By_Batch);
         games = games.reverse().filter(game => game.getState() === State.Finished);
-        if (games.length < this.maxLines && roundNumber.hasPrevious()) {
-            games = games.concat(this.getPlayedGamesHelper(roundNumber.getPrevious()));
+        if (games.length < this.maxLines) {
+            const previousRoundNumber = roundNumber.getPrevious();
+            if (previousRoundNumber) {
+                games = games.concat(this.getPlayedGamesHelper(previousRoundNumber));
+            }
         }
         if (games.length > this.maxLines) {
             games = games.splice(0, this.maxLines);

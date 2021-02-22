@@ -9,22 +9,22 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
     styleUrls: ['./namemodal.component.scss']
 })
 export class NameModalComponent implements OnInit {
-    @Input() header: string;
-    @Input() range: VoetbalRange;
-    @Input() initialName: string;
-    @Input() labelName: string;
-    @Input() buttonName: string;
-    @Input() buttonOutline: boolean;
+    @Input() header!: string;
+    @Input() range!: VoetbalRange;
+    @Input() initialName!: string;
+    @Input() labelName!: string;
+    @Input() buttonName!: string;
+    @Input() buttonOutline!: boolean;
     form: FormGroup;
 
-    constructor(public activeModal: NgbActiveModal, private fb: FormBuilder) {
+    constructor(public activeModal: NgbActiveModal, fb: FormBuilder) {
         this.form = fb.group({
             name: ''
         });
     }
 
     ngOnInit() {
-        this.form.get('name').setValidators(
+        this.form.get('name')?.setValidators(
             Validators.compose([
                 Validators.required,
                 Validators.minLength(this.range.min),

@@ -15,8 +15,8 @@ import { Role } from '../../lib/role';
     styleUrls: ['./view.component.scss']
 })
 export class RankingComponent extends TournamentComponent implements OnInit {
-    activeTab: number;
-    competitors: Competitor[];
+    activeTab: number = 1;
+    competitors: Competitor[] = [];
 
     constructor(
         route: ActivatedRoute,
@@ -33,8 +33,6 @@ export class RankingComponent extends TournamentComponent implements OnInit {
         super.myNgOnInit(() => {
             const competitors = this.tournament.getCompetitors();
             this.competitors = this.favRepository.getObject(this.tournament).filterCompetitors(competitors);
-
-            this.activeTab = 1;
             if (this.structure.getLastRoundNumber().getState() === State.Finished) {
                 this.activeTab = 2;
             }
@@ -43,6 +41,6 @@ export class RankingComponent extends TournamentComponent implements OnInit {
     }
 
     isAdmin(): boolean {
-        return this.tournament.getUser(this.authService.getUser())?.hasRoles(Role.ADMIN);
+        return this.hasRole(this.authService, Role.ADMIN);
     }
 }

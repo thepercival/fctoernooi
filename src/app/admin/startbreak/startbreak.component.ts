@@ -19,9 +19,9 @@ import { Tournament } from '../../lib/tournament';
 })
 export class StartBreakComponent extends TournamentComponent implements OnInit {
     form: FormGroup;
-    minDateStruct: NgbDateStruct;
+    minDateStruct!: NgbDateStruct;
     processing = true;
-    hasBegun: boolean;
+    hasBegun!: boolean;
 
     constructor(
         route: ActivatedRoute,
@@ -69,14 +69,15 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
     }
 
     isTimeEnabled() {
-        return this.structure.getFirstRoundNumber().getPlanningConfig().getEnableTime();
+        return this.structure.getFirstRoundNumber().getValidPlanningConfig().getEnableTime();
     }
 
     setBreak() {
         let breakStartDateTime, breakEndDateTime;
-        if (this.tournament.hasBreak()) {
-            breakStartDateTime = new Date(this.tournament.getBreakStartDateTime().getTime());
-            breakEndDateTime = new Date(this.tournament.getBreakEndDateTime().getTime());
+        const breakX: Period | undefined = this.tournament.getBreak();
+        if (breakX) {
+            breakStartDateTime = new Date(breakX.getStartDateTime().getTime());
+            breakEndDateTime = new Date(breakX.getEndDateTime().getTime());
         } else {
             breakStartDateTime = this.getDate(this.form.controls.date, this.form.controls.time);
             breakStartDateTime.setHours(breakStartDateTime.getHours() + 2);
@@ -106,7 +107,7 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
         this.setAlert('info', 'het toernooi wordt opgeslagen');
 
         const startDateTime = this.getDate(this.form.controls.date, this.form.controls.time);
-        let breakX: Period;
+        let breakX: Period | undefined;
         if (this.form.controls.togglebreak.value) {
             const breakStartDateTime = this.getDate(this.form.controls.breakstartdate, this.form.controls.breakstarttime);
             const breakEndDateTime = this.getDate(this.form.controls.breakenddate, this.form.controls.breakendtime);
@@ -114,7 +115,7 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
             const message = this.checkBreakPeriod(startDateTime, breakStartDateTime, breakEndDateTime);
             if (message !== undefined) {
                 this.setAlert('danger', message);
-                return;
+                return false;
             }
         }
 
@@ -149,7 +150,7 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
         return false;
     }
 
-    checkBreakPeriod(startDateTime: Date, breakStartDateTime: Date, breakEndDateTime: Date): string {
+    protected checkBreakPeriod(startDateTime: Date, breakStartDateTime: Date, breakEndDateTime: Date): string | undefined {
         if (breakStartDateTime.getTime() < startDateTime.getTime()) {
             return 'de start van de pauze moet na het begin van het toernooi zijn';
         } else if (breakStartDateTime.getTime() >= breakEndDateTime.getTime()) {

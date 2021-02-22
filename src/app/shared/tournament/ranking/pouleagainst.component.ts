@@ -12,14 +12,14 @@ import { Tournament } from '../../../lib/tournament';
   styleUrls: ['./pouleagainst.component.scss']
 })
 export class PouleRankingAgainstComponent implements OnInit {
-  public rankingItems: RankedRoundItem[];
-  @Input() poule: Poule;
-  @Input() tournament: Tournament;
-  @Input() header: boolean;
-  public placeLocationMap: PlaceLocationMap;
-  public nameService: NameService;
+  @Input() poule!: Poule;
+  @Input() tournament!: Tournament;
+  @Input() header!: boolean;
+  public rankingItems!: RankedRoundItem[];
+  public placeLocationMap!: PlaceLocationMap;
+  public nameService!: NameService;
   public showDifferenceDetail = false;
-  favorites: Favorites;
+  public favorites!: Favorites;
   public processing = true;
 
   constructor(
@@ -41,5 +41,10 @@ export class PouleRankingAgainstComponent implements OnInit {
     return this.poule.getRound().getValidScoreConfigs().some((scoreConfig: ScoreConfig) => {
       return scoreConfig.useSubScore();
     });
+  }
+
+  getQualifyPlaceClass(rankingItem: RankedRoundItem): string {
+    const place = this.poule.getPlace(rankingItem.getUniqueRank());
+    return place ? this.cssService.getQualifyPlace(place) : '';
   }
 }

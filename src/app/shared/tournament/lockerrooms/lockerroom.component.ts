@@ -11,10 +11,10 @@ import { Favorites } from '../../../lib/favorites';
     styleUrls: ['./lockerroom.component.scss']
 })
 export class LockerRoomComponent implements OnInit {
-    @Input() validator: LockerRoomValidator;
-    @Input() lockerRoom: LockerRoom;
-    @Input() editable: boolean;
-    @Input() favorites: Favorites;
+    @Input() validator!: LockerRoomValidator;
+    @Input() lockerRoom!: LockerRoom;
+    @Input() editable!: boolean;
+    @Input() favorites!: Favorites;
     @Output() remove = new EventEmitter<LockerRoom>();
     @Output() changeName = new EventEmitter<LockerRoom>();
     @Output() changeCompetitors = new EventEmitter<LockerRoom>();

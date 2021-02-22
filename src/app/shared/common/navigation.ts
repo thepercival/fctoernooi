@@ -5,8 +5,8 @@ import { filter, pairwise } from 'rxjs/operators';
 
 @Injectable()
 export class MyNavigation {
-    private previousUrl: string;
-    scrollPosition: [number, number];
+    private previousUrl: string | undefined;
+    scrollPosition: [number, number] = [0, 0];
 
     constructor(
         private router: Router,
@@ -22,8 +22,9 @@ export class MyNavigation {
         this.router.events.pipe(
             filter(e => e instanceof Scroll)
         ).subscribe(e => {
-            if ((e as Scroll).position) {
-                this.scrollPosition = (e as Scroll).position;
+            const position = (e as Scroll).position;
+            if (position) {
+                this.scrollPosition = position;
             } else {
                 this.scrollPosition = [0, 0];
             }

@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import * as cloneDeep from 'lodash.clonedeep';
 import {
   Competitor,
-  Round,
   RoundNumber,
   Structure,
   PlaceLocationMap,
@@ -14,6 +12,7 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
+import { cloneDeep } from 'lodash';
 
 @Component({
   selector: 'app-tournament-structure',
@@ -21,10 +20,10 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
   styleUrls: ['./edit.component.css'],
 })
 export class StructureEditComponent extends TournamentComponent implements OnInit {
-  changedRoundNumber: RoundNumber;
-  originalCompetitors: Competitor[];
-  clonedStructure: Structure;
-  public placeLocationMap: PlaceLocationMap;
+  changedRoundNumber: RoundNumber | undefined;
+  originalCompetitors!: Competitor[];
+  clonedStructure!: Structure;
+  public placeLocationMap!: PlaceLocationMap;
 
   uiSliderConfigExample: any = {
     behaviour: 'drag',

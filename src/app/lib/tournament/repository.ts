@@ -39,7 +39,7 @@ export class TournamentRepository extends APIRepository {
         );
     }
 
-    getUserRefereeId(tournament: Tournament): Observable<number> {
+    getUserRefereeId(tournament: Tournament): Observable<string | number> {
         if (this.getToken() === undefined) {
             return of(0);
         }
@@ -51,7 +51,7 @@ export class TournamentRepository extends APIRepository {
     }
 
     createObject(json: JsonTournament): Observable<Tournament> {
-        return this.http.post(this.url, json, { headers: super.getHeaders() }).pipe(
+        return this.http.post<JsonTournament>(this.url, json, { headers: super.getHeaders() }).pipe(
             map((jsonTournament: JsonTournament) => this.mapper.toObject(jsonTournament)),
             catchError((err) => this.handleError(err))
         );
@@ -59,7 +59,7 @@ export class TournamentRepository extends APIRepository {
 
     editObject(json: JsonTournament): Observable<Tournament> {
         const url = this.getUrl(json.id);
-        return this.http.put(url, json, { headers: super.getHeaders() }).pipe(
+        return this.http.put<JsonTournament>(url, json, { headers: super.getHeaders() }).pipe(
             map((res: JsonTournament) => {
                 return this.mapper.toObject(res);
             }),
@@ -75,10 +75,9 @@ export class TournamentRepository extends APIRepository {
         );
     }
 
-    copyObject(tournament: Tournament, newStartDateTime: Date): Observable<number> {
+    copyObject(tournament: Tournament, newStartDateTime: Date): Observable<number | string> {
         const url = this.getUrl(tournament.getId()) + '/copy';
-        return this.http.post(url, { startdatetime: newStartDateTime }, this.getOptions()).pipe(
-            map((id: number) => id),
+        return this.http.post<number | string>(url, { startdatetime: newStartDateTime }, this.getOptions()).pipe(
             catchError((err) => this.handleError(err))
         );
     }
@@ -86,7 +85,7 @@ export class TournamentRepository extends APIRepository {
     getExportUrl(tournament: Tournament, exportAction: TournamentExportAction): Observable<string> {
 
         const url = this.getUrl() + '/' + tournament.getId() + '/exportgeneratehash';
-        return this.http.get(url, this.getOptions()).pipe(
+        return this.http.get<TournamentExportHash>(url, this.getOptions()).pipe(
             map((jsonHash: TournamentExportHash) => {
                 const exportUrl = super.getApiUrl() + 'public/' + this.getUrlpostfix() + '/' + tournament.getId() + '/export';
                 return exportUrl + '?subjects=' + exportAction.subjects + '&format=' + exportAction.format + '&hash=' + jsonHash.hash;

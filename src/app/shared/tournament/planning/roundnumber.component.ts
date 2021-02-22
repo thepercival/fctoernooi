@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbPopover, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -17,7 +17,8 @@ import {
   AgainstGame,
   SelfReferee,
   GameMode,
-  TogetherGame
+  TogetherGame,
+  CompetitionSport
 } from 'ngx-sport';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -30,6 +31,8 @@ import { PouleRankingModalComponent } from '../poulerankingmodal/rankingmodal.co
 import { TranslateService } from '../../../lib/translate';
 import { CompetitionSportRouter } from '../competitionSport.router';
 import { CompetitionSportTab } from '../competitionSportTab';
+import { InfoModalComponent } from '../infomodal/infomodal.component';
+import { IAlert } from '../../common/alert';
 
 @Component({
   selector: 'app-tournament-roundnumber-planning',
@@ -38,33 +41,33 @@ import { CompetitionSportTab } from '../competitionSportTab';
 })
 export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnChanges {
 
-  @Input() tournament: Tournament;
-  @Input() roundNumber: RoundNumber;
-  @Input() userRefereeId: number;
-  @Input() reload: boolean;
-  @Input() roles: number;
-  @Input() favorites: Favorites;
-  @Input() refreshingData: boolean;
+  @Input() tournament!: Tournament;
+  @Input() roundNumber!: RoundNumber;
+  @Input() userRefereeId: number | undefined;
+  @Input() reload: boolean = false;
+  @Input() roles: number = 0;
+  @Input() favorites!: Favorites;
+  @Input() refreshingData: boolean = false;
   @Output() refreshData = new EventEmitter();
   @Output() scroll = new EventEmitter();
-  alert: any;
-  sameDay = true;
-  tournamentBreak: Period;
-  breakShown: boolean;
-  userIsAdmin: boolean;
-  gameOrder = Game.Order_By_Batch;
-  filterEnabled = false;
-  hasReferees: boolean;
-  hasBegun: boolean;
-  tournamentHasBegun: boolean;
-  gameDatas: GameData[];
+  alert: IAlert | undefined;
+  public sameDay = true;
+  public tournamentBreak: Period | undefined;
+  public breakShown: boolean = false;
+  public userIsAdmin: boolean = false;
+  public gameOrder = Game.Order_By_Batch;
+  public filterEnabled = false;
+  public hasReferees: boolean = false;
+  public hasBegun: boolean = false;
+  public tournamentHasBegun: boolean = false;
+  public gameDatas: GameData[] = [];
   private scoreConfigService: ScoreConfigService;
-  needsRanking: boolean;
-  hasMultiplePoules: boolean;
-  planningConfig: PlanningConfig;
-  translate = new TranslateService();
-  private placeLocationMap: PlaceLocationMap;
-  nameService: NameService;
+  public needsRanking: boolean = false;
+  public hasMultiplePoules: boolean = false;
+  public translate = new TranslateService();
+  private placeLocationMap!: PlaceLocationMap;
+  public nameService!: NameService;
+  public planningConfig!: PlanningConfig;
 
   constructor(
     private router: Router,
@@ -84,7 +87,10 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     this.nameService = new NameService(this.placeLocationMap);
     this.tournamentBreak = this.tournament.getBreak();
     this.planningConfig = this.roundNumber.getValidPlanningConfig();
-    this.userIsAdmin = this.tournament.getUser(this.authService.getUser())?.hasRoles(Role.ADMIN);
+    const authUser = this.authService.getUser();
+    const currentUser = authUser ? this.tournament.getUser(authUser) : undefined;
+    this.userIsAdmin = currentUser ? currentUser.hasRoles(Role.ADMIN) : false;
+    this.roles = currentUser?.getRoles() ?? 0;
     this.needsRanking = this.roundNumber.needsRanking();
     this.hasMultiplePoules = this.roundNumber.getPoules().length > 1;
     this.hasReferees = this.tournament.getCompetition().getReferees().length > 0
@@ -122,14 +128,16 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
 
   private getGameData() {
     const gameDatas: GameData[] = [];
-    const pouleDatas = this.getPouleDatas();
+    const pouleDataMap = this.getPouleDataMap();
     this.roundNumber.getGames(this.gameOrder).forEach(game => {
       const aPlaceHasACompetitor = this.hasAPlaceACompetitor(game);
       if (this.filterEnabled && this.favorites?.hasItems() && !this.favorites?.hasGameItem(game)) {
         return;
       }
-      const pouleData: PouleData = pouleDatas[game.getPoule().getId()];
-
+      const pouleData: PouleData | undefined = pouleDataMap.get(game.getPoule().getId());
+      if (pouleData === undefined) {
+        return;
+      }
       const gameData: GameData = {
         canChangeResult: this.canChangeResult(game),
         hasACompetitor: aPlaceHasACompetitor,
@@ -148,15 +156,14 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     this.reloadGameData();
   }
 
-  private getPouleDatas(): any {
-    const pouleDatas = {};
-
+  private getPouleDataMap(): PouleDataMap {
+    const pouleDatas = new PouleDataMap();
     this.roundNumber.getPoules().forEach(poule => {
-      pouleDatas[poule.getId()] = {
+      pouleDatas.set(poule.getId(), {
         name: this.nameService.getPouleName(poule, false),
         needsRanking: poule.needsRanking(),
         round: poule.getRound()
-      };
+      });
     });
     return pouleDatas;
   }
@@ -200,10 +207,11 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     if (this.hasRole(Role.GAMERESULTADMIN)) {
       return true;
     }
-    if (game.getReferee() === undefined) {
+    const referee = game.getReferee();
+    if (referee === undefined) {
       return false;
     }
-    return this.hasRole(Role.REFEREE) && this.userRefereeId === game.getReferee().getId();
+    return this.hasRole(Role.REFEREE) && this.userRefereeId === referee.getId();
   }
 
   hasAdminRole(): boolean {
@@ -221,7 +229,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     if (this.tournamentBreak === undefined || this.breakShown || !this.planningConfig.getEnableTime() || !this.gameOrder) {
       return false;
     }
-    this.breakShown = game.getStartDateTime().getTime() === this.tournamentBreak.getEndDateTime().getTime();
+    const startDateTime = game.getStartDateTime();
+    this.breakShown = startDateTime?.getTime() === this.tournamentBreak.getEndDateTime().getTime();
     return this.breakShown;
   }
 
@@ -264,16 +273,16 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   }
 
   sortGames() {
-    this.gameOrder = this.gameOrder ? undefined : Game.Order_By_Batch;
+    // this.gameOrder = this.gameOrder ? undefined : Game.Order_By_Batch;
     this.reloadGameData();
   }
 
   protected isSameDay(gameDataOne: GameData, gameDataTwo: GameData): boolean {
     const gameOne = gameDataOne.game;
     const gameTwo = gameDataTwo.game;
-    const dateOne: Date = gameOne.getStartDateTime();
-    const dateTwo: Date = gameTwo.getStartDateTime();
-    if (dateOne === undefined && dateTwo === undefined) {
+    const dateOne: Date | undefined = gameOne.getStartDateTime();
+    const dateTwo: Date | undefined = gameTwo.getStartDateTime();
+    if (dateOne === undefined || dateTwo === undefined) {
       return true;
     }
     return (dateOne.getDate() === dateTwo.getDate()
@@ -303,8 +312,37 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     modalRef.componentInstance.tournament = this.tournament;
   }
 
-  openModal(templateRef) {
-    const modalRef = this.modalService.open(templateRef);
+  openInfoModal(header: string, modalContent: TemplateRef<any>) {
+    const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
+    activeModal.componentInstance.header = header;
+    activeModal.componentInstance.noHeaderBorder = true;
+    activeModal.componentInstance.modalContent = modalContent;
+  }
+
+  getUniqueScoreConfigs(): ScoreConfig[] {
+    const sameScoreConfigs: ScoreConfig[] = [];
+    this.roundNumber.getCompetitionSports().forEach((competitionSport: CompetitionSport) => {
+      const sameScoreConfig = this.getSameScoreConfig(competitionSport);
+      if (sameScoreConfig !== undefined) {
+        sameScoreConfigs.push(sameScoreConfig);
+      }
+    });
+    return sameScoreConfigs;
+  }
+
+  getSameScoreConfig(competitionSport: CompetitionSport): ScoreConfig | undefined {
+    let scoreConfig: ScoreConfig | undefined;
+    this.roundNumber.getRounds().some((round: Round) => {
+      const roundScoreConfig = round.getValidScoreConfig(competitionSport);
+      if (scoreConfig === undefined) {
+        scoreConfig = roundScoreConfig;
+      } else if (roundScoreConfig !== scoreConfig) {
+        scoreConfig = undefined;
+        return false;
+      }
+      return true;
+    });
+    return scoreConfig;
   }
 }
 
@@ -322,3 +360,6 @@ interface PouleData {
   needsRanking: boolean;
   round: Round;
 }
+
+class PouleDataMap extends Map<string | number, PouleData> { }
+

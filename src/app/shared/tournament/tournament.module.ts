@@ -21,13 +21,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CompetitorChooseModalComponent } from './competitorchoosemodal/competitorchoosemodal.component';
 import { RouterModule } from '@angular/router';
 import { RankingRulesComponent } from './rankingrules/rankingrules.component';
-import { facStructure, facReferee, facScoreboard } from './icons';
+import { facStructure, facReferee, facScoreboard, facSoccerField } from './icons';
 import { CompetitionSportRouter } from './competitionSport.router';
 import { InfoModalComponent } from './infomodal/infomodal.component';
 import { QualifyAgainstInfoComponent } from './qualifyAgainstConfig/info.component';
 import { PouleRankingAgainstComponent } from './ranking/pouleagainst.component';
 import { PouleRankingTogetherComponent } from './ranking/pouletogether.component';
 import { GameModeInfoModalComponent } from './gameMode/infomodal.component';
+import { TournamentIconComponent } from './icon/icon.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { GameModeInfoModalComponent } from './gameMode/infomodal.component';
     StructureRoundArrangeComponent, StructureQualifyComponent, StructureRoundComponent,
     LockerRoomsComponent, LockerRoomComponent,
     RankingRulesComponent,
-    QualifyAgainstInfoComponent
+    QualifyAgainstInfoComponent,
+    TournamentIconComponent
   ],
   imports: [
     CommonModule,
@@ -73,6 +75,7 @@ import { GameModeInfoModalComponent } from './gameMode/infomodal.component';
     RankingRulesComponent,
     QualifyAgainstInfoComponent,
     NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule,
+    TournamentIconComponent,
     NgbNavModule
   ]
 })
@@ -80,7 +83,7 @@ export class TournamentModule {
   constructor(library: FaIconLibrary, modalConfig: NgbModalConfig) {
     library.addIcons(faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt,
       faMedal, faSpinner, faLevelUpAlt, faMinus, faDoorClosed, faPlus,
-      facStructure, facReferee, facScoreboard);
+      facStructure, facReferee, facScoreboard, facSoccerField);
     modalConfig.centered = true;
     modalConfig.scrollable = true;
     modalConfig.size = 'lg';

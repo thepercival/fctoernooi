@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -20,8 +20,8 @@ import { AuthorizationExplanationModalComponent } from './infomodal.component';
 })
 export class AuthorizationListComponent extends TournamentComponent implements OnInit {
     public invitations: TournamentInvitation[] = [];
-    public roleProcessing: TournamentAuthorizationRole;
-    public removeWithRefereeRole: boolean;
+    public roleProcessing: TournamentAuthorizationRole | undefined;
+    public removeWithRefereeRole: boolean | undefined;
 
     constructor(
         route: ActivatedRoute,
@@ -78,7 +78,7 @@ export class AuthorizationListComponent extends TournamentComponent implements O
         return roles === Role.REFEREE || roles === 0;
     }
 
-    toggleRole(authorizationRole: TournamentAuthorizationRole, modalContent) {
+    toggleRole(authorizationRole: TournamentAuthorizationRole, modalContent: TemplateRef<any>) {
         const role = authorizationRole.role;
         const authorization = authorizationRole.authorization;
         const roleDelta = (authorization.hasRoles(role) ? -role : role);
@@ -159,7 +159,7 @@ export class AuthorizationListComponent extends TournamentComponent implements O
         });
     }
 
-    openModalRemove(modalContent, authorization: TournamentAuthorization, removeWithRefereeRole?: boolean) {
+    openModalRemove(modalContent: TemplateRef<any>, authorization: TournamentAuthorization, removeWithRefereeRole?: boolean) {
         this.removeWithRefereeRole = removeWithRefereeRole;
         const activeModal = this.modalService.open(modalContent);
         activeModal.result.then((result) => {

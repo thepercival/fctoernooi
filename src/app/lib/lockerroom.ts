@@ -1,38 +1,20 @@
-/**
- * Created by coen on 9-10-17.
- */
 import { Tournament } from './tournament';
 import { TournamentCompetitor } from './competitor';
+import { Competitor, Identifiable } from 'ngx-sport';
 
-export class LockerRoom {
+export class LockerRoom extends Identifiable {
     static readonly MIN_LENGTH_NAME = 1;
     static readonly MAX_LENGTH_NAME = 6;
 
-    protected id: number;
-    protected name: string;
     protected competitors: TournamentCompetitor[] = [];
-    protected tournament: Tournament;
 
-    constructor(tournament: Tournament, name: string) {
-        this.setTournament(tournament);
-        this.setName(name);
-    }
-
-    getId(): number {
-        return this.id;
-    }
-
-    setId(id: number): void {
-        this.id = id;
+    constructor(protected tournament: Tournament, protected name: string) {
+        super();
+        this.tournament.getLockerRooms().push(this);
     }
 
     getTournament(): Tournament {
         return this.tournament;
-    }
-
-    setTournament(tournament: Tournament): void {
-        this.tournament = tournament;
-        this.tournament.getLockerRooms().push(this);
     }
 
     getName(): string {
@@ -47,8 +29,8 @@ export class LockerRoom {
         return this.competitors;
     }
 
-    hasCompetitor(competitor: TournamentCompetitor): boolean {
-        return this.getCompetitors().indexOf(competitor) >= 0;
+    hasCompetitor(competitor: TournamentCompetitor | Competitor): boolean {
+        return this.competitors.some((competitorIt: Competitor) => competitorIt === competitor);
     }
 
     hasCompetitors(): boolean {

@@ -3,7 +3,7 @@
     <div class="d-flex justify-content-between">
       <h5 class="mb-0 ml-3 mt-3" [innerHtml]="nameService.getRoundNumberName(roundNumber) | keepHtml"></h5>
       <button class="btn btn-sm btn-outline-info my-2" (click)="openModal(contentScoreRules)">
-        <fa-icon [icon]="['fac', 'scoreboard']"></fa-icon>
+        <app-tournament-icon name="scoreboard"></app-tournament-icon>
       </button>
       <fa-icon class="pointer px-3 pt-3" (click)="show=!show" [icon]="['fas', 'chevron-right']"
         [rotate]="show ? 90 : 0">

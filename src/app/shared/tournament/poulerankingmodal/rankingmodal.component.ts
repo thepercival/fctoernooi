@@ -9,10 +9,10 @@ import { Tournament } from '../../../lib/tournament';
     styleUrls: ['./rankingmodal.component.scss']
 })
 export class PouleRankingModalComponent implements OnInit {
-    poule: Poule;
-    tournament: Tournament;
-    gameMode: GameMode;
-    activeTab = 1;
+    public poule!: Poule;
+    public tournament!: Tournament;
+    public gameMode!: GameMode;
+    public activeTab = 1;
     public nameService: NameService
     constructor(public activeModal: NgbActiveModal) {
         this.nameService = new NameService(undefined);

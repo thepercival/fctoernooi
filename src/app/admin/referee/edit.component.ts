@@ -21,7 +21,7 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 })
 export class RefereeEditComponent extends TournamentComponent implements OnInit {
     form: FormGroup;
-    referee: Referee;
+    originalReferee: Referee | undefined;
     addAndInvite: boolean = false;
 
     validations: RefValidations = {
@@ -77,59 +77,48 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
         });
     }
 
-    private getReferee(rank: number): Referee {
-        if (rank === undefined) {
-            this.processing = false;
-            return;
-        }
-        return this.competition.getReferee(rank);
-    }
-
     private postInit(rank: number) {
-        this.referee = this.getReferee(rank);
-        if (this.referee === undefined) {
-            this.processing = false;
-            return;
+        this.originalReferee = this.competition.getReferee(rank);
+        if (this.originalReferee) {
+            this.form.controls.initials.setValue(this.originalReferee.getInitials());
+            this.form.controls.name.setValue(this.originalReferee.getName());
+            this.form.controls.emailaddress.setValue(this.originalReferee.getEmailaddress());
+            this.form.controls.info.setValue(this.originalReferee.getInfo());
         }
-        this.form.controls.initials.setValue(this.referee.getInitials());
-        this.form.controls.name.setValue(this.referee.getName());
-        this.form.controls.emailaddress.setValue(this.referee.getEmailaddress());
-        this.form.controls.info.setValue(this.referee.getInfo());
         this.processing = false;
     }
 
-    save(): boolean {
-        if (this.referee !== undefined) {
-            this.edit();
-        } else {
-            this.add();
-        }
-        return false;
-    }
-
-    add() {
-        this.processing = true;
-        this.setAlert('info', 'de scheidsrechter wordt toegevoegd');
-        const initials = this.form.controls.initials.value;
+    formToJson(): JsonReferee {
         const name = this.form.controls.name.value;
         const emailaddress = this.form.controls.emailaddress.value;
         const info = this.form.controls.info.value;
-
-        if (this.isInitialsDuplicate(this.form.controls.initials.value)) {
-            this.setAlert('danger', 'de initialen bestaan al voor dit toernooi');
-            this.processing = false;
-            return;
-        }
-        const ref: JsonReferee = {
-            id: 0,
+        return {
+            id: this.originalReferee ? this.originalReferee.getId() : 0,
             priority: this.competition.getReferees().length + 1,
-            initials: initials,
+            initials: this.form.controls.initials.value,
             name: name ? name : undefined,
             emailaddress: emailaddress ? emailaddress : undefined,
             info: info ? info : undefined
         };
-        this.refereeRepository.createObject(ref, this.tournament, this.addAndInvite).subscribe(
-            /* happy path */ refereeRes => {
+    }
+
+    save(): boolean {
+        return this.originalReferee ? this.edit(this.originalReferee) : this.add();
+    }
+
+    add(): boolean {
+        this.processing = true;
+        this.setAlert('info', 'de scheidsrechter wordt toegevoegd');
+
+        const jsonReferee: JsonReferee = this.formToJson();
+        if (this.isInitialsDuplicate(jsonReferee.initials)) {
+            this.setAlert('danger', 'de initialen bestaan al voor dit toernooi');
+            this.processing = false;
+            return false;
+        }
+
+        this.refereeRepository.createObject(jsonReferee, this.tournament, this.addAndInvite).subscribe(
+            /* happy path */(refereeRes: Referee) => {
                 this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
                 /* happy path */ roundNumberOut => {
                         this.processing = false;
@@ -141,26 +130,19 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
             },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
         );
+        return false;
     }
 
-    edit() {
+    edit(referee: Referee): boolean {
         this.processing = true;
         this.setAlert('info', 'de scheidsrechter wordt gewijzigd');
-        if (this.isInitialsDuplicate(this.form.controls.initials.value, this.referee)) {
+        const jsonReferee: JsonReferee = this.formToJson();
+        if (this.isInitialsDuplicate(jsonReferee.initials, referee)) {
             this.setAlert('danger', 'de initialen bestaan al voor dit toernooi');
             this.processing = false;
-            return;
+            return false;
         }
-        const initials = this.form.controls.initials.value;
-        const name = this.form.controls.name.value;
-        const emailaddress = this.form.controls.emailaddress.value;
-        const info = this.form.controls.info.value;
-
-        this.referee.setInitials(initials);
-        this.referee.setName(name ? name : undefined);
-        this.referee.setEmailaddress(emailaddress ? emailaddress : undefined);
-        this.referee.setInfo(info ? info : undefined);
-        this.refereeRepository.editObject(this.referee, this.tournament)
+        this.refereeRepository.editObject(jsonReferee, referee, this.tournament)
             .subscribe(
             /* happy path */ refereeRes => {
                     this.navigateBack();
@@ -168,6 +150,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
                 /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
                 /* onComplete */() => { this.processing = false; }
             );
+        return false;
     }
 
     navigateBack() {

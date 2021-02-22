@@ -75,7 +75,7 @@ export class EqualQualifiersChecker {
 
     protected reverseRanking(rankingItems: RankedRoundItem[]): RankedRoundItem[] {
         const nrOfItems = rankingItems.length;
-        const reversedRankingItems = [];
+        const reversedRankingItems: RankedRoundItem[] = [];
         rankingItems.forEach(rankingItem => {
             const uniqueRank = (nrOfItems + 1) - rankingItem.getUniqueRank();
             const nrOfEqualRank = this.rankingService.getItemsByRank(rankingItems, rankingItem.getRank()).length;

@@ -21,7 +21,7 @@ export class DefaultService {
             team: false,
             gameMode: GameMode.Against,
             nrOfGamePlaces: 2,
-            customId: undefined
+            customId: 0
         };
     }
 

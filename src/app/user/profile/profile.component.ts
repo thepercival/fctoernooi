@@ -15,9 +15,9 @@ import { MyNavigation } from '../../shared/common/navigation';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  alert: IAlert;
+  alert: IAlert | undefined;
   processing = true;
-  user: User;
+  user!: User;
   form: FormGroup;
 
   validations: UserValidations = {

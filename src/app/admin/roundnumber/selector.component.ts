@@ -7,9 +7,8 @@ import { Structure, RoundNumber, NameService } from 'ngx-sport';
     templateUrl: './selector.component.html',
 })
 export class RoundNumbersSelectorModalComponent implements OnInit {
-    @Input() structure: Structure;
-    @Input() subject: string;
-    protected roundNumber: RoundNumber;
+    @Input() structure!: Structure;
+    @Input() subject!: string;
     public nameService: NameService;
     processing = true;
 

@@ -6,11 +6,10 @@ import {
   NameService,
   Place,
   PlaceLocation,
-  QualifyGroup,
-  Round,
   Structure,
   PlaceLocationMap,
-  StructureService
+  StructureService,
+  JsonCompetitor
 } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
 
@@ -25,6 +24,7 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { CompetitorListRemoveModalComponent } from './listremovemodal.component';
 import { LockerRoomValidator } from '../../lib/lockerroom/validator';
 import { TournamentCompetitor } from '../../lib/competitor';
+import { CompetitorMapper } from '../../lib/competitor/mapper';
 
 @Component({
   selector: 'app-tournament-competitors',
@@ -33,17 +33,16 @@ import { TournamentCompetitor } from '../../lib/competitor';
 })
 export class CompetitorListComponent extends TournamentComponent implements OnInit, AfterViewChecked {
 
-  places: Place[];
-  alert: IAlert;
-  swapPlace: Place;
-  focusId: number;
-  showSwap: boolean;
+  places: Place[] = [];
+  alert: IAlert | undefined;
+  swapPlace: Place | undefined;
+  focusId!: number | string;
   orderMode = false;
-  hasBegun: boolean;
-  lockerRoomValidator: LockerRoomValidator;
-  areSomeCompetitorsArranged: boolean;
-  private placeLocationMap: PlaceLocationMap
-  public nameService: NameService;
+  hasBegun!: boolean;
+  lockerRoomValidator!: LockerRoomValidator;
+  areSomeCompetitorsArranged!: boolean;
+  private placeLocationMap!: PlaceLocationMap
+  public nameService!: NameService;
 
   constructor(
     route: ActivatedRoute,
@@ -53,6 +52,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     private structureService: StructureService,
     private planningRepository: PlanningRepository,
     private competitorRepository: CompetitorRepository,
+    private mapper: CompetitorMapper,
     private modalService: NgbModal,
     private myNavigation: MyNavigation
   ) {
@@ -141,9 +141,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.setAlert('info', 'volgorde wordt gewijzigd');
     const swapCompetitor = <TournamentCompetitor>this.placeLocationMap.getCompetitor(this.swapPlace);
     const swapCompetitorTwo = <TournamentCompetitor>this.placeLocationMap.getCompetitor(swapPlaceTwo);
-    const reposUpdates: Observable<Competitor>[] = [];
-    reposUpdates.push(this.competitorRepository.editObject(swapCompetitor, this.tournament));
-    reposUpdates.push(this.competitorRepository.editObject(swapCompetitorTwo, this.tournament));
+    const reposUpdates: Observable<Competitor>[] = this.getSwapReposUpdates(swapCompetitor, swapCompetitorTwo);
     this.swapHelper(reposUpdates);
   }
 
@@ -151,15 +149,13 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.processing = true;
     this.setAlert('info', 'volgorde wordt willekeurig gewijzigd');
 
-    const reposUpdates: Observable<Competitor>[] = [];
+    let reposUpdates: Observable<Competitor>[] = [];
     const competitors = this.tournament.getCompetitors();
     let swapCompetitor;
     while (competitors.length > 1) {
       const idx = Math.floor(Math.random() * competitors.length) + 1;
       if (swapCompetitor) {
-        this.swap(swapCompetitor, competitors[idx]);
-        reposUpdates.push(this.competitorRepository.editObject(swapCompetitor, this.tournament));
-        reposUpdates.push(this.competitorRepository.editObject(competitors[idx], this.tournament));
+        reposUpdates = reposUpdates.concat(this.getSwapReposUpdates(swapCompetitor, competitors[idx]));
         swapCompetitor = undefined;
       } else {
         swapCompetitor = competitors[idx];
@@ -168,13 +164,17 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.swapHelper(reposUpdates);
   }
 
-  protected swap(competitorOne: TournamentCompetitor, competitorTwo: TournamentCompetitor) {
-    const tmpPouleNr = competitorOne.getPouleNr();
-    competitorOne.setPouleNr(competitorTwo.getPouleNr());
-    competitorTwo.setPouleNr(tmpPouleNr);
-    const tmpPlaceNr = competitorOne.getPlaceNr();
-    competitorOne.setPlaceNr(competitorTwo.getPlaceNr());
-    competitorTwo.setPlaceNr(tmpPlaceNr);
+  protected getSwapReposUpdates(competitorOne: TournamentCompetitor, competitorTwo: TournamentCompetitor): Observable<Competitor>[] {
+    const jsonCompetitorOne = this.mapper.toJson(competitorOne);
+    const jsonCompetitorTwo = this.mapper.toJson(competitorTwo);
+    jsonCompetitorOne.pouleNr = competitorTwo.getPouleNr();
+    jsonCompetitorTwo.pouleNr = competitorOne.getPouleNr();
+    jsonCompetitorOne.placeNr = competitorTwo.getPlaceNr();
+    jsonCompetitorTwo.placeNr = competitorOne.getPlaceNr();
+    return [
+      this.competitorRepository.editObject(jsonCompetitorOne, competitorOne, this.tournament),
+      this.competitorRepository.editObject(jsonCompetitorTwo, competitorTwo, this.tournament)
+    ];
   }
 
   protected swapHelper(reposUpdates: Observable<Competitor>[]) {
@@ -237,13 +237,13 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
    */
   registerCompetitor(competitor: TournamentCompetitor): void {
     this.processing = true;
-    const newRegistered = competitor.getRegistered() === true ? false : true;
-    competitor.setRegistered(newRegistered);
-    const prefix = newRegistered ? 'aan' : 'af';
+    const jsonCompetitor = this.mapper.toJson(competitor);
+    jsonCompetitor.registered = competitor.getRegistered() === true ? false : true;
+    const prefix = jsonCompetitor.registered ? 'aan' : 'af';
     this.setAlert('info', 'deelnemer ' + competitor.getName() + ' wordt ' + prefix + 'gemeld');
-    this.competitorRepository.editObject(competitor, this.tournament)
+    this.competitorRepository.editObject(jsonCompetitor, competitor, this.tournament)
       .subscribe(
-            /* happy path */ competitorRes => {
+            /* happy path */(competitorRes: TournamentCompetitor) => {
           this.setAlert('success', 'deelnemer ' + competitor.getName() + ' is ' + prefix + 'gemeld');
         },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
@@ -256,11 +256,11 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
    */
   removeCompetitor(place: Place): void {
     this.processing = true;
-    const competitor = this.placeLocationMap.getCompetitor(place);
+    const competitor = <TournamentCompetitor>this.placeLocationMap.getCompetitor(place);
     this.setAlert('info', 'deelnemer ' + competitor.getName() + ' wordt verwijderd');
     this.competitorRepository.removeObject(competitor, this.tournament)
       .subscribe(
-            /* happy path */ placeRes => {
+            /* happy path */() => {
           this.setAlert('success', 'deelnemer ' + competitor + ' is verwijderd');
         },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },

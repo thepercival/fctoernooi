@@ -5,15 +5,16 @@ import { HorizontalPoule, Place, QualifyGroup, Round } from 'ngx-sport';
 export class CSSService {
     getQualifyPlace(place: Place): string {
         const horizontalPouleWinners = place.getHorizontalPoule(QualifyGroup.WINNERS);
-        const qualifyGroupWinners: QualifyGroup = horizontalPouleWinners.getQualifyGroup();
         const horizontalPouleLosers = place.getHorizontalPoule(QualifyGroup.LOSERS);
-        const qualifyGroupLosers: QualifyGroup = horizontalPouleLosers.getQualifyGroup();
+
+        const qualifyGroupWinners: QualifyGroup | undefined = horizontalPouleWinners?.getQualifyGroup();
+        const qualifyGroupLosers: QualifyGroup | undefined = horizontalPouleLosers?.getQualifyGroup();
         if (!qualifyGroupWinners && !qualifyGroupLosers) {
             return '';
         }
         if (qualifyGroupWinners && qualifyGroupLosers) {
-            const partialWinners = (qualifyGroupWinners.getNrOfToPlacesTooMuch() > 0 && horizontalPouleWinners.isBorderPoule());
-            const partialLosers = (qualifyGroupLosers.getNrOfToPlacesTooMuch() > 0 && horizontalPouleLosers.isBorderPoule());
+            const partialWinners = (qualifyGroupWinners.getNrOfToPlacesTooMuch() > 0 && horizontalPouleWinners?.isBorderPoule());
+            const partialLosers = (qualifyGroupLosers.getNrOfToPlacesTooMuch() > 0 && horizontalPouleLosers?.isBorderPoule());
             if (partialWinners && partialLosers) {
                 return 'q-partial q-w-' + this.getQualifyGroupNumber(qualifyGroupWinners) + '-double-partial q-l-'
                     + this.getQualifyGroupNumber(qualifyGroupLosers) + '-double-partial';
@@ -23,10 +24,13 @@ export class CSSService {
             }
             return 'q-l-' + this.getQualifyGroupNumber(qualifyGroupLosers);
         }
-        if (qualifyGroupWinners && !qualifyGroupLosers) {
+        if (qualifyGroupWinners && horizontalPouleWinners && !qualifyGroupLosers) {
             return this.getQualifyPoule(horizontalPouleWinners);
         }
-        return this.getQualifyPoule(horizontalPouleLosers);
+        if (horizontalPouleLosers) {
+            return this.getQualifyPoule(horizontalPouleLosers);
+        }
+        return '';
     }
 
     protected getQualifyGroupNumber(qualifyGroup: QualifyGroup): number {
@@ -48,7 +52,7 @@ export class CSSService {
     }
 
     getQualifyRound(round: Round, noQualifyClass: string = ''): string {
-        const qualifyGroup: QualifyGroup = round.getParentQualifyGroup();
+        const qualifyGroup: QualifyGroup | undefined = round.getParentQualifyGroup();
         if (qualifyGroup === undefined) {
             return noQualifyClass;
         }

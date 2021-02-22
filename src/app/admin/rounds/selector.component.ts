@@ -7,11 +7,11 @@ import { Structure, NameService, Round, CompetitionSport } from 'ngx-sport';
     templateUrl: './selector.component.html',
 })
 export class RoundsSelectorModalComponent implements OnInit {
-    @Input() subject: string;
-    @Input() structure: Structure;
-    @Input() competitionSport: CompetitionSport;
-    @Input() hasOwnConfig: Function;
-    @Input() toggleRound: ToggleRound;
+    @Input() subject!: string;
+    @Input() structure!: Structure;
+    @Input() competitionSport!: CompetitionSport;
+    @Input() hasOwnConfig!: Function;
+    @Input() toggleRound!: ToggleRound;
 
     public nameService: NameService;
     public someRoundSelected: boolean = false;

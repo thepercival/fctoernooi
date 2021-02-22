@@ -8,10 +8,10 @@ import { Role } from '../../lib/role';
     styleUrls: ['./infomodal.component.scss']
 })
 export class AuthorizationExplanationModalComponent implements OnInit {
-    @Input() header: string;
-    @Input() showAdd: boolean;
+    @Input() header!: string;
+    @Input() showAdd: boolean = false;
 
-    roleDefinitions: RoleDefinition[];
+    roleDefinitions: RoleDefinition[] = [];
 
     constructor(public activeModal: NgbActiveModal) {
     }

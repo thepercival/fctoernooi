@@ -35,7 +35,7 @@ import { HomeShellComponent } from './home/shell.component';
 import { TournamentShellRepository } from './lib/tournament/shell/repository';
 import { UserMapper } from './lib/user/mapper';
 import { LayoutModule } from './shared/layout/layout.module';
-import { facDarts, facSoccerField, facTennis, facBadminton, facHockey, facSquash, facKorfball, facFavicon } from './lib/icons';
+import { facDarts, facTennis, facBadminton, facHockey, facSquash, facKorfball, facFavicon } from './lib/icons';
 import { SportIconCustomComponent } from './home/sport/customicon.component';
 
 @NgModule({
@@ -74,7 +74,7 @@ export class AppModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(faPlusCircle, faSpinner, faSearch, faAngleDoubleDown
       , faUserShield, faUserFriends, faSave, faUserCircle,
-      facDarts, facSoccerField, facTennis, facBadminton, facHockey, facSquash, facKorfball,
+      facDarts, facTennis, facBadminton, facHockey, facSquash, facKorfball,
       facFavicon
     );
     library.addIcons(

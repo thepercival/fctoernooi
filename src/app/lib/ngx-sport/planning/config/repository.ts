@@ -24,7 +24,7 @@ export class PlanningConfigRepository extends APIRepository {
 
     createObject(json: JsonPlanningConfig, roundNumber: RoundNumber, tournament: Tournament): Observable<PlanningConfig> {
         const url = this.getUrl(tournament, roundNumber);
-        return this.http.post(url, json, this.getOptions()).pipe(
+        return this.http.post<JsonPlanningConfig>(url, json, this.getOptions()).pipe(
             map((jsonRes: JsonPlanningConfig) => this.planningConfigMapper.toObject(jsonRes, roundNumber)),
             catchError((err) => this.handleError(err))
         );
@@ -32,7 +32,7 @@ export class PlanningConfigRepository extends APIRepository {
 
     saveObject(json: JsonPlanningConfig, roundNumber: RoundNumber, tournament: Tournament): Observable<PlanningConfig> {
         const url = this.getUrl(tournament, roundNumber);
-        return this.http.post(url, json, this.getOptions()).pipe(
+        return this.http.post<JsonPlanningConfig>(url, json, this.getOptions()).pipe(
             map((jsonResult: JsonPlanningConfig) => {
                 this.removeNext(roundNumber);
                 return this.planningConfigMapper.toObject(jsonResult, roundNumber);
@@ -42,10 +42,11 @@ export class PlanningConfigRepository extends APIRepository {
     }
 
     private removeNext(roundNumber: RoundNumber) {
-        if (!roundNumber.hasNext()) {
+        const nextRoundNumber = roundNumber.getNext();
+        if (nextRoundNumber === undefined) {
             return;
         }
-        roundNumber.getNext().setPlanningConfig(undefined);
-        this.removeNext(roundNumber.getNext());
+        nextRoundNumber.setPlanningConfig(undefined);
+        this.removeNext(nextRoundNumber);
     }
 }

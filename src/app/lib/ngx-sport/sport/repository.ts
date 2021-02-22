@@ -26,7 +26,7 @@ export class SportRepository extends APIRepository {
     }
 
     getObjects(): Observable<Sport[]> {
-        return this.http.get(this.getUrl(), this.getOptions()).pipe(
+        return this.http.get<JsonSport[]>(this.getUrl(), this.getOptions()).pipe(
             map((jsonSports: JsonSport[]) => jsonSports.map((jsonSport: JsonSport) => {
                 return this.mapper.toObject(jsonSport);
             })),
@@ -36,14 +36,14 @@ export class SportRepository extends APIRepository {
 
     getObjectByCustomId(customId: number): Observable<Sport> {
         const url = this.getUrl() + '/' + customId;
-        return this.http.get(url, this.getOptions()).pipe(
+        return this.http.get<JsonSport>(url, this.getOptions()).pipe(
             map((json: JsonSport) => this.mapper.toObject(json)),
             catchError((err) => this.handleError(err))
         );
     }
 
     createObject(json: JsonSport): Observable<Sport> {
-        return this.http.post(this.getUrl(), json, this.getOptions()).pipe(
+        return this.http.post<JsonSport>(this.getUrl(), json, this.getOptions()).pipe(
             map((jsonRes: JsonSport) => this.mapper.toObject(jsonRes)),
             catchError((err) => this.handleError(err))
         );

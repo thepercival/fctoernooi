@@ -31,7 +31,7 @@ export class TournamentUserRepository extends APIRepository {
     editObject(tournamentUser: TournamentUser): Observable<TournamentUser> {
         const tournament = tournamentUser.getTournament();
         const url = this.getUrl(tournament) + '/' + tournamentUser.getId();
-        return this.http.put(url, this.mapper.toJson(tournamentUser), this.getOptions()).pipe(
+        return this.http.put<JsonTournamentUser>(url, this.mapper.toJson(tournamentUser), this.getOptions()).pipe(
             map((res: JsonTournamentUser) => this.mapper.toObject(res, tournament, tournamentUser)),
             catchError((err) => this.handleError(err))
         );
@@ -40,7 +40,7 @@ export class TournamentUserRepository extends APIRepository {
     removeObject(tournamentUser: TournamentUser): Observable<JsonTournamentUser> {
         const tournament = tournamentUser.getTournament();
         const url = this.getUrl(tournament) + '/' + tournamentUser.getId();
-        return this.http.delete(url, this.getOptions()).pipe(
+        return this.http.delete<JsonTournamentUser>(url, this.getOptions()).pipe(
             map((res: JsonTournamentUser) => {
                 const index = tournament.getUsers().indexOf(tournamentUser);
                 if (index > -1) {

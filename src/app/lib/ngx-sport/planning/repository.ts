@@ -28,7 +28,10 @@ export class PlanningRepository extends APIRepository {
 
     get(structure: Structure, tournament: Tournament, startRoundNumber: number): Observable<RoundNumber> {
         const roundNumber = structure.getRoundNumber(startRoundNumber);
-        return this.http.get(this.getUrl(tournament, roundNumber), this.getOptions()).pipe(
+        if (roundNumber === undefined) {
+            throw Error('het rondenummer kan niet gevonden worden');
+        }
+        return this.http.get<JsonStructure>(this.getUrl(tournament, roundNumber), this.getOptions()).pipe(
             map((jsonStructure: JsonStructure) => this.planningMapper.toObject(jsonStructure, structure, startRoundNumber)),
             catchError((err) => this.handleError(err))
         );
@@ -36,9 +39,12 @@ export class PlanningRepository extends APIRepository {
 
     create(structure: Structure, tournament: Tournament, startRoundNumber: number): Observable<RoundNumber> {
         const roundNumber = structure.getRoundNumber(startRoundNumber);
+        if (roundNumber === undefined) {
+            throw Error('het rondenummer kan niet gevonden worden');
+        }
         this.removeGames(roundNumber);
         const url = this.getUrl(tournament, roundNumber) + '/create';
-        return this.http.post(url, undefined, this.getOptions()).pipe(
+        return this.http.post<JsonStructure>(url, undefined, this.getOptions()).pipe(
             map((jsonStructure: JsonStructure) => this.planningMapper.toObject(jsonStructure, structure, startRoundNumber)),
             catchError((err) => this.handleError(err))
         );
@@ -48,21 +54,23 @@ export class PlanningRepository extends APIRepository {
         roundNumber.getPoules().forEach(poule => {
             poule.getGames().splice(0, poule.getGames().length);
         });
-        if (roundNumber.hasNext()) {
-            this.removeGames(roundNumber.getNext());
+        const nextRoundNumber = roundNumber.getNext();
+        if (nextRoundNumber) {
+            this.removeGames(nextRoundNumber);
         }
     }
 
     reschedule(roundNumber: RoundNumber, tournament: Tournament): Observable<boolean> {
         const url = this.getUrl(tournament, roundNumber) + '/reschedule';
-        return this.http.post(url, undefined, this.getOptions()).pipe(
+        return this.http.post<Date[]>(url, undefined, this.getOptions()).pipe(
             map((dates: Date[]) => this.updateDates(roundNumber, dates)),
             catchError((err) => this.handleError(err))
         );
     }
 
     private updateDates(roundNumber: RoundNumber, dates: Date[]): boolean {
-        let previousBatchNr, gameDate;
+        let previousBatchNr: number | undefined;
+        let gameDate: Date | undefined;
         roundNumber.getGames(Game.Order_By_Batch).forEach(game => {
             if (previousBatchNr === undefined || previousBatchNr !== game.getBatchNr()) {
                 previousBatchNr = game.getBatchNr();
@@ -73,9 +81,9 @@ export class PlanningRepository extends APIRepository {
             }
             game.setStartDateTime(gameDate);
         });
-        if (roundNumber.hasNext()) {
-            // batchDates
-            this.updateDates(roundNumber.getNext(), dates);
+        const nextRoundNumber = roundNumber.getNext();
+        if (nextRoundNumber) {
+            this.updateDates(nextRoundNumber, dates);
         }
         return true;
     }

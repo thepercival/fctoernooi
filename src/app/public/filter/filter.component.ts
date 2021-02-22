@@ -17,11 +17,11 @@ import { Role } from '../../lib/role';
     styleUrls: ['./filter.component.scss']
 })
 export class FilterComponent extends TournamentComponent implements OnInit {
-    places: Place[];
-    favorites: Favorites;
-    processingItem: Referee | Place;
-    public placeLocationMap: PlaceLocationMap;
-    public nameService: NameService;
+    public places: Place[] = [];
+    public favorites!: Favorites;
+    public processingItem: Referee | Place | undefined;
+    public placeLocationMap!: PlaceLocationMap;
+    public nameService!: NameService;
 
     constructor(
         route: ActivatedRoute,
@@ -47,7 +47,7 @@ export class FilterComponent extends TournamentComponent implements OnInit {
     }
 
     isAdmin(): boolean {
-        return this.tournament.getUser(this.authService.getUser())?.hasRoles(Role.ADMIN);
+        return this.hasRole(this.authService, Role.ADMIN);
     }
 
     initPlaces() {

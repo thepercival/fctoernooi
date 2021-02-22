@@ -10,9 +10,9 @@ import { PoulesRankingScreen } from '../../lib/liveboard/screens';
     styleUrls: ['./poules.liveboard.component.scss']
 })
 export class LiveboardPoulesComponent {
-    @Input() screen: PoulesRankingScreen;
-    @Input() ruleSet: number;
-    @Input() nameService: NameService;
+    @Input() screen!: PoulesRankingScreen;
+    @Input() ruleSet!: number;
+    @Input() nameService!: NameService;
 
     constructor(
         public cssService: CSSService

@@ -3,7 +3,7 @@ import { OnInit, ElementRef, Input, Directive } from '@angular/core';
 @Directive({ selector: '[focuMe]' })
 export class FocusDirective implements OnInit {
 
-    @Input('focuMe') isFocused: boolean;
+    @Input('focuMe') isFocused: boolean = false;;
 
     constructor(private hostElement: ElementRef) { }
 

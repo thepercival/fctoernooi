@@ -34,7 +34,7 @@ export class QualifyAgainstConfigRepository extends APIRepository {
 
     saveObject(jsonQualifyAgainstConfig: JsonQualifyAgainstConfig, round: Round, tournament: Tournament): Observable<QualifyAgainstConfig> {
         const url = this.getUrl(tournament, round, jsonQualifyAgainstConfig.competitionSport);
-        return this.http.post(url, jsonQualifyAgainstConfig, this.getOptions()).pipe(
+        return this.http.post<JsonQualifyAgainstConfig>(url, jsonQualifyAgainstConfig, this.getOptions()).pipe(
             map((jsonResult: JsonQualifyAgainstConfig) => {
                 const competitionSport = this.competitionSportMapper.toObject(jsonResult.competitionSport, tournament.getCompetition());
                 round.getChildren().forEach((child: Round) => this.service.removeFromRound(competitionSport, round));

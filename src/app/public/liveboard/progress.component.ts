@@ -17,16 +17,16 @@ import { Subscription, timer } from 'rxjs';
     styleUrls: ['./progress.component.scss']
 })
 export class ProgressComponent implements OnDestroy, OnChanges {
-    @Input() max: number;
-    @Input() toggleProgress: boolean;
+    @Input() max!: number;
+    @Input() toggleProgress!: boolean;
     @Output() executeAtZero = new EventEmitter<boolean>();
     radius = 16;
     strokeWidth = 5;
     circumference = 2 * Math.PI * this.radius;
     length = (this.radius + this.strokeWidth) * 2;
-    private timer: Subscription;
-    private progress: number;
-    public dashoffset: number;
+    private timer!: Subscription;
+    private progress!: number;
+    public dashoffset!: number;
 
     constructor(private _ngZone: NgZone, private changeRef: ChangeDetectorRef) {
         this.resetProgress();

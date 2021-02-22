@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { EndRankingService, EndRankingItem, RankingService, Structure, Competitor, RankingRuleSet } from 'ngx-sport';
+import { EndRankingService, EndRankingItem, Structure, Competitor } from 'ngx-sport';
 import { VoetbalRange } from 'ngx-sport';
 
 @Component({
@@ -9,11 +9,10 @@ import { VoetbalRange } from 'ngx-sport';
 })
 export class EndRankingComponent implements OnInit, OnChanges {
 
-  @Input() structure: Structure;
-  @Input() favorites: Competitor[];
-  @Input() range: VoetbalRange;
-
-  public items: EndRankingItem[];
+  @Input() structure!: Structure;
+  @Input() favorites!: Competitor[];
+  @Input() range: VoetbalRange | undefined;
+  public items: EndRankingItem[] = [];
 
   constructor() {
   }
@@ -34,10 +33,7 @@ export class EndRankingComponent implements OnInit, OnChanges {
 
   protected updateItems() {
     const endRankingService = new EndRankingService(this.structure);
-    this.items = endRankingService.getItems();
-    if (this.range !== undefined) {
-      this.items = this.items.filter(item => item.getUniqueRank() >= this.range.min && item.getUniqueRank() <= this.range.max);
-    }
+    this.items = endRankingService.getItems().filter(item => this.range && item.getUniqueRank() >= this.range.min && item.getUniqueRank() <= this.range.max);
   }
 
   hasMedal(rank: number): boolean {

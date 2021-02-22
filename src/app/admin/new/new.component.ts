@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -24,7 +24,7 @@ import { SportSelectMode } from '../sport/select.component';
 export class NewComponent implements OnInit {
   form: FormGroup;
   processing = true;
-  alert: IAlert;
+  alert: IAlert | undefined;
   minDateStruct: NgbDateStruct;
   showSelectSports: boolean = false;
   sports: Sport[] = [];
@@ -202,13 +202,9 @@ export class NewComponent implements OnInit {
     return translate.getFieldNamePlural(this.sports[0]);
   }
 
-  openInfoModal(header: string, modalContent) {
+  openInfoModal(header: string, modalContent: TemplateRef<any>) {
     const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
     activeModal.componentInstance.header = header;
     activeModal.componentInstance.modalContent = modalContent;
-    activeModal.result.then((result) => {
-    }, (reason) => {
-
-    });
   }
 }

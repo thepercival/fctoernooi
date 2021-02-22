@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -29,9 +29,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     copyForm: FormGroup;
     minDateStruct: NgbDateStruct;
     translate: TranslateService;
-    allHavePlannings: boolean;
-    oldStructureRequested: boolean;
-    lockerRoomValidator: LockerRoomValidator;
+    lockerRoomValidator!: LockerRoomValidator;
 
     constructor(
         route: ActivatedRoute,
@@ -131,19 +129,15 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     isAdmin(): boolean {
-        return this.isAdminHelper(Role.ADMIN);
+        return this.hasRole(this.authService, Role.ADMIN);
     }
 
     isRoleAdmin(): boolean {
-        return this.isAdminHelper(Role.ROLEADMIN);
+        return this.hasRole(this.authService, Role.ROLEADMIN);
     }
 
     isRefereeOrGameResultAdmin(): boolean {
-        return this.isAdminHelper(Role.GAMERESULTADMIN + Role.REFEREE);
-    }
-
-    protected isAdminHelper(roles: number) {
-        return this.tournament.getUser(this.authService.getUser())?.hasARole(roles);
+        return this.hasRole(this.authService, Role.GAMERESULTADMIN + Role.REFEREE);
     }
 
     remove() {
@@ -225,7 +219,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         });
     }
 
-    openModalCopy(modalContent) {
+    openModalCopy(modalContent: TemplateRef<any>) {
         const activeModal = this.modalService.open(modalContent, { scrollable: false });
         activeModal.result.then((result) => {
             if (result === 'copy') {
@@ -235,7 +229,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         });
     }
 
-    openModalRemove(modalContent) {
+    openModalRemove(modalContent: TemplateRef<any>) {
         const activeModal = this.modalService.open(modalContent);
         activeModal.result.then((result) => {
             if (result === 'remove') {
@@ -293,10 +287,8 @@ export class HomeComponent extends TournamentComponent implements OnInit {
             if (roundNumber.getValidPlanningConfig().getGameMode() === GameMode.Against) {
                 return true;
             }
-            if (!roundNumber.hasNext()) {
-                return false;
-            }
-            return hasGameModeAgainst(roundNumber.getNext());
+            const nextRoundNumber = roundNumber.getNext();
+            return nextRoundNumber ? hasGameModeAgainst(nextRoundNumber) : false;
         };
         return hasGameModeAgainst(this.structure.getFirstRoundNumber());
     }
@@ -314,7 +306,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         this.processing = true;
         this.tournamentRepository.copyObject(this.tournament, startDateTime)
             .subscribe(
-                /* happy path */(newTournamentId: number) => {
+                /* happy path */(newTournamentId: number | string) => {
                     this.router.navigate(['/admin', newTournamentId]);
                     this.setAlert('success', 'de nieuwe editie is aangemaakt, je bevindt je nu in de nieuwe editie');
                 },

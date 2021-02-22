@@ -39,17 +39,17 @@ import { EqualQualifiersChecker } from '../../lib/ngx-sport/ranking/equalQualifi
     styleUrls: ['./editagainst.component.scss']
 })
 export class GameAgainstEditComponent extends TournamentComponent implements OnInit {
-    public game: AgainstGame;
+    public game!: AgainstGame;
     public scoreConfigService: ScoreConfigService;
     public form: FormGroup;
     public hasAuthorization: boolean = false;
     // private originalPouleState: number;    
-    public planningConfig: PlanningConfig;
-    public firstScoreConfig: ScoreConfig;
-    public nameService: NameService;
+    public planningConfig!: PlanningConfig;
+    public firstScoreConfig!: ScoreConfig;
+    public nameService!: NameService;
     public warningsForEqualQualifiers: string[] = [];
-    private equalQualifiersChecker: EqualQualifiersChecker;
-    public calculateScoreControl: AgainstScoreFormControl;
+    private equalQualifiersChecker!: EqualQualifiersChecker;
+    public calculateScoreControl: AgainstScoreFormControl | undefined;
     public scoreControls: AgainstScoreFormControl[] = [];
     public pristineScore = true;
 
@@ -78,12 +78,13 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
         this.route.params.subscribe(params => {
             super.myNgOnInit(() => {
                 this.nameService = new NameService(new PlaceLocationMap(this.tournament.getCompetitors()));
-                this.game = this.getGameById(+params.gameId, this.structure.getRootRound());
-                if (this.game === undefined) {
+                const game = this.getGameById(+params.gameId, this.structure.getRootRound());
+                if (game === undefined) {
                     this.setAlert('danger', 'de wedstrijd kan niet gevonden worden');
                     this.processing = false;
                     return;
                 }
+                this.game = game;
                 this.equalQualifiersChecker = new EqualQualifiersChecker(this.game, this.nameService, this.mapper);
                 const roundNumber = this.game.getRound().getNumber();
                 if (this.nextRoundNumberBegun(roundNumber)) {
@@ -92,7 +93,8 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
                 this.planningConfig = roundNumber.getValidPlanningConfig();
                 this.firstScoreConfig = this.game.getScoreConfig();
                 this.initForm();
-                const tournamentUser = this.tournament.getUser(this.authService.getUser());
+                const authUser = this.authService.getUser();
+                const tournamentUser = authUser ? this.tournament.getUser(authUser) : undefined;
                 this.getAuthorization(tournamentUser).subscribe(
                         /* happy path */ hasAuthorization => {
                         this.hasAuthorization = hasAuthorization;
@@ -123,11 +125,12 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
         if (tournamentUser.hasRoles(Role.GAMERESULTADMIN)) {
             return of(true);
         }
-        if (!tournamentUser.hasRoles(Role.REFEREE) || !this.game.getReferee()) {
+        const referee = this.game.getReferee();
+        if (!tournamentUser.hasRoles(Role.REFEREE) || !referee) {
             return of(false);
         }
         return this.tournamentRepository.getUserRefereeId(this.tournament).pipe(
-            map((userRefereeId: number) => this.game.getReferee().getId() === userRefereeId)
+            map((userRefereeId: number | string) => referee.getId() === userRefereeId)
         );
     }
 
@@ -180,13 +183,13 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
     }
 
     protected updateCalculateScoreControl() {
-        if (this.firstScoreConfig === this.firstScoreConfig.getCalculate()) {
+        if (this.calculateScoreControl === undefined) {
             return;
         }
         this.calculateScoreControl.home.setValue(0);
         this.calculateScoreControl.away.setValue(0);
         this.scoreControls.forEach(scoreControl => {
-            if (scoreControl.isScoreValid() === false) {
+            if (!this.calculateScoreControl || scoreControl.isScoreValid() === false) {
                 return;
             }
             if (scoreControl.home.value > scoreControl.away.value) {
@@ -242,7 +245,7 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
     getCalculateScoreUnitName(): string {
         const calculateScore = this.firstScoreConfig.getCalculate();
         const translateService = new TranslateService();
-        return translateService.getScoreNameSingular(this.scoreConfigMapper.toJson(calculateScore));
+        return translateService.getScoreNameSingular(calculateScore);
     }
 
     // getCalculateScoreDescription() {
@@ -274,16 +277,14 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
     // }
 
     protected nextRoundNumberBegun(roundNumber: RoundNumber): boolean {
-        if (!roundNumber.hasNext()) {
+        const nextRoundNumber = roundNumber.getNext();
+        if (nextRoundNumber === undefined) {
             return false;
         }
-        if (roundNumber.getNext().hasBegun()) {
-            return true;
-        }
-        return this.nextRoundNumberBegun(roundNumber.getNext());
+        return nextRoundNumber.hasBegun() || this.nextRoundNumberBegun(nextRoundNumber);
     }
 
-    protected getGameById(id: number, round: Round): AgainstGame {
+    protected getGameById(id: number, round: Round): AgainstGame | undefined {
         if (round === undefined) {
             return undefined;
         }
@@ -295,7 +296,10 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
             game = this.getGameById(id, child);
             return (game !== undefined);
         });
-        return <AgainstGame>game;
+        if (game !== undefined) {
+            return <AgainstGame>game;
+        }
+        return undefined;
     }
 
     // protected initScores(game?: Game) {

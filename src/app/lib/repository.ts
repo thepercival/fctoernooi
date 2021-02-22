@@ -25,7 +25,7 @@ export class APIRepository {
         return headers;
     }
 
-    protected getToken(): string {
+    protected getToken(): string | undefined {
         const localStorageAuth = localStorage.getItem('auth');
         const auth = localStorageAuth !== null ? JSON.parse(localStorageAuth) : undefined;
         if (auth !== undefined && auth.token !== undefined) {

@@ -21,11 +21,11 @@ import { TournamentCompetitor } from '../../lib/competitor';
 })
 export class CompetitorEditComponent extends TournamentComponent implements OnInit {
     form: FormGroup;
-    competitor: TournamentCompetitor;
-    hasBegun: boolean;
-    public nameService: NameService;
-    pouleNr: number;
-    placeNr: number;
+    originalCompetitor!: TournamentCompetitor;
+    hasBegun!: boolean;
+    public nameService!: NameService;
+    pouleNr!: number;
+    placeNr!: number;
 
     validations: CompetitorValidations = {
         minlengthname: TournamentCompetitor.MIN_LENGTH_NAME,
@@ -69,60 +69,62 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
     }
 
     private postInit(pouleNr: number, placeNr: number) {
+        if (placeNr < 1 || pouleNr < 1) {
+            this.setAlert('danger', 'de rondeplek kan niet gevonden worden');
+            return;
+        }
         this.pouleNr = pouleNr;
         this.placeNr = placeNr;
         this.hasBegun = this.structure.getRootRound().hasBegun();
         this.nameService = new NameService(new PlaceLocationMap(this.tournament.getCompetitors()));
 
-        if (pouleNr === undefined || pouleNr < 1) {
-            this.processing = false;
-            return;
-        }
-
-        this.competitor = this.tournament.getCompetitors().find(competitorIt => {
+        const competitor = this.tournament.getCompetitors().find(competitorIt => {
             return competitorIt.getPouleNr() === pouleNr && competitorIt.getPlaceNr() === placeNr;
         });
-        if (this.competitor === undefined) {
-            this.processing = false;
+        if (competitor === undefined) {
+            this.setAlert('danger', 'de deelnemer kan niet gevonden worden');
             return;
         }
-
-        this.form.controls.name.setValue(this.competitor?.getName());
-        this.form.controls.registered.setValue(this.competitor ? this.competitor.getRegistered() : false);
-        this.form.controls.info.setValue(this.competitor?.getInfo());
+        this.originalCompetitor = competitor;
+        this.form.controls.name.setValue(this.originalCompetitor?.getName());
+        this.form.controls.registered.setValue(this.originalCompetitor ? this.originalCompetitor.getRegistered() : false);
+        this.form.controls.info.setValue(this.originalCompetitor?.getInfo());
         this.processing = false;
     }
 
-    save(): boolean {
-        this.processing = true;
-        this.setAlert('info', 'de deelnemer wordt opgeslagen');
-        if (this.competitor !== undefined) {
-            this.edit();
-        } else {
-            this.add();
-        }
-        return false;
-    }
-
-    add() {
+    formToJson(): JsonCompetitor {
         const name = this.form.controls.name.value;
         const info = this.form.controls.info.value;
-
-        const message = this.validateName(this.form.controls.name.value);
-        if (message) {
-            this.setAlert('danger', message);
-            this.processing = false;
-            return;
-        }
-        const jsonCompetitor: JsonCompetitor = {
-            id: 0,
+        return {
+            id: this.originalCompetitor ? this.originalCompetitor.getId() : 0,
             name: name,
             registered: this.form.controls.registered.value,
             info: info ? info : undefined,
             pouleNr: this.pouleNr,
             placeNr: this.placeNr
         };
+    }
 
+    save(): boolean {
+        const jsonCompetitor = this.formToJson();
+        const message = this.validateName(jsonCompetitor.name, this.originalCompetitor);
+        if (message) {
+            this.setAlert('danger', message);
+            return false;
+        }
+        this.processing = true;
+        this.setAlert('info', 'de deelnemer wordt opgeslagen');
+        if (this.originalCompetitor) {
+            this.competitorRepository.editObject(jsonCompetitor, this.originalCompetitor, this.tournament)
+                .subscribe(
+                    /* happy path */ competitorRes => {
+                        this.navigateBack();
+                    },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+            /* onComplete */() => this.processing = false
+                );
+            return false;
+        }
         this.competitorRepository.createObject(jsonCompetitor, this.tournament)
             .subscribe(
             /* happy path */ competitorRes => {
@@ -130,43 +132,19 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
                 },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
             );
+        return false;
     }
 
-
-    edit() {
-        const message = this.validateName(this.form.controls.name.value, this.competitor);
-        if (message) {
-            this.setAlert('danger', message);
-            this.processing = false;
-            return;
-        }
-
-        const name = this.form.controls.name.value;
-        const registered = this.form.controls.registered.value;
-        const info = this.form.controls.info.value;
-
-        this.competitor.setName(name);
-        this.competitor.setRegistered(registered);
-        this.competitor.setInfo(info ? info : undefined);
-        this.competitorRepository.editObject(this.competitor, this.tournament)
-            .subscribe(
-                    /* happy path */ competitorRes => {
-                    this.navigateBack();
-                },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => this.processing = false
-            );
-    }
 
     navigateBack() {
         this.myNavigation.back();
     }
 
-    protected validateName(name: string, competitor?: TournamentCompetitor): string {
+    protected validateName(name: string, competitor: TournamentCompetitor | undefined): string | undefined {
         if (this.isNameDuplicate(name, competitor)) {
             return 'de naam bestaat al voor dit toernooi';
         }
-        let checkName = (name: string): string => {
+        let checkName = (name: string): string | undefined => {
             if (name.length <= 20) {
                 return undefined;
             }
@@ -179,7 +157,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         return checkName(name);
     }
 
-    isNameDuplicate(name: string, competitor: TournamentCompetitor): boolean {
+    isNameDuplicate(name: string, competitor: TournamentCompetitor | undefined): boolean {
         return this.tournament.getCompetitors().find((competitorIt: TournamentCompetitor) => {
             return (name === competitorIt.getName() && (competitor === undefined || competitor !== competitorIt));
         }) !== undefined;

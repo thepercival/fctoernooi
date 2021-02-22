@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { JsonIdentifiable } from 'ngx-sport';
 
 import { Tournament } from '../../tournament';
 import { JsonUser, UserMapper } from '../../user/mapper';
@@ -29,8 +30,7 @@ export class TournamentUserMapper {
     }
 }
 
-export interface JsonTournamentUser {
-    id?: number;
+export interface JsonTournamentUser extends JsonIdentifiable {
     user: JsonUser;
     roles: number;
 }

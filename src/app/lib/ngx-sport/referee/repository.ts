@@ -27,16 +27,16 @@ export class RefereeRepository extends APIRepository {
 
     createObject(json: JsonReferee, tournament: Tournament, invite: boolean): Observable<Referee> {
         const inviteSuffix = '/invite/' + (invite ? 'true' : 'false');
-        return this.http.post(this.getUrl(tournament) + inviteSuffix, json, this.getOptions()).pipe(
-            map((jsonRes: JsonReferee) => this.mapper.toObject(jsonRes, tournament.getCompetition())),
+        return this.http.post<JsonReferee>(this.getUrl(tournament) + inviteSuffix, json, this.getOptions()).pipe(
+            map((jsonRes: JsonReferee) => this.mapper.toNewObject(jsonRes, tournament.getCompetition())),
             catchError((err) => this.handleError(err))
         );
     }
 
-    editObject(referee: Referee, tournament: Tournament): Observable<Referee> {
+    editObject(jsonReferee: JsonReferee, referee: Referee, tournament: Tournament): Observable<Referee> {
         const url = this.getUrl(tournament) + '/' + referee.getId();
-        return this.http.put(url, this.mapper.toJson(referee), this.getOptions()).pipe(
-            map((jsonReferee: JsonReferee) => this.mapper.toObject(jsonReferee, tournament.getCompetition(), referee)),
+        return this.http.put<JsonReferee>(url, jsonReferee, this.getOptions()).pipe(
+            map((jsonReferee: JsonReferee) => this.mapper.toExistingObject(jsonReferee)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -47,6 +47,9 @@ export class RefereeRepository extends APIRepository {
             map(() => {
                 const competition = referee.getCompetition();
                 const downgrade = competition.getReferee(referee.getPriority() - 1);
+                if (!downgrade) {
+                    return;
+                }
                 referee.setPriority(downgrade.getPriority());
                 downgrade.setPriority(downgrade.getPriority() + 1);
                 competition.getReferees().sort((refA, refB) => refA.getPriority() - refB.getPriority());
@@ -58,7 +61,7 @@ export class RefereeRepository extends APIRepository {
     removeObject(referee: Referee, tournament: Tournament): Observable<void> {
         const url = this.getUrl(tournament) + '/' + referee.getId();
         return this.http.delete(url, this.getOptions()).pipe(
-            map((jsonReferee: JsonReferee) => {
+            map(() => {
                 referee.getCompetition().removeReferee(referee);
             }),
             catchError((err) => this.handleError(err))

@@ -6,7 +6,7 @@ export class PasswordValidation {
         const passwordField = AC.get('password');
         const confirmPasswordField = AC.get('passwordRepeat');
         if (passwordField !== null && confirmPasswordField !== null && passwordField.value !== confirmPasswordField.value) {
-            AC.get('passwordRepeat').setErrors({ MatchPassword: true });
+            AC.get('passwordRepeat')?.setErrors({ MatchPassword: true });
         }
     }
 }

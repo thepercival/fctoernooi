@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
 
 @Component({
     selector: 'app-sport-icon-custom',
@@ -6,20 +7,16 @@ import { Component, Input, OnInit } from '@angular/core';
     styleUrls: ['./customicon.component.scss']
 })
 export class SportIconCustomComponent implements OnInit {
-    @Input() customId: number;
-
-    public show = false;
-    public prefix: string;
-    public class: string;
+    @Input() customId: number = 0;
+    public prefix!: IconPrefix;
+    public iconName: IconName | undefined;
 
     constructor() {
-
     }
 
     ngOnInit() {
         this.prefix = this.getIconPrefix(this.customId);
-        this.class = this.getIconClass(this.customId);
-        this.show = this.class !== undefined;
+        this.iconName = this.getIconName(this.customId);
     }
 
     // copied from SportCustom
@@ -38,39 +35,39 @@ export class SportIconCustomComponent implements OnInit {
     protected Baseball = 13;
     protected IceHockey = 14;
 
-    protected getIconPrefix(customId: number): string {
+    protected getIconPrefix(customId: number): IconPrefix {
         if (customId === this.Darts || customId === this.Tennis || customId === this.Badminton
             || customId === this.Hockey || customId === this.Squash || customId === this.Korfball) {
-            return 'fac';
+            return <IconPrefix>'fac';
         }
         return 'fas';
     }
 
-    protected getIconClass(customId: number): string {
+    protected getIconName(customId: number): IconName | undefined {
         if (customId === this.Baseball) {
             return 'baseball-ball';
         } else if (customId === this.Basketball) {
             return 'basketball-ball';
         } else if (customId === this.Badminton) {
-            return 'badminton';
+            return <IconName>'badminton';
         } else if (customId === this.Chess) {
             return 'chess';
         } else if (customId === this.Darts) {
-            return 'darts';
+            return <IconName>'darts';
         } else if (customId === this.ESports) {
             return 'gamepad';
         } else if (customId === this.Football) {
             return 'futbol';
         } else if (customId === this.Hockey) {
-            return 'hockey';
+            return <IconName>'hockey';
         } else if (customId === this.Korfball) {
-            return 'korfball';
+            return <IconName>'korfball';
         } else if (customId === this.Squash) {
-            return 'squash';
+            return <IconName>'squash';
         } else if (customId === this.TableTennis) {
             return 'table-tennis';
         } else if (customId === this.Tennis) {
-            return 'tennis-custom';
+            return <IconName>'tennis-custom';
         } else if (customId === this.Volleyball) {
             return 'volleyball-ball';
         } else if (customId === this.IceHockey) {

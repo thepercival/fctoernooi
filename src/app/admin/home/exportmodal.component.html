@@ -11,7 +11,7 @@
         <form [formGroup]="form">
             <div class="form-group row" *ngFor="let exportOption of exportOptions">
                 <label for="{{exportOption.key}}" class="col-9 col-form-label pointer">{{exportOption.label}}
-                    <fa-icon *ngIf="exportOption.iconId" [icon]="['fas', exportOption.iconId]"></fa-icon>
+                    <fa-icon *ngIf="exportOption.iconName" [icon]="['fas', exportOption.iconName]"></fa-icon>
                 </label>
                 <div class="form-check col-3">
                     <div class="form-control custom-control custom-switch">

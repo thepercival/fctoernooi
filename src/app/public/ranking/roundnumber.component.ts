@@ -1,6 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef } from '@angular/core';
 
-import { RoundNumber, Poule, State, NameService, PlaceLocationMap } from 'ngx-sport';
+import { RoundNumber, Poule, State, NameService } from 'ngx-sport';
 import { Tournament } from '../../lib/tournament';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -10,10 +10,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
     styleUrls: ['./roundnumber.component.scss']
 })
 export class RankingRoundNumberComponent implements OnInit {
-    @Input() tournament: Tournament;
-    @Input() roundNumber: RoundNumber;
-    public nameService: NameService;
-    show: boolean;
+    @Input() tournament!: Tournament;
+    @Input() roundNumber!: RoundNumber;
+    public nameService!: NameService;
+    public show: boolean = false;
 
     constructor(
         private modalService: NgbModal
@@ -23,10 +23,10 @@ export class RankingRoundNumberComponent implements OnInit {
     ngOnInit() {
         this.nameService = new NameService(undefined);
         const state = this.roundNumber.getState();
-        const statePrevious = this.roundNumber.hasPrevious() ? this.roundNumber.getPrevious().getState() : undefined;
-        const stateNext = this.roundNumber.hasNext() ? this.roundNumber.getNext().getState() : undefined;
-        const nextNeedsRanking = this.roundNumber.hasNext() && this.roundNumber.getNext().needsRanking();
-        this.show = false;
+        const statePrevious = this.roundNumber.getPrevious()?.getState();
+        const nextRoundNumber = this.roundNumber.getNext();
+        const stateNext = nextRoundNumber?.getState();
+        const nextNeedsRanking = nextRoundNumber?.needsRanking() ?? false;
         if (state === State.InProgress) {
             this.show = true;
         } else if (state === State.Created && (statePrevious === undefined || statePrevious === State.Finished)) {
@@ -36,8 +36,8 @@ export class RankingRoundNumberComponent implements OnInit {
         }
     }
 
-    openModal(templateRef) {
-        const modalRef = this.modalService.open(templateRef);
+    openModal(templateRef: TemplateRef<any>) {
+        this.modalService.open(templateRef);
     }
 
     getPoules(): Poule[] {

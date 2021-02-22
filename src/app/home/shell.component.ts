@@ -8,9 +8,9 @@ import { TournamentShell } from '../lib/tournament/shell/repository';
   styleUrls: ['./shell.component.css']
 })
 export class HomeShellComponent implements OnInit {
-  @Input() shell: TournamentShell;
-  @Input() showPublic: boolean;
-  @Input() linethroughDate: Date;
+  @Input() shell!: TournamentShell;
+  @Input() showPublic!: boolean;
+  @Input() linethroughDate!: Date;
 
   constructor() {
   }

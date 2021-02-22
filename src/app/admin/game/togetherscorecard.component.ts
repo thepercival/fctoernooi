@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
-import { NameService, ScoreConfig, ScoreConfigMapper, TogetherScore } from 'ngx-sport';
+import { NameService, ScoreConfig, TogetherScore } from 'ngx-sport';
 import { TogetherGamePlace } from 'ngx-sport/src/game/place/together';
-import { first } from 'rxjs/operators';
 import { TranslateService } from '../../lib/translate';
 
 @Component({
@@ -11,16 +10,13 @@ import { TranslateService } from '../../lib/translate';
   styleUrls: ['./togetherscorecard.component.css']
 })
 export class ScoreTogetherCardComponent implements OnInit {
-  @Input() form: FormGroup;
-  @Input() gamePlace: TogetherGamePlace;
-  @Input() nameService: NameService;
+  @Input() form!: FormGroup;
+  @Input() gamePlace!: TogetherGamePlace;
+  @Input() nameService!: NameService;
   @Output() afterEdit = new EventEmitter<void>();
-  public firstScoreConfig: ScoreConfig;
+  public firstScoreConfig!: ScoreConfig;
 
-  constructor(
-    private scoreConfigMapper: ScoreConfigMapper
-  ) {
-
+  constructor() {
   }
 
   ngOnInit() {
@@ -45,7 +41,7 @@ export class ScoreTogetherCardComponent implements OnInit {
   getCalculateScoreUnitName(): string {
     const calculateScore = this.firstScoreConfig.getCalculate();
     const translateService = new TranslateService();
-    return translateService.getScoreNameSingular(this.scoreConfigMapper.toJson(calculateScore));
+    return translateService.getScoreNameSingular(calculateScore);
   }
 
   getInputScoreDescription() {
@@ -54,7 +50,7 @@ export class ScoreTogetherCardComponent implements OnInit {
       description = 'eerste bij ' + this.firstScoreConfig.getMaximum() + ' ';
     }
     const translate = new TranslateService();
-    return description + translate.getScoreNamePlural(this.scoreConfigMapper.toJson(this.firstScoreConfig));
+    return description + translate.getScoreNamePlural(this.firstScoreConfig);
   }
 
   postUpdate() {
@@ -91,7 +87,7 @@ export class ScoreTogetherCardComponent implements OnInit {
       description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
     }
     const translate = new TranslateService();
-    return description + translate.getScoreNamePlural(this.scoreConfigMapper.toJson(scoreConfig));
+    return description + translate.getScoreNamePlural(scoreConfig);
   }
 
   allScoresValid(): boolean {

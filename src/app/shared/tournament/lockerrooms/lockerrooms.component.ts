@@ -17,6 +17,7 @@ import { FavoritesRepository } from '../../../lib/favorites/repository';
 import { Favorites } from '../../../lib/favorites';
 import { LockerRoomRepository } from '../../../lib/lockerroom/repository';
 import { TournamentCompetitor } from '../../../lib/competitor';
+import { JsonLockerRoom } from '../../../lib/lockerroom/json';
 
 
 
@@ -27,8 +28,8 @@ import { TournamentCompetitor } from '../../../lib/competitor';
 })
 export class LockerRoomsComponent extends TournamentComponent implements OnInit {
   hasCompetitors = false;
-  validator: LockerRoomValidator;
-  favorites: Favorites;
+  validator!: LockerRoomValidator;
+  favorites!: Favorites;
   editMode: boolean = true;
 
   validations: any = {
@@ -65,17 +66,17 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
   }
 
   isAdmin(): boolean {
-    return this.tournament?.getUser(this.authService.getUser())?.hasRoles(Role.ADMIN);
+    return this.hasRole(this.authService, Role.ADMIN);
   }
 
   add() {
     const modal = this.getChangeNameModel('naar "deelnemers selecteren"');
     modal.result.then((resName: string) => {
       this.processing = true;
-      const jsonLockerRoom = { name: resName, competitorIds: [] };
+      const jsonLockerRoom: JsonLockerRoom = { id: 0, name: resName, competitorIds: [] };
       this.lockerRoomRepository.createObject(jsonLockerRoom, this.tournament)
         .subscribe(
-        /* happy path */ lockerRoomRes => {
+        /* happy path */(lockerRoomRes: LockerRoom) => {
             this.changeCompetitors(lockerRoomRes);
           },
         /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
@@ -124,7 +125,9 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
   changeCompetitors(lockerRoom: LockerRoom) {
     const activeModal = this.modalService.open(CompetitorChooseModalComponent);
     activeModal.componentInstance.validator = this.validator;
-    activeModal.componentInstance.places = this.structure.getFirstRoundNumber().getPlaces();
+    if (this.structure) {
+      activeModal.componentInstance.places = this.structure.getFirstRoundNumber().getPlaces();
+    }
     activeModal.componentInstance.competitors = this.tournament.getCompetitors();
     activeModal.componentInstance.lockerRoom = lockerRoom;
     activeModal.componentInstance.selectedCompetitors = lockerRoom.getCompetitors().slice();

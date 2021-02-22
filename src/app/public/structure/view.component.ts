@@ -18,8 +18,8 @@ import { Role } from '../../lib/role';
 })
 export class StructureViewComponent extends TournamentComponent implements OnInit {
   competitors: Competitor[] = [];
-  private favorites: Favorites;
-  public placeLocationMap: PlaceLocationMap;
+  private favorites!: Favorites;
+  public placeLocationMap!: PlaceLocationMap;
 
   constructor(
     route: ActivatedRoute,
@@ -50,6 +50,6 @@ export class StructureViewComponent extends TournamentComponent implements OnIni
   }
 
   isAdmin(): boolean {
-    return this.tournament.getUser(this.authService.getUser())?.hasRoles(Role.ADMIN);
+    return this.hasRole(this.authService, Role.ADMIN);
   }
 }

@@ -8,7 +8,7 @@ import { JsonFavorites } from './json';
 })
 export class FavoritesBackEnd {
 
-    protected json: JsonFavorites[];
+    protected json: JsonFavorites[] = [];
     protected identifier = 'favorites';
 
     constructor() { }
@@ -16,7 +16,7 @@ export class FavoritesBackEnd {
     get(tournament: Tournament): JsonFavorites {
         this.readAll();
 
-        let jsonFavorites: JsonFavorites = this.find(tournament.getId());
+        let jsonFavorites: JsonFavorites | undefined = this.find(tournament.getId());
         if (jsonFavorites === undefined) {
             jsonFavorites = {
                 tournamentId: tournament.getId(),
@@ -48,19 +48,15 @@ export class FavoritesBackEnd {
         this.writeAll();
     }
 
-    protected find(tournamentId: number | string): JsonFavorites {
+    protected find(tournamentId: number | string): JsonFavorites | undefined {
         return this.json.find(jsonFavorites => jsonFavorites.tournamentId === tournamentId);
     }
 
     protected readAll() {
-        if (this.json) {
-            return;
-        }
         const favorites = localStorage.getItem(this.identifier);
-        if (favorites === null) {
-            this.json = [];
+        if (favorites) {
+            this.json = JSON.parse(favorites);
         }
-        this.json = JSON.parse(favorites);
     }
 
     protected writeAll() {

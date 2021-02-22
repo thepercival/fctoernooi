@@ -33,7 +33,7 @@ export class LockerRoomRepository extends APIRepository {
     }
 
     createObject(jsonLockerRoom: JsonLockerRoom, tournament: Tournament): Observable<LockerRoom> {
-        return this.http.post(this.getUrl(tournament), jsonLockerRoom, this.getOptions()).pipe(
+        return this.http.post<JsonLockerRoom>(this.getUrl(tournament), jsonLockerRoom, this.getOptions()).pipe(
             map((res: JsonLockerRoom) => this.mapper.toObject(res, tournament)),
             catchError((err) => this.handleError(err))
         );
@@ -41,7 +41,7 @@ export class LockerRoomRepository extends APIRepository {
 
     editObject(lockerroom: LockerRoom, tournament: Tournament): Observable<LockerRoom> {
         const url = this.getUrl(tournament) + '/' + lockerroom.getId();
-        return this.http.put(url, this.mapper.toJson(lockerroom), this.getOptions()).pipe(
+        return this.http.put<JsonLockerRoom>(url, this.mapper.toJson(lockerroom), this.getOptions()).pipe(
             map((res: JsonLockerRoom) => this.mapper.toObject(res, tournament, lockerroom)),
             catchError((err) => this.handleError(err))
         );

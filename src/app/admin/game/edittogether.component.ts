@@ -4,32 +4,20 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
     Game,
     NameService,
-    Place,
-    Poule,
-    QualifyRuleMultiple,
-    QualifyService,
-    RankedRoundItem,
-    RankingService,
     Round,
     State,
-    QualifyGroup,
     RoundNumber,
     PlaceLocationMap,
     ScoreConfigService,
     ScoreConfig,
     AgainstGame,
-    GameMode,
-    PlanningConfigMapper,
     PlanningConfig,
     TogetherGame,
     GameMapper,
-    JsonAgainstGame,
     JsonTogetherGame,
     ScoreConfigMapper,
-    AgainstScoreHelper,
-    TogetherScore,
 } from 'ngx-sport';
-import { forkJoin, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/common/navigation';
@@ -51,17 +39,17 @@ import { JsonTogetherGamePlace } from 'ngx-sport/src/game/place/together/json';
     styleUrls: ['./edittogether.component.scss']
 })
 export class GameTogetherEditComponent extends TournamentComponent implements OnInit {
-    public game: TogetherGame;
+    public game!: TogetherGame;
     public scoreConfigService: ScoreConfigService;
     public form: FormGroup;
     public hasAuthorization: boolean = false;
     // private originalPouleState: number;    
-    public planningConfig: PlanningConfig;
-    public firstScoreConfig: ScoreConfig;
-    public nameService: NameService;
+    public planningConfig!: PlanningConfig;
+    public firstScoreConfig!: ScoreConfig;
+    public nameService!: NameService;
     public warningsForEqualQualifiers: string[] = [];
-    private equalQualifiersChecker: EqualQualifiersChecker;
-    public pristineScore: boolean;
+    private equalQualifiersChecker!: EqualQualifiersChecker;
+    public pristineScore!: boolean;
     public allScoresValid = true;
 
     constructor(
@@ -89,16 +77,18 @@ export class GameTogetherEditComponent extends TournamentComponent implements On
         this.route.params.subscribe(params => {
             super.myNgOnInit(() => {
                 this.nameService = new NameService(new PlaceLocationMap(this.tournament.getCompetitors()));
-                this.game = this.getGameById(+params.gameId, this.structure.getRootRound());
-                if (this.game === undefined) {
+                const game = this.getGameById(+params.gameId, this.structure.getRootRound());
+                if (game === undefined) {
                     this.setAlert('danger', 'de wedstrijd kan niet gevonden worden');
                     this.processing = false;
                     return;
                 }
+                this.game = game;
                 this.equalQualifiersChecker = new EqualQualifiersChecker(this.game, this.nameService, this.mapper);
                 this.initForm();
                 // this.originalPouleState = this.game.getPoule().getState();
-                const tournamentUser = this.tournament.getUser(this.authService.getUser());
+                const authUser = this.authService.getUser();
+                const tournamentUser = authUser ? this.tournament.getUser(authUser) : undefined;
                 this.getAuthorization(tournamentUser).subscribe(
                         /* happy path */ hasAuthorization => {
                         this.hasAuthorization = hasAuthorization;
@@ -128,12 +118,12 @@ export class GameTogetherEditComponent extends TournamentComponent implements On
         }
         this.planningConfig = roundNumber.getValidPlanningConfig();
         this.firstScoreConfig = this.game.getScoreConfig();
-        this.game.getPlaces().forEach((gamePlace: TogetherGamePlace) => {
+        this.game.getTogetherPlaces().forEach((gamePlace: TogetherGamePlace) => {
             this.getFormGroupGamePlaces().addControl('' + gamePlace.getId(), new FormGroup({}));
         });
         this.form.controls.played.setValue(this.game.getState() === State.Finished);
         //     this.form.controls.extension.setValue(this.game.getFinalPhase() === Game.Phase_ExtraTime);
-        this.pristineScore = this.game.getPlaces().every((gamePlace: TogetherGamePlace) => {
+        this.pristineScore = this.game.getTogetherPlaces().every((gamePlace: TogetherGamePlace) => {
             return gamePlace.getScores().length === 0;
         });
     }
@@ -145,11 +135,12 @@ export class GameTogetherEditComponent extends TournamentComponent implements On
         if (tournamentUser.hasRoles(Role.GAMERESULTADMIN)) {
             return of(true);
         }
-        if (!tournamentUser.hasRoles(Role.REFEREE) || !this.game.getReferee()) {
+        const referee = this.game.getReferee();
+        if (referee === undefined || !tournamentUser.hasRoles(Role.REFEREE)) {
             return of(false);
         }
         return this.tournamentRepository.getUserRefereeId(this.tournament).pipe(
-            map((userRefereeId: number) => this.game.getReferee().getId() === userRefereeId)
+            map((userRefereeId: number | string) => referee.getId() === userRefereeId)
         );
     }
 
@@ -209,16 +200,14 @@ export class GameTogetherEditComponent extends TournamentComponent implements On
 
 
     protected nextRoundNumberBegun(roundNumber: RoundNumber): boolean {
-        if (!roundNumber.hasNext()) {
+        const nextRoundNumber = roundNumber.getNext();
+        if (nextRoundNumber === undefined) {
             return false;
         }
-        if (roundNumber.getNext().hasBegun()) {
-            return true;
-        }
-        return this.nextRoundNumberBegun(roundNumber.getNext());
+        return nextRoundNumber.hasBegun() || this.nextRoundNumberBegun(nextRoundNumber);
     }
 
-    protected getGameById(id: number, round: Round): TogetherGame {
+    protected getGameById(id: number, round: Round): TogetherGame | undefined {
         if (round === undefined) {
             return undefined;
         }
@@ -230,7 +219,10 @@ export class GameTogetherEditComponent extends TournamentComponent implements On
             game = this.getGameById(id, child);
             return (game !== undefined);
         });
-        return <TogetherGame>game;
+        if (game !== undefined) {
+            return <TogetherGame>game;
+        }
+        return undefined;
     }
 
     protected getPhase(): number {
@@ -266,7 +258,7 @@ export class GameTogetherEditComponent extends TournamentComponent implements On
     }
 
     areAllScoresValid(): boolean {
-        return this.game.getPlaces().every((gamePlace: TogetherGamePlace) => {
+        return this.game.getTogetherPlaces().every((gamePlace: TogetherGamePlace) => {
             const formGroupGamePlace = this.getFormGroupGamePlace(gamePlace.getId());
             const scores = <FormArray>formGroupGamePlace.controls.scores;
             return scores.controls.every((scoreControl: AbstractControl) => {

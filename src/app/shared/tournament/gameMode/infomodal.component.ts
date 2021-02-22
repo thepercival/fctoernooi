@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { GameMode, NameService } from 'ngx-sport';
 
@@ -7,15 +7,12 @@ import { GameMode, NameService } from 'ngx-sport';
     templateUrl: './infomodal.component.html',
     styleUrls: ['./infomodal.component.scss']
 })
-export class GameModeInfoModalComponent implements OnInit {
+export class GameModeInfoModalComponent {
     public gameModeDefinitions: GameModeOption[];
     private nameService: NameService;
 
     constructor(public activeModal: NgbActiveModal) {
         this.nameService = new NameService();
-    }
-
-    ngOnInit() {
         this.gameModeDefinitions = [
             {
                 value: GameMode.Against,

@@ -23,8 +23,8 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     private maxLines = 8;
     public refreshAfterSeconds = 15;
     public toggleProgress = false;
-    private screenfilter: string;
-    public nameService: NameService;
+    private screenfilter: string = '';
+    public nameService!: NameService;
 
     constructor(
         route: ActivatedRoute,
@@ -41,7 +41,7 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     ngOnInit() {
         this.route.queryParamMap.subscribe(params => {
             if (params.get('screenfilter') !== null) {
-                this.screenfilter = params.get('screenfilter');
+                this.screenfilter = '' + params.get('screenfilter');
             }
         });
 

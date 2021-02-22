@@ -1,4 +1,4 @@
-import { Competition, Period, PlaceRange } from 'ngx-sport';
+import { Competition, Period } from 'ngx-sport';
 
 import { Sponsor } from './sponsor';
 import { LockerRoom } from './lockerroom';
@@ -8,38 +8,28 @@ import { TournamentCompetitor } from './competitor';
 import { Identifiable } from 'ngx-sport';
 
 export class Tournament extends Identifiable {
-    protected id: number;
-    protected competition: Competition;
+    protected id: number = 0;
     protected users: TournamentUser[] = [];
     protected sponsors: Sponsor[] = [];
     protected competitors: TournamentCompetitor[] = [];
     protected lockerRooms: LockerRoom[] = [];
-    protected breakStartDateTime: Date;
-    protected breakEndDateTime: Date;
-    protected public: boolean;
-    protected updated: boolean;
+    protected breakStartDateTime: Date | undefined;
+    protected breakEndDateTime: Date | undefined;
+    protected public: boolean = false;
 
-    constructor(competition: Competition) {
+    constructor(protected competition: Competition) {
         super();
-        this.setCompetition(competition);
     }
 
     getCompetition(): Competition {
         return this.competition;
     }
 
-    setCompetition(competition: Competition): void {
-        this.competition = competition;
-    }
-
     getUsers(): TournamentUser[] {
         return this.users;
     }
 
-    getUser(user?: User): TournamentUser {
-        if (user === undefined) {
-            return undefined;
-        }
+    getUser(user: User): TournamentUser | undefined {
         return this.getUsers().find(tournamentUser => tournamentUser.getUser() === user);
     }
 
@@ -67,7 +57,7 @@ export class Tournament extends Identifiable {
         return this.lockerRooms;
     }
 
-    getBreakStartDateTime(): Date {
+    getBreakStartDateTime(): Date | undefined {
         return this.breakStartDateTime;
     }
 
@@ -75,7 +65,7 @@ export class Tournament extends Identifiable {
         this.breakStartDateTime = breakStartDateTime;
     }
 
-    getBreakEndDateTime(): Date {
+    getBreakEndDateTime(): Date | undefined {
         return this.breakEndDateTime;
     }
 
@@ -95,10 +85,9 @@ export class Tournament extends Identifiable {
         return this.breakStartDateTime !== undefined;
     }
 
-    getBreak(): Period {
-        if (this.getBreakStartDateTime() === undefined || this.getBreakEndDateTime() === undefined) {
-            return undefined;
-        }
-        return new Period(this.getBreakStartDateTime(), this.getBreakEndDateTime());
+    getBreak(): Period | undefined {
+        const start = this.getBreakStartDateTime();
+        const end = this.getBreakEndDateTime();
+        return (start && end) ? new Period(start, end) : undefined;
     }
 }

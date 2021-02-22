@@ -4,17 +4,18 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../repository';
-import { UserMapper, JsonUser } from '../user/mapper';
+import { UserMapper } from '../user/mapper';
 import { User } from '../user';
 
 @Injectable()
 export class AuthService extends APIRepository {
-  private user: User
-  private authItem: JsonAuthItem;
+  private user: User | undefined;
+  private authItem: JsonAuthItem | undefined;
 
   constructor(private userMapper: UserMapper, private http: HttpClient) {
     super();
-    const authItem = JSON.parse(localStorage.getItem('auth'));
+    const authStorageItem = localStorage.getItem('auth');
+    const authItem = authStorageItem ? JSON.parse(authStorageItem) : undefined;
     authItem ? this.setAuthItem(authItem) : this.clearAuthItem();
   }
 
@@ -22,7 +23,7 @@ export class AuthService extends APIRepository {
     return this.authItem !== undefined;
   }
 
-  getUser(): User {
+  getUser(): User | undefined {
     return this.user;
   }
 
@@ -50,14 +51,14 @@ export class AuthService extends APIRepository {
   }
 
   register(newUser: any): Observable<boolean> {
-    return this.http.post(this.getPublicUrl() + '/register', newUser, { headers: super.getHeaders() }).pipe(
+    return this.http.post<JsonAuthItem>(this.getPublicUrl() + '/register', newUser, { headers: super.getHeaders() }).pipe(
       map((authItem: JsonAuthItem) => this.setAuthItem(authItem)),
       catchError((err) => this.handleError(err))
     );
   }
 
   extendToken() {
-    this.http.post(this.getUrl() + '/extendtoken', undefined, { headers: super.getHeaders() }).pipe(
+    this.http.post<JsonAuthItem>(this.getUrl() + '/extendtoken', undefined, { headers: super.getHeaders() }).pipe(
       map((authItem: JsonAuthItem) => this.setAuthItem(authItem)),
       catchError((err) => this.handleError(err))
     ).subscribe();
@@ -71,7 +72,7 @@ export class AuthService extends APIRepository {
 
   login(emailaddress: string, password: string): Observable<boolean> {
     const json = { emailaddress: emailaddress, password: password };
-    return this.http.post(this.getPublicUrl() + '/login', json, this.getOptions()).pipe(
+    return this.http.post<JsonAuthItem>(this.getPublicUrl() + '/login', json, this.getOptions()).pipe(
       map((authItem: JsonAuthItem) => this.setAuthItem(authItem)),
       catchError((err) => this.handleError(err))
     );
@@ -89,7 +90,7 @@ export class AuthService extends APIRepository {
 
   passwordChange(emailaddress: string, password: string, code: string): Observable<boolean> {
     const json = { emailaddress: emailaddress, password: password, code: code };
-    return this.http.post(this.getPublicUrl() + '/passwordchange', json, this.getOptions()).pipe(
+    return this.http.post<JsonAuthItem>(this.getPublicUrl() + '/passwordchange', json, this.getOptions()).pipe(
       map((authItem: JsonAuthItem) => this.setAuthItem(authItem)),
       catchError((err) => this.handleError(err))
     );

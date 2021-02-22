@@ -8,9 +8,9 @@ import { Place, Competitor } from 'ngx-sport';
     styleUrls: ['./listremovemodal.component.scss']
 })
 export class CompetitorListRemoveModalComponent {
-    place: Place;
-    competitor: Competitor;
-    allPlacesAssigned: boolean;
+    place!: Place;
+    competitor!: Competitor;
+    allPlacesAssigned!: boolean;
 
     constructor(public activeModal: NgbActiveModal) { }
 

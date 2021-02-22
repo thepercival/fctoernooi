@@ -7,7 +7,7 @@
           {{tournament.getName()}}</h1>
         <h1 class="mr-1">
           <button [routerLink]="['']" type="button" class="btn btn-outline-secondary">
-            <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+            <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
             <span class="ml-1 d-none d-md-inline"> terug</span>
           </button>
         </h1>
@@ -29,8 +29,8 @@
               <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijden
             </h5>
             <p class="card-text">start is {{competition.getStartDateTime().toLocaleString("nl",
-                      {"month":"short","day":"2-digit","hour12":
-                      false,"hour":"2-digit","minute":"2-digit"})}}
+              {"month":"short","day":"2-digit","hour12":
+              false,"hour":"2-digit","minute":"2-digit"})}}
             </p>
           </div>
         </div>
@@ -47,7 +47,7 @@
         <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/public/structure', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
-              <fa-icon [icon]="['fac', 'structure']"></fa-icon> opzet
+              <app-tournament-icon name="structure"></app-tournament-icon> opzet
             </h5>
             <p class="card-text" *ngIf="!structure.getFirstRoundNumber().hasNext()">
               1 ronde ingesteld

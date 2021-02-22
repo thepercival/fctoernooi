@@ -10,8 +10,6 @@ import { APIRepository } from '../../repository';
 @Injectable()
 export class TournamentShellRepository extends APIRepository {
 
-    private url: string;
-
     constructor(
         private http: HttpClient) {
         super();
@@ -30,7 +28,7 @@ export class TournamentShellRepository extends APIRepository {
             headers: super.getHeaders(),
             params: this.getHttpParams(filter)
         };
-        const withRole: boolean = filter ? filter.roles > 0 : false;
+        const withRole: boolean = filter && filter.roles ? filter.roles > 0 : false;
         return this.http.get<TournamentShell[]>(this.getUrl(withRole), options).pipe(
             map((jsonShells: TournamentShell[]) => this.convertObjects(jsonShells)),
             catchError((err) => this.handleError(err))

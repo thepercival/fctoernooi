@@ -12,8 +12,8 @@ export class LiveboardGamesComponent {
 
     private ScoreConfigService: ScoreConfigService;
 
-    @Input() screen: GamesScreen;
-    @Input() nameService: NameService;
+    @Input() screen!: GamesScreen;
+    @Input() nameService!: NameService;
 
     constructor(
     ) {

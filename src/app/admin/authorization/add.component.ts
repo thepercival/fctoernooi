@@ -8,7 +8,7 @@ import { Role } from '../../lib/role';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { User } from '../../lib/user';
 import { TournamentInvitationRepository } from '../../lib/tournament/invitation/repository';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MyNavigation } from '../../shared/common/navigation';
 import { JsonTournamentInvitation } from '../../lib/tournament/invitation/mapper';
 import { AuthorizationExplanationModalComponent } from './infomodal.component';
@@ -43,12 +43,14 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
                 Validators.required,
                 Validators.minLength(this.validations.minlengthemailaddress),
                 Validators.maxLength(this.validations.maxlengthemailaddress)
-            ])]
+            ])],
+            sendinvitation: true
         };
-        this.roleItems = this.createRoleItems();
-        this.roleItems.forEach(roleItem => config['role' + roleItem.value] = roleItem.selected);
-        config['sendinvitation'] = true;
         this.form = fb.group(config);
+        this.roleItems = this.createRoleItems();
+        this.roleItems.forEach((roleItem: RoleItem) => {
+            this.form.addControl('role' + roleItem.value, new FormControl(roleItem.selected));
+        });
     }
 
     createRoleItems(): RoleItem[] {

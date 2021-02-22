@@ -1,8 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Round, StructureService } from 'ngx-sport';
-
-import { Tournament } from '../../../../lib/tournament';
-
+import { Round } from 'ngx-sport';
 @Component({
   selector: 'app-tournament-structureround-arrange',
   templateUrl: './arrange.component.html',
@@ -10,7 +7,7 @@ import { Tournament } from '../../../../lib/tournament';
 })
 export class StructureRoundArrangeComponent {
 
-  @Input() round: Round;
+  @Input() round: Round | undefined;
   @Output() arrangeAction = new EventEmitter<string>();
 
   constructor() {
@@ -25,7 +22,7 @@ export class StructureRoundArrangeComponent {
   }
 
   addPlace() {
-    if (this.round.isRoot()) {
+    if (this.round?.isRoot()) {
       this.arrangeAction.emit('addPlace');
     }
   }
@@ -39,7 +36,7 @@ export class StructureRoundArrangeComponent {
   }
 
   hasMinimumNrOfPlacesPerPoule() {
-    return (this.round.getPoules().length * 2) === this.round.getNrOfPlaces();
+    return this.round && (this.round.getPoules().length * 2) === this.round.getNrOfPlaces();
   }
 
   // getDivisionClasses(round: Round): string {

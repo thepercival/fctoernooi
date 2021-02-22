@@ -30,7 +30,7 @@ export class CompetitionSportRepository extends APIRepository {
 
     createObject(sport: Sport, tournament: Tournament, structure: Structure): Observable<CompetitionSport> {
         const url = this.getUrl(tournament);
-        return this.http.post(url, this.sportMapper.toJson(sport), this.getOptions()).pipe(
+        return this.http.post<JsonCompetitionSport>(url, this.sportMapper.toJson(sport), this.getOptions()).pipe(
             map((jsonResult: JsonCompetitionSport) => {
                 const competitionSport = this.mapper.toObject(jsonResult, tournament.getCompetition(), true);
                 this.service.addToStructure(competitionSport, structure);

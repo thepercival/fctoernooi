@@ -7,27 +7,35 @@ import { CompetitionSport, SportCustom } from 'ngx-sport';
     styleUrls: ['./icon.component.scss']
 })
 export class SportIconComponent implements OnInit {
-    @Input() competitionSports: CompetitionSport[];
-    @Input() customId: number;
+    @Input() competitionSports: CompetitionSport[] | undefined;
+    @Input() customId: number | undefined;
 
     public show = false;
-    public prefix: string;
-    public class: string;
+    public prefix!: string;
+    public class!: string;
 
     constructor() {
 
     }
 
     ngOnInit() {
-        let customId;
-        if (this.customId !== undefined) {
-            customId = this.customId;
-        } else if (this.competitionSports !== undefined && this.competitionSports.length === 1) {
-            customId = this.competitionSports[0].getSport().getCustomId();
-        }
+        const customId = this.getCustomIdFromInput();
         this.prefix = this.getIconPrefix(customId);
         this.class = this.getIconClass(customId);
         this.show = this.class !== undefined;
+    }
+
+    getCustomIdFromInput(): number {
+        if (this.customId && this.customId > 0) {
+            return this.customId;
+        }
+        if (this.competitionSports === undefined) {
+            return 0;
+        }
+        if (this.competitionSports.length === 1) {
+            return this.competitionSports[0].getSport().getCustomId();
+        }
+        return 0;
     }
 
     protected getIconPrefix(customId: number): string {
@@ -68,6 +76,6 @@ export class SportIconComponent implements OnInit {
         } else if (customId === SportCustom.IceHockey) {
             return 'hockey-puck';
         }
-        return undefined;
+        return '';
     }
 }

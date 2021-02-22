@@ -29,7 +29,7 @@ export class TournamentInvitationRepository extends APIRepository {
     }
 
     getObjects(tournament: Tournament): Observable<TournamentInvitation[]> {
-        return this.http.get(this.getUrl(tournament), this.getOptions()).pipe(
+        return this.http.get<JsonTournamentInvitation[]>(this.getUrl(tournament), this.getOptions()).pipe(
             map((jsonInvitations: JsonTournamentInvitation[]) => jsonInvitations.map(jsonInvitation => {
                 return this.mapper.toObject(jsonInvitation, tournament);
             })),
@@ -38,7 +38,7 @@ export class TournamentInvitationRepository extends APIRepository {
     }
 
     createObject(json: JsonTournamentInvitation, tournament: Tournament): Observable<TournamentInvitation> {
-        return this.http.post(this.getUrl(tournament), json, this.getOptions()).pipe(
+        return this.http.post<JsonTournamentInvitation>(this.getUrl(tournament), json, this.getOptions()).pipe(
             map((res: JsonTournamentInvitation) => this.mapper.toObject(res, tournament)),
             catchError((err) => this.handleError(err))
         );
@@ -47,7 +47,7 @@ export class TournamentInvitationRepository extends APIRepository {
     editObject(invitation: TournamentInvitation): Observable<TournamentInvitation> {
         const tournament = invitation.getTournament();
         const url = this.getUrl(tournament) + '/' + invitation.getId();
-        return this.http.put(url, this.mapper.toJson(invitation), this.getOptions()).pipe(
+        return this.http.put<JsonTournamentInvitation>(url, this.mapper.toJson(invitation), this.getOptions()).pipe(
             map((res: JsonTournamentInvitation) => this.mapper.toObject(res, tournament)),
             catchError((err) => this.handleError(err))
         );
@@ -56,7 +56,7 @@ export class TournamentInvitationRepository extends APIRepository {
     removeObject(invitation: TournamentInvitation): Observable<JsonTournamentInvitation> {
         const tournament = invitation.getTournament();
         const url = this.getUrl(tournament) + '/' + invitation.getId();
-        return this.http.delete(url, this.getOptions()).pipe(
+        return this.http.delete<JsonTournamentInvitation>(url, this.getOptions()).pipe(
             map((res: JsonTournamentInvitation) => res),
             catchError((err) => this.handleError(err))
         );

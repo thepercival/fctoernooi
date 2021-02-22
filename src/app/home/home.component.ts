@@ -17,25 +17,25 @@ export class HomeComponent implements OnInit, AfterViewInit {
   static readonly FUTURE: number = 1;
   static readonly PAST: number = 2;
 
-  @ViewChild('inputsearchname') private searchElementRef: ElementRef;
+  @ViewChild('inputsearchname') private searchElementRef: ElementRef | undefined;
 
-  shellsWithRoleTillX: TournamentShell[];
-  shellsWithRoleFromX: TournamentShell[];
+  shellsWithRoleTillX: TournamentShell[] = [];
+  shellsWithRoleFromX: TournamentShell[] = [];
   shellsWithRoleX = 5;
   linethroughDate: Date;
   showingAllWithRole = false;
-  publicShells: TournamentShell[];
+  publicShells: TournamentShell[] = [];
   showingFuture = false;
-  alert: IAlert;
+  alert: IAlert | undefined;
   processingWithRole = true;
   publicProcessing = true;
-  public firstTimeVisit;
+  public firstTimeVisit = false;
   private defaultHourRange: HourRange = {
     start: -4, end: 168
   };
-  private hourRange: HourRange;
+  private hourRange!: HourRange;
   searchFilterActive = false;
-  searchFilterName: string;
+  searchFilterName: string = '';
   hasSearched = false;
 
   constructor(
@@ -63,7 +63,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   onSearchChanges(): void {
-    this.changeSearchFilterName(this.searchElementRef.nativeElement.value);
+    if (this.searchElementRef) {
+      this.changeSearchFilterName(this.searchElementRef.nativeElement.value);
+    }
   }
 
   setShellsWithRole() {
@@ -134,8 +136,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     if (localStorage.getItem('firsttimevisit') === null) {
       this.firstTimeVisit = true;
       localStorage.setItem('firsttimevisit', JSON.stringify(false));
-    } else {
-      this.firstTimeVisit = false;
     }
   }
 
@@ -165,8 +165,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
   enableSearchFilter() {
     this.searchFilterActive = true;
     setTimeout(() => { // this will make the execution after the above boolean has changed
-      this.searchElementRef.nativeElement.scrollIntoView(true);
-      this.searchElementRef.nativeElement.focus();
+      if (this.searchElementRef) {
+        this.searchElementRef.nativeElement.scrollIntoView(true);
+        this.searchElementRef.nativeElement.focus();
+      }
     }, 0);
     this.publicShells = [];
   }
@@ -204,12 +206,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     return this.getSearchFilter(startDate, endDate, undefined);
   }
 
-  private getSearchFilter(startDate: Date, endDate: Date, name: string): TournamentShellFilter {
+  private getSearchFilter(startDate: Date | undefined, endDate: Date | undefined, name: string | undefined): TournamentShellFilter {
     return { startDate: startDate, endDate: endDate, name: name };
   }
 
   changeSearchFilterName(searchFilterName: string) {
-    if (searchFilterName === undefined || searchFilterName.length < 2) {
+    if (searchFilterName.length < 2) {
       return;
     }
     this.publicProcessing = true;

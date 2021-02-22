@@ -27,7 +27,7 @@
         </li>
         <li [ngbNavItem]="2">
           <a ngbNavLink>
-            <fa-icon [icon]="['fac', 'referee']"></fa-icon><span> scheidsrechters </span><span
+            <app-tournament-icon name="referee"></app-tournament-icon> <span> scheidsrechters </span><span
               *ngIf="favorites.hasReferees()" class="badge badge-primary">{{favorites.getNrOfReferees()}}</span>
           </a>
           <ng-template ngbNavContent>
@@ -54,7 +54,7 @@
     <div *ngIf="!processing && !hasCompetitors() && hasReferees()">
       <div class="d-flex justify-content-between mb-2">
         <h3>
-          <fa-icon [icon]="['fac', 'referee']"></fa-icon><span> scheidsrechters </span><small><span
+          <app-tournament-icon name="referee"></app-tournament-icon> <span> scheidsrechters </span><small><span
               *ngIf="favorites.hasReferees()" class="badge badge-primary">{{favorites.getNrOfReferees()}}</span></small>
         </h3>
       </div>

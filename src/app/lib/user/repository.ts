@@ -20,7 +20,7 @@ export class UserRepository extends APIRepository {
     return 'users';
   }
 
-  getUrl(id: number): string {
+  getUrl(id: number | string): string {
     return super.getApiUrl() + this.getUrlpostfix() + '/' + id;
   }
 
@@ -38,7 +38,7 @@ export class UserRepository extends APIRepository {
     );
   }
 
-  removeObject(id: number): Observable<void> {
+  removeObject(id: number | string): Observable<void> {
     const url = this.getUrl(id);
     return this.http.delete(url, this.getOptions()).pipe(
       map((res) => { }),

@@ -1,7 +1,9 @@
-import { Game, Referee, Competitor, Place } from 'ngx-sport';
+import { Game, Referee, Competitor, Place, AgainstGame, TogetherGame } from 'ngx-sport';
 import { LockerRoom } from './lockerroom';
 import { PlaceLocationMap } from 'ngx-sport';
 import { Tournament } from './tournament';
+import { AgainstGamePlace } from 'ngx-sport/src/game/place/against';
+import { TogetherGamePlace } from 'ngx-sport/src/game/place/together';
 
 export class Favorites {
 
@@ -32,7 +34,7 @@ export class Favorites {
     //     });
     // }
 
-    hasGameItem(game: Game): boolean {
+    hasGameItem(game: AgainstGame | TogetherGame): boolean {
         return this.hasGameReferee(game) || this.hasGameCompetitor(game);
     }
 
@@ -55,13 +57,25 @@ export class Favorites {
         return this.competitors.length;
     }
 
-    hasGameCompetitor(game: Game, homeAway?: boolean): boolean {
-        // TODOSPORT
-        return false;
-        // return game.getPlaces(homeAway).some(gamePlace => {
-        //     const competitor = this.placeLocationMap.getCompetitor(gamePlace.getPlace().getStartLocation());
-        //     return competitor && this.hasCompetitor(competitor);
-        // });
+    protected hasGameCompetitor(game: AgainstGame | TogetherGame): boolean {
+        if (game instanceof AgainstGame) {
+            return this.hasAgainstGameCompetitor(game);
+        }
+        return this.hasTogetherGameCompetitor(game);
+    }
+
+    hasAgainstGameCompetitor(game: AgainstGame, homeAway?: boolean): boolean {
+        return game.getHomeAwayPlaces(homeAway).some((gamePlace: AgainstGamePlace) => {
+            const competitor = this.placeLocationMap.getCompetitor(gamePlace.getPlace().getStartLocation());
+            return competitor && this.hasCompetitor(competitor);
+        });
+    }
+
+    hasTogetherGameCompetitor(game: TogetherGame): boolean {
+        return game.getTogetherPlaces().some((gamePlace: TogetherGamePlace) => {
+            const competitor = this.placeLocationMap.getCompetitor(gamePlace.getPlace().getStartLocation());
+            return competitor && this.hasCompetitor(competitor);
+        });
     }
 
     addCompetitor(competitor: Competitor) {
@@ -100,19 +114,17 @@ export class Favorites {
         return this.referees.length;
     }
 
-    hasGameReferee(game: Game): boolean {
+    hasGameReferee(game: AgainstGame | TogetherGame): boolean {
         const referee = game.getReferee();
         if (referee !== undefined) {
             return this.hasReferee(referee);
         }
-        const competitor = this.getCompetitorFromPlace(game.getRefereePlace());
+        const refereePlace = game.getRefereePlace();
+        const competitor = refereePlace ? this.getCompetitorFromPlace(refereePlace) : undefined;
         return competitor ? this.hasCompetitor(competitor) : false;
     }
 
     protected getCompetitorFromPlace(place: Place): Competitor {
-        if (!place) {
-            return undefined;
-        }
         return this.placeLocationMap.getCompetitor(place.getStartLocation());
     }
 

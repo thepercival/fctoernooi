@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     NameService,
@@ -40,12 +40,12 @@ import { SportService } from '../../lib/ngx-sport/sport/service';
     styleUrls: ['./edit.component.css']
 })
 export class PlanningConfigComponent extends TournamentComponent implements OnInit {
-    startRoundNumber: RoundNumber;
-    hasBegun: boolean;
+    startRoundNumber!: RoundNumber;
+    hasBegun!: boolean;
     form: FormGroup;
-    private pouleStructure: PouleStructure;
-    public nameService: NameService;
-    gameAmountRange: VoetbalRange;
+    private pouleStructure!: PouleStructure;
+    public nameService!: NameService;
+    gameAmountRange!: VoetbalRange;
     gameAmountConfigControls: GameAmountConfigControl[] = [];
     gameModes: GameMode[] = [GameMode.Against, GameMode.Together];
     validations: PlanningConfigValidations = { minMinutes: 1, maxMinutes: 10080 };
@@ -112,6 +112,10 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     initConfig(startRoundNumberAsValue: number) {
         this.nameService = new NameService(new PlaceLocationMap(this.tournament.getCompetitors()));
         const startRoundNumber = this.structure.getRoundNumber(startRoundNumberAsValue);
+        if (startRoundNumber === undefined) {
+            this.setAlert('danger', 'het rondenumber is niet gevonden');
+            return;
+        }
         this.initGameAmountConfigs(startRoundNumber);
         this.changeStartRoundNumber(startRoundNumber);
         this.processing = false;
@@ -183,14 +187,10 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.modalService.open(GameModeInfoModalComponent, { windowClass: 'info-modal' });
     }
 
-    openInfoModal(header: string, modalContent) {
+    openInfoModal(header: string, modalContent: TemplateRef<any>) {
         const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
         activeModal.componentInstance.header = header;
         activeModal.componentInstance.modalContent = modalContent;
-        activeModal.result.then((result) => {
-        }, (reason) => {
-
-        });
     }
 
     private jsonToForm(json: JsonPlanningConfig) {
@@ -403,14 +403,15 @@ class PlanningActionCalculator {
     }
 
     private gameAmountConfigsChanged(jsonGameAmountConfigs: JsonGameAmountConfig[]): boolean {
-        const getGameAmountConfig = (competitionSport: CompetitionSport): JsonGameAmountConfig => {
+        const getGameAmountConfig = (competitionSport: CompetitionSport): JsonGameAmountConfig | undefined => {
             return jsonGameAmountConfigs.find((jsonGameAmountConfigIt: JsonGameAmountConfig) => {
                 return jsonGameAmountConfigIt.competitionSport.id === competitionSport.getId();
             });
         };
         return this.roundNumber.getCompetitionSports().some((competitionSport: CompetitionSport) => {
             const jsonGameAmountConfig = getGameAmountConfig(competitionSport);
-            return jsonGameAmountConfig.amount !== this.roundNumber.getGameAmountConfig(competitionSport).getAmount();
+            const gameAmountConfig = this.roundNumber.getGameAmountConfig(competitionSport);
+            return jsonGameAmountConfig && gameAmountConfig && jsonGameAmountConfig.amount !== gameAmountConfig.getAmount();
         });
     }
 

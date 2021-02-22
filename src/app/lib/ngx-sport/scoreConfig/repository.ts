@@ -34,7 +34,7 @@ export class ScoreConfigRepository extends APIRepository {
 
     saveObject(jsonScoreConfig: JsonScoreConfig, round: Round, tournament: Tournament): Observable<ScoreConfig> {
         const url = this.getUrl(tournament, round, jsonScoreConfig.competitionSport);
-        return this.http.post(url, jsonScoreConfig, this.getOptions()).pipe(
+        return this.http.post<JsonScoreConfig>(url, jsonScoreConfig, this.getOptions()).pipe(
             map((jsonResult: JsonScoreConfig) => {
                 const competitionSport = this.competitionSportMapper.toObject(jsonResult.competitionSport, tournament.getCompetition());
                 round.getChildren().forEach((child: Round) => this.service.removeFromRound(competitionSport, round));

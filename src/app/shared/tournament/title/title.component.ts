@@ -9,9 +9,8 @@ import { Tournament } from '../../../lib/tournament';
   templateUrl: './title.component.html'
 })
 export class TitleComponent {
-
-  @Input() tournament: Tournament;
-  @Input() admin: boolean;
+  @Input() tournament: Tournament | undefined;
+  @Input() admin: boolean = false;
 
   constructor(private router: Router, private myNavigation: MyNavigation) {
   }

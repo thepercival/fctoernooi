@@ -56,7 +56,7 @@
               <span>start</span>
             </button>
             <button *ngIf="!userIsAdmin || hasBegun" class="btn btn-sm btn-outline-info"
-              (click)="openModal(planningInfo)">
+              (click)="openInfoModal('wedstrijdplanning',planningInfo)">
               <span>start</span>
             </button>
           </th>
@@ -65,9 +65,9 @@
             <button *ngIf="userIsAdmin" title="wijzig velden"
               class="btn btn-sm btn-outline-{{tournamentHasBegun ? 'warning' : 'primary'}}"
               (click)="linkToCompetitionSport(SportConfigTabFields)">
-              <fa-icon [icon]="['fac', 'soccer-field']"></fa-icon>
+              <app-tournament-icon name="soccer-field"></app-tournament-icon>
             </button>
-            <fa-icon *ngIf="!userIsAdmin" title="veld" [icon]="['fac', 'soccer-field']"></fa-icon>
+            <app-tournament-icon *ngIf="!userIsAdmin" title="veld" name="soccer-field"></app-tournament-icon>
           </th>
           <th *ngIf="planningConfig.getGameMode() === GameModeAgainst" class="text-right">thuis</th>
           <th *ngIf="planningConfig.getGameMode() === GameModeTogether">deelnemer(s)</th>
@@ -76,11 +76,11 @@
             <button *ngIf="userIsAdmin" title="wijzig score-regels"
               class="btn btn-sm btn-outline-{{hasBegun ? 'warning' : 'primary'}}"
               (click)="linkToCompetitionSport(SportConfigTabScore)">
-              <fa-icon [icon]="['fac', 'scoreboard']"></fa-icon>
+              <app-tournament-icon name="scoreboard"></app-tournament-icon>
             </button>
-            <button *ngIf="!userIsAdmin" title="score" class="btn btn-sm btn-outline-info"
-              (click)="openModal(scoreInfo)">
-              <fa-icon [icon]="['fac', 'scoreboard']"></fa-icon>
+            <button *ngIf="!userIsAdmin && getUniqueScoreConfigs().length > 0" title="score"
+              class="btn btn-sm btn-outline-info" (click)="openInfoModal('score informatie',scoreInfo)">
+              <app-tournament-icon name="scoreboard"></app-tournament-icon>
             </button>
           </th>
           <th *ngIf="planningConfig.getGameMode() === GameModeAgainst">uit</th>
@@ -88,9 +88,10 @@
           <th *ngIf="hasReferees" class="d-none d-sm-table-cell text-right" title="scheidsrechter">
             <button *ngIf="userIsAdmin && !planningConfig.getSelfReferee()" title="wijzig scheidsrechters"
               class="btn btn-sm btn-outline-{{tournamentHasBegun ? 'warning' : 'primary'}}" (click)="linkToReferee()">
-              <fa-icon [icon]="['fac', 'referee']"></fa-icon>
+              <app-tournament-icon name="referee"></app-tournament-icon>
             </button>
-            <fa-icon *ngIf="!userIsAdmin || planningConfig.getSelfReferee()" [icon]="['fac', 'referee']"></fa-icon>
+            <app-tournament-icon *ngIf="!userIsAdmin || planningConfig.getSelfReferee()" name="referee">
+            </app-tournament-icon>
           </th>
         </tr>
       </thead>
@@ -156,7 +157,7 @@
 
 <ng-template #againstGamePlaces let-gmData>
   <!-- homePlaces -->
-  <td class="place text-right " [ngClass]="{'favitem': favorites?.hasGameCompetitor(gmData.game, GameHOME) }">
+  <td class="place text-right " [ngClass]="{'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, GameHOME) }">
     <span>{{nameService.getPlacesFromName(gmData.game.getHomeAwayPlaces( GameHOME ),true,true)}}</span>
   </td>
   <!-- score -->
@@ -173,7 +174,7 @@
       <button *ngIf="hasReferees && !isPlayed(gmData.game)" class="btn btn-outline-info btn-sm d-sm-none"
         placement="top" [ngbPopover]="nameService.getRefereeName(gmData.game)">
         <span [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
-          <fa-icon [icon]="['fac', 'referee']"></fa-icon>
+          <app-tournament-icon name="referee"></app-tournament-icon>
         </span>
       </button>
       <span *ngIf="!(hasReferees && !isPlayed(gmData.game))"
@@ -183,14 +184,14 @@
     </ng-template>
   </td>
   <!-- awayPlaces -->
-  <td class="place" [ngClass]="{ 'favitem': favorites?.hasGameCompetitor(gmData.game, GameAWAY) }">
+  <td class="place" [ngClass]="{ 'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, GameAWAY) }">
     <span>{{nameService.getPlacesFromName(gmData.game.getHomeAwayPlaces( GameAWAY ),true,true)}}</span>
   </td>
 </ng-template>
 
 <ng-template #togetherGamePlaces let-gmData>
   <!-- places -->
-  <td class="place" [ngClass]="{'favitem': favorites?.hasGameCompetitor(gmData.game, GameHOME) }">
+  <td class="place" [ngClass]="{'favitem': favorites?.hasTogetherGameCompetitor(gmData.game) }">
     <span>{{nameService.getPlacesFromName(gmData.game.getTogetherPlaces(),true,true)}}</span>
   </td>
   <!-- score 1 place -->
@@ -207,7 +208,7 @@
       <button *ngIf="hasReferees && !isPlayed(gmData.game)" class="btn btn-outline-info btn-sm d-sm-none"
         placement="top" [ngbPopover]="nameService.getRefereeName(gmData.game)">
         <span [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
-          <fa-icon [icon]="['fac', 'referee']"></fa-icon>
+          <app-tournament-icon name="referee"></app-tournament-icon>
         </span>
       </button>
       <span *ngIf="!(hasReferees && !isPlayed(gmData.game))"
@@ -227,85 +228,53 @@
       class="btn btn-outline-info btn-sm d-sm-none" placement="top"
       [ngbPopover]="nameService.getRefereeName(gmData.game)">
       <span [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
-        <fa-icon [icon]="['fac', 'referee']"></fa-icon>
+        <app-tournament-icon name="referee"></app-tournament-icon>
       </span>
     </button>
   </td>
 </ng-template>
 
 <ng-template #planningInfo let-modal>
-  <div class="modal-header border-bottom-0">
-    <h4 class="modal-title">
-      <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijdplanning
-    </h4>
-    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <!-- TODOSPORT -->
-    <!-- <ul class="list-group">
-      <li class="list-group-item border-info">
-        de start is op {{roundNumber.getFirstStartDateTime().toLocaleString("nl",
-        {"month":"short","day":"2-digit"})}} om {{roundNumber.getFirstStartDateTime().toLocaleString("nl", {"hour12":
-        false,"hour":"2-digit","minute":"2-digit"})}}
-      </li>
-      <li class="list-group-item border-info">
-        het aantal onderlinge duels is {{planningConfig.getNrOfHeadtohead()}}
-      </li>
-      <li class="list-group-item border-info">
-        de wedstrijden duren {{planningConfig.getMinutesPerGame()}} minuten
-      </li>
-      <li *ngIf="planningConfig.getExtension()" class="list-group-item border-info">
-        de eventuele verlenging duurt {{planningConfig.getMinutesPerGameExt()}} minuten
-      </li>
-      <li class="list-group-item border-info">er zit {{planningConfig.getMinutesBetweenGames()}} minuten
-        tussen de wedstrijden</li>
-    </ul> -->
-  </div>
-  <div class="modal-footer align-items-end border-top-0">
-    <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
-      (click)="modal.dismiss('close')">sluiten</button>
-  </div>
+  <ul class="list-group">
+    <li class="list-group-item border-info">
+      de start is op {{roundNumber.getFirstStartDateTime().toLocaleString("nl",
+      {"month":"short","day":"2-digit"})}} om {{roundNumber.getFirstStartDateTime().toLocaleString("nl", {"hour12":
+      false,"hour":"2-digit","minute":"2-digit"})}}
+    </li>
+    <li class="list-group-item border-info">
+      de wedstrijden duren {{planningConfig.getMinutesPerGame()}} minuten
+    </li>
+    <li *ngIf="planningConfig.getExtension()" class="list-group-item border-info">
+      de eventuele verlenging duurt {{planningConfig.getMinutesPerGameExt()}} minuten
+    </li>
+    <li class="list-group-item border-info">er zit {{planningConfig.getMinutesBetweenGames()}} minuten
+      tussen de wedstrijden</li>
+  </ul>
 </ng-template>
 
 <ng-template #scoreInfo let-modal>
-  <div class="modal-header border-bottom-0">
-    <h4 class="modal-title">
-      <fa-icon [icon]="['fac', 'scoreboard']"></fa-icon> score informatie
-    </h4>
-    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <!-- TODOSPORT -->
-    <!-- <ng-template ngFor let-scoreConfig [ngForOf]="roundNumber.getValidScoreConfigs()">
-      <ul class="list-group">
-        <li *ngIf="scoreConfig.hasNext() && scoreConfig.getNext().getEnabled()" class="list-group-item border-info">
-          <span *ngIf="scoreConfig.getNext().getMaximum() === 0">behaal zoveel mogelijk
-            {{translate.getScoreNamePlural(scoreConfig.getNext())}}</span>
-          <span *ngIf="scoreConfig.getNext().getMaximum() > 0">wie het eerst {{scoreConfig.getNext().getMaximum()}}
-            {{translate.getScoreNamePlural(scoreConfig.getNext())}} heeft behaald</span>
-          <span *ngIf="planningConfig.getEnableTime()"> binnen de tijd</span>
-        </li>
-        <li *ngIf="scoreConfig.hasNext() && scoreConfig.getNext().getEnabled()" class="list-group-item border-info">
-          <span>per
-            {{translate.getScoreNameSingular(scoreConfig.getNext())}} moet(en) er
-            {{scoreConfig.getMaximum()}} {{translate.getScoreNamePlural(scoreConfig)}} worden behaald</span>
-        </li>
-        <li *ngIf="!scoreConfig.hasNext() || !scoreConfig.getNext().getEnabled()" class="list-group-item border-info">
-          <span *ngIf="scoreConfig.getMaximum() === 0">behaal zoveel mogelijk
-            {{translate.getScoreNamePlural(scoreConfig)}}</span>
-          <span *ngIf="scoreConfig.getMaximum() > 0">wie het eerst {{scoreConfig.getMaximum()}}
-            {{translate.getScoreNamePlural(scoreConfig)}} heeft behaald</span>
-          <span *ngIf="planningConfig.getEnableTime()"> binnen de tijd</span>
-        </li>
-      </ul>
-    </ng-template> -->
-  </div>
-  <div class="modal-footer align-items-end border-top-0">
-    <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
-      (click)="modal.dismiss('close')">sluiten</button>
-  </div>
+  <ng-template ngFor let-scoreConfig [ngForOf]="getUniqueScoreConfigs()">
+    <h2>{{scoreConfig.getSport().getName()}}</h2>
+    <ul class="list-group">
+      <li *ngIf="scoreConfig.hasNext() && scoreConfig.getNext().getEnabled()" class="list-group-item border-info">
+        <span *ngIf="scoreConfig.getNext().getMaximum() === 0">behaal zoveel mogelijk
+          {{translate.getScoreNamePlural(scoreConfig.getNext())}}</span>
+        <span *ngIf="scoreConfig.getNext().getMaximum() > 0">wie het eerst {{scoreConfig.getNext().getMaximum()}}
+          {{translate.getScoreNamePlural(scoreConfig.getNext())}} heeft behaald</span>
+        <span *ngIf="planningConfig.getEnableTime()"> binnen de tijd</span>
+      </li>
+      <li *ngIf="scoreConfig.hasNext() && scoreConfig.getNext().getEnabled()" class="list-group-item border-info">
+        <span>per
+          {{translate.getScoreNameSingular(scoreConfig.getNext())}} moet(en) er
+          {{scoreConfig.getMaximum()}} {{translate.getScoreNamePlural(scoreConfig)}} worden behaald</span>
+      </li>
+      <li *ngIf="!scoreConfig.hasNext() || !scoreConfig.getNext()?.getEnabled()" class="list-group-item border-info">
+        <span *ngIf="scoreConfig.getMaximum() === 0">behaal zoveel mogelijk
+          {{translate.getScoreNamePlural(scoreConfig)}}</span>
+        <span *ngIf="scoreConfig.getMaximum() > 0">wie het eerst {{scoreConfig.getMaximum()}}
+          {{translate.getScoreNamePlural(scoreConfig)}} heeft behaald</span>
+        <span *ngIf="planningConfig.getEnableTime()"> binnen de tijd</span>
+      </li>
+    </ul>
+  </ng-template>
 </ng-template>
