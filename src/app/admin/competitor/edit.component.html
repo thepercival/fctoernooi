@@ -28,7 +28,7 @@
             <input class="form-control"
               [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
               formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters"
-              [focuMe]="competitor === undefined">
+              [focuMe]="originalCompetitor === undefined">
           </div>
         </div>
         <div class="form-group row">

@@ -11,7 +11,6 @@ import {
     ScoreConfigService,
     ScoreConfig,
     AgainstGame,
-    GameMode,
     PlanningConfig,
     TogetherGame,
     GameMapper,
@@ -32,6 +31,7 @@ import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { TournamentUser } from '../../lib/tournament/user';
 import { map } from 'rxjs/operators';
 import { EqualQualifiersChecker } from '../../lib/ngx-sport/ranking/equalQualifiersChecker';
+import { DateFormatter } from '../../lib/dateFormatter';
 
 @Component({
     selector: 'app-tournament-againstgame-edit',
@@ -62,6 +62,7 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
         private gameRepository: GameRepository,
         private scoreConfigMapper: ScoreConfigMapper,
         private mapper: GameMapper,
+        public dateFormatter: DateFormatter,
         private myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
@@ -133,9 +134,6 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
             map((userRefereeId: number | string) => referee.getId() === userRefereeId)
         );
     }
-
-    get GameHOME(): boolean { return AgainstGame.Home; }
-    get GameAWAY(): boolean { return AgainstGame.Away; }
 
     getCalculateScoreDescription() {
         const scoreConfig = this.firstScoreConfig.getCalculate();

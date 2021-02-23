@@ -144,8 +144,8 @@ export class AuthorizationListComponent extends TournamentComponent implements O
         return !tournamentUser.hasRoles(Role.ROLEADMIN) || this.getNrOfRoles(Role.ROLEADMIN) > 1;
     }
 
-    rolesAreEqual(roleA: TournamentAuthorizationRole, roleB: TournamentAuthorizationRole): boolean {
-        return roleA && roleB && roleA.authorization === roleB.authorization && roleA.role === roleB.role;
+    rolesAreEqual(roleA: TournamentAuthorizationRole, roleB: TournamentAuthorizationRole | undefined): boolean {
+        return roleB !== undefined && roleA.authorization === roleB.authorization && roleA.role === roleB.role;
     }
 
     openHelpModal() {

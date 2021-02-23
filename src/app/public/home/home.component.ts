@@ -15,6 +15,7 @@ import { Favorites } from '../../lib/favorites';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { LiveboardLink } from '../../lib/liveboard/link';
 import { TournamentCompetitor } from '../../lib/competitor';
+import { DateFormatter } from '../../lib/dateFormatter';
 
 @Component({
     selector: 'app-tournament-public',
@@ -38,6 +39,7 @@ export class HomeComponent extends TournamentComponent implements OnInit, OnDest
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         public favRepository: FavoritesRepository,
+        public dateFormatter: DateFormatter,
         private globalEventsManager: GlobalEventsManager
     ) {
         super(route, router, tournamentRepository, structureRepository);

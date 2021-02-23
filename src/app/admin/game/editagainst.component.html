@@ -25,9 +25,8 @@
             <label class="col-form-label">start</label>
           </div>
           <div class="col-9">
-            <label class="col-form-label">{{game.getStartDateTime().toLocaleString("nl",
-              {"month":"short","day":"2-digit"})}} {{game.getStartDateTime().toLocaleString("nl",
-              {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}</label>
+            <label
+              class="col-form-label">{{dateFormatter.toString(game.getStartDateTime(),dateFormatter.datetime())}}</label>
           </div>
         </div>
         <div *ngIf="game.getField()" class="form-group row">
@@ -44,11 +43,11 @@
             <label for="competitors" class="col-form-label">deelnemers</label>
           </div>
           <div class="col-4 font-weight-bold text-break">
-            {{nameService.getPlacesFromName(game.getHomeAwayPlaces( GameHOME ), true, true)}}
+            {{nameService.getPlacesFromName(game.getHomePlaces(), true, true)}}
           </div>
           <div class="col-1 homeAway-splitter">-</div>
           <div class="col-4 font-weight-bold text-break">
-            {{nameService.getPlacesFromName(game.getHomeAwayPlaces( GameAWAY ), true, true)}}</div>
+            {{nameService.getPlacesFromName(game.getAwayPlaces(), true, true)}}</div>
         </div>
         <div *ngFor="let scoreControl of scoreControls" class="form-group row">
           <label class="col-3 col-form-label">

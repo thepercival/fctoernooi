@@ -77,6 +77,7 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
         let roles = 0;
         this.roleItems.forEach(roleItem => roles += roleItem.selected ? roleItem.value : 0);
         const json: JsonTournamentInvitation = {
+            id: 0,
             emailaddress: this.form.value['emailaddress'],
             roles
         };

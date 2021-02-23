@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faProductHunt } from '@fortawesome/free-brands-svg-icons';
-import { faCheckSquare, faSquare } from '@fortawesome/free-regular-svg-icons';
 import {
   faCheckCircle,
   faCopy,
@@ -130,7 +129,7 @@ export class AdminModule {
       /* homescreen */ faMoneyBillAlt, faCheckCircle, faTimesCircle, faShareAlt, faEye, faFileExport, faCopy, faTrashAlt
       , faQrcode, faPrint, faFileExcel,
       /* sport select*/ faDotCircle,
-      /* competitors*/ faSquare, faCheckSquare, faRandom, faSort,
+      /* competitors*/ faRandom, faSort,
       /* structure*/ faCompressAlt, faExpandAlt, faTh,
       /* delen */ faClipboardCheck,
       /* standen */ faListOl

@@ -129,24 +129,24 @@ export class ScoreConfigEditComponent implements OnInit {
 
     protected formToJson() {
         this.jsonScoreConfig.maximum = this.form.value['max'];
-        if (this.form.controls.maxNext !== undefined) {
+        if (this.form.controls.maxNext !== undefined && this.jsonScoreConfig.next) {
             this.jsonScoreConfig.next.maximum = this.form.value['maxNext'];
             this.jsonScoreConfig.next.enabled = this.form.value['useNext'];
         }
     }
 
     onChanges(): void {
-        this.form.get('useNext').valueChanges.subscribe(val => {
-            this.form.get('max').clearValidators();
+        this.form.controls.useNext.valueChanges.subscribe(val => {
+            this.form.controls.max.clearValidators();
             const minScore = this.validations.minScore + (val ? 1 : 0);
-            this.form.get('max').setValidators(
+            this.form.controls.max.setValidators(
                 Validators.compose([
                     Validators.required,
                     Validators.min(minScore),
                     Validators.max(this.validations.maxScore)
                 ]));
-            if (this.form.get('max').value === 0) {
-                this.form.get('max').setErrors({ 'invalid': true });
+            if (this.form.controls.max.value === 0) {
+                this.form.controls.max.setErrors({ 'invalid': true });
             }
         });
     }
@@ -265,7 +265,7 @@ export class ToggleRoundInittializer {
         };
         toggleRound.selected = this.select(toggleRound, differentPreviousSibblingConfig);
 
-        let previousSibblingConfig;
+        let previousSibblingConfig: ScoreConfig | undefined;
         let differentPreviousSibblingConfigChild = false;
         toggleRound.children = round.getChildren().map((childRound: Round): ToggleRound => {
             const roundConfig = round.getValidScoreConfig(this.competitionSport);
@@ -281,7 +281,7 @@ export class ToggleRoundInittializer {
     }
 
     protected hasDifferentConfigs(rounds: Round[]): boolean {
-        let config;
+        let config: ScoreConfig | undefined;
         return rounds.some((round: Round) => {
             const roundConfig = round.getValidScoreConfig(this.competitionSport);
             if (!config) {
@@ -302,7 +302,7 @@ export class ToggleRoundInittializer {
         if (this.hasOwnConfig(toggleRound.round, this.competitionSport)) {
             return false;
         }
-        return toggleRound.parent && toggleRound.parent.selected;
+        return toggleRound.parent !== undefined && toggleRound.parent.selected;
     }
 
     protected ancestorSelected(toggleRound: ToggleRound): boolean {
@@ -339,7 +339,8 @@ export class ToggleRoundConverter {
         if (toggleRound.selected && !this.hasSelectedAncestor(toggleRound)) {
             selection.rootRounds.push(toggleRound.round);
         }
-        if (!toggleRound.selected && this.hasSelectedAncestor(toggleRound) && toggleRound.parent.selected) {
+        if (!toggleRound.selected && this.hasSelectedAncestor(toggleRound)
+            && toggleRound.parent && toggleRound.parent.selected) {
             selection.unchangedDescendants.push(toggleRound.round);
         }
         toggleRound.children.forEach(child => this.updateRoundsSelection(child, selection));

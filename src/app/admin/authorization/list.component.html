@@ -36,7 +36,7 @@
                         <ul class="list-group list-group-flush w-100">
                             <app-tournament-authorization-role *ngFor="let role of getAssignableRoles(tournamentUser)"
                                 [role]="role" [disabled]="!canToggleRole(tournamentUser, role.role)"
-                                [processing]="rolesAreEqual(roleProcessing, role)"
+                                [processing]="rolesAreEqual(role,roleProcessing)"
                                 (toggleRole)="toggleRole($event,contentremove)">
                             </app-tournament-authorization-role>
                         </ul>
@@ -55,7 +55,7 @@
                         </div>
                         <ul class="list-group list-group-flush w-100">
                             <app-tournament-authorization-role *ngFor="let role of getAssignableRoles(invitation)"
-                                [role]="role" [processing]="rolesAreEqual(roleProcessing, role)"
+                                [role]="role" [processing]="rolesAreEqual(role,roleProcessing)"
                                 (toggleRole)="toggleRole($event,contentremove)"></app-tournament-authorization-role>
                         </ul>
                     </div>

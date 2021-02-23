@@ -8,9 +8,9 @@ import { Sponsor } from '../../lib/sponsor';
     styleUrls: ['./sponsors.liveboard.component.scss']
 })
 export class LiveboardSponsorsComponent implements OnChanges {
-    @Input() sponsors: Sponsor[];
-    nrOfColumns: number;
-    sponsorRows: Sponsor[][];
+    @Input() sponsors: Sponsor[] = [];
+    nrOfColumns: number = 0;
+    sponsorRows: Sponsor[][] = [];
     viewHeight: number;
 
     constructor() {
@@ -36,9 +36,12 @@ export class LiveboardSponsorsComponent implements OnChanges {
 
         this.sponsorRows = [];
         for (let rowIt = 1; rowIt <= nrOfRows; rowIt++) {
-            const sponsorRow = [];
+            const sponsorRow: Sponsor[] = [];
             for (let colIt = 1; colIt <= this.nrOfColumns; colIt++) {
-                sponsorRow.push(this.sponsors.shift());
+                const sponsor = this.sponsors.shift();
+                if (sponsor) {
+                    sponsorRow.push(sponsor);
+                }
             }
             this.sponsorRows.push(sponsorRow);
         }

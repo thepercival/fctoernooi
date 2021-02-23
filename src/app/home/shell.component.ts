@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { DateFormatter } from '../lib/dateFormatter';
 
 import { TournamentShell } from '../lib/tournament/shell/repository';
 
@@ -7,15 +8,12 @@ import { TournamentShell } from '../lib/tournament/shell/repository';
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.css']
 })
-export class HomeShellComponent implements OnInit {
+export class HomeShellComponent {
   @Input() shell!: TournamentShell;
   @Input() showPublic!: boolean;
   @Input() linethroughDate!: Date;
 
-  constructor() {
-  }
-
-  ngOnInit() {
+  constructor(public dateFormatter: DateFormatter) {
   }
 
   inPast(date: Date): boolean {

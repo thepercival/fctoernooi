@@ -11,6 +11,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { TournamentMapper } from '../../lib/tournament/mapper';
 import { Tournament } from '../../lib/tournament';
+import { DateFormatter } from '../../lib/dateFormatter';
 
 @Component({
     selector: 'app-tournament-startbreak',
@@ -31,6 +32,7 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
         private planningRepository: PlanningRepository,
         private tournamentMapper: TournamentMapper,
         private myNavigation: MyNavigation,
+        public dateFormatter: DateFormatter,
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);

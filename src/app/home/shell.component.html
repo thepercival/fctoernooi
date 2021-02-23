@@ -2,12 +2,11 @@
   <fa-icon [icon]="['fas', shell.public ? 'user-friends' : 'user-shield']"></fa-icon>
 </td>
 <td *ngIf="inPast(shell.startDateTime)">
-  <span
-    style="text-decoration: line-through;">{{shell.startDateTime.toLocaleString("nl",{"month":"short","day":"2-digit"})}}
+  <span style="text-decoration: line-through;">{{dateFormatter.toString(shell.startDateTime,dateFormatter.date())}}
     {{shell.startDateTime.getFullYear()}}</span>
 </td>
 <td *ngIf="!inPast(shell.startDateTime)" [title]="shell.startDateTime.getFullYear()">
-  {{shell.startDateTime.toLocaleString("nl",{"month":"short","day":"2-digit","hour12": false,"hour":"2-digit","minute":"2-digit"})}}
+  {{dateFormatter.toString(shell.startDateTime,dateFormatter.datetime())}}
 </td>
 <td>
   <app-sport-icon-custom [customId]="shell.sportCustomId"></app-sport-icon-custom>

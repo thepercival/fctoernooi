@@ -1,4 +1,4 @@
-import { Game, Referee, Competitor, Place, AgainstGame, TogetherGame } from 'ngx-sport';
+import { Game, Referee, Competitor, Place, AgainstGame, TogetherGame, HomeOrAway } from 'ngx-sport';
 import { LockerRoom } from './lockerroom';
 import { PlaceLocationMap } from 'ngx-sport';
 import { Tournament } from './tournament';
@@ -64,7 +64,7 @@ export class Favorites {
         return this.hasTogetherGameCompetitor(game);
     }
 
-    hasAgainstGameCompetitor(game: AgainstGame, homeAway?: boolean): boolean {
+    hasAgainstGameCompetitor(game: AgainstGame, homeAway?: HomeOrAway): boolean {
         return game.getHomeAwayPlaces(homeAway).some((gamePlace: AgainstGamePlace) => {
             const competitor = this.placeLocationMap.getCompetitor(gamePlace.getPlace().getStartLocation());
             return competitor && this.hasCompetitor(competitor);

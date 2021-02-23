@@ -82,11 +82,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
       .subscribe(
           /* happy path */ myShells => {
           this.sortShellsByDateDesc(myShells);
-          while (myShells.length > 0) {
+          let myShell: TournamentShell | undefined;
+          while (myShell = myShells.shift()) {
             if (this.shellsWithRoleTillX.length < this.shellsWithRoleX) {
-              this.shellsWithRoleTillX.push(myShells.shift());
+              this.shellsWithRoleTillX.push(myShell);
             } else {
-              this.shellsWithRoleFromX.push(myShells.shift());
+              this.shellsWithRoleFromX.push(myShell);
             }
           }
           this.processingWithRole = false;

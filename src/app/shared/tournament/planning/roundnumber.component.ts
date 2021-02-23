@@ -18,7 +18,8 @@ import {
   SelfReferee,
   GameMode,
   TogetherGame,
-  CompetitionSport
+  CompetitionSport,
+  HomeOrAway
 } from 'ngx-sport';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -33,6 +34,7 @@ import { CompetitionSportRouter } from '../competitionSport.router';
 import { CompetitionSportTab } from '../competitionSportTab';
 import { InfoModalComponent } from '../infomodal/infomodal.component';
 import { IAlert } from '../../common/alert';
+import { DateFormatter } from '../../../lib/dateFormatter';
 
 @Component({
   selector: 'app-tournament-roundnumber-planning',
@@ -43,7 +45,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
 
   @Input() tournament!: Tournament;
   @Input() roundNumber!: RoundNumber;
-  @Input() userRefereeId: number | undefined;
+  @Input() userRefereeId: number | string | undefined;
   @Input() reload: boolean = false;
   @Input() roles: number = 0;
   @Input() favorites!: Favorites;
@@ -52,7 +54,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   @Output() scroll = new EventEmitter();
   alert: IAlert | undefined;
   public sameDay = true;
-  public tournamentBreak: Period | undefined;
   public breakShown: boolean = false;
   public userIsAdmin: boolean = false;
   public gameOrder = Game.Order_By_Batch;
@@ -74,6 +75,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     public competitionSportRouter: CompetitionSportRouter,
     private authService: AuthService,
     public cssService: CSSService,
+    public dateFormatter: DateFormatter,
     private modalService: NgbModal,
     protected planningRepository: PlanningRepository) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
@@ -85,7 +87,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     this.translate = new TranslateService();
     this.placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
     this.nameService = new NameService(this.placeLocationMap);
-    this.tournamentBreak = this.tournament.getBreak();
     this.planningConfig = this.roundNumber.getValidPlanningConfig();
     const authUser = this.authService.getUser();
     const currentUser = authUser ? this.tournament.getUser(authUser) : undefined;
@@ -121,8 +122,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
 
   get GameModeAgainst(): GameMode { return GameMode.Against; }
   get GameModeTogether(): GameMode { return GameMode.Together; }
-  get GameHOME(): boolean { return AgainstGame.Home; }
-  get GameAWAY(): boolean { return AgainstGame.Away; }
+  get Home(): HomeOrAway { return AgainstGame.Home; }
+  get Away(): HomeOrAway { return AgainstGame.Away; }
   get SportConfigTabFields(): number { return CompetitionSportTab.Fields; }
   get SportConfigTabScore(): number { return CompetitionSportTab.Score; }
 
@@ -144,7 +145,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
         poule: pouleData,
         hasPopover: pouleData.needsRanking || (!this.roundNumber.isFirst() && aPlaceHasACompetitor),
         game: game,
-        showBreak: this.isBreakBeforeGame(game)
+        break: this.isBreakBeforeGame(game) ? this.tournament.getBreak() : undefined
       };
       gameDatas.push(gameData);
     });
@@ -226,11 +227,12 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     return (this.roles & role) === role;
   }
   protected isBreakBeforeGame(game: Game): boolean {
-    if (this.tournamentBreak === undefined || this.breakShown || !this.planningConfig.getEnableTime() || !this.gameOrder) {
+    const breakX: Period | undefined = this.tournament.getBreak();
+    if (breakX === undefined || this.breakShown || !this.planningConfig.getEnableTime() || !this.gameOrder) {
       return false;
     }
     const startDateTime = game.getStartDateTime();
-    this.breakShown = startDateTime?.getTime() === this.tournamentBreak.getEndDateTime().getTime();
+    this.breakShown = startDateTime?.getTime() === breakX.getEndDateTime().getTime();
     return this.breakShown;
   }
 
@@ -352,7 +354,7 @@ interface GameData {
   poule: PouleData;
   hasPopover: boolean;
   game: Game;
-  showBreak?: boolean;
+  break: Period | undefined;
 }
 
 interface PouleData {

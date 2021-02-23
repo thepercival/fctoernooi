@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { AgainstGame, Game, NameService, Round, RoundNumber, ScoreConfigService, State } from 'ngx-sport';
+import { DateFormatter } from '../../lib/dateFormatter';
 
 import { CreatedAndInplayGamesScreen, GamesScreen } from '../../lib/liveboard/screens';
 
@@ -16,12 +17,10 @@ export class LiveboardGamesComponent {
     @Input() nameService!: NameService;
 
     constructor(
+        public dateFormatter: DateFormatter
     ) {
         this.ScoreConfigService = new ScoreConfigService();
     }
-
-    get GameHOME(): boolean { return AgainstGame.Home; }
-    get GameAWAY(): boolean { return AgainstGame.Away; }
 
     isCreatedAndInplay(): boolean {
         return this.screen instanceof CreatedAndInplayGamesScreen;

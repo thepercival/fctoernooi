@@ -9,7 +9,7 @@
           <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
         </th>
         <th *ngIf="showDateTime()" class="width-10">
-          {{getRoundNumber().getFirstStartDateTime().toLocaleString("nl",{"month":"short","day":"2-digit"})}}
+          {{dateFormatter.toString(getRoundNumber().getFirstStartDateTime(),dateFormatter.date())}}
         </th>
         <th *ngIf="showBatch()" class="text-center width-10">batch</th>
         <th *ngIf="isCreatedAndInplay()" class="width-8">
@@ -34,19 +34,19 @@
           <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
         </td>
         <td *ngIf="showDateTime()">
-          <span *ngIf="showDateTime(game)">{{game.getStartDateTime().toLocaleString("nl", {"hour12":
-            false,"hour":"2-digit","minute":"2-digit"})}}</span>
+          <span
+            *ngIf="showDateTime(game)">{{dateFormatter.toString(game.getStartDateTime(),dateFormatter.time())}}</span>
         </td>
         <td *ngIf="showBatch()" class="text-center width-10">{{game.getBatchNr()}}</td>
         <td *ngIf="isCreatedAndInplay()">{{game.getField()?.getName()}}</td>
         <td class="text-right">
-          <span>{{nameService.getPlacesFromName(game.getPlaces(GameHOME),true,true)}}</span>
+          <span>{{nameService.getPlacesFromName(game.getHomePlaces(),true,true)}}</span>
         </td>
         <td nowrap class="text-center">
           <span>{{getScore(game)}}</span>
         </td>
         <td class="text-left">
-          <span>{{nameService.getPlacesFromName(game.getPlaces(GameAWAY),true,true)}}</span>
+          <span>{{nameService.getPlacesFromName(game.getAwayPlaces(),true,true)}}</span>
         </td>
         <td *ngIf="isCreatedAndInplay() && hasReferees()" class="text-right">{{nameService.getRefereeName(game)}}</td>
       </tr>

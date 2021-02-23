@@ -32,9 +32,7 @@ import { CompetitorMapper } from '../../lib/competitor/mapper';
   styleUrls: ['./list.component.scss']
 })
 export class CompetitorListComponent extends TournamentComponent implements OnInit, AfterViewChecked {
-
   places: Place[] = [];
-  alert: IAlert | undefined;
   swapPlace: Place | undefined;
   focusId!: number | string;
   orderMode = false;
@@ -91,8 +89,8 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.resetAlert();
   }
 
-  getCompetitor(place: Place) {
-    return this.placeLocationMap.getCompetitor(place);
+  getCompetitor(place: Place): TournamentCompetitor {
+    return <TournamentCompetitor>this.placeLocationMap.getCompetitor(place);
   }
 
   private hasCompetitor(place: Place): boolean {
@@ -305,9 +303,4 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
         /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
       );
   }
-}
-
-interface CompetitorLocation {
-  placeLocation: PlaceLocation;
-  competitor: Competitor;
 }

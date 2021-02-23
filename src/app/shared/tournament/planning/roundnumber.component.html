@@ -97,13 +97,12 @@
       </thead>
       <tbody>
         <ng-template ngFor let-gmData [ngForOf]="gameDatas">
-          <tr *ngIf="gmData.showBreak" class="table-info">
+          <tr *ngIf="gmData.break" class="table-info">
             <td></td>
             <td *ngIf="planningConfig.getEnableTime()"><span
-                *ngIf="!sameDay">{{tournamentBreak.getStartDateTime().toLocaleString("nl",
-                {"month":"short","day":"2-digit"})}} </span>
-              <span>{{tournamentBreak.getStartDateTime().toLocaleString("nl", {"hour12":
-                false,"hour":"2-digit","minute":"2-digit"})}}</span>
+                *ngIf="!sameDay">{{dateFormatter.toString(gmData.break.getStartDateTime(),
+                dateFormatter.date())}}</span>
+              <span>{{dateFormatter.toString(gmData.break.getStartDateTime(), dateFormatter.time())}}</span>
             </td>
             <td></td>
             <td colspan="3" class="text-center">PAUZE</td>
@@ -130,10 +129,9 @@
             </td>
             <!-- datetime -->
             <td *ngIf="planningConfig.getEnableTime()">
-              <span *ngIf="!sameDay">{{gmData.game.getStartDateTime().toLocaleString("nl",
-                {"month":"short","day":"2-digit"})}} </span>
-              <span>{{gmData.game.getStartDateTime().toLocaleString("nl", {"hour12":
-                false,"hour":"2-digit","minute":"2-digit"})}}</span>
+              <span *ngIf="!sameDay">{{dateFormatter.toString(gmData.game.getStartDateTime(),
+                dateFormatter.date())}}</span>
+              <span>{{dateFormatter.toString(gmData.game.getStartDateTime(), dateFormatter.time())}}</span>
             </td>
             <!-- field -->
             <td class="text-center">{{gmData.game.getField()?.getName()}}</td>
@@ -157,8 +155,8 @@
 
 <ng-template #againstGamePlaces let-gmData>
   <!-- homePlaces -->
-  <td class="place text-right " [ngClass]="{'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, GameHOME) }">
-    <span>{{nameService.getPlacesFromName(gmData.game.getHomeAwayPlaces( GameHOME ),true,true)}}</span>
+  <td class="place text-right " [ngClass]="{'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, Home) }">
+    <span>{{nameService.getPlacesFromName(gmData.game.getHomePlaces(),true,true)}}</span>
   </td>
   <!-- score -->
   <td nowrap class="text-center">
@@ -184,8 +182,8 @@
     </ng-template>
   </td>
   <!-- awayPlaces -->
-  <td class="place" [ngClass]="{ 'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, GameAWAY) }">
-    <span>{{nameService.getPlacesFromName(gmData.game.getHomeAwayPlaces( GameAWAY ),true,true)}}</span>
+  <td class="place" [ngClass]="{ 'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, Away) }">
+    <span>{{nameService.getPlacesFromName(gmData.game.getAwayPlaces(),true,true)}}</span>
   </td>
 </ng-template>
 
@@ -237,9 +235,8 @@
 <ng-template #planningInfo let-modal>
   <ul class="list-group">
     <li class="list-group-item border-info">
-      de start is op {{roundNumber.getFirstStartDateTime().toLocaleString("nl",
-      {"month":"short","day":"2-digit"})}} om {{roundNumber.getFirstStartDateTime().toLocaleString("nl", {"hour12":
-      false,"hour":"2-digit","minute":"2-digit"})}}
+      de start is op {{dateFormatter.toString(roundNumber.getFirstStartDateTime(), dateFormatter.date())}} om
+      {{dateFormatter.toString(roundNumber.getFirstStartDateTime(), dateFormatter.time())}}
     </li>
     <li class="list-group-item border-info">
       de wedstrijden duren {{planningConfig.getMinutesPerGame()}} minuten

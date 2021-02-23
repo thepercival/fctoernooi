@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { SponsorScreenService } from '../../lib/liveboard/screens';
@@ -18,8 +18,8 @@ import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.
   styleUrls: ['./list.component.scss']
 })
 export class SponsorListComponent extends TournamentComponent implements OnInit {
-  sponsors: Sponsor[];
-  sponsorScreenService: SponsorScreenService;
+  sponsors: Sponsor[] = [];
+  sponsorScreenService!: SponsorScreenService;
 
   validations: any = {
     'minlengthname': Sponsor.MIN_LENGTH_NAME,
@@ -48,7 +48,7 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
     this.processing = false;
   }
 
-  openHelpModal(modalContent) {
+  openHelpModal(modalContent: TemplateRef<any>) {
     const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
     activeModal.componentInstance.header = 'uitleg sponsoren';
     activeModal.componentInstance.modalContent = modalContent;

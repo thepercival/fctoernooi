@@ -66,7 +66,7 @@ export class PublicModule {
     library.addIcons(
       faListOl, faChevronRight
       /*faMoneyBillAlt, faTrashAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
-      faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom, faSquare, faCheckSquare,
+      faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom,
       faInfoCircle, faMedal, faUsers, faQrcode, faCopy, faDotCircle, faSync*/
     );
     /*library.addIcons(

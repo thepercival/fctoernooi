@@ -21,7 +21,7 @@ import { TournamentCompetitor } from '../../lib/competitor';
 })
 export class CompetitorEditComponent extends TournamentComponent implements OnInit {
     form: FormGroup;
-    originalCompetitor!: TournamentCompetitor;
+    originalCompetitor: TournamentCompetitor | undefined;
     hasBegun!: boolean;
     public nameService!: NameService;
     pouleNr!: number;

@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AuthService } from '../../../lib/auth/auth.service';
 import { GlobalEventsManager } from '../../../shared/common/eventmanager';
 import { LiveboardLink } from '../../../lib/liveboard/link';
+import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
 
 @Component({
   selector: 'app-nav',
@@ -26,5 +27,14 @@ export class NavComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+
+  getLogoIconPrefix(): IconPrefix {
+    return <IconPrefix>'fac';
+  }
+
+  getLogoIconName(): IconName {
+    return <IconName>'favicon';
   }
 }

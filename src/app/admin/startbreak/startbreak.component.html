@@ -43,7 +43,7 @@
           </div>
           <div class="col-9 col-sm-8 col-md-7">
             <input class="form-control" type="text"
-              placeholder="{{competition.getStartDateTime().toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12': false,'hour':'2-digit','minute':'2-digit'})}}"
+              placeholder="{{dateFormatter.toString(competition.getStartDateTime(), dateFormatter.dateWithYear())}}"
               readonly>
           </div>
         </div>
@@ -94,7 +94,7 @@
             </div>
             <div class="col-9 col-sm-8 col-md-7">
               <input class="form-control" type="text"
-                placeholder="{{tournament.getBreakStartDateTime().toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12': false,'hour':'2-digit','minute':'2-digit'})}}"
+                placeholder="{{dateFormatter.toString(tournament.getBreakStartDateTime(), dateFormatter.dateWithYear())}}"
                 readonly>
             </div>
           </div>
@@ -131,7 +131,7 @@
             </div>
             <div class="col-9 col-sm-8 col-md-7">
               <input class="form-control" type="text"
-                placeholder="{{tournament.getBreakEndDateTime().toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12': false,'hour':'2-digit','minute':'2-digit'})}}"
+                placeholder="{{dateFormatter.toString(tournament.getBreakStartDateTime(), dateFormatter.datetimeWithYear())}}"
                 readonly>
             </div>
           </div>

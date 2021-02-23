@@ -60,9 +60,8 @@
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijdplanning
             </h5>
-            <p class="card-text">start is {{competition.getStartDateTime().toLocaleString("nl",
-              {"month":"short","day":"2-digit","hour12":
-              false,"hour":"2-digit","minute":"2-digit"})}}
+            <p class="card-text">start is
+              {{dateFormatter.toString(competition.getStartDateTime(),dateFormatter.datetime())}}
             </p>
           </div>
         </div>

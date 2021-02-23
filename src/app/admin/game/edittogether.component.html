@@ -25,9 +25,8 @@
             <label class="col-form-label">start</label>
           </div>
           <div class="col-9">
-            <label class="col-form-label">{{game.getStartDateTime().toLocaleString("nl",
-              {"month":"short","day":"2-digit"})}} {{game.getStartDateTime().toLocaleString("nl",
-              {"hour12": false,"hour":"2-digit","minute":"2-digit"})}}</label>
+            <label
+              class="col-form-label">{{dateFormatter.toString(game.getStartDateTime(),dateFormatter.datetime())}}</label>
           </div>
         </div>
         <div *ngIf="game.getField()" class="form-group row">
