@@ -49,6 +49,9 @@
                 "./node_modules/bootstrap/scss"
               ]
             },
+            "allowedCommonJsDependencies": [
+              "lodash"
+            ],
             "scripts": []
           },
           "configurations": {

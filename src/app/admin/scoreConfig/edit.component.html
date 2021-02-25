@@ -2,9 +2,9 @@
   <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </h2>
 <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
-<form *ngIf="!processing && jsonScoreConfig" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
-  <div *ngIf="jsonScoreConfig.next" class="form-group row">
-    <label for="useNext" class="col-7 col-form-label">gebruik sets</label>
+<form *ngIf="!processing && originalScoreConfig" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+  <div *ngIf="originalScoreConfig.hasNext()" class="form-group row">
+    <label for="useNext" class="col-7 col-form-label">gebruik {{getNextPluralName()}}</label>
     <div class="col-5">
       <div class="form-control custom-control custom-switch">
         <input type="checkbox" class="custom-control-input" id="useNext" formControlName="useNext">
@@ -13,9 +13,8 @@
     </div>
   </div>
   <div *ngIf="form.value['useNext']" class="form-group row">
-    <label class="col-5 col-form-label">{{translateService.getScoreNamePlural(jsonScoreConfig.next)}}</label>
-    <label for="maxNext"
-      class="col-2 col-form-label text-right">{{translateService.getScoreDirection(jsonScoreConfig.next.direction)}}</label>
+    <label class="col-5 col-form-label">{{getNextPluralName()}}</label>
+    <label for="maxNext" class="col-2 col-form-label text-right">{{getNextDirectionName()}}</label>
     <div class="col-5">
       <input type="number" aria-describedby="zeroHelp"
         [ngClass]="{ 'is-invalid': form.controls.maxNext.invalid, 'is-valid': form.controls.maxNext.valid}"
@@ -24,14 +23,12 @@
     </div>
   </div>
   <div class="form-group row">
-    <label *ngIf="form.value['useNext']"
-      class="col-7 col-form-label">{{translateService.getScoreNamePlural(jsonScoreConfig)}} per
-      {{translateService.getScoreNameSingular(jsonScoreConfig.next)}}
+    <label *ngIf="form.value['useNext']" class="col-7 col-form-label">{{getPluralName()}} per
+      {{getNextSingularName()}}
     </label>
-    <label *ngIf="!form.value['useNext']"
-      class="col-5 col-form-label">{{translateService.getScoreNamePlural(jsonScoreConfig)}}</label>
+    <label *ngIf="!form.value['useNext']" class="col-5 col-form-label">{{getPluralName()}}</label>
     <label *ngIf="!form.value['useNext']" for="max"
-      class="col-2 col-form-label text-right">{{translateService.getScoreDirection(jsonScoreConfig.direction)}}</label>
+      class="col-2 col-form-label text-right">{{getDirectionName()}}</label>
     <div class="col-5">
       <input type="number" aria-describedby="zeroHelpNext"
         [ngClass]="{ 'is-invalid': form.controls.max.invalid, 'is-valid': form.controls.max.valid}"

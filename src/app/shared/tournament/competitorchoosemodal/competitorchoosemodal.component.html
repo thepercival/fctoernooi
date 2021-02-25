@@ -1,5 +1,7 @@
 <div class="modal-header border-bottom-0">
-    <h4 class="modal-title"><span>selecteer deelnemers</span></h4>
+    <h4 class="modal-title">
+        <fa-icon [icon]="['fas', 'users']"></fa-icon> <span> deelnemers selecteren</span>
+    </h4>
     <button type="button" class="close" aria-label="sluiten" (click)="activeModal.dismiss('close')">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -17,11 +19,12 @@
                         {{competitorListItem.competitor.getName()}}
                     </td>
                     <td class="text-right">
-                        <fa-icon
-                            class="text-{{competitorListItem.nrOtherLockerRooms > 0 ? 'warning' : 'primary'}} pointer"
-                            (click)="toggle(competitorListItem)"
-                            [icon]="['far',  (competitorListItem.selected ? 'check-' : '') + 'square']" size="2x">
-                        </fa-icon>
+                        <div class="custom-control custom-switch {{getSelectClass(competitorListItem)}}">
+                            <input type="checkbox" class="custom-control-input"
+                                id="{{getId(competitorListItem.competitor)}}" [checked]="competitorListItem.selected"
+                                (change)="toggle(competitorListItem)">
+                            <label class="custom-control-label" for="{{getId(competitorListItem.competitor)}}"></label>
+                        </div>
                     </td>
                 </tr>
                 <tr *ngIf="!competitorListItem.competitor">

@@ -32,6 +32,7 @@ import { map } from 'rxjs/operators';
 import { TogetherGamePlace } from 'ngx-sport/src/game/place/together';
 import { EqualQualifiersChecker } from '../../lib/ngx-sport/ranking/equalQualifiersChecker';
 import { JsonTogetherGamePlace } from 'ngx-sport/src/game/place/together/json';
+import { DateFormatter } from '../../lib/dateFormatter';
 
 @Component({
     selector: 'app-tournament-togethergame-edit',
@@ -59,8 +60,8 @@ export class GameTogetherEditComponent extends TournamentComponent implements On
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private gameRepository: GameRepository,
-        private scoreConfigMapper: ScoreConfigMapper,
         private mapper: GameMapper,
+        public dateFormatter: DateFormatter,
         private myNavigation: MyNavigation,
         fb: FormBuilder
     ) {

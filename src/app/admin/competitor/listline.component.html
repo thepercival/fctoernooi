@@ -4,27 +4,35 @@
   </button>
 </td>
 <td>
-  <span>{{nameService.getPlaceFromName(place, false)}}</span>
+  <span>{{nameService.getPlaceFromName(placeCompetitor.place, false)}}</span>
 </td>
-<td *ngIf="competitor && !showLockerRoomNotArranged">
-  <span [ngClass]="{ 'registered-xs': competitor.getRegistered() }">{{competitor.getName()}}</span>
+<td *ngIf="placeCompetitor.competitor">
+  <div class="d-flex justify-content-between">
+    {{placeCompetitor.competitor.getName()}}
+    <div>
+      <fa-icon *ngIf="showLockerRoomNotArranged" [icon]="['fas', 'door-closed']" class="pointer text-warning"
+        (click)="openInfoModal(popLockerRoom)"></fa-icon>
+      <fa-icon title="aangemeld" *ngIf="placeCompetitor.competitor.getRegistered()" [icon]="['fas', 'check-circle']"
+        class="text-success d-inline d-sm-none">
+      </fa-icon>
+    </div>
+  </div>
 </td>
-<!-- show tooltip -->
-<td *ngIf="competitor && showLockerRoomNotArranged" class="pointer" container="body" placement="top" autoClose="outside"
-  [ngbPopover]="popLockerRoom" #p="ngbPopover">
-  <span [ngClass]="{ 'registered-xs': competitor.getRegistered() }">{{competitor.getName()}}
-  </span>
-  <fa-icon [icon]="['fas', 'door-closed']" class="text-warning"></fa-icon>
-</td>
-<td *ngIf="!competitor">
+<td *ngIf="!placeCompetitor.competitor">
   <button #btnEdit type="button" class="btn btn-sm btn-outline-warning" (click)="edit()">vul een naam in</button>
 </td>
 <td class="text-center d-none d-sm-table-cell">
-  <label *ngIf="competitor" class="custom-control custom-checkbox col-form-label pointer pl-0">
+  <div *ngIf="placeCompetitor.competitor" class="custom-control custom-switch">
+    <input type="checkbox" class="custom-control-input" id="{{getSwitchId(placeCompetitor.place)}}"
+      [checked]="placeCompetitor.competitor.getRegistered()" (change)="register()">
+    <label class="custom-control-label" for="{{getSwitchId(placeCompetitor.place)}}"></label>
+  </div>
+
+  <!-- <label *ngIf="competitor" class="custom-control custom-checkbox col-form-label pointer pl-0">
     <input type="checkbox" class="custom-control-input form-check-input" [checked]="competitor.getRegistered()"
       (change)="register()">
     <span class="custom-control-indicator"></span>
-  </label>
+  </label> -->
 </td>
 <td *ngIf="!hasBegun" class="text-right"><button type="button" class="btn btn-sm btn-danger" (click)="remove()">
     <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>

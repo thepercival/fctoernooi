@@ -21,7 +21,7 @@
             <input class="form-control"
               [ngClass]="{ 'is-invalid': form.controls.initials.invalid, 'is-valid': form.controls.initials.valid }"
               type="text" formControlName="initials" placeholder="max. {{validations.maxlengthinitials}} karakters"
-              [focuMe]="referee === undefined">
+              [focuMe]="originalReferee === undefined">
           </div>
         </div>
         <div class="form-group row">
@@ -61,10 +61,10 @@
         <div class="form-group row">
           <div class="offset-3 col-9">
             <button [disabled]="form.invalid" type="submit" class="btn btn-primary mr-2 mt-4">
-              <app-tournament-icon name="referee"></app-tournament-icon> <span>{{referee ? 'wijzigen' :
+              <app-tournament-icon name="referee"></app-tournament-icon> <span>{{originalReferee ? 'wijzigen' :
                 'toevoegen'}}</span>
             </button>
-            <button *ngIf="!referee && form.controls.emailaddress.value" [disabled]="form.invalid" type="submit"
+            <button *ngIf="!originalReferee && form.controls.emailaddress.value" [disabled]="form.invalid" type="submit"
               class="btn btn-primary mt-4" (click)="addAndInvite=true">
               <app-tournament-icon name="referee"></app-tournament-icon> toevoegen & uitnodigen
             </button>

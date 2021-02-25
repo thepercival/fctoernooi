@@ -30,6 +30,7 @@ export class TournamentComponent {
     }
 
     setData(tournamentId: number | string, callback?: DataProcessCallBack, noStructure?: boolean) {
+        console.log('changeCompetitors123');
         this.tournamentRepository.getObject(tournamentId)
             .subscribe(
                 /* happy path */(tournament: Tournament) => {

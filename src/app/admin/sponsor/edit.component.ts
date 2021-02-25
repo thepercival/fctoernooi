@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, HostListener, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -12,6 +12,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
+import { EventEmitter } from 'keyv';
 
 @Component({
     selector: 'app-tournament-sponsor-edit',
@@ -29,7 +30,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
     logoInputUrl = 2;
     newLogoUploaded: boolean;
     private readonly LOGO_ASPECTRATIO_THRESHOLD = 0.34;
-    private originalSponsor: Sponsor | undefined;
+    public originalSponsor: Sponsor | undefined;
 
     validations: RefValidations = {
         minlengthname: Sponsor.MIN_LENGTH_NAME,
@@ -157,18 +158,18 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
             );
     }
 
-    onFileChange(event: { target: { files: string | any[]; }; }) {
-        if (event.target.files.length === 0) {
+    onFileChange(event: Event) {
+        const files: FileList | null = (<HTMLInputElement>event.target).files;
+        if (!files || files.length === 0) {
             return;
         }
-        const file = event.target.files[0];
+        const file = files[0];
         const mimeType = file.type;
         if (mimeType.match(/image\/*/) == null) {
             this.setAlert('danger', 'alleen plaatjes worden ondersteund');
             return;
         }
         const reader = new FileReader();
-        // const imagePath = event.target.files;
         reader.readAsDataURL(file);
         reader.onload = (_event) => {
             this.base64Logo = reader.result;
@@ -206,4 +207,8 @@ export interface RefValidations {
     minlengthname: number;
     maxlengthname: number;
     maxlengthurl: number;
+}
+
+interface HTMLInputEvent extends Event {
+    target: HTMLInputElement & EventTarget;
 }

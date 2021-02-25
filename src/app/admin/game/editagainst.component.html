@@ -34,7 +34,7 @@
             <label class="col-form-label">{{getFieldDescription()}}</label>
           </div>
           <div class="col-9">
-            <label class="col-form-label">{{game.getField().getName()}}</label>
+            <label class="col-form-label">{{game.getField()?.getName()}}</label>
           </div>
         </div>
 
@@ -45,7 +45,7 @@
           <div class="col-4 font-weight-bold text-break">
             {{nameService.getPlacesFromName(game.getHomePlaces(), true, true)}}
           </div>
-          <div class="col-1 homeAway-splitter">-</div>
+          <div class="col-1 side-splitter">-</div>
           <div class="col-4 font-weight-bold text-break">
             {{nameService.getPlacesFromName(game.getAwayPlaces(), true, true)}}</div>
         </div>
@@ -57,7 +57,7 @@
             <input [formControl]="scoreControl.home" (ngModelChange)="postScoreControlUpdate()"
               class="form-control max-width-100 {{scoreControl.getValidateClass()}}" type="number">
           </div>
-          <div class="col-1 homeAway-splitter">-</div>
+          <div class="col-1 side-splitter">-</div>
           <div class="col-4">
             <input [formControl]="scoreControl.away" (ngModelChange)="postScoreControlUpdate()"
               class="form-control max-width-100 {{scoreControl.getValidateClass()}}" type="number">
@@ -85,7 +85,7 @@
             <input [formControl]="calculateScoreControl.home"
               class="form-control max-width-100 {{calculateScoreControl.getValidateClass()}}" type="number">
           </div>
-          <div class="col-1 homeAway-splitter">-</div>
+          <div class="col-1 side-splitter">-</div>
           <div class="col-4">
             <input [formControl]="calculateScoreControl.away"
               class="form-control max-width-100 {{calculateScoreControl.getValidateClass()}}" type="number">

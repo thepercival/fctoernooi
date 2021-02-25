@@ -128,7 +128,7 @@ export class SportSelectComponent implements OnInit {
     }
 
     getGameModeClass(sport: Sport): string {
-        return sport.getGameMode() === GameMode.Against ? 'against' : 'together';
+        return 'custom-switch-' + (sport.getGameMode() === GameMode.Against ? 'against' : 'together');
     }
 
     translate(sport: Sport): string {

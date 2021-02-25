@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NameService, Competitor, Place, Round, RoundNumber, PlaceLocationMap } from 'ngx-sport';
+import { TournamentCompetitor } from '../../../lib/competitor';
 import { LockerRoom } from '../../../lib/lockerroom';
 import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
 
@@ -16,18 +17,18 @@ export class CompetitorChooseModalComponent implements OnInit {
     @Input() lockerRoom!: LockerRoom;
     @Input() selectedCompetitors: Competitor[] = [];
     public competitorListItems: CompetitorListItem[] = [];
-    public nameService: NameService;
-    public placeLocationMap: PlaceLocationMap;
+    public nameService!: NameService;
+    public placeLocationMap!: PlaceLocationMap;
     public changed = false;
 
     constructor(public activeModal: NgbActiveModal) {
-        this.placeLocationMap = new PlaceLocationMap(this.competitors);
-        this.nameService = new NameService(this.placeLocationMap);
     }
 
     ngOnInit() {
+        this.placeLocationMap = new PlaceLocationMap(this.competitors);
+        this.nameService = new NameService(this.placeLocationMap);
         this.places.forEach((place: Place) => {
-            const competitor = this.placeLocationMap.getCompetitor(place);
+            const competitor = <TournamentCompetitor>this.placeLocationMap.getCompetitor(place);
             this.competitorListItems.push({
                 placeName: this.nameService.getPlaceFromName(place, false),
                 competitor: competitor,
@@ -35,13 +36,22 @@ export class CompetitorChooseModalComponent implements OnInit {
                 nrOtherLockerRooms: this.validator.nrArranged(competitor, this.lockerRoom)
             });
         });
+        console.log(this.competitorListItems);
     }
 
     hasSelectableCompetitors(): boolean {
         return this.validator && this.validator.getCompetitors().length > 0;
     }
 
-    private isSelected(competitor?: Competitor): boolean {
+    getId(competitor: TournamentCompetitor): string {
+        return 'competitor-select-' + competitor.getId();
+    }
+
+    getSelectClass(competitorListItem: CompetitorListItem): string {
+        return competitorListItem.nrOtherLockerRooms > 0 ? 'custom-switch-warning' : ''
+    }
+
+    private isSelected(competitor?: TournamentCompetitor): boolean {
         return competitor !== undefined && this.selectedCompetitors.indexOf(competitor) >= 0;
     }
 
@@ -50,14 +60,14 @@ export class CompetitorChooseModalComponent implements OnInit {
         this.changed = true;
     }
 
-    getSelectedCompetitors(): Competitor[] {
+    getSelectedCompetitors(): TournamentCompetitor[] {
         return this.competitorListItems.filter(competitorListItem => competitorListItem.selected).map(competitorListItem => competitorListItem.competitor);
     }
 }
 
 interface CompetitorListItem {
     placeName: string;
-    competitor: Competitor;
+    competitor: TournamentCompetitor;
     selected: boolean;
     nrOtherLockerRooms: number;
 }

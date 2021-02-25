@@ -49,7 +49,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
                 Validators.minLength(this.validations.minlengthname),
                 Validators.maxLength(this.validations.maxlengthname)
             ])],
-            registered: [''],
+            registered: false,
             info: ['', Validators.compose([
                 Validators.maxLength(this.validations.maxlengthinfo)
             ])],
@@ -81,10 +81,6 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         const competitor = this.tournament.getCompetitors().find(competitorIt => {
             return competitorIt.getPouleNr() === pouleNr && competitorIt.getPlaceNr() === placeNr;
         });
-        if (competitor === undefined) {
-            this.setAlert('danger', 'de deelnemer kan niet gevonden worden');
-            return;
-        }
         this.originalCompetitor = competitor;
         this.form.controls.name.setValue(this.originalCompetitor?.getName());
         this.form.controls.registered.setValue(this.originalCompetitor ? this.originalCompetitor.getRegistered() : false);

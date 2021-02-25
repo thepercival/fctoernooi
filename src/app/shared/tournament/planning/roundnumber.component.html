@@ -252,26 +252,35 @@
 <ng-template #scoreInfo let-modal>
   <ng-template ngFor let-scoreConfig [ngForOf]="getUniqueScoreConfigs()">
     <h2>{{scoreConfig.getSport().getName()}}</h2>
-    <ul class="list-group">
-      <li *ngIf="scoreConfig.hasNext() && scoreConfig.getNext().getEnabled()" class="list-group-item border-info">
-        <span *ngIf="scoreConfig.getNext().getMaximum() === 0">behaal zoveel mogelijk
-          {{translate.getScoreNamePlural(scoreConfig.getNext())}}</span>
-        <span *ngIf="scoreConfig.getNext().getMaximum() > 0">wie het eerst {{scoreConfig.getNext().getMaximum()}}
-          {{translate.getScoreNamePlural(scoreConfig.getNext())}} heeft behaald</span>
+
+    <ul *ngIf="scoreConfig.getNext()?.getEnabled()" class="list-group">
+      <ng-container *ngTemplateOutlet="withNext; context: {$implicit: scoreConfig.getNext()}"></ng-container>
+    </ul>
+    <ul *ngIf="!scoreConfig.hasNext()" class="list-group">
+      <ng-container *ngTemplateOutlet="single"></ng-container>
+    </ul>
+
+    <ng-template #withNext let-next>
+      <li class="list-group-item border-info">
+        <span *ngIf="next.getMaximum() === 0">behaal zoveel mogelijk
+          {{translate.getScoreNamePlural(next)}}</span>
+        <span *ngIf="next.getMaximum() > 0">wie het eerst {{next.getMaximum()}}
+          {{translate.getScoreNamePlural(next)}} heeft behaald</span>
         <span *ngIf="planningConfig.getEnableTime()"> binnen de tijd</span>
       </li>
-      <li *ngIf="scoreConfig.hasNext() && scoreConfig.getNext().getEnabled()" class="list-group-item border-info">
-        <span>per
-          {{translate.getScoreNameSingular(scoreConfig.getNext())}} moet(en) er
+      <li class="list-group-item border-info">
+        <span>per {{translate.getScoreNameSingular(next)}} moet(en) er
           {{scoreConfig.getMaximum()}} {{translate.getScoreNamePlural(scoreConfig)}} worden behaald</span>
       </li>
-      <li *ngIf="!scoreConfig.hasNext() || !scoreConfig.getNext()?.getEnabled()" class="list-group-item border-info">
+    </ng-template>
+    <ng-template #single>
+      <li class="list-group-item border-info">
         <span *ngIf="scoreConfig.getMaximum() === 0">behaal zoveel mogelijk
           {{translate.getScoreNamePlural(scoreConfig)}}</span>
         <span *ngIf="scoreConfig.getMaximum() > 0">wie het eerst {{scoreConfig.getMaximum()}}
           {{translate.getScoreNamePlural(scoreConfig)}} heeft behaald</span>
         <span *ngIf="planningConfig.getEnableTime()"> binnen de tijd</span>
       </li>
-    </ul>
+    </ng-template>
   </ng-template>
 </ng-template>

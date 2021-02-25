@@ -6,7 +6,7 @@
       <h2>
         <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
       </h2>
-      <button *ngIf="!processing && places && !hasBegun && atLeastTwoPlaceHaveCompetitor()" type="button"
+      <button *ngIf="!processing && !hasBegun && atLeastTwoPlacesHaveACompetitor()" type="button"
         class="btn btn-sm mr-0" [ngClass]="{ 'btn-outline-secondary': !orderMode, 'btn-outline-primary': orderMode }"
         (click)="toggleView()">
         <fa-icon [icon]="['fas', 'random']"></fa-icon> volgorde
@@ -16,10 +16,11 @@
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
 
-    <ngb-alert [ngClass]="{ invisible: !alert}" class="m-0" [type]="alert?.type" [dismissible]="false">
-      {{ alert?.message }}</ngb-alert>
+    <ngb-alert [ngClass]="{ invisible: !alert}" class="m-0" [type]="alertType()" [dismissible]="false">
+      {{alertMessage()}}
+    </ngb-alert>
 
-    <table *ngIf="!processing && places && !orderMode" class="table">
+    <table *ngIf="!processing && !orderMode" class="table">
       <thead>
         <tr>
           <th></th>
@@ -33,42 +34,43 @@
         </tr>
       </thead>
       <tbody>
-        <app-tournament-competitor-line *ngFor="let place of places" [place]="place"
-          [showLockerRoomNotArranged]="showLockerRoomNotArranged(this.getCompetitor(place))" [hasBegun]="hasBegun"
-          [competitor]="this.getCompetitor(place)" [nameService]="nameService" [focus]="place.getId() === focusId"
-          (editPressed)="editPlace($event)" (removePressed)="preRemove($event)"
-          (registerPressed)="registerCompetitor($event)" (toLockerRooms)="linkToLockerRooms()">
+        <app-tournament-competitor-line *ngFor="let item of placeCompetitorItems" [placeCompetitor]="item"
+          [showLockerRoomNotArranged]="showLockerRoomNotArranged(item.competitor)" [hasBegun]="hasBegun"
+          [nameService]="nameService" [focus]="item.place.getId() === focusId" (editPressed)="editPlace($event)"
+          (removePressed)="preRemove($event)" (registerPressed)="registerCompetitor($event)"
+          (toLockerRooms)="linkToLockerRooms()">
         </app-tournament-competitor-line>
       </tbody>
     </table>
 
-    <table *ngIf="!processing && places && orderMode" class="table">
+    <table *ngIf="!processing && orderMode" class="table">
       <thead>
         <th>plek</th>
         <th>naam</th>
         <th class="text-center">
-          <button *ngIf="allPlaceHaveCompetitor()" type="button" class="btn btn-sm btn-outline-primary"
-            (click)="swapAll()" [disabled]="processing || swapPlace" title="willekeurige volgorde">
+          <button *ngIf="allPlacesHaveACompetitor()" type="button" class="btn btn-sm btn-outline-primary"
+            (click)="swapAll()" [disabled]="processing || swapItem" title="willekeurige volgorde">
             <fa-icon [icon]="['fas', 'random']"></fa-icon> willekeurig
           </button>
-          <fa-icon *ngIf="!hasBegun && !allPlaceHaveCompetitor()" title="volgorder omwisselen" [icon]="['fas', 'sort']">
+          <fa-icon *ngIf="!hasBegun && !allPlacesHaveACompetitor()" title="volgorder omwisselen"
+            [icon]="['fas', 'sort']">
           </fa-icon>
         </th>
       </thead>
       <tbody>
-        <tr *ngFor="let place of places">
+        <tr *ngFor="let item of placeCompetitorItems">
           <td>
-            <span>{{nameService.getPlaceFromName(place, false)}}</span>
+            <span>{{nameService.getPlaceFromName(item.place, false)}}</span>
           </td>
           <td>
-            <span *ngIf="getCompetitor(place)"
-              [ngClass]="{ 'registered-xs': getCompetitor(place).getRegistered() }">{{getCompetitor(place).getName()}}</span>
+            <span *ngIf="item.competitor">{{item.competitor.getName()}}</span>
           </td>
           <td class="text-center">
-            <fa-icon *ngIf="getCompetitor(place)" class="text-primary pointer" (click)="swapTwo(place)"
-              [icon]="['far', (swapPlace === place ? 'check-' : '') + 'square']" size="2x" popoverClass="popover-small"
-              container="body" ngbPopover="selecteer tweede deelnemer
-              om ze te wisselen van plaats"></fa-icon>
+            <div *ngIf="item.competitor" class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="{{getSwapSwitchId(item.place)}}"
+                (change)="swapTwo(item)">
+              <label class="custom-control-label" for="{{getSwapSwitchId(item.place)}}"></label>
+            </div>
           </td>
         </tr>
       </tbody>

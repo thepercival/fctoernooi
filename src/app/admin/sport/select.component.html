@@ -34,11 +34,10 @@
             <span>{{translate(sport)}}</span>
             <small *ngIf="sport.getGameMode() === Against"> (tegen elkaar)</small>
           </label>
-          <div class="custom-control custom-switch custom-switch-{{getGameModeClass(sport)}}">
+          <div class="custom-control custom-switch {{getGameModeClass(sport)}}">
             <input type="checkbox" class="custom-control-input" id="sport-{{sport.getId()}}"
               formControlName="sport-{{sport.getId()}}">
-            <label class="custom-control-label " for="sport-{{sport.getId()}}"
-              [ngClass]="{ 'custom-control-label-warning': hasOtherGameMode(sport) }"></label>
+            <label class="custom-control-label " for="sport-{{sport.getId()}}"></label>
           </div>
         </div>
       </li>

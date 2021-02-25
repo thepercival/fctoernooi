@@ -13,6 +13,7 @@ import {
     CompetitionSport,
     Round,
     ScoreConfigMapper,
+    CompetitionSportMapper,
 } from 'ngx-sport';
 import { CSSService } from '../../shared/common/cssservice';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -39,7 +40,7 @@ export class ScoreConfigEditComponent implements OnInit {
     public form: FormGroup;
     public translateService: TranslateService;
     protected toggleRound!: ToggleRound;
-    jsonScoreConfig!: JsonScoreConfig;
+    public originalScoreConfig!: ScoreConfig;
     readonly: boolean = true;
 
     validations: ScoreValidations = {
@@ -51,7 +52,7 @@ export class ScoreConfigEditComponent implements OnInit {
     constructor(
         private scoreConfigRepository: ScoreConfigRepository,
         public cssService: CSSService,
-        // public sportConfigService: SportConfigService,
+        public competitionSportMapper: CompetitionSportMapper,
         private mapper: ScoreConfigMapper,
         fb: FormBuilder,
         private modalService: NgbModal
@@ -79,6 +80,7 @@ export class ScoreConfigEditComponent implements OnInit {
                 return round.getScoreConfig(competitionSport);
             });
         this.toggleRound = toggleRoundInittializer.createToggleRound(this.structure.getRootRound());
+        this.originalScoreConfig = this.toggleRound.round.getValidScoreConfig(this.competitionSport);
         this.postToggleRoundChange();
     }
 
@@ -96,8 +98,10 @@ export class ScoreConfigEditComponent implements OnInit {
         } else if (this.someSelectedToggleRoundsBegun(this.toggleRound)) {
             this.alert = { type: 'warning', message: 'er zijn wedstrijden gespeeld voor sommige gekozen ronden, de score-regels hiervoor worden niet opgeslagen' };
         }
-        this.jsonScoreConfig = this.getInputJson(this.getFirstSelectedToggleRound(this.toggleRound).round);
-        this.jsonToForm();
+
+        const scoreConfigInit = this.getFirstSelectedToggleRound(this.toggleRound).round.getValidScoreConfig(this.competitionSport);
+        // this.jsonScoreConfig = this.getInputJson(this.getFirstSelectedToggleRound(this.toggleRound).round);
+        this.initForm(scoreConfigInit);
     }
 
     /**
@@ -111,12 +115,13 @@ export class ScoreConfigEditComponent implements OnInit {
         return this.mapper.toJson(scoreConfig);
     }
 
-    protected jsonToForm() {
-        this.form.controls.max.setValue(this.jsonScoreConfig.maximum);
-        if (this.jsonScoreConfig.next) {
-            this.form.controls.useNext.setValue(this.jsonScoreConfig.next.enabled);
+    protected initForm(scoreConfigInit: ScoreConfig) {
+        this.form.controls.max.setValue(scoreConfigInit.getMaximum());
+        const next = scoreConfigInit.getNext();
+        if (next) {
+            this.form.controls.useNext.setValue(next.getEnabled());
             this.form.addControl('maxNext', new FormControl(
-                this.jsonScoreConfig.next.maximum,
+                next.getMaximum(),
                 Validators.compose([
                     Validators.required,
                     Validators.min(this.validations.minScore),
@@ -127,12 +132,27 @@ export class ScoreConfigEditComponent implements OnInit {
         this.processing = false;
     }
 
-    protected formToJson() {
-        this.jsonScoreConfig.maximum = this.form.value['max'];
-        if (this.form.controls.maxNext !== undefined && this.jsonScoreConfig.next) {
-            this.jsonScoreConfig.next.maximum = this.form.value['maxNext'];
-            this.jsonScoreConfig.next.enabled = this.form.value['useNext'];
+    protected formToJson(): JsonScoreConfig {
+        const jsonCompetitionSport = this.competitionSportMapper.toJson(this.competitionSport);
+        const json: JsonScoreConfig = {
+            id: 0,
+            competitionSport: jsonCompetitionSport,
+            direction: this.originalScoreConfig.getDirection(),
+            maximum: this.form.controls.max.value,
+            enabled: true,
+            isFirst: true,
+        };
+        if (this.form.controls.maxNext !== undefined && this.originalScoreConfig.hasNext()) {
+            json.next = {
+                id: 0,
+                competitionSport: jsonCompetitionSport,
+                direction: this.originalScoreConfig.getDirection(),
+                maximum: this.form.value['maxNext'],
+                enabled: this.form.value['useNext'],
+                isFirst: false
+            };
         }
+        return json;
     }
 
     onChanges(): void {
@@ -191,10 +211,35 @@ export class ScoreConfigEditComponent implements OnInit {
         return selected;
     }
 
+    getPluralName(): string {
+        const next = this.originalScoreConfig.getNext();
+        return this.translateService.getScoreNamePlural(this.originalScoreConfig);
+    }
+
+    getNextPluralName(): string {
+        const next = this.originalScoreConfig.getNext();
+        return next ? this.translateService.getScoreNamePlural(next) : '';
+    }
+
+    getDirectionName(): string {
+        const next = this.originalScoreConfig.getNext();
+        return this.translateService.getScoreDirection(this.originalScoreConfig.getDirection());
+    }
+
+    getNextDirectionName(): string {
+        const next = this.originalScoreConfig.getNext();
+        return next ? this.translateService.getScoreDirection(next.getDirection()) : '';
+    }
+
+    getNextSingularName(): string {
+        const next = this.originalScoreConfig.getNext();
+        return next ? this.translateService.getScoreNameSingular(next) : '';
+    }
+
     save(): boolean {
         this.alert = undefined;
         this.processing = true;
-        this.formToJson();
+        const jsonScoreConfig: JsonScoreConfig = this.formToJson();
 
         const toggleRoundConverter = new ToggleRoundConverter();
         const roundsSelection = toggleRoundConverter.createRoundsSelection(this.toggleRound);
@@ -203,13 +248,12 @@ export class ScoreConfigEditComponent implements OnInit {
         const validScoreConfigs: ValidScoreConfigOfUnchangedChildRound[] = [];
         roundsSelection.unchangedDescendants.forEach((unchangedChildRound: Round) => {
             const scoreConfig = unchangedChildRound.getValidScoreConfig(this.competitionSport);
-            const jsonScoreConfig = this.mapper.toJson(scoreConfig);
-            validScoreConfigs.push({ unchangedChildRound, scoreConfig: jsonScoreConfig });
+            validScoreConfigs.push({ unchangedChildRound, scoreConfig: this.mapper.toJson(scoreConfig) });
         });
 
         // 2 verwijder en voeg de scoreregels toe van de rootRounds
         const reposUpdates: Observable<ScoreConfig>[] = roundsSelection.rootRounds.map((round: Round) => {
-            return this.scoreConfigRepository.saveObject(this.jsonScoreConfig, round, this.tournament);
+            return this.scoreConfigRepository.saveObject(jsonScoreConfig, round, this.tournament);
         });
         forkJoin(reposUpdates).subscribe(results => {
             if (validScoreConfigs.length === 0) {

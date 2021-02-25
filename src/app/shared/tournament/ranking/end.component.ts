@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { EndRankingService, EndRankingItem, Structure, Competitor } from 'ngx-sport';
+import { EndRankingService, EndRankingItem, Structure, Competitor, PlaceLocation, PlaceLocationMap } from 'ngx-sport';
 import { VoetbalRange } from 'ngx-sport';
 
 @Component({
@@ -10,6 +10,7 @@ import { VoetbalRange } from 'ngx-sport';
 export class EndRankingComponent implements OnInit, OnChanges {
 
   @Input() structure!: Structure;
+  @Input() placeLocationMap!: PlaceLocationMap;
   @Input() favorites!: Competitor[];
   @Input() range: VoetbalRange | undefined;
   public items: EndRankingItem[] = [];
@@ -44,7 +45,20 @@ export class EndRankingComponent implements OnInit, OnChanges {
     return 'text-' + (rank === 1 ? 'gold' : (rank === 2 ? 'silver' : 'bronze'));
   }
 
-  isFavorite(competitorName: string) {
-    return this.favorites && this.favorites.some(competitor => competitor.getName() === competitorName);
+  isFavorite(endRankingItem: EndRankingItem): boolean {
+    const placeLocation = endRankingItem.getStartPlaceLocation();
+    if (placeLocation === undefined) {
+      return false;
+    }
+    const competitor = this.placeLocationMap.getCompetitor(placeLocation);
+    return this.favorites && this.favorites.some(competitorIt => competitorIt === competitor);
+  }
+
+  getName(endRankingItem: EndRankingItem): string {
+    const placeLocation = endRankingItem.getStartPlaceLocation();
+    if (placeLocation === undefined) {
+      return '';
+    }
+    return this.placeLocationMap.getCompetitor(placeLocation).getName();
   }
 }

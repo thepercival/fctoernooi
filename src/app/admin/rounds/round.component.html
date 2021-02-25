@@ -5,7 +5,7 @@
       <div class="card-header px-1 text-center form-group">
         <div class="custom-control custom-switch">
           <input type="checkbox" class="custom-control-input" [id]="getCustomSwitchId()" formControlName="selected"
-            (ngModelChange)="toggleSelection($event)">
+            (ngModelChange)="toggleSelection()">
           <label class="custom-control-label" [for]="getCustomSwitchId()"><span class="lead"
               [innerHTML]="nameService.getRoundName( toggleRound.round ) | keepHtml"></span></label>
           <fa-icon *ngIf="hasOwnConfig2()" class="ml-1" [icon]="['fas', 'cogs']"></fa-icon>

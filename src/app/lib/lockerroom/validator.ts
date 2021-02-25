@@ -21,6 +21,10 @@ export class LockerRoomValidator {
         return this.competitors.length > 0 && this.competitors.some(competitor => this.isArranged(competitor));
     }
 
+    areSomeUnarranged(): boolean {
+        return this.competitors.some(competitor => !this.isArranged(competitor));
+    }
+
     isArranged(competitor: Competitor): boolean {
         return this.lockerRooms.some(lockerRoom => lockerRoom.hasCompetitor(competitor));
     }

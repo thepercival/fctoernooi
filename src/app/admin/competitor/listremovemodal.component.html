@@ -36,27 +36,26 @@
         (click)="activeModal.close('to-structure')">naar
         <app-tournament-icon name="structure"></app-tournament-icon> opzet
     </button>
-    <button *ngIf="competitor" type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+    <button *ngIf="item.competitor" type="button" class="btn btn-outline-secondary" data-dismiss="modal"
         (click)="activeModal.close('remove-competitor')">
         <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon> <span> deelnemer</span>
         <span class="d-none d-sm-inline"> verwijderen</span>
     </button>
-    <button *ngIf="competitor === undefined" type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+    <button *ngIf="item.competitor === undefined" type="button" class="btn btn-outline-secondary" data-dismiss="modal"
         (click)="activeModal.close('close')">sluiten</button>
 </div>
 
 <div *ngIf="!hasMinimumNrOfPlacesPerPoule() && !allCompetitorsQualifyForNextRound()"
     class="modal-footer justify-content-around">
-    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
-        (click)="activeModal.close('remove-place')">
+    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="activeModal.close('remove-place')">
         <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon><span> pouleplek</span>
         <span class="d-none d-sm-inline"> verwijderen</span>
     </button>
-    <button *ngIf="competitor" type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+    <button *ngIf="item.competitor" type="button" class="btn btn-danger" data-dismiss="modal"
         (click)="activeModal.close('remove-competitor')">
         <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon> <span> deelnemer</span>
         <span class="d-none d-sm-inline"> verwijderen</span>
     </button>
-    <button *ngIf="competitor === undefined" type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+    <button *ngIf="item.competitor === undefined" type="button" class="btn btn-outline-secondary" data-dismiss="modal"
         (click)="activeModal.close('close')">sluiten</button>
 </div>

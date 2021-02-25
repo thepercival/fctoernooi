@@ -60,7 +60,6 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private gameRepository: GameRepository,
-        private scoreConfigMapper: ScoreConfigMapper,
         private mapper: GameMapper,
         public dateFormatter: DateFormatter,
         private myNavigation: MyNavigation,
@@ -142,7 +141,7 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
             description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
         }
         const translate = new TranslateService();
-        return description + translate.getScoreNamePlural(this.scoreConfigMapper.toJson(scoreConfig));
+        return description + translate.getScoreNamePlural(scoreConfig);
     }
 
     // getFieldDescription(): string {
@@ -156,7 +155,7 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
             description = 'eerste bij ' + this.firstScoreConfig.getMaximum() + ' ';
         }
         const translate = new TranslateService();
-        return description + translate.getScoreNamePlural(this.scoreConfigMapper.toJson(this.firstScoreConfig));
+        return description + translate.getScoreNamePlural(this.firstScoreConfig);
     }
 
     aScoreIsInvalid() {

@@ -19,7 +19,7 @@ import {
   GameMode,
   TogetherGame,
   CompetitionSport,
-  HomeOrAway
+  AgainstSide
 } from 'ngx-sport';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -46,7 +46,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   @Input() tournament!: Tournament;
   @Input() roundNumber!: RoundNumber;
   @Input() userRefereeId: number | string | undefined;
-  @Input() reload: boolean = false;
+  @Input() reload: boolean | undefined;
   @Input() roles: number = 0;
   @Input() favorites!: Favorites;
   @Input() refreshingData: boolean = false;
@@ -117,13 +117,14 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
 
   private reloadGameData() {
     this.gameDatas = this.getGameData();
+    console.log(this.gameDatas);
     this.sameDay = this.gameDatas.length > 1 ? this.isSameDay(this.gameDatas[0], this.gameDatas[this.gameDatas.length - 1]) : true;
   }
 
   get GameModeAgainst(): GameMode { return GameMode.Against; }
   get GameModeTogether(): GameMode { return GameMode.Together; }
-  get Home(): HomeOrAway { return AgainstGame.Home; }
-  get Away(): HomeOrAway { return AgainstGame.Away; }
+  get Home(): AgainstSide { return AgainstSide.Home; }
+  get Away(): AgainstSide { return AgainstSide.Away; }
   get SportConfigTabFields(): number { return CompetitionSportTab.Fields; }
   get SportConfigTabScore(): number { return CompetitionSportTab.Score; }
 
@@ -353,7 +354,7 @@ interface GameData {
   hasACompetitor: boolean;
   poule: PouleData;
   hasPopover: boolean;
-  game: Game;
+  game: AgainstGame | TogetherGame;
   break: Period | undefined;
 }
 

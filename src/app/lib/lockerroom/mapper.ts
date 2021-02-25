@@ -17,22 +17,23 @@ export class LockerRoomMapper {
             lockerRoom = new LockerRoom(tournament, json.name);
         }
         lockerRoom.setId(json.id);
-        json.competitorIds.forEach(competitorId => {
-            const competitor = tournament.getCompetitors().find((competitorIt: TournamentCompetitor) => {
-                return competitorIt.getId() === competitorId;
+        if (json.competitorIds) {
+            json.competitorIds.forEach(competitorId => {
+                const competitor = tournament.getCompetitors().find((competitorIt: TournamentCompetitor) => {
+                    return competitorIt.getId() === competitorId;
+                });
+                if (lockerRoom && competitor) {
+                    lockerRoom.getCompetitors().push(competitor);
+                }
             });
-            if (lockerRoom && competitor) {
-                lockerRoom.getCompetitors().push(competitor);
-            }
-        });
+        }
         return lockerRoom;
     }
 
     toJson(lockerRoom: LockerRoom): JsonLockerRoom {
         return {
             id: lockerRoom.getId(),
-            name: lockerRoom.getName(),
-            competitorIds: lockerRoom.getCompetitors().map(competitor => +competitor.getId())
+            name: lockerRoom.getName()
         };
     }
 }

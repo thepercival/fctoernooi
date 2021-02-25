@@ -26,7 +26,8 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let game of screen.getGames()" [ngClass]="{ 'batch-striped-row': (game.getBatchNr() % 2) === 0 }">
+      <!-- TODOSPORTS-->
+      <!-- <tr *ngFor="let game of screen.getGames()" [ngClass]="{ 'batch-striped-row': (game.getBatchNr() % 2) === 0 }">
         <td class="d-none d-xl-table-cell">
           <span [innerHtml]="getRoundAbbreviation(game.getRound()) | keepHtml"></span>
         </td>
@@ -49,7 +50,7 @@
           <span>{{nameService.getPlacesFromName(game.getAwayPlaces(),true,true)}}</span>
         </td>
         <td *ngIf="isCreatedAndInplay() && hasReferees()" class="text-right">{{nameService.getRefereeName(game)}}</td>
-      </tr>
+      </tr> -->
     </tbody>
   </table>
 </div>

@@ -5,15 +5,12 @@ import {
   Competitor,
   NameService,
   Place,
-  PlaceLocation,
   Structure,
   PlaceLocationMap,
-  StructureService,
-  JsonCompetitor
+  StructureService
 } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
 
-import { IAlert } from '../../shared/common/alert';
 import { MyNavigation } from '../../shared/common/navigation';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -32,14 +29,13 @@ import { CompetitorMapper } from '../../lib/competitor/mapper';
   styleUrls: ['./list.component.scss']
 })
 export class CompetitorListComponent extends TournamentComponent implements OnInit, AfterViewChecked {
-  places: Place[] = [];
-  swapPlace: Place | undefined;
+  public placeCompetitorItems: PlaceCompetitorItem[] = [];
+  swapItem: PlaceCompetitorItem | undefined;
   focusId!: number | string;
   orderMode = false;
   hasBegun!: boolean;
   lockerRoomValidator!: LockerRoomValidator;
   areSomeCompetitorsArranged!: boolean;
-  private placeLocationMap!: PlaceLocationMap
   public nameService!: NameService;
 
   constructor(
@@ -60,28 +56,31 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   ngOnInit() {
     super.myNgOnInit(() => {
       const competitors = this.tournament.getCompetitors();
-      this.placeLocationMap = new PlaceLocationMap(competitors);
-      this.nameService = new NameService(this.placeLocationMap);
-      this.initPlaces();
+      const placeLocationMap = new PlaceLocationMap(competitors);
+      this.nameService = new NameService(placeLocationMap);
       this.lockerRoomValidator = new LockerRoomValidator(competitors, this.tournament.getLockerRooms());
       this.areSomeCompetitorsArranged = this.lockerRoomValidator.areSomeArranged(); // caching
+      this.placeCompetitorItems = this.getPlaceCompetitorItems();
+      this.initFocus(placeLocationMap);
+      this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
+      this.processing = false;
     });
   }
 
-  initPlaces() {
-    const round = this.structure.getRootRound();
-    round.getPlaces().forEach(place => {
-      if (!this.hasCompetitor(place) && this.focusId === undefined) {
-        this.focusId = place.getId();
-      }
-    });
-    this.places = round.getPlaces();
-    this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
-    this.processing = false;
-  }
+  alertType(): string { return this.alert?.type ?? 'danger' }
+  alertMessage(): string { return this.alert?.message ?? '' }
 
   ngAfterViewChecked() {
     this.myNavigation.scroll();
+  }
+
+  initFocus(placeLocationMap: PlaceLocationMap) {
+    this.structure.getRootRound().getPlaces().some(place => {
+      if (placeLocationMap.getCompetitor(place) === undefined) {
+        this.focusId = place.getId();
+      }
+      return this.focusId === undefined;
+    });
   }
 
   toggleView() {
@@ -89,24 +88,29 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.resetAlert();
   }
 
-  getCompetitor(place: Place): TournamentCompetitor {
-    return <TournamentCompetitor>this.placeLocationMap.getCompetitor(place);
+  getPlaceCompetitorItems(): PlaceCompetitorItem[] {
+    const placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
+    return this.structure.getRootRound().getPlaces().map((place: Place): PlaceCompetitorItem => {
+      return { place, competitor: <TournamentCompetitor>placeLocationMap.getCompetitor(place) };
+    });
   }
 
-  private hasCompetitor(place: Place): boolean {
-    return this.getCompetitor(place) === undefined;
+  allPlacesHaveACompetitor(): boolean {
+    return this.placeCompetitorItems.every((item: PlaceCompetitorItem) => item.competitor !== undefined);
   }
 
-  allPlaceHaveCompetitor() {
-    return !this.places.some(place => !this.hasCompetitor(place));
+  atLeastTwoPlacesHaveACompetitor(): boolean {
+    let firstCompetitor: TournamentCompetitor | undefined;
+    return this.placeCompetitorItems.some((item: PlaceCompetitorItem) => {
+      if (firstCompetitor === undefined) {
+        firstCompetitor = item.competitor;
+      }
+      return firstCompetitor !== undefined && item.competitor !== undefined && firstCompetitor !== item.competitor;
+    });
   }
 
-  atLeastTwoPlaceHaveCompetitor() {
-    return this.places.filter(place => this.hasCompetitor(place)).length >= 2;
-  }
-
-  showLockerRoomNotArranged(competitor: Competitor): boolean {
-    return this.areSomeCompetitorsArranged && !this.lockerRoomValidator.isArranged(competitor);
+  showLockerRoomNotArranged(competitor: Competitor | undefined): boolean {
+    return competitor !== undefined && this.areSomeCompetitorsArranged && !this.lockerRoomValidator.isArranged(competitor);
   }
 
   editPlace(place: Place) {
@@ -125,65 +129,65 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     );
   }
 
-  swapTwo(swapPlaceTwo: Place) {
+  swapTwo(secondSwapItem: PlaceCompetitorItem) {
     this.resetAlert();
-    if (this.swapPlace === undefined) {
-      this.swapPlace = swapPlaceTwo;
+    if (this.swapItem === undefined) {
+      this.swapItem = secondSwapItem;
       return;
     }
-    if (this.swapPlace === swapPlaceTwo) {
-      this.swapPlace = undefined;
+    if (this.swapItem === secondSwapItem) {
+      this.swapItem = undefined;
+      return;
+    }
+    const swapCompetitorOne = this.swapItem.competitor;
+    const swapCompetitorTwo = secondSwapItem.competitor;
+    if (!swapCompetitorOne || !swapCompetitorTwo) {
       return;
     }
     this.processing = true;
     this.setAlert('info', 'volgorde wordt gewijzigd');
-    const swapCompetitor = <TournamentCompetitor>this.placeLocationMap.getCompetitor(this.swapPlace);
-    const swapCompetitorTwo = <TournamentCompetitor>this.placeLocationMap.getCompetitor(swapPlaceTwo);
-    const reposUpdates: Observable<Competitor>[] = this.getSwapReposUpdates(swapCompetitor, swapCompetitorTwo);
-    this.swapHelper(reposUpdates);
+    this.swapHelper(
+      [this.competitorRepository.swapObjects(swapCompetitorOne, swapCompetitorTwo, this.tournament)]);
   }
 
   swapAll() {
     this.processing = true;
     this.setAlert('info', 'volgorde wordt willekeurig gewijzigd');
 
-    let reposUpdates: Observable<Competitor>[] = [];
-    const competitors = this.tournament.getCompetitors();
-    let swapCompetitor;
+    let reposUpdates: Observable<void>[] = [];
+    const competitors = this.tournament.getCompetitors().slice();
+    let swapCompetitor: TournamentCompetitor | undefined;
     while (competitors.length > 1) {
-      const idx = Math.floor(Math.random() * competitors.length) + 1;
-      if (swapCompetitor) {
-        reposUpdates = reposUpdates.concat(this.getSwapReposUpdates(swapCompetitor, competitors[idx]));
-        swapCompetitor = undefined;
-      } else {
-        swapCompetitor = competitors[idx];
+      if (swapCompetitor === undefined) {
+        swapCompetitor = competitors.shift();
+        continue;
       }
+      console.log('competitors.length', competitors.length);
+      const idx = this.getRandomInt(competitors.length);
+      console.log('idx', idx);
+      console.log('swapCompetitor', swapCompetitor);
+
+      reposUpdates.push(this.competitorRepository.swapObjects(swapCompetitor, competitors[idx], this.tournament));
+      swapCompetitor = undefined;
     }
     this.swapHelper(reposUpdates);
   }
 
-  protected getSwapReposUpdates(competitorOne: TournamentCompetitor, competitorTwo: TournamentCompetitor): Observable<Competitor>[] {
-    const jsonCompetitorOne = this.mapper.toJson(competitorOne);
-    const jsonCompetitorTwo = this.mapper.toJson(competitorTwo);
-    jsonCompetitorOne.pouleNr = competitorTwo.getPouleNr();
-    jsonCompetitorTwo.pouleNr = competitorOne.getPouleNr();
-    jsonCompetitorOne.placeNr = competitorTwo.getPlaceNr();
-    jsonCompetitorTwo.placeNr = competitorOne.getPlaceNr();
-    return [
-      this.competitorRepository.editObject(jsonCompetitorOne, competitorOne, this.tournament),
-      this.competitorRepository.editObject(jsonCompetitorTwo, competitorTwo, this.tournament)
-    ];
+  private getRandomInt(max: number): number {
+    return Math.floor(Math.random() * Math.floor(max));
   }
 
-  protected swapHelper(reposUpdates: Observable<Competitor>[]) {
+  protected swapHelper(reposUpdates: Observable<void>[]) {
     forkJoin(reposUpdates).subscribe(results => {
       this.setAlert('success', 'volgorde gewijzigd');
-      this.swapPlace = undefined;
+      this.swapItem = undefined;
+      this.placeCompetitorItems = this.getPlaceCompetitorItems();
       this.processing = false;
     },
       err => {
         this.setAlert('danger', 'volgorde niet gewijzigd: ' + err);
-        this.swapPlace = undefined;
+        this.swapItem = undefined;
+        this.placeCompetitorItems = this.getPlaceCompetitorItems();
         this.processing = false;
       }
     );
@@ -201,17 +205,16 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     }
   }
 
-  preRemove(place: Place) {
+  preRemove(item: PlaceCompetitorItem) {
     const activeModal = this.modalService.open(CompetitorListRemoveModalComponent);
-    activeModal.componentInstance.place = place;
-    activeModal.componentInstance.competitor = this.getCompetitor(place);
-    activeModal.componentInstance.allPlacesAssigned = this.tournament.getCompetitors().length === place.getRound().getNrOfPlaces();
+    activeModal.componentInstance.item = item;
+    activeModal.componentInstance.allPlacesAssigned = this.allPlacesHaveACompetitor();
 
     activeModal.result.then((result) => {
       if (result === 'remove-place') {
-        this.removePlaceFromRootRound(place);
-      } else if (result === 'remove-competitor') {
-        this.removeCompetitor(place);
+        this.removePlaceFromRootRound(item);
+      } else if (result === 'remove-competitor' && item.competitor) {
+        this.removeCompetitor(item.competitor);
       } else if (result === 'to-structure') {
         this.processing = true;
         this.router.navigate(['/admin/structure', this.tournament.getId()]);
@@ -249,16 +252,18 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
       );
   }
 
-  /**
-   * verwijder de deelnemer van de pouleplek
-   */
-  removeCompetitor(place: Place): void {
+  getSwapSwitchId(place: Place): string {
+    return 'swap-' + place.getId();
+  }
+
+  removeCompetitor(competitor: TournamentCompetitor): void {
     this.processing = true;
-    const competitor = <TournamentCompetitor>this.placeLocationMap.getCompetitor(place);
     this.setAlert('info', 'deelnemer ' + competitor.getName() + ' wordt verwijderd');
     this.competitorRepository.removeObject(competitor, this.tournament)
       .subscribe(
             /* happy path */() => {
+          this.placeCompetitorItems = this.getPlaceCompetitorItems();
+
           this.setAlert('success', 'deelnemer ' + competitor + ' is verwijderd');
         },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
@@ -266,17 +271,15 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
       );
   }
 
-  removePlaceFromRootRound(place: Place): void {
+  removePlaceFromRootRound(item: PlaceCompetitorItem): void {
     this.processing = true;
     const rootRound = this.structure.getRootRound();
-    const competitor = this.placeLocationMap.getCompetitor(place);
-    const suffix = competitor ? ' en deelnemer ' + competitor.getName() : '';
+    const competitor = item.competitor;
+    const suffix = competitor ? ' en deelnemer "' + competitor.getName() : '"';
     const singledoubleWill = competitor ? 'worden' : 'wordt';
-    this.setAlert('info', 'een pouleplek' + competitor + ' ' + singledoubleWill + ' verwijderd');
+    this.setAlert('info', 'een pouleplek' + suffix + ' ' + singledoubleWill + ' verwijderd');
     try {
-
       this.structureService.removePlaceFromRootRound(rootRound);
-
       const singledoubleIs = competitor ? 'zijn' : 'is';
       this.saveStructure('een pouleplek' + competitor + ' ' + singledoubleIs + ' verwijderd');
     } catch (e) {
@@ -293,7 +296,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
           this.planningRepository.create(this.structure, this.tournament, 1)
             .subscribe(
                     /* happy path */ roundNumberOut => {
-                this.initPlaces();
+                this.placeCompetitorItems = this.getPlaceCompetitorItems();
                 this.setAlert('success', message);
               },
                   /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
@@ -303,4 +306,9 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
         /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
       );
   }
+}
+
+export interface PlaceCompetitorItem {
+  place: Place,
+  competitor: TournamentCompetitor | undefined;
 }

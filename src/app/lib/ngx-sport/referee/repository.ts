@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../repository';
-import { Referee, RefereeMapper, JsonReferee } from 'ngx-sport';
+import { Referee, RefereeMapper, JsonReferee, Competition } from 'ngx-sport';
 import { Tournament } from '../../tournament';
 
 @Injectable({
@@ -28,7 +28,7 @@ export class RefereeRepository extends APIRepository {
     createObject(json: JsonReferee, tournament: Tournament, invite: boolean): Observable<Referee> {
         const inviteSuffix = '/invite/' + (invite ? 'true' : 'false');
         return this.http.post<JsonReferee>(this.getUrl(tournament) + inviteSuffix, json, this.getOptions()).pipe(
-            map((jsonRes: JsonReferee) => this.mapper.toNewObject(jsonRes, tournament.getCompetition())),
+            map((jsonRes: JsonReferee) => this.mapper.toObject(jsonRes, tournament.getCompetition())),
             catchError((err) => this.handleError(err))
         );
     }
@@ -36,7 +36,7 @@ export class RefereeRepository extends APIRepository {
     editObject(jsonReferee: JsonReferee, referee: Referee, tournament: Tournament): Observable<Referee> {
         const url = this.getUrl(tournament) + '/' + referee.getId();
         return this.http.put<JsonReferee>(url, jsonReferee, this.getOptions()).pipe(
-            map((jsonReferee: JsonReferee) => this.mapper.toExistingObject(jsonReferee)),
+            map((jsonReferee: JsonReferee) => this.mapper.updateObject(jsonReferee, referee)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -62,9 +62,26 @@ export class RefereeRepository extends APIRepository {
         const url = this.getUrl(tournament) + '/' + referee.getId();
         return this.http.delete(url, this.getOptions()).pipe(
             map(() => {
-                referee.getCompetition().removeReferee(referee);
+                this.removeReferee(referee);
+
             }),
             catchError((err) => this.handleError(err))
         );
+    }
+
+    protected removeReferee(referee: Referee) {
+        const referees: Referee[] = referee.getCompetition().getReferees();
+        const index = referees.indexOf(referee);
+        if (index < 0) {
+            return;
+        }
+        const lowerPrioReferees = referees.splice(index);
+        lowerPrioReferees.shift(); // referee itself
+        let priority = referee.getPriority();
+        let removedReferee: Referee | undefined;
+        while (removedReferee = lowerPrioReferees.shift()) {
+            removedReferee.setPriority(priority++);
+            referees.push(removedReferee);
+        }
     }
 }

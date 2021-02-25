@@ -28,7 +28,7 @@ export class FieldRepository extends APIRepository {
 
     createObject(json: JsonField, competitionSport: CompetitionSport, tournament: Tournament): Observable<Field> {
         return this.http.post<JsonField>(this.getUrl(tournament, competitionSport), json, this.getOptions()).pipe(
-            map((jsonRes: JsonField) => this.mapper.toNewObject(jsonRes, competitionSport)),
+            map((jsonRes: JsonField) => this.mapper.toObject(jsonRes, competitionSport)),
             catchError((err) => this.handleError(err))
         );
     }
@@ -36,7 +36,7 @@ export class FieldRepository extends APIRepository {
     editObject(jsonField: JsonField, field: Field, tournament: Tournament): Observable<Field> {
         const url = this.getUrl(tournament, field.getCompetitionSport()) + '/' + field.getId();
         return this.http.put<JsonField>(url, jsonField, this.getOptions()).pipe(
-            map((jsonRes: JsonField) => this.mapper.toExistingObject(jsonRes)),
+            map((jsonRes: JsonField) => this.mapper.updateObject(jsonRes, field)),
             catchError((err) => this.handleError(err))
         );
     }

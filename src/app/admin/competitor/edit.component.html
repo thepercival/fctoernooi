@@ -32,13 +32,12 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="registered" class="col-3 col-form-label">
-            <span [ngClass]="{ 'registered-xs': form.controls.registered.value }">aangemeld</span></label>
-          <div class="form-check col-9">
-            <label class="custom-control custom-checkbox col-form-label pl-0">
-              <input type="checkbox" class="custom-control-input form-check-input" formControlName="registered">
-              <span class="custom-control-indicator"></span>
-            </label>
+          <label for="registered" class="col-3 col-form-label">aangemeld</label>
+          <div class="col-9">
+            <div class="form-control custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="registered" formControlName="registered">
+              <label class="custom-control-label" for="registered"></label>
+            </div>
           </div>
         </div>
         <div class="form-group row">

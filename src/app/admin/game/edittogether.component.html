@@ -34,7 +34,7 @@
             <label class="col-form-label">{{getFieldDescription()}}</label>
           </div>
           <div class="col-9">
-            <label class="col-form-label">{{game.getField().getName()}}</label>
+            <label class="col-form-label">{{game.getField()?.getName()}}</label>
           </div>
         </div>
 
@@ -44,8 +44,8 @@
           </div>
           <div class="col-9">
             <div formGroupName="gamePlaces" class="card-deck flex-wrap d-flex">
-              <app-tournament-togetherscorecard *ngFor="let gamePlace of game.getPlaces()" [gamePlace]="gamePlace"
-                [form]="getFormGroupGamePlace(gamePlace.getId())" [nameService]="nameService"
+              <app-tournament-togetherscorecard *ngFor="let gamePlace of game.getTogetherPlaces()"
+                [gamePlace]="gamePlace" [form]="getFormGroupGamePlace(gamePlace.getId())" [nameService]="nameService"
                 (afterEdit)="postScoreControlUpdate()">
               </app-tournament-togetherscorecard>
             </div>

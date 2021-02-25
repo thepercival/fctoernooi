@@ -106,10 +106,6 @@ input.is-warning {
   @extend .border-white;
 }
 
-.custom-control-label-warning:before {
-  @extend .border-warning;
-}
-
 .bg-against {
   background-color: purple;
 }
@@ -121,6 +117,9 @@ input.is-warning {
 }
 .custom-switch-together .custom-control-label::after {
   @extend .bg-together;
+}
+.custom-switch-warning .custom-control-label::after {
+  @extend .bg-warning;
 }
 
 .progress {
@@ -140,12 +139,6 @@ input.is-warning {
 
 ngb-alert {
   width:100%;
-}
-
-.registered-xs {
-  @include media-breakpoint-only(xs) {
-      color: #{$success};
-  }
 }
 
 /*.more-than-two-rounds {

@@ -59,11 +59,9 @@ export class TranslateService {
         return '';
     }
 
-    getScoreNamePlural(scoreConfig: ScoreConfig | JsonScoreConfig): string {
-        const isFirst = (scoreConfig instanceof ScoreConfig) ? scoreConfig.isFirst() : scoreConfig.isFirst;
-        const customId = (scoreConfig instanceof ScoreConfig) ? scoreConfig.getCompetitionSport().getSport().getCustomId()
-            : scoreConfig.competitionSport.sport.customId;
-        return this.getScoreNamePluralHelper(isFirst, customId);
+    getScoreNamePlural(scoreConfig: ScoreConfig): string {
+        const customId = scoreConfig.getCompetitionSport().getSport().getCustomId();
+        return this.getScoreNamePluralHelper(scoreConfig.isFirst(), customId);
     }
 
     protected getScoreNamePluralHelper(isFirst: boolean, customId: number): string {

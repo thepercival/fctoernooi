@@ -55,6 +55,7 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
   }
 
   initLockerRooms() {
+    console.log('init');
     if (this.router.url.indexOf('/public') === 0) {
       this.favorites = this.favRepository.getObject(this.tournament);
       this.editMode = false;
@@ -123,6 +124,7 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
   }
 
   changeCompetitors(lockerRoom: LockerRoom) {
+    console.log('changeCompetitors');
     const activeModal = this.modalService.open(CompetitorChooseModalComponent);
     activeModal.componentInstance.validator = this.validator;
     if (this.structure) {

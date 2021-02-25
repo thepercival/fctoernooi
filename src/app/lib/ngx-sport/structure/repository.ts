@@ -1,11 +1,13 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, concatMap, map } from 'rxjs/operators';
 
 import { StructureMapper, Structure, JsonStructure } from 'ngx-sport';
 import { APIRepository } from '../../repository';
 import { Tournament } from '../../tournament';
+import { TournamentCompetitor } from '../../competitor';
+import { CompetitorRepository } from '../competitor/repository';
 
 @Injectable({
     providedIn: 'root'
@@ -13,6 +15,7 @@ import { Tournament } from '../../tournament';
 export class StructureRepository extends APIRepository {
 
     constructor(
+        private competitorRepository: CompetitorRepository,
         private mapper: StructureMapper,
         private http: HttpClient) {
         super();
@@ -36,8 +39,19 @@ export class StructureRepository extends APIRepository {
 
     editObject(structure: Structure, tournament: Tournament): Observable<Structure> {
         return this.http.put<JsonStructure>(this.getUrl(tournament), this.mapper.toJson(structure), this.getOptions()).pipe(
-            map((jsonRes: JsonStructure) => this.mapper.toObject(jsonRes, tournament.getCompetition())),
+            concatMap((jsonRes: JsonStructure) => {
+                const structure = this.mapper.toObject(jsonRes, tournament.getCompetition());
+                return this.updateCompetitors(structure, this.competitorRepository.reloadObjects(tournament));
+            }),
             catchError((err) => this.handleError(err))
+        );
+    }
+
+    updateCompetitors(structure: Structure, obsCompetitors: Observable<TournamentCompetitor[]>): Observable<Structure> {
+        return obsCompetitors.pipe(
+            map((competitors: TournamentCompetitor[]) => {
+                return structure;
+            })
         );
     }
 }

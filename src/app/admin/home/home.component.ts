@@ -19,6 +19,7 @@ import { ExportModalComponent, TournamentExportAction } from './exportmodal.comp
 import { ShareModalComponent } from './sharemodal.component';
 import { RankingRuleSetModalComponent } from './rankingrulesetmodal.component';
 import { TournamentMapper } from '../../lib/tournament/mapper';
+import { DateFormatter } from '../../lib/dateFormatter';
 
 @Component({
     selector: 'app-tournament-admin',
@@ -39,6 +40,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         router: Router,
         private tournamentMapper: TournamentMapper,
         private authService: AuthService,
+        public dateFormatter: DateFormatter,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         fb: FormBuilder
