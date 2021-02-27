@@ -29,11 +29,12 @@ export class ProgressComponent implements OnDestroy, OnChanges {
     public dashoffset!: number;
 
     constructor(private _ngZone: NgZone, private changeRef: ChangeDetectorRef) {
+        console.log('resetProgress');
         this.resetProgress();
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.toggleProgress !== undefined && changes.toggleProgress.previousValue !== undefined
+        if (changes.toggleProgress !== undefined
             && changes.toggleProgress.currentValue !== changes.toggleProgress.previousValue) {
             this.processOutsideOfAngularZone();
         }

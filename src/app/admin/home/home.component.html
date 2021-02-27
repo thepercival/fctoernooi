@@ -79,15 +79,6 @@
             </p>
           </div>
         </div>
-        <div *ngIf="isAdmin()" class="card border-secondary pointer mt-3 mx-2"
-          [routerLink]="['/admin/referees', tournament.getId()]">
-          <div class="card-body">
-            <h5 class="card-title">
-              <app-tournament-icon name="referee"></app-tournament-icon> scheidsrechters
-            </h5>
-            <p class="card-text">{{getNrOfRefereesDescription()}}</p>
-          </div>
-        </div>
         <div *ngIf="structure.getRootRound().hasBegun()" class="card border-secondary pointer mt-3 mx-2"
           [routerLink]="['/public/ranking', tournament.getId()]">
           <div class="card-body">
@@ -99,34 +90,6 @@
             </p>
           </div>
         </div>
-        <div *ngIf="isAdmin()" class="card border-secondary pointer mt-3 mx-2"
-          [routerLink]="['/admin/lockerrooms', tournament.getId()]">
-          <div class="card-body">
-            <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'door-closed']"></fa-icon> kleedkamers
-            </h5>
-            <p class="card-text">
-              <span *ngIf="!lockerRoomValidator.areSomeArranged()">
-                nog geen indeling
-              </span>
-              <span *ngIf="!lockerRoomValidator.areAllArranged() && lockerRoomValidator.areSomeArranged()">
-                <fa-icon [icon]="['fas', 'times-circle']" class="text-warning"></fa-icon> indeling niet compleet
-              </span>
-              <span *ngIf="lockerRoomValidator.areAllArranged()">
-                <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> deelnemers ingedeeld
-              </span>
-            </p>
-          </div>
-        </div>
-        <div *ngIf="isAdmin()" class="card border-secondary pointer mt-3 mx-2"
-          [routerLink]="['/admin/sponsors', tournament.getId()]">
-          <div class="card-body">
-            <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon> sponsoren
-            </h5>
-            <p class="card-text">{{getNrOfSponsorsDescription()}}</p>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -135,96 +98,133 @@
       naar het publieke gedeelte <fa-icon [icon]="['fas', 'eye']"></fa-icon>
     </button>
   </div>
-  <!-- option block 1 -->
+  <!-- option block -->
   <div *ngIf="!processing && structure" class="row d-flex justify-content-center">
-    <div *ngIf="structure.hasPlanning() && (isAdmin() || isRoleAdmin())" class="card border-secondary mt-3 mx-2">
-      <div class="card-body d-flex justify-content-between">
-        <div [routerLink]="['/public/liveboard', tournament.getId()]" class="text-center pointer">
-          <div>
-            <h5 class="card-title">
-              <fa-icon [icon]=" [ 'fas', 'tv'] "></fa-icon>
-            </h5>
-          </div>
-          <div><span>live</span><br><span>scorebord</span></div>
-        </div>
-        <div *ngIf="isAdmin()" (click)="openModalExport()" class="text-center pointer">
-          <div>
-            <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'file-export']"></fa-icon>
-            </h5>
-          </div>
-          <div><span>pdf</span><br><span>excel</span></div>
-        </div>
-        <div *ngIf="isAdmin()" (click)="openModalShare()" class="text-center pointer">
-          <div>
-            <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'share-alt']"></fa-icon>
-            </h5>
-          </div>
-          <div><span>delen</span></div>
-        </div>
+    <!-- referees -->
+    <div *ngIf="isAdmin()" class="card card-sub pointer mt-3 mx-2"
+      [routerLink]="['/admin/referees', tournament.getId()]">
+      <div class="card-body text-center p-1 pt-2">
+        <h5 class="card-title">
+          <app-tournament-icon name="referee"></app-tournament-icon>
+        </h5>
+        <div [innerHTML]="getNrOfRefereesDescription()"></div>
       </div>
     </div>
-    <!-- option block 2 -->
-    <div *ngIf="structure.hasPlanning() && !structure.getRootRound().hasBegun()"
-      class="card border-secondary mt-3 mx-2">
-      <div class="card-body d-flex justify-content-between">
-        <div (click)="openModalName()" class="text-center pointer">
-          <div>
-            <h5 class="card-title">
-              <fa-icon [icon]=" [ 'fas', 'pencil-alt'] "></fa-icon>
-            </h5>
-          </div>
-          <div><span>naam</span><br><span>wijzigen</span></div>
-        </div>
-        <div *ngIf="hasGameModeAgainst()" (click)="openModalRankingRuleSet()" class="text-center pointer">
-          <div>
-            <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'list-ol']"></fa-icon>
-            </h5>
-          </div>
-          <div><span>rangschikking</span><br><span>regels</span></div>
-        </div>
-        <!-- <div (click)="openGuide()" class="text-center pointer">
-          <div>
-            <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'share-alt']"></fa-icon>
-            </h5>
-          </div>
-          <div><span>programma</span><br><span>boekje</span></div>
-        </div> -->
+    <!-- lockerRooms -->
+    <div *ngIf="isAdmin()" class="card card-sub {{getLockerRoomBorderClass()}} pointer mt-3 mx-2"
+      [routerLink]="['/admin/lockerrooms', tournament.getId()]">
+      <div class="card-body text-center p-1 pt-2">
+        <h5 class="card-title">
+          <fa-icon [icon]="['fas', 'door-closed']"></fa-icon>
+        </h5>
+        <div [innerHTML]="getNrOfLockerRoomsDescription()"></div>
       </div>
     </div>
-    <!-- option block 3 -->
-    <div *ngIf="isAdmin() || isRoleAdmin()" class="card border-secondary mt-3 mx-2">
-      <div class="card-body d-flex justify-content-between">
-        <div *ngIf="isRoleAdmin()" [routerLink]="['/admin/authorizations', tournament.getId()]"
-          class="text-center pointer">
-          <div>
-            <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'user-friends']"></fa-icon>
-            </h5>
-          </div>
-          <div><span>rollen</span><br><span>uitdelen</span></div>
-        </div>
-        <div *ngIf="isAdmin()" (click)="openModalCopy(contentcopy)" class="text-center pointer">
-          <div>
-            <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'copy']"></fa-icon>
-            </h5>
-          </div>
-          <div><span>nieuwe</span><br><span>editie</span></div>
-        </div>
-        <div *ngIf="isAdmin()" (click)="openModalRemove(contentremove)" class="text-center pointer">
-          <div>
-            <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
-            </h5>
-          </div>
-          <div><span>verwijderen</span></div>
-        </div>
+    <!-- sponsors -->
+    <div *ngIf="isAdmin()" class="card card-sub pointer mt-3 mx-2"
+      [routerLink]="['/admin/sponsors', tournament.getId()]">
+      <div class="card-body text-center p-1 pt-2">
+        <h5 class="card-title">
+          <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon>
+        </h5>
+        <p class="card-text">{{getNrOfSponsorsDescription()}}</p>
       </div>
     </div>
+    <!-- live scoreboard -->
+    <div *ngIf="structure.hasPlanning()" class="card card-sub pointer mt-3 mx-2"
+      [routerLink]="['/public/liveboard', tournament.getId()]">
+      <div class="card-body text-center p-1 pt-2">
+        <h5 class="card-title">
+          <fa-icon [icon]=" [ 'fas', 'tv'] "></fa-icon>
+        </h5>
+        <div>live</div>
+        <div>scorebord</div>
+      </div>
+    </div>
+    <!-- export -->
+    <div *ngIf="structure.hasPlanning() && isAdmin()" class="card card-sub pointer mt-3 mx-2"
+      (click)="openModalExport()">
+      <div class="card-body text-center p-1 pt-2">
+        <h5 class="card-title">
+          <fa-icon [icon]="['fas', 'file-export']"></fa-icon>
+        </h5>
+        <div>pdf</div>
+        <div>excel</div>
+      </div>
+    </div>
+    <!-- ranking ruleset -->
+    <div *ngIf="hasGameModeAgainst() && !structure.getRootRound().hasBegun()" class="card card-sub pointer mt-3 mx-2"
+      (click)="openModalRankingRuleSet()">
+      <div class="card-body text-center p-1 pt-2">
+        <h5 class="card-title">
+          <fa-icon [icon]="['fas', 'list-ol']"></fa-icon>
+        </h5>
+        <div>rang-</div>
+        <div>schikking</div>
+      </div>
+    </div>
+    <!-- roleadmin -->
+    <div *ngIf="isRoleAdmin()" class="card card-sub pointer mt-3 mx-2"
+      [routerLink]="['/admin/authorizations', tournament.getId()]">
+      <div class="card-body text-center p-1 pt-2">
+        <h5 class="card-title">
+          <fa-icon [icon]="['fas', 'user-friends']"></fa-icon>
+        </h5>
+        <div>rollen</div>
+        <div>uitdelen</div>
+      </div>
+    </div>
+    <!-- change name -->
+    <div *ngIf="structure.hasPlanning() && isAdmin()" class="card card-sub pointer mt-3 mx-2" (click)="openModalName()">
+      <div class="card-body text-center p-1 pt-2">
+        <h5 class="card-title">
+          <span class="font-weight-bold">A</span>
+        </h5>
+        <div>naam</div>
+        <div>wijzigen</div>
+      </div>
+    </div>
+    <!-- copy -->
+    <div *ngIf="isAdmin()" class="card card-sub pointer mt-3 mx-2" (click)="openModalCopy(contentcopy)">
+      <div class="card-body text-center p-1 pt-2">
+        <h5 class="card-title">
+          <fa-icon [icon]="['fas', 'copy']"></fa-icon>
+        </h5>
+        <div>nieuwe</div>
+        <div>editie</div>
+      </div>
+    </div>
+    <!-- remove -->
+    <div *ngIf="isAdmin()" class="card card-sub pointer mt-3 mx-2" (click)="openModalRemove(contentremove)">
+      <div class="card-body text-center p-1 pt-2">
+        <h5 class="card-title">
+          <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+        </h5>
+        <div>ver-</div>
+        <div>wijderen</div>
+      </div>
+    </div>
+    <!-- share -->
+    <div *ngIf="structure.hasPlanning() && isAdmin()" class="card card-sub pointer mt-3 mx-2"
+      (click)="openModalShare()">
+      <div class="card-body text-center p-1 pt-2">
+        <h5 class="card-title">
+          <fa-icon [icon]="['fas', 'share-alt']"></fa-icon>
+        </h5>
+        <div>delen</div>
+      </div>
+    </div>
+    <!-- program book -->
+    <!-- <div class="card card-sub pointer mt-3 mx-2" (click)="openGuide()">
+              <div class="card-body text-center p-1 pt-2">
+                <h5 class="card-title">
+                  <fa-icon [icon]="['fas', '?????']"></fa-icon>
+                </h5>
+                <div>programma</div>
+                <div>boekje</div>
+              </div>
+            </div> -->
+
   </div>
 </div>
 <!-- copy modal -->

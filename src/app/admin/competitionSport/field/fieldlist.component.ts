@@ -60,7 +60,7 @@ export class FieldListComponent implements OnInit {
     formToJson(name: string, field?: Field): JsonField {
         return {
             id: field ? field.getId() : 0,
-            priority: this.competitionSport.getCompetition().getFields().length + 1,
+            priority: field ? field.getPriority() : this.competitionSport.getCompetition().getFields().length + 1,
             name: name
         };
     }

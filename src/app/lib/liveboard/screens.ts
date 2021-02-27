@@ -1,4 +1,4 @@
-import { Game, Poule } from 'ngx-sport';
+import { AgainstGame, TogetherGame, Poule, GameMode, TogetherScore } from 'ngx-sport';
 
 import { Sponsor } from '../sponsor';
 import { VoetbalRange } from 'ngx-sport';
@@ -45,20 +45,33 @@ export class EndRankingScreen extends Screen {
 }
 
 export class GamesScreen extends Screen {
-    constructor(protected games: Game[]) {
+
+    constructor(protected screenGames: ScreenGames) {
         super();
     }
 
-    getGames(): Game[] {
-        return this.games;
+    getGames(): (AgainstGame | TogetherGame)[] {
+        return this.screenGames.games;
     }
 
-    addGame(game: Game) {
-        this.games.push(game);
+    addGame(game: AgainstGame | TogetherGame) {
+        this.screenGames.games.push(game);
     }
 
     isEmpty(): boolean {
-        return this.games.length === 0;
+        return this.screenGames.games.length === 0;
+    }
+
+    onlyGameModeAgainst(): boolean {
+        return this.screenGames.usedGameModes === GameMode.Against;
+    }
+
+    onlyGameModeTogether(): boolean {
+        return this.screenGames.usedGameModes === GameMode.Together;
+    }
+
+    bothGameModes(): boolean {
+        return this.screenGames.usedGameModes === (GameMode.Against + GameMode.Together);
     }
 }
 
@@ -70,7 +83,7 @@ export class CreatedAndInplayGamesScreen extends GamesScreen implements IGamesSc
     protected next: CreatedAndInplayGamesScreen | undefined;
 
     constructor(protected maxLines: number, protected previous?: CreatedAndInplayGamesScreen) {
-        super([]);
+        super({ usedGameModes: 0, games: [] });
         this.setDescription('programma');
     }
 
@@ -79,7 +92,7 @@ export class CreatedAndInplayGamesScreen extends GamesScreen implements IGamesSc
     }
 
     isFull(): boolean {
-        return this.games.length >= this.maxLines;
+        return this.screenGames.games.length >= this.maxLines;
     }
 
     isFirst(): boolean {
@@ -107,10 +120,8 @@ export class CreatedAndInplayGamesScreen extends GamesScreen implements IGamesSc
 }
 
 export class PlayedGamesScreen extends GamesScreen implements IGamesScreen {
-    // playedGames: Game[];
-
-    constructor(playedGames: Game[]) {
-        super(playedGames);
+    constructor(screenGames: ScreenGames) {
+        super(screenGames);
         this.description = 'uitslagen';
     }
 
@@ -173,4 +184,9 @@ export class SponsorScreenService {
     getMaxNrOfSponsors(): number {
         return SponsorScreenService.MAXNROFSPONSORSCREENS * SponsorScreenService.MAXNROFSPONSORSPERSCREEN;
     }
+}
+
+export interface ScreenGames {
+    usedGameModes: number;
+    games: (AgainstGame | TogetherGame)[];
 }

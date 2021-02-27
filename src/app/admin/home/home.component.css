@@ -2,6 +2,10 @@
     width:212px;
 }
 
+.card-sub{
+    max-width:76px;
+}
+
 .card-body {
     padding: 1rem;
 }

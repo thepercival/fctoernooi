@@ -78,10 +78,10 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
     activeModal.componentInstance.header = 'uitleg scheidsrechters';
     activeModal.componentInstance.modalContent = modalContent;
+    activeModal.componentInstance.noHeaderBorder = true;
     activeModal.result.then((result) => {
-    }, (reason) => {
       this.linkToPlanningConfig();
-    });
+    }, (reason) => { });
   }
 
   upgradePriority(referee: Referee) {

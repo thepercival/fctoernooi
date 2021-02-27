@@ -16,8 +16,8 @@
       <thead>
         <tr>
           <th></th>
-          <th *ngIf="!hasBegun" class="text-center">
-            <fa-icon *ngIf="competition.getReferees().length > 1" [icon]="['fas', 'sort']"></fa-icon>
+          <th *ngIf="!hasBegun && competition.getReferees().length > 1" class="text-center">
+            <fa-icon [icon]="['fas', 'sort']"></fa-icon>
           </th>
           <th>initialen</th>
           <th class="d-none d-sm-table-cell">naam</th>
@@ -37,7 +37,7 @@
               <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
             </button>
           </td>
-          <td *ngIf="!hasBegun" class="text-center">
+          <td *ngIf="!hasBegun && competition.getReferees().length > 1" class="text-center">
             <button *ngIf="referee.getPriority() > 1" type="button" class="btn btn-sm btn-outline-secondary"
               [disabled]="processing" (click)="upgradePriority(referee)">
               <fa-icon [icon]="['fas', 'level-up-alt']"></fa-icon>
@@ -64,7 +64,7 @@
   </div>
 </div>
 
-<ng-template #contentInfo>
+<ng-template #contentInfo let-activeModal>
   <ul class="list-group">
     <li class="list-group-item border-info">
       De scheidsrechter bovenaan de lijst krijgt de eerste (laatste vanaf de tweede ronde) wedstrijd toegekend.
@@ -73,8 +73,8 @@
       emailadres is ingevoerd
       en ze ingelogd zijn.</li>
     <li class="list-group-item border-info">
-      Onder <button type="submit" *ngIf="!hasBegun" class="btn btn-secondary" data-dismiss="modal"
-        (click)="linkToPlanningConfig()">plannings-instellingen</button> kun je
+      Onder <button type="submit" *ngIf="!hasBegun" class="btn btn-secondary"
+        (click)="activeModal.close('linkToPlanningConfig')">plannings-instellingen</button> kun je
       "deelnemers zijn scheidsrechter " instellen.
     </li>
   </ul>

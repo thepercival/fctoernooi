@@ -1,4 +1,4 @@
-import { AgainstGame, Game, NameService, Poule, RoundNumber, State, Structure, TogetherGame } from 'ngx-sport';
+import { AgainstGame, Game, NameService, Poule, RoundNumber, State, Structure, TogetherGame, TogetherScore } from 'ngx-sport';
 
 import {
     CreatedAndInplayGamesScreen,
@@ -6,6 +6,7 @@ import {
     PlayedGamesScreen,
     PoulesRankingScreen,
     Screen,
+    ScreenGames,
     SponsorScreenService,
 } from './liveboard/screens';
 import { Tournament } from './tournament';
@@ -18,7 +19,7 @@ export class Liveboard {
     ) { }
 
     // if more than one rank-screen, show schedulescreens in between
-    getScreens(screenfilter: string): Screen[] {
+    getScreens(screenfilter: string | undefined): Screen[] {
         let screens: Screen[] = [];
 
         if (screenfilter === undefined) {
@@ -161,30 +162,35 @@ export class Liveboard {
     }
 
     private getScreenForGamesPlayed(): Screen | undefined {
-        const games: Game[] = this.getPlayedGames();
-        if (games.length === 0) {
+        const screenGames = this.getPlayedScreenGames();
+        if (screenGames.games.length === 0) {
             return undefined;
         }
-        return new PlayedGamesScreen(games);
+        return new PlayedGamesScreen(screenGames);
     }
 
-    getPlayedGames(): Game[] {
-        return this.getPlayedGamesHelper(this.structure.getLastRoundNumber());
+    getPlayedScreenGames(): ScreenGames {
+        const screenGames = { usedGameModes: 0, games: [] };
+        this.setPlayedScreenGames(this.structure.getLastRoundNumber(), screenGames);
+        return screenGames;
     }
 
-    getPlayedGamesHelper(roundNumber: RoundNumber): Game[] {
-        let games: Game[] = roundNumber.getGames(Game.Order_By_Batch);
-        games = games.reverse().filter(game => game.getState() === State.Finished);
-        if (games.length < this.maxLines) {
-            const previousRoundNumber = roundNumber.getPrevious();
-            if (previousRoundNumber) {
-                games = games.concat(this.getPlayedGamesHelper(previousRoundNumber));
-            }
-        }
+    protected setPlayedScreenGames(roundNumber: RoundNumber, screenGames: ScreenGames) {
+        let games: (AgainstGame | TogetherGame)[] = roundNumber.getGames(Game.Order_By_Batch);
         if (games.length > this.maxLines) {
             games = games.splice(0, this.maxLines);
         }
-        return games;
+        const preFilteredNrOfGames = games.length;
+        games = games.reverse().filter(game => game.getState() === State.Finished);
+        if (preFilteredNrOfGames > games.length) {
+            screenGames.usedGameModes |= roundNumber.getValidPlanningConfig().getGameMode();
+        }
+        if (games.length < this.maxLines) {
+            const previousRoundNumber = roundNumber.getPrevious();
+            if (previousRoundNumber) {
+                this.setPlayedScreenGames(previousRoundNumber, screenGames);
+            }
+        }
     }
 
     private getScreensForSponsors(): Screen[] {

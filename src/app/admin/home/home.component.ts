@@ -110,24 +110,24 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         return nrOfFields + ' ' + this.getFieldsDescription();
     }
 
-    getNrOfRefereesDescription() {
-        const nrOfReferees = this.competition.getReferees().length;
-        if (nrOfReferees === 0) {
-            return 'geen scheidsrechters';
-        } else if (nrOfReferees === 1) {
-            return '1 scheidsrechter';
-        }
-        return nrOfReferees + ' scheidsrechters';
+    getNrOfLockerRoomsDescription(): string {
+        const nrOfLockerRooms = this.tournament.getLockerRooms().length;
+        return nrOfLockerRooms + ' kleed-<br/>kamer' + (nrOfLockerRooms === 1 ? '' : 's');
     }
 
-    getNrOfSponsorsDescription() {
+    getNrOfRefereesDescription(): string {
+        const nrOfReferees = this.competition.getReferees().length;
+        return nrOfReferees + ' scheids-<br/>rechter' + (nrOfReferees === 1 ? '' : 's');
+    }
+
+    getNrOfSponsorsDescription(): string {
         const nrOfSponsors = this.tournament.getSponsors().length;
-        if (nrOfSponsors === 0) {
-            return 'geen sponsors';
-        } else if (nrOfSponsors === 1) {
-            return '1 sponsor';
-        }
-        return nrOfSponsors + ' sponsors';
+        return nrOfSponsors + ' sponsors' + (nrOfSponsors === 1 ? '' : 's');
+    }
+
+    getLockerRoomBorderClass(): string {
+        const arrangedIncompleet = !this.lockerRoomValidator.areAllArranged() && this.lockerRoomValidator.areSomeArranged();
+        return arrangedIncompleet ? 'border-warning' : '';
     }
 
     isAdmin(): boolean {

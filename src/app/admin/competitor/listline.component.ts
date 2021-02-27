@@ -1,7 +1,9 @@
 import { AfterViewChecked, Component, ElementRef, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NameService, Place } from 'ngx-sport';
 import { TournamentCompetitor } from '../../lib/competitor';
+import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { PlaceCompetitorItem } from './list.component';
 
 @Component({
@@ -50,9 +52,19 @@ export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  openInfoModal(modalContent: TemplateRef<any>) {
-    const activeModal = this.modalService.open(modalContent, { windowClass: 'info-modal' });
-    activeModal.componentInstance.header = 'publiek';
+  openLockerRoomInfoModal(modalContent: TemplateRef<any>) {
+    const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
+    activeModal.componentInstance.header = 'kleedkamers';
     activeModal.componentInstance.modalContent = modalContent;
+    activeModal.result.then((result) => {
+      if (result === 'linkToLockerRooms') {
+        this.toLockerRooms.emit();
+      }
+    }, (reason) => {
+    });
+  }
+
+  linkToLockerRooms() {
+    this.toLockerRooms.emit();
   }
 }

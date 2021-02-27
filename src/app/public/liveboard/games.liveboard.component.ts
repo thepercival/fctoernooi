@@ -10,16 +10,13 @@ import { CreatedAndInplayGamesScreen, GamesScreen } from '../../lib/liveboard/sc
     styleUrls: ['./games.liveboard.component.scss']
 })
 export class LiveboardGamesComponent {
-
-    private ScoreConfigService: ScoreConfigService;
-
     @Input() screen!: GamesScreen;
     @Input() nameService!: NameService;
 
     constructor(
+        private scoreConfigService: ScoreConfigService,
         public dateFormatter: DateFormatter
     ) {
-        this.ScoreConfigService = new ScoreConfigService();
     }
 
     isCreatedAndInplay(): boolean {
@@ -49,7 +46,7 @@ export class LiveboardGamesComponent {
             return sScore;
         }
         // TODOSPORT
-        // const finalScore = this.ScoreConfigService.getFinalScore(game);
+        // const finalScore = this.scoreConfigService.getFinalScore(game);
         // if (finalScore === undefined) {
         //     return sScore;
         // }

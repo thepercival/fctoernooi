@@ -15,19 +15,29 @@
         <th *ngIf="isCreatedAndInplay()" class="width-8">
           <app-tournament-icon name="soccer-field"></app-tournament-icon>
         </th>
-        <th class="text-right width-25">thuis</th>
-        <th class="text-center width-8">
-          <app-tournament-icon name="scoreboard"></app-tournament-icon>
-        </th>
-        <th class="text-left width-25">uit</th>
+        <ng-template *ngIf="screen.onlyGameModeAgainst()">
+          <th class="text-right width-25">thuis</th>
+          <th class="text-center width-8">
+            <app-tournament-icon name="scoreboard"></app-tournament-icon>
+          </th>
+          <th class="text-left width-25">uit</th>
+        </ng-template>
+        <ng-template *ngIf="screen.onlyGameModeTogether()">
+          <th class="text-right width-50">deelnemers</th>
+          <th class="text-center width-8">
+            <app-tournament-icon name="scoreboard"></app-tournament-icon>
+          </th>
+        </ng-template>
+        <ng-template *ngIf="screen.bothGameModes()">
+          <th class="text-right width-58">deelnemers/score</th>
+        </ng-template>
         <th *ngIf="isCreatedAndInplay() && hasReferees()" class="width-14 text-right">
           <app-tournament-icon name="referee"></app-tournament-icon>
         </th>
       </tr>
     </thead>
     <tbody>
-      <!-- TODOSPORTS-->
-      <!-- <tr *ngFor="let game of screen.getGames()" [ngClass]="{ 'batch-striped-row': (game.getBatchNr() % 2) === 0 }">
+      <tr *ngFor="let game of screen.getGames()" [ngClass]="{ 'batch-striped-row': (game.getBatchNr() % 2) === 0 }">
         <td class="d-none d-xl-table-cell">
           <span [innerHtml]="getRoundAbbreviation(game.getRound()) | keepHtml"></span>
         </td>
@@ -40,17 +50,34 @@
         </td>
         <td *ngIf="showBatch()" class="text-center width-10">{{game.getBatchNr()}}</td>
         <td *ngIf="isCreatedAndInplay()">{{game.getField()?.getName()}}</td>
-        <td class="text-right">
-          <span>{{nameService.getPlacesFromName(game.getHomePlaces(),true,true)}}</span>
-        </td>
-        <td nowrap class="text-center">
-          <span>{{getScore(game)}}</span>
-        </td>
-        <td class="text-left">
-          <span>{{nameService.getPlacesFromName(game.getAwayPlaces(),true,true)}}</span>
-        </td>
+        <!-- against -->
+        <ng-template *ngIf="screen.onlyGameModeAgainst()">
+          <td class="text-right">
+            <span>{{nameService.getPlacesFromName(game.getHomePlaces(),true,true)}}</span>
+          </td>
+          <td nowrap class="text-center">
+            <span>{{getScore(game)}}</span>
+          </td>
+          <td class="text-left">
+            <span>{{nameService.getPlacesFromName(game.getAwayPlaces(),true,true)}}</span>
+          </td>
+        </ng-template>
+        <!-- together -->
+        <ng-template *ngIf="screen.onlyGameModeTogether()">
+          <td></td>
+          <td></td>
+          <!-- <th class="text-right width-50">deelnemers</th>
+          <th class="text-center width-8">
+            <app-tournament-icon name="scoreboard"></app-tournament-icon>
+          </th> -->
+        </ng-template>
+        <!-- both -->
+        <ng-template *ngIf="screen.bothGameModes()">
+          <!-- <th class="text-right width-58">deelnemers/score</th> -->
+          <td></td>
+        </ng-template>
         <td *ngIf="isCreatedAndInplay() && hasReferees()" class="text-right">{{nameService.getRefereeName(game)}}</td>
-      </tr> -->
+      </tr>
     </tbody>
   </table>
 </div>

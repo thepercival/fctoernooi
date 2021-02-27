@@ -1,12 +1,9 @@
 import { Component, OnInit, Input, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
-    Sport,
     NameService,
     QualifyAgainstConfig,
-    RoundNumber,
     JsonQualifyAgainstConfig,
-    SportMapper,
     Structure,
     PlaceLocationMap,
     CompetitionSport,

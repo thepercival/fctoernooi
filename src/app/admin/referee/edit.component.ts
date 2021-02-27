@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -13,6 +13,8 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { RefereeRepository } from '../../lib/ngx-sport/referee/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
+import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-tournament-referee-edit',
@@ -41,6 +43,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
         structureRepository: StructureRepository,
         private planningRepository: PlanningRepository,
         private myNavigation: MyNavigation,
+        private modalService: NgbModal,
         fb: FormBuilder
     ) {
         // EditPermissions, EmailAddresses
@@ -94,7 +97,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
         const info = this.form.controls.info.value;
         return {
             id: this.originalReferee ? this.originalReferee.getId() : 0,
-            priority: this.competition.getReferees().length + 1,
+            priority: this.originalReferee ? this.originalReferee.getPriority() : this.competition.getReferees().length + 1,
             initials: this.form.controls.initials.value,
             name: name ? name : undefined,
             emailaddress: emailaddress ? emailaddress : undefined,
@@ -162,6 +165,12 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
         return referees.find(refereeIt => {
             return (initials === refereeIt.getInitials() && (referee === undefined || refereeIt.getId() === undefined));
         }) !== undefined;
+    }
+
+    openInfoModal(modalContent: TemplateRef<any>) {
+        const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
+        activeModal.componentInstance.header = 'emailadres scheidsrechter';
+        activeModal.componentInstance.modalContent = modalContent;
     }
 }
 

@@ -23,7 +23,7 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     private maxLines = 8;
     public refreshAfterSeconds = 15;
     public toggleProgress = false;
-    private screenfilter: string = '';
+    private screenfilter: string | undefined;
     public nameService!: NameService;
 
     constructor(
@@ -40,8 +40,9 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
 
     ngOnInit() {
         this.route.queryParamMap.subscribe(params => {
-            if (params.get('screenfilter') !== null) {
-                this.screenfilter = '' + params.get('screenfilter');
+            const screenFilter: string | null = params.get('screenfilter');
+            if (screenFilter !== null) {
+                this.screenfilter = screenFilter;
             }
         });
 
@@ -49,6 +50,7 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     }
 
     processScreens() {
+        console.log('wim');
         const link: LiveboardLink = { showIcon: false, tournamentId: this.tournament.getId(), link: 'wim' };
         this.globalEventsManager.toggleLiveboardIconInNavBar.emit(link);
         this.nameService = new NameService(new PlaceLocationMap(this.tournament.getCompetitors()));
@@ -105,5 +107,3 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         this.router.navigateByUrl(this.myNavigation.getPreviousUrl(''));
     }
 }
-
-

@@ -31,10 +31,10 @@
           <span [innerHTML]="activeScreen.getDescription() | keepHtml"></span>
         </small>
       </h1>
-      <app-progress class="d-inline-block" [toggleProgress]="toggleProgress" [max]="refreshAfterSeconds"
-        (executeAtZero)="executeScheduledTask()">
+      <app-progress *ngIf="activeScreen" class="d-inline-block" [toggleProgress]="toggleProgress"
+        [max]="refreshAfterSeconds" (executeAtZero)="executeScheduledTask()">
       </app-progress>
-    </div> -->
+    </div>
 
     <!-- right -->
     <button *ngIf="tournament" (click)="navigateBack()" class="btn btn-outline-secondary" type="button">

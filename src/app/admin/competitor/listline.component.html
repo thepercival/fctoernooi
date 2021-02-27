@@ -8,12 +8,14 @@
 </td>
 <td *ngIf="placeCompetitor.competitor">
   <div class="d-flex justify-content-between">
-    {{placeCompetitor.competitor.getName()}}
+    <span>{{placeCompetitor.competitor.getName()}}</span>
     <div>
-      <fa-icon *ngIf="showLockerRoomNotArranged" [icon]="['fas', 'door-closed']" class="pointer text-warning"
-        (click)="openInfoModal(popLockerRoom)"></fa-icon>
-      <fa-icon title="aangemeld" *ngIf="placeCompetitor.competitor.getRegistered()" [icon]="['fas', 'check-circle']"
-        class="text-success d-inline d-sm-none">
+      <fa-icon [icon]="['fas', 'door-closed']" [fixedWidth]="true" class="pointer text-warning"
+        [ngClass]="{ 'empty-fixedwidth': !showLockerRoomNotArranged}" (click)="openLockerRoomInfoModal(popLockerRoom)">
+      </fa-icon>
+      <fa-icon title="aangemeld" [fixedWidth]="true" [icon]="['fas', 'check-circle']"
+        class="text-success d-inline d-sm-none"
+        [ngClass]="{ 'empty-fixedwidth': !placeCompetitor.competitor.getRegistered()}">
       </fa-icon>
     </div>
   </div>
@@ -38,11 +40,11 @@
     <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
   </button></td>
 
-<ng-template #popLockerRoom>
-  <div class="text-center">
-    de deelnemer is nog niet ingedeeld in een kleedkamer<br /><button type="button"
-      class="btn btn-sm btn-outline-secondary my-1" (click)="toLockerRooms.emit()">
-      naar de kleedkamers
-    </button>
+<ng-template #popLockerRoom let-activeModal>
+  <div class="text-center lead">
+    de deelnemer is nog niet ingedeeld in een kleedkamer<br /><button type="submit"
+      class="btn btn-sm btn-secondary my-3" data-dismiss="modal" (click)="activeModal.close('linkToLockerRooms')">naar
+      de
+      kleedkamers</button>
   </div>
 </ng-template>
