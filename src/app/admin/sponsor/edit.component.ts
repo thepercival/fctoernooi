@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MyNavigation } from '../../shared/common/navigation';
-import { SponsorScreenService } from '../../lib/liveboard/screens';
 import { Sponsor } from '../../lib/sponsor';
 import { JsonSponsor } from '../../lib/sponsor/json';
 import { SponsorRepository } from '../../lib/sponsor/repository';
@@ -12,7 +11,8 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
-import { EventEmitter } from 'keyv';
+import { SponsorScreensCreator } from '../../lib/liveboard/screenCreator/sponsors';
+import { SponsorScreen } from '../../lib/liveboard/screens';
 
 @Component({
     selector: 'app-tournament-sponsor-edit',
@@ -23,7 +23,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
     form: FormGroup;
     base64Logo!: string | ArrayBuffer | null;
 
-    private sponsorScreenService!: SponsorScreenService;
+    private sponsorScreensCreator!: SponsorScreensCreator;
     rangeScreenNrs: number[] = [];
     logoInput: number;
     logoInputUpload = 1;
@@ -32,7 +32,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
     private readonly LOGO_ASPECTRATIO_THRESHOLD = 0.34;
     public originalSponsor: Sponsor | undefined;
 
-    validations: RefValidations = {
+    validations: SponsorValidations = {
         minlengthname: Sponsor.MIN_LENGTH_NAME,
         maxlengthname: Sponsor.MAX_LENGTH_NAME,
         maxlengthurl: Sponsor.MAX_LENGTH_URL,
@@ -83,14 +83,15 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
     }
 
     private postInit(id: number | string) {
-        this.sponsorScreenService = new SponsorScreenService(this.tournament.getSponsors());
+        this.sponsorScreensCreator = new SponsorScreensCreator();
         this.originalSponsor = this.tournament.getSponsors().find(sponsorIt => sponsorIt.getId() === id);
 
         this.rangeScreenNrs = [];
-        for (let screenNr = 1; screenNr <= SponsorScreenService.MAXNROFSPONSORSCREENS; screenNr++) {
-            const screen = this.sponsorScreenService.getScreen(screenNr);
-            if (screen !== undefined && (screen.getSponsors().length > SponsorScreenService.MAXNROFSPONSORSPERSCREEN
-                || (screen.getSponsors().length === SponsorScreenService.MAXNROFSPONSORSPERSCREEN
+        const screens: SponsorScreen[] = this.sponsorScreensCreator.getScreens(this.tournament.getSponsors());
+        for (let screenNr = 1; screenNr <= SponsorScreensCreator.MaxNrOfSponsorScreens; screenNr++) {
+            const screen = this.sponsorScreensCreator.getScreen(screens, screenNr);
+            if (screen !== undefined && (screen.getSponsors().length > SponsorScreensCreator.MaxNrOfSponsorsPerScreen
+                || (screen.getSponsors().length === SponsorScreensCreator.MaxNrOfSponsorsPerScreen
                     && !(this.originalSponsor !== undefined && this.originalSponsor.getScreenNr() === screenNr)))) {
                 continue;
             }
@@ -203,7 +204,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
     }
 }
 
-export interface RefValidations {
+export interface SponsorValidations {
     minlengthname: number;
     maxlengthname: number;
     maxlengthurl: number;

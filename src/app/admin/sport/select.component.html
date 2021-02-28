@@ -8,7 +8,7 @@
   </h1>
 </div>
 
-<ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+<ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
 <form [formGroup]="form" name="form" (ngSubmit)="save()" novalidate>
   <div *ngIf="!processing && inputType === inputTypeSelect">
@@ -22,7 +22,7 @@
       </button>
       <button type="submit" class="btn btn-primary" [disabled]="form.invalid || !someSportSelected()">opslaan</button>
     </div>
-    <ngb-alert *ngIf="bothGameModeSelected()" type="warning" [dismissible]="false">De wedstrijd-modus voor de sporten is
+    <ngb-alert *ngIf="bothGameModeSelected()" type="warning">De wedstrijd-modus voor de sporten is
       ingesteld op "met elkaar".</ngb-alert>
     <ul class="list-group">
       <li *ngFor="let sport of selectableSports" class="list-group-item">

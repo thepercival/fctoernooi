@@ -8,7 +8,7 @@
         naar het beheergedeelte
       </button>
     </div>
-    <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+    <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
     <div *ngIf="!processing && hasCompetitors() && hasReferees()">
       <div class="d-flex justify-content-between mb-2">
         <h2>Instellen</h2>

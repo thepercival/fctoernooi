@@ -3,7 +3,7 @@
     <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
       <app-tournament-title [tournament]="tournament">
       </app-tournament-title>
-      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>

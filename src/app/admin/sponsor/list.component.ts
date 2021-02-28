@@ -1,7 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { SponsorScreenService } from '../../lib/liveboard/screens';
 import { Sponsor } from '../../lib/sponsor';
 import { SponsorRepository } from '../../lib/sponsor/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
@@ -10,6 +9,7 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
+import { SponsorScreensCreator } from '../../lib/liveboard/screenCreator/sponsors';
 
 
 @Component({
@@ -19,13 +19,7 @@ import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.
 })
 export class SponsorListComponent extends TournamentComponent implements OnInit {
   sponsors: Sponsor[] = [];
-  sponsorScreenService!: SponsorScreenService;
-
-  validations: any = {
-    'minlengthname': Sponsor.MIN_LENGTH_NAME,
-    'maxlengthname': Sponsor.MAX_LENGTH_NAME,
-    'maxlengthurl': Sponsor.MAX_LENGTH_URL
-  };
+  sponsorScreensCreator!: SponsorScreensCreator;
 
   constructor(
     route: ActivatedRoute,
@@ -44,7 +38,7 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
 
   initSponsors() {
     this.createSponsorsList();
-    this.sponsorScreenService = new SponsorScreenService(this.sponsors);
+    this.sponsorScreensCreator = new SponsorScreensCreator();
     this.processing = false;
   }
 

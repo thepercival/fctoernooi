@@ -14,7 +14,7 @@
         (arrangeAction)="arrangeAction($event)">
       </app-tournament-structureround-arrange>
       <p *ngIf="editable && round.hasBegun()">
-        <ngb-alert [dismissible]="false" type="warning">de ronde heeft al gespeelde wedstrijden, je kunt niet meer
+        <ngb-alert type="warning">de ronde heeft al gespeelde wedstrijden, je kunt niet meer
           wijzigen</ngb-alert>
       </p>
       <p *ngIf="editable && alert">
@@ -23,13 +23,13 @@
       <div *ngIf="viewType !== ViewTypeQualifyGroups" class="d-flex flex-wrap justify-content-around">
         <ul *ngFor="let poule of round.getPoules();" class="list-group mb-3">
           <li class="list-group-item disabled px-2 py-2">
-            {{nameService.getPouleName( poule, round.isRoot() && round.getPoules().length <= 2)}}
-          </li>
+            {{nameService.getPouleName( poule, round.isRoot() && round.getPoules().length <= 2)}} </li>
           <li *ngFor="let place of poule.getPlaces();"
             class="list-group-item px-2 py-2 place-list-item pointer {{cssService.getQualifyPlace(place)}}"
             placement="top" ngbPopover="{{nameService.getPlaceFromName(place,true,true)}}">
             <span
-              [ngClass]="{'favitem': isFavorite(placeLocationMap.getCompetitor(place)) }">{{nameService.getPlaceFromName(place, false)}}</span>
+              [ngClass]="{'favitem': isFavorite(placeLocationMap.getCompetitor(place)) }">{{nameService.getPlaceFromName(place,
+              false)}}</span>
           </li>
         </ul>
       </div>
@@ -96,7 +96,7 @@
     </div>
   </div>
   <div *ngIf="!round.isRoot() && round.getNrOfPlaces() < 2">
-    <ngb-alert [dismissible]="false" type="warning">fout: los op door bovenstaande ronde opnieuw aan te maken
+    <ngb-alert type="warning">fout: los op door bovenstaande ronde opnieuw aan te maken
     </ngb-alert>
   </div>
 </div>

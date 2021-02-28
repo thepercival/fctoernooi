@@ -1,6 +1,6 @@
 <div class=" text-center align-items-center d-lg-none">
   <div>
-    <ngb-alert type="info" [dismissible]="false">deze pagina werkt alleen vanaf middelgrote schermen</ngb-alert>
+    <ngb-alert type="info">deze pagina werkt alleen vanaf middelgrote schermen</ngb-alert>
   </div>
   <div>
     <button *ngIf="tournament" (click)="navigateBack()" routerLinkActive="active" class="btn btn-outline-secondary"
@@ -47,7 +47,7 @@
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
   </div>
-  <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+  <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
   <!-- scheduled games and results screen -->
   <app-tournament-liveboard-games *ngIf="isGamesScreen()" [screen]="activeScreen" [nameService]="nameService">

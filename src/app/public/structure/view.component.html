@@ -13,7 +13,7 @@
       </h2>
     </div>
   </div>
-  <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+  <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
   <div class="text-center">
     <button *ngIf="!processing && tournament && isAdmin()" [routerLink]="['/admin', tournament.getId()]" type="button"
       class="btn btn-warning w-100 mb-3">

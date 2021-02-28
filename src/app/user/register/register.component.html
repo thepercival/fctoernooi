@@ -15,7 +15,7 @@
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
-      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
       <div *ngIf="!processing && isLoggedIn() && registered" class="card card-body mx-auto bg-faded form-register mt-3">
         <legend class="m-b-1 text-xs-center">bedankt voor het registreren!</legend>
         <button role="button" class="btn btn-outline-secondary" routerLink="/">ga verder</button>

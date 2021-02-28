@@ -11,7 +11,7 @@
             <h2 *ngIf="processing" class="text-center">
                 <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
             </h2>
-            <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+            <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
             <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
                 <div class="form-group row">
                     <div class="col-3 col-sm-6">

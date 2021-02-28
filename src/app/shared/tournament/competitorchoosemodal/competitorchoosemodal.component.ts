@@ -36,7 +36,6 @@ export class CompetitorChooseModalComponent implements OnInit {
                 nrOtherLockerRooms: this.validator.nrArranged(competitor, this.lockerRoom)
             });
         });
-        console.log(this.competitorListItems);
     }
 
     hasSelectableCompetitors(): boolean {

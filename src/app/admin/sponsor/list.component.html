@@ -18,7 +18,7 @@
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
     </div>
-    <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+    <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
     <table *ngIf="!processing" class="table">
       <thead>
         <tr>
@@ -28,7 +28,7 @@
           <th class="d-none d-lg-table-cell">url</th>
           <th class="text-right">
             <button type="button" class="btn btn-sm btn-primary" (click)="addSponsor()"
-              *ngIf="sponsors.length < sponsorScreenService.getMaxNrOfSponsors()">
+              *ngIf="sponsors.length < sponsorScreensCreator.getMaxNrOfSponsors()">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button>
           </th>

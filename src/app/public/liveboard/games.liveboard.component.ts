@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { AgainstGame, Game, NameService, Round, RoundNumber, ScoreConfigService, State } from 'ngx-sport';
+import { AgainstGame, AgainstSide, NameService, Round, ScoreConfigService, State, TogetherGame } from 'ngx-sport';
+import { AgainstGamePlace } from 'ngx-sport/src/game/place/against';
+import { TogetherGamePlace } from 'ngx-sport/src/game/place/together';
 import { DateFormatter } from '../../lib/dateFormatter';
-
-import { CreatedAndInplayGamesScreen, GamesScreen } from '../../lib/liveboard/screens';
+import { GamesScreen, ResultsScreen } from '../../lib/liveboard/screens';
 
 @Component({
     selector: 'app-tournament-liveboard-games',
@@ -19,39 +20,47 @@ export class LiveboardGamesComponent {
     ) {
     }
 
-    isCreatedAndInplay(): boolean {
-        return this.screen instanceof CreatedAndInplayGamesScreen;
+    isResultsScreen(): boolean {
+        return this.screen instanceof ResultsScreen;
     }
 
-    showDateTime(game?: Game): boolean {
-        const roundNumber = this.getRoundNumber(game);
-        return this.isCreatedAndInplay() && roundNumber.getValidPlanningConfig().getEnableTime();
+    get BatchViewModeNr(): BatchViewMode { return BatchViewMode.Nr }
+    get BatchViewModeDate(): BatchViewMode { return BatchViewMode.Nr }
+
+    getBatchViewMode(game: AgainstGame | TogetherGame): BatchViewMode {
+        return game.getPlanningConfig().getEnableTime() ? BatchViewMode.Date : BatchViewMode.Nr;
     }
 
-    showBatch(game?: Game): boolean {
-        const roundNumber = this.getRoundNumber(game);
-        return this.isCreatedAndInplay() && !roundNumber.getValidPlanningConfig().getEnableTime();
+    get HomeSide(): AgainstSide { return AgainstSide.Home; }
+    get AwaySide(): AgainstSide { return AgainstSide.Away; }
+
+    getSidePlaces(game: TogetherGame | AgainstGame, side: AgainstSide): string {
+        return this.nameService.getPlacesFromName((<AgainstGame>game).getSidePlaces(side), true, true)
     }
 
-    getRoundNumber(game?: Game): RoundNumber {
-        if (game === undefined) {
-            game = this.screen.getGames()[0];
-        }
-        return game.getRound().getNumber();
+    getTogetherPlace(gamePlace: AgainstGamePlace | TogetherGamePlace): string {
+        return this.nameService.getPlaceFromName(gamePlace.getPlace(), true, true)
     }
 
-    getScore(game: Game): string {
+    getAgainstScore(game: TogetherGame | AgainstGame): string {
         const sScore = ' - ';
         if (game.getState() !== State.Finished) {
             return sScore;
         }
-        // TODOSPORT
-        // const finalScore = this.scoreConfigService.getFinalScore(game);
-        // if (finalScore === undefined) {
-        //     return sScore;
-        // }
-        // return finalScore.getHome() + sScore + finalScore.getAway();
-        return '';
+        const finalScore = this.scoreConfigService.getFinalAgainstScore(<AgainstGame>game);
+        if (finalScore === undefined) {
+            return sScore;
+        }
+        return finalScore.getHome() + sScore + finalScore.getAway();
+    }
+
+    getTogetherScore(gamePlace: TogetherGamePlace): string {
+        const score = '';
+        if (gamePlace.getGame().getState() !== State.Finished) {
+            return score;
+        }
+        const finalScore = this.scoreConfigService.getFinalTogetherScore(gamePlace);
+        return score + finalScore;
     }
 
     hasReferees() {
@@ -72,3 +81,5 @@ export class LiveboardGamesComponent {
         return name;
     }
 }
+
+export enum BatchViewMode { Nr = 1, Date }

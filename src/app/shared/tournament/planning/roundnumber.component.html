@@ -16,11 +16,11 @@
       <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellingen
     </button>
   </div>
-  <ngb-alert *ngIf="!roundNumber.getHasPlanning()" class="mb-0" type="warning" [dismissible]="false">
+  <ngb-alert *ngIf="!roundNumber.getHasPlanning()" class="mb-0" type="warning">
     <fa-icon [icon]="['fas', 'info-circle']"></fa-icon> De wedstrijdplanning wordt gezocht, dit duurt enkele
     seconden tot 1 minuut. Zodra de wedstrijdplanning is gevonden, worden de wedstrijden automatisch getoond.
   </ngb-alert>
-  <ngb-alert *ngIf="refreshingData" type="info" [dismissible]="false">
+  <ngb-alert *ngIf="refreshingData" type="info">
     de uitslagen worden vernieuwd
   </ngb-alert>
   <div *ngIf="roundNumber.getHasPlanning()">

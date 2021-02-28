@@ -117,7 +117,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
 
   private reloadGameData() {
     this.gameDatas = this.getGameData();
-    console.log(this.gameDatas);
     this.sameDay = this.gameDatas.length > 1 ? this.isSameDay(this.gameDatas[0], this.gameDatas[this.gameDatas.length - 1]) : true;
   }
 

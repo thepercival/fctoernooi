@@ -20,7 +20,6 @@ import { NameService, PlaceLocationMap } from 'ngx-sport';
 export class LiveboardComponent extends TournamentComponent implements OnInit, OnDestroy {
     public activeScreen: any;
     private screens: any[] = [];
-    private maxLines = 8;
     public refreshAfterSeconds = 15;
     public toggleProgress = false;
     private screenfilter: string | undefined;
@@ -54,8 +53,8 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         const link: LiveboardLink = { showIcon: false, tournamentId: this.tournament.getId(), link: 'wim' };
         this.globalEventsManager.toggleLiveboardIconInNavBar.emit(link);
         this.nameService = new NameService(new PlaceLocationMap(this.tournament.getCompetitors()));
-        const liveBoard = new Liveboard(this.tournament, this.structure, this.maxLines);
-        this.screens = liveBoard.getScreens(this.screenfilter);
+        const liveBoard = new Liveboard();
+        this.screens = liveBoard.getScreens(this.tournament, this.structure, this.screenfilter);
         if (this.screens.length > 0) {
             this.executeScheduledTask();
         } else {

@@ -1,9 +1,10 @@
-import { AgainstGame, TogetherGame, Poule, GameMode, TogetherScore } from 'ngx-sport';
+import { AgainstGame, TogetherGame, Poule, GameMode } from 'ngx-sport';
 
 import { Sponsor } from '../sponsor';
 import { VoetbalRange } from 'ngx-sport';
+import { BatchViewMode } from '../../public/liveboard/games.liveboard.component';
 
-export class Screen {
+export class LiveboardScreen {
     protected description: string = '';
 
     getDescription() {
@@ -11,7 +12,7 @@ export class Screen {
     }
 }
 
-export class PoulesRankingScreen extends Screen {
+export class PoulesRankingScreen extends LiveboardScreen {
     constructor(
         private pouleOne: Poule,
         private pouleTwo: Poule | undefined,
@@ -37,41 +38,58 @@ export class PoulesRankingScreen extends Screen {
     }
 }
 
-export class EndRankingScreen extends Screen {
+export class EndRankingScreen extends LiveboardScreen {
     constructor(public range: VoetbalRange) {
         super();
         this.description = 'eindstand';
     }
 }
 
-export class GamesScreen extends Screen {
+export abstract class GamesScreen extends LiveboardScreen {
 
-    constructor(protected screenGames: ScreenGames) {
+    protected usedGameModes: number = 0;
+    protected games: (AgainstGame | TogetherGame)[] = [];
+
+    constructor(protected maxLines: number) {
         super();
+        // this.screenGames = { usedGameModes: 0, games: [] };
     }
 
-    getGames(): (AgainstGame | TogetherGame)[] {
-        return this.screenGames.games;
+    public abstract getBatchViewMode(): BatchViewMode | undefined;
+
+    // public hasgetBatchViewMode(): BatchViewMode | undefined;
+
+    public getGames(): (AgainstGame | TogetherGame)[] {
+        return this.games;
     }
 
-    addGame(game: AgainstGame | TogetherGame) {
-        this.screenGames.games.push(game);
+    addGame(game: AgainstGame | TogetherGame): boolean {
+        if (!this.hasEnoughLines()) {
+            this.games.push(game);
+            // this.usedGameModes |= game.getPlanningConfig().getGameMode();
+            return true;
+        }
+        return false;
     }
 
     isEmpty(): boolean {
-        return this.screenGames.games.length === 0;
+        return this.games.length === 0;
+    }
+
+    hasEnoughLines(): boolean {
+        return this.games.length >= this.maxLines;
     }
 
     onlyGameModeAgainst(): boolean {
-        return this.screenGames.usedGameModes === GameMode.Against;
+        return this.usedGameModes === GameMode.Against;
     }
 
     onlyGameModeTogether(): boolean {
-        return this.screenGames.usedGameModes === GameMode.Together;
+        return this.usedGameModes === GameMode.Together;
     }
 
     bothGameModes(): boolean {
-        return this.screenGames.usedGameModes === (GameMode.Against + GameMode.Together);
+        return this.usedGameModes === (GameMode.Against + GameMode.Together);
     }
 }
 
@@ -79,11 +97,11 @@ export interface IGamesScreen {
     isScheduled(): boolean;
 }
 
-export class CreatedAndInplayGamesScreen extends GamesScreen implements IGamesScreen {
-    protected next: CreatedAndInplayGamesScreen | undefined;
+export class ScheduleScreen extends GamesScreen implements IGamesScreen {
+    protected next: ScheduleScreen | undefined;
 
-    constructor(protected maxLines: number, protected previous?: CreatedAndInplayGamesScreen) {
-        super({ usedGameModes: 0, games: [] });
+    constructor(maxLines: number, protected previous?: ScheduleScreen) {
+        super(maxLines);
         this.setDescription('programma');
     }
 
@@ -92,14 +110,14 @@ export class CreatedAndInplayGamesScreen extends GamesScreen implements IGamesSc
     }
 
     isFull(): boolean {
-        return this.screenGames.games.length >= this.maxLines;
+        return this.games.length >= this.maxLines;
     }
 
     isFirst(): boolean {
         return this.previous === undefined;
     }
 
-    getNext(): CreatedAndInplayGamesScreen | undefined {
+    getNext(): ScheduleScreen | undefined {
         return this.next;
     }
 
@@ -107,30 +125,39 @@ export class CreatedAndInplayGamesScreen extends GamesScreen implements IGamesSc
         return this.next !== undefined;
     }
 
+    // if has by date else get by nr else undefined
+    public getBatchViewMode(): BatchViewMode | undefined {
+        return undefined;
+    }
+
     setDescription(description: string) {
         this.description = description;
     }
 
-    createNext(): CreatedAndInplayGamesScreen {
+    createNext(): ScheduleScreen {
         this.setDescription(this.description + ' <span class="badge badge-info">deel 1</span>');
-        this.next = new CreatedAndInplayGamesScreen(this.maxLines, this);
+        this.next = new ScheduleScreen(this.maxLines, this);
         this.next.setDescription(this.next.description + ' <span class="badge badge-info">deel 2</span>');
         return this.next;
     }
 }
 
-export class PlayedGamesScreen extends GamesScreen implements IGamesScreen {
-    constructor(screenGames: ScreenGames) {
-        super(screenGames);
+export class ResultsScreen extends GamesScreen implements IGamesScreen {
+    constructor(maxLines: number) {
+        super(maxLines);
         this.description = 'uitslagen';
     }
 
     isScheduled(): boolean {
         return false;
     }
+
+    public getBatchViewMode(): BatchViewMode | undefined {
+        return undefined;
+    }
 }
 
-export class SponsorScreen extends Screen {
+export class SponsorScreen extends LiveboardScreen {
     private sponsors: Sponsor[] = [];
 
     constructor(private number: number) {
@@ -145,48 +172,4 @@ export class SponsorScreen extends Screen {
     getSponsors(): Sponsor[] {
         return this.sponsors;
     }
-}
-
-export class SponsorScreenService {
-    static readonly MAXNROFSPONSORSCREENS: number = 4;
-    static readonly MAXNROFSPONSORSPERSCREEN: number = 4;
-
-    private screens: SponsorScreen[] = [];
-
-    constructor(sponsors: Sponsor[]) {
-        this.initScreens(sponsors);
-    }
-
-    private initScreens(sponsors: Sponsor[]) {
-        sponsors.forEach(sponsor => {
-            let screen = this.getScreen(sponsor.getScreenNr());
-            if (screen === undefined && this.screens.length < SponsorScreenService.MAXNROFSPONSORSCREENS) {
-                screen = new SponsorScreen(sponsor.getScreenNr());
-                this.screens.push(screen);
-            }
-            if (screen && screen.getSponsors().length < SponsorScreenService.MAXNROFSPONSORSPERSCREEN) {
-                screen.getSponsors().push(sponsor);
-            }
-        });
-        this.screens.sort((s1, s2) => {
-            return (s1.getNumber() > s2.getNumber() ? 1 : -1);
-        });
-    }
-
-    getScreens(): SponsorScreen[] {
-        return this.screens;
-    }
-
-    getScreen(screenNr: number): SponsorScreen | undefined {
-        return this.screens.find(screen => screen.getNumber() === screenNr);
-    }
-
-    getMaxNrOfSponsors(): number {
-        return SponsorScreenService.MAXNROFSPONSORSCREENS * SponsorScreenService.MAXNROFSPONSORSPERSCREEN;
-    }
-}
-
-export interface ScreenGames {
-    usedGameModes: number;
-    games: (AgainstGame | TogetherGame)[];
 }

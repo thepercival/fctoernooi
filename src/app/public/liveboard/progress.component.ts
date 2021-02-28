@@ -29,7 +29,6 @@ export class ProgressComponent implements OnDestroy, OnChanges {
     public dashoffset!: number;
 
     constructor(private _ngZone: NgZone, private changeRef: ChangeDetectorRef) {
-        console.log('resetProgress');
         this.resetProgress();
     }
 

@@ -162,11 +162,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
         swapCompetitor = competitors.shift();
         continue;
       }
-      console.log('competitors.length', competitors.length);
       const idx = this.getRandomInt(competitors.length);
-      console.log('idx', idx);
-      console.log('swapCompetitor', swapCompetitor);
-
       reposUpdates.push(this.competitorRepository.swapObjects(swapCompetitor, competitors[idx], this.tournament));
       swapCompetitor = undefined;
     }

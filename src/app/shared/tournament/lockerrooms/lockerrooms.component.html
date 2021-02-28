@@ -23,7 +23,7 @@
           naar het beheergedeelte
         </button>
       </div>
-      <ngb-alert *ngIf="!processing && tournament && !hasCompetitors" type="info" [dismissible]="false">er zijn nog geen
+      <ngb-alert *ngIf="!processing && tournament && !hasCompetitors" type="info">er zijn nog geen
         deelnemers
         ingevuld, ga naar
         <button role="button" class="btn btn-secondary" [routerLink]="['/admin/competitors', tournament.getId()]">
@@ -32,7 +32,7 @@
           </span>
         </button>
       </ngb-alert>
-      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
       <div *ngIf="!processing && hasCompetitors" class="card-deck flex-wrap d-flex justify-content-center mx-0">
         <app-tournament-lockerroom *ngFor="let lockerRoom of tournament.getLockerRooms()" [lockerRoom]="lockerRoom"

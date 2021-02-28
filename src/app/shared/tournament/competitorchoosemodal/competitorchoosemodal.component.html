@@ -7,7 +7,7 @@
     </button>
 </div>
 <div class="modal-body">
-    <ngb-alert *ngIf="!hasSelectableCompetitors()" type="danger" [dismissible]="false">er zijn geen deelnemers
+    <ngb-alert *ngIf="!hasSelectableCompetitors()" type="danger">er zijn geen deelnemers
         die je kunt kiezen</ngb-alert>
 
     <table *ngIf="places.length > 0" class="table">

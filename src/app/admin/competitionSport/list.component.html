@@ -14,7 +14,7 @@
     <h2 *ngIf="processing" class="text-center">
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
-    <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{alert.message}}</ngb-alert>
+    <ngb-alert *ngIf="alert" [type]="alert.type">{{alert.message}}</ngb-alert>
     <!-- <div *ngIf="!processing && !structure.getFirstRoundNumber().getConfig().getSelfReferee()" class="text-info">
       "deelnemers zijn scheidsrechter" kun je aanzetten onder <a [routerLink]="" (click)="linkToRoundSettings()">
         <fa-icon [icon]="['fas', 'cogs']"></fa-icon> <span>instellingen</span>
@@ -68,7 +68,7 @@
     </button>
   </div>
   <div class="modal-body">
-    <ngb-alert type="warning" [dismissible]="false">de velden voor deze sport worden ook verwijderd</ngb-alert>
+    <ngb-alert type="warning">de velden voor deze sport worden ook verwijderd</ngb-alert>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="modal.close('remove')">verwijderen</button>

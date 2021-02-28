@@ -12,7 +12,7 @@ import { TitleComponent } from './title/title.component';
 import { StructureRoundArrangeComponent } from './structure/round/arrange.component';
 import { StructureQualifyComponent } from './structure/qualify.component';
 import { StructureRoundComponent } from './structure/round.component';
-import { NgbNavModule, NgbAlertModule, NgbPopoverModule, NgbDatepickerModule, NgbTimepickerModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavModule, NgbAlertModule, NgbPopoverModule, NgbDatepickerModule, NgbTimepickerModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule, NgbModalConfig, NgbAlertConfig } from '@ng-bootstrap/ng-bootstrap';
 import { CommonSharedModule } from '../common/shared.module';
 import { LockerRoomsComponent } from './lockerrooms/lockerrooms.component';
 import { LockerRoomComponent } from './lockerrooms/lockerroom.component';
@@ -35,17 +35,17 @@ import { TournamentIconComponent } from './icon/icon.component';
     RoundNumberPlanningComponent,
     PouleRankingModalComponent,
     CompetitorChooseModalComponent,
-    NameModalComponent,
+    EndRankingComponent,
     GameModeInfoModalComponent,
     InfoModalComponent,
-    EndRankingComponent,
+    LockerRoomsComponent, LockerRoomComponent,
+    NameModalComponent,
     PouleRankingAgainstComponent,
     PouleRankingTogetherComponent,
-    TitleComponent,
-    StructureRoundArrangeComponent, StructureQualifyComponent, StructureRoundComponent,
-    LockerRoomsComponent, LockerRoomComponent,
-    RankingRulesComponent,
     QualifyAgainstInfoComponent,
+    RankingRulesComponent,
+    StructureRoundArrangeComponent, StructureQualifyComponent, StructureRoundComponent,
+    TitleComponent,
     TournamentIconComponent
   ],
   imports: [
@@ -61,31 +61,31 @@ import { TournamentIconComponent } from './icon/icon.component';
     CompetitionSportRouter,
   ],
   exports: [
-    RoundNumberPlanningComponent,
-    PouleRankingModalComponent,
-    NameModalComponent,
+    EndRankingComponent,
     GameModeInfoModalComponent,
     InfoModalComponent,
-    EndRankingComponent,
+    LockerRoomsComponent,
+    NameModalComponent,
+    NgbAlertModule, NgbButtonsModule, NgbCollapseModule, NgbDatepickerModule, NgbModalModule, NgbNavModule, NgbPopoverModule, NgbTimepickerModule,
+    PouleRankingModalComponent,
     PouleRankingAgainstComponent,
     PouleRankingTogetherComponent,
-    TitleComponent,
-    StructureRoundComponent,
-    LockerRoomsComponent,
-    RankingRulesComponent,
     QualifyAgainstInfoComponent,
-    NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule,
+    RankingRulesComponent,
+    RoundNumberPlanningComponent,
+    StructureRoundComponent,
+    TitleComponent,
     TournamentIconComponent,
-    NgbNavModule
   ]
 })
 export class TournamentModule {
-  constructor(library: FaIconLibrary, modalConfig: NgbModalConfig) {
+  constructor(library: FaIconLibrary, modalConfig: NgbModalConfig, alertConfig: NgbAlertConfig) {
     library.addIcons(faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt,
       faMedal, faSpinner, faLevelUpAlt, faMinus, faDoorClosed, faPlus,
       facStructure, facReferee, facScoreboard, facSoccerField);
     modalConfig.centered = true;
     modalConfig.scrollable = true;
     modalConfig.size = 'lg';
+    alertConfig.dismissible = false;
   }
 }
