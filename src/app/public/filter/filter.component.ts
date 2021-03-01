@@ -10,6 +10,8 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { AuthService } from '../../lib/auth/auth.service';
 import { Role } from '../../lib/role';
+import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
+import { TournamentCompetitor } from '../../lib/competitor';
 
 @Component({
     selector: 'app-tournament-filter',
@@ -17,10 +19,9 @@ import { Role } from '../../lib/role';
     styleUrls: ['./filter.component.scss']
 })
 export class FilterComponent extends TournamentComponent implements OnInit {
-    public places: Place[] = [];
+    public placeCompetitorItems: PlaceCompetitorItem[] = [];
     public favorites!: Favorites;
     public processingItem: Referee | Place | undefined;
-    public placeLocationMap!: PlaceLocationMap;
     public nameService!: NameService;
 
     constructor(
@@ -38,10 +39,13 @@ export class FilterComponent extends TournamentComponent implements OnInit {
 
     ngOnInit() {
         super.myNgOnInit(() => {
-            this.placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
-            this.nameService = new NameService(this.placeLocationMap);
-            this.initPlaces();
+            const placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
+            this.nameService = new NameService(placeLocationMap);
+            this.placeCompetitorItems = this.getPlaceCompetitorItems(placeLocationMap);
             this.favorites = this.favRepository.getObject(this.tournament);
+            if (this.hasCompetitors() === false) {
+                this.setAlert('info', 'er zijn nog geen deelnemers ingevuld, je kunt daarom nog geen deelnemers kiezen');
+            }
             this.processing = false;
         });
     }
@@ -50,20 +54,14 @@ export class FilterComponent extends TournamentComponent implements OnInit {
         return this.hasRole(this.authService, Role.ADMIN);
     }
 
-    initPlaces() {
-        const round = this.structure.getRootRound();
-        this.places = round.getPlaces();
-        if (this.hasCompetitors() === false) {
-            this.setAlert('info', 'er zijn nog geen deelnemers ingevuld, je kunt daarom nog geen deelnemers kiezen');
-        }
+    getPlaceCompetitorItems(map: PlaceLocationMap): PlaceCompetitorItem[] {
+        return this.structure.getRootRound().getPlaces().map((place: Place): PlaceCompetitorItem => {
+            return { place, competitor: <TournamentCompetitor>map.getCompetitor(place) };
+        });
     }
 
     hasCompetitors() {
         return this.tournament.getCompetitors().length > 0;
-    }
-
-    getCompetitor(place: Place): Competitor {
-        return this.placeLocationMap.getCompetitor(place);
     }
 
     save() {

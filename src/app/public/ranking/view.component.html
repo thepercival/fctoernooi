@@ -1,4 +1,4 @@
-<!-- <div class="container-fluid px-0">
+<div class="container-fluid px-0">
   <div class="row justify-content-around no-gutters">
     <div class="col-12 col-lg-10">
       <app-tournament-title [tournament]="tournament">
@@ -18,15 +18,16 @@
           <li [ngbNavItem]="1">
             <a ngbNavLink>poulestanden</a>
             <ng-template ngbNavContent>
-              <app-tournament-ranking-roundnumber [roundNumber]="structure.getFirstRoundNumber()"
-                [tournament]="tournament">
-              </app-tournament-ranking-roundnumber>
+              <app-tournament-ranking-round [round]="structure.getRootRound()" [favorites]="favorites"
+                [placeLocationMap]="placeLocationMap" [first]="true">
+              </app-tournament-ranking-round>
             </ng-template>
           </li>
           <li [ngbNavItem]="2">
             <a ngbNavLink>eindstand</a>
             <ng-template ngbNavContent>
-              <app-tournament-endranking [favorites]="competitors" [structure]="structure"></app-tournament-endranking>
+              <app-tournament-endranking [placeLocationMap]="placeLocationMap" [favorites]="favorites"
+                [structure]="structure"></app-tournament-endranking>
             </ng-template>
           </li>
           <li [ngbNavItem]="3">
@@ -34,7 +35,9 @@
             <ng-template ngbNavContent>
               <div class="m-3">
                 <h4>rangschikking</h4>
-                <app-ranking-rules [ruleSet]="tournament.getCompetition().getRuleSet()"></app-ranking-rules>
+                <app-ranking-rules [rankingRuleSet]="tournament.getCompetition().getRankingRuleSet()"
+                  [editMode]="isAdmin()" (changed)="saveRankingRuleSet($event)">
+                </app-ranking-rules>
               </div>
             </ng-template>
           </li>
@@ -43,4 +46,4 @@
       </div>
     </div>
   </div>
-</div> -->
+</div>

@@ -17,7 +17,6 @@ import { LockerRoomValidator } from '../../lib/lockerroom/validator';
 import { CompetitionSportRouter } from '../../shared/tournament/competitionSport.router';
 import { ExportModalComponent, TournamentExportAction } from './exportmodal.component';
 import { ShareModalComponent } from './sharemodal.component';
-import { RankingRuleSetModalComponent } from './rankingrulesetmodal.component';
 import { TournamentMapper } from '../../lib/tournament/mapper';
 import { DateFormatter } from '../../lib/dateFormatter';
 
@@ -246,23 +245,6 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         activeModal.componentInstance.tournament = this.tournament;
         activeModal.result.then((publicEnabled: boolean) => {
             this.share(publicEnabled);
-        }, (reason) => {
-        });
-    }
-
-    openModalRankingRuleSet() {
-        const activeModal = this.modalService.open(RankingRuleSetModalComponent);
-        activeModal.componentInstance.rankingRuleSet = this.tournament.getCompetition().getRankingRuleSet();
-        activeModal.result.then((rankingRuleSet: RankingRuleSet) => {
-            this.processing = true;
-            const json = this.tournamentMapper.toJson(this.tournament);
-            json.competition.rankingRuleSet = rankingRuleSet;
-            this.tournamentRepository.editObject(json)
-                .subscribe(
-                /* happy path */(tournament: Tournament) => { this.tournament = tournament; },
-                /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
-                /* onComplete */() => { this.processing = false; }
-                );
         }, (reason) => {
         });
     }

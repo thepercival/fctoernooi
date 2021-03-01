@@ -6,7 +6,7 @@ $enable-responsive-font-sizes: true !default;
 @import "./bootswatch/bootswatch";
 
 @include media-breakpoint-up(sm) {
-    app-tournament-pouleranking {       
+    app-tournament-pouleranking {
         margin: 10px;
     }
     .card-deck-wrapper {
@@ -30,7 +30,7 @@ $enable-responsive-font-sizes: true !default;
     .card-deck-wrapper {
      padding: 0;
     }
-    app-tournament-pouleranking {       
+    app-tournament-pouleranking {
       margin-top: 10px;
     }
 }

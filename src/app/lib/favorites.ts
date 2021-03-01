@@ -46,7 +46,7 @@ export class Favorites {
         return this.competitors.length > 0;
     }
 
-    hasCompetitor(competitor: Competitor): boolean {
+    hasCompetitor(competitor: Competitor | undefined): boolean {
         if (competitor === undefined) {
             return false;
         }
@@ -124,7 +124,7 @@ export class Favorites {
         return competitor ? this.hasCompetitor(competitor) : false;
     }
 
-    protected getCompetitorFromPlace(place: Place): Competitor {
+    protected getCompetitorFromPlace(place: Place): Competitor | undefined {
         return this.placeLocationMap.getCompetitor(place.getStartLocation());
     }
 

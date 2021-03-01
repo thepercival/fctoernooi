@@ -52,7 +52,7 @@
           <!-- start -->
           <th *ngIf="planningConfig.getEnableTime()">
             <button *ngIf="userIsAdmin && !hasBegun" title="wijzig plannings-instellingen"
-              class="btn btn-sm btn-outline-primary" (click)="linkToPlanningConfig()">
+              class="btn btn-sm btn-outline-secondary" (click)="linkToPlanningConfig()">
               <span>start</span>
             </button>
             <button *ngIf="!userIsAdmin || hasBegun" class="btn btn-sm btn-outline-info"
@@ -63,7 +63,7 @@
           <!-- field -->
           <th class="text-center">
             <button *ngIf="userIsAdmin" title="wijzig velden"
-              class="btn btn-sm btn-outline-{{tournamentHasBegun ? 'warning' : 'primary'}}"
+              class="btn btn-sm btn-outline-{{tournamentHasBegun ? 'warning' : 'secondary'}}"
               (click)="linkToCompetitionSport(SportConfigTabFields)">
               <app-tournament-icon name="soccer-field"></app-tournament-icon>
             </button>
@@ -74,7 +74,7 @@
           <!-- score -->
           <th class="text-center">
             <button *ngIf="userIsAdmin" title="wijzig score-regels"
-              class="btn btn-sm btn-outline-{{hasBegun ? 'warning' : 'primary'}}"
+              class="btn btn-sm btn-outline-{{hasBegun ? 'warning' : 'secondary'}}"
               (click)="linkToCompetitionSport(SportConfigTabScore)">
               <app-tournament-icon name="scoreboard"></app-tournament-icon>
             </button>
@@ -87,7 +87,7 @@
           <!-- referee -->
           <th *ngIf="hasReferees" class="d-none d-sm-table-cell text-right" title="scheidsrechter">
             <button *ngIf="userIsAdmin && !planningConfig.getSelfReferee()" title="wijzig scheidsrechters"
-              class="btn btn-sm btn-outline-{{tournamentHasBegun ? 'warning' : 'primary'}}" (click)="linkToReferee()">
+              class="btn btn-sm btn-outline-{{tournamentHasBegun ? 'warning' : 'secondary'}}" (click)="linkToReferee()">
               <app-tournament-icon name="referee"></app-tournament-icon>
             </button>
             <app-tournament-icon *ngIf="!userIsAdmin || planningConfig.getSelfReferee()" name="referee">

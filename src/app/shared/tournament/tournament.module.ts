@@ -29,6 +29,7 @@ import { PouleRankingAgainstComponent } from './ranking/pouleagainst.component';
 import { PouleRankingTogetherComponent } from './ranking/pouletogether.component';
 import { GameModeInfoModalComponent } from './gameMode/infomodal.component';
 import { TournamentIconComponent } from './icon/icon.component';
+import { PouleRankingComponent } from './ranking/poule.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { TournamentIconComponent } from './icon/icon.component';
     InfoModalComponent,
     LockerRoomsComponent, LockerRoomComponent,
     NameModalComponent,
+    PouleRankingComponent,
     PouleRankingAgainstComponent,
     PouleRankingTogetherComponent,
     QualifyAgainstInfoComponent,
@@ -68,6 +70,7 @@ import { TournamentIconComponent } from './icon/icon.component';
     NameModalComponent,
     NgbAlertModule, NgbButtonsModule, NgbCollapseModule, NgbDatepickerModule, NgbModalModule, NgbNavModule, NgbPopoverModule, NgbTimepickerModule,
     PouleRankingModalComponent,
+    PouleRankingComponent,
     PouleRankingAgainstComponent,
     PouleRankingTogetherComponent,
     QualifyAgainstInfoComponent,

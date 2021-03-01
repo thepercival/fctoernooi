@@ -79,17 +79,6 @@
             </p>
           </div>
         </div>
-        <div *ngIf="structure.getRootRound().hasBegun()" class="card border-secondary pointer mt-3 mx-2"
-          [routerLink]="['/public/ranking', tournament.getId()]">
-          <div class="card-body">
-            <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> standen
-            </h5>
-            <p class="card-text">
-              poule- en eindstanden
-            </p>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -130,6 +119,15 @@
         <p class="card-text">{{getNrOfSponsorsDescription()}}</p>
       </div>
     </div>
+    <!-- ranking (ruleset) -->
+    <div class="card card-sub pointer mt-3 mx-2" [routerLink]="['/public/ranking', tournament.getId()]">
+      <div class="card-body text-center p-1 pt-2">
+        <h5 class="card-title">
+          <fa-icon [icon]="['fas', 'list-ol']"></fa-icon>
+        </h5>
+        <div>standen</div>
+      </div>
+    </div>
     <!-- live scoreboard -->
     <div *ngIf="structure.hasPlanning()" class="card card-sub pointer mt-3 mx-2"
       [routerLink]="['/public/liveboard', tournament.getId()]">
@@ -150,17 +148,6 @@
         </h5>
         <div>pdf</div>
         <div>excel</div>
-      </div>
-    </div>
-    <!-- ranking ruleset -->
-    <div *ngIf="hasGameModeAgainst() && !structure.getRootRound().hasBegun()" class="card card-sub pointer mt-3 mx-2"
-      (click)="openModalRankingRuleSet()">
-      <div class="card-body text-center p-1 pt-2">
-        <h5 class="card-title">
-          <fa-icon [icon]="['fas', 'list-ol']"></fa-icon>
-        </h5>
-        <div>rang-</div>
-        <div>schikking</div>
       </div>
     </div>
     <!-- roleadmin -->

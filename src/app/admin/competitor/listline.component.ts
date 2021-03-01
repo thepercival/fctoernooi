@@ -1,10 +1,9 @@
 import { AfterViewChecked, Component, ElementRef, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
-import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NameService, Place } from 'ngx-sport';
 import { TournamentCompetitor } from '../../lib/competitor';
+import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
-import { PlaceCompetitorItem } from './list.component';
 
 @Component({
   selector: 'app-tournament-competitor-line',

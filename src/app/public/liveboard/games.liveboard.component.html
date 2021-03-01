@@ -10,11 +10,10 @@
         </th>
         <th *ngIf="screen.getBatchViewMode()" class="width-10"
           [ngClass]="{ 'text-center': screen.getBatchViewMode() === BatchViewModeNr }">
-          <span
-            *ngIf="screen.getBatchViewMode() === BatchViewModeDate">{{dateFormatter.toString(getRoundNumber().getFirstStartDateTime(),dateFormatter.date())}}</span>
+          <span *ngIf="screen.getBatchViewMode() === BatchViewModeDate">{{getFirstGameStartDate()}}</span>
           <span *ngIf="screen.getBatchViewMode() === BatchViewModeNr">batch</span>
         </th>
-        <th *ngIf="isCreatedAndInplay()" class="width-8">
+        <th *ngIf="isScheduleScreen()" class="width-8">
           <app-tournament-icon name="soccer-field"></app-tournament-icon>
         </th>
         <ng-template *ngIf="screen.onlyGameModeAgainst()">
@@ -28,7 +27,7 @@
           <th class="text-right width-58">deelnemers en <app-tournament-icon name="scoreboard"></app-tournament-icon>
           </th>
         </ng-template>
-        <th *ngIf="isCreatedAndInplay() && hasReferees()" class="width-14 text-right">
+        <th *ngIf="isScheduleScreen() && hasReferees()" class="width-14 text-right">
           <app-tournament-icon name="referee"></app-tournament-icon>
         </th>
       </tr>
@@ -50,7 +49,7 @@
             *ngIf="getBatchViewMode(game) === BatchViewModeDate">{{dateFormatter.toString(game.getStartDateTime(),dateFormatter.time())}}</span>
           <span *ngIf="getBatchViewMode(game) === BatchViewModeNr">{{game.getBatchNr()}}</span>
         </td>
-        <td *ngIf="isCreatedAndInplay()">{{game.getField()?.getName()}}</td>
+        <td *ngIf="isScheduleScreen()">{{game.getField()?.getName()}}</td>
         <!-- against -->
         <ng-template *ngIf="screen.onlyGameModeAgainst()">
           <ng-container *ngTemplateOutlet="againstGamePlaces;context:{$implicit: game}"></ng-container>
@@ -59,7 +58,7 @@
         <ng-template *ngIf="!screen.onlyGameModeAgainst()">
           <ng-container *ngTemplateOutlet="bothGamePlaces;context:{$implicit: game}"></ng-container>
         </ng-template>
-        <td *ngIf="isCreatedAndInplay() && hasReferees()" class="text-right">{{nameService.getRefereeName(game)}}</td>
+        <td *ngIf="isScheduleScreen() && hasReferees()" class="text-right">{{nameService.getRefereeName(game)}}</td>
       </tr>
     </tbody>
   </table>

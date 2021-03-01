@@ -3,37 +3,33 @@ import { NameService, Poule, RankedRoundItem, RankingService, PlaceLocationMap, 
 
 import { CSSService } from '../../common/cssservice';
 import { Favorites } from '../../../lib/favorites';
-import { FavoritesRepository } from '../../../lib/favorites/repository';
-import { Tournament } from '../../../lib/tournament';
 
 @Component({
-  selector: 'app-tournament-pouleranking-against',
+  selector: 'app-tournament-pouleranking-against-table',
   templateUrl: './pouleagainst.component.html',
   styleUrls: ['./pouleagainst.component.scss']
 })
 export class PouleRankingAgainstComponent implements OnInit {
   @Input() poule!: Poule;
-  @Input() tournament!: Tournament;
+  @Input() favorites!: Favorites;
+  @Input() placeLocationMap!: PlaceLocationMap;
+  @Input() rankingService!: RankingService;
   @Input() header!: boolean;
   public rankingItems!: RankedRoundItem[];
-  public placeLocationMap!: PlaceLocationMap;
+
   public nameService!: NameService;
   public showDifferenceDetail = false;
-  public favorites!: Favorites;
   public processing = true;
 
   constructor(
-    public cssService: CSSService,
-    public favRepository: FavoritesRepository) {
+    public cssService: CSSService
+  ) {
   }
 
   ngOnInit() {
     this.processing = true;
-    this.placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
     this.nameService = new NameService(this.placeLocationMap);
-    this.favorites = this.favRepository.getObject(this.tournament);
-    const ranking = new RankingService(GameMode.Against, this.tournament.getCompetition().getRankingRuleSet());
-    this.rankingItems = ranking.getItemsForPoule(this.poule);
+    this.rankingItems = this.rankingService.getItemsForPoule(this.poule);
     this.processing = false;
   }
 

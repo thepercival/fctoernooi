@@ -63,13 +63,11 @@ import { StructureSelectRoundComponent } from './rounds/round.component';
 import { ExportModalComponent } from './home/exportmodal.component';
 import { ShareModalComponent } from './home/sharemodal.component';
 import { QualifyAgainstConfigEditComponent } from './qualifyAgainstConfig/edit.component';
-import { RankingRuleSetModalComponent } from './home/rankingrulesetmodal.component';
 import { GameAmountConfigEditComponent } from './gameAmountConfig/edit.component';
 import { SportNewComponent } from './sport/new.component';
 import { GameTogetherEditComponent } from './game/edittogether.component';
 import { GameAgainstEditComponent } from './game/editagainst.component';
 import { ScoreTogetherCardComponent } from './game/togetherscorecard.component';
-import { Tournament } from '../lib/tournament';
 
 @NgModule({
   imports: [
@@ -108,7 +106,6 @@ import { Tournament } from '../lib/tournament';
     StructureEditComponent,
     PlanningConfigComponent,
     QualifyAgainstConfigEditComponent,
-    RankingRuleSetModalComponent,
     RefereeEditComponent,
     RoleItemComponent,
     RoundNumbersSelectorModalComponent,

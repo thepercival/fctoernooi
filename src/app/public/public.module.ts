@@ -28,8 +28,7 @@ import { RoutingModule } from './public-routing.module';
 import { GamesComponent } from './games/view.component';
 import { TournamentModule } from '../shared/tournament/tournament.module';
 import { RankingComponent } from './ranking/view.component';
-import { RankingRoundNumberComponent } from './ranking/roundnumber.component';
-
+import { RankingRoundComponent } from './ranking/round.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -51,7 +50,7 @@ import { RankingRoundNumberComponent } from './ranking/roundnumber.component';
     FilterComponent,
     ProgressComponent,
     RankingComponent,
-    RankingRoundNumberComponent
+    RankingRoundComponent
   ],
   providers: [
     CompetitionSportService,

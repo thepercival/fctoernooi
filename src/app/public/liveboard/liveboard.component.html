@@ -61,7 +61,8 @@
   <!-- endranking screen -->
   <div *ngIf="isEndRankingScreen()" class="row no-gutters">
     <div class="col-12 liveboard">
-      <app-tournament-endranking [structure]="structure" [range]="activeScreen.range">
+      <app-tournament-endranking [placeLocationMap]="placeLocationMap" [structure]="structure"
+        [range]="activeScreen.range">
       </app-tournament-endranking>
     </div>
   </div>

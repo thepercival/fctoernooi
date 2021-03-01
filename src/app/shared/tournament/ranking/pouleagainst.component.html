@@ -1,58 +1,46 @@
-<div *ngIf="poule" class="card border-1">
-    <div *ngIf="header" class="card-header">
-        {{nameService.getPouleName(poule, true)}}
-    </div>
-    <div class="card-body p-0">
-        <h2 *ngIf="processing" class="text-center">
-            <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-        </h2>
-        <div *ngIf="!processing" class="card-text">
-            <table class="table fixed mb-0">
-                <colgroup>
-                    <col>
-                    <col class="width-30">
-                    <col>
-                    <col>
-                    <col>
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th class="text-right pl-0">pl</th>
-                        <th class="place pl-0">deelnemer</th>
-                        <th class="text-right pl-0" title="gespeeld">g</th>
-                        <th class="text-right pl-0" title="punten">p</th>
-                        <th class="text-center text-info pl-0 pointer"
-                            (click)="showDifferenceDetail = !showDifferenceDetail" title="doelsaldo">&Delta;</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <ng-template ngFor let-rankingItem [ngForOf]="rankingItems">
-                        <tr>
-                            <td class="rankingnr text-right pl-0">
-                                <span
-                                    class="badge badge-rank {{getQualifyPlaceClass(rankingItem)}}">{{rankingItem.getUniqueRank()}}</span>
-                            </td>
-                            <td class="place pl-0"
-                                [ngClass]="{ 'favitem': favorites.hasCompetitor(placeLocationMap.getCompetitor(rankingItem.getPlace())) }">
-                                {{nameService.getPlaceFromName(rankingItem.getPlace(), true)}}
-                            </td>
-                            <td class="text-right pl-0">{{rankingItem.getUnranked().getGames()}}</td>
-                            <td class="text-right pl-0">{{rankingItem.getUnranked().getPoints()}}</td>
-                            <td class="text-center unitdiff pl-0">
-                                <div>
-                                    {{rankingItem.getUnranked().getDiff() > 0 ? '+' :
-                                    ''}}{{rankingItem.getUnranked().getDiff()}}
-                                </div>
-                                <div *ngIf="showDifferenceDetail">( {{rankingItem.getUnranked().getScored()}} -
-                                    {{rankingItem.getUnranked().getReceived()}} )</div>
-                                <div *ngIf="showDifferenceDetail && useSubScore()">(
-                                    {{rankingItem.getUnranked().getSubScored()}} -
-                                    {{rankingItem.getUnranked().getSubReceived()}} )</div>
-                            </td>
-                        </tr>
-                    </ng-template>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+<table class="table fixed mb-0">
+    <colgroup>
+        <col>
+        <col class="width-30">
+        <col>
+        <col>
+        <col>
+    </colgroup>
+    <thead>
+        <tr>
+            <th class="text-right pl-0">pl</th>
+            <th class="place pl-0">deelnemer</th>
+            <th class="text-right pl-0" title="gespeeld">g</th>
+            <th class="text-right pl-0" title="punten">p</th>
+            <th class="text-center text-info pl-0 pointer" (click)="showDifferenceDetail = !showDifferenceDetail"
+                title="doelsaldo">&Delta;</th>
+        </tr>
+    </thead>
+    <tbody>
+        <ng-template ngFor let-rankingItem [ngForOf]="rankingItems">
+            <tr>
+                <td class="rankingnr text-right pl-0">
+                    <span
+                        class="badge badge-rank {{getQualifyPlaceClass(rankingItem)}}">{{rankingItem.getUniqueRank()}}</span>
+                </td>
+                <td class="place pl-0"
+                    [ngClass]="{ 'favitem': favorites.hasCompetitor(placeLocationMap.getCompetitor(rankingItem.getPlace())) }">
+                    {{nameService.getPlaceFromName(rankingItem.getPlace(), true)}}
+                </td>
+                <td class="text-right pl-0">{{rankingItem.getUnranked().getGames()}}</td>
+                <td class="text-right pl-0">{{rankingItem.getUnranked().getPoints()}}</td>
+                <td class="text-center unitdiff pl-0">
+                    <div>
+                        {{rankingItem.getUnranked().getDiff() > 0 ? '+' :
+                        ''}}{{rankingItem.getUnranked().getDiff()}}
+                    </div>
+                    <div *ngIf="showDifferenceDetail">( {{rankingItem.getUnranked().getScored()}} -
+                        {{rankingItem.getUnranked().getReceived()}} )</div>
+                    <div *ngIf="showDifferenceDetail && useSubScore()">(
+                        {{rankingItem.getUnranked().getSubScored()}} -
+                        {{rankingItem.getUnranked().getSubReceived()}} )</div>
+                </td>
+            </tr>
+        </ng-template>
+    </tbody>
+</table>

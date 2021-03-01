@@ -1,0 +1,38 @@
+<div *ngIf="poules.length > 0" [ngClass]="{ 'pl-1': !first, 'pr-1': round.isRoot() }">
+  <div class="card border-secondary round mb-2 {{cssService.getQualifyRound(round)}}">
+    <div class="card-header p-0">
+      <div class="d-flex justify-content-between">
+        <span>
+        </span>
+        <h5 class="mb-2 mt-2">
+          <span [innerHtml]="nameService.getRoundName(round) | keepHtml"></span>
+          <button *ngIf="gameMode === Against" class="btn btn-sm btn-outline-info ml-1"
+            (click)="openInfoModal(contentScoreRules)">
+            <app-tournament-icon name="scoreboard"></app-tournament-icon>
+          </button>
+        </h5>
+        <fa-icon class="pointer px-3 pt-3" (click)="collapsed=!collapsed" [icon]="['fas', 'chevron-right']"
+          [rotate]="getCollapseDegrees()">
+        </fa-icon>
+      </div>
+    </div>
+    <div class="card-body px-1 card-deck-wrapper" [ngClass]="{ 'd-none': collapsed }">
+      <div class=" d-flex flex-wrap justify-content-center">
+        <app-tournament-pouleranking *ngFor="let poule of poules" [poule]="poule" [header]="true"
+          [favorites]="favorites" [placeLocationMap]="placeLocationMap">
+        </app-tournament-pouleranking>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="d-flex align-items-stretch text-center">
+  <app-tournament-ranking-round *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed(); first as first"
+    class="align-self-stretch flex-wrap mb-2" [round]="qualifyGroup.getChildRound()" [favorites]="favorites"
+    [first]="first" [placeLocationMap]="placeLocationMap">
+  </app-tournament-ranking-round>
+</div>
+
+
+<ng-template #contentScoreRules>
+  <app-qualifyagainstconfig-info [round]="round"></app-qualifyagainstconfig-info>
+</ng-template>

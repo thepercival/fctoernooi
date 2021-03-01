@@ -172,7 +172,7 @@ export class StructureRoundComponent implements OnInit {
     return nrOfChildPoules;
   }
 
-  isFavorite(competitor: Competitor) {
+  isFavorite(competitor: Competitor | undefined) {
     if (competitor === undefined) {
       return false;
     }

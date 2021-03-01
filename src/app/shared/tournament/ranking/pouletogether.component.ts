@@ -1,25 +1,24 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, RankedRoundItem, RankingService, PlaceLocationMap, GameMode, GameAmountConfig, Place, ScoreConfigService, TogetherGame, VoetbalRange, CompetitionSport } from 'ngx-sport';
+import { NameService, Poule, RankedRoundItem, RankingService, PlaceLocationMap, GameAmountConfig, Place, ScoreConfigService, TogetherGame, VoetbalRange, CompetitionSport } from 'ngx-sport';
 
 import { CSSService } from '../../common/cssservice';
 import { Favorites } from '../../../lib/favorites';
 import { FavoritesRepository } from '../../../lib/favorites/repository';
-import { Tournament } from '../../../lib/tournament';
 import { TogetherGamePlace } from 'ngx-sport/src/game/place/together';
 
 @Component({
-  selector: 'app-tournament-pouleranking-together',
+  selector: 'app-tournament-pouleranking-together-table',
   templateUrl: './pouletogether.component.html',
   styleUrls: ['./pouletogether.component.scss']
 })
 export class PouleRankingTogetherComponent implements OnInit {
   public rankingItems!: RankedRoundItem[];
   @Input() poule!: Poule;
-  @Input() tournament!: Tournament;
+  @Input() favorites!: Favorites;
+  @Input() placeLocationMap!: PlaceLocationMap;
+  @Input() rankingService!: RankingService;
   @Input() header!: boolean;
-  public placeLocationMap!: PlaceLocationMap;
   public nameService!: NameService;
-  favorites!: Favorites;
   gameAmountConfigs: GameAmountConfig[] = [];
   gameRoundMap = new GameRoundMap();
   togetherRankingMap: TogetherRankingMap = new TogetherRankingMap();
@@ -37,11 +36,8 @@ export class PouleRankingTogetherComponent implements OnInit {
 
   ngOnInit() {
     this.processing = true;
-    this.placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
     this.nameService = new NameService(this.placeLocationMap);
-    this.favorites = this.favRepository.getObject(this.tournament);
-    const ranking = new RankingService(GameMode.Together, this.tournament.getCompetition().getRankingRuleSet());
-    this.rankingItems = ranking.getItemsForPoule(this.poule);
+    this.rankingItems = this.rankingService.getItemsForPoule(this.poule);
     this.gameAmountConfigs = this.poule.getRound().getNumber().getValidGameAmountConfigs();
     this.initViewPortNrOfColumnsMap();
     this.initGameRoundMap();

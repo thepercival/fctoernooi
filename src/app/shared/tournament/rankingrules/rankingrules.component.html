@@ -4,3 +4,7 @@
         <span class="ml-2">{{description}}</span>
     </li>
 </ul>
+<div *ngIf="editMode" class="d-flex justify-content-between mt-3">
+    <button type="button" class="btn btn-outline-primary" (click)="toggle()">"onderling resultaat"
+        verplaatsen</button>
+</div>

@@ -3,7 +3,7 @@ import { AgainstGame, AgainstSide, NameService, Round, ScoreConfigService, State
 import { AgainstGamePlace } from 'ngx-sport/src/game/place/against';
 import { TogetherGamePlace } from 'ngx-sport/src/game/place/together';
 import { DateFormatter } from '../../lib/dateFormatter';
-import { GamesScreen, ResultsScreen } from '../../lib/liveboard/screens';
+import { ResultsScreen, ScheduleScreen } from '../../lib/liveboard/screens';
 
 @Component({
     selector: 'app-tournament-liveboard-games',
@@ -11,7 +11,7 @@ import { GamesScreen, ResultsScreen } from '../../lib/liveboard/screens';
     styleUrls: ['./games.liveboard.component.scss']
 })
 export class LiveboardGamesComponent {
-    @Input() screen!: GamesScreen;
+    @Input() screen!: ScheduleScreen | ResultsScreen;
     @Input() nameService!: NameService;
 
     constructor(
@@ -22,6 +22,10 @@ export class LiveboardGamesComponent {
 
     isResultsScreen(): boolean {
         return this.screen instanceof ResultsScreen;
+    }
+
+    isScheduleScreen(): boolean {
+        return this.screen instanceof ScheduleScreen;
     }
 
     get BatchViewModeNr(): BatchViewMode { return BatchViewMode.Nr }
@@ -79,6 +83,11 @@ export class LiveboardGamesComponent {
             return 'R' + name.substring(0, 1);
         }
         return name;
+    }
+
+    public getFirstGameStartDate(): string {
+        const game: TogetherGame | AgainstGame | undefined = this.screen.getGames()[0];
+        return this.dateFormatter.toString(game?.getStartDateTime(), this.dateFormatter.date())
     }
 }
 

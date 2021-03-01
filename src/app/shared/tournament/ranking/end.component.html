@@ -8,7 +8,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let rankingItem of items">
+      <tr *ngFor="let rankingItem of rankingItems">
         <td class="text-right">
           <span [ngClass]="{ 'favitem': isFavorite(rankingItem) }">{{rankingItem.getRank()}}</span>
         </td>

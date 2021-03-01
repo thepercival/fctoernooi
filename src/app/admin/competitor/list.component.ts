@@ -22,6 +22,7 @@ import { CompetitorListRemoveModalComponent } from './listremovemodal.component'
 import { LockerRoomValidator } from '../../lib/lockerroom/validator';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { CompetitorMapper } from '../../lib/competitor/mapper';
+import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 
 @Component({
   selector: 'app-tournament-competitors',
@@ -304,7 +305,3 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 }
 
-export interface PlaceCompetitorItem {
-  place: Place,
-  competitor: TournamentCompetitor | undefined;
-}

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Place, Competitor } from 'ngx-sport';
-import { PlaceCompetitorItem } from './list.component';
+import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 
 @Component({
     selector: 'app-ngbd-modal-listremove',

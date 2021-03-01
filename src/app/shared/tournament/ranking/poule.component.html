@@ -1,0 +1,20 @@
+<div *ngIf="poule" class="card border-1">
+    <div *ngIf="header" class="card-header text-center pb-0">
+        <h5>{{nameService.getPouleName(poule, true)}}</h5>
+    </div>
+    <div class="card-body p-0">
+        <h2 *ngIf="processing" class="text-center">
+            <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+        </h2>
+        <div *ngIf="!processing" class="card-text">
+            <app-tournament-pouleranking-together-table *ngIf="gameMode === Together" [poule]="poule"
+                [favorites]="favorites" [placeLocationMap]="placeLocationMap" [rankingService]="rankingService"
+                [header]="header">
+            </app-tournament-pouleranking-together-table>
+            <app-tournament-pouleranking-against-table *ngIf="gameMode === Against" [poule]="poule"
+                [favorites]="favorites" [placeLocationMap]="placeLocationMap" [rankingService]="rankingService"
+                [header]="header">
+            </app-tournament-pouleranking-against-table>
+        </div>
+    </div>
+</div>

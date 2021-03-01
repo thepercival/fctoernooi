@@ -24,6 +24,7 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     public toggleProgress = false;
     private screenfilter: string | undefined;
     public nameService!: NameService;
+    public placeLocationMap!: PlaceLocationMap;
 
     constructor(
         route: ActivatedRoute,
@@ -49,10 +50,10 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     }
 
     processScreens() {
-        console.log('wim');
+        this.placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
         const link: LiveboardLink = { showIcon: false, tournamentId: this.tournament.getId(), link: 'wim' };
         this.globalEventsManager.toggleLiveboardIconInNavBar.emit(link);
-        this.nameService = new NameService(new PlaceLocationMap(this.tournament.getCompetitors()));
+        this.nameService = new NameService(this.placeLocationMap);
         const liveBoard = new Liveboard();
         this.screens = liveBoard.getScreens(this.tournament, this.structure, this.screenfilter);
         if (this.screens.length > 0) {

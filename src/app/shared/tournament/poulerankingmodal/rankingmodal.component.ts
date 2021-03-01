@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Poule, NameService, GameMode } from 'ngx-sport';
+import { Component, OnInit, TemplateRef } from '@angular/core';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Poule, NameService, GameMode, PlaceLocationMap, RankingService } from 'ngx-sport';
+import { Favorites } from '../../../lib/favorites';
+import { FavoritesRepository } from '../../../lib/favorites/repository';
 import { Tournament } from '../../../lib/tournament';
+import { InfoModalComponent } from '../infomodal/infomodal.component';
 
 @Component({
     selector: 'app-ngbd-modal-poule-ranking',
@@ -13,13 +16,23 @@ export class PouleRankingModalComponent implements OnInit {
     public tournament!: Tournament;
     public gameMode!: GameMode;
     public activeTab = 1;
-    public nameService: NameService
-    constructor(public activeModal: NgbActiveModal) {
-        this.nameService = new NameService(undefined);
+    public nameService!: NameService;
+    public favorites!: Favorites;
+    public placeLocationMap!: PlaceLocationMap;
+    public rankingService!: RankingService;
+
+    constructor(
+        public favRepos: FavoritesRepository,
+        private modalService: NgbModal,
+        public activeModal: NgbActiveModal) {
     }
 
     ngOnInit() {
+        this.favorites = this.favRepos.getObject(this.tournament);
+        this.placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
+        this.nameService = new NameService(this.placeLocationMap);
         this.gameMode = this.poule.getRound().getNumber().getValidPlanningConfig().getGameMode();
+        this.rankingService = new RankingService(this.gameMode, this.tournament.getCompetition().getRankingRuleSet());
     }
 
     get Against(): GameMode { return GameMode.Against; }
@@ -28,5 +41,12 @@ export class PouleRankingModalComponent implements OnInit {
     getHeader(): string {
         const header = this.nameService.getPouleName(this.poule, true);
         return this.gameMode === GameMode.Together ? header + ' - stand' : header;
+    }
+
+    openInfoModal(header: string, modalContent: TemplateRef<any>) {
+        const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
+        activeModal.componentInstance.header = header;
+        activeModal.componentInstance.noHeaderBorder = true;
+        activeModal.componentInstance.modalContent = modalContent;
     }
 }
