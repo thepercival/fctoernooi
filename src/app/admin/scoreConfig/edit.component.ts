@@ -38,7 +38,6 @@ export class ScoreConfigEditComponent implements OnInit {
     public processing: boolean = true;
     public nameService!: NameService;
     public form: FormGroup;
-    public translateService: TranslateService;
     protected toggleRound!: ToggleRound;
     public originalScoreConfig!: ScoreConfig;
     readonly: boolean = true;
@@ -54,10 +53,10 @@ export class ScoreConfigEditComponent implements OnInit {
         public cssService: CSSService,
         public competitionSportMapper: CompetitionSportMapper,
         private mapper: ScoreConfigMapper,
+        private translate: TranslateService,
         fb: FormBuilder,
         private modalService: NgbModal
     ) {
-        this.translateService = new TranslateService();
         this.form = fb.group({
             useNext: false,
             max: ['', Validators.compose([
@@ -213,27 +212,27 @@ export class ScoreConfigEditComponent implements OnInit {
 
     getPluralName(): string {
         const next = this.originalScoreConfig.getNext();
-        return this.translateService.getScoreNamePlural(this.originalScoreConfig);
+        return this.translate.getScoreNamePlural(this.originalScoreConfig);
     }
 
     getNextPluralName(): string {
         const next = this.originalScoreConfig.getNext();
-        return next ? this.translateService.getScoreNamePlural(next) : '';
+        return next ? this.translate.getScoreNamePlural(next) : '';
     }
 
     getDirectionName(): string {
         const next = this.originalScoreConfig.getNext();
-        return this.translateService.getScoreDirection(this.originalScoreConfig.getDirection());
+        return this.translate.getScoreDirection(this.originalScoreConfig.getDirection());
     }
 
     getNextDirectionName(): string {
         const next = this.originalScoreConfig.getNext();
-        return next ? this.translateService.getScoreDirection(next.getDirection()) : '';
+        return next ? this.translate.getScoreDirection(next.getDirection()) : '';
     }
 
     getNextSingularName(): string {
         const next = this.originalScoreConfig.getNext();
-        return next ? this.translateService.getScoreNameSingular(next) : '';
+        return next ? this.translate.getScoreNameSingular(next) : '';
     }
 
     save(): boolean {

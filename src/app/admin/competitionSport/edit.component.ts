@@ -33,7 +33,7 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
-        private modalService: NgbModal,
+        private translate: TranslateService,
         public competitionSportService: CompetitionSportService,
         private myNavigation: MyNavigation
     ) {
@@ -142,10 +142,9 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
         this.router.navigate(['/admin/competitionsports', this.tournament.getId()]);
     }
 
-    // getFieldsDescription(): string {
-    //     const translate = new TranslateService();
-    //     return translate.getFieldNamePlural(this.sportConfig.getSport());
-    // }
+    getFieldsDescription(): string {
+        return this.translate.getFieldNamePlural(this.competitionSport.getSport());
+    }
 }
 
 

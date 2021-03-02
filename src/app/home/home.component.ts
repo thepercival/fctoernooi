@@ -1,12 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-// import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../lib/auth/auth.service';
 import { IAlert } from '../shared/common/alert';
-import { TournamentShell, TournamentShellFilter, TournamentShellRepository } from '../lib/tournament/shell/repository';
+import { TournamentShellFilter, TournamentShellRepository } from '../lib/tournament/shell/repository';
 import { Role } from '../lib/role';
-import { resolveSanitizationFn } from '@angular/compiler/src/render3/view/template';
+import { TournamentShell } from '../lib/tournament/shell';
 
 @Component({
   selector: 'app-home',

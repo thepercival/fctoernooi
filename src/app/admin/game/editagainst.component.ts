@@ -15,7 +15,6 @@ import {
     TogetherGame,
     GameMapper,
     JsonAgainstGame,
-    ScoreConfigMapper,
     AgainstScoreHelper,
 } from 'ngx-sport';
 import { Observable, of } from 'rxjs';
@@ -61,6 +60,7 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
         structureRepository: StructureRepository,
         private gameRepository: GameRepository,
         private mapper: GameMapper,
+        private translate: TranslateService,
         public dateFormatter: DateFormatter,
         private myNavigation: MyNavigation,
         fb: FormBuilder
@@ -140,22 +140,15 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
         if (scoreConfig.getDirection() === ScoreConfig.UPWARDS && scoreConfig.getMaximum() > 0) {
             description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
         }
-        const translate = new TranslateService();
-        return description + translate.getScoreNamePlural(scoreConfig);
+        return description + this.translate.getScoreNamePlural(scoreConfig);
     }
-
-    // getFieldDescription(): string {
-    //     const translate = new TranslateService();
-    //     return translate.getFieldNameSingular(this.firstScoreConfig.getSport());
-    // }
 
     getInputScoreDescription() {
         let description = '';
         if (this.firstScoreConfig.getDirection() === ScoreConfig.UPWARDS && this.firstScoreConfig.getMaximum() > 0) {
             description = 'eerste bij ' + this.firstScoreConfig.getMaximum() + ' ';
         }
-        const translate = new TranslateService();
-        return description + translate.getScoreNamePlural(this.firstScoreConfig);
+        return description + this.translate.getScoreNamePlural(this.firstScoreConfig);
     }
 
     aScoreIsInvalid() {
@@ -241,8 +234,7 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
 
     getCalculateScoreUnitName(): string {
         const calculateScore = this.firstScoreConfig.getCalculate();
-        const translateService = new TranslateService();
-        return translateService.getScoreNameSingular(calculateScore);
+        return this.translate.getScoreNameSingular(calculateScore);
     }
 
     // getCalculateScoreDescription() {
@@ -251,13 +243,11 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
     //     if (scoreConfig.getDirection() === ScoreConfig.UPWARDS && scoreConfig.getMaximum() > 0) {
     //         description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
     //     }
-    //     const translate = new TranslateService();
-    //     return description + translate.getScoreNamePlural(scoreConfig);
+    //     return description + this.translate.getScoreNamePlural(scoreConfig);
     // }
 
     getFieldDescription(): string {
-        const translate = new TranslateService();
-        return translate.getFieldNameSingular(this.firstScoreConfig.getSport());
+        return this.translate.getFieldNameSingular(this.firstScoreConfig.getSport());
     }
 
     // getInputScoreDescription() {
@@ -265,8 +255,7 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
     //     if (this.firstScoreConfig.getDirection() === ScoreConfig.UPWARDS && this.firstScoreConfig.getMaximum() > 0) {
     //         description = 'eerste bij ' + this.firstScoreConfig.getMaximum() + ' ';
     //     }
-    //     const translate = new TranslateService();
-    //     return description + translate.getScoreNamePlural(this.firstScoreConfig);
+    //     return description + this.translate.getScoreNamePlural(this.firstScoreConfig);
     // }
 
     // isScoreEqual(score: GameScoreHomeAway): boolean {
@@ -365,8 +354,7 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
 
     // getCalculateScoreUnitName(game: Game): string {
     //     const calculateScore = game.getScoreConfig().getCalculate();
-    //     const translateService = new TranslateService();
-    //     return translateService.getScoreNameSingular(calculateScore);
+    //     return this.translate.getScoreNameSingular(calculateScore);
     // }
 
     save(): boolean {

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
-import { CompetitionSport, SportCustom } from 'ngx-sport';
+import { CompetitionSport, CustomSport } from 'ngx-sport';
 
 @Component({
     selector: 'app-sport-icon',
@@ -9,7 +9,7 @@ import { CompetitionSport, SportCustom } from 'ngx-sport';
 })
 export class SportIconComponent implements OnInit {
     @Input() competitionSports: CompetitionSport[] | undefined;
-    @Input() customId: number | undefined;
+    @Input() customId: CustomSport | 0 = 0;
 
     public prefix!: IconPrefix;
     public iconName: IconName | undefined;
@@ -24,7 +24,7 @@ export class SportIconComponent implements OnInit {
         this.iconName = this.getIconName(customId);
     }
 
-    getCustomIdFromInput(): number {
+    getCustomIdFromInput(): CustomSport {
         if (this.customId && this.customId > 0) {
             return this.customId;
         }
@@ -37,43 +37,49 @@ export class SportIconComponent implements OnInit {
         return 0;
     }
 
-    protected getIconPrefix(customId: number): IconPrefix {
-        if (customId === SportCustom.Darts || customId === SportCustom.Tennis || customId === SportCustom.Badminton
-            || customId === SportCustom.Hockey || customId === SportCustom.Squash || customId === SportCustom.Korfball) {
+    protected getIconPrefix(customId: CustomSport): IconPrefix {
+        if (customId === CustomSport.Darts
+            || customId === CustomSport.Tennis
+            || customId === CustomSport.Badminton
+            || customId === CustomSport.Squash
+            || customId === CustomSport.TennisDouble
+            || customId === CustomSport.BadmintonDouble
+            || customId === CustomSport.SquashDouble
+            || customId === CustomSport.Hockey
+            || customId === CustomSport.Korfball) {
             return <IconPrefix>'fac';
         }
         return 'fas';
     }
 
-    protected getIconName(customId: number): IconName | undefined {
-        if (customId === SportCustom.Baseball) {
-            return 'baseball-ball';
-        } else if (customId === SportCustom.Basketball) {
-            return 'basketball-ball';
-        } else if (customId === SportCustom.Badminton) {
-            return <IconName>'badminton';
-        } else if (customId === SportCustom.Chess) {
-            return 'chess';
-        } else if (customId === SportCustom.Darts) {
-            return <IconName>'darts';
-        } else if (customId === SportCustom.ESports) {
-            return 'gamepad';
-        } else if (customId === SportCustom.Football) {
-            return 'futbol';
-        } else if (customId === SportCustom.Hockey) {
-            return <IconName>'hockey';
-        } else if (customId === SportCustom.Korfball) {
-            return <IconName>'korfball';
-        } else if (customId === SportCustom.Squash) {
-            return <IconName>'squash';
-        } else if (customId === SportCustom.TableTennis) {
-            return 'table-tennis';
-        } else if (customId === SportCustom.Tennis) {
-            return <IconName>'tennis-custom';
-        } else if (customId === SportCustom.Volleyball) {
-            return 'volleyball-ball';
-        } else if (customId === SportCustom.IceHockey) {
-            return 'hockey-puck';
+    protected getIconName(customId: CustomSport): IconName | undefined {
+        switch (customId) {
+            case CustomSport.Baseball: { return 'baseball-ball'; }
+            case CustomSport.Basketball: { return 'basketball-ball'; }
+            case CustomSport.Badminton:
+            case CustomSport.BadmintonDouble: {
+                return <IconName>'badminton';
+            }
+            case CustomSport.Chess: { return 'chess'; }
+            case CustomSport.Darts: { return <IconName>'darts'; }
+            case CustomSport.ESports: { return 'gamepad'; }
+            case CustomSport.Football: { return 'futbol'; }
+            case CustomSport.Hockey: { return <IconName>'hockey'; }
+            case CustomSport.Korfball: { return <IconName>'korfball'; }
+            case CustomSport.Tennis:
+            case CustomSport.TennisDouble: {
+                return <IconName>'tennis-custom';
+            }
+            case CustomSport.TableTennis:
+            case CustomSport.TableTennisDouble: {
+                return 'table-tennis';
+            }
+            case CustomSport.Squash:
+            case CustomSport.SquashDouble: {
+                return <IconName>'squash';
+            }
+            case CustomSport.Volleyball: { return 'volleyball-ball'; }
+            case CustomSport.IceHockey: { return 'hockey-puck'; }
         }
         return undefined;
     }

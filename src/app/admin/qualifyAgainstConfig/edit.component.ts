@@ -10,9 +10,9 @@ import {
     Round,
     QualifyAgainstConfigMapper,
     CompetitionSportMapper,
-    SportCustom,
     GameMode,
     PointsCalculation,
+    CustomSport,
 } from 'ngx-sport';
 import { CSSService } from '../../shared/common/cssservice';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -161,7 +161,7 @@ export class QualifyAgainstConfigEditComponent implements OnInit {
             this.ranges.losePoints.push(i);
         }
         const sport = this.competitionSport.getSport();
-        if (sport.getCustomId() === SportCustom.Chess) {
+        if (sport.getCustomId() === CustomSport.Chess) {
             this.ranges.drawPoints.push(0.5);
             this.ranges.drawPoints.sort();
         }

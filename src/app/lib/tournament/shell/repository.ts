@@ -3,10 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { APIRepository } from '../../repository';
+import { TournamentShell } from '../shell';
 
-/**
- * Created by coen on 1-10-17.
- */
 @Injectable()
 export class TournamentShellRepository extends APIRepository {
 
@@ -61,15 +59,6 @@ export class TournamentShellRepository extends APIRepository {
         }
         return httpParams;
     }
-}
-
-export interface TournamentShell {
-    tournamentId: number;
-    sportCustomId: number;
-    name: string;
-    startDateTime: Date;
-    roles: number;
-    public: boolean;
 }
 
 export interface TournamentShellFilter {

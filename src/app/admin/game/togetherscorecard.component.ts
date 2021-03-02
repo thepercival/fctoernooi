@@ -16,7 +16,7 @@ export class ScoreTogetherCardComponent implements OnInit {
   @Output() afterEdit = new EventEmitter<void>();
   public firstScoreConfig!: ScoreConfig;
 
-  constructor() {
+  constructor(private translate: TranslateService) {
   }
 
   ngOnInit() {
@@ -40,8 +40,7 @@ export class ScoreTogetherCardComponent implements OnInit {
 
   getCalculateScoreUnitName(): string {
     const calculateScore = this.firstScoreConfig.getCalculate();
-    const translateService = new TranslateService();
-    return translateService.getScoreNameSingular(calculateScore);
+    return this.translate.getScoreNameSingular(calculateScore);
   }
 
   getInputScoreDescription() {
@@ -49,8 +48,7 @@ export class ScoreTogetherCardComponent implements OnInit {
     if (this.firstScoreConfig.getDirection() === ScoreConfig.UPWARDS && this.firstScoreConfig.getMaximum() > 0) {
       description = 'eerste bij ' + this.firstScoreConfig.getMaximum() + ' ';
     }
-    const translate = new TranslateService();
-    return description + translate.getScoreNamePlural(this.firstScoreConfig);
+    return description + this.translate.getScoreNamePlural(this.firstScoreConfig);
   }
 
   postUpdate() {
@@ -86,8 +84,7 @@ export class ScoreTogetherCardComponent implements OnInit {
     if (scoreConfig.getDirection() === ScoreConfig.UPWARDS && scoreConfig.getMaximum() > 0) {
       description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
     }
-    const translate = new TranslateService();
-    return description + translate.getScoreNamePlural(scoreConfig);
+    return description + this.translate.getScoreNamePlural(scoreConfig);
   }
 
   allScoresValid(): boolean {

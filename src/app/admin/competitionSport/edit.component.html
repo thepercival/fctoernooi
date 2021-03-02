@@ -25,7 +25,7 @@
       <div *ngIf="!processing">
         <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs nav-fill">
           <li [ngbNavItem]="TabFields">
-            <a ngbNavLink>velden</a>
+            <a ngbNavLink>{{getFieldsDescription()}}</a>
             <ng-template ngbNavContent>
               <app-tournament-fields [competitionSport]="competitionSport" [hasBegun]="hasBegun"
                 [tournament]="tournament" [structure]="structure">

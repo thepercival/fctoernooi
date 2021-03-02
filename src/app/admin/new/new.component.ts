@@ -4,14 +4,13 @@ import { Router } from '@angular/router';
 import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { IAlert } from '../../shared/common/alert';
-import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TranslateService } from '../../lib/translate';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { JsonTournament } from '../../lib/tournament/json';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
-import { JsonCompetitionSport, JsonField, League, PouleStructure, Sport, SportMapper, State, Structure, StructureService } from 'ngx-sport';
+import { JsonCompetitionSport, JsonField, League, Sport, SportMapper, State, Structure, StructureService } from 'ngx-sport';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { SportSelectMode } from '../sport/select.component';
 
@@ -45,6 +44,7 @@ export class NewComponent implements OnInit {
     private structureService: StructureService,
     private defaultService: DefaultService,
     private sportMapper: SportMapper,
+    private translate: TranslateService,
     private modalService: NgbModal,
     fb: FormBuilder
   ) {
@@ -181,7 +181,7 @@ export class NewComponent implements OnInit {
               }
             );
         },
-            /* error path */ e => { this.setAlert('danger', 'het toernooi kon niet worden aangemaakt: ' + e); this.processing = false; }
+        /* error path */ e => { this.setAlert('danger', 'het toernooi kon niet worden aangemaakt: ' + e); this.processing = false; }
       );
     return false;
   }
@@ -195,11 +195,10 @@ export class NewComponent implements OnInit {
   }
 
   getFieldsDescription(): string {
-    const translate = new TranslateService();
     if (this.sports.length > 0) {
-      return translate.getFieldNamePlural(undefined) + ' per sport';
+      return this.translate.getFieldNamePlural(undefined) + ' per sport';
     }
-    return translate.getFieldNamePlural(this.sports[0]);
+    return this.translate.getFieldNamePlural(this.sports[0]);
   }
 
   openInfoModal(header: string, modalContent: TemplateRef<any>) {

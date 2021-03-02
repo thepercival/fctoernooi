@@ -65,7 +65,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   private scoreConfigService: ScoreConfigService;
   public needsRanking: boolean = false;
   public hasMultiplePoules: boolean = false;
-  public translate = new TranslateService();
   private placeLocationMap!: PlaceLocationMap;
   public nameService!: NameService;
   public planningConfig!: PlanningConfig;
@@ -76,6 +75,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     private authService: AuthService,
     public cssService: CSSService,
     public dateFormatter: DateFormatter,
+    private translate: TranslateService,
     private modalService: NgbModal,
     protected planningRepository: PlanningRepository) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
@@ -84,7 +84,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   }
 
   ngOnInit() {
-    this.translate = new TranslateService();
     this.placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
     this.nameService = new NameService(this.placeLocationMap);
     this.planningConfig = this.roundNumber.getValidPlanningConfig();
@@ -131,7 +130,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     const gameDatas: GameData[] = [];
     const pouleDataMap = this.getPouleDataMap();
     this.roundNumber.getGames(this.gameOrder).forEach(game => {
-      const aPlaceHasACompetitor = this.hasAPlaceACompetitor(game);
+      const somePlaceHasACompetitor = this.somePlaceHasACompetitor(game);
       if (this.filterEnabled && this.favorites?.hasItems() && !this.favorites?.hasGameItem(game)) {
         return;
       }
@@ -141,9 +140,9 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
       }
       const gameData: GameData = {
         canChangeResult: this.canChangeResult(game),
-        hasACompetitor: aPlaceHasACompetitor,
+        somePlaceHasACompetitor: somePlaceHasACompetitor,
         poule: pouleData,
-        hasPopover: pouleData.needsRanking || (!this.roundNumber.isFirst() && aPlaceHasACompetitor),
+        hasPopover: pouleData.needsRanking || (!this.roundNumber.isFirst() && somePlaceHasACompetitor),
         game: game,
         break: this.isBreakBeforeGame(game) ? this.tournament.getBreak() : undefined
       };
@@ -244,7 +243,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     return this.getCompetitor(place) === undefined;
   }
 
-  hasAPlaceACompetitor(game: Game): boolean {
+  somePlaceHasACompetitor(game: Game): boolean {
     return game.getPlaces().some(gamePlace => this.hasCompetitor(gamePlace.getPlace()));
   }
 
@@ -346,11 +345,19 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     });
     return scoreConfig;
   }
+
+  addGames() {
+
+  }
+
+  removeGames() {
+
+  }
 }
 
 interface GameData {
   canChangeResult: boolean;
-  hasACompetitor: boolean;
+  somePlaceHasACompetitor: boolean;
   poule: PouleData;
   hasPopover: boolean;
   game: AgainstGame | TogetherGame;

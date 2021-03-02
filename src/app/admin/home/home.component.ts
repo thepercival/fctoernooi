@@ -28,7 +28,6 @@ import { DateFormatter } from '../../lib/dateFormatter';
 export class HomeComponent extends TournamentComponent implements OnInit {
     copyForm: FormGroup;
     minDateStruct: NgbDateStruct;
-    translate: TranslateService;
     lockerRoomValidator!: LockerRoomValidator;
 
     constructor(
@@ -40,12 +39,12 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         private tournamentMapper: TournamentMapper,
         private authService: AuthService,
         public dateFormatter: DateFormatter,
+        private translate: TranslateService,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository);
-        this.translate = new TranslateService();
         const date = new Date();
         this.minDateStruct = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
 

@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { DateFormatter } from '../lib/dateFormatter';
-
-import { TournamentShell } from '../lib/tournament/shell/repository';
+import { TournamentShell } from '../lib/tournament/shell';
 
 @Component({
   selector: 'app-home-shell',

@@ -150,6 +150,16 @@
         </ng-template>
       </tbody>
     </table>
+
+    <div class="btn-group" role="group" class="text-center" aria-label="aantal">
+      <button type="button" class="btn btn-danger" (click)="removeGames()">
+        <fa-icon [icon]="['fas', 'minus']"></fa-icon>
+      </button>
+      <button type="button" class="btn btn-outline-secondary">wedstrijden</button>
+      <button type="button" class="btn btn-primary" (click)="addGames()">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+      </button>
+    </div>
   </div>
 </div>
 

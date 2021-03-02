@@ -24,7 +24,6 @@ import { DateFormatter } from '../../lib/dateFormatter';
 })
 export class HomeComponent extends TournamentComponent implements OnInit, OnDestroy {
     private liveboardLinkSet = false;
-    translate: TranslateService;
     allHavePlannings!: boolean;
     lockerRoomValidator!: LockerRoomValidator;
     competitors: TournamentCompetitor[] = [];
@@ -32,7 +31,7 @@ export class HomeComponent extends TournamentComponent implements OnInit, OnDest
 
     constructor(
         route: ActivatedRoute,
-        private modalService: NgbModal,
+        private translate: TranslateService,
         public cssService: CSSService,
         router: Router,
         private authService: AuthService,
@@ -43,7 +42,6 @@ export class HomeComponent extends TournamentComponent implements OnInit, OnDest
         private globalEventsManager: GlobalEventsManager
     ) {
         super(route, router, tournamentRepository, structureRepository);
-        this.translate = new TranslateService();
     }
 
     ngOnInit() {

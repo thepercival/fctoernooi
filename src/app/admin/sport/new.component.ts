@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CompetitionSport, GameMode, JsonSport, NameService, Sport, SportCustom } from 'ngx-sport';
+import { GameMode, JsonSport, NameService, Sport } from 'ngx-sport';
 
 import { IAlert } from '../../shared/common/alert';
 import { CSSService } from '../../shared/common/cssservice';
@@ -20,7 +20,6 @@ export class SportNewComponent implements OnInit {
     public processing = true;
     public form: FormGroup;
     public alert: IAlert | undefined;
-    public translateService: TranslateService;
     public gameModes: GameMode[] = [GameMode.Against, GameMode.Together];
     public nrOfGamePlacesOptions: NrOfGamePlacesOption[] = [];
     public nameService!: NameService;
@@ -30,6 +29,7 @@ export class SportNewComponent implements OnInit {
         public cssService: CSSService,
         private sportRepository: SportRepository,
         private defaultService: DefaultService,
+        private translate: TranslateService,
         private modalService: NgbModal,
         fb: FormBuilder
     ) {
@@ -44,7 +44,6 @@ export class SportNewComponent implements OnInit {
             nrOfGamePlaces: this.jsonDefaultSport.nrOfGamePlaces,
             gameMode: this.jsonDefaultSport.gameMode
         });
-        this.translateService = new TranslateService();
     }
 
     ngOnInit() {

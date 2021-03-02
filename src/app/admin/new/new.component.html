@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
-    <app-tournament-sports-selector *ngIf="showSelectSports" class="col-xs-12 col-sm-10 col-md-6 col-lg-4"
+    <app-tournament-sports-selector *ngIf="showSelectSports" class="col-xs-12 col-sm-10 col-md-8 col-lg-6"
       [selectedSports]="sports" [editMode]="SportSelectModeAddRemove" (selected)="selectedSports($event)">
     </app-tournament-sports-selector>
     <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6" *ngIf="!showSelectSports">

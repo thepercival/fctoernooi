@@ -48,7 +48,8 @@ export class DefaultService {
         if (gameMode === GameMode.Against) {
             return 5;
         }
-        return this.sportService.getMaxNrOfGamePlaces(sports) * nrOfFields;
+        let nrOfPlaces = this.sportService.getMaxNrOfGamePlaces(sports) * nrOfFields;
+        return nrOfPlaces < 5 ? 5 : nrOfPlaces;
     }
 
     getDefaultGameMode(sports: Sport[]): GameMode {

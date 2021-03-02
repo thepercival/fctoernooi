@@ -2,6 +2,10 @@ table.fixed {
     table-layout: fixed;
 }
 
+td {
+    vertical-align: middle;
+}
+
 col.width-30 {
     width:30%;
 }

@@ -15,7 +15,6 @@ import {
     TogetherGame,
     GameMapper,
     JsonTogetherGame,
-    ScoreConfigMapper,
 } from 'ngx-sport';
 import { Observable, of } from 'rxjs';
 
@@ -23,7 +22,6 @@ import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/common/navigation';
 import { Role } from '../../lib/role';
 import { TournamentRepository } from '../../lib/tournament/repository';
-import { TranslateService } from '../../lib/translate';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
@@ -33,6 +31,7 @@ import { TogetherGamePlace } from 'ngx-sport/src/game/place/together';
 import { EqualQualifiersChecker } from '../../lib/ngx-sport/ranking/equalQualifiersChecker';
 import { JsonTogetherGamePlace } from 'ngx-sport/src/game/place/together/json';
 import { DateFormatter } from '../../lib/dateFormatter';
+import { TranslateService } from '../../lib/translate';
 
 @Component({
     selector: 'app-tournament-togethergame-edit',
@@ -61,6 +60,7 @@ export class GameTogetherEditComponent extends TournamentComponent implements On
         structureRepository: StructureRepository,
         private gameRepository: GameRepository,
         private mapper: GameMapper,
+        private translate: TranslateService,
         public dateFormatter: DateFormatter,
         private myNavigation: MyNavigation,
         fb: FormBuilder
@@ -146,8 +146,7 @@ export class GameTogetherEditComponent extends TournamentComponent implements On
     }
 
     // getFieldDescription(): string {
-    //     const translate = new TranslateService();
-    //     return translate.getFieldNameSingular(this.firstScoreConfig.getSport());
+    //     return this.translate.getFieldNameSingular(this.firstScoreConfig.getSport());
     // }
 
     postScoreControlUpdate() {
@@ -183,13 +182,11 @@ export class GameTogetherEditComponent extends TournamentComponent implements On
     //     if (scoreConfig.getDirection() === ScoreConfig.UPWARDS && scoreConfig.getMaximum() > 0) {
     //         description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
     //     }
-    //     const translate = new TranslateService();
-    //     return description + translate.getScoreNamePlural(scoreConfig);
+    //     return description + this.translate.getScoreNamePlural(scoreConfig);
     // }
 
     getFieldDescription(): string {
-        const translate = new TranslateService();
-        return translate.getFieldNameSingular(this.firstScoreConfig.getSport());
+        return this.translate.getFieldNameSingular(this.firstScoreConfig.getSport());
     }
 
 
@@ -271,8 +268,7 @@ export class GameTogetherEditComponent extends TournamentComponent implements On
 
     // getCalculateScoreUnitName(game: Game): string {
     //     const calculateScore = game.getScoreConfig().getCalculate();
-    //     const translateService = new TranslateService();
-    //     return translateService.getScoreNameSingular(calculateScore);
+    //     return this.translate.getScoreNameSingular(calculateScore);
     // }
 
     save(): boolean {

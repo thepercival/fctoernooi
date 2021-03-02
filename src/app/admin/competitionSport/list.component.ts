@@ -23,7 +23,6 @@ import { forkJoin, Observable } from 'rxjs';
 })
 export class CompetitionSportListComponent extends TournamentComponent implements OnInit {
   competitionSports: CompetitionSport[] = [];
-  translateService: TranslateService;
   showSelectSports = false;
   hasBegun!: boolean;
 
@@ -39,10 +38,10 @@ export class CompetitionSportListComponent extends TournamentComponent implement
     sructureRepository: StructureRepository,
     private competitionSportRepository: CompetitionSportRepository,
     private planningRepository: PlanningRepository,
+    public translateService: TranslateService,
     private modalService: NgbModal
   ) {
     super(route, router, tournamentRepository, sructureRepository);
-    this.translateService = new TranslateService();
   }
 
   ngOnInit() {

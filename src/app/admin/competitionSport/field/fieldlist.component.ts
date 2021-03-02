@@ -5,9 +5,9 @@ import { FieldRepository } from '../../../lib/ngx-sport/field/repository';
 import { PlanningRepository } from '../../../lib/ngx-sport/planning/repository';
 import { IAlert } from '../../../shared/common/alert';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { NameModalComponent } from '../../../shared/tournament/namemodal/namemodal.component';
 import { TranslateService } from '../../../lib/translate';
 import { Tournament } from '../../../lib/tournament';
+import { NameModalComponent } from '../../../shared/tournament/namemodal/namemodal.component';
 
 @Component({
     selector: 'app-tournament-fields',
@@ -27,6 +27,7 @@ export class FieldListComponent implements OnInit {
     constructor(
         private fieldRepository: FieldRepository,
         private planningRepository: PlanningRepository,
+        private translate: TranslateService,
         private modalService: NgbModal,
     ) {
         this.processing = true;
@@ -42,8 +43,7 @@ export class FieldListComponent implements OnInit {
     }
 
     getFieldDescription(): string {
-        const translate = new TranslateService();
-        return translate.getFieldNameSingular(this.competitionSport.getSport());
+        return this.translate.getFieldNameSingular(this.competitionSport.getSport());
     }
 
     getChangeNameModel(buttonLabel: string, initialName?: string): NgbModalRef {

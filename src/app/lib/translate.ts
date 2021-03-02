@@ -1,26 +1,34 @@
-import { Sport, SportCustom, ScoreConfig, JsonScoreConfig } from 'ngx-sport';
+import { Injectable } from '@angular/core';
+import { Sport, ScoreConfig, CustomSport } from 'ngx-sport';
 
+@Injectable({
+    providedIn: 'root'
+})
 export class TranslateService {
     static readonly language = 'nl';
 
-    getSportName(customId: number): string {
+    getSportName(customId: CustomSport): string {
         switch (customId) {
-            case SportCustom.Badminton: { return 'badminton'; }
-            case SportCustom.Basketball: { return 'basketbal'; }
-            case SportCustom.Darts: { return 'darten'; }
-            case SportCustom.ESports: { return 'e-sporten'; }
-            case SportCustom.Hockey: { return 'hockey'; }
-            case SportCustom.Baseball: { return 'honkbal'; }
-            case SportCustom.Korfball: { return 'korfbal'; }
-            case SportCustom.Chess: { return 'schaken'; }
-            case SportCustom.Squash: { return 'squash'; }
-            case SportCustom.TableTennis: { return 'tafeltennis'; }
-            case SportCustom.Tennis: { return 'tennis'; }
-            case SportCustom.Football: { return 'voetbal'; }
-            case SportCustom.Volleyball: { return 'volleybal'; }
-            case SportCustom.IceHockey: { return 'ijshockey'; }
-            case SportCustom.Sjoelen: { return 'sjoelen'; }
-            case SportCustom.Klaverjassen: { return 'klaverjassen'; }
+            case CustomSport.Badminton: { return 'badminton'; }
+            case CustomSport.Basketball: { return 'basketbal'; }
+            case CustomSport.Darts: { return 'darten'; }
+            case CustomSport.ESports: { return 'e-sporten'; }
+            case CustomSport.Hockey: { return 'hockey'; }
+            case CustomSport.Baseball: { return 'honkbal'; }
+            case CustomSport.Korfball: { return 'korfbal'; }
+            case CustomSport.Chess: { return 'schaken'; }
+            case CustomSport.Squash: { return 'squash'; }
+            case CustomSport.TableTennis: { return 'tafeltennis'; }
+            case CustomSport.Tennis: { return 'tennis'; }
+            case CustomSport.Football: { return 'voetbal'; }
+            case CustomSport.Volleyball: { return 'volleybal'; }
+            case CustomSport.IceHockey: { return 'ijshockey'; }
+            case CustomSport.Shuffleboard: { return 'sjoelen'; }
+            case CustomSport.Jass: { return 'klaverjassen'; }
+            case CustomSport.BadmintonDouble: { return this.getSportName(CustomSport.Badminton) + ' dubbel'; }
+            case CustomSport.SquashDouble: { return this.getSportName(CustomSport.Squash) + ' dubbel'; }
+            case CustomSport.TableTennisDouble: { return this.getSportName(CustomSport.TableTennis) + ' dubbel'; }
+            case CustomSport.TennisDouble: { return this.getSportName(CustomSport.Tennis) + ' dubbel'; }
         }
         return '?';
     }
@@ -33,12 +41,12 @@ export class TranslateService {
         return this.getLastScoreNameSingular(customId);
     }
 
-    protected getFirstScoreNameSingular(customId: number): string {
+    protected getFirstScoreNameSingular(customId: CustomSport): string {
         switch (customId) {
-            case SportCustom.Darts: { return 'leg'; }
-            case SportCustom.Tennis: { return 'game'; }
-            case SportCustom.Football:
-            case SportCustom.Hockey: {
+            case CustomSport.Darts: { return 'leg'; }
+            case CustomSport.Tennis: { return 'game'; }
+            case CustomSport.Football:
+            case CustomSport.Hockey: {
                 return 'goal';
             }
         }
@@ -47,12 +55,19 @@ export class TranslateService {
 
     protected getLastScoreNameSingular(customId: number): string {
         switch (customId) {
-            case SportCustom.Badminton:
-            case SportCustom.Squash:
-            case SportCustom.TableTennis:
-            case SportCustom.Volleyball:
-            case SportCustom.Darts:
-            case SportCustom.Tennis: {
+            case CustomSport.Jass: {
+                return 'boom';
+            }
+            case CustomSport.Badminton:
+            case CustomSport.Squash:
+            case CustomSport.TableTennis:
+            case CustomSport.Tennis:
+            case CustomSport.BadmintonDouble:
+            case CustomSport.SquashDouble:
+            case CustomSport.TableTennisDouble:
+            case CustomSport.TennisDouble:
+            case CustomSport.Volleyball:
+            case CustomSport.Darts: {
                 return 'set';
             }
         }
@@ -61,36 +76,45 @@ export class TranslateService {
 
     getScoreNamePlural(scoreConfig: ScoreConfig): string {
         const customId = scoreConfig.getCompetitionSport().getSport().getCustomId();
-        return this.getScoreNamePluralHelper(scoreConfig.isFirst(), customId);
-    }
-
-    protected getScoreNamePluralHelper(isFirst: boolean, customId: number): string {
-        if (isFirst) {
-            return this.getFirstScoreNamePlural(customId);
-        }
-        return this.getLastScoreNamePlural(customId);
+        const getScoreNamePluralHelper = (isFirst: boolean, customId: number): string => {
+            if (isFirst) {
+                return this.getFirstScoreNamePlural(customId);
+            }
+            return this.getLastScoreNamePlural(customId);
+        };
+        return getScoreNamePluralHelper(scoreConfig.isFirst(), customId);
     }
 
     protected getFirstScoreNamePlural(customId: number): string {
         switch (customId) {
-            case SportCustom.Darts: { return 'legs'; }
-            case SportCustom.Tennis: { return 'games'; }
-            case SportCustom.Football:
-            case SportCustom.Hockey: {
+            case CustomSport.Darts: { return 'legs'; }
+            case CustomSport.Tennis:
+            case CustomSport.TennisDouble: {
+                return 'games';
+            }
+            case CustomSport.Football:
+            case CustomSport.Hockey: {
                 return 'goals';
             }
         }
         return 'punten';
     }
 
-    protected getLastScoreNamePlural(customId: number): string {
+    protected getLastScoreNamePlural(customId: CustomSport): string {
         switch (customId) {
-            case SportCustom.Badminton:
-            case SportCustom.Squash:
-            case SportCustom.TableTennis:
-            case SportCustom.Volleyball:
-            case SportCustom.Darts:
-            case SportCustom.Tennis: {
+            case CustomSport.Jass: {
+                return 'bomem';
+            }
+            case CustomSport.Badminton:
+            case CustomSport.Squash:
+            case CustomSport.TableTennis:
+            case CustomSport.Tennis:
+            case CustomSport.BadmintonDouble:
+            case CustomSport.SquashDouble:
+            case CustomSport.TableTennisDouble:
+            case CustomSport.TennisDouble:
+            case CustomSport.Volleyball:
+            case CustomSport.Darts: {
                 return 'sets';
             }
         }
@@ -107,24 +131,29 @@ export class TranslateService {
     }
 
     getFieldNameSingular(sport?: Sport): string {
-        const customId = sport ? sport.getCustomId() : undefined;
+        const customId = sport ? sport.getCustomId() : 0;
         switch (customId) {
-            case SportCustom.Darts:
-            case SportCustom.Chess:
+            case CustomSport.Darts:
+            case CustomSport.Chess:
                 {
                     return 'bord';
                 }
-            case SportCustom.Squash:
-            case SportCustom.Tennis:
+            case CustomSport.Badminton:
+            case CustomSport.Squash:
+            case CustomSport.Tennis:
+            case CustomSport.BadmintonDouble:
+            case CustomSport.SquashDouble:
+            case CustomSport.TennisDouble:
                 {
                     return 'baan';
                 }
-            case SportCustom.TableTennis:
-            case SportCustom.Klaverjassen:
+            case CustomSport.TableTennis:
+            case CustomSport.TableTennisDouble:
+            case CustomSport.Jass:
                 {
                     return 'tafel';
                 }
-            case SportCustom.Sjoelen:
+            case CustomSport.Shuffleboard:
                 {
                     return 'bak';
                 }

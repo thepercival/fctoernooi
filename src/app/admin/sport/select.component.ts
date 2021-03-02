@@ -22,16 +22,15 @@ export class SportSelectComponent implements OnInit {
     form: FormGroup;
     public alert: IAlert | undefined;
     public selectableSports: Sport[] = [];
-    translateService: TranslateService;
 
     constructor(
         public cssService: CSSService,
         private sportRepository: SportRepository,
+        private translateService: TranslateService,
         private modalService: NgbModal,
         fb: FormBuilder
     ) {
         this.form = fb.group({});
-        this.translateService = new TranslateService();
     }
 
     ngOnInit() {
