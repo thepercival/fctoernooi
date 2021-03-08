@@ -7,7 +7,7 @@ import {
     Round,
     State,
     RoundNumber,
-    PlaceLocationMap,
+    CompetitorMap,
     ScoreConfigService,
     ScoreConfig,
     AgainstGame,
@@ -15,6 +15,7 @@ import {
     TogetherGame,
     GameMapper,
     JsonTogetherGame,
+    TogetherGamePlace,
 } from 'ngx-sport';
 import { Observable, of } from 'rxjs';
 
@@ -27,11 +28,10 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { TournamentUser } from '../../lib/tournament/user';
 import { map } from 'rxjs/operators';
-import { TogetherGamePlace } from 'ngx-sport/src/game/place/together';
 import { EqualQualifiersChecker } from '../../lib/ngx-sport/ranking/equalQualifiersChecker';
-import { JsonTogetherGamePlace } from 'ngx-sport/src/game/place/together/json';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { TranslateService } from '../../lib/translate';
+import { JsonTogetherGamePlace } from 'ngx-sport/src/game/place/together/json';
 
 @Component({
     selector: 'app-tournament-togethergame-edit',
@@ -77,7 +77,7 @@ export class GameTogetherEditComponent extends TournamentComponent implements On
     ngOnInit() {
         this.route.params.subscribe(params => {
             super.myNgOnInit(() => {
-                this.nameService = new NameService(new PlaceLocationMap(this.tournament.getCompetitors()));
+                this.nameService = new NameService(new CompetitorMap(this.tournament.getCompetitors()));
                 const game = this.getGameById(+params.gameId, this.structure.getRootRound());
                 if (game === undefined) {
                     this.setAlert('danger', 'de wedstrijd kan niet gevonden worden');

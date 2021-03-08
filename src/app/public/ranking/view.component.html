@@ -19,14 +19,14 @@
             <a ngbNavLink>poulestanden</a>
             <ng-template ngbNavContent>
               <app-tournament-ranking-round [round]="structure.getRootRound()" [favorites]="favorites"
-                [placeLocationMap]="placeLocationMap" [first]="true">
+                [competitorMap]="competitorMap" [first]="true">
               </app-tournament-ranking-round>
             </ng-template>
           </li>
           <li [ngbNavItem]="2">
             <a ngbNavLink>eindstand</a>
             <ng-template ngbNavContent>
-              <app-tournament-endranking [placeLocationMap]="placeLocationMap" [favorites]="favorites"
+              <app-tournament-endranking [competitorMap]="competitorMap" [favorites]="favorites"
                 [structure]="structure"></app-tournament-endranking>
             </ng-template>
           </li>

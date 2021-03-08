@@ -1,7 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { AgainstGame, AgainstSide, NameService, Round, ScoreConfigService, State, TogetherGame } from 'ngx-sport';
-import { AgainstGamePlace } from 'ngx-sport/src/game/place/against';
-import { TogetherGamePlace } from 'ngx-sport/src/game/place/together';
+import { AgainstGame, AgainstGamePlace, AgainstSide, NameService, Round, ScoreConfigService, State, TogetherGame, TogetherGamePlace } from 'ngx-sport';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { ResultsScreen, ScheduleScreen } from '../../lib/liveboard/screens';
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Poule, NameService, GameMode, PlaceLocationMap, RankingService } from 'ngx-sport';
+import { Poule, NameService, GameMode, CompetitorMap } from 'ngx-sport';
 import { Favorites } from '../../../lib/favorites';
 import { FavoritesRepository } from '../../../lib/favorites/repository';
 import { Tournament } from '../../../lib/tournament';
@@ -18,8 +18,8 @@ export class PouleRankingModalComponent implements OnInit {
     public activeTab = 1;
     public nameService!: NameService;
     public favorites!: Favorites;
-    public placeLocationMap!: PlaceLocationMap;
-    public rankingService!: RankingService;
+    public competitorMap!: CompetitorMap;
+    // public rankingService!: RankingService;
 
     constructor(
         public favRepos: FavoritesRepository,
@@ -29,10 +29,10 @@ export class PouleRankingModalComponent implements OnInit {
 
     ngOnInit() {
         this.favorites = this.favRepos.getObject(this.tournament);
-        this.placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
-        this.nameService = new NameService(this.placeLocationMap);
-        this.gameMode = this.poule.getRound().getNumber().getValidPlanningConfig().getGameMode();
-        this.rankingService = new RankingService(this.gameMode, this.tournament.getCompetition().getRankingRuleSet());
+        this.competitorMap = new CompetitorMap(this.tournament.getCompetitors());
+        this.nameService = new NameService(this.competitorMap);
+        // this.gameMode = this.poule.getRound().getNumber().getValidPlanningConfig().getGameMode();
+        // this.rankingService = new RankingService(this.gameMode, this.tournament.getCompetition().getRankingRuleSet());
     }
 
     get Against(): GameMode { return GameMode.Against; }

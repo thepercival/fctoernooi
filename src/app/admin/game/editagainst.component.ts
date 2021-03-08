@@ -7,7 +7,7 @@ import {
     Round,
     State,
     RoundNumber,
-    PlaceLocationMap,
+    CompetitorMap,
     ScoreConfigService,
     ScoreConfig,
     AgainstGame,
@@ -77,7 +77,7 @@ export class GameAgainstEditComponent extends TournamentComponent implements OnI
     ngOnInit() {
         this.route.params.subscribe(params => {
             super.myNgOnInit(() => {
-                this.nameService = new NameService(new PlaceLocationMap(this.tournament.getCompetitors()));
+                this.nameService = new NameService(new CompetitorMap(this.tournament.getCompetitors()));
                 const game = this.getGameById(+params.gameId, this.structure.getRootRound());
                 if (game === undefined) {
                     this.setAlert('danger', 'de wedstrijd kan niet gevonden worden');

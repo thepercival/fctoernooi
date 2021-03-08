@@ -6,7 +6,7 @@ import {
   NameService,
   Place,
   Structure,
-  PlaceLocationMap,
+  CompetitorMap,
   StructureService
 } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
@@ -57,12 +57,12 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   ngOnInit() {
     super.myNgOnInit(() => {
       const competitors = this.tournament.getCompetitors();
-      const placeLocationMap = new PlaceLocationMap(competitors);
-      this.nameService = new NameService(placeLocationMap);
+      const competitorMap = new CompetitorMap(competitors);
+      this.nameService = new NameService(competitorMap);
       this.lockerRoomValidator = new LockerRoomValidator(competitors, this.tournament.getLockerRooms());
       this.areSomeCompetitorsArranged = this.lockerRoomValidator.areSomeArranged(); // caching
       this.placeCompetitorItems = this.getPlaceCompetitorItems();
-      this.initFocus(placeLocationMap);
+      this.initFocus(competitorMap);
       this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
       this.processing = false;
     });
@@ -75,9 +75,9 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.myNavigation.scroll();
   }
 
-  initFocus(placeLocationMap: PlaceLocationMap) {
+  initFocus(competitorMap: CompetitorMap) {
     this.structure.getRootRound().getPlaces().some(place => {
-      if (placeLocationMap.getCompetitor(place) === undefined) {
+      if (competitorMap.getCompetitor(place) === undefined) {
         this.focusId = place.getId();
       }
       return this.focusId === undefined;
@@ -90,9 +90,9 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   getPlaceCompetitorItems(): PlaceCompetitorItem[] {
-    const placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
+    const competitorMap = new CompetitorMap(this.tournament.getCompetitors());
     return this.structure.getRootRound().getPlaces().map((place: Place): PlaceCompetitorItem => {
-      return { place, competitor: <TournamentCompetitor>placeLocationMap.getCompetitor(place) };
+      return { place, competitor: <TournamentCompetitor>competitorMap.getCompetitor(place) };
     });
   }
 

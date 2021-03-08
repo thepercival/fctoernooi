@@ -24,7 +24,7 @@
                         class="badge badge-rank {{getQualifyPlaceClass(rankingItem)}}">{{rankingItem.getUniqueRank()}}</span>
                 </td>
                 <td class="place pl-0"
-                    [ngClass]="{ 'favitem': favorites.hasCompetitor(placeLocationMap.getCompetitor(rankingItem.getPlace())) }">
+                    [ngClass]="{ 'favitem': favorites.hasCompetitor(competitorMap.getCompetitor(rankingItem.getPlace())) }">
                     {{nameService.getPlaceFromName(rankingItem.getPlace(), true)}}
                 </td>
                 <td class="text-right pl-0">{{rankingItem.getUnranked().getGames()}}</td>

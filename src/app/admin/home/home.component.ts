@@ -265,17 +265,6 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         return date.getFullYear();
     }
 
-    hasGameModeAgainst(): boolean {
-        const hasGameModeAgainst = (roundNumber: RoundNumber): boolean => {
-            if (roundNumber.getValidPlanningConfig().getGameMode() === GameMode.Against) {
-                return true;
-            }
-            const nextRoundNumber = roundNumber.getNext();
-            return nextRoundNumber ? hasGameModeAgainst(nextRoundNumber) : false;
-        };
-        return hasGameModeAgainst(this.structure.getFirstRoundNumber());
-    }
-
     copy() {
         this.setAlert('info', 'de nieuwe editie wordt aangemaakt');
         const startDateTime = new Date(

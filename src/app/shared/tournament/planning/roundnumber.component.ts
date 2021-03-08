@@ -11,7 +11,7 @@ import {
   Round,
   PlanningConfig,
   ScoreConfig,
-  PlaceLocationMap,
+  CompetitorMap,
   Place,
   Period,
   AgainstGame,
@@ -65,7 +65,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   private scoreConfigService: ScoreConfigService;
   public needsRanking: boolean = false;
   public hasMultiplePoules: boolean = false;
-  private placeLocationMap!: PlaceLocationMap;
+  private competitorMap!: CompetitorMap;
   public nameService!: NameService;
   public planningConfig!: PlanningConfig;
 
@@ -84,8 +84,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   }
 
   ngOnInit() {
-    this.placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
-    this.nameService = new NameService(this.placeLocationMap);
+    this.competitorMap = new CompetitorMap(this.tournament.getCompetitors());
+    this.nameService = new NameService(this.competitorMap);
     this.planningConfig = this.roundNumber.getValidPlanningConfig();
     const authUser = this.authService.getUser();
     const currentUser = authUser ? this.tournament.getUser(authUser) : undefined;
@@ -236,7 +236,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   }
 
   getCompetitor(place: Place) {
-    return this.placeLocationMap.getCompetitor(place.getStartLocation());
+    return this.competitorMap.getCompetitor(place.getStartLocation());
   }
 
   private hasCompetitor(place: Place): boolean {

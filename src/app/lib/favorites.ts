@@ -1,20 +1,18 @@
-import { Game, Referee, Competitor, Place, AgainstGame, TogetherGame, AgainstSide } from 'ngx-sport';
+import { Referee, Competitor, Place, AgainstGame, TogetherGame, AgainstSide, AgainstGamePlace, TogetherGamePlace } from 'ngx-sport';
 import { LockerRoom } from './lockerroom';
-import { PlaceLocationMap } from 'ngx-sport';
+import { CompetitorMap } from 'ngx-sport';
 import { Tournament } from './tournament';
-import { AgainstGamePlace } from 'ngx-sport/src/game/place/against';
-import { TogetherGamePlace } from 'ngx-sport/src/game/place/together';
 
 export class Favorites {
 
-    protected placeLocationMap: PlaceLocationMap;
+    protected competitorMap: CompetitorMap;
 
     constructor(
         private tournament: Tournament,
         private competitors: Competitor[] = [],
         private referees: Referee[] = []
     ) {
-        this.placeLocationMap = new PlaceLocationMap(tournament.getCompetitors());
+        this.competitorMap = new CompetitorMap(tournament.getCompetitors());
     }
 
     getTournament(): Tournament {
@@ -66,14 +64,14 @@ export class Favorites {
 
     hasAgainstGameCompetitor(game: AgainstGame, side?: AgainstSide): boolean {
         return game.getSidePlaces(side).some((gamePlace: AgainstGamePlace) => {
-            const competitor = this.placeLocationMap.getCompetitor(gamePlace.getPlace().getStartLocation());
+            const competitor = this.competitorMap.getCompetitor(gamePlace.getPlace().getStartLocation());
             return competitor && this.hasCompetitor(competitor);
         });
     }
 
     hasTogetherGameCompetitor(game: TogetherGame): boolean {
         return game.getTogetherPlaces().some((gamePlace: TogetherGamePlace) => {
-            const competitor = this.placeLocationMap.getCompetitor(gamePlace.getPlace().getStartLocation());
+            const competitor = this.competitorMap.getCompetitor(gamePlace.getPlace().getStartLocation());
             return competitor && this.hasCompetitor(competitor);
         });
     }
@@ -125,7 +123,7 @@ export class Favorites {
     }
 
     protected getCompetitorFromPlace(place: Place): Competitor | undefined {
-        return this.placeLocationMap.getCompetitor(place.getStartLocation());
+        return this.competitorMap.getCompetitor(place.getStartLocation());
     }
 
     addReferee(referee: Referee) {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Competitor, NameService, Place, Referee, PlaceLocationMap } from 'ngx-sport';
+import { Competitor, NameService, Place, Referee, CompetitorMap } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
 import { Favorites } from '../../lib/favorites';
@@ -39,9 +39,9 @@ export class FilterComponent extends TournamentComponent implements OnInit {
 
     ngOnInit() {
         super.myNgOnInit(() => {
-            const placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
-            this.nameService = new NameService(placeLocationMap);
-            this.placeCompetitorItems = this.getPlaceCompetitorItems(placeLocationMap);
+            const competitorMap = new CompetitorMap(this.tournament.getCompetitors());
+            this.nameService = new NameService(competitorMap);
+            this.placeCompetitorItems = this.getPlaceCompetitorItems(competitorMap);
             this.favorites = this.favRepository.getObject(this.tournament);
             if (this.hasCompetitors() === false) {
                 this.setAlert('info', 'er zijn nog geen deelnemers ingevuld, je kunt daarom nog geen deelnemers kiezen');
@@ -54,7 +54,7 @@ export class FilterComponent extends TournamentComponent implements OnInit {
         return this.hasRole(this.authService, Role.ADMIN);
     }
 
-    getPlaceCompetitorItems(map: PlaceLocationMap): PlaceCompetitorItem[] {
+    getPlaceCompetitorItems(map: CompetitorMap): PlaceCompetitorItem[] {
         return this.structure.getRootRound().getPlaces().map((place: Place): PlaceCompetitorItem => {
             return { place, competitor: <TournamentCompetitor>map.getCompetitor(place) };
         });

@@ -4,7 +4,7 @@ import {
   Competitor,
   RoundNumber,
   Structure,
-  PlaceLocationMap,
+  CompetitorMap,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -23,7 +23,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   changedRoundNumber: RoundNumber | undefined;
   originalCompetitors!: Competitor[];
   clonedStructure!: Structure;
-  public placeLocationMap!: PlaceLocationMap;
+  public competitorMap!: CompetitorMap;
 
   uiSliderConfigExample: any = {
     behaviour: 'drag',
@@ -45,7 +45,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
 
   ngOnInit() {
     super.myNgOnInit(() => {
-      this.placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
+      this.competitorMap = new CompetitorMap(this.tournament.getCompetitors());
       this.clonedStructure = this.createClonedStructure(this.structure);
       this.processing = false;
     });

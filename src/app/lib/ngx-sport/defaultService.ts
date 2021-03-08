@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { GameMode, JsonPlanningConfig, JsonSport, PouleStructure, RankingRuleSet, SelfReferee, Sport } from "ngx-sport";
+import { CreationStrategy, GameMode, JsonPlanningConfig, JsonSport, PouleStructure, RankingRuleSet, SelfReferee, Sport } from "ngx-sport";
 import { SportService } from "./sport/service";
 @Injectable({
     providedIn: 'root'
@@ -9,7 +9,7 @@ export class DefaultService {
     static readonly MinutesPerGameExt: number = 5;
     static readonly MinutesBetweenGames: number = 5;
     static readonly MinutesAfter: number = 5;
-    static readonly RankingRuleSet: RankingRuleSet = RankingRuleSet.WC;
+    static readonly RankingRuleSet: RankingRuleSet = RankingRuleSet.Against;
 
     constructor(private sportService: SportService) {
     }
@@ -28,7 +28,7 @@ export class DefaultService {
     getJsonPlanningConfig(sports: Sport[]): JsonPlanningConfig {
         return {
             id: 0,
-            gameMode: this.getDefaultGameMode(sports),
+            creationStrategy: this.getDefaultGameCreationStrategy(sports),
             extension: false,
             enableTime: true,
             minutesPerGame: DefaultService.MinutesPerGame,
@@ -44,17 +44,36 @@ export class DefaultService {
     }
 
     private getNrOfPlaces(sports: Sport[], nrOfFields: number): GameMode {
-        const gameMode = this.getDefaultGameMode(sports);
-        if (gameMode === GameMode.Against) {
-            return 5;
+        const maxNrOfGamePlaces = this.sportService.getMaxNrOfGamePlaces(sports);
+        if (maxNrOfGamePlaces === 0) {
+            return 10;
         }
-        let nrOfPlaces = this.sportService.getMaxNrOfGamePlaces(sports) * nrOfFields;
+        let nrOfPlaces = maxNrOfGamePlaces * nrOfFields * 2;
         return nrOfPlaces < 5 ? 5 : nrOfPlaces;
     }
 
-    getDefaultGameMode(sports: Sport[]): GameMode {
-        const hasTogether = this.hasGameMode(sports, GameMode.Together);
-        return hasTogether ? GameMode.Together : GameMode.Against;
+    /**
+     * Bij aanmaken toernooi, moet je bij sport.getGameMode() === Against, 
+     * kunnen kiezen voor een laddertoernooi. Dit houdt dan in 
+     * CreationStrategy.incrementalRanking
+     * 
+     * @param sports 
+     */
+    protected getDefaultGameCreationStrategy(sports: Sport[]): CreationStrategy {
+        // muliply
+        if (sports.length > 1) {
+            return CreationStrategy.staticManual;
+        }
+        const sport: Sport = sports[0];
+        if (sport.getGameMode() === GameMode.Together) {
+            return CreationStrategy.staticManual;
+
+        }
+        if (sport.getNrOfGamePlaces() > 2) {
+            return CreationStrategy.incrementalRandom;
+        }
+
+        return CreationStrategy.staticPouleSize
     }
 
     protected hasGameMode(sports: Sport[], gameMode: GameMode): boolean {

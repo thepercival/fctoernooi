@@ -10,7 +10,7 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { LiveboardLink } from '../../lib/liveboard/link';
-import { NameService, PlaceLocationMap } from 'ngx-sport';
+import { NameService, CompetitorMap } from 'ngx-sport';
 
 @Component({
     selector: 'app-tournament-liveboard',
@@ -24,7 +24,7 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     public toggleProgress = false;
     private screenfilter: string | undefined;
     public nameService!: NameService;
-    public placeLocationMap!: PlaceLocationMap;
+    public competitorMap!: CompetitorMap;
 
     constructor(
         route: ActivatedRoute,
@@ -50,10 +50,10 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     }
 
     processScreens() {
-        this.placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
+        this.competitorMap = new CompetitorMap(this.tournament.getCompetitors());
         const link: LiveboardLink = { showIcon: false, tournamentId: this.tournament.getId(), link: 'wim' };
         this.globalEventsManager.toggleLiveboardIconInNavBar.emit(link);
-        this.nameService = new NameService(this.placeLocationMap);
+        this.nameService = new NameService(this.competitorMap);
         const liveBoard = new Liveboard();
         this.screens = liveBoard.getScreens(this.tournament, this.structure, this.screenfilter);
         if (this.screens.length > 0) {

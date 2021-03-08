@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
-import { NameService, ScoreConfig, TogetherScore } from 'ngx-sport';
-import { TogetherGamePlace } from 'ngx-sport/src/game/place/together';
+import { NameService, ScoreConfig, TogetherGamePlace, TogetherScore } from 'ngx-sport';
 import { TranslateService } from '../../lib/translate';
 
 @Component({

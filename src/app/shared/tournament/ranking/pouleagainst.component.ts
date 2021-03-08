@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, RankedRoundItem, RankingService, PlaceLocationMap, GameMode, ScoreConfig } from 'ngx-sport';
+import { NameService, Poule, CompetitorMap, ScoreConfig, RoundRankingCalculator, RankedRoundItem } from 'ngx-sport';
 
 import { CSSService } from '../../common/cssservice';
 import { Favorites } from '../../../lib/favorites';
@@ -12,11 +12,10 @@ import { Favorites } from '../../../lib/favorites';
 export class PouleRankingAgainstComponent implements OnInit {
   @Input() poule!: Poule;
   @Input() favorites!: Favorites;
-  @Input() placeLocationMap!: PlaceLocationMap;
-  @Input() rankingService!: RankingService;
+  @Input() competitorMap!: CompetitorMap;
   @Input() header!: boolean;
+  protected roundRankingCalculator: RoundRankingCalculator;
   public rankingItems!: RankedRoundItem[];
-
   public nameService!: NameService;
   public showDifferenceDetail = false;
   public processing = true;
@@ -24,12 +23,13 @@ export class PouleRankingAgainstComponent implements OnInit {
   constructor(
     public cssService: CSSService
   ) {
+    this.roundRankingCalculator = new RoundRankingCalculator();
   }
 
   ngOnInit() {
     this.processing = true;
-    this.nameService = new NameService(this.placeLocationMap);
-    this.rankingItems = this.rankingService.getItemsForPoule(this.poule);
+    this.nameService = new NameService(this.competitorMap);
+    this.rankingItems = this.roundRankingCalculator.getItemsForPoule(this.poule);
     this.processing = false;
   }
 

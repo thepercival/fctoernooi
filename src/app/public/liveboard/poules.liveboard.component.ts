@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { NameService, Poule, RankedRoundItem, RankingService } from 'ngx-sport';
+import { NameService } from 'ngx-sport';
 
 import { CSSService } from '../../shared/common/cssservice';
 import { PoulesRankingScreen } from '../../lib/liveboard/screens';

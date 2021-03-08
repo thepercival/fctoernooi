@@ -1,8 +1,8 @@
-import { RankingService, JsonAgainstGame, JsonTogetherGame, AgainstGame, TogetherGame, NameService, GameMapper, State, RankedRoundItem, QualifyRuleMultiple, QualifyGroup } from "ngx-sport";
+import { JsonAgainstGame, JsonTogetherGame, AgainstGame, TogetherGame, NameService, GameMapper, State, RankedRoundItem, QualifyRuleMultiple, QualifyGroup, RoundRankingCalculator } from "ngx-sport";
 
 export class EqualQualifiersChecker {
 
-    private rankingService: RankingService;
+    private roundRankingCalculator: RoundRankingCalculator;
     private jsonOriginalGame: JsonAgainstGame | JsonTogetherGame;
 
     constructor(
@@ -10,10 +10,7 @@ export class EqualQualifiersChecker {
         private nameService: NameService,
         private gameMapper: GameMapper
     ) {
-        const roundNumber = game.getRound().getNumber();
-        const gameMode = roundNumber.getValidPlanningConfig().getGameMode();
-        this.rankingService = new RankingService(gameMode, roundNumber.getCompetition().getRankingRuleSet());
-        this.rankingService.disableCache();
+        this.roundRankingCalculator = new RoundRankingCalculator();
         this.jsonOriginalGame = this.gameMapper.toJson(game);
     }
 
@@ -26,7 +23,7 @@ export class EqualQualifiersChecker {
         }
         const round = poule.getRound();
 
-        const pouleRankingItems = this.rankingService.getItemsForPoule(this.game.getPoule());
+        const pouleRankingItems = this.roundRankingCalculator.getItemsForPoule(this.game.getPoule());
         const equalPouleItems = this.getEqualPouleRankingItemsWithQualifyRules(pouleRankingItems);
         const postFix = '(' + this.nameService.getPouleName(this.game.getPoule(), true) + ')';
         let warnings: string[] = this.getWarningsForEqualQualifiersHelper(equalPouleItems, postFix);
@@ -40,7 +37,7 @@ export class EqualQualifiersChecker {
                 if (multipleRule === undefined) {
                     return;
                 }
-                const rankedItems = this.rankingService.getItemsForHorizontalPoule(horizontalPoule);
+                const rankedItems = this.roundRankingCalculator.getItemsForHorizontalPoule(horizontalPoule);
                 const equalRuleItems = this.getEqualRuleRankingItems(multipleRule, rankedItems);
                 const postFixTmp = '(' + this.nameService.getHorizontalPouleName(horizontalPoule) + ')';
                 warnings = warnings.concat(this.getWarningsForEqualQualifiersHelper(equalRuleItems, postFixTmp));
@@ -76,14 +73,21 @@ export class EqualQualifiersChecker {
     protected reverseRanking(rankingItems: RankedRoundItem[]): RankedRoundItem[] {
         const nrOfItems = rankingItems.length;
         const reversedRankingItems: RankedRoundItem[] = [];
-        rankingItems.forEach(rankingItem => {
+        rankingItems.forEach((rankingItem: RankedRoundItem) => {
             const uniqueRank = (nrOfItems + 1) - rankingItem.getUniqueRank();
-            const nrOfEqualRank = this.rankingService.getItemsByRank(rankingItems, rankingItem.getRank()).length;
+            const nrOfEqualRank = this.getItemsByRank(rankingItems, rankingItem.getRank()).length;
             const rank = (nrOfItems + 1) - (rankingItem.getRank() + (nrOfEqualRank - 1));
-            reversedRankingItems.push(new RankedRoundItem(rankingItem.getUnranked(), uniqueRank, rank));
+            const rankedRoundItem = new RankedRoundItem(rankingItem.getPlace());
+            rankedRoundItem.setRank(rank);
+            rankedRoundItem.setUniqueRank(uniqueRank);
+            reversedRankingItems.push(rankedRoundItem);
         });
         reversedRankingItems.sort((itemA, itemB) => itemA.getUniqueRank() - itemB.getUniqueRank());
         return reversedRankingItems;
+    }
+
+    protected getItemsByRank(rankingItems: RankedRoundItem[], rank: number): RankedRoundItem[] {
+        return rankingItems.filter(rankingItemIt => rankingItemIt.getRank() === rank);
     }
 
     protected getEqualPouleRankingItemsWithQualifyRules(rankingItems: RankedRoundItem[]): RankedRoundItem[][] {
@@ -100,7 +104,7 @@ export class EqualQualifiersChecker {
         const equalItems = [];
         const maxRank = rankingItems[rankingItems.length - 1].getRank();
         for (let rank = 1; rank <= maxRank; rank++) {
-            const equalItemsTmp = this.rankingService.getItemsByRank(rankingItems, rank);
+            const equalItemsTmp = this.getItemsByRank(rankingItems, rank);
             if (equalItemsTmp.length > 1) {
                 equalItems.push(equalItemsTmp);
             }

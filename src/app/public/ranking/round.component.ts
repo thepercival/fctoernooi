@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, TemplateRef } from '@angular/core';
 
-import { Poule, State, NameService, GameMode, Round, PlaceLocationMap } from 'ngx-sport';
+import { Poule, State, NameService, GameMode, Round, CompetitorMap } from 'ngx-sport';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { CSSService } from '../../shared/common/cssservice';
@@ -14,13 +14,13 @@ import { Favorites } from '../../lib/favorites';
 })
 export class RankingRoundComponent implements OnInit {
     @Input() round!: Round;
-    @Input() placeLocationMap!: PlaceLocationMap;
+    @Input() competitorMap!: CompetitorMap;
     @Input() favorites!: Favorites;
     @Input() first: boolean = true;
     public nameService!: NameService;
     public collapsed: boolean = true;
     public poules: Poule[] = [];
-    public gameMode!: GameMode;
+    // public gameMode!: GameMode;
 
     constructor(
         public favRepos: FavoritesRepository,
@@ -32,7 +32,7 @@ export class RankingRoundComponent implements OnInit {
     ngOnInit() {
         this.poules = this.round.getPoules().filter((poule: Poule) => poule.needsRanking());
         const roundNumber = this.round.getNumber();
-        this.gameMode = roundNumber.getValidPlanningConfig().getGameMode();
+        // this.gameMode = roundNumber.getValidPlanningConfig().getGameMode();
         this.nameService = new NameService(undefined);
         const state = this.round.getState();
         const statePrevious = roundNumber.getPrevious()?.getState();

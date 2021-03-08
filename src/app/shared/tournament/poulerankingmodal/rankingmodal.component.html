@@ -1,9 +1,9 @@
 <div class="modal-header border-bottom-0">
     <h4 class="modal-title"><span>{{getHeader()}}</span></h4>
-    <button *ngIf="gameMode === Against" type="button" class="btn btn-sm btn-outline-info ml-1"
+    <!-- <button *ngIf="gameMode === Against" type="button" class="btn btn-sm btn-outline-info ml-1"
         (click)="openInfoModal('puntentelling',contentScoreRules)">
         <app-tournament-icon class="d-none d-sm-inline" name="scoreboard"></app-tournament-icon> puntentelling
-    </button>
+    </button> -->
     <button type="button" class="btn btn-sm btn-outline-info ml-1"
         (click)="openInfoModal('rangschikking',contentRankingRuleSet)">
         rangschikking
@@ -14,7 +14,7 @@
     </button>
 </div>
 <div class="modal-body p-0">
-    <app-tournament-pouleranking [poule]="poule" [favorites]="favorites" [placeLocationMap]="placeLocationMap">
+    <app-tournament-pouleranking [poule]="poule" [favorites]="favorites" [competitorMap]="competitorMap">
     </app-tournament-pouleranking>
 </div>
 <div class="modal-footer align-items-end border-top-0">

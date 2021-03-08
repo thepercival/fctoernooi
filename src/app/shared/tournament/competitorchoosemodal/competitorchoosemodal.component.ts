@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { NameService, Competitor, Place, Round, RoundNumber, PlaceLocationMap } from 'ngx-sport';
+import { NameService, Competitor, Place, Round, RoundNumber, CompetitorMap } from 'ngx-sport';
 import { TournamentCompetitor } from '../../../lib/competitor';
 import { LockerRoom } from '../../../lib/lockerroom';
 import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
@@ -18,17 +18,17 @@ export class CompetitorChooseModalComponent implements OnInit {
     @Input() selectedCompetitors: Competitor[] = [];
     public competitorListItems: CompetitorListItem[] = [];
     public nameService!: NameService;
-    public placeLocationMap!: PlaceLocationMap;
+    public competitorMap!: CompetitorMap;
     public changed = false;
 
     constructor(public activeModal: NgbActiveModal) {
     }
 
     ngOnInit() {
-        this.placeLocationMap = new PlaceLocationMap(this.competitors);
-        this.nameService = new NameService(this.placeLocationMap);
+        this.competitorMap = new CompetitorMap(this.competitors);
+        this.nameService = new NameService(this.competitorMap);
         this.places.forEach((place: Place) => {
-            const competitor = <TournamentCompetitor>this.placeLocationMap.getCompetitor(place);
+            const competitor = <TournamentCompetitor>this.competitorMap.getCompetitor(place);
             this.competitorListItems.push({
                 placeName: this.nameService.getPlaceFromName(place, false),
                 competitor: competitor,

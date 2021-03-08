@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-import { HorizontalPoule, NameService, QualifyGroup, Round, RoundNumber, StructureService, Competitor, PlaceLocationMap } from 'ngx-sport';
+import { HorizontalPoule, NameService, QualifyGroup, Round, RoundNumber, StructureService, Competitor, CompetitorMap } from 'ngx-sport';
 
 import { IAlert } from '../../common/alert';
 import { CSSService } from '../../common/cssservice';
@@ -18,7 +18,7 @@ export class StructureRoundComponent implements OnInit {
   @Input() editable: boolean = false;
   @Input() first!: boolean;
   @Input() favorites: Competitor[] = [];
-  @Input() placeLocationMap!: PlaceLocationMap;
+  @Input() competitorMap!: CompetitorMap;
   viewType: number = StructureViewType.ROUNDSTRUCTURE;
   alert: IAlert | undefined;
   public nameService!: NameService;
@@ -28,7 +28,7 @@ export class StructureRoundComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.nameService = new NameService(this.placeLocationMap);
+    this.nameService = new NameService(this.competitorMap);
   }
 
   arrangeAction(action: string) {

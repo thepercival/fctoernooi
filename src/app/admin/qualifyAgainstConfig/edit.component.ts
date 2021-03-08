@@ -5,7 +5,7 @@ import {
     QualifyAgainstConfig,
     JsonQualifyAgainstConfig,
     Structure,
-    PlaceLocationMap,
+    CompetitorMap,
     CompetitionSport,
     Round,
     QualifyAgainstConfigMapper,
@@ -94,7 +94,7 @@ export class QualifyAgainstConfigEditComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.nameService = new NameService(new PlaceLocationMap(this.tournament.getCompetitors()));
+        this.nameService = new NameService(new CompetitorMap(this.tournament.getCompetitors()));
         this.initRanges();
         this.initToggleRound();
         this.processing = false;
@@ -138,13 +138,15 @@ export class QualifyAgainstConfigEditComponent implements OnInit {
     }
 
     selectedAgainstGameMode(): boolean {
-        const selectedAgainstGameMode = (toggleRound: ToggleRound): boolean => {
-            if (toggleRound.selected && toggleRound.round.getNumber().getValidPlanningConfig().getGameMode() === GameMode.Against) {
-                return true;
-            }
-            return toggleRound.children.some((child: ToggleRound) => selectedAgainstGameMode(child));
-        };
-        return selectedAgainstGameMode(this.toggleRound);
+        // TODOSPORTS
+        return true;
+        // const selectedAgainstGameMode = (toggleRound: ToggleRound): boolean => {
+        //     if (toggleRound.selected && toggleRound.round.getNumber().getValidPlanningConfig().getGameMode() === GameMode.Against) {
+        //         return true;
+        //     }
+        //     return toggleRound.children.some((child: ToggleRound) => selectedAgainstGameMode(child));
+        // };
+        // return selectedAgainstGameMode(this.toggleRound);
     }
 
     initRanges() {

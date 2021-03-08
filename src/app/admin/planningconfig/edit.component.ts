@@ -4,7 +4,7 @@ import {
     NameService,
     RoundNumber,
     JsonPlanningConfig,
-    PlaceLocationMap,
+    CompetitorMap,
     PouleStructure,
     SelfReferee,
     GameMode,
@@ -14,6 +14,8 @@ import {
     PlanningConfigMapper,
     JsonGameAmountConfig,
     Sport,
+    GameAmountConfig,
+    CreationStrategy,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -26,7 +28,6 @@ import { PlanningConfigRepository } from '../../lib/ngx-sport/planning/config/re
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RoundNumbersSelectorModalComponent } from '../roundnumber/selector.component';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
-import { GameAmountConfig } from 'ngx-sport/src/planning/gameAmountConfig';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { GameAmountConfigControl } from '../gameAmountConfig/edit.component';
 import { GameAmountConfigRepository } from '../../lib/ngx-sport/gameAmountConfig/repository';
@@ -110,7 +111,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     initConfig(startRoundNumberAsValue: number) {
-        this.nameService = new NameService(new PlaceLocationMap(this.tournament.getCompetitors()));
+        this.nameService = new NameService(new CompetitorMap(this.tournament.getCompetitors()));
         const startRoundNumber = this.structure.getRoundNumber(startRoundNumberAsValue);
         if (startRoundNumber === undefined) {
             this.setAlert('danger', 'het rondenumber is niet gevonden');
@@ -122,7 +123,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     initGameAmountConfigs(startRoundNumber: RoundNumber) {
-        this.setGameAmountRange(startRoundNumber.getValidPlanningConfig().getGameMode());
+        this.setGameAmountRange(startRoundNumber.getValidPlanningConfig().getCreationStrategy());
         startRoundNumber.getValidGameAmountConfigs().forEach((gameAmountConfig: GameAmountConfig) => {
             this.form.addControl('' + gameAmountConfig.getId(), new FormControl(
                 gameAmountConfig.getAmount(),
@@ -130,13 +131,29 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             ));
         });
         this.setGameAmountControls(startRoundNumber);
-        this.processing = false;
     }
 
-    setGameAmountRange(gameMode: GameMode) {
-        const validations = this.gameAmountValidations
-        let min = gameMode === GameMode.Against ? validations.minNrOfHeadtohead : validations.minNrOfGames;
-        let max = gameMode === GameMode.Against ? validations.maxNrOfHeadtohead : validations.maxNrOfGames;
+    /*
+     Hoe moet je de CreationStrategy kunnen wijzigen
+     Voetbal: CreationStrategy.staticPouleSize wanneer nog niet begonnen kun je onderlinge duels aanpassen
+     Wilerennen: CreationStrategy.staticManual wanneer nog niet begonnen kun je aantal wedstrijden aanpassen
+     Klaverjassen: CreationStrategy.incrementalRandom na elke speelronde een speelronde kunnen toevoegen
+     Badminton: CreationStrategy.incrementalRanking na elke afgeronde speelronde een speelronde kunnen toevoegen
+
+     creationStrategy kies je bij het aanmaken van het toernooi!
+     // dus bij sommige sporten moet je kunnen kiezen voor een laddertoernooi.
+     */
+
+    isGameAmountEditable(): boolean {
+        const strategy = this.startRoundNumber.getValidPlanningConfig().getCreationStrategy();
+        return strategy === CreationStrategy.staticPouleSize || strategy === CreationStrategy.staticManual;
+    }
+
+
+    setGameAmountRange(creationStrategy: CreationStrategy) {
+        const validations = this.gameAmountValidations;
+        let min = creationStrategy === CreationStrategy.staticPouleSize ? validations.minNrOfHeadtohead : validations.minNrOfGames;
+        let max = creationStrategy === CreationStrategy.staticPouleSize ? validations.maxNrOfHeadtohead : validations.maxNrOfGames;
         this.gameAmountRange = { min, max };
     }
 
@@ -153,16 +170,12 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.startRoundNumber = startRoundNumber;
         this.pouleStructure = startRoundNumber.createPouleStructure();
         this.hasBegun = this.startRoundNumber.hasBegun()
-        this.setGameAmountRange(startRoundNumber.getValidPlanningConfig().getGameMode());
+        this.setGameAmountRange(startRoundNumber.getValidPlanningConfig().getCreationStrategy());
         this.jsonToForm(this.mapper.toJson(startRoundNumber.getValidPlanningConfig()));
         this.resetAlert();
         if (this.hasBegun) {
             this.setAlert('warning', 'er zijn wedstrijden gespeeld voor deze ronde, je kunt niet meer wijzigen');
         }
-    }
-
-    changeGameMode(gameMode: GameMode) {
-        this.setGameAmountRange(gameMode);
     }
 
     changeMinutesPerGameExt(minutesPerGameExt: number) {
@@ -194,7 +207,6 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     private jsonToForm(json: JsonPlanningConfig) {
-        this.form.controls.gameMode.setValue(json.gameMode);
         this.form.controls.extension.setValue(json.extension);
         this.form.controls.enableTime.setValue(json.enableTime);
         this.form.controls.minutesPerGame.setValue(json.minutesPerGame);
@@ -224,7 +236,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     private formToJson(): JsonPlanningConfig {
         return {
             id: 0,
-            gameMode: this.form.controls.gameMode.value,
+            creationStrategy: this.startRoundNumber.getValidPlanningConfig().getCreationStrategy(),
             extension: this.form.controls.extension.value,
             enableTime: this.form.controls.enableTime.value,
             minutesPerGame: this.form.controls.minutesPerGame.value,
@@ -309,12 +321,17 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
         const jsonConfig: JsonPlanningConfig = this.formToJson();
         const jsonGameAmountConfigs: JsonGameAmountConfig[] = this.formToJsonGameAmountConfigs();
-        const planningAction = (new PlanningActionCalculator(this.startRoundNumber)).getAction(jsonConfig, jsonGameAmountConfigs);
+        const planningActionCalculator = new PlanningActionCalculator(this.startRoundNumber);
+        const planningAction = planningActionCalculator.getAction(jsonConfig, jsonGameAmountConfigs);
 
         this.planningConfigRepository.saveObject(jsonConfig, this.startRoundNumber, this.tournament)
             .subscribe(
                 /* happy path */ configRes => {
-                    this.saveGameAmountConfigs(jsonGameAmountConfigs, planningAction);
+                    if (planningActionCalculator.isGameAmountEditable()) {
+                        this.saveGameAmountConfigs(jsonGameAmountConfigs, planningAction);
+                    } else {
+                        this.processing = false;
+                    }
                 },
                 /* error path */ e => {
                     this.setAlert('danger', 'de instellingen zijn niet opgeslagen: ' + e);
@@ -396,13 +413,16 @@ class PlanningActionCalculator {
 
     private needsRecreating(json: JsonPlanningConfig, jsonGameAmountConfigs: JsonGameAmountConfig[]): boolean {
         const config = this.roundNumber.getValidPlanningConfig();
-        if (config.getGameMode() !== json.gameMode || config.getSelfReferee() !== json.selfReferee) {
+        if (config.getSelfReferee() !== json.selfReferee) {
             return true
         }
         return this.gameAmountConfigsChanged(jsonGameAmountConfigs);
     }
 
     private gameAmountConfigsChanged(jsonGameAmountConfigs: JsonGameAmountConfig[]): boolean {
+        if (!this.isGameAmountEditable()) {
+            return false;
+        }
         const getGameAmountConfig = (competitionSport: CompetitionSport): JsonGameAmountConfig | undefined => {
             return jsonGameAmountConfigs.find((jsonGameAmountConfigIt: JsonGameAmountConfig) => {
                 return jsonGameAmountConfigIt.competitionSport.id === competitionSport.getId();
@@ -413,6 +433,11 @@ class PlanningActionCalculator {
             const gameAmountConfig = this.roundNumber.getGameAmountConfig(competitionSport);
             return jsonGameAmountConfig && gameAmountConfig && jsonGameAmountConfig.amount !== gameAmountConfig.getAmount();
         });
+    }
+
+    isGameAmountEditable(): boolean {
+        const strategy = this.roundNumber.getValidPlanningConfig().getCreationStrategy();
+        return strategy === CreationStrategy.staticPouleSize || strategy === CreationStrategy.staticManual;
     }
 
     private needsRescheduling(json: JsonPlanningConfig): boolean {

@@ -6,11 +6,11 @@ import { Favorites } from '../../../lib/favorites';
 import { FavoritesRepository } from '../../../lib/favorites/repository';
 
 @Component({
-  selector: 'app-tournament-pouleranking-together-table',
-  templateUrl: './pouletogether.component.html',
-  styleUrls: ['./pouletogether.component.scss']
+  selector: 'app-tournament-pouleranking-sports-table',
+  templateUrl: './poulesports.component.html',
+  styleUrls: ['./poulesports.component.scss']
 })
-export class PouleRankingTogetherComponent implements OnInit {
+export class PouleRankingSportsComponent implements OnInit {
   @Input() poule!: Poule;
   @Input() favorites!: Favorites;
   @Input() competitorMap!: CompetitorMap;

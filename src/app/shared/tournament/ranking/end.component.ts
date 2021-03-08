@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { EndRankingService, EndRankingItem, Structure, Competitor, PlaceLocation, PlaceLocationMap } from 'ngx-sport';
-import { VoetbalRange } from 'ngx-sport';
+import { EndRankingItem, Structure, CompetitorMap, VoetbalRange, EndRankingCalculator } from 'ngx-sport';
 import { Favorites } from '../../../lib/favorites';
 
 @Component({
@@ -11,7 +10,7 @@ import { Favorites } from '../../../lib/favorites';
 export class EndRankingComponent implements OnInit, OnChanges {
 
   @Input() structure!: Structure;
-  @Input() placeLocationMap!: PlaceLocationMap;
+  @Input() competitorMap!: CompetitorMap;
   @Input() favorites!: Favorites;
   @Input() range: VoetbalRange | undefined;
   public rankingItems: EndRankingItem[] = [];
@@ -34,8 +33,8 @@ export class EndRankingComponent implements OnInit, OnChanges {
   }
 
   protected updateItems() {
-    const endRankingService = new EndRankingService(this.structure);
-    this.rankingItems = endRankingService.getItems().filter((item: EndRankingItem): boolean => {
+    const endRankingCalculator = new EndRankingCalculator(this.structure);
+    this.rankingItems = endRankingCalculator.getItems().filter((item: EndRankingItem): boolean => {
       return this.range === undefined || (item.getUniqueRank() >= this.range.min && item.getUniqueRank() <= this.range.max);
     });
   }
@@ -53,7 +52,7 @@ export class EndRankingComponent implements OnInit, OnChanges {
     if (placeLocation === undefined) {
       return false;
     }
-    const competitor = this.placeLocationMap.getCompetitor(placeLocation);
+    const competitor = this.competitorMap.getCompetitor(placeLocation);
     return this.favorites && this.favorites.hasCompetitor(competitor);
   }
 
@@ -62,6 +61,6 @@ export class EndRankingComponent implements OnInit, OnChanges {
     if (placeLocation === undefined) {
       return 'nog onbekend';
     }
-    return this.placeLocationMap.getCompetitor(placeLocation)?.getName() ?? 'onbekend';
+    return this.competitorMap.getCompetitor(placeLocation)?.getName() ?? 'onbekend';
   }
 }

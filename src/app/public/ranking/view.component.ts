@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { State, Competitor, RankingRuleSet, PlaceLocationMap } from 'ngx-sport';
+import { State, Competitor, RankingRuleSet, CompetitorMap } from 'ngx-sport';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { AuthService } from '../../lib/auth/auth.service';
 import { Role } from '../../lib/role';
@@ -20,7 +20,7 @@ import { Favorites } from '../../lib/favorites';
 export class RankingComponent extends TournamentComponent implements OnInit {
     public activeTab: number = 1;
     public favorites!: Favorites;
-    public placeLocationMap!: PlaceLocationMap;
+    public competitorMap!: CompetitorMap;
     public rankingRuleSet!: RankingRuleSet;
 
     constructor(
@@ -38,7 +38,7 @@ export class RankingComponent extends TournamentComponent implements OnInit {
     ngOnInit() {
         super.myNgOnInit(() => {
             this.rankingRuleSet = this.tournament.getCompetition().getRankingRuleSet();
-            this.placeLocationMap = new PlaceLocationMap(this.tournament.getCompetitors());
+            this.competitorMap = new CompetitorMap(this.tournament.getCompetitors());
             this.favorites = this.favRepository.getObject(this.tournament);
             if (this.structure.getLastRoundNumber().getState() === State.Finished) {
                 this.activeTab = 2;

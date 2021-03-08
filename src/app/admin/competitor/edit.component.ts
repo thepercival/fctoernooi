@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
     JsonCompetitor,
     NameService,
-    PlaceLocationMap,
+    CompetitorMap,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -76,7 +76,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         this.pouleNr = pouleNr;
         this.placeNr = placeNr;
         this.hasBegun = this.structure.getRootRound().hasBegun();
-        this.nameService = new NameService(new PlaceLocationMap(this.tournament.getCompetitors()));
+        this.nameService = new NameService(new CompetitorMap(this.tournament.getCompetitors()));
 
         const competitor = this.tournament.getCompetitors().find(competitorIt => {
             return competitorIt.getPouleNr() === pouleNr && competitorIt.getPlaceNr() === placeNr;

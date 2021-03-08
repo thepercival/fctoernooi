@@ -9,7 +9,7 @@ import {
     JsonScoreConfig,
     SportMapper,
     Structure,
-    PlaceLocationMap,
+    CompetitorMap,
     CompetitionSport,
     Round,
     ScoreConfigMapper,
@@ -69,7 +69,7 @@ export class ScoreConfigEditComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.nameService = new NameService(new PlaceLocationMap(this.tournament.getCompetitors()));
+        this.nameService = new NameService(new CompetitorMap(this.tournament.getCompetitors()));
         this.initToggleRound();
     }
 
