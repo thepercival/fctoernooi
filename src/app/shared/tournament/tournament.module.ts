@@ -25,12 +25,12 @@ import { facStructure, facReferee, facScoreboard, facSoccerField } from './icons
 import { CompetitionSportRouter } from './competitionSport.router';
 import { InfoModalComponent } from './infomodal/infomodal.component';
 import { QualifyAgainstInfoComponent } from './qualifyAgainstConfig/info.component';
-import { PouleRankingAgainstComponent } from './ranking/pouleagainst.component';
-import { PouleRankingTogetherComponent } from './ranking/pouletogether.component';
 import { GameModeInfoModalComponent } from './gameMode/infomodal.component';
 import { TournamentIconComponent } from './icon/icon.component';
 import { PouleRankingComponent } from './ranking/poule.component';
-import { PouleRankingSportsComponent } from './ranking/poulesports.component';
+import { PouleRankingSportsComponent } from './ranking/poule/sports.component';
+import { PouleRankingAgainstComponent } from './ranking/poule/against.component';
+import { PouleRankingTogetherComponent } from './ranking/poule/together.component';
 
 @NgModule({
   declarations: [

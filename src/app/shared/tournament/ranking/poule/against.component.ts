@@ -1,21 +1,22 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, CompetitorMap, ScoreConfig, RoundRankingCalculator, RankedRoundItem } from 'ngx-sport';
+import { NameService, Poule, CompetitorMap, ScoreConfig, AgainstSportRoundRankingCalculator, CompetitionSport, RankedSportRoundItem } from 'ngx-sport';
+import { Favorites } from '../../../../lib/favorites';
+import { CSSService } from '../../../common/cssservice';
 
-import { CSSService } from '../../common/cssservice';
-import { Favorites } from '../../../lib/favorites';
 
 @Component({
   selector: 'app-tournament-pouleranking-against-table',
-  templateUrl: './pouleagainst.component.html',
-  styleUrls: ['./pouleagainst.component.scss']
+  templateUrl: './against.component.html',
+  styleUrls: ['./against.component.scss']
 })
 export class PouleRankingAgainstComponent implements OnInit {
   @Input() poule!: Poule;
   @Input() favorites!: Favorites;
   @Input() competitorMap!: CompetitorMap;
   @Input() header!: boolean;
-  protected roundRankingCalculator: RoundRankingCalculator;
-  public rankingItems!: RankedRoundItem[];
+  protected rankingCalculator!: AgainstSportRoundRankingCalculator;
+  public competitionSport!: CompetitionSport;
+  public rankingItems!: RankedSportRoundItem[];
   public nameService!: NameService;
   public showDifferenceDetail = false;
   public processing = true;
@@ -23,13 +24,14 @@ export class PouleRankingAgainstComponent implements OnInit {
   constructor(
     public cssService: CSSService
   ) {
-    this.roundRankingCalculator = new RoundRankingCalculator();
   }
 
   ngOnInit() {
     this.processing = true;
     this.nameService = new NameService(this.competitorMap);
-    this.rankingItems = this.roundRankingCalculator.getItemsForPoule(this.poule);
+    this.competitionSport = this.poule.getCompetition().getSingleSport();
+    this.rankingCalculator = new AgainstSportRoundRankingCalculator(this.competitionSport);
+    this.rankingItems = this.rankingCalculator.getItemsForPoule(this.poule);
     this.processing = false;
   }
 
@@ -39,7 +41,7 @@ export class PouleRankingAgainstComponent implements OnInit {
     });
   }
 
-  getQualifyPlaceClass(rankingItem: RankedRoundItem): string {
+  getQualifyPlaceClass(rankingItem: RankedSportRoundItem): string {
     const place = this.poule.getPlace(rankingItem.getUniqueRank());
     return place ? this.cssService.getQualifyPlace(place) : '';
   }

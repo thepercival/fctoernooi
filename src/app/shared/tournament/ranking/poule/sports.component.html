@@ -1,0 +1,40 @@
+<table class="table table-striped fixed mb-0">
+    <colgroup>
+        <col>
+        <col class="width-30">
+        <col>
+        <col>
+    </colgroup>
+    <thead>
+        <tr>
+            <th class="text-right pl-0">pl</th>
+            <th class="place pl-0">
+                <span>deelnemer</span>
+                <!-- <span *ngIf="activeGameRound < nrOfGameRounds">backwards</span> -->
+            </th>
+            <th *ngFor="let competitionSport of competitionSports; let counter = index"
+                class="text-right pl-0 {{getViewPortClass(counter+1)}}">
+                {{competitionSport.getSport().getName()}}</th>
+            <th class="text-right pl-0" title="totaal">
+                <!-- <span *ngIf="activeGameRound < nrOfGameRounds">forward</span> -->
+                <span>t</span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let rankedRoundItem of rankedRoundItems">
+            <td class="rankingnr text-right pl-0">
+                <span
+                    class="badge badge-rank {{getQualifyPlaceClass(rankedRoundItem)}}">{{rankedRoundItem.getUniqueRank()}}</span>
+            </td>
+            <td class="place pl-0"
+                [ngClass]="{ 'favitem': favorites.hasCompetitor(competitorMap.getCompetitor(rankedRoundItem.getPlace())) }">
+                {{nameService.getPlaceFromName(rankedRoundItem.getPlace(), true)}}
+            </td>
+            <td *ngFor="let competitionSport of competitionSports; let counter = index;"
+                class="text-right pl-0 {{getViewPortClass(counter+1)}}">
+                {{rankedRoundItem.getSportItem(competitionSport).getRank()}}</td>
+            <td class="text-right pl-0">{{rankedRoundItem.getUnranked().getPoints()}}</td>
+        </tr>
+    </tbody>
+</table>

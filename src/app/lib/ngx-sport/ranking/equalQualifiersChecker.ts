@@ -78,8 +78,7 @@ export class EqualQualifiersChecker {
             const nrOfEqualRank = this.getItemsByRank(rankingItems, rankingItem.getRank()).length;
             const rank = (nrOfItems + 1) - (rankingItem.getRank() + (nrOfEqualRank - 1));
             const rankedRoundItem = new RankedRoundItem(rankingItem.getPlace());
-            rankedRoundItem.setRank(rank);
-            rankedRoundItem.setUniqueRank(uniqueRank);
+            rankedRoundItem.setRank(rank, uniqueRank);
             reversedRankingItems.push(rankedRoundItem);
         });
         reversedRankingItems.sort((itemA, itemB) => itemA.getUniqueRank() - itemB.getUniqueRank());

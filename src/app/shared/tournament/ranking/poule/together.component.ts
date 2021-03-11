@@ -1,22 +1,23 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, CompetitorMap, GameAmountConfig, Place, ScoreConfigService, TogetherGame, VoetbalRange, CompetitionSport, RoundRankingCalculator, RankedRoundItem, TogetherGamePlace } from 'ngx-sport';
+import { NameService, Poule, CompetitorMap, GameAmountConfig, Place, ScoreConfigService, TogetherGame, VoetbalRange, CompetitionSport, TogetherGamePlace, TogetherSportRoundRankingCalculator, RankedSportRoundItem } from 'ngx-sport';
 
-import { CSSService } from '../../common/cssservice';
-import { Favorites } from '../../../lib/favorites';
-import { FavoritesRepository } from '../../../lib/favorites/repository';
+import { CSSService } from '../../../common/cssservice';
+import { Favorites } from '../../../../lib/favorites';
+import { FavoritesRepository } from '../../../../lib/favorites/repository';
 
 @Component({
-  selector: 'app-tournament-pouleranking-sports-table',
-  templateUrl: './poulesports.component.html',
-  styleUrls: ['./poulesports.component.scss']
+  selector: 'app-tournament-pouleranking-together-table',
+  templateUrl: './together.component.html',
+  styleUrls: ['./together.component.scss']
 })
-export class PouleRankingSportsComponent implements OnInit {
+export class PouleRankingTogetherComponent implements OnInit {
   @Input() poule!: Poule;
   @Input() favorites!: Favorites;
   @Input() competitorMap!: CompetitorMap;
   @Input() header!: boolean;
-  protected roundRankingCalculator: RoundRankingCalculator;
-  public rankingItems!: RankedRoundItem[];
+  protected rankingCalculator!: TogetherSportRoundRankingCalculator;
+  public competitionSport!: CompetitionSport;
+  public rankingItems!: RankedSportRoundItem[];
   public nameService!: NameService;
   gameAmountConfigs: GameAmountConfig[] = [];
   gameRoundMap = new GameRoundMap();
@@ -31,13 +32,14 @@ export class PouleRankingSportsComponent implements OnInit {
     public cssService: CSSService,
     private scoreConfigService: ScoreConfigService,
     public favRepository: FavoritesRepository) {
-    this.roundRankingCalculator = new RoundRankingCalculator();
   }
 
   ngOnInit() {
     this.processing = true;
     this.nameService = new NameService(this.competitorMap);
-    this.rankingItems = this.roundRankingCalculator.getItemsForPoule(this.poule);
+    this.competitionSport = this.poule.getCompetition().getSingleSport();
+    this.rankingCalculator = new TogetherSportRoundRankingCalculator(this.competitionSport);
+    this.rankingItems = this.rankingCalculator.getItemsForPoule(this.poule);
     this.gameAmountConfigs = this.poule.getRound().getNumber().getValidGameAmountConfigs();
     this.initViewPortNrOfColumnsMap();
     this.initGameRoundMap();
@@ -163,7 +165,7 @@ export class PouleRankingSportsComponent implements OnInit {
     return this.getGameRounds(competitionSport)[0] + gameRound;;
   }
 
-  getQualifyPlaceClass(rankingItem: RankedRoundItem): string {
+  getQualifyPlaceClass(rankingItem: RankedSportRoundItem): string {
     const place = this.poule.getPlace(rankingItem.getUniqueRank());
     return place ? this.cssService.getQualifyPlace(place) : '';
   }

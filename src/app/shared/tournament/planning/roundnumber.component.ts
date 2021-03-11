@@ -75,7 +75,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     private authService: AuthService,
     public cssService: CSSService,
     public dateFormatter: DateFormatter,
-    private translate: TranslateService,
+    public translate: TranslateService,
     private modalService: NgbModal,
     protected planningRepository: PlanningRepository) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];

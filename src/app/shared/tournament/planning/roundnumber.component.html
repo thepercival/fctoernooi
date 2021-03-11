@@ -69,10 +69,11 @@
             </button>
             <app-tournament-icon *ngIf="!userIsAdmin" title="veld" name="soccer-field"></app-tournament-icon>
           </th>
-          <th *ngIf="planningConfig.getGameMode() === GameModeAgainst" class="text-right">thuis</th>
-          <th *ngIf="planningConfig.getGameMode() === GameModeTogether">deelnemer(s)</th>
+          <!-- TODOSPORTS -->
+          <!-- <th *ngIf="planningConfig.getGameMode() === GameModeAgainst" class="text-right">thuis</th>
+          <th *ngIf="planningConfig.getGameMode() === GameModeTogether">deelnemer(s)</th> -->
           <!-- score -->
-          <th class="text-center">
+          <!-- <th class="text-center">
             <button *ngIf="userIsAdmin" title="wijzig score-regels"
               class="btn btn-sm btn-outline-{{hasBegun ? 'warning' : 'secondary'}}"
               (click)="linkToCompetitionSport(SportConfigTabScore)">
@@ -83,7 +84,7 @@
               <app-tournament-icon name="scoreboard"></app-tournament-icon>
             </button>
           </th>
-          <th *ngIf="planningConfig.getGameMode() === GameModeAgainst">uit</th>
+          <th *ngIf="planningConfig.getGameMode() === GameModeAgainst">uit</th> -->
           <!-- referee -->
           <th *ngIf="hasReferees" class="d-none d-sm-table-cell text-right" title="scheidsrechter">
             <button *ngIf="userIsAdmin && !planningConfig.getSelfReferee()" title="wijzig scheidsrechters"
@@ -136,12 +137,13 @@
             <!-- field -->
             <td class="text-center">{{gmData.game.getField()?.getName()}}</td>
             <!-- gamePlaces -->
-            <ng-container *ngIf="planningConfig.getGameMode() === GameModeAgainst">
+            <!-- TODOSPORTS -->
+            <!-- <ng-container *ngIf="planningConfig.getGameMode() === GameModeAgainst">
               <ng-container *ngTemplateOutlet="againstGamePlaces;context:{$implicit: gmData}"></ng-container>
             </ng-container>
             <ng-container *ngIf="planningConfig.getGameMode() === GameModeTogether">
               <ng-container *ngTemplateOutlet="togetherGamePlaces;context:{$implicit: gmData}"></ng-container>
-            </ng-container>
+            </ng-container> -->
             <!-- referee -->
             <td *ngIf="hasReferees" class="d-none d-sm-table-cell text-right"
               [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
