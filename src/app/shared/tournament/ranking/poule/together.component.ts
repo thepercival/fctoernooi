@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, CompetitorMap, GameAmountConfig, Place, ScoreConfigService, TogetherGame, VoetbalRange, CompetitionSport, TogetherGamePlace, TogetherSportRoundRankingCalculator, RankedSportRoundItem } from 'ngx-sport';
+import { NameService, Poule, CompetitorMap, GameAmountConfig, Place, ScoreConfigService, TogetherGame, VoetbalRange, CompetitionSport, TogetherGamePlace, TogetherSportRoundRankingCalculator, SportRoundRankingItem, PlaceLocation } from 'ngx-sport';
 
 import { CSSService } from '../../../common/cssservice';
 import { Favorites } from '../../../../lib/favorites';
@@ -15,9 +15,9 @@ export class PouleRankingTogetherComponent implements OnInit {
   @Input() favorites!: Favorites;
   @Input() competitorMap!: CompetitorMap;
   @Input() header!: boolean;
-  protected rankingCalculator!: TogetherSportRoundRankingCalculator;
+  protected togetherRankingCalculator!: TogetherSportRoundRankingCalculator;
   public competitionSport!: CompetitionSport;
-  public rankingItems!: RankedSportRoundItem[];
+  public sportRankingItems!: SportRoundRankingItem[];
   public nameService!: NameService;
   gameAmountConfigs: GameAmountConfig[] = [];
   gameRoundMap = new GameRoundMap();
@@ -38,8 +38,8 @@ export class PouleRankingTogetherComponent implements OnInit {
     this.processing = true;
     this.nameService = new NameService(this.competitorMap);
     this.competitionSport = this.poule.getCompetition().getSingleSport();
-    this.rankingCalculator = new TogetherSportRoundRankingCalculator(this.competitionSport);
-    this.rankingItems = this.rankingCalculator.getItemsForPoule(this.poule);
+    this.togetherRankingCalculator = new TogetherSportRoundRankingCalculator(this.competitionSport);
+    this.sportRankingItems = this.togetherRankingCalculator.getItemsForPoule(this.poule);
     this.gameAmountConfigs = this.poule.getRound().getNumber().getValidGameAmountConfigs();
     this.initViewPortNrOfColumnsMap();
     this.initGameRoundMap();
@@ -156,8 +156,8 @@ export class PouleRankingTogetherComponent implements OnInit {
 
   }
 
-  getScore(place: Place, gameAmountConfig: GameAmountConfig, gameRound: number): number {
-    const compettionSportMap = this.togetherRankingMap.get(place.getNumber());
+  getScore(placeLocation: PlaceLocation, gameAmountConfig: GameAmountConfig, gameRound: number): number {
+    const compettionSportMap = this.togetherRankingMap.get(placeLocation.getPlaceNr());
     return compettionSportMap?.get(gameAmountConfig.getCompetitionSport().getId())?.get(gameRound) ?? 0;
   }
 
@@ -165,7 +165,7 @@ export class PouleRankingTogetherComponent implements OnInit {
     return this.getGameRounds(competitionSport)[0] + gameRound;;
   }
 
-  getQualifyPlaceClass(rankingItem: RankedSportRoundItem): string {
+  getQualifyPlaceClass(rankingItem: SportRoundRankingItem): string {
     const place = this.poule.getPlace(rankingItem.getUniqueRank());
     return place ? this.cssService.getQualifyPlace(place) : '';
   }

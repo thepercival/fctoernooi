@@ -22,19 +22,19 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let rankedRoundItem of rankedRoundItems">
+        <tr *ngFor="let roundRankingItem of roundRankingItems">
             <td class="rankingnr text-right pl-0">
                 <span
-                    class="badge badge-rank {{getQualifyPlaceClass(rankedRoundItem)}}">{{rankedRoundItem.getUniqueRank()}}</span>
+                    class="badge badge-rank {{getQualifyPlaceClass(roundRankingItem)}}">{{roundRankingItem.getUniqueRank()}}</span>
             </td>
             <td class="place pl-0"
-                [ngClass]="{ 'favitem': favorites.hasCompetitor(competitorMap.getCompetitor(rankedRoundItem.getPlace())) }">
-                {{nameService.getPlaceFromName(rankedRoundItem.getPlace(), true)}}
+                [ngClass]="{ 'favitem': favorites.hasCompetitor(competitorMap.getCompetitor(roundRankingItem.getPlace())) }">
+                {{nameService.getPlaceFromName(roundRankingItem.getPlace(), true)}}
             </td>
             <td *ngFor="let competitionSport of competitionSports; let counter = index;"
                 class="text-right pl-0 {{getViewPortClass(counter+1)}}">
-                {{rankedRoundItem.getSportItem(competitionSport).getRank()}}</td>
-            <td class="text-right pl-0">{{rankedRoundItem.getUnranked().getPoints()}}</td>
+                {{roundRankingItem.getSportItem(competitionSport).getRank()}}</td>
+            <td class="text-right pl-0">{{roundRankingItem.getPerformance().getPoints()}}</td>
         </tr>
     </tbody>
 </table>

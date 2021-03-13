@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, CompetitorMap, VoetbalRange, CompetitionSport, RoundRankingCalculator, RankedRoundItem } from 'ngx-sport';
+import { NameService, Poule, CompetitorMap, VoetbalRange, CompetitionSport, RoundRankingCalculator, RoundRankingItem } from 'ngx-sport';
 
 import { CSSService } from '../../../common/cssservice';
 import { Favorites } from '../../../../lib/favorites';
@@ -16,7 +16,7 @@ export class PouleRankingSportsComponent implements OnInit {
   @Input() competitorMap!: CompetitorMap;
   @Input() header!: boolean;
   protected roundRankingCalculator: RoundRankingCalculator;
-  public rankedRoundItems!: RankedRoundItem[];
+  public roundRankingItems!: RoundRankingItem[];
   public nameService!: NameService;
   competitionSports: CompetitionSport[] = [];
   gameRoundMap = new GameRoundMap();
@@ -36,7 +36,7 @@ export class PouleRankingSportsComponent implements OnInit {
   ngOnInit() {
     this.processing = true;
     this.nameService = new NameService(this.competitorMap);
-    this.rankedRoundItems = this.roundRankingCalculator.getItemsForPoule(this.poule);
+    this.roundRankingItems = this.roundRankingCalculator.getItemsForPoule(this.poule);
     this.competitionSports = this.poule.getCompetition().getSports();
     this.initViewPortNrOfColumnsMap();
     this.initGameRoundMap();
@@ -92,8 +92,8 @@ export class PouleRankingSportsComponent implements OnInit {
     this.nrOfGameRounds = startGameRound - 1;
   }
 
-  getQualifyPlaceClass(rankingItem: RankedRoundItem): string {
-    const place = this.poule.getPlace(rankingItem.getUniqueRank());
+  getQualifyPlaceClass(roundRankingItem: RoundRankingItem): string {
+    const place = this.poule.getPlace(roundRankingItem.getUniqueRank());
     return place ? this.cssService.getQualifyPlace(place) : '';
   }
 

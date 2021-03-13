@@ -25,21 +25,21 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let rankingItem of rankingItems">
+        <tr *ngFor="let sportRankingItem of sportRankingItems">
             <td class="rankingnr text-right pl-0">
                 <span
-                    class="badge badge-rank {{getQualifyPlaceClass(rankingItem)}}">{{rankingItem.getUniqueRank()}}</span>
+                    class="badge badge-rank {{getQualifyPlaceClass(sportRankingItem)}}">{{sportRankingItem.getUniqueRank()}}</span>
             </td>
             <td class="place pl-0"
-                [ngClass]="{ 'favitem': favorites.hasCompetitor(competitorMap.getCompetitor(rankingItem.getPlace())) }">
-                {{nameService.getPlaceFromName(rankingItem.getPlace(), true)}}
+                [ngClass]="{ 'favitem': favorites.hasCompetitor(competitorMap.getCompetitor(sportRankingItem.getPlace())) }">
+                {{nameService.getPlaceFromName(sportRankingItem.getPlace(), true)}}
             </td>
             <ng-template ngFor let-gameAmountConfig [ngForOf]="gameAmountConfigs">
                 <td *ngFor="let gameRound of getGameRounds(gameAmountConfig.getCompetitionSport())"
                     class="text-right pl-0 {{getViewPortClass(gameRound)}}">
-                    {{getScore(rankingItem.getPlace(), gameAmountConfig, gameRound+1 )}}</td>
+                    {{getScore(sportRankingItem.getPlaceLocation(), gameAmountConfig, gameRound+1 )}}</td>
             </ng-template>
-            <td class="text-right pl-0">{{rankingItem.getUnranked().getPoints()}}</td>
+            <td class="text-right pl-0">{{sportRankingItem.getPerformance().getPoints()}}</td>
         </tr>
     </tbody>
 </table>

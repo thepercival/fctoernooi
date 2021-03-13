@@ -17,28 +17,28 @@
         </tr>
     </thead>
     <tbody>
-        <ng-template ngFor let-rankingItem [ngForOf]="rankingItems">
+        <ng-template ngFor let-sportRankingItem [ngForOf]="sportRankingItems">
             <tr>
                 <td class="rankingnr text-right pl-0">
                     <span
-                        class="badge badge-rank {{getQualifyPlaceClass(rankingItem)}}">{{rankingItem.getUniqueRank()}}</span>
+                        class="badge badge-rank {{getQualifyPlaceClass(sportRankingItem)}}">{{sportRankingItem.getUniqueRank()}}</span>
                 </td>
                 <td class="place pl-0"
-                    [ngClass]="{ 'favitem': favorites.hasCompetitor(competitorMap.getCompetitor(rankingItem.getPlace())) }">
-                    {{nameService.getPlaceFromName(rankingItem.getPlace(), true)}}
+                    [ngClass]="{ 'favitem': favorites.hasCompetitor(competitorMap.getCompetitor(sportRankingItem.getPlaceLocation())) }">
+                    {{nameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true)}}
                 </td>
-                <td class="text-right pl-0">{{rankingItem.getUnranked().getGames()}}</td>
-                <td class="text-right pl-0">{{rankingItem.getUnranked().getPoints()}}</td>
+                <td class="text-right pl-0">{{sportRankingItem.getPerformance().getGames()}}</td>
+                <td class="text-right pl-0">{{sportRankingItem.getPerformance().getPoints()}}</td>
                 <td class="text-center unitdiff pl-0">
                     <div>
-                        {{rankingItem.getUnranked().getDiff() > 0 ? '+' :
-                        ''}}{{rankingItem.getUnranked().getDiff()}}
+                        {{sportRankingItem.getPerformance().getDiff() > 0 ? '+' :
+                        ''}}{{sportRankingItem.getPerformance().getDiff()}}
                     </div>
-                    <div *ngIf="showDifferenceDetail">( {{rankingItem.getUnranked().getScored()}} -
-                        {{rankingItem.getUnranked().getReceived()}} )</div>
+                    <div *ngIf="showDifferenceDetail">( {{sportRankingItem.getPerformance().getScored()}} -
+                        {{sportRankingItem.getPerformance().getReceived()}} )</div>
                     <div *ngIf="showDifferenceDetail && useSubScore()">(
-                        {{rankingItem.getUnranked().getSubScored()}} -
-                        {{rankingItem.getUnranked().getSubReceived()}} )</div>
+                        {{sportRankingItem.getPerformance().getSubScored()}} -
+                        {{sportRankingItem.getPerformance().getSubReceived()}} )</div>
                 </td>
             </tr>
         </ng-template>

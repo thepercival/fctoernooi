@@ -146,14 +146,14 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     isGameAmountEditable(): boolean {
         const strategy = this.startRoundNumber.getValidPlanningConfig().getCreationStrategy();
-        return strategy === CreationStrategy.staticPouleSize || strategy === CreationStrategy.staticManual;
+        return strategy === CreationStrategy.StaticPouleSize || strategy === CreationStrategy.StaticManual;
     }
 
 
     setGameAmountRange(creationStrategy: CreationStrategy) {
         const validations = this.gameAmountValidations;
-        let min = creationStrategy === CreationStrategy.staticPouleSize ? validations.minNrOfHeadtohead : validations.minNrOfGames;
-        let max = creationStrategy === CreationStrategy.staticPouleSize ? validations.maxNrOfHeadtohead : validations.maxNrOfGames;
+        let min = creationStrategy === CreationStrategy.StaticPouleSize ? validations.minNrOfHeadtohead : validations.minNrOfGames;
+        let max = creationStrategy === CreationStrategy.StaticPouleSize ? validations.maxNrOfHeadtohead : validations.maxNrOfGames;
         this.gameAmountRange = { min, max };
     }
 
@@ -437,7 +437,7 @@ class PlanningActionCalculator {
 
     isGameAmountEditable(): boolean {
         const strategy = this.roundNumber.getValidPlanningConfig().getCreationStrategy();
-        return strategy === CreationStrategy.staticPouleSize || strategy === CreationStrategy.staticManual;
+        return strategy === CreationStrategy.StaticPouleSize || strategy === CreationStrategy.StaticManual;
     }
 
     private needsRescheduling(json: JsonPlanningConfig): boolean {

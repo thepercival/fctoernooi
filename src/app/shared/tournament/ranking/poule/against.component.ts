@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, CompetitorMap, ScoreConfig, AgainstSportRoundRankingCalculator, CompetitionSport, RankedSportRoundItem } from 'ngx-sport';
+import { NameService, Poule, CompetitorMap, ScoreConfig, AgainstSportRoundRankingCalculator, CompetitionSport, SportRoundRankingItem } from 'ngx-sport';
 import { Favorites } from '../../../../lib/favorites';
 import { CSSService } from '../../../common/cssservice';
 
@@ -14,9 +14,9 @@ export class PouleRankingAgainstComponent implements OnInit {
   @Input() favorites!: Favorites;
   @Input() competitorMap!: CompetitorMap;
   @Input() header!: boolean;
-  protected rankingCalculator!: AgainstSportRoundRankingCalculator;
+  protected againstRankingCalculator!: AgainstSportRoundRankingCalculator;
   public competitionSport!: CompetitionSport;
-  public rankingItems!: RankedSportRoundItem[];
+  public sportRankingItems!: SportRoundRankingItem[];
   public nameService!: NameService;
   public showDifferenceDetail = false;
   public processing = true;
@@ -30,8 +30,8 @@ export class PouleRankingAgainstComponent implements OnInit {
     this.processing = true;
     this.nameService = new NameService(this.competitorMap);
     this.competitionSport = this.poule.getCompetition().getSingleSport();
-    this.rankingCalculator = new AgainstSportRoundRankingCalculator(this.competitionSport);
-    this.rankingItems = this.rankingCalculator.getItemsForPoule(this.poule);
+    this.againstRankingCalculator = new AgainstSportRoundRankingCalculator(this.competitionSport);
+    this.sportRankingItems = this.againstRankingCalculator.getItemsForPoule(this.poule);
     this.processing = false;
   }
 
@@ -41,7 +41,7 @@ export class PouleRankingAgainstComponent implements OnInit {
     });
   }
 
-  getQualifyPlaceClass(rankingItem: RankedSportRoundItem): string {
+  getQualifyPlaceClass(rankingItem: SportRoundRankingItem): string {
     const place = this.poule.getPlace(rankingItem.getUniqueRank());
     return place ? this.cssService.getQualifyPlace(place) : '';
   }

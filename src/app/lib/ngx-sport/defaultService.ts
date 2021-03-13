@@ -62,18 +62,18 @@ export class DefaultService {
     protected getDefaultGameCreationStrategy(sports: Sport[]): CreationStrategy {
         // muliply
         if (sports.length > 1) {
-            return CreationStrategy.staticManual;
+            return CreationStrategy.StaticManual;
         }
         const sport: Sport = sports[0];
         if (sport.getGameMode() === GameMode.Together) {
-            return CreationStrategy.staticManual;
+            return CreationStrategy.StaticManual;
 
         }
         if (sport.getNrOfGamePlaces() > 2) {
-            return CreationStrategy.incrementalRandom;
+            return CreationStrategy.IncrementalRandom;
         }
 
-        return CreationStrategy.staticPouleSize
+        return CreationStrategy.StaticPouleSize
     }
 
     protected hasGameMode(sports: Sport[], gameMode: GameMode): boolean {

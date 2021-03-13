@@ -1,4 +1,4 @@
-import { JsonAgainstGame, JsonTogetherGame, AgainstGame, TogetherGame, NameService, GameMapper, State, RankedRoundItem, QualifyRuleMultiple, QualifyGroup, RoundRankingCalculator } from "ngx-sport";
+import { JsonAgainstGame, JsonTogetherGame, AgainstGame, TogetherGame, NameService, GameMapper, State, QualifyRuleMultiple, QualifyGroup, RoundRankingCalculator, RoundRankingItem } from "ngx-sport";
 
 export class EqualQualifiersChecker {
 
@@ -37,8 +37,8 @@ export class EqualQualifiersChecker {
                 if (multipleRule === undefined) {
                     return;
                 }
-                const rankedItems = this.roundRankingCalculator.getItemsForHorizontalPoule(horizontalPoule);
-                const equalRuleItems = this.getEqualRuleRankingItems(multipleRule, rankedItems);
+                const roundRankingItems = this.roundRankingCalculator.getItemsForHorizontalPoule(horizontalPoule);
+                const equalRuleItems = this.getEqualRuleRankingItems(multipleRule, roundRankingItems);
                 const postFixTmp = '(' + this.nameService.getHorizontalPouleName(horizontalPoule) + ')';
                 warnings = warnings.concat(this.getWarningsForEqualQualifiersHelper(equalRuleItems, postFixTmp));
             });
@@ -48,7 +48,7 @@ export class EqualQualifiersChecker {
         return warnings;
     }
 
-    protected getWarningsForEqualQualifiersHelper(equalItemsPerRank: RankedRoundItem[][], postFix: string): string[] {
+    protected getWarningsForEqualQualifiersHelper(equalItemsPerRank: RoundRankingItem[][], postFix: string): string[] {
         return equalItemsPerRank.map(equalItems => {
             const names: string[] = equalItems.map(equalItem => {
                 return this.nameService.getPlaceName(equalItem.getPlace(), true, true);
@@ -57,7 +57,7 @@ export class EqualQualifiersChecker {
         });
     }
 
-    protected getEqualRuleRankingItems(multipleRule: QualifyRuleMultiple, rankingItems: RankedRoundItem[]): RankedRoundItem[][] {
+    protected getEqualRuleRankingItems(multipleRule: QualifyRuleMultiple, rankingItems: RoundRankingItem[]): RoundRankingItem[][] {
         if (multipleRule.getWinnersOrLosers() === QualifyGroup.LOSERS) {
             rankingItems = this.reverseRanking(rankingItems);
         }
@@ -70,26 +70,26 @@ export class EqualQualifiersChecker {
         });
     }
 
-    protected reverseRanking(rankingItems: RankedRoundItem[]): RankedRoundItem[] {
+    protected reverseRanking(rankingItems: RoundRankingItem[]): RoundRankingItem[] {
         const nrOfItems = rankingItems.length;
-        const reversedRankingItems: RankedRoundItem[] = [];
-        rankingItems.forEach((rankingItem: RankedRoundItem) => {
+        const reversedRankingItems: RoundRankingItem[] = [];
+        rankingItems.forEach((rankingItem: RoundRankingItem) => {
             const uniqueRank = (nrOfItems + 1) - rankingItem.getUniqueRank();
             const nrOfEqualRank = this.getItemsByRank(rankingItems, rankingItem.getRank()).length;
             const rank = (nrOfItems + 1) - (rankingItem.getRank() + (nrOfEqualRank - 1));
-            const rankedRoundItem = new RankedRoundItem(rankingItem.getPlace());
-            rankedRoundItem.setRank(rank, uniqueRank);
-            reversedRankingItems.push(rankedRoundItem);
+            const roundRankingItem = new RoundRankingItem(rankingItem.getPlace());
+            roundRankingItem.setRank(rank, uniqueRank);
+            reversedRankingItems.push(roundRankingItem);
         });
         reversedRankingItems.sort((itemA, itemB) => itemA.getUniqueRank() - itemB.getUniqueRank());
         return reversedRankingItems;
     }
 
-    protected getItemsByRank(rankingItems: RankedRoundItem[], rank: number): RankedRoundItem[] {
+    protected getItemsByRank(rankingItems: RoundRankingItem[], rank: number): RoundRankingItem[] {
         return rankingItems.filter(rankingItemIt => rankingItemIt.getRank() === rank);
     }
 
-    protected getEqualPouleRankingItemsWithQualifyRules(rankingItems: RankedRoundItem[]): RankedRoundItem[][] {
+    protected getEqualPouleRankingItemsWithQualifyRules(rankingItems: RoundRankingItem[]): RoundRankingItem[][] {
         const equalItemsPerRank = this.getEqualRankedItems(rankingItems);
         return equalItemsPerRank.filter(equalItems => {
             return equalItems.some(item => {
@@ -99,7 +99,7 @@ export class EqualQualifiersChecker {
         });
     }
 
-    protected getEqualRankedItems(rankingItems: RankedRoundItem[]): RankedRoundItem[][] {
+    protected getEqualRankedItems(rankingItems: RoundRankingItem[]): RoundRankingItem[][] {
         const equalItems = [];
         const maxRank = rankingItems[rankingItems.length - 1].getRank();
         for (let rank = 1; rank <= maxRank; rank++) {
