@@ -34,7 +34,7 @@
             <td *ngFor="let competitionSport of competitionSports; let counter = index;"
                 class="text-right pl-0 {{getViewPortClass(counter+1)}}">
                 {{roundRankingItem.getSportItem(competitionSport).getRank()}}</td>
-            <td class="text-right pl-0">{{roundRankingItem.getPerformance().getPoints()}}</td>
+            <td class="text-right pl-0">{{roundRankingItem.getCumulativeRank()}}</td>
         </tr>
     </tbody>
 </table>

@@ -31,8 +31,8 @@
                     class="badge badge-rank {{getQualifyPlaceClass(sportRankingItem)}}">{{sportRankingItem.getUniqueRank()}}</span>
             </td>
             <td class="place pl-0"
-                [ngClass]="{ 'favitem': favorites.hasCompetitor(competitorMap.getCompetitor(sportRankingItem.getPlace())) }">
-                {{nameService.getPlaceFromName(sportRankingItem.getPlace(), true)}}
+                [ngClass]="{ 'favitem': favorites.hasCompetitor(competitorMap.getCompetitor(sportRankingItem.getPlaceLocation())) }">
+                {{nameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true)}}
             </td>
             <ng-template ngFor let-gameAmountConfig [ngForOf]="gameAmountConfigs">
                 <td *ngFor="let gameRound of getGameRounds(gameAmountConfig.getCompetitionSport())"
