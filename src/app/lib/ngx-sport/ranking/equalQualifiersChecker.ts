@@ -1,4 +1,4 @@
-import { JsonAgainstGame, JsonTogetherGame, AgainstGame, TogetherGame, NameService, GameMapper, State, QualifyRuleMultiple, QualifyGroup, RoundRankingCalculator, RoundRankingItem } from "ngx-sport";
+import { JsonAgainstGame, JsonTogetherGame, AgainstGame, TogetherGame, NameService, GameMapper, State, QualifyRuleMultiple, QualifyGroup, RoundRankingCalculator, RoundRankingItem, QualifyTarget, Round, Place } from "ngx-sport";
 
 export class EqualQualifiersChecker {
 
@@ -24,24 +24,22 @@ export class EqualQualifiersChecker {
         const round = poule.getRound();
 
         const pouleRankingItems = this.roundRankingCalculator.getItemsForPoule(this.game.getPoule());
-        const equalPouleItems = this.getEqualPouleRankingItemsWithQualifyRules(pouleRankingItems);
+        const equalPouleItems = this.getEqualPouleRankingItemsWithQualifyRules(round, pouleRankingItems);
         const postFix = '(' + this.nameService.getPouleName(this.game.getPoule(), true) + ')';
         let warnings: string[] = this.getWarningsForEqualQualifiersHelper(equalPouleItems, postFix);
 
         if (round.getState() !== State.Finished) {
             return warnings;
         }
-        round.getQualifyGroups().forEach(qualifyGroup => {
-            qualifyGroup.getHorizontalPoules().forEach(horizontalPoule => {
-                const multipleRule = horizontalPoule.getQualifyRuleMultiple();
-                if (multipleRule === undefined) {
-                    return;
-                }
-                const roundRankingItems = this.roundRankingCalculator.getItemsForHorizontalPoule(horizontalPoule);
+        round.getQualifyGroups().forEach((qualifyGroup: QualifyGroup) => {
+            let multipleRule = qualifyGroup.getMultipleRule();
+            if (multipleRule !== undefined) {
+                const fromHorPoule = multipleRule.getFromHorizontalPoule();
+                const roundRankingItems = this.roundRankingCalculator.getItemsForMultipleRule(multipleRule);
                 const equalRuleItems = this.getEqualRuleRankingItems(multipleRule, roundRankingItems);
-                const postFixTmp = '(' + this.nameService.getHorizontalPouleName(horizontalPoule) + ')';
+                const postFixTmp = '(' + this.nameService.getHorizontalPouleName(fromHorPoule) + ')';
                 warnings = warnings.concat(this.getWarningsForEqualQualifiersHelper(equalRuleItems, postFixTmp));
-            });
+            }
         });
 
         this.game = this.gameMapper.toExisting(this.jsonOriginalGame, this.game);
@@ -58,7 +56,7 @@ export class EqualQualifiersChecker {
     }
 
     protected getEqualRuleRankingItems(multipleRule: QualifyRuleMultiple, rankingItems: RoundRankingItem[]): RoundRankingItem[][] {
-        if (multipleRule.getWinnersOrLosers() === QualifyGroup.LOSERS) {
+        if (multipleRule.getQualifyTarget() === QualifyTarget.Losers) {
             rankingItems = this.reverseRanking(rankingItems);
         }
         const equalItemsPerRank = this.getEqualRankedItems(rankingItems);
@@ -89,13 +87,16 @@ export class EqualQualifiersChecker {
         return rankingItems.filter(rankingItemIt => rankingItemIt.getRank() === rank);
     }
 
-    protected getEqualPouleRankingItemsWithQualifyRules(rankingItems: RoundRankingItem[]): RoundRankingItem[][] {
+    protected getEqualPouleRankingItemsWithQualifyRules(round: Round, rankingItems: RoundRankingItem[]): RoundRankingItem[][] {
         const equalItemsPerRank = this.getEqualRankedItems(rankingItems);
-        return equalItemsPerRank.filter(equalItems => {
-            return equalItems.some(item => {
-                const place = item.getPlace();
-                return place.getToQualifyRules().length > 0;
-            });
+        return equalItemsPerRank.filter((equalItems: RoundRankingItem[]) => {
+            return equalItems.some((item: RoundRankingItem) => this.hasToQualifyRule(item.getPlace()));
+        });
+    }
+
+    protected hasToQualifyRule(place: Place): boolean {
+        return [QualifyTarget.Winners, QualifyTarget.Losers].some((qualifyTarget: QualifyTarget): boolean => {
+            return place.getHorizontalPoule(qualifyTarget).getQualifyRule() !== undefined;
         });
     }
 

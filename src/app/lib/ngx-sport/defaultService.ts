@@ -28,7 +28,7 @@ export class DefaultService {
     getJsonPlanningConfig(sports: Sport[]): JsonPlanningConfig {
         return {
             id: 0,
-            creationStrategy: this.getDefaultGameCreationStrategy(sports),
+            creationStrategy: this.getGameCreationStrategy(sports),
             extension: false,
             enableTime: true,
             minutesPerGame: DefaultService.MinutesPerGame,

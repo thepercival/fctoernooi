@@ -7,7 +7,7 @@ import {
   Place,
   Structure,
   CompetitorMap,
-  StructureService
+  StructureEditor,
 } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
 
@@ -44,7 +44,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     router: Router,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
-    private structureService: StructureService,
+    private structureEditor: StructureEditor,
     private planningRepository: PlanningRepository,
     private competitorRepository: CompetitorRepository,
     private mapper: CompetitorMapper,
@@ -195,7 +195,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.setAlert('info', 'er wordt een pouleplek toegevoegd');
     try {
       const rootRound = this.structure.getRootRound();
-      const addedPlace = this.structureService.addPlaceToRootRound(rootRound);
+      const addedPlace = this.structureEditor.addPlaceToRootRound(rootRound);
       this.saveStructure('pouleplek ' + this.nameService.getPlaceName(addedPlace) + ' is toegevoegd');
     } catch (e) {
       this.setAlert('danger', e.message);
@@ -276,7 +276,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     const singledoubleWill = competitor ? 'worden' : 'wordt';
     this.setAlert('info', 'een pouleplek' + suffix + ' ' + singledoubleWill + ' verwijderd');
     try {
-      this.structureService.removePlaceFromRootRound(rootRound);
+      this.structureEditor.removePlaceFromRootRound(rootRound);
       const singledoubleIs = competitor ? 'zijn' : 'is';
       this.saveStructure('een pouleplek' + competitor + ' ' + singledoubleIs + ' verwijderd');
     } catch (e) {

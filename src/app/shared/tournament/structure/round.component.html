@@ -1,13 +1,9 @@
-<div *ngIf="round" [ngClass]="{ 'pl-1': !first, 'pr-1': round.isRoot() }">
+<!-- <div *ngIf="round" [ngClass]="{ 'pl-1': !first, 'pr-1': round.isRoot() }">
   <div class="card border-secondary round mb-2 {{cssService.getQualifyRound(round)}}"
     *ngIf="round.isRoot() || round.getNrOfPlaces() > 2">
     <div class="card-header px-1">
       <span class="lead" [innerHTML]="nameService.getRoundName( round ) | keepHtml"></span>
       &nbsp;
-      <!-- round.getPath()-->
-      <!-- <fa-icon [icon]="['fas', 'circle']" *ngFor="let winnersOrLosers of round.getPath()" [title]="getWinnersLosersDescription(
-      winnersOrLosers )"
-        class="text-{{getClassPostfix(winnersOrLosers)}}"></fa-icon> -->
     </div>
     <div class="card-body px-1">
       <app-tournament-structureround-arrange *ngIf="editable && viewType !== ViewTypeQualifyGroups" [round]="round"
@@ -37,7 +33,6 @@
       <div *ngIf="editable && viewType === ViewTypeQualifyGroups" class="d-flex flex-wrap justify-content-center mb-3">
         <table>
           <tbody>
-            <!-- als de volgende is splittable plaats dan beide in een rij en maak de knop 2 rijen -->
             <ng-template ngFor let-editHorPoule [ngForOf]="getEditHorizontalPoules()">
               <tr *ngIf="areQualifyGroupsMergable(editHorPoule) || isQualifyGroupSplittable(editHorPoule)">
                 <td></td>
@@ -99,4 +94,4 @@
     <ngb-alert type="warning">fout: los op door bovenstaande ronde opnieuw aan te maken
     </ngb-alert>
   </div>
-</div>
+</div> -->

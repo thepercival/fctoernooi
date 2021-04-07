@@ -4,10 +4,11 @@
     aria-label="aantal poules">
     <button type="button" disabled class="btn btn-outline-secondary">poules</button>
     <div class="btn-group" role="group" aria-label="aantal poules">
-      <button type="button" class="btn btn-outline-primary" (click)="removePoule()">
+      <button type="button" class="btn btn-outline-primary" (click)="decrementNrOfPoules()">
         <fa-icon [icon]="['fas', 'minus']"></fa-icon>
       </button>
-      <button *ngIf="round.getPoules().length < 8" type="button" class="btn btn-outline-primary" (click)="addPoule()">
+      <button *ngIf="round.getPoules().length < 8" type="button" class="btn btn-outline-primary"
+        (click)="incrementNrOfPoules()">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
     </div>
@@ -28,11 +29,11 @@
   <!-- start horizontal-->
   <div *ngIf="round.isRoot() || round.getNrOfPlaces() >= 4" class="d-none d-sm-inline-flex btn-group" role="group"
     aria-label="aantal poules">
-    <button type="button" class="btn btn-outline-primary" (click)="removePoule()">
+    <button type="button" class="btn btn-outline-primary" (click)="decrementNrOfPoules()">
       <fa-icon [icon]="['fas', 'minus']"></fa-icon>
     </button>
     <button type="button" disabled class="btn btn-outline-secondary">poules</button>
-    <button type="button" class="btn btn-outline-primary" (click)="addPoule()">
+    <button type="button" class="btn btn-outline-primary" (click)="incrementNrOfPoules()">
       <fa-icon [icon]="['fas', 'plus']"></fa-icon>
     </button>
   </div>

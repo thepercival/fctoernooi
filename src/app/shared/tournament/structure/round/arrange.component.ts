@@ -13,12 +13,12 @@ export class StructureRoundArrangeComponent {
   constructor() {
   }
 
-  addPoule() {
-    this.arrangeAction.emit('addPoule');
+  incrementNrOfPoules() {
+    this.arrangeAction.emit('incrementNrOfPoules');
   }
 
-  removePoule() {
-    this.arrangeAction.emit('removePoule');
+  decrementNrOfPoules() {
+    this.arrangeAction.emit('decrementNrOfPoules');
   }
 
   addPlace() {

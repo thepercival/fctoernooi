@@ -10,7 +10,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { JsonTournament } from '../../lib/tournament/json';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
-import { JsonCompetitionSport, JsonField, League, Sport, SportMapper, State, Structure, StructureService } from 'ngx-sport';
+import { JsonCompetitionSport, JsonField, League, Sport, SportMapper, State, Structure, StructureEditor } from 'ngx-sport';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { SportSelectMode } from '../sport/select.component';
 
@@ -41,7 +41,7 @@ export class NewComponent implements OnInit {
     private tournamentRepository: TournamentRepository,
     private structureRepository: StructureRepository,
     private planningRepository: PlanningRepository,
-    private structureService: StructureService,
+    private structureEditor: StructureEditor,
     private defaultService: DefaultService,
     private sportMapper: SportMapper,
     private translate: TranslateService,
@@ -156,7 +156,7 @@ export class NewComponent implements OnInit {
       .subscribe(
         /* happy path */ tournament => {
           const jsonPlanningConfig = this.defaultService.getJsonPlanningConfig(this.sports);
-          const structure: Structure = this.structureService.create(
+          const structure: Structure = this.structureEditor.create(
             tournament.getCompetition(),
             jsonPlanningConfig,
             this.defaultService.getPouleStructure(this.sports, nrOfFields));

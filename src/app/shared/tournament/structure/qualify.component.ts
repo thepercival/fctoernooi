@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { HorizontalPoule, NameService, QualifyGroup, Round, RoundNumber, StructureService } from 'ngx-sport';
+import { HorizontalPoule, NameService, QualifyGroup, QualifyRuleSingle, QualifyTarget, Round, RoundNumber, StructureEditor } from 'ngx-sport';
 
 import { IAlert } from '../../common/alert';
 import { Tournament } from '../../../lib/tournament';
@@ -25,17 +25,17 @@ export class StructureQualifyComponent {
     alert: IAlert | undefined;
     public nameService: NameService;
 
-    constructor(private structureService: StructureService) {
+    constructor(private structureEditor: StructureEditor) {
         this.resetAlert();
         this.nameService = new NameService(undefined);
     }
 
-    get QualifyGroupWINNERS(): number {
-        return QualifyGroup.WINNERS;
+    get QualifyGroupWINNERS(): QualifyTarget {
+        return QualifyTarget.Winners;
     }
 
-    get QualifyGroupLOSERS(): number {
-        return QualifyGroup.LOSERS;
+    get QualifyGroupLOSERS(): QualifyTarget {
+        return QualifyTarget.Losers;
     }
 
     get ViewTypeQualifyGroups(): number {
@@ -44,20 +44,20 @@ export class StructureQualifyComponent {
 
     get IconStructure(): [IconPrefix, IconName] { return [facStructure.prefix, facStructure.iconName]; }
 
-    removeQualifier(winnersOrLosers: number) {
+    removeQualifier(target: QualifyTarget) {
         this.resetAlert();
         try {
-            this.structureService.removeQualifier(this.round, winnersOrLosers);
+            this.structureEditor.removeQualifier(this.round, target);
             this.roundNumberChanged.emit(this.round.getNumber());
         } catch (e) {
             this.setAlert('danger', e.message);
         }
     }
 
-    addQualifier(winnersOrLosers: number) {
+    addQualifier(target: QualifyTarget) {
         this.resetAlert();
         try {
-            this.structureService.addQualifier(this.round, winnersOrLosers);
+            this.structureEditor.addQualifiers(this.round, target, 1);
             this.roundNumberChanged.emit(this.round.getNumber());
         } catch (e) {
             this.setAlert('danger', e.message);
@@ -76,10 +76,10 @@ export class StructureQualifyComponent {
             return false;
         }
         // can some merge
-        const mergable = [QualifyGroup.WINNERS, QualifyGroup.LOSERS].some(winnersOrLosers => {
+        const mergable = [QualifyTarget.Winners, QualifyTarget.Losers].some(winnersOrLosers => {
             let previous: QualifyGroup | undefined;
             return this.round.getQualifyGroups(winnersOrLosers).some((qualifyGroup: QualifyGroup) => {
-                if (previous && this.structureService.areQualifyGroupsMergable(previous, qualifyGroup)) {
+                if (previous && this.structureEditor.areQualifyGroupsMergable(previous, qualifyGroup)) {
                     return true;
                 };
                 previous = qualifyGroup;
@@ -90,18 +90,22 @@ export class StructureQualifyComponent {
             return true;
         }
         // can some split
-        return [QualifyGroup.WINNERS, QualifyGroup.LOSERS].some(winnersOrLosers => {
+        return [QualifyTarget.Winners, QualifyTarget.Losers].some(winnersOrLosers => {
             return this.round.getQualifyGroups(winnersOrLosers).some(qualifyGroup => {
-                let previous: HorizontalPoule | undefined;
-                return qualifyGroup.getHorizontalPoules().some((horizontalPoule: HorizontalPoule) => {
-                    if (previous && this.structureService.isQualifyGroupSplittable(previous, horizontalPoule)) {
-                        return true;
-                    };
-                    previous = horizontalPoule;
-                    return false;
-                });
+                return this.isQualifyGroupSplittable(qualifyGroup);
             });
         });
+    }
+
+    isQualifyGroupSplittable(qualifyGroup: QualifyGroup): boolean {
+        let singleRule: QualifyRuleSingle | undefined = qualifyGroup.getFirstSingleRule();
+        while (singleRule !== undefined) {
+            if (this.structureEditor.isQualifyGroupSplittableAt(singleRule)) {
+                return true;
+            }
+            singleRule = singleRule.getNext();
+        }
+        return false;
     }
 
     switchView() {
