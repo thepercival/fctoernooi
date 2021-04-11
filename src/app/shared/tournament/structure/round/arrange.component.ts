@@ -13,6 +13,22 @@ export class StructureRoundArrangeComponent {
   constructor() {
   }
 
+  addPouleToRootRound() {
+    this.arrangeAction.emit('addPouleToRootRound');
+  }
+
+  removePouleFromRootRound() {
+    this.arrangeAction.emit('removePouleFromRootRound');
+  }
+
+  addPlaceToRootRound() {
+    this.arrangeAction.emit('addPlaceToRootRound');
+  }
+
+  removePlaceFromRootRound() {
+    this.arrangeAction.emit('removePlaceFromRootRound');
+  }
+
   incrementNrOfPoules() {
     this.arrangeAction.emit('incrementNrOfPoules');
   }
@@ -21,15 +37,7 @@ export class StructureRoundArrangeComponent {
     this.arrangeAction.emit('decrementNrOfPoules');
   }
 
-  addPlace() {
-    if (this.round?.isRoot()) {
-      this.arrangeAction.emit('addPlace');
-    }
-  }
 
-  removePlace() {
-    this.arrangeAction.emit('removePlace');
-  }
 
   canRemovePlace() {
     return !this.hasMinimumNrOfPlacesPerPoule();

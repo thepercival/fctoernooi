@@ -1,4 +1,4 @@
-<!-- <div *ngIf="round" [ngClass]="{ 'pl-1': !first, 'pr-1': round.isRoot() }">
+<div *ngIf="round" [ngClass]="{ 'pl-1': !first, 'pr-1': round.isRoot() }">
   <div class="card border-secondary round mb-2 {{cssService.getQualifyRound(round)}}"
     *ngIf="round.isRoot() || round.getNrOfPlaces() > 2">
     <div class="card-header px-1">
@@ -6,17 +6,16 @@
       &nbsp;
     </div>
     <div class="card-body px-1">
-      <app-tournament-structureround-arrange *ngIf="editable && viewType !== ViewTypeQualifyGroups" [round]="round"
-        (arrangeAction)="arrangeAction($event)">
+      <app-tournament-structureround-arrange *ngIf="editable" [round]="round" (arrangeAction)="arrangeAction($event)">
       </app-tournament-structureround-arrange>
       <p *ngIf="editable && round.hasBegun()">
         <ngb-alert type="warning">de ronde heeft al gespeelde wedstrijden, je kunt niet meer
           wijzigen</ngb-alert>
       </p>
       <p *ngIf="editable && alert">
-        <ngb-alert [dismissible]="true" (close)="alert = undefined" [type]="alert.type">{{ alert.message }}</ngb-alert>
+        <ngb-alert [dismissible]="true" (closed)="alert = undefined" [type]="alert.type">{{ alert.message }}</ngb-alert>
       </p>
-      <div *ngIf="viewType !== ViewTypeQualifyGroups" class="d-flex flex-wrap justify-content-around">
+      <div class="d-flex flex-wrap justify-content-around">
         <ul *ngFor="let poule of round.getPoules();" class="list-group mb-3">
           <li class="list-group-item disabled px-2 py-2">
             {{nameService.getPouleName( poule, round.isRoot() && round.getPoules().length <= 2)}} </li>
@@ -29,58 +28,17 @@
           </li>
         </ul>
       </div>
-
-      <div *ngIf="editable && viewType === ViewTypeQualifyGroups" class="d-flex flex-wrap justify-content-center mb-3">
-        <table>
-          <tbody>
-            <ng-template ngFor let-editHorPoule [ngForOf]="getEditHorizontalPoules()">
-              <tr *ngIf="areQualifyGroupsMergable(editHorPoule) || isQualifyGroupSplittable(editHorPoule)">
-                <td></td>
-                <td>
-                  <li *ngIf="isQualifyGroupSplittable(editHorPoule)"
-                    class="list-group-item btn-outline-secondary px-2 py-1 place-list-item pointer btn-action-list-item"
-                    (click)="splitQualifyGroup(editHorPoule)">
-                    <button type="button" class="btn btn-outline-primary btn-block">
-                      <fa-icon class="rotate-45" [icon]="['fas', 'expand-alt']"></fa-icon><span
-                        *ngIf="round.getNumber().getRounds().length <= 2">
-                        splitsen</span>
-                    </button>
-                  </li>
-                  <li *ngIf="areQualifyGroupsMergable(editHorPoule)"
-                    class="list-group-item btn-outline-secondary px-2 py-1 place-list-item pointer btn-action-list-item"
-                    (click)="mergeQualifyGroups(editHorPoule)">
-                    <button type="button" class="btn btn-outline-primary btn-block">
-                      <fa-icon class="rotate-45" [icon]="['fas', 'compress-alt']"></fa-icon><span
-                        *ngIf="round.getNumber().getRounds().length <= 2">
-                        samenvoegen</span>
-                    </button>
-                  </li>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <li
-                    class="list-group-item px-2 py-2 place-list-item  {{cssService.getQualifyPoule(editHorPoule.current)}}">
-                    {{nameService.getHorizontalPouleName(editHorPoule.current)}}
-                  </li>
-                </td>
-                <td></td>
-              </tr>
-            </ng-template>
-          </tbody>
-        </table>
-      </div>
     </div>
   </div>
-  <app-tournament-structurequalify *ngIf="editable" [round]="round" (viewTypeChanged)="viewType = $event"
+  <app-tournament-structurequalify *ngIf="editable" [round]="round"
     (roundNumberChanged)="roundNumberChanged.emit($event)">
   </app-tournament-structurequalify>
 
   <div class="d-flex align-items-stretch text-center">
     <app-tournament-structureround *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed(); first as first"
       class="align-self-stretch flex-wrap mb-2" [round]="qualifyGroup.getChildRound()"
-      [editable]="editable && !round.hasBegun()" [favorites]="favorites" [first]="first"
-      [competitorMap]="competitorMap" (roundNumberChanged)="roundNumberChanged.emit($event)">
+      [editable]="editable && !round.hasBegun()" [favorites]="favorites" [first]="first" [competitorMap]="competitorMap"
+      (roundNumberChanged)="roundNumberChanged.emit($event)">
     </app-tournament-structureround>
   </div>
   <div *ngIf="!round.isRoot() && round.getNrOfPlaces() === 2">
@@ -94,4 +52,4 @@
     <ngb-alert type="warning">fout: los op door bovenstaande ronde opnieuw aan te maken
     </ngb-alert>
   </div>
-</div> -->
+</div>

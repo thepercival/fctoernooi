@@ -18,7 +18,7 @@
       </h2>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
       <ngb-alert *ngIf="!processing && tournament && isAdmin() && !isManualMessageReadOnDevice()" type="info"
-        (close)="manualMessageReadOnDevice()">gedetailleerde
+        (closed)="manualMessageReadOnDevice()">gedetailleerde
         informatie kun je vinden onderaan de pagina via de handleiding-link</ngb-alert>
       <div *ngIf="!processing && structure && ( isAdmin() || isRefereeOrGameResultAdmin() )"
         class="row d-flex justify-content-center">

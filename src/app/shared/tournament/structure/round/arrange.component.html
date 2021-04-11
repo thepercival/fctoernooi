@@ -1,7 +1,27 @@
-<div *ngIf="round && !round.hasBegun()" class="d-flex justify-content-around mb-3">
-  <!-- start vertical-->
-  <div *ngIf="round.isRoot() || round.getNrOfPlaces() >= 4" class="d-sm-none btn-group-vertical" role="group"
-    aria-label="aantal poules">
+<!-- root round-->
+<div *ngIf="round && round.isRoot() && !round.hasBegun()" class="d-flex justify-content-around mb-3">
+  <div class="btn-group" role="group" aria-label="aantal poules">
+    <button type="button" class="btn btn-outline-primary" (click)="removePouleFromRootRound()">
+      <fa-icon [icon]="['fas', 'minus']"></fa-icon>
+    </button>
+    <button type="button" disabled class="btn btn-outline-secondary">poules</button>
+    <button type="button" class="btn btn-outline-primary" (click)="addPouleToRootRound()">
+      <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+    </button>
+  </div>
+  <div class="btn-group" role="group" aria-label="aantal deelnemers">
+    <button type="button" class="btn btn-outline-primary" (click)="removePlaceFromRootRound()">
+      <fa-icon [icon]="['fas', 'minus']"></fa-icon>
+    </button>
+    <button type="button" disabled class="btn btn-outline-secondary">deelnemers</button>
+    <button type="button" class="btn btn-outline-primary" (click)="addPlaceToRootRound()">
+      <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+    </button>
+  </div>
+</div>
+<!-- child round-->
+<div *ngIf="round && !round.isRoot() && !round.hasBegun()" class="text-center mb-3">
+  <div class="btn-group-vertical" role="group" aria-label="aantal poules">
     <button type="button" disabled class="btn btn-outline-secondary">poules</button>
     <div class="btn-group" role="group" aria-label="aantal poules">
       <button type="button" class="btn btn-outline-primary" (click)="decrementNrOfPoules()">
@@ -13,38 +33,4 @@
       </button>
     </div>
   </div>
-  <div *ngIf="round.isRoot()" class="d-sm-none btn-group-vertical" role="group" aria-label="aantal deelnemers">
-    <button type="button" disabled class="btn btn-outline-secondary">deelnemers</button>
-    <div class="btn-group" role="group" aria-label="aantal deelnemers">
-      <button type="button" class="btn btn-outline-primary" (click)="removePlace()">
-        <fa-icon [icon]="['fas', 'minus']"></fa-icon>
-      </button>
-      <button type="button" class="btn btn-outline-primary" (click)="addPlace()">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-      </button>
-    </div>
-  </div>
-  <!-- end vertical-->
-
-  <!-- start horizontal-->
-  <div *ngIf="round.isRoot() || round.getNrOfPlaces() >= 4" class="d-none d-sm-inline-flex btn-group" role="group"
-    aria-label="aantal poules">
-    <button type="button" class="btn btn-outline-primary" (click)="decrementNrOfPoules()">
-      <fa-icon [icon]="['fas', 'minus']"></fa-icon>
-    </button>
-    <button type="button" disabled class="btn btn-outline-secondary">poules</button>
-    <button type="button" class="btn btn-outline-primary" (click)="incrementNrOfPoules()">
-      <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-    </button>
-  </div>
-  <div *ngIf="round.isRoot()" class="d-none d-sm-inline-flex btn-group" role="group" aria-label="aantal deelnemers">
-    <button type="button" class="btn btn-outline-primary" (click)="removePlace()">
-      <fa-icon [icon]="['fas', 'minus']"></fa-icon>
-    </button>
-    <button type="button" disabled class="btn btn-outline-secondary">deelnemers</button>
-    <button type="button" class="btn btn-outline-primary" (click)="addPlace()">
-      <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-    </button>
-  </div>
-  <!-- end horizontal-->
 </div>

@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-import { HorizontalPoule, NameService, QualifyGroup, Round, RoundNumber, Competitor, CompetitorMap, StructureEditor, QualifyTarget } from 'ngx-sport';
+import { HorizontalPoule, NameService, QualifyGroup, Round, RoundNumber, Competitor, CompetitorMap, StructureEditor, QualifyTarget, SingleQualifyRule } from 'ngx-sport';
 
 import { IAlert } from '../../common/alert';
 import { CSSService } from '../../common/cssservice';
-import { StructureViewType } from './qualify.component';
 
 @Component({
   selector: 'app-tournament-structureround',
@@ -18,7 +17,6 @@ export class StructureRoundComponent implements OnInit {
   @Input() first!: boolean;
   @Input() favorites: Competitor[] = [];
   @Input() competitorMap!: CompetitorMap;
-  viewType: number = StructureViewType.ROUNDSTRUCTURE;
   alert: IAlert | undefined;
   public nameService!: NameService;
 
@@ -33,140 +31,100 @@ export class StructureRoundComponent implements OnInit {
   arrangeAction(action: string) {
     this.resetAlert();
     try {
-      if (action === 'decrementNrOfPoules') {
-        this.decrementNrOfPoules();
+      if (action === 'addPouleToRootRound') {
+        this.structureEditor.addPouleToRootRound(this.round);
+      } else if (action === 'removePouleFromRootRound') {
+        this.structureEditor.removePouleFromRootRound(this.round);
+      } else if (action === 'addPlaceToRootRound') {
+        this.structureEditor.addPlaceToRootRound(this.round);
+      } else if (action === 'removePlaceFromRootRound') {
+        this.structureEditor.removePlaceFromRootRound(this.round);
       } else if (action === 'incrementNrOfPoules') {
-        this.incrementNrOfPoules();
-      } else if (action === 'removePlace') {
-        this.removePlace();
-      } else if (action === 'addPlace') {
-        this.addPlace();
+        this.structureEditor.incrementNrOfPoules(this.round);
+      } else if (action === 'decrementNrOfPoules') {
+        this.structureEditor.decrementNrOfPoules(this.round);
       }
+      this.nameService = new NameService(this.competitorMap);
       this.roundNumberChanged.emit(this.round.getNumber());
     } catch (e) {
       this.setAlert('danger', e.message);
     }
   }
 
-  get QualifyGroupWINNERS(): QualifyTarget {
+  get TargetWINNERS(): QualifyTarget {
     return QualifyTarget.Winners;
   }
 
-  get QualifyGroupLOSERS(): QualifyTarget {
+  get TargetLOSERS(): QualifyTarget {
     return QualifyTarget.Losers;
   }
 
-  get ViewTypeQualifyGroups(): StructureViewType {
-    return StructureViewType.QUALIFYGROUPS;
-  }
+  // getEditHorizontalPoules(): HorPouleEdit[] {
+  // TODOSTRUCTURE CDK
+  // return [];
+  // const horizontalPoulesWinners: HorizontalPoule[] = [];    
+  // // QualifyTarget.Winners
+  // this.round.getQualifyGroups(QualifyTarget.Winners).forEach(qualifyGroup => {
+  //   qualifyGroup.getHorizontalPoules().forEach(horizontalPoule => {
+  //     if (horizontalPoule.getNrOfQualifiers() > 1) {
+  //       horizontalPoulesWinners.push(horizontalPoule);
+  //     }
+  //   });
+  // });
 
-  protected decrementNrOfPoules() {
-    this.structureEditor.decrementNrOfPoules(this.round);
-  }
+  // // QualifyTarget.Losers
+  // const horizontalPoulesLosers: HorizontalPoule[] = [];
+  // this.round.getQualifyGroups(QualifyTarget.Losers).forEach(qualifyGroup => {
+  //   qualifyGroup.getHorizontalPoules().forEach(horizontalPoule => {
+  //     if (horizontalPoule.getNrOfQualifiers() > 1) {
+  //       horizontalPoulesLosers.unshift(horizontalPoule);
+  //     }
+  //   });
+  // });
 
-  protected incrementNrOfPoules() {
-    this.structureEditor.incrementNrOfPoules(this.round);
-  }
+  // // QualifyGroup.DROPOUTS
+  // const lastWinnersHorPoule = horizontalPoulesWinners[horizontalPoulesWinners.length - 1];
+  // const lastLosersHorPoule = horizontalPoulesLosers[0]; // because losers are unshifted instead of pushed
+  // const horizontalPoulesDropouts: HorizontalPoule[] = this.round.getHorizontalPoules(QualifyTarget.Winners).filter(horizontalPoule => {
+  //   return ((!lastWinnersHorPoule || horizontalPoule.getPlaceNumber() > lastWinnersHorPoule.getPlaceNumber())
+  //     && (!lastLosersHorPoule || horizontalPoule.getPlaceNumber() < lastLosersHorPoule.getPlaceNumber())
+  //   );
+  // });
 
-  protected removePlace() {
-    if (this.round.isRoot()) {
-      this.structureEditor.removePlaceFromRootRound(this.round);
-    }
-  }
+  // let horizontalPoules: HorizontalPoule[] = horizontalPoulesWinners.concat(horizontalPoulesDropouts);
+  // horizontalPoules = horizontalPoules.concat(horizontalPoulesLosers);
 
-  protected addPlace() {
-    if (this.round.isRoot()) {
-      this.structureEditor.addPlaceToRootRound(this.round);
-    }
-  }
+  // const editHorPoules: EditHorPoule[] = [];
+  // let previous: HorizontalPoule | undefined;
+  // horizontalPoules.forEach((horizontalPoule: HorizontalPoule) => {
+  //   const editHorPoule: EditHorPoule = { current: horizontalPoule, previous: previous };
+  //   editHorPoules.push(editHorPoule);
+  //   previous = horizontalPoule;
+  // });
+  // return editHorPoules;
+  //}
 
-  getEditHorizontalPoules(): HorPouleEdit[] {
-    // TODOSTRUCTURE CDK
-    return [];
-    // const horizontalPoulesWinners: HorizontalPoule[] = [];    
-    // // QualifyTarget.Winners
-    // this.round.getQualifyGroups(QualifyTarget.Winners).forEach(qualifyGroup => {
-    //   qualifyGroup.getHorizontalPoules().forEach(horizontalPoule => {
-    //     if (horizontalPoule.getNrOfQualifiers() > 1) {
-    //       horizontalPoulesWinners.push(horizontalPoule);
-    //     }
-    //   });
-    // });
+  isQualifyGroupSplittableAt(singleRule: SingleQualifyRule): boolean {
 
-    // // QualifyTarget.Losers
-    // const horizontalPoulesLosers: HorizontalPoule[] = [];
-    // this.round.getQualifyGroups(QualifyTarget.Losers).forEach(qualifyGroup => {
-    //   qualifyGroup.getHorizontalPoules().forEach(horizontalPoule => {
-    //     if (horizontalPoule.getNrOfQualifiers() > 1) {
-    //       horizontalPoulesLosers.unshift(horizontalPoule);
-    //     }
-    //   });
-    // });
-
-    // // QualifyGroup.DROPOUTS
-    // const lastWinnersHorPoule = horizontalPoulesWinners[horizontalPoulesWinners.length - 1];
-    // const lastLosersHorPoule = horizontalPoulesLosers[0]; // because losers are unshifted instead of pushed
-    // const horizontalPoulesDropouts: HorizontalPoule[] = this.round.getHorizontalPoules(QualifyTarget.Winners).filter(horizontalPoule => {
-    //   return ((!lastWinnersHorPoule || horizontalPoule.getPlaceNumber() > lastWinnersHorPoule.getPlaceNumber())
-    //     && (!lastLosersHorPoule || horizontalPoule.getPlaceNumber() < lastLosersHorPoule.getPlaceNumber())
-    //   );
-    // });
-
-    // let horizontalPoules: HorizontalPoule[] = horizontalPoulesWinners.concat(horizontalPoulesDropouts);
-    // horizontalPoules = horizontalPoules.concat(horizontalPoulesLosers);
-
-    // const editHorPoules: EditHorPoule[] = [];
-    // let previous: HorizontalPoule | undefined;
-    // horizontalPoules.forEach((horizontalPoule: HorizontalPoule) => {
-    //   const editHorPoule: EditHorPoule = { current: horizontalPoule, previous: previous };
-    //   editHorPoules.push(editHorPoule);
-    //   previous = horizontalPoule;
-    // });
-    // return editHorPoules;
-  }
-
-  isQualifyGroupSplittable(editHorPoule: HorPouleEdit): boolean {
-    // TODOSTRUCTURE CDK
-    return false;
     // const prevHorPoule = editHorPoule.previous;
     // if (prevHorPoule === undefined) {
     //   return false;
     // }
-    // return this.structureEditor.isQualifyGroupSplittable(prevHorPoule, editHorPoule.current);
+    return this.structureEditor.isQualifyGroupSplittableAt(singleRule);
   }
 
-  areQualifyGroupsMergable(editHorPoule: HorPouleEdit): boolean {
-    // TODOSTRUCTURE CDK
-    return false;
-    // const previousQualifyGroup = editHorPoule.previous?.getQualifyGroup();
-    // const currentQualifyGroup = editHorPoule.current.getQualifyGroup();
-    // if (!previousQualifyGroup || !currentQualifyGroup) {
-    //   return false;
-    // }
-    // return this.structureEditor.areQualifyGroupsMergable(previousQualifyGroup, currentQualifyGroup);
+  areQualifyGroupsMergable(groupA: QualifyGroup, groupB: QualifyGroup): boolean {
+    return this.structureEditor.areQualifyGroupsMergable(groupA, groupB);
   }
 
-  splitQualifyGroup(editHorPoule: HorPouleEdit) {
-    // TODOSTRUCTURE CDK
-    return;
-    // const previousQualifyGroup = editHorPoule.previous?.getQualifyGroup();
-    // if (!previousQualifyGroup || !editHorPoule.previous) {
-    //   return;
-    // }
-    // this.structureEditor.splitQualifyGroupFrom(previousQualifyGroup, editHorPoule.previous);
-    // this.roundNumberChanged.emit(this.round.getNumber());
+  splitQualifyGroupFrom(group: QualifyGroup, singleRule: SingleQualifyRule) {
+    this.structureEditor.splitQualifyGroupFrom(group, singleRule);
+    this.roundNumberChanged.emit(this.round.getNumber());
   }
 
-  mergeQualifyGroups(editHorPoule: HorPouleEdit) {
-    // TODOSTRUCTURE CDK
-    return;
-    // const previousQualifyGroup = editHorPoule.previous?.getQualifyGroup();
-    // const currentQualifyGroup = editHorPoule.current.getQualifyGroup();
-    // if (!previousQualifyGroup || !currentQualifyGroup) {
-    //   return;
-    // }
-    // this.structureEditor.mergeQualifyGroups(previousQualifyGroup, currentQualifyGroup);
-    // this.roundNumberChanged.emit(this.round.getNumber());
+  mergeQualifyGroups(groupA: QualifyGroup, groupB: QualifyGroup) {
+    this.structureEditor.mergeQualifyGroups(groupA, groupB);
+    this.roundNumberChanged.emit(this.round.getNumber());
   }
 
   getQualifyGroupWidthPercentage(qualifyGroup: QualifyGroup): number {
@@ -199,10 +157,3 @@ export class StructureRoundComponent implements OnInit {
     this.alert = { type: type, message: message };
   }
 }
-
-interface HorPouleEdit {
-  current: HorizontalPoule;
-  qualifyGroup: QualifyGroup;
-  previous: HorizontalPoule | undefined;
-}
-

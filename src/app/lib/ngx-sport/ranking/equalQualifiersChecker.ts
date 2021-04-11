@@ -1,4 +1,4 @@
-import { JsonAgainstGame, JsonTogetherGame, AgainstGame, TogetherGame, NameService, GameMapper, State, QualifyRuleMultiple, QualifyGroup, RoundRankingCalculator, RoundRankingItem, QualifyTarget, Round, Place } from "ngx-sport";
+import { JsonAgainstGame, JsonTogetherGame, AgainstGame, TogetherGame, NameService, GameMapper, State, MultipleQualifyRule, QualifyGroup, RoundRankingCalculator, RoundRankingItem, QualifyTarget, Round, Place } from "ngx-sport";
 
 export class EqualQualifiersChecker {
 
@@ -35,7 +35,7 @@ export class EqualQualifiersChecker {
             let multipleRule = qualifyGroup.getMultipleRule();
             if (multipleRule !== undefined) {
                 const fromHorPoule = multipleRule.getFromHorizontalPoule();
-                const roundRankingItems = this.roundRankingCalculator.getItemsForMultipleRule(multipleRule);
+                const roundRankingItems = this.roundRankingCalculator.getItemsForHorizontalPoule(fromHorPoule);
                 const equalRuleItems = this.getEqualRuleRankingItems(multipleRule, roundRankingItems);
                 const postFixTmp = '(' + this.nameService.getHorizontalPouleName(fromHorPoule) + ')';
                 warnings = warnings.concat(this.getWarningsForEqualQualifiersHelper(equalRuleItems, postFixTmp));
@@ -55,7 +55,7 @@ export class EqualQualifiersChecker {
         });
     }
 
-    protected getEqualRuleRankingItems(multipleRule: QualifyRuleMultiple, rankingItems: RoundRankingItem[]): RoundRankingItem[][] {
+    protected getEqualRuleRankingItems(multipleRule: MultipleQualifyRule, rankingItems: RoundRankingItem[]): RoundRankingItem[][] {
         if (multipleRule.getQualifyTarget() === QualifyTarget.Losers) {
             rankingItems = this.reverseRanking(rankingItems);
         }

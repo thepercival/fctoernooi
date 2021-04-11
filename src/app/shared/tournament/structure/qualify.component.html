@@ -1,8 +1,57 @@
 <div class="d-flex flex-wrap justify-content-around mb-2" *ngIf="round.getNrOfPlaces() > 2 && !round.hasBegun()">
-    <!-- <ng-container *ngTemplateOutlet="modifyQualifiers;context:{$implicit: QualifyGroupWINNERS}">
-    </ng-container>
-    <button *ngIf="showSwitchView() || round.isRoot()"
-        [ngClass]="{ 'visible': showSwitchView(), 'invisible': !showSwitchView() }" type="button"
+  <ng-container *ngTemplateOutlet="modifyToPlaces;context:{$implicit: TargetWinners}">
+  </ng-container>
+  <ng-container *ngTemplateOutlet="modifyToPlaces;context:{$implicit: TargetLosers}">
+  </ng-container>
+</div>
+<p *ngIf="alert">
+  <ngb-alert [dismissible]="true" (closed)="resetAlert()" [type]="alert.type">{{ alert.message }}</ngb-alert>
+</p>
+<ng-template #modifyToPlaces let-target>
+  <div class=" btn-group-vertical" role="group" aria-label="aantal">
+    <button type="button" [disabled]="!areSomeQualifyGroupsEditable(target)" class="btn btn-outline-secondary"
+      (click)="collapsed = !collapsed">
+      <fa-icon *ngIf="areSomeQualifyGroupsEditable(target) && collapsed" [icon]="IconStructure"></fa-icon>
+      <fa-icon *ngIf="areSomeQualifyGroupsEditable(target) && !collapsed" [icon]="['fas', 'th']"></fa-icon>
+      <span>{{nameService.getQualifyTargetDescription(target,true)}}</span>
+      <span *ngIf="round.isRoot()">: {{round.getNrOfPlacesChildren(target)}}</span>
+    </button>
+    <div class="bg-warning" *ngIf="areSomeQualifyGroupsEditable(target) && !collapsed">
+      <ng-container *ngTemplateOutlet="editQualifyGroups;context:{$implicit: target}">
+      </ng-container>
+    </div>
+    <div class="btn-group" role="group" aria-label="aantal">
+      <button [disabled]="!canRemoveQualifier(target)" type="button" class="btn btn-outline-primary"
+        (click)="removeQualifier(target)">
+        <fa-icon [icon]="['fas', 'minus']"></fa-icon>
+      </button>
+      <button [disabled]="!canAddQualifier(target)" type="button" class="btn btn-outline-primary"
+        (click)="addQualifier(target)">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #editQualifyGroups let-target>
+  {{target}}
+  <!-- loop door de qualifygroups,
+  onthoud previous
+  kijk tussen current en previous als deze mergable zijn
+  per group:
+  toon per singlerule "nummers x"
+  kijk als je group kan opsplitsen bij de qualifyrule
+  =====
+  nummers 1
+  btn split
+  nummers 2
+  =====
+  =====
+  nummers 3
+  ===== -->
+</ng-template>
+<!-- <button *ngIf="areSomeQualifyGroupsEditable() || round.isRoot()"
+        [ngClass]="{ 'visible': areSomeQualifyGroupsEditable(), 'invisible': !areSomeQualifyGroupsEditable() }" type="button"
         class="btn btn-secondary" (click)="switchView()"
         [disabled]="viewType !== ViewTypeQualifyGroups && !showSwitchView()">
         <fa-icon *ngIf="viewType !== ViewTypeQualifyGroups" [icon]="IconStructure"></fa-icon>
@@ -10,43 +59,39 @@
             kwalificatiegroepen</span>
         <fa-icon *ngIf="viewType === ViewTypeQualifyGroups" [icon]="['fas', 'th']"></fa-icon> <span
             *ngIf="viewType === ViewTypeQualifyGroups" class="d-none d-sm-inline-flex">&nbsp;ronde-opzet</span>
-    </button>
-    <ng-container *ngTemplateOutlet="modifyQualifiers;context:{$implicit: QualifyGroupLOSERS}">
-    </ng-container> -->
-</div>
-<p *ngIf="alert">
-    <ngb-alert [dismissible]="true" (close)="alert = undefined" [type]="alert.type">{{ alert.message }}</ngb-alert>
-</p>
-<ng-template #modifyQualifiers let-winnersOrLosers>
-    <!-- start vertical-->
-    <!-- <div *ngIf="round.getNrOfPlaces() >= 4" class=" btn-group-vertical" [ngClass]="{ 'd-sm-none': round.isRoot() }"
-        role="group" aria-label="aantal">
-        <button type="button" disabled
-            class="btn btn-outline-secondary">{{nameService.getWinnersLosersDescription(winnersOrLosers,true)}}
-            <span *ngIf="round.isRoot()">: {{round.getNrOfPlacesChildren(winnersOrLosers)}}</span>
-        </button>
-        <div class="btn-group" role="group" aria-label="aantal">
-            <button type="button" class="btn btn-outline-primary" (click)="removeQualifier(winnersOrLosers)">
-                <fa-icon [icon]="['fas', 'minus']"></fa-icon>
-            </button>
-            <button type="button" class="btn btn-outline-primary" (click)="addQualifier(winnersOrLosers)">
-                <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-            </button>
-        </div>
-    </div> -->
-    <!-- end vertical-->
-    <!-- start horizontal-->
-    <!-- <div *ngIf="round.getNrOfPlaces() >= 4 && round.isRoot()" class="d-none d-sm-inline-flex btn-group" role="group"
-        aria-label="aantal">
-        <button type="button" class="btn btn-outline-primary" (click)="removeQualifier(winnersOrLosers)">
-            <fa-icon [icon]="['fas', 'minus']"></fa-icon>
-        </button>
-        <button type="button" disabled
-            class="btn btn-outline-secondary">{{nameService.getWinnersLosersDescription(winnersOrLosers,true)}}:
-            {{round.getNrOfPlacesChildren(winnersOrLosers)}}</button>
-        <button type="button" class="btn btn-outline-primary" (click)="addQualifier(winnersOrLosers)">
-            <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-        </button>
-    </div> -->
-    <!-- end horizontal-->
-</ng-template>
+    </button>-->
+
+<!-- <ng-template ngFor let-editHorPoule [ngForOf]="round.getHorizontalPoules(Target())">
+              <tr *ngIf="areQualifyGroupsMergable(editHorPoule) || isQualifyGroupSplittable(editHorPoule)">
+                <td></td>
+                <td>
+                  <li *ngIf="isQualifyGroupSplittable(editHorPoule)"
+                    class="list-group-item btn-outline-secondary px-2 py-1 place-list-item pointer btn-action-list-item"
+                    (click)="splitQualifyGroup(editHorPoule)">
+                    <button type="button" class="btn btn-outline-primary btn-block">
+                      <fa-icon class="rotate-45" [icon]="['fas', 'expand-alt']"></fa-icon><span
+                        *ngIf="round.getNumber().getRounds().length <= 2">
+                        splitsen</span>
+                    </button>
+                  </li>
+                  <li *ngIf="areQualifyGroupsMergable(editHorPoule)"
+                    class="list-group-item btn-outline-secondary px-2 py-1 place-list-item pointer btn-action-list-item"
+                    (click)="mergeQualifyGroups(editHorPoule)">
+                    <button type="button" class="btn btn-outline-primary btn-block">
+                      <fa-icon class="rotate-45" [icon]="['fas', 'compress-alt']"></fa-icon><span
+                        *ngIf="round.getNumber().getRounds().length <= 2">
+                        samenvoegen</span>
+                    </button>
+                  </li>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <li
+                    class="list-group-item px-2 py-2 place-list-item  {{cssService.getQualifyPoule(editHorPoule.current)}}">
+                    {{nameService.getHorizontalPouleName(editHorPoule.current)}}
+                  </li>
+                </td>
+                <td></td>
+              </tr>
+            </ng-template> -->
