@@ -1,22 +1,22 @@
-<div class="d-flex flex-wrap justify-content-around mb-2" *ngIf="round.getNrOfPlaces() > 2 && !round.hasBegun()">
-  <ng-container *ngTemplateOutlet="modifyToPlaces;context:{$implicit: TargetWinners}">
-  </ng-container>
-  <ng-container *ngTemplateOutlet="modifyToPlaces;context:{$implicit: TargetLosers}">
+<div class="d-flex flex-wrap justify-content-around mb-2"
+  *ngIf="parentRound.getNrOfPlaces() > 2 && !parentRound.hasBegun()">
+  <ng-container *ngFor="let target of getTargets()" [ngTemplateOutlet]="modifyToPlaces"
+    [ngTemplateOutletContext]="{target:target}">
   </ng-container>
 </div>
 <p *ngIf="alert">
   <ngb-alert [dismissible]="true" (closed)="resetAlert()" [type]="alert.type">{{ alert.message }}</ngb-alert>
 </p>
-<ng-template #modifyToPlaces let-target>
+<ng-template let-target="target" #modifyToPlaces>
   <div class=" btn-group-vertical" role="group" aria-label="aantal">
-    <button type="button" [disabled]="!areSomeQualifyGroupsEditable(target)" class="btn btn-outline-secondary"
-      (click)="collapsed = !collapsed">
-      <fa-icon *ngIf="areSomeQualifyGroupsEditable(target) && collapsed" [icon]="IconStructure"></fa-icon>
-      <fa-icon *ngIf="areSomeQualifyGroupsEditable(target) && !collapsed" [icon]="['fas', 'th']"></fa-icon>
+    <button type="button" [disabled]="!areSomeQualifyGroupsEditable(target)"
+      class="btn {{getQualifyGroupBtnClass(target)}}" (click)="targetCollapsed[target] = !targetCollapsed[target]">
+      <fa-icon *ngIf="areSomeQualifyGroupsEditable(target)" class="mr-1" [icon]="IconStructure"></fa-icon>
       <span>{{nameService.getQualifyTargetDescription(target,true)}}</span>
-      <span *ngIf="round.isRoot()">: {{round.getNrOfPlacesChildren(target)}}</span>
+      <span *ngIf="parentRound.isRoot()">: {{parentRound.getNrOfPlacesChildren(target)}}</span>
     </button>
-    <div class="bg-warning" *ngIf="areSomeQualifyGroupsEditable(target) && !collapsed">
+    <div class="btn-group-vertical d-flex flex-column {{getTargetDirectionClass(target)}}" role="group"
+      *ngIf="areSomeQualifyGroupsEditable(target) && !targetCollapsed[target]">
       <ng-container *ngTemplateOutlet="editQualifyGroups;context:{$implicit: target}">
       </ng-container>
     </div>
@@ -34,64 +34,29 @@
 </ng-template>
 
 <ng-template #editQualifyGroups let-target>
-  {{target}}
-  <!-- loop door de qualifygroups,
-  onthoud previous
-  kijk tussen current en previous als deze mergable zijn
-  per group:
-  toon per singlerule "nummers x"
-  kijk als je group kan opsplitsen bij de qualifyrule
-  =====
-  nummers 1
-  btn split
-  nummers 2
-  =====
-  =====
-  nummers 3
-  ===== -->
+  <ng-template ngFor let-qualifyGroup [ngForOf]="parentRound.getQualifyGroups(target)">
+    <li
+      class="list-group-item text-center w-100 d-flex flex-column {{getTargetDirectionClass(target)}} py-2 {{cssService.getQualifyGroup(qualifyGroup)}}">
+      <ng-container *ngIf="qualifyGroup.getFirstSingleRule()" [ngTemplateOutlet]="editSingleRule"
+        [ngTemplateOutletContext]="{singleRule:qualifyGroup.getFirstSingleRule()}">
+      </ng-container>
+    </li>
+    <button *ngIf="isQualifyGroupMergableWithNext(qualifyGroup)" type="button"
+      class="btn btn-outline-primary btn-block my-1" (click)="mergeQualifyGroupWithNext(qualifyGroup)">
+      <fa-icon class="rotate-45" [icon]="['fas', 'compress-alt']"></fa-icon><span>
+        samenvoegen</span>
+    </button>
+  </ng-template>
 </ng-template>
-<!-- <button *ngIf="areSomeQualifyGroupsEditable() || round.isRoot()"
-        [ngClass]="{ 'visible': areSomeQualifyGroupsEditable(), 'invisible': !areSomeQualifyGroupsEditable() }" type="button"
-        class="btn btn-secondary" (click)="switchView()"
-        [disabled]="viewType !== ViewTypeQualifyGroups && !showSwitchView()">
-        <fa-icon *ngIf="viewType !== ViewTypeQualifyGroups" [icon]="IconStructure"></fa-icon>
-        <span *ngIf="viewType !== ViewTypeQualifyGroups" class="d-none d-sm-inline-flex">
-            kwalificatiegroepen</span>
-        <fa-icon *ngIf="viewType === ViewTypeQualifyGroups" [icon]="['fas', 'th']"></fa-icon> <span
-            *ngIf="viewType === ViewTypeQualifyGroups" class="d-none d-sm-inline-flex">&nbsp;ronde-opzet</span>
-    </button>-->
 
-<!-- <ng-template ngFor let-editHorPoule [ngForOf]="round.getHorizontalPoules(Target())">
-              <tr *ngIf="areQualifyGroupsMergable(editHorPoule) || isQualifyGroupSplittable(editHorPoule)">
-                <td></td>
-                <td>
-                  <li *ngIf="isQualifyGroupSplittable(editHorPoule)"
-                    class="list-group-item btn-outline-secondary px-2 py-1 place-list-item pointer btn-action-list-item"
-                    (click)="splitQualifyGroup(editHorPoule)">
-                    <button type="button" class="btn btn-outline-primary btn-block">
-                      <fa-icon class="rotate-45" [icon]="['fas', 'expand-alt']"></fa-icon><span
-                        *ngIf="round.getNumber().getRounds().length <= 2">
-                        splitsen</span>
-                    </button>
-                  </li>
-                  <li *ngIf="areQualifyGroupsMergable(editHorPoule)"
-                    class="list-group-item btn-outline-secondary px-2 py-1 place-list-item pointer btn-action-list-item"
-                    (click)="mergeQualifyGroups(editHorPoule)">
-                    <button type="button" class="btn btn-outline-primary btn-block">
-                      <fa-icon class="rotate-45" [icon]="['fas', 'compress-alt']"></fa-icon><span
-                        *ngIf="round.getNumber().getRounds().length <= 2">
-                        samenvoegen</span>
-                    </button>
-                  </li>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <li
-                    class="list-group-item px-2 py-2 place-list-item  {{cssService.getQualifyPoule(editHorPoule.current)}}">
-                    {{nameService.getHorizontalPouleName(editHorPoule.current)}}
-                  </li>
-                </td>
-                <td></td>
-              </tr>
-            </ng-template> -->
+<ng-template let-singleRule="singleRule" #editSingleRule>
+  <div>
+    {{nameService.getHorizontalPouleName(singleRule.getFromHorizontalPoule())}}
+  </div>
+  <button *ngIf="structureEditor.isQualifyGroupSplittableAt(singleRule)" type="button"
+    class="btn btn-outline-primary btn-block" (click)="splitQualifyGroupFrom(singleRule)">
+    <fa-icon class="rotate-45" [icon]="['fas', 'expand-alt']"></fa-icon><span>splitsen</span>
+  </button>
+  <ng-container *ngIf="singleRule.getNext()" [ngTemplateOutlet]="editSingleRule"
+    [ngTemplateOutletContext]="{singleRule:singleRule.getNext()}">
+  </ng-container>

@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Competitor,
+  CompetitorMap,
+  NameService,
   RoundNumber,
   Structure,
-  CompetitorMap,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -23,7 +24,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   changedRoundNumber: RoundNumber | undefined;
   originalCompetitors!: Competitor[];
   clonedStructure!: Structure;
-  public competitorMap!: CompetitorMap;
+  public nameService!: NameService;
 
   uiSliderConfigExample: any = {
     behaviour: 'drag',
@@ -45,7 +46,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
 
   ngOnInit() {
     super.myNgOnInit(() => {
-      this.competitorMap = new CompetitorMap(this.tournament.getCompetitors());
+      this.nameService = new NameService(new CompetitorMap(this.tournament.getCompetitors()));
       this.clonedStructure = this.createClonedStructure(this.structure);
       this.processing = false;
     });

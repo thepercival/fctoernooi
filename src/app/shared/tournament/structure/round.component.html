@@ -23,21 +23,21 @@
             class="list-group-item px-2 py-2 place-list-item pointer {{cssService.getQualifyPlace(place)}}"
             placement="top" ngbPopover="{{nameService.getPlaceFromName(place,true,true)}}">
             <span
-              [ngClass]="{'favitem': isFavorite(competitorMap.getCompetitor(place)) }">{{nameService.getPlaceFromName(place,
+              [ngClass]="{'favitem': isFavorite(nameService.getCompetitorMap()?.getCompetitor(place)) }">{{nameService.getPlaceFromName(place,
               false)}}</span>
           </li>
         </ul>
       </div>
     </div>
   </div>
-  <app-tournament-structurequalify *ngIf="editable" [round]="round"
+  <app-tournament-structurequalify *ngIf="editable" [parentRound]="round" [nameService]="nameService"
     (roundNumberChanged)="roundNumberChanged.emit($event)">
   </app-tournament-structurequalify>
 
   <div class="d-flex align-items-stretch text-center">
     <app-tournament-structureround *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed(); first as first"
       class="align-self-stretch flex-wrap mb-2" [round]="qualifyGroup.getChildRound()"
-      [editable]="editable && !round.hasBegun()" [favorites]="favorites" [first]="first" [competitorMap]="competitorMap"
+      [editable]="editable && !round.hasBegun()" [favorites]="favorites" [first]="first" [nameService]="nameService"
       (roundNumberChanged)="roundNumberChanged.emit($event)">
     </app-tournament-structureround>
   </div>

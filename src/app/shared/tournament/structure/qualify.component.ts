@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { HorizontalPoule, NameService, QualifyGroup, SingleQualifyRule, QualifyTarget, Round, RoundNumber, StructureEditor } from 'ngx-sport';
+import { HorizontalPoule, NameService, QualifyGroup, SingleQualifyRule, QualifyTarget, Round, RoundNumber, StructureEditor, CompetitorMap } from 'ngx-sport';
 
 import { IAlert } from '../../common/alert';
 import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
 import { facStructure } from '../icons';
+import { CSSService } from '../../common/cssservice';
 
 
 @Component({
@@ -13,42 +14,44 @@ import { facStructure } from '../icons';
 })
 export class StructureQualifyComponent {
 
-    @Input() round!: Round;
-    @Output() viewTypeChanged = new EventEmitter<number>();
+    @Input() parentRound!: Round;
     @Output() roundNumberChanged = new EventEmitter<RoundNumber>();
+    @Input() nameService!: NameService;
     alert: IAlert | undefined;
-    public collapsed = true;
-    public nameService: NameService;
+    public targetCollapsed: TargetMap = {};
 
-    constructor(private structureEditor: StructureEditor) {
+    constructor(
+        public structureEditor: StructureEditor,
+        public cssService: CSSService) {
         this.resetAlert();
-        this.nameService = new NameService(undefined);
+        this.targetCollapsed[QualifyTarget.Winners] = true;
+        this.targetCollapsed[QualifyTarget.Losers] = true;
     }
 
-    get TargetWinners(): QualifyTarget {
-        return QualifyTarget.Winners;
-    }
-
-    get TargetLosers(): QualifyTarget {
-        return QualifyTarget.Losers;
+    getTargets(): QualifyTarget[] {
+        return [QualifyTarget.Winners, QualifyTarget.Losers];
     }
 
     get IconStructure(): [IconPrefix, IconName] { return [facStructure.prefix, facStructure.iconName]; }
 
     canRemoveQualifier(target: QualifyTarget): boolean {
-        return this.round.getQualifyGroups(target).length > 0;
+        return this.parentRound.getQualifyGroups(target).length > 0;
     }
 
     removeQualifier(target: QualifyTarget) {
         this.resetAlert();
-        this.structureEditor.removeQualifier(this.round, target);
-        this.roundNumberChanged.emit(this.round.getNumber());
+        this.structureEditor.removeQualifier(this.parentRound, target);
+        if (!this.areSomeQualifyGroupsEditable(target)) {
+            this.targetCollapsed[target] = true;
+        }
+        this.nameService.resetStructure();
+        this.roundNumberChanged.emit(this.parentRound.getNumber());
     }
 
     canAddQualifier(target: QualifyTarget): boolean {
-        let nrOfToPlacesChildren = this.round.getNrOfPlacesChildren();
-        const nrOfToPlaces = this.round.getNrOfPlaces();
-        if (this.round.getQualifyGroups(target).length === 0) {
+        let nrOfToPlacesChildren = this.parentRound.getNrOfPlacesChildren();
+        const nrOfToPlaces = this.parentRound.getNrOfPlaces();
+        if (this.parentRound.getQualifyGroups(target).length === 0) {
             nrOfToPlacesChildren++;
         }
         return nrOfToPlaces > nrOfToPlacesChildren;
@@ -56,12 +59,29 @@ export class StructureQualifyComponent {
 
     addQualifier(target: QualifyTarget) {
         this.resetAlert();
-        if (this.round.getQualifyGroups(target).length === 0) {
-            this.structureEditor.addChildRound(this.round, target, [2]);
+        if (this.parentRound.getQualifyGroups(target).length === 0) {
+            this.structureEditor.addChildRound(this.parentRound, target, [2]);
         } else {
-            this.structureEditor.addQualifiers(this.round, target, 1);
+            this.structureEditor.addQualifiers(this.parentRound, target, 1);
         }
-        this.roundNumberChanged.emit(this.round.getNumber());
+        this.nameService.resetStructure();
+        this.roundNumberChanged.emit(this.parentRound.getNumber());
+    }
+
+    splitQualifyGroupFrom(singleRule: SingleQualifyRule) {
+        this.structureEditor.splitQualifyGroupFrom(singleRule.getGroup(), singleRule);
+        this.nameService.resetStructure();
+        this.roundNumberChanged.emit(this.parentRound.getNumber());
+    }
+
+    mergeQualifyGroupWithNext(group: QualifyGroup): void {
+        const next = group.getNext();
+        if (next === undefined) {
+            return;
+        }
+        this.structureEditor.mergeQualifyGroups(group, next);
+        this.nameService.resetStructure();
+        this.roundNumberChanged.emit(this.parentRound.getNumber());
     }
 
     /**
@@ -73,20 +93,28 @@ export class StructureQualifyComponent {
     }
 
     areSomeQualifyGroupsSplittable(target: QualifyTarget): boolean {
-        return this.round.getQualifyGroups(target).some(qualifyGroup => {
+        return this.parentRound.getQualifyGroups(target).some((qualifyGroup: QualifyGroup) => {
             return this.isQualifyGroupSplittable(qualifyGroup);
         });
     }
 
     areSomeQualifyGroupsMergable(target: QualifyTarget): boolean {
         let previous: QualifyGroup | undefined;
-        return this.round.getQualifyGroups(target).some((qualifyGroup: QualifyGroup) => {
+        return this.parentRound.getQualifyGroups(target).some((qualifyGroup: QualifyGroup) => {
             if (previous && this.structureEditor.areQualifyGroupsMergable(previous, qualifyGroup)) {
                 return true;
             };
             previous = qualifyGroup;
             return false;
         });
+    }
+
+    isQualifyGroupMergableWithNext(qualifyGroup: QualifyGroup): boolean {
+        const next = qualifyGroup.getNext();
+        if (next === undefined) {
+            return false;
+        }
+        return this.structureEditor.areQualifyGroupsMergable(qualifyGroup, next);
     }
 
     isQualifyGroupSplittable(qualifyGroup: QualifyGroup): boolean {
@@ -100,6 +128,15 @@ export class StructureQualifyComponent {
         return false;
     }
 
+    getTargetDirectionClass(target: QualifyTarget): string {
+        return target === QualifyTarget.Losers ? 'flex-column-reverse' : '';
+    }
+
+    getQualifyGroupBtnClass(target: QualifyTarget): string {
+        const editable = this.areSomeQualifyGroupsEditable(target);
+        return 'btn-' + (this.targetCollapsed[target] ? 'outline-' : '') + (editable ? 'primary' : 'secondary');
+    }
+
     resetAlert(): void {
         this.alert = undefined;
     }
@@ -107,4 +144,8 @@ export class StructureQualifyComponent {
     protected setAlert(type: string, message: string) {
         this.alert = { type: type, message: message };
     }
+}
+
+interface TargetMap {
+    [key: string]: boolean;
 }

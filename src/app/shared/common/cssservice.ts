@@ -43,17 +43,12 @@ export class CSSService {
 
     getQualifyRule(rule: SingleQualifyRule | MultipleQualifyRule): string {
         const classes = rule instanceof MultipleQualifyRule ? 'q-partial' : '';
-        return classes + ' q-' + rule.getQualifyTarget().toLowerCase() + '-' +
-            this.getQualifyGroupNumber(rule.getGroup());
+        return classes + this.getQualifyGroup(rule.getGroup());
     }
 
-    /*getQualifyGroup(horPoule: HorizontalPoule): QualifyGroup | undefined {
-        const qualifyRule = horPoule.getQualifyRule();
-        if (qualifyRule === undefined) {
-            return undefined;
-        }
-        return horPoule.getRound().getQualifyGroupByRule(qualifyRule);
-    }*/
+    getQualifyGroup(qualifyGroup: QualifyGroup): string {
+        return ' q-' + qualifyGroup.getTarget().toLowerCase() + '-' + this.getQualifyGroupNumber(qualifyGroup);
+    }
 
     getQualifyRound(round: Round, noQualifyClass: string = ''): string {
         const qualifyGroup: QualifyGroup | undefined = round.getParentQualifyGroup();

@@ -1,0 +1,5 @@
+.rotate-45 {
+    transform: rotate(-45deg);
+    display: inline-block;
+    transition: transform 1s;
+}
