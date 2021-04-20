@@ -35,12 +35,11 @@ export class PouleRankingModalComponent implements OnInit {
         // this.rankingService = new RankingService(this.gameMode, this.tournament.getCompetition().getRankingRuleSet());
     }
 
-    get Against(): GameMode { return GameMode.Against; }
-    get Together(): GameMode { return GameMode.Together; }
+    // get Against(): GameMode { return GameMode.Against; }    
 
     getHeader(): string {
         const header = this.nameService.getPouleName(this.poule, true);
-        return this.gameMode === GameMode.Together ? header + ' - stand' : header;
+        return this.gameMode !== GameMode.Against ? header + ' - stand' : header;
     }
 
     openInfoModal(header: string, modalContent: TemplateRef<any>) {

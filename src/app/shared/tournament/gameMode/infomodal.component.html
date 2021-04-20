@@ -14,12 +14,11 @@
         <tr>
             <th></th>
             <th *ngFor="let def of gameModeDefinitions" class="font-weight-bold border-info">
-                <span class="badge bg-{{getClass(def.value)}} mr-1">{{getAbbreviation(def.value)}}</span>
                 <span>{{getName(def.value)}}</span>
             </th>
         </tr>
         <tr>
-            <td>voorbeelden</td>
+            <td>voorbeeld</td>
             <td *ngFor="let def of gameModeDefinitions">
                 {{def.examples}}
             </td>

@@ -51,9 +51,9 @@
         </ul>
         <div [ngbNavOutlet]="nav" class="mt-2"></div>
       </div>
-      <app-tournament-sports-selector *ngIf="!processing && competition && !competitionSport"
+      <!-- <app-tournament-create-sportvariant *ngIf="!processing && competition && !competitionSport"
         class="col-xs-12 col-sm-10 col-md-8 col-lg-6" (selected)="selectedSports($event)"
-        [selectedSports]="getSports()">
-      </app-tournament-sports-selector>
+        [selectedSports]="getSportsWithFields()">
+      </app-tournament-create-sportvariant> -->
     </div>
   </div>

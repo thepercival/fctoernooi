@@ -16,6 +16,10 @@ import {
     Sport,
     GameAmountConfig,
     CreationStrategy,
+    SingleSportVariant,
+    AgainstGame,
+    AgainstSportVariant,
+    AllInOneGameSportVariant,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -27,13 +31,12 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { PlanningConfigRepository } from '../../lib/ngx-sport/planning/config/repository';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RoundNumbersSelectorModalComponent } from '../roundnumber/selector.component';
-import { DefaultService } from '../../lib/ngx-sport/defaultService';
+import { DefaultService, GameAmountConfigValidations } from '../../lib/ngx-sport/defaultService';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { GameAmountConfigControl } from '../gameAmountConfig/edit.component';
 import { GameAmountConfigRepository } from '../../lib/ngx-sport/gameAmountConfig/repository';
 import { forkJoin, Observable } from 'rxjs';
 import { GameModeInfoModalComponent } from '../../shared/tournament/gameMode/infomodal.component';
-import { SportService } from '../../lib/ngx-sport/sport/service';
 
 @Component({
     selector: 'app-planningconfig-edit',
@@ -48,14 +51,9 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     public nameService!: NameService;
     gameAmountRange!: VoetbalRange;
     gameAmountConfigControls: GameAmountConfigControl[] = [];
-    gameModes: GameMode[] = [GameMode.Against, GameMode.Together];
+    // gameModes: GameMode[] = [GameMode.Against, GameMode.Together];
     validations: PlanningConfigValidations = { minMinutes: 1, maxMinutes: 10080 };
-    gameAmountValidations: GameAmountConfigValidations = {
-        minNrOfHeadtohead: 1,
-        maxNrOfHeadtohead: 4,
-        minNrOfGames: 1,
-        maxNrOfGames: 50
-    };
+    gameAmountValidations: GameAmountConfigValidations;
 
     constructor(
         route: ActivatedRoute,
@@ -65,14 +63,15 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         private planningConfigRepository: PlanningConfigRepository,
         private gameAmountConfigRepository: GameAmountConfigRepository,
         private myNavigation: MyNavigation,
+        private defaultService: DefaultService,
         private planningRepository: PlanningRepository,
         private mapper: PlanningConfigMapper,
-        private sportService: SportService,
         private gameAmountConfigMapper: GameAmountConfigMapper,
         private modalService: NgbModal,
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, sructureRepository);
+        this.gameAmountValidations = this.defaultService.getGameAmountConfigValidations();
         this.form = fb.group({
             gameMode: ['', Validators.compose([
                 Validators.required
@@ -152,9 +151,10 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     setGameAmountRange(creationStrategy: CreationStrategy) {
         const validations = this.gameAmountValidations;
-        let min = creationStrategy === CreationStrategy.StaticPouleSize ? validations.minNrOfHeadtohead : validations.minNrOfGames;
-        let max = creationStrategy === CreationStrategy.StaticPouleSize ? validations.maxNrOfHeadtohead : validations.maxNrOfGames;
-        this.gameAmountRange = { min, max };
+        if (creationStrategy === CreationStrategy.StaticPouleSize) {
+            return this.gameAmountValidations.nrOfH2HRange;
+        }
+        return this.gameAmountValidations.gameAmountRange;
     }
 
     setGameAmountControls(startRoundNumber: RoundNumber) {
@@ -280,17 +280,17 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     protected getSelfRefereeAvailable(): number {
-        const competitionSports = this.competition.getSports();
+        const compSports = this.competition.getSports();
 
         let selfRefereeAvailable = SelfReferee.Disabled;
 
-        const sports = competitionSports.map((competitionSport: CompetitionSport): Sport => competitionSport.getSport());
-        const maxNrOfGamePlaces = this.sportService.getMaxNrOfGamePlaces(sports);
-        const otherPoulesAvailable = this.pouleStructure.selfRefereeOtherPoulesAvailable();
+        const sportVariants = compSports.map((compSport: CompetitionSport): SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant => compSport.getVariant());
+
+        const otherPoulesAvailable = this.pouleStructure.isSelfRefereeOtherPoulesAvailable();
         if (otherPoulesAvailable) {
             selfRefereeAvailable += SelfReferee.OtherPoules;
         }
-        const samePouleAvailable = this.pouleStructure.selfRefereeSamePouleAvailable(maxNrOfGamePlaces);
+        const samePouleAvailable = this.pouleStructure.isSelfRefereeSamePouleAvailable(sportVariants);
         if (samePouleAvailable) {
             selfRefereeAvailable += SelfReferee.SamePoule;
         }
@@ -456,13 +456,6 @@ class PlanningActionCalculator {
 export interface PlanningConfigValidations {
     minMinutes: number;
     maxMinutes: number;
-}
-
-export interface GameAmountConfigValidations {
-    minNrOfHeadtohead: number;
-    maxNrOfHeadtohead: number;
-    minNrOfGames: number;
-    maxNrOfGames: number;
 }
 
 enum PlanningAction {

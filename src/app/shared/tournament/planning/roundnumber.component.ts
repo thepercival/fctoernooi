@@ -119,8 +119,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     this.sameDay = this.gameDatas.length > 1 ? this.isSameDay(this.gameDatas[0], this.gameDatas[this.gameDatas.length - 1]) : true;
   }
 
-  get GameModeAgainst(): GameMode { return GameMode.Against; }
-  get GameModeTogether(): GameMode { return GameMode.Together; }
+  // get GameModeAgainst(): GameMode { return GameMode.Against; }
+  // get GameModeTogether(): GameMode { return GameMode.Together; }
   get Home(): AgainstSide { return AgainstSide.Home; }
   get Away(): AgainstSide { return AgainstSide.Away; }
   get SportConfigTabFields(): number { return CompetitionSportTab.Fields; }

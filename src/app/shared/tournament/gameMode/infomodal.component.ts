@@ -17,15 +17,21 @@ export class GameModeInfoModalComponent {
             {
                 value: GameMode.Against,
                 examples: 'tennis of voetbal',
-                scoreConfig: 'in te stellen op wedstrijdpunten(standaard) of scores',
-                gameAmount: 'de grootte van de poule en het aantal onderlinge duels(in te stellen)'
+                scoreConfig: 'wedstrijd-punten, score of beide',
+                gameAmount: 'de poule-grootte en aantal onderlinge duels'
 
             },
             {
-                value: GameMode.Together,
-                examples: 'sjoelen of wielrennen',
-                scoreConfig: 'scores worden opgeteld',
-                gameAmount: 'in te stellen'
+                value: GameMode.Single,
+                examples: 'sjoelen',
+                scoreConfig: 'score',
+                gameAmount: 'te kiezen aantal'
+            },
+            {
+                value: GameMode.AllInOneGame,
+                examples: 'wielrennen',
+                scoreConfig: 'score',
+                gameAmount: 'te kiezen aantal'
             }
         ];
     }

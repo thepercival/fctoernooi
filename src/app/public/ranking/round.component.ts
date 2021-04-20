@@ -55,8 +55,8 @@ export class RankingRoundComponent implements OnInit {
         activeModal.componentInstance.modalContent = modalContent;
     }
 
-    get Against(): GameMode { return GameMode.Against; }
-    get Together(): GameMode { return GameMode.Together; }
+    // get Against(): GameMode { return GameMode.Against; }
+    // get Together(): GameMode { return GameMode.Together; }
 
     getCollapseDegrees(): 90 | 180 | 270 | undefined {
         return this.collapsed ? undefined : 90;

@@ -1,0 +1,110 @@
+<div *ngIf="sport" class="d-flex justify-content-between mb-4">
+  <h1 class="text-truncate">sport-instellingen</h1>
+  <h1 class="mr-1">
+    <button (click)="goToPrevious.emit()" type="button" class="btn btn-outline-secondary">
+      <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
+      <span class="ml-1 d-none d-sm-inline"> terug</span>
+    </button>
+  </h1>
+</div>
+
+<ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+
+<form *ngIf="sport" [formGroup]="form" name="form" (ngSubmit)="save(sport)" novalidate>
+  <div class="form-group row">
+    <div class="col-6">
+      <label for="name" class="col-form-label">naam</label>
+    </div>
+    <div class="col-6">
+      <div class="input-group">
+        <input class="form-control"
+          [ngClass]="{ 'is-invalid': form.controls.sportName.invalid, 'is-valid': form.controls.sportName.valid }"
+          type="text" formControlName="sportName" placeholder="naam" required>
+        <div class="input-group-append">
+          <span class="input-group-text pointer" (click)="toSportToAdd()">
+            <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="nrOfFields" class="col-6 col-form-label">{{getFieldsDescription()}}</label>
+    <div class="col-6">
+      <input type="number" class="form-control"
+        [ngClass]="{ 'is-invalid': form.controls.nrOfFields.invalid, 'is-valid': form.controls.nrOfFields.valid}"
+        formControlName="nrOfFields" [min]="minNrOfFields" [max]="maxNrOfFields">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="gameMode" class="col-6 col-form-label pointer" (click)="openGameModeInfoModal()">wedstrijd-modus
+      <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
+    </label>
+    <div class="col-6">
+      <select class="form-control" formControlName="gameMode" required>
+        <option *ngFor="let gameMode of gameModes" [ngValue]="gameMode">
+          {{nameService.getGameModeName(gameMode)}}</option>
+      </select>
+    </div>
+  </div>
+  <div *ngIf="form.value['gameMode'] === Against" class="form-group row">
+    <label for="mixed" class="col-6 col-form-label">
+      van samenstelling wisselende teams
+    </label>
+    <div class="col-6">
+      <div class="form-control custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="mixed" formControlName="mixed">
+        <label class="custom-control-label" for="mixed"></label>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="form.value['gameMode'] === Against && form.value['mixed']" class="form-group row">
+    <label for="mixed" class="col-6 col-form-label">
+      aantal deelnemers per wedstrijd
+    </label>
+    <div class="col-6">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            thuis
+          </span>
+        </div>
+        <input class="form-control"
+          [ngClass]="{ 'is-invalid': form.controls.nrOfHomePlaces.invalid, 'is-valid': form.controls.nrOfHomePlaces.valid }"
+          type="text" formControlName="nrOfHomePlaces" placeholder="1" required [min]="minNrOfSidePlaces"
+          [max]="maxNrOfSidePlaces">
+      </div>
+      <div class="input-group mt-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text pr-4">uit</span>
+        </div>
+        <input class="form-control"
+          [ngClass]="{ 'is-invalid': form.controls.nrOfAwayPlaces.invalid, 'is-valid': form.controls.nrOfAwayPlaces.valid }"
+          type="text" formControlName="nrOfHomePlaces" placeholder="1" required [min]="minNrOfSidePlaces"
+          [max]="maxNrOfSidePlaces">
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="form.value['gameMode'] !== Against" class="form-group row">
+    <label for="gameAmount" class="col-6 col-form-label">
+      aantal wedstrijden
+    </label>
+    <div class="col-6">
+      <input type="number" class="form-control"
+        [ngClass]="{ 'is-invalid': form.controls.gameAmount.invalid, 'is-valid': form.controls.gameAmount.valid}"
+        formControlName="nrOfFields" [min]="gameAmountValidations.gameAmountRange.min"
+        [max]="gameAmountValidations.gameAmountRange.max">
+    </div>
+  </div>
+  <div class="form-group row justify-content-end">
+    <div class="col-6">
+      <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
+        {{labelBtnNext}}
+      </button>
+    </div>
+  </div>
+</form>
+
+<app-tournament-sport-to-add *ngIf="sport === undefined" (sportToAdd)="sportChanged($event)">
+</app-tournament-sport-to-add>

@@ -46,7 +46,6 @@ import { RefereeEditComponent } from './referee/edit.component';
 import { RefereeListComponent } from './referee/list.component';
 import { SponsorEditComponent } from './sponsor/edit.component';
 import { SponsorListComponent } from './sponsor/list.component';
-import { SportSelectComponent } from './sport/select.component';
 import { CompetitionSportEditComponent } from './competitionSport/edit.component';
 import { CompetitionSportListComponent } from './competitionSport/list.component';
 import { StructureEditComponent } from './structure/edit.component';
@@ -64,10 +63,12 @@ import { ExportModalComponent } from './home/exportmodal.component';
 import { ShareModalComponent } from './home/sharemodal.component';
 import { QualifyAgainstConfigEditComponent } from './qualifyAgainstConfig/edit.component';
 import { GameAmountConfigEditComponent } from './gameAmountConfig/edit.component';
-import { SportNewComponent } from './sport/new.component';
 import { GameTogetherEditComponent } from './game/edittogether.component';
 import { GameAgainstEditComponent } from './game/editagainst.component';
 import { ScoreTogetherCardComponent } from './game/togetherscorecard.component';
+import { TournamentPropertiesComponent } from './new/properties.component';
+import { CreateSportWithFieldsComponent } from './sport/createSportWithFields.component';
+import { SportToAddComponent } from './sport/toAdd.component';
 
 @NgModule({
   imports: [
@@ -100,12 +101,13 @@ import { ScoreTogetherCardComponent } from './game/togetherscorecard.component';
     ScoreConfigEditComponent,
     SponsorEditComponent,
     SponsorListComponent,
-    SportSelectComponent,
-    SportNewComponent,
+    SportToAddComponent,
+    CreateSportWithFieldsComponent,
     StartBreakComponent,
     StructureEditComponent,
     PlanningConfigComponent,
     QualifyAgainstConfigEditComponent,
+    TournamentPropertiesComponent,
     RefereeEditComponent,
     RoleItemComponent,
     RoundNumbersSelectorModalComponent,

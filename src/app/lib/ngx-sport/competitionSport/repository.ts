@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../repository';
-import { CompetitionSport, CompetitionSportMapper, CompetitionSportService, JsonCompetitionSport, RoundNumber, Sport, SportMapper, Structure } from 'ngx-sport';
+import { CompetitionSport, CompetitionSportMapper, CompetitionSportService, JsonCompetitionSport, Sport, SportMapper, Structure } from 'ngx-sport';
 import { Tournament } from '../../tournament';
 
 @Injectable({

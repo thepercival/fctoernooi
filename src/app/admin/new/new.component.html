@@ -1,18 +1,6 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
-    <app-tournament-sports-selector *ngIf="showSelectSports" class="col-xs-12 col-sm-10 col-md-8 col-lg-6"
-      [selectedSports]="sports" [editMode]="SportSelectModeAddRemove" (selected)="selectedSports($event)">
-    </app-tournament-sports-selector>
-    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6" *ngIf="!showSelectSports">
-      <div class="d-flex justify-content-between mb-4">
-        <h1>nieuw toernooi</h1>
-        <h1 class="mr-1">
-          <button *ngIf="!processing" [routerLink]="['']" type="button" class="btn btn-outline-secondary">
-            <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
-            <span class="ml-1 d-none d-md-inline"> terug</span>
-          </button>
-        </h1>
-      </div>
+    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-6 pt-1">
 
       <ngb-alert *ngIf="alert" [type]="alert.type">
         {{ alert.message }}</ngb-alert>
@@ -21,85 +9,12 @@
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
 
-      <form *ngIf="!processing" name="form" (ngSubmit)="create()" [formGroup]="form" novalidate>
-        <div class="form-group row">
-          <label for="name" class="col-4 col-form-label">naam</label>
-          <div class="col-8">
-            <input class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
-              formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="sportsName" class="col-4 col-form-label">sport(en)</label>
-          <div class="col-8">
-            <div class="input-group pointer" (click)="showSelectSports = true">
-              <input class="form-control"
-                [ngClass]="{ 'is-invalid': sports.length === 0, 'is-valid': sports.length > 0 }"
-                formControlName="sportsName">
-              <div class="input-group-append">
-                <span class="input-group-text">kies</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="nroffields" class="col-4 col-form-label">{{getFieldsDescription()}}</label>
-          <div class="col-8">
-            <input type="number" class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.nroffields.invalid, 'is-valid': form.controls.nroffields.valid}"
-              formControlName="nroffields" [min]="validations.minnroffields" [max]="validations.maxnroffields">
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="dp" class="col-4 col-form-label">startdatum</label>
-          <div class="col-8">
-            <div class="input-group input-group-date">
-              <input class="form-control"
-                [ngClass]="{ 'is-invalid': form.controls.date.invalid, 'is-valid': form.controls.date.valid }"
-                placeholder="yyyy-mm-dd" formControlName="date" ngbDatepicker #d="ngbDatepicker"
-                [minDate]="minDateStruct" container="body">
-              <div class="input-group-append">
-                <span class="input-group-text pointer" (click)="d.toggle()">
-                  <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="starttime" class="col-4 col-form-label">starttijd</label>
-          <div class="col-8">
-            <ngb-timepicker formControlName="time" [spinners]="false" required>
-            </ngb-timepicker>
-          </div>
-        </div>
-        <div class="form-group row">
-          <label class="col-4 col-form-label pointer" (click)="openInfoModal('publiek', contentInfo)">publiek
-            <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
-          </label>
-          <div class="col-8">
-            <div class="form-control custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="public" formControlName="public">
-              <label class="custom-control-label" for="public"></label>
-            </div>
-          </div>
-        </div>
-        <div class="form-group row justify-content-end">
-          <div class="col-8">
-            <button [disabled]="form.invalid || sports.length === 0" type="submit" class="btn btn-primary">
-              ga naar de opzet
-            </button>
-          </div>
-        </div>
-      </form>
+      <app-tournament-properties [hidden]="currentStep !== stepEditProperties"
+        (toNextStep)="toStepCreateSportWithFields($event)">
+      </app-tournament-properties>
+      <app-tournament-create-sportwithfields [hidden]="currentStep !== stepCreateSportWithFields"
+        labelBtnNext="naar opzet" (created)="create($event)" (goToPrevious)="toStepEditProperties()">
+      </app-tournament-create-sportwithfields>
     </div>
   </div>
 </div>
-
-<ng-template #contentInfo>
-  <p class="lead">Publieke toernooien zijn te bekijken door anderen. Standen, uitslagen, etc. zijn live te bekijken,
-    niet publieke
-    toernooien zijn alleen voor jou beschikbaar.
-  </p>
-</ng-template>

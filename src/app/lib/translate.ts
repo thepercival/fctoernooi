@@ -7,8 +7,8 @@ import { Sport, ScoreConfig, CustomSport } from 'ngx-sport';
 export class TranslateService {
     static readonly language = 'nl';
 
-    getSportName(customId: CustomSport): string {
-        switch (customId) {
+    getSportName(sport: Sport): string {
+        switch (sport.getCustomId()) {
             case CustomSport.Badminton: { return 'badminton'; }
             case CustomSport.Basketball: { return 'basketbal'; }
             case CustomSport.Darts: { return 'darten'; }
@@ -25,12 +25,8 @@ export class TranslateService {
             case CustomSport.IceHockey: { return 'ijshockey'; }
             case CustomSport.Shuffleboard: { return 'sjoelen'; }
             case CustomSport.Jass: { return 'klaverjassen'; }
-            case CustomSport.BadmintonDouble: { return this.getSportName(CustomSport.Badminton) + ' dubbel'; }
-            case CustomSport.SquashDouble: { return this.getSportName(CustomSport.Squash) + ' dubbel'; }
-            case CustomSport.TableTennisDouble: { return this.getSportName(CustomSport.TableTennis) + ' dubbel'; }
-            case CustomSport.TennisDouble: { return this.getSportName(CustomSport.Tennis) + ' dubbel'; }
         }
-        return '?';
+        return sport.getName();
     }
 
     getScoreNameSingular(scoreConfig: ScoreConfig): string {
@@ -127,7 +123,7 @@ export class TranslateService {
             case ScoreConfig.UPWARDS: { return 'naar'; }
             case ScoreConfig.DOWNWARDS: { return 'vanaf'; }
         }
-        return '?';
+        return '';
     }
 
     getFieldNameSingular(sport?: Sport): string {

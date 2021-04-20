@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, CompetitorMap, GameMode } from 'ngx-sport';
+import { NameService, Poule, CompetitorMap, GameMode, AgainstSportVariant } from 'ngx-sport';
 
 import { CSSService } from '../../common/cssservice';
 import { Favorites } from '../../../lib/favorites';
@@ -37,7 +37,7 @@ export class PouleRankingComponent implements OnInit {
     const competitionSports = this.poule.getRound().getCompetition().getSports();
     if (competitionSports.length > 1) {
       return RoundRanking.Sports;
-    } else if (competitionSports[0].getSport().getGameMode() === GameMode.Against) {
+    } else if (competitionSports[0].getVariant() instanceof AgainstSportVariant) {
       return RoundRanking.Against;
     }
     return RoundRanking.Together;

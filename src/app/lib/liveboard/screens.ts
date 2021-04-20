@@ -84,13 +84,13 @@ export abstract class GamesScreen extends LiveboardScreen {
         return this.usedGameModes === GameMode.Against;
     }
 
-    onlyGameModeTogether(): boolean {
-        return this.usedGameModes === GameMode.Together;
-    }
+    // onlyGameModeTogether(): boolean {
+    //     return this.usedGameModes === GameMode.Together;
+    // }
 
-    bothGameModes(): boolean {
-        return this.usedGameModes === (GameMode.Against + GameMode.Together);
-    }
+    // bothGameModes(): boolean {
+    //     return this.usedGameModes === (GameMode.Against + GameMode.Together);
+    // }
 }
 
 export interface IGamesScreen {

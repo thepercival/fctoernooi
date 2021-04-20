@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
-import { CreationStrategy, GameMode, JsonPlanningConfig, JsonSport, PouleStructure, RankingRuleSet, SelfReferee, Sport } from "ngx-sport";
-import { SportService } from "./sport/service";
+import { AgainstSportVariant, AllInOneGameSportVariant, CreationStrategy, GameMode, JsonPlanningConfig, JsonSport, PouleStructure, RankingRuleSet, SelfReferee, SingleSportVariant, Sport, VoetbalRange } from "ngx-sport";
+import { SportWithFields } from "../../admin/sport/createSportWithFields.component";
+
 @Injectable({
     providedIn: 'root'
 })
@@ -11,24 +12,37 @@ export class DefaultService {
     static readonly MinutesAfter: number = 5;
     static readonly RankingRuleSet: RankingRuleSet = RankingRuleSet.Against;
 
-    constructor(private sportService: SportService) {
+    constructor() {
     }
 
-    getJsonSport(): JsonSport {
+    getJsonSport(name: string): JsonSport {
         return {
             id: 0,
-            name: '',
+            name: name,
             team: false,
-            gameMode: GameMode.Against,
-            nrOfGamePlaces: 2,
+            defaultGameMode: GameMode.Against,
+            defaultNrOfSidePlaces: 1,
             customId: 0
         };
     }
 
-    getJsonPlanningConfig(sports: Sport[]): JsonPlanningConfig {
+    public getSportVariant(sport: Sport): SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant {
+        if (sport.getDefaultGameMode() === GameMode.Against) {
+            return new AgainstSportVariant(
+                sport,
+                sport.getDefaultNrOfSidePlaces(),
+                sport.getDefaultNrOfSidePlaces(),
+                1);
+        } else if (sport.getDefaultGameMode() === GameMode.Single) {
+            return new SingleSportVariant(sport, 1, 1);
+        }
+        return new AllInOneGameSportVariant(sport, 1);
+    }
+
+    getJsonPlanningConfig(sportVariants: (SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant)[]): JsonPlanningConfig {
         return {
             id: 0,
-            creationStrategy: this.getGameCreationStrategy(sports),
+            creationStrategy: this.getGameCreationStrategy(sportVariants),
             extension: false,
             enableTime: true,
             minutesPerGame: DefaultService.MinutesPerGame,
@@ -39,17 +53,8 @@ export class DefaultService {
         }
     }
 
-    getPouleStructure(sports: Sport[], nrOfFields: number): PouleStructure {
-        return new PouleStructure(this.getNrOfPlaces(sports, nrOfFields));
-    }
-
-    private getNrOfPlaces(sports: Sport[], nrOfFields: number): GameMode {
-        const maxNrOfGamePlaces = this.sportService.getMaxNrOfGamePlaces(sports);
-        if (maxNrOfGamePlaces === 0) {
-            return 10;
-        }
-        let nrOfPlaces = maxNrOfGamePlaces * nrOfFields * 2;
-        return nrOfPlaces < 5 ? 5 : nrOfPlaces;
+    getPouleStructure(sportsWithFields: SportWithFields[]): PouleStructure {
+        return new PouleStructure(5);
     }
 
     /**
@@ -59,26 +64,32 @@ export class DefaultService {
      * 
      * @param sports 
      */
-    protected getGameCreationStrategy(sports: Sport[]): CreationStrategy {
-        // muliply
-        if (sports.length > 1) {
+    protected getGameCreationStrategy(sportVariants: (SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant)[]): CreationStrategy {
+        // als er gemixed
+        // // muliply
+        if (sportVariants.length > 1) {
             return CreationStrategy.StaticManual;
         }
-        const sport: Sport = sports[0];
-        if (sport.getGameMode() === GameMode.Together) {
+        const sportVariant = sportVariants[0];
+        if (sportVariant instanceof SingleSportVariant) {
             return CreationStrategy.StaticManual;
-
         }
-        if (sport.getNrOfGamePlaces() > 2) {
+        if (sportVariant instanceof AgainstSportVariant && sportVariant.getNrOfGamePlaces() > 2) {
             return CreationStrategy.IncrementalRandom;
         }
-
         return CreationStrategy.StaticPouleSize
     }
 
-    protected hasGameMode(sports: Sport[], gameMode: GameMode): boolean {
-        return sports.some((sport: Sport) => sport.getGameMode() === gameMode);
-    }
+    // protected hasGameMode(sports: Sport[], gameMode: GameMode): boolean {
+    //     return sports.some((sport: Sport) => sport.getGameMode() === gameMode);
+    // }
+
+    getGameAmountConfigValidations(): GameAmountConfigValidations {
+        return {
+            nrOfH2HRange: { min: 1, max: 4 },
+            gameAmountRange: { min: 1, max: 50 }
+        }
+    };
 
     getNrOfPoules(nrOfPlaces: number): number {
         switch (nrOfPlaces) {
@@ -138,4 +149,9 @@ export class DefaultService {
         }
         return 8;
     }
+}
+
+export interface GameAmountConfigValidations {
+    nrOfH2HRange: VoetbalRange;
+    gameAmountRange: VoetbalRange;
 }

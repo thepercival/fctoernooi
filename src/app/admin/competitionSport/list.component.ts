@@ -13,7 +13,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { CompetitionSportTab } from '../../shared/tournament/competitionSportTab';
 import { CompetitionSportRepository } from '../../lib/ngx-sport/competitionSport/repository';
-import { SportSelectMode } from '../sport/select.component';
+import { SportWithFields } from '../sport/createSportWithFields.component';
 import { forkJoin, Observable } from 'rxjs';
 
 @Component({
@@ -61,15 +61,15 @@ export class CompetitionSportListComponent extends TournamentComponent implement
     this.competitionSports = this.competition.getSports();
   }
 
-  get SportSelectModeAdd(): SportSelectMode { return SportSelectMode.Add; }
-
   get TabFields(): CompetitionSportTab { return CompetitionSportTab.Fields; }
 
-  getSports(): Sport[] {
-    return this.competitionSports.map((competitionSport: CompetitionSport) => competitionSport.getSport());
+  getSportsWithFields(): SportWithFields[] {
+    return this.competitionSports.map((competitionSport: CompetitionSport): SportWithFields => {
+      return { variant: competitionSport.getVariant(), nrOfFields: competitionSport.getFields().length };
+    });
   }
 
-  selectedSports(sports: Sport[]) {
+  selectedSports(sports: SportWithFields[]) {
     // const sportsName = this.sports.map((sport: Sport) => sport.getName()).join(',');
     // this.form.controls.sportsName.setValue(sportsName);
     this.showSelectSports = false;
@@ -80,8 +80,8 @@ export class CompetitionSportListComponent extends TournamentComponent implement
     this.setAlert('info', 'de sport(en) worden toegevoegd');
     this.processing = true;
 
-    const reposUpdates: Observable<CompetitionSport>[] = sports.map((sport: Sport) => {
-      return this.competitionSportRepository.createObject(sport, this.tournament, this.structure);
+    const reposUpdates: Observable<CompetitionSport>[] = sports.map((sportWithFields: SportWithFields) => {
+      return this.competitionSportRepository.createObject(sportWithFields.variant.getSport(), this.tournament, this.structure);
     });
     forkJoin(reposUpdates).subscribe(results => {
       this.processing = false;

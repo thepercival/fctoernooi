@@ -1,0 +1,27 @@
+<div class="d-flex justify-content-between mb-4">
+  <h1 class="text-truncate">sport kiezen</h1>
+  <h1 class="mr-1">
+    <button *ngIf="!processing" type="button" (click)="createCustom()" class="btn btn-outline-secondary">
+      zelf invoeren
+    </button>
+  </h1>
+</div>
+
+<ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+
+<div *ngIf="!processing">
+  <ul class="list-group pointer">
+    <li *ngFor="let sport of sports" class="list-group-item" (click)="select(sport)">
+      <app-sport-icon class="float-left mr-1" [customId]="sport.getCustomId()"></app-sport-icon>
+      <div class="d-flex justify-content-between">
+        <label for="sport-{{sport.getId()}}" class="pointer mb-0">
+          <span>{{translate.getSportName(sport)}}</span>
+        </label>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="sport-{{sport.getId()}}" (change)="select(sport)">
+          <label class="custom-control-label " for="sport-{{sport.getId()}}"></label>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
