@@ -1,7 +1,8 @@
 <!-- root round-->
 <div *ngIf="round && round.isRoot() && !round.hasBegun()" class="d-flex justify-content-around mb-3">
   <div class="btn-group" role="group" aria-label="aantal poules">
-    <button type="button" class="btn btn-outline-primary" (click)="removePouleFromRootRound()">
+    <button [disabled]="!canRemovePouleFromRoot()" type="button"
+      class="btn btn-outline-{{getRemovePouleFromRootRoundBtnClass()}}" (click)="removePouleFromRootRound()">
       <fa-icon [icon]="['fas', 'minus']"></fa-icon>
     </button>
     <button type="button" disabled class="btn btn-outline-secondary">poules</button>
@@ -10,7 +11,8 @@
     </button>
   </div>
   <div class="btn-group" role="group" aria-label="aantal deelnemers">
-    <button type="button" class="btn btn-outline-primary" (click)="removePlaceFromRootRound()">
+    <button [disabled]="!canRemovePlaceFromRoot()" type="button"
+      class="btn btn-outline-{{getRemovePlaceFromRootRoundBtnClass()}}" (click)="removePlaceFromRootRound()">
       <fa-icon [icon]="['fas', 'minus']"></fa-icon>
     </button>
     <button type="button" disabled class="btn btn-outline-secondary">deelnemers</button>
@@ -24,10 +26,11 @@
   <div class="btn-group-vertical" role="group" aria-label="aantal poules">
     <button type="button" disabled class="btn btn-outline-secondary">poules</button>
     <div class="btn-group" role="group" aria-label="aantal poules">
-      <button type="button" class="btn btn-outline-primary" (click)="decrementNrOfPoules()">
+      <button [disabled]="!canDecrementNrOfPoules()" type="button" class="btn btn-outline-{{getDecrementBtnClass()}}"
+        (click)="decrementNrOfPoules()">
         <fa-icon [icon]="['fas', 'minus']"></fa-icon>
       </button>
-      <button *ngIf="round.getPoules().length < 8" type="button" class="btn btn-outline-primary"
+      <button [disabled]="!canIncrementNrOfPoules()" type="button" class="btn btn-outline-{{getIncrementBtnClass()}}"
         (click)="incrementNrOfPoules()">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>

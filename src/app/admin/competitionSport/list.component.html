@@ -1,62 +1,65 @@
-<div class="row justify-content-center no-gutters">
-  <!-- <app-tournament-create-sportvariant *ngIf="showSelectSports" class="col-xs-12 col-sm-10 col-md-6 col-lg-4"
-    [selectedSports]="getSportsWithFields()" [editMode]="SportSelectModeAdd" (selected)="selectedSports($event)">
-  </app-tournament-create-sportvariant> -->
-  <div *ngIf="!showSelectSports" class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-    <app-tournament-title [tournament]="tournament" [admin]="true">
-    </app-tournament-title>
-    <div class="d-flex justify-content-between">
-      <h2>
-        sporten
-      </h2>
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-6 pt-1">
+      <div *ngIf="!showCreateSportWithFields">
+        <app-tournament-title [tournament]="tournament" [admin]="true">
+        </app-tournament-title>
+        <div class="d-flex justify-content-between">
+          <h2>
+            sporten
+          </h2>
+        </div>
+        <h2 *ngIf="processing" class="text-center">
+          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+        </h2>
+        <ngb-alert *ngIf="alert" [type]="alert.type">{{alert.message}}</ngb-alert>
+        <!-- <div *ngIf="!processing && !structure.getFirstRoundNumber().getConfig().getSelfReferee()" class="text-info">
+        "deelnemers zijn scheidsrechter" kun je aanzetten onder <a [routerLink]="" (click)="linkToRoundSettings()">
+          <fa-icon [icon]="['fas', 'cogs']"></fa-icon> <span>instellingen</span>
+        </a>
+      </div> -->
+        <table *ngIf="!processing" class="table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>naam</th>
+              <th title="aantal">
+                <app-tournament-icon class="d-none d-sm-inline" name="soccer-field"></app-tournament-icon> velden
+              </th>
+              <th class="text-right" *ngIf="!hasBegun">
+                <button type="button" class="btn btn-sm btn-primary" (click)="showCreateSportWithFields = true"
+                  [disabled]="processing">
+                  <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let competitionSport of competitionSports; let last = last;">
+              <td>
+                <button type="button" class="btn btn-sm btn-outline-primary"
+                  [routerLink]="['/admin/competitionsport', tournament.getId(), competitionSport.getId(), TabFields]">
+                  <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+                </button>
+              </td>
+              <td>
+                <span>{{competitionSport.getSport().getName()}}</span>
+              </td>
+              <td>{{competitionSport.getFields().length}}</td>
+              <td class="text-right" *ngIf="!hasBegun && competitionSports.length > 1">
+                <button type="button" class="btn btn-sm btn-danger" [disabled]="processing"
+                  (click)="openRemoveModal(content, competitionSport)">
+                  <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <app-tournament-create-sportwithfields [hidden]="!showCreateSportWithFields" (created)="add($event)"
+        (goToPrevious)="showCreateSportWithFields = false">
+      </app-tournament-create-sportwithfields>
     </div>
-
-    <h2 *ngIf="processing" class="text-center">
-      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-    </h2>
-    <ngb-alert *ngIf="alert" [type]="alert.type">{{alert.message}}</ngb-alert>
-    <!-- <div *ngIf="!processing && !structure.getFirstRoundNumber().getConfig().getSelfReferee()" class="text-info">
-      "deelnemers zijn scheidsrechter" kun je aanzetten onder <a [routerLink]="" (click)="linkToRoundSettings()">
-        <fa-icon [icon]="['fas', 'cogs']"></fa-icon> <span>instellingen</span>
-      </a>
-    </div> -->
-    <table *ngIf="!processing" class="table">
-      <thead>
-        <tr>
-          <th></th>
-          <th>naam</th>
-          <th class="d-none d-sm-table-cell" title="aantal">
-            <app-tournament-icon name="soccer-field"></app-tournament-icon> velden
-          </th>
-          <th class="text-right" *ngIf="!hasBegun">
-            <button type="button" class="btn btn-sm btn-primary" (click)="showSelectSports = true"
-              [disabled]="processing">
-              <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-            </button>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let competitionSport of competitionSports; let last = last;">
-          <td>
-            <button type="button" class="btn btn-sm btn-outline-primary"
-              [routerLink]="['/admin/competitionsport', tournament.getId(), competitionSport.getId(), TabFields]">
-              <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
-            </button>
-          </td>
-          <td>
-            <span>{{competitionSport.getSport().getName()}}</span>
-          </td>
-          <td class="d-none d-sm-table-cell">{{competitionSport.getFields().length}}</td>
-          <td class="text-right" *ngIf="!hasBegun && competitionSports.length > 1">
-            <button type="button" class="btn btn-sm btn-danger" [disabled]="processing"
-              (click)="openRemoveModal(content, competitionSport)">
-              <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
   </div>
 </div>
 

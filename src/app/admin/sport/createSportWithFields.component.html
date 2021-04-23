@@ -41,7 +41,7 @@
       <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
     </label>
     <div class="col-6">
-      <select class="form-control" formControlName="gameMode" required>
+      <select class="form-control" formControlName="gameMode" required (ngModelChange)="changeGameMode($event)">
         <option *ngFor="let gameMode of gameModes" [ngValue]="gameMode">
           {{nameService.getGameModeName(gameMode)}}</option>
       </select>
@@ -71,7 +71,7 @@
         </div>
         <input class="form-control"
           [ngClass]="{ 'is-invalid': form.controls.nrOfHomePlaces.invalid, 'is-valid': form.controls.nrOfHomePlaces.valid }"
-          type="text" formControlName="nrOfHomePlaces" placeholder="1" required [min]="minNrOfSidePlaces"
+          type="number" formControlName="nrOfHomePlaces" placeholder="1" required [min]="minNrOfSidePlaces"
           [max]="maxNrOfSidePlaces">
       </div>
       <div class="input-group mt-2">
@@ -80,7 +80,7 @@
         </div>
         <input class="form-control"
           [ngClass]="{ 'is-invalid': form.controls.nrOfAwayPlaces.invalid, 'is-valid': form.controls.nrOfAwayPlaces.valid }"
-          type="text" formControlName="nrOfHomePlaces" placeholder="1" required [min]="minNrOfSidePlaces"
+          type="number" formControlName="nrOfAwayPlaces" placeholder="1" required [min]="minNrOfSidePlaces"
           [max]="maxNrOfSidePlaces">
       </div>
     </div>
@@ -93,8 +93,17 @@
     <div class="col-6">
       <input type="number" class="form-control"
         [ngClass]="{ 'is-invalid': form.controls.gameAmount.invalid, 'is-valid': form.controls.gameAmount.valid}"
-        formControlName="nrOfFields" [min]="gameAmountValidations.gameAmountRange.min"
-        [max]="gameAmountValidations.gameAmountRange.max">
+        formControlName="nrOfFields" [min]="gameAmountRange.min" [max]="gameAmountRange.max">
+    </div>
+  </div>
+  <div *ngIf="form.value['gameMode'] === Single" class="form-group row">
+    <label for="nrOfGamePlaces" class="col-6 col-form-label">
+      aantal deelnemers per wedstrijd (planning)
+    </label>
+    <div class="col-6">
+      <input type="number" class="form-control"
+        [ngClass]="{ 'is-invalid': form.controls.nrOfGamePlaces.invalid, 'is-valid': form.controls.nrOfGamePlaces.valid}"
+        formControlName="nrOfGamePlaces" [min]="minNrOfGamePlaces" [max]="maxNrOfGamePlaces">
     </div>
   </div>
   <div class="form-group row justify-content-end">

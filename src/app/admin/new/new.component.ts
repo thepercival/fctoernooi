@@ -1,17 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { IAlert } from '../../shared/common/alert';
 import { TournamentRepository } from '../../lib/tournament/repository';
-import { TranslateService } from '../../lib/translate';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { JsonTournament } from '../../lib/tournament/json';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
-import { CompetitionSportMapper, JsonCompetitionSport, JsonField, SportMapper, Structure, StructureEditor } from 'ngx-sport';
+import { Structure, StructureEditor } from 'ngx-sport';
 import { SportWithFields } from '../sport/createSportWithFields.component';
+import { CompetitionSportRepository } from '../../lib/ngx-sport/competitionSport/repository';
 
 
 @Component({
@@ -32,11 +30,7 @@ export class NewComponent implements OnInit {
     private planningRepository: PlanningRepository,
     private structureEditor: StructureEditor,
     private defaultService: DefaultService,
-    private competitionSportMapper: CompetitionSportMapper,
-    private sportMapper: SportMapper,
-    private translate: TranslateService,
-    private modalService: NgbModal,
-    fb: FormBuilder
+    private competitionSportRepository: CompetitionSportRepository,
   ) {
   }
 
@@ -59,7 +53,8 @@ export class NewComponent implements OnInit {
     this.currentStep = NewTournamentStep.editProperties;
     this.setAlert('info', 'het toernooi wordt aangemaakt');
 
-    this.jsonTournament.competition.sports = [this.convertToJsonCompetitionSport(sportWithFields)];
+    const jsonCompetitionSport = this.competitionSportRepository.sportWithFieldsToJson(sportWithFields);
+    this.jsonTournament.competition.sports = [jsonCompetitionSport];
 
     this.tournamentRepository.createObject(this.jsonTournament)
       .subscribe(
@@ -68,11 +63,10 @@ export class NewComponent implements OnInit {
           const structure: Structure = this.structureEditor.create(
             tournament.getCompetition(),
             jsonPlanningConfig,
-            this.defaultService.getPouleStructure([sportWithFields]));
+            this.defaultService.getPouleStructure([sportWithFields.variant]));
           this.structureRepository.editObject(structure, tournament)
             .subscribe(
             /* happy path */(structureOut: Structure) => {
-                console.log(structureOut);
                 this.planningRepository.create(structureOut, tournament, 1)
                   .subscribe(
                     /* happy path */ roundNumberOut => {
@@ -104,25 +98,7 @@ export class NewComponent implements OnInit {
     this.alert = undefined;
   }
 
-  convertToJsonCompetitionSport(sportWithFields: SportWithFields): JsonCompetitionSport {
 
-    const fields: JsonField[] = [];
-    for (let priority = 1; priority <= sportWithFields.nrOfFields; priority++) {
-      fields.push({ id: priority, priority, name: String(priority) });
-    }
-    let jsonVariant = this.competitionSportMapper.variantToJson(sportWithFields.variant);
-    return {
-      id: 0,
-      sport: this.sportMapper.toJson(sportWithFields.variant.getSport()),
-      fields,
-      gameMode: jsonVariant.gameMode,
-      nrOfHomePlaces: jsonVariant.nrOfHomePlaces,
-      nrOfAwayPlaces: jsonVariant.nrOfAwayPlaces,
-      nrOfH2H: jsonVariant.nrOfH2H,
-      nrOfGamePlaces: jsonVariant.nrOfGamePlaces,
-      gameAmount: jsonVariant.gameAmount
-    }
-  }
 
   get stepEditProperties(): NewTournamentStep { return NewTournamentStep.editProperties; }
   get stepCreateSportWithFields(): NewTournamentStep { return NewTournamentStep.createSportWithFields; }

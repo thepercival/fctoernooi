@@ -60,13 +60,13 @@ import { SportIconCustomComponent } from './home/sport/customicon.component';
     TournamentShellRepository,
     UserMapper,
     GlobalEventsManager,
-    MyNavigation,
+    MyNavigation/*,
     {
       provide: 'placeRanges', useValue: [
         { min: 2, max: 40, placesPerPoule: { min: 2, max: 12 } },
         { min: 41, max: 128, placesPerPoule: { min: 2, max: 8 } }
       ]
-    }
+    }*/
   ],
   bootstrap: [AppComponent]
 })

@@ -1,11 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
+  Competition,
+  CompetitionSport,
+  CompetitionSportService,
   Competitor,
   CompetitorMap,
   NameService,
+  PlaceRange,
+  PlaceRanges,
   RoundNumber,
   Structure,
+  StructureEditor,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -38,7 +44,9 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     router: Router,
     tournamentRepository: TournamentRepository,
     structureRepository: StructureRepository,
+    public structureEditor: StructureEditor,
     private planningRepository: PlanningRepository,
+    private competitionSportService: CompetitionSportService,
     private myNavigation: MyNavigation
   ) {
     super(route, router, tournamentRepository, structureRepository);
@@ -48,8 +56,23 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     super.myNgOnInit(() => {
       this.nameService = new NameService(new CompetitorMap(this.tournament.getCompetitors()));
       this.clonedStructure = this.createClonedStructure(this.structure);
+      this.structureEditor.setPlaceRanges(this.getPlaceRanges());
       this.processing = false;
     });
+  }
+
+  protected getPlaceRanges(): PlaceRanges {
+    const sportVariants = this.competition.getSportVariants();
+    const minNrOfPlacesPerPoule = this.competitionSportService.getMinNrOfPlacesPerPoule(sportVariants);
+    const maxNrOfPlacesPerPouleSmall = 16;
+    const maxNrOfPlacesPerPouleLarge = 10;
+    const minNrOfPlacesPerRound = this.competitionSportService.getMinNrOfPlacesPerRound(sportVariants);
+    const maxNrOfPlacesPerRoundSmall = 40;
+    const maxNrOfPlacesPerRoundLarge = 128;
+    return new PlaceRanges(
+      minNrOfPlacesPerPoule, maxNrOfPlacesPerPouleSmall, maxNrOfPlacesPerPouleLarge,
+      minNrOfPlacesPerRound, maxNrOfPlacesPerRoundSmall, maxNrOfPlacesPerRoundLarge
+    );
   }
 
   createClonedStructure(structure: Structure): Structure {

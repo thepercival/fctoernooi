@@ -23,7 +23,8 @@
   <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
   <div *ngIf="!processing && clonedStructure" class="row text-center">
     <app-tournament-structureround [editable]="true" [round]="clonedStructure.getRootRound()"
-      (roundNumberChanged)="setChangedRoundNumber($event)" [first]="false" [nameService]="nameService">
+      (roundNumberChanged)="setChangedRoundNumber($event)" [first]="false" [nameService]="nameService"
+      [structureEditor]="structureEditor">
     </app-tournament-structureround>
   </div>
 </div>

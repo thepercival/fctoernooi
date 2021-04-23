@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-import { NameService, Round, RoundNumber, Competitor, CompetitorMap, StructureEditor, QualifyTarget } from 'ngx-sport';
+import { NameService, Round, RoundNumber, Competitor, CompetitorMap, StructureEditor, QualifyTarget, PlaceRanges } from 'ngx-sport';
 import { IAlert } from '../../common/alert';
 import { CSSService } from '../../common/cssservice';
 
@@ -9,16 +9,16 @@ import { CSSService } from '../../common/cssservice';
   styleUrls: ['./round.component.css']
 })
 export class StructureRoundComponent implements OnInit {
-
+  @Input() structureEditor!: StructureEditor;
   @Input() round!: Round;
-  @Output() roundNumberChanged = new EventEmitter<RoundNumber>();
   @Input() editable: boolean = false;
   @Input() first!: boolean;
   @Input() favorites: Competitor[] = [];
   @Input() nameService!: NameService;
+  @Output() roundNumberChanged = new EventEmitter<RoundNumber>();
   alert: IAlert | undefined;
 
-  constructor(private structureEditor: StructureEditor, public cssService: CSSService) {
+  constructor(public cssService: CSSService) {
     this.resetAlert();
   }
 
@@ -69,6 +69,10 @@ export class StructureRoundComponent implements OnInit {
       return false;
     }
     return this.favorites && this.favorites.indexOf(competitor) >= 0;
+  }
+
+  get MinPlacesPerPoule(): number {
+    return PlaceRanges.MinNrOfPlacesPerPoule;
   }
 
   protected resetAlert(): void {

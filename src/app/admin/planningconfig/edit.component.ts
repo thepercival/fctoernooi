@@ -49,11 +49,10 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     form: FormGroup;
     private pouleStructure!: PouleStructure;
     public nameService!: NameService;
-    gameAmountRange!: VoetbalRange;
     gameAmountConfigControls: GameAmountConfigControl[] = [];
     // gameModes: GameMode[] = [GameMode.Against, GameMode.Together];
     validations: PlanningConfigValidations = { minMinutes: 1, maxMinutes: 10080 };
-    gameAmountValidations: GameAmountConfigValidations;
+    // gameAmountRange: VoetbalRange | undefined;
 
     constructor(
         route: ActivatedRoute,
@@ -71,11 +70,10 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         fb: FormBuilder
     ) {
         super(route, router, tournamentRepository, sructureRepository);
-        this.gameAmountValidations = this.defaultService.getGameAmountConfigValidations();
         this.form = fb.group({
-            gameMode: ['', Validators.compose([
+            /*gameMode: ['', Validators.compose([
                 Validators.required
-            ])],
+            ])],*/
             extension: false,
             enableTime: true,
             minutesPerGame: ['', Validators.compose([
@@ -122,11 +120,13 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     initGameAmountConfigs(startRoundNumber: RoundNumber) {
-        this.setGameAmountRange(startRoundNumber.getValidPlanningConfig().getCreationStrategy());
+        // getGameAmountRange
+        // moet de CreationStrategy per Sport kunnen worden ingesteld?
         startRoundNumber.getValidGameAmountConfigs().forEach((gameAmountConfig: GameAmountConfig) => {
+            const range = this.defaultService.getGameAmountRange(gameAmountConfig.getCompetitionSport().getVariant());
             this.form.addControl('' + gameAmountConfig.getId(), new FormControl(
                 gameAmountConfig.getAmount(),
-                Validators.compose([Validators.required, Validators.min(this.gameAmountRange.min), Validators.max(this.gameAmountRange.max)])
+                Validators.compose([Validators.required, Validators.min(range.min), Validators.max(range.max)])
             ));
         });
         this.setGameAmountControls(startRoundNumber);
@@ -149,13 +149,13 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
 
-    setGameAmountRange(creationStrategy: CreationStrategy) {
-        const validations = this.gameAmountValidations;
-        if (creationStrategy === CreationStrategy.StaticPouleSize) {
-            return this.gameAmountValidations.nrOfH2HRange;
-        }
-        return this.gameAmountValidations.gameAmountRange;
-    }
+    // getGameAmountRange(creationStrategy: CreationStrategy): VoetbalRange {
+    //     const validations = this.defaultService.getGameAmountConfigValidations();
+    //     if (creationStrategy === CreationStrategy.StaticPouleSize) {
+    //         return validations.nrOfH2HRange;
+    //     }
+    //     return validations.gameAmountRange;
+    // }
 
     setGameAmountControls(startRoundNumber: RoundNumber) {
         startRoundNumber.getValidGameAmountConfigs().forEach((gameAmountConfig: GameAmountConfig) => {
@@ -170,7 +170,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.startRoundNumber = startRoundNumber;
         this.pouleStructure = startRoundNumber.createPouleStructure();
         this.hasBegun = this.startRoundNumber.hasBegun()
-        this.setGameAmountRange(startRoundNumber.getValidPlanningConfig().getCreationStrategy());
+        // this.setGameAmountRange(startRoundNumber.getValidPlanningConfig().getCreationStrategy());
         this.jsonToForm(this.mapper.toJson(startRoundNumber.getValidPlanningConfig()));
         this.resetAlert();
         if (this.hasBegun) {
@@ -214,9 +214,13 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.form.controls.minutesBetweenGames.setValue(json.minutesBetweenGames);
         this.form.controls.minutesAfter.setValue(json.minutesAfter);
         this.startRoundNumber.getValidGameAmountConfigs().forEach((gameAmountConfig: GameAmountConfig) => {
+            const range = this.defaultService.getGameAmountRange(gameAmountConfig.getCompetitionSport().getVariant())
             const id = '' + gameAmountConfig.getId();
             this.form.controls[id].setValidators(
-                Validators.compose([Validators.required, Validators.min(this.gameAmountRange.min), Validators.max(this.gameAmountRange.max)])
+                Validators.compose([
+                    Validators.required,
+                    Validators.min(range.min),
+                    Validators.max(range.max)])
             );
             this.form.controls[id].setValue(gameAmountConfig.getAmount());
         });

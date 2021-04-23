@@ -13,7 +13,7 @@ import { CSSService } from '../../common/cssservice';
     styleUrls: ['./qualify.component.css']
 })
 export class StructureQualifyComponent {
-
+    @Input() structureEditor!: StructureEditor;
     @Input() parentRound!: Round;
     @Output() roundNumberChanged = new EventEmitter<RoundNumber>();
     @Input() nameService!: NameService;
@@ -21,7 +21,6 @@ export class StructureQualifyComponent {
     public targetCollapsed: TargetMap = {};
 
     constructor(
-        public structureEditor: StructureEditor,
         public cssService: CSSService) {
         this.resetAlert();
         this.targetCollapsed[QualifyTarget.Winners] = true;
@@ -35,43 +34,74 @@ export class StructureQualifyComponent {
     get IconStructure(): [IconPrefix, IconName] { return [facStructure.prefix, facStructure.iconName]; }
 
     canRemoveQualifier(target: QualifyTarget): boolean {
-        return this.parentRound.getQualifyGroups(target).length > 0;
+        return this.parentRound.getBorderQualifyGroup(target) !== undefined;
     }
 
     removeQualifier(target: QualifyTarget) {
         this.resetAlert();
-        this.structureEditor.removeQualifier(this.parentRound, target);
-        if (!this.areSomeQualifyGroupsEditable(target)) {
-            this.targetCollapsed[target] = true;
+        try {
+            this.structureEditor.removeQualifier(this.parentRound, target);
+            if (!this.areSomeQualifyGroupsEditable(target)) {
+                this.targetCollapsed[target] = true;
+            }
+            this.nameService.resetStructure();
+            this.roundNumberChanged.emit(this.parentRound.getNumber());
+        } catch (e) {
+            this.setAlert('danger', e.message);
         }
-        this.nameService.resetStructure();
-        this.roundNumberChanged.emit(this.parentRound.getNumber());
     }
 
     canAddQualifier(target: QualifyTarget): boolean {
         let nrOfToPlacesChildren = this.parentRound.getNrOfPlacesChildren();
-        const nrOfToPlaces = this.parentRound.getNrOfPlaces();
-        if (this.parentRound.getQualifyGroups(target).length === 0) {
-            nrOfToPlacesChildren++;
+        const nrOfPlaces = this.parentRound.getNrOfPlaces();
+        const availableNrOfPlacesToAdd = nrOfPlaces - nrOfToPlacesChildren;
+        const borderQualifyGroup = this.parentRound.getBorderQualifyGroup(target);
+        if (borderQualifyGroup === undefined) {
+            return this.canAddChildRound(availableNrOfPlacesToAdd);
         }
-        return nrOfToPlaces > nrOfToPlacesChildren;
+        if (availableNrOfPlacesToAdd <= 0) {
+            return false;
+        }
+        try {
+            this.structureEditor.validate(
+                borderQualifyGroup.getChildRound().getNrOfPlaces() + 1,
+                borderQualifyGroup.getChildRound().getPoules().length
+            );
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    canAddChildRound(availableNrOfPlacesToAdd: number): boolean {
+        return availableNrOfPlacesToAdd >= this.structureEditor.getMinPlacesPerPouleSmall();
     }
 
     addQualifier(target: QualifyTarget) {
         this.resetAlert();
-        if (this.parentRound.getQualifyGroups(target).length === 0) {
-            this.structureEditor.addChildRound(this.parentRound, target, [2]);
-        } else {
-            this.structureEditor.addQualifiers(this.parentRound, target, 1);
+        try {
+            if (this.parentRound.getQualifyGroups(target).length === 0) {
+                const minNrOfPlacesPerPoule = this.structureEditor.getMinPlacesPerPouleSmall();
+                this.structureEditor.addChildRound(this.parentRound, target, [minNrOfPlacesPerPoule]);
+            } else {
+                this.structureEditor.addQualifiers(this.parentRound, target, 1);
+            }
+            this.nameService.resetStructure();
+            this.roundNumberChanged.emit(this.parentRound.getNumber());
+        } catch (e) {
+            this.setAlert('danger', e.message);
         }
-        this.nameService.resetStructure();
-        this.roundNumberChanged.emit(this.parentRound.getNumber());
     }
 
     splitQualifyGroupFrom(singleRule: SingleQualifyRule) {
-        this.structureEditor.splitQualifyGroupFrom(singleRule.getGroup(), singleRule);
-        this.nameService.resetStructure();
-        this.roundNumberChanged.emit(this.parentRound.getNumber());
+        this.resetAlert();
+        try {
+            this.structureEditor.splitQualifyGroupFrom(singleRule.getGroup(), singleRule);
+            this.nameService.resetStructure();
+            this.roundNumberChanged.emit(this.parentRound.getNumber());
+        } catch (e) {
+            this.setAlert('danger', e.message);
+        }
     }
 
     mergeQualifyGroupWithNext(group: QualifyGroup): void {
@@ -79,9 +109,14 @@ export class StructureQualifyComponent {
         if (next === undefined) {
             return;
         }
-        this.structureEditor.mergeQualifyGroups(group, next);
-        this.nameService.resetStructure();
-        this.roundNumberChanged.emit(this.parentRound.getNumber());
+        this.resetAlert();
+        try {
+            this.structureEditor.mergeQualifyGroups(group, next);
+            this.nameService.resetStructure();
+            this.roundNumberChanged.emit(this.parentRound.getNumber());
+        } catch (e) {
+            this.setAlert('danger', e.message);
+        }
     }
 
     /**
@@ -135,6 +170,14 @@ export class StructureQualifyComponent {
     getQualifyGroupBtnClass(target: QualifyTarget): string {
         const editable = this.areSomeQualifyGroupsEditable(target);
         return 'btn-' + (this.targetCollapsed[target] ? 'outline-' : '') + (editable ? 'primary' : 'secondary');
+    }
+
+    getRemoveQualifierBtnClass(target: QualifyTarget): string {
+        return this.canRemoveQualifier(target) ? 'primary' : 'secondary';
+    }
+
+    getAddQualifierBtnClass(target: QualifyTarget): string {
+        return this.canAddQualifier(target) ? 'primary' : 'secondary';
     }
 
     resetAlert(): void {

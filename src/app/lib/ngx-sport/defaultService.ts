@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AgainstSportVariant, AllInOneGameSportVariant, CreationStrategy, GameMode, JsonPlanningConfig, JsonSport, PouleStructure, RankingRuleSet, SelfReferee, SingleSportVariant, Sport, VoetbalRange } from "ngx-sport";
+import { AgainstSportVariant, AllInOneGameSportVariant, CompetitionSport, CompetitionSportService, CreationStrategy, GameMode, JsonPlanningConfig, JsonSport, PouleStructure, RankingRuleSet, SelfReferee, SingleSportVariant, Sport, VoetbalRange } from "ngx-sport";
 import { SportWithFields } from "../../admin/sport/createSportWithFields.component";
 
 @Injectable({
@@ -12,7 +12,7 @@ export class DefaultService {
     static readonly MinutesAfter: number = 5;
     static readonly RankingRuleSet: RankingRuleSet = RankingRuleSet.Against;
 
-    constructor() {
+    constructor(private competitionService: CompetitionSportService) {
     }
 
     getJsonSport(name: string): JsonSport {
@@ -53,8 +53,12 @@ export class DefaultService {
         }
     }
 
-    getPouleStructure(sportsWithFields: SportWithFields[]): PouleStructure {
-        return new PouleStructure(5);
+    getPouleStructure(sportVariants: (SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant)[]): PouleStructure {
+        let nrOfPlaces = this.competitionService.getMinNrOfPlacesPerPoule(sportVariants);
+        if (nrOfPlaces < 5) {
+            nrOfPlaces = 5;
+        }
+        return new PouleStructure(nrOfPlaces);
     }
 
     /**
@@ -84,11 +88,11 @@ export class DefaultService {
     //     return sports.some((sport: Sport) => sport.getGameMode() === gameMode);
     // }
 
-    getGameAmountConfigValidations(): GameAmountConfigValidations {
-        return {
-            nrOfH2HRange: { min: 1, max: 4 },
-            gameAmountRange: { min: 1, max: 50 }
+    getGameAmountRange(sportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant | GameMode): VoetbalRange {
+        if (sportVariant instanceof AgainstSportVariant || sportVariant === GameMode.Against) {
+            return { min: 1, max: 4 };
         }
+        return { min: 1, max: 50 };
     };
 
     getNrOfPoules(nrOfPlaces: number): number {

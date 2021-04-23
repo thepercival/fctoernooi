@@ -1,12 +1,13 @@
 <div *ngIf="round" [ngClass]="{ 'pl-1': !first, 'pr-1': round.isRoot() }">
   <div class="card border-secondary round mb-2 {{cssService.getQualifyRound(round)}}"
-    *ngIf="round.isRoot() || round.getNrOfPlaces() > 2">
+    *ngIf="round.isRoot() || round.getNrOfPlaces() > MinPlacesPerPoule">
     <div class="card-header px-1">
       <span class="lead" [innerHTML]="nameService.getRoundName( round ) | keepHtml"></span>
       &nbsp;
     </div>
     <div class="card-body px-1">
-      <app-tournament-structureround-arrange *ngIf="editable" [round]="round" (arrangeAction)="arrangeAction($event)">
+      <app-tournament-structureround-arrange *ngIf="editable" [round]="round" [structureEditor]="structureEditor"
+        (arrangeAction)="arrangeAction($event)">
       </app-tournament-structureround-arrange>
       <p *ngIf="editable && round.hasBegun()">
         <ngb-alert type="warning">de ronde heeft al gespeelde wedstrijden, je kunt niet meer
@@ -31,24 +32,25 @@
     </div>
   </div>
   <app-tournament-structurequalify *ngIf="editable" [parentRound]="round" [nameService]="nameService"
-    (roundNumberChanged)="roundNumberChanged.emit($event)">
+    [structureEditor]="structureEditor" (roundNumberChanged)="roundNumberChanged.emit($event)">
   </app-tournament-structurequalify>
 
   <div class="d-flex align-items-stretch text-center">
     <app-tournament-structureround *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed(); first as first"
       class="align-self-stretch flex-wrap mb-2" [round]="qualifyGroup.getChildRound()"
-      [editable]="editable && !round.hasBegun()" [favorites]="favorites" [first]="first" [nameService]="nameService"
+      [editable]="editable && !round.hasBegun()" [favorites]="favorites" [first]="first"
+      [structureEditor]="structureEditor" [nameService]="nameService"
       (roundNumberChanged)="roundNumberChanged.emit($event)">
     </app-tournament-structureround>
   </div>
-  <div *ngIf="!round.isRoot() && round.getNrOfPlaces() === 2">
+  <div *ngIf="!round.isRoot() && round.getNrOfPlaces() === MinPlacesPerPoule">
     <div class="card round {{cssService.getQualifyRound(round)}}">
       <div class="card-header px-1">
         <span [innerHTML]="nameService.getRoundName(round) | keepHtml"></span>
       </div>
     </div>
   </div>
-  <div *ngIf="!round.isRoot() && round.getNrOfPlaces() < 2">
+  <div *ngIf="!round.isRoot() && round.getNrOfPlaces() < MinPlacesPerPoule">
     <ngb-alert type="warning">fout: los op door bovenstaande ronde opnieuw aan te maken
     </ngb-alert>
   </div>

@@ -1,5 +1,5 @@
 <div class="d-flex flex-wrap justify-content-around mb-2"
-  *ngIf="parentRound.getNrOfPlaces() > 2 && !parentRound.hasBegun()">
+  *ngIf="parentRound.getNrOfPlaces() > structureEditor.getMinPlacesPerPouleSmall() && !parentRound.hasBegun()">
   <ng-container *ngFor="let target of getTargets()" [ngTemplateOutlet]="modifyToPlaces"
     [ngTemplateOutletContext]="{target:target}">
   </ng-container>
@@ -21,12 +21,12 @@
       </ng-container>
     </div>
     <div class="btn-group" role="group" aria-label="aantal">
-      <button [disabled]="!canRemoveQualifier(target)" type="button" class="btn btn-outline-primary"
-        (click)="removeQualifier(target)">
+      <button [disabled]="!canRemoveQualifier(target)" type="button"
+        class="btn btn-outline-{{getRemoveQualifierBtnClass(target)}}" (click)="removeQualifier(target)">
         <fa-icon [icon]="['fas', 'minus']"></fa-icon>
       </button>
-      <button [disabled]="!canAddQualifier(target)" type="button" class="btn btn-outline-primary"
-        (click)="addQualifier(target)">
+      <button [disabled]="!canAddQualifier(target)" type="button"
+        class="btn btn-outline-{{getAddQualifierBtnClass(target)}}" (click)="addQualifier(target)">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
     </div>

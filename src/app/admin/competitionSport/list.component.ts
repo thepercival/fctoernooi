@@ -23,7 +23,7 @@ import { forkJoin, Observable } from 'rxjs';
 })
 export class CompetitionSportListComponent extends TournamentComponent implements OnInit {
   competitionSports: CompetitionSport[] = [];
-  showSelectSports = false;
+  showCreateSportWithFields = false;
   hasBegun!: boolean;
 
   validations: any = {
@@ -69,27 +69,28 @@ export class CompetitionSportListComponent extends TournamentComponent implement
     });
   }
 
-  selectedSports(sports: SportWithFields[]) {
+  add(sportWithFields: SportWithFields) {
     // const sportsName = this.sports.map((sport: Sport) => sport.getName()).join(',');
     // this.form.controls.sportsName.setValue(sportsName);
-    this.showSelectSports = false;
-    if (sports.length === 0) {
-      return;
-    }
+    this.showCreateSportWithFields = false;
 
     this.setAlert('info', 'de sport(en) worden toegevoegd');
     this.processing = true;
 
-    const reposUpdates: Observable<CompetitionSport>[] = sports.map((sportWithFields: SportWithFields) => {
-      return this.competitionSportRepository.createObject(sportWithFields.variant.getSport(), this.tournament, this.structure);
-    });
-    forkJoin(reposUpdates).subscribe(results => {
-      this.processing = false;
-    },
-      e => {
-        this.alert = { type: 'danger', message: 'de wedstrijd-aantallen zijn niet opgeslagen: ' + e };
-        this.processing = false;
-      });
+    const json = this.competitionSportRepository.sportWithFieldsToJson(sportWithFields, true);
+    this.competitionSportRepository.createObject(json, this.tournament, this.structure)
+      .subscribe(
+        /* happy path */(competitionSport: CompetitionSport) => {
+          this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
+            /* happy path */ roundNumberOut => {
+              this.setAlert('success', 'de sport is verwijderd');
+            },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+            /* onComplete */() => this.processing = false
+          );
+        },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+      );
   }
 
   // addSport() {
@@ -112,7 +113,7 @@ export class CompetitionSportListComponent extends TournamentComponent implement
 
     this.competitionSportRepository.removeObject(competitionSport, this.tournament, this.structure)
       .subscribe(
-        /* happy path */ refereeRes => {
+        /* happy path */() => {
           this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
             /* happy path */ roundNumberOut => {
               this.setAlert('success', 'de sport is verwijderd');
