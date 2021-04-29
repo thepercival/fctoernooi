@@ -66,7 +66,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     const minNrOfPlacesPerPoule = this.competitionSportService.getMinNrOfPlacesPerPoule(sportVariants);
     const maxNrOfPlacesPerPouleSmall = 16;
     const maxNrOfPlacesPerPouleLarge = 10;
-    const minNrOfPlacesPerRound = this.competitionSportService.getMinNrOfPlacesPerRound(sportVariants);
+    const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
     const maxNrOfPlacesPerRoundSmall = 40;
     const maxNrOfPlacesPerRoundLarge = 128;
     return new PlaceRanges(

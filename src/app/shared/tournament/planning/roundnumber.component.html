@@ -29,10 +29,8 @@
         <col *ngIf="needsRanking">
         <col *ngIf="!needsRanking">
         <col *ngIf="planningConfig.getEnableTime()">
-        <col>
-        <col>
-        <col>
-        <col>
+        <col span="3" *ngIf="hasOnlyGameModeAgainst">
+        <col *ngIf="!hasOnlyGameModeAgainst">
         <col *ngIf="hasReferees" class="d-none d-sm-table-cell text-right">
       </colgroup>
       <thead>
@@ -69,11 +67,9 @@
             </button>
             <app-tournament-icon *ngIf="!userIsAdmin" title="veld" name="soccer-field"></app-tournament-icon>
           </th>
-          <!-- TODOSPORTS -->
-          <!-- <th *ngIf="planningConfig.getGameMode() === GameModeAgainst" class="text-right">thuis</th>
-          <th *ngIf="planningConfig.getGameMode() === GameModeTogether">deelnemer(s)</th> -->
-          <!-- score -->
-          <!-- <th class="text-center">
+          <!-- gamePlaces & score -->
+          <th *ngIf="hasOnlyGameModeAgainst" class="text-right">thuis</th>
+          <th *ngIf="hasOnlyGameModeAgainst" class="text-center">
             <button *ngIf="userIsAdmin" title="wijzig score-regels"
               class="btn btn-sm btn-outline-{{hasBegun ? 'warning' : 'secondary'}}"
               (click)="linkToCompetitionSport(SportConfigTabScore)">
@@ -84,7 +80,8 @@
               <app-tournament-icon name="scoreboard"></app-tournament-icon>
             </button>
           </th>
-          <th *ngIf="planningConfig.getGameMode() === GameModeAgainst">uit</th> -->
+          <th *ngIf="hasOnlyGameModeAgainst">uit</th>
+          <th *ngIf="!hasOnlyGameModeAgainst">deelnemer(s)</th>
           <!-- referee -->
           <th *ngIf="hasReferees" class="d-none d-sm-table-cell text-right" title="scheidsrechter">
             <button *ngIf="userIsAdmin && !planningConfig.getSelfReferee()" title="wijzig scheidsrechters"
@@ -136,14 +133,16 @@
             </td>
             <!-- field -->
             <td class="text-center">{{gmData.game.getField()?.getName()}}</td>
-            <!-- gamePlaces -->
-            <!-- TODOSPORTS -->
-            <!-- <ng-container *ngIf="planningConfig.getGameMode() === GameModeAgainst">
-              <ng-container *ngTemplateOutlet="againstGamePlaces;context:{$implicit: gmData}"></ng-container>
+            <!-- gamePlaces & score -->
+            <ng-container *ngIf="hasOnlyGameModeAgainst">
+              <ng-container *ngTemplateOutlet="againstGamePlacesCell;context:{$implicit: gmData}"></ng-container>
             </ng-container>
-            <ng-container *ngIf="planningConfig.getGameMode() === GameModeTogether">
+            <ng-container *ngIf="!hasOnlyGameModeAgainst && isAgainst(gmData.game)">
+              <ng-container *ngTemplateOutlet="againstGamePlacesDiv;context:{$implicit: gmData}"></ng-container>
+            </ng-container>
+            <ng-container *ngIf="!hasOnlyGameModeAgainst && !isAgainst(gmData.game)">
               <ng-container *ngTemplateOutlet="togetherGamePlaces;context:{$implicit: gmData}"></ng-container>
-            </ng-container> -->
+            </ng-container>
             <!-- referee -->
             <td *ngIf="hasReferees" class="d-none d-sm-table-cell text-right"
               [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
@@ -153,19 +152,23 @@
       </tbody>
     </table>
 
-    <div class="btn-group" role="group" class="text-center" aria-label="aantal">
-      <button type="button" class="btn btn-danger" (click)="removeGames()">
-        <fa-icon [icon]="['fas', 'minus']"></fa-icon>
-      </button>
-      <button type="button" class="btn btn-outline-secondary">wedstrijden</button>
-      <button type="button" class="btn btn-primary" (click)="addGames()">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-      </button>
-    </div>
+    <!-- <div *ngIf="isCreationStrategyIncremental()" class="d-flex justify-content-center">
+      <ul class="list-group list-group-horizontal">
+        <button [disabled]="!canDecrementNrOfGameRounds()" type="button" class="btn btn-danger"
+          (click)="decrementNrOfGameRounds()">
+          <fa-icon [icon]="['fas', 'minus']"></fa-icon>
+        </button>
+        <li class="list-group-item py-2">speelronde</li>
+        <button [disabled]="!canIncrementNrOfGameRounds()" type="button" class="btn btn-primary"
+          (click)="incrementNrOfGameRounds()">
+          <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+        </button>
+      </ul>
+    </div> -->
   </div>
 </div>
 
-<ng-template #againstGamePlaces let-gmData>
+<ng-template #againstGamePlacesCell let-gmData>
   <!-- homePlaces -->
   <td class="place text-right " [ngClass]="{'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, Home) }">
     <span>{{nameService.getPlacesFromName(gmData.game.getHomePlaces(),true,true)}}</span>
@@ -175,12 +178,10 @@
     <button *ngIf="gmData.canChangeResult" class="btn btn-sm btn-outline-primary" (click)="linkToGameEdit(gmData.game)">
       <fa-icon *ngIf="!isPlayed(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
       <span *ngIf="isPlayed(gmData.game)">{{getAgainstScore(gmData.game)}}</span>
-      <span *ngIf="isPlayed(gmData.game)" class="font-weight-bold">{{getScoreFinalPhase(gmData.game)}}</span>
     </button>
     <!-- no auth -->
     <ng-template *ngIf="!gmData.canChangeResult">
       <span class="d-none d-sm-inline">{{getAgainstScore(gmData.game)}}</span>
-      <span class="d-none d-sm-inline font-weight-bold">{{getScoreFinalPhase(gmData.game)}}</span>
       <button *ngIf="hasReferees && !isPlayed(gmData.game)" class="btn btn-outline-info btn-sm d-sm-none"
         placement="top" [ngbPopover]="nameService.getRefereeName(gmData.game)">
         <span [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
@@ -189,8 +190,6 @@
       </button>
       <span *ngIf="!(hasReferees && !isPlayed(gmData.game))"
         class="d-sm-none font-weight-bold">{{getAgainstScore(gmData.game)}}</span>
-      <span *ngIf="!(hasReferees && !isPlayed(gmData.game))"
-        class="d-sm-none">{{getScoreFinalPhase(gmData.game)}}</span>
     </ng-template>
   </td>
   <!-- awayPlaces -->
@@ -199,50 +198,51 @@
   </td>
 </ng-template>
 
+<ng-template #againstGamePlacesDiv let-gmData>
+  <table>
+    <tr>
+      <ng-container>
+        <ng-container *ngTemplateOutlet="againstGamePlacesCell;context:{$implicit: gmData}"></ng-container>
+      </ng-container>
+    </tr>
+  </table>>
+</ng-template>
+
 <ng-template #togetherGamePlaces let-gmData>
-  <!-- places -->
-  <td class="place" [ngClass]="{'favitem': favorites?.hasTogetherGameCompetitor(gmData.game) }">
-    <span>{{nameService.getPlacesFromName(gmData.game.getTogetherPlaces(),true,true)}}</span>
-  </td>
-  <!-- score 1 place -->
-  <td *ngIf="gmData.game.getPlaces().length === 1" nowrap class="text-center">
-    <button *ngIf="gmData.canChangeResult" class="btn btn-sm btn-outline-primary" (click)="linkToGameEdit(gmData.game)">
-      <fa-icon *ngIf="!isPlayed(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
-      <span *ngIf="isPlayed(gmData.game)">{{getTogetherSingleScore(gmData.game)}}</span>
-      <span *ngIf="isPlayed(gmData.game)" class="font-weight-bold">{{getScoreFinalPhase(gmData.game)}}</span>
-    </button>
-    <!-- no auth -->
-    <ng-template *ngIf="!gmData.canChangeResult">
-      <span class="d-none d-sm-inline">{{getTogetherSingleScore(gmData.game)}}</span>
-      <span class="d-none d-sm-inline font-weight-bold">{{getScoreFinalPhase(gmData.game)}}</span>
-      <button *ngIf="hasReferees && !isPlayed(gmData.game)" class="btn btn-outline-info btn-sm d-sm-none"
-        placement="top" [ngbPopover]="nameService.getRefereeName(gmData.game)">
-        <span [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
-          <app-tournament-icon name="referee"></app-tournament-icon>
-        </span>
-      </button>
-      <span *ngIf="!(hasReferees && !isPlayed(gmData.game))"
-        class="d-sm-none font-weight-bold">{{getTogetherSingleScore(gmData.game)}}</span>
-      <span *ngIf="!(hasReferees && !isPlayed(gmData.game))"
-        class="d-sm-none">{{getScoreFinalPhase(gmData.game)}}</span>
-    </ng-template>
-  </td>
-  <!-- score multiple place -->
-  <td *ngIf="gmData.game.getPlaces().length !== 1" nowrap class="text-center">
-    <button *ngIf="gmData.canChangeResult" class="btn btn-sm btn-outline-{{getTogetherScoreButtonClass(gmData.game)}}"
-      (click)="linkToGameEdit(gmData.game)">
-      <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
-    </button>
-    <!-- no auth -->
-    <button *ngIf="!gmData.canChangeResult && hasReferees && !isPlayed(gmData.game)"
-      class="btn btn-outline-info btn-sm d-sm-none" placement="top"
-      [ngbPopover]="nameService.getRefereeName(gmData.game)">
+  <!-- <button *ngIf="!gmData.canChangeResult && hasReferees && !isPlayed(gmData.game)"
+      class="btn btn-outline-info btn-sm d-sm-none" placement="top" [ngbPopover]="nameService.getRefereeName(gmData.game)">
       <span [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
         <app-tournament-icon name="referee"></app-tournament-icon>
       </span>
-    </button>
+    </button> -->
+
+  <td class="place pb-0">
+    <!-- CAN NOT CHANGE -->
+    <ng-template [ngIf]="!gmData.canChangeResult">
+      <ul *ngFor="let gamePlace of gmData.game.getTogetherPlaces()" class="list-group list-group-horizontal mb-2">
+        <li [ngClass]="{'favitem': favorites?.hasTogetherGameCompetitor(gmData.game) }" class="list-group-item">
+          {{nameService.getPlaceFromName(gamePlace.getPlace(),true,true)}}
+        </li>
+        <li *ngIf="isPlayed(gmData.game)" class="list-group-item">
+          {{getTogetherScore(gamePlace)}}
+        </li>
+      </ul>
+    </ng-template>
+    <!-- CAN CHANGE -->
+    <ng-template [ngIf]="gmData.canChangeResult">
+      <div *ngFor="let gamePlace of gmData.game.getTogetherPlaces()" class="btn-group mb-2" role="group">
+        <div class="list-group-item" [ngClass]="{'favitem': favorites?.hasTogetherGameCompetitor(gmData.game) }">
+          {{nameService.getPlaceFromName(gamePlace.getPlace(),true,true)}}</div>
+        <button class="btn btn-sm btn-outline-{{getTogetherScoreButtonClass(gamePlace)}}"
+          (click)="linkToGameEdit(gmData.game)">
+          <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+          <span *ngIf="isPlayed(gmData.game)">{{getTogetherScore(gamePlace)}}</span>
+        </button>
+      </div>
+    </ng-template>
   </td>
 </ng-template>
+
 
 <ng-template #planningInfo let-modal>
   <ul class="list-group">

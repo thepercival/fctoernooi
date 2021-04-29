@@ -86,17 +86,17 @@
     </div>
   </div>
 
-  <div *ngIf="form.value['gameMode'] !== Against" class="form-group row">
+  <!-- <div *ngIf="form.value['gameMode'] !== Against && getCreationStrategy(sport) === Static" class="form-group row">
     <label for="gameAmount" class="col-6 col-form-label">
-      aantal wedstrijden
+      aantal speelronden
     </label>
     <div class="col-6">
       <input type="number" class="form-control"
         [ngClass]="{ 'is-invalid': form.controls.gameAmount.invalid, 'is-valid': form.controls.gameAmount.valid}"
         formControlName="nrOfFields" [min]="gameAmountRange.min" [max]="gameAmountRange.max">
     </div>
-  </div>
-  <div *ngIf="form.value['gameMode'] === Single" class="form-group row">
+  </div> -->
+  <div *ngIf="form.value['gameMode'] === Single && getCreationStrategy(sport) === Static" class="form-group row">
     <label for="nrOfGamePlaces" class="col-6 col-form-label">
       aantal deelnemers per wedstrijd (planning)
     </label>

@@ -16,10 +16,13 @@ import {
   Period,
   AgainstGame,
   SelfReferee,
-  GameMode,
   TogetherGame,
   CompetitionSport,
-  AgainstSide
+  AgainstSide,
+  AgainstSportVariant,
+  TogetherGamePlace,
+  GameCreationStrategy,
+  GameCreationStrategyCalculator,
 } from 'ngx-sport';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -68,6 +71,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   private competitorMap!: CompetitorMap;
   public nameService!: NameService;
   public planningConfig!: PlanningConfig;
+  public hasOnlyGameModeAgainst: boolean = true;
 
   constructor(
     private router: Router,
@@ -98,6 +102,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     this.hasBegun = this.roundNumber.hasBegun();
     this.tournamentHasBegun = this.roundNumber.getFirst().hasBegun();
     this.reloadGameData();
+    this.hasOnlyGameModeAgainst = this.getHasOnlyGameModeAgainst();
   }
 
   ngAfterViewInit() {
@@ -119,8 +124,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     this.sameDay = this.gameDatas.length > 1 ? this.isSameDay(this.gameDatas[0], this.gameDatas[this.gameDatas.length - 1]) : true;
   }
 
-  // get GameModeAgainst(): GameMode { return GameMode.Against; }
-  // get GameModeTogether(): GameMode { return GameMode.Together; }
   get Home(): AgainstSide { return AgainstSide.Home; }
   get Away(): AgainstSide { return AgainstSide.Away; }
   get SportConfigTabFields(): number { return CompetitionSportTab.Fields; }
@@ -156,6 +159,16 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     this.reloadGameData();
   }
 
+  private getHasOnlyGameModeAgainst(): boolean {
+    return this.tournament.getCompetition().getSports().every((competitionSport: CompetitionSport): boolean => {
+      return competitionSport.getVariant() instanceof AgainstSportVariant;
+    });
+  }
+
+  isAgainst(game: AgainstGame | TogetherGame): boolean {
+    return game instanceof AgainstGame;
+  }
+
   private getPouleDataMap(): PouleDataMap {
     const pouleDatas = new PouleDataMap();
     this.roundNumber.getPoules().forEach(poule => {
@@ -180,23 +193,17 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     return finalScore.getHome() + sScore + finalScore.getAway();
   }
 
-  getTogetherSingleScore(game: TogetherGame): string {
+  getTogetherScore(gamePlace: TogetherGamePlace): string {
     const sScore = ' - ';
-    if (game.getState() !== State.Finished) {
+    if (gamePlace.getGame().getState() !== State.Finished) {
       return sScore;
     }
-    const finalScore = this.scoreConfigService.getFinalTogetherScore(game.getTogetherPlaces()[0]);
+    const finalScore = this.scoreConfigService.getFinalTogetherScore(gamePlace);
     return finalScore === undefined ? sScore : '' + finalScore;
   }
 
-  getScoreFinalPhase(game: TogetherGame | AgainstGame): string {
-    // TODOSPORT
-    // return game.getFinalPhase() === Game.Phase_ExtraTime ? '*' : '';
-    return '';
-  }
-
-  getTogetherScoreButtonClass(game: Game): string {
-    return game.getState() === State.Finished ? 'success' : 'primary';
+  getTogetherScoreButtonClass(gamePlace: TogetherGamePlace): string {
+    return gamePlace.getGame().getState() === State.Finished ? 'success' : 'primary';
   }
 
   isPlayed(game: Game): boolean {
@@ -300,11 +307,12 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     return (type === 'success');
   }
 
-  getGameQualificationDescription(game: Game): string {
-    // TODOSPORT
-    // return this.nameService.getPlacesFromName(game.getPlaces(AgainstGame.Home), false, true)
-    //   + ' - ' + this.nameService.getPlacesFromName(game.getPlaces(AgainstGame.Away), false, true);
-    return '';
+  getGameQualificationDescription(game: AgainstGame | TogetherGame): string {
+    if (game instanceof AgainstGame) {
+      return this.nameService.getPlacesFromName(game.getSidePlaces(AgainstSide.Home), false, true)
+        + ' - ' + this.nameService.getPlacesFromName(game.getSidePlaces(AgainstSide.Away), false, true);
+    }
+    return this.nameService.getPlacesFromName(game.getPlaces(), false, true)
   }
 
   openModalPouleRank(poule: Poule) {
@@ -345,14 +353,28 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     });
     return scoreConfig;
   }
-
-  addGames() {
-
-  }
-
-  removeGames() {
-
-  }
+  /*
+    isCreationStrategyIncremental(): boolean {
+      const calculator = new GameCreationStrategyCalculator();
+      return calculator.calculate(this.roundNumber.getCompetition().getSportVariants()) !== GameCreationStrategy.Static;
+    }
+  
+    canDecrementNrOfGameRounds(): boolean {
+      // when last gameroundnr is not started and is greater than 1
+      return true;
+    }
+  
+    canIncrementNrOfGameRounds(): boolean {
+      return !(this.roundNumber.hasNext() && this.roundNumber.getState() === State.Finished);
+    }
+  
+    decrementNrOfGameRounds() {
+      console.log('decrementNrOfGameRounds');
+    }
+  
+    incrementNrOfGameRounds() {
+      console.log('incrementNrOfGameRounds');
+    }*/
 }
 
 interface GameData {

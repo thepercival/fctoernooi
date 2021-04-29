@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AgainstSportVariant, AllInOneGameSportVariant, CompetitionSport, CompetitionSportService, CreationStrategy, GameMode, JsonPlanningConfig, JsonSport, PouleStructure, RankingRuleSet, SelfReferee, SingleSportVariant, Sport, VoetbalRange } from "ngx-sport";
-import { SportWithFields } from "../../admin/sport/createSportWithFields.component";
+import { AgainstSportVariant, AllInOneGameSportVariant, CompetitionSportService, GameMode, JsonPlanningConfig, JsonSport, PouleStructure, RankingRuleSet, SelfReferee, SingleSportVariant, Sport, VoetbalRange } from "ngx-sport";
 
 @Injectable({
     providedIn: 'root'
@@ -32,7 +31,8 @@ export class DefaultService {
                 sport,
                 sport.getDefaultNrOfSidePlaces(),
                 sport.getDefaultNrOfSidePlaces(),
-                1);
+                sport.getDefaultNrOfSidePlaces() > 1 ? 0 : 1,
+                sport.getDefaultNrOfSidePlaces() > 1 ? 1 : 0);
         } else if (sport.getDefaultGameMode() === GameMode.Single) {
             return new SingleSportVariant(sport, 1, 1);
         }
@@ -42,7 +42,6 @@ export class DefaultService {
     getJsonPlanningConfig(sportVariants: (SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant)[]): JsonPlanningConfig {
         return {
             id: 0,
-            creationStrategy: this.getGameCreationStrategy(sportVariants),
             extension: false,
             enableTime: true,
             minutesPerGame: DefaultService.MinutesPerGame,
@@ -60,33 +59,6 @@ export class DefaultService {
         }
         return new PouleStructure(nrOfPlaces);
     }
-
-    /**
-     * Bij aanmaken toernooi, moet je bij sport.getGameMode() === Against, 
-     * kunnen kiezen voor een laddertoernooi. Dit houdt dan in 
-     * CreationStrategy.incrementalRanking
-     * 
-     * @param sports 
-     */
-    protected getGameCreationStrategy(sportVariants: (SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant)[]): CreationStrategy {
-        // als er gemixed
-        // // muliply
-        if (sportVariants.length > 1) {
-            return CreationStrategy.StaticManual;
-        }
-        const sportVariant = sportVariants[0];
-        if (sportVariant instanceof SingleSportVariant) {
-            return CreationStrategy.StaticManual;
-        }
-        if (sportVariant instanceof AgainstSportVariant && sportVariant.getNrOfGamePlaces() > 2) {
-            return CreationStrategy.IncrementalRandom;
-        }
-        return CreationStrategy.StaticPouleSize
-    }
-
-    // protected hasGameMode(sports: Sport[], gameMode: GameMode): boolean {
-    //     return sports.some((sport: Sport) => sport.getGameMode() === gameMode);
-    // }
 
     getGameAmountRange(sportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant | GameMode): VoetbalRange {
         if (sportVariant instanceof AgainstSportVariant || sportVariant === GameMode.Against) {

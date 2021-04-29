@@ -15,11 +15,12 @@ import {
     JsonGameAmountConfig,
     Sport,
     GameAmountConfig,
-    CreationStrategy,
     SingleSportVariant,
     AgainstGame,
     AgainstSportVariant,
     AllInOneGameSportVariant,
+    GameCreationStrategyCalculator,
+    GameCreationStrategy
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -49,6 +50,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     form: FormGroup;
     private pouleStructure!: PouleStructure;
     public nameService!: NameService;
+    public gameAmountLabel!: string;
     gameAmountConfigControls: GameAmountConfigControl[] = [];
     // gameModes: GameMode[] = [GameMode.Against, GameMode.Together];
     validations: PlanningConfigValidations = { minMinutes: 1, maxMinutes: 10080 };
@@ -130,22 +132,28 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             ));
         });
         this.setGameAmountControls(startRoundNumber);
+        this.gameAmountLabel = this.getGameAmountLabel(startRoundNumber.getCompetition().getSportVariants());
     }
 
-    /*
-     Hoe moet je de CreationStrategy kunnen wijzigen
-     Voetbal: CreationStrategy.staticPouleSize wanneer nog niet begonnen kun je onderlinge duels aanpassen
-     Wilerennen: CreationStrategy.staticManual wanneer nog niet begonnen kun je aantal wedstrijden aanpassen
-     Klaverjassen: CreationStrategy.incrementalRandom na elke speelronde een speelronde kunnen toevoegen
-     Badminton: CreationStrategy.incrementalRanking na elke afgeronde speelronde een speelronde kunnen toevoegen
-
-     creationStrategy kies je bij het aanmaken van het toernooi!
-     // dus bij sommige sporten moet je kunnen kiezen voor een laddertoernooi.
-     */
-
     isGameAmountEditable(): boolean {
-        const strategy = this.startRoundNumber.getValidPlanningConfig().getCreationStrategy();
-        return strategy === CreationStrategy.StaticPouleSize || strategy === CreationStrategy.StaticManual;
+        const calculator = new GameCreationStrategyCalculator();
+        const strategy = calculator.calculate(this.competition.getSportVariants());
+        return strategy === GameCreationStrategy.Static;
+    }
+
+
+    getGameAmountLabel(sportVariants: (SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant)[]): string {
+        if (sportVariants.length > 1) {
+            return 'aantal wedstrijden';
+        }
+        const sportVariant = sportVariants[0];
+        if (sportVariant instanceof AgainstSportVariant) {
+            if (sportVariant.getNrOfGamePlaces() > 2) {
+                return 'aantal wedstrijden per deelnemer';
+            }
+            return 'aantal onderlinge duels';
+        }
+        return 'aantal speelronden';
     }
 
 
@@ -159,8 +167,10 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     setGameAmountControls(startRoundNumber: RoundNumber) {
         startRoundNumber.getValidGameAmountConfigs().forEach((gameAmountConfig: GameAmountConfig) => {
+            const range = this.defaultService.getGameAmountRange(gameAmountConfig.getCompetitionSport().getVariant());
             this.gameAmountConfigControls.push({
                 json: this.gameAmountConfigMapper.toJson(gameAmountConfig),
+                range: range,
                 control: this.form.controls['' + gameAmountConfig.getId()]
             });
         });
@@ -240,7 +250,6 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     private formToJson(): JsonPlanningConfig {
         return {
             id: 0,
-            creationStrategy: this.startRoundNumber.getValidPlanningConfig().getCreationStrategy(),
             extension: this.form.controls.extension.value,
             enableTime: this.form.controls.enableTime.value,
             minutesPerGame: this.form.controls.minutesPerGame.value,
@@ -439,11 +448,6 @@ class PlanningActionCalculator {
         });
     }
 
-    isGameAmountEditable(): boolean {
-        const strategy = this.roundNumber.getValidPlanningConfig().getCreationStrategy();
-        return strategy === CreationStrategy.StaticPouleSize || strategy === CreationStrategy.StaticManual;
-    }
-
     private needsRescheduling(json: JsonPlanningConfig): boolean {
         const config = this.roundNumber.getValidPlanningConfig();
         return config.getExtension() !== json.extension
@@ -453,6 +457,12 @@ class PlanningActionCalculator {
             || config.getMinutesBetweenGames() !== json.minutesBetweenGames
             || config.getMinutesAfter() !== json.minutesAfter
             ;
+    }
+
+    isGameAmountEditable(): boolean {
+        const calculator = new GameCreationStrategyCalculator();
+        const strategy = calculator.calculate(this.roundNumber.getCompetition().getSportVariants());
+        return strategy === GameCreationStrategy.Static;
     }
 
 }

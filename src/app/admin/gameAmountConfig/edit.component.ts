@@ -1,17 +1,16 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { Component, Input, OnInit, TemplateRef } from '@angular/core';
+import { AbstractControl, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { GameMode, JsonGameAmountConfig, VoetbalRange } from 'ngx-sport';
+import { JsonGameAmountConfig, VoetbalRange } from 'ngx-sport';
 
 @Component({
   selector: 'app-tournament-gameamountconfigs-edit',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.css']
 })
-export class GameAmountConfigEditComponent implements OnInit, OnChanges {
-  @Input() gameMode!: GameMode;
+export class GameAmountConfigEditComponent implements OnInit {
   @Input() gameAmountControls!: GameAmountConfigControl[];
-  @Input() gameAmountRange!: VoetbalRange;
+  @Input() label!: string;
   @Input() form!: FormGroup;
 
   range: number[] = [];
@@ -23,37 +22,23 @@ export class GameAmountConfigEditComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.gameAmountRange !== undefined && changes.gameAmountRange.currentValue !== changes.gameAmountRange.previousValue) {
-      this.setRange();
-      this.checkGameAmountControls();
-    }
-  }
-
-  checkGameAmountControls() {
     this.gameAmountControls.forEach((gameAmountControl: GameAmountConfigControl) => {
       if (gameAmountControl.control === undefined) {
         return;
       }
       const value = gameAmountControl.control.value;
-      if (value === undefined || value > this.gameAmountRange.max || value < this.gameAmountRange.min) {
-        gameAmountControl.control.setValue(this.gameAmountRange.min);
+      if (value === undefined || value > gameAmountControl.range.max || value < gameAmountControl.range.min) {
+        gameAmountControl.control.setValue(gameAmountControl.range.min);
       }
     });
   }
 
-  private setRange() {
-    this.range = [];
-    for (let i = this.gameAmountRange.min; i <= this.gameAmountRange.max; i++) {
-      this.range.push(i);
+  getRange(range: VoetbalRange): number[] {
+    const rangeAsArray = [];
+    for (let i = range.min; i <= range.max; i++) {
+      rangeAsArray.push(i);
     }
-  }
-
-  getGamesDescription(): string {
-    return this.gameMode === GameMode.Against ? 'aantal onderlinge duels' : 'aantal wedstrijden';
+    return rangeAsArray;
   }
 
   openModal(modalContent: TemplateRef<any>) {
@@ -66,5 +51,6 @@ export class GameAmountConfigEditComponent implements OnInit, OnChanges {
 
 export interface GameAmountConfigControl {
   json: JsonGameAmountConfig;
+  range: VoetbalRange;
   control: AbstractControl;
 }

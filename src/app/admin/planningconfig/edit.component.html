@@ -24,7 +24,7 @@
                         </select>
                     </div>
                 </div> -->
-                <app-tournament-gameamountconfigs-edit *ngIf="isGameAmountEditable()"
+                <app-tournament-gameamountconfigs-edit *ngIf="isGameAmountEditable()" [label]="gameAmountLabel"
                     [gameAmountControls]="gameAmountConfigControls" [form]="form">
                 </app-tournament-gameamountconfigs-edit>
                 <div class="form-group row">

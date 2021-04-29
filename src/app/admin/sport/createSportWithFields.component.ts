@@ -1,14 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { AgainstSportVariant, AllInOneGameSportVariant, GameMode, NameService, SingleSportVariant, Sport, VoetbalRange } from 'ngx-sport';
+import { AgainstSportVariant, AllInOneGameSportVariant, GameCreationStrategy, GameCreationStrategyCalculator, GameMode, NameService, SingleSportVariant, Sport, VoetbalRange } from 'ngx-sport';
 
 import { IAlert } from '../../shared/common/alert';
 import { CSSService } from '../../shared/common/cssservice';
 import { TranslateService } from '../../lib/translate';
-import { SportRepository } from '../../lib/ngx-sport/sport/repository';
 import { GameModeInfoModalComponent } from '../../shared/tournament/gameMode/infomodal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DefaultService, GameAmountConfigValidations } from '../../lib/ngx-sport/defaultService';
+import { DefaultService } from '../../lib/ngx-sport/defaultService';
 
 @Component({
     selector: 'app-tournament-create-sportwithfields',
@@ -18,6 +17,7 @@ import { DefaultService, GameAmountConfigValidations } from '../../lib/ngx-sport
 export class CreateSportWithFieldsComponent implements OnInit {
     @Input() labelBtnNext: string = 'toevoegen';
     @Input() sport: Sport | undefined;
+    @Input() existingSportVariants: (SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant)[] = [];
     public sportWithFields: SportWithFields | undefined;
     @Output() created = new EventEmitter<SportWithFields>();
     @Output() goToPrevious = new EventEmitter<void>();
@@ -69,7 +69,7 @@ export class CreateSportWithFieldsComponent implements OnInit {
             nrOfAwayPlaces: new FormControl(newSport.getDefaultNrOfSidePlaces()),
             nrOfGamePlaces: new FormControl(nrOfFields),
             // Single, AllInOneGame
-            gameAmount: new FormControl(2),
+            gameAmount: new FormControl(1),
         });
         this.sport = newSport;
     }
@@ -119,10 +119,11 @@ export class CreateSportWithFieldsComponent implements OnInit {
                 sport,
                 this.form.controls.nrOfHomePlaces.value,
                 this.form.controls.nrOfAwayPlaces.value,
-                1
+                1,
+                this.form.controls.nrOfHomePlaces.value + this.form.controls.nrOfAwayPlaces.value > 2 ? 1 : 0
             );
         }
-        return new AllInOneGameSportVariant(sport, 1);
+        return new AllInOneGameSportVariant(sport, this.form.controls.gameAmount.value);
     }
 
     save(sport: Sport) {
@@ -131,9 +132,17 @@ export class CreateSportWithFieldsComponent implements OnInit {
 
     get Single(): GameMode { return GameMode.Single; }
     get Against(): GameMode { return GameMode.Against; }
+    get Static(): GameCreationStrategy { return GameCreationStrategy.Static; }
 
     openGameModeInfoModal() {
         this.modalService.open(GameModeInfoModalComponent, { windowClass: 'info-modal' });
+    }
+
+    getCreationStrategy(sport: Sport): GameCreationStrategy {
+        const calculator = new GameCreationStrategyCalculator();
+        const thisSportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant = this.formToVariant(sport);
+        console.log(this.existingSportVariants.concat([thisSportVariant]));
+        return calculator.calculate(this.existingSportVariants.concat([thisSportVariant]));
     }
 
     protected setAlert(type: string, message: string) {

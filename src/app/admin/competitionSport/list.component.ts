@@ -14,8 +14,6 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { CompetitionSportTab } from '../../shared/tournament/competitionSportTab';
 import { CompetitionSportRepository } from '../../lib/ngx-sport/competitionSport/repository';
 import { SportWithFields } from '../sport/createSportWithFields.component';
-import { forkJoin, Observable } from 'rxjs';
-
 @Component({
   selector: 'app-tournament-sport',
   templateUrl: './list.component.html',

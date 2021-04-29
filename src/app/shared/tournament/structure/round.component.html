@@ -1,6 +1,6 @@
 <div *ngIf="round" [ngClass]="{ 'pl-1': !first, 'pr-1': round.isRoot() }">
   <div class="card border-secondary round mb-2 {{cssService.getQualifyRound(round)}}"
-    *ngIf="round.isRoot() || round.getNrOfPlaces() > MinPlacesPerPoule">
+    *ngIf="round.isRoot() || round.getNrOfPlaces() >= MinPlacesPerPoule">
     <div class="card-header px-1">
       <span class="lead" [innerHTML]="nameService.getRoundName( round ) | keepHtml"></span>
       &nbsp;
@@ -43,14 +43,14 @@
       (roundNumberChanged)="roundNumberChanged.emit($event)">
     </app-tournament-structureround>
   </div>
-  <div *ngIf="!round.isRoot() && round.getNrOfPlaces() === MinPlacesPerPoule">
+  <div *ngIf="!round.isRoot() && round.getNrOfPlaces() === AbsoluteMinPlacesPerPoule">
     <div class="card round {{cssService.getQualifyRound(round)}}">
       <div class="card-header px-1">
         <span [innerHTML]="nameService.getRoundName(round) | keepHtml"></span>
       </div>
     </div>
   </div>
-  <div *ngIf="!round.isRoot() && round.getNrOfPlaces() < MinPlacesPerPoule">
+  <div *ngIf="!round.isRoot() && round.getNrOfPlaces() < AbsoluteMinPlacesPerPoule">
     <ngb-alert type="warning">fout: los op door bovenstaande ronde opnieuw aan te maken
     </ngb-alert>
   </div>

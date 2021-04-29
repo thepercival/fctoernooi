@@ -71,8 +71,12 @@ export class StructureRoundComponent implements OnInit {
     return this.favorites && this.favorites.indexOf(competitor) >= 0;
   }
 
-  get MinPlacesPerPoule(): number {
+  get AbsoluteMinPlacesPerPoule(): number {
     return PlaceRanges.MinNrOfPlacesPerPoule;
+  }
+
+  get MinPlacesPerPoule(): number {
+    return this.structureEditor.getMinPlacesPerPouleSmall();
   }
 
   protected resetAlert(): void {

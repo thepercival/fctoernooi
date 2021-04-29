@@ -72,7 +72,7 @@ footer {
 .batch-striped-row {
   background-color: #{$table-accent-bg};
 }
-td > .btn.btn-sm, th > .btn.btn-sm {
+td .btn.btn-sm, th .btn.btn-sm, td .list-group-item {
   padding-top: 0px;
   padding-bottom: 0px;
 }

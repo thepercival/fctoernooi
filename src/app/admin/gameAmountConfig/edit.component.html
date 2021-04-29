@@ -1,16 +1,16 @@
 <ng-container *ngIf="gameAmountControls.length === 1" [formGroup]="form">
   <div class="form-group row" *ngFor="let gameAmountControl of gameAmountControls">
-    <label [for]="gameAmountControl.json.id" class="col-7 col-form-label">{{getGamesDescription()}}</label>
+    <label [for]="gameAmountControl.json.id" class="col-7 col-form-label">{{label}}</label>
     <div class="col-5">
       <select class="form-control" [formControlName]="gameAmountControl.json.id" required>
-        <option *ngFor="let n of range" [ngValue]="n">{{n}}</option>
+        <option *ngFor="let n of getRange(gameAmountControl.range)" [ngValue]="n">{{n}}</option>
       </select>
     </div>
   </div>
 </ng-container>
 
 <div class="form-group row" *ngIf="gameAmountControls.length === 0">
-  <label class="col-7 col-form-label">{{getGamesDescription()}}</label>
+  <label class="col-7 col-form-label">{{label}}</label>
   <div class="col-5">
     <button type="button" (click)="openModal(gameAmountModal)" class="btn btn-sm btn-outline-secondary">
       instellen
@@ -21,7 +21,7 @@
 <ng-template #gameAmountModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title">
-      {{getGamesDescription()}}
+      {{label}}
     </h4>
     <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss()">
       <span aria-hidden="true">&times;</span>
@@ -33,7 +33,7 @@
         class="col-8 col-form-label">{{gameAmountControl.json.competitionSport.sport.name}}</label>
       <div class="col-4">
         <select class="form-control" [formControlName]="gameAmountControl.json.id" required>
-          <option *ngFor="let n of range" [ngValue]="n">{{n}}</option>
+          <option *ngFor="let n of getRange(gameAmountControl.range)" [ngValue]="n">{{n}}</option>
         </select>
       </div>
     </div>
