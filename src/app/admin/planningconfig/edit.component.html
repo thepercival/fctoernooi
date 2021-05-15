@@ -11,19 +11,6 @@
             </h2>
             <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
             <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
-                <!-- <div class="form-group row">
-                    <label for="gameMode" class="col-7 col-form-label pointer"
-                        (click)="openGameModeInfoModal()">wedstrijd-modus
-                        <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
-                    </label>
-                    <div class="col-5">
-                        <select class="form-control" formControlName="gameMode" (ngModelChange)="changeGameMode($event)"
-                            required>
-                            <option *ngFor="let gameMode of gameModes" [ngValue]="gameMode">
-                                {{nameService.getGameModeName(gameMode)}}</option>
-                        </select>
-                    </div>
-                </div> -->
                 <app-tournament-gameamountconfigs-edit *ngIf="isGameAmountEditable()" [label]="gameAmountLabel"
                     [gameAmountControls]="gameAmountConfigControls" [form]="form">
                 </app-tournament-gameamountconfigs-edit>

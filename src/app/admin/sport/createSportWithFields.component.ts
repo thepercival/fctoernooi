@@ -119,8 +119,8 @@ export class CreateSportWithFieldsComponent implements OnInit {
                 sport,
                 this.form.controls.nrOfHomePlaces.value,
                 this.form.controls.nrOfAwayPlaces.value,
-                1,
-                this.form.controls.nrOfHomePlaces.value + this.form.controls.nrOfAwayPlaces.value > 2 ? 1 : 0
+                (this.form.controls.nrOfHomePlaces.value + this.form.controls.nrOfAwayPlaces.value) > 2 ? 0 : 1,
+                (this.form.controls.nrOfHomePlaces.value + this.form.controls.nrOfAwayPlaces.value) > 2 ? 1 : 0
             );
         }
         return new AllInOneGameSportVariant(sport, this.form.controls.gameAmount.value);

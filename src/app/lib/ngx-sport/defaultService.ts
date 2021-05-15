@@ -61,7 +61,7 @@ export class DefaultService {
     }
 
     getGameAmountRange(sportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant | GameMode): VoetbalRange {
-        if (sportVariant instanceof AgainstSportVariant || sportVariant === GameMode.Against) {
+        if (sportVariant instanceof AgainstSportVariant && !sportVariant.isMixed()) {
             return { min: 1, max: 4 };
         }
         return { min: 1, max: 50 };

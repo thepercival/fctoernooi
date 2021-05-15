@@ -27,6 +27,7 @@ export class GameAmountConfigEditComponent implements OnInit {
         return;
       }
       const value = gameAmountControl.control.value;
+      console.log(value);
       if (value === undefined || value > gameAmountControl.range.max || value < gameAmountControl.range.min) {
         gameAmountControl.control.setValue(gameAmountControl.range.min);
       }

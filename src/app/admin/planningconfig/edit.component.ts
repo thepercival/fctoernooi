@@ -122,17 +122,20 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     initGameAmountConfigs(startRoundNumber: RoundNumber) {
-        // getGameAmountRange
-        // moet de CreationStrategy per Sport kunnen worden ingesteld?
         startRoundNumber.getValidGameAmountConfigs().forEach((gameAmountConfig: GameAmountConfig) => {
-            const range = this.defaultService.getGameAmountRange(gameAmountConfig.getCompetitionSport().getVariant());
-            this.form.addControl('' + gameAmountConfig.getId(), new FormControl(
-                gameAmountConfig.getAmount(),
-                Validators.compose([Validators.required, Validators.min(range.min), Validators.max(range.max)])
-            ));
+            this.form.addControl('' + gameAmountConfig.getId(), new FormControl());
         });
         this.setGameAmountControls(startRoundNumber);
         this.gameAmountLabel = this.getGameAmountLabel(startRoundNumber.getCompetition().getSportVariants());
+    }
+
+    protected getCorrectAmount(
+        sportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant,
+        gameAmountConfig: GameAmountConfig): number {
+        if (sportVariant instanceof AgainstSportVariant && sportVariant.getNrOfGamePlaces() > 2) {
+            return gameAmountConfig.getPartial();
+        }
+        return gameAmountConfig.getAmount();
     }
 
     isGameAmountEditable(): boolean {
@@ -148,22 +151,10 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         }
         const sportVariant = sportVariants[0];
         if (sportVariant instanceof AgainstSportVariant) {
-            if (sportVariant.getNrOfGamePlaces() > 2) {
-                return 'aantal wedstrijden per deelnemer';
-            }
             return 'aantal onderlinge duels';
         }
         return 'aantal speelronden';
     }
-
-
-    // getGameAmountRange(creationStrategy: CreationStrategy): VoetbalRange {
-    //     const validations = this.defaultService.getGameAmountConfigValidations();
-    //     if (creationStrategy === CreationStrategy.StaticPouleSize) {
-    //         return validations.nrOfH2HRange;
-    //     }
-    //     return validations.gameAmountRange;
-    // }
 
     setGameAmountControls(startRoundNumber: RoundNumber) {
         startRoundNumber.getValidGameAmountConfigs().forEach((gameAmountConfig: GameAmountConfig) => {
@@ -180,7 +171,6 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.startRoundNumber = startRoundNumber;
         this.pouleStructure = startRoundNumber.createPouleStructure();
         this.hasBegun = this.startRoundNumber.hasBegun()
-        // this.setGameAmountRange(startRoundNumber.getValidPlanningConfig().getCreationStrategy());
         this.jsonToForm(this.mapper.toJson(startRoundNumber.getValidPlanningConfig()));
         this.resetAlert();
         if (this.hasBegun) {
@@ -224,7 +214,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.form.controls.minutesBetweenGames.setValue(json.minutesBetweenGames);
         this.form.controls.minutesAfter.setValue(json.minutesAfter);
         this.startRoundNumber.getValidGameAmountConfigs().forEach((gameAmountConfig: GameAmountConfig) => {
-            const range = this.defaultService.getGameAmountRange(gameAmountConfig.getCompetitionSport().getVariant())
+            const sportVariant = gameAmountConfig.getCompetitionSport().getVariant();
+            const range = this.defaultService.getGameAmountRange(sportVariant);
             const id = '' + gameAmountConfig.getId();
             this.form.controls[id].setValidators(
                 Validators.compose([
@@ -232,7 +223,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
                     Validators.min(range.min),
                     Validators.max(range.max)])
             );
-            this.form.controls[id].setValue(gameAmountConfig.getAmount());
+            this.form.controls[id].setValue(this.getCorrectAmount(sportVariant, gameAmountConfig));
         });
 
         const selfRefee = this.getSelfReferee(json.selfReferee);
@@ -263,10 +254,18 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     private formToJsonGameAmountConfigs(): JsonGameAmountConfig[] {
         return this.gameAmountConfigControls.map((gameAmountConfigControl: GameAmountConfigControl): JsonGameAmountConfig => {
+            const nrOfGamePlaces = gameAmountConfigControl.json.competitionSport.nrOfHomePlaces +
+                gameAmountConfigControl.json.competitionSport.nrOfAwayPlaces;
+            let amount = gameAmountConfigControl.control.value;
+            let partial = 0;
+            if (nrOfGamePlaces > 2) {
+                partial = gameAmountConfigControl.control.value;
+                amount = 0;
+            }
             return {
                 id: gameAmountConfigControl.json.id,
                 competitionSport: gameAmountConfigControl.json.competitionSport,
-                amount: gameAmountConfigControl.control.value
+                amount, partial
             };
         });
     }
@@ -340,6 +339,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.planningConfigRepository.saveObject(jsonConfig, this.startRoundNumber, this.tournament)
             .subscribe(
                 /* happy path */ configRes => {
+                    console.log(planningActionCalculator.isGameAmountEditable());
                     if (planningActionCalculator.isGameAmountEditable()) {
                         this.saveGameAmountConfigs(jsonGameAmountConfigs, planningAction);
                     } else {
@@ -388,6 +388,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     private saveGameAmountConfigs(jsonGameAmountConfigs: JsonGameAmountConfig[], planningAction: PlanningAction) {
+        console.log(jsonGameAmountConfigs);
         const reposUpdates: Observable<GameAmountConfig>[] = jsonGameAmountConfigs.map((jsonGameAmountConfig: JsonGameAmountConfig) => {
             return this.gameAmountConfigRepository.saveObject(jsonGameAmountConfig, this.startRoundNumber, this.tournament);
         });
@@ -444,7 +445,9 @@ class PlanningActionCalculator {
         return this.roundNumber.getCompetitionSports().some((competitionSport: CompetitionSport) => {
             const jsonGameAmountConfig = getGameAmountConfig(competitionSport);
             const gameAmountConfig = this.roundNumber.getGameAmountConfig(competitionSport);
-            return jsonGameAmountConfig && gameAmountConfig && jsonGameAmountConfig.amount !== gameAmountConfig.getAmount();
+            return jsonGameAmountConfig && gameAmountConfig
+                && (jsonGameAmountConfig.amount !== gameAmountConfig.getAmount()
+                    || jsonGameAmountConfig.partial !== gameAmountConfig.getPartial());
         });
     }
 
@@ -475,3 +478,8 @@ export interface PlanningConfigValidations {
 enum PlanningAction {
     None = 1, Reschedule, Recreate
 }
+
+
+
+
+
