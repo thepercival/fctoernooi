@@ -76,6 +76,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             /*gameMode: ['', Validators.compose([
                 Validators.required
             ])],*/
+            strategyIncremental: false,
             extension: false,
             enableTime: true,
             minutesPerGame: ['', Validators.compose([
@@ -133,7 +134,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         sportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant,
         gameAmountConfig: GameAmountConfig): number {
         if (sportVariant instanceof AgainstSportVariant && sportVariant.getNrOfGamePlaces() > 2) {
-            return gameAmountConfig.getPartial();
+            return gameAmountConfig.getNrOfGamesPerPlace();
         }
         return gameAmountConfig.getAmount();
     }
@@ -151,6 +152,10 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         }
         const sportVariant = sportVariants[0];
         if (sportVariant instanceof AgainstSportVariant) {
+            console.log(sportVariant, sportVariant.getNrOfGamePlaces());
+            if (sportVariant.getNrOfGamePlaces() > 2) {
+                return 'aantal wedstrijden per deelnemer';
+            }
             return 'aantal onderlinge duels';
         }
         return 'aantal speelronden';
@@ -239,8 +244,10 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     private formToJson(): JsonPlanningConfig {
+        const strategy = this.form.controls.strategyIncremental.value ? GameCreationStrategy.Incremental : GameCreationStrategy.Static;
         return {
             id: 0,
+            gameCreationStrategy: strategy,
             extension: this.form.controls.extension.value,
             enableTime: this.form.controls.enableTime.value,
             minutesPerGame: this.form.controls.minutesPerGame.value,
@@ -257,15 +264,15 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             const nrOfGamePlaces = gameAmountConfigControl.json.competitionSport.nrOfHomePlaces +
                 gameAmountConfigControl.json.competitionSport.nrOfAwayPlaces;
             let amount = gameAmountConfigControl.control.value;
-            let partial = 0;
+            let nrOfGamesPerPlace = 0;
             if (nrOfGamePlaces > 2) {
-                partial = gameAmountConfigControl.control.value;
+                nrOfGamesPerPlace = gameAmountConfigControl.control.value;
                 amount = 0;
             }
             return {
                 id: gameAmountConfigControl.json.id,
                 competitionSport: gameAmountConfigControl.json.competitionSport,
-                amount, partial
+                amount, nrOfGamesPerPlace
             };
         });
     }
@@ -388,7 +395,6 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     private saveGameAmountConfigs(jsonGameAmountConfigs: JsonGameAmountConfig[], planningAction: PlanningAction) {
-        console.log(jsonGameAmountConfigs);
         const reposUpdates: Observable<GameAmountConfig>[] = jsonGameAmountConfigs.map((jsonGameAmountConfig: JsonGameAmountConfig) => {
             return this.gameAmountConfigRepository.saveObject(jsonGameAmountConfig, this.startRoundNumber, this.tournament);
         });
@@ -430,6 +436,9 @@ class PlanningActionCalculator {
         if (config.getSelfReferee() !== json.selfReferee) {
             return true
         }
+        if (config.getGameCreationStrategy() !== json.gameCreationStrategy) {
+            return true
+        }
         return this.gameAmountConfigsChanged(jsonGameAmountConfigs);
     }
 
@@ -447,7 +456,7 @@ class PlanningActionCalculator {
             const gameAmountConfig = this.roundNumber.getGameAmountConfig(competitionSport);
             return jsonGameAmountConfig && gameAmountConfig
                 && (jsonGameAmountConfig.amount !== gameAmountConfig.getAmount()
-                    || jsonGameAmountConfig.partial !== gameAmountConfig.getPartial());
+                    || jsonGameAmountConfig.nrOfGamesPerPlace !== gameAmountConfig.getNrOfGamesPerPlace());
         });
     }
 

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AgainstSportVariant, AllInOneGameSportVariant, CompetitionSportService, GameMode, JsonPlanningConfig, JsonSport, PouleStructure, RankingRuleSet, SelfReferee, SingleSportVariant, Sport, VoetbalRange } from "ngx-sport";
+import { AgainstSportVariant, AllInOneGameSportVariant, CompetitionSportService, GameCreationStrategy, GameMode, JsonPlanningConfig, JsonSport, PouleStructure, RankingRuleSet, SelfReferee, SingleSportVariant, Sport, VoetbalRange } from "ngx-sport";
 
 @Injectable({
     providedIn: 'root'
@@ -42,6 +42,7 @@ export class DefaultService {
     getJsonPlanningConfig(sportVariants: (SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant)[]): JsonPlanningConfig {
         return {
             id: 0,
+            gameCreationStrategy: GameCreationStrategy.Static,
             extension: false,
             enableTime: true,
             minutesPerGame: DefaultService.MinutesPerGame,

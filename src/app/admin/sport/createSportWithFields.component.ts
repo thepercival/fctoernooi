@@ -30,7 +30,7 @@ export class CreateSportWithFieldsComponent implements OnInit {
     public nameService!: NameService;
 
     get minNrOfSidePlaces(): number { return 1; }
-    get maxNrOfSidePlaces(): number { return 6; }
+    get maxNrOfSidePlaces(): number { return 2; }
     get minNrOfFields(): number { return 1; }
     get maxNrOfFields(): number { return 64; }
     get minNrOfGamePlaces(): number { return 1; }
@@ -115,13 +115,13 @@ export class CreateSportWithFieldsComponent implements OnInit {
         if (this.form.controls.gameMode.value === GameMode.Single) {
             return new SingleSportVariant(sport, this.form.controls.nrOfGamePlaces.value, this.form.controls.gameAmount.value);
         } else if (this.form.controls.gameMode.value === GameMode.Against) {
-            return new AgainstSportVariant(
-                sport,
-                this.form.controls.nrOfHomePlaces.value,
-                this.form.controls.nrOfAwayPlaces.value,
-                (this.form.controls.nrOfHomePlaces.value + this.form.controls.nrOfAwayPlaces.value) > 2 ? 0 : 1,
-                (this.form.controls.nrOfHomePlaces.value + this.form.controls.nrOfAwayPlaces.value) > 2 ? 1 : 0
-            );
+            let home = this.form.controls.nrOfHomePlaces.value;
+            let away = this.form.controls.nrOfAwayPlaces.value;
+            if (away < home) {
+                home = away;
+                away = this.form.controls.nrOfHomePlaces.value;
+            }
+            return new AgainstSportVariant(sport, home, away, (home + away) > 2 ? 0 : 1, (home + away) > 2 ? 1 : 0);
         }
         return new AllInOneGameSportVariant(sport, this.form.controls.gameAmount.value);
     }
@@ -141,7 +141,7 @@ export class CreateSportWithFieldsComponent implements OnInit {
     getCreationStrategy(sport: Sport): GameCreationStrategy {
         const calculator = new GameCreationStrategyCalculator();
         const thisSportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant = this.formToVariant(sport);
-        console.log(this.existingSportVariants.concat([thisSportVariant]));
+        // console.log(this.existingSportVariants.concat([thisSportVariant]));
         return calculator.calculate(this.existingSportVariants.concat([thisSportVariant]));
     }
 

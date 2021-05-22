@@ -11,7 +11,19 @@
             </h2>
             <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
             <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
-                <app-tournament-gameamountconfigs-edit *ngIf="isGameAmountEditable()" [label]="gameAmountLabel"
+                <div class="form-group row">
+                    <label for="extension" class="col-7 col-form-label pointer">wedstrijden genereren per
+                        speelronde</label>
+                    <div class="col-5">
+                        <div class="form-control custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="strategyIncremental"
+                                formControlName="strategyIncremental">
+                            <label class="custom-control-label" for="strategyIncremental"></label>
+                        </div>
+                    </div>
+                </div>
+                <app-tournament-gameamountconfigs-edit
+                    *ngIf="isGameAmountEditable() && !form.value['strategyIncremental']" [label]="gameAmountLabel"
                     [gameAmountControls]="gameAmountConfigControls" [form]="form">
                 </app-tournament-gameamountconfigs-edit>
                 <div class="form-group row">

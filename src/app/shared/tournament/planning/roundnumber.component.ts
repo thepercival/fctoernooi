@@ -353,28 +353,27 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     });
     return scoreConfig;
   }
-  /*
-    isCreationStrategyIncremental(): boolean {
-      const calculator = new GameCreationStrategyCalculator();
-      return calculator.calculate(this.roundNumber.getCompetition().getSportVariants()) !== GameCreationStrategy.Static;
-    }
-  
-    canDecrementNrOfGameRounds(): boolean {
-      // when last gameroundnr is not started and is greater than 1
-      return true;
-    }
-  
-    canIncrementNrOfGameRounds(): boolean {
-      return !(this.roundNumber.hasNext() && this.roundNumber.getState() === State.Finished);
-    }
-  
-    decrementNrOfGameRounds() {
-      console.log('decrementNrOfGameRounds');
-    }
-  
-    incrementNrOfGameRounds() {
-      console.log('incrementNrOfGameRounds');
-    }*/
+
+  isCreationStrategyIncremental(): boolean {
+    return this.roundNumber.getValidPlanningConfig().getGameCreationStrategy() === GameCreationStrategy.Incremental;
+  }
+
+  canDecrementNrOfGameRounds(): boolean {
+    // when last gameroundnr is not started and is greater than 1
+    return true;
+  }
+
+  canIncrementNrOfGameRounds(): boolean {
+    return !(this.roundNumber.hasNext() && this.roundNumber.getState() === State.Finished);
+  }
+
+  decrementNrOfGameRounds() {
+    console.log('decrementNrOfGameRounds');
+  }
+
+  incrementNrOfGameRounds() {
+    console.log('incrementNrOfGameRounds');
+  }
 }
 
 interface GameData {

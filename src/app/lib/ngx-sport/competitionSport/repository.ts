@@ -70,9 +70,8 @@ export class CompetitionSportRepository extends APIRepository {
             gameMode: jsonVariant.gameMode,
             nrOfHomePlaces: jsonVariant.nrOfHomePlaces,
             nrOfAwayPlaces: jsonVariant.nrOfAwayPlaces,
-            nrOfH2H: jsonVariant.nrOfH2H,
-            nrOfPartials: jsonVariant.nrOfPartials,
             nrOfGamePlaces: jsonVariant.nrOfGamePlaces,
+            nrOfH2H: jsonVariant.nrOfH2H,
             nrOfGamesPerPlace: jsonVariant.nrOfGamesPerPlace
         }
     }

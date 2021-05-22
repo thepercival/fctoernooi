@@ -7,7 +7,7 @@
       "i18n": {
         "locales": {
           "fr": {
-            "translation": "src/locale/messages.fr.xlf",
+            "translation": "src/locale/messages.nl.xlf",
             "baseHref": ""
           },
           "nl": {
@@ -23,7 +23,6 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "aot": true,
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -52,7 +51,11 @@
             "allowedCommonJsDependencies": [
               "lodash"
             ],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "optimization": false
           },
           "configurations": {
             "production": {
@@ -76,7 +79,6 @@
               "namedChunks": false,
               "sourceMap": false,
               "extractLicenses": true,
-              "vendorChunk": true,
               "buildOptimizer": true,
               "fileReplacements": [
                 {
@@ -105,23 +107,21 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
-              "outputPath": "dist/nl/",
-              "i18nFile": "src/locale/messages.nl.xlf",
-              "i18nLocale": "fr",
+              "outputPath": "dist/",
               "i18nMissingTranslation": "error"
             },
             "nl": {
-              "aot": true,
               "budgets": [
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "6kb"
                 }
               ],
-              "outputPath": "dist/nl/",
-              "i18nFile": "src/locale/messages.nl.xlf",
-              "i18nLocale": "nl",
-              "i18nMissingTranslation": "error"
+              "outputPath": "dist",
+              "i18nMissingTranslation": "error",
+              "localize": [
+                "nl"
+              ]
             },
             "acc": {
               "budgets": [
@@ -134,7 +134,6 @@
               "outputHashing": "all",
               "sourceMap": false,
               "extractLicenses": true,
-              "vendorChunk": true,
               "buildOptimizer": true,
               "fileReplacements": [
                 {

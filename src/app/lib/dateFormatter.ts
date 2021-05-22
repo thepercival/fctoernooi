@@ -4,11 +4,11 @@ import { Injectable } from "@angular/core";
     providedIn: 'root'
 })
 export class DateFormatter {
-    protected static readonly YMSD2TC = { year: "numeric", month: "short", day: "2-digit", hour12: false, hour: "2-digit", minute: "2-digit" };
-    protected static readonly YMSD2 = { year: "numeric", month: "short", day: "2-digit" };
-    protected static readonly MSD2 = { month: "short", "day": "2-digit" };
-    protected static readonly MSD2TC = { month: "short", day: "2-digit", hour12: false, hour: "2-digit", minute: "2-digit" };
-    protected static readonly TC = { hour12: false, hour: "2-digit", minute: "2-digit" };
+    protected static readonly YMSD2TC: Intl.DateTimeFormatOptions = { year: "numeric", month: "short", day: "2-digit", hour12: false, hour: "2-digit", minute: "2-digit" };
+    protected static readonly YMSD2: Intl.DateTimeFormatOptions = { year: "numeric", month: "short", day: "2-digit" };
+    protected static readonly MSD2: Intl.DateTimeFormatOptions = { month: "short", "day": "2-digit" };
+    protected static readonly MSD2TC: Intl.DateTimeFormatOptions = { month: "short", day: "2-digit", hour12: false, hour: "2-digit", minute: "2-digit" };
+    protected static readonly TC: Intl.DateTimeFormatOptions = { hour12: false, hour: "2-digit", minute: "2-digit" };
 
     date(): Intl.DateTimeFormatOptions {
         return DateFormatter.MSD2;

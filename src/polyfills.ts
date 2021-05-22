@@ -13,6 +13,6 @@
  *
  * Learn more in https://angular.io/docs/ts/latest/guide/browser-support.html
  */
-import 'zone.js/dist/zone';
+import 'zone.js';
 
 import '@angular/localize/init';
