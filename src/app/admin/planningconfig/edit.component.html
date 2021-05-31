@@ -11,23 +11,22 @@
             </h2>
             <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
             <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
-                <div class="form-group row">
-                    <label for="extension" class="col-7 col-form-label pointer">wedstrijden genereren per
-                        speelronde</label>
+                <app-tournament-gameamountconfigs-edit *ngIf="!form.value['manual']" [label]="gameAmountLabel"
+                    [gameAmountControls]="gameAmountConfigControls" [form]="form">
+                </app-tournament-gameamountconfigs-edit>
+                <div *ngIf="!form.value['manual'] && showGamePlaceStrategy()" class="form-group row">
+                    <label for="strategyRandomly" class="col-7 col-form-label pointer">willekeurge wedstrijden
+                        genereren</label>
                     <div class="col-5">
                         <div class="form-control custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="strategyIncremental"
-                                formControlName="strategyIncremental">
-                            <label class="custom-control-label" for="strategyIncremental"></label>
+                            <input type="checkbox" class="custom-control-input" id="strategyRandomly"
+                                formControlName="strategyRandomly">
+                            <label class="custom-control-label" for="strategyRandomly"></label>
                         </div>
                     </div>
                 </div>
-                <app-tournament-gameamountconfigs-edit
-                    *ngIf="isGameAmountEditable() && !form.value['strategyIncremental']" [label]="gameAmountLabel"
-                    [gameAmountControls]="gameAmountConfigControls" [form]="form">
-                </app-tournament-gameamountconfigs-edit>
-                <div class="form-group row">
-                    <label class="col-7 col-form-label">plannen o.b.v. tijd</label>
+                <div *ngIf="!form.value['manual']" class="form-group row">
+                    <label for="enableTime" class="col-7 col-form-label pointer">plannen o.b.v. tijd</label>
                     <div class="col-5">
                         <div class="form-control custom-control custom-switch">
                             <input type="checkbox" class="custom-control-input" id="enableTime"
@@ -37,7 +36,7 @@
                     </div>
                 </div>
 
-                <div *ngIf="!form.value['enableTime']" class="form-group row">
+                <div *ngIf="!form.value['manual'] && !form.value['enableTime']" class="form-group row">
                     <label for="extension" class="col-7 col-form-label pointer">met verlenging</label>
                     <div class="col-5">
                         <div class="form-control custom-control custom-switch">
@@ -47,7 +46,7 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="form.value['enableTime']" class="form-group row">
+                <div *ngIf="!form.value['manual'] && form.value['enableTime']" class="form-group row">
                     <label for="minutesPerGame" class="col-7 col-form-label">minuten per wedstrijd</label>
                     <div class="col-5">
                         <input type="number"
@@ -55,7 +54,7 @@
                             formControlName="minutesPerGame" maxlength="2" class="form-control" />
                     </div>
                 </div>
-                <div *ngIf="form.value['enableTime']" class="form-group row">
+                <div *ngIf="!form.value['manual'] && form.value['enableTime']" class="form-group row">
                     <label for="minutesPerGameExt" class="col-7 col-form-label">minuten verlenging</label>
                     <div class="col-5">
                         <input type="number"
@@ -64,7 +63,7 @@
                             (ngModelChange)="changeMinutesPerGameExt($event)" />
                     </div>
                 </div>
-                <div *ngIf="form.value['enableTime']" class="form-group row">
+                <div *ngIf="!form.value['manual'] && form.value['enableTime']" class="form-group row">
                     <label for="minutesBetweenGames" class="col-7 col-form-label">minuten tussen
                         wedstrijden</label>
                     <div class="col-5">
@@ -73,9 +72,10 @@
                             formControlName="minutesBetweenGames" maxlength="2" class="form-control" />
                     </div>
                 </div>
-                <div *ngIf="form.value['enableTime'] && startRoundNumber.hasNext()" class="form-group row">
+                <div *ngIf="!form.value['manual'] && form.value['enableTime'] && startRoundNumber.hasNext()"
+                    class="form-group row">
                     <label for="minutesAfter" class="col-7 col-form-label pointer"
-                        (click)="openInfoModal('minuten pauze na de ronde', contentInfoMinutesAfter)">minuten
+                        (click)="openInfoModal('minuten pauze na de ronde', 'info-modal', contentInfoMinutesAfter)">minuten
                         pauze na de ronde
                         <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
                     </label>
@@ -85,7 +85,7 @@
                             formControlName="minutesAfter" maxlength="3" class="form-control" />
                     </div>
                 </div>
-                <div *ngIf="isSelfRefereeAvailable()" class="form-group row">
+                <div *ngIf="!form.value['manual'] && isSelfRefereeAvailable()" class="form-group row">
                     <label for="selfReferee" class="col-7 col-form-label">deelnemers zijn
                         scheidsrechter</label>
                     <div class="col-5">
@@ -96,7 +96,8 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="bothSelfRefereeAvailable() && form.value['selfReferee']" class="form-group row">
+                <div *ngIf="!form.value['manual'] && bothSelfRefereeAvailable() && form.value['selfReferee']"
+                    class="form-group row">
                     <label for="selfrefereenoaction" class="col-7 col-form-label">
                         scheidsrechter in eigen poule
                     </label>
@@ -106,6 +107,16 @@
                                 formControlName="selfRefereeSamePoule">
                             <span class="custom-control-indicator"></span>
                         </label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="manual" class="col-7 col-form-label pointer">handmatig wedstrijden aanpassen</label>
+                    <div class="col-5">
+                        <div class="form-control custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="manual" formControlName="manual"
+                                (ngModelChange)="changedEditMode(contentInfoManual)">
+                            <label class="custom-control-label" for="manual"></label>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -124,8 +135,8 @@
     </div>
 </div>
 
-<ng-template #contentInfoGameMode>
-
+<ng-template #contentInfoManual>
+    <span class="lead">Let op: je bent nu zelf verantwoordelijk voor de planning</span>
 </ng-template>
 
 <ng-template #contentInfoMinutesAfter>

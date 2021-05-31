@@ -1,8 +1,8 @@
 <table class="table table-striped fixed mb-0">
     <colgroup>
-        <col>
+        <col class="width-10">
         <col class="width-30">
-        <col>
+        <col *ngFor="let competitionSport of competitionSports">
         <col>
     </colgroup>
     <thead>
@@ -14,7 +14,10 @@
             </th>
             <th *ngFor="let competitionSport of competitionSports; let counter = index"
                 class="text-right pl-0 {{getViewPortClass(counter+1)}}">
-                {{competitionSport.getSport().getName()}}</th>
+                <button class="btn btn-sm btn-outline-info" (click)="openModalPouleRank(competitionSport)">
+                    {{competitionSport.getSport().getName()}}
+                </button>
+            </th>
             <th class="text-right pl-0" title="totaal">
                 <!-- <span *ngIf="activeGameRound < nrOfGameRounds">forward</span> -->
                 <span>t</span>

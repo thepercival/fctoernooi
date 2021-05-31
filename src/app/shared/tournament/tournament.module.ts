@@ -24,7 +24,7 @@ import { RankingRulesComponent } from './rankingrules/rankingrules.component';
 import { facStructure, facReferee, facScoreboard, facSoccerField } from './icons';
 import { CompetitionSportRouter } from './competitionSport.router';
 import { InfoModalComponent } from './infomodal/infomodal.component';
-import { QualifyAgainstInfoComponent } from './qualifyAgainstConfig/info.component';
+import { AgainstQualifyInfoComponent } from './againstQualifyConfig/info.component';
 import { GameModeInfoModalComponent } from './gameMode/infomodal.component';
 import { TournamentIconComponent } from './icon/icon.component';
 import { PouleRankingComponent } from './ranking/poule.component';
@@ -46,7 +46,7 @@ import { PouleRankingTogetherComponent } from './ranking/poule/together.componen
     PouleRankingSportsComponent,
     PouleRankingAgainstComponent,
     PouleRankingTogetherComponent,
-    QualifyAgainstInfoComponent,
+    AgainstQualifyInfoComponent,
     RankingRulesComponent,
     StructureRoundArrangeComponent, StructureQualifyComponent, StructureRoundComponent,
     TitleComponent,
@@ -76,7 +76,7 @@ import { PouleRankingTogetherComponent } from './ranking/poule/together.componen
     PouleRankingSportsComponent,
     PouleRankingAgainstComponent,
     PouleRankingTogetherComponent,
-    QualifyAgainstInfoComponent,
+    AgainstQualifyInfoComponent,
     RankingRulesComponent,
     RoundNumberPlanningComponent,
     StructureRoundComponent,

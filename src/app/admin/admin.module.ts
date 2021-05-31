@@ -61,7 +61,7 @@ import { AuthorizationExplanationModalComponent } from './authorization/infomoda
 import { StructureSelectRoundComponent } from './rounds/round.component';
 import { ExportModalComponent } from './home/exportmodal.component';
 import { ShareModalComponent } from './home/sharemodal.component';
-import { QualifyAgainstConfigEditComponent } from './qualifyAgainstConfig/edit.component';
+import { AgainstQualifyConfigEditComponent } from './againstQualifyConfig/edit.component';
 import { GameAmountConfigEditComponent } from './gameAmountConfig/edit.component';
 import { GameTogetherEditComponent } from './game/edittogether.component';
 import { GameAgainstEditComponent } from './game/editagainst.component';
@@ -106,7 +106,7 @@ import { SportToAddComponent } from './sport/toAdd.component';
     StartBreakComponent,
     StructureEditComponent,
     PlanningConfigComponent,
-    QualifyAgainstConfigEditComponent,
+    AgainstQualifyConfigEditComponent,
     TournamentPropertiesComponent,
     RefereeEditComponent,
     RoleItemComponent,

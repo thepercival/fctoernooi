@@ -1,0 +1,38 @@
+<table class="table mb-0 text-white">
+    <thead>
+        <tr>
+            <th>sport</th>
+            <th class="">resultaat</th>
+            <th class="text-right">punten</th>
+        </tr>
+    </thead>
+    <tbody>
+        <ng-template ngFor let-againstQualifyConfig [ngForOf]="round.getValidAgainstQualifyConfigs()">
+            <tr>
+                <td>{{againstQualifyConfig.getSport().getName()}}</td>
+                <td>overwinning</td>
+                <td class="text-right">{{againstQualifyConfig.getWinPoints()}}</td>
+            </tr>
+            <tr>
+                <td>{{againstQualifyConfig.getSport().getName()}}</td>
+                <td>gelijkspel</td>
+                <td class="text-right">{{againstQualifyConfig.getDrawPoints()}}</td>
+            </tr>
+            <tr *ngIf="round.getNumber().getValidPlanningConfig().getExtension()">
+                <td>{{againstQualifyConfig.getSport().getName()}}</td>
+                <td>overwinning na verlenging</td>
+                <td class="text-right">{{againstQualifyConfig.getWinPointsExt()}}</td>
+            </tr>
+            <tr *ngIf="round.getNumber().getValidPlanningConfig().getExtension()">
+                <td>{{againstQualifyConfig.getSport().getName()}}</td>
+                <td>gelijkspel na verlenging</td>
+                <td class="text-right">{{againstQualifyConfig.getDrawPointsExt()}}</td>
+            </tr>
+            <tr *ngIf="round.getNumber().getValidPlanningConfig().getExtension()">
+                <td>{{againstQualifyConfig.getSport().getName()}}</td>
+                <td>verlies na verlenging</td>
+                <td class="text-right">{{againstQualifyConfig.getLosePointsExt()}}</td>
+            </tr>
+        </ng-template>
+    </tbody>
+</table>

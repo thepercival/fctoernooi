@@ -21,8 +21,7 @@ import {
   AgainstSide,
   AgainstSportVariant,
   TogetherGamePlace,
-  GameCreationStrategy,
-  GameCreationStrategyCalculator,
+  PlanningEditMode
 } from 'ngx-sport';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -132,7 +131,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   private getGameData() {
     const gameDatas: GameData[] = [];
     const pouleDataMap = this.getPouleDataMap();
-    this.roundNumber.getGames(this.gameOrder).forEach(game => {
+    this.roundNumber.getGames(this.gameOrder).forEach((game: AgainstGame | TogetherGame) => {
       const somePlaceHasACompetitor = this.somePlaceHasACompetitor(game);
       if (this.filterEnabled && this.favorites?.hasItems() && !this.favorites?.hasGameItem(game)) {
         return;
@@ -166,7 +165,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   }
 
   isAgainst(game: AgainstGame | TogetherGame): boolean {
-    return game instanceof AgainstGame;
+    return (game instanceof AgainstGame);
   }
 
   private getPouleDataMap(): PouleDataMap {
@@ -257,6 +256,12 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   linkToGameEdit(game: AgainstGame | TogetherGame) {
     const suffix = ((game instanceof AgainstGame) ? 'against' : 'together')
     this.router.navigate(['/admin/game' + suffix, this.tournament.getId(), game.getId()]);
+  }
+
+  linkToGameAdd() {
+    const competitionSport = this.roundNumber.getCompetition().getSingleSport();
+    const suffix = ((competitionSport.getVariant() instanceof AgainstSportVariant) ? 'against' : 'together')
+    this.router.navigate(['/admin/game' + suffix, this.tournament.getId(), 0]);
   }
 
   linkToPlanningConfig() {
@@ -354,8 +359,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     return scoreConfig;
   }
 
-  isCreationStrategyIncremental(): boolean {
-    return this.roundNumber.getValidPlanningConfig().getGameCreationStrategy() === GameCreationStrategy.Incremental;
+  inManualMode(): boolean {
+    return this.roundNumber.getValidPlanningConfig().getEditMode() === PlanningEditMode.Manual;
   }
 
   canDecrementNrOfGameRounds(): boolean {

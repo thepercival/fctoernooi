@@ -1,4 +1,4 @@
-<div class="modal-header text-white bg-info" [ngClass]="{ 'border-bottom-0': noHeaderBorder }">
+<div class="modal-header" [ngClass]="{ 'border-bottom-0': noHeaderBorder }">
     <h4 class="modal-title">
         <fa-icon [icon]=" ['fas', 'info-circle' ]"></fa-icon><span class="ml-1">{{header}}</span>
     </h4>
@@ -6,7 +6,7 @@
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
-<div class="modal-body text-white bg-info">
+<div class="modal-body">
     <ng-container *ngTemplateOutlet="modalContent;context:{$implicit: activeModal}">
     </ng-container>
 </div>

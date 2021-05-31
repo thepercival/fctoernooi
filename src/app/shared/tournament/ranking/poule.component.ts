@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, CompetitorMap, GameMode, AgainstSportVariant } from 'ngx-sport';
+import { NameService, Poule, CompetitorMap, AgainstSportVariant, CompetitionSport, SingleSportVariant, AllInOneGameSportVariant } from 'ngx-sport';
 
 import { CSSService } from '../../common/cssservice';
-import { Favorites } from '../../../lib/favorites';
+import { Tournament } from '../../../lib/tournament';
 
 @Component({
   selector: 'app-tournament-pouleranking',
@@ -11,7 +11,8 @@ import { Favorites } from '../../../lib/favorites';
 })
 export class PouleRankingComponent implements OnInit {
   @Input() poule!: Poule;
-  @Input() favorites!: Favorites;
+  @Input() tournament!: Tournament;
+  @Input() competitionSport: CompetitionSport | undefined;
   @Input() competitorMap!: CompetitorMap;
   @Input() header!: boolean;
 
@@ -29,19 +30,12 @@ export class PouleRankingComponent implements OnInit {
     this.processing = false;
   }
 
-  get Sports(): RoundRanking { return RoundRanking.Sports; }
-  get Against(): RoundRanking { return RoundRanking.Against; }
-  get Together(): RoundRanking { return RoundRanking.Together; }
+  isAgainst(): boolean {
+    return (this.competitionSport?.getVariant() instanceof AgainstSportVariant);
+  }
 
-  get RoundRanking(): RoundRanking {
-    const competitionSports = this.poule.getRound().getCompetition().getSports();
-    if (competitionSports.length > 1) {
-      return RoundRanking.Sports;
-    } else if (competitionSports[0].getVariant() instanceof AgainstSportVariant) {
-      return RoundRanking.Against;
-    }
-    return RoundRanking.Together;
+  isTogether(): boolean {
+    return (this.competitionSport?.getVariant() instanceof SingleSportVariant)
+      || (this.competitionSport?.getVariant() instanceof AllInOneGameSportVariant);
   }
 }
-
-enum RoundRanking { Sports = 1, Against, Together };

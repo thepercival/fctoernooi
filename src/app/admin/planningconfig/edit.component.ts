@@ -7,20 +7,16 @@ import {
     CompetitorMap,
     PouleStructure,
     SelfReferee,
-    GameMode,
     CompetitionSport,
-    VoetbalRange,
     GameAmountConfigMapper,
     PlanningConfigMapper,
     JsonGameAmountConfig,
-    Sport,
     GameAmountConfig,
     SingleSportVariant,
-    AgainstGame,
     AgainstSportVariant,
     AllInOneGameSportVariant,
-    GameCreationStrategyCalculator,
-    GameCreationStrategy
+    GamePlaceStrategy,
+    PlanningEditMode
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -32,7 +28,7 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { PlanningConfigRepository } from '../../lib/ngx-sport/planning/config/repository';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RoundNumbersSelectorModalComponent } from '../roundnumber/selector.component';
-import { DefaultService, GameAmountConfigValidations } from '../../lib/ngx-sport/defaultService';
+import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { GameAmountConfigControl } from '../gameAmountConfig/edit.component';
 import { GameAmountConfigRepository } from '../../lib/ngx-sport/gameAmountConfig/repository';
@@ -76,7 +72,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             /*gameMode: ['', Validators.compose([
                 Validators.required
             ])],*/
-            strategyIncremental: false,
+            manual: false,
+            strategyRandomly: false,
             extension: false,
             enableTime: true,
             minutesPerGame: ['', Validators.compose([
@@ -139,11 +136,11 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         return gameAmountConfig.getAmount();
     }
 
-    isGameAmountEditable(): boolean {
-        const calculator = new GameCreationStrategyCalculator();
-        const strategy = calculator.calculate(this.competition.getSportVariants());
-        return strategy === GameCreationStrategy.Static;
-    }
+    // isGameAmountEditable(): boolean {
+    //     const calculator = new GameCreationStrategyCalculator();
+    //     const strategy = calculator.calculate(this.competition.getSportVariants());
+    //     return strategy === GameCreationStrategy.Static;
+    // }
 
 
     getGameAmountLabel(sportVariants: (SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant)[]): string {
@@ -205,8 +202,14 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.modalService.open(GameModeInfoModalComponent, { windowClass: 'info-modal' });
     }
 
-    openInfoModal(header: string, modalContent: TemplateRef<any>) {
-        const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
+    changedEditMode(modalContent: TemplateRef<any>) {
+        if (this.form.controls.manual.value) {
+            this.openInfoModal('handmatig aanpassen', 'warning-modal', modalContent);
+        }
+    }
+
+    openInfoModal(header: string, windowClass: string, modalContent: TemplateRef<any>) {
+        const activeModal = this.modalService.open(InfoModalComponent, { windowClass });
         activeModal.componentInstance.header = header;
         activeModal.componentInstance.modalContent = modalContent;
     }
@@ -230,6 +233,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             );
             this.form.controls[id].setValue(this.getCorrectAmount(sportVariant, gameAmountConfig));
         });
+        this.form.controls.strategyRandomly.setValue(json.gamePlaceStrategy === GamePlaceStrategy.RandomlyAssigned);
+        this.form.controls.manual.setValue(json.editMode === PlanningEditMode.Manual);
 
         const selfRefee = this.getSelfReferee(json.selfReferee);
         this.form.controls.selfReferee.setValue(selfRefee !== SelfReferee.Disabled);
@@ -244,10 +249,11 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     private formToJson(): JsonPlanningConfig {
-        const strategy = this.form.controls.strategyIncremental.value ? GameCreationStrategy.Incremental : GameCreationStrategy.Static;
+        const strategy = this.form.controls.strategyRandomly.value ? GamePlaceStrategy.RandomlyAssigned : GamePlaceStrategy.EquallyAssigned;
         return {
             id: 0,
-            gameCreationStrategy: strategy,
+            editMode: this.form.controls.manual.value ? PlanningEditMode.Manual : PlanningEditMode.Auto,
+            gamePlaceStrategy: strategy,
             extension: this.form.controls.extension.value,
             enableTime: this.form.controls.enableTime.value,
             minutesPerGame: this.form.controls.minutesPerGame.value,
@@ -316,7 +322,12 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         return selfRefereeAvailable;
     }
 
-
+    showGamePlaceStrategy(): boolean {
+        const sportVariants = this.startRoundNumber.getCompetition().getSportVariants();
+        return !sportVariants.every((sportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant): boolean => {
+            return sportVariant instanceof AgainstSportVariant && !sportVariant.isMixed();
+        });
+    }
 
     enableDisableSelfReferee() {
         if (this.isSelfRefereeAvailable()) {
@@ -346,11 +357,11 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.planningConfigRepository.saveObject(jsonConfig, this.startRoundNumber, this.tournament)
             .subscribe(
                 /* happy path */ configRes => {
-                    console.log(planningActionCalculator.isGameAmountEditable());
-                    if (planningActionCalculator.isGameAmountEditable()) {
+                    if (jsonConfig.editMode === PlanningEditMode.Auto) {
                         this.saveGameAmountConfigs(jsonGameAmountConfigs, planningAction);
                     } else {
                         this.processing = false;
+                        this.myNavigation.back();
                     }
                 },
                 /* error path */ e => {
@@ -391,6 +402,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         } else {
             this.processing = false;
             this.setAlert('success', 'de instellingen zijn opgeslagen');
+            this.myNavigation.back();
         }
     }
 
@@ -436,16 +448,16 @@ class PlanningActionCalculator {
         if (config.getSelfReferee() !== json.selfReferee) {
             return true
         }
-        if (config.getGameCreationStrategy() !== json.gameCreationStrategy) {
+        if (config.getGamePlaceStrategy() !== json.gamePlaceStrategy) {
             return true
         }
         return this.gameAmountConfigsChanged(jsonGameAmountConfigs);
     }
 
     private gameAmountConfigsChanged(jsonGameAmountConfigs: JsonGameAmountConfig[]): boolean {
-        if (!this.isGameAmountEditable()) {
-            return false;
-        }
+        // if (!this.isGameAmountEditable()) {
+        //     return false;
+        // }
         const getGameAmountConfig = (competitionSport: CompetitionSport): JsonGameAmountConfig | undefined => {
             return jsonGameAmountConfigs.find((jsonGameAmountConfigIt: JsonGameAmountConfig) => {
                 return jsonGameAmountConfigIt.competitionSport.id === competitionSport.getId();
@@ -471,11 +483,11 @@ class PlanningActionCalculator {
             ;
     }
 
-    isGameAmountEditable(): boolean {
-        const calculator = new GameCreationStrategyCalculator();
-        const strategy = calculator.calculate(this.roundNumber.getCompetition().getSportVariants());
-        return strategy === GameCreationStrategy.Static;
-    }
+    // isGameAmountEditable(): boolean {
+    //     const calculator = new GameCreationStrategyCalculator();
+    //     const strategy = calculator.calculate(this.roundNumber.getCompetition().getSportVariants());
+    //     return strategy === GameCreationStrategy.Static;
+    // }
 
 }
 

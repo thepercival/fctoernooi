@@ -94,6 +94,12 @@ input.is-warning {
   @extend .border-info;
 }
 
+.warning-modal .modal-content{
+  border: 5px;
+  @extend .bg-warning;
+  @extend .text-white;
+}
+
 .info-modal .modal-content{
   border: 5px;
   @extend .bg-info;

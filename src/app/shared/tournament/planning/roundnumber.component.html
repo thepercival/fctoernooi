@@ -152,18 +152,10 @@
       </tbody>
     </table>
 
-    <div *ngIf="isCreationStrategyIncremental()" class="d-flex justify-content-center">
-      <ul class="list-group list-group-horizontal">
-        <button [disabled]="!canDecrementNrOfGameRounds()" type="button" class="btn btn-danger"
-          (click)="decrementNrOfGameRounds()">
-          <fa-icon [icon]="['fas', 'minus']"></fa-icon>
-        </button>
-        <li class="list-group-item py-2">speelronde</li>
-        <button [disabled]="!canIncrementNrOfGameRounds()" type="button" class="btn btn-primary"
-          (click)="incrementNrOfGameRounds()">
-          <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-        </button>
-      </ul>
+    <div *ngIf="inManualMode()" class="d-flex justify-content-center">
+      <button type="button" class="btn btn-primary" (click)="linkToGameAdd()">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon> wedstrijd toevoegen
+      </button>
     </div>
   </div>
 </div>
@@ -205,7 +197,7 @@
         <ng-container *ngTemplateOutlet="againstGamePlacesCell;context:{$implicit: gmData}"></ng-container>
       </ng-container>
     </tr>
-  </table>>
+  </table>
 </ng-template>
 
 <ng-template #togetherGamePlaces let-gmData>

@@ -4,6 +4,9 @@ import { NameService, Poule, CompetitorMap, VoetbalRange, CompetitionSport, Roun
 import { CSSService } from '../../../common/cssservice';
 import { Favorites } from '../../../../lib/favorites';
 import { FavoritesRepository } from '../../../../lib/favorites/repository';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PouleRankingModalComponent } from '../../poulerankingmodal/rankingmodal.component';
+import { Tournament } from '../../../../lib/tournament';
 
 @Component({
   selector: 'app-tournament-pouleranking-sports-table',
@@ -12,43 +15,51 @@ import { FavoritesRepository } from '../../../../lib/favorites/repository';
 })
 export class PouleRankingSportsComponent implements OnInit {
   @Input() poule!: Poule;
-  @Input() favorites!: Favorites;
+  @Input() tournament!: Tournament;
   @Input() competitorMap!: CompetitorMap;
   @Input() header!: boolean;
   protected roundRankingCalculator: RoundRankingCalculator;
   public roundRankingItems!: RoundRankingItem[];
   public nameService!: NameService;
+  public favorites!: Favorites;
   competitionSports: CompetitionSport[] = [];
   gameRoundMap = new GameRoundMap();
   togetherRankingMap: TogetherRankingMap = new TogetherRankingMap();
   nrOfGameRounds!: number;
-  viewPortNrOfColumnsMap = new ViewPortNrOfColumnsMap();
-  viewPortRangeMap!: ViewPortRangeMap;
+  viewPointStart: number = 1;
   public processing = true;
 
 
   constructor(
     public cssService: CSSService,
-    public favRepository: FavoritesRepository) {
+    private modalService: NgbModal,
+    public favRepos: FavoritesRepository) {
     this.roundRankingCalculator = new RoundRankingCalculator();
   }
 
   ngOnInit() {
     this.processing = true;
     this.nameService = new NameService(this.competitorMap);
+    this.favorites = this.favRepos.getObject(this.tournament);
     this.roundRankingItems = this.roundRankingCalculator.getItemsForPoule(this.poule);
     this.competitionSports = this.poule.getCompetition().getSports();
-    this.initViewPortNrOfColumnsMap();
     this.initGameRoundMap();
     this.processing = false;
   }
 
-  protected initViewPortNrOfColumnsMap() {
-    this.viewPortNrOfColumnsMap.set(ViewPort.xs, 2);
-    this.viewPortNrOfColumnsMap.set(ViewPort.sm, 5);
-    this.viewPortNrOfColumnsMap.set(ViewPort.md, 10);
-    this.viewPortNrOfColumnsMap.set(ViewPort.lg, 15);
-    this.viewPortNrOfColumnsMap.set(ViewPort.xl, 30);
+  protected getNrOfColumns(viewPort: ViewPort): number {
+    switch (viewPort) {
+      case ViewPort.xs:
+        return 2;
+      case ViewPort.sm:
+        return 5;
+      case ViewPort.md:
+        return 10;
+      case ViewPort.lg:
+        return 15;
+      default: // xl
+        return 30;
+    }
   }
 
   getViewPortClass(gameRound: number): string {
@@ -57,8 +68,9 @@ export class PouleRankingSportsComponent implements OnInit {
         continue;
       }
       const viewPort = <ViewPort>propertyValue;
-      const viewPortRange = this.viewPortRangeMap.get(viewPort);
-      if (!viewPortRange || gameRound < viewPortRange.min || gameRound > viewPortRange.max) {
+      const nrOfColumns = this.getNrOfColumns(viewPort);
+      const viewPortEnd = this.viewPointStart + (nrOfColumns - 1)
+      if (!viewPortEnd || gameRound < this.viewPointStart || gameRound > viewPortEnd) {
         continue;
       }
       if (viewPort === ViewPort.xs) {
@@ -70,12 +82,6 @@ export class PouleRankingSportsComponent implements OnInit {
     // als in xs dan niets
     // als in sm dan .d-none .d-sm-block
     // als in md dan .d-none .d-sm-block
-
-    // check in which viewPort the gameRound number is active, than return that class
-    // this.viewPortRangeMap
-    // HIER JUISTE CLASSES TOEVOEGEN
-    // BEVRAAG
-    return '';
   }
 
   initGameRoundMap() {
@@ -108,6 +114,13 @@ export class PouleRankingSportsComponent implements OnInit {
   //     return scoreConfig.useSubScore();
   //   });
   // }
+
+  openModalPouleRank(competitionSport: CompetitionSport) {
+    const modalRef = this.modalService.open(PouleRankingModalComponent, { size: 'xl' });
+    modalRef.componentInstance.poule = this.poule;
+    modalRef.componentInstance.competitionSport = competitionSport;
+    modalRef.componentInstance.tournament = this.tournament;
+  }
 }
 
 class TogetherRankingMap extends Map<number, CompetitionSportMap>{
@@ -128,10 +141,6 @@ class GameRoundMap extends Map<number | string, number[]> {
 
 }
 
-
-class ViewPortNrOfColumnsMap extends Map<ViewPort, number> {
-
-}
 class ViewPortRangeMap extends Map<ViewPort, VoetbalRange> {
 
 }

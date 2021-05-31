@@ -3,14 +3,14 @@
     <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
       <app-tournament-title [tournament]="tournament">
       </app-tournament-title>
-      <div class="d-flex justify-content-between">
+
+      <div *ngIf="competitionSport" class="d-flex justify-content-between">
         <h2 class="text-truncate">
-          <app-sport-icon *ngIf="competitionSport" [customId]="competitionSport.getSport().getCustomId()">
+          <app-sport-icon [customId]="competitionSport.getSport().getCustomId()">
           </app-sport-icon>
-          <span *ngIf="competitionSport"> {{competitionSport.getSport().getName()}}</span>
-          <span *ngIf="!competitionSport">sport</span>
+          <span> {{competitionSport.getSport().getName()}}</span>
         </h2>
-        <button *ngIf="competitionSport && competition.getSports().length === 1" (click)="linkToSports()"
+        <button *ngIf="competition.getSports().length === 1" (click)="linkToSports()"
           class="mb-2 btn btn-outline-secondary btn-sm">
           <span>meerdere sporten</span>
         </button>
@@ -22,7 +22,7 @@
 
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
-      <div *ngIf="!processing">
+      <div *ngIf="!processing && competitionSport">
         <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs nav-fill">
           <li [ngbNavItem]="TabFields">
             <a ngbNavLink>{{getFieldsDescription()}}</a>
@@ -40,7 +40,7 @@
               </app-tournament-scoreconfig-edit>
             </ng-template>
           </li>
-          <li [ngbNavItem]="TabPoints">
+          <li *ngIf="showAgainstQualifyConfig(competitionSport)" [ngbNavItem]="TabPoints">
             <a ngbNavLink>puntentelling</a>
             <ng-template ngbNavContent>
               <app-tournament-qualifyagainstconfig-edit [competitionSport]="competitionSport" [tournament]="tournament"
@@ -51,9 +51,5 @@
         </ul>
         <div [ngbNavOutlet]="nav" class="mt-2"></div>
       </div>
-      <!-- <app-tournament-create-sportvariant *ngIf="!processing && competition && !competitionSport"
-        class="col-xs-12 col-sm-10 col-md-8 col-lg-6" (selected)="selectedSports($event)"
-        [selectedSports]="getSportsWithFields()">
-      </app-tournament-create-sportvariant> -->
     </div>
   </div>

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { AgainstSportVariant, AllInOneGameSportVariant, GameCreationStrategy, GameCreationStrategyCalculator, GameMode, NameService, SingleSportVariant, Sport, VoetbalRange } from 'ngx-sport';
+import { AgainstSportVariant, AllInOneGameSportVariant, GameMode, GamePlaceStrategy, NameService, SingleSportVariant, Sport, VoetbalRange } from 'ngx-sport';
 
 import { IAlert } from '../../shared/common/alert';
 import { CSSService } from '../../shared/common/cssservice';
@@ -130,20 +130,21 @@ export class CreateSportWithFieldsComponent implements OnInit {
         this.created.emit(this.formToSportWithFields(sport));
     }
 
-    get Single(): GameMode { return GameMode.Single; }
     get Against(): GameMode { return GameMode.Against; }
-    get Static(): GameCreationStrategy { return GameCreationStrategy.Static; }
+    get Single(): GameMode { return GameMode.Single; }
+    get Equally(): GamePlaceStrategy { return GamePlaceStrategy.EquallyAssigned; }
+    get Randomly(): GamePlaceStrategy { return GamePlaceStrategy.RandomlyAssigned; }
 
     openGameModeInfoModal() {
         this.modalService.open(GameModeInfoModalComponent, { windowClass: 'info-modal' });
     }
 
-    getCreationStrategy(sport: Sport): GameCreationStrategy {
-        const calculator = new GameCreationStrategyCalculator();
-        const thisSportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant = this.formToVariant(sport);
-        // console.log(this.existingSportVariants.concat([thisSportVariant]));
-        return calculator.calculate(this.existingSportVariants.concat([thisSportVariant]));
-    }
+    // getCreationStrategy(sport: Sport): GameCreationStrategy {
+    //     const calculator = new GameCreationStrategyCalculator();
+    //     const thisSportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant = this.formToVariant(sport);
+    //     // console.log(this.existingSportVariants.concat([thisSportVariant]));
+    //     return calculator.calculate(this.existingSportVariants.concat([thisSportVariant]));
+    // }
 
     protected setAlert(type: string, message: string) {
         this.alert = { 'type': type, 'message': message };

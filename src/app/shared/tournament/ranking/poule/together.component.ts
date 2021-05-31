@@ -4,6 +4,7 @@ import { NameService, Poule, CompetitorMap, GameAmountConfig, Place, ScoreConfig
 import { CSSService } from '../../../common/cssservice';
 import { Favorites } from '../../../../lib/favorites';
 import { FavoritesRepository } from '../../../../lib/favorites/repository';
+import { Tournament } from '../../../../lib/tournament';
 
 @Component({
   selector: 'app-tournament-pouleranking-together-table',
@@ -12,13 +13,15 @@ import { FavoritesRepository } from '../../../../lib/favorites/repository';
 })
 export class PouleRankingTogetherComponent implements OnInit {
   @Input() poule!: Poule;
-  @Input() favorites!: Favorites;
+  @Input() tournament!: Tournament;
   @Input() competitorMap!: CompetitorMap;
+  @Input() competitionSport!: CompetitionSport;
   @Input() header!: boolean;
   protected togetherRankingCalculator!: TogetherSportRoundRankingCalculator;
-  public competitionSport!: CompetitionSport;
+
   public sportRankingItems!: SportRoundRankingItem[];
   public nameService!: NameService;
+  public favorites!: Favorites;
   gameAmountConfigs: GameAmountConfig[] = [];
   gameRoundMap = new GameRoundMap();
   togetherRankingMap: TogetherRankingMap = new TogetherRankingMap();
@@ -31,13 +34,13 @@ export class PouleRankingTogetherComponent implements OnInit {
   constructor(
     public cssService: CSSService,
     private scoreConfigService: ScoreConfigService,
-    public favRepository: FavoritesRepository) {
+    public favRepos: FavoritesRepository) {
   }
 
   ngOnInit() {
     this.processing = true;
     this.nameService = new NameService(this.competitorMap);
-    this.competitionSport = this.poule.getCompetition().getSingleSport();
+    this.favorites = this.favRepos.getObject(this.tournament);
     this.togetherRankingCalculator = new TogetherSportRoundRankingCalculator(this.competitionSport);
     this.sportRankingItems = this.togetherRankingCalculator.getItemsForPoule(this.poule);
     this.gameAmountConfigs = this.poule.getRound().getNumber().getValidGameAmountConfigs();

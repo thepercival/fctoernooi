@@ -7,14 +7,16 @@
             <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
         <div *ngIf="!processing" class="card-text">
-            <app-tournament-pouleranking-sports-table *ngIf="RoundRanking === Sports" [poule]="poule"
-                [favorites]="favorites" [competitorMap]="competitorMap" [header]="header">
+            <app-tournament-pouleranking-sports-table *ngIf="competitionSport === undefined" [poule]="poule"
+                [tournament]="tournament" [competitorMap]="competitorMap" [header]="header">
             </app-tournament-pouleranking-sports-table>
-            <app-tournament-pouleranking-against-table *ngIf="RoundRanking === Against" [poule]="poule"
-                [favorites]="favorites" [competitorMap]="competitorMap" [header]="header">
+            <app-tournament-pouleranking-against-table *ngIf="competitionSport && isAgainst()" [poule]="poule"
+                [tournament]="tournament" [competitionSport]="competitionSport" [competitorMap]="competitorMap"
+                [header]="header">
             </app-tournament-pouleranking-against-table>
-            <app-tournament-pouleranking-together-table *ngIf="RoundRanking === Together" [poule]="poule"
-                [favorites]="favorites" [competitorMap]="competitorMap" [header]="header">
+            <app-tournament-pouleranking-together-table *ngIf="competitionSport && isTogether()" [poule]="poule"
+                [tournament]="tournament" [competitionSport]="competitionSport" [competitorMap]="competitorMap"
+                [header]="header">
             </app-tournament-pouleranking-together-table>
         </div>
     </div>

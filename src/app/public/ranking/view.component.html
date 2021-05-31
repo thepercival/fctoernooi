@@ -18,7 +18,7 @@
           <li [ngbNavItem]="1">
             <a ngbNavLink>poulestanden</a>
             <ng-template ngbNavContent>
-              <app-tournament-ranking-round [round]="structure.getRootRound()" [favorites]="favorites"
+              <app-tournament-ranking-round [round]="structure.getRootRound()" [tournament]="tournament"
                 [competitorMap]="competitorMap" [first]="true">
               </app-tournament-ranking-round>
             </ng-template>

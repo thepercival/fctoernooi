@@ -9,7 +9,7 @@
   </div>
 </ng-container>
 
-<div class="form-group row" *ngIf="gameAmountControls.length === 0">
+<div class="form-group row" *ngIf="gameAmountControls.length !== 0">
   <label class="col-7 col-form-label">{{label}}</label>
   <div class="col-5">
     <button type="button" (click)="openModal(gameAmountModal)" class="btn btn-sm btn-outline-secondary">
@@ -30,7 +30,8 @@
   <div class="modal-body" [formGroup]="form">
     <div class="form-group row" *ngFor="let gameAmountControl of gameAmountControls">
       <label [for]="gameAmountControl.json.id"
-        class="col-8 col-form-label">{{gameAmountControl.json.competitionSport.sport.name}}</label>
+        class="col-8 col-form-label">{{gameAmountControl.json.competitionSport.sport.name}}
+        ({{getAmountDescription(gameAmountControl.json.competitionSport)}})</label>
       <div class="col-4">
         <select class="form-control" [formControlName]="gameAmountControl.json.id" required>
           <option *ngFor="let n of getRange(gameAmountControl.range)" [ngValue]="n">{{n}}</option>

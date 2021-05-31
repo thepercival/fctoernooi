@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
+    AgainstSportVariant,
     CompetitionSport,
     CompetitionSportService,
     RoundNumber,
@@ -22,7 +23,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
     styleUrls: ['./edit.component.css']
 })
 export class CompetitionSportEditComponent extends TournamentComponent implements OnInit {
-    competitionSport!: CompetitionSport;
+    competitionSport: CompetitionSport | undefined;
     activeTab!: number;
     hasBegun!: boolean;
     // startRoundNumber: RoundNumber;
@@ -53,7 +54,6 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
         this.hasBegun = this.structure.getRootRound().hasBegun();
         const competitionSport = this.getCompetitionSportById(id);
         if (competitionSport === undefined) {
-            this.setAlert('danger', 'de sport kan niet gevonden worden');
             return;
         }
         this.competitionSport = competitionSport;
@@ -75,55 +75,9 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
     get TabScore(): number { return CompetitionSportTab.Score; }
     get TabPoints(): number { return CompetitionSportTab.Points; }
 
-    selectedSports(sports: Sport[]) {
-        // if (sport === undefined) {
-        //     return this.navigateBack();
-        // }
-        // this.competitionSportService = this.competitionSportService.createDefault(sport, this.competition, this.structure);
-        // this.initForm();
+    showAgainstQualifyConfig(competitionSport: CompetitionSport): boolean {
+        return competitionSport.getVariant() instanceof AgainstSportVariant;
     }
-
-
-    // add(): boolean {
-    //     this.processing = true;
-    //     this.setAlert('info', 'de sport wordt gewijzigd');
-
-    //     this.sportConfig.setWinPoints(this.form.value['winPoints']);
-    //     this.sportConfig.setDrawPoints(this.form.value['drawPoints']);
-    //     this.sportConfig.setWinPointsExt(this.form.value['winPointsExt']);
-    //     this.sportConfig.setDrawPointsExt(this.form.value['drawPointsExt']);
-    //     this.sportConfig.setLosePointsExt(this.form.value['losePointsExt']);
-
-    //     this.sportConfigRepository.createObject(this.sportConfig, this.tournament)
-    //         .subscribe(
-    //             /* happy path */ sportConfigRes => {
-    //                 const fieldReposAdds = [];
-    //                 for (let priority = 1; priority <= this.form.value['nrOfFields']; priority++) {
-    //                     const jsonField: JsonField = { priority, name: String(priority) };
-    //                     fieldReposAdds.push(this.fieldRepository.createObject(jsonField, this.sportConfig, this.tournament));
-    //                 }
-
-    //                 forkJoin(fieldReposAdds).subscribe(results => {
-    //                     this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
-    //                 /* happy path */ roundNumberOut => {
-    //                             this.linkToSportConfig(); /* niet navigate back van kan van sport komen */
-    //                             this.processing = false;
-    //                         },
-    //                 /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-    //                 /* onComplete */() => this.processing = false
-    //                     );
-    //                 },
-    //                     err => {
-    //                         this.processing = false;
-    //                         this.setAlert('danger', 'de wedstrijd is niet opgeslagen: ' + err);
-    //                     }
-    //                 );
-    //             },
-    //     /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-    //     /* onComplete */() => { this.processing = false; }
-    //         );
-    //     return false;
-    // }
 
     navigateBack() {
         this.myNavigation.back();
@@ -143,7 +97,7 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
     }
 
     getFieldsDescription(): string {
-        return this.translate.getFieldNamePlural(this.competitionSport.getSport());
+        return this.translate.getFieldNamePlural(this.competitionSport?.getSport());
     }
 }
 

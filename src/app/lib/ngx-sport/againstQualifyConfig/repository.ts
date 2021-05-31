@@ -1,20 +1,20 @@
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { APIRepository } from '../../../repository';
-import { QualifyAgainstConfig, QualifyAgainstConfigMapper, JsonQualifyAgainstConfig, Round, CompetitionSport, CompetitionSportMapper, JsonCompetitionSport, QualifyAgainstConfigService } from 'ngx-sport';
-import { Tournament } from '../../../tournament';
+import { APIRepository } from '../../repository';
+import { AgainstQualifyConfig, AgainstQualifyConfigMapper, JsonAgainstQualifyConfig, Round, CompetitionSportMapper, JsonCompetitionSport, AgainstQualifyConfigService } from 'ngx-sport';
+import { Tournament } from '../../tournament';
 
 @Injectable({
     providedIn: 'root'
 })
-export class QualifyAgainstConfigRepository extends APIRepository {
+export class AgainstQualifyConfigRepository extends APIRepository {
 
     constructor(
-        private service: QualifyAgainstConfigService,
-        private mapper: QualifyAgainstConfigMapper,
+        private service: AgainstQualifyConfigService,
+        private mapper: AgainstQualifyConfigMapper,
         private competitionSportMapper: CompetitionSportMapper,
         private http: HttpClient) {
         super();
@@ -32,13 +32,13 @@ export class QualifyAgainstConfigRepository extends APIRepository {
             this.getUrlpostfix();
     }
 
-    saveObject(jsonQualifyAgainstConfig: JsonQualifyAgainstConfig, round: Round, tournament: Tournament): Observable<QualifyAgainstConfig> {
-        const url = this.getUrl(tournament, round, jsonQualifyAgainstConfig.competitionSport);
-        return this.http.post<JsonQualifyAgainstConfig>(url, jsonQualifyAgainstConfig, this.getOptions()).pipe(
-            map((jsonResult: JsonQualifyAgainstConfig) => {
+    saveObject(jsonAgainstQualifyConfig: JsonAgainstQualifyConfig, round: Round, tournament: Tournament): Observable<AgainstQualifyConfig> {
+        const url = this.getUrl(tournament, round, jsonAgainstQualifyConfig.competitionSport);
+        return this.http.post<JsonAgainstQualifyConfig>(url, jsonAgainstQualifyConfig, this.getOptions()).pipe(
+            map((jsonResult: JsonAgainstQualifyConfig) => {
                 const competitionSport = this.competitionSportMapper.toObject(jsonResult.competitionSport, tournament.getCompetition());
                 round.getChildren().forEach((child: Round) => this.service.removeFromRound(competitionSport, round));
-                return this.mapper.toObject(jsonResult, round, round.getQualifyAgainstConfig(competitionSport));
+                return this.mapper.toObject(jsonResult, round, round.getAgainstQualifyConfig(competitionSport));
             }),
             catchError((err) => this.handleError(err))
         );

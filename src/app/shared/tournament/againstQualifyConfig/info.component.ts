@@ -7,7 +7,7 @@ import { Round } from 'ngx-sport';
     templateUrl: './info.component.html',
     styleUrls: ['./info.component.scss']
 })
-export class QualifyAgainstInfoComponent {
+export class AgainstQualifyInfoComponent {
     @Input() round!: Round;
     constructor() { }
 }

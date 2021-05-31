@@ -9,7 +9,7 @@ import {
 import {
   ScoreConfigService,
   CompetitionSportService,
-  QualifyAgainstConfigService,
+  AgainstQualifyConfigService,
   GameAmountConfigService
 } from 'ngx-sport';
 
@@ -56,7 +56,7 @@ import { RankingRoundComponent } from './ranking/round.component';
     CompetitionSportService,
     CSSService,
     GameAmountConfigService,
-    QualifyAgainstConfigService,
+    AgainstQualifyConfigService,
     ScoreConfigService
   ]
 })
