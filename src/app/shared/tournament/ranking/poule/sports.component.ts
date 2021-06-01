@@ -7,6 +7,7 @@ import { FavoritesRepository } from '../../../../lib/favorites/repository';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PouleRankingModalComponent } from '../../poulerankingmodal/rankingmodal.component';
 import { Tournament } from '../../../../lib/tournament';
+import { ViewPort, ViewPortManager, ViewPortNrOfColumnsMap } from '../../../common/viewPortManager';
 
 @Component({
   selector: 'app-tournament-pouleranking-sports-table',
@@ -22,10 +23,10 @@ export class PouleRankingSportsComponent implements OnInit {
   public roundRankingItems!: RoundRankingItem[];
   public nameService!: NameService;
   public favorites!: Favorites;
+  public viewPortManager!: ViewPortManager;
   competitionSports: CompetitionSport[] = [];
   gameRoundMap = new GameRoundMap();
   togetherRankingMap: TogetherRankingMap = new TogetherRankingMap();
-  nrOfGameRounds!: number;
   viewPointStart: number = 1;
   public processing = true;
 
@@ -43,59 +44,19 @@ export class PouleRankingSportsComponent implements OnInit {
     this.favorites = this.favRepos.getObject(this.tournament);
     this.roundRankingItems = this.roundRankingCalculator.getItemsForPoule(this.poule);
     this.competitionSports = this.poule.getCompetition().getSports();
-    this.initGameRoundMap();
+    this.viewPortManager = new ViewPortManager(this.getViewPortNrOfColumnsMap(), this.competitionSports.length);
+    this.viewPortManager.update(1);
     this.processing = false;
   }
 
-  protected getNrOfColumns(viewPort: ViewPort): number {
-    switch (viewPort) {
-      case ViewPort.xs:
-        return 2;
-      case ViewPort.sm:
-        return 5;
-      case ViewPort.md:
-        return 10;
-      case ViewPort.lg:
-        return 15;
-      default: // xl
-        return 30;
-    }
-  }
-
-  getViewPortClass(gameRound: number): string {
-    for (const [propertyKey, propertyValue] of Object.entries(ViewPort)) {
-      if (!Number.isNaN(Number(propertyKey))) {
-        continue;
-      }
-      const viewPort = <ViewPort>propertyValue;
-      const nrOfColumns = this.getNrOfColumns(viewPort);
-      const viewPortEnd = this.viewPointStart + (nrOfColumns - 1)
-      if (!viewPortEnd || gameRound < this.viewPointStart || gameRound > viewPortEnd) {
-        continue;
-      }
-      if (viewPort === ViewPort.xs) {
-        return '';
-      }
-      return 'd-none d-' + propertyKey + '-table-cell';
-    }
-    return 'd-none';
-    // als in xs dan niets
-    // als in sm dan .d-none .d-sm-block
-    // als in md dan .d-none .d-sm-block
-  }
-
-  initGameRoundMap() {
-    let startGameRound = 1;
-    // this.gameAmountConfigs.forEach(gameAmountConfig => {
-    //   const gameRounds: number[] = [];
-    //   const iterator = (new Array(gameAmountConfig.getAmount())).keys();
-    //   for (const key of iterator) {
-    //     gameRounds.push(startGameRound + key);
-    //   }
-    //   this.gameRoundMap.set(gameAmountConfig.getCompetitionSport().getId(), gameRounds);
-    //   startGameRound += gameAmountConfig.getAmount();
-    // });
-    this.nrOfGameRounds = startGameRound - 1;
+  protected getViewPortNrOfColumnsMap(): ViewPortNrOfColumnsMap {
+    const viewPortNrOfColumnsMap = new ViewPortNrOfColumnsMap();
+    viewPortNrOfColumnsMap.set(ViewPort.xs, 2);
+    viewPortNrOfColumnsMap.set(ViewPort.sm, 5);
+    viewPortNrOfColumnsMap.set(ViewPort.md, 10);
+    viewPortNrOfColumnsMap.set(ViewPort.lg, 15);
+    viewPortNrOfColumnsMap.set(ViewPort.xl, 30);
+    return viewPortNrOfColumnsMap;
   }
 
   getQualifyPlaceClass(roundRankingItem: RoundRankingItem): string {
@@ -140,9 +101,3 @@ class StartGameRoundMap extends Map<number | string, number> {
 class GameRoundMap extends Map<number | string, number[]> {
 
 }
-
-class ViewPortRangeMap extends Map<ViewPort, VoetbalRange> {
-
-}
-
-enum ViewPort { xs, sm, md, lg, xl }

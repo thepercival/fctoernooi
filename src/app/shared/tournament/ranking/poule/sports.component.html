@@ -9,18 +9,33 @@
         <tr>
             <th class="text-right pl-0">pl</th>
             <th class="place pl-0">
-                <span>deelnemer</span>
-                <!-- <span *ngIf="activeGameRound < nrOfGameRounds">backwards</span> -->
+                <div class="d-flex justify-content-between">
+                    <span class="d-xs-inline d-sm-none">deeln.</span>
+                    <span class="d-none d-sm-inline">deelnemer</span>
+                    <ng-template ngFor let-viewPort [ngForOf]="viewPortManager.getViewPorts()">
+                        <button *ngIf="viewPortManager.showBackArrow(viewPort)"
+                            class="btn btn-sm btn-outline-secondary {{viewPortManager.getSingleVisibleClass(viewPort)}}"
+                            (click)="viewPortManager.decrement()">
+                            < </button>
+                    </ng-template>
+                </div>
             </th>
             <th *ngFor="let competitionSport of competitionSports; let counter = index"
-                class="text-right pl-0 {{getViewPortClass(counter+1)}}">
+                class="text-right pl-0 {{viewPortManager.getClass(counter+1)}}">
                 <button class="btn btn-sm btn-outline-info" (click)="openModalPouleRank(competitionSport)">
                     {{competitionSport.getSport().getName()}}
                 </button>
             </th>
-            <th class="text-right pl-0" title="totaal">
-                <!-- <span *ngIf="activeGameRound < nrOfGameRounds">forward</span> -->
-                <span>t</span>
+            <th class="pl-0" title="totaal">
+                <div class="d-flex justify-content-between">
+                    <ng-template ngFor let-viewPort [ngForOf]="viewPortManager.getViewPorts()">
+                        <button *ngIf="viewPortManager.showForwardArrow(viewPort)"
+                            class="btn btn-sm btn-outline-secondary {{viewPortManager.getSingleVisibleClass(viewPort)}}"
+                            (click)="viewPortManager.increment()">
+                            > </button>
+                    </ng-template>
+                    <span class="d-none d-sm-inline">tot.</span>
+                </div>
             </th>
         </tr>
     </thead>
@@ -35,7 +50,7 @@
                 {{nameService.getPlaceFromName(roundRankingItem.getPlace(), true)}}
             </td>
             <td *ngFor="let competitionSport of competitionSports; let counter = index;"
-                class="text-right pl-0 {{getViewPortClass(counter+1)}}">
+                class="text-right pl-0 {{viewPortManager.getClass(counter+1)}}">
                 {{roundRankingItem.getSportItem(competitionSport).getRank()}}</td>
             <td class="text-right pl-0">{{roundRankingItem.getCumulativeRank()}}</td>
         </tr>

@@ -7,20 +7,33 @@
     </colgroup>
     <thead>
         <tr>
-            <th class="text-right pl-0">pl</th>
+            <th class="text-right pl-0 align-middle">pl</th>
             <th class="place pl-0">
-                <span>deelnemer</span>
-                <!-- <span *ngIf="activeGameRound > 1">back</span> -->
+                <div class="d-flex justify-content-between">
+                    <span class="d-xs-inline d-sm-none">deeln.</span>
+                    <span class="d-none d-sm-inline">deelnemer</span>
+                    <ng-template ngFor let-viewPort [ngForOf]="viewPortManager.getViewPorts()">
+                        <button *ngIf="viewPortManager.showBackArrow(viewPort)"
+                            class="btn btn-sm btn-outline-secondary {{viewPortManager.getSingleVisibleClass(viewPort)}}"
+                            (click)="viewPortManager.decrement()">
+                            < </button>
+                    </ng-template>
+                </div>
             </th>
-            <ng-template ngFor let-gameAmountConfig [ngForOf]="gameAmountConfigs">
-                <th *ngFor="let gameRound of getGameRounds(gameAmountConfig.getCompetitionSport())"
-                    class="text-right pl-0 {{getViewPortClass(gameRound)}}">
-                    {{gameRound}}</th>
-            </ng-template>
-            <!-- <th *ngFor="let gameRound of gameRounds" class="text-right pl-0">{{gameRound}}</th> -->
-            <th class="text-right pl-0" title="totaal">
-                <!-- <span *ngIf="activeGameRound < nrOfGameRounds">forward</span> -->
-                <span>t</span>
+            <th *ngFor="let gameRound of getGameRounds()"
+                class="text-right pl-0 align-middle {{viewPortManager.getClass(gameRound)}}">
+                {{gameRound}}</th>
+
+            <th class="text-center" title="totaal">
+                <div class="d-flex justify-content-between">
+                    <ng-template ngFor let-viewPort [ngForOf]="viewPortManager.getViewPorts()">
+                        <button *ngIf="viewPortManager.showForwardArrow(viewPort)"
+                            class="btn btn-sm btn-outline-secondary {{viewPortManager.getSingleVisibleClass(viewPort)}}"
+                            (click)="viewPortManager.increment()">
+                            > </button>
+                    </ng-template>
+                    <span class="d-none d-sm-inline">tot.</span>
+                </div>
             </th>
         </tr>
     </thead>
@@ -34,11 +47,9 @@
                 [ngClass]="{ 'favitem': favorites.hasCompetitor(competitorMap.getCompetitor(sportRankingItem.getPlaceLocation())) }">
                 {{nameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true)}}
             </td>
-            <ng-template ngFor let-gameAmountConfig [ngForOf]="gameAmountConfigs">
-                <td *ngFor="let gameRound of getGameRounds(gameAmountConfig.getCompetitionSport())"
-                    class="text-right pl-0 {{getViewPortClass(gameRound)}}">
-                    {{getScore(sportRankingItem.getPlaceLocation(), gameAmountConfig, gameRound+1 )}}</td>
-            </ng-template>
+            <td *ngFor="let gameRound of getGameRounds()"
+                class="text-right pl-0 {{viewPortManager.getClass(gameRound)}}">
+                {{getScore(sportRankingItem.getPlaceLocation(), gameRound )}}</td>
             <td class="text-right pl-0">{{sportRankingItem.getPerformance().getPoints()}}</td>
         </tr>
     </tbody>

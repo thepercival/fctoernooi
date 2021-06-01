@@ -323,6 +323,9 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   openModalPouleRank(poule: Poule) {
     const modalRef = this.modalService.open(PouleRankingModalComponent, { size: 'xl' });
     modalRef.componentInstance.poule = poule;
+    if (!this.roundNumber.getCompetition().hasMultipleSports()) {
+      modalRef.componentInstance.competitionSport = this.roundNumber.getCompetition().getSingleSport();
+    }
     modalRef.componentInstance.tournament = this.tournament;
   }
 
