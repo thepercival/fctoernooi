@@ -21,7 +21,8 @@ import {
   AgainstSide,
   AgainstSportVariant,
   TogetherGamePlace,
-  PlanningEditMode
+  PlanningEditMode,
+  GameOrder
 } from 'ngx-sport';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -37,6 +38,7 @@ import { CompetitionSportTab } from '../competitionSportTab';
 import { InfoModalComponent } from '../infomodal/infomodal.component';
 import { IAlert } from '../../common/alert';
 import { DateFormatter } from '../../../lib/dateFormatter';
+import { GameRepository } from '../../../lib/ngx-sport/game/repository';
 
 @Component({
   selector: 'app-tournament-roundnumber-planning',
@@ -58,7 +60,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   public sameDay = true;
   public breakShown: boolean = false;
   public userIsAdmin: boolean = false;
-  public gameOrder = Game.Order_By_Batch;
+  public gameOrder: GameOrder = GameOrder.ByDate;
   public filterEnabled = false;
   public hasReferees: boolean = false;
   public hasBegun: boolean = false;
@@ -127,6 +129,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   get Away(): AgainstSide { return AgainstSide.Away; }
   get SportConfigTabFields(): number { return CompetitionSportTab.Fields; }
   get SportConfigTabScore(): number { return CompetitionSportTab.Score; }
+  get OrderByPoule(): GameOrder { return GameOrder.ByPoule; }
+  get OrderByDate(): GameOrder { return GameOrder.ByDate; }
 
   private getGameData() {
     const gameDatas: GameData[] = [];
@@ -233,7 +237,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   }
   protected isBreakBeforeGame(game: Game): boolean {
     const breakX: Period | undefined = this.tournament.getBreak();
-    if (breakX === undefined || this.breakShown || !this.planningConfig.getEnableTime() || !this.gameOrder) {
+    if (breakX === undefined || this.breakShown || !this.planningConfig.getEnableTime() || this.gameOrder === GameOrder.ByPoule) {
       return false;
     }
     const startDateTime = game.getStartDateTime();
@@ -261,7 +265,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   linkToGameAdd() {
     const competitionSport = this.roundNumber.getCompetition().getSingleSport();
     const suffix = ((competitionSport.getVariant() instanceof AgainstSportVariant) ? 'against' : 'together')
-    this.router.navigate(['/admin/game' + suffix, this.tournament.getId(), 0]);
+    this.router.navigate(['/admin/game/new', this.tournament.getId(), this.roundNumber.getNumber()]);
   }
 
   linkToPlanningConfig() {
@@ -286,7 +290,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   }
 
   sortGames() {
-    // this.gameOrder = this.gameOrder ? undefined : Game.Order_By_Batch;
+    this.gameOrder = this.gameOrder === GameOrder.ByDate ? GameOrder.ByPoule : GameOrder.ByDate;
     this.reloadGameData();
   }
 
@@ -364,23 +368,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
 
   inManualMode(): boolean {
     return this.roundNumber.getValidPlanningConfig().getEditMode() === PlanningEditMode.Manual;
-  }
-
-  canDecrementNrOfGameRounds(): boolean {
-    // when last gameroundnr is not started and is greater than 1
-    return true;
-  }
-
-  canIncrementNrOfGameRounds(): boolean {
-    return !(this.roundNumber.hasNext() && this.roundNumber.getState() === State.Finished);
-  }
-
-  decrementNrOfGameRounds() {
-    console.log('decrementNrOfGameRounds');
-  }
-
-  incrementNrOfGameRounds() {
-    console.log('incrementNrOfGameRounds');
   }
 }
 

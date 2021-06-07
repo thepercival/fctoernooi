@@ -149,7 +149,6 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         }
         const sportVariant = sportVariants[0];
         if (sportVariant instanceof AgainstSportVariant) {
-            console.log(sportVariant, sportVariant.getNrOfGamePlaces());
             if (sportVariant.getNrOfGamePlaces() > 2) {
                 return 'aantal wedstrijden per deelnemer';
             }

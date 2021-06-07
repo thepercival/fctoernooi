@@ -44,7 +44,6 @@ export class NewComponent implements OnInit {
 
   toStepCreateSportWithFields(jsonTournament: JsonTournament) {
     this.jsonTournament = jsonTournament;
-    console.log(jsonTournament);
     this.currentStep = NewTournamentStep.createSportWithFields;
   }
 

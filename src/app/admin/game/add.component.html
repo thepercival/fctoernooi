@@ -1,0 +1,74 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-xs-12 col-sm-10 col-md-8">
+      <app-tournament-title [tournament]="tournament">
+      </app-tournament-title>
+      <h2 *ngIf="processing" class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
+      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+      <form *ngIf="!processing" [formGroup]="form" (ngSubmit)="save()" #f="ngForm" novalidate>
+
+        <div class="form-group row">
+          <label for="poule" class="col-6 col-form-label pointer">poule</label>
+          <div class="col-6">
+            <select class="form-control" formControlName="poule" required (ngModelChange)="changePoule($event)">
+              <option *ngFor="let poule of poules" [ngValue]="poule">
+                {{nameService.getPouleName(poule, true)}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="competitionSport" class="col-6 col-form-label pointer">sport</label>
+          <div class="col-6">
+            <select class="form-control" formControlName="competitionSport" required
+              (ngModelChange)="changeCompetitionSport($event)">
+              <option *ngFor="let competitionSport of competitionSports" [ngValue]="competitionSport">
+                {{competitionSport.getSport().getName()}}</option>
+            </select>
+          </div>
+        </div>
+        <div *ngIf="form.value['poule'] && againstSportVariant" formGroupName="homeGamePlaces">
+          <div *ngFor="let homeNr of getPlaceNrs(againstSportVariant.getNrOfHomePlaces())" class="form-group row">
+            <label for="{{homeNr}}" class="col-6 col-form-label pointer">thuis {{homeNr}}</label>
+            <div class="col-6">
+              <select class="form-control" formControlName="{{homeNr}}" required>
+                <option *ngFor="let place of form.value['poule'].getPlaces()" [ngValue]="place">
+                  {{nameService.getPlaceName(place, false, true)}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="form.value['poule'] && againstSportVariant" formGroupName="awayGamePlaces">
+          <div *ngFor="let awayNr of getPlaceNrs(againstSportVariant.getNrOfAwayPlaces())" class="form-group row">
+            <label for="{{awayNr}}" class="col-6 col-form-label pointer">uit {{awayNr}}</label>
+            <div class="col-6">
+              <select class="form-control" formControlName="{{awayNr}}" required>
+                <option *ngFor="let place of form.value['poule'].getPlaces()" [ngValue]="place">
+                  {{nameService.getPlaceName(place, false, true)}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="form.value['poule'] && singleSportVariant" formGroupName="gamePlaces">
+          <div *ngFor="let placeNr of getPlaceNrs(singleSportVariant.getNrOfGamePlaces())" class="form-group row">
+            <label for="{{placeNr}}" class="col-6 col-form-label pointer">deelnemer {{placeNr}}</label>
+            <div class="col-6">
+              <select class="form-control" formControlName="{{placeNr}}" required>
+                <option *ngFor="let place of form.value['poule'].getPlaces()" [ngValue]="place">
+                  {{nameService.getPlaceName(place, false, true)}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row justify-content-end">
+          <div class="col-6">
+            <button type="submit" [disabled]="form.invalid || !allPlacesAreValid()"
+              class="btn btn-outline-primary">wedstrijd toevoegen</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

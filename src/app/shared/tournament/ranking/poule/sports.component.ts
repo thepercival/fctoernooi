@@ -45,7 +45,6 @@ export class PouleRankingSportsComponent implements OnInit {
     this.roundRankingItems = this.roundRankingCalculator.getItemsForPoule(this.poule);
     this.competitionSports = this.poule.getCompetition().getSports();
     this.viewPortManager = new ViewPortManager(this.getViewPortNrOfColumnsMap(), this.competitionSports.length);
-    this.viewPortManager.update(1);
     this.processing = false;
   }
 

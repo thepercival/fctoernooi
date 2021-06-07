@@ -3,42 +3,53 @@ import { VoetbalRange } from 'ngx-sport';
 export class ViewPortManager {
 
     viewPortRangeMap: ViewPortRangeMap = new ViewPortRangeMap();
-    currentEndColumn: number = 1;
 
     constructor(
         public viewPortNrOfColumnsMap: ViewPortNrOfColumnsMap, protected maxNrOfColumns: number) {
+        this.initViewPorts(1);
     }
 
-    update(currentEndColumn: number) {
-        this.currentEndColumn = currentEndColumn;
+    initViewPorts(currentEndColumn: number) {
         const viewPortRangeMap = new ViewPortRangeMap();
-        console.log(this.maxNrOfColumns, this.viewPortNrOfColumnsMap);
         this.viewPortNrOfColumnsMap.forEach((nrOfColumns: number, viewPort: ViewPort) => {
-            console.log(nrOfColumns, viewPort);
-            let startColumnNr = currentEndColumn - nrOfColumns;
             let endColumnNr = currentEndColumn;
-            const underMin = 1 - startColumnNr;
-            if (underMin > 0) {
-                startColumnNr = 1;
-                endColumnNr += startColumnNr;
+            if (endColumnNr < nrOfColumns) {
+                endColumnNr = nrOfColumns;
             }
             if (endColumnNr > this.maxNrOfColumns) {
                 endColumnNr = this.maxNrOfColumns;
             }
+            let startColumnNr = endColumnNr - nrOfColumns;
+            if (startColumnNr < 1) {
+                startColumnNr = 1;
+            }
             viewPortRangeMap.set(viewPort, { min: startColumnNr, max: endColumnNr });
         });
-        console.log(viewPortRangeMap);
         this.viewPortRangeMap = viewPortRangeMap;
     }
 
-    getClass(columnNr: number): string {
-        // console.log('columnNr', columnNr);
-        for (const viewPort of this.getViewPorts()) {
+    decrement() {
+        this.viewPortRangeMap.forEach((range: VoetbalRange) => {
+            if (range.min === 1) {
+                return;
+            }
+            range.min--;
+            range.max--;
+        });
+    }
 
-            // const nrOfColumns = this.viewPortNrOfColumnsMap.get(viewPort);
-            // if (nrOfColumns === undefined) {
-            //     continue;
-            // }
+    increment() {
+        this.viewPortRangeMap.forEach((range: VoetbalRange) => {
+            if (range.max === this.maxNrOfColumns) {
+                return;
+            }
+            range.min++;
+            range.max++;
+        });
+    }
+
+    getClass(columnNr: number): string {
+        for (const viewPort of this.getViewPorts()) {
             const viewPortRange = this.viewPortRangeMap.get(viewPort);
             if (!viewPortRange || columnNr < viewPortRange.min || columnNr > viewPortRange.max) {
                 continue;
@@ -49,14 +60,6 @@ export class ViewPortManager {
             return 'd-none d-' + viewPort + '-table-cell';
         }
         return 'd-none';
-    }
-
-    decrement(): void {
-        this.update(this.currentEndColumn - 1);
-    }
-
-    increment(): void {
-        this.update(this.currentEndColumn + 1);
     }
 
     showBackArrow(viewPort: ViewPort): boolean {

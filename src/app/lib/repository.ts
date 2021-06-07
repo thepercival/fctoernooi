@@ -41,20 +41,24 @@ export class APIRepository {
         };
     }
 
-    protected handleError(response: HttpErrorResponse): Observable<any> {
+    protected handleError(error: HttpErrorResponse | Error): Observable<any> {
         let errortext;
         if (!navigator.onLine) {
             errortext = 'er kan geen internet verbinding gemaakt worden';
-        } else if (response.status === 0) {
-            errortext = 'er kan geen verbinding met de data-service gemaakt worden, ververs de pagina';
-        } else if (response.status === 401) {
-            if (response.error && response.error.message === 'Expired token') {
-                errortext = 'de sessie is verlopen, log uit en log daarna opnieuw in';
-            } else {
-                errortext = 'je hebt geen rechten om de aanvraag te doen, waarschijnlijk is je sessie verlopen, log dan opnieuw in';
+        } else if (error instanceof HttpErrorResponse) {
+            if (error.status === 0) {
+                errortext = 'er kan geen verbinding met de data-service gemaakt worden, ververs de pagina';
+            } else if (error.status === 401) {
+                if (error.error && error.error.message === 'Expired token') {
+                    errortext = 'de sessie is verlopen, log uit en log daarna opnieuw in';
+                } else {
+                    errortext = 'je hebt geen rechten om de aanvraag te doen, waarschijnlijk is je sessie verlopen, log dan opnieuw in';
+                }
+            } else if (error.error && error.error.message) {
+                errortext = error.error.message;
             }
-        } else if (response.error && response.error.message) {
-            errortext = response.error.message;
+        } else {
+            errortext = error.message;
         }
         return observableThrowError(errortext);
     }

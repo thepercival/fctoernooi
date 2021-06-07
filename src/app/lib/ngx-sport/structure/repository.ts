@@ -32,7 +32,9 @@ export class StructureRepository extends APIRepository {
 
     getObject(tournament: Tournament): Observable<Structure> {
         return this.http.get<JsonStructure>(this.getUrl(tournament), this.getOptions()).pipe(
-            map((json: JsonStructure) => this.mapper.toObject(json, tournament.getCompetition())),
+            map((json: JsonStructure) => {
+                return this.mapper.toObject(json, tournament.getCompetition());
+            }),
             catchError((err) => this.handleError(err))
         );
     }

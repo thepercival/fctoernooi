@@ -88,8 +88,7 @@ export class PouleRankingTogetherComponent implements OnInit {
         gameRoundMap[gameRoundNr] = finalScore;
       });
     });
-    console.log('gameRoundWithFinishedGame: ' + gameRoundWithFinishedGame);
-    this.viewPortManager.update(gameRoundWithFinishedGame);
+    this.viewPortManager.initViewPorts(gameRoundWithFinishedGame);
   }
 
   protected getTogetherGames(): TogetherGame[] {

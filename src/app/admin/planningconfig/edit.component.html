@@ -86,8 +86,7 @@
                     </div>
                 </div>
                 <div *ngIf="!form.value['manual'] && isSelfRefereeAvailable()" class="form-group row">
-                    <label for="selfReferee" class="col-7 col-form-label">deelnemers zijn
-                        scheidsrechter</label>
+                    <label for="selfReferee" class="col-7 col-form-label">deelnemers zijn scheidsrechter</label>
                     <div class="col-5">
                         <div class="form-control custom-control custom-switch">
                             <input type="checkbox" class="custom-control-input" id="selfReferee"
@@ -96,17 +95,14 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="!form.value['manual'] && bothSelfRefereeAvailable() && form.value['selfReferee']"
-                    class="form-group row">
-                    <label for="selfrefereenoaction" class="col-7 col-form-label">
-                        scheidsrechter in eigen poule
-                    </label>
+                <div *ngIf="!form.value['manual'] && bothSelfRefereeAvailable()" class="form-group row">
+                    <label for="selfRefereeSamePoule" class="col-7 col-form-label">scheidsrechter in eigen poule</label>
                     <div class="col-5">
-                        <label class="custom-control custom-checkbox col-form-label pl-0">
-                            <input type="checkbox" class="custom-control-input form-check-input"
+                        <div class="form-control custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="selfRefereeSamePoule"
                                 formControlName="selfRefereeSamePoule">
-                            <span class="custom-control-indicator"></span>
-                        </label>
+                            <label class="custom-control-label" for="selfRefereeSamePoule"></label>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -136,7 +132,8 @@
 </div>
 
 <ng-template #contentInfoManual>
-    <span class="lead">Let op: je bent nu zelf verantwoordelijk voor de planning</span>
+    <span class="lead">Let op: je bent nu zelf verantwoordelijk voor de planning. Tevens kunnen aanpassingen handmatige
+        gewijzigde wedsrtijden weer overschrijven</span>
 </ng-template>
 
 <ng-template #contentInfoMinutesAfter>

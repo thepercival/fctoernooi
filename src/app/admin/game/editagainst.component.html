@@ -9,45 +9,18 @@
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
       <form *ngIf="!processing && tournament && hasAuthorization" [formGroup]="form" (ngSubmit)="save()" #f="ngForm"
         novalidate>
-        <div class="form-group row">
-          <div class="col-3">
-            <label class="col-form-label">poule</label>
-          </div>
-          <div class="col-9">
-            <label class="col-form-label" [innerHTML]="nameService.getRoundName( game.getRound() ) | keepHtml"></label>
-            <label class="mx-1">-</label>
-            <label class="col-form-label"
-              [innerHTML]="nameService.getPouleName( game.getPoule(), true) | keepHtml"></label>
-          </div>
-        </div>
-        <div *ngIf="planningConfig.getEnableTime()" class="form-group row">
-          <div class="col-3">
-            <label class="col-form-label">start</label>
-          </div>
-          <div class="col-9">
-            <label
-              class="col-form-label">{{dateFormatter.toString(game.getStartDateTime(),dateFormatter.datetime())}}</label>
-          </div>
-        </div>
-        <div *ngIf="game.getField()" class="form-group row">
-          <div class="col-3">
-            <label class="col-form-label">{{getFieldDescription()}}</label>
-          </div>
-          <div class="col-9">
-            <label class="col-form-label">{{game.getField()?.getName()}}</label>
-          </div>
-        </div>
-
+        <app-tournament-basegame-edit [form]="getBaseFormGroup()" [nameService]="nameService" [game]="game">
+        </app-tournament-basegame-edit>
         <div class="form-group row">
           <div class="col-3">
             <label for="competitors" class="col-form-label">deelnemers</label>
           </div>
-          <div class="col-4 font-weight-bold text-break">
-            {{nameService.getPlacesFromName(game.getHomePlaces(), true, true)}}
+          <div class="col-4 font-weight-bold col-form-label text-break">
+            {{nameService.getPlacesFromName(getGame().getHomePlaces(), true, true)}}
           </div>
           <div class="col-1 side-splitter">-</div>
-          <div class="col-4 font-weight-bold text-break">
-            {{nameService.getPlacesFromName(game.getAwayPlaces(), true, true)}}</div>
+          <div class="col-4 font-weight-bold col-form-label text-break">
+            {{nameService.getPlacesFromName(getGame().getAwayPlaces(), true, true)}}</div>
         </div>
         <div *ngFor="let scoreControl of scoreControls" class="form-group row">
           <label class="col-3 col-form-label">
@@ -114,9 +87,12 @@
 
         <div *ngFor="let warning of warningsForEqualQualifiers" class="alert alert-warning">{{warning}}</div>
         <div class="form-group row justify-content-end">
-          <div class="col-9">
-            <button type="submit" [disabled]="form.invalid || aScoreIsInvalid()" class="btn btn-outline-primary">wijzig
+          <div class="col-9 d-inline-flex">
+            <button type="submit" [disabled]="form.invalid || aScoreIsInvalid()"
+              class="btn btn-outline-primary mr-1">wijzig
               wedstrijd</button>
+            <button type="button" *ngIf="manualEditMode()" class="btn btn-outline-danger"
+              (click)="remove()">verwijder</button>
           </div>
         </div>
       </form>

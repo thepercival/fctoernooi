@@ -27,7 +27,6 @@ export class GameAmountConfigEditComponent implements OnInit {
         return;
       }
       const value = gameAmountControl.control.value;
-      console.log(value);
       if (value === undefined || value > gameAmountControl.range.max || value < gameAmountControl.range.min) {
         gameAmountControl.control.setValue(gameAmountControl.range.min);
       }
@@ -35,7 +34,6 @@ export class GameAmountConfigEditComponent implements OnInit {
   }
 
   getAmountDescription(jsonCompetitionSport: JsonCompetitionSport): string {
-    console.log(jsonCompetitionSport);
     if (jsonCompetitionSport.nrOfHomePlaces === 1 && jsonCompetitionSport.nrOfAwayPlaces === 1) {
       return 'onderlinge duels';
     }

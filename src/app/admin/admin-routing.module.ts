@@ -23,6 +23,7 @@ import { AuthorizationAddComponent } from './authorization/add.component';
 import { CompetitionSportEditComponent } from './competitionSport/edit.component';
 import { GameAgainstEditComponent } from './game/editagainst.component';
 import { GameTogetherEditComponent } from './game/edittogether.component';
+import { GameAddComponent } from './game/add.component';
 
 const routes: Routes = [
   { path: 'new', component: NewComponent }, // ALL ROLES
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'competitors/:id', component: CompetitorListComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'competitor/:id/:pouleNr/:placeNr', component: CompetitorEditComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'games/:id', component: GameListComponent, canActivate: [AuthguardService] }, // GAMERESULTADMIN
+  { path: 'game/new/:id/:roundNumber', component: GameAddComponent, canActivate: [AuthguardService] }, // GAMERESULTADMIN
   { path: 'gameagainst/:id/:gameId', component: GameAgainstEditComponent, canActivate: [AuthguardService] }, // GAMERESULTADMIN
   { path: 'gametogether/:id/:gameId', component: GameTogetherEditComponent, canActivate: [AuthguardService] }, // GAMERESULTADMIN
   { path: 'fields/:id', component: FieldListComponent, canActivate: [AuthguardService] }, // ADMIN

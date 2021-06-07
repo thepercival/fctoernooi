@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { PlanningMapper, JsonStructure, RoundNumber, Game, Structure, AgainstGame, TogetherGamePlace, JsonAgainstGame, JsonTogetherGame, TogetherGame, Poule, GameMapper } from 'ngx-sport';
+import { PlanningMapper, JsonStructure, RoundNumber, Game, Structure, AgainstGame, TogetherGamePlace, JsonAgainstGame, JsonTogetherGame, TogetherGame, Poule, GameMapper, GameOrder } from 'ngx-sport';
 import { APIRepository } from '../../repository';
 import { Tournament } from '../../tournament';
 
@@ -103,7 +103,7 @@ export class PlanningRepository extends APIRepository {
     private updateDates(roundNumber: RoundNumber, dates: Date[]): boolean {
         let previousBatchNr: number | undefined;
         let gameDate: Date | undefined;
-        roundNumber.getGames(Game.Order_By_Batch).forEach(game => {
+        roundNumber.getGames(GameOrder.ByBatch).forEach(game => {
             if (previousBatchNr === undefined || previousBatchNr !== game.getBatchNr()) {
                 previousBatchNr = game.getBatchNr();
                 if (dates.length === 0) {
@@ -111,7 +111,9 @@ export class PlanningRepository extends APIRepository {
                 }
                 gameDate = dates.pop();
             }
-            game.setStartDateTime(gameDate);
+            if (gameDate) {
+                game.setStartDateTime(gameDate);
+            }
         });
         const nextRoundNumber = roundNumber.getNext();
         if (nextRoundNumber) {

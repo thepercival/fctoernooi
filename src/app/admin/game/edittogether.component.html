@@ -9,35 +9,8 @@
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
       <form *ngIf="!processing && tournament && hasAuthorization" [formGroup]="form" (ngSubmit)="save()" #f="ngForm"
         novalidate>
-        <div class="form-group row">
-          <div class="col-3">
-            <label class="col-form-label">poule</label>
-          </div>
-          <div class="col-9">
-            <label class="col-form-label" [innerHTML]="nameService.getRoundName( game.getRound() ) | keepHtml"></label>
-            <label class="mx-1">-</label>
-            <label class="col-form-label"
-              [innerHTML]="nameService.getPouleName( game.getPoule(), true) | keepHtml"></label>
-          </div>
-        </div>
-        <div *ngIf="planningConfig.getEnableTime()" class="form-group row">
-          <div class="col-3">
-            <label class="col-form-label">start</label>
-          </div>
-          <div class="col-9">
-            <label
-              class="col-form-label">{{dateFormatter.toString(game.getStartDateTime(),dateFormatter.datetime())}}</label>
-          </div>
-        </div>
-        <div *ngIf="game.getField()" class="form-group row">
-          <div class="col-3">
-            <label class="col-form-label">{{getFieldDescription()}}</label>
-          </div>
-          <div class="col-9">
-            <label class="col-form-label">{{game.getField()?.getName()}}</label>
-          </div>
-        </div>
-
+        <app-tournament-basegame-edit [form]="getBaseFormGroup()" [nameService]="nameService" [game]="game">
+        </app-tournament-basegame-edit>
         <div class="form-group row">
           <div class="col-3">
             <label class="col-form-label">deelnemers</label>
@@ -51,8 +24,6 @@
             </div>
           </div>
         </div>
-
-
         <div class="form-group row">
           <label for="played" class="col-3 col-form-label">gespeeld</label>
           <div class="col-9">

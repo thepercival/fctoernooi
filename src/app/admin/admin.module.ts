@@ -69,6 +69,8 @@ import { ScoreTogetherCardComponent } from './game/togetherscorecard.component';
 import { TournamentPropertiesComponent } from './new/properties.component';
 import { CreateSportWithFieldsComponent } from './sport/createSportWithFields.component';
 import { SportToAddComponent } from './sport/toAdd.component';
+import { GameBaseEditComponent } from './game/editbase.component';
+import { GameAddComponent } from './game/add.component';
 
 @NgModule({
   imports: [
@@ -91,8 +93,10 @@ import { SportToAddComponent } from './sport/toAdd.component';
     CompetitorListRemoveModalComponent,
     ExportModalComponent,
     FieldListComponent,
+    GameAddComponent,
     GameAmountConfigEditComponent,
     GameAgainstEditComponent,
+    GameBaseEditComponent,
     GameListComponent,
     GameTogetherEditComponent,
     HomeComponent,

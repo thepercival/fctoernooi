@@ -27,7 +27,6 @@ export class PouleRankingComponent implements OnInit {
   ngOnInit() {
     this.processing = true;
     this.nameService = new NameService(this.competitorMap);
-    console.log('isTogether', this.isTogether(), this.competitionSport?.getVariant());
     this.processing = false;
   }
 

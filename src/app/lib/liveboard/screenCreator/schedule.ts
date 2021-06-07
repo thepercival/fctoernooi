@@ -1,4 +1,4 @@
-import { AgainstGame, Game, RoundNumber, State, TogetherGame } from "ngx-sport";
+import { AgainstGame, Game, GameOrder, RoundNumber, State, TogetherGame } from "ngx-sport";
 import { ScheduleScreen } from "../screens";
 export class ScheduleScreenCreator {
 
@@ -22,7 +22,7 @@ export class ScheduleScreenCreator {
     }
 
     protected fillScreens(screen: ScheduleScreen, roundNumber: RoundNumber) {
-        const roundGames: (AgainstGame | TogetherGame)[] = roundNumber.getGames(Game.Order_By_Batch);
+        const roundGames: (AgainstGame | TogetherGame)[] = roundNumber.getGames(GameOrder.ByDate);
 
         const maxNrOfScreens = this.getNrOfScreens(roundGames);
 

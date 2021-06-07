@@ -8,7 +8,7 @@
     <thead>
         <tr>
             <th class="text-right pl-0">pl</th>
-            <th class="place pl-0">
+            <th class="place px-0">
                 <div class="d-flex justify-content-between">
                     <span class="d-xs-inline d-sm-none">deeln.</span>
                     <span class="d-none d-sm-inline">deelnemer</span>
@@ -26,16 +26,15 @@
                     {{competitionSport.getSport().getName()}}
                 </button>
             </th>
-            <th class="pl-0" title="totaal">
-                <div class="d-flex justify-content-between">
-                    <ng-template ngFor let-viewPort [ngForOf]="viewPortManager.getViewPorts()">
-                        <button *ngIf="viewPortManager.showForwardArrow(viewPort)"
-                            class="btn btn-sm btn-outline-secondary {{viewPortManager.getSingleVisibleClass(viewPort)}}"
-                            (click)="viewPortManager.increment()">
-                            > </button>
-                    </ng-template>
-                    <span class="d-none d-sm-inline">tot.</span>
-                </div>
+            <th class="pl-0 text-center" title="totaal">
+                <ng-template ngFor let-viewPort [ngForOf]="viewPortManager.getViewPorts()">
+                    <button *ngIf="viewPortManager.showForwardArrow(viewPort)"
+                        class="btn btn-sm btn-outline-secondary {{viewPortManager.getSingleVisibleClass(viewPort)}}"
+                        (click)="viewPortManager.increment()">
+                        > </button>
+                </ng-template>
+                <span class="d-none d-sm-inline">tot.</span>
+
             </th>
         </tr>
     </thead>

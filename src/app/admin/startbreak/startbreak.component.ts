@@ -123,32 +123,29 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
 
         this.processing = true;
         const firstRoundNumber = this.structure.getFirstRoundNumber();
-        try {
-            const json = this.tournamentMapper.toJson(this.tournament);
-            json.competition.startDateTime = startDateTime.toISOString();
-            json.breakStartDateTime = breakX?.getStartDateTime().toISOString();
-            json.breakEndDateTime = breakX?.getEndDateTime().toISOString();
 
-            this.tournamentRepository.editObject(json)
-                .subscribe(
-                    /* happy path */(tournament: Tournament) => {
-                        this.tournament = tournament;
-                        this.planningRepository.reschedule(firstRoundNumber, this.tournament).subscribe(
-                                /* happy path */ gamesRes => {
-                                this.myNavigation.back();
-                            },
-                            /* error path */ e => {
-                                this.setAlert('danger', 'de wedstrijdplanning is niet opgeslagen: ' + e);
-                                this.processing = false;
-                            }
-                        );
-                    },
-                    /* error path */ e => { this.setAlert('danger', 'het toernooi is niet opgeslagen: ' + e); this.processing = false; }
-                );
-        } catch (e) {
-            this.setAlert('danger', e.message);
-            this.processing = false;
-        }
+        const json = this.tournamentMapper.toJson(this.tournament);
+        json.competition.startDateTime = startDateTime.toISOString();
+        json.breakStartDateTime = breakX?.getStartDateTime().toISOString();
+        json.breakEndDateTime = breakX?.getEndDateTime().toISOString();
+
+        this.tournamentRepository.editObject(json)
+            .subscribe(
+                /* happy path */(tournament: Tournament) => {
+                    this.tournament = tournament;
+                    this.planningRepository.reschedule(firstRoundNumber, this.tournament).subscribe(
+                            /* happy path */ gamesRes => {
+                            this.myNavigation.back();
+                        },
+                        /* error path */ e => {
+                            this.setAlert('danger', 'de wedstrijdplanning is niet opgeslagen: ' + e);
+                            this.processing = false;
+                        }
+                    );
+                },
+                /* error path */ e => { this.setAlert('danger', 'het toernooi is niet opgeslagen: ' + e); this.processing = false; }
+            );
+
         return false;
     }
 
