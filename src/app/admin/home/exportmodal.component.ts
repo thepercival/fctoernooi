@@ -40,21 +40,28 @@ export class ExportModalComponent implements OnInit {
         return this.exportOptions.every(exportOption => !this.form.value[exportOption.key]);
     }
 
-    closePdf(): TournamentExportAction {
-        return { subjects: this.getSubjects(), format: TournamentExportFormat.Pdf }
+    closePdf(): void {
+        this.close(TournamentExportFormat.Pdf);
     }
 
-    closeExcel(): TournamentExportAction {
-        return { subjects: this.getSubjects(), format: TournamentExportFormat.Excel }
+    closeExcel(): void {
+        this.close(TournamentExportFormat.Excel);
+    }
+
+    private close(exportFormat: TournamentExportFormat): void {
+        this.activeModal.close(
+            { subjects: this.getSubjects(), format: exportFormat }
+        );
     }
 
     protected getSubjects(): number {
         let subjects: number = 0;
-        this.exportOptions.forEach(exportOption => {
-            if (this.form.value[exportOption.key]) {
+        this.exportOptions.forEach((exportOption: ExportOption) => {
+            if (this.form.value[exportOption.key] === true) {
                 subjects += exportOption.value;
             };
         });
+        console.log(subjects);
         return subjects;
     }
 
@@ -90,6 +97,6 @@ interface ExportOption {
     key: string;
     label: string;
     enabled: boolean;
-    value: number;
+    value: TournamentExportConfig;
     iconName: IconName | undefined;
 }

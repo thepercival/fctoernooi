@@ -84,8 +84,8 @@ export class GameEditComponent extends TournamentComponent {
             this.processing = false;
             return;
         }
-        console.log(game);
         this.game = game;
+        console.log(game);
         this.equalQualifiersChecker = new EqualQualifiersChecker(this.game, this.nameService, this.mapper);
         const roundNumber = this.game.getRound().getNumber();
         if (this.nextRoundNumberBegun(roundNumber)) {

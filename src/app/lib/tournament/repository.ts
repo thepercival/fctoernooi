@@ -110,4 +110,4 @@ export enum TournamentExportConfig {
     qrCode = 128
 }
 
-export enum TournamentExportFormat { Pdf, Excel }
+export enum TournamentExportFormat { Pdf = 1, Excel }

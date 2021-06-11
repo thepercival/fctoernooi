@@ -103,7 +103,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     this.hasBegun = this.roundNumber.hasBegun();
     this.tournamentHasBegun = this.roundNumber.getFirst().hasBegun();
     this.reloadGameData();
-    this.hasOnlyGameModeAgainst = this.getHasOnlyGameModeAgainst();
+    this.hasOnlyGameModeAgainst = this.hasOnlyAgainstGameMode();
   }
 
   ngAfterViewInit() {
@@ -162,7 +162,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     this.reloadGameData();
   }
 
-  private getHasOnlyGameModeAgainst(): boolean {
+  private hasOnlyAgainstGameMode(): boolean {
     return this.tournament.getCompetition().getSports().every((competitionSport: CompetitionSport): boolean => {
       return competitionSport.getVariant() instanceof AgainstSportVariant;
     });

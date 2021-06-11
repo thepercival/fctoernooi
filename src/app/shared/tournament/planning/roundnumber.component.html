@@ -228,7 +228,7 @@
           {{nameService.getPlaceFromName(gamePlace.getPlace(),true,true)}}</div>
         <button class="btn btn-sm btn-outline-{{getTogetherScoreButtonClass(gamePlace)}}"
           (click)="linkToGameEdit(gmData.game)">
-          <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+          <fa-icon *ngIf="!isPlayed(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
           <span *ngIf="isPlayed(gmData.game)">{{getTogetherScore(gamePlace)}}</span>
         </button>
       </div>

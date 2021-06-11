@@ -130,8 +130,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     protected getCorrectAmount(
         sportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant,
         gameAmountConfig: GameAmountConfig): number {
-        if (sportVariant instanceof AgainstSportVariant && sportVariant.getNrOfGamePlaces() > 2) {
-            return gameAmountConfig.getNrOfGamesPerPlace();
+        if (sportVariant instanceof AgainstSportVariant && sportVariant.isMixed()) {
+            return gameAmountConfig.getNrOfGamesPerPlaceMixed();
         }
         return gameAmountConfig.getAmount();
     }
@@ -269,15 +269,16 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             const nrOfGamePlaces = gameAmountConfigControl.json.competitionSport.nrOfHomePlaces +
                 gameAmountConfigControl.json.competitionSport.nrOfAwayPlaces;
             let amount = gameAmountConfigControl.control.value;
-            let nrOfGamesPerPlace = 0;
+            let nrOfGamesPerPlaceMixed = 0;
             if (nrOfGamePlaces > 2) {
-                nrOfGamesPerPlace = gameAmountConfigControl.control.value;
+                nrOfGamesPerPlaceMixed = gameAmountConfigControl.control.value;
                 amount = 0;
             }
             return {
                 id: gameAmountConfigControl.json.id,
                 competitionSport: gameAmountConfigControl.json.competitionSport,
-                amount, nrOfGamesPerPlace
+                amount: amount,
+                nrOfGamesPerPlaceMixed: nrOfGamesPerPlaceMixed
             };
         });
     }
@@ -467,7 +468,7 @@ class PlanningActionCalculator {
             const gameAmountConfig = this.roundNumber.getGameAmountConfig(competitionSport);
             return jsonGameAmountConfig && gameAmountConfig
                 && (jsonGameAmountConfig.amount !== gameAmountConfig.getAmount()
-                    || jsonGameAmountConfig.nrOfGamesPerPlace !== gameAmountConfig.getNrOfGamesPerPlace());
+                    || jsonGameAmountConfig.nrOfGamesPerPlaceMixed !== gameAmountConfig.getNrOfGamesPerPlaceMixed());
         });
     }
 
