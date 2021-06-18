@@ -34,7 +34,7 @@ export class CreateSportWithFieldsComponent implements OnInit {
     get minNrOfFields(): number { return 1; }
     get maxNrOfFields(): number { return 64; }
     get minNrOfGamePlaces(): number { return 1; }
-    get maxNrOfGamePlaces(): number { return 10; }
+    get maxNrOfGamePlaces(): number { return 4; }
 
     constructor(
         public cssService: CSSService,
@@ -67,7 +67,7 @@ export class CreateSportWithFieldsComponent implements OnInit {
             mixed: new FormControl(newSport.getDefaultNrOfSidePlaces() > 1),
             nrOfHomePlaces: new FormControl(newSport.getDefaultNrOfSidePlaces()),
             nrOfAwayPlaces: new FormControl(newSport.getDefaultNrOfSidePlaces()),
-            nrOfGamePlaces: new FormControl(nrOfFields),
+            nrOfGamePlaces: new FormControl(1),
             // Single, AllInOneGame
             gameAmount: new FormControl(1),
         });

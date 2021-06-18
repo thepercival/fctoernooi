@@ -20,6 +20,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { cloneDeep } from 'lodash';
+import { DefaultService } from '../../lib/ngx-sport/defaultService';
 
 @Component({
   selector: 'app-tournament-structure',
@@ -47,25 +48,42 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     public structureEditor: StructureEditor,
     private planningRepository: PlanningRepository,
     private competitionSportService: CompetitionSportService,
-    private myNavigation: MyNavigation
+    private myNavigation: MyNavigation,
+    private defaultService: DefaultService
   ) {
     super(route, router, tournamentRepository, structureRepository);
   }
 
   ngOnInit() {
+    const noStructure = true;
     super.myNgOnInit(() => {
       this.nameService = new NameService(new CompetitorMap(this.tournament.getCompetitors()));
-      this.clonedStructure = this.createClonedStructure(this.structure);
       this.structureEditor.setPlaceRanges(this.getPlaceRanges());
-      this.processing = false;
-    });
+      this.structureRepository.getObject(this.tournament)
+        .subscribe(
+          /* happy path */(structure: Structure) => {
+            this.structure = structure;
+            this.clonedStructure = this.createClonedStructure(this.structure);
+            this.processing = false;
+          },
+          /* error path */(e: string) => {
+            const sportVariants = this.competition.getSportVariants();
+            const pouleStructure = this.defaultService.getPouleStructure(sportVariants);
+            const jsonPlanningConfig = this.defaultService.getJsonPlanningConfig(sportVariants);
+            this.structure = this.structureEditor.create(this.competition, jsonPlanningConfig, pouleStructure);
+            this.clonedStructure = this.createClonedStructure(this.structure);
+            this.setAlert('danger', e + ', new structure created'); this.processing = false;
+          },
+          /* onComplete */() => { }
+        );
+    }, noStructure);
   }
 
   protected getPlaceRanges(): PlaceRanges {
     const sportVariants = this.competition.getSportVariants();
     const minNrOfPlacesPerPoule = this.competitionSportService.getMinNrOfPlacesPerPoule(sportVariants);
-    const maxNrOfPlacesPerPouleSmall = 16;
-    const maxNrOfPlacesPerPouleLarge = 10;
+    const maxNrOfPlacesPerPouleSmall = 20;
+    const maxNrOfPlacesPerPouleLarge = 12;
     const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
     const maxNrOfPlacesPerRoundSmall = 40;
     const maxNrOfPlacesPerRoundLarge = 128;

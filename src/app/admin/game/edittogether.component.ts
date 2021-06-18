@@ -19,6 +19,7 @@ import {
     FieldMapper,
     RefereeMapper,
     PlaceMapper,
+    AgainstGamePlace,
 } from 'ngx-sport';
 import { Observable, of } from 'rxjs';
 
@@ -102,6 +103,10 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
         });
     }
 
+    protected resetScoreControlValues(): void {
+
+    }
+
     getFormGroupGamePlace(gamePlaceId: string | number): FormGroup {
         return <FormGroup>this.getFormGroupGamePlaces().controls[gamePlaceId];
     }
@@ -134,8 +139,14 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
 
     setPlayed(played: boolean) {
         if (played === false) {
-            this.form.controls.extension.setValue(false);
-            // this.initScoreControls(true);
+            // this.form.controls.extension.setValue(false);
+            this.game.getPlaces().forEach((gamePlace: AgainstGamePlace | TogetherGamePlace) => {
+                const scores = <FormArray>this.getFormGroupGamePlace(gamePlace.getId()).controls.scores;
+                for (let scoreControl of scores.controls) {
+                    scoreControl.setValue(0);
+                }
+            });
+
             // this.updateCalculateScoreControl();
         } // else if (this.game.getScores().length === 0) {
         // this.updateCalculateScoreControl();

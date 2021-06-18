@@ -5,6 +5,7 @@ import { AgainstSportVariant, AllInOneGameSportVariant, CompetitionSportService,
     providedIn: 'root'
 })
 export class DefaultService {
+
     static readonly MinutesPerGame: number = 20;
     static readonly MinutesPerGameExt: number = 5;
     static readonly MinutesBetweenGames: number = 5;

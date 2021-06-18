@@ -237,8 +237,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
         const selfRefee = this.getSelfReferee(json.selfReferee);
         this.form.controls.selfReferee.setValue(selfRefee !== SelfReferee.Disabled);
-        const selfRefeeSamePoule = !(selfRefee && json.selfReferee === SelfReferee.OtherPoules);
-        this.form.controls.selfRefereeSamePoule.setValue(selfRefeeSamePoule);
+        this.form.controls.selfRefereeSamePoule.setValue(selfRefee === SelfReferee.SamePoule);
 
         Object.keys(this.form.controls).forEach(key => {
             const control = this.form.controls[key];

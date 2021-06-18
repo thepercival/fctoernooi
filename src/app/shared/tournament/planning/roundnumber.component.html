@@ -13,7 +13,7 @@
       <span> filter</span>
     </button>
     <button type="button" class="btn btn-sm btn-primary" *ngIf="hasAdminRole()" (click)="linkToPlanningConfig()">
-      <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellingen
+      <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellen
     </button>
   </div>
   <ngb-alert *ngIf="!roundNumber.getHasPlanning()" class="mb-0" type="warning">
