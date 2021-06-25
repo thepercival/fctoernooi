@@ -218,7 +218,7 @@ export class GameEditComponent extends TournamentComponent {
         const referee: Referee | undefined = this.getBaseFormGroup().controls.referee.value;
         jsonGame.referee = referee instanceof Referee ? this.refereeMapper.toJson(referee) : undefined;
         const refereePlace: Place | undefined = this.getBaseFormGroup().controls.refereePlace.value;
-        jsonGame.refereePlace = refereePlace instanceof Place ? this.placeMapper.toJson(refereePlace) : undefined;
+        jsonGame.refereeStructureLocation = refereePlace instanceof Place ? refereePlace.getStructureLocation() : undefined;
     }
 
     getDate(dateFormControl: AbstractControl, timeFormControl: AbstractControl): Date {

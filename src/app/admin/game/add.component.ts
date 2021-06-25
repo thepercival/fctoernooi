@@ -194,7 +194,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
             referee: this.getDefaultJsonReferee(),
             state: State.Created,
             startDateTime: this.roundNumber.getLastStartDateTime().toISOString(),
-            refereePlace: undefined
+            refereeStructureLocation: undefined
         };
         if (this.againstSportVariant instanceof AgainstSportVariant) {
             const jsonAgainst = <JsonAgainstGame>json;
