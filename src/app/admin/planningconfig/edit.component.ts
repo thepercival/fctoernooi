@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     NameService,
@@ -26,14 +26,15 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { PlanningConfigRepository } from '../../lib/ngx-sport/planning/config/repository';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RoundNumbersSelectorModalComponent } from '../roundnumber/selector.component';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { GameAmountConfigControl } from '../gameAmountConfig/edit.component';
 import { GameAmountConfigRepository } from '../../lib/ngx-sport/gameAmountConfig/repository';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, Subject } from 'rxjs';
 import { GameModeInfoModalComponent } from '../../shared/tournament/gameMode/infomodal.component';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
     selector: 'app-planningconfig-edit',
@@ -51,6 +52,10 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     // gameModes: GameMode[] = [GameMode.Against, GameMode.Together];
     validations: PlanningConfigValidations = { minMinutes: 1, maxMinutes: 10080 };
     // gameAmountRange: VoetbalRange | undefined;
+
+    @ViewChild('updateDataAlert', { static: false }) updateDataAlert!: NgbAlert;
+    updateDataMsg: string | undefined = '';
+    private _changingStartRoundNumber = new Subject<RoundNumber>();
 
     constructor(
         route: ActivatedRoute,
@@ -102,6 +107,16 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     ngOnInit() {
+        this._changingStartRoundNumber.subscribe((roundNumber: RoundNumber) => {
+            this.changeStartRoundNumberHelper(roundNumber);
+            this.updateDataMsg = 'de gegevens bijwerken...';
+        });
+        this._changingStartRoundNumber.pipe(debounceTime(500)).subscribe(() => {
+            if (this.updateDataAlert) {
+                this.updateDataAlert.close();
+            }
+            this.processing = false;
+        });
         this.route.params.subscribe(params => {
             super.myNgOnInit(() => this.initConfig(+params.startRoundNumber));
         });
@@ -114,9 +129,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             this.setAlert('danger', 'het rondenumber is niet gevonden');
             return;
         }
-        this.initGameAmountConfigs(startRoundNumber);
-        this.changeStartRoundNumber(startRoundNumber);
-        this.processing = false;
+        this._changingStartRoundNumber.next(startRoundNumber);
     }
 
     initGameAmountConfigs(startRoundNumber: RoundNumber) {
@@ -158,6 +171,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     setGameAmountControls(startRoundNumber: RoundNumber) {
+        this.gameAmountConfigControls = [];
         startRoundNumber.getValidGameAmountConfigs().forEach((gameAmountConfig: GameAmountConfig) => {
             const range = this.defaultService.getGameAmountRange(gameAmountConfig.getCompetitionSport().getVariant());
             this.gameAmountConfigControls.push({
@@ -168,10 +182,11 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         });
     }
 
-    changeStartRoundNumber(startRoundNumber: RoundNumber) {
+    changeStartRoundNumberHelper(startRoundNumber: RoundNumber) {
         this.startRoundNumber = startRoundNumber;
         this.pouleStructure = startRoundNumber.createPouleStructure();
-        this.hasBegun = this.startRoundNumber.hasBegun()
+        this.hasBegun = this.startRoundNumber.hasBegun();
+        this.initGameAmountConfigs(startRoundNumber);
         this.jsonToForm(this.mapper.toJson(startRoundNumber.getValidPlanningConfig()));
         this.resetAlert();
         if (this.hasBegun) {
@@ -423,7 +438,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         modalRef.componentInstance.structure = this.structure;
         modalRef.componentInstance.subject = 'de score-regels';
         modalRef.result.then((startRoundNumber: RoundNumber) => {
-            this.changeStartRoundNumber(startRoundNumber);
+            this.processing = true;
+            this._changingStartRoundNumber.next(startRoundNumber);
         }, (reason) => { });
     }
 }

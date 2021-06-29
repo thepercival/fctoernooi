@@ -22,7 +22,8 @@ import {
   AgainstSportVariant,
   TogetherGamePlace,
   PlanningEditMode,
-  GameOrder
+  GameOrder,
+  Competitor
 } from 'ngx-sport';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -245,8 +246,12 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     return this.breakShown;
   }
 
-  getCompetitor(place: Place) {
-    return this.competitorMap.getCompetitor(place.getStartLocation());
+  getCompetitor(place: Place): Competitor | undefined {
+    const startLocation = place.getStartLocation();
+    if (startLocation === undefined) {
+      return undefined;
+    }
+    return this.competitorMap.getCompetitor(startLocation);
   }
 
   private hasCompetitor(place: Place): boolean {

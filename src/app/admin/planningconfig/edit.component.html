@@ -10,6 +10,9 @@
                 <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
             </h2>
             <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+            <ngb-alert #updateDataAlert *ngIf="updateDataMsg" type="info" (closed)="updateDataMsg = undefined">
+                {{updateDataMsg}}
+            </ngb-alert>
             <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
                 <app-tournament-gameamountconfigs-edit *ngIf="!form.value['manual']" [label]="gameAmountLabel"
                     [gameAmountControls]="gameAmountConfigControls" [form]="form">

@@ -64,14 +64,14 @@ export class Favorites {
 
     hasAgainstGameCompetitor(game: AgainstGame, side?: AgainstSide): boolean {
         return game.getSidePlaces(side).some((gamePlace: AgainstGamePlace) => {
-            const competitor = this.competitorMap.getCompetitor(gamePlace.getPlace().getStartLocation());
+            const competitor = this.getCompetitorFromPlace(gamePlace.getPlace());
             return competitor && this.hasCompetitor(competitor);
         });
     }
 
     hasTogetherGameCompetitor(game: TogetherGame): boolean {
         return game.getTogetherPlaces().some((gamePlace: TogetherGamePlace) => {
-            const competitor = this.competitorMap.getCompetitor(gamePlace.getPlace().getStartLocation());
+            const competitor = this.getCompetitorFromPlace(gamePlace.getPlace());
             return competitor && this.hasCompetitor(competitor);
         });
     }
@@ -123,7 +123,11 @@ export class Favorites {
     }
 
     protected getCompetitorFromPlace(place: Place): Competitor | undefined {
-        return this.competitorMap.getCompetitor(place.getStartLocation());
+        const startLocation = place.getStartLocation();
+        if (startLocation === undefined) {
+            return undefined;
+        }
+        return this.competitorMap.getCompetitor(startLocation);
     }
 
     addReferee(referee: Referee) {
