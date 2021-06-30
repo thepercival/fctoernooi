@@ -61,7 +61,6 @@ export class ExportModalComponent implements OnInit {
                 subjects += exportOption.value;
             };
         });
-        console.log(subjects);
         return subjects;
     }
 
