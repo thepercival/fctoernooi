@@ -76,7 +76,7 @@
               <span>sporten</span>
             </h5>
             <p class="card-text">
-              <span class="font-weight-bold">{{getNrOfFieldsDescription()}}</span>, punten en score
+              <span class="fw-bold">{{getNrOfFieldsDescription()}}</span>, punten en score
             </p>
           </div>
         </div>
@@ -166,7 +166,7 @@
     <div *ngIf="structure.hasPlanning() && isAdmin()" class="card card-sub pointer mt-3 mx-2" (click)="openModalName()">
       <div class="card-body text-center p-1 pt-2">
         <h5 class="card-title">
-          <span class="font-weight-bold">A</span>
+          <span class="fw-bold">A</span>
         </h5>
         <div>naam</div>
         <div>wijzigen</div>
@@ -221,9 +221,7 @@
     <h4 class="modal-title">
       <fa-icon [icon]="['fas', 'copy']"></fa-icon> nieuwe editie
     </h4>
-    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
   </div>
   <div class="modal-body">
     <div class="container-fluid">
@@ -254,9 +252,7 @@
 <ng-template #contentremove let-modal>
   <div class="modal-header">
     <h4 class="modal-title">toernooi verwijderen</h4>
-    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
   </div>
   <div class="modal-body">
     <p>Weet je zeker dat je het toernooi wilt verwijderen?</p>

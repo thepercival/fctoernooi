@@ -2,9 +2,7 @@
     <h4 class="modal-title">
         <fa-icon [icon]="['fas', 'users']"></fa-icon> <span> deelnemers selecteren</span>
     </h4>
-    <button type="button" class="close" aria-label="sluiten" (click)="activeModal.dismiss('close')">
-        <span aria-hidden="true">&times;</span>
-    </button>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="activeModal.dismiss('close')"></button>
 </div>
 <div class="modal-body">
     <ngb-alert *ngIf="!hasSelectableCompetitors()" type="danger">er zijn geen deelnemers

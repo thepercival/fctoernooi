@@ -86,13 +86,13 @@ export class HomeComponent extends TournamentComponent implements OnInit, OnDest
         if (this.favorites.hasCompetitors()) {
             const competitors = this.favorites.filterCompetitors(this.competitors);
             if (competitors.length === 1) {
-                return 'deelnemer <span class="font-weight-bold">' + competitors.pop()?.getName() + '</span> ingesteld';
+                return 'deelnemer <span class="fw-bold">' + competitors.pop()?.getName() + '</span> ingesteld';
             }
             return 'meerdere deelnemers ingesteld';
         }
         const referees = this.favorites.filterReferees(this.competition.getReferees());
         if (referees.length === 1) {
-            return 'scheidsrechter <span class="font-weight-bold">' + referees.pop()?.getInitials() + '</span> ingesteld';
+            return 'scheidsrechter <span class="fw-bold">' + referees.pop()?.getInitials() + '</span> ingesteld';
         }
         return 'meerdere scheidsrechters ingesteld';
     }

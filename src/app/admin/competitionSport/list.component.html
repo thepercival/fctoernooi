@@ -67,9 +67,7 @@
 <ng-template #content let-modal>
   <div class="modal-header">
     <h4 class="modal-title">sport verwijderen</h4>
-    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('cancel')">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('cancel')"></button>
   </div>
   <div class="modal-body">
     <ngb-alert type="warning">de velden voor deze sport worden ook verwijderd</ngb-alert>

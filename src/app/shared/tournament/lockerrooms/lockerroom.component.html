@@ -1,7 +1,7 @@
 <div class="card-header pointer p-3">
   <div class="d-flex justify-content-between">
     <h5 class="mb-0 mt-2" (click)="changeName.emit(lockerRoom)"><small>kleedkamer </small><span
-        class="font-weight-bold">{{lockerRoom.getName()}}</span>
+        class="fw-bold">{{lockerRoom.getName()}}</span>
     </h5>
     <button *ngIf="editable" class="btn btn-sm btn-outline-danger ml-1" (click)="remove.emit(lockerRoom)">
       <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>

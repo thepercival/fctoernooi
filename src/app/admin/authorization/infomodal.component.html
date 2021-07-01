@@ -1,17 +1,18 @@
 <div class="modal-header border-bottom-0">
     <h4 class="modal-title">{{header}}</h4>
-    <button type="button" class="close" aria-label="sluiten" (click)="activeModal.dismiss('close')">
-        <span aria-hidden="true">&times;</span>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="activeModal.dismiss('close')">
     </button>
 </div>
 <div class="modal-body">
     <ngb-alert *ngIf="showAdd" type="info">De uitnodigings-email wordt alleen verstuurd,
         wanneer het emailadres onbekend is bij fctoernooi.</ngb-alert>
     <table class="table text-white">
-        <tr *ngFor="let roleDefinition of roleDefinitions">
-            <td class="font-weight-bold border-info">{{roleDefinition.name}}</td>
-            <td class="border-info bg-info">{{roleDefinition.description}}</td>
-        </tr>
+        <tbody>
+            <tr *ngFor="let roleDefinition of roleDefinitions">
+                <td class="fw-bold border-info">{{roleDefinition.name}}</td>
+                <td class="border-info bg-info">{{roleDefinition.description}}</td>
+            </tr>
+        </tbody>
     </table>
 </div>
 <div class="modal-footer justify-content-reverse border-top-0">

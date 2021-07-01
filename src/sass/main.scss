@@ -37,8 +37,8 @@ $enable-responsive-font-sizes: true !default;
 }
 
 .favitem {
-    @extend .text-primary !optional;
-    @extend .font-weight-bold !optional;
+    @extend .text-primary;
+    @extend .fw-bold;
 }
 
 hr {
@@ -91,25 +91,25 @@ input.is-warning {
 
 .modal-content-info .modal-content {
   border: 5px;
-  @extend .border-info !optional;
+  @extend .border-info;
 }
 
 .warning-modal .modal-content{
   border: 5px;
-  @extend .bg-warning !optional;
-  @extend .text-white !optional;
+  @extend .bg-warning;
+  @extend .text-white;
 }
 
 .info-modal .modal-content{
   border: 5px;
-  @extend .bg-info !optional;
-  @extend .text-white !optional;
+  @extend .bg-info;
+  @extend .text-white;
 }
 
 .info-modal .list-group-item {
-  @extend .bg-info !optional;
-  @extend .text-white !optional;
-  @extend .border-white !optional;
+  @extend .bg-info;
+  @extend .text-white;
+  @extend .border-white;
 }
 
 .bg-against {
@@ -119,13 +119,13 @@ input.is-warning {
   background-color: pink;
 }
 .custom-switch-against .form-check-label::after {
-  @extend .bg-against !optional;
+  @extend .bg-against;
 }
 .custom-switch-together .form-check-label::after {
-  @extend .bg-together !optional;
+  @extend .bg-together;
 }
 .custom-switch-warning .form-check-label::after {
-  @extend .bg-warning !optional;
+  @extend .bg-warning;
 }
 
 .progress {

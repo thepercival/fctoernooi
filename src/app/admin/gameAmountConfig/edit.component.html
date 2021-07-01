@@ -23,9 +23,7 @@
     <h4 class="modal-title">
       {{label}}
     </h4>
-    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss()">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
   </div>
   <div class="modal-body" [formGroup]="form">
     <div class="row mb-3" *ngFor="let gameAmountControl of gameAmountControls">

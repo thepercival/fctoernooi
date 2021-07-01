@@ -4,10 +4,7 @@
         (click)="openInfoModal('rangschikking',contentRankingRuleSet)">
         rangschikking
     </button>
-
-    <button type="button" class="close" aria-label="sluiten" (click)="activeModal.dismiss('close')">
-        <span aria-hidden="true">&times;</span>
-    </button>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="activeModal.dismiss('close')"></button>
 </div>
 <div class="modal-body p-0">
     <app-tournament-pouleranking [poule]="poule" [competitionSport]="competitionSport" [tournament]="tournament"
