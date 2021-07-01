@@ -16,18 +16,14 @@
         <th *ngIf="isScheduleScreen()" class="width-8">
           <app-tournament-icon name="soccer-field"></app-tournament-icon>
         </th>
-        <ng-template *ngIf="screen.onlyGameModeAgainst()">
-          <th class="text-right width-25">thuis</th>
-          <th class="text-center width-8">
-            <app-tournament-icon name="scoreboard"></app-tournament-icon>
-          </th>
-          <th class="text-left width-25">uit</th>
-        </ng-template>
-        <ng-template *ngIf="!screen.onlyGameModeAgainst()">
-          <th class="text-right width-58">deelnemers en <app-tournament-icon name="scoreboard"></app-tournament-icon>
-          </th>
-        </ng-template>
-        <th *ngIf="isScheduleScreen() && hasReferees()" class="width-14 text-right">
+        <!-- gamePlaces & score -->
+        <th *ngIf="hasOnlyGameModeAgainst" class="text-end width-25">thuis</th>
+        <th *ngIf="hasOnlyGameModeAgainst" class="text-center width-8">
+          <app-tournament-icon name="scoreboard"></app-tournament-icon>
+        </th>
+        <th *ngIf="hasOnlyGameModeAgainst" class="text-left width-25">uit</th>
+        <th *ngIf="!hasOnlyGameModeAgainst" class="text-center width-58">deelnemers en score</th>
+        <th *ngIf="isScheduleScreen() && hasReferees()" class="width-14 text-end">
           <app-tournament-icon name="referee"></app-tournament-icon>
         </th>
       </tr>
@@ -50,23 +46,25 @@
           <span *ngIf="getBatchViewMode(game) === BatchViewModeNr">{{game.getBatchNr()}}</span>
         </td>
         <td *ngIf="isScheduleScreen()">{{game.getField()?.getName()}}</td>
-        <!-- against -->
-        <ng-template *ngIf="screen.onlyGameModeAgainst()">
-          <ng-container *ngTemplateOutlet="againstGamePlaces;context:{$implicit: game}"></ng-container>
-        </ng-template>
-        <!-- together or both -->
-        <ng-template *ngIf="!screen.onlyGameModeAgainst()">
-          <ng-container *ngTemplateOutlet="bothGamePlaces;context:{$implicit: game}"></ng-container>
-        </ng-template>
-        <td *ngIf="isScheduleScreen() && hasReferees()" class="text-right">{{nameService.getRefereeName(game)}}</td>
+
+        <ng-container *ngIf="hasOnlyGameModeAgainst">
+          <ng-container *ngTemplateOutlet="againstGamePlacesCell;context:{$implicit: game}"></ng-container>
+        </ng-container>
+        <ng-container *ngIf="!hasOnlyGameModeAgainst && isAgainst(game)">
+          <ng-container *ngTemplateOutlet="againstGamePlacesDiv;context:{$implicit: game}"></ng-container>
+        </ng-container>
+        <ng-container *ngIf="!hasOnlyGameModeAgainst && !isAgainst(game)">
+          <ng-container *ngTemplateOutlet="togetherGamePlaces;context:{$implicit: game}"></ng-container>
+        </ng-container>
+        <td *ngIf="isScheduleScreen() && hasReferees()" class="text-end">{{nameService.getRefereeName(game)}}</td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<ng-template #againstGamePlaces let-game>
+<ng-template #againstGamePlacesCell let-game>
   <!-- homePlaces -->
-  <td class="text-right">
+  <td class="text-end">
     <span>{{getSidePlaces(game, HomeSide)}}</span>
   </td>
   <!-- score -->
@@ -76,6 +74,31 @@
   <!-- awayPlaces -->
   <td class="text-left">
     <span>{{getSidePlaces(game, AwaySide)}}</span>
+  </td>
+</ng-template>
+
+<ng-template #againstGamePlacesDiv let-gmData>
+  <td class="py-0">
+    <table class="noborder">
+      <tr>
+        <ng-container>
+          <ng-container *ngTemplateOutlet="againstGamePlacesCell;context:{$implicit: gmData}"></ng-container>
+        </ng-container>
+      </tr>
+    </table>
+  </td>
+</ng-template>
+
+<ng-template #togetherGamePlaces let-game>
+  <td class="place pb-0">
+    <ul *ngFor="let gamePlace of game.getTogetherPlaces()" class="list-group list-group-horizontal mb-2">
+      <li class="list-group-item">
+        {{nameService.getPlaceFromName(gamePlace.getPlace(),true,true)}}
+      </li>
+      <li *ngIf="isPlayed(game)" class="list-group-item">
+        {{getTogetherScore(gamePlace)}}
+      </li>
+    </ul>
   </td>
 </ng-template>
 

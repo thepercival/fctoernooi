@@ -3,7 +3,7 @@
 </h2>
 <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
-  <div class="form-group row">
+  <div class="row mb-3">
     <label for="pointsCalculation" class="col-7 col-form-label pointer"
       (click)="openInfoModal('punten berekening', contentInfo)">berekening
       <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
@@ -15,7 +15,7 @@
       </select>
     </div>
   </div>
-  <div class="form-group row">
+  <div class="row mb-3">
     <div class="col-7">
       <label for="winPoints" class="col-form-label">punten bij overwinning</label>
     </div>
@@ -26,7 +26,7 @@
       </select>
     </div>
   </div>
-  <div class="form-group row">
+  <div class="row mb-3">
     <div class="col-7">
       <label for="drawPoints" class="col-form-label">punten bij gelijkspel</label>
     </div>
@@ -43,7 +43,7 @@
           ingesteld is)</small></label>
     </div>
   </div>
-  <div class="form-group row">
+  <div class="row mb-3">
     <div class="col-7">
       <label for="winPointsExt" class="col-form-label">punten bij overwinning</label>
     </div>
@@ -54,7 +54,7 @@
       </select>
     </div>
   </div>
-  <div class="form-group row">
+  <div class="row mb-3">
     <div class="col-7">
       <label for="drawPointsExt" class="col-form-label">punten bij gelijkspel</label>
     </div>
@@ -66,7 +66,7 @@
       </select>
     </div>
   </div>
-  <div class="form-group row">
+  <div class="row mb-3">
     <div class="col-7">
       <label for="losePointsExt" class="col-form-label">punten bij verlies</label>
     </div>
@@ -78,7 +78,7 @@
       </select>
     </div>
   </div>
-  <div class="form-group row">
+  <div class="row mb-3">
     <div class="col-7 d-flex justify-content-end">
       <button *ngIf="structure.getRootRound().getChildren().length" type="button" (click)="openSelectRoundsModal()"
         class="btn btn-outline-primary">

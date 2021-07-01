@@ -35,12 +35,8 @@ export class FavoritesMapper {
     toJson(favorites: Favorites): JsonFavorites {
         return {
             tournamentId: favorites.getTournament().getId(),
-            competitorIds: favorites.getTournament().getCompetitors().map(competitor => {
-                return +competitor.getId();
-            }),
-            refereeIds: favorites.getTournament().getCompetition().getReferees().map(referee => {
-                return referee.getId();
-            })
+            competitorIds: favorites.getCompetitorIds(),
+            refereeIds: favorites.getRefereeIds()
         };
     }
 }

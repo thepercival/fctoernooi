@@ -8,28 +8,28 @@
     </colgroup>
     <thead>
         <tr>
-            <th class="text-right pl-0">pl</th>
-            <th class="place pl-0">deelnemer</th>
-            <th class="text-right pl-0" title="gespeeld">g</th>
-            <th class="text-right pl-0" title="punten">p</th>
-            <th class="text-center text-info pl-0 pointer" (click)="showDifferenceDetail = !showDifferenceDetail"
+            <th class="text-end ps-0"><span class="badge badge-rank pb-0">pl</span></th>
+            <th class="place ps-0">deelnemer</th>
+            <th class="text-end ps-0" title="gespeeld">g</th>
+            <th class="text-end ps-0" title="punten">p</th>
+            <th class="text-center text-info ps-0 pointer" (click)="showDifferenceDetail = !showDifferenceDetail"
                 title="doelsaldo">&Delta;</th>
         </tr>
     </thead>
     <tbody>
         <ng-template ngFor let-sportRankingItem [ngForOf]="sportRankingItems">
             <tr>
-                <td class="rankingnr text-right pl-0">
+                <td class="rankingnr text-end ps-0">
                     <span
                         class="badge badge-rank {{getQualifyPlaceClass(sportRankingItem)}}">{{sportRankingItem.getUniqueRank()}}</span>
                 </td>
-                <td class="place pl-0"
+                <td class="place ps-0"
                     [ngClass]="{ 'favitem': favorites.hasCompetitor(competitorMap.getCompetitor(sportRankingItem.getPlaceLocation())) }">
                     {{nameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true)}}
                 </td>
-                <td class="text-right pl-0">{{sportRankingItem.getPerformance().getGames()}}</td>
-                <td class="text-right pl-0">{{sportRankingItem.getPerformance().getPoints()}}</td>
-                <td class="text-center unitdiff pl-0">
+                <td class="text-end ps-0">{{sportRankingItem.getPerformance().getGames()}}</td>
+                <td class="text-end ps-0">{{sportRankingItem.getPerformance().getPoints()}}</td>
+                <td class="text-center unitdiff ps-0">
                     <div>
                         {{sportRankingItem.getPerformance().getDiff() > 0 ? '+' :
                         ''}}{{sportRankingItem.getPerformance().getDiff()}}

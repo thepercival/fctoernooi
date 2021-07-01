@@ -1,5 +1,5 @@
-<div class="row justify-content-center no-gutters">
-  <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
+<div class="row justify-content-center g-0">
+  <div class="col-sm-12 col-md-10 col-lg-8">
     <app-tournament-title [tournament]="tournament" [admin]="true">
     </app-tournament-title>
     <div class="d-flex justify-content-between">
@@ -27,7 +27,7 @@
           <th>plek</th>
           <th>naam</th>
           <th class="text-center d-none d-sm-table-cell">aangemeld</th>
-          <th *ngIf="!hasBegun" class="text-right"><button type="button" class="btn btn-sm btn-primary"
+          <th *ngIf="!hasBegun" class="text-end"><button type="button" class="btn btn-sm btn-primary"
               (click)="addPlaceToRootRound()">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button></th>
@@ -66,10 +66,10 @@
             <span *ngIf="item.competitor">{{item.competitor.getName()}}</span>
           </td>
           <td class="text-center">
-            <div *ngIf="item.competitor" class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="{{getSwapSwitchId(item.place)}}"
+            <div *ngIf="item.competitor" class="form-check form-switch">
+              <input type="checkbox" class="form-check-input" id="{{getSwapSwitchId(item.place)}}"
                 (change)="swapTwo(item)">
-              <label class="custom-control-label" for="{{getSwapSwitchId(item.place)}}"></label>
+              <label class="form-check-label" for="{{getSwapSwitchId(item.place)}}"></label>
             </div>
           </td>
         </tr>

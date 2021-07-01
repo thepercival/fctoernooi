@@ -24,19 +24,13 @@
   <button #btnEdit type="button" class="btn btn-sm btn-outline-warning" (click)="edit()">vul een naam in</button>
 </td>
 <td class="text-center d-none d-sm-table-cell">
-  <div *ngIf="placeCompetitor.competitor" class="custom-control custom-switch">
-    <input type="checkbox" class="custom-control-input" id="{{getSwitchId(placeCompetitor.place)}}"
+  <div *ngIf="placeCompetitor.competitor" class="form-check form-switch">
+    <input type="checkbox" class="form-check-input" id="{{getSwitchId(placeCompetitor.place)}}"
       [checked]="placeCompetitor.competitor.getRegistered()" (change)="register()">
-    <label class="custom-control-label" for="{{getSwitchId(placeCompetitor.place)}}"></label>
+    <label class="form-check-label" for="{{getSwitchId(placeCompetitor.place)}}"></label>
   </div>
-
-  <!-- <label *ngIf="competitor" class="custom-control custom-checkbox col-form-label pointer pl-0">
-    <input type="checkbox" class="custom-control-input form-check-input" [checked]="competitor.getRegistered()"
-      (change)="register()">
-    <span class="custom-control-indicator"></span>
-  </label> -->
 </td>
-<td *ngIf="!hasBegun" class="text-right"><button type="button" class="btn btn-sm btn-danger" (click)="remove()">
+<td *ngIf="!hasBegun" class="text-end"><button type="button" class="btn btn-sm btn-danger" (click)="remove()">
     <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
   </button></td>
 

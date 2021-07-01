@@ -1,9 +1,9 @@
-<!-- <div class="d-flex justify-content-between">
-  <div class="pr-5">
+<div class="d-flex justify-content-between">
+  <div class="pe-5">
     <ng-container *ngTemplateOutlet="pouleRanking;context:{$implicit: screen.getFirstPoule()}">
     </ng-container>
   </div>
-  <div class="pl-5">
+  <div class="ps-5">
     <ng-container *ngTemplateOutlet="pouleRanking;context:{$implicit: screen.getLastPoule()}">
     </ng-container>
   </div>
@@ -13,31 +13,36 @@
   <table *ngIf="poule" class="table liveboard">
     <thead>
       <tr>
-        <th class="text-right width-14">pl</th>
-        <th class="width-40"><span class="badge badge-info">{{nameService.getPouleName(poule, true)}}</span></th>
-        <th class="text-right width-8">g</th>
-        <th class="text-right width-8">pnt</th>
-        <th class="text-center width-30">&Delta;</th>
+        <th class="text-end width-14">pl</th>
+        <th class="width-40">
+          <span class="badge badge-info">{{nameService.getPouleName(poule,!hasMultipleSports())}}</span>
+          <span *ngIf="hasMultipleSports()"
+            class="badge badge-info ml-1">{{screen.getCompetitionSport().getSport().getName()}}</span>
+        </th>
+        <th class="text-end width-8">g</th>
+        <th class="text-end width-8">pnt</th>
+        <th *ngIf="isAgainstSportVariant()" class="text-center width-30">&Delta;</th>
       </tr>
     </thead>
     <tbody>
       <ng-template ngFor let-rankingItem [ngForOf]="getRankingItems(poule)">
         <tr>
-          <td nowrap class="text-right">
+          <td nowrap class="text-end">
             <span
               class="badge badge-rank {{cssService.getQualifyPlace(poule.getPlace(rankingItem.getUniqueRank()))}}">{{rankingItem.getUniqueRank()}}</span>
           </td>
-          <td class="place">{{nameService.getPlaceFromName(rankingItem.getPlace(), true)}}</td>
-          <td class="text-right">{{rankingItem.getUnranked().getGames()}}</td>
-          <td class="text-right">{{rankingItem.getUnranked().getPoints()}}</td>
-          <td nowrap class="text-center unitdiff">
-            <span>{{rankingItem.getUnranked().getDiff() > 0 ? '+' : ''}}{{rankingItem.getUnranked().getDiff()}} </span>
+          <td class="place">{{nameService.getPlaceFromName(rankingItem.getPerformance().getPlace(), true)}}</td>
+          <td class="text-end">{{rankingItem.getPerformance().getGames()}}</td>
+          <td class="text-end">{{rankingItem.getPerformance().getPoints()}}</td>
+          <td *ngIf="isAgainstSportVariant()" nowrap class="text-center unitdiff">
+            <span>{{rankingItem.getPerformance().getDiff() > 0 ? '+' : ''}}{{rankingItem.getPerformance().getDiff()}}
+            </span>
             <span class="d-none d-xl-inline">
-              ({{rankingItem.getUnranked().getScored()}}-{{rankingItem.getUnranked().getReceived()}})
+              ({{rankingItem.getPerformance().getScored()}}-{{rankingItem.getPerformance().getReceived()}})
             </span>
           </td>
         </tr>
       </ng-template>
     </tbody>
   </table>
-</ng-template> -->
+</ng-template>

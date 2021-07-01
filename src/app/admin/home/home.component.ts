@@ -29,6 +29,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     copyForm: FormGroup;
     minDateStruct: NgbDateStruct;
     lockerRoomValidator!: LockerRoomValidator;
+    hasBegun: boolean = true;
 
     constructor(
         route: ActivatedRoute,
@@ -61,6 +62,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     postNgOnInit() {
         this.lockerRoomValidator = new LockerRoomValidator(this.tournament.getCompetitors(), this.tournament.getLockerRooms());
         const date = new Date();
+        this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
         this.copyForm.controls.date.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
         this.processing = false;
     }
@@ -128,6 +130,10 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         return arrangedIncompleet ? 'border-warning' : '';
     }
 
+    getLiveBoardBorderClass(): string {
+        return this.hasBegun ? 'border-success' : '';
+    }
+
     isAdmin(): boolean {
         return this.hasRole(this.authService, Role.ADMIN);
     }
@@ -177,18 +183,31 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         localStorage.setItem('manualmessageread', JSON.stringify(true));
     }
 
+    getExportSubjectsFromDevice(): number {
+        let exportSubjectsItem = localStorage.getItem('exportSubjects');
+
+        const defaultSubjects = TournamentExportConfig.gameNotes + TournamentExportConfig.lockerRooms + TournamentExportConfig.qrCode;
+        let exportSubjects: number = exportSubjectsItem !== null ? +exportSubjectsItem : defaultSubjects;
+
+        if (!this.lockerRoomValidator.areSomeArranged() && (exportSubjects & TournamentExportConfig.lockerRooms) > 0) {
+            exportSubjects -= TournamentExportConfig.lockerRooms;
+        }
+        if (!this.tournament.getPublic() && (exportSubjects & TournamentExportConfig.qrCode) > 0) {
+            exportSubjects -= TournamentExportConfig.qrCode;
+        }
+        return exportSubjects;
+    }
+
+    setExportSubjectsOnDevice(exportSubjects: number) {
+        localStorage.setItem('exportSubjects', JSON.stringify(exportSubjects));
+    }
+
     openModalExport() {
         const activeModal = this.modalService.open(ExportModalComponent);
-        let enabled = TournamentExportConfig.gameNotes;
-        if (this.lockerRoomValidator.areSomeArranged()) {
-            enabled += TournamentExportConfig.lockerRooms;
-        }
-        if (this.tournament.getPublic()) {
-            enabled += TournamentExportConfig.qrCode;
-        }
-        activeModal.componentInstance.enabled = enabled;
+        activeModal.componentInstance.subjects = this.getExportSubjectsFromDevice();
         activeModal.componentInstance.fieldDescription = this.getFieldDescription();
         activeModal.result.then((exportAction: TournamentExportAction) => {
+            this.setExportSubjectsOnDevice(exportAction.subjects);
             this.processing = true;
             this.tournamentRepository.getExportUrl(this.tournament, exportAction)
                 .subscribe(

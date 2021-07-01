@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
-    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+    <div class="col-sm-10 col-md-8 col-lg-6">
       <div class="d-flex justify-content-between mb-4">
         <h1>
           <fa-icon [icon]="['fas', 'user-circle']"></fa-icon> registreren
@@ -28,7 +28,7 @@
 
       <form *ngIf="!processing && !isLoggedIn() && !registered" name="form" (ngSubmit)="register()" [formGroup]="form"
         novalidate>
-        <div class="form-group row">
+        <div class="row mb-3">
           <div class="col-3">
             <label for="emailaddress" class="col-form-label">emailadres</label>
           </div>
@@ -39,7 +39,7 @@
               placeholder="max. {{validations.maxlengthemailaddress}} karakters">
           </div>
         </div>
-        <div class="form-group row">
+        <div class="row mb-3">
           <div class="col-3">
             <label for="password" class="col-form-label">wachtwoord</label>
           </div>
@@ -49,7 +49,7 @@
               type="password" formControlName="password" placeholder="min. {{validations.minlengthpassword}} karakters">
           </div>
         </div>
-        <div class="form-group row">
+        <div class="row mb-3">
           <div class="col-3">
             <label for="passwordRepeat" class="col-form-label">herhaal wachtwoord</label>
           </div>
@@ -60,7 +60,7 @@
               placeholder="min. {{validations.minlengthpassword}} karakters">
           </div>
         </div>
-        <div class="form-group row justify-content-end">
+        <div class="row mb-3 justify-content-end">
           <div class="col-9">
             <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
               registreren

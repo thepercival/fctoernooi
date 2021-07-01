@@ -18,12 +18,12 @@
                     <td>
                         {{competitorListItem.competitor.getName()}}
                     </td>
-                    <td class="text-right">
-                        <div class="custom-control custom-switch {{getSelectClass(competitorListItem)}}">
-                            <input type="checkbox" class="custom-control-input"
+                    <td class="text-end">
+                        <div class="form-check form-switch {{getSelectClass(competitorListItem)}}">
+                            <input type="checkbox" class="form-check-input"
                                 id="{{getId(competitorListItem.competitor)}}" [checked]="competitorListItem.selected"
                                 (change)="toggle(competitorListItem)">
-                            <label class="custom-control-label" for="{{getId(competitorListItem.competitor)}}"></label>
+                            <label class="form-check-label" for="{{getId(competitorListItem.competitor)}}"></label>
                         </div>
                     </td>
                 </tr>

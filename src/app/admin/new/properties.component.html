@@ -8,7 +8,7 @@
   </h1>
 </div>
 <form name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
-  <div class="form-group row">
+  <div class="row mb-3">
     <label for="name" class="col-4 col-form-label">naam</label>
     <div class="col-8 col-sm-6">
       <input class="form-control"
@@ -16,7 +16,7 @@
         formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
     </div>
   </div>
-  <div class="form-group row">
+  <div class="row mb-3">
     <label for="dp" class="col-4 col-form-label">startdatum</label>
     <div class="col-8 col-sm-6">
       <div class="input-group input-group-date">
@@ -24,33 +24,31 @@
           [ngClass]="{ 'is-invalid': form.controls.date.invalid, 'is-valid': form.controls.date.valid }"
           placeholder="yyyy-mm-dd" formControlName="date" ngbDatepicker #d="ngbDatepicker" [minDate]="minDateStruct"
           container="body">
-        <div class="input-group-append">
-          <span class="input-group-text pointer" (click)="d.toggle()">
-            <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
-          </span>
-        </div>
+        <span class="input-group-text pointer" (click)="d.toggle()">
+          <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+        </span>
       </div>
     </div>
   </div>
-  <div class="form-group row">
+  <div class="row mb-3">
     <label for="starttime" class="col-4 col-form-label">starttijd</label>
     <div class="col-8 col-sm-6">
       <ngb-timepicker formControlName="time" [spinners]="false" required>
       </ngb-timepicker>
     </div>
   </div>
-  <div class="form-group row">
+  <div class="row mb-3">
     <label class="col-4 col-form-label pointer" (click)="openInfoModal('publiek', contentInfo)">publiek
       <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
     </label>
     <div class="col-8 col-sm-6">
-      <div class="form-control custom-control custom-switch">
-        <input type="checkbox" class="custom-control-input" id="public" formControlName="public">
-        <label class="custom-control-label" for="public"></label>
+      <div class="form-control form-check form-switch">
+        <input type="checkbox" class="form-check-input" id="public" formControlName="public">
+        <label class="form-check-label" for="public"></label>
       </div>
     </div>
   </div>
-  <div class="form-group row justify-content-end">
+  <div class="row justify-content-end">
     <div class="col-8 col-sm-6">
       <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
         kies sport

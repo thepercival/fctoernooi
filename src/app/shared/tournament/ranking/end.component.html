@@ -2,14 +2,14 @@
   <table class="table">
     <thead>
       <tr>
-        <th class="text-right">pl</th>
+        <th class="text-end">pl</th>
         <th></th>
         <th>deelnemers</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let rankingItem of rankingItems">
-        <td class="text-right">
+        <td class="text-end">
           <span [ngClass]="{ 'favitem': isFavorite(rankingItem) }">{{rankingItem.getRank()}}</span>
         </td>
         <td>

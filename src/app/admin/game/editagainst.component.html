@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
-    <div class="col-xs-12 col-lg-9 col-xl-7">
+    <div class="col-lg-9 col-xl-7">
       <app-tournament-title [tournament]="tournament">
       </app-tournament-title>
       <h2 *ngIf="processing" class="text-center">
@@ -11,7 +11,7 @@
         novalidate>
         <app-tournament-basegame-edit [form]="getBaseFormGroup()" [nameService]="nameService" [game]="game">
         </app-tournament-basegame-edit>
-        <div class="form-group row">
+        <div class="row mb-3">
           <div class="col-3">
             <label for="competitors" class="col-form-label">deelnemers</label>
           </div>
@@ -22,7 +22,7 @@
           <div class="col-4 font-weight-bold col-form-label text-break">
             {{nameService.getPlacesFromName(getGame().getAwayPlaces(), true, true)}}</div>
         </div>
-        <div *ngFor="let scoreControl of scoreControls" class="form-group row">
+        <div *ngFor="let scoreControl of scoreControls" class="row mb-3">
           <label class="col-3 col-form-label">
             <span>{{getInputScoreDescription()}}</span>
           </label>
@@ -36,7 +36,7 @@
               class="form-control max-width-100 {{scoreControl.getValidateClass()}}" type="number">
           </div>
         </div>
-        <div *ngIf="firstScoreConfig !== firstScoreConfig.getCalculate()" class="form-group row">
+        <div *ngIf="firstScoreConfig !== firstScoreConfig.getCalculate()" class="row mb-3">
           <div class="col-3">
           </div>
           <div class="col-9">
@@ -50,7 +50,7 @@
             </button>
           </div>
         </div>
-        <div *ngIf="calculateScoreControl" class="form-group row">
+        <div *ngIf="calculateScoreControl" class="row mb-3">
           <div class="col-3">
             <label class="col-form-label">{{getCalculateScoreDescription()}}</label>
           </div>
@@ -64,29 +64,29 @@
               class="form-control max-width-100 {{calculateScoreControl.getValidateClass()}}" type="number">
           </div>
         </div>
-        <div class="form-group row">
+        <div class="row mb-3">
           <label for="played" class="col-3 col-form-label">gespeeld</label>
           <div class="col-9">
-            <div class="form-control custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="played" formControlName="played"
+            <div class="form-control form-check form-switch">
+              <input type="checkbox" class="form-check-input" id="played" formControlName="played"
                 (ngModelChange)="setPlayed($event)">
-              <label class="custom-control-label" for="played"></label>
+              <label class="form-check-label" for="played"></label>
             </div>
           </div>
         </div>
-        <div *ngIf="game.getRound().getNumber().getValidPlanningConfig().getExtension()" class="form-group row">
-          <label for="extension" class="col-3 col-form-label">na verlenging</label>
+        <div *ngIf="planningConfig.getExtension()" class="row mb-3">
+          <label for="extratime" class="col-3 col-form-label">na verlenging</label>
           <div class="col-9">
-            <div class="form-control custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="extratime" formControlName="extension"
-                (ngModelChange)="setExtension($event)">
-              <label class="custom-control-label" for="extension"></label>
+            <div class="form-control form-check form-switch">
+              <input type="checkbox" class="form-check-input" id="extratime" formControlName="extratime"
+                (ngModelChange)="setExtratime($event)">
+              <label class="form-check-label" for="extratime"></label>
             </div>
           </div>
         </div>
 
         <div *ngFor="let warning of warningsForEqualQualifiers" class="alert alert-warning">{{warning}}</div>
-        <div class="form-group row justify-content-end">
+        <div class="row mb-3 justify-content-end">
           <div class="col-9 d-inline-flex">
             <button type="submit" [disabled]="form.invalid || aScoreIsInvalid()"
               class="btn btn-outline-primary mr-1">wijzig

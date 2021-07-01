@@ -1,5 +1,5 @@
 <div [formGroup]="form">
-  <div class="form-group row">
+  <div class="row mb-3">
     <div class="col-3">
       <label class="col-form-label">poule</label>
     </div>
@@ -9,7 +9,7 @@
       <label class="col-form-label" [innerHTML]="nameService.getPouleName( game.getPoule(), true) | keepHtml"></label>
     </div>
   </div>
-  <div *ngIf="getPlanningConfig().getEnableTime() && !manualEditMode()" class="form-group row">
+  <div *ngIf="getPlanningConfig().getEnableTime() && !manualEditMode()" class="row mb-3">
     <div class="col-3">
       <label class="col-form-label">start</label>
     </div>
@@ -18,7 +18,7 @@
     </div>
   </div>
 
-  <div *ngIf="getPlanningConfig().getEnableTime() && manualEditMode()" class="form-group row">
+  <div *ngIf="getPlanningConfig().getEnableTime() && manualEditMode()" class="row mb-3">
     <div class="col-3">
       <label for="date" class="col-form-label">datum</label>
     </div>
@@ -27,15 +27,13 @@
         <input class="form-control"
           [ngClass]="{ 'is-invalid': form.controls.date.invalid, 'is-valid': form.controls.date.valid }"
           placeholder="yyyy-mm-dd" formControlName="date" ngbDatepicker #d="ngbDatepicker" required container="body">
-        <div class="input-group-append">
-          <span class="input-group-text pointer" (click)="d.toggle()">
-            <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
-          </span>
-        </div>
+        <span class="input-group-text pointer" (click)="d.toggle()">
+          <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+        </span>
       </div>
     </div>
   </div>
-  <div *ngIf="getPlanningConfig().getEnableTime() && manualEditMode()" class="form-group row">
+  <div *ngIf="getPlanningConfig().getEnableTime() && manualEditMode()" class="row mb-3">
     <div class="col-3">
       <label for="time" class="col-form-label">tijd</label>
     </div>
@@ -45,7 +43,7 @@
     </div>
   </div>
 
-  <div *ngIf="game.getCompetition().getFields().length > 1" class="form-group row">
+  <div *ngIf="game.getCompetition().getFields().length > 1" class="row mb-3">
     <label for="field" class="col-3 col-form-label">{{getFieldDescription()}}</label>
     <div class="col-9 col-sm-6">
       <select class="form-control" formControlName="field" required>
@@ -54,7 +52,7 @@
       </select>
     </div>
   </div>
-  <div *ngIf="areRefereesEnabled()" class="form-group row">
+  <div *ngIf="areRefereesEnabled()" class="row mb-3">
     <label for="field" class="col-3 col-form-label">scheidsrechter</label>
     <div class="col-9 col-sm-6">
       <select class="form-control" formControlName="referee">
@@ -63,7 +61,7 @@
       </select>
     </div>
   </div>
-  <div *ngIf="areRefereePlacesEnabled()" class="form-group row">
+  <div *ngIf="areRefereePlacesEnabled()" class="row mb-3">
     <label for="field" class="col-3 col-form-label">scheidsrechter</label>
     <div class="col-9 col-sm-6">
       <select class="form-control" formControlName="refereePlace">

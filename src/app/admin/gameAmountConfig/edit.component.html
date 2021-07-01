@@ -1,5 +1,5 @@
 <ng-container *ngIf="gameAmountControls.length === 1" [formGroup]="form">
-  <div class="form-group row" *ngFor="let gameAmountControl of gameAmountControls">
+  <div class="row mb-3" *ngFor="let gameAmountControl of gameAmountControls">
     <label [for]="gameAmountControl.json.id" class="col-7 col-form-label">{{label}}</label>
     <div class="col-5">
       <select class="form-control" [formControlName]="gameAmountControl.json.id" required>
@@ -9,7 +9,7 @@
   </div>
 </ng-container>
 
-<div class="form-group row" *ngIf="gameAmountControls.length > 1">
+<div class="row mb-3" *ngIf="gameAmountControls.length > 1">
   <label class="col-7 col-form-label">{{label}}</label>
   <div class="col-5">
     <button type="button" (click)="openModal(gameAmountModal)" class="btn btn-sm btn-outline-secondary">
@@ -28,7 +28,7 @@
     </button>
   </div>
   <div class="modal-body" [formGroup]="form">
-    <div class="form-group row" *ngFor="let gameAmountControl of gameAmountControls">
+    <div class="row mb-3" *ngFor="let gameAmountControl of gameAmountControls">
       <label [for]="gameAmountControl.json.id"
         class="col-8 col-form-label">{{gameAmountControl.json.competitionSport.sport.name}}
         ({{getAmountDescription(gameAmountControl.json.competitionSport)}})</label>

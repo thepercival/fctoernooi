@@ -78,6 +78,7 @@ export class FilterComponent extends TournamentComponent implements OnInit {
     }
 
     toggleFavoriteReferee(referee: Referee) {
+        console.log(this.favorites.hasReferee(referee));
         if (this.favorites.hasReferee(referee)) {
             this.favorites.removeReferee(referee);
         } else {

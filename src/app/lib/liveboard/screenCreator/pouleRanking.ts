@@ -1,4 +1,4 @@
-import { NameService, Poule, RoundNumber, State } from "ngx-sport";
+import { CompetitionSport, NameService, Poule, RoundNumber, State } from "ngx-sport";
 import { PoulesRankingScreen } from "../screens";
 
 export class PouleRankingScreensCreator {
@@ -12,21 +12,20 @@ export class PouleRankingScreensCreator {
         if (roundNumbers.length === 0) {
             return screens;
         }
-        roundNumbers.forEach(roundNumber => {
-            const poulesForRanking = roundNumber.getPoules().filter(poule => poule.needsRanking());
-            const nameService = new NameService(undefined);
-            const roundsDescription = nameService.getRoundNumberName(roundNumber);
-            const twoPoules: Poule[] = [];
-            poulesForRanking.forEach(poule => {
-                twoPoules.push(poule);
-                if (twoPoules.length < 2) {
-                    return;
+        const competitionSports = firstRoundNumber.getCompetitionSports();
+        competitionSports.forEach((competitionSport: CompetitionSport) => {
+            roundNumbers.forEach((roundNumber: RoundNumber) => {
+                const poulesForRanking = roundNumber.getPoules().filter(poule => poule.needsRanking());
+                const nameService = new NameService(undefined);
+                const roundsDescription = nameService.getRoundNumberName(roundNumber);
+                let pouleOne = poulesForRanking.shift();
+                while (pouleOne !== undefined) {
+                    const pouleTwo = poulesForRanking.shift();
+                    const screen = new PoulesRankingScreen(competitionSport, pouleOne, pouleTwo, roundsDescription);
+                    screens.push(screen);
+                    pouleOne = poulesForRanking.shift();
                 }
-                screens.push(new PoulesRankingScreen(<Poule>twoPoules.shift(), <Poule>twoPoules.shift(), roundsDescription));
             });
-            if (twoPoules.length === 1) {
-                screens.push(new PoulesRankingScreen(<Poule>twoPoules.shift(), undefined, roundsDescription));
-            }
         });
         return screens;
     }

@@ -36,9 +36,13 @@ export class Favorites {
         return this.hasGameReferee(game) || this.hasGameCompetitor(game);
     }
 
-    // getCompetitorIds(): number[] {
-    //     return this.competitorIds;
-    // }
+    getCompetitorIds(): number[] {
+        return this.competitors.map((competitor: Competitor) => +competitor.getId());
+    }
+
+    getRefereeIds(): number[] {
+        return this.referees.map((referee: Referee) => +referee.getId());
+    }
 
     hasCompetitors(): boolean {
         return this.competitors.length > 0;

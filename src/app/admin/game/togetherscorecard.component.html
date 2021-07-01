@@ -5,7 +5,7 @@
   </div>
   <div class="card-body pb-0" [formGroup]="form">
     <div formArrayName="scores">
-      <div *ngFor="let inputControl of getScoreControls().controls; index as idx" class="form-group row">
+      <div *ngFor="let inputControl of getScoreControls().controls; index as idx" class="row mb-3">
         <label class="col-6 col-form-label">
           <span>{{getInputScoreDescription()}}</span>
         </label>
@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <div *ngIf="form.controls.calculate" class="form-group row">
+    <div *ngIf="form.controls.calculate" class="row mb-3">
       <div class="col-6">
         <label class="col-form-label">{{getCalculateScoreDescription()}}</label>
       </div>
@@ -29,7 +29,7 @@
   </div>
 
   <div *ngIf="form.controls.calculate" class="card-footer text-primary border-primary pointer text-center">
-    <div class="form-group row">
+    <div class="row mb-3">
       <div class="col-3">
       </div>
       <div class="col-9">

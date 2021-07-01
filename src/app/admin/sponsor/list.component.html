@@ -1,5 +1,5 @@
-<div class="row justify-content-center no-gutters">
-  <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+<div class="row justify-content-center g-0">
+  <div class="col-sm-10 col-md-8 col-lg-6">
     <app-tournament-title [tournament]="tournament" [admin]="true">
     </app-tournament-title>
     <div *ngIf="!processing" class="d-flex justify-content-between">
@@ -26,7 +26,7 @@
           <th>naam</th>
           <th class="text-center">scherm nummer</th>
           <th class="d-none d-lg-table-cell">url</th>
-          <th class="text-right">
+          <th class="text-end">
             <button type="button" class="btn btn-sm btn-primary" (click)="addSponsor()"
               *ngIf="sponsors.length < sponsorScreensCreator.getMaxNrOfSponsors()">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
@@ -50,7 +50,7 @@
           <td class="d-none d-lg-table-cell">
             <span>{{sponsor.getUrl()}}</span>
           </td>
-          <td class="text-right">
+          <td class="text-end">
             <button type="button" class="btn btn-sm btn-danger" (click)="removeSponsor(sponsor);">
               <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
             </button>

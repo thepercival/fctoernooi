@@ -23,6 +23,7 @@ import {
     PlaceMapper,
     Referee,
     Place,
+    GamePhase,
 } from 'ngx-sport';
 import { Observable, of } from 'rxjs';
 
@@ -265,11 +266,11 @@ export class GameEditComponent extends TournamentComponent {
     // }
 
     protected getPhase(form: FormGroup): number {
-        if (form.value['extension']) {
-            return Game.Phase_ExtraTime;
+        if (form.value['extratime'] === true) {
+            return GamePhase.ExtraTime;
         }
-        if (form.value['played']) {
-            return Game.Phase_RegularTime;
+        if (form.value['played'] === true) {
+            return GamePhase.RegularTime;
         }
         return 0;
     }

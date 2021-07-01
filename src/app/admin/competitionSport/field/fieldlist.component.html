@@ -10,7 +10,7 @@
                 <fa-icon [icon]="['fas', 'sort']"></fa-icon>
             </th>
             <th>naam</th>
-            <th class="text-right">
+            <th class="text-end">
                 <button *ngIf="!hasBegun" type="button" class="btn btn-sm btn-primary" (click)="addField()"
                     [disabled]="processing">
                     <fa-icon [icon]="['fas', 'plus']"></fa-icon>
@@ -34,7 +34,7 @@
             <td>
                 <span>{{field.getName()}}</span>
             </td>
-            <td class="text-right">
+            <td class="text-end">
                 <button *ngIf="!hasBegun" type="button" class="btn btn-sm btn-danger"
                     [disabled]="processing || competitionSport.getFields().length === 1" (click)="removeField(field);">
                     <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>

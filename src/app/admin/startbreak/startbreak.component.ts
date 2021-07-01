@@ -16,7 +16,7 @@ import { DateFormatter } from '../../lib/dateFormatter';
 @Component({
     selector: 'app-tournament-startbreak',
     templateUrl: './startbreak.component.html',
-    styleUrls: ['./startbreak.component.css']
+    styleUrls: ['./startbreak.component.scss']
 })
 export class StartBreakComponent extends TournamentComponent implements OnInit {
     form: FormGroup;
@@ -40,7 +40,7 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
         this.form = fb.group({
             date: ['', Validators.compose([])],
             time: ['', Validators.compose([])],
-            togglebreak: ['', Validators.compose([])],
+            togglebreak: [false, Validators.compose([])],
             breakstartdate: ['', Validators.compose([])],
             breakstarttime: ['', Validators.compose([])],
             breakenddate: ['', Validators.compose([])],

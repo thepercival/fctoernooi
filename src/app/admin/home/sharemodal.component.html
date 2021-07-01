@@ -12,19 +12,19 @@
             klembord
         </ngb-alert>
         <form name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
-            <div class="form-group row">
+            <div class="row mb-3">
                 <label for="publicotherid" class="col-9 col-form-label pointer">publiek
                     <fa-icon (click)="openInfoModal(infoPublic)" [icon]="['fas', 'info-circle']" class="text-info">
                     </fa-icon>
                 </label>
                 <div class="form-check col-3">
-                    <div class="form-control custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="public" formControlName="public">
-                        <label class="custom-control-label" for="public"></label>
+                    <div class="form-control form-check form-switch">
+                        <input type="checkbox" class="form-check-input" id="public" formControlName="public">
+                        <label class="form-check-label" for="public"></label>
                     </div>
                 </div>
             </div>
-            <div [ngStyle]="{'visibility':form.value['public'] ? 'visible' : 'hidden'}" class="form-group row">
+            <div [ngStyle]="{'visibility':form.value['public'] ? 'visible' : 'hidden'}" class="row mb-3">
                 <div class="col-4">
                     <label for="url" class="col-form-label">url</label>
                 </div>
@@ -41,7 +41,8 @@
         (cbOnSuccess)="copied = true;" [cbContent]="form.controls.url.value">
         <fa-icon [icon]="['fas', 'clipboard-check']"></fa-icon> kopieer url naar klembord
     </button>
-    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="modal.close('share')">opslaan</button>
+    <button type="button" class="btn btn-primary" data-dismiss="modal"
+        (click)="modal.close(form.value['public'])">opslaan</button>
 </div>
 
 <ng-template #infoPublic>

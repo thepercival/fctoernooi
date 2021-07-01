@@ -1,12 +1,12 @@
-<div *ngIf="toggleRound" [ngClass]="{ 'pl-1': !first, 'pr-1': !toggleRound.parent }">
+<div *ngIf="toggleRound" [ngClass]="{ 'ps-1': !first, 'pe-1': !toggleRound.parent }">
   <form name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
     <div class="card border-secondary round mb-2 {{cssService.getQualifyRound(toggleRound.round)}}"
       *ngIf="!toggleRound.parent || toggleRound.round.getNrOfPlaces() > 2">
       <div class="card-header px-1 text-center form-group">
-        <div class="custom-control custom-switch">
-          <input type="checkbox" class="custom-control-input" [id]="getCustomSwitchId()" formControlName="selected"
+        <div class="form-check form-switch">
+          <input type="checkbox" class="form-check-input" [id]="getCustomSwitchId()" formControlName="selected"
             (ngModelChange)="toggleSelection()">
-          <label class="custom-control-label" [for]="getCustomSwitchId()"><span class="lead"
+          <label class="form-check-label" [for]="getCustomSwitchId()"><span class="lead"
               [innerHTML]="nameService.getRoundName( toggleRound.round ) | keepHtml"></span></label>
           <fa-icon *ngIf="hasOwnConfig2()" class="ml-1" [icon]="['fas', 'cogs']"></fa-icon>
         </div>
@@ -31,10 +31,10 @@
       <div class="card round {{cssService.getQualifyRound(toggleRound.round)}}">
         <div class="card-header px-1">
           <span [innerHTML]="nameService.getRoundName(toggleRound.round) | keepHtml"></span>
-          <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" [id]="getCustomSwitchId()" formControlName="selected"
+          <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input" [id]="getCustomSwitchId()" formControlName="selected"
               (ngModelChange)="toggleSelection()">
-            <label class="custom-control-label" [for]="getCustomSwitchId()"></label>
+            <label class="form-check-label" [for]="getCustomSwitchId()"></label>
           </div>
           <fa-icon *ngIf="hasOwnConfig2()" class="ml-1" [icon]="['fas', 'cogs']"></fa-icon>
         </div>

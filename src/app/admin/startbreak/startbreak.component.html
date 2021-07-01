@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
-    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
+    <div class="col-sm-12 col-md-10 col-lg-8">
       <app-tournament-title [tournament]="tournament">
       </app-tournament-title>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
@@ -10,7 +10,7 @@
 
       <form *ngIf="!processing" name="form" (ngSubmit)="edit()" [formGroup]="form" novalidate>
         <h2>start</h2>
-        <div *ngIf="!hasBegun" class="form-group row">
+        <div *ngIf="!hasBegun" class="row mb-3">
           <div class="col-3">
             <label for="date" class="col-form-label">datum</label>
           </div>
@@ -20,15 +20,13 @@
                 [ngClass]="{ 'is-invalid': form.controls.date.invalid, 'is-valid': form.controls.date.valid }"
                 placeholder="yyyy-mm-dd" formControlName="date" ngbDatepicker #d="ngbDatepicker" required
                 [minDate]="minDateStruct" container="body">
-              <div class="input-group-append">
-                <span class="input-group-text pointer" (click)="d.toggle()">
-                  <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
-                </span>
-              </div>
+              <span class="input-group-text pointer" (click)="d.toggle()">
+                <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+              </span>
             </div>
           </div>
         </div>
-        <div *ngIf="!hasBegun" class="form-group row">
+        <div *ngIf="!hasBegun" class="row mb-3">
           <div class="col-3">
             <label for="starttime" class="col-form-label">tijd</label>
           </div>
@@ -37,7 +35,7 @@
             </ngb-timepicker>
           </div>
         </div>
-        <div *ngIf="hasBegun" class="form-group row">
+        <div *ngIf="hasBegun" class="row mb-2">
           <div class="col-3">
             <label for="start" class="col-form-label">datumtijd</label>
           </div>
@@ -48,20 +46,19 @@
           </div>
         </div>
         <div *ngIf="isTimeEnabled()">
-          <div *ngIf="!hasBegun || this.form.controls.togglebreak.value" class="form-group row">
-            <div class="col-3">
-              <h2 for="togglebreak" class="pt-1">
-                pauze</h2>
-            </div>
-            <div *ngIf="!hasBegun" class="col-9 pr-0">
-              <label class="custom-control custom-checkbox pointer col-form-label pl-0">
-                <input type="checkbox" class="custom-control-input form-check-input" formControlName="togglebreak">
-                <span class="custom-control-indicator"></span>
-                <label class="ml-2 col-form-label" nowrap>( tijdens een ronde )</label>
-              </label>
+          <div *ngIf="!hasBegun || this.form.controls.togglebreak.value" class="row mb-3">
+
+            <label for="togglebreak" class="col-3 col-form-label pointer fs-2">
+              pauze
+            </label>
+            <div class="col-9">
+              <div class="mt-3 form-check form-switch">
+                <input type="checkbox" class="form-check-input" id="public" formControlName="togglebreak">
+                <label class="form-check-label" for="togglebreak"></label>
+              </div>
             </div>
           </div>
-          <div *ngIf="!hasBegun && this.form.controls.togglebreak.value" class="form-group row">
+          <div *ngIf="!hasBegun && this.form.controls.togglebreak.value" class="row mb-3">
             <div class="col-3">
               <label for="breakstartdate" class="col-form-label">start</label>
             </div>
@@ -71,15 +68,13 @@
                   [ngClass]="{ 'is-invalid': form.controls.breakstartdate.invalid, 'is-valid': form.controls.breakstartdate.valid }"
                   placeholder="yyyy-mm-dd" formControlName="breakstartdate" ngbDatepicker #dBreakStart="ngbDatepicker"
                   required [minDate]="minDateStruct" container="body">
-                <div class="input-group-append">
-                  <span class="input-group-text pointer" (click)="dBreakStart.toggle()">
-                    <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
-                  </span>
-                </div>
+                <span class="input-group-text pointer" (click)="dBreakStart.toggle()">
+                  <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+                </span>
               </div>
             </div>
           </div>
-          <div *ngIf="!hasBegun && this.form.controls.togglebreak.value" class="form-group row">
+          <div *ngIf="!hasBegun && this.form.controls.togglebreak.value" class="row mb-3">
             <div class="col-3">
               <label for="breakstarttime" class="col-form-label"></label>
             </div>
@@ -88,7 +83,7 @@
               </ngb-timepicker>
             </div>
           </div>
-          <div *ngIf="hasBegun && tournament.hasBreak()" class="form-group row">
+          <div *ngIf="hasBegun && tournament.hasBreak()" class="row mb-3">
             <div class="col-3">
               <label for="start" class="col-form-label">start</label>
             </div>
@@ -98,7 +93,7 @@
                 readonly>
             </div>
           </div>
-          <div *ngIf="!hasBegun && this.form.controls.togglebreak.value" class="form-group row">
+          <div *ngIf="!hasBegun && this.form.controls.togglebreak.value" class="row mb-3">
             <div class="col-3">
               <label for="breakenddate" class="col-form-label">eind</label>
             </div>
@@ -108,15 +103,13 @@
                   [ngClass]="{ 'is-invalid': form.controls.breakenddate.invalid, 'is-valid': form.controls.breakenddate.valid }"
                   placeholder="yyyy-mm-dd" formControlName="breakenddate" ngbDatepicker #dBreakEnd="ngbDatepicker"
                   required [minDate]="minDateStruct" container="body">
-                <div class="input-group-append">
-                  <span class="input-group-text pointer" (click)="dBreakEnd.toggle()">
-                    <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
-                  </span>
-                </div>
+                <span class="input-group-text pointer" (click)="dBreakEnd.toggle()">
+                  <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+                </span>
               </div>
             </div>
           </div>
-          <div *ngIf="!hasBegun && this.form.controls.togglebreak.value" class="form-group row">
+          <div *ngIf="!hasBegun && this.form.controls.togglebreak.value" class="row mb-3">
             <div class="col-3">
               <label for="breakendtime" class="col-form-label"></label>
             </div>
@@ -125,7 +118,7 @@
               </ngb-timepicker>
             </div>
           </div>
-          <div *ngIf="hasBegun && tournament.hasBreak()" class="form-group row">
+          <div *ngIf="hasBegun && tournament.hasBreak()" class="row mb-3">
             <div class="col-3">
               <label for="end" class="col-form-label">eind</label>
             </div>
@@ -137,7 +130,7 @@
           </div>
         </div>
 
-        <div *ngIf="!hasBegun" class="form-group row justify-content-end">
+        <div *ngIf="!hasBegun" class="row mb-3 justify-content-end">
           <div class="col-9">
             <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
               opslaan

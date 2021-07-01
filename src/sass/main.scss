@@ -2,7 +2,8 @@
 
 $enable-responsive-font-sizes: true !default;
 @import "./bootswatch/variables";
-@import "./bootstrap-custom-components";
+// @import "./bootstrap-custom-components";
+@import "~bootstrap/scss/bootstrap";
 @import "./bootswatch/bootswatch";
 
 @include media-breakpoint-up(sm) {
@@ -36,8 +37,8 @@ $enable-responsive-font-sizes: true !default;
 }
 
 .favitem {
-    @extend .text-primary;
-    @extend .font-weight-bold;
+    @extend .text-primary !optional;
+    @extend .font-weight-bold !optional;
 }
 
 hr {
@@ -51,12 +52,7 @@ hr {
 html {
   position: relative;
 }
-// h1 {
-//   font-size: 2.5rem;
-// }
-// h2 {
-//   font-size: 1.5rem;
-// }
+
 app-root {
   display: flex;
   min-height: 100vh;
@@ -77,6 +73,10 @@ td .btn.btn-sm, th .btn.btn-sm, td .list-group-item {
   padding-bottom: 0px;
 }
 
+.input-group-date {
+    width: 185px;
+}
+
 input.is-valid, textarea.is-valid {
     border-left: 5px solid #{$success};
 }
@@ -91,25 +91,25 @@ input.is-warning {
 
 .modal-content-info .modal-content {
   border: 5px;
-  @extend .border-info;
+  @extend .border-info !optional;
 }
 
 .warning-modal .modal-content{
   border: 5px;
-  @extend .bg-warning;
-  @extend .text-white;
+  @extend .bg-warning !optional;
+  @extend .text-white !optional;
 }
 
 .info-modal .modal-content{
   border: 5px;
-  @extend .bg-info;
-  @extend .text-white;
+  @extend .bg-info !optional;
+  @extend .text-white !optional;
 }
 
 .info-modal .list-group-item {
-  @extend .bg-info;
-  @extend .text-white;
-  @extend .border-white;
+  @extend .bg-info !optional;
+  @extend .text-white !optional;
+  @extend .border-white !optional;
 }
 
 .bg-against {
@@ -118,14 +118,14 @@ input.is-warning {
 .bg-together {
   background-color: pink;
 }
-.custom-switch-against .custom-control-label::after {
-  @extend .bg-against;
+.custom-switch-against .form-check-label::after {
+  @extend .bg-against !optional;
 }
-.custom-switch-together .custom-control-label::after {
-  @extend .bg-together;
+.custom-switch-together .form-check-label::after {
+  @extend .bg-together !optional;
 }
-.custom-switch-warning .custom-control-label::after {
-  @extend .bg-warning;
+.custom-switch-warning .form-check-label::after {
+  @extend .bg-warning !optional;
 }
 
 .progress {
@@ -252,12 +252,12 @@ span.badge-rank {
     border-width: 2px;
     font-size: inherit;
 }
-
-.custom-switch {
+// form-group
+.form-switch {
     border: 0;
 }
 
-.custom-switch .custom-control-label {
+.form-check-input {
   cursor: pointer;
 }
 

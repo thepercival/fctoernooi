@@ -1,5 +1,5 @@
-<div class="row justify-content-center no-gutters">
-  <div class="col-xs-12 col-sm-10 col-md-10 col-lg-6">
+<div class="row justify-content-center g-0">
+  <div class="col-sm-10 col-md-10 col-lg-6">
     <app-tournament-title [tournament]="tournament" [admin]="true">
     </app-tournament-title>
     <div class="d-flex justify-content-between mr-1">
@@ -22,7 +22,7 @@
           <th>initialen</th>
           <th class="d-none d-sm-table-cell">naam</th>
           <th class="d-none d-md-table-cell">emailadres</th>
-          <th class="text-right">
+          <th class="text-end">
             <button *ngIf="!hasBegun" type="button" class="btn btn-sm btn-primary" (click)="addReferee()"
               [disabled]="processing">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
@@ -52,7 +52,7 @@
           <td class="d-none d-md-table-cell">
             <span>{{referee.getEmailaddress()}}</span>
           </td>
-          <td class="text-right">
+          <td class="text-end">
             <button *ngIf="!hasBegun" type="button" class="btn btn-sm btn-danger" [disabled]="processing"
               (click)="removeReferee(referee);">
               <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>

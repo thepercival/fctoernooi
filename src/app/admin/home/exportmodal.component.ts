@@ -10,7 +10,7 @@ import { TournamentExportConfig, TournamentExportFormat } from '../../lib/tourna
     styleUrls: ['./exportmodal.component.scss']
 })
 export class ExportModalComponent implements OnInit {
-    @Input() enabled!: number;
+    @Input() subjects!: number;
     @Input() fieldDescription!: string;
     form: FormGroup;
     exportOptions: ExportOption[] = [];
@@ -28,7 +28,7 @@ export class ExportModalComponent implements OnInit {
                 key: propertyKey,
                 value: +propertyValue,
                 label: this.getLabel(+propertyValue),
-                enabled: (this.enabled & +propertyValue) > 0,
+                enabled: (this.subjects & +propertyValue) > 0,
                 iconName: TournamentExportConfig.qrCode === +propertyValue ? 'qrcode' : undefined
             };
             this.exportOptions.push(exportOption);

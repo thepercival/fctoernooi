@@ -3,7 +3,7 @@
         <tr>
             <th>sport</th>
             <th class="">resultaat</th>
-            <th class="text-right">punten</th>
+            <th class="text-end">punten</th>
         </tr>
     </thead>
     <tbody>
@@ -11,27 +11,27 @@
             <tr>
                 <td>{{againstQualifyConfig.getSport().getName()}}</td>
                 <td>overwinning</td>
-                <td class="text-right">{{againstQualifyConfig.getWinPoints()}}</td>
+                <td class="text-end">{{againstQualifyConfig.getWinPoints()}}</td>
             </tr>
             <tr>
                 <td>{{againstQualifyConfig.getSport().getName()}}</td>
                 <td>gelijkspel</td>
-                <td class="text-right">{{againstQualifyConfig.getDrawPoints()}}</td>
+                <td class="text-end">{{againstQualifyConfig.getDrawPoints()}}</td>
             </tr>
             <tr *ngIf="round.getNumber().getValidPlanningConfig().getExtension()">
                 <td>{{againstQualifyConfig.getSport().getName()}}</td>
                 <td>overwinning na verlenging</td>
-                <td class="text-right">{{againstQualifyConfig.getWinPointsExt()}}</td>
+                <td class="text-end">{{againstQualifyConfig.getWinPointsExt()}}</td>
             </tr>
             <tr *ngIf="round.getNumber().getValidPlanningConfig().getExtension()">
                 <td>{{againstQualifyConfig.getSport().getName()}}</td>
                 <td>gelijkspel na verlenging</td>
-                <td class="text-right">{{againstQualifyConfig.getDrawPointsExt()}}</td>
+                <td class="text-end">{{againstQualifyConfig.getDrawPointsExt()}}</td>
             </tr>
             <tr *ngIf="round.getNumber().getValidPlanningConfig().getExtension()">
                 <td>{{againstQualifyConfig.getSport().getName()}}</td>
                 <td>verlies na verlenging</td>
-                <td class="text-right">{{againstQualifyConfig.getLosePointsExt()}}</td>
+                <td class="text-end">{{againstQualifyConfig.getLosePointsExt()}}</td>
             </tr>
         </ng-template>
     </tbody>

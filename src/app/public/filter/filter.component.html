@@ -1,5 +1,5 @@
-<div class="row justify-content-center no-gutters">
-  <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
+<div class="row justify-content-center g-0">
+  <div class="col-sm-10 col-md-8 col-lg-6 col-xl-4">
     <app-tournament-title [tournament]="tournament">
     </app-tournament-title>
     <div class="text-center">
@@ -81,17 +81,19 @@
         <td class="place">
           <span *ngIf="placeCompetitor.competitor">{{placeCompetitor.competitor.getName()}}</span>
         </td>
-        <td class="text-right">
+        <td class="text-end">
           <fa-icon class="my-2" *ngIf="placeCompetitor.competitor && processingItem === placeCompetitor.place"
             [icon]="['fas', 'spinner']" [spin]="true">
           </fa-icon>
-          <label *ngIf="placeCompetitor.competitor && processingItem !== placeCompetitor.place"
-            class="custom-control custom-checkbox col-form-label pl-0">
-            <input type="checkbox" class="custom-control-input form-check-input"
+          <div *ngIf="placeCompetitor.competitor && processingItem !== placeCompetitor.place"
+            class="pt-0 form-check form-switch col-form-label ps-0">
+            <input type="checkbox" class="form-check-input"
               [checked]="favorites.hasCompetitor(placeCompetitor.competitor)"
               (change)="toggleFavoriteCompetitor(placeCompetitor.competitor)">
             <span class="custom-control-indicator"></span>
-          </label>
+          </div>
+
+
         </td>
       </tr>
     </tbody>
@@ -106,12 +108,12 @@
           <span>{{referee.getInitials()}}</span>
           <span *ngIf="referee.getName()"> - {{referee.getName()}}</span>
         </td>
-        <td class="text-right">
+        <td class="text-end">
           <fa-icon class="my-2" *ngIf="processingItem === referee" [icon]="['fas', 'spinner']" [spin]="true">
           </fa-icon>
-          <label *ngIf="processingItem !== referee" class="custom-control custom-checkbox col-form-label pl-0">
-            <input type="checkbox" class="custom-control-input form-check-input"
-              [checked]="favorites.hasReferee(referee)" (change)="toggleFavoriteReferee(referee)">
+          <label *ngIf="processingItem !== referee" class="pt-0 form-check form-switch col-form-label ps-0">
+            <input type="checkbox" class="form-check-input" [checked]="favorites.hasReferee(referee)"
+              (change)="toggleFavoriteReferee(referee)">
             <span class="custom-control-indicator"></span>
           </label>
         </td>

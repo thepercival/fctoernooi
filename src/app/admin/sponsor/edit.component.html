@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
-    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+    <div class="col-sm-10 col-md-8 col-lg-6">
       <app-tournament-title [tournament]="tournament">
       </app-tournament-title>
       <div>
@@ -13,7 +13,7 @@
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
       <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
-        <div class="form-group row">
+        <div class="row mb-3">
           <div class="col-3">
             <label for="name" class="col-form-label">naam</label>
           </div>
@@ -23,7 +23,7 @@
               formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
         </div>
-        <div class="form-group row">
+        <div class="row mb-3">
           <div class="col-3">
             <label for="url" class="col-form-label">url</label>
           </div>
@@ -33,7 +33,7 @@
               formControlName="url" placeholder="max. {{validations.maxlengthurl}} karakters">
           </div>
         </div>
-        <div *ngIf="logoInput === logoInputUpload" class="form-group row">
+        <div *ngIf="logoInput === logoInputUpload" class="row mb-3">
           <div class="col-3">
             <label for="logouploadother" (click)="openInfoModal(contentInfo)" class="pointer">logo
               <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
@@ -46,7 +46,7 @@
             </div>
           </div>
         </div>
-        <div class="form-group row">
+        <div class="row mb-3">
           <div class="col-3">
             <label for="screennr" class="col-form-label">scherm nummer</label>
           </div>
@@ -59,14 +59,14 @@
             </select>
           </div>
         </div>
-        <div class="form-group row justify-content-end">
+        <div class="row mb-3 justify-content-end">
           <div class="col-9">
             <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
               <span>{{originalSponsor !== undefined ? 'wijzigen' : 'toevoegen'}}</span>
             </button>
           </div>
         </div>
-        <div *ngIf="base64Logo || form.controls.logourl.value" class="form-group row">
+        <div *ngIf="base64Logo || form.controls.logourl.value" class="row mb-3">
           <div class="col-3">
             <label for="log">preview</label>
           </div>

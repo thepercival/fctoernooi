@@ -54,7 +54,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   @Input() reload: boolean | undefined;
   @Input() roles: number = 0;
   @Input() favorites!: Favorites;
-  @Input() refreshingData: boolean = false;
+  @Input() refreshingData: boolean | undefined;
   @Output() refreshData = new EventEmitter();
   @Output() scroll = new EventEmitter();
   alert: IAlert | undefined;
@@ -206,7 +206,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     return finalScore === undefined ? sScore : '' + finalScore;
   }
 
-  getTogetherScoreButtonClass(gamePlace: TogetherGamePlace): string {
+  getTogetherScoreBtnBorderClass(gamePlace: TogetherGamePlace): string {
     return gamePlace.getGame().getState() === State.Finished ? 'success' : 'primary';
   }
 

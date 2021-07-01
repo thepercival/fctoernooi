@@ -2,12 +2,13 @@
     <colgroup>
         <col class="width-10">
         <col class="width-30">
-        <col *ngFor="let competitionSport of competitionSports">
+        <col *ngFor="let competitionSport of competitionSports; let counter = index"
+            class="{{viewPortManager.getClass(counter+1)}}">
         <col>
     </colgroup>
     <thead>
         <tr>
-            <th class="text-right pl-0">pl</th>
+            <th class="text-end ps-0"><span class="badge badge-rank pb-0">pl</span></th>
             <th class="place px-0">
                 <div class="d-flex justify-content-between">
                     <span class="d-xs-inline d-sm-none">deeln.</span>
@@ -21,12 +22,12 @@
                 </div>
             </th>
             <th *ngFor="let competitionSport of competitionSports; let counter = index"
-                class="text-right pl-0 {{viewPortManager.getClass(counter+1)}}">
-                <button class="btn btn-sm btn-outline-info" (click)="openModalPouleRank(competitionSport)">
+                class="text-end ps-0 {{viewPortManager.getClass(counter+1)}}">
+                <button class="btn btn-sm btn-outline-info w-100" (click)="openModalPouleRank(competitionSport)">
                     {{competitionSport.getSport().getName()}}
                 </button>
             </th>
-            <th class="pl-0 text-center" title="totaal">
+            <th class="ps-0 text-end" title="totaal">
                 <ng-template ngFor let-viewPort [ngForOf]="viewPortManager.getViewPorts()">
                     <button *ngIf="viewPortManager.showForwardArrow(viewPort)"
                         class="btn btn-sm btn-outline-secondary {{viewPortManager.getSingleVisibleClass(viewPort)}}"
@@ -40,18 +41,18 @@
     </thead>
     <tbody>
         <tr *ngFor="let roundRankingItem of roundRankingItems">
-            <td class="rankingnr text-right pl-0">
+            <td class="rankingnr text-end ps-0">
                 <span
                     class="badge badge-rank {{getQualifyPlaceClass(roundRankingItem)}}">{{roundRankingItem.getUniqueRank()}}</span>
             </td>
-            <td class="place pl-0"
+            <td class="place ps-0"
                 [ngClass]="{ 'favitem': favorites.hasCompetitor(competitorMap.getCompetitor(roundRankingItem.getPlace())) }">
                 {{nameService.getPlaceFromName(roundRankingItem.getPlace(), true)}}
             </td>
             <td *ngFor="let competitionSport of competitionSports; let counter = index;"
-                class="text-right pl-0 {{viewPortManager.getClass(counter+1)}}">
+                class="text-end ps-0 {{viewPortManager.getClass(counter+1)}}">
                 {{roundRankingItem.getSportItem(competitionSport).getRank()}}</td>
-            <td class="text-right pl-0">{{roundRankingItem.getCumulativeRank()}}</td>
+            <td class="text-end ps-0">{{roundRankingItem.getCumulativeRank()}}</td>
         </tr>
     </tbody>
 </table>

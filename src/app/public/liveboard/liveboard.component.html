@@ -59,10 +59,9 @@
   </app-tournament-liveboard-poules>
 
   <!-- endranking screen -->
-  <div *ngIf="isEndRankingScreen()" class="row no-gutters">
+  <div *ngIf="isEndRankingScreen()" class="row g-0">
     <div class="col-12 liveboard">
-      <app-tournament-endranking [competitorMap]="competitorMap" [structure]="structure"
-        [range]="activeScreen.range">
+      <app-tournament-endranking [competitorMap]="competitorMap" [structure]="structure" [range]="activeScreen.range">
       </app-tournament-endranking>
     </div>
   </div>

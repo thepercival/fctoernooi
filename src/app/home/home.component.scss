@@ -5,6 +5,7 @@
 app-home-shell {
     display:table-row; 
     box-sizing:inherit;
+    border-color: inherit;
 }
 
 tr:first-child>td { border-top:0; }

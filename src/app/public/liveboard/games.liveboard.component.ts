@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { AgainstGame, AgainstGamePlace, AgainstSide, NameService, Round, ScoreConfigService, State, TogetherGame, TogetherGamePlace } from 'ngx-sport';
+import { Component, Input, OnInit } from '@angular/core';
+import { AgainstGame, AgainstGamePlace, AgainstSide, AgainstSportVariant, NameService, Round, ScoreConfigService, State, TogetherGame, TogetherGamePlace } from 'ngx-sport';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { ResultsScreen, ScheduleScreen } from '../../lib/liveboard/screens';
 
@@ -8,14 +8,19 @@ import { ResultsScreen, ScheduleScreen } from '../../lib/liveboard/screens';
     templateUrl: './games.liveboard.component.html',
     styleUrls: ['./games.liveboard.component.scss']
 })
-export class LiveboardGamesComponent {
+export class LiveboardGamesComponent implements OnInit {
     @Input() screen!: ScheduleScreen | ResultsScreen;
     @Input() nameService!: NameService;
+    public hasOnlyGameModeAgainst: boolean = true;
 
     constructor(
         private scoreConfigService: ScoreConfigService,
         public dateFormatter: DateFormatter
     ) {
+    }
+
+    ngOnInit() {
+        this.hasOnlyGameModeAgainst = this.hasOnlyAgainstGameMode();
     }
 
     isResultsScreen(): boolean {
@@ -86,6 +91,20 @@ export class LiveboardGamesComponent {
     public getFirstGameStartDate(): string {
         const game: TogetherGame | AgainstGame | undefined = this.screen.getGames()[0];
         return this.dateFormatter.toString(game?.getStartDateTime(), this.dateFormatter.date())
+    }
+
+    private hasOnlyAgainstGameMode(): boolean {
+        return this.screen.getGames().every((game: AgainstGame | TogetherGame): boolean => {
+            return this.isAgainst(game);
+        });
+    }
+
+    isAgainst(game: AgainstGame | TogetherGame): boolean {
+        return game.getCompetitionSport().getVariant() instanceof AgainstSportVariant;
+    }
+
+    isPlayed(game: AgainstGame | TogetherGame): boolean {
+        return game.getState() === State.Finished;
     }
 }
 

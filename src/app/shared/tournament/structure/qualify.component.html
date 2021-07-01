@@ -41,8 +41,8 @@
         [ngTemplateOutletContext]="{singleRule:qualifyGroup.getFirstSingleRule()}">
       </ng-container>
     </li>
-    <button *ngIf="isQualifyGroupMergableWithNext(qualifyGroup)" type="button"
-      class="btn btn-outline-primary btn-block my-1" (click)="mergeQualifyGroupWithNext(qualifyGroup)">
+    <button *ngIf="isQualifyGroupMergableWithNext(qualifyGroup)" type="button" class="btn btn-outline-primary my-1"
+      (click)="mergeQualifyGroupWithNext(qualifyGroup)">
       <fa-icon class="rotate-45" [icon]="['fas', 'compress-alt']"></fa-icon><span>
         samenvoegen</span>
     </button>
@@ -53,8 +53,8 @@
   <div>
     {{nameService.getHorizontalPouleName(singleRule.getFromHorizontalPoule())}}
   </div>
-  <button *ngIf="structureEditor.isQualifyGroupSplittableAt(singleRule)" type="button"
-    class="btn btn-outline-primary btn-block" (click)="splitQualifyGroupFrom(singleRule)">
+  <button *ngIf="structureEditor.isQualifyGroupSplittableAt(singleRule)" type="button" class="btn btn-outline-primary"
+    (click)="splitQualifyGroupFrom(singleRule)">
     <fa-icon class="rotate-45" [icon]="['fas', 'expand-alt']"></fa-icon><span>splitsen</span>
   </button>
   <ng-container *ngIf="singleRule.getNext()" [ngTemplateOutlet]="editSingleRule"

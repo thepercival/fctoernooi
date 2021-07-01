@@ -11,6 +11,11 @@ td.place {
     overflow-wrap: break-word;    
 }
 
+table.noborder td {
+    border: 0;
+}
+
+
 .card-header-rules {
     margin-top: -8px;
 }

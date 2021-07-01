@@ -9,22 +9,22 @@
 <div class="modal-body">
     <div class="container-fluid">
         <form [formGroup]="form">
-            <div class="form-group row" *ngFor="let exportOption of exportOptions">
+            <div class="row mb-3" *ngFor="let exportOption of exportOptions">
                 <label for="{{exportOption.key}}" class="col-9 col-form-label pointer">{{exportOption.label}}
                     <fa-icon *ngIf="exportOption.iconName" [icon]="['fas', exportOption.iconName]"></fa-icon>
                 </label>
                 <div class="form-check col-3">
-                    <div class="form-control custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="{{exportOption.key}}"
+                    <div class="form-control form-check form-switch">
+                        <input type="checkbox" class="form-check-input" id="{{exportOption.key}}"
                             formControlName="{{exportOption.key}}">
-                        <label class="custom-control-label" for="{{exportOption.key}}"></label>
+                        <label class="form-check-label" for="{{exportOption.key}}"></label>
                     </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
-<div class="modal-footer text-right">
+<div class="modal-footer text-end">
     <button type="button" class="btn btn-outline-primary" [disabled]="noneSelected()" data-dismiss="modal"
         (click)="closePdf()">
         <fa-icon [icon]="['fas', 'print']"></fa-icon> naar pdf

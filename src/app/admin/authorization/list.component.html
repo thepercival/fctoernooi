@@ -1,67 +1,64 @@
-<div>
-    <div class="row justify-content-center no-gutters">
-        <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-            <app-tournament-title [tournament]="tournament" [admin]="true">
-            </app-tournament-title>
-            <div class="d-flex justify-content-between mx-2">
-                <h2 (click)="openHelpModal()" class="pointer">
-                    <fa-icon [icon]="['fas', 'user-friends']"></fa-icon> gebruikers <fa-icon class="text-info"
-                        [icon]=" ['fas', 'info-circle' ]"></fa-icon>
-                </h2>
-                <div *ngIf="!processing">
-                    <button type="button" class="btn btn-sm ml-2 mr-0 btn-outline-primary"
-                        [routerLink]="['/admin/authorization', tournament.getId()]">
-                        <fa-icon [icon]=" ['fas', 'plus-circle' ]"></fa-icon> toevoegen
-                    </button>
-                </div>
-            </div>
-            <h2 *ngIf="processing" class="text-center">
-                <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+<div class="row justify-content-center g-0">
+    <div class="col-sm-10 col-md-8 col-lg-6">
+        <app-tournament-title [tournament]="tournament" [admin]="true">
+        </app-tournament-title>
+        <div class="d-flex justify-content-between mx-2">
+            <h2 (click)="openHelpModal()" class="pointer">
+                <fa-icon [icon]="['fas', 'user-friends']"></fa-icon> gebruikers <fa-icon class="text-info"
+                    [icon]=" ['fas', 'info-circle' ]"></fa-icon>
             </h2>
-            <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-            <ul *ngIf="!processing" class="list-unstyled">
-                <li>
-                    <div *ngFor="let tournamentUser of getValidTournamentUsers()"
-                        class="card border-secondary mt-3 mx-2">
-                        <div class="card-header">
-                            <div class="d-flex justify-content-between">
-                                <h5 class="mb-0 mt-2">{{tournamentUser.getUser().getEmailaddress()}} </h5>
-                                <button *ngIf="canBeRemoved(tournamentUser)" [disabled]="roleProcessing"
-                                    class="btn btn-sm btn-outline-danger ml-1"
-                                    (click)="openModalRemove(contentremove, tournamentUser, tournamentUser.hasARole(RoleReferee))">
-                                    <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
-                                </button>
-                            </div>
-                        </div>
-                        <ul class="list-group list-group-flush w-100">
-                            <app-tournament-authorization-role *ngFor="let role of getAssignableRoles(tournamentUser)"
-                                [role]="role" [disabled]="!canToggleRole(tournamentUser, role.role)"
-                                [processing]="rolesAreEqual(role,roleProcessing)"
-                                (toggleRole)="toggleRole($event,contentremove)">
-                            </app-tournament-authorization-role>
-                        </ul>
-                    </div>
-
-                    <div *ngFor="let invitation of invitations" class="card border-secondary mt-3 mx-2">
-                        <div class="card-header">
-                            <div class="d-flex justify-content-between">
-                                <h5 class="mb-0 mt-2">{{invitation.getEmailaddress()}} <span
-                                        class="badge badge-info">gebruiker nog onbekend</span></h5>
-                                <button class="btn btn-sm btn-outline-danger ml-1" [disabled]="roleProcessing"
-                                    (click)="openModalRemove(contentremove, invitation)">
-                                    <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
-                                </button>
-                            </div>
-                        </div>
-                        <ul class="list-group list-group-flush w-100">
-                            <app-tournament-authorization-role *ngFor="let role of getAssignableRoles(invitation)"
-                                [role]="role" [processing]="rolesAreEqual(role,roleProcessing)"
-                                (toggleRole)="toggleRole($event,contentremove)"></app-tournament-authorization-role>
-                        </ul>
-                    </div>
-                </li>
-            </ul>
+            <div *ngIf="!processing">
+                <button type="button" class="btn btn-sm ml-2 mr-0 btn-outline-primary"
+                    [routerLink]="['/admin/authorization', tournament.getId()]">
+                    <fa-icon [icon]=" ['fas', 'plus-circle' ]"></fa-icon> toevoegen
+                </button>
+            </div>
         </div>
+        <h2 *ngIf="processing" class="text-center">
+            <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+        </h2>
+        <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+        <ul *ngIf="!processing" class="list-unstyled">
+            <li>
+                <div *ngFor="let tournamentUser of getValidTournamentUsers()" class="card border-secondary mt-3 mx-2">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="mb-0 mt-2">{{tournamentUser.getUser().getEmailaddress()}} </h5>
+                            <button *ngIf="canBeRemoved(tournamentUser)" [disabled]="roleProcessing"
+                                class="btn btn-sm btn-outline-danger ml-1"
+                                (click)="openModalRemove(contentremove, tournamentUser, tournamentUser.hasARole(RoleReferee))">
+                                <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <ul class="list-group list-group-flush w-100">
+                        <app-tournament-authorization-role *ngFor="let role of getAssignableRoles(tournamentUser)"
+                            [role]="role" [disabled]="!canToggleRole(tournamentUser, role.role)"
+                            [processing]="rolesAreEqual(role,roleProcessing)"
+                            (toggleRole)="toggleRole($event,contentremove)">
+                        </app-tournament-authorization-role>
+                    </ul>
+                </div>
+
+                <div *ngFor="let invitation of invitations" class="card border-secondary mt-3 mx-2">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="mb-0 mt-2">{{invitation.getEmailaddress()}} <span
+                                    class="badge badge-info">gebruiker nog onbekend</span></h5>
+                            <button class="btn btn-sm btn-outline-danger ml-1" [disabled]="roleProcessing"
+                                (click)="openModalRemove(contentremove, invitation)">
+                                <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <ul class="list-group list-group-flush w-100">
+                        <app-tournament-authorization-role *ngFor="let role of getAssignableRoles(invitation)"
+                            [role]="role" [processing]="rolesAreEqual(role,roleProcessing)"
+                            (toggleRole)="toggleRole($event,contentremove)"></app-tournament-authorization-role>
+                    </ul>
+                </div>
+            </li>
+        </ul>
     </div>
 </div>
 

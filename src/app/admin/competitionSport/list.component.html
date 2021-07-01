@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
-    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-6 pt-1">
+    <div class="col-sm-12 col-md-10 col-lg-6 pt-1">
       <div *ngIf="!showCreateSportWithFields">
         <app-tournament-title [tournament]="tournament" [admin]="true">
         </app-tournament-title>
@@ -26,7 +26,7 @@
               <th title="aantal">
                 <app-tournament-icon class="d-none d-sm-inline" name="soccer-field"></app-tournament-icon> velden
               </th>
-              <th class="text-right" *ngIf="!hasBegun">
+              <th class="text-end" *ngIf="!hasBegun">
                 <button type="button" class="btn btn-sm btn-primary" (click)="showCreateSportWithFields = true"
                   [disabled]="processing">
                   <fa-icon [icon]="['fas', 'plus']"></fa-icon>
@@ -46,7 +46,7 @@
                 <span>{{competitionSport.getSport().getName()}}</span>
               </td>
               <td>{{competitionSport.getFields().length}}</td>
-              <td class="text-right" *ngIf="!hasBegun && competitionSports.length > 1">
+              <td class="text-end" *ngIf="!hasBegun && competitionSports.length > 1">
                 <button type="button" class="btn btn-sm btn-danger" [disabled]="processing"
                   (click)="openRemoveModal(content, competitionSport)">
                   <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
