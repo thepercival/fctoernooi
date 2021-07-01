@@ -8,7 +8,7 @@
             (ngModelChange)="toggleSelection()">
           <label class="form-check-label" [for]="getCustomSwitchId()"><span class="lead"
               [innerHTML]="nameService.getRoundName( toggleRound.round ) | keepHtml"></span></label>
-          <fa-icon *ngIf="hasOwnConfig2()" class="ml-1" [icon]="['fas', 'cogs']"></fa-icon>
+          <fa-icon *ngIf="hasOwnConfig2()" class="ms-1" [icon]="['fas', 'cogs']"></fa-icon>
         </div>
       </div>
       <div class="card-body px-1">
@@ -36,7 +36,7 @@
               (ngModelChange)="toggleSelection()">
             <label class="form-check-label" [for]="getCustomSwitchId()"></label>
           </div>
-          <fa-icon *ngIf="hasOwnConfig2()" class="ml-1" [icon]="['fas', 'cogs']"></fa-icon>
+          <fa-icon *ngIf="hasOwnConfig2()" class="ms-1" [icon]="['fas', 'cogs']"></fa-icon>
         </div>
       </div>
     </div>

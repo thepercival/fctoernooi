@@ -4,7 +4,7 @@
       <app-tournament-title [tournament]="tournament">
       </app-tournament-title>
       <div class="d-flex justify-content-between mb-3">
-        <h2 class="mr-auto">
+        <h2 class="me-auto">
           <fa-icon [icon]="['fas', 'door-closed']"></fa-icon> kleedkamers
         </h2>
         <button *ngIf="!processing && editMode && hasCompetitors" role="button" (click)="add()"

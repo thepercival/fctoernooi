@@ -3,7 +3,7 @@
     <h5 class="mb-0 mt-2" (click)="changeName.emit(lockerRoom)"><small>kleedkamer </small><span
         class="fw-bold">{{lockerRoom.getName()}}</span>
     </h5>
-    <button *ngIf="editable" class="btn btn-sm btn-outline-danger ml-1" (click)="remove.emit(lockerRoom)">
+    <button *ngIf="editable" class="btn btn-sm btn-outline-danger ms-1" (click)="remove.emit(lockerRoom)">
       <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
     </button>
   </div>
@@ -13,7 +13,7 @@
     <span [ngClass]="{ 'favitem': favorites && favorites.hasCompetitor(competitor) }">{{competitor.getName()}}</span>
     <span *ngIf="validator.isArrangedMultiple(competitor)"
       title="ingedeeld in {{validator.nrArranged(competitor)}} kleedkamers"
-      class="badge badge-warning ml-1">{{validator.nrArranged(competitor)}}</span>
+      class="badge badge-warning ms-1">{{validator.nrArranged(competitor)}}</span>
   </li>
 </ul>
 <div *ngIf="editable" (click)="changeCompetitors.emit(lockerRoom)"

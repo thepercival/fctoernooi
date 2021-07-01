@@ -1,9 +1,9 @@
 <div *ngIf="tournament">
   <div class="d-flex justify-content-between mt-3">
-    <h2 class="mr-auto">
+    <h2 class="me-auto">
       <span [innerHTML]="nameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
       <button *ngIf="refreshingData !== undefined && roundNumber.getHasPlanning()" type="button"
-        class="btn btn-sm btn-outline-secondary ml-1" (click)="refreshData.emit()" [disabled]="refreshingData">
+        class="btn btn-sm btn-outline-secondary ms-1" (click)="refreshData.emit()" [disabled]="refreshingData">
         <fa-icon [icon]="['fas', 'sync']" [spin]="refreshingData"></fa-icon>
       </button>
     </h2>
@@ -217,7 +217,7 @@
           <li [ngClass]="{'favitem': favorites?.hasTogetherGameCompetitor(gmData.game) }" class="list-group-item">
             {{nameService.getPlaceFromName(gamePlace.getPlace(),true,true)}}
           </li>
-          <li *ngIf="isPlayed(gmData.game)" class="list-group-item mr-1">
+          <li *ngIf="isPlayed(gmData.game)" class="list-group-item me-1">
             {{getTogetherScore(gamePlace)}}
           </li>
         </ul>
@@ -228,7 +228,7 @@
       <div *ngFor="let gamePlace of gmData.game.getTogetherPlaces()" class="btn-group mb-2" role="group">
         <div class="list-group-item" [ngClass]="{'favitem': favorites?.hasTogetherGameCompetitor(gmData.game) }">
           {{nameService.getPlaceFromName(gamePlace.getPlace(),true,true)}}</div>
-        <button class="btn btn-sm border border-{{getTogetherScoreBtnBorderClass(gamePlace)}} mr-1"
+        <button class="btn btn-sm border border-{{getTogetherScoreBtnBorderClass(gamePlace)}} me-1"
           (click)="linkToGameEdit(gmData.game)">
           <fa-icon *ngIf="!isPlayed(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
           <span *ngIf="isPlayed(gmData.game)">{{getTogetherScore(gamePlace)}}</span>

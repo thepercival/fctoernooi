@@ -12,7 +12,7 @@
 <div *ngIf="!processing">
   <ul class="list-group pointer">
     <li *ngFor="let sport of sports" class="list-group-item" (click)="select(sport)">
-      <app-sport-icon class="float-start mr-1" [customId]="sport.getCustomId()"></app-sport-icon>
+      <app-sport-icon class="float-start me-1" [customId]="sport.getCustomId()"></app-sport-icon>
       <div class="d-flex justify-content-between">
         <label for="sport-{{sport.getId()}}" class="pointer mb-0">
           <span>{{translate.getSportName(sport)}}</span>

@@ -11,7 +11,7 @@
   <div class=" btn-group-vertical" role="group" aria-label="aantal">
     <button type="button" [disabled]="!areSomeQualifyGroupsEditable(target)"
       class="btn {{getQualifyGroupBtnClass(target)}}" (click)="targetCollapsed[target] = !targetCollapsed[target]">
-      <fa-icon *ngIf="areSomeQualifyGroupsEditable(target)" class="mr-1" [icon]="IconStructure"></fa-icon>
+      <fa-icon *ngIf="areSomeQualifyGroupsEditable(target)" class="me-1" [icon]="IconStructure"></fa-icon>
       <span>{{nameService.getQualifyTargetDescription(target,true)}}</span>
       <span *ngIf="parentRound.isRoot()">: {{parentRound.getNrOfPlacesChildren(target)}}</span>
     </button>

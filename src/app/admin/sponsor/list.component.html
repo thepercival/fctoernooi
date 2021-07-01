@@ -3,7 +3,7 @@
     <app-tournament-title [tournament]="tournament" [admin]="true">
     </app-tournament-title>
     <div *ngIf="!processing" class="d-flex justify-content-between">
-      <h2 (click)="openHelpModal(contentInfo)" class="pointer mr-auto">
+      <h2 (click)="openHelpModal(contentInfo)" class="pointer me-auto">
         <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon> sponsoren <fa-icon class="text-info"
           [icon]=" ['fas', 'info-circle' ]"></fa-icon>
       </h2>

@@ -8,7 +8,7 @@
                     [icon]=" ['fas', 'info-circle' ]"></fa-icon>
             </h2>
             <div *ngIf="!processing">
-                <button type="button" class="btn btn-sm ml-2 mr-0 btn-outline-primary"
+                <button type="button" class="btn btn-sm btn-outline-primary"
                     [routerLink]="['/admin/authorization', tournament.getId()]">
                     <fa-icon [icon]=" ['fas', 'plus-circle' ]"></fa-icon> toevoegen
                 </button>
@@ -25,7 +25,7 @@
                         <div class="d-flex justify-content-between">
                             <h5 class="mb-0 mt-2">{{tournamentUser.getUser().getEmailaddress()}} </h5>
                             <button *ngIf="canBeRemoved(tournamentUser)" [disabled]="roleProcessing"
-                                class="btn btn-sm btn-outline-danger ml-1"
+                                class="btn btn-sm btn-outline-danger ms-1"
                                 (click)="openModalRemove(contentremove, tournamentUser, tournamentUser.hasARole(RoleReferee))">
                                 <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
                             </button>
@@ -45,7 +45,7 @@
                         <div class="d-flex justify-content-between">
                             <h5 class="mb-0 mt-2">{{invitation.getEmailaddress()}} <span
                                     class="badge badge-info">gebruiker nog onbekend</span></h5>
-                            <button class="btn btn-sm btn-outline-danger ml-1" [disabled]="roleProcessing"
+                            <button class="btn btn-sm btn-outline-danger ms-1" [disabled]="roleProcessing"
                                 (click)="openModalRemove(contentremove, invitation)">
                                 <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
                             </button>

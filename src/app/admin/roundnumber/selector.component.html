@@ -7,7 +7,7 @@
     <li *ngFor="let roundNumber of structure.getRoundNumbers()" class="list-group-item border-primary pointer"
       (click)="activeModal.close(roundNumber)">
       <span [innerHTML]="nameService.getRoundNumbersName( roundNumber ) | keepHtml"></span>
-      <span *ngIf="roundNumber.hasBegun()" class="badge badge-warning ml-1" pull="left">begonnen</span>
+      <span *ngIf="roundNumber.hasBegun()" class="badge badge-warning ms-1" pull="left">begonnen</span>
       <fa-icon [icon]="['fas', 'dot-circle']" class="text-primary" pull="right"></fa-icon>
     </li>
   </ul>
