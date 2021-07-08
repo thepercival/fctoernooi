@@ -81,7 +81,7 @@ export class TournamentPropertiesComponent implements OnInit {
           start: (new Date()).toISOString(),
           end: (new Date()).toISOString(),
         },
-        rankingRuleSet: DefaultService.RankingRuleSet,
+        againstRuleSet: DefaultService.AgainstRuleSet,
         startDateTime: startDateTime.toISOString(),
         referees: [],
         state: State.Created,

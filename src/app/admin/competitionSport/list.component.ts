@@ -23,6 +23,7 @@ export class CompetitionSportListComponent extends TournamentComponent implement
   competitionSports: CompetitionSport[] = [];
   showCreateSportWithFields = false;
   hasBegun!: boolean;
+  maxReached = true;
 
   validations: any = {
     'minlengthname': Sport.MIN_LENGTH_NAME,
@@ -49,6 +50,7 @@ export class CompetitionSportListComponent extends TournamentComponent implement
   initSports() {
     this.createCompetitionSportsList();
     this.hasBegun = this.structure.getRootRound().hasBegun();
+    this.maxReached = this.competition.getSports().length >= 10;
     this.processing = false;
     if (this.hasBegun) {
       this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');

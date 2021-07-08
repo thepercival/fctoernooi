@@ -15,9 +15,9 @@
       <tr>
         <th class="text-end width-14">pl</th>
         <th class="width-40">
-          <span class="badge badge-info">{{nameService.getPouleName(poule,!hasMultipleSports())}}</span>
+          <span class="badge bg-info">{{nameService.getPouleName(poule,!hasMultipleSports())}}</span>
           <span *ngIf="hasMultipleSports()"
-            class="badge badge-info ms-1">{{screen.getCompetitionSport().getSport().getName()}}</span>
+            class="badge bg-info ms-1">{{screen.getCompetitionSport().getSport().getName()}}</span>
         </th>
         <th class="text-end width-8">g</th>
         <th class="text-end width-8">pnt</th>
@@ -29,9 +29,9 @@
         <tr>
           <td nowrap class="text-end">
             <span
-              class="badge badge-rank {{cssService.getQualifyPlace(poule.getPlace(rankingItem.getUniqueRank()))}}">{{rankingItem.getUniqueRank()}}</span>
+              class="badge bg-rank {{cssService.getQualifyPlace(poule.getPlace(rankingItem.getUniqueRank()))}}">{{rankingItem.getUniqueRank()}}</span>
           </td>
-          <td class="place">{{nameService.getPlaceFromName(rankingItem.getPerformance().getPlace(), true)}}</td>
+          <td class="text-nowrap">{{nameService.getPlaceFromName(rankingItem.getPerformance().getPlace(), true)}}</td>
           <td class="text-end">{{rankingItem.getPerformance().getGames()}}</td>
           <td class="text-end">{{rankingItem.getPerformance().getPoints()}}</td>
           <td *ngIf="isAgainstSportVariant()" nowrap class="text-center unitdiff">

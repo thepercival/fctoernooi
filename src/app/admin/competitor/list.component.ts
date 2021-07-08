@@ -76,12 +76,13 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   initFocus(competitorMap: CompetitorMap) {
-    this.structure.getRootRound().getPlaces().some(place => {
+    this.structure.getRootRound().getPlaces().every(place => {
       if (competitorMap.getCompetitor(place) === undefined) {
         this.focusId = place.getId();
       }
       return this.focusId === undefined;
     });
+    console.log(this.focusId);
   }
 
   toggleView() {

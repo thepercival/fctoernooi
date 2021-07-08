@@ -12,7 +12,7 @@ import { TitleComponent } from './title/title.component';
 import { StructureRoundArrangeComponent } from './structure/round/arrange.component';
 import { StructureQualifyComponent } from './structure/qualify.component';
 import { StructureRoundComponent } from './structure/round.component';
-import { NgbNavModule, NgbAlertModule, NgbPopoverModule, NgbDatepickerModule, NgbTimepickerModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule, NgbModalConfig, NgbAlertConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavModule, NgbAlertModule, NgbPopoverModule, NgbDatepickerModule, NgbTimepickerModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule, NgbModalConfig, NgbAlertConfig, NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonSharedModule } from '../common/shared.module';
 import { LockerRoomsComponent } from './lockerrooms/lockerrooms.component';
 import { LockerRoomComponent } from './lockerrooms/lockerroom.component';
@@ -58,7 +58,7 @@ import { PouleRankingTogetherComponent } from './ranking/poule/together.componen
     ReactiveFormsModule,
     CommonSharedModule,
     RouterModule,
-    NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule,
+    NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule, NgbProgressbarModule,
     NgbNavModule
   ],
   providers: [

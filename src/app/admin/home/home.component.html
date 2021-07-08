@@ -22,8 +22,8 @@
         (closed)="manualMessageReadOnDevice()">gedetailleerde
         informatie kun je vinden onderaan de pagina via de handleiding-link</ngb-alert>
       <div *ngIf="!processing && structure && ( isAdmin() || isRefereeOrGameResultAdmin() )"
-        class="row d-flex justify-content-center">
-        <div *ngIf="isAdmin()" class="card border-secondary pointer mt-3 mx-2" (click)="linkToStructure()">
+        class="d-flex flex-wrap gap-3 justify-content-center">
+        <div *ngIf="isAdmin()" class="card border-secondary pointer" (click)="linkToStructure()">
           <div class="card-body">
             <h5 class="card-title">
               <app-tournament-icon name="structure"></app-tournament-icon> opzet
@@ -31,12 +31,12 @@
             <p class="card-text" *ngIf="!structure.getFirstRoundNumber().hasNext()">
               1 ronde ingesteld
             </p>
-            <p class="card-text" *ngIf="structure.getFirstRoundNumber().hasNext()">
+            <p class="card-text text-nowrap" *ngIf="structure.getFirstRoundNumber().hasNext()">
               meerdere ronde ingesteld
             </p>
           </div>
         </div>
-        <div *ngIf="isAdmin()" class="card border-secondary pointer mt-3 mx-2"
+        <div *ngIf="isAdmin()" class="card border-secondary pointer"
           [routerLink]="['/admin/competitors', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
@@ -56,7 +56,7 @@
             </p>
           </div>
         </div>
-        <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/admin/games', tournament.getId()]">
+        <div class="card border-secondary pointer" [routerLink]="['/admin/games', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijdplanning
@@ -66,7 +66,7 @@
             </p>
           </div>
         </div>
-        <div *ngIf="isAdmin()" class="card border-secondary pointer mt-3 mx-2" (click)="linkToCompetitionSport()">
+        <div *ngIf="isAdmin()" class="card border-secondary pointer" (click)="linkToCompetitionSport()">
           <div class="card-body">
             <h5 *ngIf="!competition.hasMultipleSports()" class="card-title text-truncate">
               <app-sport-icon [competitionSports]="competition.getSports()"></app-sport-icon>
@@ -75,33 +75,32 @@
             <h5 *ngIf="competition.hasMultipleSports()" class="card-title text-truncate">
               <span>sporten</span>
             </h5>
-            <p class="card-text">
-              <span class="fw-bold">{{getNrOfFieldsDescription()}}</span>, punten en score
+            <p class="card-text text-nowrap">
+              <span class="fw-bold">{{getNrOfFieldsDescription()}}</span>, punten & score
             </p>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div *ngIf="!processing && tournament && tournament.getPublic()" class="text-center mt-3">
+  <div *ngIf="!processing && tournament && tournament.getPublic()" class="text-center my-3">
     <button [routerLink]="['/public', tournament.getId()]" type="button" class="btn btn-outline-secondary w-100">
       naar het publieke gedeelte <fa-icon [icon]="['fas', 'eye']"></fa-icon>
     </button>
   </div>
   <!-- option block -->
-  <div *ngIf="!processing && structure" class="row d-flex justify-content-center">
+  <div *ngIf="!processing && structure" class="d-flex flex-wrap gap-3 justify-content-center">
     <!-- referees -->
-    <div *ngIf="isAdmin()" class="card card-sub pointer mt-3 mx-2"
-      [routerLink]="['/admin/referees', tournament.getId()]">
+    <div *ngIf="isAdmin()" class="card card-sub pointer px-0" [routerLink]="['/admin/referees', tournament.getId()]">
       <div class="card-body text-center p-1 pt-2">
         <h5 class="card-title">
           <app-tournament-icon name="referee"></app-tournament-icon>
         </h5>
-        <div [innerHTML]="getNrOfRefereesDescription()"></div>
+        <div class="text-nowrap" [innerHTML]="getNrOfRefereesDescription()"></div>
       </div>
     </div>
     <!-- lockerRooms -->
-    <div *ngIf="isAdmin()" class="card card-sub {{getLockerRoomBorderClass()}} pointer mt-3 mx-2"
+    <div *ngIf="isAdmin()" class="card card-sub {{getLockerRoomBorderClass()}} pointer"
       [routerLink]="['/admin/lockerrooms', tournament.getId()]">
       <div class="card-body text-center p-1 pt-2">
         <h5 class="card-title">
@@ -111,8 +110,7 @@
       </div>
     </div>
     <!-- sponsors -->
-    <div *ngIf="isAdmin()" class="card card-sub pointer mt-3 mx-2"
-      [routerLink]="['/admin/sponsors', tournament.getId()]">
+    <div *ngIf="isAdmin()" class="card card-sub pointer" [routerLink]="['/admin/sponsors', tournament.getId()]">
       <div class="card-body text-center p-1 pt-2">
         <h5 class="card-title">
           <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon>
@@ -121,7 +119,7 @@
       </div>
     </div>
     <!-- ranking (ruleset) -->
-    <div class="card card-sub pointer mt-3 mx-2" [routerLink]="['/public/ranking', tournament.getId()]">
+    <div class="card card-sub pointer" [routerLink]="['/public/ranking', tournament.getId()]">
       <div class="card-body text-center p-1 pt-2">
         <h5 class="card-title">
           <fa-icon [icon]="['fas', 'list-ol']"></fa-icon>
@@ -130,19 +128,18 @@
       </div>
     </div>
     <!-- live scoreboard -->
-    <div *ngIf="structure.hasPlanning()" class="card card-sub {{getLiveBoardBorderClass()}} pointer mt-3 mx-2"
+    <div *ngIf="structure.hasPlanning()" class="card card-sub {{getLiveBoardBorderClass()}} pointer"
       [routerLink]="['/public/liveboard', tournament.getId()]">
       <div class="card-body text-center p-1 pt-2">
         <h5 class="card-title">
           <fa-icon [icon]=" [ 'fas', 'tv'] "></fa-icon>
         </h5>
         <div>live</div>
-        <div>scorebord</div>
+        <div class="text-nowrap">scorebord</div>
       </div>
     </div>
     <!-- export -->
-    <div *ngIf="structure.hasPlanning() && isAdmin()" class="card card-sub pointer mt-3 mx-2"
-      (click)="openModalExport()">
+    <div *ngIf="structure.hasPlanning() && isAdmin()" class="card card-sub pointer" (click)="openModalExport()">
       <div class="card-body text-center p-1 pt-2">
         <h5 class="card-title">
           <fa-icon [icon]="['fas', 'file-export']"></fa-icon>
@@ -152,7 +149,7 @@
       </div>
     </div>
     <!-- roleadmin -->
-    <div *ngIf="isRoleAdmin()" class="card card-sub pointer mt-3 mx-2"
+    <div *ngIf="isRoleAdmin()" class="card card-sub pointer"
       [routerLink]="['/admin/authorizations', tournament.getId()]">
       <div class="card-body text-center p-1 pt-2">
         <h5 class="card-title">
@@ -163,7 +160,7 @@
       </div>
     </div>
     <!-- change name -->
-    <div *ngIf="structure.hasPlanning() && isAdmin()" class="card card-sub pointer mt-3 mx-2" (click)="openModalName()">
+    <div *ngIf="structure.hasPlanning() && isAdmin()" class="card card-sub pointer" (click)="openModalName()">
       <div class="card-body text-center p-1 pt-2">
         <h5 class="card-title">
           <span class="fw-bold">A</span>
@@ -173,7 +170,7 @@
       </div>
     </div>
     <!-- copy -->
-    <div *ngIf="isAdmin()" class="card card-sub pointer mt-3 mx-2" (click)="openModalCopy(contentcopy)">
+    <div *ngIf="isAdmin()" class="card card-sub pointer" (click)="openModalCopy(contentcopy)">
       <div class="card-body text-center p-1 pt-2">
         <h5 class="card-title">
           <fa-icon [icon]="['fas', 'copy']"></fa-icon>
@@ -183,7 +180,7 @@
       </div>
     </div>
     <!-- remove -->
-    <div *ngIf="isAdmin()" class="card card-sub pointer mt-3 mx-2" (click)="openModalRemove(contentremove)">
+    <div *ngIf="isAdmin()" class="card card-sub pointer" (click)="openModalRemove(contentremove)">
       <div class="card-body text-center p-1 pt-2">
         <h5 class="card-title">
           <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
@@ -193,8 +190,7 @@
       </div>
     </div>
     <!-- share -->
-    <div *ngIf="structure.hasPlanning() && isAdmin()" class="card card-sub pointer mt-3 mx-2"
-      (click)="openModalShare()">
+    <div *ngIf="structure.hasPlanning() && isAdmin()" class="card card-sub pointer" (click)="openModalShare()">
       <div class="card-body text-center p-1 pt-2">
         <h5 class="card-title">
           <fa-icon [icon]="['fas', 'share-alt']"></fa-icon>

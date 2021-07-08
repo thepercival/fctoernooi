@@ -46,10 +46,15 @@
   <div *ngIf="game.getCompetition().getFields().length > 1" class="row mb-3">
     <label for="field" class="col-3 col-form-label">{{getFieldDescription()}}</label>
     <div class="col-9 col-sm-6">
-      <select class="form-control" formControlName="field" required>
+      <select *ngIf="manualEditMode()" class="form-control" formControlName="field" required>
         <option *ngFor="let field of game.getCompetitionSport().getFields()" [ngValue]="field">
           {{field.getName()}}</option>
       </select>
+
+      <div *ngIf="!manualEditMode()" class="col-form-label text-break">
+        {{getFieldName(game.getField())}}
+      </div>
+
     </div>
   </div>
   <div *ngIf="areRefereesEnabled()" class="row mb-3">

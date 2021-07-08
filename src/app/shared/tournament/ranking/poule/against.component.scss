@@ -1,21 +1,9 @@
-table.fixed {
-    table-layout: fixed;
-}
-
 td {
     vertical-align: middle;
 }
 
 col.width-30 {
     width:30%;
-}
-
-th.place {
-    overflow-wrap: break-word;
-}
-
-td.place {
-    overflow-wrap: break-word;
 }
 
 td.unitdiff, td.rankingnr {

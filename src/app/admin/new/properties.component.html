@@ -10,7 +10,7 @@
 <form name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
   <div class="row mb-3">
     <label for="name" class="col-4 col-form-label">naam</label>
-    <div class="col-8 col-sm-6">
+    <div class="col-8">
       <input class="form-control"
         [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
         formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
@@ -18,7 +18,7 @@
   </div>
   <div class="row mb-3">
     <label for="dp" class="col-4 col-form-label">startdatum</label>
-    <div class="col-8 col-sm-6">
+    <div class="col-8">
       <div class="input-group input-group-date">
         <input class="form-control"
           [ngClass]="{ 'is-invalid': form.controls.date.invalid, 'is-valid': form.controls.date.valid }"
@@ -32,7 +32,7 @@
   </div>
   <div class="row mb-3">
     <label for="starttime" class="col-4 col-form-label">starttijd</label>
-    <div class="col-8 col-sm-6">
+    <div class="col-8">
       <ngb-timepicker formControlName="time" [spinners]="false" required>
       </ngb-timepicker>
     </div>
@@ -41,7 +41,7 @@
     <label class="col-4 col-form-label pointer" (click)="openInfoModal('publiek', contentInfo)">publiek
       <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
     </label>
-    <div class="col-8 col-sm-6">
+    <div class="col-8">
       <div class="form-control form-check form-switch">
         <input type="checkbox" class="form-check-input" id="public" formControlName="public">
         <label class="form-check-label" for="public"></label>
@@ -49,7 +49,7 @@
     </div>
   </div>
   <div class="row justify-content-end">
-    <div class="col-8 col-sm-6">
+    <div class="col-8">
       <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
         kies sport
       </button>

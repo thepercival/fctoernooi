@@ -19,6 +19,7 @@ export class PouleRankingSportsComponent implements OnInit {
   @Input() tournament!: Tournament;
   @Input() competitorMap!: CompetitorMap;
   @Input() header!: boolean;
+  @Input() fixed = false;
   protected roundRankingCalculator: RoundRankingCalculator;
   public roundRankingItems!: RoundRankingItem[];
   public nameService!: NameService;

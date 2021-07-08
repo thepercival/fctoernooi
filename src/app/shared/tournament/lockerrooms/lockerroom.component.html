@@ -8,12 +8,12 @@
     </button>
   </div>
 </div>
-<ul class="card-body list-group list-group-flush text-center p-0">
+<ul class="card-body list-group list-group-flush p-0">
   <li *ngFor="let competitor of lockerRoom.getCompetitors()" class="list-group-item">
     <span [ngClass]="{ 'favitem': favorites && favorites.hasCompetitor(competitor) }">{{competitor.getName()}}</span>
     <span *ngIf="validator.isArrangedMultiple(competitor)"
       title="ingedeeld in {{validator.nrArranged(competitor)}} kleedkamers"
-      class="badge badge-warning ms-1">{{validator.nrArranged(competitor)}}</span>
+      class="badge bg-warning ms-1">{{validator.nrArranged(competitor)}}</span>
   </li>
 </ul>
 <div *ngIf="editable" (click)="changeCompetitors.emit(lockerRoom)"

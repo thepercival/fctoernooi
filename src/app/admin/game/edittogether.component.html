@@ -16,7 +16,7 @@
             <label class="col-form-label">deelnemers</label>
           </div>
           <div class="col-9">
-            <div formGroupName="gamePlaces" class="card-deck flex-wrap d-flex">
+            <div formGroupName="gamePlaces" class="d-flex flex-wrap gap-3">
               <app-tournament-togetherscorecard *ngFor="let gamePlace of game.getTogetherPlaces()"
                 [gamePlace]="gamePlace" [form]="getFormGroupGamePlace(gamePlace.getId())" [nameService]="nameService"
                 (afterEdit)="postScoreControlUpdate()">

@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { PlanningMapper, JsonStructure, RoundNumber, Game, Structure, AgainstGame, TogetherGamePlace, JsonAgainstGame, JsonTogetherGame, TogetherGame, Poule, GameMapper, GameOrder } from 'ngx-sport';
+import { PlanningMapper, JsonStructure, RoundNumber, Game, Structure, AgainstGame, TogetherGamePlace, JsonAgainstGame, JsonTogetherGame, TogetherGame, Poule, GameMapper, GameOrder, StructureMapper, CompetitionSportMapper, CompetitionSport, CompetitionSportMap } from 'ngx-sport';
 import { APIRepository } from '../../repository';
 import { Tournament } from '../../tournament';
+import { JsonPoule } from 'ngx-sport/src/poule/json';
 
 @Injectable({
     providedIn: 'root'
@@ -13,6 +14,8 @@ import { Tournament } from '../../tournament';
 export class PlanningRepository extends APIRepository {
 
     constructor(
+        private competitionSportMapper: CompetitionSportMapper,
+        private structureMapper: StructureMapper,
         private planningMapper: PlanningMapper,
         private gameMapper: GameMapper,
         private http: HttpClient) {
@@ -31,36 +34,82 @@ export class PlanningRepository extends APIRepository {
         return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix() + '/' + poule.getId();
     }
 
-    get(structure: Structure, tournament: Tournament, startRoundNumber: number): Observable<RoundNumber> {
-        const roundNumber = structure.getRoundNumber(startRoundNumber);
-        if (roundNumber === undefined) {
-            throw Error('het rondenummer kan niet gevonden worden');
-        }
-        return this.http.get<JsonStructure>(this.getUrl(tournament, roundNumber), this.getOptions()).pipe(
-            map((jsonStructure: JsonStructure) => this.planningMapper.toObject(jsonStructure, structure, startRoundNumber)),
+    get(roundNumber: RoundNumber, tournament: Tournament): Observable<RoundNumber> {
+        const sportMap = this.competitionSportMapper.getMap(tournament.getCompetition());
+        return this.http.get<JsonPoule[]>(this.getUrl(tournament, roundNumber), this.getOptions()).pipe(
+            map((jsonPoules: JsonPoule[]) => {
+                this.planningMapper.toObject(jsonPoules, roundNumber, sportMap);
+                return roundNumber;
+            }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    create(structure: Structure, tournament: Tournament, startRoundNumber: number): Observable<RoundNumber> {
-        const roundNumber = structure.getRoundNumber(startRoundNumber);
-        if (roundNumber === undefined) {
+    progress(roundNumber: RoundNumber, tournament: Tournament): Observable<number> {
+        const url = this.getUrl(tournament, roundNumber) + '/progress';
+        return this.http.get<number>(url, this.getOptions()).pipe(
+            map((jsonProgress: any) => jsonProgress.progress),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+    create(structure: Structure, tournament: Tournament, startRoundNumberAsValue: number): Observable<void> {
+        const startRoundNumber = structure.getRoundNumber(startRoundNumberAsValue);
+        if (startRoundNumber === undefined) {
             throw Error('het rondenummer kan niet gevonden worden');
         }
-        this.removeGames(roundNumber);
-        const url = this.getUrl(tournament, roundNumber) + '/create';
+        this.removeGames(startRoundNumber);
+
+        const sportMap = this.competitionSportMapper.getMap(tournament.getCompetition());
+        const url = this.getUrl(tournament, startRoundNumber) + '/create';
         return this.http.post<JsonStructure>(url, undefined, this.getOptions()).pipe(
-            map((jsonStructure: JsonStructure) => this.planningMapper.toObject(jsonStructure, structure, startRoundNumber)),
+            map((jsonStructure: JsonStructure) => {
+                this.structureMapper.planningToObject(jsonStructure, startRoundNumber, sportMap);
+            }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    decrement(tournament: Tournament, poule: Poule): Observable<void> {
+    // protected jsonToPlanning(jsonRoundNumber: JsonRoundNumber, roundNumber: RoundNumber, startRoundNumber: number) {
+    //     if (roundNumber.getNumber() >= startRoundNumber) {
+    //         roundNumber.setHasPlanning(jsonRoundNumber.hasPlanning);
+    //     }
+
+    //     this.planningMapper.toObject(jsonStructure, structure, startRoundNumber);
+
+    //     const nextRoundNumber = roundNumber.getNext();
+    //     if (nextRoundNumber && jsonRoundNumber.next) {
+    //         this.roundNumber(jsonRoundNumber.next, nextRoundNumber, startRoundNumber);
+    //     }
+    // }
+
+    // protected getCreateRoundNumbers(
+    //     roundNumber: RoundNumber | undefined,
+    //     tournament: Tournament,
+    //     sportMap: CompetitionSportMap): Observable<void>[] {
+    //     const reposUpdates: Observable<void>[] = [];
+    //     while (roundNumber !== undefined) {
+    //         const url = this.getUrl(tournament, roundNumber) + '/create';
+    //         const reposUpdate = this.http.post<JsonPoule[]>(url, undefined, this.getOptions()).pipe(
+    //             map((jsonPoules: JsonPoule[]) => {
+    //                 if (roundNumber !== undefined) {
+    //                     this.planningMapper.toObject(jsonPoules, roundNumber, sportMap);
+    //                 }
+    //             }),
+    //             catchError((err) => this.handleError(err))
+    //         );
+    //         reposUpdates.push(reposUpdate);
+    //         roundNumber = roundNumber.getNext();
+    //     }
+    //     return reposUpdates;
+    // }
+
+    /*decrement(tournament: Tournament, poule: Poule): Observable<void> {
         const url = this.getUrlPoule(tournament, poule) + '/decrement';
         return this.http.post<(JsonAgainstGame | JsonTogetherGame)[]>(url, undefined, this.getOptions()).pipe(
             map((jsonRemovedGames: (JsonAgainstGame | JsonTogetherGame)[]) => {
                 this.removePouleGames(poule);
-                const map = this.planningMapper.getCompetitionSportMap(tournament.getCompetition());
+                const map = this.competitionSportMapper.getMap(tournament.getCompetition());
                 return jsonRemovedGames.map((jsonGame: JsonAgainstGame | JsonTogetherGame) => this.gameMapper.toNew(jsonGame, poule, map));
             }),
             catchError((err) => this.handleError(err))
@@ -71,12 +120,12 @@ export class PlanningRepository extends APIRepository {
         const url = this.getUrlPoule(tournament, poule) + '/increment';
         return this.http.post<(JsonAgainstGame | JsonTogetherGame)[]>(url, undefined, this.getOptions()).pipe(
             map((jsonGames: (JsonAgainstGame | JsonTogetherGame)[]) => {
-                const map = this.planningMapper.getCompetitionSportMap(tournament.getCompetition());
+                const map = this.competitionSportMapper.getMap(tournament.getCompetition());
                 return jsonGames.map((jsonGame: JsonAgainstGame | JsonTogetherGame) => this.gameMapper.toNew(jsonGame, poule, map));
             }),
             catchError((err) => this.handleError(err))
         );
-    }
+    }*/
 
     protected removeGames(roundNumber: RoundNumber) {
         roundNumber.getPoules().forEach(poule => {
@@ -86,10 +135,6 @@ export class PlanningRepository extends APIRepository {
         if (nextRoundNumber) {
             this.removeGames(nextRoundNumber);
         }
-    }
-
-    protected removePouleGames(poule: Poule) {
-
     }
 
     reschedule(roundNumber: RoundNumber, tournament: Tournament): Observable<boolean> {

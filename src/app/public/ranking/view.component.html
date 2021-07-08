@@ -35,8 +35,8 @@
             <ng-template ngbNavContent>
               <div class="m-3">
                 <h4>rangschikking</h4>
-                <app-ranking-rules [rankingRuleSet]="tournament.getCompetition().getRankingRuleSet()"
-                  [editMode]="isAdmin()" (changed)="saveRankingRuleSet($event)">
+                <app-ranking-rules [againstRuleSet]="tournament.getCompetition().getAgainstRuleSet()"
+                  [editMode]="isAdmin() && !hasBegun" (changed)="saveRankingRuleSet($event)">
                 </app-ranking-rules>
               </div>
             </ng-template>

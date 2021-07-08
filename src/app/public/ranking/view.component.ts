@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { State, Competitor, RankingRuleSet, CompetitorMap } from 'ngx-sport';
+import { State, AgainstRuleSet, CompetitorMap } from 'ngx-sport';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { AuthService } from '../../lib/auth/auth.service';
 import { Role } from '../../lib/role';
@@ -21,7 +21,8 @@ export class RankingComponent extends TournamentComponent implements OnInit {
     public activeTab: number = 1;
     public favorites!: Favorites;
     public competitorMap!: CompetitorMap;
-    public rankingRuleSet!: RankingRuleSet;
+    public againstRuleSet!: AgainstRuleSet;
+    public hasBegun: boolean = true;
 
     constructor(
         route: ActivatedRoute,
@@ -37,9 +38,10 @@ export class RankingComponent extends TournamentComponent implements OnInit {
 
     ngOnInit() {
         super.myNgOnInit(() => {
-            this.rankingRuleSet = this.tournament.getCompetition().getRankingRuleSet();
+            this.againstRuleSet = this.tournament.getCompetition().getAgainstRuleSet();
             this.competitorMap = new CompetitorMap(this.tournament.getCompetitors());
             this.favorites = this.favRepository.getObject(this.tournament);
+            this.hasBegun = this.structure.getRootRound().hasBegun();
             if (this.structure.getLastRoundNumber().getState() === State.Finished) {
                 this.activeTab = 2;
             }
@@ -51,11 +53,11 @@ export class RankingComponent extends TournamentComponent implements OnInit {
         return this.hasRole(this.authService, Role.ADMIN);
     }
 
-    saveRankingRuleSet(rankingRuleSet: RankingRuleSet) {
+    saveRankingRuleSet(againstRuleSet: AgainstRuleSet) {
         this.resetAlert();
         this.processing = true;
         const json = this.tournamentMapper.toJson(this.tournament);
-        json.competition.rankingRuleSet = rankingRuleSet;
+        json.competition.againstRuleSet = againstRuleSet;
         this.tournamentRepository.editObject(json)
             .subscribe(
             /* happy path */(tournament: Tournament) => { this.tournament = tournament; },

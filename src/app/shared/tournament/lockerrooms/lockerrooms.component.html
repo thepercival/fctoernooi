@@ -33,17 +33,16 @@
         </button>
       </ngb-alert>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-
-      <div *ngIf="!processing && hasCompetitors" class="card-deck flex-wrap d-flex justify-content-center mx-0">
+      <div *ngIf="!processing && hasCompetitors" class="d-flex flex-wrap gap-3">
         <app-tournament-lockerroom *ngFor="let lockerRoom of tournament.getLockerRooms()" [lockerRoom]="lockerRoom"
-          [validator]="validator" [editable]="editMode" class="card m-2" [favorites]="favorites"
+          [validator]="validator" [editable]="editMode" class="card mx-auto" [favorites]="favorites"
           (remove)="remove($event)" (changeName)="changeName($event)" (changeCompetitors)="changeCompetitors($event)">
         </app-tournament-lockerroom>
       </div>
       <div *ngIf="validator && !validator.areAllArranged() && hasCompetitors">
         <hr />
         <div *ngIf="!validator.areAllArranged()" class="d-flex justify-content-center">
-          <div class="card border-warning m-2 unarranged-competitors text-center">
+          <div class="card border-warning unarranged-competitors text-center">
             <div class="card-header">
               <h5 class="mb-0">niet ingedeelde deelnemers</h5>
             </div>

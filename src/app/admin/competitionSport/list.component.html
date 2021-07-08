@@ -26,7 +26,7 @@
               <th title="aantal">
                 <app-tournament-icon class="d-none d-sm-inline" name="soccer-field"></app-tournament-icon> velden
               </th>
-              <th class="text-end" *ngIf="!hasBegun">
+              <th class="text-end" *ngIf="!hasBegun && !maxReached">
                 <button type="button" class="btn btn-sm btn-primary" (click)="showCreateSportWithFields = true"
                   [disabled]="processing">
                   <fa-icon [icon]="['fas', 'plus']"></fa-icon>

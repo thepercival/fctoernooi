@@ -17,8 +17,7 @@
         <li [ngbNavItem]="1">
           <a ngbNavLink>
             <fa-icon [icon]="['fas', 'users']"></fa-icon><span> deelnemers </span>
-            <span *ngIf="favorites.hasCompetitors()"
-              class="badge badge-primary">{{favorites.getNrOfCompetitors()}}</span>
+            <span *ngIf="favorites.hasCompetitors()" class="badge bg-primary">{{favorites.getNrOfCompetitors()}}</span>
           </a>
           <ng-template ngbNavContent>
             <ng-container *ngTemplateOutlet="competitors">
@@ -28,7 +27,7 @@
         <li [ngbNavItem]="2">
           <a ngbNavLink>
             <app-tournament-icon name="referee"></app-tournament-icon> <span> scheidsrechters </span><span
-              *ngIf="favorites.hasReferees()" class="badge badge-primary">{{favorites.getNrOfReferees()}}</span>
+              *ngIf="favorites.hasReferees()" class="badge bg-primary">{{favorites.getNrOfReferees()}}</span>
           </a>
           <ng-template ngbNavContent>
             <ng-container *ngTemplateOutlet="referees">
@@ -44,7 +43,7 @@
         <h3>
           <fa-icon [icon]="['fas', 'users']"></fa-icon><span> deelnemers </span>
           <small><span *ngIf="favorites.hasCompetitors()"
-              class="badge badge-primary">{{favorites.getNrOfCompetitors()}}</span></small>
+              class="badge bg-primary">{{favorites.getNrOfCompetitors()}}</span></small>
         </h3>
       </div>
       <ng-container *ngTemplateOutlet="competitors">
@@ -55,7 +54,7 @@
       <div class="d-flex justify-content-between mb-2">
         <h3>
           <app-tournament-icon name="referee"></app-tournament-icon> <span> scheidsrechters </span><small><span
-              *ngIf="favorites.hasReferees()" class="badge badge-primary">{{favorites.getNrOfReferees()}}</span></small>
+              *ngIf="favorites.hasReferees()" class="badge bg-primary">{{favorites.getNrOfReferees()}}</span></small>
         </h3>
       </div>
       <ng-container *ngTemplateOutlet="referees">
@@ -78,7 +77,7 @@
         <td>
           <span>{{nameService.getPlaceFromName(placeCompetitor.place, false)}}</span>
         </td>
-        <td class="place">
+        <td class="text-break">
           <span *ngIf="placeCompetitor.competitor">{{placeCompetitor.competitor.getName()}}</span>
         </td>
         <td class="text-end">

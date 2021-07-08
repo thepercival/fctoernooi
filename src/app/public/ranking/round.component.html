@@ -16,21 +16,22 @@
         </fa-icon>
       </div>
     </div>
-    <div class="card-body px-1 card-deck-wrapper" [ngClass]="{ 'd-none': collapsed }">
-      <div class=" d-flex flex-wrap justify-content-center">
+    <div class="card-body px-1" [ngClass]="{ 'd-none': collapsed }">
+      <div class="d-flex flex-wrap gap-3 justify-content-between">
         <app-tournament-pouleranking *ngFor="let poule of poules" [poule]="poule" [header]="true"
-          [tournament]="tournament" [competitorMap]="competitorMap">
+          [tournament]="tournament" [competitorMap]="competitorMap" class="mx-auto"
+          [competitionSport]="tournament.getCompetition().getSingleSport()">
         </app-tournament-pouleranking>
       </div>
     </div>
   </div>
 </div>
-<div class="d-flex align-items-stretch text-center">
+<!-- <div class="d-flex align-items-stretch text-center">
   <app-tournament-ranking-round *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed(); first as first"
     class="align-self-stretch flex-wrap mb-2" [round]="qualifyGroup.getChildRound()" [tournament]="tournament"
     [first]="first" [competitorMap]="competitorMap">
   </app-tournament-ranking-round>
-</div>
+</div> -->
 
 
 <ng-template #contentScoreRules>

@@ -18,6 +18,7 @@ export class PouleRankingTogetherComponent implements OnInit {
   @Input() competitorMap!: CompetitorMap;
   @Input() competitionSport!: CompetitionSport;
   @Input() header!: boolean;
+  @Input() fixed = false;
   protected togetherRankingCalculator!: TogetherSportRoundRankingCalculator;
 
   public sportRankingItems!: SportRoundRankingItem[];

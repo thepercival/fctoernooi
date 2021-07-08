@@ -21,7 +21,7 @@ export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
   @Output() registerPressed = new EventEmitter<TournamentCompetitor>();
   @Output() toLockerRooms = new EventEmitter<void>();
 
-  @ViewChild('btnEdit', { static: true }) private elementRef: ElementRef | undefined;
+  @ViewChild('btnEdit', { static: true }) private btnEditRef: ElementRef | undefined;
 
   constructor(private modalService: NgbModal) {
   }
@@ -46,8 +46,8 @@ export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked() {
-    if (this.focus && this.elementRef) {
-      this.elementRef.nativeElement.focus();
+    if (this.focus && this.btnEditRef) {
+      this.btnEditRef.nativeElement.focus();
     }
   }
 

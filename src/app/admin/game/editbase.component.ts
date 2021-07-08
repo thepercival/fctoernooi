@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { AgainstGame, CompetitionSport, NameService, Place, PlanningConfig, PlanningEditMode, ScoreConfig, TogetherGame, TogetherGamePlace, TogetherScore } from 'ngx-sport';
+import { AgainstGame, CompetitionSport, Field, NameService, Place, PlanningConfig, PlanningEditMode, ScoreConfig, TogetherGame, TogetherGamePlace, TogetherScore } from 'ngx-sport';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { TranslateService } from '../../lib/translate';
 
@@ -87,74 +87,15 @@ export class GameBaseEditComponent implements OnInit {
     });
   }
 
-  // getCalculateScoreUnitName(): string {
-  //   const calculateScore = this.firstScoreConfig.getCalculate();
-  //   return this.translate.getScoreNameSingular(calculateScore);
-  // }
-
-  // getInputScoreDescription() {
-  //   let description = '';
-  //   if (this.firstScoreConfig.getDirection() === ScoreConfig.UPWARDS && this.firstScoreConfig.getMaximum() > 0) {
-  //     description = 'eerste bij ' + this.firstScoreConfig.getMaximum() + ' ';
-  //   }
-  //   return description + this.translate.getScoreNamePlural(this.firstScoreConfig);
-  // }
-
-  // postUpdate() {
-  //   this.afterEdit.emit();
-  // }
-
-  // // getInputScores(): TogetherScore[] {
-  // //   // get values from controls
-  // //   return [];
-  // // }
-
-  // isScoreValid(score: number): boolean {
-  //   return score >= 0;
-  // }
-
-  // getValidateClass(formControl: AbstractControl, scoreConfig: ScoreConfig): string {
-  //   const score = formControl.value;
-  //   if (!this.isScoreValid(formControl.value)) {
-  //     return 'is-invalid';
-  //   }
-  //   if (scoreConfig.getDirection() !== ScoreConfig.UPWARDS || scoreConfig.getMaximum() === 0) {
-  //     return 'is-valid';
-  //   }
-  //   if (score === scoreConfig.getMaximum()) {
-  //     return 'is-valid';
-  //   }
-  //   return 'is-warning';
-  // }
-
-  // getCalculateScoreDescription() {
-  //   const scoreConfig = this.firstScoreConfig.getCalculate();
-  //   let description = '';
-  //   if (scoreConfig.getDirection() === ScoreConfig.UPWARDS && scoreConfig.getMaximum() > 0) {
-  //     description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
-  //   }
-  //   return description + this.translate.getScoreNamePlural(scoreConfig);
-  // }
-
-  // allScoresValid(): boolean {
-  //   // walk through formgroup this.form.controls.gamePlace.controls
-  //   return false;
-  // }
-
-  // // allScoresAreInvalid(): boolean {
-  // //   return this.scoreControls.every((scoreControl: AgainstScoreFormControl) => !scoreControl.isScoreValid());
-
-  // // }
-
-
-
-  // addScoreControl() {
-  //   this.getScoreControls().push(new FormControl(0));
-  //   // this.postScoreControlUpdate();
-  // }
-
-  // removeScoreControl() {
-  //   this.getScoreControls().removeAt(this.getScoreControls().length - 1);
-  //   // this.updateCalculateScoreControl();
-  // }
+  getFieldName(field: Field | undefined): string {
+    if (field === undefined) {
+      return '?';
+    }
+    const competition = this.game.getCompetitionSport().getCompetition();
+    let fieldName = field.getName();
+    if (competition.hasMultipleSports()) {
+      fieldName += ' - ' + field.getCompetitionSport().getSport().getName();
+    }
+    return fieldName ?? '';
+  }
 }

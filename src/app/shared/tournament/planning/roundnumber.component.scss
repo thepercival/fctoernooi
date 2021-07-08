@@ -1,14 +1,8 @@
-// @import "~bootstrap/scss/bootstrap";
-
 .table th, .table td {
     padding-left: 0.25rem;
     padding-right: 0.25rem;
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
-}
-
-td.place {
-    overflow-wrap: break-word;    
 }
 
 table.noborder td {
@@ -20,8 +14,8 @@ table.noborder td {
     margin-top: -8px;
 }
 
-// @include media-breakpoint-up(sm) {
-//   .some-class {
-//     display: block;
-//   }
-// }
+.custom-progress {
+    height: 2rem;
+    font-size: 1.2rem;
+    background-color: #dfd7ca;
+}

@@ -6,39 +6,27 @@ $enable-responsive-font-sizes: true !default;
 @import "~bootstrap/scss/bootstrap";
 @import "./bootswatch/bootswatch";
 
-@include media-breakpoint-up(sm) {
+/*@include media-breakpoint-up(sm) {
     app-tournament-pouleranking {
         margin: 10px;
-    }
-    .card-deck-wrapper {
-        padding: 10px;
-    }
-    .popover-small {  
-      max-width: 400px;
-    }
-    .popover {
-      max-width: 400px;
     }
 }
 
 @include media-breakpoint-only(xs) {
-    .popover-small {
-      max-width: 200px;
-    }
-    .popover {
-      max-width: 300px;
-    } 
-    .card-deck-wrapper {
-     padding: 0;
-    }
     app-tournament-pouleranking {
       margin-top: 10px;
     }
-}
+}*/
 
 .favitem {
     @extend .text-primary;
     @extend .fw-bold;
+}
+
+table.table-fixed {
+    @extend .table;
+    table-layout: fixed;
+    width: auto;
 }
 
 hr {

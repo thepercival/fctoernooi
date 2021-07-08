@@ -2,7 +2,7 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { GameMode, League, RankingRuleSet, RoundNumber } from 'ngx-sport';
+import { League } from 'ngx-sport';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { CSSService } from '../../shared/common/cssservice';
@@ -122,7 +122,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
 
     getNrOfSponsorsDescription(): string {
         const nrOfSponsors = this.tournament.getSponsors().length;
-        return nrOfSponsors + ' sponsors' + (nrOfSponsors === 1 ? '' : 's');
+        return nrOfSponsors + ' sponsor' + (nrOfSponsors === 1 ? '' : 's');
     }
 
     getLockerRoomBorderClass(): string {

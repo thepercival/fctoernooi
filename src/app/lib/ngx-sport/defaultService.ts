@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AgainstSportVariant, AllInOneGameSportVariant, CompetitionSportService, GameMode, GamePlaceStrategy, JsonPlanningConfig, JsonSport, PlanningEditMode, PouleStructure, RankingRuleSet, SelfReferee, SingleSportVariant, Sport, VoetbalRange } from "ngx-sport";
+import { AgainstRuleSet, AgainstSportVariant, AllInOneGameSportVariant, CompetitionSportService, GameMode, GamePlaceStrategy, JsonPlanningConfig, JsonSport, PlanningEditMode, PouleStructure, SelfReferee, SingleSportVariant, Sport, VoetbalRange } from "ngx-sport";
 
 @Injectable({
     providedIn: 'root'
@@ -10,7 +10,7 @@ export class DefaultService {
     static readonly MinutesPerGameExt: number = 5;
     static readonly MinutesBetweenGames: number = 5;
     static readonly MinutesAfter: number = 5;
-    static readonly RankingRuleSet: RankingRuleSet = RankingRuleSet.Against;
+    static readonly AgainstRuleSet: AgainstRuleSet = AgainstRuleSet.DiffFirst;
 
     constructor(private competitionService: CompetitionSportService) {
     }

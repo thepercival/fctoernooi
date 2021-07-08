@@ -1,13 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  Competition,
-  CompetitionSport,
   CompetitionSportService,
   Competitor,
   CompetitorMap,
   NameService,
-  PlaceRange,
   PlaceRanges,
   RoundNumber,
   Structure,

@@ -140,9 +140,9 @@ export class ScheduleScreen extends GamesScreen implements IGamesScreen {
     }
 
     createNext(): ScheduleScreen {
-        this.setDescription(this.description + ' <span class="badge badge-info">deel 1</span>');
+        this.setDescription(this.description + ' <span class="badge bg-info">deel 1</span>');
         this.next = new ScheduleScreen(this.maxLines, this);
-        this.next.setDescription(this.next.description + ' <span class="badge badge-info">deel 2</span>');
+        this.next.setDescription(this.next.description + ' <span class="badge bg-info">deel 2</span>');
         return this.next;
     }
 }

@@ -1,0 +1,4 @@
+input[type="number"]{
+	min-width: 5rem;
+    max-width: 10rem;
+}

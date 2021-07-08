@@ -43,8 +43,8 @@
                 <div *ngFor="let invitation of invitations" class="card border-secondary mt-3 mx-2">
                     <div class="card-header">
                         <div class="d-flex justify-content-between">
-                            <h5 class="mb-0 mt-2">{{invitation.getEmailaddress()}} <span
-                                    class="badge badge-info">gebruiker nog onbekend</span></h5>
+                            <h5 class="mb-0 mt-2">{{invitation.getEmailaddress()}} <span class="badge bg-info">gebruiker
+                                    nog onbekend</span></h5>
                             <button class="btn btn-sm btn-outline-danger ms-1" [disabled]="roleProcessing"
                                 (click)="openModalRemove(contentremove, invitation)">
                                 <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>

@@ -23,8 +23,8 @@
 <td *ngIf="!placeCompetitor.competitor">
   <button #btnEdit type="button" class="btn btn-sm btn-outline-warning" (click)="edit()">vul een naam in</button>
 </td>
-<td class="text-center d-none d-sm-table-cell">
-  <div *ngIf="placeCompetitor.competitor" class="form-check form-switch">
+<td class="d-none d-sm-table-cell">
+  <div *ngIf="placeCompetitor.competitor" class="form-switch text-center">
     <input type="checkbox" class="form-check-input" id="{{getSwitchId(placeCompetitor.place)}}"
       [checked]="placeCompetitor.competitor.getRegistered()" (change)="register()">
     <label class="form-check-label" for="{{getSwitchId(placeCompetitor.place)}}"></label>

@@ -1,4 +1,4 @@
-<table class="table table-striped fixed mb-0">
+<table class="{{fixed ? 'table-fixed' : 'table'}} table-striped mb-0">
     <colgroup>
         <col class="width-10">
         <col class="width-30">
@@ -9,7 +9,7 @@
     <thead>
         <tr>
             <th class="text-end ps-0"><span class="badge badge-rank pb-0">pl</span></th>
-            <th class="place px-0">
+            <th class="text-break px-0">
                 <div class="d-flex justify-content-between">
                     <span class="d-xs-inline d-sm-none">deeln.</span>
                     <span class="d-none d-sm-inline">deelnemer</span>
@@ -45,7 +45,7 @@
                 <span
                     class="badge badge-rank {{getQualifyPlaceClass(roundRankingItem)}}">{{roundRankingItem.getUniqueRank()}}</span>
             </td>
-            <td class="place ps-0"
+            <td class="text-break ps-0"
                 [ngClass]="{ 'favitem': favorites.hasCompetitor(competitorMap.getCompetitor(roundRankingItem.getPlace())) }">
                 {{nameService.getPlaceFromName(roundRankingItem.getPlace(), true)}}
             </td>

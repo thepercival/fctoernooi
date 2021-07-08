@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NameService, RankingRuleSet } from 'ngx-sport';
+import { AgainstRuleSet, NameService } from 'ngx-sport';
 
 @Component({
     selector: 'app-ranking-rules',
@@ -7,9 +7,9 @@ import { NameService, RankingRuleSet } from 'ngx-sport';
     styleUrls: ['./rankingrules.component.scss']
 })
 export class RankingRulesComponent {
-    @Input() rankingRuleSet!: RankingRuleSet;
+    @Input() againstRuleSet!: AgainstRuleSet;
     @Input() editMode: boolean = false;
-    @Output() changed = new EventEmitter<RankingRuleSet>();
+    @Output() changed = new EventEmitter<AgainstRuleSet>();
 
     protected nameService: NameService;
 
@@ -18,15 +18,15 @@ export class RankingRulesComponent {
     }
 
     getDescription(): string[] {
-        return this.nameService.getRulesName(this.rankingRuleSet);
+        return this.nameService.getRulesName(this.againstRuleSet);
     }
 
     toggle() {
-        if (this.rankingRuleSet === RankingRuleSet.Against) {
-            this.rankingRuleSet = RankingRuleSet.AgainstAmong;
+        if (this.againstRuleSet === AgainstRuleSet.DiffFirst) {
+            this.againstRuleSet = AgainstRuleSet.AmongFirst;
         } else {
-            this.rankingRuleSet = RankingRuleSet.Against;
+            this.againstRuleSet = AgainstRuleSet.DiffFirst;
         }
-        this.changed.emit(this.rankingRuleSet);
+        this.changed.emit(this.againstRuleSet);
     }
 }

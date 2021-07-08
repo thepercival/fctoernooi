@@ -4,8 +4,8 @@
 <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 <form *ngIf="!processing && originalScoreConfig" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
   <div *ngIf="originalScoreConfig.hasNext()" class="row mb-3">
-    <label for="useNext" class="col-7 col-form-label">gebruik {{getNextPluralName()}}</label>
-    <div class="col-5">
+    <label for="useNext" class="col-5 col-form-label">gebruik {{getNextPluralName()}}</label>
+    <div class="col-7">
       <div class="form-control form-check form-switch">
         <input type="checkbox" class="form-check-input" id="useNext" formControlName="useNext">
         <label class="form-check-label" for="useNext"></label>
@@ -13,36 +13,35 @@
     </div>
   </div>
   <div *ngIf="form.value['useNext']" class="row mb-3">
-    <label class="col-5 col-form-label">{{getNextPluralName()}}</label>
+    <label class="col-3 col-form-label">{{getNextPluralName()}}</label>
     <label for="maxNext" class="col-2 col-form-label text-end">{{getNextDirectionName()}}</label>
-    <div class="col-5">
-      <input type="number" aria-describedby="zeroHelp"
+    <div class="col-7">
+      <input type="number"
         [ngClass]="{ 'is-invalid': form.controls.maxNext.invalid, 'is-valid': form.controls.maxNext.valid}"
-        formControlName="maxNext" maxlength="2" class="form-control" />
-      <small *ngIf="form.value['useNext']" id="zeroHelp" class="form-text text-info">0 = zoveel mogelijk</small>
+        formControlName="maxNext" maxlength="2" class="form-control" id="maxNext" />
+      <label *ngIf="form.value['useNext']" for="maxNext" class="ms-3">0 = zoveel mogelijk</label>
     </div>
   </div>
   <div class="row mb-3">
-    <label *ngIf="form.value['useNext']" class="col-7 col-form-label">{{getPluralName()}} per
+    <label *ngIf="form.value['useNext']" class="col-5 col-form-label">{{getPluralName()}} per
       {{getNextSingularName()}}
     </label>
-    <label *ngIf="!form.value['useNext']" class="col-5 col-form-label">{{getPluralName()}}</label>
+    <label *ngIf="!form.value['useNext']" class="col-3 col-form-label">{{getPluralName()}}</label>
     <label *ngIf="!form.value['useNext']" for="max" class="col-2 col-form-label text-end">{{getDirectionName()}}</label>
-    <div class="col-5">
-      <input type="number" aria-describedby="zeroHelpNext"
-        [ngClass]="{ 'is-invalid': form.controls.max.invalid, 'is-valid': form.controls.max.valid}"
-        formControlName="max" maxlength="2" class="form-control" />
-      <small *ngIf="!form.value['useNext']" id="zeroHelpNext" class="form-text text-info">0 = zoveel mogelijk</small>
+    <div class="col-7 form-floating">
+      <input type="number" [ngClass]="{ 'is-invalid': form.controls.max.invalid, 'is-valid': form.controls.max.valid}"
+        formControlName="max" maxlength="2" class="form-control" id="max" />
+      <label *ngIf="!form.value['useNext']" for="max" class="ms-3">0 = zoveel mogelijk</label>
     </div>
   </div>
   <div class="row mb-3">
-    <div class="col-7 d-flex justify-content-end">
+    <div class="col-5 d-flex justify-content-end">
       <button *ngIf="structure.getRootRound().getChildren().length" type="button" (click)="openSelectRoundsModal()"
         class="btn btn-outline-primary">
         selecteer ronden
       </button>
     </div>
-    <div *ngIf="!readonly" class="col-5">
+    <div *ngIf="!readonly" class="col-7">
       <button type="submit" class="btn btn-primary" [disabled]="form.invalid">opslaan</button>
     </div>
 
