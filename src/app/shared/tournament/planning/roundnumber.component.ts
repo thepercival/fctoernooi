@@ -378,7 +378,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   /////////////////  NO PLANNING ///////////////////////////
 
   private showProgress() {
-    this.refreshTimer = timer(0, 1000) // repeats every 1 seconds
+    this.refreshTimer = timer(0, 1500) // repeats every 1.5 seconds
       .pipe(
         switchMap(() => this.planningRepository.progress(this.roundNumber, this.tournament).pipe()),
         catchError(err => of(undefined))

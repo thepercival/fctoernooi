@@ -50,7 +50,7 @@
                 <fa-icon [icon]="['fas', 'check-circle']" class="text-warning"></fa-icon> deelnemers aanmelden
               </span>
             </p>
-            <p class="card-text" *ngIf="!allPlacesAssigned()">
+            <p class="card-text text-nowrap" *ngIf="!allPlacesAssigned()">
               <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> vul de namen in
               ({{getNrOfCompetitors()}}/{{getNrOfPlaces()}})
             </p>

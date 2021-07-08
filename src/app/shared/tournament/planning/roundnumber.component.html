@@ -17,17 +17,15 @@
     </button>
   </div>
   <div *ngIf="gameDatas.length === 0">
-    <ngb-alert class="my-1" type="info">
+    <ngb-alert class="mt-1" type="info">
       <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
       <span *ngIf="progressPerc === 0">Het berekenen van de wedstrijdplanning staat in de wachtrij. Een moment geduld
         alsjeblieft.</span>
       <span *ngIf="progressPerc > 0">De wedstrijdplanning wordt berekend ...</span>
     </ngb-alert>
-    <p>
-      <ngb-progressbar *ngIf="progressPerc > 0" class="custom-progress" type="info" [value]="progressPerc"
-        [striped]="true" [animated]="true"><i>{{progressPerc}}%</i>
-      </ngb-progressbar>
-    </p>
+    <ngb-progressbar *ngIf="progressPerc > 0" class="custom-progress mt-4 mx-auto" type="info" [value]="progressPerc">
+      <i>{{progressPerc}}%</i>
+    </ngb-progressbar>
   </div>
 
   <ngb-alert *ngIf="refreshingData" type="info">de uitslagen worden bijgewerk</ngb-alert>
