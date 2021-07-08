@@ -47,12 +47,11 @@ import { catchError, switchMap } from 'rxjs/operators';
   templateUrl: './roundnumber.component.html',
   styleUrls: ['./roundnumber.component.scss']
 })
-export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() tournament!: Tournament;
   @Input() roundNumber!: RoundNumber;
   @Input() userRefereeId: number | string | undefined;
-  @Input() reload: boolean | undefined;
   @Input() roles: number = 0;
   @Input() favorites!: Favorites;
   @Input() refreshingData: boolean | undefined;
@@ -106,10 +105,10 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
       || this.planningConfig.getSelfReferee() !== SelfReferee.Disabled;
     this.hasBegun = this.roundNumber.hasBegun();
     this.tournamentHasBegun = this.roundNumber.getFirst().hasBegun();
-    this.reloadGameData();
+    this.loadGameData();
     this.hasOnlyGameModeAgainst = this.hasOnlyAgainstGameMode();
 
-    if (!this.roundNumber.getHasPlanning()) {
+    if (this.gameDatas.length === 0) {
       this.showProgress()
     }
   }
@@ -120,16 +119,10 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.reload && changes.reload.currentValue !== changes.reload.previousValue && changes.reload.currentValue !== undefined) {
-      if (this.gameDatas.length === 0) {
-        this.reloadGameData();
-      }
-    }
-  }
-
-  private reloadGameData() {
+  private loadGameData() {
+    console.log('loadGameData');
     this.gameDatas = this.getGameData();
+    console.log('GameData loaded', this.gameDatas);
     this.sameDay = this.gameDatas.length > 1 ? this.isSameDay(this.gameDatas[0], this.gameDatas[this.gameDatas.length - 1]) : true;
   }
 
@@ -167,7 +160,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
 
   toggleFilter() {
     this.filterEnabled = !this.filterEnabled;
-    this.reloadGameData();
+    this.loadGameData();
   }
 
   private hasOnlyAgainstGameMode(): boolean {
@@ -303,7 +296,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
 
   sortGames() {
     this.gameOrder = this.gameOrder === GameOrder.ByDate ? GameOrder.ByPoule : GameOrder.ByDate;
-    this.reloadGameData();
+    this.loadGameData();
   }
 
   protected isSameDay(gameDataOne: GameData, gameDataTwo: GameData): boolean {
@@ -385,7 +378,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
   /////////////////  NO PLANNING ///////////////////////////
 
   private showProgress() {
-    this.refreshTimer = timer(0, 10000) // repeats every 10 seconds
+    this.refreshTimer = timer(0, 1000) // repeats every 1 seconds
       .pipe(
         switchMap(() => this.planningRepository.progress(this.roundNumber, this.tournament).pipe()),
         catchError(err => of(undefined))
@@ -396,9 +389,15 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnCh
           }
           this.progressPerc = progressPerc;
           if (progressPerc === 100) {
-            this.reload = ((this.reload === undefined) ? true : !this.reload);
             this.stopShowProgress();
-            this.progressPerc = 0;
+            this.planningRepository.get(this.roundNumber, this.tournament)
+              .subscribe(
+            /* happy path */ invitations => {
+                  this.progressPerc = 0;
+                  this.loadGameData();
+                },
+              /* error path */ e => { this.setAlert('danger', e); }
+              );
           }
         });
   }

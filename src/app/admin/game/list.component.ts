@@ -18,7 +18,6 @@ import { Observable, of, Subscription } from 'rxjs';
 export class GameListComponent extends TournamentComponent implements OnInit {
   userRefereeId: number | string | undefined;
   roles: number = 0;
-  reload: boolean | undefined;
 
   constructor(
     route: ActivatedRoute,

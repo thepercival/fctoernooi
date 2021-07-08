@@ -2,7 +2,7 @@
   <div class="d-flex justify-content-between mt-3">
     <h2 class="me-auto">
       <span [innerHTML]="nameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
-      <button *ngIf="refreshingData !== undefined && roundNumber.getHasPlanning()" type="button"
+      <button *ngIf="refreshingData !== undefined && gameDatas.length > 0" type="button"
         class="btn btn-sm btn-outline-secondary ms-1" (click)="refreshData.emit()" [disabled]="refreshingData">
         <fa-icon [icon]="['fas', 'sync']" [spin]="refreshingData"></fa-icon>
       </button>
@@ -16,7 +16,7 @@
       <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellen
     </button>
   </div>
-  <div *ngIf="!roundNumber.getHasPlanning()">
+  <div *ngIf="gameDatas.length === 0">
     <ngb-alert class="my-1" type="info">
       <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
       <span *ngIf="progressPerc === 0">Het berekenen van de wedstrijdplanning staat in de wachtrij. Een moment geduld
@@ -31,7 +31,7 @@
   </div>
 
   <ngb-alert *ngIf="refreshingData" type="info">de uitslagen worden bijgewerk</ngb-alert>
-  <div *ngIf="roundNumber.getHasPlanning()">
+  <div *ngIf="gameDatas.length > 0">
     <table class="table">
       <colgroup>
         <col *ngIf="needsRanking">
