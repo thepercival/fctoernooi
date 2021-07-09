@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     State,
@@ -70,7 +70,7 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
         if (this.firstScoreConfig !== this.firstScoreConfig.getCalculate()) {
             this.calculateScoreControl = new AgainstScoreFormControl(this.firstScoreConfig.getCalculate(), 0, 0, true);
         }
-        this.form.controls.played.setValue(this.game.getState() === State.Finished);
+        this.form.controls.played.setValue(this.game?.getState() === State.Finished);
         this.form.controls.extratime.setValue(this.getGame().getFinalPhase() === GamePhase.ExtraTime);
         this.initScoreControls();
     }

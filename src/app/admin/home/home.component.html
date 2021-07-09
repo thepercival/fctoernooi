@@ -56,13 +56,16 @@
             </p>
           </div>
         </div>
-        <div class="card border-secondary pointer" [routerLink]="['/admin/games', tournament.getId()]">
+        <div class="card {{getPlanningBorderClass()}} pointer" [routerLink]="['/admin/games', tournament.getId()]">
           <div class="card-body">
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijdplanning
             </h5>
-            <p class="card-text">start is
+            <p *ngIf="allPoulesHaveGames" class="card-text">
               {{dateFormatter.toString(competition.getStartDateTime(),dateFormatter.datetime())}}
+            </p>
+            <p *ngIf="!allPoulesHaveGames" class="card-text">
+              <fa-icon class="text-danger" [icon]="['fas', 'info-circle']"></fa-icon> wordt berekend
             </p>
           </div>
         </div>
@@ -128,7 +131,7 @@
       </div>
     </div>
     <!-- live scoreboard -->
-    <div *ngIf="structure.hasPlanning()" class="card card-sub {{getLiveBoardBorderClass()}} pointer"
+    <div *ngIf="allPoulesHaveGames" class="card card-sub {{getLiveBoardBorderClass()}} pointer"
       [routerLink]="['/public/liveboard', tournament.getId()]">
       <div class="card-body text-center p-1 pt-2">
         <h5 class="card-title">
@@ -139,7 +142,7 @@
       </div>
     </div>
     <!-- export -->
-    <div *ngIf="structure.hasPlanning() && isAdmin()" class="card card-sub pointer" (click)="openModalExport()">
+    <div *ngIf="allPoulesHaveGames && isAdmin()" class="card card-sub pointer" (click)="openModalExport()">
       <div class="card-body text-center p-1 pt-2">
         <h5 class="card-title">
           <fa-icon [icon]="['fas', 'file-export']"></fa-icon>
@@ -160,7 +163,7 @@
       </div>
     </div>
     <!-- change name -->
-    <div *ngIf="structure.hasPlanning() && isAdmin()" class="card card-sub pointer" (click)="openModalName()">
+    <div *ngIf="allPoulesHaveGames && isAdmin()" class="card card-sub pointer" (click)="openModalName()">
       <div class="card-body text-center p-1 pt-2">
         <h5 class="card-title">
           <span class="fw-bold">A</span>
@@ -190,7 +193,7 @@
       </div>
     </div>
     <!-- share -->
-    <div *ngIf="structure.hasPlanning() && isAdmin()" class="card card-sub pointer" (click)="openModalShare()">
+    <div *ngIf="allPoulesHaveGames && isAdmin()" class="card card-sub pointer" (click)="openModalShare()">
       <div class="card-body text-center p-1 pt-2">
         <h5 class="card-title">
           <fa-icon [icon]="['fas', 'share-alt']"></fa-icon>

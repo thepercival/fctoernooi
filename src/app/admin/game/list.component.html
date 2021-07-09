@@ -7,7 +7,7 @@
         <h2>
           <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijdplanning
         </h2>
-        <button *ngIf="tournament && structure && structure.hasPlanning() && hasAdminRole()" type="button"
+        <button *ngIf="tournament && structure && structure.allPoulesHaveGames() && hasAdminRole()" type="button"
           class="btn btn-sm btn-primary me-0" [routerLink]="['/admin/startbreak', tournament.getId()]">
           start & pauze
         </button>

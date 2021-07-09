@@ -30,6 +30,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     minDateStruct: NgbDateStruct;
     lockerRoomValidator!: LockerRoomValidator;
     hasBegun: boolean = true;
+    allPoulesHaveGames: boolean = false;
 
     constructor(
         route: ActivatedRoute,
@@ -63,6 +64,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         this.lockerRoomValidator = new LockerRoomValidator(this.tournament.getCompetitors(), this.tournament.getLockerRooms());
         const date = new Date();
         this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
+        this.allPoulesHaveGames = this.structure.allPoulesHaveGames();
         this.copyForm.controls.date.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
         this.processing = false;
     }
@@ -123,6 +125,10 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     getNrOfSponsorsDescription(): string {
         const nrOfSponsors = this.tournament.getSponsors().length;
         return nrOfSponsors + ' sponsor' + (nrOfSponsors === 1 ? '' : 's');
+    }
+
+    getPlanningBorderClass(): string {
+        return this.allPoulesHaveGames ? 'border-secondary' : 'border-danger';
     }
 
     getLockerRoomBorderClass(): string {

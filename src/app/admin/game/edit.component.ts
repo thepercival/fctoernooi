@@ -41,7 +41,7 @@ import { EqualQualifiersChecker } from '../../lib/ngx-sport/ranking/equalQualifi
 import { DateFormatter } from '../../lib/dateFormatter';
 
 export class GameEditComponent extends TournamentComponent {
-    public game!: AgainstGame | TogetherGame;
+    public game: AgainstGame | TogetherGame | undefined;
     public scoreConfigService: ScoreConfigService;
     public hasAuthorization: boolean = false;
     // private originalPouleState: number;    
@@ -112,7 +112,7 @@ export class GameEditComponent extends TournamentComponent {
     }
 
     protected getAuthorization(tournamentUser?: TournamentUser): Observable<boolean> {
-        if (!tournamentUser) {
+        if (!tournamentUser || !this.game) {
             return of(false);
         }
         if (tournamentUser.hasRoles(Role.GAMERESULTADMIN)) {
@@ -190,20 +190,20 @@ export class GameEditComponent extends TournamentComponent {
         return nextRoundNumber.hasBegun() || this.nextRoundNumberBegun(nextRoundNumber);
     }
 
-    protected getGameById(id: number, round: Round): AgainstGame | undefined {
+    protected getGameById(id: number, round: Round): AgainstGame | TogetherGame | undefined {
         if (round === undefined) {
             return undefined;
         }
         let game = round.getGames().find((gameIt: AgainstGame | TogetherGame) => gameIt.getId() === id);
         if (game !== undefined) {
-            return <AgainstGame>game;
+            return game;
         }
         round.getChildren().some(child => {
             game = this.getGameById(id, child);
             return (game !== undefined);
         });
         if (game !== undefined) {
-            return <AgainstGame>game;
+            return game;
         }
         return undefined;
     }
@@ -284,6 +284,9 @@ export class GameEditComponent extends TournamentComponent {
     // }
 
     saveHelper(jsonGame: JsonAgainstGame | JsonTogetherGame): boolean {
+        if (this.game === undefined) {
+            return false;
+        }
         this.processing = true;
         this.setAlert('info', 'de wedstrijd wordt opgeslagen');
 
@@ -298,7 +301,9 @@ export class GameEditComponent extends TournamentComponent {
     }
 
     remove() {
-
+        if (this.game === undefined) {
+            return;
+        }
         this.processing = true;
         this.setAlert('info', 'de wedstrijd wordt verwijderd');
 

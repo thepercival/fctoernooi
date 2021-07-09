@@ -392,7 +392,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
             this.stopShowProgress();
             this.planningRepository.get(this.roundNumber, this.tournament)
               .subscribe(
-            /* happy path */ invitations => {
+            /* happy path */ roundNumber => {
                   this.progressPerc = 0;
                   this.loadGameData();
                 },
