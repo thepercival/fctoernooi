@@ -112,7 +112,7 @@
             <td colspan="3" class="text-center">PAUZE</td>
             <td *ngIf="hasReferees" class="d-none d-sm-table-cell"></td>
           </tr>
-          <tr [ngClass]="{ 'batch-striped-row': (gmData.game.getBatchNr() % 2) === 0 && gameOrder === OrderByDate }">
+          <tr [ngClass]="{ 'table-light': (gmData.game.getBatchNr() % 2) === 0 && gameOrder === OrderByDate }">
             <!-- poule -->
             <td *ngIf="!gmData.hasPopover" class="text-center">
               <span
