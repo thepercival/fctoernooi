@@ -26,10 +26,9 @@
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "namedChunks": true,
-            "sourceMap": true,
-            "tsConfig": "src/tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.app.json",
+            "inlineStyleLanguage": "sass",
             "assets": [
               {
                 "glob": "**/*",
@@ -51,90 +50,33 @@
             "allowedCommonJsDependencies": [
               "lodash"
             ],
-            "scripts": [],
-            "vendorChunk": true,
-            "extractLicenses": false,
-            "buildOptimizer": false,
-            "optimization": false
+            "scripts": []
           },
           "configurations": {
-            "production": {
+            "prod": {
               "budgets": [
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "6kb"
                 }
               ],
-              "optimization": {
-                "scripts": true,
-                "fonts": {
-                  "inline": true
-                },
-                "styles": {
-                  "minify": true,
-                  "inlineCritical": true
-                }
-              },
-              "outputHashing": "all",
-              "namedChunks": false,
-              "sourceMap": false,
-              "extractLicenses": true,
-              "buildOptimizer": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
+              "outputHashing": "all",
               "serviceWorker": true
             },
-            "production-nl": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "outputPath": "dist/",
-              "i18nMissingTranslation": "error"
-            },
             "nl": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
-              "outputPath": "dist",
+              "outputPath": "dist/nl",
               "i18nMissingTranslation": "error",
               "localize": [
                 "nl"
               ]
             },
             "acc": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractLicenses": true,
-              "buildOptimizer": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -142,7 +84,16 @@
                 }
               ],
               "serviceWorker": true
-            }
+            },
+            "dev": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            },
+            "defaultConfiguration": "prod"
           }
         },
         "serve": {
@@ -151,8 +102,11 @@
             "browserTarget": "fctoernooi:build"
           },
           "configurations": {
-            "production": {
-              "browserTarget": "fctoernooi:build:production"
+            "prod": {
+              "browserTarget": "fctoernooi:build:prod"
+            },
+            "dev": {
+              "browserTarget": "fctoernooi:build:dev"
             }
           }
         },
@@ -183,20 +137,6 @@
               "src//assets/favicon/favicon.ico",
               "src/manifest.webmanifest"
             ]
-          }
-        }
-      }
-    },
-    "fctoernooi-e2e": {
-      "root": "",
-      "sourceRoot": "",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "fctoernooi:serve"
           }
         }
       }

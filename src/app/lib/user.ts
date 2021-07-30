@@ -1,6 +1,4 @@
-import { Identifiable } from "ngx-sport";
-
-export class User extends Identifiable {
+export class User {
     static readonly MIN_LENGTH_EMAIL = 6;
     static readonly MAX_LENGTH_EMAIL = 100;
     static readonly MIN_LENGTH_PASSWORD = 3;
@@ -8,10 +6,16 @@ export class User extends Identifiable {
 
     protected emailaddress: string = '';
 
-    constructor(id: number | string) {
-        super();
-        this.setId(id);
+    constructor(protected id: number | string) {
     }
+
+    getId(): string | number {
+        return this.id;
+    }
+
+    /*setId(id: string | number): void {
+        this.id = id;
+    }*/
 
     getEmailaddress(): string {
         return this.emailaddress;
