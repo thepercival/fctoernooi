@@ -20,7 +20,7 @@ import { NameService, CompetitorMap } from 'ngx-sport';
 export class LiveboardComponent extends TournamentComponent implements OnInit, OnDestroy {
     public activeScreen: any;
     private screens: any[] = [];
-    public refreshAfterSeconds = 115;
+    public refreshAfterSeconds = 15;
     public toggleProgress = false;
     private screenfilter: string | undefined;
     public nameService!: NameService;

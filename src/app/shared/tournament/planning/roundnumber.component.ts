@@ -120,9 +120,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private loadGameData() {
-    console.log('loadGameData');
     this.gameDatas = this.getGameData();
-    console.log('GameData loaded', this.gameDatas);
     this.sameDay = this.gameDatas.length > 1 ? this.isSameDay(this.gameDatas[0], this.gameDatas[this.gameDatas.length - 1]) : true;
   }
 

@@ -82,7 +82,6 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
       }
       return this.focusId === undefined;
     });
-    console.log(this.focusId);
   }
 
   toggleView() {

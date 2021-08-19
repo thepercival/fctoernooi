@@ -35,7 +35,6 @@ export class FavoritesBackEnd {
 
     remove(tournamentId: number | string) {
         this.readAll();
-        console.log('remove tournamentId');
         const oldItem = this.find(tournamentId);
         if (oldItem === undefined) {
             return;

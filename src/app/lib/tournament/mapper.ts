@@ -20,7 +20,6 @@ export class TournamentMapper {
         private lockerRoomMapper: LockerRoomMapper) { }
 
     toObject(json: JsonTournament): Tournament {
-        console.log('toObject', json);
         const competition = this.competitionMapper.toObject(json.competition);
         const tournament = new Tournament(competition);
         if (json.users) {
