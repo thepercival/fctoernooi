@@ -66,6 +66,12 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
+              "optimization": {
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": true
+                }
+              },
               "outputHashing": "all",
               "serviceWorker": true
             },

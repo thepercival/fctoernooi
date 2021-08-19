@@ -18,9 +18,6 @@
       </h2>
 
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <ngb-alert *ngIf="!processing && tournament && isAdmin() && !isManualMessageReadOnDevice()" type="info"
-        (closed)="manualMessageReadOnDevice()">gedetailleerde
-        informatie kun je vinden onderaan de pagina via de handleiding-link</ngb-alert>
       <div *ngIf="!processing && structure && ( isAdmin() || isRefereeOrGameResultAdmin() )"
         class="d-flex flex-wrap gap-3 justify-content-center">
         <div *ngIf="isAdmin()" class="card border-secondary pointer" (click)="linkToStructure()">

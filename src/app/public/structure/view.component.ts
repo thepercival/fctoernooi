@@ -5,7 +5,7 @@ import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { Competitor, CompetitorMap, NameService } from 'ngx-sport';
+import { Competitor, CompetitorMap, NameService, StructureEditor } from 'ngx-sport';
 import { Favorites } from '../../lib/favorites';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { AuthService } from '../../lib/auth/auth.service';
@@ -27,6 +27,7 @@ export class StructureViewComponent extends TournamentComponent implements OnIni
     tournamentRepository: TournamentRepository,
     private myNavigation: MyNavigation,
     structureRepository: StructureRepository,
+    public structureEditor: StructureEditor,
     public favRepository: FavoritesRepository,
     private authService: AuthService
   ) {

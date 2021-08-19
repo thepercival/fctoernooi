@@ -177,18 +177,6 @@ export class HomeComponent extends TournamentComponent implements OnInit {
             );
     }
 
-    isManualMessageReadOnDevice() {
-        let manualMessageReadOnDevice = localStorage.getItem('manualmessageread');
-        if (manualMessageReadOnDevice === null) {
-            manualMessageReadOnDevice = 'false';
-        }
-        return JSON.parse(manualMessageReadOnDevice);
-    }
-
-    manualMessageReadOnDevice() {
-        localStorage.setItem('manualmessageread', JSON.stringify(true));
-    }
-
     getExportSubjectsFromDevice(): number {
         let exportSubjectsItem = localStorage.getItem('exportSubjects');
 

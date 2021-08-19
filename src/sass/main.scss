@@ -2,21 +2,20 @@
 
 $enable-responsive-font-sizes: true !default;
 @import "./bootswatch/variables";
-// @import "./bootstrap-custom-components";
-@import "~bootstrap/scss/bootstrap";
+@import "./bootstrap-custom-components"; // "~bootstrap/scss/bootstrap";
 @import "./bootswatch/bootswatch";
 
-/*@include media-breakpoint-up(sm) {
-    app-tournament-pouleranking {
-        margin: 10px;
-    }
-}
+// @include media-breakpoint-up(sm) {
+//     app-tournament-pouleranking {
+//         margin: 10px;
+//     }
+// }
 
-@include media-breakpoint-only(xs) {
-    app-tournament-pouleranking {
-      margin-top: 10px;
-    }
-}*/
+// @include media-breakpoint-only(xs) {
+//     app-tournament-pouleranking {
+//       margin-top: 10px;
+//     }
+// }
 
 .favitem {
     @extend .text-primary;
@@ -132,29 +131,29 @@ ngb-alert {
   width:100%;
 }
 
-/*.more-than-two-rounds {
-  @include media-breakpoint-only(xs) {
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-  }
-}
+// .more-than-two-rounds {
+//   @include media-breakpoint-only(xs) {
+//       flex-direction: column;
+//       align-items: flex-start;
+//       justify-content: center;
+//   }
+// }
 
-.more-than-four-rounds {
-  @include media-breakpoint-only(sm) {
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-  }
-}
+// .more-than-four-rounds {
+//   @include media-breakpoint-only(sm) {
+//       flex-direction: column;
+//       align-items: flex-start;
+//       justify-content: center;
+//   }
+// }
 
-.more-than-eight-rounds {
-  @include media-breakpoint-up(md) {
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-  }
-}*/
+// .more-than-eight-rounds {
+//   @include media-breakpoint-up(md) {
+//       flex-direction: column;
+//       align-items: flex-start;
+//       justify-content: center;
+//   }
+// }
 .q-w-1 {
   border-color: #298F00 !important;
 }

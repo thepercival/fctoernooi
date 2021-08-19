@@ -22,7 +22,7 @@
   </div>
   <div *ngIf="!processing" class="row text-center">
     <app-tournament-structureround [editable]="false" [round]="structure.getRootRound()" [favorites]="competitors"
-      [nameService]="nameService">
+      [nameService]="nameService" [structureEditor]="structureEditor">
     </app-tournament-structureround>
   </div>
 </div>
