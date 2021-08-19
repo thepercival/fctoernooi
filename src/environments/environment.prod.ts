@@ -1,6 +1,6 @@
 // apiurl: 'https://api.fctoernooi.nl/'
 export const environment = {
   production: true,
-  apiurl: 'http://localhost:2998/',
+  apiurl: 'https://api.fctoernooi.nl/',
   apiVersion: '25'
 };
