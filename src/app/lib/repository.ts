@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 export class APIRepository {
 
     protected apiurl: string = environment.apiurl;
+    private apiVersion: string = environment.apiVersion;
 
     constructor() {
     }
@@ -16,7 +17,7 @@ export class APIRepository {
 
     getHeaders(): HttpHeaders {
         let headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
-        headers = headers.append('X-Api-Version', '24');
+        headers = headers.append('X-Api-Version', this.apiVersion);
 
         const token = this.getToken();
         if (token !== undefined) {
