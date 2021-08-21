@@ -16,7 +16,7 @@
       <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellen
     </button>
   </div>
-  <ngb-alert *ngIf="inManualMode()" type="warning">handmatig plannen staat aan</ngb-alert>
+  <ngb-alert *ngIf="userIsAdmin && inManualMode()" type="warning">handmatig plannen staat aan</ngb-alert>
   <div *ngIf="gameDatas.length === 0 && !inManualMode()">
     <ngb-alert class="mt-1" type="info">
       <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
