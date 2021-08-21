@@ -23,6 +23,7 @@ import {
   faEye,
   faClipboardCheck,
   faListOl,
+  faExclamationCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { ClipboardModule } from 'ngx-clipboard';
 import {
@@ -135,7 +136,8 @@ export class AdminModule {
       /* competitors*/ faRandom, faSort,
       /* structure*/ faCompressAlt, faExpandAlt, faTh,
       /* delen */ faClipboardCheck,
-      /* standen */ faListOl
+      /* standen */ faListOl,
+      /* handmatige planningmodus */ faExclamationCircle
       /*faCircle, faListUl, faCogs, faMinus, faInfoCircle, faMedal, faUsers, faSync*/
     );
     library.addIcons(

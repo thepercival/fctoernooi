@@ -58,12 +58,20 @@
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijdplanning
             </h5>
-            <p *ngIf="allPoulesHaveGames" class="card-text">
-              {{dateFormatter.toString(competition.getStartDateTime(),dateFormatter.datetime())}}
-            </p>
-            <p *ngIf="!allPoulesHaveGames" class="card-text">
+
+            <ng-container *ngIf="!allPoulesHaveGames;else second">
               <fa-icon class="text-danger" [icon]="['fas', 'info-circle']"></fa-icon> wordt berekend
-            </p>
+            </ng-container>
+            <ng-template #second>
+              <ng-container *ngIf="hasPlanningEditManualMode;else third">
+                <fa-icon class="text-warning" [icon]="['fas', 'exclamation-circle']"></fa-icon> handmatige planning
+              </ng-container>
+            </ng-template>
+            <ng-template #third>
+              <p class="card-text">
+                {{dateFormatter.toString(competition.getStartDateTime(),dateFormatter.datetime())}}
+              </p>
+            </ng-template>
           </div>
         </div>
         <div *ngIf="isAdmin()" class="card border-secondary pointer" (click)="linkToCompetitionSport()">

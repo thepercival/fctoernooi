@@ -2,7 +2,7 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { League } from 'ngx-sport';
+import { League, PlanningEditMode, RoundNumber } from 'ngx-sport';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { CSSService } from '../../shared/common/cssservice';
@@ -30,6 +30,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     minDateStruct: NgbDateStruct;
     lockerRoomValidator!: LockerRoomValidator;
     hasBegun: boolean = true;
+    hasPlanningEditManualMode: boolean = false;
     allPoulesHaveGames: boolean = false;
 
     constructor(
@@ -63,10 +64,20 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     postNgOnInit() {
         this.lockerRoomValidator = new LockerRoomValidator(this.tournament.getCompetitors(), this.tournament.getLockerRooms());
         const date = new Date();
-        this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
+        const firstRoundNumber = this.structure.getFirstRoundNumber();
+        this.hasBegun = firstRoundNumber.hasBegun();
         this.allPoulesHaveGames = this.structure.allPoulesHaveGames();
+        this.hasPlanningEditManualMode = this.structureHasPlanningEditManualMode(firstRoundNumber);
         this.copyForm.controls.date.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
         this.processing = false;
+    }
+
+    protected structureHasPlanningEditManualMode(roundNumber: RoundNumber): boolean {
+        if (roundNumber.getValidPlanningConfig().getEditMode() === PlanningEditMode.Manual) {
+            return true
+        }
+        const nextRoundNumber = roundNumber.getNext();
+        return nextRoundNumber !== undefined && this.structureHasPlanningEditManualMode(nextRoundNumber);
     }
 
     protected allArranged(): boolean {
@@ -128,7 +139,13 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     getPlanningBorderClass(): string {
-        return this.allPoulesHaveGames ? 'border-secondary' : 'border-danger';
+        if (!this.allPoulesHaveGames) {
+            return 'border-danger';
+        }
+        else if (this.hasPlanningEditManualMode) {
+            return 'border-warning';
+        }
+        return 'border-secondary';
     }
 
     getLockerRoomBorderClass(): string {
