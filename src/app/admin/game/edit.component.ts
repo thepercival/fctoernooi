@@ -304,6 +304,10 @@ export class GameEditComponent extends TournamentComponent {
         if (this.game === undefined) {
             return;
         }
+        if (this.game.getPoule().getNrOfGames() === 1) {
+            this.setAlert('warning', 'de laatste wedstrijd uit de poule kun je niet verwijderen');
+            return;
+        }
         this.processing = true;
         this.setAlert('info', 'de wedstrijd wordt verwijderd');
 

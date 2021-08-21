@@ -16,7 +16,8 @@
       <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellen
     </button>
   </div>
-  <div *ngIf="gameDatas.length === 0">
+  <ngb-alert *ngIf="inManualMode()" type="warning">handmatig plannen staat aan</ngb-alert>
+  <div *ngIf="gameDatas.length === 0 && !inManualMode()">
     <ngb-alert class="mt-1" type="info">
       <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
       <span *ngIf="progressPerc === 0">Het berekenen van de wedstrijdplanning staat in de wachtrij. Een moment geduld
@@ -155,7 +156,7 @@
       </tbody>
     </table>
 
-    <div *ngIf="inManualMode()" class="d-flex justify-content-center">
+    <div *ngIf="inManualMode() && !hasSomeAgainstGameMode()" class="d-flex justify-content-center">
       <button type="button" class="btn btn-outline-primary" (click)="linkToGameAdd()">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon> wedstrijd toevoegen
       </button>
