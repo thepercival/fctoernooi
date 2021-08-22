@@ -93,9 +93,28 @@
 
 <ng-template #contentInfo>
   <table class="table text-white">
-    <tr *ngFor="let pointsCalculation of pointsCalculations">
-      <td class="fw-bold border-info">{{nameService.getPointsCalculationName(pointsCalculation)}}</td>
-      <td class="border-info bg-info">{{getPointsCalculationDescription(pointsCalculation)}}</td>
-    </tr>
+    <tbody>
+      <tr *ngFor="let pointsCalculation of pointsCalculations">
+        <td class="fw-bold border-white">{{getPointsCalculationDef(pointsCalculation)}}</td>
+        <td class="border-white">{{getPointsCalculationDef(pointsCalculation)}}</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td class="fw-bold border-white">voorbeeld</td>
+        <td class="border-white">deelnemer A wint met 6 - 1 van deelnemer B
+          <ul class="list-unstyled">
+            <li>{{getPointsCalculationDef(PointsCalculationAgainstGamePoints)}}: deelnemer A krijgt
+              {{form.value['winPoints']}} punten en
+              deelnemer B 0 punten</li>
+            <li>{{getPointsCalculationDef(PointsCalculationScores)}}: deelnemer A krijgt 6 punten en deelnemer B 1 punt
+            </li>
+            <li>{{getPointsCalculationDef(PointsCalculationBoth)}}: deelnemer A krijgt {{6 + form.value['winPoints']}}
+              punten en deelnemer B 1
+              punt</li>
+          </ul>
+        </td>
+      </tr>
+    </tfoot>
   </table>
 </ng-template>

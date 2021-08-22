@@ -286,6 +286,15 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
             });
         return true;
     }
+
+
+    get PointsCalculationAgainstGamePoints(): PointsCalculation { return PointsCalculation.AgainstGamePoints };
+    get PointsCalculationScores(): PointsCalculation { return PointsCalculation.Scores };
+    get PointsCalculationBoth(): PointsCalculation { return PointsCalculation.Both };
+
+    getPointsCalculationDef(pointsCalculation: PointsCalculation): string {
+        return this.nameService.getPointsCalculationName(pointsCalculation);
+    }
 }
 
 interface AgainstQualifyValidations {
