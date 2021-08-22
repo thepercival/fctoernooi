@@ -13,7 +13,7 @@ export class AppComponent {
   constructor(
     protected myNavigation: MyNavigation
   ) {
-    const preloadElement = document.createElement('link');
+    /*const preloadElement = document.createElement('link');
     preloadElement.rel = 'preload';
     preloadElement.as = 'style';
     preloadElement.href = 'styles.css';
@@ -22,6 +22,6 @@ export class AppComponent {
     const lazyStyleElement = document.createElement('link');
     lazyStyleElement.rel = 'stylesheet';
     lazyStyleElement.href = 'styles.css';
-    document.body.appendChild(lazyStyleElement);
+    document.body.appendChild(lazyStyleElement);*/
   }
 }

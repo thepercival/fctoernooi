@@ -167,12 +167,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     });
   }
 
-  hasSomeAgainstGameMode(): boolean {
-    return this.tournament.getCompetition().getSports().some((competitionSport: CompetitionSport): boolean => {
-      return competitionSport.getVariant() instanceof AgainstSportVariant;
-    });
-  }
-
   isAgainst(game: AgainstGame | TogetherGame): boolean {
     return (game instanceof AgainstGame);
   }
