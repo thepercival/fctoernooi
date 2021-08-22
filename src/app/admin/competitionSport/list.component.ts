@@ -83,7 +83,7 @@ export class CompetitionSportListComponent extends TournamentComponent implement
         /* happy path */(competitionSport: CompetitionSport) => {
           this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
             /* happy path */ roundNumberOut => {
-              this.setAlert('success', 'de sport is verwijderd');
+              this.setAlert('success', 'de sport is toegevoegd');
             },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
             /* onComplete */() => this.processing = false
