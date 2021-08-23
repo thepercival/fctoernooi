@@ -27,12 +27,12 @@
             <span>{{getInputScoreDescription()}}</span>
           </label>
           <div class="col-4">
-            <input [formControl]="scoreControl.home" (ngModelChange)="postScoreControlUpdate()"
+            <input [formControl]="scoreControl.home" (ngModelChange)="postScoreControlUpdate(true)"
               class="form-control max-width-100 {{scoreControl.getValidateClass()}}" type="number">
           </div>
           <div class="col-1 side-splitter">-</div>
           <div class="col-4">
-            <input [formControl]="scoreControl.away" (ngModelChange)="postScoreControlUpdate()"
+            <input [formControl]="scoreControl.away" (ngModelChange)="postScoreControlUpdate(true)"
               class="form-control max-width-100 {{scoreControl.getValidateClass()}}" type="number">
           </div>
         </div>
@@ -40,13 +40,13 @@
           <div class="col-3">
           </div>
           <div class="col-9">
-            <button type="button" class="btn btn-outline-secondary" [disabled]="aScoreIsInvalid()"
-              (click)="addScoreControl(0,0)">
+            <button type="button" class="btn btn-outline-secondary me-1 mt-1" [disabled]="aScoreIsInvalid()"
+              (click)="addScoreControl(0,0, true)">
               <span>voeg {{getCalculateScoreUnitName()}} toe</span>
             </button>
-            <button *ngIf="scoreControls.length > 0" type="button" class="btn btn-sm btn-outline-secondary"
+            <button *ngIf="scoreControls.length > 0" type="button" class="btn btn-outline-secondary mt-1"
               (click)="removeScoreControl()">
-              <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+              <span>verwijder {{getCalculateScoreUnitName()}}</span>
             </button>
           </div>
         </div>

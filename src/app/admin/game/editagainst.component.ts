@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ɵCompiler_compileModuleSync__POST_R3__ } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -12,6 +12,7 @@ import {
     RefereeMapper,
     PlaceMapper,
     GamePhase,
+    AgainstScore,
 } from 'ngx-sport';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -77,8 +78,8 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
 
     protected initScoreControls() {
         this.scoreControls = [];
-        this.getGame().getScores().forEach(score => {
-            this.addScoreControl(score.getHome(), score.getAway());
+        this.getGame().getScores().forEach((score: AgainstScore) => {
+            this.addScoreControl(score.getHome(), score.getAway(), false);
         });
         if (this.scoreControls.length === 0) {
             this.scoreControls.push(new AgainstScoreFormControl(this.firstScoreConfig, 0, 0));
@@ -96,7 +97,7 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
         }
     }
 
-    protected updateCalculateScoreControl() {
+    protected updateCalculateScoreControl(updateWarnings: boolean) {
         if (this.calculateScoreControl === undefined) {
             return;
         }
@@ -112,22 +113,22 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
                 this.calculateScoreControl.away.setValue(this.calculateScoreControl.away.value + 1);
             }
         });
-        this.postScoreControlUpdate();
+        this.postScoreControlUpdate(updateWarnings);
     }
 
-    addScoreControl(home: number, away: number) {
+    addScoreControl(home: number, away: number, updateWarnings: boolean) {
         this.scoreControls.push(new AgainstScoreFormControl(this.firstScoreConfig, home, away));
-        this.postScoreControlUpdate();
+        this.postScoreControlUpdate(updateWarnings);
     }
 
     removeScoreControl() {
         this.scoreControls.pop();
-        this.updateCalculateScoreControl();
+        this.updateCalculateScoreControl(true);
     }
 
     setExtratime(extratime: boolean) {
         if (this.getGame().getScores().length === 0) {
-            this.updateCalculateScoreControl();
+            this.updateCalculateScoreControl(false);
         } else if (extratime === true && this.form.controls.played.value !== true) {
             this.form.controls.played.setValue(true);
         }
@@ -138,9 +139,9 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
         if (played === false) {
             this.form.controls.extratime.setValue(false);
             this.resetScoreControls();
-            this.updateCalculateScoreControl();
+            this.updateCalculateScoreControl(false);
         } else if (this.getGame().getScores().length === 0) {
-            this.updateCalculateScoreControl();
+            this.updateCalculateScoreControl(false);
         }
         super.updateWarningsForEqualQualifiers(this.formToJson());
     }
@@ -173,12 +174,14 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
         return this.saveHelper(this.formToJson());
     }
 
-    postScoreControlUpdate() {
+    postScoreControlUpdate(updateWarning: boolean) {
         if (this.pristineScore && this.getGame().getScores().length === 0) {
             this.form.controls.played.setValue(true);
         }
         this.pristineScore = false;
-        this.updateWarningsForEqualQualifiers(this.formToJson());
+        if (updateWarning) {
+            this.updateWarningsForEqualQualifiers(this.formToJson());
+        }
     }
 }
 
