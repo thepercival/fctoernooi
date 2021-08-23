@@ -84,6 +84,7 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
         if (this.scoreControls.length === 0) {
             this.scoreControls.push(new AgainstScoreFormControl(this.firstScoreConfig, 0, 0));
         }
+        this.updateWarningsForEqualQualifiers(this.formToJson());
     }
 
     aScoreIsInvalid() {
