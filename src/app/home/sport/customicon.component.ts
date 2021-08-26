@@ -24,9 +24,7 @@ export class SportIconCustomComponent implements OnInit {
             || customId === TCustomSport.Tennis
             || customId === TCustomSport.Badminton
             || customId === TCustomSport.Squash
-            || customId === TCustomSport.TennisDouble
-            || customId === TCustomSport.BadmintonDouble
-            || customId === TCustomSport.SquashDouble
+            || customId === TCustomSport.Padel
             || customId === TCustomSport.Hockey
             || customId === TCustomSport.Korfball) {
             return <IconPrefix>'fac';
@@ -38,10 +36,7 @@ export class SportIconCustomComponent implements OnInit {
         switch (customId) {
             case TCustomSport.Baseball: { return 'baseball-ball'; }
             case TCustomSport.Basketball: { return 'basketball-ball'; }
-            case TCustomSport.Badminton:
-            case TCustomSport.BadmintonDouble: {
-                return <IconName>'badminton';
-            }
+            case TCustomSport.Badminton: { return <IconName>'badminton'; }
             case TCustomSport.Chess: { return 'chess'; }
             case TCustomSport.Darts: { return <IconName>'darts'; }
             case TCustomSport.ESports: { return 'gamepad'; }
@@ -49,17 +44,11 @@ export class SportIconCustomComponent implements OnInit {
             case TCustomSport.Hockey: { return <IconName>'hockey'; }
             case TCustomSport.Korfball: { return <IconName>'korfball'; }
             case TCustomSport.Tennis:
-            case TCustomSport.TennisDouble: {
+            case TCustomSport.Padel: {
                 return <IconName>'tennis-custom';
             }
-            case TCustomSport.TableTennis:
-            case TCustomSport.TableTennisDouble: {
-                return 'table-tennis';
-            }
-            case TCustomSport.Squash:
-            case TCustomSport.SquashDouble: {
-                return <IconName>'squash';
-            }
+            case TCustomSport.TableTennis: { return 'table-tennis'; }
+            case TCustomSport.Squash: { return <IconName>'squash'; }
             case TCustomSport.Volleyball: { return 'volleyball-ball'; }
             case TCustomSport.IceHockey: { return 'hockey-puck'; }
         }
@@ -84,8 +73,5 @@ enum TCustomSport {
     IceHockey,
     Shuffleboard,
     Jass,
-    BadmintonDouble,
-    SquashDouble,
-    TennisDouble,
-    TableTennisDouble,
+    Padel,
 }

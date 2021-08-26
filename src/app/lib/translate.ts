@@ -25,6 +25,7 @@ export class TranslateService {
             case CustomSport.IceHockey: { return 'ijshockey'; }
             case CustomSport.Shuffleboard: { return 'sjoelen'; }
             case CustomSport.Jass: { return 'klaverjassen'; }
+            case CustomSport.Padel: { return 'padel'; }
         }
         return sport.getName();
     }
@@ -40,7 +41,10 @@ export class TranslateService {
     protected getFirstScoreNameSingular(customId: CustomSport): string {
         switch (customId) {
             case CustomSport.Darts: { return 'leg'; }
-            case CustomSport.Tennis: { return 'game'; }
+            case CustomSport.Tennis:
+            case CustomSport.Padel: {
+                return 'game';
+            }
             case CustomSport.Football:
             case CustomSport.Hockey: {
                 return 'goal';
@@ -58,10 +62,7 @@ export class TranslateService {
             case CustomSport.Squash:
             case CustomSport.TableTennis:
             case CustomSport.Tennis:
-            case CustomSport.BadmintonDouble:
-            case CustomSport.SquashDouble:
-            case CustomSport.TableTennisDouble:
-            case CustomSport.TennisDouble:
+            case CustomSport.Padel:
             case CustomSport.Volleyball:
             case CustomSport.Darts: {
                 return 'set';
@@ -85,7 +86,7 @@ export class TranslateService {
         switch (customId) {
             case CustomSport.Darts: { return 'legs'; }
             case CustomSport.Tennis:
-            case CustomSport.TennisDouble: {
+            case CustomSport.Padel: {
                 return 'games';
             }
             case CustomSport.Football:
@@ -105,10 +106,7 @@ export class TranslateService {
             case CustomSport.Squash:
             case CustomSport.TableTennis:
             case CustomSport.Tennis:
-            case CustomSport.BadmintonDouble:
-            case CustomSport.SquashDouble:
-            case CustomSport.TableTennisDouble:
-            case CustomSport.TennisDouble:
+            case CustomSport.Padel:
             case CustomSport.Volleyball:
             case CustomSport.Darts: {
                 return 'sets';
@@ -137,14 +135,11 @@ export class TranslateService {
             case CustomSport.Badminton:
             case CustomSport.Squash:
             case CustomSport.Tennis:
-            case CustomSport.BadmintonDouble:
-            case CustomSport.SquashDouble:
-            case CustomSport.TennisDouble:
+            case CustomSport.Padel:
                 {
                     return 'baan';
                 }
             case CustomSport.TableTennis:
-            case CustomSport.TableTennisDouble:
             case CustomSport.Jass:
                 {
                     return 'tafel';

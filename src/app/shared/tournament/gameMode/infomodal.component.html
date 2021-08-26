@@ -9,29 +9,33 @@
             <col>
             <col class="w-25">
         </colgroup>
-        <tr>
-            <th></th>
-            <th *ngFor="let def of gameModeDefinitions" class="fw-bold border-info">
-                <span>{{getName(def.value)}}</span>
-            </th>
-        </tr>
-        <tr>
-            <td>voorbeeld</td>
-            <td *ngFor="let def of gameModeDefinitions">
-                {{def.examples}}
-            </td>
-        </tr>
-        <tr>
-            <td>punten-telling</td>
-            <td *ngFor="let def of gameModeDefinitions">
-                {{def.scoreConfig}}
-            </td>
-        </tr>
-        <tr>
-            <td>aantal wedstrijden</td>
-            <td *ngFor="let def of gameModeDefinitions">
-                {{def.gameAmount}}
-            </td>
-        </tr>
+        <thead>
+            <tr>
+                <th></th>
+                <th *ngFor="let def of gameModeDefinitions" class="fw-bold">
+                    <span>{{getName(def.value)}}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="fw-bold">voorbeeld</td>
+                <td *ngFor="let def of gameModeDefinitions">
+                    {{def.examples}}
+                </td>
+            </tr>
+            <tr>
+                <td class="fw-bold">punten-telling</td>
+                <td *ngFor="let def of gameModeDefinitions">
+                    {{def.scoreConfig}}
+                </td>
+            </tr>
+            <tr>
+                <td class="fw-bold">aantal wedstrijden</td>
+                <td *ngFor="let def of gameModeDefinitions">
+                    {{def.gameAmount}}
+                </td>
+            </tr>
+        </tbody>
     </table>
 </div>

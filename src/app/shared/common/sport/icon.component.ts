@@ -42,9 +42,7 @@ export class SportIconComponent implements OnInit {
             || customId === CustomSport.Tennis
             || customId === CustomSport.Badminton
             || customId === CustomSport.Squash
-            || customId === CustomSport.TennisDouble
-            || customId === CustomSport.BadmintonDouble
-            || customId === CustomSport.SquashDouble
+            || customId === CustomSport.Padel
             || customId === CustomSport.Hockey
             || customId === CustomSport.Korfball) {
             return <IconPrefix>'fac';
@@ -56,10 +54,7 @@ export class SportIconComponent implements OnInit {
         switch (customId) {
             case CustomSport.Baseball: { return 'baseball-ball'; }
             case CustomSport.Basketball: { return 'basketball-ball'; }
-            case CustomSport.Badminton:
-            case CustomSport.BadmintonDouble: {
-                return <IconName>'badminton';
-            }
+            case CustomSport.Badminton: { return <IconName>'badminton'; }
             case CustomSport.Chess: { return 'chess'; }
             case CustomSport.Darts: { return <IconName>'darts'; }
             case CustomSport.ESports: { return 'gamepad'; }
@@ -67,17 +62,11 @@ export class SportIconComponent implements OnInit {
             case CustomSport.Hockey: { return <IconName>'hockey'; }
             case CustomSport.Korfball: { return <IconName>'korfball'; }
             case CustomSport.Tennis:
-            case CustomSport.TennisDouble: {
+            case CustomSport.Padel: {
                 return <IconName>'tennis-custom';
             }
-            case CustomSport.TableTennis:
-            case CustomSport.TableTennisDouble: {
-                return 'table-tennis';
-            }
-            case CustomSport.Squash:
-            case CustomSport.SquashDouble: {
-                return <IconName>'squash';
-            }
+            case CustomSport.TableTennis: { return 'table-tennis'; }
+            case CustomSport.Squash: { return <IconName>'squash'; }
             case CustomSport.Volleyball: { return 'volleyball-ball'; }
             case CustomSport.IceHockey: { return 'hockey-puck'; }
         }
