@@ -26,9 +26,9 @@
               <th title="aantal">
                 <app-tournament-icon class="d-none d-sm-inline" name="soccer-field"></app-tournament-icon> velden
               </th>
-              <th class="text-end" *ngIf="!hasBegun && !maxReached">
-                <button type="button" class="btn btn-sm btn-primary" (click)="showCreateSportWithFields = true"
-                  [disabled]="processing">
+              <th class="text-end" *ngIf="!hasBegun">
+                <button *ngIf="!maxReached" type="button" class="btn btn-sm btn-primary"
+                  (click)="showCreateSportWithFields = true" [disabled]="processing">
                   <fa-icon [icon]="['fas', 'plus']"></fa-icon>
                 </button>
               </th>
@@ -46,9 +46,9 @@
                 <span>{{competitionSport.getSport().getName()}}</span>
               </td>
               <td>{{competitionSport.getFields().length}}</td>
-              <td class="text-end" *ngIf="!hasBegun && competitionSports.length > 1">
-                <button type="button" class="btn btn-sm btn-danger" [disabled]="processing"
-                  (click)="openRemoveModal(content, competitionSport)">
+              <td class="text-end" *ngIf="!hasBegun">
+                <button *ngIf="competitionSports.length > 1" type="button" class="btn btn-sm btn-danger"
+                  [disabled]="processing" (click)="openRemoveModal(content, competitionSport)">
                   <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
                 </button>
               </td>
