@@ -71,9 +71,9 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
         if (this.firstScoreConfig !== this.firstScoreConfig.getCalculate()) {
             this.calculateScoreControl = new AgainstScoreFormControl(this.firstScoreConfig.getCalculate(), 0, 0, true);
         }
+        this.initScoreControls();
         this.form.controls.played.setValue(this.game?.getState() === State.Finished);
         this.form.controls.extratime.setValue(this.getGame().getFinalPhase() === GamePhase.ExtraTime);
-        this.initScoreControls();
     }
 
     protected initScoreControls() {
@@ -176,7 +176,7 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
     }
 
     postScoreControlUpdate(updateWarning: boolean) {
-        if (this.pristineScore && this.getGame().getScores().length === 0) {
+        if (this.pristineScore && this.form.controls.played.value === false) {
             this.form.controls.played.setValue(true);
         }
         this.pristineScore = false;
