@@ -98,7 +98,8 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="!form.value['manual'] && bothSelfRefereeAvailable()" class="row mb-3">
+                <div *ngIf="!form.value['manual'] && form.value['selfReferee'] && bothSelfRefereeAvailable()"
+                    class="row mb-3">
                     <label for="selfRefereeSamePoule" class="col-7 col-form-label">scheidsrechter in eigen poule</label>
                     <div class="col-5">
                         <div class="form-check form-switch">

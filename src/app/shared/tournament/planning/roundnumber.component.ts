@@ -253,7 +253,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private hasCompetitor(place: Place): boolean {
-    return this.getCompetitor(place) === undefined;
+    return this.getCompetitor(place) !== undefined;
   }
 
   somePlaceHasACompetitor(game: Game): boolean {
