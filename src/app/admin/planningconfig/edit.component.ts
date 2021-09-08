@@ -481,9 +481,11 @@ class PlanningActionCalculator {
         return this.roundNumber.getCompetitionSports().some((competitionSport: CompetitionSport) => {
             const jsonGameAmountConfig = getGameAmountConfig(competitionSport);
             const gameAmountConfig = this.roundNumber.getGameAmountConfig(competitionSport);
-            return jsonGameAmountConfig && gameAmountConfig
-                && (jsonGameAmountConfig.amount !== gameAmountConfig.getAmount()
-                    || jsonGameAmountConfig.nrOfGamesPerPlaceMixed !== gameAmountConfig.getNrOfGamesPerPlaceMixed());
+            if (gameAmountConfig === undefined) {
+                return true;
+            }
+            return jsonGameAmountConfig && (jsonGameAmountConfig.amount !== gameAmountConfig.getAmount()
+                || jsonGameAmountConfig.nrOfGamesPerPlaceMixed !== gameAmountConfig.getNrOfGamesPerPlaceMixed());
         });
     }
 
