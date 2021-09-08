@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { AgainstSportVariant, AllInOneGameSportVariant, GameMode, GamePlaceStrategy, NameService, SingleSportVariant, Sport, VoetbalRange } from 'ngx-sport';
+import { AgainstSportVariant, AllInOneGameSportVariant, CustomSport, GameMode, GamePlaceStrategy, NameService, SingleSportVariant, Sport, VoetbalRange } from 'ngx-sport';
 
 import { IAlert } from '../../shared/common/alert';
 import { CSSService } from '../../shared/common/cssservice';
@@ -23,6 +23,7 @@ export class CreateSportWithFieldsComponent implements OnInit {
     @Output() goToPrevious = new EventEmitter<void>();
     processing = true;
     form: FormGroup;
+    public currentCustomId: CustomSport | 0 = 0;
     public alert: IAlert | undefined;
     public gameModes: GameMode[] = [GameMode.Single, GameMode.Against, GameMode.AllInOneGame];
     public nrOfGamePlacesOptions: NrOfGamePlacesOption[] = [];
@@ -56,6 +57,7 @@ export class CreateSportWithFieldsComponent implements OnInit {
         this.nrOfGamePlacesOptions = this.getNrOfGamePlacesOptions(newSport.getDefaultGameMode());
         this.gameAmountRange = this.defaultService.getGameAmountRange(newSport.getDefaultGameMode());
         const nrOfFields = 2;
+        this.currentCustomId = newSport.getCustomId();
         this.form = new FormGroup({
             sportName: new FormControl({
                 value: this.translate.getSportName(newSport),
@@ -71,6 +73,9 @@ export class CreateSportWithFieldsComponent implements OnInit {
             // Single, AllInOneGame
             gameAmount: new FormControl(1),
         });
+        if (newSport.getCustomId() !== 0) {
+            this.form.controls.gameMode.disable();
+        }
         this.sport = newSport;
     }
 

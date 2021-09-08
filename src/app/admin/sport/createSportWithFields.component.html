@@ -45,7 +45,7 @@
       </select>
     </div>
   </div>
-  <div *ngIf="form.value['gameMode'] === Against" class="row mb-3">
+  <div *ngIf="currentCustomId !== 0 && form.controls.gameMode.value === Against" class="row mb-3">
     <label for="mixed" class="col-6 col-form-label">
       van samenstelling wisselende teams
     </label>
@@ -56,7 +56,7 @@
       </div>
     </div>
   </div>
-  <div *ngIf="form.value['gameMode'] === Against && form.value['mixed']" class="row mb-3">
+  <div *ngIf="currentCustomId !== 0 && form.value['gameMode'] === Against && form.value['mixed']" class="row mb-3">
     <label for="mixed" class="col-6 col-form-label">
       aantal deelnemers per wedstrijd
     </label>
