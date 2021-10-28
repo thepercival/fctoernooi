@@ -13,7 +13,11 @@
       class="btn {{getQualifyGroupBtnClass(target)}}" (click)="targetCollapsed[target] = !targetCollapsed[target]">
       <fa-icon *ngIf="areSomeQualifyGroupsEditable(target)" class="me-1" [icon]="IconStructure"></fa-icon>
       <span>{{nameService.getQualifyTargetDescription(target,true)}}</span>
-      <span *ngIf="parentRound.isRoot()">: {{parentRound.getNrOfPlacesChildren(target)}}</span>
+      <span *ngIf="parentRound.isRoot() && !areSomeQualifyGroupsEditable(target)">:
+        {{parentRound.getNrOfPlacesChildren(target)}}</span>
+      <fa-icon *ngIf="areSomeQualifyGroupsEditable(target)" class="ms-1" [icon]="['fas', 'pencil-alt']">
+      </fa-icon>
+
     </button>
     <div class="btn-group-vertical d-flex flex-column {{getTargetDirectionClass(target)}}" role="group"
       *ngIf="areSomeQualifyGroupsEditable(target) && !targetCollapsed[target]">

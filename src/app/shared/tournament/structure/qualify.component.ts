@@ -46,7 +46,7 @@ export class StructureQualifyComponent {
             }
             this.nameService.resetStructure();
             this.roundNumberChanged.emit(this.parentRound.getNumber());
-        } catch (e) {
+        } catch (e: any) {
             this.setAlert('danger', e.message);
         }
     }
@@ -88,7 +88,7 @@ export class StructureQualifyComponent {
             }
             this.nameService.resetStructure();
             this.roundNumberChanged.emit(this.parentRound.getNumber());
-        } catch (e) {
+        } catch (e: any) {
             this.setAlert('danger', e.message);
         }
     }
@@ -99,7 +99,7 @@ export class StructureQualifyComponent {
             this.structureEditor.splitQualifyGroupFrom(singleRule.getGroup(), singleRule);
             this.nameService.resetStructure();
             this.roundNumberChanged.emit(this.parentRound.getNumber());
-        } catch (e) {
+        } catch (e: any) {
             this.setAlert('danger', e.message);
         }
     }
@@ -114,7 +114,7 @@ export class StructureQualifyComponent {
             this.structureEditor.mergeQualifyGroups(group, next);
             this.nameService.resetStructure();
             this.roundNumberChanged.emit(this.parentRound.getNumber());
-        } catch (e) {
+        } catch (e: any) {
             this.setAlert('danger', e.message);
         }
     }
