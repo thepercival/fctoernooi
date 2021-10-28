@@ -1,11 +1,4 @@
-<table class="{{fixed ? 'table-fixed' : 'table'}} table-striped mb-0">
-    <colgroup>
-        <col class="width-10">
-        <col class="width-30">
-        <col *ngFor="let competitionSport of competitionSports; let counter = index"
-            class="{{viewPortManager.getClass(counter+1)}}">
-        <col>
-    </colgroup>
+<table class="table table-striped mb-0">
     <thead>
         <tr>
             <th class="text-end ps-0"><span class="badge badge-rank pb-0">pl</span></th>

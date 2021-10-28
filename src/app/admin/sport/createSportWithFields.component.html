@@ -90,7 +90,7 @@
         formControlName="nrOfFields" [min]="gameAmountRange.min" [max]="gameAmountRange.max">
     </div>
   </div> -->
-  <div *ngIf="form.value['gameMode'] === Single" class="row mb-3">
+  <div *ngIf="form.controls.gameMode.value === Single" class="row mb-3">
     <label for="nrOfGamePlaces" class="col-6 col-form-label">
       aantal deelnemers per wedstrijd (planning)
     </label>

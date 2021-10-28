@@ -32,13 +32,6 @@
   <ngb-alert *ngIf="refreshingData" type="info">de uitslagen worden bijgewerk</ngb-alert>
   <div *ngIf="gameDatas.length > 0">
     <table class="table">
-      <colgroup>
-        <col *ngIf="needsRanking">
-        <col *ngIf="!needsRanking">
-        <col *ngIf="planningConfig.getEnableTime()">
-        <col span="3">
-        <col *ngIf="hasReferees" class="d-none d-sm-table-cell text-end">
-      </colgroup>
       <thead>
         <tr>
           <!-- poule -->

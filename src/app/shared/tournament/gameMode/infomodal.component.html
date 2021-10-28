@@ -4,14 +4,9 @@
 </div>
 <div class="modal-body">
     <table class="table fixed text-white">
-        <colgroup>
-            <col class="w-25">
-            <col>
-            <col class="w-25">
-        </colgroup>
         <thead>
             <tr>
-                <th></th>
+                <th class="w-30"></th>
                 <th *ngFor="let def of gameModeDefinitions" class="fw-bold">
                     <span>{{getName(def.value)}}</span>
                 </th>

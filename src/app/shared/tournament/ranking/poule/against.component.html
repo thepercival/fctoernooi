@@ -1,11 +1,4 @@
-<table class="{{fixed ? 'table-fixed' : 'table'}} table-striped mb-0">
-    <colgroup>
-        <col>
-        <col class="width-30">
-        <col>
-        <col>
-        <col>
-    </colgroup>
+<table class="table table-striped mb-0">
     <thead>
         <tr>
             <th class="text-end ps-0"><span class="badge badge-rank pb-0">pl</span></th>
@@ -23,7 +16,7 @@
                     <span
                         class="badge badge-rank {{getQualifyPlaceClass(sportRankingItem)}}">{{sportRankingItem.getUniqueRank()}}</span>
                 </td>
-                <td class="text-break ps-0"
+                <td class="text-break ps-0  width-30"
                     [ngClass]="{ 'favitem': favorites.hasCompetitor(competitorMap.getCompetitor(sportRankingItem.getPlaceLocation())) }">
                     {{nameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true)}}
                 </td>

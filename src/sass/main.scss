@@ -22,19 +22,13 @@ $enable-responsive-font-sizes: true !default;
     @extend .fw-bold;
 }
 
-table.table-fixed {
-    @extend .table;
-    table-layout: fixed;
-    width: auto;
-}
-
 hr {
   border-top: 1px solid rgba(136, 136, 136, 0.30);
 }
 
-.table th {
-  border-top-width: 0px;
-}
+// .table th {
+//   border-top-width: 0px;
+// }
 
 html {
   position: relative;
@@ -234,6 +228,7 @@ span.badge-rank {
     border-style: solid;
     border-color: white;
     border-width: 1px;
+    font-size: 100%;
 }
 // form-group
 .form-switch {
