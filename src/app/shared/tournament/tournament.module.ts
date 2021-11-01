@@ -25,7 +25,6 @@ import { facStructure, facReferee, facScoreboard, facSoccerField } from './icons
 import { CompetitionSportRouter } from './competitionSport.router';
 import { InfoModalComponent } from './infomodal/infomodal.component';
 import { AgainstQualifyInfoComponent } from './againstQualifyConfig/info.component';
-import { GameModeInfoModalComponent } from './gameMode/infomodal.component';
 import { TournamentIconComponent } from './icon/icon.component';
 import { PouleRankingComponent } from './ranking/poule.component';
 import { PouleRankingSportsComponent } from './ranking/poule/sports.component';
@@ -38,7 +37,6 @@ import { PouleRankingTogetherComponent } from './ranking/poule/together.componen
     PouleRankingModalComponent,
     CompetitorChooseModalComponent,
     EndRankingComponent,
-    GameModeInfoModalComponent,
     InfoModalComponent,
     LockerRoomsComponent, LockerRoomComponent,
     NameModalComponent,
@@ -66,7 +64,6 @@ import { PouleRankingTogetherComponent } from './ranking/poule/together.componen
   ],
   exports: [
     EndRankingComponent,
-    GameModeInfoModalComponent,
     InfoModalComponent,
     LockerRoomsComponent,
     NameModalComponent,

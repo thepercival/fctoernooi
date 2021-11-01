@@ -72,6 +72,7 @@ import { CreateSportWithFieldsComponent } from './sport/createSportWithFields.co
 import { SportToAddComponent } from './sport/toAdd.component';
 import { GameBaseEditComponent } from './game/editbase.component';
 import { GameAddComponent } from './game/add.component';
+import { GameModeModalComponent } from './gameMode/modal.component';
 
 @NgModule({
   imports: [
@@ -120,6 +121,7 @@ import { GameAddComponent } from './game/add.component';
     ScoreTogetherCardComponent,
     ShareModalComponent,
     StructureSelectRoundComponent,
+    GameModeModalComponent,
   ],
   providers: [
     CompetitionSportService,

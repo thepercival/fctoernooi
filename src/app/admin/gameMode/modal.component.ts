@@ -1,13 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { GameMode, NameService } from 'ngx-sport';
 
 @Component({
-    selector: 'app-ngbd-modal-gamemodeinfo',
-    templateUrl: './infomodal.component.html',
-    styleUrls: ['./infomodal.component.scss']
+    selector: 'app-modal-gamemode',
+    templateUrl: './modal.component.html',
+    styleUrls: ['./modal.component.scss']
 })
-export class GameModeInfoModalComponent {
+export class GameModeModalComponent {
+    @Input() defaultGameMode: GameMode | undefined;
     public gameModeDefinitions: GameModeOption[];
     private nameService: NameService;
 

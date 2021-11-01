@@ -5,7 +5,7 @@ import { AgainstSportVariant, AllInOneGameSportVariant, CustomSport, GameMode, G
 import { IAlert } from '../../shared/common/alert';
 import { CSSService } from '../../shared/common/cssservice';
 import { TranslateService } from '../../lib/translate';
-import { GameModeInfoModalComponent } from '../../shared/tournament/gameMode/infomodal.component';
+import { GameModeModalComponent } from '../gameMode/modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
 
@@ -25,6 +25,7 @@ export class CreateSportWithFieldsComponent implements OnInit {
     form: FormGroup;
     public alert: IAlert | undefined;
     public gameModes: GameMode[] = [GameMode.Single, GameMode.Against, GameMode.AllInOneGame];
+    public selectedGameMode!: GameMode;
     public nrOfGamePlacesOptions: NrOfGamePlacesOption[] = [];
     public gameAmountRange!: VoetbalRange;
     public nameService!: NameService;
@@ -53,6 +54,7 @@ export class CreateSportWithFieldsComponent implements OnInit {
     }
 
     sportChanged(newSport: Sport) {
+        console.log(newSport);
         this.nrOfGamePlacesOptions = this.getNrOfGamePlacesOptions(newSport.getDefaultGameMode());
         this.gameAmountRange = this.defaultService.getGameAmountRange(newSport.getDefaultGameMode());
         const nrOfFields = 2;
@@ -62,7 +64,10 @@ export class CreateSportWithFieldsComponent implements OnInit {
                 disabled: true
             }, Validators.required),
             nrOfFields: new FormControl(nrOfFields),
-            gameMode: new FormControl(newSport.getDefaultGameMode()),
+            gameMode: new FormControl({
+                value: this.nameService.getGameModeName(newSport.getDefaultGameMode()),
+                disabled: true
+            }, Validators.required),
             // Against
             mixed: new FormControl(newSport.getDefaultNrOfSidePlaces() > 1),
             nrOfHomePlaces: new FormControl(newSport.getDefaultNrOfSidePlaces()),
@@ -74,6 +79,7 @@ export class CreateSportWithFieldsComponent implements OnInit {
         if (newSport.getCustomId() !== 0) {
             this.form.controls.gameMode.disable();
         }
+        this.selectedGameMode = newSport.getDefaultGameMode();
         this.sport = newSport;
     }
 
@@ -115,9 +121,9 @@ export class CreateSportWithFieldsComponent implements OnInit {
     }
 
     protected formToVariant(sport: Sport): SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant {
-        if (this.form.controls.gameMode.value === GameMode.Single) {
+        if (this.selectedGameMode === GameMode.Single) {
             return new SingleSportVariant(sport, this.form.controls.nrOfGamePlaces.value, this.form.controls.gameAmount.value);
-        } else if (this.form.controls.gameMode.value === GameMode.Against) {
+        } else if (this.selectedGameMode === GameMode.Against) {
             let home = this.form.controls.nrOfHomePlaces.value;
             let away = this.form.controls.nrOfAwayPlaces.value;
             if (away < home) {
@@ -139,7 +145,17 @@ export class CreateSportWithFieldsComponent implements OnInit {
     get Randomly(): GamePlaceStrategy { return GamePlaceStrategy.RandomlyAssigned; }
 
     openGameModeInfoModal() {
-        this.modalService.open(GameModeInfoModalComponent, { windowClass: 'info-modal' });
+        // const modalRef = this.modalService.open(RoundsSelectorModalComponent);
+        // modalRef.componentInstance.structure = this.structure;
+        this.modalService.open(GameModeModalComponent, { windowClass: 'info-modal' });
+    }
+
+    openGameModeChooseModal() {
+        const modalRef = this.modalService.open(GameModeModalComponent);
+        modalRef.componentInstance.defaultGameMode = this.selectedGameMode;
+        modalRef.result.then((gameMode: GameMode) => {
+            this.selectedGameMode = gameMode;
+        }, (reason) => { });
     }
 
     // getCreationStrategy(sport: Sport): GameCreationStrategy {

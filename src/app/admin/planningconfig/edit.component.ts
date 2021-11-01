@@ -33,7 +33,6 @@ import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.
 import { GameAmountConfigControl } from '../gameAmountConfig/edit.component';
 import { GameAmountConfigRepository } from '../../lib/ngx-sport/gameAmountConfig/repository';
 import { forkJoin, Observable, Subject } from 'rxjs';
-import { GameModeInfoModalComponent } from '../../shared/tournament/gameMode/infomodal.component';
 import { debounceTime } from 'rxjs/operators';
 
 @Component({
@@ -210,10 +209,6 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         if (!extension && this.form.controls.minutesPerGameExt.value > 0) {
             this.form.controls.minutesPerGameExt.setValue(0);
         }
-    }
-
-    openGameModeInfoModal() {
-        this.modalService.open(GameModeInfoModalComponent, { windowClass: 'info-modal' });
     }
 
     changedEditMode(modalContent: TemplateRef<any>) {

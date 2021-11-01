@@ -1,14 +1,16 @@
 <div class="modal-header border-bottom-0">
-    <h4 class="modal-title">wedstrijdmodi</h4>
+    <h4 class="modal-title">{{defaultGameMode ? 'kies wedstrijdmodus' : 'wedstrijdmodi'}}</h4>
     <button type="button" class="btn-close" aria-label="sluiten" (click)="activeModal.dismiss('close')"></button>
 </div>
 <div class="modal-body">
-    <table class="table fixed text-white">
+    <table class="table fixed" [ngClass]="{'text-white': !defaultGameMode }">
         <thead>
             <tr>
                 <th class="w-30"></th>
                 <th *ngFor="let def of gameModeDefinitions" class="fw-bold">
-                    <span>{{getName(def.value)}}</span>
+                    <button type="button" class="btn btn{{def.value === defaultGameMode ? '' : '-outline'}}-primary"
+                        data-dismiss="modal" (click)="activeModal.close(def.value)">
+                        {{getName(def.value)}}</button>
                 </th>
             </tr>
         </thead>
