@@ -8,8 +8,10 @@
             <tr>
                 <th class="w-30"></th>
                 <th *ngFor="let def of gameModeDefinitions" class="fw-bold">
-                    <button type="button" class="btn btn{{def.value === defaultGameMode ? '' : '-outline'}}-primary"
-                        data-dismiss="modal" (click)="activeModal.close(def.value)">
+                    <span *ngIf="!defaultGameMode">{{getName(def.value)}}</span>
+                    <button *ngIf="defaultGameMode" type="button"
+                        class="btn btn{{def.value === defaultGameMode ? '' : '-outline'}}-primary" data-dismiss="modal"
+                        (click)="activeModal.close(def.value)">
                         {{getName(def.value)}}</button>
                 </th>
             </tr>

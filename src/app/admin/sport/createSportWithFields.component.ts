@@ -54,7 +54,6 @@ export class CreateSportWithFieldsComponent implements OnInit {
     }
 
     sportChanged(newSport: Sport) {
-        console.log(newSport);
         this.nrOfGamePlacesOptions = this.getNrOfGamePlacesOptions(newSport.getDefaultGameMode());
         this.gameAmountRange = this.defaultService.getGameAmountRange(newSport.getDefaultGameMode());
         const nrOfFields = 2;
@@ -154,6 +153,7 @@ export class CreateSportWithFieldsComponent implements OnInit {
         const modalRef = this.modalService.open(GameModeModalComponent);
         modalRef.componentInstance.defaultGameMode = this.selectedGameMode;
         modalRef.result.then((gameMode: GameMode) => {
+            this.form.controls.gameMode.setValue(this.nameService.getGameModeName(gameMode));
             this.selectedGameMode = gameMode;
         }, (reason) => { });
     }

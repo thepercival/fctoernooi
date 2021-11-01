@@ -62,7 +62,7 @@
       </div>
     </div>
   </div>
-  <div *ngIf="form.value['mixed']" class="row mb-3">
+  <div *ngIf="selectedGameMode === Against && form.controls.mixed.value" class="row mb-3">
     <label for="mixed" class="col-4 col-form-label">
       aantal deelnemers per wedstrijd
     </label>
@@ -97,10 +97,10 @@
     </div>
   </div> -->
   <div *ngIf="selectedGameMode === Single" class="row mb-3">
-    <label for="nrOfGamePlaces" class="col-6 col-form-label">
+    <label for="nrOfGamePlaces" class="col-4 col-form-label">
       aantal deelnemers per wedstrijd (planning)
     </label>
-    <div class="col-6">
+    <div class="col-8">
       <input type="number" class="form-control"
         [ngClass]="{ 'is-invalid': form.controls.nrOfGamePlaces.invalid, 'is-valid': form.controls.nrOfGamePlaces.valid}"
         formControlName="nrOfGamePlaces" [min]="minNrOfGamePlaces" [max]="maxNrOfGamePlaces">
