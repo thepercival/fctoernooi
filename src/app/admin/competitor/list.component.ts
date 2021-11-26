@@ -197,7 +197,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
       const rootRound = this.structure.getRootRound();
       const addedPlace = this.structureEditor.addPlaceToRootRound(rootRound);
       this.saveStructure('pouleplek ' + this.nameService.getPlaceName(addedPlace) + ' is toegevoegd');
-    } catch (e) {
+    } catch (e: any) {
       this.setAlert('danger', e.message);
     }
   }
@@ -279,7 +279,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
       this.structureEditor.removePlaceFromRootRound(rootRound);
       const singledoubleIs = competitor ? 'zijn' : 'is';
       this.saveStructure('een pouleplek' + competitor + ' ' + singledoubleIs + ' verwijderd');
-    } catch (e) {
+    } catch (e: any) {
       this.processing = false;
       this.setAlert('danger', e.message);
     }

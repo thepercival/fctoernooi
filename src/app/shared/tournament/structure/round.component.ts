@@ -43,7 +43,7 @@ export class StructureRoundComponent implements OnInit {
       }
       this.nameService.resetStructure();
       this.roundNumberChanged.emit(this.round.getNumber());
-    } catch (e) {
+    } catch (e: any) {
       this.setAlert('danger', e.message);
     }
   }
