@@ -41,13 +41,16 @@ export class AuthorizationListComponent extends TournamentComponent implements O
 
     initAuthorizations() {
         this.invitationRepository.getObjects(this.tournament)
-            .subscribe(
-            /* happy path */ invitations => {
+            .subscribe({
+                next: (invitations: TournamentInvitation[]) => {
                     this.invitations = invitations
                     this.processing = false;
                 },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
-            );
+                error: (e) => {
+                    this.setAlert('danger', e); this.processing = false;
+                }
+            });
+
     }
 
     getAssignableRoles(authorization: TournamentAuthorization): TournamentAuthorizationRole[] {
@@ -117,26 +120,27 @@ export class AuthorizationListComponent extends TournamentComponent implements O
             this.processing = true;
         if (authorization instanceof TournamentUser) {
             this.tournamentUserRepository.removeObject(<TournamentUser>authorization)
-                .subscribe(
-                /* happy path */ res => {
-                        this.processing = false;
-
-                    },
-                /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
-                );
+                .subscribe({
+                    next: () => this.processing = false,
+                    error: (e) => {
+                        this.setAlert('danger', e); this.processing = false;
+                    }
+                });
         } else {
             const invitation = <TournamentInvitation>authorization;
             this.invitationRepository.removeObject(invitation)
-                .subscribe(
-                /* happy path */ res => {
+                .subscribe({
+                    next: () => {
                         const idx = this.invitations.indexOf(invitation);
                         if (idx >= 0) {
                             this.invitations.splice(idx, 1);
                         }
                         this.processing = false;
                     },
-                /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
-                );
+                    error: (e) => {
+                        this.setAlert('danger', e); this.processing = false;
+                    }
+                });
         }
     }
 

@@ -47,15 +47,16 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.userRepository.getObject(+params['id'])
-        .subscribe(
-                /* happy path */(user: User) => {
+        .subscribe({
+          next: (user: User) => {
             this.user = user;
             this.form.controls.emailaddress.setValue(this.user.getEmailaddress());
-            // this.processing = false;
           },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => this.processing = false
-        );
+          error: (e) => {
+            this.setAlert('danger', e); this.processing = false;
+          },
+          complete: () => this.processing = false
+        });
     });
 
 
@@ -73,30 +74,34 @@ export class ProfileComponent implements OnInit {
     this.processing = true;
     const emailaddress = this.form.controls.emailaddress.value;
     this.userRepository.editObject({ id: this.user.getId(), emailaddress: emailaddress })
-      .subscribe(
-            /* happy path */() => {
+      .subscribe({
+        next: () => {
           this.setAlert('success', 'het emailadres is opgeslagen');
           this.form.controls.emailaddress.setValue(emailaddress);
-          // this.processing = false;
         },
-            /* error path */ e => { this.setAlert('danger', 'het opslaan is niet gelukt: ' + e); this.processing = false; },
-            /* onComplete */() => this.processing = false
-      );
+        error: (e) => {
+          this.setAlert('danger', 'het opslaan is niet gelukt: ' + e); this.processing = false;
+        },
+        complete: () => {
+          this.processing = false
+        }
+      });
     return false;
   }
 
   remove() {
     this.processing = true;
     this.userRepository.removeObject(this.user.getId())
-      .subscribe(
-            /* happy path */() => {
+      .subscribe({
+        next: () => {
           this.authService.logout();
           this.router.navigate(['']);
-          // this.processing = false;
         },
-            /* error path */ e => { this.setAlert('danger', 'het opslaan is niet gelukt: ' + e); this.processing = false; },
-            /* onComplete */() => this.processing = false
-      );
+        error: (e) => {
+          this.setAlert('danger', 'het opslaan is niet gelukt: ' + e); this.processing = false;
+        },
+        complete: () => this.processing = false
+      });
   }
 }
 

@@ -60,15 +60,16 @@ export class PasswordresetComponent implements OnInit {
     const emailaddress = this.form.controls.emailaddress.value;
 
     // this.activationmessage = undefined;
-    this.authService.passwordReset(emailaddress)
-      .subscribe(
-            /* happy path */ p => {
-          this.codeSend = true;
-          this.resetAlert();
-        },
-            /* error path */ e => { this.setAlert('danger', 'het verzenden van de code is niet gelukt: ' + e); this.processing = false; },
-            /* onComplete */() => this.processing = false
-      );
+    this.authService.passwordReset(emailaddress).subscribe({
+      next: () => {
+        this.codeSend = true;
+        this.resetAlert();
+      },
+      error: (e) => {
+        this.setAlert('danger', 'het verzenden van de code is niet gelukt: ' + e); this.processing = false;
+      },
+      complete: () => this.processing = false
+    });
     return false;
   }
 

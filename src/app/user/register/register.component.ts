@@ -77,14 +77,16 @@ export class RegisterComponent implements OnInit {
 
     // this.activationmessage = undefined;
     this.authService.register({ emailaddress: emailaddress, password: password })
-      .subscribe(
-            /* happy path */ registered => {
+      .subscribe({
+        next: (registered) => {
           this.registered = registered;
           this.resetAlert();
         },
-            /* error path */ e => { this.setAlert('danger', 'het registreren is niet gelukt: ' + e); this.processing = false; },
-            /* onComplete */() => this.processing = false
-      );
+        error: (e) => {
+          this.setAlert('danger', 'het registreren is niet gelukt: ' + e); this.processing = false;
+        },
+        complete: () => this.processing = false
+      });
     return false;
   }
 }

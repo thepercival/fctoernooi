@@ -173,8 +173,8 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         this.setAlert('info', 'het toernooi wordt verwijderd');
         this.processing = true;
         this.tournamentRepository.removeObject(this.tournament)
-            .subscribe(
-                /* happy path */(deleted: boolean) => {
+            .subscribe({
+                next: (deleted: boolean) => {
                     if (deleted) {
                         const navigationExtras: NavigationExtras = {
                             queryParams: { type: 'success', message: 'het toernooi is verwijderd' }
@@ -184,14 +184,13 @@ export class HomeComponent extends TournamentComponent implements OnInit {
                         this.setAlert('danger', 'het toernooi kon niet verwijderd worden');
                         this.processing = false;
                     }
-                    // redirect to home with message
                 },
-                /* error path */ e => {
+                error: (e) => {
                     this.setAlert('danger', 'het toernooi kon niet verwijderd worden');
                     this.processing = false;
                 },
-                /* onComplete */() => { this.processing = false; }
-            );
+                complete: () => this.processing = false
+            });
     }
 
     getExportSubjectsFromDevice(): number {
@@ -221,16 +220,16 @@ export class HomeComponent extends TournamentComponent implements OnInit {
             this.setExportSubjectsOnDevice(exportAction.subjects);
             this.processing = true;
             this.tournamentRepository.getExportUrl(this.tournament, exportAction)
-                .subscribe(
-                /* happy path */(url: string) => {
+                .subscribe({
+                    next: (url: string) => {
                         window.open(url);
                     },
-                /* error path */ e => {
+                    error: (e) => {
                         this.setAlert('danger', 'het exporteren is niet gelukt');
                         this.processing = false;
                     },
-                /* onComplete */() => { this.processing = false; }
-                );
+                    complete: () => this.processing = false
+                });
         }, (reason) => {
         });
     }
@@ -307,17 +306,17 @@ export class HomeComponent extends TournamentComponent implements OnInit {
 
         this.processing = true;
         this.tournamentRepository.copyObject(this.tournament, startDateTime)
-            .subscribe(
-                /* happy path */(newTournamentId: number | string) => {
+            .subscribe({
+                next: (newTournamentId: number | string) => {
                     this.router.navigate(['/admin', newTournamentId]);
                     this.setAlert('success', 'de nieuwe editie is aangemaakt, je bevindt je nu in de nieuwe editie');
                 },
-                /* error path */ e => {
+                error: (e) => {
                     this.setAlert('danger', 'er kon geen nieuwe editie worden aangemaakt : ' + e);
                     this.processing = false;
                 },
-                /* onComplete */() => { this.processing = false; }
-            );
+                complete: () => this.processing = false
+            });
     }
 
     share(publicEnabled: boolean) {
@@ -327,18 +326,18 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         const json = this.tournamentMapper.toJson(this.tournament);
         json.public = publicEnabled;
         this.tournamentRepository.editObject(json)
-            .subscribe(
-                /* happy path */(tournament: Tournament) => {
+            .subscribe({
+                next: (tournament: Tournament) => {
                     this.tournament = tournament;
                     // this.router.navigate(['/admin', newTournamentId]);
                     this.setAlert('success', 'het delen is gewijzigd');
                 },
-                /* error path */ e => {
+                error: (e) => {
                     this.setAlert('danger', 'het delen kon niet worden gewijzigd');
                     this.processing = false;
                 },
-                /* onComplete */() => { this.processing = false; }
-            );
+                complete: () => this.processing = false
+            });
     }
 
     saveName(newName: string) {
@@ -348,17 +347,17 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         const json = this.tournamentMapper.toJson(this.tournament);
         json.competition.league.name = newName;
         this.tournamentRepository.editObject(json)
-            .subscribe(
-                /* happy path */(tournament: Tournament) => {
+            .subscribe({
+                next: (tournament: Tournament) => {
                     this.tournament = tournament;
                     // this.router.navigate(['/admin', newTournamentId]);
                     this.setAlert('success', 'de naam is opgeslagen');
                 },
-                /* error path */ e => {
+                error: (e) => {
                     this.setAlert('danger', 'de naam kon niet worden opgeslagen');
                     this.processing = false;
                 },
-                /* onComplete */() => { this.processing = false; }
-            );
+                complete: () => this.processing = false
+            });
     }
 }

@@ -75,13 +75,15 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
       this.processing = true;
       const jsonLockerRoom: JsonLockerRoom = { id: 0, name: resName, competitorIds: [] };
       this.lockerRoomRepository.createObject(jsonLockerRoom, this.tournament)
-        .subscribe(
-        /* happy path */(lockerRoomRes: LockerRoom) => {
-            this.changeCompetitors(lockerRoomRes);
+        .subscribe({
+          next: (lockerRoomRes: LockerRoom) => this.changeCompetitors(lockerRoomRes),
+          error: (e) => {
+            this.setAlert('danger', e); this.processing = false;
           },
-        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-        /* onComplete */() => { this.processing = false; }
-        );
+          complete: () => {
+            this.processing = false
+          }
+        });
     }, (reason) => {
     });
   }
@@ -89,12 +91,15 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
   remove(lockerRoom: LockerRoom) {
     this.processing = true;
     this.lockerRoomRepository.removeObject(lockerRoom, this.tournament)
-      .subscribe(
-        /* happy path */ lockerRoomRes => {
+      .subscribe({
+        next: () => { },
+        error: (e) => {
+          this.setAlert('danger', e); this.processing = false;
         },
-        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-        /* onComplete */() => { this.processing = false; }
-      );
+        complete: () => {
+          this.processing = false
+        }
+      });
   }
 
   changeName(lockerRoom: LockerRoom) {
@@ -104,11 +109,15 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
       lockerRoom.setName(result);
       this.processing = true;
       this.lockerRoomRepository.editObject(lockerRoom, this.tournament)
-        .subscribe(
-        /* happy path */ lockerRoomRes => { },
-        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-        /* onComplete */() => { this.processing = false; }
-        );
+        .subscribe({
+          next: () => { },
+          error: (e) => {
+            this.setAlert('danger', e); this.processing = false;
+          },
+          complete: () => {
+            this.processing = false
+          }
+        });
     }, (reason) => { });
   }
 
@@ -134,11 +143,13 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
     activeModal.result.then((selectedCompetitors: TournamentCompetitor[]) => {
       this.processing = true;
       this.lockerRoomRepository.syncCompetitors(lockerRoom, selectedCompetitors)
-        .subscribe(
-        /* happy path */ lockerRoomRes => { },
-        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-        /* onComplete */() => { this.processing = false; }
-        );
+        .subscribe({
+          next: () => { },
+          error: (e) => {
+            this.setAlert('danger', e); this.processing = false;
+          },
+          complete: () => this.processing = false
+        });
     }, (reason) => { });
   }
 }

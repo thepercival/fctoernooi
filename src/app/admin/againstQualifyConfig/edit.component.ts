@@ -263,30 +263,31 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
         const reposUpdates: Observable<AgainstQualifyConfig>[] = roundsSelection.rootRounds.map((round: Round) => {
             return this.againstQualifyConfigRepository.saveObject(this.formToJson(), round, this.tournament);
         });
-        forkJoin(reposUpdates).subscribe(results => {
-            if (validAgainstQualifyConfigs.length === 0) {
-                this.processing = false;
-                return;
-            }
-            // 3 voeg de qualifyagainstregels toe van de unchangedChildRounds
-            const reposChildUpdates: Observable<AgainstQualifyConfig>[] = validAgainstQualifyConfigs.map((validAgainstQualifyConfig: ValidAgainstQualifyConfigOfUnchangedChildRound) => {
-                return this.againstQualifyConfigRepository.saveObject(validAgainstQualifyConfig.qualifyagainstConfig, validAgainstQualifyConfig.unchangedChildRound, this.tournament);
-            });
-            forkJoin(reposChildUpdates).subscribe(results => {
-                this.processing = false;
-            },
-                e => {
-                    this.alert = { type: 'danger', message: 'de qualifyagainstregels zijn niet opgeslagen: ' + e };
+        forkJoin(reposUpdates).subscribe({
+            next: (results) => {
+                if (validAgainstQualifyConfigs.length === 0) {
                     this.processing = false;
+                    return;
+                }
+                // 3 voeg de qualifyagainstregels toe van de unchangedChildRounds
+                const reposChildUpdates: Observable<AgainstQualifyConfig>[] = validAgainstQualifyConfigs.map((validAgainstQualifyConfig: ValidAgainstQualifyConfigOfUnchangedChildRound) => {
+                    return this.againstQualifyConfigRepository.saveObject(validAgainstQualifyConfig.qualifyagainstConfig, validAgainstQualifyConfig.unchangedChildRound, this.tournament);
                 });
-        },
-            e => {
+                forkJoin(reposChildUpdates).subscribe({
+                    next: () => this.processing = false,
+                    error: (e) => {
+                        this.alert = { type: 'danger', message: 'de qualifyagainstregels zijn niet opgeslagen: ' + e };
+                        this.processing = false;
+                    }
+                });
+            },
+            error: (e) => {
                 this.alert = { type: 'danger', message: 'de qualifyagainstregels zijn niet opgeslagen: ' + e };
                 this.processing = false;
-            });
+            }
+        });
         return true;
     }
-
 
     get PointsCalculationAgainstGamePoints(): PointsCalculation { return PointsCalculation.AgainstGamePoints };
     get PointsCalculationScores(): PointsCalculation { return PointsCalculation.Scores };

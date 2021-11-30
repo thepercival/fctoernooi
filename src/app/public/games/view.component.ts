@@ -39,13 +39,14 @@ export class GamesComponent extends TournamentComponent implements OnInit {
             const tournamentUser = authUser ? this.tournament.getUser(authUser) : undefined;
             if (tournamentUser && tournamentUser.hasRoles(Role.REFEREE)) {
                 this.roles = tournamentUser.getRoles();
-                this.getUserRefereeId(tournamentUser).subscribe(
-                    (userRefereeId: number | string) => {
-                        this.userRefereeId = userRefereeId;
-                        this.processing = false;
-                    },
-                    e => { this.processing = false; }
-                );
+                this.getUserRefereeId(tournamentUser)
+                    .subscribe({
+                        next: (userRefereeId: number | string) => {
+                            this.userRefereeId = userRefereeId;
+                            this.processing = false;
+                        },
+                        error: (e) => this.processing = false
+                    });
             } else {
                 this.processing = false;
             }

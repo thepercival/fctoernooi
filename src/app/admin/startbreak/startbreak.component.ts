@@ -130,21 +130,25 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
         json.breakEndDateTime = breakX?.getEndDateTime().toISOString();
 
         this.tournamentRepository.editObject(json)
-            .subscribe(
-                /* happy path */(tournament: Tournament) => {
+            .subscribe({
+                next: (tournament: Tournament) => {
                     this.tournament = tournament;
-                    this.planningRepository.reschedule(firstRoundNumber, this.tournament).subscribe(
-                            /* happy path */ gamesRes => {
-                            this.myNavigation.back();
-                        },
-                        /* error path */ e => {
-                            this.setAlert('danger', 'de wedstrijdplanning is niet opgeslagen: ' + e);
-                            this.processing = false;
-                        }
-                    );
+                    this.planningRepository.reschedule(firstRoundNumber, this.tournament)
+                        .subscribe({
+                            next: () => {
+                                this.myNavigation.back();
+                            },
+                            error: (e) => {
+                                this.setAlert('danger', 'de wedstrijdplanning is niet opgeslagen: ' + e);
+                                this.processing = false;
+                            }
+                        });
                 },
-                /* error path */ e => { this.setAlert('danger', 'het toernooi is niet opgeslagen: ' + e); this.processing = false; }
-            );
+                error: (e) => {
+                    this.setAlert('danger', 'het toernooi is niet opgeslagen: ' + e);
+                    this.processing = false;
+                }
+            });
 
         return false;
     }

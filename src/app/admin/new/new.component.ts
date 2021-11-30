@@ -10,6 +10,7 @@ import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { Structure, StructureEditor } from 'ngx-sport';
 import { SportWithFields } from '../sport/createSportWithFields.component';
 import { CompetitionSportRepository } from '../../lib/ngx-sport/competitionSport/repository';
+import { Tournament } from '../../lib/tournament';
 
 
 @Component({
@@ -56,36 +57,39 @@ export class NewComponent implements OnInit {
     this.jsonTournament.competition.sports = [jsonCompetitionSport];
 
     this.tournamentRepository.createObject(this.jsonTournament)
-      .subscribe(
-        /* happy path */ tournament => {
+      .subscribe({
+        next: (tournament: Tournament) => {
           const jsonPlanningConfig = this.defaultService.getJsonPlanningConfig([sportWithFields.variant]);
           const structure: Structure = this.structureEditor.create(
             tournament.getCompetition(),
             jsonPlanningConfig,
             this.defaultService.getPouleStructure([sportWithFields.variant]));
           this.structureRepository.editObject(structure, tournament)
-            .subscribe(
-            /* happy path */(structureOut: Structure) => {
+            .subscribe({
+              next: (structureOut: Structure) => {
                 this.planningRepository.create(structureOut, tournament, 1)
-                  .subscribe(
-                    /* happy path */ roundNumberOut => {
+                  .subscribe({
+                    next: () => {
                       this.router.navigate(['/admin/structure', tournament.getId()]);
                     },
-                  /* error path */ e => {
+                    error: (e) => {
                       this.setAlert('danger', 'de wedstrijdplanning kon niet worden aangemaakt: ' + e);
                       this.processing = false;
                     },
-                  /* onComplete */() => { this.processing = false; }
-                  );
+                    complete: () => this.processing = false
+                  });
               },
-            /* error path */ e => {
+              error: (e) => {
                 this.setAlert('danger', 'de opzet kon niet worden aangemaakt: ' + e);
                 this.processing = false;
+              },
+              complete: () => {
+
               }
-            );
+            });
         },
-        /* error path */ e => { this.setAlert('danger', 'het toernooi kon niet worden aangemaakt: ' + e); this.processing = false; }
-      );
+        error: (e) => { this.setAlert('danger', 'het toernooi kon niet worden aangemaakt: ' + e); this.processing = false; }
+      });
     return false;
   }
 

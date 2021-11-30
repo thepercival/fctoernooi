@@ -78,8 +78,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     const filter = { roles: Role.ALL };
     this.tournamentShellRepos.getObjects(filter)
-      .subscribe(
-          /* happy path */ myShells => {
+      .subscribe({
+        next: (myShells) => {
           this.sortShellsByDateDesc(myShells);
           let myShell: TournamentShell | undefined;
           while (myShell = myShells.shift()) {
@@ -92,17 +92,19 @@ export class HomeComponent implements OnInit, AfterViewInit {
           this.processingWithRole = false;
           this.authService.extendToken();
         },
-          /* error path */ e => { this.setAlert('danger', e); this.processingWithRole = false; },
-          /* onComplete */() => { this.processingWithRole = false; }
-      );
+        error: (e) => {
+          this.setAlert('danger', e); this.processingWithRole = false;
+        },
+        complete: () => this.processingWithRole = false
+      });
   }
 
   addToPublicShells(pastFuture: number, hoursToAdd: number) {
     this.publicProcessing = true;
     const searchFilter = this.extendHourRange(pastFuture, hoursToAdd);
     this.tournamentShellRepos.getObjects(searchFilter)
-      .subscribe(
-          /* happy path */(shellsRes: TournamentShell[]) => {
+      .subscribe({
+        next: (shellsRes: TournamentShell[]) => {
           this.sortShellsByDateAsc(shellsRes);
           if (pastFuture === HomeComponent.PAST) {
             this.publicShells = shellsRes.concat(this.publicShells);
@@ -112,8 +114,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
           // this.showingFuture = (futureDate === undefined);
           this.publicProcessing = false;
         },
-        /* error path */ e => { this.setAlert('danger', e); this.publicProcessing = false; }
-      );
+        error: (e) => {
+          this.setAlert('danger', e); this.publicProcessing = false;
+        }
+      });
   }
 
   protected sortShellsByDateAsc(shells: TournamentShell[]) {
@@ -217,13 +221,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.publicProcessing = true;
     const searchFilter = this.getSearchFilter(undefined, undefined, searchFilterName);
     this.tournamentShellRepos.getObjects(searchFilter)
-      .subscribe(
-        /* happy path */(shellsRes: TournamentShell[]) => {
+      .subscribe({
+        next: (shellsRes: TournamentShell[]) => {
           this.publicShells = shellsRes;
           this.publicProcessing = false;
         },
-      /* error path */ e => { this.setAlert('danger', e); this.publicProcessing = false; }
-      );
+        error: (e) => {
+          this.setAlert('danger', e); this.publicProcessing = false;
+        }
+      });
   }
 }
 

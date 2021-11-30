@@ -31,8 +31,8 @@ export class TournamentComponent {
 
     setData(tournamentId: number | string, callback?: DataProcessCallBack, noStructure?: boolean) {
         this.tournamentRepository.getObject(tournamentId)
-            .subscribe(
-                /* happy path */(tournament: Tournament) => {
+            .subscribe({
+                next: (tournament: Tournament) => {
                     this.tournament = tournament;
                     this.competition = tournament.getCompetition();
                     if (noStructure === true) {
@@ -42,24 +42,22 @@ export class TournamentComponent {
                         return;
                     }
                     this.structureRepository.getObject(tournament)
-                        .subscribe(
-                            /* happy path */(structure: Structure) => {
+                        .subscribe({
+                            next: (structure: Structure) => {
                                 this.structure = structure;
                                 if (callback !== undefined) {
                                     callback();
                                 }
                             },
-                            /* error path */(e: string) => {
+                            error: (e) => {
                                 this.setAlert('danger', e); this.processing = false;
-                            },
-                            /* onComplete */() => { }
-                        );
+                            }
+                        });
                 },
-                /* error path */(e: string) => {
+                error: (e) => {
                     this.setAlert('danger', e); this.processing = false;
-                },
-                /* onComplete */() => { }
-            );
+                }
+            });
     }
 
     protected setAlert(type: string, message: string) {

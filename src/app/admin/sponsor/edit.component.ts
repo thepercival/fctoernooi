@@ -117,14 +117,16 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
 
         const reposCall = this.originalSponsor ? this.sponsorRepository.editObject(this.formToJson(), this.originalSponsor, this.tournament) : this.sponsorRepository.createObject(this.formToJson(), this.tournament);
 
-        reposCall.subscribe(
-            /* happy path */(sponsor: Sponsor) => {
+        reposCall.subscribe({
+            next: (sponsor: Sponsor) => {
                 this.originalSponsor = sponsor;
                 this.processLogoAndNavigateBack(sponsor);
             },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => this.processing = false
-        );
+            error: (e) => {
+                this.setAlert('danger', e); this.processing = false;
+            },
+            complete: () => this.processing = false
+        });
         return false;
     }
 
@@ -149,14 +151,16 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         const input = new FormData();
         input.append('logostream', this.form.get('logoupload')?.value);
         this.sponsorRepository.uploadImage(input, sponsor, this.tournament)
-            .subscribe(
-                        /* happy path */() => {
+            .subscribe({
+                next: () => {
                     this.processing = false;
                     this.navigateBack();
                 },
-                        /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                        /* onComplete */() => { this.processing = false; }
-            );
+                error: (e) => {
+                    this.setAlert('danger', e); this.processing = false;
+                },
+                complete: () => this.processing = false
+            });
     }
 
     onFileChange(event: Event) {

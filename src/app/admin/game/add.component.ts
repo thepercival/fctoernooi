@@ -284,13 +284,15 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
             this.form.controls.competitionSport.value,
             this.form.controls.poule.value,
             this.tournament)
-            .subscribe(
-                    /* happy path */ gameRes => {
+            .subscribe({
+                next: (gameRes) => {
                     const suffix = ((gameRes instanceof AgainstGame) ? 'against' : 'together')
                     this.router.navigate(['/admin/game' + suffix, this.tournament.getId(), gameRes.getId()], { replaceUrl: true });
                 },
-                 /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
-            );
+                error: (e) => {
+                    this.setAlert('danger', e); this.processing = false;
+                }
+            });
         return false;
     }
 

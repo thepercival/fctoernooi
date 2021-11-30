@@ -32,17 +32,20 @@ export class SportToAddComponent implements OnInit {
 
     ngOnInit() {
         this.processing = true;
-        this.sportRepository.getObjects().subscribe(
-            /* happy path */(sports: Sport[]) => {
-                sports.sort((s1: Sport, s2: Sport) => {
-                    return (this.translate.getSportName(s1) > this.translate.getSportName(s2) ? 1 : -1);
-                });
-                this.sports = sports;
-                this.processing = false;
-            },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => this.processing = false
-        );
+        this.sportRepository.getObjects()
+            .subscribe({
+                next: (sports: Sport[]) => {
+                    sports.sort((s1: Sport, s2: Sport) => {
+                        return (this.translate.getSportName(s1) > this.translate.getSportName(s2) ? 1 : -1);
+                    });
+                    this.sports = sports;
+                    this.processing = false;
+                },
+                error: (e) => {
+                    this.setAlert('danger', e); this.processing = false;
+                },
+                complete: () => this.processing = false
+            });
     }
 
     getNameModal(): NgbModalRef {
@@ -61,16 +64,18 @@ export class SportToAddComponent implements OnInit {
         this.getNameModal().result.then((nameRes: string) => {
             this.processing = true;
             this.alert = undefined;
-            this.sportRepository.createObject(this.defaultService.getJsonSport(nameRes)).subscribe(
-            /* happy path */(sportRes: Sport) => {
-                    this.sportToAdd.emit(sportRes);
-                },
-            /* error path */ e => {
-                    this.setAlert('danger', e);
-                    this.processing = false;
-                },
-            /* onComplete */() => this.processing = false
-            );
+            this.sportRepository.createObject(this.defaultService.getJsonSport(nameRes))
+                .subscribe({
+                    next: (sportRes: Sport) => {
+                        this.sportToAdd.emit(sportRes);
+                    },
+                    error: (e) => {
+                        this.setAlert('danger', e); this.processing = false;
+                    },
+                    complete: () => {
+                        this.processing = false
+                    }
+                });
         }, (reason) => {
         });
     }

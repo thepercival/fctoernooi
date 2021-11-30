@@ -82,17 +82,17 @@ export class PasswordchangeComponent implements OnInit {
 
     // this.activationmessage = undefined;
     this.authService.passwordChange(this.emailaddress, password, code)
-      .subscribe(
-            /* happy path */ p => {
+      .subscribe({
+        next: () => {
           this.passwordChanged = true;
           this.resetAlert();
         },
-            /* error path */ e => {
+        error: (e) => {
           this.setAlert('danger', 'het wijzigen van het wachtwoord is niet gelukt: ' + e);
           this.processing = false;
         },
-            /* onComplete */() => this.processing = false
-      );
+        complete: () => this.processing = false
+      });
     return false;
   }
 }

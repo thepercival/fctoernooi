@@ -71,10 +71,13 @@ export class FieldListComponent implements OnInit {
         modal.result.then((resName: string) => {
             this.processing = true;
             const jsonField = this.formToJson(resName);
-            this.fieldRepository.createObject(jsonField, this.competitionSport, this.tournament).subscribe(
-                /* happy path */(fieldRes) => this.updatePlanning(),
-                /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
-            );
+            this.fieldRepository.createObject(jsonField, this.competitionSport, this.tournament)
+                .subscribe({
+                    next: () => this.updatePlanning(),
+                    error: (e) => {
+                        this.alert = { type: 'danger', message: e }; this.processing = false;
+                    }
+                });
         }, (reason) => {
         });
     }
@@ -86,41 +89,45 @@ export class FieldListComponent implements OnInit {
             this.processing = true;
             const jsonField = this.formToJson(resName, field);
             this.fieldRepository.editObject(jsonField, field, this.tournament)
-                .subscribe(
-            /* happy path */() => { },
-            /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
-            /* onComplete */() => { this.processing = false; }
-                );
+                .subscribe({
+                    next: () => { },
+                    error: (e) => {
+                        this.alert = { type: 'danger', message: e }; this.processing = false;
+                    },
+                    complete: () => this.processing = false
+                });
         }, (reason) => {
         });
     }
 
     upgradePriority(field: Field) {
         this.processing = true;
-        this.fieldRepository.upgradeObject(field, this.tournament)
-            .subscribe(
-            /* happy path */() => this.updatePlanning(),
-            /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
-            );
+        this.fieldRepository.upgradeObject(field, this.tournament).subscribe({
+            next: () => this.updatePlanning(),
+            error: (e) => {
+                this.alert = { type: 'danger', message: e }; this.processing = false;
+            }
+        });
     }
 
     removeField(field: Field) {
         this.processing = true;
 
-        this.fieldRepository.removeObject(field, this.tournament)
-            .subscribe(
-            /* happy path */() => this.updatePlanning(),
-            /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
-            );
+        this.fieldRepository.removeObject(field, this.tournament).subscribe({
+            next: () => this.updatePlanning(),
+            error: (e) => {
+                this.alert = { type: 'danger', message: e }; this.processing = false;
+            }
+        });
     }
 
     protected updatePlanning() {
-        this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
-            /* happy path */ roundNumberOut => {
-                // this.processing = false;
+        this.planningRepository.create(this.structure, this.tournament, 1).subscribe({
+            next: () => { },
+            error: (e) => {
+                this.alert = { type: 'danger', message: e }; this.processing = false;
             },
-            /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
-            /* onComplete */() => this.processing = false
-        );
+            complete: () => this.processing = false
+        });
     }
 }

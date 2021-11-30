@@ -175,19 +175,21 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   protected swapHelper(reposUpdates: Observable<void>[]) {
-    forkJoin(reposUpdates).subscribe(results => {
-      this.setAlert('success', 'volgorde gewijzigd');
-      this.swapItem = undefined;
-      this.placeCompetitorItems = this.getPlaceCompetitorItems();
-      this.processing = false;
-    },
-      err => {
-        this.setAlert('danger', 'volgorde niet gewijzigd: ' + err);
-        this.swapItem = undefined;
-        this.placeCompetitorItems = this.getPlaceCompetitorItems();
-        this.processing = false;
-      }
-    );
+    forkJoin(reposUpdates)
+      .subscribe({
+        next: () => {
+          this.setAlert('success', 'volgorde gewijzigd');
+          this.swapItem = undefined;
+          this.placeCompetitorItems = this.getPlaceCompetitorItems();
+          this.processing = false;
+        },
+        error: (e) => {
+          this.setAlert('danger', 'volgorde niet gewijzigd: ' + e);
+          this.swapItem = undefined;
+          this.placeCompetitorItems = this.getPlaceCompetitorItems();
+          this.processing = false;
+        }
+      });
   }
 
   addPlaceToRootRound(): void {
@@ -240,13 +242,15 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     const prefix = jsonCompetitor.registered ? 'aan' : 'af';
     this.setAlert('info', 'deelnemer ' + competitor.getName() + ' wordt ' + prefix + 'gemeld');
     this.competitorRepository.editObject(jsonCompetitor, competitor, this.tournament)
-      .subscribe(
-            /* happy path */(competitorRes: TournamentCompetitor) => {
+      .subscribe({
+        next: (competitorRes: TournamentCompetitor) => {
           this.setAlert('success', 'deelnemer ' + competitor.getName() + ' is ' + prefix + 'gemeld');
         },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => { this.processing = false; }
-      );
+        error: (e) => {
+          this.setAlert('danger', e); this.processing = false;
+        },
+        complete: () => this.processing = false
+      });
   }
 
   getSwapSwitchId(place: Place): string {
@@ -257,15 +261,16 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.processing = true;
     this.setAlert('info', 'deelnemer ' + competitor.getName() + ' wordt verwijderd');
     this.competitorRepository.removeObject(competitor, this.tournament)
-      .subscribe(
-            /* happy path */() => {
+      .subscribe({
+        next: () => {
           this.placeCompetitorItems = this.getPlaceCompetitorItems();
-
           this.setAlert('success', 'deelnemer ' + competitor + ' is verwijderd');
         },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => { this.processing = false; }
-      );
+        error: (e) => {
+          this.setAlert('danger', e); this.processing = false;
+        },
+        complete: () => this.processing = false
+      });
   }
 
   removePlaceFromRootRound(item: PlaceCompetitorItem): void {
@@ -287,21 +292,23 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
 
   protected saveStructure(message: string) {
     this.structureRepository.editObject(this.structure, this.tournament)
-      .subscribe(
-          /* happy path */(structure: Structure) => {
+      .subscribe({
+        next: (structure: Structure) => {
           this.structure = structure;
           this.planningRepository.create(this.structure, this.tournament, 1)
-            .subscribe(
-                    /* happy path */ roundNumberOut => {
+            .subscribe({
+              next: () => {
                 this.placeCompetitorItems = this.getPlaceCompetitorItems();
                 this.setAlert('success', message);
               },
-                  /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                  /* onComplete */() => this.processing = false
-            );
+              error: (e) => {
+                this.setAlert('danger', e); this.processing = false;
+              },
+              complete: () => this.processing = false
+            });
         },
-        /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
-      );
+        error: (e) => { this.setAlert('danger', e); this.processing = false; }
+      });
   }
 }
 

@@ -112,22 +112,26 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         this.setAlert('info', 'de deelnemer wordt opgeslagen');
         if (this.originalCompetitor) {
             this.competitorRepository.editObject(jsonCompetitor, this.originalCompetitor, this.tournament)
-                .subscribe(
-                    /* happy path */ competitorRes => {
+                .subscribe({
+                    next: () => {
                         this.navigateBack();
                     },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => this.processing = false
-                );
+                    error: (e) => {
+                        this.setAlert('danger', e); this.processing = false;
+                    },
+                    complete: () => this.processing = false
+                });
             return false;
         }
         this.competitorRepository.createObject(jsonCompetitor, this.tournament)
-            .subscribe(
-            /* happy path */ competitorRes => {
+            .subscribe({
+                next: () => {
                     this.navigateBack();
                 },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
-            );
+                error: (e) => {
+                    this.setAlert('danger', e); this.processing = false;
+                }
+            });
         return false;
     }
 

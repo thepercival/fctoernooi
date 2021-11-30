@@ -40,13 +40,14 @@ export class GameListComponent extends TournamentComponent implements OnInit {
         return;
       }
       this.roles = tournamentUser ? tournamentUser.getRoles() : 0;
-      this.getUserRefereeId(tournamentUser).subscribe(
-        (userRefereeId: string | number | undefined) => {
-          this.userRefereeId = userRefereeId;
-          this.processing = false;
-        },
-        e => { this.processing = false; }
-      );
+      this.getUserRefereeId(tournamentUser)
+        .subscribe({
+          next: (userRefereeId: string | number | undefined) => {
+            this.userRefereeId = userRefereeId;
+            this.processing = false;
+          },
+          error: (e) => this.processing = false
+        });
     });
   }
 

@@ -254,26 +254,30 @@ export class ScoreConfigEditComponent implements OnInit {
         const reposUpdates: Observable<ScoreConfig>[] = roundsSelection.rootRounds.map((round: Round) => {
             return this.scoreConfigRepository.saveObject(jsonScoreConfig, round, this.tournament);
         });
-        forkJoin(reposUpdates).subscribe(results => {
-            if (validScoreConfigs.length === 0) {
-                this.processing = false;
-                return;
-            }
-            // 3 voeg de scoreregels toe van de unchangedChildRounds
-            const reposChildUpdates: Observable<ScoreConfig>[] = validScoreConfigs.map((validScoreConfig: ValidScoreConfigOfUnchangedChildRound) => {
-                return this.scoreConfigRepository.saveObject(validScoreConfig.scoreConfig, validScoreConfig.unchangedChildRound, this.tournament);
-            });
-            forkJoin(reposChildUpdates).subscribe(results => {
-                this.processing = false;
-            },
-                e => {
+        forkJoin(reposUpdates)
+            .subscribe({
+                next: () => {
+                    if (validScoreConfigs.length === 0) {
+                        this.processing = false;
+                        return;
+                    }
+                    // 3 voeg de scoreregels toe van de unchangedChildRounds
+                    const reposChildUpdates: Observable<ScoreConfig>[] = validScoreConfigs.map((validScoreConfig: ValidScoreConfigOfUnchangedChildRound) => {
+                        return this.scoreConfigRepository.saveObject(validScoreConfig.scoreConfig, validScoreConfig.unchangedChildRound, this.tournament);
+                    });
+                    forkJoin(reposChildUpdates)
+                        .subscribe({
+                            next: () => this.processing = false,
+                            error: (e) => {
+                                this.alert = { type: 'danger', message: 'de scoreregels zijn niet opgeslagen: ' + e };
+                                this.processing = false;
+                            }
+                        });
+                },
+                error: (e) => {
                     this.alert = { type: 'danger', message: 'de scoreregels zijn niet opgeslagen: ' + e };
                     this.processing = false;
-                });
-        },
-            e => {
-                this.alert = { type: 'danger', message: 'de scoreregels zijn niet opgeslagen: ' + e };
-                this.processing = false;
+                }
             });
         return true;
     }

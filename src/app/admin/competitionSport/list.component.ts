@@ -79,18 +79,19 @@ export class CompetitionSportListComponent extends TournamentComponent implement
 
     const json = this.competitionSportRepository.sportWithFieldsToJson(sportWithFields, true);
     this.competitionSportRepository.createObject(json, this.tournament, this.structure)
-      .subscribe(
-        /* happy path */(competitionSport: CompetitionSport) => {
-          this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
-            /* happy path */ roundNumberOut => {
-              this.setAlert('success', 'de sport is toegevoegd');
-            },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => this.processing = false
-          );
+      .subscribe({
+        next: (competitionSport: CompetitionSport) => {
+          this.planningRepository.create(this.structure, this.tournament, 1)
+            .subscribe({
+              next: () => this.setAlert('success', 'de sport is toegevoegd'),
+              error: (e) => {
+                this.setAlert('danger', e); this.processing = false;
+              },
+              complete: () => this.processing = false
+            });
         },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-      );
+        error: (e) => { this.setAlert('danger', e); this.processing = false; }
+      });
   }
 
   // addSport() {
@@ -112,17 +113,20 @@ export class CompetitionSportListComponent extends TournamentComponent implement
     this.processing = true;
 
     this.competitionSportRepository.removeObject(competitionSport, this.tournament, this.structure)
-      .subscribe(
-        /* happy path */() => {
-          this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
-            /* happy path */ roundNumberOut => {
-              this.setAlert('success', 'de sport is verwijderd');
-            },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => this.processing = false
-          );
+      .subscribe({
+        next: () => {
+          this.planningRepository.create(this.structure, this.tournament, 1)
+            .subscribe({
+              next: () => this.setAlert('success', 'de sport is verwijderd'),
+              error: (e) => {
+                this.setAlert('danger', e); this.processing = false;
+              },
+              complete: () => this.processing = false
+            });
         },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-      );
+        error: (e) => {
+          this.setAlert('danger', e); this.processing = false;
+        }
+      });
   }
 }

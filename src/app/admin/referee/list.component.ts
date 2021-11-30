@@ -87,28 +87,37 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   upgradePriority(referee: Referee) {
     this.processing = true;
     this.refereeRepository.upgradeObject(referee, this.tournament)
-      .subscribe(
-            /* happy path */() => this.updatePlanning(),
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-      );
+      .subscribe({
+        next: () => {
+          this.updatePlanning()
+        },
+        error: (e) => {
+          this.setAlert('danger', e); this.processing = false;
+        }
+      });
   }
 
   removeReferee(referee: Referee) {
     this.processing = true;
     this.refereeRepository.removeObject(referee, this.tournament)
-      .subscribe(
-            /* happy path */ refereeRes => this.updatePlanning(),
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-      );
+      .subscribe({
+        next: () => {
+          this.updatePlanning()
+        },
+        error: (e) => {
+          this.setAlert('danger', e); this.processing = false;
+        }
+      });
   }
 
   protected updatePlanning() {
-    this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
-            /* happy path */ roundNumberOut => {
-        // this.processing = false;
-      },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => this.processing = false
-    );
+    this.planningRepository.create(this.structure, this.tournament, 1)
+      .subscribe({
+        next: () => { },
+        error: (e) => {
+          this.setAlert('danger', e); this.processing = false;
+        },
+        complete: () => this.processing = false
+      });
   }
 }

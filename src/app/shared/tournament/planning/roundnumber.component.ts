@@ -389,13 +389,15 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
           if (progressPerc === 100) {
             this.stopShowProgress();
             this.planningRepository.get(this.roundNumber, this.tournament)
-              .subscribe(
-            /* happy path */ roundNumber => {
+              .subscribe({
+                next: () => {
                   this.progressPerc = 0;
                   this.loadGameData();
                 },
-              /* error path */ e => { this.setAlert('danger', e); }
-              );
+                error: (e) => {
+                  this.setAlert('danger', e);
+                }
+              });
           }
         });
   }

@@ -59,10 +59,12 @@ export class RankingComponent extends TournamentComponent implements OnInit {
         const json = this.tournamentMapper.toJson(this.tournament);
         json.competition.againstRuleSet = againstRuleSet;
         this.tournamentRepository.editObject(json)
-            .subscribe(
-            /* happy path */(tournament: Tournament) => { this.tournament = tournament; },
-            /* error path */ e => { this.alert = { type: 'danger', message: e }; this.processing = false; },
-            /* onComplete */() => { this.processing = false; }
-            );
+            .subscribe({
+                next: (tournament: Tournament) => { this.tournament = tournament; },
+                error: (e) => {
+                    this.alert = { type: 'danger', message: e }; this.processing = false;
+                },
+                complete: () => this.processing = false
+            });
     }
 }

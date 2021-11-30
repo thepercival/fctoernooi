@@ -120,19 +120,24 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
             return false;
         }
 
-        this.refereeRepository.createObject(jsonReferee, this.tournament, this.addAndInvite).subscribe(
-            /* happy path */(refereeRes: Referee) => {
-                this.planningRepository.create(this.structure, this.tournament, 1).subscribe(
-                /* happy path */ roundNumberOut => {
-                        this.processing = false;
-                        this.navigateBack();
-
-                    },
-                /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                );
-            },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-        );
+        this.refereeRepository.createObject(jsonReferee, this.tournament, this.addAndInvite)
+            .subscribe({
+                next: (refereeRes: Referee) => {
+                    this.planningRepository.create(this.structure, this.tournament, 1)
+                        .subscribe({
+                            next: () => {
+                                this.processing = false;
+                                this.navigateBack();
+                            },
+                            error: (e) => {
+                                this.setAlert('danger', e); this.processing = false;
+                            }
+                        });
+                },
+                error: (e) => {
+                    this.setAlert('danger', e); this.processing = false;
+                }
+            });
         return false;
     }
 
@@ -146,13 +151,15 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
             return false;
         }
         this.refereeRepository.editObject(jsonReferee, referee, this.tournament)
-            .subscribe(
-            /* happy path */ refereeRes => {
+            .subscribe({
+                next: () => {
                     this.navigateBack();
                 },
-                /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-                /* onComplete */() => { this.processing = false; }
-            );
+                error: (e) => {
+                    this.setAlert('danger', e); this.processing = false;
+                },
+                complete: () => this.processing = false
+            });
         return false;
     }
 

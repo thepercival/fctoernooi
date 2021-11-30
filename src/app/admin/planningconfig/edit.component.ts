@@ -364,8 +364,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         const planningAction = planningActionCalculator.getAction(jsonConfig, jsonGameAmountConfigs);
 
         this.planningConfigRepository.saveObject(jsonConfig, this.startRoundNumber, this.tournament)
-            .subscribe(
-                /* happy path */ configRes => {
+            .subscribe({
+                next: () => {
                     if (jsonConfig.editMode === PlanningEditMode.Auto) {
                         this.saveGameAmountConfigs(jsonGameAmountConfigs, planningAction);
                     } else {
@@ -373,12 +373,11 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
                         this.myNavigation.back();
                     }
                 },
-                /* error path */ e => {
+                error: (e) => {
                     this.setAlert('danger', 'de instellingen zijn niet opgeslagen: ' + e);
                     this.processing = false;
-                } // ,
-                // /* onComplete */() => /*this.processing = false*/
-            );
+                }
+            });
 
         return true;
     }
@@ -386,28 +385,28 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     private savePlanning(action: PlanningAction) {
         if (action === PlanningAction.Recreate) {
             this.planningRepository.create(this.structure, this.tournament, this.startRoundNumber.getNumber())
-                .subscribe(
-                    /* happy path */ roundNumberOut => {
+                .subscribe({
+                    next: () => {
                         this.setAlert('success', 'de instellingen zijn opgeslagen');
                         this.myNavigation.back();
                     },
-                    /* error path */ e => {
+                    error: (e) => {
                         this.setAlert('danger', 'de instellingen zijn niet opgeslagen: ' + e); this.processing = false;
                     },
-                    /* onComplete */() => this.processing = false
-                );
+                    complete: () => this.processing = false
+                });
         } else if (action === PlanningAction.Reschedule) {
             this.planningRepository.reschedule(this.startRoundNumber, this.tournament)
-                .subscribe(
-                    /* happy path */ gamesRes => {
+                .subscribe({
+                    next: () => {
                         this.setAlert('success', 'de instellingen zijn opgeslagen');
                         this.myNavigation.back();
                     },
-                    /* error path */ e => {
+                    error: (e) => {
                         this.setAlert('danger', 'de instellingen zijn niet opgeslagen: ' + e); this.processing = false;
                     },
-                        /* onComplete */() => this.processing = false
-                );
+                    complete: () => this.processing = false
+                });
         } else {
             this.processing = false;
             this.setAlert('success', 'de instellingen zijn opgeslagen');

@@ -81,16 +81,14 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
             emailaddress: this.form.value['emailaddress'],
             roles
         };
-        this.invitationRepository.createObject(json, this.tournament).subscribe(
-            /* happy path */ invitationRes => {
-                this.navigateBack();
-            },
-            /* error path */ e => {
+        this.invitationRepository.createObject(json, this.tournament).subscribe({
+            next: () => this.navigateBack(),
+            error: (e) => {
                 this.setAlert('danger', 'de rol kon niet worden aangemaakt: ' + e);
                 this.processing = false;
             },
-            /* onComplete */() => this.processing = false
-        );
+            complete: () => this.processing = false
+        });
         return false;
     }
 
