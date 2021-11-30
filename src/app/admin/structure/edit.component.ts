@@ -57,22 +57,22 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
       this.nameService = new NameService(new CompetitorMap(this.tournament.getCompetitors()));
       this.structureEditor.setPlaceRanges(this.getPlaceRanges());
       this.structureRepository.getObject(this.tournament)
-        .subscribe(
-          /* happy path */(structure: Structure) => {
+        .subscribe({
+          next: (structure: Structure) => {
             this.structure = structure;
             this.clonedStructure = this.createClonedStructure(this.structure);
+            console.log(this.clonedStructure);
             this.processing = false;
           },
-          /* error path */(e: string) => {
+          error: (e: string) => {
             const sportVariants = this.competition.getSportVariants();
             const pouleStructure = this.defaultService.getPouleStructure(sportVariants);
             const jsonPlanningConfig = this.defaultService.getJsonPlanningConfig(sportVariants);
             this.structure = this.structureEditor.create(this.competition, jsonPlanningConfig, pouleStructure);
             this.clonedStructure = this.createClonedStructure(this.structure);
             this.setAlert('danger', e + ', new structure created'); this.processing = false;
-          },
-          /* onComplete */() => { }
-        );
+          }
+        });
     }, noStructure);
   }
 
@@ -108,13 +108,12 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     this.setAlert('info', 'wijzigingen worden opgeslagen');
 
     this.structureRepository.editObject(this.clonedStructure, this.tournament)
-      .subscribe(
-          /* happy path */ structureRes => {
-          // should always be first roundnumber
-          this.syncPlanning(structureRes, 1/*this.changedRoundNumber.getNumber()*/);
+      .subscribe({
+        next: (structureRes: Structure) => {
+          this.syncPlanning(structureRes, 1/*this.changedRoundNumber.getNumber()*/); // should always be first roundnumber
         },
-        /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
-      );
+        error: (e) => { this.setAlert('danger', e); this.processing = false; }
+      });
   }
 
   completeSave(structureRes: Structure) {
@@ -130,11 +129,11 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
       return this.completeSave(structure);
     }
     this.planningRepository.create(structure, this.tournament, roundNumberToSync)
-      .subscribe(
-          /* happy path */ roundNumberOut => this.completeSave(structure),
-          /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-          /* onComplete */() => this.processing = false
-      );
+      .subscribe({
+        next: () => this.completeSave(structure),
+        error: e => { this.setAlert('danger', e); this.processing = false; },
+        complete: () => this.processing = false
+      });
   }
 
   navigateBack() {
