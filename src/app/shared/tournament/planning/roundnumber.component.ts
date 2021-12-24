@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges, TemplateRef, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, TemplateRef, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbPopover, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
