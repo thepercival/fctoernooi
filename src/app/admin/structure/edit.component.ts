@@ -61,7 +61,6 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
           next: (structure: Structure) => {
             this.structure = structure;
             this.clonedStructure = this.createClonedStructure(this.structure);
-            console.log(this.clonedStructure);
             this.processing = false;
           },
           error: (e: string) => {
