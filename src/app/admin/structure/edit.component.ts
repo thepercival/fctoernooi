@@ -67,7 +67,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
             const sportVariants = this.competition.getSportVariants();
             const pouleStructure = this.defaultService.getPouleStructure(sportVariants);
             const jsonPlanningConfig = this.defaultService.getJsonPlanningConfig(sportVariants);
-            this.structure = this.structureEditor.create(this.competition, jsonPlanningConfig, pouleStructure);
+            this.structure = this.structureEditor.create(this.competition, pouleStructure, jsonPlanningConfig);
             this.clonedStructure = this.createClonedStructure(this.structure);
             this.setAlert('danger', e + ', new structure created'); this.processing = false;
           }

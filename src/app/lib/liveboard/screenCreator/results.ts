@@ -1,4 +1,4 @@
-import { AgainstGame, Game, GameOrder, RoundNumber, State, TogetherGame } from "ngx-sport";
+import { AgainstGame, Game, GameOrder, RoundNumber, GameState, TogetherGame } from "ngx-sport";
 import { ResultsScreen } from "../screens";
 
 export class ResultsScreenCreator {
@@ -15,7 +15,7 @@ export class ResultsScreenCreator {
 
     protected addGames(screen: ResultsScreen, roundNumber: RoundNumber) {
         let games: (AgainstGame | TogetherGame)[] = roundNumber.getGames(GameOrder.ByDate);
-        games = games.reverse().filter(game => game.getState() === State.Finished);
+        games = games.reverse().filter(game => game.getState() === GameState.Finished);
 
 
         while (!screen.hasEnoughLines() && games.length > 0) {

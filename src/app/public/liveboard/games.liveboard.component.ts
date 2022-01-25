@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AgainstGame, AgainstGamePlace, AgainstSide, AgainstSportVariant, NameService, Round, ScoreConfigService, State, TogetherGame, TogetherGamePlace } from 'ngx-sport';
+import { AgainstGame, AgainstGamePlace, AgainstSide, AgainstSportVariant, NameService, Round, ScoreConfigService, GameState, TogetherGame, TogetherGamePlace } from 'ngx-sport';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { ResultsScreen, ScheduleScreen } from '../../lib/liveboard/screens';
 
@@ -51,7 +51,7 @@ export class LiveboardGamesComponent implements OnInit {
 
     getAgainstScore(game: TogetherGame | AgainstGame): string {
         const sScore = ' - ';
-        if (game.getState() !== State.Finished) {
+        if (game.getState() !== GameState.Finished) {
             return sScore;
         }
         const finalScore = this.scoreConfigService.getFinalAgainstScore(<AgainstGame>game);
@@ -63,7 +63,7 @@ export class LiveboardGamesComponent implements OnInit {
 
     getTogetherScore(gamePlace: TogetherGamePlace): string {
         const score = '';
-        if (gamePlace.getGame().getState() !== State.Finished) {
+        if (gamePlace.getGame().getState() !== GameState.Finished) {
             return score;
         }
         const finalScore = this.scoreConfigService.getFinalTogetherScore(gamePlace);
@@ -104,7 +104,7 @@ export class LiveboardGamesComponent implements OnInit {
     }
 
     isPlayed(game: AgainstGame | TogetherGame): boolean {
-        return game.getState() === State.Finished;
+        return game.getState() === GameState.Finished;
     }
 }
 

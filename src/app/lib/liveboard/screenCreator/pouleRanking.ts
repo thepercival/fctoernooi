@@ -1,4 +1,4 @@
-import { CompetitionSport, NameService, Poule, RoundNumber, State } from "ngx-sport";
+import { CompetitionSport, NameService, Poule, RoundNumber, GameState } from "ngx-sport";
 import { PoulesRankingScreen } from "../screens";
 
 export class PouleRankingScreensCreator {
@@ -31,14 +31,14 @@ export class PouleRankingScreensCreator {
     }
 
     protected getRoundNumbersForPouleRankings(roundNumber: RoundNumber): RoundNumber[] {
-        if (roundNumber.getState() === State.Created || roundNumber.getState() === State.InProgress) {
+        if (roundNumber.getGamesState() === GameState.Created || roundNumber.getGamesState() === GameState.InProgress) {
             return [roundNumber];
         }
         const nextRoundNumber = roundNumber.getNext();
         if (nextRoundNumber === undefined) {
             return [roundNumber];
         }
-        if (nextRoundNumber.getState() === State.Created) {
+        if (nextRoundNumber.getGamesState() === GameState.Created) {
             return [roundNumber, nextRoundNumber];
         }
         return this.getRoundNumbersForPouleRankings(nextRoundNumber);

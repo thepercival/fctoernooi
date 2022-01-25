@@ -165,19 +165,19 @@
   <!-- score -->
   <td class="text-center text-nowrap">
     <button *ngIf="gmData.canChangeResult" class="btn btn-sm btn-outline-primary" (click)="linkToGameEdit(gmData.game)">
-      <fa-icon *ngIf="!isPlayed(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
-      <span *ngIf="isPlayed(gmData.game)">{{getAgainstScore(gmData.game)}}</span>
+      <fa-icon *ngIf="!isFinished(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
+      <span *ngIf="isFinished(gmData.game)">{{getAgainstScore(gmData.game)}}</span>
     </button>
     <!-- no auth -->
     <ng-template [ngIf]="!gmData.canChangeResult">
       <span class="d-none d-sm-inline">{{getAgainstScore(gmData.game)}}</span>
-      <button *ngIf="hasReferees && !isPlayed(gmData.game)" class="btn btn-outline-info btn-sm d-sm-none"
+      <button *ngIf="hasReferees && !isFinished(gmData.game)" class="btn btn-outline-info btn-sm d-sm-none"
         placement="top" [ngbPopover]="nameService.getRefereeName(gmData.game)">
         <span [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
           <app-tournament-icon name="referee"></app-tournament-icon>
         </span>
       </button>
-      <span *ngIf="!(hasReferees && !isPlayed(gmData.game))"
+      <span *ngIf="!(hasReferees && !isFinished(gmData.game))"
         class="d-sm-none fw-bold">{{getAgainstScore(gmData.game)}}</span>
     </ng-template>
   </td>
@@ -205,7 +205,7 @@
             class="list-group-item border-start-0">
             {{nameService.getPlaceFromName(gamePlace.getPlace(),true,true)}}
           </li>
-          <li *ngIf="isPlayed(gmData.game)" class="list-group-item me-1">
+          <li *ngIf="isFinished(gmData.game)" class="list-group-item me-1">
             {{getTogetherScore(gamePlace)}}
           </li>
         </ul>
@@ -220,8 +220,8 @@
             {{nameService.getPlaceFromName(gamePlace.getPlace(),true,true)}}</div>
           <button class="btn btn-sm border border-{{getTogetherScoreBtnBorderClass(gamePlace)}} me-1"
             (click)="linkToGameEdit(gmData.game)">
-            <fa-icon *ngIf="!isPlayed(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
-            <span *ngIf="isPlayed(gmData.game)">{{getTogetherScore(gamePlace)}}</span>
+            <fa-icon *ngIf="!isFinished(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
+            <span *ngIf="isFinished(gmData.game)">{{getTogetherScore(gamePlace)}}</span>
           </button>
         </div>
       </div>

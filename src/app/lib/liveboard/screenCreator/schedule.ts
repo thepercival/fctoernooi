@@ -1,4 +1,4 @@
-import { AgainstGame, Game, GameOrder, RoundNumber, State, TogetherGame } from "ngx-sport";
+import { AgainstGame, Game, GameOrder, RoundNumber, GameState, TogetherGame } from "ngx-sport";
 import { ScheduleScreen } from "../screens";
 export class ScheduleScreenCreator {
 
@@ -31,7 +31,7 @@ export class ScheduleScreenCreator {
         let nextGame: AgainstGame | TogetherGame | undefined = roundGames.shift();
         while (!this.screensFilled(screen, maxNrOfScreens) && game !== undefined) {
             const start = game.getStartDateTime();
-            if (game.getState() === State.Finished || (roundNumber.getValidPlanningConfig().getEnableTime() && start && start < now)
+            if (game.getState() === GameState.Finished || (roundNumber.getValidPlanningConfig().getEnableTime() && start && start < now)
             ) {
                 game = nextGame;
                 nextGame = roundGames.shift();

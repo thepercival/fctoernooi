@@ -5,7 +5,7 @@ import {
     Game,
     NameService,
     Round,
-    State,
+    GameState,
     RoundNumber,
     CompetitorMap,
     ScoreConfigService,
@@ -192,7 +192,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
             competitionSport: this.competitionSportMapper.toJson(competitionSport),
             field: this.getDefaultJsonField(),
             referee: this.getDefaultJsonReferee(),
-            state: State.Created,
+            state: GameState.Created,
             startDateTime: this.roundNumber.getLastStartDateTime().toISOString(),
             refereeStructureLocation: undefined
         };

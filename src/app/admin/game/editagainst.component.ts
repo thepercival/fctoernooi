@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    State,
+    GameState,
     ScoreConfig,
     AgainstGame,
     GameMapper,
@@ -72,7 +72,7 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
             this.calculateScoreControl = new AgainstScoreFormControl(this.firstScoreConfig.getCalculate(), 0, 0, true);
         }
         this.initScoreControls();
-        this.form.controls.played.setValue(this.game?.getState() === State.Finished);
+        this.form.controls.played.setValue(this.game?.getState() === GameState.Finished);
         this.form.controls.extratime.setValue(this.getGame().getFinalPhase() === GamePhase.ExtraTime);
     }
 
@@ -167,7 +167,7 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
                 number: jsonGame.scores.length + 1
             });
         });
-        jsonGame.state = this.form.controls.played.value === true ? State.Finished : State.Created;
+        jsonGame.state = this.form.controls.played.value === true ? GameState.Finished : GameState.Created;
         return jsonGame;
     }
 

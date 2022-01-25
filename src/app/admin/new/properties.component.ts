@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { JsonTournament } from '../../lib/tournament/json';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
-import { League, State } from 'ngx-sport';
+import { League } from 'ngx-sport';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 
 
@@ -84,7 +84,6 @@ export class TournamentPropertiesComponent implements OnInit {
         againstRuleSet: DefaultService.AgainstRuleSet,
         startDateTime: startDateTime.toISOString(),
         referees: [],
-        state: State.Created,
         sports: [],
       },
       competitors: [],

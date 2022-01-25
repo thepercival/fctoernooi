@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, CompetitorMap, GameAmountConfig, ScoreConfigService, TogetherGame, CompetitionSport, TogetherGamePlace, TogetherSportRoundRankingCalculator, SportRoundRankingItem, PlaceLocation, State, SingleSportVariant, AllInOneGameSportVariant, AgainstSportVariant, Place } from 'ngx-sport';
+import { NameService, Poule, CompetitorMap, GameAmountConfig, ScoreConfigService, TogetherGame, CompetitionSport, TogetherGamePlace, TogetherSportRoundRankingCalculator, SportRoundRankingItem, PlaceLocation, GameState, SingleSportVariant, AllInOneGameSportVariant, AgainstSportVariant, Place } from 'ngx-sport';
 
 import { CSSService } from '../../../common/cssservice';
 import { Favorites } from '../../../../lib/favorites';
@@ -74,7 +74,7 @@ export class PouleRankingTogetherComponent implements OnInit {
 
     this.getTogetherGames().forEach((game: TogetherGame) => {
       const useSubScore = game.getScoreConfig()?.useSubScore();
-      const finished = game.getState() === State.Finished;
+      const finished = game.getState() === GameState.Finished;
       game.getTogetherPlaces().forEach((gamePlace: TogetherGamePlace) => {
         const gameRoundMap = this.scoreMap.get(gamePlace.getPlace().getRoundLocationId());
         if (gameRoundMap === undefined) {

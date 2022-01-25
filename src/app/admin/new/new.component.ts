@@ -62,8 +62,8 @@ export class NewComponent implements OnInit {
           const jsonPlanningConfig = this.defaultService.getJsonPlanningConfig([sportWithFields.variant]);
           const structure: Structure = this.structureEditor.create(
             tournament.getCompetition(),
-            jsonPlanningConfig,
-            this.defaultService.getPouleStructure([sportWithFields.variant]));
+            this.defaultService.getPouleStructure([sportWithFields.variant]),
+            jsonPlanningConfig);
           this.structureRepository.editObject(structure, tournament)
             .subscribe({
               next: (structureOut: Structure) => {

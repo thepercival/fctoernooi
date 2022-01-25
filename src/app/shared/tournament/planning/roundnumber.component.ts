@@ -7,7 +7,6 @@ import {
   Poule,
   RoundNumber,
   ScoreConfigService,
-  State,
   Round,
   PlanningConfig,
   ScoreConfig,
@@ -23,7 +22,8 @@ import {
   TogetherGamePlace,
   PlanningEditMode,
   GameOrder,
-  Competitor
+  Competitor,
+  GameState
 } from 'ngx-sport';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -104,6 +104,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     this.hasReferees = this.tournament.getCompetition().getReferees().length > 0
       || this.planningConfig.getSelfReferee() !== SelfReferee.Disabled;
     this.hasBegun = this.roundNumber.hasBegun();
+    console.log('this.hasBegun', this.hasBegun);
     this.tournamentHasBegun = this.roundNumber.getFirst().hasBegun();
     this.loadGameData();
     this.hasOnlyGameModeAgainst = this.hasOnlyAgainstGameMode();
@@ -185,7 +186,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
 
   getAgainstScore(game: AgainstGame): string {
     const score = ' - ';
-    if (game.getState() !== State.Finished) {
+    if (game.getState() !== GameState.Finished) {
       return score;
     }
     const finalScore = this.scoreConfigService.getFinalAgainstScore(game);
@@ -197,7 +198,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
 
   getTogetherScore(gamePlace: TogetherGamePlace): string {
     const sScore = ' - ';
-    if (gamePlace.getGame().getState() !== State.Finished) {
+    if (gamePlace.getGame().getState() !== GameState.Finished) {
       return sScore;
     }
     const finalScore = this.scoreConfigService.getFinalTogetherScore(gamePlace);
@@ -205,11 +206,11 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   }
 
   getTogetherScoreBtnBorderClass(gamePlace: TogetherGamePlace): string {
-    return gamePlace.getGame().getState() === State.Finished ? 'success' : 'primary';
+    return gamePlace.getGame().getState() === GameState.Finished ? 'success' : 'primary';
   }
 
-  isPlayed(game: Game): boolean {
-    return game.getState() === State.Finished;
+  isFinished(game: Game): boolean {
+    return game.getState() === GameState.Finished;
   }
 
   canChangeResult(game: Game): boolean {

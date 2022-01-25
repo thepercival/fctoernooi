@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { State, AgainstRuleSet, CompetitorMap } from 'ngx-sport';
+import { AgainstRuleSet, CompetitorMap, GameState } from 'ngx-sport';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { AuthService } from '../../lib/auth/auth.service';
 import { Role } from '../../lib/role';
@@ -42,7 +42,7 @@ export class RankingComponent extends TournamentComponent implements OnInit {
             this.competitorMap = new CompetitorMap(this.tournament.getCompetitors());
             this.favorites = this.favRepository.getObject(this.tournament);
             this.hasBegun = this.structure.getRootRound().hasBegun();
-            if (this.structure.getLastRoundNumber().getState() === State.Finished) {
+            if (this.structure.getLastRoundNumber().getGamesState() === GameState.Finished) {
                 this.activeTab = 2;
             }
             this.processing = false;

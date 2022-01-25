@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, TemplateRef } from '@angular/core';
 
-import { Poule, State, NameService, Round, CompetitorMap } from 'ngx-sport';
+import { Poule, NameService, Round, CompetitorMap, GameState } from 'ngx-sport';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { CSSService } from '../../shared/common/cssservice';
@@ -31,16 +31,16 @@ export class RankingRoundComponent implements OnInit {
         this.poules = this.round.getPoules().filter((poule: Poule) => poule.needsRanking());
         const roundNumber = this.round.getNumber();
         this.nameService = new NameService(undefined);
-        const state = this.round.getState();
-        const statePrevious = roundNumber.getPrevious()?.getState();
+        const state = this.round.getGamesState();
+        const statePrevious = roundNumber.getPrevious()?.getGamesState();
         const nextRoundNumber = roundNumber.getNext();
-        const stateNext = nextRoundNumber?.getState();
+        const stateNext = nextRoundNumber?.getGamesState();
         const nextNeedsRanking = nextRoundNumber?.needsRanking() ?? false;
-        if (state === State.InProgress) {
+        if (state === GameState.InProgress) {
             this.collapsed = false;
-        } else if (state === State.Created && (statePrevious === undefined || statePrevious === State.Finished)) {
+        } else if (state === GameState.Created && (statePrevious === undefined || statePrevious === GameState.Finished)) {
             this.collapsed = false;
-        } else if (state === State.Finished && (stateNext === undefined || stateNext === State.Created || !nextNeedsRanking)) {
+        } else if (state === GameState.Finished && (stateNext === undefined || stateNext === GameState.Created || !nextNeedsRanking)) {
             this.collapsed = false;
         }
     }

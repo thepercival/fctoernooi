@@ -1,11 +1,8 @@
-import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    Game,
     NameService,
     Round,
-    State,
     RoundNumber,
     CompetitorMap,
     ScoreConfigService,
@@ -38,7 +35,6 @@ import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { TournamentUser } from '../../lib/tournament/user';
 import { map } from 'rxjs/operators';
 import { EqualQualifiersChecker } from '../../lib/ngx-sport/ranking/equalQualifiersChecker';
-import { DateFormatter } from '../../lib/dateFormatter';
 
 export class GameEditComponent extends TournamentComponent {
     public game: AgainstGame | TogetherGame | undefined;

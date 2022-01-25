@@ -1,4 +1,4 @@
-import { JsonAgainstGame, JsonTogetherGame, AgainstGame, TogetherGame, NameService, GameMapper, State, MultipleQualifyRule, QualifyGroup, RoundRankingCalculator, RoundRankingItem, QualifyTarget, Round, Place } from "ngx-sport";
+import { JsonAgainstGame, JsonTogetherGame, AgainstGame, TogetherGame, NameService, GameMapper, GameState, MultipleQualifyRule, QualifyGroup, RoundRankingCalculator, RoundRankingItem, QualifyTarget, Round, Place } from "ngx-sport";
 
 export class EqualQualifiersChecker {
 
@@ -18,7 +18,7 @@ export class EqualQualifiersChecker {
         this.game = this.gameMapper.toExisting(jsonGame, this.game);
 
         const poule = this.game.getPoule();
-        if (poule.getState() !== State.Finished) {
+        if (poule.getGamesState() !== GameState.Finished) {
             return [];
         }
         const round = poule.getRound();
@@ -28,7 +28,7 @@ export class EqualQualifiersChecker {
         const postFix = '(' + this.nameService.getPouleName(this.game.getPoule(), true) + ')';
         let warnings: string[] = this.getWarningsForEqualQualifiersHelper(equalPouleItems, postFix);
 
-        if (round.getState() !== State.Finished) {
+        if (round.getGamesState() !== GameState.Finished) {
             return warnings;
         }
         round.getQualifyGroups().forEach((qualifyGroup: QualifyGroup) => {

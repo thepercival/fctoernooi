@@ -1,4 +1,4 @@
-import { State, Structure } from "ngx-sport";
+import { GameState, Structure } from "ngx-sport";
 import { EndRankingScreen } from "../screens";
 
 export class EndRankingScreenCreator {
@@ -11,7 +11,7 @@ export class EndRankingScreenCreator {
         if (!(structure.getFirstRoundNumber().hasNext() || structure.getRootRound().getPoules().length === 1)) {
             return screens;
         }
-        if (structure.getLastRoundNumber().getState() !== State.Finished) {
+        if (structure.getLastRoundNumber().getGamesState() !== GameState.Finished) {
             return screens;
         }
         const nrOfItems = structure.getRootRound().getNrOfPlaces();

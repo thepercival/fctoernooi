@@ -2,16 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    Game,
-    NameService,
-    Round,
-    State,
-    RoundNumber,
-    CompetitorMap,
-    ScoreConfigService,
-    ScoreConfig,
-    AgainstGame,
-    PlanningConfig,
     TogetherGame,
     GameMapper,
     JsonTogetherGame,
@@ -20,20 +10,14 @@ import {
     RefereeMapper,
     PlaceMapper,
     AgainstGamePlace,
+    GameState,
 } from 'ngx-sport';
-import { Observable, of } from 'rxjs';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/common/navigation';
-import { Role } from '../../lib/role';
 import { TournamentRepository } from '../../lib/tournament/repository';
-import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
-import { TournamentUser } from '../../lib/tournament/user';
-import { map } from 'rxjs/operators';
-import { EqualQualifiersChecker } from '../../lib/ngx-sport/ranking/equalQualifiersChecker';
-import { DateFormatter } from '../../lib/dateFormatter';
 import { TranslateService } from '../../lib/translate';
 import { JsonTogetherGamePlace } from 'ngx-sport/src/game/place/together/json';
 import { GameEditComponent } from './edit.component';
@@ -96,7 +80,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
         this.game.getTogetherPlaces().forEach((gamePlace: TogetherGamePlace) => {
             this.getFormGroupGamePlaces().addControl('' + gamePlace.getId(), new FormGroup({}));
         });
-        this.form.controls.played.setValue(this.game.getState() === State.Finished);
+        this.form.controls.played.setValue(this.game.getState() === GameState.Finished);
         //     this.form.controls.extension.setValue(this.game.getFinalPhase() === Game.Phase_ExtraTime);
         this.pristineScore = this.game.getTogetherPlaces().every((gamePlace: TogetherGamePlace) => {
             return gamePlace.getScores().length === 0;
@@ -219,7 +203,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
                 });
             }
         });
-        jsonGame.state = this.form.controls.played.value === true ? State.Finished : State.Created;
+        jsonGame.state = this.form.controls.played.value === true ? GameState.Finished : GameState.Created;
         return jsonGame;
     }
 
