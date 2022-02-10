@@ -104,7 +104,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     this.hasReferees = this.tournament.getCompetition().getReferees().length > 0
       || this.planningConfig.getSelfReferee() !== SelfReferee.Disabled;
     this.hasBegun = this.roundNumber.hasBegun();
-    console.log('this.hasBegun', this.hasBegun);
     this.tournamentHasBegun = this.roundNumber.getFirst().hasBegun();
     this.loadGameData();
     this.hasOnlyGameModeAgainst = this.hasOnlyAgainstGameMode();
@@ -377,7 +376,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   /////////////////  NO PLANNING ///////////////////////////
 
   private showProgress() {
-    this.refreshTimer = timer(0, 1500) // repeats every 1.5 seconds
+    this.refreshTimer = timer(0, 2000) // repeats every 2 seconds
       .pipe(
         switchMap(() => this.planningRepository.progress(this.roundNumber, this.tournament).pipe()),
         catchError(err => of(undefined))

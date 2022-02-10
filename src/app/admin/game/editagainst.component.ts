@@ -161,8 +161,8 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
             }
             jsonGame.scores.push({
                 id: 0,
-                home: scoreControl.home.value,
-                away: scoreControl.away.value,
+                home: scoreControl.home.value ?? 0,
+                away: scoreControl.away.value ?? 0,
                 phase: this.getPhase(this.form),
                 number: jsonGame.scores.length + 1
             });
