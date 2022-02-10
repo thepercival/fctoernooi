@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
   apiurl: 'http://localhost:2998/',
-  apiVersion: '27'
+  apiVersion: '28'
 };
