@@ -149,7 +149,7 @@
       </tbody>
     </table>
 
-    <div *ngIf="inManualMode()" class="d-flex justify-content-center">
+    <div *ngIf="userIsAdmin && inManualMode()" class="d-flex justify-content-center">
       <button type="button" class="btn btn-outline-primary" (click)="linkToGameAdd()">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon> wedstrijd toevoegen
       </button>
