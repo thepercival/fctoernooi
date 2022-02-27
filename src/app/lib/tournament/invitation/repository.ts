@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -30,17 +30,17 @@ export class TournamentInvitationRepository extends APIRepository {
 
     getObjects(tournament: Tournament): Observable<TournamentInvitation[]> {
         return this.http.get<JsonTournamentInvitation[]>(this.getUrl(tournament), this.getOptions()).pipe(
-            map((jsonInvitations: JsonTournamentInvitation[]) => jsonInvitations.map(jsonInvitation => {
+            map((jsonInvitations: JsonTournamentInvitation[]) => jsonInvitations.map((jsonInvitation: JsonTournamentInvitation) => {
                 return this.mapper.toObject(jsonInvitation, tournament);
             })),
-            catchError((err) => this.handleError(err))
-        );
+            catchError((err: HttpErrorResponse) => this.handleError(err))
+        )
     }
 
     createObject(json: JsonTournamentInvitation, tournament: Tournament): Observable<TournamentInvitation> {
         return this.http.post<JsonTournamentInvitation>(this.getUrl(tournament), json, this.getOptions()).pipe(
             map((res: JsonTournamentInvitation) => this.mapper.toObject(res, tournament)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -49,7 +49,7 @@ export class TournamentInvitationRepository extends APIRepository {
         const url = this.getUrl(tournament) + '/' + invitation.getId();
         return this.http.put<JsonTournamentInvitation>(url, this.mapper.toJson(invitation), this.getOptions()).pipe(
             map((res: JsonTournamentInvitation) => this.mapper.toObject(res, tournament)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -58,7 +58,7 @@ export class TournamentInvitationRepository extends APIRepository {
         const url = this.getUrl(tournament) + '/' + invitation.getId();
         return this.http.delete<JsonTournamentInvitation>(url, this.getOptions()).pipe(
             map((res: JsonTournamentInvitation) => res),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 }

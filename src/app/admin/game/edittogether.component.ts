@@ -21,6 +21,7 @@ import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { TranslateService } from '../../lib/translate';
 import { JsonTogetherGamePlace } from 'ngx-sport/src/game/place/together/json';
 import { GameEditComponent } from './edit.component';
+import { IAlertType } from '../../shared/common/alert';
 
 @Component({
     selector: 'app-tournament-togethergame-edit',
@@ -73,7 +74,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
     protected initForm() {
         const roundNumber = this.game.getRound().getNumber();
         if (this.nextRoundNumberBegun(roundNumber)) {
-            this.setAlert('warning', 'het aanpassen van de score kan gevolgen hebben voor de al begonnen volgende ronde');
+            this.setAlert(IAlertType.Warning, 'het aanpassen van de score kan gevolgen hebben voor de al begonnen volgende ronde');
         }
         this.planningConfig = roundNumber.getValidPlanningConfig();
         this.firstScoreConfig = this.game.getScoreConfig();
@@ -228,7 +229,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
 
     // save(): boolean {
     //     this.processing = true;
-    //     this.setAlert('info', 'de wedstrijd wordt opgeslagen');
+    //     this.setAlert(IAlertType.Info, 'de wedstrijd wordt opgeslagen');
 
     //     const jsonGame = this.formToJson();
     //     this.gameRepository.editObject(jsonGame, this.game, this.game.getPoule(), this.tournament)
@@ -236,7 +237,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
     //             /* happy path */ gameRes => {
     //                 this.navigateBack();
     //             },
-    //          /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
+    //          /* error path */ e => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
     //         );
     //     return false;
     // }

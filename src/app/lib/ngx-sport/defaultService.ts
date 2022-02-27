@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AgainstRuleSet, AgainstSportVariant, AllInOneGameSportVariant, CompetitionSportService, GameMode, GamePlaceStrategy, JsonPlanningConfig, JsonSport, PlanningEditMode, PouleStructure, SelfReferee, SingleSportVariant, Sport, VoetbalRange } from "ngx-sport";
+import { AgainstGpp, AgainstH2h, AgainstRuleSet, AllInOneGame, CompetitionSportService, GameMode, GamePlaceStrategy, JsonPlanningConfig, JsonSport, PlanningEditMode, PouleStructure, SelfReferee, Single, Sport, VoetbalRange } from "ngx-sport";
 
 @Injectable({
     providedIn: 'root'
@@ -26,25 +26,27 @@ export class DefaultService {
         };
     }
 
-    public getSportVariant(sport: Sport): SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant {
-        if (sport.getDefaultGameMode() === GameMode.Against) {
-            return new AgainstSportVariant(
-                sport,
-                sport.getDefaultNrOfSidePlaces(),
-                sport.getDefaultNrOfSidePlaces(),
-                sport.getDefaultNrOfSidePlaces() > 1 ? 0 : 1,
-                sport.getDefaultNrOfSidePlaces() > 1 ? 1 : 0);
-        } else if (sport.getDefaultGameMode() === GameMode.Single) {
-            return new SingleSportVariant(sport, 1, 1);
-        }
-        return new AllInOneGameSportVariant(sport, 1);
-    }
+    // public getSportVariant(sport: Sport): Single | AgainstH2h | AgainstGpp | AllInOneGame {
+    //     if (sport.getDefaultGameMode() === GameMode.Against) {
+    //         if (sport.getDefaultNrOfSidePlaces() === 1) {
+    //             return new AgainstH2h(sport, sport.getDefaultNrOfSidePlaces(), sport.getDefaultNrOfSidePlaces(), 1);
+    //         }
+    //         return new AgainstGpp(sport, sport.getDefaultNrOfSidePlaces(), sport.getDefaultNrOfSidePlaces(), 1);
+    //     } else if (sport.getDefaultGameMode() === GameMode.Single) {
+    //         return new Single(sport, 1, 1);
+    //     }
+    //     return new AllInOneGame(sport, 1);
+    // }
 
-    getJsonPlanningConfig(sportVariants: (SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant)[]): JsonPlanningConfig {
+    getJsonPlanningConfig(sportVariant: Single | AgainstH2h | AgainstGpp | AllInOneGame): JsonPlanningConfig {
+        let gamePlaceStrategy = GamePlaceStrategy.EquallyAssigned;
+        // if (sportVariant instanceof AgainstGpp && sportVariant.hasMultipleSidePlaces()) {
+        //     gamePlaceStrategy = GamePlaceStrategy.RandomlyAssigned;
+        // }
         return {
             id: 0,
             editMode: PlanningEditMode.Auto,
-            gamePlaceStrategy: GamePlaceStrategy.EquallyAssigned,
+            gamePlaceStrategy: gamePlaceStrategy,
             extension: false,
             enableTime: true,
             minutesPerGame: DefaultService.MinutesPerGame,
@@ -55,7 +57,7 @@ export class DefaultService {
         }
     }
 
-    getPouleStructure(sportVariants: (SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant)[]): PouleStructure {
+    getPouleStructure(sportVariants: (Single | AgainstH2h | AgainstGpp | AllInOneGame)[]): PouleStructure {
         let nrOfPlaces = this.competitionService.getMinNrOfPlacesPerPoule(sportVariants);
         if (nrOfPlaces < 5) {
             nrOfPlaces = 5;
@@ -63,8 +65,8 @@ export class DefaultService {
         return new PouleStructure(nrOfPlaces);
     }
 
-    getGameAmountRange(sportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant | GameMode): VoetbalRange {
-        if (sportVariant instanceof AgainstSportVariant && !sportVariant.isMixed()) {
+    getGameAmountRange(sportVariant: Single | AgainstH2h | AgainstGpp | AllInOneGame | GameMode): VoetbalRange {
+        if (sportVariant instanceof AgainstH2h) {
             return { min: 1, max: 4 };
         }
         return { min: 1, max: 50 };

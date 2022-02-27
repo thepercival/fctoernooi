@@ -12,6 +12,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { MyNavigation } from '../../shared/common/navigation';
 import { JsonTournamentInvitation } from '../../lib/tournament/invitation/mapper';
 import { AuthorizationExplanationModalComponent } from './infomodal.component';
+import { IAlertType } from '../../shared/common/alert';
 
 @Component({
     selector: 'app-tournament-authorization-add',
@@ -73,7 +74,7 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
 
     save(): boolean {
         this.processing = true;
-        this.setAlert('info', 'de deelnemer wordt opgeslagen');
+        this.setAlert(IAlertType.Info, 'de deelnemer wordt opgeslagen');
         let roles = 0;
         this.roleItems.forEach(roleItem => roles += roleItem.selected ? roleItem.value : 0);
         const json: JsonTournamentInvitation = {
@@ -84,7 +85,7 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
         this.invitationRepository.createObject(json, this.tournament).subscribe({
             next: () => this.navigateBack(),
             error: (e) => {
-                this.setAlert('danger', 'de rol kon niet worden aangemaakt: ' + e);
+                this.setAlert(IAlertType.Danger, 'de rol kon niet worden aangemaakt: ' + e);
                 this.processing = false;
             },
             complete: () => this.processing = false

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -29,7 +29,7 @@ export class RefereeRepository extends APIRepository {
         const inviteSuffix = '/invite/' + (invite ? 'true' : 'false');
         return this.http.post<JsonReferee>(this.getUrl(tournament) + inviteSuffix, json, this.getOptions()).pipe(
             map((jsonRes: JsonReferee) => this.mapper.toObject(jsonRes, tournament.getCompetition())),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -37,7 +37,7 @@ export class RefereeRepository extends APIRepository {
         const url = this.getUrl(tournament) + '/' + referee.getId();
         return this.http.put<JsonReferee>(url, jsonReferee, this.getOptions()).pipe(
             map((jsonReferee: JsonReferee) => this.mapper.updateObject(jsonReferee, referee)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -54,7 +54,7 @@ export class RefereeRepository extends APIRepository {
                 downgrade.setPriority(downgrade.getPriority() + 1);
                 competition.getReferees().sort((refA, refB) => refA.getPriority() - refB.getPriority());
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -65,7 +65,7 @@ export class RefereeRepository extends APIRepository {
                 this.removeReferee(referee);
 
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 

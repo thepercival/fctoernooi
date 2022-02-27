@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    AgainstSportVariant,
+    AgainstVariant,
     CompetitionSport,
     CompetitionSportService,
-    RoundNumber,
     Sport,
 } from 'ngx-sport';
 import { CSSService } from '../../shared/common/cssservice';
@@ -15,7 +13,6 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { TranslateService } from '../../lib/translate';
 import { CompetitionSportTab } from '../../shared/tournament/competitionSportTab';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-tournament-sportconfig-edit',
@@ -76,7 +73,7 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
     get TabPoints(): number { return CompetitionSportTab.Points; }
 
     showAgainstQualifyConfig(competitionSport: CompetitionSport): boolean {
-        return competitionSport.getVariant() instanceof AgainstSportVariant;
+        return competitionSport.getVariant() instanceof AgainstVariant;
     }
 
     navigateBack() {
@@ -100,5 +97,3 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
         return this.translate.getFieldNamePlural(this.competitionSport?.getSport());
     }
 }
-
-

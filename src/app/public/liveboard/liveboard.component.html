@@ -32,15 +32,21 @@
         </small>
       </h1>
       <app-progress *ngIf="activeScreen" class="d-inline-block" [toggleProgress]="toggleProgress"
-        [max]="refreshAfterSeconds" (executeAtZero)="executeScheduledTask()">
+        [max]="getRefreshAfterSeconds(activeScreen)" (executeAtZero)="executeScheduledTask()">
       </app-progress>
     </div>
 
     <!-- right -->
-    <button *ngIf="tournament" (click)="navigateBack()" class="btn btn-outline-secondary" type="button">
-      <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
-      <span> terug</span>
-    </button>
+    <div *ngIf="tournament">
+      <button (click)="openRefreshModal(refreshModal)" class="btn btn-outline-secondary me-3" type="button">
+        <fa-icon [icon]="['fas', 'cogs']"></fa-icon>
+      </button>
+      <button (click)="navigateBack()" class="btn btn-outline-secondary" type="button">
+        <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
+        <span> terug</span>
+      </button>
+    </div>
+
   </div>
   <div>
     <h2 *ngIf="processing" class="text-center">
@@ -50,24 +56,52 @@
   <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
   <!-- scheduled games and results screen -->
-  <app-tournament-liveboard-games *ngIf="isGamesScreen()" [screen]="activeScreen" [nameService]="nameService">
-  </app-tournament-liveboard-games>
+  <ng-container *ngIf="activeScreen">
+    <app-tournament-liveboard-games *ngIf="isGamesScreen()" [screen]="getGamesScreen()" [nameService]="nameService">
+    </app-tournament-liveboard-games>
 
-  <!-- pouleranking screen -->
-  <app-tournament-liveboard-poules *ngIf="isPoulesRankingScreen()" [screen]="activeScreen" [nameService]="nameService"
-    [ruleSet]="competition.getAgainstRuleSet()">
-  </app-tournament-liveboard-poules>
+    <!-- pouleranking screen -->
+    <app-tournament-liveboard-poules *ngIf="isPoulesRankingScreen()" [screen]="getPoulesRankingScreen()"
+      [nameService]="nameService" [ruleSet]="competition.getAgainstRuleSet()">
+    </app-tournament-liveboard-poules>
 
-  <!-- endranking screen -->
-  <div *ngIf="isEndRankingScreen()" class="row g-0">
-    <div class="col-12 liveboard">
-      <app-tournament-endranking [competitorMap]="competitorMap" [structure]="structure" [range]="activeScreen.range">
-      </app-tournament-endranking>
+    <!-- endranking screen -->
+    <div *ngIf="isEndRankingScreen()" class="row g-0">
+      <div class="col-12 liveboard">
+        <app-tournament-endranking [competitorMap]="competitorMap" [structure]="structure"
+          [range]="getEndRankingScreen().range">
+        </app-tournament-endranking>
+      </div>
     </div>
-  </div>
 
-  <!-- sponsor screen -->
-  <div *ngIf="isSponsorScreen()">
-    <app-tournament-liveboard-sponsors [sponsors]="activeScreen.getSponsors()"></app-tournament-liveboard-sponsors>
-  </div>
-</div>
+    <!-- sponsor screen -->
+    <div *ngIf="isSponsorScreen()">
+      <app-tournament-liveboard-sponsors [sponsors]="getSponsorScreen().getSponsors()">
+      </app-tournament-liveboard-sponsors>
+    </div>
+  </ng-container>
+
+  <ng-template #refreshModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">
+        vernieuwen na <small>in seconden</small>
+      </h4>
+      <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body" [formGroup]="refreshForm">
+      <div class="row mb-3" *ngFor="let refreshControlItem of getJsonRefreshControlItems()">
+        <label [for]="refreshControlItem.property"
+          class="col-8 col-form-label">{{refreshControlItem.description}}</label>
+        <div class="col-4">
+          <select class="form-control" [formControlName]="refreshControlItem.property" required>
+            <option *ngFor="let n of getRefreshRange()" [ngValue]="n">{{n}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer d-flex justify-content-reverse border-top-0">
+      <button type="button" class="btn btn-outline-primary" data-dismiss="modal"
+        (click)="modal.close(saveRefreshConfig())">
+        opslaan</button>
+    </div>
+  </ng-template>

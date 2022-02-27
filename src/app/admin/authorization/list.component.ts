@@ -12,6 +12,7 @@ import { TournamentInvitation } from '../../lib/tournament/invitation';
 import { TournamentUser } from '../../lib/tournament/user';
 import { TournamentAuthorization } from '../../lib/tournament/authorization';
 import { AuthorizationExplanationModalComponent } from './infomodal.component';
+import { IAlertType } from '../../shared/common/alert';
 
 @Component({
     selector: 'app-tournament-authorization-list',
@@ -47,7 +48,7 @@ export class AuthorizationListComponent extends TournamentComponent implements O
                     this.processing = false;
                 },
                 error: (e) => {
-                    this.setAlert('danger', e); this.processing = false;
+                    this.setAlert(IAlertType.Danger, e); this.processing = false;
                 }
             });
 
@@ -102,7 +103,7 @@ export class AuthorizationListComponent extends TournamentComponent implements O
                 /* happy path */ res => {
                         this.roleProcessing = undefined;
                     },
-                /* error path */ e => { this.setAlert('danger', e); this.roleProcessing = undefined; }
+                /* error path */ e => { this.setAlert(IAlertType.Danger, e); this.roleProcessing = undefined; }
                 );
         } else {
             this.invitationRepository.editObject(<TournamentInvitation>authorization)
@@ -110,7 +111,7 @@ export class AuthorizationListComponent extends TournamentComponent implements O
             /* happy path */ res => {
                         this.roleProcessing = undefined;
                     },
-            /* error path */ e => { this.setAlert('danger', e); this.roleProcessing = undefined; }
+            /* error path */ e => { this.setAlert(IAlertType.Danger, e); this.roleProcessing = undefined; }
                 );
         }
     }
@@ -123,7 +124,7 @@ export class AuthorizationListComponent extends TournamentComponent implements O
                 .subscribe({
                     next: () => this.processing = false,
                     error: (e) => {
-                        this.setAlert('danger', e); this.processing = false;
+                        this.setAlert(IAlertType.Danger, e); this.processing = false;
                     }
                 });
         } else {
@@ -138,7 +139,7 @@ export class AuthorizationListComponent extends TournamentComponent implements O
                         this.processing = false;
                     },
                     error: (e) => {
-                        this.setAlert('danger', e); this.processing = false;
+                        this.setAlert(IAlertType.Danger, e); this.processing = false;
                     }
                 });
         }

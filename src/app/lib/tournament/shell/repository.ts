@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -29,7 +29,7 @@ export class TournamentShellRepository extends APIRepository {
         const withRole: boolean = filter && filter.roles ? filter.roles > 0 : false;
         return this.http.get<TournamentShell[]>(this.getUrl(withRole), options).pipe(
             map((jsonShells: TournamentShell[]) => this.convertObjects(jsonShells)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { AgainstSportRoundRankingCalculator, AgainstSportVariant, NameService, Poule, SportRoundRankingItem, TogetherSportRoundRankingCalculator } from 'ngx-sport';
+import { AgainstSportRoundRankingCalculator, AgainstVariant, NameService, Poule, SportRoundRankingItem, TogetherSportRoundRankingCalculator } from 'ngx-sport';
 
 import { CSSService } from '../../shared/common/cssservice';
 import { PoulesRankingScreen } from '../../lib/liveboard/screens';
@@ -36,6 +36,6 @@ export class LiveboardPoulesComponent {
     }
 
     isAgainstSportVariant(): boolean {
-        return this.screen.getCompetitionSport().getVariant() instanceof AgainstSportVariant;
+        return this.screen.getCompetitionSport().getVariant() instanceof AgainstVariant;
     }
 }

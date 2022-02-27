@@ -18,6 +18,7 @@ import { Favorites } from '../../../lib/favorites';
 import { LockerRoomRepository } from '../../../lib/lockerroom/repository';
 import { TournamentCompetitor } from '../../../lib/competitor';
 import { JsonLockerRoom } from '../../../lib/lockerroom/json';
+import { IAlertType } from '../../common/alert';
 
 
 
@@ -78,7 +79,7 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
         .subscribe({
           next: (lockerRoomRes: LockerRoom) => this.changeCompetitors(lockerRoomRes),
           error: (e) => {
-            this.setAlert('danger', e); this.processing = false;
+            this.setAlert(IAlertType.Danger, e); this.processing = false;
           },
           complete: () => {
             this.processing = false
@@ -94,7 +95,7 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
       .subscribe({
         next: () => { },
         error: (e) => {
-          this.setAlert('danger', e); this.processing = false;
+          this.setAlert(IAlertType.Danger, e); this.processing = false;
         },
         complete: () => {
           this.processing = false
@@ -112,7 +113,7 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
         .subscribe({
           next: () => { },
           error: (e) => {
-            this.setAlert('danger', e); this.processing = false;
+            this.setAlert(IAlertType.Danger, e); this.processing = false;
           },
           complete: () => {
             this.processing = false
@@ -146,7 +147,7 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
         .subscribe({
           next: () => { },
           error: (e) => {
-            this.setAlert('danger', e); this.processing = false;
+            this.setAlert(IAlertType.Danger, e); this.processing = false;
           },
           complete: () => this.processing = false
         });

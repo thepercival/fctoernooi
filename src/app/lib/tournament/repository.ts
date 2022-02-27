@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -35,7 +35,7 @@ export class TournamentRepository extends APIRepository {
         const url = super.getApiUrl() + (this.getToken() === undefined ? 'public/' : '') + this.getUrlpostfix() + '/' + id;
         return this.http.get<JsonTournament>(url, { headers: super.getHeaders() }).pipe(
             map((jsonTournament: JsonTournament) => this.mapper.toObject(jsonTournament)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -46,14 +46,14 @@ export class TournamentRepository extends APIRepository {
         const url = this.getUrl(tournament.getId()) + '/userrefereeid';
         return this.http.get<JsonTournament>(url, { headers: super.getHeaders() }).pipe(
             // map((userRefereeId: number) => userRefereeId),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
     createObject(json: JsonTournament): Observable<Tournament> {
         return this.http.post<JsonTournament>(this.url, json, { headers: super.getHeaders() }).pipe(
             map((jsonTournament: JsonTournament) => this.mapper.toObject(jsonTournament)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -63,7 +63,7 @@ export class TournamentRepository extends APIRepository {
             map((res: JsonTournament) => {
                 return this.mapper.toObject(res);
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -71,14 +71,14 @@ export class TournamentRepository extends APIRepository {
         const url = this.getUrl(tournament.getId());
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(
             map((res) => true),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
     copyObject(tournament: Tournament, newStartDateTime: Date): Observable<number | string> {
         const url = this.getUrl(tournament.getId()) + '/copy';
         return this.http.post<number | string>(url, { startdatetime: newStartDateTime }, this.getOptions()).pipe(
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -90,7 +90,7 @@ export class TournamentRepository extends APIRepository {
                 const exportUrl = super.getApiUrl() + 'public/' + this.getUrlpostfix() + '/' + tournament.getId() + '/export';
                 return exportUrl + '?subjects=' + exportAction.subjects + '&format=' + exportAction.format + '&hash=' + jsonHash.hash;
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 }

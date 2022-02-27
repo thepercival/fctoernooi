@@ -15,6 +15,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { IAlertType } from '../../shared/common/alert';
 
 @Component({
     selector: 'app-tournament-referee-edit',
@@ -111,11 +112,11 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
 
     add(): boolean {
         this.processing = true;
-        this.setAlert('info', 'de scheidsrechter wordt toegevoegd');
+        this.setAlert(IAlertType.Info, 'de scheidsrechter wordt toegevoegd');
 
         const jsonReferee: JsonReferee = this.formToJson();
         if (this.isInitialsDuplicate(jsonReferee.initials)) {
-            this.setAlert('danger', 'de initialen bestaan al voor dit toernooi');
+            this.setAlert(IAlertType.Danger, 'de initialen bestaan al voor dit toernooi');
             this.processing = false;
             return false;
         }
@@ -130,12 +131,12 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
                                 this.navigateBack();
                             },
                             error: (e) => {
-                                this.setAlert('danger', e); this.processing = false;
+                                this.setAlert(IAlertType.Danger, e); this.processing = false;
                             }
                         });
                 },
                 error: (e) => {
-                    this.setAlert('danger', e); this.processing = false;
+                    this.setAlert(IAlertType.Danger, e); this.processing = false;
                 }
             });
         return false;
@@ -143,10 +144,10 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
 
     edit(referee: Referee): boolean {
         this.processing = true;
-        this.setAlert('info', 'de scheidsrechter wordt gewijzigd');
+        this.setAlert(IAlertType.Info, 'de scheidsrechter wordt gewijzigd');
         const jsonReferee: JsonReferee = this.formToJson();
         if (this.isInitialsDuplicate(jsonReferee.initials, referee)) {
-            this.setAlert('danger', 'de initialen bestaan al voor dit toernooi');
+            this.setAlert(IAlertType.Danger, 'de initialen bestaan al voor dit toernooi');
             this.processing = false;
             return false;
         }
@@ -156,7 +157,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
                     this.navigateBack();
                 },
                 error: (e) => {
-                    this.setAlert('danger', e); this.processing = false;
+                    this.setAlert(IAlertType.Danger, e); this.processing = false;
                 },
                 complete: () => this.processing = false
             });

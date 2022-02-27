@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { IAlert } from '../../shared/common/alert';
+import { IAlert, IAlertType } from '../../shared/common/alert';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { JsonTournament } from '../../lib/tournament/json';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
-import { Structure, StructureEditor } from 'ngx-sport';
+import { PouleStructure, Structure, StructureEditor } from 'ngx-sport';
 import { SportWithFields } from '../sport/createSportWithFields.component';
 import { CompetitionSportRepository } from '../../lib/ngx-sport/competitionSport/repository';
 import { Tournament } from '../../lib/tournament';
@@ -51,7 +51,7 @@ export class NewComponent implements OnInit {
   create(sportWithFields: SportWithFields): boolean {
     this.processing = true;
     this.currentStep = NewTournamentStep.editProperties;
-    this.setAlert('info', 'het toernooi wordt aangemaakt');
+    this.setAlert(IAlertType.Info, 'het toernooi wordt aangemaakt');
 
     const jsonCompetitionSport = this.competitionSportRepository.sportWithFieldsToJson(sportWithFields);
     this.jsonTournament.competition.sports = [jsonCompetitionSport];
@@ -59,7 +59,7 @@ export class NewComponent implements OnInit {
     this.tournamentRepository.createObject(this.jsonTournament)
       .subscribe({
         next: (tournament: Tournament) => {
-          const jsonPlanningConfig = this.defaultService.getJsonPlanningConfig([sportWithFields.variant]);
+          const jsonPlanningConfig = this.defaultService.getJsonPlanningConfig(sportWithFields.variant);
           const structure: Structure = this.structureEditor.create(
             tournament.getCompetition(),
             this.defaultService.getPouleStructure([sportWithFields.variant]),
@@ -73,14 +73,14 @@ export class NewComponent implements OnInit {
                       this.router.navigate(['/admin/structure', tournament.getId()]);
                     },
                     error: (e) => {
-                      this.setAlert('danger', 'de wedstrijdplanning kon niet worden aangemaakt: ' + e);
+                      this.setAlert(IAlertType.Danger, 'de wedstrijdplanning kon niet worden aangemaakt: ' + e);
                       this.processing = false;
                     },
                     complete: () => this.processing = false
                   });
               },
               error: (e) => {
-                this.setAlert('danger', 'de opzet kon niet worden aangemaakt: ' + e);
+                this.setAlert(IAlertType.Danger, 'de opzet kon niet worden aangemaakt: ' + e);
                 this.processing = false;
               },
               complete: () => {
@@ -88,12 +88,12 @@ export class NewComponent implements OnInit {
               }
             });
         },
-        error: (e) => { this.setAlert('danger', 'het toernooi kon niet worden aangemaakt: ' + e); this.processing = false; }
+        error: (e) => { this.setAlert(IAlertType.Danger, 'het toernooi kon niet worden aangemaakt: ' + e); this.processing = false; }
       });
     return false;
   }
 
-  protected setAlert(type: string, message: string) {
+  protected setAlert(type: IAlertType, message: string) {
     this.alert = { 'type': type, 'message': message };
   }
 

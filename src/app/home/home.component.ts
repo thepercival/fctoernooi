@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../lib/auth/auth.service';
-import { IAlert } from '../shared/common/alert';
+import { IAlert, IAlertType } from '../shared/common/alert';
 import { TournamentShellFilter, TournamentShellRepository } from '../lib/tournament/shell/repository';
 import { Role } from '../lib/role';
 import { TournamentShell } from '../lib/tournament/shell';
@@ -93,7 +93,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           this.authService.extendToken();
         },
         error: (e) => {
-          this.setAlert('danger', e); this.processingWithRole = false;
+          this.setAlert(IAlertType.Danger, e); this.processingWithRole = false;
         },
         complete: () => this.processingWithRole = false
       });
@@ -115,7 +115,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           this.publicProcessing = false;
         },
         error: (e) => {
-          this.setAlert('danger', e); this.publicProcessing = false;
+          this.setAlert(IAlertType.Danger, e); this.publicProcessing = false;
         }
       });
   }
@@ -132,7 +132,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
   }
 
-  protected setAlert(type: string, message: string) {
+  protected setAlert(type: IAlertType, message: string) {
     this.alert = { 'type': type, 'message': message };
   }
 
@@ -227,7 +227,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           this.publicProcessing = false;
         },
         error: (e) => {
-          this.setAlert('danger', e); this.publicProcessing = false;
+          this.setAlert(IAlertType.Danger, e); this.publicProcessing = false;
         }
       });
   }

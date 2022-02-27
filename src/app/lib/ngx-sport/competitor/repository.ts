@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -35,14 +35,14 @@ export class CompetitorRepository extends APIRepository {
             map((jsoCompetitors: JsonCompetitor[]) => jsoCompetitors.map((jsoCompetitor: JsonCompetitor): TournamentCompetitor => {
                 return this.mapper.toObject(jsoCompetitor, tournament);
             })),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
     createObject(json: JsonCompetitor, tournament: Tournament): Observable<Competitor> {
         return this.http.post<JsonCompetitor>(this.getUrl(tournament), json, this.getOptions()).pipe(
             map((jsonCompetitor: JsonCompetitor) => this.mapper.toObject(jsonCompetitor, tournament)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -50,7 +50,7 @@ export class CompetitorRepository extends APIRepository {
         const url = this.getUrl(tournament) + '/' + competitor.getId();
         return this.http.put<JsonCompetitor>(url, jsonCompetitor, this.getOptions()).pipe(
             map((jsonCompetitor: JsonCompetitor) => this.mapper.updateObject(jsonCompetitor, competitor)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -64,7 +64,7 @@ export class CompetitorRepository extends APIRepository {
                 competitorTwo.setPouleNr(competitorOneTmp.getPouleNr());
                 competitorTwo.setPlaceNr(competitorOneTmp.getPlaceNr());
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -86,7 +86,7 @@ export class CompetitorRepository extends APIRepository {
                     tournament.getCompetitors().splice(index, 1);
                 }
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 }

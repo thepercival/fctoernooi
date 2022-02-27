@@ -13,6 +13,7 @@ import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository'
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentCompetitor } from '../../lib/competitor';
+import { IAlertType } from '../../shared/common/alert';
 
 @Component({
     selector: 'app-tournament-competitor-edit',
@@ -70,7 +71,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
 
     private postInit(pouleNr: number, placeNr: number) {
         if (placeNr < 1 || pouleNr < 1) {
-            this.setAlert('danger', 'de rondeplek kan niet gevonden worden');
+            this.setAlert(IAlertType.Danger, 'de rondeplek kan niet gevonden worden');
             return;
         }
         this.pouleNr = pouleNr;
@@ -105,11 +106,11 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         const jsonCompetitor = this.formToJson();
         const message = this.validateName(jsonCompetitor.name, this.originalCompetitor);
         if (message) {
-            this.setAlert('danger', message);
+            this.setAlert(IAlertType.Danger, message);
             return false;
         }
         this.processing = true;
-        this.setAlert('info', 'de deelnemer wordt opgeslagen');
+        this.setAlert(IAlertType.Info, 'de deelnemer wordt opgeslagen');
         if (this.originalCompetitor) {
             this.competitorRepository.editObject(jsonCompetitor, this.originalCompetitor, this.tournament)
                 .subscribe({
@@ -117,7 +118,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
                         this.navigateBack();
                     },
                     error: (e) => {
-                        this.setAlert('danger', e); this.processing = false;
+                        this.setAlert(IAlertType.Danger, e); this.processing = false;
                     },
                     complete: () => this.processing = false
                 });
@@ -129,7 +130,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
                     this.navigateBack();
                 },
                 error: (e) => {
-                    this.setAlert('danger', e); this.processing = false;
+                    this.setAlert(IAlertType.Danger, e); this.processing = false;
                 }
             });
         return false;

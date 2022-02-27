@@ -3,7 +3,7 @@ import { Field, CompetitionSport, JsonField, Structure } from 'ngx-sport';
 
 import { FieldRepository } from '../../../lib/ngx-sport/field/repository';
 import { PlanningRepository } from '../../../lib/ngx-sport/planning/repository';
-import { IAlert } from '../../../shared/common/alert';
+import { IAlert, IAlertType } from '../../../shared/common/alert';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '../../../lib/translate';
 import { Tournament } from '../../../lib/tournament';
@@ -36,7 +36,7 @@ export class FieldListComponent implements OnInit {
 
     ngOnInit() {
         if (this.hasBegun) {
-            this.alert = { type: 'warning', message: 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen of verwijderen' };
+            this.alert = { type: IAlertType.Warning, message: 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen of verwijderen' };
         }
         this.prioritizable = !this.competitionSport.getCompetition().hasMultipleSports();
         this.processing = false;
@@ -75,7 +75,7 @@ export class FieldListComponent implements OnInit {
                 .subscribe({
                     next: () => this.updatePlanning(),
                     error: (e) => {
-                        this.alert = { type: 'danger', message: e }; this.processing = false;
+                        this.alert = { type: IAlertType.Danger, message: e }; this.processing = false;
                     }
                 });
         }, (reason) => {
@@ -92,7 +92,7 @@ export class FieldListComponent implements OnInit {
                 .subscribe({
                     next: () => { },
                     error: (e) => {
-                        this.alert = { type: 'danger', message: e }; this.processing = false;
+                        this.alert = { type: IAlertType.Danger, message: e }; this.processing = false;
                     },
                     complete: () => this.processing = false
                 });
@@ -105,7 +105,7 @@ export class FieldListComponent implements OnInit {
         this.fieldRepository.upgradeObject(field, this.tournament).subscribe({
             next: () => this.updatePlanning(),
             error: (e) => {
-                this.alert = { type: 'danger', message: e }; this.processing = false;
+                this.alert = { type: IAlertType.Danger, message: e }; this.processing = false;
             }
         });
     }
@@ -116,7 +116,7 @@ export class FieldListComponent implements OnInit {
         this.fieldRepository.removeObject(field, this.tournament).subscribe({
             next: () => this.updatePlanning(),
             error: (e) => {
-                this.alert = { type: 'danger', message: e }; this.processing = false;
+                this.alert = { type: IAlertType.Danger, message: e }; this.processing = false;
             }
         });
     }
@@ -125,7 +125,7 @@ export class FieldListComponent implements OnInit {
         this.planningRepository.create(this.structure, this.tournament, 1).subscribe({
             next: () => { },
             error: (e) => {
-                this.alert = { type: 'danger', message: e }; this.processing = false;
+                this.alert = { type: IAlertType.Danger, message: e }; this.processing = false;
             },
             complete: () => this.processing = false
         });

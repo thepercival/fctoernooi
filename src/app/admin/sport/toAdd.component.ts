@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { AgainstSportVariant, AllInOneGameSportVariant, SingleSportVariant, Sport, SportMapper } from 'ngx-sport';
+import { AgainstGpp, AgainstH2h, AllInOneGame, Single, Sport } from 'ngx-sport';
 
-import { IAlert } from '../../shared/common/alert';
+import { IAlert, IAlertType } from '../../shared/common/alert';
 import { CSSService } from '../../shared/common/cssservice';
 import { TranslateService } from '../../lib/translate';
 import { SportRepository } from '../../lib/ngx-sport/sport/repository';
@@ -42,7 +42,7 @@ export class SportToAddComponent implements OnInit {
                     this.processing = false;
                 },
                 error: (e) => {
-                    this.setAlert('danger', e); this.processing = false;
+                    this.setAlert(IAlertType.Danger, e); this.processing = false;
                 },
                 complete: () => this.processing = false
             });
@@ -70,7 +70,7 @@ export class SportToAddComponent implements OnInit {
                         this.sportToAdd.emit(sportRes);
                     },
                     error: (e) => {
-                        this.setAlert('danger', e); this.processing = false;
+                        this.setAlert(IAlertType.Danger, e); this.processing = false;
                     },
                     complete: () => {
                         this.processing = false
@@ -84,12 +84,12 @@ export class SportToAddComponent implements OnInit {
         this.sportToAdd.emit(sport);
     }
 
-    protected setAlert(type: string, message: string) {
+    protected setAlert(type: IAlertType, message: string) {
         this.alert = { 'type': type, 'message': message };
     }
 }
 
 export interface SportWithFields {
-    variant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant;
+    variant: Single | AgainstH2h | AgainstGpp | AllInOneGame;
     nrOfFields: number;
 }

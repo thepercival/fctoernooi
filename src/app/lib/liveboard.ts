@@ -6,9 +6,12 @@ import { ScheduleScreenCreator } from './liveboard/screenCreator/schedule';
 import { SponsorScreensCreator } from './liveboard/screenCreator/sponsors';
 
 import {
+    EndRankingScreen,
     LiveboardScreen,
     PoulesRankingScreen,
-    ScheduleScreen
+    ResultsScreen,
+    ScheduleScreen,
+    SponsorScreen
 } from './liveboard/screens';
 import { Tournament } from './tournament';
 
@@ -31,8 +34,8 @@ export class Liveboard {
     }
 
     // if more than one rank-screen, show schedulescreens in between
-    getScreens(tournament: Tournament, structure: Structure, screenfilter: string | undefined): LiveboardScreen[] {
-        let screens: LiveboardScreen[] = [];
+    getScreens(tournament: Tournament, structure: Structure, screenfilter: string | undefined): (SponsorScreen | ResultsScreen | ScheduleScreen | EndRankingScreen | PoulesRankingScreen)[] {
+        let screens: (SponsorScreen | ResultsScreen | ScheduleScreen | EndRankingScreen | PoulesRankingScreen)[] = [];
 
         if (screenfilter === undefined) {
             const resultsScreen = this.resultsScreenCreator.getScreen(structure.getLastRoundNumber());

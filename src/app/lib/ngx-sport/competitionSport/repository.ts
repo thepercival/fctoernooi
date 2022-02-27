@@ -1,10 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../repository';
-import { CompetitionSport, CompetitionSportMapper, CompetitionSportService, JsonCompetitionSport, JsonField, SportMapper, Structure } from 'ngx-sport';
+import { AgainstGpp, AgainstH2h, Competition, CompetitionSport, CompetitionSportMapper, CompetitionSportService, JsonCompetitionSport, JsonField, SportMapper, Structure } from 'ngx-sport';
 import { Tournament } from '../../tournament';
 import { SportWithFields } from '../../../admin/sport/createSportWithFields.component';
 
@@ -31,26 +31,70 @@ export class CompetitionSportRepository extends APIRepository {
 
     createObject(json: JsonCompetitionSport, tournament: Tournament, structure: Structure): Observable<CompetitionSport> {
         const url = this.getUrl(tournament);
+        const competition = tournament.getCompetition();
         return this.http.post<JsonCompetitionSport>(url, json, this.getOptions()).pipe(
-            map((jsonResult: JsonCompetitionSport) => {
-                const competitionSport = this.mapper.toObject(jsonResult, tournament.getCompetition(), true);
-                this.service.addToStructure(competitionSport, structure);
+            map((jsonCompetitionSport: JsonCompetitionSport) => {
+                const firstCompetitionSport = competition.getSingleSport();
+                if (firstCompetitionSport.getVariant() instanceof AgainstH2h) {
+                    this.convertFirstSport(firstCompetitionSport, structure);
+                }
+                this.add(jsonCompetitionSport, competition, structure);
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
+    }
+
+    protected add(jsonCompetitionSport: JsonCompetitionSport, competition: Competition, structure: Structure) {
+        const competitionSport = this.mapper.toObject(jsonCompetitionSport, competition, true);
+        this.service.addToStructure(competitionSport, structure);
     }
 
     removeObject(competitionSport: CompetitionSport, tournament: Tournament, structure: Structure): Observable<void> {
         const url = this.getUrl(tournament) + '/' + competitionSport.getId();
         return this.http.delete(url, this.getOptions()).pipe(
             map(() => {
-                this.service.removeFromStructure(competitionSport, structure);
-                const competitionSports = tournament.getCompetition().getSports();
-                competitionSports.splice(competitionSports.indexOf(competitionSport), 1);
+                this.remove(competitionSport, structure);
+                const firstCompetitionSport = competitionSport.getCompetition().getSingleSport();
+                const variant = firstCompetitionSport.getVariant();
+                if (variant instanceof AgainstGpp && !variant.hasMultipleSidePlaces()) {
+                    this.convertFirstSport(firstCompetitionSport, structure);
+                }
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
+
+    protected remove(competitionSport: CompetitionSport, structure: Structure) {
+        this.service.removeFromStructure(competitionSport, structure);
+        const competitionSports = competitionSport.getCompetition().getSports();
+        competitionSports.splice(competitionSports.indexOf(competitionSport), 1);
+    }
+
+    protected convertFirstSport(competitionSport: CompetitionSport, structure: Structure) {
+        this.remove(competitionSport, structure);
+        const json = this.mapper.toJson(competitionSport);
+        if (json.nrOfH2H > 0) {
+            json.nrOfGamesPerPlace = 1;
+            json.nrOfH2H = 0;
+        } else {
+            json.nrOfGamesPerPlace = 0;
+            json.nrOfH2H = 1;
+        }
+        this.add(json, competitionSport.getCompetition(), structure);
+    }
+    // protected convertAgainstSports(competition: Competition): void {
+    //     if (competition.hasMultipleSports()) {
+    //         competition.getSports().forEach((competitionSport: CompetitionSport) => {
+    //             if (competitionSport.getVariant() instanceof AgainstH2h) {
+
+    //             }
+    //         });
+    //     }
+    //     const competitionSport = competition.getSingleSport();
+    //     if (competitionSport.getVariant() instanceof AgainstGpp) {
+
+    //     }
+    // }
 
     sportWithFieldsToJson(sportWithFields: SportWithFields, withFieldNamePrefix?: boolean): JsonCompetitionSport {
         const sport = sportWithFields.variant.getSport();

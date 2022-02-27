@@ -17,7 +17,7 @@ import {
 import { CSSService } from '../../shared/common/cssservice';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Tournament } from '../../lib/tournament';
-import { IAlert } from '../../shared/common/alert';
+import { IAlert, IAlertType } from '../../shared/common/alert';
 import { RoundsSelectorModalComponent, ToggleRound } from '../rounds/selector.component';
 import { forkJoin, Observable } from 'rxjs';
 import { AgainstQualifyConfigRepository } from '../../lib/ngx-sport/againstQualifyConfig/repository';
@@ -121,9 +121,9 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
         this.readonly = this.allSelectedToggleRoundsBegun(this.toggleRound);
         this.alert = undefined;
         if (this.readonly) {
-            this.alert = { type: 'warning', message: 'er zijn wedstrijden gespeeld voor gekozen ronden, je kunt niet meer wijzigen' }
+            this.alert = { type: IAlertType.Warning, message: 'er zijn wedstrijden gespeeld voor gekozen ronden, je kunt niet meer wijzigen' }
         } else if (this.someSelectedToggleRoundsBegun(this.toggleRound)) {
-            this.alert = { type: 'warning', message: 'er zijn wedstrijden gespeeld voor sommige gekozen ronden, de score-regels hiervoor worden niet opgeslagen' }
+            this.alert = { type: IAlertType.Warning, message: 'er zijn wedstrijden gespeeld voor sommige gekozen ronden, de score-regels hiervoor worden niet opgeslagen' }
         }
         const json = this.getInputJson(this.getFirstSelectedToggleRound(this.toggleRound).round);
         this.jsonToForm(json);
@@ -276,13 +276,13 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
                 forkJoin(reposChildUpdates).subscribe({
                     next: () => this.processing = false,
                     error: (e) => {
-                        this.alert = { type: 'danger', message: 'de qualifyagainstregels zijn niet opgeslagen: ' + e };
+                        this.alert = { type: IAlertType.Danger, message: 'de qualifyagainstregels zijn niet opgeslagen: ' + e };
                         this.processing = false;
                     }
                 });
             },
             error: (e) => {
-                this.alert = { type: 'danger', message: 'de qualifyagainstregels zijn niet opgeslagen: ' + e };
+                this.alert = { type: IAlertType.Danger, message: 'de qualifyagainstregels zijn niet opgeslagen: ' + e };
                 this.processing = false;
             }
         });

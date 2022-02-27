@@ -18,6 +18,7 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { cloneDeep } from 'lodash';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
+import { IAlertType } from '../../shared/common/alert';
 
 @Component({
   selector: 'app-tournament-structure',
@@ -64,12 +65,13 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
             this.processing = false;
           },
           error: (e: string) => {
-            const sportVariants = this.competition.getSportVariants();
-            const pouleStructure = this.defaultService.getPouleStructure(sportVariants);
-            const jsonPlanningConfig = this.defaultService.getJsonPlanningConfig(sportVariants);
+            const sportVariant = this.competition.getSingleSport().getVariant();
+            const pouleStructure = this.defaultService.getPouleStructure([sportVariant]);
+            const jsonPlanningConfig = this.defaultService.getJsonPlanningConfig(sportVariant);
             this.structure = this.structureEditor.create(this.competition, pouleStructure, jsonPlanningConfig);
             this.clonedStructure = this.createClonedStructure(this.structure);
-            this.setAlert('danger', e + ', new structure created'); this.processing = false;
+            this.setAlert(IAlertType.Danger, e + ', new structure created');
+            this.processing = false;
           }
         });
     }, noStructure);
@@ -104,14 +106,14 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
 
   saveStructure() {
     this.processing = true;
-    this.setAlert('info', 'wijzigingen worden opgeslagen');
+    this.setAlert(IAlertType.Info, 'wijzigingen worden opgeslagen');
 
     this.structureRepository.editObject(this.clonedStructure, this.tournament)
       .subscribe({
         next: (structureRes: Structure) => {
           this.syncPlanning(structureRes, 1/*this.changedRoundNumber.getNumber()*/); // should always be first roundnumber
         },
-        error: (e) => { this.setAlert('danger', e); this.processing = false; }
+        error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
       });
   }
 
@@ -119,7 +121,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     this.clonedStructure = this.createClonedStructure(structureRes);
     this.changedRoundNumber = undefined;
     this.processing = false;
-    this.setAlert('success', 'de wijzigingen zijn opgeslagen');
+    this.setAlert(IAlertType.Success, 'de wijzigingen zijn opgeslagen');
   }
 
   protected syncPlanning(structure: Structure, roundNumberToSync: number) {
@@ -130,7 +132,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     this.planningRepository.create(structure, this.tournament, roundNumberToSync)
       .subscribe({
         next: () => this.completeSave(structure),
-        error: e => { this.setAlert('danger', e); this.processing = false; },
+        error: e => { this.setAlert(IAlertType.Danger, e); this.processing = false; },
         complete: () => this.processing = false
       });
   }

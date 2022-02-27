@@ -62,6 +62,11 @@
       </div>
     </div>
   </div>
+  <div *ngIf="tooFewPoulePlaces()" class="row mb-3">
+    <ngb-alert [type]="'danger'">er zijn te weinig poule-plekken om wedstrijden te kunnen maken, maak de poule(s) groter
+      of verminder het aantal deelnemers per wedstrijd
+    </ngb-alert>
+  </div>
   <div *ngIf="selectedGameMode === Against && form.controls.mixed.value" class="row mb-3">
     <label for="mixed" class="col-4 col-form-label">
       aantal deelnemers per wedstrijd
@@ -108,7 +113,7 @@
   </div>
   <div class="row mb-3 justify-content-end">
     <div class="col-8">
-      <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
+      <button [disabled]="form.invalid || tooFewPoulePlaces()" type="submit" class="btn btn-primary">
         {{labelBtnNext}}
       </button>
     </div>

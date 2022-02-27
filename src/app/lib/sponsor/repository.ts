@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -32,7 +32,7 @@ export class SponsorRepository extends APIRepository {
     createObject(jsonSponsor: JsonSponsor, tournament: Tournament): Observable<Sponsor> {
         return this.http.post<JsonSponsor>(this.getUrl(tournament), jsonSponsor, this.getOptions()).pipe(
             map((res: JsonSponsor) => this.mapper.toObject(res, tournament)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -40,7 +40,7 @@ export class SponsorRepository extends APIRepository {
         const url = this.getUrl(tournament) + '/' + sponsor.getId();
         return this.http.put<JsonSponsor>(url, jsonSponsor, this.getOptions()).pipe(
             map((res: JsonSponsor) => this.mapper.toObject(res, tournament, sponsor)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -53,7 +53,7 @@ export class SponsorRepository extends APIRepository {
                     tournament.getSponsors().splice(index, 1);
                 }
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -61,7 +61,7 @@ export class SponsorRepository extends APIRepository {
         const url = this.getUrl(tournament) + '/' + sponsor.getId() + '/upload';
         return this.http.post<JsonSponsor>(url, input, this.getUploadOptions()).pipe(
             map((res: JsonSponsor) => this.mapper.toObject(res, tournament, sponsor)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 

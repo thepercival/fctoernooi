@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -30,7 +30,7 @@ export class SportRepository extends APIRepository {
             map((jsonSports: JsonSport[]) => jsonSports.map((jsonSport: JsonSport) => {
                 return this.mapper.toObject(jsonSport);
             })),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -38,14 +38,14 @@ export class SportRepository extends APIRepository {
         const url = this.getUrl() + '/' + customId;
         return this.http.get<JsonSport>(url, this.getOptions()).pipe(
             map((json: JsonSport) => this.mapper.toObject(json)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
     createObject(json: JsonSport): Observable<Sport> {
         return this.http.post<JsonSport>(this.getUrl(), json, this.getOptions()).pipe(
             map((jsonRes: JsonSport) => this.mapper.toObject(jsonRes)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -53,14 +53,14 @@ export class AuthService extends APIRepository {
   register(newUser: any): Observable<boolean> {
     return this.http.post<JsonAuthItem>(this.getPublicUrl() + '/register', newUser, { headers: super.getHeaders() }).pipe(
       map((authItem: JsonAuthItem) => this.setAuthItem(authItem)),
-      catchError((err) => this.handleError(err))
+      catchError((err: HttpErrorResponse) => this.handleError(err))
     );
   }
 
   extendToken() {
     this.http.post<JsonAuthItem>(this.getUrl() + '/extendtoken', undefined, { headers: super.getHeaders() }).pipe(
       map((authItem: JsonAuthItem) => this.setAuthItem(authItem)),
-      catchError((err) => this.handleError(err))
+      catchError((err: HttpErrorResponse) => this.handleError(err))
     ).subscribe();
   }
 
@@ -74,7 +74,7 @@ export class AuthService extends APIRepository {
     const json = { emailaddress: emailaddress, password: password };
     return this.http.post<JsonAuthItem>(this.getPublicUrl() + '/login', json, this.getOptions()).pipe(
       map((authItem: JsonAuthItem) => this.setAuthItem(authItem)),
-      catchError((err) => this.handleError(err))
+      catchError((err: HttpErrorResponse) => this.handleError(err))
     );
   }
 
@@ -84,7 +84,7 @@ export class AuthService extends APIRepository {
       map((res: any) => {
         return res.retval;
       }),
-      catchError((err) => this.handleError(err))
+      catchError((err: HttpErrorResponse) => this.handleError(err))
     );
   }
 
@@ -92,7 +92,7 @@ export class AuthService extends APIRepository {
     const json = { emailaddress: emailaddress, password: password, code: code };
     return this.http.post<JsonAuthItem>(this.getPublicUrl() + '/passwordchange', json, this.getOptions()).pipe(
       map((authItem: JsonAuthItem) => this.setAuthItem(authItem)),
-      catchError((err) => this.handleError(err))
+      catchError((err: HttpErrorResponse) => this.handleError(err))
     );
   }
 

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, concatMap, map } from 'rxjs/operators';
@@ -35,7 +35,7 @@ export class StructureRepository extends APIRepository {
             map((json: JsonStructure) => {
                 return this.mapper.toObject(json, tournament.getCompetition());
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -46,7 +46,7 @@ export class StructureRepository extends APIRepository {
                 const structure = this.mapper.toObject(jsonRes, tournament.getCompetition());
                 return this.updateCompetitors(structure, this.competitorRepository.reloadObjects(tournament));
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 

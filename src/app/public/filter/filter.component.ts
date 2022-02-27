@@ -12,6 +12,7 @@ import { AuthService } from '../../lib/auth/auth.service';
 import { Role } from '../../lib/role';
 import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 import { TournamentCompetitor } from '../../lib/competitor';
+import { IAlertType } from '../../shared/common/alert';
 
 @Component({
     selector: 'app-tournament-filter',
@@ -44,7 +45,7 @@ export class FilterComponent extends TournamentComponent implements OnInit {
             this.placeCompetitorItems = this.getPlaceCompetitorItems(competitorMap);
             this.favorites = this.favRepository.getObject(this.tournament);
             if (this.hasCompetitors() === false) {
-                this.setAlert('info', 'er zijn nog geen deelnemers ingevuld, je kunt daarom nog geen deelnemers kiezen');
+                this.setAlert(IAlertType.Info, 'er zijn nog geen deelnemers ingevuld, je kunt daarom nog geen deelnemers kiezen');
             }
             this.processing = false;
         });

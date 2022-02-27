@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -41,7 +41,7 @@ export class PlanningRepository extends APIRepository {
                 this.planningMapper.toObject(jsonPoules, roundNumber, sportMap);
                 return roundNumber;
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -49,7 +49,7 @@ export class PlanningRepository extends APIRepository {
         const url = this.getUrl(tournament, roundNumber) + '/progress';
         return this.http.get<number>(url, this.getOptions()).pipe(
             map((jsonProgress: any) => jsonProgress.progress),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -66,7 +66,7 @@ export class PlanningRepository extends APIRepository {
             map((jsonStructure: JsonStructure) => {
                 this.structureMapper.planningToObject(jsonStructure, startRoundNumber, sportMap);
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -96,7 +96,7 @@ export class PlanningRepository extends APIRepository {
     //                     this.planningMapper.toObject(jsonPoules, roundNumber, sportMap);
     //                 }
     //             }),
-    //             catchError((err) => this.handleError(err))
+    //             catchError((err: HttpErrorResponse) => this.handleError(err))
     //         );
     //         reposUpdates.push(reposUpdate);
     //         roundNumber = roundNumber.getNext();
@@ -112,7 +112,7 @@ export class PlanningRepository extends APIRepository {
                 const map = this.competitionSportMapper.getMap(tournament.getCompetition());
                 return jsonRemovedGames.map((jsonGame: JsonAgainstGame | JsonTogetherGame) => this.gameMapper.toNew(jsonGame, poule, map));
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -123,7 +123,7 @@ export class PlanningRepository extends APIRepository {
                 const map = this.competitionSportMapper.getMap(tournament.getCompetition());
                 return jsonGames.map((jsonGame: JsonAgainstGame | JsonTogetherGame) => this.gameMapper.toNew(jsonGame, poule, map));
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }*/
 
@@ -141,7 +141,7 @@ export class PlanningRepository extends APIRepository {
         const url = this.getUrl(tournament, roundNumber) + '/reschedule';
         return this.http.post<Date[]>(url, undefined, this.getOptions()).pipe(
             map((dates: Date[]) => this.updateDates(roundNumber, dates)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 

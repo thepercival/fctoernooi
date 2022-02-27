@@ -12,11 +12,12 @@ import {
     PlanningConfigMapper,
     JsonGameAmountConfig,
     GameAmountConfig,
-    SingleSportVariant,
-    AgainstSportVariant,
-    AllInOneGameSportVariant,
     GamePlaceStrategy,
-    PlanningEditMode
+    PlanningEditMode,
+    AgainstH2h,
+    AgainstGpp,
+    AllInOneGame,
+    Single
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -34,6 +35,7 @@ import { GameAmountConfigControl } from '../gameAmountConfig/edit.component';
 import { GameAmountConfigRepository } from '../../lib/ngx-sport/gameAmountConfig/repository';
 import { forkJoin, Observable, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { IAlertType } from '../../shared/common/alert';
 
 @Component({
     selector: 'app-planningconfig-edit',
@@ -125,7 +127,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.nameService = new NameService(new CompetitorMap(this.tournament.getCompetitors()));
         const startRoundNumber = this.structure.getRoundNumber(startRoundNumberAsValue);
         if (startRoundNumber === undefined) {
-            this.setAlert('danger', 'het rondenumber is niet gevonden');
+            this.setAlert(IAlertType.Danger, 'het rondenumber is niet gevonden');
             return;
         }
         this._changingStartRoundNumber.next(startRoundNumber);
@@ -139,14 +141,14 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.gameAmountLabel = this.getGameAmountLabel(startRoundNumber.getCompetition().getSportVariants());
     }
 
-    protected getCorrectAmount(
-        sportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant,
-        gameAmountConfig: GameAmountConfig): number {
-        if (sportVariant instanceof AgainstSportVariant && sportVariant.isMixed()) {
-            return gameAmountConfig.getNrOfGamesPerPlaceMixed();
-        }
-        return gameAmountConfig.getAmount();
-    }
+    // protected getCorrectAmount(
+    //     sportVariant: Single | AgainstH2h | AgainstGpp | AllInOneGame,
+    //     gameAmountConfig: GameAmountConfig): number {
+    //     if (sportVariant instanceof AgainstVariant && sportVariant.isMixed()) {
+    //         return gameAmountConfig.getNrOfGamesPerPlaceMixed();
+    //     }
+    //     return gameAmountConfig.getAmount();
+    // }
 
     // isGameAmountEditable(): boolean {
     //     const calculator = new GameCreationStrategyCalculator();
@@ -155,18 +157,15 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     // }
 
 
-    getGameAmountLabel(sportVariants: (SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant)[]): string {
+    private getGameAmountLabel(sportVariants: (Single | AgainstH2h | AgainstGpp | AllInOneGame)[]): string {
         if (sportVariants.length > 1) {
             return 'aantal wedstrijden';
         }
         const sportVariant = sportVariants[0];
-        if (sportVariant instanceof AgainstSportVariant) {
-            if (sportVariant.getNrOfGamePlaces() > 2) {
-                return 'aantal wedstrijden per deelnemer';
-            }
+        if (sportVariant instanceof AgainstH2h) {
             return 'aantal onderlinge duels';
         }
-        return 'aantal speelronden';
+        return 'aantal wedstrijden per deelnemer';
     }
 
     setGameAmountControls(startRoundNumber: RoundNumber) {
@@ -189,7 +188,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.jsonToForm(this.mapper.toJson(startRoundNumber.getValidPlanningConfig()));
         this.resetAlert();
         if (this.hasBegun) {
-            this.setAlert('warning', 'er zijn wedstrijden gespeeld voor deze ronde, je kunt niet meer wijzigen');
+            this.setAlert(IAlertType.Warning, 'er zijn wedstrijden gespeeld voor deze ronde, je kunt niet meer wijzigen');
         }
     }
 
@@ -240,7 +239,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
                     Validators.min(range.min),
                     Validators.max(range.max)])
             );
-            this.form.controls[id].setValue(this.getCorrectAmount(sportVariant, gameAmountConfig));
+            this.form.controls[id].setValue(gameAmountConfig.getAmount());
         });
         this.form.controls.strategyRandomly.setValue(json.gamePlaceStrategy === GamePlaceStrategy.RandomlyAssigned);
         this.form.controls.manual.setValue(json.editMode === PlanningEditMode.Manual);
@@ -275,19 +274,10 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     private formToJsonGameAmountConfigs(): JsonGameAmountConfig[] {
         return this.gameAmountConfigControls.map((gameAmountConfigControl: GameAmountConfigControl): JsonGameAmountConfig => {
-            const nrOfGamePlaces = gameAmountConfigControl.json.competitionSport.nrOfHomePlaces +
-                gameAmountConfigControl.json.competitionSport.nrOfAwayPlaces;
-            let amount = gameAmountConfigControl.control.value;
-            let nrOfGamesPerPlaceMixed = 0;
-            if (nrOfGamePlaces > 2) {
-                nrOfGamesPerPlaceMixed = gameAmountConfigControl.control.value;
-                amount = 0;
-            }
             return {
                 id: gameAmountConfigControl.json.id,
                 competitionSport: gameAmountConfigControl.json.competitionSport,
-                amount: amount,
-                nrOfGamesPerPlaceMixed: nrOfGamesPerPlaceMixed
+                amount: gameAmountConfigControl.control.value
             };
         });
     }
@@ -318,7 +308,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
         let selfRefereeAvailable = SelfReferee.Disabled;
 
-        const sportVariants = compSports.map((compSport: CompetitionSport): SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant => compSport.getVariant());
+        const sportVariants = compSports.map((compSport: CompetitionSport): Single | AgainstH2h | AgainstGpp | AllInOneGame => compSport.getVariant());
 
         const otherPoulesAvailable = this.pouleStructure.isSelfRefereeOtherPoulesAvailable();
         if (otherPoulesAvailable) {
@@ -331,11 +321,12 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         return selfRefereeAvailable;
     }
 
-    showGamePlaceStrategy(): boolean {
+    showRandomGamePlaceStrategy(): boolean {
         const sportVariants = this.startRoundNumber.getCompetition().getSportVariants();
-        return !sportVariants.every((sportVariant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant): boolean => {
-            return sportVariant instanceof AgainstSportVariant && !sportVariant.isMixed();
+        return sportVariants.every((sportVariant: Single | AgainstH2h | AgainstGpp | AllInOneGame): boolean => {
+            return sportVariant instanceof AgainstGpp && sportVariant.hasMultipleSidePlaces();
         });
+
     }
 
     enableDisableSelfReferee() {
@@ -352,10 +343,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         return this.getSelfRefereeAvailable() !== SelfReferee.Disabled;
     }
 
-
-
     save(): boolean {
-        this.setAlert('info', 'instellingen worden opgeslagen');
+        this.setAlert(IAlertType.Info, 'instellingen worden opgeslagen');
         this.processing = true;
 
         const jsonConfig: JsonPlanningConfig = this.formToJson();
@@ -374,7 +363,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
                     }
                 },
                 error: (e) => {
-                    this.setAlert('danger', 'de instellingen zijn niet opgeslagen: ' + e);
+                    this.setAlert(IAlertType.Danger, 'de instellingen zijn niet opgeslagen: ' + e);
                     this.processing = false;
                 }
             });
@@ -387,11 +376,11 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             this.planningRepository.create(this.structure, this.tournament, this.startRoundNumber.getNumber())
                 .subscribe({
                     next: () => {
-                        this.setAlert('success', 'de instellingen zijn opgeslagen');
+                        this.setAlert(IAlertType.Success, 'de instellingen zijn opgeslagen');
                         this.myNavigation.back();
                     },
                     error: (e) => {
-                        this.setAlert('danger', 'de instellingen zijn niet opgeslagen: ' + e); this.processing = false;
+                        this.setAlert(IAlertType.Danger, 'de instellingen zijn niet opgeslagen: ' + e); this.processing = false;
                     },
                     complete: () => this.processing = false
                 });
@@ -399,17 +388,17 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             this.planningRepository.reschedule(this.startRoundNumber, this.tournament)
                 .subscribe({
                     next: () => {
-                        this.setAlert('success', 'de instellingen zijn opgeslagen');
+                        this.setAlert(IAlertType.Success, 'de instellingen zijn opgeslagen');
                         this.myNavigation.back();
                     },
                     error: (e) => {
-                        this.setAlert('danger', 'de instellingen zijn niet opgeslagen: ' + e); this.processing = false;
+                        this.setAlert(IAlertType.Danger, 'de instellingen zijn niet opgeslagen: ' + e); this.processing = false;
                     },
                     complete: () => this.processing = false
                 });
         } else {
             this.processing = false;
-            this.setAlert('success', 'de instellingen zijn opgeslagen');
+            this.setAlert(IAlertType.Success, 'de instellingen zijn opgeslagen');
             this.myNavigation.back();
         }
     }
@@ -418,13 +407,15 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         const reposUpdates: Observable<GameAmountConfig>[] = jsonGameAmountConfigs.map((jsonGameAmountConfig: JsonGameAmountConfig) => {
             return this.gameAmountConfigRepository.saveObject(jsonGameAmountConfig, this.startRoundNumber, this.tournament);
         });
-        forkJoin(reposUpdates).subscribe(results => {
-            this.savePlanning(planningAction);
-        },
-            e => {
-                this.alert = { type: 'danger', message: 'de wedstrijd-aantallen zijn niet opgeslagen: ' + e };
+        forkJoin(reposUpdates).subscribe({
+            next: () => {
+                this.savePlanning(planningAction);
+            },
+            error: (e) => {
+                this.alert = { type: IAlertType.Danger, message: 'de wedstrijd-aantallen zijn niet opgeslagen: ' + e };
                 this.processing = false;
-            });
+            }
+        });
     }
 
     openModalSelectStartRoundNumber() {
@@ -478,8 +469,7 @@ class PlanningActionCalculator {
             if (gameAmountConfig === undefined) {
                 return true;
             }
-            return jsonGameAmountConfig && (jsonGameAmountConfig.amount !== gameAmountConfig.getAmount()
-                || jsonGameAmountConfig.nrOfGamesPerPlaceMixed !== gameAmountConfig.getNrOfGamesPerPlaceMixed());
+            return jsonGameAmountConfig && jsonGameAmountConfig.amount !== gameAmountConfig.getAmount();
         });
     }
 

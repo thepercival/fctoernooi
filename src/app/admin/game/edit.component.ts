@@ -35,6 +35,7 @@ import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { TournamentUser } from '../../lib/tournament/user';
 import { map } from 'rxjs/operators';
 import { EqualQualifiersChecker } from '../../lib/ngx-sport/ranking/equalQualifiersChecker';
+import { IAlertType } from '../../shared/common/alert';
 
 export class GameEditComponent extends TournamentComponent {
     public game: AgainstGame | TogetherGame | undefined;
@@ -77,7 +78,7 @@ export class GameEditComponent extends TournamentComponent {
         this.nameService = new NameService(new CompetitorMap(this.tournament.getCompetitors()));
         const game = this.getGameById(gameId, this.structure.getRootRound());
         if (game === undefined) {
-            this.setAlert('danger', 'de wedstrijd kan niet gevonden worden');
+            this.setAlert(IAlertType.Danger, 'de wedstrijd kan niet gevonden worden');
             this.processing = false;
             return;
         }
@@ -85,7 +86,7 @@ export class GameEditComponent extends TournamentComponent {
         this.equalQualifiersChecker = new EqualQualifiersChecker(this.game, this.nameService, this.mapper);
         const roundNumber = this.game.getRound().getNumber();
         if (this.nextRoundNumberBegun(roundNumber)) {
-            this.setAlert('warning', 'het aanpassen van de score kan gevolgen hebben voor de al begonnen volgende ronde');
+            this.setAlert(IAlertType.Warning, 'het aanpassen van de score kan gevolgen hebben voor de al begonnen volgende ronde');
         }
         this.planningConfig = roundNumber.getValidPlanningConfig();
         this.firstScoreConfig = this.game.getScoreConfig();
@@ -96,7 +97,7 @@ export class GameEditComponent extends TournamentComponent {
                 /* happy path */ hasAuthorization => {
                 this.hasAuthorization = hasAuthorization;
                 if (!this.hasAuthorization) {
-                    this.setAlert('danger', 'je bent geen scheidsrechter voor deze wedstrijd of uitslagen-invoerder voor dit toernooi, je emailadres moet door de beheerder gekoppeld zijn');
+                    this.setAlert(IAlertType.Danger, 'je bent geen scheidsrechter voor deze wedstrijd of uitslagen-invoerder voor dit toernooi, je emailadres moet door de beheerder gekoppeld zijn');
                 }
                 this.processing = false;
             }
@@ -284,14 +285,14 @@ export class GameEditComponent extends TournamentComponent {
             return false;
         }
         this.processing = true;
-        this.setAlert('info', 'de wedstrijd wordt opgeslagen');
+        this.setAlert(IAlertType.Info, 'de wedstrijd wordt opgeslagen');
 
         this.gameRepository.editObject(jsonGame, this.game, this.game.getPoule(), this.tournament)
             .subscribe(
                 /* happy path */ gameRes => {
                     this.navigateBack();
                 },
-             /* error path */ e => { this.setAlert('danger', e); this.processing = false; }
+             /* error path */ e => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
             );
         return false;
     }
@@ -301,18 +302,18 @@ export class GameEditComponent extends TournamentComponent {
             return;
         }
         if (this.game.getPoule().getNrOfGames() === 1) {
-            this.setAlert('warning', 'de laatste wedstrijd uit de poule kun je niet verwijderen');
+            this.setAlert(IAlertType.Warning, 'de laatste wedstrijd uit de poule kun je niet verwijderen');
             return;
         }
         this.processing = true;
-        this.setAlert('info', 'de wedstrijd wordt verwijderd');
+        this.setAlert(IAlertType.Info, 'de wedstrijd wordt verwijderd');
 
         this.gameRepository.removeObject(this.game, this.game.getPoule(), this.tournament)
             .subscribe(
         /* happy path */() => {
                     this.navigateBack();
                 },
-        /* error path */ e => { this.setAlert('danger', 'het opslaan is niet gelukt: ' + e); this.processing = false; },
+        /* error path */ e => { this.setAlert(IAlertType.Danger, 'het opslaan is niet gelukt: ' + e); this.processing = false; },
         /* onComplete */() => this.processing = false
             );
     }

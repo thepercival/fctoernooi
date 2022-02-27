@@ -1,14 +1,16 @@
 import { HttpParams } from '@angular/common/http';
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError as observableThrowError } from 'rxjs';
+import { Observable, throwError as observableThrowError, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export class APIRepository {
 
     protected apiurl: string = environment.apiurl;
     private apiVersion: string = environment.apiVersion;
+    private appErrorHandler: AppErrorHandler;
 
     constructor() {
+        this.appErrorHandler = new AppErrorHandler();
     }
 
     getApiUrl(): string {
@@ -43,7 +45,13 @@ export class APIRepository {
     }
 
     protected handleError(error: HttpErrorResponse | Error): Observable<any> {
-        let errortext;
+        return this.appErrorHandler.handleError(error);
+    }
+}
+
+export class AppErrorHandler {
+    public handleError(error: HttpErrorResponse | Error): Observable<any> {
+        let errortext: string = 'onbekende fout(';
         if (!navigator.onLine) {
             errortext = 'er kan geen internet verbinding gemaakt worden';
         } else if (error instanceof HttpErrorResponse) {
@@ -61,6 +69,7 @@ export class APIRepository {
         } else {
             errortext = error.message;
         }
-        return observableThrowError(errortext);
+        const err = new Error(errortext);
+        return throwError(() => err);
     }
 }

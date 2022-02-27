@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -40,7 +40,7 @@ export class AgainstQualifyConfigRepository extends APIRepository {
                 round.getChildren().forEach((child: Round) => this.service.removeFromRound(competitionSport, round));
                 return this.mapper.toObject(jsonResult, round, round.getAgainstQualifyConfig(competitionSport));
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 }

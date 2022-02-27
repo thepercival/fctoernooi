@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
-import { IAlert } from '../../shared/common/alert';
+import { IAlert, IAlertType } from '../../shared/common/alert';
 import { User } from '../../lib/user';
 import { PasswordValidation } from '../password-validation';
 
@@ -61,7 +61,7 @@ export class PasswordchangeComponent implements OnInit {
     this.processing = false;
   }
 
-  protected setAlert(type: string, message: string) {
+  protected setAlert(type: IAlertType, message: string) {
     this.alert = { 'type': type, 'message': message };
   }
 
@@ -75,7 +75,7 @@ export class PasswordchangeComponent implements OnInit {
 
   changePassword(): boolean {
     this.processing = true;
-    this.setAlert('info', 'het wachtwoord wordt gewijzigd');
+    this.setAlert(IAlertType.Info, 'het wachtwoord wordt gewijzigd');
 
     const code = this.form.controls.code.value;
     const password = this.form.controls.password.value;
@@ -88,7 +88,7 @@ export class PasswordchangeComponent implements OnInit {
           this.resetAlert();
         },
         error: (e) => {
-          this.setAlert('danger', 'het wijzigen van het wachtwoord is niet gelukt: ' + e);
+          this.setAlert(IAlertType.Danger, 'het wijzigen van het wachtwoord is niet gelukt: ' + e);
           this.processing = false;
         },
         complete: () => this.processing = false

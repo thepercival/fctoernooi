@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -33,7 +33,7 @@ export class TournamentUserRepository extends APIRepository {
         const url = this.getUrl(tournament) + '/' + tournamentUser.getId();
         return this.http.put<JsonTournamentUser>(url, this.mapper.toJson(tournamentUser), this.getOptions()).pipe(
             map((res: JsonTournamentUser) => this.mapper.toObject(res, tournament, tournamentUser)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -49,7 +49,7 @@ export class TournamentUserRepository extends APIRepository {
 
                 return res;
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 }

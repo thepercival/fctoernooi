@@ -18,12 +18,14 @@ import {
   TogetherGame,
   CompetitionSport,
   AgainstSide,
-  AgainstSportVariant,
   TogetherGamePlace,
   PlanningEditMode,
   GameOrder,
   Competitor,
-  GameState
+  GameState,
+  AgainstGpp,
+  AgainstH2h,
+  AgainstVariant
 } from 'ngx-sport';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -37,10 +39,13 @@ import { TranslateService } from '../../../lib/translate';
 import { CompetitionSportRouter } from '../competitionSport.router';
 import { CompetitionSportTab } from '../competitionSportTab';
 import { InfoModalComponent } from '../infomodal/infomodal.component';
-import { IAlert } from '../../common/alert';
+import { IAlert, IAlertType } from '../../common/alert';
 import { DateFormatter } from '../../../lib/dateFormatter';
-import { interval, of, Subscription, timer } from 'rxjs';
+import { interval, Observable, of, Subscription, throwError, timer } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AppErrorHandler } from '../../../lib/repository';
+import { isLocalRelativePath } from '@angular/compiler-cli/private/localize';
 
 @Component({
   selector: 'app-tournament-roundnumber-planning',
@@ -75,6 +80,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   public planningConfig!: PlanningConfig;
   public hasOnlyGameModeAgainst: boolean = true;
   private refreshTimer: Subscription | undefined;
+  private appErrorHandler: AppErrorHandler;
   public progressPerc = 0;
 
   constructor(
@@ -89,6 +95,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
     this.resetAlert();
     this.scoreConfigService = new ScoreConfigService();
+    this.appErrorHandler = new AppErrorHandler();
   }
 
   ngOnInit() {
@@ -163,7 +170,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
 
   private hasOnlyAgainstGameMode(): boolean {
     return this.tournament.getCompetition().getSports().every((competitionSport: CompetitionSport): boolean => {
-      return competitionSport.getVariant() instanceof AgainstSportVariant;
+      return competitionSport.getVariant() instanceof AgainstVariant;
     });
   }
 
@@ -205,7 +212,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   }
 
   getTogetherScoreBtnBorderClass(gamePlace: TogetherGamePlace): string {
-    return gamePlace.getGame().getState() === GameState.Finished ? 'success' : 'primary';
+    return gamePlace.getGame().getState() === GameState.Finished ? IAlertType.Success : 'primary';
   }
 
   isFinished(game: Game): boolean {
@@ -267,7 +274,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
 
   linkToGameAdd() {
     const competitionSport = this.roundNumber.getCompetition().getSingleSport();
-    const suffix = ((competitionSport.getVariant() instanceof AgainstSportVariant) ? 'against' : 'together')
+    const suffix = ((competitionSport.getVariant() instanceof AgainstVariant) ? 'against' : 'together')
     this.router.navigate(['/admin/game/new', this.tournament.getId(), this.roundNumber.getNumber()]);
   }
 
@@ -314,9 +321,9 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     this.alert = undefined;
   }
 
-  protected setAlert(type: string, message: string): boolean {
+  protected setAlert(type: IAlertType, message: string): boolean {
     this.alert = { 'type': type, 'message': message };
-    return (type === 'success');
+    return (type === IAlertType.Success);
   }
 
   getGameQualificationDescription(game: AgainstGame | TogetherGame): string {
@@ -379,9 +386,9 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     this.refreshTimer = timer(0, 2000) // repeats every 2 seconds
       .pipe(
         switchMap(() => this.planningRepository.progress(this.roundNumber, this.tournament).pipe()),
-        catchError(err => of(undefined))
-      ).subscribe(
-        /* happy path */(progressPerc: number | undefined) => {
+        catchError(err => this.appErrorHandler.handleError(err))
+      ).subscribe({
+        next: (progressPerc: number | undefined) => {
           if (progressPerc === undefined) {
             return;
           }
@@ -395,11 +402,19 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
                   this.loadGameData();
                 },
                 error: (e) => {
-                  this.setAlert('danger', e);
+                  this.setAlert(IAlertType.Danger, e);
                 }
               });
           }
-        });
+        },
+        error: (e) => {
+          this.setAlert(IAlertType.Danger, e);
+        }
+      })
+  }
+
+  public showError(): boolean {
+    return this.alert?.type === IAlertType.Danger;
   }
 
   ngOnDestroy() {

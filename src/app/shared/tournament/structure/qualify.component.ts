@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { HorizontalPoule, NameService, QualifyGroup, SingleQualifyRule, QualifyTarget, Round, RoundNumber, StructureEditor, CompetitorMap } from 'ngx-sport';
 
-import { IAlert } from '../../common/alert';
+import { IAlert, IAlertType } from '../../common/alert';
 import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
 import { facStructure } from '../icons';
 import { CSSService } from '../../common/cssservice';
@@ -47,7 +47,7 @@ export class StructureQualifyComponent {
             this.nameService.resetStructure();
             this.roundNumberChanged.emit(this.parentRound.getNumber());
         } catch (e: any) {
-            this.setAlert('danger', e.message);
+            this.setAlert(IAlertType.Danger, e.message);
         }
     }
 
@@ -89,7 +89,7 @@ export class StructureQualifyComponent {
             this.nameService.resetStructure();
             this.roundNumberChanged.emit(this.parentRound.getNumber());
         } catch (e: any) {
-            this.setAlert('danger', e.message);
+            this.setAlert(IAlertType.Danger, e.message);
         }
     }
 
@@ -100,7 +100,7 @@ export class StructureQualifyComponent {
             this.nameService.resetStructure();
             this.roundNumberChanged.emit(this.parentRound.getNumber());
         } catch (e: any) {
-            this.setAlert('danger', e.message);
+            this.setAlert(IAlertType.Danger, e.message);
         }
     }
 
@@ -115,7 +115,7 @@ export class StructureQualifyComponent {
             this.nameService.resetStructure();
             this.roundNumberChanged.emit(this.parentRound.getNumber());
         } catch (e: any) {
-            this.setAlert('danger', e.message);
+            this.setAlert(IAlertType.Danger, e.message);
         }
     }
 
@@ -184,7 +184,7 @@ export class StructureQualifyComponent {
         this.alert = undefined;
     }
 
-    protected setAlert(type: string, message: string) {
+    protected setAlert(type: IAlertType, message: string) {
         this.alert = { type: type, message: message };
     }
 }

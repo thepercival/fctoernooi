@@ -23,6 +23,7 @@ import { LockerRoomValidator } from '../../lib/lockerroom/validator';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { CompetitorMapper } from '../../lib/competitor/mapper';
 import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
+import { IAlertType } from '../../shared/common/alert';
 
 @Component({
   selector: 'app-tournament-competitors',
@@ -68,7 +69,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     });
   }
 
-  alertType(): string { return this.alert?.type ?? 'danger' }
+  alertType(): string { return this.alert?.type ?? IAlertType.Danger }
   alertMessage(): string { return this.alert?.message ?? '' }
 
   ngAfterViewChecked() {
@@ -146,14 +147,14 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
       return;
     }
     this.processing = true;
-    this.setAlert('info', 'volgorde wordt gewijzigd');
+    this.setAlert(IAlertType.Info, 'volgorde wordt gewijzigd');
     this.swapHelper(
       [this.competitorRepository.swapObjects(swapCompetitorOne, swapCompetitorTwo, this.tournament)]);
   }
 
   swapAll() {
     this.processing = true;
-    this.setAlert('info', 'volgorde wordt willekeurig gewijzigd');
+    this.setAlert(IAlertType.Info, 'volgorde wordt willekeurig gewijzigd');
 
     let reposUpdates: Observable<void>[] = [];
     const competitors = this.tournament.getCompetitors().slice();
@@ -178,13 +179,13 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     forkJoin(reposUpdates)
       .subscribe({
         next: () => {
-          this.setAlert('success', 'volgorde gewijzigd');
+          this.setAlert(IAlertType.Success, 'volgorde gewijzigd');
           this.swapItem = undefined;
           this.placeCompetitorItems = this.getPlaceCompetitorItems();
           this.processing = false;
         },
         error: (e) => {
-          this.setAlert('danger', 'volgorde niet gewijzigd: ' + e);
+          this.setAlert(IAlertType.Danger, 'volgorde niet gewijzigd: ' + e);
           this.swapItem = undefined;
           this.placeCompetitorItems = this.getPlaceCompetitorItems();
           this.processing = false;
@@ -194,13 +195,13 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
 
   addPlaceToRootRound(): void {
     this.processing = true;
-    this.setAlert('info', 'er wordt een pouleplek toegevoegd');
+    this.setAlert(IAlertType.Info, 'er wordt een pouleplek toegevoegd');
     try {
       const rootRound = this.structure.getRootRound();
       const addedPlace = this.structureEditor.addPlaceToRootRound(rootRound);
       this.saveStructure('pouleplek ' + this.nameService.getPlaceName(addedPlace) + ' is toegevoegd');
     } catch (e: any) {
-      this.setAlert('danger', e.message);
+      this.setAlert(IAlertType.Danger, e.message);
     }
   }
 
@@ -240,14 +241,14 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     const jsonCompetitor = this.mapper.toJson(competitor);
     jsonCompetitor.registered = competitor.getRegistered() === true ? false : true;
     const prefix = jsonCompetitor.registered ? 'aan' : 'af';
-    this.setAlert('info', 'deelnemer ' + competitor.getName() + ' wordt ' + prefix + 'gemeld');
+    this.setAlert(IAlertType.Info, 'deelnemer ' + competitor.getName() + ' wordt ' + prefix + 'gemeld');
     this.competitorRepository.editObject(jsonCompetitor, competitor, this.tournament)
       .subscribe({
         next: (competitorRes: TournamentCompetitor) => {
-          this.setAlert('success', 'deelnemer ' + competitor.getName() + ' is ' + prefix + 'gemeld');
+          this.setAlert(IAlertType.Success, 'deelnemer ' + competitor.getName() + ' is ' + prefix + 'gemeld');
         },
         error: (e) => {
-          this.setAlert('danger', e); this.processing = false;
+          this.setAlert(IAlertType.Danger, e); this.processing = false;
         },
         complete: () => this.processing = false
       });
@@ -259,15 +260,15 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
 
   removeCompetitor(competitor: TournamentCompetitor): void {
     this.processing = true;
-    this.setAlert('info', 'deelnemer ' + competitor.getName() + ' wordt verwijderd');
+    this.setAlert(IAlertType.Info, 'deelnemer ' + competitor.getName() + ' wordt verwijderd');
     this.competitorRepository.removeObject(competitor, this.tournament)
       .subscribe({
         next: () => {
           this.placeCompetitorItems = this.getPlaceCompetitorItems();
-          this.setAlert('success', 'deelnemer ' + competitor + ' is verwijderd');
+          this.setAlert(IAlertType.Success, 'deelnemer ' + competitor + ' is verwijderd');
         },
         error: (e) => {
-          this.setAlert('danger', e); this.processing = false;
+          this.setAlert(IAlertType.Danger, e); this.processing = false;
         },
         complete: () => this.processing = false
       });
@@ -279,14 +280,14 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     const competitor = item.competitor;
     const suffix = competitor ? ' en deelnemer "' + competitor.getName() : '"';
     const singledoubleWill = competitor ? 'worden' : 'wordt';
-    this.setAlert('info', 'een pouleplek' + suffix + ' ' + singledoubleWill + ' verwijderd');
+    this.setAlert(IAlertType.Info, 'een pouleplek' + suffix + ' ' + singledoubleWill + ' verwijderd');
     try {
       this.structureEditor.removePlaceFromRootRound(rootRound);
       const singledoubleIs = competitor ? 'zijn' : 'is';
       this.saveStructure('een pouleplek' + competitor + ' ' + singledoubleIs + ' verwijderd');
     } catch (e: any) {
       this.processing = false;
-      this.setAlert('danger', e.message);
+      this.setAlert(IAlertType.Danger, e.message);
     }
   }
 
@@ -299,15 +300,15 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
             .subscribe({
               next: () => {
                 this.placeCompetitorItems = this.getPlaceCompetitorItems();
-                this.setAlert('success', message);
+                this.setAlert(IAlertType.Success, message);
               },
               error: (e) => {
-                this.setAlert('danger', e); this.processing = false;
+                this.setAlert(IAlertType.Danger, e); this.processing = false;
               },
               complete: () => this.processing = false
             });
         },
-        error: (e) => { this.setAlert('danger', e); this.processing = false; }
+        error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
       });
   }
 }

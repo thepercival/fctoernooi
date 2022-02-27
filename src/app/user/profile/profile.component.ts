@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { IAlert } from '../../shared/common/alert';
+import { IAlert, IAlertType } from '../../shared/common/alert';
 import { User } from '../../lib/user';
 import { PasswordValidation } from '../password-validation';
 import { UserRepository } from '../../lib/user/repository';
@@ -53,7 +53,7 @@ export class ProfileComponent implements OnInit {
             this.form.controls.emailaddress.setValue(this.user.getEmailaddress());
           },
           error: (e) => {
-            this.setAlert('danger', e); this.processing = false;
+            this.setAlert(IAlertType.Danger, e); this.processing = false;
           },
           complete: () => this.processing = false
         });
@@ -62,7 +62,7 @@ export class ProfileComponent implements OnInit {
 
   }
 
-  protected setAlert(type: string, message: string) {
+  protected setAlert(type: IAlertType, message: string) {
     this.alert = { 'type': type, 'message': message };
   }
 
@@ -76,11 +76,11 @@ export class ProfileComponent implements OnInit {
     this.userRepository.editObject({ id: this.user.getId(), emailaddress: emailaddress })
       .subscribe({
         next: () => {
-          this.setAlert('success', 'het emailadres is opgeslagen');
+          this.setAlert(IAlertType.Success, 'het emailadres is opgeslagen');
           this.form.controls.emailaddress.setValue(emailaddress);
         },
         error: (e) => {
-          this.setAlert('danger', 'het opslaan is niet gelukt: ' + e); this.processing = false;
+          this.setAlert(IAlertType.Danger, 'het opslaan is niet gelukt: ' + e); this.processing = false;
         },
         complete: () => {
           this.processing = false
@@ -98,7 +98,7 @@ export class ProfileComponent implements OnInit {
           this.router.navigate(['']);
         },
         error: (e) => {
-          this.setAlert('danger', 'het opslaan is niet gelukt: ' + e); this.processing = false;
+          this.setAlert(IAlertType.Danger, 'het opslaan is niet gelukt: ' + e); this.processing = false;
         },
         complete: () => this.processing = false
       });

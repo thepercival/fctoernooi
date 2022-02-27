@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -35,7 +35,7 @@ export class LockerRoomRepository extends APIRepository {
     createObject(jsonLockerRoom: JsonLockerRoom, tournament: Tournament): Observable<LockerRoom> {
         return this.http.post<JsonLockerRoom>(this.getUrl(tournament), jsonLockerRoom, this.getOptions()).pipe(
             map((res: JsonLockerRoom) => this.mapper.toObject(res, tournament)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -43,7 +43,7 @@ export class LockerRoomRepository extends APIRepository {
         const url = this.getUrl(tournament) + '/' + lockerroom.getId();
         return this.http.put<JsonLockerRoom>(url, this.mapper.toJson(lockerroom), this.getOptions()).pipe(
             map((res: JsonLockerRoom) => this.mapper.toObject(res, tournament, lockerroom)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -56,7 +56,7 @@ export class LockerRoomRepository extends APIRepository {
                     tournament.getLockerRooms().splice(index, 1);
                 }
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -69,7 +69,7 @@ export class LockerRoomRepository extends APIRepository {
                 lockerRoom.getCompetitors().splice(0);
                 newCompetitors.forEach((newCompetitorIt: TournamentCompetitor) => (lockerRoom.getCompetitors().push(newCompetitorIt)));
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 }

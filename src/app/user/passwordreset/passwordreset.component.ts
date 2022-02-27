@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
-import { IAlert } from '../../shared/common/alert';
+import { IAlert, IAlertType } from '../../shared/common/alert';
 import { User } from '../../lib/user';
 
 @Component({
@@ -41,7 +41,7 @@ export class PasswordresetComponent implements OnInit {
     this.processing = false;
   }
 
-  protected setAlert(type: string, message: string) {
+  protected setAlert(type: IAlertType, message: string) {
     this.alert = { 'type': type, 'message': message };
   }
 
@@ -55,7 +55,7 @@ export class PasswordresetComponent implements OnInit {
 
   sendCode(): boolean {
     this.processing = true;
-    this.setAlert('info', 'de code wordt verstuurd');
+    this.setAlert(IAlertType.Info, 'de code wordt verstuurd');
 
     const emailaddress = this.form.controls.emailaddress.value;
 
@@ -66,7 +66,7 @@ export class PasswordresetComponent implements OnInit {
         this.resetAlert();
       },
       error: (e) => {
-        this.setAlert('danger', 'het verzenden van de code is niet gelukt: ' + e); this.processing = false;
+        this.setAlert(IAlertType.Danger, 'het verzenden van de code is niet gelukt: ' + e); this.processing = false;
       },
       complete: () => this.processing = false
     });

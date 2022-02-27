@@ -20,7 +20,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '../../lib/translate';
 import { ScoreConfigRepository } from '../../lib/ngx-sport/scoreConfig/repository';
 import { Tournament } from '../../lib/tournament';
-import { IAlert } from '../../shared/common/alert';
+import { IAlert, IAlertType } from '../../shared/common/alert';
 import { RoundsSelectorModalComponent, ToggleRound } from '../rounds/selector.component';
 import { forkJoin, Observable } from 'rxjs';
 
@@ -93,9 +93,9 @@ export class ScoreConfigEditComponent implements OnInit {
     protected postToggleRoundChange() {
         this.readonly = this.allSelectedToggleRoundsBegun(this.toggleRound);
         if (this.readonly) {
-            this.alert = { type: 'warning', message: 'er zijn wedstrijden gespeeld voor gekozen ronden, je kunt niet meer wijzigen' };
+            this.alert = { type: IAlertType.Warning, message: 'er zijn wedstrijden gespeeld voor gekozen ronden, je kunt niet meer wijzigen' };
         } else if (this.someSelectedToggleRoundsBegun(this.toggleRound)) {
-            this.alert = { type: 'warning', message: 'er zijn wedstrijden gespeeld voor sommige gekozen ronden, de score-regels hiervoor worden niet opgeslagen' };
+            this.alert = { type: IAlertType.Warning, message: 'er zijn wedstrijden gespeeld voor sommige gekozen ronden, de score-regels hiervoor worden niet opgeslagen' };
         }
 
         const scoreConfigInit = this.getFirstSelectedToggleRound(this.toggleRound).round.getValidScoreConfig(this.competitionSport);
@@ -269,13 +269,13 @@ export class ScoreConfigEditComponent implements OnInit {
                         .subscribe({
                             next: () => this.processing = false,
                             error: (e) => {
-                                this.alert = { type: 'danger', message: 'de scoreregels zijn niet opgeslagen: ' + e };
+                                this.alert = { type: IAlertType.Danger, message: 'de scoreregels zijn niet opgeslagen: ' + e };
                                 this.processing = false;
                             }
                         });
                 },
                 error: (e) => {
-                    this.alert = { type: 'danger', message: 'de scoreregels zijn niet opgeslagen: ' + e };
+                    this.alert = { type: IAlertType.Danger, message: 'de scoreregels zijn niet opgeslagen: ' + e };
                     this.processing = false;
                 }
             });

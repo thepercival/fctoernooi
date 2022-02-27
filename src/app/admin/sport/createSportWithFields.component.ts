@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { AgainstSportVariant, AllInOneGameSportVariant, CustomSport, GameMode, GamePlaceStrategy, NameService, SingleSportVariant, Sport, VoetbalRange } from 'ngx-sport';
+import { AgainstGpp, AgainstH2h, AllInOneGame, GameMode, GamePlaceStrategy, NameService, PouleStructure, Single, Sport, VoetbalRange } from 'ngx-sport';
 
-import { IAlert } from '../../shared/common/alert';
+import { IAlert, IAlertType } from '../../shared/common/alert';
 import { CSSService } from '../../shared/common/cssservice';
 import { TranslateService } from '../../lib/translate';
 import { GameModeModalComponent } from '../gameMode/modal.component';
@@ -17,7 +17,8 @@ import { DefaultService } from '../../lib/ngx-sport/defaultService';
 export class CreateSportWithFieldsComponent implements OnInit {
     @Input() labelBtnNext: string = 'toevoegen';
     @Input() sport: Sport | undefined;
-    @Input() existingSportVariants: (SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant)[] = [];
+    @Input() smallestNrOfPoulePlaces: number | undefined;
+    @Input() existingSportVariants: (Single | AgainstH2h | AgainstGpp | AllInOneGame)[] = [];
     public sportWithFields: SportWithFields | undefined;
     @Output() created = new EventEmitter<SportWithFields>();
     @Output() goToPrevious = new EventEmitter<void>();
@@ -67,13 +68,10 @@ export class CreateSportWithFieldsComponent implements OnInit {
                 value: this.nameService.getGameModeName(newSport.getDefaultGameMode()),
                 disabled: true
             }, Validators.required),
-            // Against
             mixed: new FormControl(newSport.getDefaultNrOfSidePlaces() > 1),
             nrOfHomePlaces: new FormControl(newSport.getDefaultNrOfSidePlaces()),
             nrOfAwayPlaces: new FormControl(newSport.getDefaultNrOfSidePlaces()),
-            nrOfGamePlaces: new FormControl(1),
-            // Single, AllInOneGame
-            gameAmount: new FormControl(1),
+            nrOfGamePlaces: new FormControl(1)
         });
         if (newSport.getCustomId() !== 0) {
             this.form.controls.gameMode.disable();
@@ -119,9 +117,9 @@ export class CreateSportWithFieldsComponent implements OnInit {
         };
     }
 
-    protected formToVariant(sport: Sport): SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant {
+    protected formToVariant(sport: Sport): Single | AgainstH2h | AgainstGpp | AllInOneGame {
         if (this.selectedGameMode === GameMode.Single) {
-            return new SingleSportVariant(sport, this.form.controls.nrOfGamePlaces.value, this.form.controls.gameAmount.value);
+            return new Single(sport, this.form.controls.nrOfGamePlaces.value, 1);
         } else if (this.selectedGameMode === GameMode.Against) {
             let home = this.form.controls.nrOfHomePlaces.value;
             let away = this.form.controls.nrOfAwayPlaces.value;
@@ -129,9 +127,23 @@ export class CreateSportWithFieldsComponent implements OnInit {
                 home = away;
                 away = this.form.controls.nrOfHomePlaces.value;
             }
-            return new AgainstSportVariant(sport, home, away, (home + away) > 2 ? 0 : 1, (home + away) > 2 ? 1 : 0);
+            if (this.existingSportVariants.length > 0 || home > 1 || away > 1) {
+                return new AgainstGpp(sport, home, away, 1);
+            }
+            return new AgainstH2h(sport, home, away, 1);
         }
-        return new AllInOneGameSportVariant(sport, this.form.controls.gameAmount.value);
+        return new AllInOneGame(sport, 1);
+    }
+
+    tooFewPoulePlaces(): boolean {
+        if (this.smallestNrOfPoulePlaces === undefined || this.sport === undefined) {
+            return false;
+        }
+        const variant: Single | AgainstH2h | AgainstGpp | AllInOneGame = this.formToVariant(this.sport);
+        if (variant instanceof AllInOneGame) {
+            return false;
+        }
+        return this.smallestNrOfPoulePlaces < variant.getNrOfGamePlaces();
     }
 
     save(sport: Sport) {
@@ -140,8 +152,8 @@ export class CreateSportWithFieldsComponent implements OnInit {
 
     get Against(): GameMode { return GameMode.Against; }
     get Single(): GameMode { return GameMode.Single; }
-    get Equally(): GamePlaceStrategy { return GamePlaceStrategy.EquallyAssigned; }
-    get Randomly(): GamePlaceStrategy { return GamePlaceStrategy.RandomlyAssigned; }
+    // get Equally(): GamePlaceStrategy { return GamePlaceStrategy.EquallyAssigned; }
+    // get Randomly(): GamePlaceStrategy { return GamePlaceStrategy.RandomlyAssigned; }
 
     openGameModeInfoModal() {
         // const modalRef = this.modalService.open(RoundsSelectorModalComponent);
@@ -165,14 +177,14 @@ export class CreateSportWithFieldsComponent implements OnInit {
     //     return calculator.calculate(this.existingSportVariants.concat([thisSportVariant]));
     // }
 
-    protected setAlert(type: string, message: string) {
+    protected setAlert(type: IAlertType, message: string) {
         this.alert = { 'type': type, 'message': message };
     }
 }
 
 
 export interface SportWithFields {
-    variant: SingleSportVariant | AgainstSportVariant | AllInOneGameSportVariant;
+    variant: Single | AgainstH2h | AgainstGpp | AllInOneGame;
     nrOfFields: number;
 }
 

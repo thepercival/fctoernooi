@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -27,14 +27,14 @@ export class UserRepository extends APIRepository {
   getObject(id: number): Observable<User> {
     return this.http.get<JsonUser>(this.getUrl(id), this.getOptions()).pipe(
       map((jsonUser: JsonUser) => this.mapper.toObject(jsonUser)),
-      catchError((err) => this.handleError(err))
+      catchError((err: HttpErrorResponse) => this.handleError(err))
     );
   }
 
   editObject(json: JsonUser): Observable<void> {
     const url = this.getUrl(json.id);
     return this.http.put(url, json, { headers: super.getHeaders() }).pipe(
-      catchError((err) => this.handleError(err))
+      catchError((err: HttpErrorResponse) => this.handleError(err))
     );
   }
 
@@ -42,7 +42,7 @@ export class UserRepository extends APIRepository {
     const url = this.getUrl(id);
     return this.http.delete(url, this.getOptions()).pipe(
       map((res) => { }),
-      catchError((err) => this.handleError(err))
+      catchError((err: HttpErrorResponse) => this.handleError(err))
     );
   }
 

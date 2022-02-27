@@ -13,6 +13,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { SponsorScreensCreator } from '../../lib/liveboard/screenCreator/sponsors';
 import { SponsorScreen } from '../../lib/liveboard/screens';
+import { IAlertType } from '../../shared/common/alert';
 
 @Component({
     selector: 'app-tournament-sponsor-edit',
@@ -113,7 +114,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
 
     save(): boolean {
         this.processing = true;
-        this.setAlert('info', 'de sponsor wordt opgeslagen');
+        this.setAlert(IAlertType.Info, 'de sponsor wordt opgeslagen');
 
         const reposCall = this.originalSponsor ? this.sponsorRepository.editObject(this.formToJson(), this.originalSponsor, this.tournament) : this.sponsorRepository.createObject(this.formToJson(), this.tournament);
 
@@ -123,7 +124,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
                 this.processLogoAndNavigateBack(sponsor);
             },
             error: (e) => {
-                this.setAlert('danger', e); this.processing = false;
+                this.setAlert(IAlertType.Danger, e); this.processing = false;
             },
             complete: () => this.processing = false
         });
@@ -157,7 +158,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
                     this.navigateBack();
                 },
                 error: (e) => {
-                    this.setAlert('danger', e); this.processing = false;
+                    this.setAlert(IAlertType.Danger, e); this.processing = false;
                 },
                 complete: () => this.processing = false
             });
@@ -171,7 +172,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         const file = files[0];
         const mimeType = file.type;
         if (mimeType.match(/image\/*/) == null) {
-            this.setAlert('danger', 'alleen plaatjes worden ondersteund');
+            this.setAlert(IAlertType.Danger, 'alleen plaatjes worden ondersteund');
             return;
         }
         const reader = new FileReader();

@@ -1,55 +1,40 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    Game,
     NameService,
-    Round,
     GameState,
     RoundNumber,
     CompetitorMap,
-    ScoreConfigService,
-    ScoreConfig,
     AgainstGame,
-    PlanningConfig,
-    TogetherGame,
-    GameMapper,
     JsonTogetherGame,
-    TogetherGamePlace,
     JsonAgainstGame,
-    AgainstSportVariant,
     Poule,
     CompetitionSport,
-    SingleSportVariant,
-    AllInOneGameSportVariant,
     CompetitionSportMapper,
     Place,
-    GamePlaceMapper,
     AgainstSide,
-    PlaceSportPerformance,
     FieldMapper,
     JsonField,
     JsonGame,
     JsonReferee,
     RefereeMapper,
     PlaceMapper,
+    AgainstGpp,
+    AgainstH2h,
+    AllInOneGame,
+    Single,
+    AgainstVariant,
+    JsonTogetherGamePlace,
+    JsonAgainstGamePlace,
 } from 'ngx-sport';
-import { Observable, of } from 'rxjs';
 
-import { AuthService } from '../../lib/auth/auth.service';
-import { MyNavigation } from '../../shared/common/navigation';
-import { Role } from '../../lib/role';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
-import { TournamentUser } from '../../lib/tournament/user';
-import { map } from 'rxjs/operators';
-import { EqualQualifiersChecker } from '../../lib/ngx-sport/ranking/equalQualifiersChecker';
 import { DateFormatter } from '../../lib/dateFormatter';
-import { TranslateService } from '../../lib/translate';
-import { JsonTogetherGamePlace } from 'ngx-sport/src/game/place/together/json';
-import { JsonAgainstGamePlace } from 'ngx-sport/src/game/place/against/json';
+import { IAlertType } from '../../shared/common/alert';
 
 @Component({
     selector: 'app-tournament-game-add',
@@ -60,9 +45,9 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
     private roundNumber!: RoundNumber;
     public poules: Poule[] = [];
     public competitionSports: CompetitionSport[] = [];
-    public againstSportVariant: AgainstSportVariant | undefined;
-    public singleSportVariant: SingleSportVariant | undefined;
-    public allInOneGameSportVariant: AllInOneGameSportVariant | undefined;
+    public againstSportVariant: AgainstH2h | AgainstGpp | undefined;
+    public singleSportVariant: Single | undefined;
+    public allInOneGameSportVariant: AllInOneGame | undefined;
     public form: FormGroup;
     public nameService!: NameService;
 
@@ -112,7 +97,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
                 const roundNumber = this.structure.getRoundNumber(+params.roundNumber);
 
                 if (roundNumber === undefined) {
-                    this.setAlert('danger', 'de wedstrijd kan niet gevonden worden');
+                    this.setAlert(IAlertType.Danger, 'de wedstrijd kan niet gevonden worden');
                     this.processing = false;
                     return;
                 }
@@ -165,9 +150,9 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
         this.singleSportVariant = undefined;
         this.allInOneGameSportVariant = undefined;
         const sportVariant = competitionSport.getVariant();
-        if (sportVariant instanceof AgainstSportVariant) {
+        if (sportVariant instanceof AgainstVariant) {
             this.againstSportVariant = sportVariant;
-        } else if (sportVariant instanceof SingleSportVariant) {
+        } else if (sportVariant instanceof Single) {
             this.singleSportVariant = sportVariant;
         } else {
             this.allInOneGameSportVariant = sportVariant;
@@ -196,13 +181,13 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
             startDateTime: this.roundNumber.getLastStartDateTime().toISOString(),
             refereeStructureLocation: undefined
         };
-        if (this.againstSportVariant instanceof AgainstSportVariant) {
+        if (this.againstSportVariant instanceof AgainstVariant) {
             const jsonAgainst = <JsonAgainstGame>json;
             jsonAgainst.places = this.getJsonAgainstPlacesFromForm(sportVariant);
             jsonAgainst.gameRoundNumber = 0;
             jsonAgainst.scores = [];
             return jsonAgainst;
-        } else if (this.singleSportVariant instanceof SingleSportVariant) {
+        } else if (this.singleSportVariant instanceof Single) {
             const jsonSingle = <JsonTogetherGame>json;
             jsonSingle.places = this.getJsonSinglePlacesFromForm(sportVariant);
             return jsonSingle;
@@ -212,7 +197,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
         return jsonAllInOneGame;
     }
 
-    getJsonAgainstPlacesFromForm(sportVariant: AgainstSportVariant): JsonAgainstGamePlace[] {
+    getJsonAgainstPlacesFromForm(sportVariant: AgainstVariant): JsonAgainstGamePlace[] {
         const places: JsonAgainstGamePlace[] = [];
         for (let homeNr of this.getPlaceNrs(sportVariant.getNrOfHomePlaces())) {
             places.push({
@@ -231,7 +216,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
         return places;
     }
 
-    getJsonSinglePlacesFromForm(sportVariant: SingleSportVariant): JsonTogetherGamePlace[] {
+    getJsonSinglePlacesFromForm(sportVariant: Single): JsonTogetherGamePlace[] {
         const places: JsonTogetherGamePlace[] = [];
         for (let placeNr of this.getPlaceNrs(sportVariant.getNrOfGamePlaces())) {
             const place = this.getGamePlacesFormGroup().value[placeNr];
@@ -276,7 +261,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
 
     save(): boolean {
         this.processing = true;
-        this.setAlert('info', 'de wedstrijd wordt opgeslagen');
+        this.setAlert(IAlertType.Info, 'de wedstrijd wordt opgeslagen');
 
         const jsonGame = this.formToJson();
         this.gameRepository.createObject(
@@ -290,7 +275,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
                     this.router.navigate(['/admin/game' + suffix, this.tournament.getId(), gameRes.getId()], { replaceUrl: true });
                 },
                 error: (e) => {
-                    this.setAlert('danger', e); this.processing = false;
+                    this.setAlert(IAlertType.Danger, e); this.processing = false;
                 }
             });
         return false;

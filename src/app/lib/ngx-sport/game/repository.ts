@@ -1,10 +1,10 @@
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../repository';
-import { AgainstGame, AgainstSportVariant, CompetitionSport, Game, GameMapper, JsonAgainstGame, JsonTogetherGame, Poule, TogetherGame } from 'ngx-sport';
+import { AgainstGame, AgainstVariant, CompetitionSport, Game, GameMapper, JsonAgainstGame, JsonTogetherGame, Poule, TogetherGame } from 'ngx-sport';
 import { Tournament } from '../../tournament';
 
 @Injectable({
@@ -26,7 +26,7 @@ export class GameRepository extends APIRepository {
     }
 
     createObject(jsonGame: JsonAgainstGame | JsonTogetherGame, competitionSport: CompetitionSport, poule: Poule, tournament: Tournament): Observable<Game> {
-        if (competitionSport.getVariant() instanceof AgainstSportVariant) {
+        if (competitionSport.getVariant() instanceof AgainstVariant) {
             return this.addAgainst(<JsonAgainstGame>jsonGame, competitionSport, poule, tournament);
         }
         return this.addTogether(<JsonTogetherGame>jsonGame, competitionSport, poule, tournament);
@@ -36,7 +36,7 @@ export class GameRepository extends APIRepository {
         const url = this.getUrl(tournament, 'against');
         return this.http.post<JsonAgainstGame>(url, jsonGame, this.getCustomOptions(poule)).pipe(
             map((jsonGameRes: JsonAgainstGame) => this.mapper.toNewAgainst(jsonGameRes, poule, competitionSport)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -44,7 +44,7 @@ export class GameRepository extends APIRepository {
         const url = this.getUrl(tournament, 'together');
         return this.http.post<JsonTogetherGame>(url, jsonGame, this.getCustomOptions(poule)).pipe(
             map((jsonGameRes: JsonTogetherGame) => this.mapper.toNewTogether(jsonGameRes, poule, competitionSport)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -59,7 +59,7 @@ export class GameRepository extends APIRepository {
         const url = this.getUrl(tournament, 'against') + '/' + game.getId();
         return this.http.put<JsonAgainstGame>(url, jsonGame, this.getCustomOptions(poule)).pipe(
             map((jsonGameRes: JsonAgainstGame) => this.mapper.toExistingAgainst(jsonGameRes, game)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -67,7 +67,7 @@ export class GameRepository extends APIRepository {
         const url = this.getUrl(tournament, 'together') + '/' + game.getId();
         return this.http.put<JsonTogetherGame>(url, jsonGame, this.getCustomOptions(poule)).pipe(
             map((jsonGameRes: JsonTogetherGame) => this.mapper.toExistingTogether(jsonGameRes, game)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -87,7 +87,7 @@ export class GameRepository extends APIRepository {
                     poule.getAgainstGames().splice(index, 1);
                 }
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -100,7 +100,7 @@ export class GameRepository extends APIRepository {
                     poule.getTogetherGames().splice(index, 1);
                 }
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 

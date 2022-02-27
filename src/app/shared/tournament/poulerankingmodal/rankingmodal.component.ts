@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Poule, NameService, CompetitorMap, CompetitionSport, AgainstSportVariant } from 'ngx-sport';
+import { Poule, NameService, CompetitorMap, CompetitionSport, AgainstGpp, AgainstH2h } from 'ngx-sport';
 import { Tournament } from '../../../lib/tournament';
 import { InfoModalComponent } from '../infomodal/infomodal.component';
 @Component({
@@ -36,7 +36,7 @@ export class PouleRankingModalComponent implements OnInit {
     }
 
     isAgainstSport(): boolean {
-        return (this.competitionSport?.getVariant() instanceof AgainstSportVariant);
+        return (this.competitionSport?.getVariant() instanceof AgainstH2h || this.competitionSport?.getVariant() instanceof AgainstGpp);
     }
 
     openInfoModal(header: string, modalContent: TemplateRef<any>) {

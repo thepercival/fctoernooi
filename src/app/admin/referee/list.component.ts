@@ -2,7 +2,7 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Referee } from 'ngx-sport';
 
-import { IAlert } from '../../shared/common/alert';
+import { IAlert, IAlertType } from '../../shared/common/alert';
 import { RefereeRepository } from '../../lib/ngx-sport/referee/repository';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
@@ -47,7 +47,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
 
     this.hasBegun = this.structure.getRootRound().hasBegun();
     if (this.hasBegun) {
-      this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen en verwijderen');
+      this.setAlert(IAlertType.Warning, 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen en verwijderen');
     }
     this.processing = false;
   }
@@ -92,7 +92,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
           this.updatePlanning()
         },
         error: (e) => {
-          this.setAlert('danger', e); this.processing = false;
+          this.setAlert(IAlertType.Danger, e); this.processing = false;
         }
       });
   }
@@ -105,7 +105,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
           this.updatePlanning()
         },
         error: (e) => {
-          this.setAlert('danger', e); this.processing = false;
+          this.setAlert(IAlertType.Danger, e); this.processing = false;
         }
       });
   }
@@ -115,7 +115,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
       .subscribe({
         next: () => { },
         error: (e) => {
-          this.setAlert('danger', e); this.processing = false;
+          this.setAlert(IAlertType.Danger, e); this.processing = false;
         },
         complete: () => this.processing = false
       });

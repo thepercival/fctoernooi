@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { JsonCompetitionSport, JsonGameAmountConfig, VoetbalRange } from 'ngx-sport';
+import { JsonGameAmountConfig, VoetbalRange } from 'ngx-sport';
 
 @Component({
   selector: 'app-tournament-gameamountconfigs-edit',
@@ -31,13 +31,6 @@ export class GameAmountConfigEditComponent implements OnInit {
         gameAmountControl.control.setValue(gameAmountControl.range.min);
       }
     });
-  }
-
-  getAmountDescription(jsonCompetitionSport: JsonCompetitionSport): string {
-    if (jsonCompetitionSport.nrOfHomePlaces === 1 && jsonCompetitionSport.nrOfAwayPlaces === 1) {
-      return 'onderlinge duels';
-    }
-    return 'per deelnemer';
   }
 
   getRange(range: VoetbalRange): number[] {

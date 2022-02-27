@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -26,7 +26,7 @@ export class PlanningConfigRepository extends APIRepository {
         const url = this.getUrl(tournament, roundNumber);
         return this.http.post<JsonPlanningConfig>(url, json, this.getOptions()).pipe(
             map((jsonRes: JsonPlanningConfig) => this.planningConfigMapper.toObject(jsonRes, roundNumber)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -37,7 +37,7 @@ export class PlanningConfigRepository extends APIRepository {
                 this.removeNext(roundNumber);
                 return this.planningConfigMapper.toObject(jsonResult, roundNumber);
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 

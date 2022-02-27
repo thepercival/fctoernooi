@@ -12,6 +12,7 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { TournamentMapper } from '../../lib/tournament/mapper';
 import { Tournament } from '../../lib/tournament';
 import { DateFormatter } from '../../lib/dateFormatter';
+import { IAlertType } from '../../shared/common/alert';
 
 @Component({
     selector: 'app-tournament-startbreak',
@@ -65,7 +66,7 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
         this.form.controls.togglebreak.setValue(this.tournament.hasBreak());
 
         if (this.hasBegun) {
-            this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
+            this.setAlert(IAlertType.Warning, 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
         }
         this.processing = false;
     }
@@ -106,7 +107,7 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
     }
 
     edit(): boolean {
-        this.setAlert('info', 'het toernooi wordt opgeslagen');
+        this.setAlert(IAlertType.Info, 'het toernooi wordt opgeslagen');
 
         const startDateTime = this.getDate(this.form.controls.date, this.form.controls.time);
         let breakX: Period | undefined;
@@ -116,7 +117,7 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
             breakX = new Period(breakStartDateTime, breakEndDateTime);
             const message = this.checkBreakPeriod(startDateTime, breakStartDateTime, breakEndDateTime);
             if (message !== undefined) {
-                this.setAlert('danger', message);
+                this.setAlert(IAlertType.Danger, message);
                 return false;
             }
         }
@@ -139,13 +140,13 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
                                 this.myNavigation.back();
                             },
                             error: (e) => {
-                                this.setAlert('danger', 'de wedstrijdplanning is niet opgeslagen: ' + e);
+                                this.setAlert(IAlertType.Danger, 'de wedstrijdplanning is niet opgeslagen: ' + e);
                                 this.processing = false;
                             }
                         });
                 },
                 error: (e) => {
-                    this.setAlert('danger', 'het toernooi is niet opgeslagen: ' + e);
+                    this.setAlert(IAlertType.Danger, 'het toernooi is niet opgeslagen: ' + e);
                     this.processing = false;
                 }
             });

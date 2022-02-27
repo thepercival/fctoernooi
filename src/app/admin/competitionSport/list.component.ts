@@ -4,6 +4,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   Sport,
   CompetitionSport,
+  PouleStructure,
+  Round,
+  Poule,
 } from 'ngx-sport';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -14,12 +17,14 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { CompetitionSportTab } from '../../shared/tournament/competitionSportTab';
 import { CompetitionSportRepository } from '../../lib/ngx-sport/competitionSport/repository';
 import { SportWithFields } from '../sport/createSportWithFields.component';
+import { IAlertType } from '../../shared/common/alert';
 @Component({
   selector: 'app-tournament-sport',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
 export class CompetitionSportListComponent extends TournamentComponent implements OnInit {
+  smallestNrOfPoulePlaces!: number;
   competitionSports: CompetitionSport[] = [];
   showCreateSportWithFields = false;
   hasBegun!: boolean;
@@ -49,12 +54,27 @@ export class CompetitionSportListComponent extends TournamentComponent implement
 
   initSports() {
     this.createCompetitionSportsList();
+    this.smallestNrOfPoulePlaces = this.getSmallestNrOfPoulePlaces(this.structure.getRootRound());
+    // console.log('smallestNrOfPoulePlaces', this.smallestNrOfPoulePlaces);
     this.hasBegun = this.structure.getRootRound().hasBegun();
     this.maxReached = this.competition.getSports().length >= 10;
     this.processing = false;
     if (this.hasBegun) {
-      this.setAlert('warning', 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
+      this.setAlert(IAlertType.Warning, 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
     }
+  }
+
+  protected getSmallestNrOfPoulePlaces(round: Round, smallestNrOfPoulePlaces: number = 0): number {
+    const smallestNrOfRoundPoulePlaces = round.getPoules().map((poule: Poule) => poule.getPlaces().length)
+      .reduce((min, current) => current < min ? min : current, 0);
+
+    if (smallestNrOfPoulePlaces === 0 || smallestNrOfRoundPoulePlaces < smallestNrOfPoulePlaces) {
+      smallestNrOfPoulePlaces = smallestNrOfRoundPoulePlaces;
+    }
+    round.getChildren().forEach((childRound: Round) => {
+      smallestNrOfPoulePlaces = this.getSmallestNrOfPoulePlaces(childRound, smallestNrOfPoulePlaces);
+    });
+    return smallestNrOfPoulePlaces;
   }
 
   createCompetitionSportsList() {
@@ -74,7 +94,7 @@ export class CompetitionSportListComponent extends TournamentComponent implement
     // this.form.controls.sportsName.setValue(sportsName);
     this.showCreateSportWithFields = false;
 
-    this.setAlert('info', 'de sport(en) worden toegevoegd');
+    this.setAlert(IAlertType.Info, 'de sport(en) worden toegevoegd');
     this.processing = true;
 
     const json = this.competitionSportRepository.sportWithFieldsToJson(sportWithFields, true);
@@ -83,14 +103,14 @@ export class CompetitionSportListComponent extends TournamentComponent implement
         next: (competitionSport: CompetitionSport) => {
           this.planningRepository.create(this.structure, this.tournament, 1)
             .subscribe({
-              next: () => this.setAlert('success', 'de sport is toegevoegd'),
+              next: () => this.setAlert(IAlertType.Success, 'de sport is toegevoegd'),
               error: (e) => {
-                this.setAlert('danger', e); this.processing = false;
+                this.setAlert(IAlertType.Danger, e); this.processing = false;
               },
               complete: () => this.processing = false
             });
         },
-        error: (e) => { this.setAlert('danger', e); this.processing = false; }
+        error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
       });
   }
 
@@ -109,7 +129,7 @@ export class CompetitionSportListComponent extends TournamentComponent implement
   }
 
   remove(competitionSport: CompetitionSport) {
-    this.setAlert('info', 'de sport wordt verwijderd');
+    this.setAlert(IAlertType.Info, 'de sport wordt verwijderd');
     this.processing = true;
 
     this.competitionSportRepository.removeObject(competitionSport, this.tournament, this.structure)
@@ -117,15 +137,15 @@ export class CompetitionSportListComponent extends TournamentComponent implement
         next: () => {
           this.planningRepository.create(this.structure, this.tournament, 1)
             .subscribe({
-              next: () => this.setAlert('success', 'de sport is verwijderd'),
+              next: () => this.setAlert(IAlertType.Success, 'de sport is verwijderd'),
               error: (e) => {
-                this.setAlert('danger', e); this.processing = false;
+                this.setAlert(IAlertType.Danger, e); this.processing = false;
               },
               complete: () => this.processing = false
             });
         },
         error: (e) => {
-          this.setAlert('danger', e); this.processing = false;
+          this.setAlert(IAlertType.Danger, e); this.processing = false;
         }
       });
   }

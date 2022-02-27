@@ -11,6 +11,7 @@ import { Role } from '../../lib/role';
 import { TournamentMapper } from '../../lib/tournament/mapper';
 import { Tournament } from '../../lib/tournament';
 import { Favorites } from '../../lib/favorites';
+import { IAlertType } from '../../shared/common/alert';
 
 @Component({
     selector: 'app-tournament-ranking',
@@ -62,7 +63,7 @@ export class RankingComponent extends TournamentComponent implements OnInit {
             .subscribe({
                 next: (tournament: Tournament) => { this.tournament = tournament; },
                 error: (e) => {
-                    this.alert = { type: 'danger', message: e }; this.processing = false;
+                    this.alert = { type: IAlertType.Danger, message: e }; this.processing = false;
                 },
                 complete: () => this.processing = false
             });

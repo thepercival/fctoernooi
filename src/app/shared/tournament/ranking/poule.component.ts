@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, CompetitorMap, AgainstSportVariant, CompetitionSport, SingleSportVariant, AllInOneGameSportVariant } from 'ngx-sport';
+import { NameService, Poule, CompetitorMap, CompetitionSport, AgainstH2h, AgainstGpp, Single, AllInOneGame } from 'ngx-sport';
 
 import { CSSService } from '../../common/cssservice';
 import { Tournament } from '../../../lib/tournament';
@@ -31,11 +31,12 @@ export class PouleRankingComponent implements OnInit {
   }
 
   isAgainst(): boolean {
-    return (this.competitionSport?.getVariant() instanceof AgainstSportVariant);
+    return (this.competitionSport?.getVariant() instanceof AgainstH2h)
+      || (this.competitionSport?.getVariant() instanceof AgainstGpp);
   }
 
   isTogether(): boolean {
-    return (this.competitionSport?.getVariant() instanceof SingleSportVariant)
-      || (this.competitionSport?.getVariant() instanceof AllInOneGameSportVariant);
+    return (this.competitionSport?.getVariant() instanceof Single)
+      || (this.competitionSport?.getVariant() instanceof AllInOneGame);
   }
 }

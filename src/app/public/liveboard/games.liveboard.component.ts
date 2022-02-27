@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AgainstGame, AgainstGamePlace, AgainstSide, AgainstSportVariant, NameService, Round, ScoreConfigService, GameState, TogetherGame, TogetherGamePlace } from 'ngx-sport';
+import { AgainstGame, AgainstGamePlace, AgainstSide, NameService, Round, ScoreConfigService, GameState, TogetherGame, TogetherGamePlace, AgainstVariant } from 'ngx-sport';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { ResultsScreen, ScheduleScreen } from '../../lib/liveboard/screens';
 
@@ -100,7 +100,7 @@ export class LiveboardGamesComponent implements OnInit {
     }
 
     isAgainst(game: AgainstGame | TogetherGame): boolean {
-        return game.getCompetitionSport().getVariant() instanceof AgainstSportVariant;
+        return game.getCompetitionSport().getVariant() instanceof AgainstVariant;
     }
 
     isPlayed(game: AgainstGame | TogetherGame): boolean {

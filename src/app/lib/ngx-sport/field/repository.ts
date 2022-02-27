@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -29,7 +29,7 @@ export class FieldRepository extends APIRepository {
     createObject(json: JsonField, competitionSport: CompetitionSport, tournament: Tournament): Observable<Field> {
         return this.http.post<JsonField>(this.getUrl(tournament, competitionSport), json, this.getOptions()).pipe(
             map((jsonRes: JsonField) => this.mapper.toObject(jsonRes, competitionSport)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -37,7 +37,7 @@ export class FieldRepository extends APIRepository {
         const url = this.getUrl(tournament, field.getCompetitionSport()) + '/' + field.getId();
         return this.http.put<JsonField>(url, jsonField, this.getOptions()).pipe(
             map((jsonRes: JsonField) => this.mapper.updateObject(jsonRes, field)),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -54,7 +54,7 @@ export class FieldRepository extends APIRepository {
                 downgrade.setPriority(downgrade.getPriority() + 1);
                 sportConfig.getFields().sort((fieldA, fieldB) => fieldA.getPriority() - fieldB.getPriority());
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
@@ -69,7 +69,7 @@ export class FieldRepository extends APIRepository {
                     sportConfig.getFields().splice(index, 1);
                 }
             }),
-            catchError((err) => this.handleError(err))
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 }

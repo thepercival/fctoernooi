@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, CompetitorMap, GameAmountConfig, ScoreConfigService, TogetherGame, CompetitionSport, TogetherGamePlace, TogetherSportRoundRankingCalculator, SportRoundRankingItem, PlaceLocation, GameState, SingleSportVariant, AllInOneGameSportVariant, AgainstSportVariant, Place } from 'ngx-sport';
+import { NameService, Poule, CompetitorMap, GameAmountConfig, ScoreConfigService, TogetherGame, CompetitionSport, TogetherGamePlace, TogetherSportRoundRankingCalculator, SportRoundRankingItem, PlaceLocation, GameState, Single, AllInOneGame, Place, AgainstH2h, AgainstGpp } from 'ngx-sport';
 
 import { CSSService } from '../../../common/cssservice';
 import { Favorites } from '../../../../lib/favorites';
@@ -95,9 +95,9 @@ export class PouleRankingTogetherComponent implements OnInit {
     return this.poule.getTogetherGames().filter((game: TogetherGame) => game.getCompetitionSport() === this.competitionSport);
   }
 
-  protected getSportVariant(): SingleSportVariant | AllInOneGameSportVariant {
+  protected getSportVariant(): Single | AllInOneGame {
     const sportVariant = this.competitionSport.getVariant();
-    if (sportVariant instanceof AgainstSportVariant) {
+    if (sportVariant instanceof AgainstH2h || sportVariant instanceof AgainstGpp) {
       throw new Error('incorrect sportvariant');
     }
     return sportVariant;

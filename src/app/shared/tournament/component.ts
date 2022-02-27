@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Structure, Competition } from 'ngx-sport';
 
-import { IAlert } from '../common/alert';
+import { IAlert, IAlertType } from '../common/alert';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
@@ -50,17 +50,17 @@ export class TournamentComponent {
                                 }
                             },
                             error: (e) => {
-                                this.setAlert('danger', e); this.processing = false;
+                                this.setAlert(IAlertType.Danger, e); this.processing = false;
                             }
                         });
                 },
                 error: (e) => {
-                    this.setAlert('danger', e); this.processing = false;
+                    this.setAlert(IAlertType.Danger, e); this.processing = false;
                 }
             });
     }
 
-    protected setAlert(type: string, message: string) {
+    protected setAlert(type: IAlertType, message: string) {
         this.alert = { 'type': type, 'message': message };
     }
 

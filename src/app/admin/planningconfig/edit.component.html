@@ -17,9 +17,8 @@
                 <app-tournament-gameamountconfigs-edit *ngIf="!form.value['manual']" [label]="gameAmountLabel"
                     [gameAmountControls]="gameAmountConfigControls" [form]="form">
                 </app-tournament-gameamountconfigs-edit>
-                <div *ngIf="!form.value['manual'] && showGamePlaceStrategy()" class="row mb-3">
-                    <label for="strategyRandomly" class="col-7 col-form-label pointer">willekeurge wedstrijden
-                        genereren</label>
+                <div *ngIf="!form.value['manual'] && showRandomGamePlaceStrategy()" class="row mb-3">
+                    <label for="strategyRandomly" class="col-7 col-form-label pointer">willekeurge wedstrijden</label>
                     <div class="col-5">
                         <div class="form-control form-check form-switch">
                             <input type="checkbox" class="form-check-input" id="strategyRandomly"

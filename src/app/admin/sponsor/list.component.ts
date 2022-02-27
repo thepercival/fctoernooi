@@ -10,6 +10,7 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { SponsorScreensCreator } from '../../lib/liveboard/screenCreator/sponsors';
+import { IAlertType } from '../../shared/common/alert';
 
 
 @Component({
@@ -68,16 +69,16 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
   }
 
   removeSponsor(sponsor: Sponsor) {
-    this.setAlert('info', 'de sponsor wordt verwijderd');
+    this.setAlert(IAlertType.Info, 'de sponsor wordt verwijderd');
     this.processing = true;
 
     this.sponsorRepository.removeObject(sponsor, this.tournament)
       .subscribe({
         next: () => {
-          this.setAlert('success', 'de sponsor is verwijderd');
+          this.setAlert(IAlertType.Success, 'de sponsor is verwijderd');
         },
         error: (e) => {
-          this.setAlert('danger', e); this.processing = false;
+          this.setAlert(IAlertType.Danger, e); this.processing = false;
         },
         complete: () => this.processing = false
       });

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { NameService, Round, RoundNumber, Competitor, CompetitorMap, StructureEditor, QualifyTarget, PlaceRanges } from 'ngx-sport';
-import { IAlert } from '../../common/alert';
+import { IAlert, IAlertType } from '../../common/alert';
 import { CSSService } from '../../common/cssservice';
 
 @Component({
@@ -44,7 +44,7 @@ export class StructureRoundComponent implements OnInit {
       this.nameService.resetStructure();
       this.roundNumberChanged.emit(this.round.getNumber());
     } catch (e: any) {
-      this.setAlert('danger', e.message);
+      this.setAlert(IAlertType.Danger, e.message);
     }
   }
 
@@ -83,7 +83,7 @@ export class StructureRoundComponent implements OnInit {
     this.alert = undefined;
   }
 
-  protected setAlert(type: string, message: string) {
+  protected setAlert(type: IAlertType, message: string) {
     this.alert = { type: type, message: message };
   }
 }

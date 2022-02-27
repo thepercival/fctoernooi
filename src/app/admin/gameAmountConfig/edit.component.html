@@ -21,15 +21,14 @@
 <ng-template #gameAmountModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title">
-      {{label}}
+      aantal wedstrijden <small>per deelnemer</small>
     </h4>
     <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
   </div>
   <div class="modal-body" [formGroup]="form">
     <div class="row mb-3" *ngFor="let gameAmountControl of gameAmountControls">
       <label [for]="gameAmountControl.json.id"
-        class="col-8 col-form-label">{{gameAmountControl.json.competitionSport.sport.name}}
-        ({{getAmountDescription(gameAmountControl.json.competitionSport)}})</label>
+        class="col-8 col-form-label">{{gameAmountControl.json.competitionSport.sport.name}}</label>
       <div class="col-4">
         <select class="form-control" [formControlName]="gameAmountControl.json.id" required>
           <option *ngFor="let n of getRange(gameAmountControl.range)" [ngValue]="n">{{n}}</option>

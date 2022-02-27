@@ -19,6 +19,7 @@ import { ExportModalComponent, TournamentExportAction } from './exportmodal.comp
 import { ShareModalComponent } from './sharemodal.component';
 import { TournamentMapper } from '../../lib/tournament/mapper';
 import { DateFormatter } from '../../lib/dateFormatter';
+import { IAlertType } from '../../shared/common/alert';
 
 @Component({
     selector: 'app-tournament-admin',
@@ -170,23 +171,23 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     remove() {
-        this.setAlert('info', 'het toernooi wordt verwijderd');
+        this.setAlert(IAlertType.Info, 'het toernooi wordt verwijderd');
         this.processing = true;
         this.tournamentRepository.removeObject(this.tournament)
             .subscribe({
                 next: (deleted: boolean) => {
                     if (deleted) {
                         const navigationExtras: NavigationExtras = {
-                            queryParams: { type: 'success', message: 'het toernooi is verwijderd' }
+                            queryParams: { type: IAlertType.Success, message: 'het toernooi is verwijderd' }
                         };
                         this.router.navigate(['/'], navigationExtras);
                     } else {
-                        this.setAlert('danger', 'het toernooi kon niet verwijderd worden');
+                        this.setAlert(IAlertType.Danger, 'het toernooi kon niet verwijderd worden');
                         this.processing = false;
                     }
                 },
                 error: (e) => {
-                    this.setAlert('danger', 'het toernooi kon niet verwijderd worden');
+                    this.setAlert(IAlertType.Danger, 'het toernooi kon niet verwijderd worden');
                     this.processing = false;
                 },
                 complete: () => this.processing = false
@@ -225,7 +226,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
                         window.open(url);
                     },
                     error: (e) => {
-                        this.setAlert('danger', 'het exporteren is niet gelukt');
+                        this.setAlert(IAlertType.Danger, 'het exporteren is niet gelukt');
                         this.processing = false;
                     },
                     complete: () => this.processing = false
@@ -295,7 +296,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     copy() {
-        this.setAlert('info', 'de nieuwe editie wordt aangemaakt');
+        this.setAlert(IAlertType.Info, 'de nieuwe editie wordt aangemaakt');
         const startDateTime = new Date(
             this.copyForm.controls.date.value.year,
             this.copyForm.controls.date.value.month - 1,
@@ -309,10 +310,10 @@ export class HomeComponent extends TournamentComponent implements OnInit {
             .subscribe({
                 next: (newTournamentId: number | string) => {
                     this.router.navigate(['/admin', newTournamentId]);
-                    this.setAlert('success', 'de nieuwe editie is aangemaakt, je bevindt je nu in de nieuwe editie');
+                    this.setAlert(IAlertType.Success, 'de nieuwe editie is aangemaakt, je bevindt je nu in de nieuwe editie');
                 },
                 error: (e) => {
-                    this.setAlert('danger', 'er kon geen nieuwe editie worden aangemaakt : ' + e);
+                    this.setAlert(IAlertType.Danger, 'er kon geen nieuwe editie worden aangemaakt : ' + e);
                     this.processing = false;
                 },
                 complete: () => this.processing = false
@@ -320,7 +321,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     share(publicEnabled: boolean) {
-        this.setAlert('info', 'het delen wordt gewijzigd');
+        this.setAlert(IAlertType.Info, 'het delen wordt gewijzigd');
 
         this.processing = true;
         const json = this.tournamentMapper.toJson(this.tournament);
@@ -330,10 +331,10 @@ export class HomeComponent extends TournamentComponent implements OnInit {
                 next: (tournament: Tournament) => {
                     this.tournament = tournament;
                     // this.router.navigate(['/admin', newTournamentId]);
-                    this.setAlert('success', 'het delen is gewijzigd');
+                    this.setAlert(IAlertType.Success, 'het delen is gewijzigd');
                 },
                 error: (e) => {
-                    this.setAlert('danger', 'het delen kon niet worden gewijzigd');
+                    this.setAlert(IAlertType.Danger, 'het delen kon niet worden gewijzigd');
                     this.processing = false;
                 },
                 complete: () => this.processing = false
@@ -341,7 +342,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     saveName(newName: string) {
-        this.setAlert('info', 'de naam wordt opgeslagen');
+        this.setAlert(IAlertType.Info, 'de naam wordt opgeslagen');
 
         this.processing = true;
         const json = this.tournamentMapper.toJson(this.tournament);
@@ -351,10 +352,10 @@ export class HomeComponent extends TournamentComponent implements OnInit {
                 next: (tournament: Tournament) => {
                     this.tournament = tournament;
                     // this.router.navigate(['/admin', newTournamentId]);
-                    this.setAlert('success', 'de naam is opgeslagen');
+                    this.setAlert(IAlertType.Success, 'de naam is opgeslagen');
                 },
                 error: (e) => {
-                    this.setAlert('danger', 'de naam kon niet worden opgeslagen');
+                    this.setAlert(IAlertType.Danger, 'de naam kon niet worden opgeslagen');
                     this.processing = false;
                 },
                 complete: () => this.processing = false
