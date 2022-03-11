@@ -51,7 +51,9 @@
     </div>
   </div>
   <div *ngIf="round.getNrOfPlaces() < AbsoluteMinPlacesPerPoule">
-    <ngb-alert type="warning">fout: los op door bovenstaande ronde opnieuw aan te maken
+    <ngb-alert type="warning"><span class="fw-bold">fout</span>: aantal deelnemers({{round.getNrOfPlaces()}}) is minder
+      dan het minimum aantal deelnemers: ({{AbsoluteMinPlacesPerPoule}}). Los op door bovenstaande ronde opnieuw aan te
+      maken
     </ngb-alert>
   </div>
 </div>

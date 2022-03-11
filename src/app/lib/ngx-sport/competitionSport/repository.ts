@@ -100,7 +100,7 @@ export class CompetitionSportRepository extends APIRepository {
         const sport = sportWithFields.variant.getSport();
         let fieldNamePrefix = '';
         if (withFieldNamePrefix) {
-            fieldNamePrefix = sport.getName().substr(0, 1).toUpperCase();
+            fieldNamePrefix = sport.getName().substring(0, 1).toUpperCase();
         }
         const fields: JsonField[] = [];
         for (let priority = 1; priority <= sportWithFields.nrOfFields; priority++) {

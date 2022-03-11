@@ -7,6 +7,12 @@ import {
   PouleStructure,
   Round,
   Poule,
+  NameService,
+  AgainstH2h,
+  AllInOneGame,
+  Single,
+  AgainstGpp,
+  GameMode,
 } from 'ngx-sport';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -18,17 +24,19 @@ import { CompetitionSportTab } from '../../shared/tournament/competitionSportTab
 import { CompetitionSportRepository } from '../../lib/ngx-sport/competitionSport/repository';
 import { SportWithFields } from '../sport/createSportWithFields.component';
 import { IAlertType } from '../../shared/common/alert';
+import { GameModeModalComponent } from '../gameMode/modal.component';
 @Component({
   selector: 'app-tournament-sport',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
 export class CompetitionSportListComponent extends TournamentComponent implements OnInit {
-  smallestNrOfPoulePlaces!: number;
-  competitionSports: CompetitionSport[] = [];
-  showCreateSportWithFields = false;
-  hasBegun!: boolean;
-  maxReached = true;
+  public smallestNrOfPoulePlaces!: number;
+  public competitionSports: CompetitionSport[] = [];
+  public showCreateSportWithFields = false;
+  public nameService = new NameService();
+  public hasBegun!: boolean;
+  public maxReached = true;
 
   validations: any = {
     'minlengthname': Sport.MIN_LENGTH_NAME,
@@ -87,6 +95,23 @@ export class CompetitionSportListComponent extends TournamentComponent implement
     return this.competitionSports.map((competitionSport: CompetitionSport): SportWithFields => {
       return { variant: competitionSport.getVariant(), nrOfFields: competitionSport.getFields().length };
     });
+  }
+
+  public openMultiSportsModal(content: TemplateRef<any>) {
+    this.modalService.open(content, { windowClass: 'info-modal' });
+  }
+
+  public getNrOfGamePlacesDescription(sportVariant: AgainstH2h | AgainstGpp | AllInOneGame | Single): string {
+    if (sportVariant instanceof AllInOneGame) {
+      return 'poule-grootte';
+    } else if (sportVariant instanceof Single) {
+      return '' + sportVariant.getNrOfGamePlaces();
+    }
+    return sportVariant.getNrOfHomePlaces() + '(thuis), ' + sportVariant.getNrOfAwayPlaces() + '(uit)';
+  }
+
+  openGameModeInfoModal() {
+    this.modalService.open(GameModeModalComponent, { windowClass: 'info-modal' });
   }
 
   add(sportWithFields: SportWithFields) {

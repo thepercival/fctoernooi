@@ -53,12 +53,7 @@
           </th>
           <!-- start -->
           <th *ngIf="planningConfig.getEnableTime()">
-            <button *ngIf="userIsAdmin && !hasBegun" title="wijzig plannings-instellingen"
-              class="btn btn-sm btn-outline-secondary" (click)="linkToPlanningConfig()">
-              <span>start</span>
-            </button>
-            <button *ngIf="!userIsAdmin || hasBegun" class="btn btn-sm btn-outline-info"
-              (click)="openInfoModal('wedstrijdplanning',planningInfo)">
+            <button class="btn btn-sm btn-outline-info" (click)="openInfoModal('wedstrijdplanning',planningInfo)">
               <span>start</span>
             </button>
           </th>
@@ -237,8 +232,7 @@
 <ng-template #planningInfo let-modal>
   <ul class="list-group">
     <li class="list-group-item border-info">
-      de start is op {{dateFormatter.toString(roundNumber.getFirstStartDateTime(), dateFormatter.date())}} om
-      {{dateFormatter.toString(roundNumber.getFirstStartDateTime(), dateFormatter.time())}}
+      de start is op {{startDateTimeToString(roundNumber.getFirstStartDateTime())}}
     </li>
     <li class="list-group-item border-info">
       de wedstrijden duren {{planningConfig.getMinutesPerGame()}} minuten
@@ -248,6 +242,8 @@
     </li>
     <li class="list-group-item border-info">er zit {{planningConfig.getMinutesBetweenGames()}} minuten
       tussen de wedstrijden</li>
+    <li class="list-group-item border-info">er zit {{planningConfig.getMinutesAfter()}} extra minuten
+      tussen de ronden</li>
   </ul>
 </ng-template>
 

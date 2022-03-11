@@ -290,6 +290,19 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     this.router.navigate(['/admin/referees', this.tournament.getId()]);
   }
 
+  public startDateTimeToString(date: Date): string {
+
+    const formatOptions: Intl.DateTimeFormatOptions = {
+      month: 'short',
+      day: 'numeric',
+      weekday: 'long'
+    };
+
+    return this.dateFormatter.toString(date, formatOptions)
+      + ' om ' + this.dateFormatter.toString(date, this.dateFormatter.time()) + ' uur';
+  }
+
+
   showPouleRanking(popOver: NgbPopover, poule: Poule) {
     if (popOver.isOpen()) {
       popOver.close();

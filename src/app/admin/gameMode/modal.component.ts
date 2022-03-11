@@ -46,7 +46,7 @@ export class GameModeModalComponent {
     }
 
     getAbbreviation(gameMode: GameMode): string {
-        return this.getName(gameMode).substr(0, 1).toUpperCase();
+        return this.getName(gameMode).substring(0, 1).toUpperCase();
     }
 }
 
