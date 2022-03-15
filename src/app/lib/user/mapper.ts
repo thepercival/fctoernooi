@@ -12,7 +12,7 @@ export class UserMapper {
     toObject(json: JsonUser): User {
         let user = this.cache[json.id];
         if (user === undefined) {
-            user = new User(json.id);
+            user = new User(json.id, json.nrOfCredits ?? 0, json.validateIn ?? 0);
             this.cache[user.getId()] = user;
         }
         if (json.emailaddress !== undefined) {
@@ -24,6 +24,8 @@ export class UserMapper {
     toJson(user: User): JsonUser {
         return {
             id: user.getId(),
+            nrOfCredits: user.getNrOfCredits(),
+            validateIn: user.getValidateIn(),
             emailaddress: user.getEmailaddress()
         };
     }
@@ -31,6 +33,8 @@ export class UserMapper {
 
 export interface JsonUser {
     id: number | string;
+    nrOfCredits?: number;
+    validateIn?: number;
     emailaddress?: string;
 }
 

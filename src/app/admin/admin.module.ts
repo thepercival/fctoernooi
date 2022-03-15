@@ -40,7 +40,7 @@ import { CompetitorListRemoveModalComponent } from './competitor/listremovemodal
 import { FieldListComponent } from './competitionSport/field/fieldlist.component';
 import { HomeComponent } from './home/home.component';
 import { NewComponent } from './new/new.component';
-import { StartBreakComponent } from './startbreak/startbreak.component';
+import { StartAndRecessesComponent } from './startAndRecesses/startAndRecesses.component';
 import { GameListComponent } from './game/list.component';
 import { PlanningConfigComponent } from './planningconfig/edit.component';
 import { RefereeEditComponent } from './referee/edit.component';
@@ -73,6 +73,7 @@ import { SportToAddComponent } from './sport/toAdd.component';
 import { GameBaseEditComponent } from './game/editbase.component';
 import { GameAddComponent } from './game/add.component';
 import { GameModeModalComponent } from './gameMode/modal.component';
+import { RecessAddComponent } from './startAndRecesses/addRecess.component';
 
 @NgModule({
   imports: [
@@ -109,7 +110,8 @@ import { GameModeModalComponent } from './gameMode/modal.component';
     SponsorListComponent,
     SportToAddComponent,
     CreateSportWithFieldsComponent,
-    StartBreakComponent,
+    StartAndRecessesComponent,
+    RecessAddComponent,
     StructureEditComponent,
     PlanningConfigComponent,
     AgainstQualifyConfigEditComponent,

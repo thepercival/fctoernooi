@@ -13,22 +13,26 @@ import { TournamentMapper } from '../../lib/tournament/mapper';
 import { Tournament } from '../../lib/tournament';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { IAlertType } from '../../shared/common/alert';
+import { RecessRepository } from '../../lib/recess/repository';
+import { Recess } from '../../lib/recess';
 
 @Component({
-    selector: 'app-tournament-startbreak',
-    templateUrl: './startbreak.component.html',
-    styleUrls: ['./startbreak.component.scss']
+    selector: 'app-tournament-startandrecesses',
+    templateUrl: './startAndRecesses.component.html',
+    styleUrls: ['./startAndRecesses.component.scss']
 })
-export class StartBreakComponent extends TournamentComponent implements OnInit {
-    form: FormGroup;
-    minDateStruct!: NgbDateStruct;
-    processing = true;
-    hasBegun!: boolean;
+export class StartAndRecessesComponent extends TournamentComponent implements OnInit {
+    public form: FormGroup;
+    public processing = true;
+    public minDateStruct!: NgbDateStruct;
+    public sameDayFormat = true;
+    public hasBegun!: boolean;
 
     constructor(
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
+        private recessRepository: RecessRepository,
         structureRepository: StructureRepository,
         private planningRepository: PlanningRepository,
         private tournamentMapper: TournamentMapper,
@@ -40,20 +44,15 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
 
         this.form = fb.group({
             date: ['', Validators.compose([])],
-            time: ['', Validators.compose([])],
-            togglebreak: [false, Validators.compose([])],
-            breakstartdate: ['', Validators.compose([])],
-            breakstarttime: ['', Validators.compose([])],
-            breakenddate: ['', Validators.compose([])],
-            breakendtime: ['', Validators.compose([])],
+            time: ['', Validators.compose([])]
         });
     }
 
     ngOnInit() {
-        super.myNgOnInit(() => this.initFields());
+        super.myNgOnInit(() => this.initStart());
     }
 
-    initFields() {
+    initStart() {
         this.hasBegun = this.structure.getRootRound().hasBegun();
         const date = this.competition.getStartDateTime();
 
@@ -62,33 +61,16 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
         this.minDateStruct = { year: minDate.getFullYear(), month: minDate.getMonth() + 1, day: minDate.getDate() };
 
         this.setDate(this.form.controls.date, this.form.controls.time, date);
-        this.setBreak();
-        this.form.controls.togglebreak.setValue(this.tournament.hasBreak());
 
         if (this.hasBegun) {
             this.setAlert(IAlertType.Warning, 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
         }
+        this.sameDayFormat = this.canUseSameDayFormat();
         this.processing = false;
     }
 
     isTimeEnabled() {
         return this.structure.getFirstRoundNumber().getValidPlanningConfig().getEnableTime();
-    }
-
-    setBreak() {
-        let breakStartDateTime, breakEndDateTime;
-        const breakX: Period | undefined = this.tournament.getBreak();
-        if (breakX) {
-            breakStartDateTime = new Date(breakX.getStartDateTime().getTime());
-            breakEndDateTime = new Date(breakX.getEndDateTime().getTime());
-        } else {
-            breakStartDateTime = this.getDate(this.form.controls.date, this.form.controls.time);
-            breakStartDateTime.setHours(breakStartDateTime.getHours() + 2);
-            breakEndDateTime = new Date(breakStartDateTime.getTime());
-            breakEndDateTime.setMinutes(breakEndDateTime.getMinutes() + 30);
-        }
-        this.setDate(this.form.controls.breakstartdate, this.form.controls.breakstarttime, breakStartDateTime);
-        this.setDate(this.form.controls.breakenddate, this.form.controls.breakendtime, breakEndDateTime);
     }
 
     getDate(dateFormControl: AbstractControl, timeFormControl: AbstractControl): Date {
@@ -106,29 +88,28 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
         timeFormControl.setValue({ hour: date.getHours(), minute: date.getMinutes() });
     }
 
+    protected canUseSameDayFormat(): boolean {
+        const start = this.competition.getStartDateTime();
+        const lastRecess = this.tournament.getRecesses().slice().pop();
+        if (lastRecess === undefined) {
+            return true;
+        }
+        const recessEnd: Date = lastRecess.getEndDateTime();
+        return (start.getDate() === recessEnd.getDate()
+            && start.getMonth() === recessEnd.getMonth()
+            && start.getFullYear() === recessEnd.getFullYear());
+    }
+
     edit(): boolean {
         this.setAlert(IAlertType.Info, 'het toernooi wordt opgeslagen');
 
         const startDateTime = this.getDate(this.form.controls.date, this.form.controls.time);
-        let breakX: Period | undefined;
-        if (this.form.controls.togglebreak.value) {
-            const breakStartDateTime = this.getDate(this.form.controls.breakstartdate, this.form.controls.breakstarttime);
-            const breakEndDateTime = this.getDate(this.form.controls.breakenddate, this.form.controls.breakendtime);
-            breakX = new Period(breakStartDateTime, breakEndDateTime);
-            const message = this.checkBreakPeriod(startDateTime, breakStartDateTime, breakEndDateTime);
-            if (message !== undefined) {
-                this.setAlert(IAlertType.Danger, message);
-                return false;
-            }
-        }
 
         this.processing = true;
         const firstRoundNumber = this.structure.getFirstRoundNumber();
 
         const json = this.tournamentMapper.toJson(this.tournament);
         json.competition.startDateTime = startDateTime.toISOString();
-        json.breakStartDateTime = breakX?.getStartDateTime().toISOString();
-        json.breakEndDateTime = breakX?.getEndDateTime().toISOString();
 
         this.tournamentRepository.editObject(json)
             .subscribe({
@@ -154,12 +135,29 @@ export class StartBreakComponent extends TournamentComponent implements OnInit {
         return false;
     }
 
-    protected checkBreakPeriod(startDateTime: Date, breakStartDateTime: Date, breakEndDateTime: Date): string | undefined {
-        if (breakStartDateTime.getTime() < startDateTime.getTime()) {
-            return 'de start van de pauze moet na het begin van het toernooi zijn';
-        } else if (breakStartDateTime.getTime() >= breakEndDateTime.getTime()) {
-            return 'het einde van de pauze moet na de start van de pauze zijn';
-        }
-        return undefined;
+    removeRecess(recess: Recess) {
+        this.processing = true;
+
+        this.recessRepository.removeObject(recess, this.tournament)
+            .subscribe({
+                next: () => {
+                    this.planningRepository.reschedule(this.structure.getFirstRoundNumber(), this.tournament)
+                        .subscribe({
+                            next: () => {
+                                this.myNavigation.back();
+                            },
+                            error: (e) => {
+                                this.setAlert(IAlertType.Danger, 'de wedstrijdplanning is niet opgeslagen: ' + e);
+                                this.processing = false;
+                            }
+                        });
+                },
+                error: (e) => {
+                    this.setAlert(IAlertType.Danger, 'het toernooi is niet opgeslagen: ' + e);
+                    this.processing = false;
+                }
+            });
     }
+
+
 }

@@ -94,12 +94,12 @@
       </thead>
       <tbody>
         <ng-template ngFor let-gmData [ngForOf]="gameDatas">
-          <tr *ngIf="gmData.break" class="table-info">
+          <tr *ngIf="gmData.recess" class="table-info">
             <td></td>
             <td *ngIf="planningConfig.getEnableTime()"><span
-                *ngIf="!sameDay">{{dateFormatter.toString(gmData.break.getStartDateTime(),
+                *ngIf="!sameDay">{{dateFormatter.toString(gmData.recess.getStartDateTime(),
                 dateFormatter.date())}}</span>
-              <span>{{dateFormatter.toString(gmData.break.getStartDateTime(), dateFormatter.time())}}</span>
+              <span>{{dateFormatter.toString(gmData.recess.getStartDateTime(), dateFormatter.time())}}</span>
             </td>
             <td></td>
             <td colspan="3" class="text-center">PAUZE</td>

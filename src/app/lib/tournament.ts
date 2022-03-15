@@ -6,6 +6,7 @@ import { User } from './user';
 import { TournamentUser } from './tournament/user';
 import { TournamentCompetitor } from './competitor';
 import { Identifiable } from 'ngx-sport';
+import { Recess } from './recess';
 
 export class Tournament extends Identifiable {
     protected id: number = 0;
@@ -13,8 +14,7 @@ export class Tournament extends Identifiable {
     protected sponsors: Sponsor[] = [];
     protected competitors: TournamentCompetitor[] = [];
     protected lockerRooms: LockerRoom[] = [];
-    protected breakStartDateTime: Date | undefined;
-    protected breakEndDateTime: Date | undefined;
+    protected recesses: Recess[] = [];
     protected public: boolean = false;
 
     constructor(protected competition: Competition) {
@@ -57,20 +57,8 @@ export class Tournament extends Identifiable {
         return this.lockerRooms;
     }
 
-    getBreakStartDateTime(): Date | undefined {
-        return this.breakStartDateTime;
-    }
-
-    setBreakStartDateTime(breakStartDateTime: Date): void {
-        this.breakStartDateTime = breakStartDateTime;
-    }
-
-    getBreakEndDateTime(): Date | undefined {
-        return this.breakEndDateTime;
-    }
-
-    setBreakEndDateTime(breakEndDateTime: Date): void {
-        this.breakEndDateTime = breakEndDateTime;
+    getRecesses(): Recess[] {
+        return this.recesses;
     }
 
     getPublic(): boolean {
@@ -79,15 +67,5 @@ export class Tournament extends Identifiable {
 
     setPublic(publicX: boolean): void {
         this.public = publicX;
-    }
-
-    hasBreak(): boolean {
-        return this.breakStartDateTime !== undefined;
-    }
-
-    getBreak(): Period | undefined {
-        const start = this.getBreakStartDateTime();
-        const end = this.getBreakEndDateTime();
-        return (start && end) ? new Period(start, end) : undefined;
     }
 }

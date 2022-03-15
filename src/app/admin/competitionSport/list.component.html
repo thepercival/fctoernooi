@@ -9,8 +9,7 @@
             sporten
           </h2>
           <div>
-            <button *ngIf="!processing && competitionSports.length > 1" role="button"
-              (click)="openMultiSportsModal(multiInfo)" class="btn btn-outline-info ms-1">
+            <button role="button" (click)="openMultiSportsModal(multiInfo)" class="btn btn-outline-info ms-1">
               hulp <span class="d-none d-sm-inline">multi sporten</span>
             </button>
           </div>
@@ -38,8 +37,8 @@
                   <span class="d-none d-sm-inline">wedstrijd-</span>modus
                 </button>
               </th>
-              <th>
-                <span class="d-none d-sm-inline">wedstrijd-</span>plaatsen
+              <th class="d-none d-sm-table-cell">
+                <span>wedstrijd-plaatsen</span>
               </th>
               <th class="text-end" *ngIf="!hasBegun">
                 <button *ngIf="!maxReached" type="button" class="btn btn-sm btn-primary"
@@ -64,7 +63,7 @@
               <td>
                 {{nameService.getGameModeName(competitionSport.getVariant().getGameMode())}}
               </td>
-              <td>
+              <td class="d-none d-sm-table-cell">
                 {{getNrOfGamePlacesDescription(competitionSport.getVariant())}}
               </td>
               <td class="text-end" *ngIf="!hasBegun">

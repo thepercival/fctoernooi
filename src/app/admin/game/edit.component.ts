@@ -21,6 +21,7 @@ import {
     Referee,
     Place,
     GamePhase,
+    Cumulative,
 } from 'ngx-sport';
 import { Observable, of } from 'rxjs';
 
@@ -83,8 +84,10 @@ export class GameEditComponent extends TournamentComponent {
             return;
         }
         this.game = game;
-        this.equalQualifiersChecker = new EqualQualifiersChecker(this.game, this.nameService, this.mapper);
         const roundNumber = this.game.getRound().getNumber();
+        const cumulative = roundNumber.getCompetition().hasMultipleSports() ? Cumulative.byPerformance : Cumulative.byRank;
+        this.equalQualifiersChecker = new EqualQualifiersChecker(this.game, this.nameService, this.mapper, cumulative);
+
         if (this.nextRoundNumberBegun(roundNumber)) {
             this.setAlert(IAlertType.Warning, 'het aanpassen van de score kan gevolgen hebben voor de al begonnen volgende ronde');
         }

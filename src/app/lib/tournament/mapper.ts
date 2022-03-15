@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CompetitionMapper } from 'ngx-sport';
+import { CompetitionMapper, JsonPeriod, Period } from 'ngx-sport';
 
 import { TournamentUserMapper } from './user/mapper';
 import { SponsorMapper } from '../sponsor/mapper';
@@ -7,6 +7,8 @@ import { Tournament } from '../tournament';
 import { LockerRoomMapper } from '../lockerroom/mapper';
 import { JsonTournament } from './json';
 import { CompetitorMapper } from '../competitor/mapper';
+import { Recess } from '../recess';
+import { RecessMapper } from '../recess/mapper';
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +19,8 @@ export class TournamentMapper {
         private tournamentUserMapper: TournamentUserMapper,
         private sponsorMapper: SponsorMapper,
         private competitorMapper: CompetitorMapper,
-        private lockerRoomMapper: LockerRoomMapper) { }
+        private lockerRoomMapper: LockerRoomMapper,
+        private recessMapper: RecessMapper) { }
 
     toObject(json: JsonTournament): Tournament {
         const competition = this.competitionMapper.toObject(json.competition);
@@ -28,28 +31,21 @@ export class TournamentMapper {
         json.sponsors.map(jsonSponsor => this.sponsorMapper.toObject(jsonSponsor, tournament));
         json.competitors.map(jsonCompetitor => this.competitorMapper.toObject(jsonCompetitor, tournament));
         json.lockerRooms.map(jsonLockerRoom => this.lockerRoomMapper.toObject(jsonLockerRoom, tournament));
+        json.recesses.map(jsonRecess => this.recessMapper.toObject(jsonRecess, tournament));
         tournament.setId(json.id);
-        if (json.breakStartDateTime !== undefined) {
-            tournament.setBreakStartDateTime(new Date(json.breakStartDateTime));
-        }
-        if (json.breakEndDateTime !== undefined) {
-            tournament.setBreakEndDateTime(new Date(json.breakEndDateTime));
-        }
         tournament.setPublic(json.public);
         return tournament;
     }
 
     toJson(tournament: Tournament): JsonTournament {
-        const breakX = tournament.getBreak();
         return {
             id: tournament.getId(),
             competition: this.competitionMapper.toJson(tournament.getCompetition()),
             users: tournament.getUsers().map(tournamentUser => this.tournamentUserMapper.toJson(tournamentUser)),
             competitors: tournament.getCompetitors().map(competitor => this.competitorMapper.toJson(competitor)),
             lockerRooms: tournament.getLockerRooms().map(lockerRoom => this.lockerRoomMapper.toJson(lockerRoom)),
+            recesses: tournament.getRecesses().map(recess => this.recessMapper.toJson(recess)),
             sponsors: tournament.getSponsors().map(sponsor => this.sponsorMapper.toJson(sponsor)),
-            breakStartDateTime: breakX ? breakX.getStartDateTime().toISOString() : undefined,
-            breakEndDateTime: breakX ? breakX.getEndDateTime().toISOString() : undefined,
             public: tournament.getPublic()
         };
     }

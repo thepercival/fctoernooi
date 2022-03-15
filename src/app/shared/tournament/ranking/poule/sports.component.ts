@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, CompetitorMap, VoetbalRange, CompetitionSport, RoundRankingCalculator, RoundRankingItem } from 'ngx-sport';
+import { NameService, Poule, CompetitorMap, CompetitionSport, RoundRankingCalculator, RoundRankingItem, Cumulative } from 'ngx-sport';
 
 import { CSSService } from '../../../common/cssservice';
 import { Favorites } from '../../../../lib/favorites';
@@ -28,6 +28,7 @@ export class PouleRankingSportsComponent implements OnInit {
   gameRoundMap = new GameRoundMap();
   togetherRankingMap: TogetherRankingMap = new TogetherRankingMap();
   viewPointStart: number = 1;
+  public showDifferenceDetail = false;
   public processing = true;
 
 
@@ -35,7 +36,7 @@ export class PouleRankingSportsComponent implements OnInit {
     public cssService: CSSService,
     private modalService: NgbModal,
     public favRepos: FavoritesRepository) {
-    this.roundRankingCalculator = new RoundRankingCalculator();
+    this.roundRankingCalculator = new RoundRankingCalculator(undefined, Cumulative.byPerformance);
   }
 
   ngOnInit() {

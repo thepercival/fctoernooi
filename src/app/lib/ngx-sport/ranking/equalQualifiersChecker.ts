@@ -1,4 +1,5 @@
 import { JsonAgainstGame, JsonTogetherGame, AgainstGame, TogetherGame, NameService, GameMapper, GameState, MultipleQualifyRule, QualifyGroup, RoundRankingCalculator, RoundRankingItem, QualifyTarget, Round, Place } from "ngx-sport";
+import { Cumulative } from "ngx-sport/src/ranking/calculator/cumulative";
 
 export class EqualQualifiersChecker {
 
@@ -8,9 +9,10 @@ export class EqualQualifiersChecker {
     constructor(
         private game: AgainstGame | TogetherGame,
         private nameService: NameService,
-        private gameMapper: GameMapper
+        private gameMapper: GameMapper,
+        cumulative: Cumulative
     ) {
-        this.roundRankingCalculator = new RoundRankingCalculator();
+        this.roundRankingCalculator = new RoundRankingCalculator(undefined, cumulative);
         this.jsonOriginalGame = this.gameMapper.toJson(game);
     }
 

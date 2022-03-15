@@ -28,7 +28,7 @@
             <a ngbNavLink>regels</a>
             <ng-template ngbNavContent>
               <div class="m-3">
-                <h4>rangschikking</h4>
+                <h4>rangschikking {{getRankingRuleSuffix()}}</h4>
                 <app-ranking-rules [againstRuleSet]="tournament.getCompetition().getAgainstRuleSet()"
                   [editMode]="isAdmin() && !hasBegun" (changed)="saveRankingRuleSet($event)">
                 </app-ranking-rules>

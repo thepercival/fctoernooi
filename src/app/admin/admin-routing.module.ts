@@ -8,7 +8,6 @@ import { CompetitorListComponent } from './competitor/list.component';
 import { FieldListComponent } from './competitionSport/field/fieldlist.component';
 import { HomeComponent } from './home/home.component';
 import { NewComponent } from './new/new.component';
-import { StartBreakComponent } from './startbreak/startbreak.component';
 import { GameListComponent } from './game/list.component';
 import { PlanningConfigComponent } from './planningconfig/edit.component';
 import { RefereeEditComponent } from './referee/edit.component';
@@ -24,6 +23,8 @@ import { CompetitionSportEditComponent } from './competitionSport/edit.component
 import { GameAgainstEditComponent } from './game/editagainst.component';
 import { GameTogetherEditComponent } from './game/edittogether.component';
 import { GameAddComponent } from './game/add.component';
+import { RecessAddComponent } from './startAndRecesses/addRecess.component';
+import { StartAndRecessesComponent } from './startAndRecesses/startAndRecesses.component';
 
 const routes: Routes = [
   { path: 'new', component: NewComponent }, // ALL ROLES
@@ -46,7 +47,8 @@ const routes: Routes = [
   { path: 'sponsor/:id/:sponsorId', component: SponsorEditComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'competitionsports/:id', component: CompetitionSportListComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'competitionsport/:id/:competitionSportId/:tabId', component: CompetitionSportEditComponent, canActivate: [AuthguardService] }, // ADMIN
-  { path: 'startbreak/:id', component: StartBreakComponent, canActivate: [AuthguardService] }, // ADMIN
+  { path: 'startandrecesses/:id', component: StartAndRecessesComponent, canActivate: [AuthguardService] }, // ADMIN
+  { path: 'recess/:id', component: RecessAddComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'structure/:id', component: StructureEditComponent, canActivate: [AuthguardService] }, // ADMIN
 ];
 

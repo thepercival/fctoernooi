@@ -1,0 +1,94 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-sm-12 col-md-10 col-lg-8">
+      <app-tournament-title [tournament]="tournament">
+      </app-tournament-title>
+      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+      <h2 *ngIf="processing" class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
+
+      <form *ngIf="!processing" name="form" (ngSubmit)="edit()" [formGroup]="form" novalidate>
+        <h2>start</h2>
+        <div *ngIf="!hasBegun" class="row mb-3">
+          <div class="col-3">
+            <label for="date" class="col-form-label">datum</label>
+          </div>
+          <div class="col-9">
+            <div class="input-group input-group-date">
+              <input class="form-control"
+                [ngClass]="{ 'is-invalid': form.controls.date.invalid, 'is-valid': form.controls.date.valid }"
+                placeholder="yyyy-mm-dd" formControlName="date" ngbDatepicker #d="ngbDatepicker" required
+                [minDate]="minDateStruct" container="body">
+              <span class="input-group-text pointer" (click)="d.toggle()">
+                <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!hasBegun" class="row mb-3">
+          <div class="col-3">
+            <label for="starttime" class="col-form-label">tijd</label>
+          </div>
+          <div class="col-9">
+            <ngb-timepicker formControlName="time" [spinners]="false" required>
+            </ngb-timepicker>
+          </div>
+        </div>
+        <div *ngIf="hasBegun" class="row mb-2">
+          <div class="col-3">
+            <label for="start" class="col-form-label">datumtijd</label>
+          </div>
+          <div class="col-9 col-sm-8 col-md-7">
+            <input class="form-control" type="text"
+              placeholder="{{dateFormatter.toString(competition.getStartDateTime(), dateFormatter.dateWithYear())}}"
+              readonly>
+          </div>
+        </div>
+
+        <div *ngIf="!hasBegun" class="row mb-3 justify-content-end">
+          <div class="col-9">
+            <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
+              opslaan
+            </button>
+          </div>
+        </div>
+      </form>
+      <div *ngIf="!processing && isTimeEnabled()">
+        <h2>pauzes</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>start</th>
+              <th>einde</th>
+              <th class="text-end">
+                <button *ngIf="!hasBegun" type="button" class="btn btn-sm btn-primary"
+                  [routerLink]="['/admin/recess',tournament.getId()]" [disabled]="processing">
+                  <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let recess of tournament.getRecesses()">
+              <td><span *ngIf="!sameDayFormat">{{dateFormatter.toString(recess.getStartDateTime(),
+                  dateFormatter.date())}}</span>
+                <span>{{dateFormatter.toString(recess.getStartDateTime(), dateFormatter.time())}}</span>
+              </td>
+              <td>
+                <span *ngIf="!sameDayFormat">{{dateFormatter.toString(recess.getEndDateTime(),
+                  dateFormatter.date())}}</span>
+                <span>{{dateFormatter.toString(recess.getEndDateTime(), dateFormatter.time())}}</span>
+              </td>
+              <td class="text-end">
+                <button *ngIf="!hasBegun" type="button" class="btn btn-sm btn-danger" [disabled]="processing"
+                  (click)="removeRecess(recess);">
+                  <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

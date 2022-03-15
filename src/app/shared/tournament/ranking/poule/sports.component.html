@@ -3,9 +3,12 @@
         <tr>
             <th class="text-end ps-0"><span class="badge badge-rank pb-0">pl</span></th>
             <th class="text-break px-0">
+                <span class="d-xs-inline d-sm-none">deeln.</span>
+                <span class="d-none d-sm-inline">deelnemer</span>
+            </th>
+            <th class="ps-0" title="gespeeld">
                 <div class="d-flex justify-content-between">
-                    <span class="d-xs-inline d-sm-none">deeln.</span>
-                    <span class="d-none d-sm-inline">deelnemer</span>
+                    <span>g</span>
                     <ng-template ngFor let-viewPort [ngForOf]="viewPortManager.getViewPorts()">
                         <button *ngIf="viewPortManager.showBackArrow(viewPort)"
                             class="btn btn-sm btn-outline-secondary {{viewPortManager.getSingleVisibleClass(viewPort)}}"
@@ -16,9 +19,9 @@
             </th>
             <th *ngFor="let competitionSport of competitionSports; let counter = index"
                 class="text-end ps-0 {{viewPortManager.getClass(counter+1)}}">
-                <button class="btn btn-sm btn-outline-info w-100" (click)="openModalPouleRank(competitionSport)">
+                <span class="">
                     {{competitionSport.getSport().getName()}}
-                </button>
+                </span>
             </th>
             <th class="ps-0 text-end" title="totaal">
                 <ng-template ngFor let-viewPort [ngForOf]="viewPortManager.getViewPorts()">
@@ -27,9 +30,12 @@
                         (click)="viewPortManager.increment()">
                         > </button>
                 </ng-template>
-                <span class="d-none d-sm-inline">tot.</span>
-
+                <span class="ps-1 d-xs-inline">t</span>
+                <span class="d-none d-sm-inline">ot.</span>
             </th>
+            <th class="text-center d-none d-sm-table-cell text-info ps-0 pointer"
+                (click)="showDifferenceDetail = !showDifferenceDetail" title="doelsaldo">
+                &Delta;</th>
         </tr>
     </thead>
     <tbody>
@@ -42,10 +48,19 @@
                 [ngClass]="{ 'favitem': favorites.hasCompetitor(competitorMap.getCompetitor(roundRankingItem.getPlace())) }">
                 {{nameService.getPlaceFromName(roundRankingItem.getPlace(), true)}}
             </td>
+            <td class="ps-0">{{roundRankingItem.getCumulativePerformance().getGames()}}</td>
             <td *ngFor="let competitionSport of competitionSports; let counter = index;"
                 class="text-end ps-0 {{viewPortManager.getClass(counter+1)}}">
-                {{roundRankingItem.getSportItem(competitionSport).getRank()}}</td>
-            <td class="text-end ps-0">{{roundRankingItem.getCumulativeRank()}}</td>
+                {{roundRankingItem.getSportItem(competitionSport).getPerformance().getPoints()}}</td>
+            <td class="text-end ps-0">{{roundRankingItem.getCumulativePerformance().getPoints()}}</td>
+            <td class="text-center unitdiff d-none d-sm-table-cell ps-0">
+                <div>
+                    {{roundRankingItem.getCumulativePerformance().getDiff() > 0 ? '+' :
+                    ''}}{{roundRankingItem.getCumulativePerformance().getDiff()}}
+                </div>
+                <div *ngIf="showDifferenceDetail">( {{roundRankingItem.getCumulativePerformance().getScored()}} -
+                    {{roundRankingItem.getCumulativePerformance().getReceived()}} )</div>
+            </td>
         </tr>
     </tbody>
 </table>

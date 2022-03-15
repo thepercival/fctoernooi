@@ -88,6 +88,7 @@ export class TournamentPropertiesComponent implements OnInit {
       },
       competitors: [],
       lockerRooms: [],
+      recesses: [],
       users: [],
       sponsors: []
     };

@@ -40,7 +40,8 @@ export class AuthService extends APIRepository {
     return true;
   }
 
-
+  // op adminhome wil ik weten wanneer er gevalideerd moet worden
+  // op adminhome wil ik weten hoeveel credits ik nog heb
 
   getUrl(): string {
     return super.getApiUrl() + 'auth';

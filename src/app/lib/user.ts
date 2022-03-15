@@ -6,7 +6,10 @@ export class User {
 
     protected emailaddress: string = '';
 
-    constructor(protected id: number | string) {
+    constructor(
+        protected id: number | string,
+        protected nrOfCredits: number,
+        protected validateIn: number) {
     }
 
     getId(): string | number {
@@ -23,5 +26,13 @@ export class User {
 
     setEmailaddress(emailaddress: string): void {
         this.emailaddress = emailaddress;
+    }
+
+    getNrOfCredits(): number {
+        return this.nrOfCredits;
+    }
+
+    getValidateIn(): number {
+        return this.validateIn;
     }
 }

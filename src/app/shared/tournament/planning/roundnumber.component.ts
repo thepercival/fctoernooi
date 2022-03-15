@@ -46,6 +46,7 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AppErrorHandler } from '../../../lib/repository';
 import { isLocalRelativePath } from '@angular/compiler-cli/private/localize';
+import { Recess } from '../../../lib/recess';
 
 @Component({
   selector: 'app-tournament-roundnumber-planning',
@@ -64,7 +65,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   @Output() scroll = new EventEmitter();
   alert: IAlert | undefined;
   public sameDay = true;
-  public breakShown: boolean = false;
   public userIsAdmin: boolean = false;
   public gameOrder: GameOrder = GameOrder.ByDate;
   public filterEnabled = false;
@@ -140,8 +140,10 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
 
   private getGameData() {
     const gameDatas: GameData[] = [];
+    const games = this.roundNumber.getGames(this.gameOrder);
+    const recesses = games.length > 0 ? this.getRecesses(this.roundNumber) : [];
     const pouleDataMap = this.getPouleDataMap();
-    this.roundNumber.getGames(this.gameOrder).forEach((game: AgainstGame | TogetherGame) => {
+    games.forEach((game: AgainstGame | TogetherGame) => {
       const somePlaceHasACompetitor = this.somePlaceHasACompetitor(game);
       if (this.filterEnabled && this.favorites?.hasItems() && !this.favorites?.hasGameItem(game)) {
         return;
@@ -156,11 +158,45 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
         poule: pouleData,
         hasPopover: pouleData.needsRanking || (!this.roundNumber.isFirst() && somePlaceHasACompetitor),
         game: game,
-        break: this.isBreakBeforeGame(game) ? this.tournament.getBreak() : undefined
+        recess: this.removeRecessBeforeGame(game, recesses)
       };
       gameDatas.push(gameData);
     });
     return gameDatas;
+  }
+
+  private getRecesses(roundNumber: RoundNumber): Period[] {
+    const previousLastEndDateTime = this.getPreviousEndDateTime(roundNumber);
+    return this.tournament.getRecesses().map((recess: Recess): Period => {
+      const startDateTime = recess.getStartDateTime().getTime() < previousLastEndDateTime.getTime() ? previousLastEndDateTime : recess.getStartDateTime();
+      return new Period(startDateTime, recess.getEndDateTime());
+    });
+  }
+
+  protected removeRecessBeforeGame(game: Game, recesses: Period[]): Period | undefined {
+    if (!this.planningConfig.getEnableTime() || this.gameOrder === GameOrder.ByPoule) {
+      return undefined;
+    }
+    const recess: Period | undefined = recesses.find((recess: Period) => {
+      return game.getStartDateTime()?.getTime() === recess.getEndDateTime().getTime();
+    });
+    if (recess === undefined) {
+      return undefined;
+    }
+    const idx = recesses.indexOf(recess);
+    if (idx >= 0) {
+      recesses.splice(idx, 1);
+    }
+    return recess;
+  }
+
+  private getPreviousEndDateTime(roundNumber: RoundNumber): Date {
+    const previous = roundNumber.getPrevious();
+    if (previous === undefined) {
+      return roundNumber.getCompetition().getStartDateTime();
+    }
+    const nrOfMinutesToAdd = previous.getValidPlanningConfig().getMaxNrOfMinutesPerGame();
+    return new Date(previous.getLastStartDateTime().getTime() + (nrOfMinutesToAdd * 60000));
   }
 
   toggleFilter() {
@@ -240,15 +276,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
 
   protected hasRole(role: number): boolean {
     return (this.roles & role) === role;
-  }
-  protected isBreakBeforeGame(game: Game): boolean {
-    const breakX: Period | undefined = this.tournament.getBreak();
-    if (breakX === undefined || this.breakShown || !this.planningConfig.getEnableTime() || this.gameOrder === GameOrder.ByPoule) {
-      return false;
-    }
-    const startDateTime = game.getStartDateTime();
-    this.breakShown = startDateTime?.getTime() === breakX.getEndDateTime().getTime();
-    return this.breakShown;
   }
 
   getCompetitor(place: Place): Competitor | undefined {
@@ -405,6 +432,10 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
           if (progressPerc === undefined) {
             return;
           }
+          const previous = this.roundNumber.getPrevious();
+          if (previous && previous.getNrOfGames() === 0) {
+            return;
+          }
           this.progressPerc = progressPerc;
           if (progressPerc === 100) {
             this.stopShowProgress();
@@ -449,7 +480,7 @@ interface GameData {
   poule: PouleData;
   hasPopover: boolean;
   game: AgainstGame | TogetherGame;
-  break: Period | undefined;
+  recess: Period | undefined;
 }
 
 interface PouleData {

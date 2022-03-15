@@ -39,7 +39,12 @@ export class PouleRankingModalComponent implements OnInit {
         return (this.competitionSport?.getVariant() instanceof AgainstH2h || this.competitionSport?.getVariant() instanceof AgainstGpp);
     }
 
-    openInfoModal(header: string, modalContent: TemplateRef<any>) {
+    openInfoModal(modalContent: TemplateRef<any>) {
+
+        let header = 'rangschikking';
+        if (this.tournament.getCompetition().hasMultipleSports()) {
+            header += '<small> per sport</small>';
+        }
         const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
         activeModal.componentInstance.header = header;
         activeModal.componentInstance.noHeaderBorder = true;

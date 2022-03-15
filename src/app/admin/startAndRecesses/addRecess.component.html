@@ -1,0 +1,75 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-sm-10 col-md-8 col-lg-6">
+      <app-tournament-title [tournament]="tournament"></app-tournament-title>
+      <div>
+        <h2>
+          <fa-icon [icon]="['fas', 'users']"></fa-icon> pauze toevoegen
+        </h2>
+        <h2 *ngIf="processing" class="text-center">
+          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+        </h2>
+      </div>
+      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+      <form *ngIf="!processing && !hasBegun" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+        <div class="row my-3">
+          <div class="col-3">
+            <label for="startdate" class="col-form-label">start</label>
+          </div>
+          <div class="col-9">
+            <div class="input-group input-group-date">
+              <input class="form-control"
+                [ngClass]="{ 'is-invalid': form.controls.startdate.invalid, 'is-valid': form.controls.startdate.valid }"
+                placeholder="yyyy-mm-dd" formControlName="startdate" ngbDatepicker #dStart="ngbDatepicker" required
+                [minDate]="minDateStruct" container="body">
+              <span class="input-group-text pointer" (click)="dStart.toggle()">
+                <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-3">
+            <label for="starttime" class="col-form-label"></label>
+          </div>
+          <div class="col-9">
+            <ngb-timepicker formControlName="starttime" [spinners]="false" required>
+            </ngb-timepicker>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-3">
+            <label for="enddate" class="col-form-label">eind</label>
+          </div>
+          <div class="col-9">
+            <div class="input-group input-group-date">
+              <input class="form-control"
+                [ngClass]="{ 'is-invalid': form.controls.enddate.invalid, 'is-valid': form.controls.enddate.valid }"
+                placeholder="yyyy-mm-dd" formControlName="enddate" ngbDatepicker #dEnd="ngbDatepicker" required
+                [minDate]="minDateStruct" container="body">
+              <span class="input-group-text pointer" (click)="dEnd.toggle()">
+                <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-3">
+            <label for="endtime" class="col-form-label"></label>
+          </div>
+          <div class="col-9">
+            <ngb-timepicker formControlName="endtime" [spinners]="false" required>
+            </ngb-timepicker>
+          </div>
+        </div>
+        <div class="row mb-3 justify-content-end">
+          <div class="col-9">
+            <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
+              pauze toevoegen
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

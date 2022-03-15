@@ -54,6 +54,10 @@ export class RankingComponent extends TournamentComponent implements OnInit {
         return this.hasRole(this.authService, Role.ADMIN);
     }
 
+    getRankingRuleSuffix(): string {
+        return this.tournament.getCompetition().hasMultipleSports() ? '<small>per sport</small>' : '';
+    }
+
     saveRankingRuleSet(againstRuleSet: AgainstRuleSet) {
         this.resetAlert();
         this.processing = true;
