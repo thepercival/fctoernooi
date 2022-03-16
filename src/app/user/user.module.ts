@@ -13,6 +13,8 @@ import { RegisterComponent } from './register/register.component';
 import { UserRoutingModule } from './user-routing.module';
 import { ProfileComponent } from './profile/profile.component';
 import { UserRepository } from '../lib/user/repository';
+import { ValidateComponent } from './validate/validate.component';
+import { UserTitleComponent } from './title/title.component';
 
 @NgModule({
   imports: [
@@ -22,7 +24,7 @@ import { UserRepository } from '../lib/user/repository';
     NgbAlertModule,
     FontAwesomeModule
   ],
-  declarations: [LoginComponent, LogoutComponent, RegisterComponent, PasswordresetComponent, PasswordchangeComponent, ProfileComponent],
+  declarations: [LoginComponent, LogoutComponent, RegisterComponent, PasswordresetComponent, PasswordchangeComponent, ProfileComponent, ValidateComponent, UserTitleComponent],
   providers: [UserRepository]
 })
 export class UserModule {

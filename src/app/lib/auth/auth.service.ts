@@ -97,6 +97,20 @@ export class AuthService extends APIRepository {
     );
   }
 
+  validationRequest(): Observable<void> {
+    return this.http.post<JsonAuthItem>(this.getUrl() + '/validationrequest', undefined, this.getOptions()).pipe(
+      catchError((err: HttpErrorResponse) => this.handleError(err))
+    );
+  }
+
+  validate(user: User, code: string): Observable<void> {
+    const url = this.getUrl() + '/validate/' + code;
+    return this.http.post<JsonAuthItem>(url, undefined, this.getOptions()).pipe(
+      map(() => user.setValidated(true)),
+      catchError((err: HttpErrorResponse) => this.handleError(err))
+    );
+  }
+
   logout(): void {
     this.clearAuthItem();
   }

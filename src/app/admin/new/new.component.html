@@ -15,6 +15,9 @@
       <app-tournament-create-sportwithfields [hidden]="currentStep !== stepCreateSportWithFields"
         labelBtnNext="naar opzet" (created)="create($event)" (goToPrevious)="toStepEditProperties()">
       </app-tournament-create-sportwithfields>
+
+      <ngb-alert *ngIf="nrOfCredits === 1" class="mt-3" [type]="'info'">
+        je kunt nog 1 toernooi aanmaken, vraag daarna nieuwe credits aan</ngb-alert>
     </div>
   </div>
 </div>

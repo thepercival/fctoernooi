@@ -12,11 +12,20 @@ export class UserMapper {
     toObject(json: JsonUser): User {
         let user = this.cache[json.id];
         if (user === undefined) {
-            user = new User(json.id, json.nrOfCredits ?? 0, json.validateIn ?? 0);
+            user = new User(json.id);
             this.cache[user.getId()] = user;
         }
         if (json.emailaddress !== undefined) {
             user.setEmailaddress(json.emailaddress)
+        }
+        if (json.validated !== undefined) {
+            user.setValidated(json.validated)
+        }
+        if (json.nrOfCredits !== undefined) {
+            user.setnrOfCredits(json.nrOfCredits)
+        }
+        if (json.validateIn !== undefined) {
+            user.setValidateIn(json.validateIn)
         }
         return user;
     }
@@ -24,8 +33,6 @@ export class UserMapper {
     toJson(user: User): JsonUser {
         return {
             id: user.getId(),
-            nrOfCredits: user.getNrOfCredits(),
-            validateIn: user.getValidateIn(),
             emailaddress: user.getEmailaddress()
         };
     }
@@ -33,6 +40,7 @@ export class UserMapper {
 
 export interface JsonUser {
     id: number | string;
+    validated?: boolean;
     nrOfCredits?: number;
     validateIn?: number;
     emailaddress?: string;

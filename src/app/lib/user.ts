@@ -5,11 +5,12 @@ export class User {
     static readonly MAX_LENGTH_PASSWORD = 50;
 
     protected emailaddress: string = '';
+    protected validated: boolean = false;
+    protected nrOfCredits: number = 0;
+    protected validateIn: number = 0;
 
     constructor(
-        protected id: number | string,
-        protected nrOfCredits: number,
-        protected validateIn: number) {
+        protected id: number | string) {
     }
 
     getId(): string | number {
@@ -28,11 +29,27 @@ export class User {
         this.emailaddress = emailaddress;
     }
 
+    getValidated(): boolean {
+        return this.validated;
+    }
+
+    setValidated(validated: boolean): void {
+        this.validated = validated;
+    }
+
     getNrOfCredits(): number {
         return this.nrOfCredits;
     }
 
+    setnrOfCredits(nrOfCredits: number): void {
+        this.nrOfCredits = nrOfCredits;
+    }
+
     getValidateIn(): number {
         return this.validateIn;
+    }
+
+    setValidateIn(validateIn: number): void {
+        this.validateIn = validateIn;
     }
 }

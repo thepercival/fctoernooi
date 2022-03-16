@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 
 import { IAlert, IAlertType } from '../../shared/common/alert';
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -11,6 +11,9 @@ import { PouleStructure, Structure, StructureEditor } from 'ngx-sport';
 import { SportWithFields } from '../sport/createSportWithFields.component';
 import { CompetitionSportRepository } from '../../lib/ngx-sport/competitionSport/repository';
 import { Tournament } from '../../lib/tournament';
+import { UserRepository } from '../../lib/user/repository';
+import { AuthService } from '../../lib/auth/auth.service';
+import { User } from '../../lib/user';
 
 
 @Component({
@@ -19,13 +22,16 @@ import { Tournament } from '../../lib/tournament';
   styleUrls: ['./new.component.scss']
 })
 export class NewComponent implements OnInit {
-  processing = true;
-  alert: IAlert | undefined;
+  public processing = true;
+  public alert: IAlert | undefined;
   protected jsonTournament!: JsonTournament;
-  currentStep = NewTournamentStep.editProperties;
+  public nrOfCredits: number | undefined;
+  public currentStep = NewTournamentStep.editProperties;
 
   constructor(
     private router: Router,
+    private authService: AuthService,
+    private userRepository: UserRepository,
     private tournamentRepository: TournamentRepository,
     private structureRepository: StructureRepository,
     private planningRepository: PlanningRepository,
@@ -36,7 +42,36 @@ export class NewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.processing = false;
+    this.processing = true;
+
+    const authUser = this.authService.getUser();
+    if (authUser === undefined) {
+      const navigationExtras: NavigationExtras = {
+        queryParams: { type: IAlertType.Danger, message: 'je bet niet ingelogd' }
+      };
+      this.router.navigate(['', navigationExtras]);
+      return
+    }
+
+    this.userRepository.getObject(authUser.getId())
+      .subscribe({
+        next: (user: User) => {
+          if (!user.getValidated()) {
+            if (user.getValidateIn() < 1) {
+              this.router.navigate(['/user/validate']);
+              return;
+            }
+          } else {
+            this.nrOfCredits = user.getNrOfCredits();
+            if (this.nrOfCredits === 0) {
+              // this.router.navigate(['/buycredits']);
+              return;
+            }
+          }
+          this.processing = false;
+        },
+        error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
+      });
   }
 
   toStepEditProperties() {

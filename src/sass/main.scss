@@ -125,6 +125,19 @@ ngb-alert {
   width:100%;
 }
 
+.card-auth .card-header {
+  margin: -1px;
+  border-start-start-radius: 1rem;
+  border-start-end-radius: 1rem;
+}
+
+.card-auth {
+  @extend .border-primary;
+  border-radius: 1rem;
+  border-end-start-radius: 1rem;
+  border-end-end-radius: 1rem;
+}
+
 // .more-than-two-rounds {
 //   @include media-breakpoint-only(xs) {
 //       flex-direction: column;

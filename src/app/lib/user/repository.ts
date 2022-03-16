@@ -7,7 +7,9 @@ import { User } from '../user';
 import { JsonUser, UserMapper } from './mapper';
 import { APIRepository } from '../repository';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class UserRepository extends APIRepository {
 
   constructor(
@@ -24,7 +26,7 @@ export class UserRepository extends APIRepository {
     return super.getApiUrl() + this.getUrlpostfix() + '/' + id;
   }
 
-  getObject(id: number): Observable<User> {
+  getObject(id: string | number): Observable<User> {
     return this.http.get<JsonUser>(this.getUrl(id), this.getOptions()).pipe(
       map((jsonUser: JsonUser) => this.mapper.toObject(jsonUser)),
       catchError((err: HttpErrorResponse) => this.handleError(err))
