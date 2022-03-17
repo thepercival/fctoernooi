@@ -9,6 +9,7 @@ import { RegisterComponent } from './register/register.component';
 import { ProfileComponent } from './profile/profile.component';
 import { AuthguardService } from '../lib/auth/authguard.service';
 import { ValidateComponent } from './validate/validate.component';
+import { BuyCreditsComponent } from './buycredits/buycredits.component';
 
 // import { ActivateComponent }  from './user/activate.component';
 const routes: Routes = [
@@ -20,7 +21,8 @@ const routes: Routes = [
   { path: 'logout', component: LogoutComponent },
   { path: 'profile/:id', component: ProfileComponent, canActivate: [AuthguardService] },
   { path: 'validate/:code', component: ValidateComponent, canActivate: [AuthguardService] },
-  { path: 'validate', component: ValidateComponent, canActivate: [AuthguardService] }
+  { path: 'validate', component: ValidateComponent, canActivate: [AuthguardService] },
+  { path: 'buycredits', component: BuyCreditsComponent, canActivate: [AuthguardService] }
 ];
 
 @NgModule({

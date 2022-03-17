@@ -7,7 +7,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { JsonTournament } from '../../lib/tournament/json';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
-import { PouleStructure, Structure, StructureEditor } from 'ngx-sport';
+import { Structure, StructureEditor } from 'ngx-sport';
 import { SportWithFields } from '../sport/createSportWithFields.component';
 import { CompetitionSportRepository } from '../../lib/ngx-sport/competitionSport/repository';
 import { Tournament } from '../../lib/tournament';
@@ -64,7 +64,7 @@ export class NewComponent implements OnInit {
           } else {
             this.nrOfCredits = user.getNrOfCredits();
             if (this.nrOfCredits === 0) {
-              // this.router.navigate(['/buycredits']);
+              this.router.navigate(['/user//buycredits']);
               return;
             }
           }

@@ -120,8 +120,9 @@
                 </div>
                 <div class="row mb-3">
                     <div class="col-7 d-flex justify-content-end">
-                        <button *ngIf="startRoundNumber.hasNext() || startRoundNumber.hasPrevious()" type="button"
-                            (click)="openModalSelectStartRoundNumber()" class="btn btn-outline-primary">
+                        <button
+                            *ngIf="!startRoundNumber.hasBegun() && (startRoundNumber.hasNext() || startRoundNumber.hasPrevious())"
+                            type="button" (click)="openModalSelectStartRoundNumber()" class="btn btn-outline-primary">
                             <span [innerHTML]="nameService.getRoundNumbersName( startRoundNumber ) | keepHtml"></span>
                         </button>
                     </div>

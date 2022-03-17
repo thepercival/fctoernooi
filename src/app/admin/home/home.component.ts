@@ -20,6 +20,8 @@ import { ShareModalComponent } from './sharemodal.component';
 import { TournamentMapper } from '../../lib/tournament/mapper';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { IAlertType } from '../../shared/common/alert';
+import { UserRepository } from '../../lib/user/repository';
+import { User } from '../../lib/user';
 
 @Component({
     selector: 'app-tournament-admin',
@@ -31,6 +33,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     minDateStruct: NgbDateStruct;
     lockerRoomValidator!: LockerRoomValidator;
     hasBegun: boolean = true;
+    public nrOfCredits: number | undefined;
     hasPlanningEditManualMode: boolean = false;
     allPoulesHaveGames: boolean = false;
 
@@ -39,6 +42,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         private competitionSportRouter: CompetitionSportRouter,
         private modalService: NgbModal,
         public cssService: CSSService,
+        private userRepository: UserRepository,
         router: Router,
         private tournamentMapper: TournamentMapper,
         private authService: AuthService,
@@ -250,6 +254,22 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     openModalCopy(modalContent: TemplateRef<any>) {
+        const user = this.authService.getUser();
+        if (user !== undefined && this.nrOfCredits === undefined) {
+            this.userRepository.getObject(user.getId())
+                .subscribe({
+                    next: (user: User) => {
+                        if (user.getValidated()) {
+                            this.nrOfCredits = user.getNrOfCredits();
+                            if (this.nrOfCredits === 0) {
+                                this.router.navigate(['/user/buycredits']);
+                                return;
+                            }
+                        }
+                    }
+                });
+        }
+
         const activeModal = this.modalService.open(modalContent, { scrollable: false });
         activeModal.result.then((result) => {
             if (result === 'copy') {

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faKey, faLevelUpAlt } from '@fortawesome/free-solid-svg-icons';
+import { faKey, faLevelUpAlt, faMoneyBillAlt } from '@fortawesome/free-solid-svg-icons';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { LoginComponent } from './login/login.component';
@@ -15,6 +15,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { UserRepository } from '../lib/user/repository';
 import { ValidateComponent } from './validate/validate.component';
 import { UserTitleComponent } from './title/title.component';
+import { BuyCreditsComponent } from './buycredits/buycredits.component';
 
 @NgModule({
   imports: [
@@ -24,11 +25,20 @@ import { UserTitleComponent } from './title/title.component';
     NgbAlertModule,
     FontAwesomeModule
   ],
-  declarations: [LoginComponent, LogoutComponent, RegisterComponent, PasswordresetComponent, PasswordchangeComponent, ProfileComponent, ValidateComponent, UserTitleComponent],
+  declarations: [
+    LoginComponent,
+    LogoutComponent,
+    RegisterComponent,
+    PasswordresetComponent,
+    PasswordchangeComponent,
+    ProfileComponent,
+    ValidateComponent,
+    BuyCreditsComponent,
+    UserTitleComponent],
   providers: [UserRepository]
 })
 export class UserModule {
   constructor(library: FaIconLibrary) {
-    library.addIcons(faLevelUpAlt, faKey);
+    library.addIcons(faLevelUpAlt, faKey, faMoneyBillAlt);
   }
 }
