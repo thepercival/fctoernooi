@@ -40,7 +40,6 @@ export class StructureRepository extends APIRepository {
     }
 
     editObject(structure: Structure, tournament: Tournament): Observable<Structure> {
-        console.log(structure);
         return this.http.put<JsonStructure>(this.getUrl(tournament), this.mapper.toJson(structure), this.getOptions()).pipe(
             concatMap((jsonRes: JsonStructure) => {
                 const structure = this.mapper.toObject(jsonRes, tournament.getCompetition());

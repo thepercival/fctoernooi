@@ -94,8 +94,8 @@ export class GameEditComponent extends TournamentComponent {
         this.planningConfig = roundNumber.getValidPlanningConfig();
         this.firstScoreConfig = this.game.getScoreConfig();
 
-        const authUser = this.authService.getUser();
-        const tournamentUser = authUser ? this.tournament.getUser(authUser) : undefined;
+        const loggedInUserId = this.authService.getLoggedInUserId();
+        const tournamentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;
         this.getAuthorization(tournamentUser).subscribe(
                 /* happy path */ hasAuthorization => {
                 this.hasAuthorization = hasAuthorization;

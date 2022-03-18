@@ -20,20 +20,26 @@
         <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
         <ul *ngIf="!processing" class="list-unstyled">
             <li>
-                <div *ngFor="let tournamentUser of getValidTournamentUsers()" class="card border-secondary mt-3 mx-2">
+                <div *ngFor="let userItem of validUserItems" class="card border-secondary mt-3 mx-2">
                     <div class="card-header">
                         <div class="d-flex justify-content-between">
-                            <h5 class="mb-0 mt-2">{{tournamentUser.getUser().getEmailaddress()}} </h5>
-                            <button *ngIf="canBeRemoved(tournamentUser)" [disabled]="roleProcessing"
+                            <h5 class="mb-0 mt-2">
+                                <span *ngIf="userItem.emailaddress">{{userItem.emailaddress}}</span>
+                                <span></span>
+                                <fa-icon *ngIf="!userItem.emailaddress" [icon]="['fas', 'spinner']" [spin]="true">
+                                </fa-icon>
+                            </h5>
+                            <button *ngIf="canBeRemoved(userItem.tournamentUser)" [disabled]="roleProcessing"
                                 class="btn btn-sm btn-outline-danger ms-1"
-                                (click)="openModalRemove(contentremove, tournamentUser, tournamentUser.hasARole(RoleReferee))">
+                                (click)="openModalRemove(contentremove, userItem.tournamentUser, userItem.tournamentUser.hasARole(RoleReferee))">
                                 <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
                             </button>
                         </div>
                     </div>
                     <ul class="list-group list-group-flush w-100">
-                        <app-tournament-authorization-role *ngFor="let role of getAssignableRoles(tournamentUser)"
-                            [role]="role" [disabled]="!canToggleRole(tournamentUser, role.role)"
+                        <app-tournament-authorization-role
+                            *ngFor="let role of getAssignableRoles(userItem.tournamentUser)" [role]="role"
+                            [disabled]="!canToggleRole(userItem.tournamentUser, role.role)"
                             [processing]="rolesAreEqual(role,roleProcessing)"
                             (toggleRole)="toggleRole($event,contentremove)">
                         </app-tournament-authorization-role>

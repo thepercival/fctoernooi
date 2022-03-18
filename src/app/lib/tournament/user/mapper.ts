@@ -2,19 +2,19 @@ import { Injectable } from '@angular/core';
 import { JsonIdentifiable } from 'ngx-sport';
 
 import { Tournament } from '../../tournament';
-import { JsonUser, UserMapper } from '../../user/mapper';
+import { UserId } from '../../user';
 import { TournamentUser } from '../user';
+import { JsonTournamentUser } from './json';
 
 @Injectable({
     providedIn: 'root'
 })
 export class TournamentUserMapper {
-    constructor(private userMapper: UserMapper) { }
+    constructor() { }
 
     toObject(json: JsonTournamentUser, tournament: Tournament, tournamentUser?: TournamentUser): TournamentUser {
         if (tournamentUser === undefined) {
-            const user = this.userMapper.toObject(json.user);
-            tournamentUser = new TournamentUser(tournament, user);
+            tournamentUser = new TournamentUser(tournament, new UserId(+json.user.id));
         }
         tournamentUser.setId(json.id);
         tournamentUser.setRoles(json.roles);
@@ -24,13 +24,10 @@ export class TournamentUserMapper {
     toJson(tournamentUser: TournamentUser): JsonTournamentUser {
         return {
             id: tournamentUser.getId(),
-            user: this.userMapper.toJson(tournamentUser.getUser()),
+            user: { id: tournamentUser.getUserId().getId() },
             roles: tournamentUser.getRoles()
         };
     }
 }
 
-export interface JsonTournamentUser extends JsonIdentifiable {
-    user: JsonUser;
-    roles: number;
-}
+

@@ -23,6 +23,7 @@ export class AuthorizationListComponent extends TournamentComponent implements O
     public invitations: TournamentInvitation[] = [];
     public roleProcessing: TournamentAuthorizationRole | undefined;
     public removeWithRefereeRole: boolean | undefined;
+    public validUserItems!: UserItem[];
 
     constructor(
         route: ActivatedRoute,
@@ -41,10 +42,15 @@ export class AuthorizationListComponent extends TournamentComponent implements O
     }
 
     initAuthorizations() {
+        this.validUserItems = this.tournament.getUsers()
+            .filter((tournamentUser: TournamentUser) => !this.hasUnassignableRoles(tournamentUser.getRoles()))
+            .map((tournamentUser: TournamentUser): UserItem => { return { tournamentUser, emailaddress: undefined } });
+
         this.invitationRepository.getObjects(this.tournament)
             .subscribe({
                 next: (invitations: TournamentInvitation[]) => {
                     this.invitations = invitations
+
                     this.processing = false;
                 },
                 error: (e) => {
@@ -52,6 +58,10 @@ export class AuthorizationListComponent extends TournamentComponent implements O
                 }
             });
 
+        this.validUserItems.forEach((userItem: UserItem) => {
+            this.tournamentUserRepository.getEmailaddress(userItem.tournamentUser)
+                .subscribe((emailaddress: string) => userItem.emailaddress = emailaddress);
+        });
     }
 
     getAssignableRoles(authorization: TournamentAuthorization): TournamentAuthorizationRole[] {
@@ -60,10 +70,6 @@ export class AuthorizationListComponent extends TournamentComponent implements O
             { authorization, role: Role.GAMERESULTADMIN },
             { authorization, role: Role.ROLEADMIN }
         ];
-    }
-
-    getValidTournamentUsers(): TournamentUser[] {
-        return this.tournament.getUsers().filter(tournamentUser => !this.hasUnassignableRoles(tournamentUser.getRoles()));
     }
 
     getNrOfRoles(role: number): number {
@@ -99,20 +105,26 @@ export class AuthorizationListComponent extends TournamentComponent implements O
         authorization.setRoles(authorization.getRoles() + newRole);
         if (authorization instanceof TournamentUser) {
             this.tournamentUserRepository.editObject(<TournamentUser>authorization)
-                .subscribe(
-                /* happy path */ res => {
+                .subscribe({
+                    next: (tournamentUser: TournamentUser) => {
                         this.roleProcessing = undefined;
                     },
-                /* error path */ e => { this.setAlert(IAlertType.Danger, e); this.roleProcessing = undefined; }
-                );
+                    error: (e) => {
+                        this.setAlert(IAlertType.Danger, e);
+                        this.roleProcessing = undefined;
+                    }
+                });
         } else {
             this.invitationRepository.editObject(<TournamentInvitation>authorization)
-                .subscribe(
-            /* happy path */ res => {
+                .subscribe({
+                    next: (invitation: TournamentInvitation) => {
                         this.roleProcessing = undefined;
                     },
-            /* error path */ e => { this.setAlert(IAlertType.Danger, e); this.roleProcessing = undefined; }
-                );
+                    error: (e) => {
+                        this.setAlert(IAlertType.Danger, e);
+                        this.roleProcessing = undefined;
+                    }
+                });
         }
     }
 
@@ -180,6 +192,11 @@ export class AuthorizationListComponent extends TournamentComponent implements O
         }, (reason) => {
         });
     }
+}
+
+export interface UserItem {
+    tournamentUser: TournamentUser;
+    emailaddress: string | undefined;
 }
 
 export interface TournamentAuthorizationRole {

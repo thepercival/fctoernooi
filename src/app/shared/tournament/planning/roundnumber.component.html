@@ -82,7 +82,8 @@
           <th *ngIf="hasOnlyGameModeAgainst">uit</th>
           <th *ngIf="!hasOnlyGameModeAgainst" colspan="3" class="text-center">deelnemers & score</th>
           <!-- referee -->
-          <th *ngIf="hasSomeReferees" class="d-none d-sm-table-cell text-end" title="scheidsrechter">
+          <th *ngIf="hasSomeReferees" class="text-end {{hasGameModeAgainst ? 'd-none d-sm-table-cell' : ''}}"
+            title="scheidsrechter">
             <ng-container *ngIf="userIsAdmin && !planningConfig.getSelfReferee(); else noAdminOrSelfReferee">
               <button title="wijzig scheidsrechters"
                 class="btn btn-sm btn-outline-{{tournamentHasBegun ? 'warning' : 'secondary'}}"
@@ -107,7 +108,7 @@
             </td>
             <td></td>
             <td colspan="3" class="text-center">PAUZE</td>
-            <td *ngIf="hasSomeReferees" class="d-none d-sm-table-cell"></td>
+            <td *ngIf="hasSomeReferees" class="{{hasGameModeAgainst ? 'd-none d-sm-table-cell' : ''}}"></td>
           </tr>
           <tr [ngClass]="{ 'table-light': (gmData.game.getBatchNr() % 2) === 0 && gameOrder === OrderByDate }">
             <!-- poule -->
@@ -144,7 +145,7 @@
               <ng-container *ngTemplateOutlet="togetherGamePlaces;context:{$implicit: gmData}"></ng-container>
             </ng-container>
             <!-- referee -->
-            <td *ngIf="hasSomeReferees" class="d-none d-sm-table-cell text-end"
+            <td *ngIf="hasSomeReferees" class="{{hasGameModeAgainst ? 'd-none d-sm-table-cell' : ''}} text-end"
               [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
               {{nameService.getRefereeName(gmData.game)}}</td>
           </tr>

@@ -33,8 +33,8 @@ export class GameListComponent extends TournamentComponent implements OnInit {
 
   ngOnInit() {
     super.myNgOnInit(() => {
-      const authUser = this.authService.getUser();
-      const tournamentUser = authUser ? this.tournament.getUser(authUser) : undefined;
+      const loggedInUserId = this.authService.getLoggedInUserId();
+      const tournamentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;
       if (tournamentUser === undefined) {
         this.processing = false;
         return;

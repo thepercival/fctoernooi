@@ -14,8 +14,8 @@
     <fa-icon [icon]=" [ 'fas', 'sign-in-alt'] "></fa-icon>
     <span class="ms-1">inloggen</span>
   </button>
-  <button *ngIf="authService.isLoggedIn()" [routerLink]="['/user/profile', authService.getUser()?.getId()]"
-    class="btn btn-outline-secondary p-0 pt-1" role="button" tabindex="-1" aria-label="account">
+  <button *ngIf="authService.isLoggedIn()" [routerLink]="['/user/profile']" class="btn btn-outline-secondary p-0 pt-1"
+    role="button" tabindex="-1" aria-label="account">
     <fa-icon [icon]="[ 'fas', 'user-circle']" size="3x"></fa-icon>
   </button>
 

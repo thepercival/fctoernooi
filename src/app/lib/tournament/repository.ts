@@ -45,7 +45,6 @@ export class TournamentRepository extends APIRepository {
         }
         const url = this.getUrl(tournament.getId()) + '/userrefereeid';
         return this.http.get<JsonTournament>(url, { headers: super.getHeaders() }).pipe(
-            // map((userRefereeId: number) => userRefereeId),
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }

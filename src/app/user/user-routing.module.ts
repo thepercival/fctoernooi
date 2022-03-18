@@ -19,7 +19,7 @@ const routes: Routes = [
   { path: 'passwordreset', component: PasswordresetComponent },
   { path: 'passwordchange', component: PasswordchangeComponent },
   { path: 'logout', component: LogoutComponent },
-  { path: 'profile/:id', component: ProfileComponent, canActivate: [AuthguardService] },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthguardService] },
   { path: 'validate/:code', component: ValidateComponent, canActivate: [AuthguardService] },
   { path: 'validate', component: ValidateComponent, canActivate: [AuthguardService] },
   { path: 'buycredits', component: BuyCreditsComponent, canActivate: [AuthguardService] }

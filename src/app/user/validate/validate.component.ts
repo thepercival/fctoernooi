@@ -38,26 +38,24 @@ export class ValidateComponent implements OnInit {
 
   ngOnInit() {
 
-    const authUser = this.authService.getUser();
-    if (authUser === undefined) {
-      const navigationExtras: NavigationExtras = {
-        queryParams: { type: IAlertType.Danger, message: 'je bent niet ingelogd' }
-      };
-      this.router.navigate([''], navigationExtras);
-      return
-    }
-    this.user = authUser;
-
     this.route.params.subscribe(params => {
       if (params.code && params.code.length > 0) {
         this.code = params.code;
       }
     });
 
-    this.userRepository.getObject(authUser.getId())
+    this.userRepository.getLoggedInObject()
       .subscribe({
-        next: (user: User) => {
-          if (user.getValidated()) {
+        next: (loggedInUser: User | undefined) => {
+          if (loggedInUser === undefined) {
+            const navigationExtras: NavigationExtras = {
+              queryParams: { type: IAlertType.Danger, message: 'je bent niet ingelogd' }
+            };
+            this.router.navigate([''], navigationExtras);
+            return;
+          }
+          this.user = loggedInUser;
+          if (loggedInUser.getValidated()) {
             const navigationExtras: NavigationExtras = {
               queryParams: { type: IAlertType.Success, message: 'je emailadres is gevalideerd' }
             };
@@ -65,7 +63,7 @@ export class ValidateComponent implements OnInit {
             return;
           }
           if (this.code.length > 0) {
-            this.authService.validate(authUser, this.code)
+            this.authService.validate(this.code)
               .subscribe({
                 next: () => {
                   const navigationExtras: NavigationExtras = {

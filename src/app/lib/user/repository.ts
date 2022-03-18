@@ -1,11 +1,12 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { User } from '../user';
+import { User, UserId } from '../user';
 import { JsonUser, UserMapper } from './mapper';
 import { APIRepository } from '../repository';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ import { APIRepository } from '../repository';
 export class UserRepository extends APIRepository {
 
   constructor(
+    private authService: AuthService,
     private http: HttpClient,
     private mapper: UserMapper) {
     super();
@@ -26,16 +28,25 @@ export class UserRepository extends APIRepository {
     return super.getApiUrl() + this.getUrlpostfix() + '/' + id;
   }
 
-  getObject(id: string | number): Observable<User> {
-    return this.http.get<JsonUser>(this.getUrl(id), this.getOptions()).pipe(
+  getLoggedInObject(): Observable<User | undefined> {
+    const loggedInUserId = this.authService.getLoggedInUserId();
+    if (loggedInUserId === undefined) {
+      return of(undefined);
+    }
+    return this.getObject(loggedInUserId);
+  }
+
+  protected getObject(userId: UserId): Observable<User> {
+    return this.http.get<JsonUser>(this.getUrl(userId.getId()), this.getOptions()).pipe(
       map((jsonUser: JsonUser) => this.mapper.toObject(jsonUser)),
       catchError((err: HttpErrorResponse) => this.handleError(err))
     );
   }
 
-  editObject(json: JsonUser): Observable<void> {
+  editObject(json: JsonUser): Observable<User> {
     const url = this.getUrl(json.id);
-    return this.http.put(url, json, { headers: super.getHeaders() }).pipe(
+    return this.http.put<JsonUser>(url, json, { headers: super.getHeaders() }).pipe(
+      map((jsonUser: JsonUser) => this.mapper.toObject(jsonUser)),
       catchError((err: HttpErrorResponse) => this.handleError(err))
     );
   }

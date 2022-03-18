@@ -5,8 +5,9 @@ import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../repository';
 import { Tournament } from '../../tournament';
-import { TournamentUserMapper, JsonTournamentUser } from './mapper';
+import { TournamentUserMapper } from './mapper';
 import { TournamentUser } from '../user';
+import { JsonTournamentUser } from './json';
 
 @Injectable({
     providedIn: 'root'
@@ -49,6 +50,14 @@ export class TournamentUserRepository extends APIRepository {
 
                 return res;
             }),
+            catchError((err: HttpErrorResponse) => this.handleError(err))
+        );
+    }
+
+    getEmailaddress(tournamentUser: TournamentUser): Observable<string> {
+        const tournament = tournamentUser.getTournament();
+        const url = this.getUrl(tournament) + '/' + tournamentUser.getId() + '/emailaddress';
+        return this.http.get<JsonTournamentUser>(url, this.getOptions()).pipe(
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }

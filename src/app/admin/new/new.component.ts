@@ -44,27 +44,25 @@ export class NewComponent implements OnInit {
   ngOnInit() {
     this.processing = true;
 
-    const authUser = this.authService.getUser();
-    if (authUser === undefined) {
-      const navigationExtras: NavigationExtras = {
-        queryParams: { type: IAlertType.Danger, message: 'je bet niet ingelogd' }
-      };
-      this.router.navigate(['', navigationExtras]);
-      return
-    }
-
-    this.userRepository.getObject(authUser.getId())
+    this.userRepository.getLoggedInObject()
       .subscribe({
-        next: (user: User) => {
-          if (!user.getValidated()) {
-            if (user.getValidateIn() < 1) {
+        next: (loggedInUser: User | undefined) => {
+          if (loggedInUser === undefined) {
+            const navigationExtras: NavigationExtras = {
+              queryParams: { type: IAlertType.Danger, message: 'je bet niet ingelogd' }
+            };
+            this.router.navigate(['', navigationExtras]);
+            return
+          }
+          if (!loggedInUser.getValidated()) {
+            if (loggedInUser.getValidateIn() < 1) {
               this.router.navigate(['/user/validate']);
               return;
             }
           } else {
-            this.nrOfCredits = user.getNrOfCredits();
+            this.nrOfCredits = loggedInUser.getNrOfCredits();
             if (this.nrOfCredits === 0) {
-              this.router.navigate(['/user//buycredits']);
+              this.router.navigate(['/user/buycredits']);
               return;
             }
           }

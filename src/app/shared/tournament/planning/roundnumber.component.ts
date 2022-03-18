@@ -23,8 +23,6 @@ import {
   GameOrder,
   Competitor,
   GameState,
-  AgainstGpp,
-  AgainstH2h,
   AgainstVariant
 } from 'ngx-sport';
 
@@ -41,11 +39,9 @@ import { CompetitionSportTab } from '../competitionSportTab';
 import { InfoModalComponent } from '../infomodal/infomodal.component';
 import { IAlert, IAlertType } from '../../common/alert';
 import { DateFormatter } from '../../../lib/dateFormatter';
-import { interval, Observable, of, Subscription, throwError, timer } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
-import { HttpErrorResponse } from '@angular/common/http';
 import { AppErrorHandler } from '../../../lib/repository';
-import { isLocalRelativePath } from '@angular/compiler-cli/private/localize';
 import { Recess } from '../../../lib/recess';
 
 @Component({
@@ -79,6 +75,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   public nameService!: NameService;
   public planningConfig!: PlanningConfig;
   public hasOnlyGameModeAgainst: boolean = true;
+  public hasGameModeAgainst: boolean = true;
   private refreshTimer: Subscription | undefined;
   private appErrorHandler: AppErrorHandler;
   public progressPerc = 0;
@@ -102,8 +99,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     this.competitorMap = new CompetitorMap(this.tournament.getCompetitors());
     this.nameService = new NameService(this.competitorMap);
     this.planningConfig = this.roundNumber.getValidPlanningConfig();
-    const authUser = this.authService.getUser();
-    const currentUser = authUser ? this.tournament.getUser(authUser) : undefined;
+    const loggedInUserId = this.authService.getLoggedInUserId();
+    const currentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;
     this.userIsAdmin = currentUser ? currentUser.hasRoles(Role.ADMIN) : false;
     this.roles = currentUser?.getRoles() ?? 0;
     this.needsRanking = this.roundNumber.needsRanking();
@@ -114,6 +111,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     this.tournamentHasBegun = this.roundNumber.getFirst().hasBegun();
     this.loadGameData();
     this.hasOnlyGameModeAgainst = this.hasOnlyAgainstGameMode();
+    this.hasGameModeAgainst = this.hasAgainstGameMode();
 
     if (this.gameDatas.length === 0) {
       this.showProgress()
@@ -202,6 +200,12 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   toggleFilter() {
     this.filterEnabled = !this.filterEnabled;
     this.loadGameData();
+  }
+
+  private hasAgainstGameMode(): boolean {
+    return this.tournament.getCompetition().getSports().some((competitionSport: CompetitionSport): boolean => {
+      return competitionSport.getVariant() instanceof AgainstVariant;
+    });
   }
 
   private hasOnlyAgainstGameMode(): boolean {

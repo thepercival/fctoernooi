@@ -254,19 +254,28 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     openModalCopy(modalContent: TemplateRef<any>) {
-        const user = this.authService.getUser();
-        if (user !== undefined && this.nrOfCredits === undefined) {
-            this.userRepository.getObject(user.getId())
+
+        if (this.nrOfCredits === undefined) {
+            this.userRepository.getLoggedInObject()
                 .subscribe({
-                    next: (user: User) => {
-                        if (user.getValidated()) {
-                            this.nrOfCredits = user.getNrOfCredits();
+                    next: (loggedInUser: User | undefined) => {
+                        if (loggedInUser === undefined) {
+                            const navigationExtras: NavigationExtras = {
+                                queryParams: { type: IAlertType.Danger, message: 'je bet niet ingelogd' }
+                            };
+                            this.router.navigate(['', navigationExtras]);
+                            return
+                        }
+                        if (loggedInUser.getValidated()) {
+                            this.nrOfCredits = loggedInUser.getNrOfCredits();
                             if (this.nrOfCredits === 0) {
                                 this.router.navigate(['/user/buycredits']);
                                 return;
                             }
                         }
-                    }
+                        this.processing = false;
+                    },
+                    error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
                 });
         }
 

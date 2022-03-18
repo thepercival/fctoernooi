@@ -38,15 +38,24 @@ export class BuyCreditsComponent implements OnInit {
 
   ngOnInit() {
 
-    const authUser = this.authService.getUser();
-    if (authUser === undefined) {
-      const navigationExtras: NavigationExtras = {
-        queryParams: { type: IAlertType.Danger, message: 'je bent niet ingelogd' }
-      };
-      this.router.navigate([''], navigationExtras);
-      return
-    }
-    this.user = authUser;
+    this.userRepository.getLoggedInObject()
+      .subscribe({
+        next: (loggedInUser: User | undefined) => {
+          if (loggedInUser === undefined) {
+            const navigationExtras: NavigationExtras = {
+              queryParams: { type: IAlertType.Danger, message: 'je bent niet ingelogd' }
+            };
+            this.router.navigate([''], navigationExtras);
+            return;
+          }
+          this.user = loggedInUser;
+        },
+        error: (e) => {
+          this.setAlert(IAlertType.Danger, e); this.processing = false;
+        },
+        complete: () => this.processing = false
+      });
+
 
     // this.route.params.subscribe(params => {
     //   if (params.code && params.code.length > 0) {

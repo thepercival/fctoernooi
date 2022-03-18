@@ -69,8 +69,8 @@ export class TournamentComponent {
     }
 
     hasRole(authService: AuthService, roles: number): boolean {
-        const authUser = authService.getUser();
-        const tournamentUser = authUser ? this.tournament.getUser(authUser) : undefined;
+        const loggedInUserId = authService.getLoggedInUserId();
+        const tournamentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;
         return tournamentUser ? tournamentUser.hasARole(roles) : false;
     }
 }

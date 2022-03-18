@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
 import { IAlert, IAlertType } from '../../shared/common/alert';
 import { User } from '../../lib/user';
@@ -8,6 +8,7 @@ import { PasswordValidation } from '../password-validation';
 import { UserRepository } from '../../lib/user/repository';
 import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/common/navigation';
+import { JsonUser } from '../../lib/user/mapper';
 
 @Component({
   selector: 'app-profile',
@@ -45,21 +46,24 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
-      this.userRepository.getObject(+params['id'])
-        .subscribe({
-          next: (user: User) => {
-            this.user = user;
-            this.form.controls.emailaddress.setValue(this.user.getEmailaddress());
-          },
-          error: (e) => {
-            this.setAlert(IAlertType.Danger, e); this.processing = false;
-          },
-          complete: () => this.processing = false
-        });
-    });
-
-
+    this.userRepository.getLoggedInObject()
+      .subscribe({
+        next: (loggedInUser: User | undefined) => {
+          if (loggedInUser === undefined) {
+            const navigationExtras: NavigationExtras = {
+              queryParams: { type: IAlertType.Danger, message: 'je bent niet ingelogd' }
+            };
+            this.router.navigate([''], navigationExtras);
+            return;
+          }
+          this.user = loggedInUser;
+          this.form.controls.emailaddress.setValue(this.user.getEmailaddress());
+        },
+        error: (e) => {
+          this.setAlert(IAlertType.Danger, e); this.processing = false;
+        },
+        complete: () => this.processing = false
+      });
   }
 
   protected setAlert(type: IAlertType, message: string) {
@@ -70,14 +74,25 @@ export class ProfileComponent implements OnInit {
     this.alert = undefined;
   }
 
+  protected formToJson(): JsonUser {
+    return {
+      id: this.user.getId(),
+      validated: this.user.getValidated(),
+      nrOfCredits: this.user.getNrOfCredits(),
+      validateIn: this.user.getValidateIn(),
+      emailaddress: this.form.controls.emailaddress.value
+    }
+  }
+
   save(): boolean {
     this.processing = true;
-    const emailaddress = this.form.controls.emailaddress.value;
-    this.userRepository.editObject({ id: this.user.getId(), emailaddress: emailaddress })
+
+
+    this.userRepository.editObject(this.formToJson())
       .subscribe({
-        next: () => {
+        next: (user: User) => {
           this.setAlert(IAlertType.Success, 'het emailadres is opgeslagen');
-          this.form.controls.emailaddress.setValue(emailaddress);
+          this.form.controls.emailaddress.setValue(user.getEmailaddress());
         },
         error: (e) => {
           this.setAlert(IAlertType.Danger, 'het opslaan is niet gelukt: ' + e); this.processing = false;

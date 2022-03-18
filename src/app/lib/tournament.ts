@@ -1,8 +1,8 @@
-import { Competition, Period } from 'ngx-sport';
+import { Competition } from 'ngx-sport';
 
 import { Sponsor } from './sponsor';
 import { LockerRoom } from './lockerroom';
-import { User } from './user';
+import { UserId } from './user';
 import { TournamentUser } from './tournament/user';
 import { TournamentCompetitor } from './competitor';
 import { Identifiable } from 'ngx-sport';
@@ -29,8 +29,8 @@ export class Tournament extends Identifiable {
         return this.users;
     }
 
-    getUser(user: User): TournamentUser | undefined {
-        return this.getUsers().find(tournamentUser => tournamentUser.getUser() === user);
+    getUser(userId: UserId): TournamentUser | undefined {
+        return this.getUsers().find(tournamentUser => tournamentUser.getUserId().getId() === userId.getId());
     }
 
     // setRoles(roles: Role[]): void {

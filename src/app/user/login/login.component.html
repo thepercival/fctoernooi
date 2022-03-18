@@ -4,11 +4,11 @@
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
-      <ngb-alert *ngIf="!processing && alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
       <div *ngIf="!processing" class="card card-auth my-3">
         <app-user-title title="inloggen" icon="sign-in-alt">
         </app-user-title>
         <div class="card-body text-center mx-auto form-validate border-top-0 border-primary">
+          <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
           <form *ngIf="!processing && !isLoggedIn()" name="form" (ngSubmit)="login()" [formGroup]="form" novalidate>
             <div class="row mb-3">

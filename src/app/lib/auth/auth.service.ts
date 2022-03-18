@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../repository';
-import { UserMapper } from '../user/mapper';
-import { User } from '../user';
-
-@Injectable()
+import { JsonUser, UserMapper } from '../user/mapper';
+import { User, UserId } from '../user';
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService extends APIRepository {
-  private user: User | undefined;
+  // private userId: UserId | undefined;
   private authItem: JsonAuthItem | undefined;
 
   constructor(private userMapper: UserMapper, private http: HttpClient) {
@@ -23,25 +24,20 @@ export class AuthService extends APIRepository {
     return this.authItem !== undefined;
   }
 
-  getUser(): User | undefined {
-    return this.user;
+  getLoggedInUserId(): UserId | undefined {
+    return this.authItem ? new UserId(this.authItem.userId) : undefined;
   }
 
   protected clearAuthItem() {
     this.authItem = undefined;
-    this.user = undefined;
     localStorage.removeItem('auth');
   }
 
   setAuthItem(authItem: JsonAuthItem): boolean {
     this.authItem = authItem;
-    this.user = this.userMapper.toObject({ id: this.authItem.userId });
     localStorage.setItem('auth', JSON.stringify(authItem));
     return true;
   }
-
-  // op adminhome wil ik weten wanneer er gevalideerd moet worden
-  // op adminhome wil ik weten hoeveel credits ik nog heb
 
   getUrl(): string {
     return super.getApiUrl() + 'auth';
@@ -103,10 +99,10 @@ export class AuthService extends APIRepository {
     );
   }
 
-  validate(user: User, code: string): Observable<void> {
+  validate(code: string): Observable<User> {
     const url = this.getUrl() + '/validate/' + code;
-    return this.http.post<JsonAuthItem>(url, undefined, this.getOptions()).pipe(
-      map(() => user.setValidated(true)),
+    return this.http.post<JsonUser>(url, undefined, this.getOptions()).pipe(
+      map((jsonUser: JsonUser) => this.userMapper.toObject(jsonUser)),
       catchError((err: HttpErrorResponse) => this.handleError(err))
     );
   }

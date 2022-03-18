@@ -1,9 +1,9 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { forkJoin, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { PlanningMapper, JsonStructure, RoundNumber, Game, Structure, AgainstGame, TogetherGamePlace, JsonAgainstGame, JsonTogetherGame, TogetherGame, Poule, GameMapper, GameOrder, StructureMapper, CompetitionSportMapper, CompetitionSport, CompetitionSportMap } from 'ngx-sport';
+import { PlanningMapper, JsonStructure, RoundNumber, Structure, Poule, GameMapper, GameOrder, StructureMapper, CompetitionSportMapper } from 'ngx-sport';
 import { APIRepository } from '../../repository';
 import { Tournament } from '../../tournament';
 import { JsonPoule } from 'ngx-sport/src/poule/json';
