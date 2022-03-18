@@ -68,7 +68,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   public userIsAdmin: boolean = false;
   public gameOrder: GameOrder = GameOrder.ByDate;
   public filterEnabled = false;
-  public hasReferees: boolean = false;
+  public hasSomeReferees: boolean = false;
   public hasBegun: boolean = false;
   public tournamentHasBegun: boolean = false;
   public gameDatas: GameData[] = [];
@@ -108,7 +108,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     this.roles = currentUser?.getRoles() ?? 0;
     this.needsRanking = this.roundNumber.needsRanking();
     this.hasMultiplePoules = this.roundNumber.getPoules().length > 1;
-    this.hasReferees = this.tournament.getCompetition().getReferees().length > 0
+    this.hasSomeReferees = this.tournament.getCompetition().getReferees().length > 0
       || this.planningConfig.getSelfReferee() !== SelfReferee.Disabled;
     this.hasBegun = this.roundNumber.hasBegun();
     this.tournamentHasBegun = this.roundNumber.getFirst().hasBegun();

@@ -82,13 +82,17 @@
           <th *ngIf="hasOnlyGameModeAgainst">uit</th>
           <th *ngIf="!hasOnlyGameModeAgainst" colspan="3" class="text-center">deelnemers & score</th>
           <!-- referee -->
-          <th *ngIf="hasReferees" class="d-none d-sm-table-cell text-end" title="scheidsrechter">
-            <button *ngIf="userIsAdmin && !planningConfig.getSelfReferee()" title="wijzig scheidsrechters"
-              class="btn btn-sm btn-outline-{{tournamentHasBegun ? 'warning' : 'secondary'}}" (click)="linkToReferee()">
+          <th *ngIf="hasSomeReferees" class="d-none d-sm-table-cell text-end" title="scheidsrechter">
+            <ng-container *ngIf="userIsAdmin && !planningConfig.getSelfReferee(); else noAdminOrSelfReferee">
+              <button title="wijzig scheidsrechters"
+                class="btn btn-sm btn-outline-{{tournamentHasBegun ? 'warning' : 'secondary'}}"
+                (click)="linkToReferee()">
+                <app-tournament-icon name="referee"></app-tournament-icon>
+              </button>
+            </ng-container>
+            <ng-template #noAdminOrSelfReferee>
               <app-tournament-icon name="referee"></app-tournament-icon>
-            </button>
-            <app-tournament-icon *ngIf="!userIsAdmin || planningConfig.getSelfReferee()" name="referee">
-            </app-tournament-icon>
+            </ng-template>
           </th>
         </tr>
       </thead>
@@ -103,7 +107,7 @@
             </td>
             <td></td>
             <td colspan="3" class="text-center">PAUZE</td>
-            <td *ngIf="hasReferees" class="d-none d-sm-table-cell"></td>
+            <td *ngIf="hasSomeReferees" class="d-none d-sm-table-cell"></td>
           </tr>
           <tr [ngClass]="{ 'table-light': (gmData.game.getBatchNr() % 2) === 0 && gameOrder === OrderByDate }">
             <!-- poule -->
@@ -140,7 +144,7 @@
               <ng-container *ngTemplateOutlet="togetherGamePlaces;context:{$implicit: gmData}"></ng-container>
             </ng-container>
             <!-- referee -->
-            <td *ngIf="hasReferees" class="d-none d-sm-table-cell text-end"
+            <td *ngIf="hasSomeReferees" class="d-none d-sm-table-cell text-end"
               [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
               {{nameService.getRefereeName(gmData.game)}}</td>
           </tr>
@@ -163,22 +167,31 @@
   </td>
   <!-- score -->
   <td class="text-center text-nowrap">
-    <button *ngIf="gmData.canChangeResult" class="btn btn-sm btn-outline-primary" (click)="linkToGameEdit(gmData.game)">
-      <fa-icon *ngIf="!isFinished(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
-      <span *ngIf="isFinished(gmData.game)">{{getAgainstScore(gmData.game)}}</span>
-    </button>
-    <!-- no auth -->
-    <ng-template [ngIf]="!gmData.canChangeResult">
-      <span class="d-none d-sm-inline">{{getAgainstScore(gmData.game)}}</span>
-      <button *ngIf="hasReferees && !isFinished(gmData.game)" class="btn btn-outline-info btn-sm d-sm-none"
-        placement="top" [ngbPopover]="nameService.getRefereeName(gmData.game)">
-        <span [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
-          <app-tournament-icon name="referee"></app-tournament-icon>
-        </span>
+
+    <ng-container *ngIf="gmData.canChangeResult; else canNotChangeResult">
+      <button class="btn btn-sm btn-outline-primary" (click)="linkToGameEdit(gmData.game)">
+        <fa-icon *ngIf="!isFinished(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
+        <span *ngIf="isFinished(gmData.game)">{{getAgainstScore(gmData.game)}}</span>
       </button>
-      <span *ngIf="!(hasReferees && !isFinished(gmData.game))"
-        class="d-sm-none fw-bold">{{getAgainstScore(gmData.game)}}</span>
+    </ng-container>
+    <ng-template #canNotChangeResult>
+      <span class="d-none d-sm-inline">{{getAgainstScore(gmData.game)}}</span>
+
+      <ng-container
+        *ngIf="(gmData.game.getReferee() || gmData.game.getRefereePlace()) && !isFinished(gmData.game); else noRefOrFinished">
+        <button class="btn btn-outline-info btn-sm d-sm-none" placement="bottom"
+          [ngbPopover]="nameService.getRefereeName(gmData.game)">
+          <span [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
+            <app-tournament-icon name="referee"></app-tournament-icon>
+          </span>
+        </button>
+      </ng-container>
+      <ng-template #noRefOrFinished>
+        <span class="d-sm-none fw-bold">{{getAgainstScore(gmData.game)}}</span>
+      </ng-template>
+
     </ng-template>
+
   </td>
   <!-- awayPlaces -->
   <td class="text-break" [ngClass]="{ 'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, Away) }">
@@ -196,22 +209,7 @@
     </button> -->
 
   <td colspan="3" class="text-break pb-0">
-    <!-- CAN NOT CHANGE -->
-    <ng-template [ngIf]="!gmData.canChangeResult">
-      <div class="d-flex flex-wrap gap-2 justify-content-center">
-        <ul *ngFor="let gamePlace of gmData.game.getTogetherPlaces()" class="list-group list-group-horizontal">
-          <li [ngClass]="{'favitem': favorites?.hasTogetherGameCompetitor(gmData.game) }"
-            class="list-group-item border-start-0">
-            {{nameService.getPlaceFromName(gamePlace.getPlace(),true,true)}}
-          </li>
-          <li *ngIf="isFinished(gmData.game)" class="list-group-item me-1">
-            {{getTogetherScore(gamePlace)}}
-          </li>
-        </ul>
-      </div>
-    </ng-template>
-    <!-- CAN CHANGE -->
-    <ng-template [ngIf]="gmData.canChangeResult">
+    <ng-container *ngIf="gmData.canChangeResult; else canNotChangeResult">
       <div class="d-flex flex-wrap gap-2 justify-content-center mb-2">
         <div *ngFor="let gamePlace of gmData.game.getTogetherPlaces()" class="btn-group" role="group">
           <div class="list-group-item border-start-0"
@@ -223,6 +221,19 @@
             <span *ngIf="isFinished(gmData.game)">{{getTogetherScore(gamePlace)}}</span>
           </button>
         </div>
+      </div>
+    </ng-container>
+    <ng-template #canNotChangeResult>
+      <div class="d-flex flex-wrap gap-2 justify-content-center">
+        <ul *ngFor="let gamePlace of gmData.game.getTogetherPlaces()" class="list-group list-group-horizontal">
+          <li [ngClass]="{'favitem': favorites?.hasTogetherGameCompetitor(gmData.game) }"
+            class="list-group-item border-start-0">
+            {{nameService.getPlaceFromName(gamePlace.getPlace(),true,true)}}
+          </li>
+          <li *ngIf="isFinished(gmData.game)" class="list-group-item me-1">
+            {{getTogetherScore(gamePlace)}}
+          </li>
+        </ul>
       </div>
     </ng-template>
   </td>
@@ -240,10 +251,11 @@
     <li *ngIf="planningConfig.getExtension()" class="list-group-item border-info">
       de eventuele verlenging duurt {{planningConfig.getMinutesPerGameExt()}} minuten
     </li>
-    <li class="list-group-item border-info">er zit {{planningConfig.getMinutesBetweenGames()}} minuten
-      tussen de wedstrijden</li>
-    <li class="list-group-item border-info">er zit {{planningConfig.getMinutesAfter()}} extra minuten
-      tussen de ronden</li>
+    <li class="list-group-item border-info">er is {{planningConfig.getMinutesBetweenGames()}} minuten
+      pauze tussen de wedstrijden</li>
+    <li *ngIf="roundNumber.hasNext()" class="list-group-item border-info">er is {{planningConfig.getMinutesAfter()}}
+      extra minuten
+      pauze na deze ronde</li>
   </ul>
 </ng-template>
 
