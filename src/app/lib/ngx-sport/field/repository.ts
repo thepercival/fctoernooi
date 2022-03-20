@@ -42,17 +42,17 @@ export class FieldRepository extends APIRepository {
     }
 
     upgradeObject(field: Field, tournament: Tournament): Observable<void> {
-        const sportConfig = field.getCompetitionSport();
-        const url = this.getUrl(tournament, sportConfig) + '/' + field.getId() + '/priorityup';
+        const competitionSport = field.getCompetitionSport();
+        const url = this.getUrl(tournament, competitionSport) + '/' + field.getId() + '/priorityup';
         return this.http.post(url, undefined, this.getOptions()).pipe(
             map(() => {
-                const downgrade = sportConfig.getField(field.getPriority() - 1);
+                const downgrade = competitionSport.getField(field.getPriority() - 1);
                 if (downgrade === undefined) {
                     throw new Error('field does not exist');
                 }
                 field.setPriority(downgrade.getPriority());
                 downgrade.setPriority(downgrade.getPriority() + 1);
-                sportConfig.getFields().sort((fieldA, fieldB) => fieldA.getPriority() - fieldB.getPriority());
+                competitionSport.getFields().sort((fieldA, fieldB) => fieldA.getPriority() - fieldB.getPriority());
             }),
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );

@@ -19,6 +19,9 @@
           <th *ngIf="!hasBegun && competition.getReferees().length > 1" class="text-center">
             <fa-icon [icon]="['fas', 'sort']"></fa-icon>
           </th>
+          <th title="rol scheidsrechter">
+            <fa-icon [icon]="[ 'fas', 'envelope'] "></fa-icon>
+          </th>
           <th>initialen</th>
           <th class="d-none d-sm-table-cell">naam</th>
           <th class="d-none d-md-table-cell">emailadres</th>
@@ -31,30 +34,36 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let referee of referees; let last = last;">
+        <tr *ngFor="let refereeItem of refereeItems; let last = last;">
           <td>
-            <button type="button" class="btn btn-sm btn-primary" [disabled]="processing" (click)="editReferee(referee)">
+            <button type="button" class="btn btn-sm btn-primary" [disabled]="processing"
+              (click)="editReferee(refereeItem.referee)">
               <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
             </button>
           </td>
           <td *ngIf="!hasBegun && competition.getReferees().length > 1" class="text-center">
-            <button *ngIf="referee.getPriority() > 1" type="button" class="btn btn-sm btn-outline-secondary"
-              [disabled]="processing" (click)="upgradePriority(referee)">
+            <button *ngIf="refereeItem.referee.getPriority() > 1" type="button" class="btn btn-sm btn-outline-secondary"
+              [disabled]="processing" (click)="upgradePriority(refereeItem.referee)">
               <fa-icon [icon]="['fas', 'level-up-alt']"></fa-icon>
             </button>
           </td>
           <td>
-            <span>{{referee.getInitials()}}</span>
+            <fa-icon *ngIf="refereeItem.rolState" [icon]="['fas', 'check-circle']"
+              (click)="openHelpModal(contentRoleStateInfo)" class="pointer {{getRoleStateClass(refereeItem)}}">
+            </fa-icon>
+          </td>
+          <td>
+            <span>{{refereeItem.referee.getInitials()}}</span>
           </td>
           <td class="d-none d-sm-table-cell">
-            <span>{{referee.getName()}}</span>
+            <span>{{refereeItem.referee.getName()}}</span>
           </td>
           <td class="d-none d-md-table-cell">
-            <span>{{referee.getEmailaddress()}}</span>
+            <span>{{refereeItem.referee.getEmailaddress()}}</span>
           </td>
           <td class="text-end">
             <button *ngIf="!hasBegun" type="button" class="btn btn-sm btn-danger" [disabled]="processing"
-              (click)="removeReferee(referee);">
+              (click)="removeReferee(refereeItem.referee);">
               <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
             </button>
           </td>
@@ -76,6 +85,19 @@
       Onder <button type="submit" *ngIf="!hasBegun" class="btn btn-secondary"
         (click)="activeModal.close('linkToPlanningConfig')">plannings-instellingen</button> kun je
       "deelnemers zijn scheidsrechter " instellen.
+    </li>
+  </ul>
+</ng-template>
+
+<ng-template #contentRoleStateInfo let-activeModal>
+  <ul class="list-group">
+    <li class="list-group-item border-info">
+      <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon>
+      De scheidsrechter heeft de rol scheidsrechter.
+    </li>
+    <li class="list-group-item border-info">
+      <fa-icon [icon]="['fas', 'check-circle']" class="text-warning"></fa-icon>
+      De scheidsrechter heeft de uitnodiging nog niet geaccepteerd
     </li>
   </ul>
 </ng-template>

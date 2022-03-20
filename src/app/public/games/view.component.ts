@@ -39,7 +39,7 @@ export class GamesComponent extends TournamentComponent implements OnInit {
             const tournamentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;
             if (tournamentUser && tournamentUser.hasRoles(Role.REFEREE)) {
                 this.roles = tournamentUser.getRoles();
-                this.getUserRefereeId(tournamentUser)
+                this.tournamentRepository.getUserRefereeId(this.tournament)
                     .subscribe({
                         next: (userRefereeId: number | string) => {
                             this.userRefereeId = userRefereeId;
@@ -51,10 +51,6 @@ export class GamesComponent extends TournamentComponent implements OnInit {
                 this.processing = false;
             }
         });
-    }
-
-    getUserRefereeId(tournamentUser: TournamentUser): Observable<string | number> {
-        return this.tournamentRepository.getUserRefereeId(this.tournament);
     }
 
     filterRefereeRole(): number {

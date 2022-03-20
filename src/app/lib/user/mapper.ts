@@ -11,7 +11,7 @@ export class UserMapper {
     constructor() { }
 
     toObject(json: JsonUser): User {
-        return new User(new UserId(+json.id), json.emailaddress, json.validated, json.nrOfCredits);
+        return new User(new UserId(+json.id), json.emailaddress, json.validated, json.nrOfCredits, json.validateIn);
         // let user = this.cache[json.id];
         // if (user === undefined) {
         //     user = new User(json.id);

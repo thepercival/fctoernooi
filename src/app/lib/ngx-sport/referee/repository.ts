@@ -58,6 +58,13 @@ export class RefereeRepository extends APIRepository {
         );
     }
 
+    getRoleState(referee: Referee, tournament: Tournament): Observable<number> {
+        const url = this.getUrl(tournament) + '/' + referee.getId() + '/rolestate';
+        return this.http.get<number>(url, { headers: super.getHeaders() }).pipe(
+            catchError((err: HttpErrorResponse) => this.handleError(err))
+        );
+    }
+
     removeObject(referee: Referee, tournament: Tournament): Observable<void> {
         const url = this.getUrl(tournament) + '/' + referee.getId();
         return this.http.delete(url, this.getOptions()).pipe(

@@ -13,6 +13,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { TranslateService } from '../../lib/translate';
 import { CompetitionSportTab } from '../../shared/tournament/competitionSportTab';
+import { IAlertType } from '../../shared/common/alert';
 
 @Component({
     selector: 'app-tournament-sportconfig-edit',
@@ -50,10 +51,11 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
     private postInit(id: number) {
         this.hasBegun = this.structure.getRootRound().hasBegun();
         const competitionSport = this.getCompetitionSportById(id);
-        if (competitionSport === undefined) {
-            return;
+        if (competitionSport !== undefined) {
+            this.competitionSport = competitionSport;
+        } else {
+            this.setAlert(IAlertType.Danger, 'de sport kon niet gevonden worden, herlaad de pagina');
         }
-        this.competitionSport = competitionSport;
         this.processing = false;
     }
 

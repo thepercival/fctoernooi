@@ -25,7 +25,7 @@ import { IAlertType } from '../../shared/common/alert';
 export class RefereeEditComponent extends TournamentComponent implements OnInit {
     form: FormGroup;
     originalReferee: Referee | undefined;
-    addAndInvite: boolean = false;
+    invite: boolean = false;
 
     validations: RefValidations = {
         minlengthinitials: Referee.MIN_LENGTH_INITIALS,
@@ -47,6 +47,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
         private modalService: NgbModal,
         fb: FormBuilder
     ) {
+
         // EditPermissions, EmailAddresses
         // andere groep moet dan zijn getEditPermission, wanneer ingelogd, bij gewone view
         super(route, router, tournamentRepository, structureRepository);
@@ -87,6 +88,9 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
             this.form.controls.initials.setValue(this.originalReferee.getInitials());
             this.form.controls.name.setValue(this.originalReferee.getName());
             this.form.controls.emailaddress.setValue(this.originalReferee.getEmailaddress());
+            if (this.originalReferee.getEmailaddress() !== undefined) {
+                this.form.controls.emailaddress.disable();
+            }
             this.form.controls.info.setValue(this.originalReferee.getInfo());
         }
         this.processing = false;
@@ -106,6 +110,11 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
         };
     }
 
+    emailaddressChanged(): boolean {
+        const original = this.originalReferee ? this.originalReferee.getEmailaddress() : undefined;
+        return original !== this.form.controls.emailaddress.value;
+    }
+
     save(): boolean {
         return this.originalReferee ? this.edit(this.originalReferee) : this.add();
     }
@@ -121,7 +130,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
             return false;
         }
 
-        this.refereeRepository.createObject(jsonReferee, this.tournament, this.addAndInvite)
+        this.refereeRepository.createObject(jsonReferee, this.tournament, this.invite)
             .subscribe({
                 next: (refereeRes: Referee) => {
                     this.planningRepository.create(this.structure, this.tournament, 1)
@@ -142,16 +151,16 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
         return false;
     }
 
-    edit(referee: Referee): boolean {
+    edit(originalReferee: Referee): boolean {
         this.processing = true;
         this.setAlert(IAlertType.Info, 'de scheidsrechter wordt gewijzigd');
         const jsonReferee: JsonReferee = this.formToJson();
-        if (this.isInitialsDuplicate(jsonReferee.initials, referee)) {
+        if (this.isInitialsDuplicate(jsonReferee.initials, originalReferee)) {
             this.setAlert(IAlertType.Danger, 'de initialen bestaan al voor dit toernooi');
             this.processing = false;
             return false;
         }
-        this.refereeRepository.editObject(jsonReferee, referee, this.tournament)
+        this.refereeRepository.editObject(jsonReferee, originalReferee, this.tournament)
             .subscribe({
                 next: () => {
                     this.navigateBack();

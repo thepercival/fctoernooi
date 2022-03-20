@@ -10,6 +10,7 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-tournament-referee',
@@ -17,7 +18,7 @@ import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.
   styleUrls: ['./list.component.scss']
 })
 export class RefereeListComponent extends TournamentComponent implements OnInit {
-  referees: Referee[] = [];
+  public refereeItems!: RefereeItem[];
   alertSelfReferee: IAlert | undefined;
   hasBegun: boolean = true;
 
@@ -53,7 +54,14 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   }
 
   createRefereesList() {
-    this.referees = this.competition.getReferees();
+    this.refereeItems = this.competition.getReferees().map((referee: Referee): RefereeItem => {
+      return { referee };
+    });
+    this.refereeItems.forEach((refereeItem: RefereeItem) => {
+
+      this.refereeRepository.getRoleState(refereeItem.referee, this.tournament)
+        .subscribe((roleState: number) => refereeItem.rolState = roleState);
+    });
   }
 
   addReferee() {
@@ -72,6 +80,15 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     this.router.navigate(['/admin/planningconfig', this.tournament.getId(),
       this.structure.getFirstRoundNumber().getNumber()
     ]);
+  }
+
+  getRoleStateClass(refereeItem: RefereeItem): string {
+    if (refereeItem.rolState === RoleState.hasInvitation) {
+      return 'text-warning'
+    } else if (refereeItem.rolState === RoleState.hasRole) {
+      return 'text-success'
+    }
+    return '';
   }
 
   openHelpModal(modalContent: TemplateRef<any>) {
@@ -102,12 +119,23 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     this.refereeRepository.removeObject(referee, this.tournament)
       .subscribe({
         next: () => {
+          this.removeRefereeFromList(referee);
           this.updatePlanning()
         },
         error: (e) => {
           this.setAlert(IAlertType.Danger, e); this.processing = false;
         }
       });
+  }
+
+  removeRefereeFromList(referee: Referee) {
+    const refereeItem = this.refereeItems.find(refereeItem => refereeItem.referee === referee);
+    if (refereeItem) {
+      const idx = this.refereeItems.indexOf(refereeItem);
+      if (idx >= 0) {
+        this.refereeItems.splice(idx, 1);
+      }
+    }
   }
 
   protected updatePlanning() {
@@ -120,4 +148,13 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
         complete: () => this.processing = false
       });
   }
+}
+
+export interface RefereeItem {
+  referee: Referee;
+  rolState?: RoleState;
+}
+
+enum RoleState {
+  hasInvitation = 1, hasRole
 }

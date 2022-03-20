@@ -63,8 +63,8 @@
               <app-tournament-icon name="referee"></app-tournament-icon> <span>{{originalReferee ? 'wijzigen' :
                 'toevoegen'}}</span>
             </button>
-            <button *ngIf="!originalReferee && form.controls.emailaddress.value" [disabled]="form.invalid" type="submit"
-              class="btn btn-primary mt-4" (click)="addAndInvite=true">
+            <button *ngIf="emailaddressChanged() && form.controls.emailaddress.value" [disabled]="form.invalid"
+              type="submit" class="btn btn-primary mt-4" (click)="invite=true">
               <app-tournament-icon name="referee"></app-tournament-icon> toevoegen & uitnodigen
             </button>
           </div>
@@ -76,7 +76,8 @@
 
 <ng-template #contentInfoEmail>
   <div class="text-center lead">
-    de gebruiker met dit emailadres kan de uitslag van de wedstrijden, waarvoor
-    hij/zij is aangesteld, wijzigen
+    Wanneer je een emailadres invult, dan wordt de het emailadres gebruikt om een uitnodiging te versturen.
+    Wanneer de gebruiker van het emailadres de uitnodiging accepteert, dan krijgt de gebruiker de rol scheidsrechter
+    en kan deze gebruiker de uitslag van zijn of haar wedstrijden invoeren.
   </div>
 </ng-template>

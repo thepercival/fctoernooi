@@ -17,10 +17,10 @@ export class User {
 
     constructor(
         protected userId: UserId,
-        protected emailaddress: string = '',
-        protected validated: boolean = false,
-        protected nrOfCredits: number = 0,
-        protected validateIn: number = 0,
+        protected emailaddress: string,
+        protected validated: boolean,
+        protected nrOfCredits: number,
+        protected validateIn: number
     ) {
     }
 
