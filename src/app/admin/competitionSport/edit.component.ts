@@ -51,11 +51,11 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
     private postInit(id: number) {
         this.hasBegun = this.structure.getRootRound().hasBegun();
         const competitionSport = this.getCompetitionSportById(id);
-        if (competitionSport !== undefined) {
-            this.competitionSport = competitionSport;
-        } else {
-            this.setAlert(IAlertType.Danger, 'de sport kon niet gevonden worden, herlaad de pagina');
+        if (competitionSport === undefined) {
+            this.router.navigate(['/admin', this.tournament.getId()]);
+            return;
         }
+        this.competitionSport = competitionSport;
         this.processing = false;
     }
 
