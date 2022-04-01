@@ -1,12 +1,13 @@
 <div class="modal-header">
     <h4 class="modal-title">
-        <fa-icon [icon]="['fas', 'file-export']"></fa-icon> exporteren
+        <fa-icon [icon]="['fas', 'print']"></fa-icon> afdruk-opties
     </h4>
     <button type="button" class="btn-close" aria-label="sluiten" (click)="activeModal.dismiss('close')"></button>
 </div>
 <div class="modal-body">
     <div class="container-fluid">
-        <form [formGroup]="form">
+        <!-- als  -->
+        <form [formGroup]="form" *ngIf="!creating">
             <div class="row mb-3" *ngFor="let exportOption of exportOptions">
                 <label for="{{exportOption.key}}" class="col-9 col-form-label pointer">{{exportOption.label}}
                     <fa-icon *ngIf="exportOption.iconName" [icon]="['fas', exportOption.iconName]"></fa-icon>
@@ -20,12 +21,29 @@
                 </div>
             </div>
         </form>
+
+        <ngb-alert *ngIf="!creating && postCreateAlert" class="mt-1" type="danger">{{postCreateAlert?.message}}
+        </ngb-alert>
+
+        <div *ngIf="creating">
+            <ngb-alert class=" mt-1" type="info">
+                <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+                <span *ngIf="progressPercentage < 100" class="ps-2">De pdf is in de maak. Een moment geduld alsjeblieft
+                    ...</span>
+                <span *ngIf="progressPercentage === 100" class="ps-2">De pdf wordt opgehaald ...</span>
+            </ngb-alert>
+            <ngb-progressbar *ngIf="progressPercentage > 0" class="custom-progress mt-4 mx-auto" type="info"
+                [value]="progressPercentage">
+                <i>{{progressPercentage}}%</i>
+            </ngb-progressbar>
+        </div>
+
     </div>
 </div>
-<div class="modal-footer text-end">
+<div *ngIf="!creating" class="modal-footer text-end">
     <button type="button" class="btn btn-outline-primary" [disabled]="noneSelected()" data-dismiss="modal"
-        (click)="closePdf()">
-        <fa-icon [icon]="['fas', 'print']"></fa-icon> naar pdf
+        (click)="createPdfAndShowProgress()">
+        <fa-icon [icon]="['fas', 'print']"></fa-icon> adrukken
     </button>
     <!-- <button type="button" class="btn btn-outline-primary" [disabled]="noneSelected()" data-dismiss="modal"
         (click)="closeExcel()">

@@ -5,16 +5,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../lib/auth/auth.service';
 import { IAlert, IAlertType } from '../../shared/common/alert';
 import { User } from '../../lib/user';
+import { UserComponent } from '../component';
+import { UserRepository } from '../../lib/user/repository';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
-  alert: IAlert | undefined;
+export class LoginComponent extends UserComponent implements OnInit {
   registered = false;
-  processing = true;
   form: FormGroup;
 
   validations: any = {
@@ -25,11 +25,13 @@ export class LoginComponent implements OnInit {
   };
 
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private authService: AuthService,
+    route: ActivatedRoute,
+    router: Router,
+    userRepository: UserRepository,
+    authService: AuthService,
     fb: FormBuilder
   ) {
+    super(route, router, userRepository, authService);
     this.form = fb.group({
       emailaddress: ['', Validators.compose([
         Validators.required,
@@ -45,29 +47,17 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  isLoggedIn() {
-    return this.authService.isLoggedIn();
-  }
-
   ngOnInit() {
-    this.activatedRoute.queryParams.subscribe(
+    this.route.queryParams.subscribe(
       (param: any) => {
         if (param.message !== undefined) {
           this.setAlert(IAlertType.Info, param.message);
         }
       });
-    if (this.isLoggedIn() === true) {
+    if (this.authService.isLoggedIn() === true) {
       this.setAlert(IAlertType.Danger, 'je bent al ingelogd');
     }
     this.processing = false;
-  }
-
-  protected setAlert(type: IAlertType, message: string) {
-    this.alert = { 'type': type, 'message': message };
-  }
-
-  protected resetAlert() {
-    this.alert = undefined;
   }
 
   login(): boolean {
@@ -78,13 +68,15 @@ export class LoginComponent implements OnInit {
     const password = this.form.controls.password.value;
 
     this.authService.login(emailaddress, password)
-      .subscribe(
-            /* happy path */ p => {
+      .subscribe({
+        next: () => {
           this.router.navigate(['/']);
         },
-            /* error path */ e => { this.setAlert(IAlertType.Danger, e); this.processing = false; },
-            /* onComplete */() => this.processing = false
-      );
+        error: (e: string) => {
+          this.setAlert(IAlertType.Danger, e); this.processing = false;
+        },
+        complete: () => this.processing = false
+      });
     return false;
   }
 }

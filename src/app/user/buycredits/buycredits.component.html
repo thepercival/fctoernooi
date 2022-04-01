@@ -1,20 +1,116 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
-    <div class="col-sm-10 col-md-6 col-lg-4 g-0">
+    <div class="col-sm-12 col-md-10 col-lg-6 g-0 text-center">
+      <div class="d-flex justify-content-between mb-4">
+        <h1>
+          <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon> toernooien kopen
+        </h1>
+        <h1 class="me-1">
+          <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary">
+            <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
+            <span class="ms-1 d-none d-sm-inline"> terug</span>
+          </button>
+        </h1>
+      </div>
+
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
-      <ngb-alert *ngIf="!processing && alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <div *ngIf="!processing && !code" class="card card-auth my-3">
-        <app-user-title title="credits aanvragen" icon="money-bill-alt">
-        </app-user-title>
-        <div class="card-body text-center mx-auto form-validate border-top-0 border-primary">
-          &euro;0,50 per toernooi.<br>
-          kies je aantal toernooien: 1 <= 200<br>
-            kies je betaal methode, misschien een standaard iets gebruiken.(eerst alleen ideal)<br>
-            na keuze doe een backend call, de backend call doet een aanvraag bij mollie en dan verder kijken<br>
+      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+
+
+      <form *ngIf="!processing" name="form" (ngSubmit)="pay()" [formGroup]="form" novalidate>
+
+        <div class="mb-3" class="btn-group mb-3" role="group">
+          <input type="radio" formControlName="purpose" [value]="PersonalPurpose" class="btn-check" autocomplete="off"
+            id="btnradio1">
+          <label class="btn btn-outline-primary" for="btnradio1">
+            <fa-icon *ngIf="form.value['purpose'] === PersonalPurpose" [icon]="['fas', 'check-circle']"
+              class="text-success"></fa-icon>
+            persoonlijk
+          </label>
+
+          <input type="radio" formControlName="purpose" [value]="OrganizationPurpose" class="btn-check"
+            autocomplete="off" id="btnradio2">
+          <label class="btn btn-outline-primary" for="btnradio2">
+
+            <fa-icon *ngIf="form.value['purpose'] === OrganizationPurpose" [icon]="['fas', 'check-circle']"
+              class="text-success"></fa-icon>
+            zakelijk
+          </label>
         </div>
-      </div>
+
+        <div *ngIf="form.value['purpose'] === PersonalPurpose">
+
+
+          <div class="row mx-0 mb-3">
+            <label for="nrOfCredits" class="col-6 col-form-label text-end">aantal</label>
+            <div class="col-6">
+              <select class="form-control" formControlName="nrOfCredits" aria-describedby="costInfo"
+                [ngClass]="{ 'is-invalid': form.controls.nrOfCredits.value === ''}" required>
+                <option *ngFor="let nrOfCreditsOption of nrOfCreditsOptions | async" [ngValue]="nrOfCreditsOption">
+                  {{nrOfCreditsOption}}
+                </option>
+              </select>
+              <small *ngIf="!form.value['nrOfCredits']" id="costInfo" class="form-text text-info">
+                &euro;0,50 per toernooi
+              </small>
+              <small *ngIf="form.value['nrOfCredits']" id="costInfo" class="form-text text-info">
+                totaal &euro;{{form.value['nrOfCredits'] * 0.50}}
+              </small>
+            </div>
+          </div>
+
+          <div *ngIf="form.value['nrOfCredits']" class="row mx-0 mb-3">
+            <label for="paymentMethod" class="col-6 col-form-label text-end">betaalmethode</label>
+            <div class="col-6">
+              <select class="form-control" formControlName="paymentMethod"
+                [ngClass]="{ 'is-invalid': form.controls.paymentMethod.value === ''}" required>
+                <option *ngFor="let paymentMethod of paymentMethods | async" [ngValue]="paymentMethod">{{paymentMethod}}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div *ngIf="form.value['paymentMethod'] === PaymentMethodIDeal" class="row mx-0 mb-3">
+            <label for="iDealIssuer" class="col-6 col-form-label text-end">bank</label>
+            <div class="col-6">
+              <select class="form-control" formControlName="iDealIssuer">
+                <option *ngFor="let option of idealIssuers | async" [ngValue]="option">{{option.name}}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="form.value['purpose'] === OrganizationPurpose">
+          Je kunt een offerte krijgen met een prijs per toernooi. Dit is afhankelijk van het aantal gebruikers.
+          Je kunt een offerte krijgen met een prijs per toernooi. Dit is afhankelijk van het aantal af te nemen
+          toernooien.
+
+          <a href="mailto:info@fctoernooi.nl" rel="noopener">
+            <fa-icon [icon]="[ 'fas', 'envelope'] "></fa-icon> info@fctoernooi.nl
+          </a>
+
+          Vraag vrijblijvend een demonstratie en/of uitleg aan als je meer wilt weten.
+        </div>
+        <div *ngIf="canAgree()" class="row mx-0 mb-3">
+          <label for="agreed" class="col-6 col-form-label pointer">akkoord met voorwaarden</label>
+          <div class="col-6">
+            <div class="form-control form-check form-switch">
+              <input type="checkbox" class="form-check-input" id="agreed" formControlName="agreed">
+              <label class="form-check-label" for="agreed"></label>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="canPay()" class="row mx-0 mb-3">
+          <div class="offset-6 col-6 text-start">
+            <button type="submit" class="btn btn-primary">betalen</button>
+          </div>
+        </div>
+
+      </form>
     </div>
   </div>
+
+
+
 </div>

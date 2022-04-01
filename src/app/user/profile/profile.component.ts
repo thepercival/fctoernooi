@@ -2,23 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
-import { IAlert, IAlertType } from '../../shared/common/alert';
+import { IAlertType } from '../../shared/common/alert';
 import { User } from '../../lib/user';
 import { PasswordValidation } from '../password-validation';
 import { UserRepository } from '../../lib/user/repository';
 import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/common/navigation';
 import { JsonUser } from '../../lib/user/mapper';
+import { UserComponent } from '../component';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
-  alert: IAlert | undefined;
-  processing = true;
-  user!: User;
+export class ProfileComponent extends UserComponent implements OnInit {
   form: FormGroup;
 
   validations: UserValidations = {
@@ -27,13 +25,14 @@ export class ProfileComponent implements OnInit {
   };
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private authService: AuthService,
-    private userRepository: UserRepository,
+    route: ActivatedRoute,
+    router: Router,
+    userRepository: UserRepository,
+    authService: AuthService,
     public myNavigation: MyNavigation,
     fb: FormBuilder
   ) {
+    super(route, router, userRepository, authService);
     this.form = fb.group({
       emailaddress: ['', Validators.compose([
         Validators.required,
@@ -59,42 +58,34 @@ export class ProfileComponent implements OnInit {
           this.user = loggedInUser;
           this.form.controls.emailaddress.setValue(this.user.getEmailaddress());
         },
-        error: (e) => {
+        error: (e: string) => {
           this.setAlert(IAlertType.Danger, e); this.processing = false;
         },
         complete: () => this.processing = false
       });
   }
 
-  protected setAlert(type: IAlertType, message: string) {
-    this.alert = { 'type': type, 'message': message };
-  }
-
-  protected resetAlert() {
-    this.alert = undefined;
-  }
-
-  protected formToJson(): JsonUser {
+  protected formToJson(user: User): JsonUser {
     return {
-      id: this.user.getId(),
-      validated: this.user.getValidated(),
-      nrOfCredits: this.user.getNrOfCredits(),
-      validateIn: this.user.getValidateIn(),
+      id: user.getId(),
+      validated: user.getValidated(),
+      nrOfCredits: user.getNrOfCredits(),
+      validateIn: user.getValidateIn(),
       emailaddress: this.form.controls.emailaddress.value
     }
   }
 
-  save(): boolean {
+  save(user: User): boolean {
     this.processing = true;
 
 
-    this.userRepository.editObject(this.formToJson())
+    this.userRepository.editObject(this.formToJson(user))
       .subscribe({
         next: (user: User) => {
           this.setAlert(IAlertType.Success, 'het emailadres is opgeslagen');
           this.form.controls.emailaddress.setValue(user.getEmailaddress());
         },
-        error: (e) => {
+        error: (e: string) => {
           this.setAlert(IAlertType.Danger, 'het opslaan is niet gelukt: ' + e); this.processing = false;
         },
         complete: () => {
@@ -104,15 +95,15 @@ export class ProfileComponent implements OnInit {
     return false;
   }
 
-  remove() {
+  remove(user: User) {
     this.processing = true;
-    this.userRepository.removeObject(this.user.getId())
+    this.userRepository.removeObject(user.getId())
       .subscribe({
         next: () => {
           this.authService.logout();
           this.router.navigate(['']);
         },
-        error: (e) => {
+        error: (e: string) => {
           this.setAlert(IAlertType.Danger, 'het opslaan is niet gelukt: ' + e); this.processing = false;
         },
         complete: () => this.processing = false

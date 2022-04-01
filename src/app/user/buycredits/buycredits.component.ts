@@ -2,42 +2,58 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
-import { IAlert, IAlertType } from '../../shared/common/alert';
+import { IAlertType } from '../../shared/common/alert';
 import { User } from '../../lib/user';
 import { UserRepository } from '../../lib/user/repository';
-import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/common/navigation';
-
+import { PaymentRepository } from '../../lib/payment/repository';
+import { Observable, of } from 'rxjs';
+import { CreditCardPayment, IDealIssuer, IDealPayment, PaymentMethod } from '../../lib/payment/json';
+import { UserComponent } from '../component';
+import { AuthService } from '../../lib/auth/auth.service';
 @Component({
   selector: 'app-buycredits',
   templateUrl: './buycredits.component.html',
   styleUrls: ['./buycredits.component.css']
 })
-export class BuyCreditsComponent implements OnInit {
-  alert: IAlert | undefined;
-  processing = true;
-  user!: User;
-  code: string = '';
-  sentValidationRequest: boolean = false;
+export class BuyCreditsComponent extends UserComponent implements OnInit {
+  purpose: Purpose | undefined;
   form: FormGroup;
+  public paymentMethods!: Observable<string[]>;
+  public idealIssuers!: Observable<IDealIssuer[]>;
+  public nrOfCreditsOptions!: Observable<number[]>;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private authService: AuthService,
-    private userRepository: UserRepository,
+    route: ActivatedRoute,
+    router: Router,
+    userRepository: UserRepository,
+    authService: AuthService,
+    private paymentRepository: PaymentRepository,
     public myNavigation: MyNavigation,
     fb: FormBuilder
   ) {
+    super(route, router, userRepository, authService);
     this.form = fb.group({
-      code: ['', Validators.compose([
+      purpose: ['', Validators.required],
+      nrOfCredits: ['', Validators.compose([
+        Validators.required,
+        Validators.min(1),
+        Validators.max(100)
+      ])],
+      paymentMethod: ['', Validators.compose([
         Validators.required
+      ])],
+      iDealIssuer: ['', Validators.compose([
+      ])],
+      agreed: [false, Validators.compose([
       ])],
     });
   }
 
   ngOnInit() {
-
+    this.nrOfCreditsOptions = of([3, 5, 10, 15, 20, 35, 50, 100]);
+    this.paymentMethods = this.paymentRepository.getMethods();
+    this.idealIssuers = this.paymentRepository.getIDealIssuers();
     this.userRepository.getLoggedInObject()
       .subscribe({
         next: (loggedInUser: User | undefined) => {
@@ -50,73 +66,108 @@ export class BuyCreditsComponent implements OnInit {
           }
           this.user = loggedInUser;
         },
-        error: (e) => {
+        error: (e: string) => {
           this.setAlert(IAlertType.Danger, e); this.processing = false;
         },
         complete: () => this.processing = false
       });
 
-
-    // this.route.params.subscribe(params => {
-    //   if (params.code && params.code.length > 0) {
-    //     this.code = params.code;
-    //   }
-    // });
-
-    // this.userRepository.getObject(authUser.getId())
-    //   .subscribe({
-    //     next: (user: User) => {
-    //       if (user.getValidated()) {
-    //         const navigationExtras: NavigationExtras = {
-    //           queryParams: { type: IAlertType.Success, message: 'je emailadres is gevalideerd' }
-    //         };
-    //         this.router.navigate([''], navigationExtras);
-    //         return;
-    //       }
-    //       if (this.code.length > 0) {
-    //         this.authService.validate(authUser, this.code)
-    //           .subscribe({
-    //             next: () => {
-    //               const navigationExtras: NavigationExtras = {
-    //                 queryParams: { type: IAlertType.Success, message: 'je emailadres is gevalideerd' }
-    //               };
-    //               this.router.navigate([''], navigationExtras);
-    //               return;
-    //             },
-    //             error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
-    //           });
-    //       } else {
-    //         this.processing = false;
-    //       }
-    //     },
-    //     error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
-    //   });
     this.processing = false;
   }
 
-  protected setAlert(type: IAlertType, message: string) {
-    this.alert = { 'type': type, 'message': message };
+  canPay(): boolean {
+    return this.canAgree() && this.form.controls.agreed.value;
   }
 
-  protected resetAlert() {
-    this.alert = undefined;
+  canAgree(): boolean {
+    return this.getPaymentFromForm() !== undefined;
   }
 
-  sendValidationRequest(): boolean {
+  getPaymentFromForm(): IDealPayment | CreditCardPayment | undefined {
+    // console.log(this.form.controls.nrOfCredits.value);
+    // console.log(this.form.controls.paymentMethod.value);
+    // console.log(this.form.controls.iDealIssuer.value?.name?.length > 0);
+    if (!this.form.controls.nrOfCredits.value) {
+      return undefined;
+    }
+    if (this.form.controls.paymentMethod.value === PaymentMethod.IDeal
+      && this.form.controls.iDealIssuer.value?.name?.length > 0) {
+      return {
+        amount: this.form.controls.nrOfCredits.value * 0.5,
+        method: PaymentMethod.IDeal,
+        issuer: this.form.controls.iDealIssuer.value
+      };
+    } else if (this.form.controls.paymentMethod.value === PaymentMethod.CreditCard) {
+      return {
+        amount: this.form.controls.nrOfCredits.value * 0.5,
+        method: PaymentMethod.CreditCard,
+        cardNumber: ''/*this.form.controls.cardNumber.value*/,
+        cvc: '012'
+      };
+    }
+    /* if (this.form.controls.paymentMethod.value === PaymentMethod.CreditCard
+       && this.form.controls.cardNumber.value?.name?.length > 0) {
+       return {
+         amount: this.form.controls.nrOfCredits.value * 0.5,
+         cardNumber: this.form.controls.cardNumber.value
+       };
+     }*/
+    return undefined;
+  }
 
+  // getPaymentMethods(): string[] {
+  //   if (this.paymentMethods !== undefined) {
+  //     return 
+  //   }
+  //   this.paymentRepository.getMethods()
+  //     .subscribe({
+  //       next: (methods: string[]) => {
+  //         this.paymentMethods = methods;
+  //       },
+  //       error: (e: string) => {
+  //         this.setAlert(IAlertType.Danger, e); this.processing = false;
+  //       },
+  //       complete: () => this.processing = false
+  //     });
+  // }
+
+
+  get PersonalPurpose(): number { return Purpose.Personal; }
+  get OrganizationPurpose(): number { return Purpose.Organization; }
+  get PaymentMethodIDeal(): string { return PaymentMethod.IDeal; }
+  get PaymentMethodCreditCard(): string { return PaymentMethod.CreditCard; }
+
+  navigateBack() {
+    this.myNavigation.back();
+  }
+
+
+
+  pay(): boolean {
+    const jsonPayment = this.getPaymentFromForm();
+    if (jsonPayment === undefined) {
+      return false;
+    }
+
+    this.setAlert(IAlertType.Info, 'je wordt doorgestuurd naar de betaalpagina..');
     this.processing = true;
-    this.authService.validationRequest()
+
+    this.paymentRepository.buyCredits(jsonPayment)
       .subscribe({
-        next: () => {
-          this.sentValidationRequest = true;
+        next: (checkOutUrl: string) => {
+          window.open(checkOutUrl, '_blank');
+          this.router.navigate(['/user/awaitpayment']);
         },
         error: (e) => {
-          this.setAlert(IAlertType.Danger, 'het opslaan is niet gelukt: ' + e); this.processing = false;
-        },
-        complete: () => {
-          this.processing = false
+          this.setAlert(IAlertType.Danger, 'de instellingen zijn niet opgeslagen: ' + e);
+          this.processing = false;
         }
       });
-    return false;
+
+    return true;
   }
+}
+
+enum Purpose {
+  Personal = 1, Organization
 }

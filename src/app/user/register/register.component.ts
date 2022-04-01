@@ -3,19 +3,19 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
-import { IAlert, IAlertType } from '../../shared/common/alert';
+import { IAlertType } from '../../shared/common/alert';
 import { User } from '../../lib/user';
 import { PasswordValidation } from '../password-validation';
+import { UserRepository } from '../../lib/user/repository';
+import { UserComponent } from '../component';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent implements OnInit {
-  alert: IAlert | undefined;
+export class RegisterComponent extends UserComponent implements OnInit {
   registered = false;
-  processing = true;
   form: FormGroup;
 
   validations: UserValidations = {
@@ -26,11 +26,13 @@ export class RegisterComponent implements OnInit {
   };
 
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private authService: AuthService,
+    route: ActivatedRoute,
+    router: Router,
+    userRepository: UserRepository,
+    authService: AuthService,
     fb: FormBuilder
   ) {
+    super(route, router, userRepository, authService);
     this.form = fb.group({
       emailaddress: ['', Validators.compose([
         Validators.required,
@@ -56,18 +58,6 @@ export class RegisterComponent implements OnInit {
     this.processing = false;
   }
 
-  protected setAlert(type: IAlertType, message: string) {
-    this.alert = { 'type': type, 'message': message };
-  }
-
-  protected resetAlert() {
-    this.alert = undefined;
-  }
-
-  isLoggedIn() {
-    return this.authService.isLoggedIn();
-  }
-
   register(): boolean {
     this.processing = true;
     this.setAlert(IAlertType.Info, 'de registratie wordt opgeslagen');
@@ -78,11 +68,11 @@ export class RegisterComponent implements OnInit {
     // this.activationmessage = undefined;
     this.authService.register({ emailaddress: emailaddress, password: password })
       .subscribe({
-        next: (registered) => {
+        next: (registered: boolean) => {
           this.registered = registered;
           this.resetAlert();
         },
-        error: (e) => {
+        error: (e: string) => {
           this.setAlert(IAlertType.Danger, 'het registreren is niet gelukt: ' + e); this.processing = false;
         },
         complete: () => this.processing = false

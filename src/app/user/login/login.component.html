@@ -10,7 +10,8 @@
         <div class="card-body text-center mx-auto form-validate border-top-0 border-primary">
           <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
-          <form *ngIf="!processing && !isLoggedIn()" name="form" (ngSubmit)="login()" [formGroup]="form" novalidate>
+          <form *ngIf="!processing && !authService.isLoggedIn()" name="form" (ngSubmit)="login()" [formGroup]="form"
+            novalidate>
             <div class="row mb-3">
               <div class="col-3 text-end">
                 <label for="emailaddress" class="col-form-label">emailadres</label>

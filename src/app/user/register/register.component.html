@@ -10,16 +10,19 @@
         </app-user-title>
         <div class="card-body text-center mx-auto form-validate border-top-0 border-primary">
 
-          <div *ngIf="isLoggedIn() && registered" class="card card-body mx-auto bg-faded form-register mt-3">
+          <div *ngIf="authService.isLoggedIn() && registered"
+            class="card card-body mx-auto bg-faded form-register mt-3">
             <legend class="m-b-1 text-xs-center">bedankt voor het registreren!</legend>
             <button role="button" class="btn btn-outline-secondary" routerLink="/">ga verder</button>
           </div>
-          <div *ngIf="isLoggedIn() && !registered" class="card card-body mx-auto bg-faded form-register mt-3">
+          <div *ngIf="authService.isLoggedIn() && !registered"
+            class="card card-body mx-auto bg-faded form-register mt-3">
             <legend class="m-b-1 text-xs-center">je bent al ingelogd</legend>
             <button role="button" class="btn btn-outline-secondary" routerLink="/">ga terug</button>
           </div>
 
-          <form *ngIf="!isLoggedIn() && !registered" name="form" (ngSubmit)="register()" [formGroup]="form" novalidate>
+          <form *ngIf="!authService.isLoggedIn() && !registered" name="form" (ngSubmit)="register()" [formGroup]="form"
+            novalidate>
             <div class="row mb-3">
               <div class="col-3">
                 <label for="emailaddress" class="col-form-label">emailadres</label>

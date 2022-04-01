@@ -39,7 +39,7 @@ import { CompetitionSportTab } from '../competitionSportTab';
 import { InfoModalComponent } from '../infomodal/infomodal.component';
 import { IAlert, IAlertType } from '../../common/alert';
 import { DateFormatter } from '../../../lib/dateFormatter';
-import { Subscription, timer } from 'rxjs';
+import { of, Subscription, timer } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AppErrorHandler } from '../../../lib/repository';
 import { Recess } from '../../../lib/recess';
@@ -429,7 +429,12 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   private showProgress() {
     this.refreshTimer = timer(0, 2000) // repeats every 2 seconds
       .pipe(
-        switchMap(() => this.planningRepository.progress(this.roundNumber, this.tournament).pipe()),
+        switchMap((value: number) => {
+          if (!this.validTimeValue(value)) {
+            return of();
+          }
+          return this.planningRepository.progress(this.roundNumber, this.tournament).pipe();
+        }),
         catchError(err => this.appErrorHandler.handleError(err))
       ).subscribe({
         next: (progressPerc: number | undefined) => {
@@ -459,6 +464,10 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
           this.setAlert(IAlertType.Danger, e);
         }
       })
+  }
+
+  validTimeValue(count: number): boolean {
+    return count <= 5 || (count % 10) === 0;
   }
 
   public showError(): boolean {

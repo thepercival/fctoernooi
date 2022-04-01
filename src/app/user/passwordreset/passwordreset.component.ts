@@ -3,18 +3,18 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
-import { IAlert, IAlertType } from '../../shared/common/alert';
+import { IAlertType } from '../../shared/common/alert';
 import { User } from '../../lib/user';
+import { UserComponent } from '../component';
+import { UserRepository } from '../../lib/user/repository';
 
 @Component({
   selector: 'app-passwordreset',
   templateUrl: './passwordreset.component.html',
   styleUrls: ['./passwordreset.component.css']
 })
-export class PasswordresetComponent implements OnInit {
-  alert: IAlert | undefined;
+export class PasswordresetComponent extends UserComponent implements OnInit {
   codeSend = false;
-  processing = true;
   form: FormGroup;
 
   validations: any = {
@@ -23,11 +23,13 @@ export class PasswordresetComponent implements OnInit {
   };
 
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private authService: AuthService,
+    route: ActivatedRoute,
+    router: Router,
+    userRepository: UserRepository,
+    authService: AuthService,
     fb: FormBuilder
   ) {
+    super(route, router, userRepository, authService);
     this.form = fb.group({
       emailaddress: ['', Validators.compose([
         Validators.required,
@@ -39,18 +41,6 @@ export class PasswordresetComponent implements OnInit {
 
   ngOnInit() {
     this.processing = false;
-  }
-
-  protected setAlert(type: IAlertType, message: string) {
-    this.alert = { 'type': type, 'message': message };
-  }
-
-  protected resetAlert() {
-    this.alert = undefined;
-  }
-
-  isLoggedIn() {
-    return this.authService.isLoggedIn();
   }
 
   sendCode(): boolean {
@@ -65,7 +55,7 @@ export class PasswordresetComponent implements OnInit {
         this.codeSend = true;
         this.resetAlert();
       },
-      error: (e) => {
+      error: (e: string) => {
         this.setAlert(IAlertType.Danger, 'het verzenden van de code is niet gelukt: ' + e); this.processing = false;
       },
       complete: () => this.processing = false

@@ -67,6 +67,11 @@ input.is-warning {
     border-left: 5px solid #{$warning};
 }
 
+.modal-header {
+  @extend .bg-dark;
+  @extend .text-white;
+}
+
 .modal-content-info .modal-content {
   border: 5px;
   @extend .border-info;

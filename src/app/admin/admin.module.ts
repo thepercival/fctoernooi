@@ -9,7 +9,6 @@ import {
   faDotCircle,
   faMoneyBillAlt,
   faFileExcel,
-  faFileExport,
   faPrint,
   faQrcode,
   faRandom,
@@ -74,6 +73,7 @@ import { GameBaseEditComponent } from './game/editbase.component';
 import { GameAddComponent } from './game/add.component';
 import { GameModeModalComponent } from './gameMode/modal.component';
 import { RecessAddComponent } from './startAndRecesses/addRecess.component';
+import { ShepherdService } from 'angular-shepherd';
 
 @NgModule({
   imports: [
@@ -83,6 +83,7 @@ import { RecessAddComponent } from './startAndRecesses/addRecess.component';
     ReactiveFormsModule,
     FontAwesomeModule,
     CommonSharedModule, TournamentModule
+
   ],
   declarations: [
     AuthorizationAddComponent,
@@ -123,18 +124,18 @@ import { RecessAddComponent } from './startAndRecesses/addRecess.component';
     ScoreTogetherCardComponent,
     ShareModalComponent,
     StructureSelectRoundComponent,
-    GameModeModalComponent,
+    GameModeModalComponent
   ],
   providers: [
     CompetitionSportService,
     CSSService,
-    ScoreConfigService
+    ScoreConfigService, ShepherdService
   ]
 })
 export class AdminModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(
-      /* homescreen */ faMoneyBillAlt, faCheckCircle, faTimesCircle, faShareAlt, faEye, faFileExport, faCopy, faTrashAlt
+      /* homescreen */ faMoneyBillAlt, faCheckCircle, faTimesCircle, faShareAlt, faEye, faCopy, faTrashAlt
       , faQrcode, faPrint, faFileExcel,
       /* sport select*/ faDotCircle,
       /* competitors*/ faRandom, faSort,

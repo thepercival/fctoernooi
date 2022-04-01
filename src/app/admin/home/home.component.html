@@ -146,14 +146,13 @@
         <div class="text-nowrap">scorebord</div>
       </div>
     </div>
-    <!-- export -->
     <div *ngIf="allPoulesHaveGames && isAdmin()" class="card card-sub pointer" (click)="openModalExport()">
-      <div class="card-body text-center p-1 pt-2">
+      <div class="card-body text-center p-0 pt-2">
         <h5 class="card-title">
-          <fa-icon [icon]="['fas', 'file-export']"></fa-icon>
+          <fa-icon [icon]="['fas', 'print']"></fa-icon>
         </h5>
         <div>pdf</div>
-        <div>export</div>
+        <div>afdrukken</div>
       </div>
     </div>
     <!-- roleadmin -->

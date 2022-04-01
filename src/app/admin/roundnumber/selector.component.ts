@@ -21,4 +21,20 @@ export class RoundNumbersSelectorModalComponent implements OnInit {
     ngOnInit() {
         this.processing = false;
     }
+
+    sendRoundNumber(roundNumber: RoundNumber) {
+        if (!roundNumber.hasBegun()) {
+            this.activeModal.close(roundNumber);
+        }
+        this.processing = false;
+    }
+
+    isFirstChoosable(roundNumber: RoundNumber): boolean {
+        const previous = roundNumber.getPrevious();
+        return !roundNumber.hasBegun() && (previous === undefined || previous.hasBegun());
+    }
+
+    showDifferentConfig(roundNumber: RoundNumber): boolean {
+        return roundNumber.getPlanningConfig() !== undefined && !this.isFirstChoosable(roundNumber) && !roundNumber.hasBegun();
+    }
 }

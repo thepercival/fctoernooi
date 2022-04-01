@@ -1,22 +1,37 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { TournamentExportConfig, TournamentExportFormat } from '../../lib/tournament/repository';
+import { Subscription, timer } from 'rxjs';
+import { PdfRepository, TournamentExportConfig } from '../../lib/pdf/repository';
+import { AppErrorHandler } from '../../lib/repository';
+import { Tournament } from '../../lib/tournament';
+import { IAlert, IAlertType } from '../../shared/common/alert';
+import { catchError, switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-ngbd-modal-export-config',
     templateUrl: './exportmodal.component.html',
     styleUrls: ['./exportmodal.component.scss']
 })
-export class ExportModalComponent implements OnInit {
+export class ExportModalComponent implements OnInit, OnDestroy {
+    @Input() tournament!: Tournament;
     @Input() subjects!: number;
     @Input() fieldDescription!: string;
     form: FormGroup;
+    creating = false;
     exportOptions: ExportOption[] = [];
+    refreshTimer: Subscription | undefined;
+    private appErrorHandler: AppErrorHandler;
+    progressPercentage = 0;
+    postCreateAlert: IAlert | undefined;
 
-    constructor(public activeModal: NgbActiveModal, private formBuilder: FormBuilder) {
+    constructor(
+        public activeModal: NgbActiveModal,
+        private formBuilder: FormBuilder,
+        private pdfRepository: PdfRepository) {
         this.form = formBuilder.group({});
+        this.appErrorHandler = new AppErrorHandler();
     }
 
     ngOnInit() {
@@ -36,25 +51,13 @@ export class ExportModalComponent implements OnInit {
         }
     }
 
+
+
     noneSelected(): boolean {
         return this.exportOptions.every(exportOption => !this.form.value[exportOption.key]);
     }
 
-    closePdf(): void {
-        this.close(TournamentExportFormat.Pdf);
-    }
-
-    closeExcel(): void {
-        this.close(TournamentExportFormat.Excel);
-    }
-
-    private close(exportFormat: TournamentExportFormat): void {
-        this.activeModal.close(
-            { subjects: this.getSubjects(), format: exportFormat }
-        );
-    }
-
-    protected getSubjects(): number {
+    protected formToSubjects(): number {
         let subjects: number = 0;
         this.exportOptions.forEach((exportOption: ExportOption) => {
             if (this.form.value[exportOption.key] === true) {
@@ -85,11 +88,60 @@ export class ExportModalComponent implements OnInit {
         }
         return '';
     }
-}
 
-export interface TournamentExportAction {
-    subjects: number;
-    format: TournamentExportFormat;
+    createPdfAndShowProgress() {
+        const subjects = this.formToSubjects();
+        localStorage.setItem('exportSubjects', JSON.stringify(subjects));
+        this.postCreateAlert = undefined;
+        this.creating = true;
+        this.progressPercentage = 0;
+        this.pdfRepository.createObject(this.tournament, subjects)
+            .subscribe({
+                next: (hash: string) => {
+                    this.showProgress(hash);
+                },
+                error: (e) => {
+                    this.setPostCreateAlert(IAlertType.Danger, e);
+                }
+            });
+    }
+
+    showProgress(hash: string) {
+        this.refreshTimer = timer(0, 2000) // repeats every 2 seconds
+            .pipe(
+                switchMap(() => this.pdfRepository.progress(this.tournament, hash).pipe()),
+                catchError(err => this.appErrorHandler.handleError(err))
+            ).subscribe({
+                next: (progressPerc: number | undefined) => {
+                    if (progressPerc === undefined) {
+                        return;
+                    }
+                    this.progressPercentage = progressPerc;
+                    if (progressPerc === 100) {
+                        this.stopTimer();
+                        this.activeModal.close(this.pdfRepository.getPdfUrl(this.tournament, hash));
+                    }
+                },
+                error: (e) => {
+                    this.setPostCreateAlert(IAlertType.Danger, e);
+                }
+            });
+    }
+
+    ngOnDestroy() {
+        this.stopTimer();
+    }
+
+    stopTimer() {
+        if (this.refreshTimer !== undefined) {
+            this.refreshTimer.unsubscribe();
+        }
+    }
+
+    protected setPostCreateAlert(type: IAlertType, message: string) {
+        this.postCreateAlert = { 'type': type, 'message': message };
+        this.creating = false;
+    }
 }
 
 interface ExportOption {

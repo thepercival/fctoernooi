@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   CompetitionSportService,
@@ -19,24 +19,18 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { cloneDeep } from 'lodash';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { IAlertType } from '../../shared/common/alert';
+import { ShepherdService } from 'angular-shepherd';
 
 @Component({
   selector: 'app-tournament-structure',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.css'],
 })
-export class StructureEditComponent extends TournamentComponent implements OnInit {
+export class StructureEditComponent extends TournamentComponent implements OnInit, AfterViewInit {
   changedRoundNumber: RoundNumber | undefined;
   originalCompetitors!: Competitor[];
   clonedStructure!: Structure;
   public nameService!: NameService;
-
-  uiSliderConfigExample: any = {
-    behaviour: 'drag',
-    margin: 1,
-    step: 1,
-    start: 1
-  };
 
   constructor(
     route: ActivatedRoute,
@@ -47,7 +41,8 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     private planningRepository: PlanningRepository,
     private competitionSportService: CompetitionSportService,
     private myNavigation: MyNavigation,
-    private defaultService: DefaultService
+    private defaultService: DefaultService,
+    public shepherdService: ShepherdService
   ) {
     super(route, router, tournamentRepository, structureRepository);
   }
@@ -76,6 +71,119 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
         });
     }, noStructure);
   }
+
+  ngAfterViewInit() {
+
+    this.shepherdService.modal = true;
+    this.shepherdService.confirmCancel = false;
+
+    this.shepherdService.addSteps([
+      {
+        id: 'addPoule',
+        attachTo: {
+          element: '#first-btn-addpoule',
+          on: 'bottom'
+        },
+        arrow: false,
+        beforeShowPromise: function () {
+          return new Promise((resolve) => {
+            setTimeout(function () {
+              window.scrollTo(0, 0);
+              resolve(undefined);
+              console.log('scrolllll');
+            }, 1000);
+          });
+        },
+        cancelIcon: { enabled: false },
+        advanceOn: { selector: '#first-btn-addpoule', event: 'click' },
+        highlightClass: 'highlight-custom',
+        scrollTo: false,
+        title: 'uitleg opzet-editor',
+        text: ['voeg een poule toe door op de plus te klikken']
+      },
+      {
+        id: 'addWinner',
+        attachTo: {
+          element: '#btn-addwinner-1',
+          on: 'bottom'
+        },
+        cancelIcon: { enabled: false },
+        advanceOn: { selector: '#btn-addwinner-1', event: 'click' },
+        highlightClass: 'highlight',
+        scrollTo: false,
+        title: 'uitleg opzet-editor',
+        text: ['voeg 4 plaatsen aan de volgende ronde toe']
+      }
+      ,
+      {
+        id: 'addWinner3',
+        attachTo: {
+          element: '#btn-addwinner-1',
+          on: 'bottom'
+        },
+        cancelIcon: { enabled: false },
+        advanceOn: { selector: '#btn-addwinner-1', event: 'click' },
+        highlightClass: 'highlight',
+        scrollTo: false,
+        title: 'uitleg opzet-editor',
+        text: ['voeg nog een plaats aan de volgende ronde toe']
+      }
+      ,
+      {
+        id: 'addWinner4',
+        attachTo: {
+          element: '#btn-addwinner-1',
+          on: 'bottom'
+        },
+        cancelIcon: { enabled: false },
+        advanceOn: { selector: '#btn-addwinner-1', event: 'click' },
+        highlightClass: 'highlight',
+        scrollTo: false,
+        title: 'uitleg opzet-editor',
+        text: ['voeg de vierde plaats aan de volgende ronde toe']
+      }
+      ,
+      {
+        id: 'editQualifyGroup',
+        attachTo: {
+          element: '#btn-edit-qualifygroup-1',
+          on: 'bottom'
+        }/*,
+        beforeShowPromise: function () {
+          return new Promise((resolve) => {
+            setTimeout(function () {
+              //     window.scrollTo(500, 0);
+              resolve(undefined);
+              console.log('scrolllll');
+            }, 1000);
+          });
+        }*/,
+        cancelIcon: { enabled: false },
+        advanceOn: { selector: '#btn-edit-qualifygroup-1', event: 'click' },
+        highlightClass: 'highlight',
+        scrollTo: true,
+        title: 'uitleg opzet-editor',
+        text: ['verander kruisfinales in finales per plaats, door de kwailificatiegroep aan te passen']
+      }
+      ,
+      {
+        id: 'splitQualifyGroup',
+        attachTo: {
+          element: '#btn-split-qualifygroup-1',
+          on: 'bottom'
+        },
+        cancelIcon: { enabled: false },
+        advanceOn: { selector: '#btn-split-qualifygroup-1', event: 'click' },
+        highlightClass: 'highlight',
+        scrollTo: false,
+        title: 'uitleg opzet-editor',
+        text: ['verander kruisfinales in finales per plaats']
+      }
+    ]);
+    console.log(123);
+    this.shepherdService.start();
+  }
+
 
   protected getPlaceRanges(): PlaceRanges {
     const sportVariants = this.competition.getSportVariants();

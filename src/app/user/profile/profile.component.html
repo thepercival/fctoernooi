@@ -16,8 +16,8 @@
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
-        <div *ngIf="user" class="row mb-3">
+      <form *ngIf="!processing && user" name="form" (ngSubmit)="save(user)" [formGroup]="form" novalidate>
+        <div class="row mb-3">
           <div class="col-3">
             <label for="emailaddress" class="col-form-label">emailadres</label>
           </div>
@@ -28,17 +28,19 @@
               placeholder="max. {{validations.maxlengthemailaddress}} karakters">
           </div>
         </div>
-        <div *ngIf="user" class="row mb-3 justify-content-end">
+        <div *ngIf="user.getValidated()" class="row mb-3">
+          <div class="col-3">
+            <label for="nrOfCredits" class="col-form-label">credits</label>
+          </div>
           <div class="col-9">
-            <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
-              opslaan
-            </button>
+            <input type="text" readonly class="form-control-plaintext" id="nrOfCredits"
+              value="{{user.getNrOfCredits()}}">
           </div>
         </div>
         <div class="row mb-3 justify-content-end">
           <div class="col-9">
-            <button routerLink="/user/logout" class="btn btn-outline-secondary" role="button" aria-label="uitloggen">
-              uitloggen
+            <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
+              opslaan
             </button>
           </div>
         </div>
@@ -47,12 +49,19 @@
             <h5 class="card-title">account verwijderen</h5>
             <p class="card-text">Het account en je toernooi-rollen zullen verwijderd worden. Wanneer je je weer
               registreert met hetzelfde emailadres krijg je je rollen terug.</p>
-            <button (click)="remove()" class="btn btn-danger" role="button" aria-label="account verwijderen">
+            <button (click)="remove(user)" class="btn btn-danger" role="button" aria-label="account verwijderen">
               verwijderen
             </button>
           </div>
         </div>
       </form>
+      <div class="row mt-3 justify-content-end">
+        <div class="col-9">
+          <button routerLink="/user/logout" class="btn btn-outline-secondary" role="button" aria-label="uitloggen">
+            uitloggen
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

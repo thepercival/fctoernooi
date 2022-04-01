@@ -4,14 +4,20 @@
 </div>
 <div class="modal-body">
   <ul class="list-group">
-    <li *ngFor="let roundNumber of structure.getRoundNumbers()" class="list-group-item border-primary pointer"
-      (click)="activeModal.close(roundNumber)">
-      <span [innerHTML]="nameService.getRoundNumbersName( roundNumber ) | keepHtml"></span>
-      <span *ngIf="roundNumber.hasBegun()" class="badge bg-warning ms-1" pull="left">begonnen</span>
-      <fa-icon [icon]="['fas', 'dot-circle']" class="text-primary" pull="right"></fa-icon>
+    <li *ngFor="let roundNumber of structure.getRoundNumbers()" class="list-group-item border-primary"
+      [ngClass]="{pointer: !roundNumber.hasBegun()}" (click)="sendRoundNumber(roundNumber)">
+      <div class="d-flex justify-content-between">
+        <label for="roundNumber-{{roundNumber.getNumber()}}" class="mb-0">
+          <span [innerHTML]="nameService.getRoundNumbersName( roundNumber ) | keepHtml"></span>
+          <span *ngIf="roundNumber.hasBegun()" class="badge bg-warning ms-1" pull="left">begonnen</span>
+          <span *ngIf="showDifferentConfig(roundNumber)" class="badge bg-warning ms-1" pull="left">verschillend</span>
+        </label>
+        <div *ngIf="!roundNumber.hasBegun()" class="form-check form-switch">
+          <input type="checkbox" class="form-check-input" id="roundNumber-{{roundNumber.getNumber()}}">
+          <label class="form-check-label" for="roundNumber-{{roundNumber.getNumber()}}"></label>
+        </div>
+        <div *ngIf="roundNumber.hasBegun()"></div>
+      </div>
     </li>
   </ul>
-</div>
-<div class="modal-footer border-top-0">
-
 </div>

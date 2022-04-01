@@ -10,7 +10,8 @@
 <ng-template let-target="target" #modifyToPlaces>
   <div class=" btn-group-vertical" role="group" aria-label="aantal">
     <button type="button" [disabled]="!areSomeQualifyGroupsEditable(target)"
-      class="btn {{getQualifyGroupBtnClass(target)}}" (click)="targetCollapsed[target] = !targetCollapsed[target]">
+      id="btn-edit-qualifygroup-{{parentRound.getNumberAsValue()}}" class="btn {{getQualifyGroupBtnClass(target)}}"
+      (click)="targetCollapsed[target] = !targetCollapsed[target]">
       <fa-icon *ngIf="areSomeQualifyGroupsEditable(target)" class="me-1" [icon]="IconStructure"></fa-icon>
       <span>{{nameService.getQualifyTargetDescription(target,true)}}</span>
       <span *ngIf="parentRound.isRoot() && !areSomeQualifyGroupsEditable(target)">:
@@ -29,7 +30,7 @@
         class="btn btn-outline-{{getRemoveQualifierBtnClass(target)}}" (click)="removeQualifier(target)">
         <fa-icon [icon]="['fas', 'minus']"></fa-icon>
       </button>
-      <button [disabled]="!canAddQualifier(target)" type="button"
+      <button [disabled]="!canAddQualifier(target)" type="button" id="btn-addwinner-{{parentRound.getNumberAsValue()}}"
         class="btn btn-outline-{{getAddQualifierBtnClass(target)}}" (click)="addQualifier(target)">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
@@ -57,7 +58,8 @@
   <div>
     {{nameService.getHorizontalPouleName(singleRule.getFromHorizontalPoule())}}
   </div>
-  <button *ngIf="structureEditor.isQualifyGroupSplittableAt(singleRule)" type="button" class="btn btn-outline-primary"
+  <button *ngIf="structureEditor.isQualifyGroupSplittableAt(singleRule)" type="button"
+    id="btn-split-qualifygroup-{{parentRound.getNumberAsValue()}}" class="btn btn-outline-primary"
     (click)="splitQualifyGroupFrom(singleRule)">
     <fa-icon class="rotate-45" [icon]="['fas', 'expand-alt']"></fa-icon><span>splitsen</span>
   </button>

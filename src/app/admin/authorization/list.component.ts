@@ -134,7 +134,10 @@ export class AuthorizationListComponent extends TournamentComponent implements O
         if (authorization instanceof TournamentUser) {
             this.tournamentUserRepository.removeObject(<TournamentUser>authorization)
                 .subscribe({
-                    next: () => this.processing = false,
+                    next: () => {
+                        this.removeTournamentUserFromList(authorization);
+                        this.processing = false
+                    },
                     error: (e) => {
                         this.setAlert(IAlertType.Danger, e); this.processing = false;
                     }
@@ -191,6 +194,16 @@ export class AuthorizationListComponent extends TournamentComponent implements O
             }
         }, (reason) => {
         });
+    }
+
+    removeTournamentUserFromList(tournamentUser: TournamentUser) {
+        const userItem = this.validUserItems.find(userItem => userItem.tournamentUser === tournamentUser);
+        if (userItem) {
+            const idx = this.validUserItems.indexOf(userItem);
+            if (idx >= 0) {
+                this.validUserItems.splice(idx, 1);
+            }
+        }
     }
 }
 

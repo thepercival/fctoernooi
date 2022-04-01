@@ -3,19 +3,19 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
-import { IAlert, IAlertType } from '../../shared/common/alert';
+import { IAlertType } from '../../shared/common/alert';
 import { User } from '../../lib/user';
 import { PasswordValidation } from '../password-validation';
+import { UserRepository } from '../../lib/user/repository';
+import { UserComponent } from '../component';
 
 @Component({
   selector: 'app-passwordchange',
   templateUrl: './passwordchange.component.html',
   styleUrls: ['./passwordchange.component.css']
 })
-export class PasswordchangeComponent implements OnInit {
-  alert: IAlert | undefined;
+export class PasswordchangeComponent extends UserComponent implements OnInit {
   passwordChanged = false;
-  processing = true;
   form: FormGroup;
 
   validations: any = {
@@ -27,12 +27,13 @@ export class PasswordchangeComponent implements OnInit {
   private emailaddress: string = '';
 
   constructor(
-    private route: ActivatedRoute,
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private authService: AuthService,
+    route: ActivatedRoute,
+    router: Router,
+    userRepository: UserRepository,
+    authService: AuthService,
     fb: FormBuilder
   ) {
+    super(route, router, userRepository, authService);
     this.form = fb.group({
       code: ['', Validators.compose([
         Validators.required,
@@ -61,18 +62,6 @@ export class PasswordchangeComponent implements OnInit {
     this.processing = false;
   }
 
-  protected setAlert(type: IAlertType, message: string) {
-    this.alert = { 'type': type, 'message': message };
-  }
-
-  protected resetAlert() {
-    this.alert = undefined;
-  }
-
-  isLoggedIn() {
-    return this.authService.isLoggedIn();
-  }
-
   changePassword(): boolean {
     this.processing = true;
     this.setAlert(IAlertType.Info, 'het wachtwoord wordt gewijzigd');
@@ -87,7 +76,7 @@ export class PasswordchangeComponent implements OnInit {
           this.passwordChanged = true;
           this.resetAlert();
         },
-        error: (e) => {
+        error: (e: string) => {
           this.setAlert(IAlertType.Danger, 'het wijzigen van het wachtwoord is niet gelukt: ' + e);
           this.processing = false;
         },

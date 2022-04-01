@@ -2,33 +2,30 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
-import { IAlert, IAlertType } from '../../shared/common/alert';
+import { IAlertType } from '../../shared/common/alert';
 import { User } from '../../lib/user';
 import { UserRepository } from '../../lib/user/repository';
 import { AuthService } from '../../lib/auth/auth.service';
-import { MyNavigation } from '../../shared/common/navigation';
+import { UserComponent } from '../component';
 
 @Component({
   selector: 'app-validate',
   templateUrl: './validate.component.html',
   styleUrls: ['./validate.component.css']
 })
-export class ValidateComponent implements OnInit {
-  alert: IAlert | undefined;
-  processing = true;
-  user!: User;
+export class ValidateComponent extends UserComponent implements OnInit {
   code: string = '';
   sentValidationRequest: boolean = false;
-  form: FormGroup;
+  public form: FormGroup;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private authService: AuthService,
-    private userRepository: UserRepository,
-    public myNavigation: MyNavigation,
+    route: ActivatedRoute,
+    router: Router,
+    userRepository: UserRepository,
+    authService: AuthService,
     fb: FormBuilder
   ) {
+    super(route, router, userRepository, authService);
     this.form = fb.group({
       code: ['', Validators.compose([
         Validators.required
@@ -72,22 +69,14 @@ export class ValidateComponent implements OnInit {
                   this.router.navigate([''], navigationExtras);
                   return;
                 },
-                error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
+                error: (e: string) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
               });
           } else {
             this.processing = false;
           }
         },
-        error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
+        error: (e: string) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
       });
-  }
-
-  protected setAlert(type: IAlertType, message: string) {
-    this.alert = { 'type': type, 'message': message };
-  }
-
-  protected resetAlert() {
-    this.alert = undefined;
   }
 
   sendValidationRequest(): boolean {
@@ -98,7 +87,7 @@ export class ValidateComponent implements OnInit {
         next: () => {
           this.sentValidationRequest = true;
         },
-        error: (e) => {
+        error: (e: string) => {
           this.setAlert(IAlertType.Danger, 'het opslaan is niet gelukt: ' + e); this.processing = false;
         },
         complete: () => {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt, faMedal, faSpinner,
@@ -56,7 +56,7 @@ import { PouleRankingTogetherComponent } from './ranking/poule/together.componen
     ReactiveFormsModule,
     CommonSharedModule,
     RouterModule,
-    NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule, NgbProgressbarModule,
+    NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbProgressbarModule,
     NgbNavModule
   ],
   providers: [
@@ -67,7 +67,7 @@ import { PouleRankingTogetherComponent } from './ranking/poule/together.componen
     InfoModalComponent,
     LockerRoomsComponent,
     NameModalComponent,
-    NgbAlertModule, NgbButtonsModule, NgbCollapseModule, NgbDatepickerModule, NgbModalModule, NgbNavModule, NgbPopoverModule, NgbTimepickerModule,
+    NgbAlertModule, NgbCollapseModule, NgbDatepickerModule, NgbModalModule, NgbNavModule, NgbPopoverModule, NgbTimepickerModule, NgbProgressbarModule,
     PouleRankingModalComponent,
     PouleRankingComponent,
     PouleRankingSportsComponent,

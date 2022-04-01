@@ -8,20 +8,21 @@ import { AuthService } from '../../lib/auth/auth.service';
 import { CSSService } from '../../shared/common/cssservice';
 import { Role } from '../../lib/role';
 import { Tournament } from '../../lib/tournament';
-import { TournamentExportConfig, TournamentRepository } from '../../lib/tournament/repository';
+import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { TranslateService } from '../../lib/translate';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
 import { LockerRoomValidator } from '../../lib/lockerroom/validator';
 import { CompetitionSportRouter } from '../../shared/tournament/competitionSport.router';
-import { ExportModalComponent, TournamentExportAction } from './exportmodal.component';
+import { ExportModalComponent } from './exportmodal.component';
 import { ShareModalComponent } from './sharemodal.component';
 import { TournamentMapper } from '../../lib/tournament/mapper';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { IAlertType } from '../../shared/common/alert';
 import { UserRepository } from '../../lib/user/repository';
 import { User } from '../../lib/user';
+import { TournamentExportConfig } from '../../lib/pdf/repository';
 
 @Component({
     selector: 'app-tournament-admin',
@@ -213,30 +214,14 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         return exportSubjects;
     }
 
-    setExportSubjectsOnDevice(exportSubjects: number) {
-        localStorage.setItem('exportSubjects', JSON.stringify(exportSubjects));
-    }
-
     openModalExport() {
-        const activeModal = this.modalService.open(ExportModalComponent);
+        const activeModal = this.modalService.open(ExportModalComponent, { backdrop: 'static' });
+        activeModal.componentInstance.tournament = this.tournament;
         activeModal.componentInstance.subjects = this.getExportSubjectsFromDevice();
         activeModal.componentInstance.fieldDescription = this.getFieldDescription();
-        activeModal.result.then((exportAction: TournamentExportAction) => {
-            this.setExportSubjectsOnDevice(exportAction.subjects);
-            this.processing = true;
-            this.tournamentRepository.getExportUrl(this.tournament, exportAction)
-                .subscribe({
-                    next: (url: string) => {
-                        window.open(url);
-                    },
-                    error: (e) => {
-                        this.setAlert(IAlertType.Danger, 'het exporteren is niet gelukt');
-                        this.processing = false;
-                    },
-                    complete: () => this.processing = false
-                });
-        }, (reason) => {
-        });
+        activeModal.result.then((url: string) => {
+            window.open(url);
+        }, (reason) => { });
     }
 
     openModalName() {

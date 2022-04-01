@@ -343,6 +343,22 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         return this.getSelfRefereeAvailable() !== SelfReferee.Disabled;
     }
 
+    hasRoundNumbersChoice(): boolean {
+        return this.getUnbegunRoundNumbers().length > 1;
+    }
+
+    hasDifferentConfigs(): boolean {
+        return this.getUnbegunRoundNumbers().filter((roundNumber: RoundNumber): boolean => {
+            return roundNumber.getPlanningConfig() !== undefined;
+        }).length > 1;
+    }
+
+    getUnbegunRoundNumbers(): RoundNumber[] {
+        return this.structure.getRoundNumbers().filter((roundNumber: RoundNumber): boolean => {
+            return !roundNumber.hasBegun();
+        });
+    }
+
     save(): boolean {
         this.setAlert(IAlertType.Info, 'instellingen worden opgeslagen');
         this.processing = true;

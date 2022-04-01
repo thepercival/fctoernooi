@@ -1,0 +1,21 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-sm-12 col-md-10 col-lg-6 g-0 text-center">
+
+      <h1>betaling verwerken</h1>
+
+      <h2 *ngIf="processing">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
+
+      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+
+      <div *ngIf="!processing && nrOfCredits">
+        <button class="btn btn-outline-primary my-3" [routerLink]="['/admin/new']">toernooi aanmaken</button>
+        <br>
+        <button class="btn btn-outline-secondary" [routerLink]="['/user/profile']">credits bekijken</button>
+      </div>
+    </div>
+  </div>
+
+</div>
