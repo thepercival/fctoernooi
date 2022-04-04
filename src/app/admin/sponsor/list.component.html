@@ -8,7 +8,7 @@
           [icon]=" ['fas', 'info-circle' ]"></fa-icon>
       </h2>
       <button *ngIf="sponsors.length > 0" [routerLink]="['/public/liveboard', tournament.getId()]"
-        [queryParams]="{screenfilter:'sponsors'}" type="button" class="btn btn-secondary">
+        [queryParams]="{screenconfigname: screenConfig.name}" type="button" class="btn btn-secondary">
         <fa-icon [icon]="['fas', 'eye']"></fa-icon>
         <span> preview</span>
       </button>

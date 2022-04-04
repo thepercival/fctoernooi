@@ -35,15 +35,13 @@ import { HomeShellComponent } from './home/shell.component';
 import { TournamentShellRepository } from './lib/tournament/shell/repository';
 import { UserMapper } from './lib/user/mapper';
 import { LayoutModule } from './shared/layout/layout.module';
-import { facDarts, facTennis, facBadminton, facHockey, facSquash, facKorfball, facFavicon } from './lib/icons';
-import { SportIconCustomComponent } from './home/sport/customicon.component';
+import { facFavicon } from './shared/tournament/icon/icons';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     HomeShellComponent,
-    SportIconCustomComponent
   ],
   imports: [
     BrowserModule,
@@ -73,12 +71,7 @@ import { SportIconCustomComponent } from './home/sport/customicon.component';
 export class AppModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(faPlusCircle, faSpinner, faSearch, faAngleDoubleDown
-      , faUserShield, faUserFriends, faSave, faUserCircle,
-      facDarts, facTennis, facBadminton, facHockey, facSquash, facKorfball,
-      facFavicon
-    );
-    library.addIcons(
-      faBasketballBall, faGamepad, faFutbol, faChess, faTableTennis, faBaseballBall, faHockeyPuck, faVolleyballBall
+      , faUserShield, faUserFriends, faSave, faUserCircle, facFavicon
     );
   }
 }

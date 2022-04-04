@@ -1,6 +1,6 @@
 export interface TournamentShell {
     tournamentId: number;
-    sportCustomId: number;
+    sportName: string;
     name: string;
     startDateTime: Date;
     roles: number;

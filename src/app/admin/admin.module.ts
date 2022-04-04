@@ -73,7 +73,6 @@ import { GameBaseEditComponent } from './game/editbase.component';
 import { GameAddComponent } from './game/add.component';
 import { GameModeModalComponent } from './gameMode/modal.component';
 import { RecessAddComponent } from './startAndRecesses/addRecess.component';
-import { ShepherdService } from 'angular-shepherd';
 
 @NgModule({
   imports: [
@@ -129,7 +128,7 @@ import { ShepherdService } from 'angular-shepherd';
   providers: [
     CompetitionSportService,
     CSSService,
-    ScoreConfigService, ShepherdService
+    ScoreConfigService
   ]
 })
 export class AdminModule {

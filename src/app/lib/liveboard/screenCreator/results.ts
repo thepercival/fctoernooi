@@ -1,14 +1,15 @@
 import { AgainstGame, Game, GameOrder, RoundNumber, GameState, TogetherGame } from "ngx-sport";
+import { ScreenConfig } from "../screenConfig/json";
 import { ResultsScreen } from "../screens";
 
 export class ResultsScreenCreator {
 
-    constructor(protected maxLines: number) {
+    constructor(protected screenConfig: ScreenConfig, protected maxLines: number) {
     }
 
     getScreen(lastRoundNumber: RoundNumber): ResultsScreen {
 
-        const screen = new ResultsScreen(this.maxLines);
+        const screen = new ResultsScreen(this.screenConfig, this.maxLines);
         this.addGames(screen, lastRoundNumber);
         return screen;
     }

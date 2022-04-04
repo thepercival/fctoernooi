@@ -160,7 +160,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
             this.processing = false;
             return false;
         }
-        this.refereeRepository.editObject(jsonReferee, originalReferee, this.tournament)
+        this.refereeRepository.editObject(jsonReferee, originalReferee, this.tournament, this.invite)
             .subscribe({
                 next: () => {
                     this.navigateBack();

@@ -1,9 +1,10 @@
 import { CompetitionSport, NameService, Poule, RoundNumber, GameState } from "ngx-sport";
+import { ScreenConfig } from "../screenConfig/json";
 import { PoulesRankingScreen } from "../screens";
 
 export class PouleRankingScreensCreator {
 
-    constructor(protected maxLines: number) {
+    constructor(protected screenConfig: ScreenConfig, protected maxLines: number) {
     }
 
     getScreens(firstRoundNumber: RoundNumber): PoulesRankingScreen[] {
@@ -21,7 +22,7 @@ export class PouleRankingScreensCreator {
                 let pouleOne = poulesForRanking.shift();
                 while (pouleOne !== undefined) {
                     const pouleTwo = poulesForRanking.shift();
-                    const screen = new PoulesRankingScreen(competitionSport, pouleOne, pouleTwo, roundsDescription);
+                    const screen = new PoulesRankingScreen(this.screenConfig, competitionSport, pouleOne, pouleTwo, roundsDescription);
                     screens.push(screen);
                     pouleOne = poulesForRanking.shift();
                 }

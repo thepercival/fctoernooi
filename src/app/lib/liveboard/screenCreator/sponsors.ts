@@ -1,12 +1,13 @@
 
 import { Sponsor } from "../../sponsor";
+import { ScreenConfig } from "../screenConfig/json";
 import { SponsorScreen } from "../screens";
 
 export class SponsorScreensCreator {
     static readonly MaxNrOfSponsorScreens: number = 4;
     static readonly MaxNrOfSponsorsPerScreen: number = 4;
 
-    constructor() {
+    constructor(protected screenConfig: ScreenConfig) {
     }
 
     getScreens(sponsors: Sponsor[]): SponsorScreen[] {
@@ -17,7 +18,7 @@ export class SponsorScreensCreator {
         sponsors.forEach(sponsor => {
             let screen = this.getScreen(screens, sponsor.getScreenNr());
             if (screen === undefined && screens.length < SponsorScreensCreator.MaxNrOfSponsorScreens) {
-                screen = new SponsorScreen(sponsor.getScreenNr());
+                screen = new SponsorScreen(this.screenConfig, sponsor.getScreenNr());
                 screens.push(screen);
             }
             if (screen && screen.getSponsors().length < SponsorScreensCreator.MaxNrOfSponsorsPerScreen) {

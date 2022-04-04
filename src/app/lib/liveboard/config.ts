@@ -1,4 +1,4 @@
-export interface JsonScreenRefreshConfig {
+export interface JsonLiveBoardConfig {
     poulesRanking: number;
     endRanking: number;
     schedule: number;

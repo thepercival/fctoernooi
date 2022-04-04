@@ -1,21 +1,26 @@
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { CSSService } from '../../shared/common/cssservice';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { MyNavigation } from '../../shared/common/navigation';
 import { Liveboard } from '../../lib/liveboard';
-import { EndRankingScreen, GamesScreen, LiveboardScreen, PoulesRankingScreen, ResultsScreen, ScheduleScreen, SponsorScreen } from '../../lib/liveboard/screens';
+import { EndRankingScreen, GamesScreen, PoulesRankingScreen, ResultsScreen, ScheduleScreen, SponsorScreen } from '../../lib/liveboard/screens';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { LiveboardLink } from '../../lib/liveboard/link';
 import { NameService, CompetitorMap } from 'ngx-sport';
 import { IAlertType } from '../../shared/common/alert';
-import { JsonScreenRefreshConfig } from '../../lib/liveboard/screenRefreshConfig';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { ScreenRefreshConfigBackEnd } from '../../lib/liveboard/screenRefreshConfig/backend';
+import { FormBuilder } from '@angular/forms';
+import { ScreenConfigRepository } from '../../lib/liveboard/screenConfig/repository';
+import { ScreenConfig } from '../../lib/liveboard/screenConfig/json';
+import { ScreenConfigLocalBackEnd } from '../../lib/liveboard/screenConfig/localBackend';
+import { ScreenConfigName } from '../../lib/liveboard/screenConfig/name';
+import { ScreenConfigsModalComponent } from './screenconfigsmodal.component';
+import { forkJoin, Observable, of } from 'rxjs';
+import { SponsorMapper } from '../../lib/sponsor/mapper';
 
 @Component({
     selector: 'app-tournament-liveboard',
@@ -25,11 +30,9 @@ import { ScreenRefreshConfigBackEnd } from '../../lib/liveboard/screenRefreshCon
 export class LiveboardComponent extends TournamentComponent implements OnInit, OnDestroy {
     public activeScreen: SponsorScreen | ResultsScreen | ScheduleScreen | EndRankingScreen | PoulesRankingScreen | undefined;
     private screens: (SponsorScreen | ResultsScreen | ScheduleScreen | EndRankingScreen | PoulesRankingScreen)[] = [];
-    public refreshConfig: JsonScreenRefreshConfig;
+    public screenConfigs: ScreenConfig[] | undefined;
     public toggleProgress = false;
-    private screenfilter: string | undefined;
     public nameService!: NameService;
-    public refreshForm: FormGroup;
     public competitorMap!: CompetitorMap;
 
     constructor(
@@ -37,125 +40,82 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
-        private screenRefreshConfigBackEnd: ScreenRefreshConfigBackEnd,
+        private screenConfigRepository: ScreenConfigRepository,
+        private screenConfigLocalBackEnd: ScreenConfigLocalBackEnd,
         private globalEventsManager: GlobalEventsManager,
         public cssService: CSSService,
         private myNavigation: MyNavigation,
         private modalService: NgbModal,
-        fb: FormBuilder
+        private sponsorMapper: SponsorMapper
     ) {
         super(route, router, tournamentRepository, structureRepository);
-        this.refreshConfig = screenRefreshConfigBackEnd.get();
-        // voor elke optie een veld maken!!
-        this.refreshForm = fb.group({});
-
-        this.getJsonRefreshControlItems().forEach((item: JsonRefreshControlItem) => {
-            this.refreshForm.addControl(item.property, new FormControl());
-        });
     }
 
     ngOnInit() {
+        let screenConfigName: undefined | ScreenConfigName;
         this.route.queryParamMap.subscribe(params => {
-            const screenFilter: string | null = params.get('screenfilter');
-            if (screenFilter !== null) {
-                this.screenfilter = screenFilter;
+            const screenConfigNameParam: string | null = params.get('screenconfigname');
+            if (screenConfigNameParam !== null) {
+                screenConfigName = <ScreenConfigName>screenConfigNameParam;
             }
         });
-        this.initRefreshControls();
 
         super.myNgOnInit(() => {
-            this.processScreens();
+            this.getScreenConfigs(screenConfigName)
+                .subscribe({
+                    next: (screenConfigs: ScreenConfig[]) => {
+                        if (screenConfigs.length > 1 && this.screenConfigLocalBackEnd.firstTime(this.tournament)) {
+                            this.screenConfigLocalBackEnd.save(this.tournament);
+                            this.openConfigModal(screenConfigs);
+                        } else {
+                            console.log('processScreens');
+                            this.processScreens(screenConfigs);
+                        }
+                    },
+                    error: (e) => {
+                        this.setAlert(IAlertType.Danger, e); this.processing = false;
+                    }
+                });
         });
     }
 
-    public initRefreshControlItems(): void {
-        // apply on screen
+    protected getScreenConfigs(screenConfigName: ScreenConfigName | undefined): Observable<ScreenConfig[]> {
+        if (screenConfigName === undefined) {
+            return this.screenConfigRepository.getObjects(this.tournament);
+        }
+        return of([this.sponsorMapper.getDefaultScreenConfig()]);
     }
 
-    public getJsonRefreshControlItems(): JsonRefreshControlItem[] {
-        return [
-            {
-                property: 'poulesRanking',
-                description: 'poulestanden',
-                nrOfSeconds: this.refreshConfig.poulesRanking
-            },
-            {
-                property: 'endRanking',
-                description: 'eind rangschikking',
-                nrOfSeconds: this.refreshConfig.endRanking
-            },
-            {
-                property: 'schedule',
-                description: 'programma',
-                nrOfSeconds: this.refreshConfig.schedule
-            },
-            {
-                property: 'results',
-                description: 'uitslagen',
-                nrOfSeconds: this.refreshConfig.results
-            },
-            {
-                property: 'sponsors',
-                description: 'sponsoren',
-                nrOfSeconds: this.refreshConfig.sponsors
-            }
-        ];
-    }
-
-    protected initRefreshControls() {
-
-        this.getJsonRefreshControlItems().forEach((item: JsonRefreshControlItem) => {
-            const control = this.refreshForm.get(item.property);
-            if (control === null) {
-                return;
-            }
-            control.setValue(item.nrOfSeconds);
-        });
-    }
-
-    getRefreshRange(): number[] {
-        return [5, 10, 15, 20, 25, 30];
-    }
-
-    saveRefreshConfig(): JsonScreenRefreshConfig {
-        const json: JsonScreenRefreshConfig = {
-            poulesRanking: this.refreshForm.controls.poulesRanking.value,
-            endRanking: this.refreshForm.controls.endRanking.value,
-            schedule: this.refreshForm.controls.schedule.value,
-            results: this.refreshForm.controls.results.value,
-            sponsors: this.refreshForm.controls.sponsors.value
-        };
-        return json;
-    }
-
-    processScreens() {
+    processScreens(screenConfigs: ScreenConfig[]) {
         this.competitorMap = new CompetitorMap(this.tournament.getCompetitors());
         const link: LiveboardLink = { showIcon: false, tournamentId: this.tournament.getId(), link: 'wim' };
         this.globalEventsManager.toggleLiveboardIconInNavBar.emit(link);
         this.nameService = new NameService(this.competitorMap);
-        const liveBoard = new Liveboard();
-        this.screens = liveBoard.getScreens(this.tournament, this.structure, this.screenfilter);
+        const liveBoard = new Liveboard(screenConfigs);
+        this.screens = liveBoard.getScreens(this.tournament, this.structure);
+        this.screenConfigs = screenConfigs;
+        console.log(this.screens);
         if (this.screens.length > 0) {
-            this.executeScheduledTask();
+            this.executeScheduledTask(screenConfigs);
         } else {
             this.setAlert(IAlertType.Danger, 'voor dit toernooi zijn er geen schermen beschikbaar, pas eventueel de tijden aan');
         }
         this.processing = false;
     }
 
-    executeScheduledTask() {
+    executeScheduledTask(screenConfigs: ScreenConfig[]) {
         this.activeScreen = this.screens.shift();
         // this.processing = false;
         if (this.activeScreen === undefined) {
             this.processing = true;
-            this.getDataAndProcessScreens();
+            this.getDataAndProcessScreens(screenConfigs);
         } else {
             this.toggleProgress = !this.toggleProgress;
         }
     }
 
-    getDataAndProcessScreens() {
-        this.setData(this.tournament.getId(), () => { this.processScreens(); });
+    getDataAndProcessScreens(screenConfigs: ScreenConfig[]) {
+        this.setData(this.tournament.getId(), () => { this.processScreens(screenConfigs); });
     }
 
     ngOnDestroy() {
@@ -214,35 +174,39 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         return location.origin;
     }
 
-    public getRefreshAfterSeconds(activeScreen: SponsorScreen | ResultsScreen | ScheduleScreen | EndRankingScreen | PoulesRankingScreen): number {
-        if (activeScreen instanceof SponsorScreen) {
-            return this.refreshConfig.sponsors;
-        } else if (activeScreen instanceof ResultsScreen) {
-            return this.refreshConfig.results;
-        } else if (activeScreen instanceof ScheduleScreen) {
-            return this.refreshConfig.schedule;
-        } else if (activeScreen instanceof EndRankingScreen) {
-            return this.refreshConfig.endRanking;
-        }
-        return this.refreshConfig.poulesRanking;
+    openConfigModal(screenConfigs: ScreenConfig[]): void {
+        const activeModal = this.modalService.open(ScreenConfigsModalComponent, { backdrop: 'static' });
+        activeModal.componentInstance.screenConfigs = screenConfigs;
+        activeModal.result.then((screenConfigs: ScreenConfig[]) => {
+            // save to server and reload
+            this.save(screenConfigs);
+
+
+        }, (reason) => { });
     }
 
-    openRefreshModal(modalContent: TemplateRef<any>): void {
-        const activeModal = this.modalService.open(modalContent);
-        activeModal.result.then((newConfig: JsonScreenRefreshConfig) => {
-            this.screenRefreshConfigBackEnd.edit(newConfig);
-            this.refreshConfig = newConfig;
+    save(screenConfigs: ScreenConfig[]): boolean {
+        this.processing = true;
+        this.setAlert(IAlertType.Info, 'de sponsor wordt opgeslagen');
+
+        const reposUpdates: Observable<ScreenConfig>[] = screenConfigs.map((screenConfig: ScreenConfig) => {
+            if (screenConfig.id > 0) {
+                return this.screenConfigRepository.editObject(screenConfig, this.tournament);
+            }
+            return this.screenConfigRepository.createObject(screenConfig, this.tournament);
         });
+        forkJoin(reposUpdates).subscribe({
+            next: (results) => {
+                this.processScreens(screenConfigs);
+            },
+            complete: () => this.processing = false
+        });
+        return false;
     }
+
+
 
     navigateBack() {
         this.router.navigateByUrl(this.myNavigation.getPreviousUrl(''));
     }
 }
-
-interface JsonRefreshControlItem {
-    property: string;
-    description: string;
-    nrOfSeconds: number;
-}
-

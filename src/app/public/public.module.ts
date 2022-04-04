@@ -29,6 +29,7 @@ import { GamesComponent } from './games/view.component';
 import { TournamentModule } from '../shared/tournament/tournament.module';
 import { RankingComponent } from './ranking/view.component';
 import { RankingRoundComponent } from './ranking/round.component';
+import { ScreenConfigsModalComponent } from './liveboard/screenconfigsmodal.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -50,7 +51,8 @@ import { RankingRoundComponent } from './ranking/round.component';
     FilterComponent,
     ProgressComponent,
     RankingComponent,
-    RankingRoundComponent
+    RankingRoundComponent,
+    ScreenConfigsModalComponent
   ],
   providers: [
     CompetitionSportService,

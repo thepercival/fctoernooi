@@ -1,0 +1,31 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+        <fa-icon [icon]="['fas', 'cogs']"></fa-icon> livebord instellingen
+    </h4>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="activeModal.dismiss()"></button>
+</div>
+<div class="modal-body" [formGroup]="form">
+    <div class="row mb-3" *ngFor="let screenConfig of screenConfigs">
+
+        <label [for]="getNrOfSecondsId(screenConfig)"
+            class="col-5 col-form-label">{{getDescription(screenConfig)}}</label>
+
+        <div class="col-4 form-check form-switch">
+            <input type="checkbox" class=" mt-2 form-check-input" [formControlName]="getEnabledId(screenConfig)">
+        </div>
+
+
+        <div class="col-3">
+            <select *ngIf="getEnabled(screenConfig)" class="form-control"
+                [formControlName]="getNrOfSecondsId(screenConfig)" required>
+                <option *ngFor="let n of getRefreshRange()" [ngValue]="n">{{n}}</option>
+            </select>
+        </div>
+
+    </div>
+</div>
+<div class="modal-footer d-flex justify-content-reverse border-top-0">
+    <button type="button" class="btn btn-outline-primary" data-dismiss="modal"
+        (click)="activeModal.close(formToJson())">
+        opslaan</button>
+</div>

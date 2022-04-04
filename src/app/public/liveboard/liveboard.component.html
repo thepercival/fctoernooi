@@ -20,7 +20,7 @@
       </small>
     </h4>
     <!-- center -->
-    <div *ngIf="tournament">
+    <div *ngIf="tournament && screenConfigs">
       <h1 class="d-inline-block">
         <small>
           <app-sport-icon [competitionSports]="competition.getSports()"></app-sport-icon>
@@ -31,14 +31,14 @@
           <span [innerHTML]="activeScreen.getDescription() | keepHtml"></span>
         </small>
       </h1>
-      <app-progress *ngIf="activeScreen" class="d-inline-block" [toggleProgress]="toggleProgress"
-        [max]="getRefreshAfterSeconds(activeScreen)" (executeAtZero)="executeScheduledTask()">
+      <app-progress *ngIf="screenConfigs && activeScreen" class="d-inline-block" [toggleProgress]="toggleProgress"
+        [max]="activeScreen.getConfig().nrOfSeconds" (executeAtZero)="executeScheduledTask(screenConfigs)">
       </app-progress>
     </div>
 
     <!-- right -->
-    <div *ngIf="tournament">
-      <button (click)="openRefreshModal(refreshModal)" class="btn btn-outline-secondary me-3" type="button">
+    <div *ngIf="tournament && screenConfigs">
+      <button (click)="openConfigModal(screenConfigs)" class="btn btn-outline-secondary me-3" type="button">
         <fa-icon [icon]="['fas', 'cogs']"></fa-icon>
       </button>
       <button (click)="navigateBack()" class="btn btn-outline-secondary" type="button">
@@ -80,28 +80,3 @@
       </app-tournament-liveboard-sponsors>
     </div>
   </ng-container>
-
-  <ng-template #refreshModal let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title">
-        vernieuwen na <small>in seconden</small>
-      </h4>
-      <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
-    </div>
-    <div class="modal-body" [formGroup]="refreshForm">
-      <div class="row mb-3" *ngFor="let refreshControlItem of getJsonRefreshControlItems()">
-        <label [for]="refreshControlItem.property"
-          class="col-8 col-form-label">{{refreshControlItem.description}}</label>
-        <div class="col-4">
-          <select class="form-control" [formControlName]="refreshControlItem.property" required>
-            <option *ngFor="let n of getRefreshRange()" [ngValue]="n">{{n}}</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer d-flex justify-content-reverse border-top-0">
-      <button type="button" class="btn btn-outline-primary" data-dismiss="modal"
-        (click)="modal.close(saveRefreshConfig())">
-        opslaan</button>
-    </div>
-  </ng-template>

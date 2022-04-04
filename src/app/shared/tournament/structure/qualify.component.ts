@@ -3,7 +3,7 @@ import { HorizontalPoule, NameService, QualifyGroup, SingleQualifyRule, QualifyT
 
 import { IAlert, IAlertType } from '../../common/alert';
 import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
-import { facStructure } from '../icons';
+import { facStructure } from '../icon/icons';
 import { CSSService } from '../../common/cssservice';
 
 

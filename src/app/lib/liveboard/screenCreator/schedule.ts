@@ -1,13 +1,14 @@
 import { AgainstGame, Game, GameOrder, RoundNumber, GameState, TogetherGame } from "ngx-sport";
+import { ScreenConfig } from "../screenConfig/json";
 import { ScheduleScreen } from "../screens";
 export class ScheduleScreenCreator {
 
-    constructor(protected maxLines: number) {
+    constructor(protected screenConfig: ScreenConfig, protected maxLines: number) {
     }
 
     // minimal current batch and next batch
     getScreens(firstRoundNuber: RoundNumber): ScheduleScreen[] {
-        const scheduleScreen = new ScheduleScreen(this.maxLines);
+        const scheduleScreen = new ScheduleScreen(this.screenConfig, this.maxLines);
         this.fillScreens(scheduleScreen, firstRoundNuber);
         if (scheduleScreen.isEmpty()) {
             return [];

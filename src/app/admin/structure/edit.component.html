@@ -35,3 +35,19 @@
     <span> opslaan</span>
   </button>
 </div>
+
+<!-- do tour modal -->
+<ng-template #contenttour let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">korte uitleg</h4>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
+  </div>
+  <div class="modal-body">
+    <p>Wil je de eerste keer een korte uitleg voor meerdere ronden?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="modal.dismiss('close')">nee</button>
+    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="modal.close('yes')">ja, start korte
+      uitleg</button>
+  </div>
+</ng-template>

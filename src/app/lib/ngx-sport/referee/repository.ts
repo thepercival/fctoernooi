@@ -33,8 +33,9 @@ export class RefereeRepository extends APIRepository {
         );
     }
 
-    editObject(jsonReferee: JsonReferee, referee: Referee, tournament: Tournament): Observable<Referee> {
-        const url = this.getUrl(tournament) + '/' + referee.getId();
+    editObject(jsonReferee: JsonReferee, referee: Referee, tournament: Tournament, invite: boolean): Observable<Referee> {
+        const inviteSuffix = '/' + (invite ? 'true' : 'false');
+        const url = this.getUrl(tournament) + '/' + referee.getId() + inviteSuffix;
         return this.http.put<JsonReferee>(url, jsonReferee, this.getOptions()).pipe(
             map((jsonReferee: JsonReferee) => this.mapper.updateObject(jsonReferee, referee)),
             catchError((err: HttpErrorResponse) => this.handleError(err))

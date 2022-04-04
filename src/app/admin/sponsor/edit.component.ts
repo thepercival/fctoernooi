@@ -14,6 +14,9 @@ import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.
 import { SponsorScreensCreator } from '../../lib/liveboard/screenCreator/sponsors';
 import { SponsorScreen } from '../../lib/liveboard/screens';
 import { IAlertType } from '../../shared/common/alert';
+import { ScreenConfigName } from '../../lib/liveboard/screenConfig/name';
+import { ScreenConfig } from '../../lib/liveboard/screenConfig/json';
+import { SponsorMapper } from '../../lib/sponsor/mapper';
 
 @Component({
     selector: 'app-tournament-sponsor-edit',
@@ -32,6 +35,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
     newLogoUploaded: boolean;
     private readonly LOGO_ASPECTRATIO_THRESHOLD = 0.34;
     public originalSponsor: Sponsor | undefined;
+    private screenConfig: ScreenConfig;
 
     validations: SponsorValidations = {
         minlengthname: Sponsor.MIN_LENGTH_NAME,
@@ -41,6 +45,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
 
     constructor(
         private sponsorRepository: SponsorRepository,
+        private sponsorMapper: SponsorMapper,
         route: ActivatedRoute,
         router: Router,
         private modalService: NgbModal,
@@ -52,6 +57,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         super(route, router, tournamentRepository, structureRepository);
         this.logoInput = this.logoInputUpload;
         this.newLogoUploaded = false;
+        this.screenConfig = this.sponsorMapper.getDefaultScreenConfig();
 
         this.form = fb.group({
             name: ['', Validators.compose([
@@ -84,7 +90,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
     }
 
     private postInit(id: number | string) {
-        this.sponsorScreensCreator = new SponsorScreensCreator();
+        this.sponsorScreensCreator = new SponsorScreensCreator(this.screenConfig);
         this.originalSponsor = this.tournament.getSponsors().find(sponsorIt => sponsorIt.getId() === id);
 
         this.rangeScreenNrs = [];

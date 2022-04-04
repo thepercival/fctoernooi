@@ -3,9 +3,19 @@ import { AgainstGame, TogetherGame, Poule, GameMode, CompetitionSport } from 'ng
 import { Sponsor } from '../sponsor';
 import { VoetbalRange } from 'ngx-sport';
 import { BatchViewMode } from '../../public/liveboard/games.liveboard.component';
+import { ScreenConfig } from './screenConfig/json';
+import { ScreenConfigName } from './screenConfig/name';
 
 export class LiveboardScreen {
+
     protected description: string = '';
+
+    constructor(protected config: ScreenConfig) {
+    }
+
+    getConfig(): ScreenConfig {
+        return this.config;
+    }
 
     getDescription() {
         return this.description;
@@ -14,11 +24,12 @@ export class LiveboardScreen {
 
 export class PoulesRankingScreen extends LiveboardScreen {
     constructor(
+        config: ScreenConfig,
         private competitionSport: CompetitionSport,
         private pouleOne: Poule,
         private pouleTwo: Poule | undefined,
         roundsDescription: string) {
-        super();
+        super(config);
         this.description = 'stand - ' + roundsDescription;
     }
 
@@ -44,8 +55,8 @@ export class PoulesRankingScreen extends LiveboardScreen {
 }
 
 export class EndRankingScreen extends LiveboardScreen {
-    constructor(public range: VoetbalRange) {
-        super();
+    constructor(config: ScreenConfig, public range: VoetbalRange) {
+        super(config);
         this.description = 'eindstand';
     }
 }
@@ -55,8 +66,8 @@ export abstract class GamesScreen extends LiveboardScreen {
     protected usedGameModes: number = 0;
     protected games: (AgainstGame | TogetherGame)[] = [];
 
-    constructor(protected maxLines: number) {
-        super();
+    constructor(config: ScreenConfig, protected maxLines: number) {
+        super(config);
         // this.screenGames = { usedGameModes: 0, games: [] };
     }
 
@@ -105,8 +116,8 @@ export interface IGamesScreen {
 export class ScheduleScreen extends GamesScreen implements IGamesScreen {
     protected next: ScheduleScreen | undefined;
 
-    constructor(maxLines: number, protected previous?: ScheduleScreen) {
-        super(maxLines);
+    constructor(config: ScreenConfig, maxLines: number, protected previous?: ScheduleScreen) {
+        super(config, maxLines);
         this.setDescription('programma');
     }
 
@@ -141,15 +152,15 @@ export class ScheduleScreen extends GamesScreen implements IGamesScreen {
 
     createNext(): ScheduleScreen {
         this.setDescription(this.description + ' <span class="badge bg-info">deel 1</span>');
-        this.next = new ScheduleScreen(this.maxLines, this);
+        this.next = new ScheduleScreen(this.config, this.maxLines, this);
         this.next.setDescription(this.next.description + ' <span class="badge bg-info">deel 2</span>');
         return this.next;
     }
 }
 
 export class ResultsScreen extends GamesScreen implements IGamesScreen {
-    constructor(maxLines: number) {
-        super(maxLines);
+    constructor(config: ScreenConfig, maxLines: number) {
+        super(config, maxLines);
         this.description = 'uitslagen';
     }
 
@@ -165,8 +176,8 @@ export class ResultsScreen extends GamesScreen implements IGamesScreen {
 export class SponsorScreen extends LiveboardScreen {
     private sponsors: Sponsor[] = [];
 
-    constructor(private number: number) {
-        super();
+    constructor(config: ScreenConfig, private number: number) {
+        super(config);
         this.description = 'sponsoren';
     }
 

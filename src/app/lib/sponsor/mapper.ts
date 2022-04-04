@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { ScreenConfig } from '../liveboard/screenConfig/json';
+import { ScreenConfigName } from '../liveboard/screenConfig/name';
 
 import { Sponsor } from '../sponsor';
 import { Tournament } from '../tournament';
@@ -28,6 +30,15 @@ export class SponsorMapper {
             url: sponsor.getUrl(),
             logoUrl: sponsor.getLogoUrl(),
             screenNr: sponsor.getScreenNr()
+        };
+    }
+
+    getDefaultScreenConfig(): ScreenConfig {
+        return {
+            name: ScreenConfigName.Sponsors,
+            enabled: true,
+            nrOfSeconds: 15,
+            id: 0
         };
     }
 }

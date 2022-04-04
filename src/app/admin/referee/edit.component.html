@@ -65,7 +65,8 @@
             </button>
             <button *ngIf="emailaddressChanged() && form.controls.emailaddress.value" [disabled]="form.invalid"
               type="submit" class="btn btn-primary mt-4" (click)="invite=true">
-              <app-tournament-icon name="referee"></app-tournament-icon> toevoegen & uitnodigen
+              <app-tournament-icon name="referee"></app-tournament-icon> {{ originalReferee ? 'wijzigen' : 'toevoegen'}}
+              & uitnodigen
             </button>
           </div>
         </div>

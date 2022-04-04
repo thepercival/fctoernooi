@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt, faMedal, faSpinner,
-  faLevelUpAlt, faMinus, faPlus, faDoorClosed
+  faLevelUpAlt, faMinus, faPlus, faDoorClosed, faBaseballBall, faBasketballBall, faChess, faFutbol, faGamepad, faHockeyPuck, faTableTennis, faVolleyballBall
 } from '@fortawesome/free-solid-svg-icons';
 import { RoundNumberPlanningComponent } from './planning/roundnumber.component';
 import { PouleRankingModalComponent } from './poulerankingmodal/rankingmodal.component';
@@ -21,7 +21,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CompetitorChooseModalComponent } from './competitorchoosemodal/competitorchoosemodal.component';
 import { RouterModule } from '@angular/router';
 import { RankingRulesComponent } from './rankingrules/rankingrules.component';
-import { facStructure, facReferee, facScoreboard, facSoccerField } from './icons';
+import { facStructure, facReferee, facScoreboard, facSoccerField } from './icon/icons';
 import { CompetitionSportRouter } from './competitionSport.router';
 import { InfoModalComponent } from './infomodal/infomodal.component';
 import { AgainstQualifyInfoComponent } from './againstQualifyConfig/info.component';
@@ -30,6 +30,7 @@ import { PouleRankingComponent } from './ranking/poule.component';
 import { PouleRankingSportsComponent } from './ranking/poule/sports.component';
 import { PouleRankingAgainstComponent } from './ranking/poule/against.component';
 import { PouleRankingTogetherComponent } from './ranking/poule/together.component';
+import { facDarts, facTennis, facBadminton, facHockey, facSquash, facKorfball, facRugby } from './icon/sporticons';
 
 @NgModule({
   declarations: [
@@ -86,6 +87,10 @@ export class TournamentModule {
     library.addIcons(faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt,
       faMedal, faSpinner, faLevelUpAlt, faMinus, faDoorClosed, faPlus,
       facStructure, facReferee, facScoreboard, facSoccerField);
+    library.addIcons(
+      facDarts, facTennis, facBadminton, facHockey, facSquash, facKorfball, facRugby, // inline
+      faBasketballBall, faGamepad, faFutbol, faChess, faTableTennis, faBaseballBall, faHockeyPuck, faVolleyballBall // font awesome
+    );
     modalConfig.centered = true;
     modalConfig.scrollable = true;
     modalConfig.size = 'lg';

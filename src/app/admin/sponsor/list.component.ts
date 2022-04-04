@@ -11,6 +11,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { SponsorScreensCreator } from '../../lib/liveboard/screenCreator/sponsors';
 import { IAlertType } from '../../shared/common/alert';
+import { ScreenConfigName } from '../../lib/liveboard/screenConfig/name';
+import { ScreenConfig } from '../../lib/liveboard/screenConfig/json';
+import { SponsorMapper } from '../../lib/sponsor/mapper';
 
 
 @Component({
@@ -21,6 +24,7 @@ import { IAlertType } from '../../shared/common/alert';
 export class SponsorListComponent extends TournamentComponent implements OnInit {
   sponsors: Sponsor[] = [];
   sponsorScreensCreator!: SponsorScreensCreator;
+  public screenConfig: ScreenConfig;
 
   constructor(
     route: ActivatedRoute,
@@ -28,9 +32,11 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
     private modalService: NgbModal,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
-    private sponsorRepository: SponsorRepository
+    private sponsorRepository: SponsorRepository,
+    private sponsorMapper: SponsorMapper
   ) {
     super(route, router, tournamentRepository, sructureRepository);
+    this.screenConfig = this.sponsorMapper.getDefaultScreenConfig();
   }
 
   ngOnInit() {
@@ -39,7 +45,7 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
 
   initSponsors() {
     this.createSponsorsList();
-    this.sponsorScreensCreator = new SponsorScreensCreator();
+    this.sponsorScreensCreator = new SponsorScreensCreator(this.screenConfig);
     this.processing = false;
   }
 

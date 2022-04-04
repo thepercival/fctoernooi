@@ -1,9 +1,10 @@
 import { GameState, Structure } from "ngx-sport";
+import { ScreenConfig } from "../screenConfig/json";
 import { EndRankingScreen } from "../screens";
 
 export class EndRankingScreenCreator {
 
-    constructor(protected maxLines: number) {
+    constructor(protected screenConfig: ScreenConfig, protected maxLines: number) {
     }
 
     getScreens(structure: Structure): EndRankingScreen[] {
@@ -18,7 +19,7 @@ export class EndRankingScreenCreator {
         let currentRank = 1;
         while (currentRank <= nrOfItems) {
             const endRank = (currentRank - 1) + this.maxLines;
-            screens.push(new EndRankingScreen({ min: currentRank, max: endRank }));
+            screens.push(new EndRankingScreen(this.screenConfig, { min: currentRank, max: endRank }));
             currentRank = endRank + 1;
         }
         return screens;
