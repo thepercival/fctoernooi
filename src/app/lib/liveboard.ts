@@ -52,7 +52,7 @@ export class Liveboard {
 
     protected getResultsScreen(structure: Structure): ResultsScreen | undefined {
         const screenConfig = this.getScreenConfig(ScreenConfigName.Results);
-        if (screenConfig === undefined) {
+        if (screenConfig === undefined || !screenConfig.enabled) {
             return undefined;
         }
         const resultsScreenCreator = new ResultsScreenCreator(screenConfig, Liveboard.MaxScreenLines);
@@ -62,7 +62,7 @@ export class Liveboard {
 
     protected getScheduleScreens(structure: Structure): ScheduleScreen[] {
         const screenConfig = this.getScreenConfig(ScreenConfigName.Schedule);
-        if (screenConfig === undefined) {
+        if (screenConfig === undefined || !screenConfig.enabled) {
             return [];
         }
         const scheduleScreenCreator = new ScheduleScreenCreator(screenConfig, Liveboard.MaxScreenLines);
@@ -71,7 +71,7 @@ export class Liveboard {
 
     protected getPouleRankingScreens(structure: Structure): PoulesRankingScreen[] {
         const screenConfig = this.getScreenConfig(ScreenConfigName.PoulesRanking);
-        if (screenConfig === undefined) {
+        if (screenConfig === undefined || !screenConfig.enabled) {
             return [];
         }
         const pouleRankingScreensCreator = new PouleRankingScreensCreator(screenConfig, Liveboard.MaxScreenLines);
@@ -80,7 +80,7 @@ export class Liveboard {
 
     protected getEndRankingScreens(structure: Structure): EndRankingScreen[] {
         const screenConfig = this.getScreenConfig(ScreenConfigName.EndRanking);
-        if (screenConfig === undefined) {
+        if (screenConfig === undefined || !screenConfig.enabled) {
             return [];
         }
         const endRankingScreenCreator = new EndRankingScreenCreator(screenConfig, Liveboard.MaxScreenLines);
@@ -89,7 +89,7 @@ export class Liveboard {
 
     protected getSponsorScreens(tournament: Tournament): SponsorScreen[] {
         const screenConfig = this.getScreenConfig(ScreenConfigName.Sponsors);
-        if (screenConfig === undefined) {
+        if (screenConfig === undefined || !screenConfig.enabled) {
             return [];
         }
         const sponsorScreensCreator = new SponsorScreensCreator(screenConfig);

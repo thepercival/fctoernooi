@@ -1,8 +1,7 @@
 <div class="modal-header">
     <h4 class="modal-title">
-        <fa-icon [icon]="['fas', 'cogs']"></fa-icon> livebord instellingen
+        <fa-icon [icon]="['fas', 'cogs']"></fa-icon> live scorebord instellingen
     </h4>
-    <button type="button" class="btn-close" aria-label="sluiten" (click)="activeModal.dismiss()"></button>
 </div>
 <div class="modal-body" [formGroup]="form">
     <div class="row mb-3" *ngFor="let screenConfig of screenConfigs">
@@ -23,9 +22,10 @@
         </div>
 
     </div>
+    <ngb-alert class="mb-0" [type]="'info'">deze instellingen gelden alleen voor dit apparaat</ngb-alert>
 </div>
 <div class="modal-footer d-flex justify-content-reverse border-top-0">
-    <button type="button" class="btn btn-outline-primary" data-dismiss="modal"
+    <button type="button" class="btn btn-outline-primary" data-dismiss="modal" [disabled]="!hasEnabledScreenConfig()"
         (click)="activeModal.close(formToJson())">
         opslaan</button>
 </div>

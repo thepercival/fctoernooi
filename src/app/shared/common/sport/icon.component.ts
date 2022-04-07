@@ -44,7 +44,8 @@ export class SportIconComponent implements OnInit {
             || customId === CustomSport.Squash
             || customId === CustomSport.Padel
             || customId === CustomSport.Hockey
-            || customId === CustomSport.Korfball) {
+            || customId === CustomSport.Korfball
+            || customId === CustomSport.Rugby) {
             return <IconPrefix>'fac';
         }
         return 'fas';
@@ -69,6 +70,7 @@ export class SportIconComponent implements OnInit {
             case CustomSport.Squash: { return <IconName>'squash'; }
             case CustomSport.Volleyball: { return 'volleyball-ball'; }
             case CustomSport.IceHockey: { return 'hockey-puck'; }
+            case CustomSport.Rugby: { return <IconName>'rugby'; }
         }
         return undefined;
     }

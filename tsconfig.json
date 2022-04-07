@@ -11,9 +11,9 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2017",
+    "target": "es2020",
     "lib": [
-      "es2018",
+      "es2020",
       "dom"
     ],
     "typeRoots": [

@@ -92,7 +92,7 @@
                     <div class="col-5">
                         <div class="form-control form-check form-switch">
                             <input type="checkbox" class="form-check-input" id="selfReferee"
-                                formControlName="selfReferee">
+                                formControlName="selfReferee" (ngModelChange)="changeSelfReferee($event)">
                             <label class="form-check-label" for="selfReferee"></label>
                         </div>
                     </div>
@@ -108,6 +108,9 @@
                         </div>
                     </div>
                 </div>
+                <ngb-alert class="mb-0" *ngIf="showNrOfBatchGamesAlert" [type]="'info'"><span class="fw-bold">Let op:
+                    </span>"deelnemers zijn scheidsrechter" bepaalt onder andere het aantal tegelijk
+                    te spelen wedstrijden</ngb-alert>
                 <div class="row mb-3">
                     <label for="manual" class="col-7 col-form-label pointer">handmatig wedstrijden aanpassen</label>
                     <div class="col-5">

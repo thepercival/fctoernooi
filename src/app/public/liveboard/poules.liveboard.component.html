@@ -27,14 +27,17 @@
     <tbody>
       <ng-template ngFor let-rankingItem [ngForOf]="getRankingItems(poule)">
         <tr>
-          <td nowrap class="text-end">
+          <td class="text-end">
             <span
-              class="badge badge-rank {{cssService.getQualifyPlace(poule.getPlace(rankingItem.getUniqueRank()))}}">{{rankingItem.getUniqueRank()}}</span>
+              class="badge badge-rank py-1 px-2 {{cssService.getQualifyPlace(poule.getPlace(rankingItem.getUniqueRank()))}}">{{rankingItem.getUniqueRank()}}</span>
           </td>
-          <td class="text-nowrap">{{nameService.getPlaceFromName(rankingItem.getPerformance().getPlace(), true)}}</td>
+          <td class="text-nowrap">
+            <span
+              [innerHtml]="nameService.getPlaceFromName(rankingItem.getPerformance().getPlace(), true) | keepHtml"></span>
+          </td>
           <td class="text-end">{{rankingItem.getPerformance().getGames()}}</td>
           <td class="text-end">{{rankingItem.getPerformance().getPoints()}}</td>
-          <td *ngIf="isAgainstSportVariant()" nowrap class="text-center unitdiff">
+          <td *ngIf="isAgainstSportVariant()" class="text-center text-nowrap unitdiff">
             <span>{{rankingItem.getPerformance().getDiff() > 0 ? '+' : ''}}{{rankingItem.getPerformance().getDiff()}}
             </span>
             <span class="d-none d-xl-inline">

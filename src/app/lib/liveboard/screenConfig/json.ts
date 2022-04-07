@@ -1,7 +1,6 @@
-import { JsonIdentifiable } from "ngx-sport";
 import { ScreenConfigName } from "./name";
 
-export interface ScreenConfig extends JsonIdentifiable {
+export interface ScreenConfig {
     name: ScreenConfigName;
     enabled: boolean;
     nrOfSeconds: number;

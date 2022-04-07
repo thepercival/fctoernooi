@@ -53,6 +53,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     // gameModes: GameMode[] = [GameMode.Against, GameMode.Together];
     validations: PlanningConfigValidations = { minMinutes: 1, maxMinutes: 10080 };
     // gameAmountRange: VoetbalRange | undefined;
+    public showNrOfBatchGamesAlert = false;
 
     @ViewChild('updateDataAlert', { static: false }) updateDataAlert!: NgbAlert;
     updateDataMsg: string | undefined = '';
@@ -214,6 +215,15 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         if (this.form.controls.manual.value) {
             this.openInfoModal('handmatig aanpassen', 'warning-modal', modalContent);
         }
+    }
+
+    changeSelfReferee(selfReferee: boolean) {
+        console.log(selfReferee);
+        const shownNrOfBatchGamesAlert = localStorage.getItem('shownNrOfBatchGamesAlert');
+        if (shownNrOfBatchGamesAlert === null) {
+            localStorage.setItem('shownNrOfBatchGamesAlert', '1');
+        }
+        this.showNrOfBatchGamesAlert = shownNrOfBatchGamesAlert === null && selfReferee;
     }
 
     openInfoModal(header: string, windowClass: string, modalContent: TemplateRef<any>) {

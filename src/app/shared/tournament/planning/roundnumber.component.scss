@@ -1,4 +1,5 @@
-.table th, .table td {
+.table th,
+.table td {
     padding-left: 0.25rem;
     padding-right: 0.25rem;
     padding-top: 0.75rem;
@@ -9,6 +10,9 @@ table.noborder td {
     border: 0;
 }
 
+.fs-custom {
+    font-size: 80%;
+}
 
 .card-header-rules {
     margin-top: -8px;

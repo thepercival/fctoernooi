@@ -12,7 +12,8 @@
         <tbody>
             <ng-template ngFor let-competitorListItem [ngForOf]="competitorListItems">
                 <tr *ngIf="competitorListItem.competitor">
-                    <td>{{competitorListItem.placeName}}</td>
+                    <td>
+                        <span [innerHtml]="competitorListItem.placeName"></span>
                     <td>
                         {{competitorListItem.competitor.getName()}}
                     </td>

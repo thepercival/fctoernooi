@@ -71,7 +71,8 @@
     <div class="col-9 col-sm-6">
       <select class="form-control" formControlName="refereePlace">
         <option *ngFor="let refereePlace of getRefereePlaces()" [ngValue]="refereePlace">
-          {{nameService.getPlaceFromName(refereePlace, true, true)}}</option>
+          <span [innerHtml]="nameService.getPlaceFromName(refereePlace, true, true) | keepHtml"></span>
+        </option>
       </select>
     </div>
   </div>

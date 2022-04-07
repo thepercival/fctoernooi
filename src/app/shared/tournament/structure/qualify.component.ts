@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { HorizontalPoule, NameService, QualifyGroup, SingleQualifyRule, QualifyTarget, Round, RoundNumber, StructureEditor, CompetitorMap } from 'ngx-sport';
+import { NameService, QualifyGroup, SingleQualifyRule, QualifyTarget, Round, StructureEditor } from 'ngx-sport';
 
 import { IAlert, IAlertType } from '../../common/alert';
 import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
 import { facStructure } from '../icon/icons';
 import { CSSService } from '../../common/cssservice';
+import { StructureAction, StructureActionName } from '../../../admin/structure/edit.component';
 
 
 @Component({
@@ -15,8 +16,9 @@ import { CSSService } from '../../common/cssservice';
 export class StructureQualifyComponent {
     @Input() structureEditor!: StructureEditor;
     @Input() parentRound!: Round;
-    @Output() roundNumberChanged = new EventEmitter<RoundNumber>();
+    @Output() addAction = new EventEmitter<StructureAction>();
     @Input() nameService!: NameService;
+    @Input() lastAction: StructureAction | undefined;
     alert: IAlert | undefined;
     public targetCollapsed: TargetMap = {};
 
@@ -45,7 +47,10 @@ export class StructureQualifyComponent {
                 this.targetCollapsed[target] = true;
             }
             this.nameService.resetStructure();
-            this.roundNumberChanged.emit(this.parentRound.getNumber());
+            this.addAction.emit({
+                path: this.parentRound.getStructurePathNode(),
+                name: StructureActionName.RemoveQualifier,
+            });
         } catch (e: any) {
             this.setAlert(IAlertType.Danger, e.message);
         }
@@ -80,14 +85,30 @@ export class StructureQualifyComponent {
     addQualifier(target: QualifyTarget) {
         this.resetAlert();
         try {
-            if (this.parentRound.getQualifyGroups(target).length === 0) {
+            let initialMaxNrOfPoulePlaces;
+            let path;
+            let borderQualifyGroup = this.parentRound.getBorderQualifyGroup(target);
+            if (borderQualifyGroup === undefined) {
                 const minNrOfPlacesPerPoule = this.structureEditor.getMinPlacesPerPouleSmall();
+                initialMaxNrOfPoulePlaces = minNrOfPlacesPerPoule;
                 this.structureEditor.addChildRound(this.parentRound, target, [minNrOfPlacesPerPoule]);
+                path = this.parentRound.getBorderQualifyGroup(target).getChildRound().getStructurePathNode();
             } else {
-                this.structureEditor.addQualifiers(this.parentRound, target, 1);
+                path = borderQualifyGroup.getChildRound().getStructurePathNode();
+                if (this.lastAction && this.lastAction.path.pathToString() === path.pathToString()
+                    && this.lastAction.name === StructureActionName.AddQualifier) {
+                    initialMaxNrOfPoulePlaces = this.lastAction.initialMaxNrOfPoulePlaces;
+                } else {
+                    initialMaxNrOfPoulePlaces = borderQualifyGroup.getChildRound().getFirstPoule().getPlaces().length;
+                }
+                this.structureEditor.addQualifiers(this.parentRound, target, 1, initialMaxNrOfPoulePlaces);
             }
             this.nameService.resetStructure();
-            this.roundNumberChanged.emit(this.parentRound.getNumber());
+            this.addAction.emit({
+                path,
+                name: StructureActionName.AddQualifier,
+                initialMaxNrOfPoulePlaces
+            });
         } catch (e: any) {
             this.setAlert(IAlertType.Danger, e.message);
         }
@@ -98,7 +119,10 @@ export class StructureQualifyComponent {
         try {
             this.structureEditor.splitQualifyGroupFrom(singleRule.getGroup(), singleRule);
             this.nameService.resetStructure();
-            this.roundNumberChanged.emit(this.parentRound.getNumber());
+            this.addAction.emit({
+                path: this.parentRound.getStructurePathNode(),
+                name: StructureActionName.SplitQualifyGroupsFrom
+            });
         } catch (e: any) {
             this.setAlert(IAlertType.Danger, e.message);
         }
@@ -113,7 +137,10 @@ export class StructureQualifyComponent {
         try {
             this.structureEditor.mergeQualifyGroups(group, next);
             this.nameService.resetStructure();
-            this.roundNumberChanged.emit(this.parentRound.getNumber());
+            this.addAction.emit({
+                path: this.parentRound.getStructurePathNode(),
+                name: StructureActionName.MergeQualifyGroupWithNext
+            });
         } catch (e: any) {
             this.setAlert(IAlertType.Danger, e.message);
         }

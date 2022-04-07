@@ -116,6 +116,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
 
   removeReferee(referee: Referee) {
     this.processing = true;
+    this.resetAlert();
     this.refereeRepository.removeObject(referee, this.tournament)
       .subscribe({
         next: () => {

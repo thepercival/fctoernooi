@@ -22,25 +22,23 @@
             {{nameService.getPouleName( poule, round.isRoot() && round.getPoules().length <= 2)}} </li>
           <li *ngFor="let place of poule.getPlaces();"
             class="list-group-item px-2 py-2 place-list-item pointer {{cssService.getQualifyPlace(place)}}"
-            placement="top" ngbPopover="{{nameService.getPlaceFromName(place,true,true)}}">
-            <span
-              [ngClass]="{'favitem': isFavorite(nameService.getCompetitorMap()?.getCompetitor(place)) }">{{nameService.getPlaceFromName(place,
-              false)}}</span>
+            placement="top" [ngbPopover]="longName" (click)="setPopoverPlace(place)">
+            <span [ngClass]="{'favitem': isFavorite(nameService.getCompetitorMap()?.getCompetitor(place)) }"
+              [innerHtml]="nameService.getPlaceFromName(place,false) | keepHtml"></span>
           </li>
         </ul>
       </div>
     </div>
   </div>
   <app-tournament-structurequalify *ngIf="editable" [parentRound]="round" [nameService]="nameService"
-    [structureEditor]="structureEditor" (roundNumberChanged)="roundNumberChanged.emit($event)">
+    [structureEditor]="structureEditor" (addAction)="addAction.emit($event)" [lastAction]="lastAction">
   </app-tournament-structurequalify>
 
   <div class="d-flex align-items-stretch text-center">
     <app-tournament-structureround *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed(); first as first"
       class="align-self-stretch flex-wrap mb-2" [round]="qualifyGroup.getChildRound()"
       [editable]="editable && !round.hasBegun()" [favorites]="favorites" [first]="first"
-      [structureEditor]="structureEditor" [nameService]="nameService"
-      (roundNumberChanged)="roundNumberChanged.emit($event)">
+      [structureEditor]="structureEditor" [nameService]="nameService" (addAction)="addAction.emit($event)">
     </app-tournament-structureround>
   </div>
   <div *ngIf="!round.isRoot() && round.getNrOfPlaces() === MinPlacesPerPoule">
@@ -57,3 +55,6 @@
     </ngb-alert>
   </div>
 </div>
+
+<ng-template #longName><span *ngIf="popoverPlace"
+    [innerHtml]="nameService.getPlaceFromName(popoverPlace,true, true) | keepHtml"></span></ng-template>

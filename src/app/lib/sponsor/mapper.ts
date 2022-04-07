@@ -37,8 +37,7 @@ export class SponsorMapper {
         return {
             name: ScreenConfigName.Sponsors,
             enabled: true,
-            nrOfSeconds: 15,
-            id: 0
+            nrOfSeconds: 15
         };
     }
 }

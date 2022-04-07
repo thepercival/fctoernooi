@@ -2,17 +2,24 @@
   <div class="col-sm-10 col-md-10 col-lg-6">
     <app-tournament-title [tournament]="tournament">
     </app-tournament-title>
-    <div class="d-flex justify-content-between me-1">
-      <h2 (click)="openHelpModal(contentInfo)" class="pointer me-auto">
-        <app-tournament-icon name="referee"></app-tournament-icon> scheidsrechters <fa-icon class="text-info"
-          [icon]=" ['fas', 'info-circle' ]"></fa-icon>
+    <div class="d-flex justify-content-between pointer me-1" (click)="openHelpModal(contentInfo)">
+      <h2>
+        <app-tournament-icon name="referee"></app-tournament-icon> scheidsrechters
       </h2>
+      <button type="button" class="btn btn-outline-info">
+        info<span class="d-none d-sm-inline"></span>
+        <fa-icon class="text-info ms-1" [icon]=" ['fas', 'info-circle' ]"></fa-icon>
+      </button>
     </div>
     <h2 *ngIf="processing" class="text-center">
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
+    <ngb-alert class="mb-0" *ngIf="!processing && competition.getReferees().length === 0" [type]="'info'"><span
+        class="fw-bold">Let op:
+      </span>Het aantal scheidsrechters bepaalt onder andere het aantal tegelijk
+      te spelen wedstrijden.</ngb-alert>
     <ngb-alert *ngIf="alert" [type]="alert.type">{{alert.message}}</ngb-alert>
-    <table *ngIf="!processing" class="table">
+    <table *ngIf="!processing" class="table mt-3">
       <thead>
         <tr>
           <th></th>
@@ -85,6 +92,11 @@
       Onder <button type="submit" *ngIf="!hasBegun" class="btn btn-secondary"
         (click)="activeModal.close('linkToPlanningConfig')">plannings-instellingen</button> kun je
       "deelnemers zijn scheidsrechter " instellen.
+    </li>
+    <li class="list-group-item bg-warning border-info">
+      <span class="fw-bold">Let op: </span>Het aantal scheidsrechters bepaalt onder andere het aantal tegelijk
+      te spelen
+      wedstrijden.
     </li>
   </ul>
 </ng-template>

@@ -26,6 +26,7 @@ export class TranslateService {
             case CustomSport.Shuffleboard: { return 'sjoelen'; }
             case CustomSport.Jass: { return 'klaverjassen'; }
             case CustomSport.Padel: { return 'padel'; }
+            case CustomSport.Rugby: { return 'rugby'; }
         }
         return sport.getName();
     }

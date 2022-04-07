@@ -39,7 +39,8 @@
             </td>
             <td class="text-break ps-0"
                 [ngClass]="{ 'favitem': favorites.hasCompetitor(competitorMap.getCompetitor(sportRankingItem.getPlaceLocation())) }">
-                {{nameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true)}}
+                <span
+                    [innerHtml]="nameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true, true) | keepHtml"></span>
             </td>
             <td *ngFor="let gameRound of getGameRounds()" class="text-end ps-0 {{viewPortManager.getClass(gameRound)}}">
                 {{getScore(sportRankingItem.getPlaceLocation(), gameRound )}}</td>

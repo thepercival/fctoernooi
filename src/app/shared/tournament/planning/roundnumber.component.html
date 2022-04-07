@@ -112,17 +112,19 @@
           </tr>
           <tr [ngClass]="{ 'table-light': (gmData.game.getBatchNr() % 2) === 0 && gameOrder === OrderByDate }">
             <!-- poule -->
+            <!-- no popover-->
             <td *ngIf="!gmData.hasPopover" class="text-center">
               <span
-                class="badge badge-rank {{cssService.getQualifyRound(gmData.poule.round)}}">{{gmData.poule.name}}</span>
+                class="badge badge-rank fs-custom fw-normal {{cssService.getQualifyRound(gmData.poule.round)}}">{{gmData.poule.name}}</span>
             </td>
+            <!-- popover with ranking -->
             <td *ngIf="gmData.hasPopover && gmData.poule.needsRanking" class="text-center">
-              <button
-                class="btn btn-outline-secondary btn-sm {{cssService.getQualifyRound(gmData.poule.round,'btn-outline-info')}}"
+              <button class="btn btn-sm {{cssService.getQualifyRound(gmData.poule.round,'btn-outline-info')}}"
                 (click)="openModalPouleRank(gmData.game.getPoule())">
                 <span>{{gmData.poule.name}}</span>
               </button>
             </td>
+            <!-- popover no ranking -->
             <td *ngIf="gmData.hasPopover && !gmData.poule.needsRanking" class="text-center">
               <button class="btn btn-sm {{cssService.getQualifyRound(gmData.poule.round,'btn-outline-info')}}"
                 placement="right" [ngbPopover]="getGameQualificationDescription(gmData.game)">
@@ -164,7 +166,7 @@
 <ng-template #againstGamePlacesCell let-gmData>
   <!-- homePlaces -->
   <td class="text-end text-break" [ngClass]="{'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, Home) }">
-    <span>{{nameService.getPlacesFromName(gmData.game.getHomePlaces(),true,true)}}</span>
+    <span [innerHTML]="nameService.getPlacesFromName(gmData.game.getHomePlaces(),true,true) | keepHtml"></span>
   </td>
   <!-- score -->
   <td class="text-center text-nowrap">
@@ -196,7 +198,7 @@
   </td>
   <!-- awayPlaces -->
   <td class="text-break" [ngClass]="{ 'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, Away) }">
-    <span>{{nameService.getPlacesFromName(gmData.game.getAwayPlaces(),true,true)}}</span>
+    <span [innerHTML]="nameService.getPlacesFromName(gmData.game.getAwayPlaces(),true,true) | keepHtml"></span>
   </td>
 </ng-template>
 
@@ -215,7 +217,8 @@
         <div *ngFor="let gamePlace of gmData.game.getTogetherPlaces()" class="btn-group" role="group">
           <div class="list-group-item border-start-0"
             [ngClass]="{'favitem': favorites?.hasTogetherGameCompetitor(gmData.game) }">
-            {{nameService.getPlaceFromName(gamePlace.getPlace(),true,true)}}</div>
+            <span [innerHtml]="nameService.getPlaceFromName(gamePlace.getPlace(),true,true) | keepHtml"></span>
+          </div>
           <button class="btn btn-sm border border-{{getTogetherScoreBtnBorderClass(gamePlace)}} me-1"
             (click)="linkToGameEdit(gmData.game)">
             <fa-icon *ngIf="!isFinished(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
@@ -229,7 +232,7 @@
         <ul *ngFor="let gamePlace of gmData.game.getTogetherPlaces()" class="list-group list-group-horizontal">
           <li [ngClass]="{'favitem': favorites?.hasTogetherGameCompetitor(gmData.game) }"
             class="list-group-item border-start-0">
-            {{nameService.getPlaceFromName(gamePlace.getPlace(),true,true)}}
+            <span [innerHtml]="nameService.getPlaceFromName(gamePlace.getPlace(),true,true) | keepHtml"></span>
           </li>
           <li *ngIf="isFinished(gmData.game)" class="list-group-item me-1">
             {{getTogetherScore(gamePlace)}}

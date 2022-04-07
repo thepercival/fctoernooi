@@ -4,7 +4,7 @@
   </button>
 </td>
 <td>
-  <span>{{nameService.getPlaceFromName(placeCompetitor.place, false)}}</span>
+  <span [innerHtml]="nameService.getPlaceFromName(placeCompetitor.place, false) | keepHtml"></span>
 </td>
 <td *ngIf="placeCompetitor.competitor">
   <div class="d-flex justify-content-between">

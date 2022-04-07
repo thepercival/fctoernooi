@@ -46,7 +46,8 @@
             </td>
             <td class="text-break ps-0"
                 [ngClass]="{ 'favitem': favorites.hasCompetitor(competitorMap.getCompetitor(roundRankingItem.getPlace())) }">
-                {{nameService.getPlaceFromName(roundRankingItem.getPlace(), true)}}
+                <span
+                    [innerHtml]="nameService.getPlaceFromName(roundRankingItem.getPlace(), true, true) | keepHtml"></span>
             </td>
             <td class="ps-0">{{roundRankingItem.getCumulativePerformance().getGames()}}</td>
             <td *ngFor="let competitionSport of competitionSports; let counter = index;"

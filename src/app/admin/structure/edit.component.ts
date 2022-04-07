@@ -19,20 +19,18 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { cloneDeep } from 'lodash';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { IAlertType } from '../../shared/common/alert';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
+import { StructurePathNode } from 'ngx-sport/src/structure/path';
 @Component({
   selector: 'app-tournament-structure',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.css'],
 })
 export class StructureEditComponent extends TournamentComponent implements OnInit {
-  changedRoundNumber: RoundNumber | undefined;
+  lastAction: StructureAction | undefined;
+  actions: StructureAction[] = [];
   originalCompetitors!: Competitor[];
   clonedStructure!: Structure;
   public nameService!: NameService;
-
-  @ViewChild('contenttour', { static: true }) private templateRef: TemplateRef<any> | undefined;
 
   constructor(
     route: ActivatedRoute,
@@ -43,8 +41,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     private planningRepository: PlanningRepository,
     private competitionSportService: CompetitionSportService,
     private myNavigation: MyNavigation,
-    private defaultService: DefaultService,
-    private modalService: NgbModal,
+    private defaultService: DefaultService
   ) {
     super(route, router, tournamentRepository, structureRepository);
   }
@@ -59,7 +56,6 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
           next: (structure: Structure) => {
             this.structure = structure;
             this.clonedStructure = this.createClonedStructure(this.structure);
-            this.askForTour();
             this.processing = false;
           },
           error: (e: string) => {
@@ -74,24 +70,6 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
         });
     }, noStructure);
   }
-
-  askForTour() {
-    if (localStorage.getItem('structureeditortour') === null && this.templateRef &&
-      this.structure && this.structure.getRootRound().getNrOfPlaces() === 5
-      && this.structure.getRootRound().getPoules().length === 1) {
-      localStorage.setItem('structureeditortour', JSON.stringify(true));
-      const activeModal = this.modalService.open(this.templateRef, { scrollable: false });
-      activeModal.result.then((result) => {
-        // per tournament eerste keer vragen
-        // 1 ronde
-        // 2 ronden met kruisfinales
-        // 2 ronden zonder kruisfinales
-      }, (reason) => {
-      });
-
-    }
-  }
-
 
   protected getPlaceRanges(): PlaceRanges {
     const sportVariants = this.competition.getSportVariants();
@@ -112,13 +90,18 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     return cloneDeep(structure);
   }
 
-  setChangedRoundNumber(changedRoundNumber: RoundNumber) {
-    if (this.changedRoundNumber !== undefined && changedRoundNumber.getNumber() > this.changedRoundNumber.getNumber()) {
-      return;
-    }
-    this.changedRoundNumber = changedRoundNumber;
+  addAction(structureAction: StructureAction) {
+    this.lastAction = structureAction;
+    this.actions.push(structureAction);
+    //console.log(this.actions);
     this.resetAlert();
   }
+
+  // getLowestRoundNumberFromActions(structurePathNode: StructurePathNode): number {
+  //   if( this.actions)
+  //   return Math.min(...arrayOfNumbers);
+  //   return structurePathNode.getLevel();
+  // }
 
   saveStructure() {
     this.processing = true;
@@ -127,7 +110,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     this.structureRepository.editObject(this.clonedStructure, this.tournament)
       .subscribe({
         next: (structureRes: Structure) => {
-          this.syncPlanning(structureRes, 1/*this.changedRoundNumber.getNumber()*/); // should always be first roundnumber
+          this.syncPlanning(structureRes, 1/*this.getLowestLevelAction()*/); // should always be first roundnumber
         },
         error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
       });
@@ -135,7 +118,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
 
   completeSave(structureRes: Structure) {
     this.clonedStructure = this.createClonedStructure(structureRes);
-    this.changedRoundNumber = undefined;
+    this.actions = [];
     this.processing = false;
     this.setAlert(IAlertType.Success, 'de wijzigingen zijn opgeslagen');
   }
@@ -156,4 +139,17 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   navigateBack() {
     this.myNavigation.back();
   }
+}
+
+export interface StructureAction {
+  path: StructurePathNode;
+  name: StructureActionName;
+  initialMaxNrOfPoulePlaces?: number;
+}
+
+export enum StructureActionName {
+  AddPouleToRootRound, RemovePouleFromRootRound, AddPlaceToRootRound, // roundActions
+  RemovePlaceFromRootRound, IncrementNrOfPoules, DecrementNrOfPoules, // roundActions
+  RemoveQualifier, AddQualifier, // qualifyActions
+  SplitQualifyGroupsFrom, MergeQualifyGroupWithNext // qualifyActions
 }

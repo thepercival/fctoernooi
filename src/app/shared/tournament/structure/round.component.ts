@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-import { NameService, Round, RoundNumber, Competitor, CompetitorMap, StructureEditor, QualifyTarget, PlaceRanges } from 'ngx-sport';
+import { NameService, Round, Competitor, StructureEditor, QualifyTarget, PlaceRanges, Place } from 'ngx-sport';
+import { StructureAction, StructureActionName } from '../../../admin/structure/edit.component';
 import { IAlert, IAlertType } from '../../common/alert';
 import { CSSService } from '../../common/cssservice';
 
@@ -15,8 +16,10 @@ export class StructureRoundComponent implements OnInit {
   @Input() first!: boolean;
   @Input() favorites: Competitor[] = [];
   @Input() nameService!: NameService;
-  @Output() roundNumberChanged = new EventEmitter<RoundNumber>();
+  @Input() lastAction: StructureAction | undefined;
+  @Output() addAction = new EventEmitter<StructureAction>();
   alert: IAlert | undefined;
+  popoverPlace: Place | undefined;
 
   constructor(public cssService: CSSService) {
     this.resetAlert();
@@ -25,24 +28,27 @@ export class StructureRoundComponent implements OnInit {
   ngOnInit() {
   }
 
-  arrangeAction(action: string) {
+  arrangeAction(actionName: StructureActionName) {
     this.resetAlert();
     try {
-      if (action === 'addPouleToRootRound') {
+      if (actionName === StructureActionName.AddPouleToRootRound) {
         this.structureEditor.addPouleToRootRound(this.round);
-      } else if (action === 'removePouleFromRootRound') {
+      } else if (actionName === StructureActionName.RemovePouleFromRootRound) {
         this.structureEditor.removePouleFromRootRound(this.round);
-      } else if (action === 'addPlaceToRootRound') {
+      } else if (actionName === StructureActionName.AddPlaceToRootRound) {
         this.structureEditor.addPlaceToRootRound(this.round);
-      } else if (action === 'removePlaceFromRootRound') {
+      } else if (actionName === StructureActionName.RemovePlaceFromRootRound) {
         this.structureEditor.removePlaceFromRootRound(this.round);
-      } else if (action === 'incrementNrOfPoules') {
+      } else if (actionName === StructureActionName.IncrementNrOfPoules) {
         this.structureEditor.incrementNrOfPoules(this.round);
-      } else if (action === 'decrementNrOfPoules') {
+      } else if (actionName === StructureActionName.DecrementNrOfPoules) {
         this.structureEditor.decrementNrOfPoules(this.round);
       }
       this.nameService.resetStructure();
-      this.roundNumberChanged.emit(this.round.getNumber());
+      this.addAction.emit({
+        path: this.round.getStructurePathNode(),
+        name: actionName,
+      });
     } catch (e: any) {
       this.setAlert(IAlertType.Danger, e.message);
     }
@@ -85,5 +91,9 @@ export class StructureRoundComponent implements OnInit {
 
   protected setAlert(type: IAlertType, message: string) {
     this.alert = { type: type, message: message };
+  }
+
+  setPopoverPlace(place: Place) {
+    this.popoverPlace = place;
   }
 }

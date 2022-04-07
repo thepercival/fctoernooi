@@ -39,7 +39,7 @@ export class EqualQualifiersChecker {
                 const fromHorPoule = multipleRule.getFromHorizontalPoule();
                 const roundRankingItems = this.roundRankingCalculator.getItemsForHorizontalPoule(fromHorPoule);
                 const equalRuleItems = this.getEqualRuleRankingItems(multipleRule, roundRankingItems);
-                const postFixTmp = '(' + this.nameService.getHorizontalPouleName(fromHorPoule) + ')';
+                const postFixTmp = '(' + this.nameService.getQualifyRuleName(multipleRule) + ')';
                 warnings = warnings.concat(this.getWarningsForEqualQualifiersHelper(equalRuleItems, postFixTmp));
             }
         });

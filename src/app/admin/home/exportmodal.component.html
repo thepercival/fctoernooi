@@ -28,8 +28,8 @@
         <div *ngIf="creating">
             <ngb-alert class=" mt-1" type="info">
                 <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-                <span *ngIf="progressPercentage < 100" class="ps-2">De pdf is in de maak. Een moment geduld alsjeblieft
-                    ...</span>
+                <span *ngIf="progressPercentage < 100" class="ps-2">De pdf is in de maak. Een moment geduld
+                    alsjeblieft</span>
                 <span *ngIf="progressPercentage === 100" class="ps-2">De pdf wordt opgehaald ...</span>
             </ngb-alert>
             <ngb-progressbar *ngIf="progressPercentage > 0" class="custom-progress mt-4 mx-auto" type="info"

@@ -13,13 +13,11 @@ import { LiveboardLink } from '../../lib/liveboard/link';
 import { NameService, CompetitorMap } from 'ngx-sport';
 import { IAlertType } from '../../shared/common/alert';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder } from '@angular/forms';
 import { ScreenConfigRepository } from '../../lib/liveboard/screenConfig/repository';
 import { ScreenConfig } from '../../lib/liveboard/screenConfig/json';
-import { ScreenConfigLocalBackEnd } from '../../lib/liveboard/screenConfig/localBackend';
 import { ScreenConfigName } from '../../lib/liveboard/screenConfig/name';
 import { ScreenConfigsModalComponent } from './screenconfigsmodal.component';
-import { forkJoin, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { SponsorMapper } from '../../lib/sponsor/mapper';
 
 @Component({
@@ -31,6 +29,7 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     public activeScreen: SponsorScreen | ResultsScreen | ScheduleScreen | EndRankingScreen | PoulesRankingScreen | undefined;
     private screens: (SponsorScreen | ResultsScreen | ScheduleScreen | EndRankingScreen | PoulesRankingScreen)[] = [];
     public screenConfigs: ScreenConfig[] | undefined;
+    public configModalIsOpen = false;
     public toggleProgress = false;
     public nameService!: NameService;
     public competitorMap!: CompetitorMap;
@@ -41,7 +40,6 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         private screenConfigRepository: ScreenConfigRepository,
-        private screenConfigLocalBackEnd: ScreenConfigLocalBackEnd,
         private globalEventsManager: GlobalEventsManager,
         public cssService: CSSService,
         private myNavigation: MyNavigation,
@@ -61,29 +59,28 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         });
 
         super.myNgOnInit(() => {
-            this.getScreenConfigs(screenConfigName)
-                .subscribe({
-                    next: (screenConfigs: ScreenConfig[]) => {
-                        if (screenConfigs.length > 1 && this.screenConfigLocalBackEnd.firstTime(this.tournament)) {
-                            this.screenConfigLocalBackEnd.save(this.tournament);
-                            this.openConfigModal(screenConfigs);
-                        } else {
-                            console.log('processScreens');
+            if (screenConfigName === undefined && !this.screenConfigRepository.hasObjects(this.tournament)) {
+                this.openConfigModal(this.screenConfigRepository.getDefaultObjects());
+            } else {
+                // processScreens
+                this.getScreenConfigs(screenConfigName)
+                    .subscribe({
+                        next: (screenConfigs: ScreenConfig[]) => {
                             this.processScreens(screenConfigs);
+                        },
+                        error: (e) => {
+                            this.setAlert(IAlertType.Danger, e); this.processing = false;
                         }
-                    },
-                    error: (e) => {
-                        this.setAlert(IAlertType.Danger, e); this.processing = false;
-                    }
-                });
+                    });
+            }
         });
     }
 
     protected getScreenConfigs(screenConfigName: ScreenConfigName | undefined): Observable<ScreenConfig[]> {
-        if (screenConfigName === undefined) {
-            return this.screenConfigRepository.getObjects(this.tournament);
+        if (screenConfigName !== undefined) {
+            return of([this.sponsorMapper.getDefaultScreenConfig()]);
         }
-        return of([this.sponsorMapper.getDefaultScreenConfig()]);
+        return this.screenConfigRepository.getObjects(this.tournament);
     }
 
     processScreens(screenConfigs: ScreenConfig[]) {
@@ -93,8 +90,8 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         this.nameService = new NameService(this.competitorMap);
         const liveBoard = new Liveboard(screenConfigs);
         this.screens = liveBoard.getScreens(this.tournament, this.structure);
-        this.screenConfigs = screenConfigs;
         console.log(this.screens);
+        this.screenConfigs = screenConfigs;
         if (this.screens.length > 0) {
             this.executeScheduledTask(screenConfigs);
         } else {
@@ -104,6 +101,9 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     }
 
     executeScheduledTask(screenConfigs: ScreenConfig[]) {
+        if (this.configModalIsOpen) {
+            return;
+        }
         this.activeScreen = this.screens.shift();
         // this.processing = false;
         if (this.activeScreen === undefined) {
@@ -175,29 +175,26 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     }
 
     openConfigModal(screenConfigs: ScreenConfig[]): void {
+        this.activeScreen = undefined;
+        this.configModalIsOpen = true;
+
         const activeModal = this.modalService.open(ScreenConfigsModalComponent, { backdrop: 'static' });
         activeModal.componentInstance.screenConfigs = screenConfigs;
         activeModal.result.then((screenConfigs: ScreenConfig[]) => {
-            // save to server and reload
+            this.configModalIsOpen = false;
             this.save(screenConfigs);
-
-
-        }, (reason) => { });
+        }, (reason) => {
+            this.configModalIsOpen = false;
+            this.getDataAndProcessScreens(screenConfigs);
+        });
     }
 
     save(screenConfigs: ScreenConfig[]): boolean {
         this.processing = true;
-        this.setAlert(IAlertType.Info, 'de sponsor wordt opgeslagen');
 
-        const reposUpdates: Observable<ScreenConfig>[] = screenConfigs.map((screenConfig: ScreenConfig) => {
-            if (screenConfig.id > 0) {
-                return this.screenConfigRepository.editObject(screenConfig, this.tournament);
-            }
-            return this.screenConfigRepository.createObject(screenConfig, this.tournament);
-        });
-        forkJoin(reposUpdates).subscribe({
-            next: (results) => {
-                this.processScreens(screenConfigs);
+        this.screenConfigRepository.saveObjects(this.tournament, screenConfigs).subscribe({
+            next: () => {
+                this.getDataAndProcessScreens(screenConfigs);
             },
             complete: () => this.processing = false
         });

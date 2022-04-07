@@ -54,15 +54,6 @@
           <ng-container *ngTemplateOutlet="togetherGamePlaces;context:{$implicit: game}"></ng-container>
         </ng-container>
 
-        <!-- <ng-container *ngIf="hasOnlyGameModeAgainst">
-          <ng-container *ngTemplateOutlet="againstGamePlacesCell;context:{$implicit: game}"></ng-container>
-        </ng-container>
-        <ng-container *ngIf="!hasOnlyGameModeAgainst && isAgainst(game)">
-          <ng-container *ngTemplateOutlet="againstGamePlacesDiv;context:{$implicit: game}"></ng-container>
-        </ng-container>
-        <ng-container *ngIf="!hasOnlyGameModeAgainst && !isAgainst(game)">
-          <ng-container *ngTemplateOutlet="togetherGamePlaces;context:{$implicit: game}"></ng-container>
-        </ng-container> -->
         <td *ngIf="isScheduleScreen() && hasReferees()" class="text-end">{{nameService.getRefereeName(game)}}</td>
       </tr>
     </tbody>
@@ -84,26 +75,12 @@
   </td>
 </ng-template>
 
-<!-- <ng-template #againstGamePlacesDiv let-gmData>
-  <td class="py-0">
-    <div class="text-center">
-      <table class="noborder mx-auto">
-        <tr>
-          <ng-container>
-            <ng-container *ngTemplateOutlet="againstGamePlacesCell;context:{$implicit: gmData}"></ng-container>
-          </ng-container>
-        </tr>
-      </table>
-    </div>
-  </td>
-</ng-template> -->
-
 <ng-template #togetherGamePlaces let-game>
   <td colspan="3" class="text-nowrap text-center pb-0">
     <div class="d-flex flex-wrap gap-2 justify-content-center mb-2">
       <ul *ngFor="let gamePlace of game.getTogetherPlaces()" class="list-group list-group-horizontal">
         <li class="list-group-item border-start-0">
-          {{nameService.getPlaceFromName(gamePlace.getPlace(),true,true)}}
+          <span [innerHtml]="nameService.getPlaceFromName(gamePlace.getPlace(),true,true) | keepHtml"></span>
         </li>
         <li *ngIf="isPlayed(game)" class="list-group-item">
           {{getTogetherScore(gamePlace)}}
@@ -112,13 +89,3 @@
     </div>
   </td>
 </ng-template>
-
-<!-- <ng-template #bothGamePlaces let-game>
-  <td>
-    <div *ngFor="let gamePlace of game.getPlaces(); let counter = index">
-      <span>{{counter}}</span>
-      <span>{{getTogetherPlace(gamePlace)}}</span>
-      <span>{{getTogetherScore(gamePlace)}}</span>
-    </div>
-  </td>
-</ng-template> -->

@@ -37,6 +37,12 @@ export class ScreenConfigsModalComponent implements OnInit {
         return screenConfig.name + '-enabled';
     }
 
+    hasEnabledScreenConfig(): boolean {
+        return this.screenConfigs.some((screenConfig: ScreenConfig): boolean => {
+            return this.getEnabled(screenConfig);
+        });
+    }
+
     getEnabled(screenConfig: ScreenConfig): boolean {
         return this.form.value[this.getEnabledId(screenConfig)];
     }
@@ -66,7 +72,6 @@ export class ScreenConfigsModalComponent implements OnInit {
     formToJson(): ScreenConfig[] {
         return this.screenConfigs.map((screenConfig: ScreenConfig): ScreenConfig => {
             return {
-                id: screenConfig.id,
                 name: screenConfig.name,
                 enabled: this.getEnabled(screenConfig),
                 nrOfSeconds: this.getNrOfSeconds(screenConfig)

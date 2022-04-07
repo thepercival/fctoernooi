@@ -42,11 +42,7 @@ export class LiveboardGamesComponent implements OnInit {
     get AwaySide(): AgainstSide { return AgainstSide.Away; }
 
     getSidePlaces(game: TogetherGame | AgainstGame, side: AgainstSide): string {
-        return this.nameService.getPlacesFromName((<AgainstGame>game).getSidePlaces(side), true, true)
-    }
-
-    getTogetherPlace(gamePlace: AgainstGamePlace | TogetherGamePlace): string {
-        return this.nameService.getPlaceFromName(gamePlace.getPlace(), true, true)
+        return this.nameService.getPlacesFromName((<AgainstGame>game).getSidePlaces(side), true, true);
     }
 
     getAgainstScore(game: TogetherGame | AgainstGame): string {

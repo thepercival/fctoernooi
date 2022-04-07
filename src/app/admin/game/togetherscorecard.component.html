@@ -1,7 +1,7 @@
 <div class="card">
   <div class="card-header">
-    <span class="fw-bold text-break">{{nameService.getPlaceFromName(gamePlace.getPlace(),true,
-      true)}}</span>
+    <span class="fw-bold text-break"
+      [innerHtml]="nameService.getPlaceFromName(gamePlace.getPlace(), true, true) | keepHtml"></span>
   </div>
   <div class="card-body pb-0" [formGroup]="form">
     <div formArrayName="scores">

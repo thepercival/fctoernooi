@@ -31,14 +31,14 @@
           <span [innerHTML]="activeScreen.getDescription() | keepHtml"></span>
         </small>
       </h1>
-      <app-progress *ngIf="screenConfigs && activeScreen" class="d-inline-block" [toggleProgress]="toggleProgress"
+      <app-progress *ngIf="activeScreen" class="d-inline-block" [toggleProgress]="toggleProgress"
         [max]="activeScreen.getConfig().nrOfSeconds" (executeAtZero)="executeScheduledTask(screenConfigs)">
       </app-progress>
     </div>
 
     <!-- right -->
     <div *ngIf="tournament && screenConfigs">
-      <button (click)="openConfigModal(screenConfigs)" class="btn btn-outline-secondary me-3" type="button">
+      <button (click)="openConfigModal(screenConfigs)" class="btn btn-secondary me-3" type="button">
         <fa-icon [icon]="['fas', 'cogs']"></fa-icon>
       </button>
       <button (click)="navigateBack()" class="btn btn-outline-secondary" type="button">

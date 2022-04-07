@@ -18,7 +18,8 @@
                 </td>
                 <td class="text-break ps-0  width-30"
                     [ngClass]="{ 'favitem': favorites.hasCompetitor(competitorMap.getCompetitor(sportRankingItem.getPlaceLocation())) }">
-                    {{nameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true)}}
+                    <span
+                        [innerHtml]="nameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true, true) | keepHtml"></span>
                 </td>
                 <td class="text-end ps-0">{{sportRankingItem.getPerformance().getGames()}}</td>
                 <td class="text-end ps-0">{{sportRankingItem.getPerformance().getPoints()}}</td>
