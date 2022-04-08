@@ -45,6 +45,7 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
       iDealIssuer: ['', Validators.compose([
       ])],
       cardNumber: ['', Validators.compose([
+        Validators.maxLength(19)
       ])],
       cvc: ['', Validators.compose([
         Validators.maxLength(3)

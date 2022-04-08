@@ -80,17 +80,23 @@
               </select>
             </div>
           </div>
-          <div *ngIf="form.value['paymentMethod'] === PaymentMethodCreditCard" class="row mx-0 mb-3">
+          <div *ngIf="form.value['paymentMethod'] === PaymentMethodCreditCard" class="row mx-0 mb-3 card-js">
             <label for="cardNumber" class="col-6 col-form-label text-end">kaartnummer</label>
             <div class="col-6">
-              <input type="card" class="form-control" formControlName="cardNumber" placeholder="0000 0000 0000 0000"
-                autocomplete="email">
+              <input class="card-number" formControlName="cardNumber" type="tel" class="form-control"
+                placeholder="kaartnummer" x-autocompletetype="cc-number" autocompletetype="cc-number" autocorrect="off"
+                spellcheck="off" autocapitalize="off" [maxLength]="19">
+
             </div>
           </div>
+          <input class="expiry-month" name="expiry-month">
+          <input class="expiry-year" name="expiry-year">
           <div *ngIf="form.value['paymentMethod'] === PaymentMethodCreditCard" class="row mx-0 mb-3">
             <label for="cvc" class="col-6 col-form-label text-end">cvc</label>
-            <div class="col-6">
-              <input type="text" class="form-control" formControlName="cvc" placeholder="000">
+            <div class="col-6 col-sm-3">
+              <input type="text" class="form-control" formControlName="cvc" placeholder="000" [maxLength]="3">
+            </div>
+            <div class="col-3  col-sm-6">
             </div>
           </div>
         </div>
