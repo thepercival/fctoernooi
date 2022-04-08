@@ -36,6 +36,7 @@ import { GameAmountConfigRepository } from '../../lib/ngx-sport/gameAmountConfig
 import { forkJoin, Observable, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { IAlertType } from '../../shared/common/alert';
+import { Options } from 'selenium-webdriver';
 
 @Component({
     selector: 'app-planningconfig-edit',
@@ -292,43 +293,52 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         });
     }
 
-    protected getSelfReferee(currentSelfReferee: number): number {
-        const selfRefereeAvailable = this.getSelfRefereeAvailable();
-        if ((currentSelfReferee & selfRefereeAvailable) === currentSelfReferee) {
+    protected getSelfReferee(currentSelfReferee: SelfReferee): SelfReferee {
+        const selfRefereeOptionsAvailable = this.getSelfRefereeOptions();
+        if (selfRefereeOptionsAvailable.indexOf(currentSelfReferee) >= 0) {
             return currentSelfReferee;
         }
-        if (currentSelfReferee === SelfReferee.OtherPoules
-            && (selfRefereeAvailable & SelfReferee.SamePoule) === SelfReferee.SamePoule) {
+        if (currentSelfReferee === SelfReferee.OtherPoules && this.isSelfRefereeSamePouleAvailable()) {
             return SelfReferee.SamePoule;
         }
-        if (currentSelfReferee === SelfReferee.SamePoule
-            && (selfRefereeAvailable & SelfReferee.OtherPoules) === SelfReferee.OtherPoules) {
+        if (currentSelfReferee === SelfReferee.SamePoule && this.isSelfRefereeOtherPouleAvailable()) {
             return SelfReferee.OtherPoules;
         }
         return SelfReferee.Disabled;
     }
 
-    bothSelfRefereeAvailable(): boolean {
-        const selfRefereeAvailable = this.getSelfRefereeAvailable();
-        return selfRefereeAvailable === (SelfReferee.OtherPoules + SelfReferee.SamePoule);
+    isSelfRefereeOtherPouleAvailable(): boolean {
+        return this.getSelfRefereeOptions().indexOf(SelfReferee.OtherPoules) >= 0;
     }
 
-    protected getSelfRefereeAvailable(): number {
+    isSelfRefereeSamePouleAvailable(): boolean {
+        return this.getSelfRefereeOptions().indexOf(SelfReferee.SamePoule) >= 0;
+    }
+
+    bothSelfRefereeOptionsAvailable(): boolean {
+        return this.isSelfRefereeOtherPouleAvailable() && this.isSelfRefereeSamePouleAvailable();
+    }
+
+    someSelfRefereeOptionAvailable(): boolean {
+        return this.isSelfRefereeOtherPouleAvailable() || this.isSelfRefereeSamePouleAvailable();
+    }
+
+    protected getSelfRefereeOptions(): SelfReferee[] {
         const compSports = this.competition.getSports();
 
-        let selfRefereeAvailable = SelfReferee.Disabled;
+        let options = [SelfReferee.Disabled];
 
         const sportVariants = compSports.map((compSport: CompetitionSport): Single | AgainstH2h | AgainstGpp | AllInOneGame => compSport.getVariant());
 
         const otherPoulesAvailable = this.pouleStructure.isSelfRefereeOtherPoulesAvailable();
         if (otherPoulesAvailable) {
-            selfRefereeAvailable += SelfReferee.OtherPoules;
+            options.push(SelfReferee.OtherPoules);
         }
         const samePouleAvailable = this.pouleStructure.isSelfRefereeSamePouleAvailable(sportVariants);
         if (samePouleAvailable) {
-            selfRefereeAvailable += SelfReferee.SamePoule;
+            options.push(SelfReferee.SamePoule);
         }
-        return selfRefereeAvailable;
+        return options;
     }
 
     showRandomGamePlaceStrategy(): boolean {
@@ -340,17 +350,13 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     enableDisableSelfReferee() {
-        if (this.isSelfRefereeAvailable()) {
+        if (this.someSelfRefereeOptionAvailable()) {
             if (this.form.controls.selfReferee.disabled && !this.hasBegun) {
                 this.form.controls.selfReferee.enable();
             }
         } else if (this.form.controls.selfReferee.disabled === false) {
             this.form.controls.selfReferee.disable();
         }
-    }
-
-    isSelfRefereeAvailable(): boolean {
-        return this.getSelfRefereeAvailable() !== SelfReferee.Disabled;
     }
 
     hasRoundNumbersChoice(): boolean {

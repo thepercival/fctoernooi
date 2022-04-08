@@ -87,7 +87,7 @@
                             formControlName="minutesAfter" maxlength="3" class="form-control" />
                     </div>
                 </div>
-                <div *ngIf="!form.value['manual'] && isSelfRefereeAvailable()" class="row mb-3">
+                <div *ngIf="!form.value['manual'] && someSelfRefereeOptionAvailable()" class="row mb-3">
                     <label for="selfReferee" class="col-7 col-form-label">deelnemers zijn scheidsrechter</label>
                     <div class="col-5">
                         <div class="form-control form-check form-switch">
@@ -97,7 +97,7 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="!form.value['manual'] && form.value['selfReferee'] && bothSelfRefereeAvailable()"
+                <div *ngIf="!form.value['manual'] && form.value['selfReferee'] && bothSelfRefereeOptionsAvailable()"
                     class="row mb-3">
                     <label for="selfRefereeSamePoule" class="col-7 col-form-label">scheidsrechter in eigen poule</label>
                     <div class="col-5">

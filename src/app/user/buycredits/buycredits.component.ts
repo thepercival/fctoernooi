@@ -22,7 +22,6 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
   public paymentMethods!: Observable<string[]>;
   public idealIssuers!: Observable<IDealIssuer[]>;
   public nrOfCreditsOptions!: Observable<number[]>;
-
   constructor(
     route: ActivatedRoute,
     router: Router,
@@ -44,6 +43,11 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
         Validators.required
       ])],
       iDealIssuer: ['', Validators.compose([
+      ])],
+      cardNumber: ['', Validators.compose([
+      ])],
+      cvc: ['', Validators.compose([
+        Validators.maxLength(3)
       ])],
       agreed: [false, Validators.compose([
       ])],
@@ -101,8 +105,8 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
       return {
         amount: this.form.controls.nrOfCredits.value * 0.5,
         method: PaymentMethod.CreditCard,
-        cardNumber: ''/*this.form.controls.cardNumber.value*/,
-        cvc: '012'
+        cardNumber: this.form.controls.cardNumber.value,
+        cvc: this.form.controls.cvc.value
       };
     }
     /* if (this.form.controls.paymentMethod.value === PaymentMethod.CreditCard

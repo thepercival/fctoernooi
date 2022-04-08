@@ -55,6 +55,7 @@ export class AppErrorHandler {
         if (!navigator.onLine) {
             errortext = 'er kan geen internet verbinding gemaakt worden';
         } else if (error instanceof HttpErrorResponse) {
+            console.log(error);
             if (error.status === 0) {
                 errortext = 'er kan geen verbinding met de data-service gemaakt worden, ververs de pagina';
             } else if (error.status === 401) {
@@ -63,10 +64,20 @@ export class AppErrorHandler {
                 } else {
                     errortext = 'je hebt geen rechten om de aanvraag te doen, waarschijnlijk is je sessie verlopen, log dan opnieuw in';
                 }
-            } else if (error.error && error.error.message) {
-                errortext = error.error.message;
+            } else if (error.error) {
+                if (typeof error.error === 'string') {
+                    errortext = error.error;
+                } else if (error.error.message) {
+                    errortext = error.error.message;
+                }
+            } else if (error && error.message) {
+                errortext = error.message;
             }
-        } else {
+        }
+        else if (typeof error === 'string') {
+            errortext = error;
+        }
+        else {
             errortext = error.message;
         }
         const err = new Error(errortext);

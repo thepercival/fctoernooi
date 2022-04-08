@@ -80,20 +80,48 @@
               </select>
             </div>
           </div>
+          <div *ngIf="form.value['paymentMethod'] === PaymentMethodCreditCard" class="row mx-0 mb-3">
+            <label for="cardNumber" class="col-6 col-form-label text-end">kaartnummer</label>
+            <div class="col-6">
+              <input type="card" class="form-control" formControlName="cardNumber" placeholder="0000 0000 0000 0000"
+                autocomplete="email">
+            </div>
+          </div>
+          <div *ngIf="form.value['paymentMethod'] === PaymentMethodCreditCard" class="row mx-0 mb-3">
+            <label for="cvc" class="col-6 col-form-label text-end">cvc</label>
+            <div class="col-6">
+              <input type="text" class="form-control" formControlName="cvc" placeholder="000">
+            </div>
+          </div>
         </div>
         <div *ngIf="form.value['purpose'] === OrganizationPurpose">
-          Je kunt een offerte krijgen met een prijs per toernooi. Dit is afhankelijk van het aantal gebruikers.
-          Je kunt een offerte krijgen met een prijs per toernooi. Dit is afhankelijk van het aantal af te nemen
-          toernooien.
 
-          <a href="mailto:info@fctoernooi.nl" rel="noopener">
-            <fa-icon [icon]="[ 'fas', 'envelope'] "></fa-icon> info@fctoernooi.nl
-          </a>
+          <div class="card border-info m-3">
+            <div class="card-body">
+              <h4 class="card-title">Wil je met je organisatie gebruik maken van fctoernooi?</h4>
+              <p class="card-text">Stuur een email naar <a href="mailto:info@fctoernooi.nl" rel="noopener">
+                  info@fctoernooi.nl
+                </a> voor
+              </p>
+              <ul class="list-group">
+                <li class="list-group-item border-info">
+                  1 een uitleg over mogelijkheden
+                </li>
+                <li class="list-group-item border-info">
+                  2 een offerte op maat
+                </li>
+                <li class="list-group-item border-info">
+                  3 advies, vragen of wat anders
+                </li>
+              </ul>
 
-          Vraag vrijblijvend een demonstratie en/of uitleg aan als je meer wilt weten.
+            </div>
+          </div>
+
         </div>
         <div *ngIf="canAgree()" class="row mx-0 mb-3">
-          <label for="agreed" class="col-6 col-form-label pointer">akkoord met voorwaarden</label>
+          <label for="agreed" class="col-6 col-form-label text-end pointer"><a href="assets/betalingsvoorwaarden.pdf"
+              rel="noopener">akkoord met voorwaarden</a></label>
           <div class="col-6">
             <div class="form-control form-check form-switch">
               <input type="checkbox" class="form-check-input" id="agreed" formControlName="agreed">
