@@ -70,7 +70,7 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
 
         const date = this.competition.getStartDateTime();
         const now = new Date();
-        const minDate = date > now ? now : date;
+        const minDate = date > now ? date : now;
         this.minDateStruct = { year: minDate.getFullYear(), month: minDate.getMonth() + 1, day: minDate.getDate() };
         this.initForm(minDate);
         this.processing = false;
