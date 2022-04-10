@@ -59,7 +59,7 @@
 
 <ng-template let-singleRule="singleRule" #editSingleRule>
   <div>
-    {{nameService.getQualifyRuleName(singleRule)}}
+    <span [innerHtml]="nameService.getQualifyRuleName(singleRule) | keepHtml"></span>
   </div>
   <button *ngIf="structureEditor.isQualifyGroupSplittableAt(singleRule)" type="button"
     id="btn-split-qualifygroup-{{parentRound.getNumberAsValue()}}" class="btn btn-outline-primary"

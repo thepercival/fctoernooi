@@ -15,14 +15,17 @@
                     <td>
                         <span [innerHtml]="competitorListItem.placeName"></span>
                     <td>
-                        {{competitorListItem.competitor.getName()}}
+                        <label class="form-check-label pointer" for="{{getId(competitorListItem.competitor)}}">
+                            {{competitorListItem.competitor.getName()}}
+                        </label>
                     </td>
-                    <td class="text-end">
-                        <div class="form-check form-switch {{getSelectClass(competitorListItem)}}">
+                    <td>
+                        <div
+                            class="d-flex justify-content-end form-check form-switch {{getSelectClass(competitorListItem)}}">
                             <input type="checkbox" class="form-check-input"
                                 id="{{getId(competitorListItem.competitor)}}" [checked]="competitorListItem.selected"
                                 (change)="toggle(competitorListItem)">
-                            <label class="form-check-label" for="{{getId(competitorListItem.competitor)}}"></label>
+
                         </div>
                     </td>
                 </tr>
