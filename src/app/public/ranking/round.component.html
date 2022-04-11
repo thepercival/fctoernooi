@@ -15,7 +15,7 @@
       <div class="d-flex flex-wrap gap-3 justify-content-between">
         <app-tournament-pouleranking *ngFor="let poule of poules" [poule]="poule" [header]="true"
           [tournament]="tournament" [competitorMap]="competitorMap" class="mx-auto"
-          [competitionSport]="tournament.getCompetition().getSingleSport()">
+          [competitionSport]="getCompetitionSport()">
         </app-tournament-pouleranking>
       </div>
     </div>

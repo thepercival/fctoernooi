@@ -53,7 +53,7 @@
             <td *ngFor="let competitionSport of competitionSports; let counter = index;"
                 class="text-end ps-0 {{viewPortManager.getClass(counter+1)}}">
                 {{roundRankingItem.getSportItem(competitionSport).getPerformance().getPoints()}}</td>
-            <td class="text-end ps-0">{{roundRankingItem.getCumulativePerformance().getPoints()}}</td>
+            <td class="text-end fw-bold ps-0">{{roundRankingItem.getCumulativePerformance().getPoints()}}</td>
             <td class="text-center unitdiff d-none d-sm-table-cell ps-0">
                 <div>
                     {{roundRankingItem.getCumulativePerformance().getDiff() > 0 ? '+' :

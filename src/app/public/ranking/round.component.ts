@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, TemplateRef } from '@angular/core';
 
-import { Poule, NameService, Round, CompetitorMap, GameState } from 'ngx-sport';
+import { Poule, NameService, Round, CompetitorMap, GameState, CompetitionSport } from 'ngx-sport';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { CSSService } from '../../shared/common/cssservice';
@@ -52,6 +52,10 @@ export class RankingRoundComponent implements OnInit {
         activeModal.componentInstance.modalContent = modalContent;
     }
 
+    getCompetitionSport(): CompetitionSport | undefined {
+        const competition = this.tournament.getCompetition();
+        return competition.hasMultipleSports() ? undefined : competition.getSingleSport();
+    }
     // get Against(): GameMode { return GameMode.Against; }
     // get Together(): GameMode { return GameMode.Together; }
 
