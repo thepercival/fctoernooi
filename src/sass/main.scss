@@ -18,8 +18,8 @@ $enable-responsive-font-sizes: true !default;
 // }
 
 .favitem {
-    @extend .text-primary;
-    @extend .fw-bold;
+  @extend .text-primary;
+  @extend .fw-bold;
 }
 
 hr {
@@ -40,31 +40,38 @@ app-root {
   height: 100vh;
   flex-direction: column;
 }
+
 .content-wrapper {
   flex: 1 0 auto;
 }
+
 footer {
   flex: 1 0 auto;
 }
-td .btn.btn-sm, th .btn.btn-sm, td .list-group-item {
+
+td .btn.btn-sm,
+th .btn.btn-sm,
+td .list-group-item {
   padding-top: 0px;
   padding-bottom: 0px;
 }
 
 .input-group-date {
-    width: 185px;
+  width: 185px;
 }
 
-input.is-valid, textarea.is-valid {
-    border-left: 5px solid #{$success};
+input.is-valid,
+textarea.is-valid {
+  border-left: 5px solid #{$success};
 }
 
-input.is-invalid, textarea.is-invalid {
-    border-left: 5px solid #{$danger};
+input.is-invalid,
+textarea.is-invalid {
+  border-left: 5px solid #{$danger};
 }
 
 input.is-warning {
-    border-left: 5px solid #{$warning};
+  border-left: 5px solid #{$warning};
 }
 
 .modal-header {
@@ -77,13 +84,13 @@ input.is-warning {
   @extend .border-info;
 }
 
-.warning-modal .modal-content{
+.warning-modal .modal-content {
   border: 5px;
   @extend .bg-warning;
   @extend .text-white;
 }
 
-.info-modal .modal-content{
+.info-modal .modal-content {
   border: 5px;
   @extend .bg-info;
   @extend .text-white;
@@ -98,15 +105,19 @@ input.is-warning {
 .bg-against {
   background-color: purple;
 }
+
 .bg-together {
   background-color: pink;
 }
+
 .custom-switch-against .form-check-label::after {
   @extend .bg-against;
 }
+
 .custom-switch-together .form-check-label::after {
   @extend .bg-together;
 }
+
 .custom-switch-warning .form-check-label::after {
   @extend .bg-warning;
 }
@@ -118,6 +129,7 @@ input.is-warning {
 .progress__value {
   stroke: #{$info};
 }
+
 .progress__meter {
   stroke: #{$body-bg};
 }
@@ -127,7 +139,7 @@ input.is-warning {
 }
 
 ngb-alert {
-  width:100%;
+  width: 100%;
 }
 
 .card-auth .card-header {
@@ -166,91 +178,128 @@ ngb-alert {
 //       justify-content: center;
 //   }
 // }
+
+// .more-than {
+//   @include media-breakpoint-only(xs) {
+//     flex-direction: column;
+//     align-items: flex-start;
+//     justify-content: center;
+//     @extend .border-primary;
+//   }
+
+//   @include media-breakpoint-up(md) {
+//     flex-direction: column;
+//     align-items: flex-start;
+//     justify-content: center;
+//   }
+// }
+
 .q-w-1 {
   border-color: #298F00 !important;
 }
+
 .q-w-2 {
   border-color: #84CF96 !important;
 }
+
 .q-w-3 {
   border-color: #0588BC !important;
 }
+
 .q-w-4 {
   border-color: #00578A !important;
 }
+
 .q-w-5 {
   border-color: $gray-600 !important;
 }
+
 .q-l-5 {
   border-color: $gray-600 !important;
 }
+
 .q-l-4 {
   border-color: #FFFF66 !important;
 }
+
 .q-l-3 {
   border-color: #FFCC00 !important;
 }
+
 .q-l-2 {
   border-color: #FF9900 !important;
 }
+
 .q-l-1 {
   border-color: #FF0000 !important;
-}			
+}
+
 .q-partial {
   border-style: dashed !important;
 }
+
 .q-w-1-double-partial {
   border-left-color: #298F00 !important;
   border-top-color: #298F00 !important;
 }
+
 .q-w-2-double-partial {
   border-left-color: #84CF96 !important;
   border-top-color: #84CF96 !important;
 }
+
 .q-w-3-double-partial {
   border-left-color: #0588BC !important;
   border-top-color: #0588BC !important;
 }
+
 .q-w-4-double-partial {
   border-left-color: #00578A !important;
   border-top-color: #00578A !important;
 }
+
 .q-w-5-double-partial {
   border-left-color: $gray-600 !important;
   border-top-color: $gray-600 !important;
 }
+
 .q-l-5-double-partial {
   border-right-color: $gray-600 !important;
   border-bottom-color: $gray-600 !important;
 }
+
 .q-l-4-double-partial {
   border-right-color: #FFFF66 !important;
   border-bottom-color: #FFFF66 !important;
 }
+
 .q-l-3-double-partial {
   border-right-color: #FFCC00 !important;
   border-bottom-color: #FFCC00 !important;
 }
+
 .q-l-2-double-partial {
   border-right-color: #FF9900 !important;
   border-bottom-color: #FF9900 !important;
 }
+
 .q-l-1-double-partial {
   border-right-color: #FF0000 !important;
   border-bottom-color: #FF0000 !important;
 }
 
 span.badge-rank {
-    background-color: inherit;
-    color: inherit;
-    border-style: solid;
-    border-color: white;
-    border-width: 1px;
-    font-size: 100%;
+  background-color: inherit;
+  color: inherit;
+  border-style: solid;
+  border-color: white;
+  border-width: 1px;
+  font-size: 100%;
 }
+
 // form-group
 .form-switch {
-    border: 0;
+  border: 0;
 }
 
 .form-check-input {

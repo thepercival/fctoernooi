@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   CompetitionSportService,
@@ -6,7 +6,6 @@ import {
   CompetitorMap,
   NameService,
   PlaceRanges,
-  RoundNumber,
   Structure,
   StructureEditor,
 } from 'ngx-sport';
@@ -23,14 +22,17 @@ import { StructurePathNode } from 'ngx-sport/src/structure/path';
 @Component({
   selector: 'app-tournament-structure',
   templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.css'],
+  styleUrls: ['./edit.component.scss'],
 })
-export class StructureEditComponent extends TournamentComponent implements OnInit {
+export class StructureEditComponent extends TournamentComponent implements OnInit, AfterViewChecked {
   lastAction: StructureAction | undefined;
   actions: StructureAction[] = [];
   originalCompetitors!: Competitor[];
   clonedStructure!: Structure;
   public nameService!: NameService;
+  private scrolled = false;
+
+  @ViewChild('structureRound') private roundElRef: ElementRef | undefined;
 
   constructor(
     route: ActivatedRoute,
@@ -138,6 +140,13 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
 
   navigateBack() {
     this.myNavigation.back();
+  }
+
+  ngAfterViewChecked() {
+    if (this.roundElRef !== undefined && !this.processing && !this.scrolled) {
+      this.scrolled = true;
+      this.roundElRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 }
 

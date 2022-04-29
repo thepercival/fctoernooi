@@ -29,26 +29,22 @@ export class PdfRepository extends APIRepository {
 
     createObject(tournament: Tournament, subjects: number): Observable<string> {
         return this.http.post<string>(this.getUrl(tournament), { subjects: subjects }, { headers: super.getHeaders() }).pipe(
-            map((jsonHash: any) => jsonHash.hash),
+            map((jsonFileName: any) => jsonFileName.fileName),
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
-    progress(tournament: Tournament, hash: string): Observable<number> {
-        const url = this.getUrl(tournament) + '/progress/' + hash;
+    progress(tournament: Tournament): Observable<number> {
+        const url = this.getUrl(tournament) + '/progress';
         return this.http.get<number>(url, this.getOptions()).pipe(
             map((jsonProgress: any) => jsonProgress.progress),
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
-    getPdfUrl(tournament: Tournament, hash: string): string {
-        return super.getApiUrl() + 'public/tournaments/' + tournament.getId() + '/pdf?hash=' + hash;
+    getPdfUrl(tournament: Tournament, fileName: string): string {
+        return super.getApiUrl() + 'pdf/' + fileName + '.pdf';
     }
-}
-
-export interface TournamentExportHash {
-    hash: string;
 }
 
 export enum TournamentExportConfig {

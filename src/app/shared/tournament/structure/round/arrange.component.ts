@@ -4,7 +4,7 @@ import { StructureActionName } from '../../../../admin/structure/edit.component'
 @Component({
   selector: 'app-tournament-structureround-arrange',
   templateUrl: './arrange.component.html',
-  styleUrls: ['./arrange.component.css']
+  styleUrls: ['./arrange.component.scss']
 })
 export class StructureRoundArrangeComponent {
   @Input() structureEditor!: StructureEditor;
@@ -79,8 +79,52 @@ export class StructureRoundArrangeComponent {
     return this.canIncrementNrOfPoules() ? 'primary' : 'secondary';
   }
 
+  showHorizontal(): boolean {
+    const nrOfRounds = this.round.getNumber().getRounds().length;
+    return nrOfRounds <= 8;
+  }
 
+  showVertical(): boolean {
+    const nrOfRounds = this.round.getNumber().getRounds().length;
+    return nrOfRounds > 2;
+  }
 
+  horViewPortClass(): string {
+    const nrOfRounds = this.round.getNumber().getRounds().length;
+    if (nrOfRounds <= 2) {
+      return ''
+    } else if (nrOfRounds <= 4) {
+      return 'd-none d-md-inline'
+    } else if (nrOfRounds <= 6) {
+      return 'd-none d-lg-inline'
+    } else if (nrOfRounds <= 8) {
+      return 'd-none d-xl-inline'
+    }
+    return 'd-none';
+  }
+
+  vertViewPortClass(): string {
+    const nrOfRounds = this.round.getNumber().getRounds().length;
+    if (nrOfRounds <= 2) {
+      return 'd-none';
+    } else if (nrOfRounds <= 4) {
+      return 'd-md-none'
+    } else if (nrOfRounds <= 6) {
+      return 'd-lg-none'
+    } else if (nrOfRounds <= 8) {
+      return 'd-xl-none'
+    }
+    return '';
+  }
+
+  /* chilround(arrange)
+            vert  hor
+xs > 1  show  hide
+sm > 1  show  hide
+md > 4
+lg > 6
+xl > 8
+*/
 
   // getDivisionClasses(round: Round): string {
   //   const nrOfRounds = round.getNumber().getRounds().length;

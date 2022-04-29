@@ -23,7 +23,8 @@
 </div>
 <!-- child round-->
 <div *ngIf="round && !round.isRoot() && !round.hasBegun()" class="text-center mb-3">
-  <div class="btn-group-vertical" role="group" aria-label="aantal poules">
+
+  <div class="btn-group-vertical {{vertViewPortClass()}}" role="group" aria-label="aantal poules">
     <button type="button" disabled class="btn btn-outline-secondary">poules</button>
     <div class="btn-group" role="group" aria-label="aantal poules">
       <button [disabled]="!canDecrementNrOfPoules()" type="button" class="btn btn-outline-{{getDecrementBtnClass()}}"
@@ -35,5 +36,17 @@
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
     </div>
+  </div>
+
+  <div class="btn-group-horizontal {{horViewPortClass()}}" role="group" aria-label="aantal poules">
+    <button [disabled]="!canDecrementNrOfPoules()" type="button" class="btn btn-outline-{{getDecrementBtnClass()}}"
+      (click)="decrementNrOfPoules()">
+      <fa-icon [icon]="['fas', 'minus']"></fa-icon>
+    </button>
+    <button type="button" disabled class="btn btn-outline-secondary">poules</button>
+    <button [disabled]="!canIncrementNrOfPoules()" type="button" class="btn btn-outline-{{getIncrementBtnClass()}}"
+      (click)="incrementNrOfPoules()">
+      <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+    </button>
   </div>
 </div>

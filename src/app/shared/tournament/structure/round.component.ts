@@ -34,7 +34,12 @@ export class StructureRoundComponent implements OnInit {
       if (actionName === StructureActionName.AddPouleToRootRound) {
         this.structureEditor.addPouleToRootRound(this.round);
       } else if (actionName === StructureActionName.RemovePouleFromRootRound) {
-        this.structureEditor.removePouleFromRootRound(this.round);
+        try {
+          this.structureEditor.removePouleFromRootRound(this.round);
+        } catch (e: any) {
+          throw new Error('de poule kan niet verwijderd worden, omdat er niet genoeg deelnemers overblijven voor de volgende ronde');
+        }
+
       } else if (actionName === StructureActionName.AddPlaceToRootRound) {
         this.structureEditor.addPlaceToRootRound(this.round);
       } else if (actionName === StructureActionName.RemovePlaceFromRootRound) {

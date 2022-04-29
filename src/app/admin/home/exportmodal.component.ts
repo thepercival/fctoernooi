@@ -97,8 +97,8 @@ export class ExportModalComponent implements OnInit, OnDestroy {
         this.progressPercentage = 0;
         this.pdfRepository.createObject(this.tournament, subjects)
             .subscribe({
-                next: (hash: string) => {
-                    this.showProgress(hash);
+                next: (fileName: string) => {
+                    this.showProgress(fileName);
                 },
                 error: (e) => {
                     this.setPostCreateAlert(IAlertType.Danger, e);
@@ -106,10 +106,10 @@ export class ExportModalComponent implements OnInit, OnDestroy {
             });
     }
 
-    showProgress(hash: string) {
+    showProgress(fileName: string) {
         this.refreshTimer = timer(0, 2000) // repeats every 2 seconds
             .pipe(
-                switchMap(() => this.pdfRepository.progress(this.tournament, hash).pipe()),
+                switchMap(() => this.pdfRepository.progress(this.tournament).pipe()),
                 catchError(err => this.appErrorHandler.handleError(err))
             ).subscribe({
                 next: (progressPerc: number | undefined) => {
@@ -119,7 +119,7 @@ export class ExportModalComponent implements OnInit, OnDestroy {
                     this.progressPercentage = progressPerc;
                     if (progressPerc === 100) {
                         this.stopTimer();
-                        this.activeModal.close(this.pdfRepository.getPdfUrl(this.tournament, hash));
+                        this.activeModal.close(this.pdfRepository.getPdfUrl(this.tournament, fileName));
                     }
                 },
                 error: (e) => {

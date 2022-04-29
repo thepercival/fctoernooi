@@ -10,12 +10,12 @@
 <ng-template let-target="target" #modifyToPlaces>
   <div class=" btn-group-vertical" role="group" aria-label="aantal">
     <button type="button" [disabled]="!areSomeQualifyGroupsEditable(target)"
-      id="btn-edit-qualifygroup-{{parentRound.getNumberAsValue()}}" class="btn {{getQualifyGroupBtnClass(target)}}"
+      class="btn {{getQualifyGroupBtnClass(target)}} d-flex justify-content-between"
       (click)="targetCollapsed[target] = !targetCollapsed[target]">
       <ng-container *ngIf="areSomeQualifyGroupsEditable(target); else showReadOnly">
         <span>kruis fin.</span>
-        <fa-icon class="ms-1" [icon]="['fas', 'pencil-alt']">
-        </fa-icon>
+        <fa-icon *ngIf="targetCollapsed[target]" [icon]="['fas', 'pencil-alt']" class="ms-1"></fa-icon>
+        <fa-icon *ngIf="!targetCollapsed[target]" [icon]="['fas', 'plus']" class="rotate-45 ms-1"></fa-icon>
       </ng-container>
       <ng-template #showReadOnly>
         <span>{{nameService.getQualifyTargetDescription(target,true)}}</span>
