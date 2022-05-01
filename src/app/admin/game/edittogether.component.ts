@@ -11,6 +11,7 @@ import {
     PlaceMapper,
     AgainstGamePlace,
     GameState,
+    JsonTogetherGamePlace,
 } from 'ngx-sport';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -19,7 +20,6 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { TranslateService } from '../../lib/translate';
-import { JsonTogetherGamePlace } from 'ngx-sport/src/game/place/together/json';
 import { GameEditComponent } from './edit.component';
 import { IAlertType } from '../../shared/common/alert';
 

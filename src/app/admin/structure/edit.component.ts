@@ -7,18 +7,18 @@ import {
   NameService,
   PlaceRanges,
   Structure,
-  StructureEditor,
+  StructureEditor
 } from 'ngx-sport';
 
+import { cloneDeep } from 'lodash';
 import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
-import { cloneDeep } from 'lodash';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { IAlertType } from '../../shared/common/alert';
-import { StructurePathNode } from 'ngx-sport/src/structure/path';
+import { StructurePathNode } from 'ngx-sport';
 @Component({
   selector: 'app-tournament-structure',
   templateUrl: './edit.component.html',
@@ -90,12 +90,15 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   createClonedStructure(structure: Structure): Structure {
     this.originalCompetitors = this.tournament.getCompetitors();
     return cloneDeep(structure);
+    /** CDK @TODO NODE 18 */
+    // return structuredClone(structure);
   }
 
   addAction(structureAction: StructureAction) {
     this.lastAction = structureAction;
     this.actions.push(structureAction);
     //console.log(this.actions);
+    // (new StructureOutput()).toConsole(this.clonedStructure, console);
     this.resetAlert();
   }
 
@@ -119,6 +122,10 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   }
 
   completeSave(structureRes: Structure) {
+    // const newClonedStructure = this.createClonedStructure(structureRes);
+    // console.log((new StructureOutput()).createGrid(structureRes).equalsGrid(
+    //   (new StructureOutput()).createGrid(this.clonedStructure)
+    // ));
     this.clonedStructure = this.createClonedStructure(structureRes);
     this.actions = [];
     this.processing = false;
@@ -162,3 +169,4 @@ export enum StructureActionName {
   RemoveQualifier, AddQualifier, // qualifyActions
   SplitQualifyGroupsFrom, MergeQualifyGroupWithNext // qualifyActions
 }
+

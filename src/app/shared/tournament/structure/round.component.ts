@@ -37,9 +37,9 @@ export class StructureRoundComponent implements OnInit {
         try {
           this.structureEditor.removePouleFromRootRound(this.round);
         } catch (e: any) {
+          console.log(e);
           throw new Error('de poule kan niet verwijderd worden, omdat er niet genoeg deelnemers overblijven voor de volgende ronde');
         }
-
       } else if (actionName === StructureActionName.AddPlaceToRootRound) {
         this.structureEditor.addPlaceToRootRound(this.round);
       } else if (actionName === StructureActionName.RemovePlaceFromRootRound) {

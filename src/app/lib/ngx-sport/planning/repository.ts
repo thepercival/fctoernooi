@@ -3,10 +3,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { PlanningMapper, JsonStructure, RoundNumber, Structure, Poule, GameMapper, GameOrder, StructureMapper, CompetitionSportMapper } from 'ngx-sport';
+import { PlanningMapper, JsonStructure, RoundNumber, Structure, Poule, GameMapper, GameOrder, StructureMapper, CompetitionSportMapper, JsonPoule } from 'ngx-sport';
 import { APIRepository } from '../../repository';
 import { Tournament } from '../../tournament';
-import { JsonPoule } from 'ngx-sport/src/poule/json';
 
 @Injectable({
     providedIn: 'root'
