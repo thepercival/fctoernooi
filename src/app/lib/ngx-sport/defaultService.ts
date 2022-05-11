@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AgainstGpp, AgainstH2h, AgainstRuleSet, AllInOneGame, CompetitionSportService, GameMode, GamePlaceStrategy, JsonPlanningConfig, JsonSport, PlanningEditMode, PouleStructure, SelfReferee, Single, Sport, VoetbalRange } from "ngx-sport";
+import { AgainstGpp, AgainstH2h, AgainstRuleSet, AllInOneGame, CompetitionSportService, GameMode, GamePlaceStrategy, JsonPlanningConfig, JsonSport, PlanningEditMode, PointsCalculation, PouleStructure, SelfReferee, Single, Sport, VoetbalRange } from "ngx-sport";
 
 @Injectable({
     providedIn: 'root'

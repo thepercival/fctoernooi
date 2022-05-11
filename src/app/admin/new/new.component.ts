@@ -7,7 +7,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { JsonTournament } from '../../lib/tournament/json';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
-import { Structure, StructureEditor } from 'ngx-sport';
+import { GameMode, PointsCalculation, Structure, StructureEditor } from 'ngx-sport';
 import { SportWithFields } from '../sport/createSportWithFields.component';
 import { CompetitionSportRepository } from '../../lib/ngx-sport/competitionSport/repository';
 import { Tournament } from '../../lib/tournament';
@@ -86,7 +86,9 @@ export class NewComponent implements OnInit {
     this.currentStep = NewTournamentStep.editProperties;
     this.setAlert(IAlertType.Info, 'het toernooi wordt aangemaakt');
 
-    const jsonCompetitionSport = this.competitionSportRepository.sportWithFieldsToJson(sportWithFields);
+    const gameMode = sportWithFields.variant.getGameMode();
+    const pointsCalculation = gameMode === GameMode.Against ? PointsCalculation.AgainstGamePoints : PointsCalculation.Scores;
+    const jsonCompetitionSport = this.competitionSportRepository.sportWithFieldsToJson(pointsCalculation, sportWithFields);
     this.jsonTournament.competition.sports = [jsonCompetitionSport];
 
     this.tournamentRepository.createObject(this.jsonTournament)

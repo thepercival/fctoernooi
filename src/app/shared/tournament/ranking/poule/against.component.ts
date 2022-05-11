@@ -35,6 +35,7 @@ export class PouleRankingAgainstComponent implements OnInit {
     this.favorites = this.favRepos.getObject(this.tournament);
     this.againstRankingCalculator = new AgainstSportRoundRankingCalculator(this.competitionSport);
     this.sportRankingItems = this.againstRankingCalculator.getItemsForPoule(this.poule);
+    console.log(this.sportRankingItems);
     this.processing = false;
   }
 

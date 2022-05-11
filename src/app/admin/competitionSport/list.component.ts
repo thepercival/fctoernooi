@@ -13,6 +13,7 @@ import {
   Single,
   AgainstGpp,
   GameMode,
+  PointsCalculation,
 } from 'ngx-sport';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -122,7 +123,9 @@ export class CompetitionSportListComponent extends TournamentComponent implement
     this.setAlert(IAlertType.Info, 'de sport(en) worden toegevoegd');
     this.processing = true;
 
-    const json = this.competitionSportRepository.sportWithFieldsToJson(sportWithFields, true);
+    const gameMode = sportWithFields.variant.getGameMode();
+    const pointsCalculation = gameMode === GameMode.Against ? PointsCalculation.AgainstGamePoints : PointsCalculation.Scores;
+    const json = this.competitionSportRepository.sportWithFieldsToJson(pointsCalculation, sportWithFields, true);
     this.competitionSportRepository.createObject(json, this.tournament, this.structure)
       .subscribe({
         next: (competitionSport: CompetitionSport) => {

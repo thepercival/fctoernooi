@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../repository';
-import { AgainstGpp, AgainstH2h, Competition, CompetitionSport, CompetitionSportMapper, CompetitionSportService, JsonCompetitionSport, JsonField, SportMapper, Structure } from 'ngx-sport';
+import { AgainstGpp, AgainstH2h, Competition, CompetitionSport, CompetitionSportMapper, CompetitionSportService, JsonCompetitionSport, JsonField, PointsCalculation, SportMapper, Structure } from 'ngx-sport';
 import { Tournament } from '../../tournament';
 import { SportWithFields } from '../../../admin/sport/createSportWithFields.component';
 
@@ -96,7 +96,9 @@ export class CompetitionSportRepository extends APIRepository {
     //     }
     // }
 
-    sportWithFieldsToJson(sportWithFields: SportWithFields, withFieldNamePrefix?: boolean): JsonCompetitionSport {
+    sportWithFieldsToJson(
+        pointsCalculation: PointsCalculation,
+        sportWithFields: SportWithFields, withFieldNamePrefix?: boolean): JsonCompetitionSport {
         const sport = sportWithFields.variant.getSport();
         let fieldNamePrefix = '';
         if (withFieldNamePrefix) {
@@ -110,6 +112,7 @@ export class CompetitionSportRepository extends APIRepository {
         return {
             id: 0,
             sport: this.sportMapper.toJson(sport),
+            defaultPointsCalculation: pointsCalculation,
             fields: fields,
             gameMode: jsonVariant.gameMode,
             nrOfHomePlaces: jsonVariant.nrOfHomePlaces,
