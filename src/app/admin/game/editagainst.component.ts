@@ -13,6 +13,7 @@ import {
     PlaceMapper,
     GamePhase,
     AgainstScore,
+    CustomSport,
 } from 'ngx-sport';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -32,6 +33,8 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
 
     public calculateScoreControl: AgainstScoreFormControl | undefined;
     public scoreControls: AgainstScoreFormControl[] = [];
+    public minExtraPoints = -10;
+    public maxExtraPoints = 10;
 
     constructor(
         route: ActivatedRoute,
@@ -52,6 +55,8 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
             mapper, fieldMapper, refereeMapper, placeMapper, translate, myNavigation, fb);
         // this.originalPouleState = State.Created;
         this.form.addControl('extratime', new FormControl(false));
+        this.form.addControl('homeExtraPoints', new FormControl(false));
+        this.form.addControl('awayExtraPoints', new FormControl(false));
     }
 
     ngOnInit() {
@@ -71,9 +76,11 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
         if (this.firstScoreConfig !== this.firstScoreConfig.getCalculate()) {
             this.calculateScoreControl = new AgainstScoreFormControl(this.firstScoreConfig.getCalculate(), 0, 0, true);
         }
-        this.initScoreControls();
+        this.form.controls.homeExtraPoints.setValue(this.getGame().getHomeExtraPoints() ?? 0);
+        this.form.controls.awayExtraPoints.setValue(this.getGame().getAwayExtraPoints() ?? 0);
         this.form.controls.played.setValue(this.game?.getState() === GameState.Finished);
         this.form.controls.extratime.setValue(this.getGame().getFinalPhase() === GamePhase.ExtraTime);
+        this.initScoreControls(); // do last!        
     }
 
     protected initScoreControls() {
@@ -168,6 +175,8 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
             });
         });
         jsonGame.state = this.form.controls.played.value === true ? GameState.Finished : GameState.Created;
+        jsonGame.homeExtraPoints = this.form.controls.homeExtraPoints.value;
+        jsonGame.awayExtraPoints = this.form.controls.awayExtraPoints.value;
         return jsonGame;
     }
 
@@ -183,6 +192,10 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
         if (updateWarning) {
             this.updateWarningsForEqualQualifiers(this.formToJson());
         }
+    }
+
+    get sportIsRugby(): boolean {
+        return this.game?.getCompetitionSport().getSport().getCustomId() === CustomSport.Rugby;
     }
 }
 

@@ -292,10 +292,14 @@ export class GameEditComponent extends TournamentComponent {
 
         this.gameRepository.editObject(jsonGame, this.game, this.game.getPoule(), this.tournament)
             .subscribe(
-                /* happy path */ gameRes => {
-                    this.navigateBack();
-                },
-             /* error path */ e => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
+                {
+                    next: (gameRes) => {
+                        this.navigateBack();
+                    },
+                    error: (e) => {
+                        this.setAlert(IAlertType.Danger, e); this.processing = false;
+                    }
+                }
             );
         return false;
     }
@@ -312,13 +316,15 @@ export class GameEditComponent extends TournamentComponent {
         this.setAlert(IAlertType.Info, 'de wedstrijd wordt verwijderd');
 
         this.gameRepository.removeObject(this.game, this.game.getPoule(), this.tournament)
-            .subscribe(
-        /* happy path */() => {
+            .subscribe({
+                next: (results) => {
                     this.navigateBack();
                 },
-        /* error path */ e => { this.setAlert(IAlertType.Danger, 'het opslaan is niet gelukt: ' + e); this.processing = false; },
-        /* onComplete */() => this.processing = false
-            );
+                error: (e) => {
+                    this.setAlert(IAlertType.Danger, 'het opslaan is niet gelukt: ' + e); this.processing = false;
+                },
+                complete: () => this.processing = false
+            });
     }
 
     // protected hasScoreChanges(originalGameScores: GameScoreHomeAway[], homeAwayControls: HomeAwayFormControl[]): boolean {

@@ -90,7 +90,7 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         this.nameService = new NameService(this.competitorMap);
         const liveBoard = new Liveboard(screenConfigs);
         this.screens = liveBoard.getScreens(this.tournament, this.structure);
-        console.log(this.screens);
+        // console.log(this.screens);
         this.screenConfigs = screenConfigs;
         if (this.screens.length > 0) {
             this.executeScheduledTask(screenConfigs);

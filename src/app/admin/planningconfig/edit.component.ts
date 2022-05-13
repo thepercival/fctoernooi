@@ -219,7 +219,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     changeSelfReferee(selfReferee: boolean) {
-        console.log(selfReferee);
+        // console.log(selfReferee);
         const shownNrOfBatchGamesAlert = localStorage.getItem('shownNrOfBatchGamesAlert');
         if (shownNrOfBatchGamesAlert === null) {
             localStorage.setItem('shownNrOfBatchGamesAlert', '1');

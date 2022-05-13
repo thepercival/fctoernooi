@@ -64,6 +64,22 @@
               class="form-control max-width-100 {{calculateScoreControl.getValidateClass()}}" type="number">
           </div>
         </div>
+        <div *ngIf="sportIsRugby" class="row mb-3">
+          <div class="col-3">
+            <label class="col-form-label">extra wedstrijdpunten</label>
+          </div>
+          <div class="col-4">
+            <input formControlName="homeExtraPoints" class="form-control max-width-100" type="number"
+              [ngClass]="{ 'is-invalid': form.controls.homeExtraPoints.invalid, 'is-valid': form.controls.homeExtraPoints.valid}"
+              required [min]="minExtraPoints" [max]="maxExtraPoints">
+          </div>
+          <div class="col-1 side-splitter">-</div>
+          <div class="col-4">
+            <input formControlName="awayExtraPoints" class="form-control max-width-100" type="number"
+              [ngClass]="{ 'is-invalid': form.controls.awayExtraPoints.invalid, 'is-valid': form.controls.awayExtraPoints.valid}"
+              required [min]="minExtraPoints" [max]="maxExtraPoints">
+          </div>
+        </div>
         <div class="row mb-3">
           <label for="played" class="col-3 col-form-label">gespeeld</label>
           <div class="col-9">
