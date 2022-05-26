@@ -1,10 +1,8 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    NameService,
     RoundNumber,
     JsonPlanningConfig,
-    CompetitorMap,
     PouleStructure,
     SelfReferee,
     CompetitionSport,
@@ -18,7 +16,8 @@ import {
     AgainstGpp,
     AllInOneGame,
     Single,
-    StructureNameService
+    StructureNameService,
+    StartLocationMap
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -129,7 +128,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     initConfig(startRoundNumberAsValue: number) {
-        this.structureNameService = new StructureNameService(new CompetitorMap(this.tournament.getCompetitors()));
+        this.structureNameService = new StructureNameService(new StartLocationMap(this.tournament.getCompetitors()));
         const startRoundNumber = this.structure.getRoundNumber(startRoundNumberAsValue);
         if (startRoundNumber === undefined) {
             this.setAlert(IAlertType.Danger, 'het rondenumber is niet gevonden');

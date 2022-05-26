@@ -1,11 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import {
     ScoreConfig,
     JsonScoreConfig,
     Structure,
-    CompetitorMap,
     CompetitionSport,
     Round,
     ScoreConfigMapper,

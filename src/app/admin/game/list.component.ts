@@ -10,7 +10,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentUser } from '../../lib/tournament/user';
 import { Observable, of } from 'rxjs';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { CompetitorMap, StructureNameService } from 'ngx-sport';
+import { StartLocationMap, StructureNameService } from 'ngx-sport';
 
 @Component({
   selector: 'app-tournament-games-edit',
@@ -42,8 +42,8 @@ export class GameListComponent extends TournamentComponent implements OnInit {
         this.processing = false;
         return;
       }
-      const competitorMap = new CompetitorMap(this.tournament.getCompetitors());
-      this.structureNameService = new StructureNameService(competitorMap);
+      const startLocationMap = new StartLocationMap(this.tournament.getCompetitors());
+      this.structureNameService = new StructureNameService(startLocationMap);
       this.roles = tournamentUser ? tournamentUser.getRoles() : 0;
       this.getUserRefereeId(tournamentUser)
         .subscribe({

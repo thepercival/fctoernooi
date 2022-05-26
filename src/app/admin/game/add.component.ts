@@ -2,10 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    NameService,
     GameState,
     RoundNumber,
-    CompetitorMap,
     AgainstGame,
     JsonTogetherGame,
     JsonAgainstGame,
@@ -28,6 +26,7 @@ import {
     JsonTogetherGamePlace,
     JsonAgainstGamePlace,
     StructureNameService,
+    StartLocationMap,
 } from 'ngx-sport';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -96,7 +95,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
     ngOnInit() {
         this.route.params.subscribe(params => {
             super.myNgOnInit(() => {
-                this.structureNameService = new StructureNameService(new CompetitorMap(this.tournament.getCompetitors()));
+                this.structureNameService = new StructureNameService(new StartLocationMap(this.tournament.getCompetitors()));
                 const roundNumber = this.structure.getRoundNumber(+params.roundNumber);
 
                 if (roundNumber === undefined) {
