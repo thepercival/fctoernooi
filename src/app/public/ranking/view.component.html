@@ -12,15 +12,15 @@
           <li [ngbNavItem]="1">
             <a ngbNavLink>poulestanden</a>
             <ng-template ngbNavContent>
-              <app-tournament-ranking-round [round]="structure.getRootRound()" [tournament]="tournament"
-                [competitorMap]="competitorMap" [first]="true">
+              <app-tournament-ranking-round [round]="getDefaultCategory(structure).getRootRound()"
+                [tournament]="tournament" [structureNameService]="structureNameService" [first]="true">
               </app-tournament-ranking-round>
             </ng-template>
           </li>
           <li [ngbNavItem]="2">
             <a ngbNavLink>eindstand</a>
             <ng-template ngbNavContent>
-              <app-tournament-endranking [competitorMap]="competitorMap" [favorites]="favorites"
+              <app-tournament-endranking [structureNameService]="structureNameService" [favorites]="favorites"
                 [structure]="structure"></app-tournament-endranking>
             </ng-template>
           </li>

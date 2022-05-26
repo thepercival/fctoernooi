@@ -58,11 +58,9 @@ export class CompetitorRepository extends APIRepository {
         const url = this.getUrl(tournament) + '/' + competitorOne.getId() + '/' + competitorTwo.getId();
         return this.http.put<JsonCompetitor>(url, undefined, this.getOptions()).pipe(
             map(() => {
-                const competitorOneTmp = new PlaceLocation(competitorOne.getPouleNr(), competitorOne.getPlaceNr());
-                competitorOne.setPouleNr(competitorTwo.getPouleNr());
-                competitorOne.setPlaceNr(competitorTwo.getPlaceNr());
-                competitorTwo.setPouleNr(competitorOneTmp.getPouleNr());
-                competitorTwo.setPlaceNr(competitorOneTmp.getPlaceNr());
+                const compOneOldStartLocation = competitorOne.getStartLocation();
+                competitorOne.updateStartLocation(competitorTwo.getStartLocation().getPouleNr(), competitorTwo.getStartLocation().getPlaceNr());
+                competitorTwo.updateStartLocation(compOneOldStartLocation.getPouleNr(), compOneOldStartLocation.getPlaceNr());
             }),
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );

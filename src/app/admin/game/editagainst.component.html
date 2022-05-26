@@ -9,18 +9,19 @@
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
       <form *ngIf="!processing && game && tournament && hasAuthorization" [formGroup]="form" (ngSubmit)="save()"
         #f="ngForm" novalidate>
-        <app-tournament-basegame-edit [form]="getBaseFormGroup()" [nameService]="nameService" [game]="game">
+        <app-tournament-basegame-edit [form]="getBaseFormGroup()" [structureNameService]="structureNameService"
+          [game]="game">
         </app-tournament-basegame-edit>
         <div class="row mb-3">
           <div class="col-3">
             <label for="competitors" class="col-form-label">deelnemers</label>
           </div>
           <div class="col-4 fw-bold col-form-label text-break">
-            {{nameService.getPlacesFromName(getGame().getHomePlaces(), true, true)}}
+            {{structureNameService.getPlacesFromName(getGame().getHomePlaces(), true, true)}}
           </div>
           <div class="col-1 side-splitter">-</div>
           <div class="col-4 fw-bold col-form-label text-break">
-            {{nameService.getPlacesFromName(getGame().getAwayPlaces(), true, true)}}</div>
+            {{structureNameService.getPlacesFromName(getGame().getAwayPlaces(), true, true)}}</div>
         </div>
         <div *ngFor="let scoreControl of scoreControls" class="row mb-3">
           <label class="col-3 col-form-label">

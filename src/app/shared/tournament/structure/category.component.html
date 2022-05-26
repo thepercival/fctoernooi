@@ -1,0 +1,26 @@
+<div *ngIf="category">
+  <div class="card border-secondary">
+
+    <div class="card-header px-3">
+      <div class="d-flex justify-content-between">
+        <h5 class="my-0">
+          <span class="fw-bold align-middle">{{category.getName()}}</span>
+          <button *ngIf="editable" class="btn btn-sm btn-outline-primary ms-1" (click)="changeName(category)">
+            <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+          </button>
+        </h5>
+        <button *ngIf="editable" class="btn btn-sm btn-outline-danger ms-1" (click)="remove.emit(category)">
+          <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+        </button>
+      </div>
+    </div>
+
+
+    <div class="card-body p-0">
+      <app-tournament-structureround [editable]="editable" [round]="category.getRootRound()" class="px-0"
+        (addAction)="addAction.emit($event)" [first]="false" [structureNameService]="structureNameService"
+        [structureEditor]="structureEditor" [lastAction]="lastAction" [favorites]="favorites">
+      </app-tournament-structureround>
+    </div>
+  </div>
+</div>

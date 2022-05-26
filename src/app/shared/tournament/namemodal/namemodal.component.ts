@@ -16,11 +16,16 @@ export class NameModalComponent implements OnInit {
     @Input() buttonName!: string;
     @Input() buttonOutline!: boolean;
     form: FormGroup;
+    @Input() placeHolder: string | undefined;
 
     constructor(public activeModal: NgbActiveModal, fb: FormBuilder) {
         this.form = fb.group({
             name: ''
         });
+    }
+
+    getPlaceHolder(): string {
+        return this.placeHolder ?? 'max ' + this.range.max + ' karakters';
     }
 
     ngOnInit() {

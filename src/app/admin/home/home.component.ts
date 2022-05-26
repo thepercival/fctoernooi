@@ -23,6 +23,7 @@ import { IAlertType } from '../../shared/common/alert';
 import { UserRepository } from '../../lib/user/repository';
 import { User } from '../../lib/user';
 import { TournamentExportConfig } from '../../lib/pdf/repository';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
     selector: 'app-tournament-admin',
@@ -40,20 +41,21 @@ export class HomeComponent extends TournamentComponent implements OnInit {
 
     constructor(
         route: ActivatedRoute,
+        router: Router,
+        tournamentRepository: TournamentRepository,
+        structureRepository: StructureRepository,
+        globalEventsManager: GlobalEventsManager,
         private competitionSportRouter: CompetitionSportRouter,
         private modalService: NgbModal,
         public cssService: CSSService,
         private userRepository: UserRepository,
-        router: Router,
         private tournamentMapper: TournamentMapper,
         private authService: AuthService,
         public dateFormatter: DateFormatter,
         private translate: TranslateService,
-        tournamentRepository: TournamentRepository,
-        structureRepository: StructureRepository,
         fb: FormBuilder
     ) {
-        super(route, router, tournamentRepository, structureRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
         const date = new Date();
         this.minDateStruct = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
 

@@ -5,12 +5,10 @@ import {
     AgainstQualifyConfig,
     JsonAgainstQualifyConfig,
     Structure,
-    CompetitorMap,
     CompetitionSport,
     Round,
     AgainstQualifyConfigMapper,
     CompetitionSportMapper,
-    GameMode,
     PointsCalculation,
     CustomSport,
 } from 'ngx-sport';
@@ -94,7 +92,7 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.nameService = new NameService(new CompetitorMap(this.tournament.getCompetitors()));
+        this.nameService = new NameService();
         this.initRanges();
         this.initToggleRound();
         this.processing = false;
@@ -106,8 +104,14 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
                 return round.getAgainstQualifyConfig(competitionSport);
             });
         this.pointsCalculations = [PointsCalculation.AgainstGamePoints, PointsCalculation.Scores, PointsCalculation.Both];
-        this.toggleRound = toggleRoundInittializer.createToggleRound(this.structure.getRootRound());
+
+        this.toggleRound = toggleRoundInittializer.createToggleRound(this.getDefaultRootRound());
         this.postToggleRoundChange();
+    }
+
+    // @TODO CDK CATEGORY - REMOVE FUNCTION
+    getDefaultRootRound(): Round {
+        return this.structure.getCategories()[0].getRootRound();
     }
 
     // hasACustomAgainstQualifyConfig(round: Round): boolean {
@@ -206,7 +210,6 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
 
     openSelectRoundsModal() {
         const modalRef = this.modalService.open(RoundsSelectorModalComponent);
-        modalRef.componentInstance.structure = this.structure;
         modalRef.componentInstance.competitionSport = this.competitionSport;
         modalRef.componentInstance.toggleRound = this.toggleRound;
         modalRef.componentInstance.subject = 'de qualifyagainst-regels';

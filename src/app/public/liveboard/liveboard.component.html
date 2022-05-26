@@ -57,18 +57,19 @@
 
   <!-- scheduled games and results screen -->
   <ng-container *ngIf="activeScreen">
-    <app-tournament-liveboard-games *ngIf="isGamesScreen()" [screen]="getGamesScreen()" [nameService]="nameService">
+    <app-tournament-liveboard-games *ngIf="isGamesScreen()" [screen]="getGamesScreen()"
+      [structureNameService]="structureNameService">
     </app-tournament-liveboard-games>
 
     <!-- pouleranking screen -->
     <app-tournament-liveboard-poules *ngIf="isPoulesRankingScreen()" [screen]="getPoulesRankingScreen()"
-      [nameService]="nameService" [ruleSet]="competition.getAgainstRuleSet()">
+      [structureNameService]="structureNameService" [ruleSet]="competition.getAgainstRuleSet()">
     </app-tournament-liveboard-poules>
 
     <!-- endranking screen -->
     <div *ngIf="isEndRankingScreen()" class="row g-0">
       <div class="col-12 liveboard">
-        <app-tournament-endranking [competitorMap]="competitorMap" [structure]="structure"
+        <app-tournament-endranking [structureNameService]="structureNameService" [structure]="structure"
           [range]="getEndRankingScreen().range">
         </app-tournament-endranking>
       </div>

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Structure, RoundNumber, NameService } from 'ngx-sport';
+import { Structure, RoundNumber, NameService, StructureNameService } from 'ngx-sport';
 
 @Component({
     selector: 'app-ngbd-modal-roundnumbers',
@@ -9,13 +9,13 @@ import { Structure, RoundNumber, NameService } from 'ngx-sport';
 export class RoundNumbersSelectorModalComponent implements OnInit {
     @Input() structure!: Structure;
     @Input() subject!: string;
-    public nameService: NameService;
+    public structureNameService: StructureNameService;
     processing = true;
 
     constructor(
         public activeModal: NgbActiveModal
     ) {
-        this.nameService = new NameService(undefined);
+        this.structureNameService = new StructureNameService();
     }
 
     ngOnInit() {

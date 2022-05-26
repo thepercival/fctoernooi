@@ -1,15 +1,12 @@
 <div class="row justify-content-center g-0">
   <div class="col-sm-12 col-md-10 col-lg-8">
-    <app-tournament-title [tournament]="tournament" [admin]="true">
-    </app-tournament-title>
     <div class="d-flex justify-content-between">
       <h2>
         <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
       </h2>
-      <button *ngIf="!processing && !hasBegun && atLeastTwoPlacesHaveACompetitor()" type="button"
-        class="btn btn-sm me-0" [ngClass]="{ 'btn-outline-secondary': !orderMode, 'btn-outline-primary': orderMode }"
-        (click)="toggleView()">
-        <fa-icon [icon]="['fas', 'random']"></fa-icon> volgorde
+      <button *ngIf="!processing" type="button" class="btn btn-sm btn-outline-secondary me-0">
+        <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
+
       </button>
     </div>
     <h2 *ngIf="processing" class="text-center">
@@ -20,61 +17,17 @@
       {{alertMessage()}}
     </ngb-alert>
 
-    <table *ngIf="!processing && !orderMode" class="table">
-      <thead>
-        <tr>
-          <th></th>
-          <th>plek</th>
-          <th>naam</th>
-          <th class="text-center d-none d-sm-table-cell">aangemeld</th>
-          <th *ngIf="!hasBegun" class="text-end"><button type="button" class="btn btn-sm btn-primary"
-              (click)="addPlaceToRootRound()">
-              <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-            </button></th>
-        </tr>
-      </thead>
-      <tbody>
-        <app-tournament-competitor-line *ngFor="let item of placeCompetitorItems" [placeCompetitor]="item"
-          [showLockerRoomNotArranged]="showLockerRoomNotArranged(item.competitor)" [hasBegun]="hasBegun"
-          [nameService]="nameService" [focus]="item.place.getId() === focusId" (editPressed)="editPlace($event)"
-          (removePressed)="preRemove($event)" (registerPressed)="registerCompetitor($event)"
-          (toLockerRooms)="linkToLockerRooms()">
-        </app-tournament-competitor-line>
-      </tbody>
-    </table>
 
-    <table *ngIf="!processing && orderMode" class="table">
-      <thead>
-        <th>plek</th>
-        <th>naam</th>
-        <th class="text-center">
-          <button *ngIf="allPlacesHaveACompetitor()" type="button" class="btn btn-sm btn-outline-primary"
-            (click)="swapAll()" [disabled]="processing || swapItem" title="willekeurige volgorde">
-            <fa-icon [icon]="['fas', 'random']"></fa-icon> willekeurig
-          </button>
-          <fa-icon *ngIf="!hasBegun && !allPlacesHaveACompetitor()" title="volgorder omwisselen"
-            [icon]="['fas', 'sort']">
-          </fa-icon>
-        </th>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of placeCompetitorItems">
-          <td>
-            <span [innerHtml]="nameService.getPlaceFromName(item.place, false) | keepHtml"></span>
-          </td>
-          <td>
-            <span *ngIf="item.competitor">{{item.competitor.getName()}}</span>
-          </td>
-          <td class="text-center">
-            <div *ngIf="item.competitor" class="form-check form-switch">
-              <input type="checkbox" class="form-check-input" id="{{getSwapSwitchId(item.place)}}"
-                (change)="swapTwo(item)">
-              <label class="form-check-label" for="{{getSwapSwitchId(item.place)}}"></label>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div *ngIf="!processing" class="d-flex flex-wrap gap-1">
+      <app-tournament-category-competitors *ngFor="let category of structure.getCategories()"
+        [showHeader]="structure.getCategories().length > 1" [category]="category" class="mx-auto card"
+        [structureNameService]="structureNameService" (processing)="updateProcessing($event)"
+        (saveStructure)="saveStructure($event)" (removeCompetitor)="removeCompetitor($event)"
+        (structureNameServiceUpdate)="structureNameServiceUpdate()" (alert)="setAlert($event.type,$event.message)">
+      </app-tournament-category-competitors>
+    </div>
 
   </div>
 </div>
+
+<app-bottom-menu *ngIf="tournament" [tournament]="tournament"></app-bottom-menu>

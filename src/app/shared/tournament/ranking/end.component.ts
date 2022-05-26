@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { EndRankingItem, Structure, CompetitorMap, VoetbalRange, EndRankingCalculator } from 'ngx-sport';
+import { EndRankingItem, Structure, VoetbalRange, EndRankingCalculator, Category, StructureNameService } from 'ngx-sport';
 import { Favorites } from '../../../lib/favorites';
 
 @Component({
@@ -10,7 +10,7 @@ import { Favorites } from '../../../lib/favorites';
 export class EndRankingComponent implements OnInit, OnChanges {
 
   @Input() structure!: Structure;
-  @Input() competitorMap!: CompetitorMap;
+  @Input() structureNameService!: StructureNameService;
   @Input() favorites!: Favorites;
   @Input() range: VoetbalRange | undefined;
   public rankingItems: EndRankingItem[] = [];
@@ -33,10 +33,15 @@ export class EndRankingComponent implements OnInit, OnChanges {
   }
 
   protected updateItems() {
-    const endRankingCalculator = new EndRankingCalculator(this.structure);
+    const endRankingCalculator = new EndRankingCalculator(this.getDefaultCategory());
     this.rankingItems = endRankingCalculator.getItems().filter((item: EndRankingItem): boolean => {
       return this.range === undefined || (item.getUniqueRank() >= this.range.min && item.getUniqueRank() <= this.range.max);
     });
+  }
+
+  // @TODO CDK CATEGORY - REMOVE FUNCTION
+  getDefaultCategory(): Category {
+    return this.structure.getCategories()[0];
   }
 
   hasMedal(rank: number): boolean {
@@ -48,19 +53,19 @@ export class EndRankingComponent implements OnInit, OnChanges {
   }
 
   isFavorite(endRankingItem: EndRankingItem): boolean {
-    const placeLocation = endRankingItem.getStartPlaceLocation();
-    if (placeLocation === undefined) {
+    const startLocation = endRankingItem.getStartLocation();
+    if (startLocation === undefined) {
       return false;
     }
-    const competitor = this.competitorMap.getCompetitor(placeLocation);
-    return this.favorites && this.favorites.hasCompetitor(competitor);
+    const competitor = this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
+    return this.favorites && competitor !== undefined && this.favorites.hasCompetitor(competitor);
   }
 
   getName(endRankingItem: EndRankingItem): string {
-    const placeLocation = endRankingItem.getStartPlaceLocation();
-    if (placeLocation === undefined) {
+    const startLocation = endRankingItem.getStartLocation();
+    if (startLocation === undefined) {
       return 'nog onbekend';
     }
-    return this.competitorMap.getCompetitor(placeLocation)?.getName() ?? 'onbekend';
+    return this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation)?.getName() ?? 'onbekend';
   }
 }

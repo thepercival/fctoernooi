@@ -22,6 +22,7 @@ import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { TranslateService } from '../../lib/translate';
 import { GameEditComponent } from './edit.component';
 import { IAlertType } from '../../shared/common/alert';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
     selector: 'app-tournament-togethergame-edit',
@@ -46,6 +47,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
+        globalEventsManager: GlobalEventsManager,
         authService: AuthService,
         gameRepository: GameRepository,
         mapper: GameMapper,
@@ -56,8 +58,8 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
         myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
-        super(route, router, tournamentRepository, structureRepository, authService, gameRepository,
-            mapper, fieldMapper, refereeMapper, placeMapper, translate, myNavigation, fb);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager,
+            authService, gameRepository, mapper, fieldMapper, refereeMapper, placeMapper, translate, myNavigation, fb);
         // this.originalPouleState = State.Created;        
         this.form.addControl('gamePlaces', new FormGroup({}));
     }

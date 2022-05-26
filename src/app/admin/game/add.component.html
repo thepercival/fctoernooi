@@ -14,7 +14,7 @@
           <div class="col-6">
             <select class="form-control" formControlName="poule" required (ngModelChange)="changePoule($event)">
               <option *ngFor="let poule of poules" [ngValue]="poule">
-                {{nameService.getPouleName(poule, true)}}</option>
+                {{structureNameService.getPouleName(poule, true)}}</option>
             </select>
           </div>
         </div>
@@ -34,7 +34,7 @@
             <div class="col-6">
               <select class="form-control" formControlName="{{homeNr}}" required>
                 <option *ngFor="let place of form.value['poule'].getPlaces()" [ngValue]="place">
-                  {{nameService.getPlaceName(place, false, true)}}</option>
+                  {{structureNameService.getPlaceName(place, false, true)}}</option>
               </select>
             </div>
           </div>
@@ -45,7 +45,7 @@
             <div class="col-6">
               <select class="form-control" formControlName="{{awayNr}}" required>
                 <option *ngFor="let place of form.value['poule'].getPlaces()" [ngValue]="place">
-                  {{nameService.getPlaceName(place, false, true)}}</option>
+                  {{structureNameService.getPlaceName(place, false, true)}}</option>
               </select>
             </div>
           </div>
@@ -56,7 +56,7 @@
             <div class="col-6">
               <select class="form-control" formControlName="{{placeNr}}" required>
                 <option *ngFor="let place of form.value['poule'].getPlaces()" [ngValue]="place">
-                  {{nameService.getPlaceName(place, false, true)}}</option>
+                  {{structureNameService.getPlaceName(place, false, true)}}</option>
               </select>
             </div>
           </div>

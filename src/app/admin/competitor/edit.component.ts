@@ -4,7 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
     JsonCompetitor,
     NameService,
-    CompetitorMap,
+    StartLocationMap,
+    StructureNameService,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -14,6 +15,7 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { IAlertType } from '../../shared/common/alert';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
     selector: 'app-tournament-competitor-edit',
@@ -24,7 +26,8 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
     form: FormGroup;
     originalCompetitor: TournamentCompetitor | undefined;
     hasBegun!: boolean;
-    public nameService!: NameService;
+    public nameService: NameService;
+    public structureNameService!: StructureNameService;
     pouleNr!: number;
     placeNr!: number;
 
@@ -35,15 +38,16 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
     };
 
     constructor(
-        private competitorRepository: CompetitorRepository,
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
+        globalEventsManager: GlobalEventsManager,
+        private competitorRepository: CompetitorRepository,
         private myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
-        super(route, router, tournamentRepository, structureRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
         this.form = fb.group({
             name: ['', Validators.compose([
                 Validators.required,
@@ -55,6 +59,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
                 Validators.maxLength(this.validations.maxlengthinfo)
             ])],
         });
+        this.nameService = new NameService();
     }
 
     // initialsValidator(control: FormControl): { [s: string]: boolean } {
@@ -76,8 +81,11 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         }
         this.pouleNr = pouleNr;
         this.placeNr = placeNr;
-        this.hasBegun = this.structure.getRootRound().hasBegun();
-        this.nameService = new NameService(new CompetitorMap(this.tournament.getCompetitors()));
+        this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
+
+        this.structureNameService = new StructureNameService(
+            new StartLocationMap(this.tournament.getCompetitors())
+        );
 
         const competitor = this.tournament.getCompetitors().find(competitorIt => {
             return competitorIt.getPouleNr() === pouleNr && competitorIt.getPlaceNr() === placeNr;
@@ -95,6 +103,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         return {
             id: this.originalCompetitor ? this.originalCompetitor.getId() : 0,
             name: name,
+            categoryNr: 1,/* TODO CDK */
             registered: this.form.controls.registered.value,
             info: info ? info : undefined,
             pouleNr: this.pouleNr,

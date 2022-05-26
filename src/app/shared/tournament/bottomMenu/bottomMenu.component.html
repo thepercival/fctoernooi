@@ -1,0 +1,49 @@
+<nav class="navbar fixed-bottom navbar-dark bg-dark border-top border-white">
+  <div class="container-fluid">
+    <div class="d-flex justify-content-between">
+
+      <!-- overzicht -->
+      <h2 class="header-bottom-bar me-3">
+        <a type="button" class="btn btn-bottom-bar" [routerLink]="['/admin', tournament.getId()]">
+          <fa-icon [icon]="['fas', 'house']"></fa-icon>
+        </a>
+      </h2>
+
+      <!-- opzet -->
+      <h2 class="header-bottom-bar">
+        <a type="button" class="btn btn-bottom-bar" (click)="linkToStructure()">
+          <app-tournament-icon name="structure"></app-tournament-icon> opzet
+        </a>
+      </h2>
+
+      <!--planning & wedstrijden -->
+      <h2 class="header-bottom-bar">
+        <a type="button" class="btn btn-bottom-bar" (click)="linkToStructure()">
+          <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijden
+        </a>
+      </h2>
+
+      <!--velden -->
+      <h2 class="header-bottom-bar">
+        <a type="button" class="btn btn-bottom-bar" (click)="linkToStructure()">
+          <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> "velden", bij multiple => "sporten"
+        </a>
+      </h2>
+
+      <!--deelnemers -->
+      <h2 class="header-bottom-bar">
+        <a type="button" class="btn btn-bottom-bar" [routerLink]="['/admin/competitors', tournament.getId()]">
+          <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
+        </a>
+      </h2>
+
+      <!--scheidsrechters -->
+      <h2 class="header-bottom-bar">
+        <a type="button" class="btn btn-bottom-bar" (click)="linkToStructure()">
+          <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> scheidsrechters
+        </a>
+      </h2>
+
+    </div>
+  </div>
+</nav>

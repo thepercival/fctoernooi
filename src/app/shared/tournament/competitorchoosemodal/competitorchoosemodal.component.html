@@ -8,7 +8,7 @@
     <ngb-alert *ngIf="!hasSelectableCompetitors()" type="danger">er zijn geen deelnemers
         die je kunt kiezen</ngb-alert>
 
-    <table *ngIf="places.length > 0" class="table">
+    <table *ngIf="structure.getFirstRoundNumber().getPlaces().length > 0" class="table">
         <tbody>
             <ng-template ngFor let-competitorListItem [ngForOf]="competitorListItems">
                 <tr *ngIf="competitorListItem.competitor">

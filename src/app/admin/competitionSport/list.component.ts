@@ -14,6 +14,8 @@ import {
   AgainstGpp,
   GameMode,
   PointsCalculation,
+  Category,
+  Structure,
 } from 'ngx-sport';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -26,6 +28,7 @@ import { CompetitionSportRepository } from '../../lib/ngx-sport/competitionSport
 import { SportWithFields } from '../sport/createSportWithFields.component';
 import { IAlertType } from '../../shared/common/alert';
 import { GameModeModalComponent } from '../gameMode/modal.component';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 @Component({
   selector: 'app-tournament-sport',
   templateUrl: './list.component.html',
@@ -49,12 +52,13 @@ export class CompetitionSportListComponent extends TournamentComponent implement
     router: Router,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
+    globalEventsManager: GlobalEventsManager,
     private competitionSportRepository: CompetitionSportRepository,
     private planningRepository: PlanningRepository,
     public translateService: TranslateService,
     private modalService: NgbModal
   ) {
-    super(route, router, tournamentRepository, sructureRepository);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
   }
 
   ngOnInit() {
@@ -63,9 +67,9 @@ export class CompetitionSportListComponent extends TournamentComponent implement
 
   initSports() {
     this.createCompetitionSportsList();
-    this.smallestNrOfPoulePlaces = this.getSmallestNrOfPoulePlaces(this.structure.getRootRound());
+    this.smallestNrOfPoulePlaces = this.getSmallestNrOfPoulePlaces(this.structure);
     // console.log('smallestNrOfPoulePlaces', this.smallestNrOfPoulePlaces);
-    this.hasBegun = this.structure.getRootRound().hasBegun();
+    this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
     this.maxReached = this.competition.getSports().length >= 10;
     this.processing = false;
     if (this.hasBegun) {
@@ -73,15 +77,22 @@ export class CompetitionSportListComponent extends TournamentComponent implement
     }
   }
 
-  protected getSmallestNrOfPoulePlaces(round: Round, smallestNrOfPoulePlaces: number = 0): number {
+  protected getSmallestNrOfPoulePlaces(structure: Structure): number {
+    const smallestNrOfPoulePlaces = structure.getCategories().map((category: Category): number => {
+      return this.getSmallestNrOfPoulePlacesHelper(category.getRootRound());
+    });
+    return Math.max(...smallestNrOfPoulePlaces);
+  }
+
+  protected getSmallestNrOfPoulePlacesHelper(round: Round, smallestNrOfPoulePlaces?: number | undefined): number {
     const smallestNrOfRoundPoulePlaces = round.getPoules().map((poule: Poule) => poule.getPlaces().length)
       .reduce((min, current) => current < min ? min : current, 0);
 
-    if (smallestNrOfPoulePlaces === 0 || smallestNrOfRoundPoulePlaces < smallestNrOfPoulePlaces) {
+    if (smallestNrOfPoulePlaces === undefined || smallestNrOfRoundPoulePlaces < smallestNrOfPoulePlaces) {
       smallestNrOfPoulePlaces = smallestNrOfRoundPoulePlaces;
     }
     round.getChildren().forEach((childRound: Round) => {
-      smallestNrOfPoulePlaces = this.getSmallestNrOfPoulePlaces(childRound, smallestNrOfPoulePlaces);
+      smallestNrOfPoulePlaces = this.getSmallestNrOfPoulePlacesHelper(childRound, smallestNrOfPoulePlaces);
     });
     return smallestNrOfPoulePlaces;
   }

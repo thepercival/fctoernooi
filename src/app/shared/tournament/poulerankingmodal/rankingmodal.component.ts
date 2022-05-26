@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Poule, NameService, CompetitorMap, CompetitionSport, AgainstGpp, AgainstH2h } from 'ngx-sport';
+import { Poule, NameService, CompetitionSport, AgainstGpp, AgainstH2h, StructureNameService } from 'ngx-sport';
 import { Tournament } from '../../../lib/tournament';
 import { InfoModalComponent } from '../infomodal/infomodal.component';
 @Component({
@@ -14,7 +14,7 @@ export class PouleRankingModalComponent implements OnInit {
     public tournament!: Tournament;
     public activeTab = 1;
     public nameService!: NameService;
-    public competitorMap!: CompetitorMap;
+    public structureNameService!: StructureNameService;
     // public rankingService!: RankingService;
 
     constructor(
@@ -23,12 +23,10 @@ export class PouleRankingModalComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.competitorMap = new CompetitorMap(this.tournament.getCompetitors());
-        this.nameService = new NameService(this.competitorMap);
     }
 
     getHeader(): string {
-        const header = this.nameService.getPouleName(this.poule, true);
+        const header = this.structureNameService.getPouleName(this.poule, true);
         if (this.competitionSport === undefined) {
             return header + ' - stand';
         }

@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { CSSService } from '../../shared/common/cssservice';
@@ -31,17 +30,17 @@ export class HomeComponent extends TournamentComponent implements OnInit, OnDest
 
     constructor(
         route: ActivatedRoute,
-        private translate: TranslateService,
-        public cssService: CSSService,
         router: Router,
-        private authService: AuthService,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
+        globalEventsManager: GlobalEventsManager,
+        private authService: AuthService,
+        private translate: TranslateService,
+        public cssService: CSSService,
         public favRepository: FavoritesRepository,
-        public dateFormatter: DateFormatter,
-        private globalEventsManager: GlobalEventsManager
+        public dateFormatter: DateFormatter
     ) {
-        super(route, router, tournamentRepository, structureRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
     }
 
     ngOnInit() {

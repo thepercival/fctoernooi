@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AgainstGame, AgainstGamePlace, AgainstSide, NameService, Round, ScoreConfigService, GameState, TogetherGame, TogetherGamePlace, AgainstVariant } from 'ngx-sport';
+import { AgainstGame, AgainstGamePlace, AgainstSide, NameService, Round, ScoreConfigService, GameState, TogetherGame, TogetherGamePlace, AgainstVariant, StructureNameService } from 'ngx-sport';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { ResultsScreen, ScheduleScreen } from '../../lib/liveboard/screens';
 
@@ -10,7 +10,7 @@ import { ResultsScreen, ScheduleScreen } from '../../lib/liveboard/screens';
 })
 export class LiveboardGamesComponent implements OnInit {
     @Input() screen!: ScheduleScreen | ResultsScreen;
-    @Input() nameService!: NameService;
+    @Input() structureNameService!: StructureNameService;
     public hasOnlyGameModeAgainst: boolean = true;
 
     constructor(
@@ -42,7 +42,7 @@ export class LiveboardGamesComponent implements OnInit {
     get AwaySide(): AgainstSide { return AgainstSide.Away; }
 
     getSidePlaces(game: TogetherGame | AgainstGame, side: AgainstSide): string {
-        return this.nameService.getPlacesFromName((<AgainstGame>game).getSidePlaces(side), true, true);
+        return this.structureNameService.getPlacesFromName((<AgainstGame>game).getSidePlaces(side), true, true);
     }
 
     getAgainstScore(game: TogetherGame | AgainstGame): string {
@@ -70,8 +70,20 @@ export class LiveboardGamesComponent implements OnInit {
         return this.screen.getGames().some(game => game.getReferee() !== undefined || game.getRefereePlace() !== undefined);
     }
 
+    getRefereeName(game: AgainstGame | TogetherGame, longName?: boolean): string | undefined {
+        const referee = game.getReferee();
+        if (referee) {
+            return longName ? referee.getName() : referee.getInitials();
+        }
+        const refereePlace = game.getRefereePlace();
+        if (refereePlace) {
+            return this.structureNameService.getPlaceName(refereePlace, true, longName);
+        }
+        return '';
+    }
+
     getRoundAbbreviation(round: Round, sameName: boolean = false) {
-        const name = this.nameService.getRoundName(round);
+        const name = this.structureNameService.getRoundName(round);
         if (name.indexOf(' finale') >= 0) {
             return name.replace(' finale', 'F');
         } else if (name.indexOf('finale') >= 0) {

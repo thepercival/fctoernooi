@@ -1,4 +1,4 @@
-import { Competitor, CompetitorBase } from 'ngx-sport';
+import { Competitor, CompetitorBase, StartLocation } from 'ngx-sport';
 import { Tournament } from './tournament';
 
 export class TournamentCompetitor extends CompetitorBase implements Competitor {
@@ -8,8 +8,8 @@ export class TournamentCompetitor extends CompetitorBase implements Competitor {
     static readonly MAX_LENGTH_INFO = 200;
     static readonly MAX_LENGTH_IMAGEURL = 150;
 
-    constructor(private tournament: Tournament, pouleNr: number, placeNr: number, private name: string) {
-        super(tournament.getCompetition(), pouleNr, placeNr);
+    constructor(private tournament: Tournament, protected startLocation: StartLocation, private name: string) {
+        super(tournament.getCompetition(), startLocation);
         this.tournament.getCompetitors().push(this);
     }
 
@@ -19,5 +19,9 @@ export class TournamentCompetitor extends CompetitorBase implements Competitor {
 
     setName(name: string) {
         this.name = name;
+    }
+
+    updateStartLocation(pouleNr: number, placeNr: number): void {
+        this.startLocation = new StartLocation(this.startLocation.getCategoryNr(), pouleNr, placeNr);
     }
 }

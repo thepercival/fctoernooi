@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, TemplateRef } from '@angular/core';
 
-import { Poule, NameService, Round, CompetitorMap, GameState, CompetitionSport } from 'ngx-sport';
+import { Poule, NameService, Round, GameState, CompetitionSport, StructureNameService } from 'ngx-sport';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { CSSService } from '../../shared/common/cssservice';
@@ -13,10 +13,9 @@ import { Tournament } from '../../lib/tournament';
 })
 export class RankingRoundComponent implements OnInit {
     @Input() round!: Round;
-    @Input() competitorMap!: CompetitorMap;
+    @Input() structureNameService!: StructureNameService;
     @Input() tournament!: Tournament;
     @Input() first: boolean = true;
-    public nameService!: NameService;
     public collapsed: boolean = true;
     public poules: Poule[] = [];
     // public gameMode!: GameMode;
@@ -30,7 +29,6 @@ export class RankingRoundComponent implements OnInit {
     ngOnInit() {
         this.poules = this.round.getPoules().filter((poule: Poule) => poule.needsRanking());
         const roundNumber = this.round.getNumber();
-        this.nameService = new NameService(undefined);
         const state = this.round.getGamesState();
         const statePrevious = roundNumber.getPrevious()?.getGamesState();
         const nextRoundNumber = roundNumber.getNext();

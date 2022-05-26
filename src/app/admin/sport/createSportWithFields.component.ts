@@ -157,7 +157,6 @@ export class CreateSportWithFieldsComponent implements OnInit {
 
     openGameModeInfoModal() {
         // const modalRef = this.modalService.open(RoundsSelectorModalComponent);
-        // modalRef.componentInstance.structure = this.structure;
         this.modalService.open(GameModeModalComponent, { windowClass: 'info-modal' });
     }
 

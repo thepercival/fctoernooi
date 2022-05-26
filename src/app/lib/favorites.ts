@@ -1,18 +1,17 @@
-import { Referee, Competitor, Place, AgainstGame, TogetherGame, AgainstSide, AgainstGamePlace, TogetherGamePlace } from 'ngx-sport';
+import { Referee, Competitor, Place, AgainstGame, TogetherGame, AgainstSide, AgainstGamePlace, TogetherGamePlace, StartLocationMap } from 'ngx-sport';
 import { LockerRoom } from './lockerroom';
-import { CompetitorMap } from 'ngx-sport';
 import { Tournament } from './tournament';
 
 export class Favorites {
 
-    protected competitorMap: CompetitorMap;
+    protected startLocationMap: StartLocationMap;
 
     constructor(
         private tournament: Tournament,
         private competitors: Competitor[] = [],
         private referees: Referee[] = []
     ) {
-        this.competitorMap = new CompetitorMap(tournament.getCompetitors());
+        this.startLocationMap = new StartLocationMap(tournament.getCompetitors());
     }
 
     getTournament(): Tournament {
@@ -48,8 +47,23 @@ export class Favorites {
         return this.competitors.length > 0;
     }
 
-    hasCompetitor(competitor: Competitor | undefined): boolean {
+    hasPlace(place: Place): boolean {
+        if (this.getNrOfCompetitors() === 0) {
+            return false;
+        }
+        const startLocation = place.getStartLocation();
+        if (startLocation === undefined) {
+            return false;
+        }
+        const competitor = this.startLocationMap.getCompetitor(startLocation);
         if (competitor === undefined) {
+            return false;
+        }
+        return this.hasCompetitor(competitor);
+    }
+
+    hasCompetitor(competitor: Competitor | undefined): boolean {
+        if (competitor === undefined || this.getNrOfCompetitors() === 0) {
             return false;
         }
         return this.competitors.find(competitorIt => competitorIt === competitor) !== undefined;
@@ -131,7 +145,7 @@ export class Favorites {
         if (startLocation === undefined) {
             return undefined;
         }
-        return this.competitorMap.getCompetitor(startLocation);
+        return this.startLocationMap.getCompetitor(startLocation);
     }
 
     addReferee(referee: Referee) {

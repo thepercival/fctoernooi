@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Structure, NameService, Round, CompetitionSport } from 'ngx-sport';
+import { Round, CompetitionSport, StructureNameService } from 'ngx-sport';
 
 @Component({
     selector: 'app-ngbd-modal-rounds',
@@ -8,19 +8,18 @@ import { Structure, NameService, Round, CompetitionSport } from 'ngx-sport';
 })
 export class RoundsSelectorModalComponent implements OnInit {
     @Input() subject!: string;
-    @Input() structure!: Structure;
     @Input() competitionSport!: CompetitionSport;
     @Input() hasOwnConfig!: Function;
     @Input() toggleRound!: ToggleRound;
 
-    public nameService: NameService;
+    public structureNameService: StructureNameService;
     public someRoundSelected: boolean = false;
     processing = true;
 
     constructor(
         public activeModal: NgbActiveModal
     ) {
-        this.nameService = new NameService(undefined);
+        this.structureNameService = new StructureNameService(undefined);
     }
 
     ngOnInit() {

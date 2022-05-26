@@ -10,7 +10,7 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { LiveboardLink } from '../../lib/liveboard/link';
-import { NameService, CompetitorMap } from 'ngx-sport';
+import { StartLocationMap, StructureNameService } from 'ngx-sport';
 import { IAlertType } from '../../shared/common/alert';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScreenConfigRepository } from '../../lib/liveboard/screenConfig/repository';
@@ -31,22 +31,22 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     public screenConfigs: ScreenConfig[] | undefined;
     public configModalIsOpen = false;
     public toggleProgress = false;
-    public nameService!: NameService;
-    public competitorMap!: CompetitorMap;
+    public structureNameService!: StructureNameService;
+    public startLocationMap!: StartLocationMap;
 
     constructor(
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
+        globalEventsManager: GlobalEventsManager,
         private screenConfigRepository: ScreenConfigRepository,
-        private globalEventsManager: GlobalEventsManager,
         public cssService: CSSService,
         private myNavigation: MyNavigation,
         private modalService: NgbModal,
         private sponsorMapper: SponsorMapper
     ) {
-        super(route, router, tournamentRepository, structureRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
     }
 
     ngOnInit() {
@@ -84,10 +84,10 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     }
 
     processScreens(screenConfigs: ScreenConfig[]) {
-        this.competitorMap = new CompetitorMap(this.tournament.getCompetitors());
+        this.startLocationMap = new StartLocationMap(this.tournament.getCompetitors());
         const link: LiveboardLink = { showIcon: false, tournamentId: this.tournament.getId(), link: 'wim' };
         this.globalEventsManager.toggleLiveboardIconInNavBar.emit(link);
-        this.nameService = new NameService(this.competitorMap);
+        this.structureNameService = new StructureNameService(this.startLocationMap);
         const liveBoard = new Liveboard(screenConfigs);
         this.screens = liveBoard.getScreens(this.tournament, this.structure);
         // console.log(this.screens);

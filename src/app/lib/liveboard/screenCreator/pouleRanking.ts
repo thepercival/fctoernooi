@@ -1,4 +1,4 @@
-import { CompetitionSport, NameService, Poule, RoundNumber, GameState } from "ngx-sport";
+import { CompetitionSport, NameService, Poule, RoundNumber, GameState, Structure, StructureNameService } from "ngx-sport";
 import { ScreenConfig } from "../screenConfig/json";
 import { PoulesRankingScreen } from "../screens";
 
@@ -7,8 +7,10 @@ export class PouleRankingScreensCreator {
     constructor(protected screenConfig: ScreenConfig, protected maxLines: number) {
     }
 
-    getScreens(firstRoundNumber: RoundNumber): PoulesRankingScreen[] {
+    getScreens(structure: Structure): PoulesRankingScreen[] {
+        const structureNameService = new StructureNameService();
         const screens: PoulesRankingScreen[] = [];
+        const firstRoundNumber = structure.getFirstRoundNumber();
         const roundNumbers: RoundNumber[] = this.getRoundNumbersForPouleRankings(firstRoundNumber).filter(roundNumber => roundNumber.needsRanking());
         if (roundNumbers.length === 0) {
             return screens;
@@ -17,8 +19,8 @@ export class PouleRankingScreensCreator {
         competitionSports.forEach((competitionSport: CompetitionSport) => {
             roundNumbers.forEach((roundNumber: RoundNumber) => {
                 const poulesForRanking = roundNumber.getPoules().filter(poule => poule.needsRanking());
-                const nameService = new NameService(undefined);
-                const roundsDescription = nameService.getRoundNumberName(roundNumber);
+
+                const roundsDescription = structureNameService.getRoundNumberName(roundNumber);
                 let pouleOne = poulesForRanking.shift();
                 while (pouleOne !== undefined) {
                     const pouleTwo = poulesForRanking.shift();

@@ -1,13 +1,16 @@
 import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
+  BalancedPouleStructure,
+  Category,
   CompetitionSportService,
   Competitor,
-  CompetitorMap,
   NameService,
   PlaceRanges,
+  StartLocationMap,
   Structure,
-  StructureEditor
+  StructureEditor,
+  StructureNameService
 } from 'ngx-sport';
 
 import { cloneDeep } from 'lodash';
@@ -18,7 +21,10 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { IAlertType } from '../../shared/common/alert';
-import { StructurePathNode } from 'ngx-sport';
+import { QualifyPathNode } from 'ngx-sport';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
 @Component({
   selector: 'app-tournament-structure',
   templateUrl: './edit.component.html',
@@ -29,7 +35,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   actions: StructureAction[] = [];
   originalCompetitors!: Competitor[];
   clonedStructure!: Structure;
-  public nameService!: NameService;
+  public structureNameService!: StructureNameService;
   private scrolled = false;
 
   @ViewChild('structureRound') private roundElRef: ElementRef | undefined;
@@ -39,25 +45,28 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     router: Router,
     tournamentRepository: TournamentRepository,
     structureRepository: StructureRepository,
+    globalEventsManager: GlobalEventsManager,
     public structureEditor: StructureEditor,
+    private modalService: NgbModal,
     private planningRepository: PlanningRepository,
     private competitionSportService: CompetitionSportService,
     private myNavigation: MyNavigation,
     private defaultService: DefaultService
   ) {
-    super(route, router, tournamentRepository, structureRepository);
+    super(route, router, tournamentRepository, structureRepository, globalEventsManager);
   }
 
   ngOnInit() {
     const noStructure = true;
     super.myNgOnInit(() => {
-      this.nameService = new NameService(new CompetitorMap(this.tournament.getCompetitors()));
       this.structureEditor.setPlaceRanges(this.getPlaceRanges());
       this.structureRepository.getObject(this.tournament)
         .subscribe({
           next: (structure: Structure) => {
             this.structure = structure;
+            console.log(this.structure);
             this.clonedStructure = this.createClonedStructure(this.structure);
+            this.structureNameService = new StructureNameService(new StartLocationMap(this.originalCompetitors));
             this.processing = false;
           },
           error: (e: string) => {
@@ -66,11 +75,26 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
             const jsonPlanningConfig = this.defaultService.getJsonPlanningConfig(sportVariant);
             this.structure = this.structureEditor.create(this.competition, pouleStructure, jsonPlanningConfig);
             this.clonedStructure = this.createClonedStructure(this.structure);
+            this.structureNameService = new StructureNameService(new StartLocationMap(this.originalCompetitors));
             this.setAlert(IAlertType.Danger, e + ', new structure created');
             this.processing = false;
           }
         });
     }, noStructure);
+  }
+
+  openCategoryModal(category?: Category) {
+    const activeModal = this.modalService.open(NameModalComponent);
+    activeModal.componentInstance.header = 'categorie';
+    activeModal.componentInstance.range = { min: 3, max: 15 };
+    activeModal.componentInstance.placeHolder = 'Jongens 7/8';
+    activeModal.componentInstance.labelName = 'naam';
+    activeModal.componentInstance.buttonName = category ? 'wijzigen' : 'toevoegen';
+
+    activeModal.result.then((categoryName: string) => {
+      this.addCategory(categoryName);
+    }, (reason) => {
+    });
   }
 
   protected getPlaceRanges(): PlaceRanges {
@@ -100,6 +124,9 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     //console.log(this.actions);
     // (new StructureOutput()).toConsole(this.clonedStructure, console);
     this.resetAlert();
+    if (structureAction.recreateStructureNameService) {
+      this.structureNameService = new StructureNameService();
+    }
   }
 
   // getLowestRoundNumberFromActions(structurePathNode: StructurePathNode): number {
@@ -119,6 +146,31 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
         },
         error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
       });
+  }
+
+  private addCategory(name: string) {
+    // this.addAction(new StructureAction( StructureActionName.AddCategory)
+
+    const catergory = this.structureEditor.addCategory(
+      name, this.clonedStructure.getCategories().length + 1,
+      this.clonedStructure.getFirstRoundNumber(),
+      new BalancedPouleStructure(...this.defaultService.getPouleStructure(this.competition.getSportVariants()))
+    );
+    this.clonedStructure.getCategories().push(catergory);
+    this.addAction({ name: StructureActionName.AddCategory, recreateStructureNameService: true });
+  }
+
+  public removeCategory(category: Category): void {
+    const categories = this.clonedStructure.getCategories();
+    const idx = categories.indexOf(category);
+    if (idx >= 0) {
+      categories.splice(idx, 1);
+    }
+    categories.slice().splice(idx).forEach((category: Category) => {
+      console.log(category);
+      category.setNumber(category.getNumber() - 1);
+    });
+    this.addAction({ name: StructureActionName.RemoveCategory, recreateStructureNameService: true });
   }
 
   completeSave(structureRes: Structure) {
@@ -158,12 +210,14 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
 }
 
 export interface StructureAction {
-  path: StructurePathNode;
   name: StructureActionName;
+  pathNode?: QualifyPathNode;
   initialMaxNrOfPoulePlaces?: number;
+  recreateStructureNameService: boolean;
 }
 
 export enum StructureActionName {
+  AddCategory, RemoveCategory, UpdateCategory, // categoryActions
   AddPouleToRootRound, RemovePouleFromRootRound, AddPlaceToRootRound, // roundActions
   RemovePlaceFromRootRound, IncrementNrOfPoules, DecrementNrOfPoules, // roundActions
   RemoveQualifier, AddQualifier, // qualifyActions

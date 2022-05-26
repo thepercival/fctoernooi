@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, CompetitorMap, CompetitionSport, AgainstH2h, AgainstGpp, Single, AllInOneGame } from 'ngx-sport';
+import { Poule, CompetitionSport, AgainstH2h, AgainstGpp, Single, AllInOneGame, StructureNameService } from 'ngx-sport';
 
 import { CSSService } from '../../common/cssservice';
 import { Tournament } from '../../../lib/tournament';
@@ -13,10 +13,9 @@ export class PouleRankingComponent implements OnInit {
   @Input() poule!: Poule;
   @Input() tournament!: Tournament;
   @Input() competitionSport: CompetitionSport | undefined;
-  @Input() competitorMap!: CompetitorMap;
+  @Input() structureNameService!: StructureNameService;
   @Input() header!: boolean;
 
-  public nameService!: NameService;
   public processing = true;
 
   constructor(
@@ -26,7 +25,6 @@ export class PouleRankingComponent implements OnInit {
 
   ngOnInit() {
     this.processing = true;
-    this.nameService = new NameService(this.competitorMap);
     this.processing = false;
   }
 

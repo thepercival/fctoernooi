@@ -18,7 +18,7 @@
         <fa-icon *ngIf="!targetCollapsed[target]" [icon]="['fas', 'plus']" class="rotate-45 ms-1"></fa-icon>
       </ng-container>
       <ng-template #showReadOnly>
-        <span>{{nameService.getQualifyTargetDescription(target,true)}}</span>
+        <span>{{structureNameService.getQualifyTargetDescription(target,true)}}</span>
         <span *ngIf="parentRound.isRoot() && !areSomeQualifyGroupsEditable(target)">:
           {{parentRound.getNrOfPlacesChildren(target)}}</span>
       </ng-template>
@@ -59,7 +59,7 @@
 
 <ng-template let-singleRule="singleRule" #editSingleRule>
   <div>
-    <span [innerHtml]="nameService.getQualifyRuleName(singleRule) | keepHtml"></span>
+    <span [innerHtml]="structureNameService.getQualifyRuleName(singleRule) | keepHtml"></span>
   </div>
   <button *ngIf="structureEditor.isQualifyGroupSplittableAt(singleRule)" type="button"
     id="btn-split-qualifygroup-{{parentRound.getNumberAsValue()}}" class="btn btn-outline-primary"

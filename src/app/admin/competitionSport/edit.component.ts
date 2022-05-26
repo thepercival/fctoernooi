@@ -14,6 +14,7 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { TranslateService } from '../../lib/translate';
 import { CompetitionSportTab } from '../../shared/tournament/competitionSportTab';
 import { IAlertType } from '../../shared/common/alert';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
     selector: 'app-tournament-sportconfig-edit',
@@ -27,16 +28,17 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
     // startRoundNumber: RoundNumber;
 
     constructor(
-        public cssService: CSSService,
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
+        globalEventsManager: GlobalEventsManager,
+        public cssService: CSSService,
         private translate: TranslateService,
         public competitionSportService: CompetitionSportService,
         private myNavigation: MyNavigation
     ) {
-        super(route, router, tournamentRepository, structureRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
     }
 
     ngOnInit() {
@@ -49,7 +51,7 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
     }
 
     private postInit(id: number) {
-        this.hasBegun = this.structure.getRootRound().hasBegun();
+        this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
         const competitionSport = this.getCompetitionSportById(id);
         if (competitionSport === undefined) {
             this.router.navigate(['/admin', this.tournament.getId()]);

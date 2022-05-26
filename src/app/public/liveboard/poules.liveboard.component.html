@@ -15,7 +15,7 @@
       <tr>
         <th class="text-end width-14">pl</th>
         <th class="width-40">
-          <span class="badge bg-info">{{nameService.getPouleName(poule,!hasMultipleSports())}}</span>
+          <span class="badge bg-info">{{structureNameService.getPouleName(poule,!hasMultipleSports())}}</span>
           <span *ngIf="hasMultipleSports()"
             class="badge bg-info ms-1">{{screen.getCompetitionSport().getSport().getName()}}</span>
         </th>
@@ -33,7 +33,7 @@
           </td>
           <td class="text-nowrap">
             <span
-              [innerHtml]="nameService.getPlaceFromName(rankingItem.getPerformance().getPlace(), true) | keepHtml"></span>
+              [innerHtml]="structureNameService.getPlaceFromName(rankingItem.getPerformance().getPlace(), true) | keepHtml"></span>
           </td>
           <td class="text-end">{{rankingItem.getPerformance().getGames()}}</td>
           <td class="text-end">{{rankingItem.getPerformance().getPoints()}}</td>

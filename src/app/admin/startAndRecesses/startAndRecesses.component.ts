@@ -15,6 +15,7 @@ import { DateFormatter } from '../../lib/dateFormatter';
 import { IAlertType } from '../../shared/common/alert';
 import { RecessRepository } from '../../lib/recess/repository';
 import { Recess } from '../../lib/recess';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
     selector: 'app-tournament-startandrecesses',
@@ -32,15 +33,16 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
-        private recessRepository: RecessRepository,
         structureRepository: StructureRepository,
+        globalEventsManager: GlobalEventsManager,
+        private recessRepository: RecessRepository,
         private planningRepository: PlanningRepository,
         private tournamentMapper: TournamentMapper,
         private myNavigation: MyNavigation,
         public dateFormatter: DateFormatter,
         fb: FormBuilder
     ) {
-        super(route, router, tournamentRepository, structureRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
 
         this.form = fb.group({
             date: ['', Validators.compose([])],
@@ -53,7 +55,7 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
     }
 
     initStart() {
-        this.hasBegun = this.structure.getRootRound().hasBegun();
+        this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
         const date = this.competition.getStartDateTime();
 
         const now = new Date();
@@ -144,7 +146,7 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
                     this.planningRepository.reschedule(this.structure.getFirstRoundNumber(), this.tournament)
                         .subscribe({
                             next: () => {
-                                this.myNavigation.back();
+                                this.processing = false;
                             },
                             error: (e) => {
                                 this.setAlert(IAlertType.Danger, 'de wedstrijdplanning is niet opgeslagen: ' + e);

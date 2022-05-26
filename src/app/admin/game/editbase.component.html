@@ -4,9 +4,11 @@
       <label class="col-form-label">poule</label>
     </div>
     <div class="col-9 col-sm-6">
-      <label class="col-form-label" [innerHTML]="nameService.getRoundName( game.getRound() ) | keepHtml"></label>
+      <label class="col-form-label"
+        [innerHTML]="structureNameService.getRoundName( game.getRound() ) | keepHtml"></label>
       <label class="mx-1">-</label>
-      <label class="col-form-label" [innerHTML]="nameService.getPouleName( game.getPoule(), true) | keepHtml"></label>
+      <label class="col-form-label"
+        [innerHTML]="structureNameService.getPouleName( game.getPoule(), true) | keepHtml"></label>
     </div>
   </div>
   <div *ngIf="getPlanningConfig().getEnableTime() && !manualEditMode()" class="row mb-3">
@@ -71,7 +73,7 @@
     <div class="col-9 col-sm-6">
       <select class="form-control" formControlName="refereePlace">
         <option *ngFor="let refereePlace of getRefereePlaces()" [ngValue]="refereePlace">
-          <span [innerHtml]="nameService.getPlaceFromName(refereePlace, true, true) | keepHtml"></span>
+          <span [innerHtml]="structureNameService.getPlaceFromName(refereePlace, true, true) | keepHtml"></span>
         </option>
       </select>
     </div>

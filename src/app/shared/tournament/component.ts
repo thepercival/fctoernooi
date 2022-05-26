@@ -6,6 +6,7 @@ import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { AuthService } from '../../lib/auth/auth.service';
+import { GlobalEventsManager } from '../common/eventmanager';
 
 export class TournamentComponent {
 
@@ -19,7 +20,8 @@ export class TournamentComponent {
         protected route: ActivatedRoute,
         protected router: Router,
         protected tournamentRepository: TournamentRepository,
-        protected structureRepository: StructureRepository
+        protected structureRepository: StructureRepository,
+        protected globalEventsManager: GlobalEventsManager
     ) {
     }
 
@@ -53,6 +55,7 @@ export class TournamentComponent {
                                 this.setAlert(IAlertType.Danger, e); this.processing = false;
                             }
                         });
+                    this.globalEventsManager.updateTitleInNavBar.emit(tournament.getName());
                 },
                 error: (e) => {
                     this.setAlert(IAlertType.Danger, e); this.processing = false;
@@ -60,7 +63,7 @@ export class TournamentComponent {
             });
     }
 
-    protected setAlert(type: IAlertType, message: string) {
+    public setAlert(type: IAlertType, message: string) {
         this.alert = { 'type': type, 'message': message };
     }
 

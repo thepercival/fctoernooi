@@ -5,7 +5,7 @@
       </app-tournament-title>
       <div class="d-flex justify-content-between">
         <h2>
-          <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijdplanning
+          <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> planning & wedstrijden
         </h2>
         <button *ngIf="tournament && structure && structure.allPoulesHaveGames() && hasAdminRole()" type="button"
           class="btn btn-sm btn-primary me-0" [routerLink]="['/admin/startandrecesses', tournament.getId()]">
@@ -18,8 +18,8 @@
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
       <div *ngIf="!processing && structure">
         <app-tournament-roundnumber-planning *ngFor="let roundNumber of structure.getRoundNumbers()"
-          [tournament]="tournament" [roundNumber]="roundNumber" [roles]="roles" [userRefereeId]="userRefereeId"
-          (scroll)="scroll()">
+          [structureNameService]="structureNameService" [tournament]="tournament" [roundNumber]="roundNumber"
+          [roles]="roles" [userRefereeId]="userRefereeId" (scroll)="scroll()">
         </app-tournament-roundnumber-planning>
       </div>
     </div>

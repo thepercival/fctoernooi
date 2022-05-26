@@ -80,7 +80,7 @@
   </div>
   <div class="row mb-3">
     <div class="col-7 d-flex justify-content-end">
-      <button *ngIf="structure.getRootRound().getChildren().length" type="button" (click)="openSelectRoundsModal()"
+      <button *ngIf="getDefaultRootRound().getChildren().length" type="button" (click)="openSelectRoundsModal()"
         class="btn btn-outline-primary">
         selecteer ronden
       </button>

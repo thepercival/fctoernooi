@@ -75,7 +75,7 @@
     <tbody>
       <tr *ngFor="let placeCompetitor of placeCompetitorItems">
         <td>
-          <span [innerHtml]="nameService.getPlaceFromName(placeCompetitor.place, false) | keepHtml"></span>
+          <span [innerHtml]="structureNameService.getPlaceFromName(placeCompetitor.place, false) | keepHtml"></span>
         </td>
         <td class="text-break">
           <span *ngIf="placeCompetitor.competitor">{{placeCompetitor.competitor.getName()}}</span>

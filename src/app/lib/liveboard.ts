@@ -75,7 +75,7 @@ export class Liveboard {
             return [];
         }
         const pouleRankingScreensCreator = new PouleRankingScreensCreator(screenConfig, Liveboard.MaxScreenLines);
-        return pouleRankingScreensCreator.getScreens(structure.getFirstRoundNumber());
+        return pouleRankingScreensCreator.getScreens(structure);
     }
 
     protected getEndRankingScreens(structure: Structure): EndRankingScreen[] {

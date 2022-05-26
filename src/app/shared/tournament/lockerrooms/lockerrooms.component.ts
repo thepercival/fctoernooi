@@ -6,11 +6,9 @@ import { TournamentRepository } from '../../../lib/tournament/repository';
 import { TournamentComponent } from '../component';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { LockerRoom } from '../../../lib/lockerroom';
-import { MyNavigation } from '../../common/navigation';
 import { AuthService } from '../../../lib/auth/auth.service';
 import { Role } from '../../../lib/role';
 import { NameModalComponent } from '../namemodal/namemodal.component';
-import { Competitor } from 'ngx-sport';
 import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
 import { CompetitorChooseModalComponent } from '../competitorchoosemodal/competitorchoosemodal.component';
 import { FavoritesRepository } from '../../../lib/favorites/repository';
@@ -19,6 +17,7 @@ import { LockerRoomRepository } from '../../../lib/lockerroom/repository';
 import { TournamentCompetitor } from '../../../lib/competitor';
 import { JsonLockerRoom } from '../../../lib/lockerroom/json';
 import { IAlertType } from '../../common/alert';
+import { GlobalEventsManager } from '../../common/eventmanager';
 
 
 
@@ -41,14 +40,15 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
   constructor(
     route: ActivatedRoute,
     router: Router,
-    private modalService: NgbModal,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
+    globalEventsManager: GlobalEventsManager,
+    private modalService: NgbModal,
     private lockerRoomRepository: LockerRoomRepository,
     private authService: AuthService,
     public favRepository: FavoritesRepository
   ) {
-    super(route, router, tournamentRepository, sructureRepository);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
   }
 
   ngOnInit() {
@@ -136,7 +136,7 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
     const activeModal = this.modalService.open(CompetitorChooseModalComponent);
     activeModal.componentInstance.validator = this.validator;
     if (this.structure) {
-      activeModal.componentInstance.places = this.structure.getFirstRoundNumber().getPlaces();
+      activeModal.componentInstance.structure = this.structure;
     }
     activeModal.componentInstance.competitors = this.tournament.getCompetitors();
     activeModal.componentInstance.lockerRoom = lockerRoom;

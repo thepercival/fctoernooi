@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
-import { NameService, ScoreConfig, TogetherGamePlace, TogetherScore } from 'ngx-sport';
+import { ScoreConfig, StructureNameService, TogetherGamePlace, TogetherScore } from 'ngx-sport';
 import { TranslateService } from '../../lib/translate';
 
 @Component({
@@ -11,7 +11,7 @@ import { TranslateService } from '../../lib/translate';
 export class ScoreTogetherCardComponent implements OnInit {
   @Input() form!: FormGroup;
   @Input() gamePlace!: TogetherGamePlace;
-  @Input() nameService!: NameService;
+  @Input() structureNameService!: StructureNameService;
   @Output() afterEdit = new EventEmitter<void>();
   public firstScoreConfig!: ScoreConfig;
 

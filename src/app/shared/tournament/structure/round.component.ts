@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-import { NameService, Round, Competitor, StructureEditor, QualifyTarget, PlaceRanges, Place } from 'ngx-sport';
+import { Round, Competitor, StructureEditor, QualifyTarget, PlaceRanges, Place, StructureNameService } from 'ngx-sport';
 import { StructureAction, StructureActionName } from '../../../admin/structure/edit.component';
 import { IAlert, IAlertType } from '../../common/alert';
 import { CSSService } from '../../common/cssservice';
@@ -15,7 +15,7 @@ export class StructureRoundComponent implements OnInit {
   @Input() editable: boolean = false;
   @Input() first!: boolean;
   @Input() favorites: Competitor[] = [];
-  @Input() nameService!: NameService;
+  @Input() structureNameService!: StructureNameService;
   @Input() lastAction: StructureAction | undefined;
   @Output() addAction = new EventEmitter<StructureAction>();
   alert: IAlert | undefined;
@@ -49,10 +49,10 @@ export class StructureRoundComponent implements OnInit {
       } else if (actionName === StructureActionName.DecrementNrOfPoules) {
         this.structureEditor.decrementNrOfPoules(this.round);
       }
-      this.nameService.resetStructure();
       this.addAction.emit({
-        path: this.round.getStructurePathNode(),
+        pathNode: this.round.getPathNode(),
         name: actionName,
+        recreateStructureNameService: true
       });
     } catch (e: any) {
       this.setAlert(IAlertType.Danger, e.message);
@@ -75,11 +75,19 @@ export class StructureRoundComponent implements OnInit {
     return nrOfChildPoules;
   }
 
-  isFavorite(competitor: Competitor | undefined) {
+  isFavorite(place: Place): boolean {
+    if (this.favorites.length === 0) {
+      return false;
+    }
+    const startLocation = place.getStartLocation();
+    if (startLocation === undefined) {
+      return false;
+    }
+    const competitor = this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
     if (competitor === undefined) {
       return false;
     }
-    return this.favorites && this.favorites.indexOf(competitor) >= 0;
+    return this.favorites.indexOf(competitor) >= 0;
   }
 
   get AbsoluteMinPlacesPerPoule(): number {

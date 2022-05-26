@@ -7,7 +7,7 @@
           <input type="checkbox" class="form-check-input" [id]="getCustomSwitchId()" formControlName="selected"
             (ngModelChange)="toggleSelection()">
           <label class="form-check-label" [for]="getCustomSwitchId()"><span class="lead"
-              [innerHTML]="nameService.getRoundName( toggleRound.round ) | keepHtml"></span></label>
+              [innerHTML]="structureNameService.getRoundName( toggleRound.round ) | keepHtml"></span></label>
           <fa-icon *ngIf="hasOwnConfig2()" class="ms-1" [icon]="['fas', 'cogs']"></fa-icon>
         </div>
       </div>
@@ -15,8 +15,8 @@
         <div class="d-flex flex-wrap justify-content-around">
           <ul *ngFor="let poule of toggleRound.round.getPoules();" class="list-group mb-3">
             <li class="list-group-item disabled px-2 py-2">
-              {{nameService.getPouleName( poule, !toggleRound.parent && toggleRound.round.getPoules().length <= 2)}}
-                </li>
+              {{structureNameService.getPouleName( poule, !toggleRound.parent && toggleRound.round.getPoules().length <=
+                2)}} </li>
           </ul>
         </div>
       </div>
@@ -24,13 +24,13 @@
     <div class="d-flex align-items-stretch text-center">
       <app-tournament-select-round *ngFor="let toggleChildRound of toggleRound.children; first as first"
         class="align-self-stretch flex-wrap mb-2" [toggleRound]="toggleChildRound" [hasOwnConfig]="hasOwnConfig"
-        [first]="first" (checkRoundsSelected)="emitRoundsSelected()">
+        [structureNameService]="structureNameService" [first]="first" (checkRoundsSelected)="emitRoundsSelected()">
       </app-tournament-select-round>
     </div>
     <div *ngIf="toggleRound.parent && toggleRound.round.getNrOfPlaces() === 2">
       <div class="card round {{cssService.getQualifyRound(toggleRound.round)}}">
         <div class="card-header px-1">
-          <span [innerHTML]="nameService.getRoundName(toggleRound.round) | keepHtml"></span>
+          <span [innerHTML]="structureNameService.getRoundName(toggleRound.round) | keepHtml"></span>
           <div class="form-check form-switch">
             <input type="checkbox" class="form-check-input" [id]="getCustomSwitchId()" formControlName="selected"
               (ngModelChange)="toggleSelection()">

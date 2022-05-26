@@ -2,25 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    JsonCompetitor,
-    NameService,
-    CompetitorMap,
     JsonPeriod,
     Period,
-    RoundNumber,
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
-import { TournamentCompetitor } from '../../lib/competitor';
 import { IAlertType } from '../../shared/common/alert';
 import { RecessRepository } from '../../lib/recess/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { Recess } from '../../lib/recess';
 import { RecessValidator } from '../../lib/recess/validator';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
     selector: 'app-tournament-competitor-edit',
@@ -31,19 +27,19 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
     form: FormGroup;
     hasBegun!: boolean;
     minDateStruct!: NgbDateStruct;
-    public nameService!: NameService;
 
     constructor(
-        private recessRepository: RecessRepository,
-        private planningRepository: PlanningRepository,
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
+        globalEventsManager: GlobalEventsManager,
+        private recessRepository: RecessRepository,
+        private planningRepository: PlanningRepository,
         private myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
-        super(route, router, tournamentRepository, structureRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
         this.form = fb.group({
             startdate: ['', Validators.compose([])],
             starttime: ['', Validators.compose([])],
@@ -65,12 +61,9 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
     }
 
     private postInit() {
-        this.hasBegun = this.structure.getRootRound().hasBegun();
-        this.nameService = new NameService(new CompetitorMap(this.tournament.getCompetitors()));
+        this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
 
-        const date = this.competition.getStartDateTime();
-        const now = new Date();
-        const minDate = date > now ? date : now;
+        const minDate = this.competition.getStartDateTime();
         this.minDateStruct = { year: minDate.getFullYear(), month: minDate.getMonth() + 1, day: minDate.getDate() };
         this.initForm(minDate);
         this.processing = false;

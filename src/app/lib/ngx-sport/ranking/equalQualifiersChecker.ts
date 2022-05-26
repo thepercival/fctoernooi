@@ -1,4 +1,4 @@
-import { JsonAgainstGame, JsonTogetherGame, AgainstGame, TogetherGame, NameService, GameMapper, GameState, MultipleQualifyRule, QualifyGroup, RoundRankingCalculator, RoundRankingItem, QualifyTarget, Round, Place, Cumulative } from "ngx-sport";
+import { JsonAgainstGame, JsonTogetherGame, AgainstGame, TogetherGame, GameMapper, GameState, MultipleQualifyRule, QualifyGroup, RoundRankingCalculator, RoundRankingItem, QualifyTarget, Round, Place, Cumulative, StructureNameService } from "ngx-sport";
 
 export class EqualQualifiersChecker {
 
@@ -7,7 +7,7 @@ export class EqualQualifiersChecker {
 
     constructor(
         private game: AgainstGame | TogetherGame,
-        private nameService: NameService,
+        private structureNameService: StructureNameService,
         private gameMapper: GameMapper,
         cumulative: Cumulative
     ) {
@@ -26,7 +26,7 @@ export class EqualQualifiersChecker {
 
         const pouleRankingItems = this.roundRankingCalculator.getItemsForPoule(this.game.getPoule());
         const equalPouleItems = this.getEqualPouleRankingItemsWithQualifyRules(round, pouleRankingItems);
-        const postFix = '(' + this.nameService.getPouleName(this.game.getPoule(), true) + ')';
+        const postFix = '(' + this.structureNameService.getPouleName(this.game.getPoule(), true) + ')';
         let warnings: string[] = this.getWarningsForEqualQualifiersHelper(equalPouleItems, postFix);
 
         if (round.getGamesState() !== GameState.Finished) {
@@ -38,7 +38,7 @@ export class EqualQualifiersChecker {
                 const fromHorPoule = multipleRule.getFromHorizontalPoule();
                 const roundRankingItems = this.roundRankingCalculator.getItemsForHorizontalPoule(fromHorPoule);
                 const equalRuleItems = this.getEqualRuleRankingItems(multipleRule, roundRankingItems);
-                const postFixTmp = '(' + this.nameService.getQualifyRuleName(multipleRule) + ')';
+                const postFixTmp = '(' + this.structureNameService.getQualifyRuleName(multipleRule) + ')';
                 warnings = warnings.concat(this.getWarningsForEqualQualifiersHelper(equalRuleItems, postFixTmp));
             }
         });
@@ -50,7 +50,7 @@ export class EqualQualifiersChecker {
     protected getWarningsForEqualQualifiersHelper(equalItemsPerRank: RoundRankingItem[][], postFix: string): string[] {
         return equalItemsPerRank.map(equalItems => {
             const names: string[] = equalItems.map(equalItem => {
-                return this.nameService.getPlaceName(equalItem.getPlace(), true, true);
+                return this.structureNameService.getPlaceName(equalItem.getPlace(), true, true);
             });
             return names.join(' & ') + ' zijn precies gelijk geëindigd' + postFix;
         });

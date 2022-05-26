@@ -27,6 +27,7 @@ import {
     AgainstVariant,
     JsonTogetherGamePlace,
     JsonAgainstGamePlace,
+    StructureNameService,
 } from 'ngx-sport';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -35,6 +36,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { IAlertType } from '../../shared/common/alert';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
     selector: 'app-tournament-game-add',
@@ -49,13 +51,14 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
     public singleSportVariant: Single | undefined;
     public allInOneGameSportVariant: AllInOneGame | undefined;
     public form: FormGroup;
-    public nameService!: NameService;
+    public structureNameService!: StructureNameService;
 
     constructor(
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
+        globalEventsManager: GlobalEventsManager,
         private gameRepository: GameRepository,
         private competitionSportMapper: CompetitionSportMapper,
         private fieldMapper: FieldMapper,
@@ -64,7 +67,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
         public dateFormatter: DateFormatter,
         fb: FormBuilder
     ) {
-        super(route, router, tournamentRepository, structureRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
         this.form = fb.group({
             poule: [undefined, Validators.compose([
                 Validators.required
@@ -93,7 +96,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
     ngOnInit() {
         this.route.params.subscribe(params => {
             super.myNgOnInit(() => {
-                this.nameService = new NameService(new CompetitorMap(this.tournament.getCompetitors()));
+                this.structureNameService = new StructureNameService(new CompetitorMap(this.tournament.getCompetitors()));
                 const roundNumber = this.structure.getRoundNumber(+params.roundNumber);
 
                 if (roundNumber === undefined) {

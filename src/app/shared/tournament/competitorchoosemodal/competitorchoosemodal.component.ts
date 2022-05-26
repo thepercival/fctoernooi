@@ -1,6 +1,6 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { NameService, Competitor, Place, Round, RoundNumber, CompetitorMap } from 'ngx-sport';
+import { Competitor, Place, StartLocationMap, Structure, StructureNameService } from 'ngx-sport';
 import { TournamentCompetitor } from '../../../lib/competitor';
 import { LockerRoom } from '../../../lib/lockerroom';
 import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
@@ -12,25 +12,32 @@ import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
 })
 export class CompetitorChooseModalComponent implements OnInit {
     @Input() validator!: LockerRoomValidator;
-    @Input() places: Place[] = [];
+    @Input() structure!: Structure;
     @Input() competitors: Competitor[] = [];
     @Input() lockerRoom!: LockerRoom;
     @Input() selectedCompetitors: Competitor[] = [];
     public competitorListItems: CompetitorListItem[] = [];
-    public nameService!: NameService;
-    public competitorMap!: CompetitorMap;
+    public structureNameService!: StructureNameService;
+    public startLocationMap!: StartLocationMap;
     public changed = false;
 
     constructor(public activeModal: NgbActiveModal) {
     }
 
     ngOnInit() {
-        this.competitorMap = new CompetitorMap(this.competitors);
-        this.nameService = new NameService(this.competitorMap);
-        this.places.forEach((place: Place) => {
-            const competitor = <TournamentCompetitor>this.competitorMap.getCompetitor(place);
+        this.startLocationMap = new StartLocationMap(this.competitors);
+        this.structureNameService = new StructureNameService(this.startLocationMap);
+        this.structure.getFirstRoundNumber().getPlaces().forEach((place: Place) => {
+            const startLocation = place.getStartLocation();
+            if (startLocation === undefined) {
+                return;
+            }
+            const competitor = <TournamentCompetitor | undefined>this.startLocationMap.getCompetitor(startLocation);
+            if (competitor === undefined) {
+                return;
+            }
             this.competitorListItems.push({
-                placeName: this.nameService.getPlaceFromName(place, false),
+                placeName: this.structureNameService.getPlaceFromName(place, false),
                 competitor: competitor,
                 selected: this.isSelected(competitor),
                 nrOtherLockerRooms: this.validator.nrArranged(competitor, this.lockerRoom)

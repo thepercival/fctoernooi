@@ -23,6 +23,7 @@ import { TranslateService } from '../../lib/translate';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { GameEditComponent } from './edit.component';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
     selector: 'app-tournament-againstgame-edit',
@@ -41,6 +42,7 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
+        globalEventsManager: GlobalEventsManager,
         authService: AuthService,
         gameRepository: GameRepository,
         mapper: GameMapper,
@@ -51,8 +53,8 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
         myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
-        super(route, router, tournamentRepository, structureRepository, authService, gameRepository,
-            mapper, fieldMapper, refereeMapper, placeMapper, translate, myNavigation, fb);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager,
+            authService, gameRepository, mapper, fieldMapper, refereeMapper, placeMapper, translate, myNavigation, fb);
         // this.originalPouleState = State.Created;
         this.form.addControl('extratime', new FormControl(false));
         this.form.addControl('homeExtraPoints', new FormControl(false));

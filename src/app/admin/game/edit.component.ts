@@ -1,10 +1,8 @@
 import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    NameService,
     Round,
     RoundNumber,
-    CompetitorMap,
     ScoreConfigService,
     ScoreConfig,
     AgainstGame,
@@ -22,6 +20,9 @@ import {
     Place,
     GamePhase,
     Cumulative,
+    Category,
+    StructureNameService,
+    StartLocationMap,
 } from 'ngx-sport';
 import { Observable, of } from 'rxjs';
 
@@ -37,6 +38,7 @@ import { TournamentUser } from '../../lib/tournament/user';
 import { map } from 'rxjs/operators';
 import { EqualQualifiersChecker } from '../../lib/ngx-sport/ranking/equalQualifiersChecker';
 import { IAlertType } from '../../shared/common/alert';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 export class GameEditComponent extends TournamentComponent {
     public game: AgainstGame | TogetherGame | undefined;
@@ -45,7 +47,7 @@ export class GameEditComponent extends TournamentComponent {
     // private originalPouleState: number;    
     public planningConfig!: PlanningConfig;
     public firstScoreConfig!: ScoreConfig;
-    public nameService!: NameService;
+    public structureNameService!: StructureNameService;
     public warningsForEqualQualifiers: string[] = [];
     private equalQualifiersChecker!: EqualQualifiersChecker;
     public pristineScore = true;
@@ -56,6 +58,7 @@ export class GameEditComponent extends TournamentComponent {
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
+        globalEventsManager: GlobalEventsManager,
         private authService: AuthService,
         private gameRepository: GameRepository,
         protected mapper: GameMapper,
@@ -66,7 +69,7 @@ export class GameEditComponent extends TournamentComponent {
         private myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
-        super(route, router, tournamentRepository, structureRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
         // this.originalPouleState = State.Created;
         this.scoreConfigService = new ScoreConfigService();
         this.form = fb.group({
@@ -76,8 +79,8 @@ export class GameEditComponent extends TournamentComponent {
     }
 
     ngOnInitBase(gameId: number) {
-        this.nameService = new NameService(new CompetitorMap(this.tournament.getCompetitors()));
-        const game = this.getGameById(gameId, this.structure.getRootRound());
+        this.structureNameService = new StructureNameService(new StartLocationMap(this.tournament.getCompetitors()));
+        const game = this.getGameById(gameId);
         if (game === undefined) {
             this.setAlert(IAlertType.Danger, 'de wedstrijd kan niet gevonden worden');
             this.processing = false;
@@ -86,7 +89,7 @@ export class GameEditComponent extends TournamentComponent {
         this.game = game;
         const roundNumber = this.game.getRound().getNumber();
         const cumulative = roundNumber.getCompetition().hasMultipleSports() ? Cumulative.byPerformance : Cumulative.byRank;
-        this.equalQualifiersChecker = new EqualQualifiersChecker(this.game, this.nameService, this.mapper, cumulative);
+        this.equalQualifiersChecker = new EqualQualifiersChecker(this.game, this.structureNameService, this.mapper, cumulative);
 
         if (this.nextRoundNumberBegun(roundNumber)) {
             this.setAlert(IAlertType.Warning, 'het aanpassen van de score kan gevolgen hebben voor de al begonnen volgende ronde');
@@ -190,7 +193,16 @@ export class GameEditComponent extends TournamentComponent {
         return nextRoundNumber.hasBegun() || this.nextRoundNumberBegun(nextRoundNumber);
     }
 
-    protected getGameById(id: number, round: Round): AgainstGame | TogetherGame | undefined {
+    protected getGameById(id: number): AgainstGame | TogetherGame | undefined {
+        let game;
+        this.structure.getCategories().some((category: Category): boolean => {
+            game = this.getGameByIdForCategory(id, category.getRootRound());
+            return game !== undefined;
+        });
+        return game;
+    }
+
+    protected getGameByIdForCategory(id: number, round: Round): AgainstGame | TogetherGame | undefined {
         if (round === undefined) {
             return undefined;
         }
@@ -198,8 +210,8 @@ export class GameEditComponent extends TournamentComponent {
         if (game !== undefined) {
             return game;
         }
-        round.getChildren().some(child => {
-            game = this.getGameById(id, child);
+        round.getChildren().some((child: Round) => {
+            game = this.getGameByIdForCategory(id, child);
             return (game !== undefined);
         });
         if (game !== undefined) {

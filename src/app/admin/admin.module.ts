@@ -58,7 +58,7 @@ import { AuthorizationListComponent } from './authorization/list.component';
 import { AuthorizationAddComponent } from './authorization/add.component';
 import { RoleItemComponent } from './authorization/roleitem.component';
 import { AuthorizationExplanationModalComponent } from './authorization/infomodal.component';
-import { StructureSelectRoundComponent } from './rounds/round.component';
+import { StructureSelectRoundComponent } from './rounds/rounds.component';
 import { ExportModalComponent } from './home/exportmodal.component';
 import { ShareModalComponent } from './home/sharemodal.component';
 import { AgainstQualifyConfigEditComponent } from './againstQualifyConfig/edit.component';
@@ -73,6 +73,7 @@ import { GameBaseEditComponent } from './game/editbase.component';
 import { GameAddComponent } from './game/add.component';
 import { GameModeModalComponent } from './gameMode/modal.component';
 import { RecessAddComponent } from './startAndRecesses/addRecess.component';
+import { CategoryCompetitorListComponent } from './competitor/category.component';
 
 @NgModule({
   imports: [
@@ -92,6 +93,7 @@ import { RecessAddComponent } from './startAndRecesses/addRecess.component';
     CompetitionSportEditComponent,
     CompetitorEditComponent,
     CompetitorListComponent,
+    CategoryCompetitorListComponent,
     CompetitorListLineComponent,
     CompetitorListRemoveModalComponent,
     ExportModalComponent,

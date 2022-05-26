@@ -3,14 +3,12 @@ import { Router } from '@angular/router';
 import { NgbPopover, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   Game,
-  NameService,
   Poule,
   RoundNumber,
   ScoreConfigService,
   Round,
   PlanningConfig,
   ScoreConfig,
-  CompetitorMap,
   Place,
   Period,
   AgainstGame,
@@ -23,7 +21,8 @@ import {
   GameOrder,
   Competitor,
   GameState,
-  AgainstVariant
+  AgainstVariant,
+  StructureNameService
 } from 'ngx-sport';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -53,6 +52,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
 
   @Input() tournament!: Tournament;
   @Input() roundNumber!: RoundNumber;
+  @Input() structureNameService!: StructureNameService;
   @Input() userRefereeId: number | string | undefined;
   @Input() roles: number = 0;
   @Input() favorites!: Favorites;
@@ -71,8 +71,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   private scoreConfigService: ScoreConfigService;
   public needsRanking: boolean = false;
   public hasMultiplePoules: boolean = false;
-  private competitorMap!: CompetitorMap;
-  public nameService!: NameService;
   public planningConfig!: PlanningConfig;
   public hasOnlyGameModeAgainst: boolean = true;
   public hasGameModeAgainst: boolean = true;
@@ -96,8 +94,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   }
 
   ngOnInit() {
-    this.competitorMap = new CompetitorMap(this.tournament.getCompetitors());
-    this.nameService = new NameService(this.competitorMap);
     this.planningConfig = this.roundNumber.getValidPlanningConfig();
     const loggedInUserId = this.authService.getLoggedInUserId();
     const currentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;
@@ -197,6 +193,18 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     return new Date(previous.getLastStartDateTime().getTime() + (nrOfMinutesToAdd * 60000));
   }
 
+  getRefereeName(game: AgainstGame | TogetherGame): string | undefined {
+    const referee = game.getReferee();
+    if (referee) {
+      return referee.getInitials();
+    }
+    const refereePlace = game.getRefereePlace();
+    if (refereePlace) {
+      return this.structureNameService.getPlaceName(refereePlace, true, false);
+    }
+    return '';
+  }
+
   toggleFilter() {
     this.filterEnabled = !this.filterEnabled;
     this.loadGameData();
@@ -222,7 +230,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     const pouleDatas = new PouleDataMap();
     this.roundNumber.getPoules().forEach(poule => {
       pouleDatas.set(poule.getId(), {
-        name: this.nameService.getPouleName(poule, false),
+        name: this.structureNameService.getPouleName(poule, false),
         needsRanking: poule.needsRanking(),
         round: poule.getRound()
       });
@@ -287,7 +295,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     if (startLocation === undefined) {
       return undefined;
     }
-    return this.competitorMap.getCompetitor(startLocation);
+    return this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
   }
 
   private hasCompetitor(place: Place): boolean {
@@ -372,10 +380,10 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
 
   getGameQualificationDescription(game: AgainstGame | TogetherGame): string {
     if (game instanceof AgainstGame) {
-      return this.nameService.getPlacesFromName(game.getSidePlaces(AgainstSide.Home), false, true)
-        + ' - ' + this.nameService.getPlacesFromName(game.getSidePlaces(AgainstSide.Away), false, true);
+      return this.structureNameService.getPlacesFromName(game.getSidePlaces(AgainstSide.Home), false, true)
+        + ' - ' + this.structureNameService.getPlacesFromName(game.getSidePlaces(AgainstSide.Away), false, true);
     }
-    return this.nameService.getPlacesFromName(game.getPlaces(), false, true)
+    return this.structureNameService.getPlacesFromName(game.getPlaces(), false, true)
   }
 
   openModalPouleRank(poule: Poule) {

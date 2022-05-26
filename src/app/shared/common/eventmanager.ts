@@ -4,4 +4,5 @@ import { LiveboardLink } from '../../lib/liveboard/link';
 @Injectable()
 export class GlobalEventsManager {
     public toggleLiveboardIconInNavBar: EventEmitter<LiveboardLink> = new EventEmitter();
+    public updateTitleInNavBar: EventEmitter<string> = new EventEmitter();
 }

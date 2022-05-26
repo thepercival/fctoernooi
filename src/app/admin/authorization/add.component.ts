@@ -13,6 +13,7 @@ import { MyNavigation } from '../../shared/common/navigation';
 import { JsonTournamentInvitation } from '../../lib/tournament/invitation/mapper';
 import { AuthorizationExplanationModalComponent } from './infomodal.component';
 import { IAlertType } from '../../shared/common/alert';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
     selector: 'app-tournament-authorization-add',
@@ -33,12 +34,13 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
+        globalEventsManager: GlobalEventsManager,
         private invitationRepository: TournamentInvitationRepository,
         private myNavigation: MyNavigation,
         fb: FormBuilder,
         private modalService: NgbModal,
     ) {
-        super(route, router, tournamentRepository, structureRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
         const config = {
             emailaddress: ['', Validators.compose([
                 Validators.required,

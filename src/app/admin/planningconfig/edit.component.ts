@@ -17,7 +17,8 @@ import {
     AgainstH2h,
     AgainstGpp,
     AllInOneGame,
-    Single
+    Single,
+    StructureNameService
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -37,6 +38,7 @@ import { forkJoin, Observable, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { IAlertType } from '../../shared/common/alert';
 import { Options } from 'selenium-webdriver';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
     selector: 'app-planningconfig-edit',
@@ -48,7 +50,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     hasBegun!: boolean;
     form: FormGroup;
     private pouleStructure!: PouleStructure;
-    public nameService!: NameService;
+    public structureNameService!: StructureNameService;
     public gameAmountLabel!: string;
     gameAmountConfigControls: GameAmountConfigControl[] = [];
     // gameModes: GameMode[] = [GameMode.Against, GameMode.Together];
@@ -65,6 +67,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         router: Router,
         tournamentRepository: TournamentRepository,
         sructureRepository: StructureRepository,
+        globalEventsManager: GlobalEventsManager,
         private planningConfigRepository: PlanningConfigRepository,
         private gameAmountConfigRepository: GameAmountConfigRepository,
         private myNavigation: MyNavigation,
@@ -75,7 +78,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         private modalService: NgbModal,
         fb: FormBuilder
     ) {
-        super(route, router, tournamentRepository, sructureRepository);
+        super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
         this.form = fb.group({
             /*gameMode: ['', Validators.compose([
                 Validators.required
@@ -126,7 +129,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     initConfig(startRoundNumberAsValue: number) {
-        this.nameService = new NameService(new CompetitorMap(this.tournament.getCompetitors()));
+        this.structureNameService = new StructureNameService(new CompetitorMap(this.tournament.getCompetitors()));
         const startRoundNumber = this.structure.getRoundNumber(startRoundNumberAsValue);
         if (startRoundNumber === undefined) {
             this.setAlert(IAlertType.Danger, 'het rondenumber is niet gevonden');

@@ -16,6 +16,7 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IAlertType } from '../../shared/common/alert';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
     selector: 'app-tournament-referee-edit',
@@ -37,11 +38,12 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
     };
 
     constructor(
-        private refereeRepository: RefereeRepository,
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
+        globalEventsManager: GlobalEventsManager,
+        private refereeRepository: RefereeRepository,
         private planningRepository: PlanningRepository,
         private myNavigation: MyNavigation,
         private modalService: NgbModal,
@@ -50,7 +52,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
 
         // EditPermissions, EmailAddresses
         // andere groep moet dan zijn getEditPermission, wanneer ingelogd, bij gewone view
-        super(route, router, tournamentRepository, structureRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
         this.form = fb.group({
             initials: ['', Validators.compose([
                 Validators.required,

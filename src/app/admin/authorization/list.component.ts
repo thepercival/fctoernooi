@@ -13,6 +13,7 @@ import { TournamentUser } from '../../lib/tournament/user';
 import { TournamentAuthorization } from '../../lib/tournament/authorization';
 import { AuthorizationExplanationModalComponent } from './infomodal.component';
 import { IAlertType } from '../../shared/common/alert';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
     selector: 'app-tournament-authorization-list',
@@ -30,11 +31,12 @@ export class AuthorizationListComponent extends TournamentComponent implements O
         router: Router,
         tournamentRepository: TournamentRepository,
         sructureRepository: StructureRepository,
+        globalEventsManager: GlobalEventsManager,
         private tournamentUserRepository: TournamentUserRepository,
         private invitationRepository: TournamentInvitationRepository,
         private modalService: NgbModal,
     ) {
-        super(route, router, tournamentRepository, sructureRepository);
+        super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
     }
 
     ngOnInit() {

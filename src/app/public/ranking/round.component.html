@@ -5,7 +5,7 @@
         <span>
         </span>
         <h5 class="mb-2 mt-2">
-          <span [innerHtml]="nameService.getRoundName(round) | keepHtml"></span>
+          <span [innerHtml]="structureNameService.getRoundName(round) | keepHtml"></span>
         </h5>
         <fa-icon class="pointer px-3 pt-2" [icon]="['fas', 'chevron-right']" [rotate]="getCollapseDegrees()">
         </fa-icon>
@@ -14,7 +14,7 @@
     <div class="card-body px-1" [ngClass]="{ 'd-none': collapsed }">
       <div class="d-flex flex-wrap gap-3 justify-content-between">
         <app-tournament-pouleranking *ngFor="let poule of poules" [poule]="poule" [header]="true"
-          [tournament]="tournament" [competitorMap]="competitorMap" class="mx-auto"
+          [tournament]="tournament" [structureNameService]="structureNameService" class="mx-auto"
           [competitionSport]="getCompetitionSport()">
         </app-tournament-pouleranking>
       </div>
@@ -24,7 +24,7 @@
 <div class="d-flex align-items-stretch text-center">
   <app-tournament-ranking-round *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed(); first as first"
     class="align-self-stretch flex-wrap mb-2 w-100" [round]="qualifyGroup.getChildRound()" [tournament]="tournament"
-    [first]="first" [competitorMap]="competitorMap">
+    [first]="first" [structureNameService]="structureNameService">
   </app-tournament-ranking-round>
 </div>
 

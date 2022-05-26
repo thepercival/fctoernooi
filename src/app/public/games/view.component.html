@@ -18,9 +18,10 @@
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
       <div *ngIf="!processing && tournament && structure">
         <app-tournament-roundnumber-planning *ngFor="let roundNumber of structure.getRoundNumbers()"
-          [tournament]="tournament" [roundNumber]="roundNumber" [favorites]="favRepository.getObject(tournament)"
-          [roles]="filterRefereeRole()" [userRefereeId]="userRefereeId" (scroll)="scroll()"
-          (refreshData)="refreshData()" [refreshingData]="refreshingData">
+          [structureNameService]="structureNameService" [tournament]="tournament" [roundNumber]="roundNumber"
+          [favorites]="favRepository.getObject(tournament)" [roles]="filterRefereeRole()"
+          [userRefereeId]="userRefereeId" (scroll)="scroll()" (refreshData)="refreshData()"
+          [refreshingData]="refreshingData">
         </app-tournament-roundnumber-planning>
       </div>
     </div>

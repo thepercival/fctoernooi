@@ -14,6 +14,7 @@ import { IAlertType } from '../../shared/common/alert';
 import { ScreenConfigName } from '../../lib/liveboard/screenConfig/name';
 import { ScreenConfig } from '../../lib/liveboard/screenConfig/json';
 import { SponsorMapper } from '../../lib/sponsor/mapper';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 
 @Component({
@@ -29,13 +30,14 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
   constructor(
     route: ActivatedRoute,
     router: Router,
-    private modalService: NgbModal,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
+    globalEventsManager: GlobalEventsManager,
+    private modalService: NgbModal,
     private sponsorRepository: SponsorRepository,
     private sponsorMapper: SponsorMapper
   ) {
-    super(route, router, tournamentRepository, sructureRepository);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
     this.screenConfig = this.sponsorMapper.getDefaultScreenConfig();
   }
 

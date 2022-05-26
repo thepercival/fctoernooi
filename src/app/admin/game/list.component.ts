@@ -8,7 +8,9 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentUser } from '../../lib/tournament/user';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { CompetitorMap, StructureNameService } from 'ngx-sport';
 
 @Component({
   selector: 'app-tournament-games-edit',
@@ -18,17 +20,18 @@ import { Observable, of, Subscription } from 'rxjs';
 export class GameListComponent extends TournamentComponent implements OnInit {
   userRefereeId: number | string | undefined;
   roles: number = 0;
+  public structureNameService!: StructureNameService;
 
   constructor(
     route: ActivatedRoute,
     router: Router,
     tournamentRepository: TournamentRepository,
     structureRepository: StructureRepository,
-
+    globalEventsManager: GlobalEventsManager,
     private authService: AuthService,
     private myNavigation: MyNavigation,
   ) {
-    super(route, router, tournamentRepository, structureRepository);
+    super(route, router, tournamentRepository, structureRepository, globalEventsManager);
   }
 
   ngOnInit() {
@@ -39,6 +42,8 @@ export class GameListComponent extends TournamentComponent implements OnInit {
         this.processing = false;
         return;
       }
+      const competitorMap = new CompetitorMap(this.tournament.getCompetitors());
+      this.structureNameService = new StructureNameService(competitorMap);
       this.roles = tournamentUser ? tournamentUser.getRoles() : 0;
       this.getUserRefereeId(tournamentUser)
         .subscribe({

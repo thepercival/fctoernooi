@@ -11,6 +11,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { Observable } from 'rxjs';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
   selector: 'app-tournament-referee',
@@ -30,13 +31,14 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   constructor(
     route: ActivatedRoute,
     router: Router,
-    private modalService: NgbModal,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
+    globalEventsManager: GlobalEventsManager,
+    private modalService: NgbModal,
     private refereeRepository: RefereeRepository,
     private planningRepository: PlanningRepository,
   ) {
-    super(route, router, tournamentRepository, sructureRepository);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
   }
 
   ngOnInit() {
@@ -46,7 +48,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   initReferees() {
     this.createRefereesList();
 
-    this.hasBegun = this.structure.getRootRound().hasBegun();
+    this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
     if (this.hasBegun) {
       this.setAlert(IAlertType.Warning, 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen en verwijderen');
     }

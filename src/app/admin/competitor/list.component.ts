@@ -1,29 +1,24 @@
 import { AfterViewChecked, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
-  Competitor,
-  NameService,
   Place,
   Structure,
-  CompetitorMap,
-  StructureEditor,
+  Category,
+  StructureNameService,
+  StartLocationMap,
 } from 'ngx-sport';
-import { forkJoin, Observable } from 'rxjs';
 
 import { MyNavigation } from '../../shared/common/navigation';
-import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { CompetitorListRemoveModalComponent } from './listremovemodal.component';
 import { LockerRoomValidator } from '../../lib/lockerroom/validator';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { CompetitorMapper } from '../../lib/competitor/mapper';
-import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 import { IAlertType } from '../../shared/common/alert';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
   selector: 'app-tournament-competitors',
@@ -31,40 +26,36 @@ import { IAlertType } from '../../shared/common/alert';
   styleUrls: ['./list.component.scss']
 })
 export class CompetitorListComponent extends TournamentComponent implements OnInit, AfterViewChecked {
-  public placeCompetitorItems: PlaceCompetitorItem[] = [];
-  swapItem: PlaceCompetitorItem | undefined;
+
   focusId!: number | string;
-  orderMode = false;
-  hasBegun!: boolean;
+  // hasBegun!: boolean;
   lockerRoomValidator!: LockerRoomValidator;
   areSomeCompetitorsArranged!: boolean;
-  public nameService!: NameService;
+  public structureNameService!: StructureNameService;
 
   constructor(
     route: ActivatedRoute,
     router: Router,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
-    private structureEditor: StructureEditor,
+    globalEventsManager: GlobalEventsManager,
     private planningRepository: PlanningRepository,
     private competitorRepository: CompetitorRepository,
     private mapper: CompetitorMapper,
-    private modalService: NgbModal,
     private myNavigation: MyNavigation
   ) {
-    super(route, router, tournamentRepository, sructureRepository);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
   }
 
   ngOnInit() {
     super.myNgOnInit(() => {
       const competitors = this.tournament.getCompetitors();
-      const competitorMap = new CompetitorMap(competitors);
-      this.nameService = new NameService(competitorMap);
+      const startLocationMap = new StartLocationMap(competitors);
+      this.structureNameService = new StructureNameService(startLocationMap);
       this.lockerRoomValidator = new LockerRoomValidator(competitors, this.tournament.getLockerRooms());
       this.areSomeCompetitorsArranged = this.lockerRoomValidator.areSomeArranged(); // caching
-      this.placeCompetitorItems = this.getPlaceCompetitorItems();
-      this.initFocus(competitorMap);
-      this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
+      this.initFocus(startLocationMap);
+      // this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
       this.processing = false;
     });
   }
@@ -72,165 +63,30 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   alertType(): string { return this.alert?.type ?? IAlertType.Danger }
   alertMessage(): string { return this.alert?.message ?? '' }
 
+  updateProcessing(message: string | false): void {
+    if (message === false) {
+      this.processing = false;
+    } else {
+      this.processing = true;
+      this.setAlert(IAlertType.Info, message);
+    }
+  }
+
   ngAfterViewChecked() {
     this.myNavigation.scroll();
   }
 
-  initFocus(competitorMap: CompetitorMap) {
-    this.structure.getRootRound().getPlaces().every(place => {
-      if (competitorMap.getCompetitor(place) === undefined) {
-        this.focusId = place.getId();
-      }
-      return this.focusId === undefined;
-    });
-  }
-
-  toggleView() {
-    this.orderMode = !this.orderMode;
-    this.resetAlert();
-  }
-
-  getPlaceCompetitorItems(): PlaceCompetitorItem[] {
-    const competitorMap = new CompetitorMap(this.tournament.getCompetitors());
-    return this.structure.getRootRound().getPlaces().map((place: Place): PlaceCompetitorItem => {
-      return { place, competitor: <TournamentCompetitor>competitorMap.getCompetitor(place) };
-    });
-  }
-
-  allPlacesHaveACompetitor(): boolean {
-    return this.placeCompetitorItems.every((item: PlaceCompetitorItem) => item.competitor !== undefined);
-  }
-
-  atLeastTwoPlacesHaveACompetitor(): boolean {
-    let firstCompetitor: TournamentCompetitor | undefined;
-    return this.placeCompetitorItems.some((item: PlaceCompetitorItem) => {
-      if (firstCompetitor === undefined) {
-        firstCompetitor = item.competitor;
-      }
-      return firstCompetitor !== undefined && item.competitor !== undefined && firstCompetitor !== item.competitor;
-    });
-  }
-
-  showLockerRoomNotArranged(competitor: Competitor | undefined): boolean {
-    return competitor !== undefined && this.areSomeCompetitorsArranged && !this.lockerRoomValidator.isArranged(competitor);
-  }
-
-  editPlace(place: Place) {
-    this.linkToEdit(this.tournament, place);
-  }
-
-  linkToEdit(tournament: Tournament, place: Place) {
-    this.router.navigate(
-      ['/admin/competitor', tournament.getId(), place.getPouleNr(), place.getPlaceNr()]
-    );
-  }
-
-  linkToLockerRooms() {
-    this.router.navigate(
-      ['/admin/lockerrooms', this.tournament.getId()]
-    );
-  }
-
-  swapTwo(secondSwapItem: PlaceCompetitorItem) {
-    this.resetAlert();
-    if (this.swapItem === undefined) {
-      this.swapItem = secondSwapItem;
-      return;
-    }
-    if (this.swapItem === secondSwapItem) {
-      this.swapItem = undefined;
-      return;
-    }
-    const swapCompetitorOne = this.swapItem.competitor;
-    const swapCompetitorTwo = secondSwapItem.competitor;
-    if (!swapCompetitorOne || !swapCompetitorTwo) {
-      return;
-    }
-    this.processing = true;
-    this.setAlert(IAlertType.Info, 'volgorde wordt gewijzigd');
-    this.swapHelper(
-      [this.competitorRepository.swapObjects(swapCompetitorOne, swapCompetitorTwo, this.tournament)]);
-  }
-
-  swapAll() {
-    this.processing = true;
-    this.setAlert(IAlertType.Info, 'volgorde wordt willekeurig gewijzigd');
-
-    let reposUpdates: Observable<void>[] = [];
-    const competitors = this.tournament.getCompetitors().slice();
-    let swapCompetitor: TournamentCompetitor | undefined;
-    while (competitors.length > 1) {
-      if (swapCompetitor === undefined) {
-        swapCompetitor = competitors.shift();
-        continue;
-      }
-      const idx = this.getRandomInt(competitors.length);
-      reposUpdates.push(this.competitorRepository.swapObjects(swapCompetitor, competitors[idx], this.tournament));
-      swapCompetitor = undefined;
-    }
-    this.swapHelper(reposUpdates);
-  }
-
-  private getRandomInt(max: number): number {
-    return Math.floor(Math.random() * Math.floor(max));
-  }
-
-  protected swapHelper(reposUpdates: Observable<void>[]) {
-    forkJoin(reposUpdates)
-      .subscribe({
-        next: () => {
-          this.setAlert(IAlertType.Success, 'volgorde gewijzigd');
-          this.swapItem = undefined;
-          this.placeCompetitorItems = this.getPlaceCompetitorItems();
-          this.processing = false;
-        },
-        error: (e) => {
-          this.setAlert(IAlertType.Danger, 'volgorde niet gewijzigd: ' + e);
-          this.swapItem = undefined;
-          this.placeCompetitorItems = this.getPlaceCompetitorItems();
-          this.processing = false;
+  initFocus(startLocationMap: StartLocationMap) {
+    this.structure.getCategories().some((category: Category) => {
+      return category.getRootRound().getPlaces().some((place: Place) => {
+        const startLocation = place.getStartLocation();
+        if (startLocation && startLocationMap.getCompetitor(startLocation) === undefined) {
+          this.focusId = place.getId();
+          return true;
         }
+        return false;
       });
-  }
-
-  addPlaceToRootRound(): void {
-    this.processing = true;
-    this.setAlert(IAlertType.Info, 'er wordt een pouleplek toegevoegd');
-    try {
-      const rootRound = this.structure.getRootRound();
-      const addedPlace = this.structureEditor.addPlaceToRootRound(rootRound);
-      this.saveStructure('pouleplek ' + this.nameService.getPlaceName(addedPlace) + ' is toegevoegd');
-    } catch (e: any) {
-      this.setAlert(IAlertType.Danger, e.message);
-    }
-  }
-
-  preRemove(item: PlaceCompetitorItem) {
-    const activeModal = this.modalService.open(CompetitorListRemoveModalComponent);
-    activeModal.componentInstance.item = item;
-    activeModal.componentInstance.allPlacesAssigned = this.allPlacesHaveACompetitor();
-
-    activeModal.result.then((result) => {
-      if (result === 'remove-place') {
-        this.removePlaceFromRootRound(item);
-      } else if (result === 'remove-competitor' && item.competitor) {
-        this.removeCompetitor(item.competitor);
-      } else if (result === 'to-structure') {
-        this.processing = true;
-        this.router.navigate(['/admin/structure', this.tournament.getId()]);
-      }
-    }, (reason) => {
     });
-  }
-
-  hasMinimumNrOfPlacesPerPoule(): boolean {
-    const rootRound = this.structure.getRootRound();
-    return (rootRound.getPoules().length * 2) === rootRound.getNrOfPlaces();
-  }
-
-  hasNoDropouts(): boolean {
-    const rootRound = this.structure.getRootRound();
-    return rootRound.getNrOfPlaces() <= rootRound.getNrOfPlacesChildren();
   }
 
   /**
@@ -254,9 +110,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
       });
   }
 
-  getSwapSwitchId(place: Place): string {
-    return 'swap-' + place.getId();
-  }
+
 
   removeCompetitor(competitor: TournamentCompetitor): void {
     this.processing = true;
@@ -264,34 +118,22 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.competitorRepository.removeObject(competitor, this.tournament)
       .subscribe({
         next: () => {
-          this.placeCompetitorItems = this.getPlaceCompetitorItems();
+          this.structureNameServiceUpdate();
           this.setAlert(IAlertType.Success, 'deelnemer ' + competitor + ' is verwijderd');
         },
         error: (e) => {
           this.setAlert(IAlertType.Danger, e); this.processing = false;
-        },
-        complete: () => this.processing = false
+        }
       });
   }
 
-  removePlaceFromRootRound(item: PlaceCompetitorItem): void {
-    this.processing = true;
-    const rootRound = this.structure.getRootRound();
-    const competitor = item.competitor;
-    const suffix = competitor ? ' en deelnemer "' + competitor.getName() : '"';
-    const singledoubleWill = competitor ? 'worden' : 'wordt';
-    this.setAlert(IAlertType.Info, 'een pouleplek' + suffix + ' ' + singledoubleWill + ' verwijderd');
-    try {
-      this.structureEditor.removePlaceFromRootRound(rootRound);
-      const singledoubleIs = competitor ? 'zijn' : 'is';
-      this.saveStructure('een pouleplek' + competitor + ' ' + singledoubleIs + ' verwijderd');
-    } catch (e: any) {
-      this.processing = false;
-      this.setAlert(IAlertType.Danger, e.message);
-    }
+  public structureNameServiceUpdate(): void {
+    const map = new StartLocationMap(this.tournament.getCompetitors());
+    this.structureNameService = new StructureNameService(map);
+    this.processing = false;
   }
 
-  protected saveStructure(message: string) {
+  public saveStructure(message: string) {
     this.structureRepository.editObject(this.structure, this.tournament)
       .subscribe({
         next: (structure: Structure) => {
@@ -299,7 +141,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
           this.planningRepository.create(this.structure, this.tournament, 1)
             .subscribe({
               next: () => {
-                this.placeCompetitorItems = this.getPlaceCompetitorItems();
+                this.structureNameService = new StructureNameService(new StartLocationMap(this.tournament.getCompetitors()));
                 this.setAlert(IAlertType.Success, message);
               },
               error: (e) => {

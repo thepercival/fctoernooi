@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HorizontalPoule, Place, QualifyGroup, MultipleQualifyRule, QualifyTarget, Round, SingleQualifyRule } from 'ngx-sport';
-import { isReturnStatement } from 'typescript';
 
 @Injectable()
 export class CSSService {

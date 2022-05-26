@@ -2,18 +2,15 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    Sport,
-    NameService,
     ScoreConfig,
-    RoundNumber,
     JsonScoreConfig,
-    SportMapper,
     Structure,
     CompetitorMap,
     CompetitionSport,
     Round,
     ScoreConfigMapper,
     CompetitionSportMapper,
+    Category,
 } from 'ngx-sport';
 import { CSSService } from '../../shared/common/cssservice';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -36,7 +33,6 @@ export class ScoreConfigEditComponent implements OnInit {
 
     public alert: IAlert | undefined;
     public processing: boolean = true;
-    public nameService!: NameService;
     public form: FormGroup;
     protected toggleRound!: ToggleRound;
     public originalScoreConfig!: ScoreConfig;
@@ -69,8 +65,12 @@ export class ScoreConfigEditComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.nameService = new NameService(new CompetitorMap(this.tournament.getCompetitors()));
         this.initToggleRound();
+    }
+
+    // @TODO CDK CATEGORY - REMOVE FUNCTION
+    getDefaultCategory(): Category {
+        return this.structure.getCategories()[0];
     }
 
     initToggleRound() {
@@ -78,7 +78,7 @@ export class ScoreConfigEditComponent implements OnInit {
             (round: Round, competitionSport: CompetitionSport) => {
                 return round.getScoreConfig(competitionSport);
             });
-        this.toggleRound = toggleRoundInittializer.createToggleRound(this.structure.getRootRound());
+        this.toggleRound = toggleRoundInittializer.createToggleRound(this.getDefaultCategory().getRootRound());
         this.originalScoreConfig = this.toggleRound.round.getValidScoreConfig(this.competitionSport);
         this.postToggleRoundChange();
     }
@@ -172,7 +172,6 @@ export class ScoreConfigEditComponent implements OnInit {
 
     openSelectRoundsModal() {
         const modalRef = this.modalService.open(RoundsSelectorModalComponent);
-        modalRef.componentInstance.structure = this.structure;
         modalRef.componentInstance.competitionSport = this.competitionSport;
         modalRef.componentInstance.toggleRound = this.toggleRound;
         modalRef.componentInstance.subject = 'de score-regels';

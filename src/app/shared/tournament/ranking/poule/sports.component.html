@@ -44,10 +44,9 @@
                 <span
                     class="badge badge-rank {{getQualifyPlaceClass(roundRankingItem)}}">{{roundRankingItem.getUniqueRank()}}</span>
             </td>
-            <td class="text-break ps-0"
-                [ngClass]="{ 'favitem': favorites.hasCompetitor(competitorMap.getCompetitor(roundRankingItem.getPlace())) }">
+            <td class="text-break ps-0" [ngClass]="{ 'favitem': favorites.hasPlace(roundRankingItem.getPlace()) }">
                 <span
-                    [innerHtml]="nameService.getPlaceFromName(roundRankingItem.getPlace(), true, true) | keepHtml"></span>
+                    [innerHtml]="structureNameService.getPlaceFromName(roundRankingItem.getPlace(), true, true) | keepHtml"></span>
             </td>
             <td class="ps-0">{{roundRankingItem.getCumulativePerformance().getGames()}}</td>
             <td *ngFor="let competitionSport of competitionSports; let counter = index;"

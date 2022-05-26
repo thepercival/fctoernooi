@@ -1,21 +1,30 @@
-<nav *ngIf="tournamentLiveboardLink.showIcon !== false" class="navbar navbar-dark bg-primary py-1">
-  <a class="navbar-brand" tabindex="-1" [routerLink]="['/']">
-    <fa-icon [icon]=" [ getLogoIconPrefix(), getLogoIconName()] "></fa-icon> {{title}}
-  </a>
-  <button *ngIf="tournamentLiveboardLink.showIcon === true"
-    [routerLink]="[tournamentLiveboardLink.link, tournamentLiveboardLink.tournamentId]" routerLinkActive="active"
-    class="btn btn-secondary d-none d-lg-block" type="button" tabindex="-1">
-    <fa-icon [icon]=" [ 'fas', 'tv'] "></fa-icon>
-    <span> live scorebord</span>
+<nav *ngIf="tournamentLiveboardLink.showIcon !== false" class="navbar bg-dark py-0 mb-2">
+  <button routerLink="/" class="btn text-header-top border-1 p-0 pt-1" role="button" aria-label="home" tabindex="-1">
+    <fa-icon [icon]=" [ getLogoIconPrefix(), getLogoIconName()]" size="3x"></fa-icon>
   </button>
+
+  <ng-container *ngIf="tournamentLiveboardLink.showIcon;else tournament">
+    <button [routerLink]="[tournamentLiveboardLink.link, tournamentLiveboardLink.tournamentId]"
+      class="btn text-header-top d-none d-lg-block" type="button" tabindex="-1">
+      <fa-icon [icon]=" [ 'fas', 'tv'] "></fa-icon>
+      <span> live scorebord</span>
+    </button>
+  </ng-container>
+  <ng-template #tournament>
+    <h1 class="text-header-top my-1">{{title}}</h1>
+  </ng-template>
+
+  <!-- <a class="navbar-brand py-0" tabindex="-1" [routerLink]="['/']">
+    <fa-icon [icon]=" [ getLogoIconPrefix(), getLogoIconName()] "></fa-icon> 
+  </a> -->
 
   <button *ngIf="!authService.isLoggedIn()" routerLink="/user/login" routerLinkActive="active"
     class="btn btn-outline-secondary" role="button" aria-label="inloggen " tabindex="-1">
     <fa-icon [icon]=" [ 'fas', 'sign-in-alt'] "></fa-icon>
     <span class="ms-1">inloggen</span>
   </button>
-  <button *ngIf="authService.isLoggedIn()" [routerLink]="['/user/profile']" class="btn btn-outline-secondary p-0 pt-1"
-    role="button" tabindex="-1" aria-label="account">
+  <button *ngIf="authService.isLoggedIn()" [routerLink]="['/user/profile']"
+    class="btn btn-outline-secondary p-0 pt-1 text-header-top" role="button" tabindex="-1" aria-label="account">
     <fa-icon [icon]="[ 'fas', 'user-circle']" size="3x"></fa-icon>
   </button>
 

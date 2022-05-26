@@ -2,7 +2,7 @@
   <div class="card border-secondary round mb-2 user-select-none {{cssService.getQualifyRound(round)}}"
     *ngIf="round.isRoot() || round.getNrOfPlaces() > MinPlacesPerPoule">
     <div class="card-header px-1">
-      <span class="lead" [innerHTML]="nameService.getRoundName( round ) | keepHtml"></span>
+      <span class="lead" [innerHTML]="structureNameService.getRoundName( round ) | keepHtml"></span>
       &nbsp;
     </div>
     <div class="card-body px-1">
@@ -19,18 +19,18 @@
       <div class="d-flex flex-wrap justify-content-around">
         <ul *ngFor="let poule of round.getPoules();" class="list-group mb-3">
           <li class="list-group-item disabled px-2 py-2">
-            {{nameService.getPouleName( poule, round.isRoot() && round.getPoules().length <= 2)}} </li>
+            {{structureNameService.getPouleName( poule, round.isRoot() && round.getPoules().length <= 2)}} </li>
           <li *ngFor="let place of poule.getPlaces();"
             class="list-group-item px-2 py-2 place-list-item pointer {{cssService.getQualifyPlace(place)}}"
             placement="top" [ngbPopover]="longName" (click)="setPopoverPlace(place)">
-            <span [ngClass]="{'favitem': isFavorite(nameService.getCompetitorMap()?.getCompetitor(place)) }"
-              [innerHtml]="nameService.getPlaceFromName(place,false) | keepHtml"></span>
+            <span [ngClass]="{'favitem': isFavorite(place) }"
+              [innerHtml]="structureNameService.getPlaceFromName(place,false) | keepHtml"></span>
           </li>
         </ul>
       </div>
     </div>
   </div>
-  <app-tournament-structurequalify *ngIf="editable" [parentRound]="round" [nameService]="nameService"
+  <app-tournament-structurequalify *ngIf="editable" [parentRound]="round" [structureNameService]="structureNameService"
     [structureEditor]="structureEditor" (addAction)="addAction.emit($event)" [lastAction]="lastAction">
   </app-tournament-structurequalify>
 
@@ -38,13 +38,14 @@
     <app-tournament-structureround *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed(); first as first"
       class="align-self-stretch flex-wrap mb-2" [round]="qualifyGroup.getChildRound()"
       [editable]="editable && !round.hasBegun()" [favorites]="favorites" [first]="first"
-      [structureEditor]="structureEditor" [nameService]="nameService" (addAction)="addAction.emit($event)">
+      [structureEditor]="structureEditor" [structureNameService]="structureNameService"
+      (addAction)="addAction.emit($event)">
     </app-tournament-structureround>
   </div>
   <div *ngIf="!round.isRoot() && round.getNrOfPlaces() === MinPlacesPerPoule">
     <div class="card round {{cssService.getQualifyRound(round)}}">
       <div class="card-header px-1">
-        <span [innerHTML]="nameService.getRoundName(round) | keepHtml"></span>
+        <span [innerHTML]="structureNameService.getRoundName(round) | keepHtml"></span>
       </div>
     </div>
   </div>
@@ -57,4 +58,4 @@
 </div>
 
 <ng-template #longName><span *ngIf="popoverPlace"
-    [innerHtml]="nameService.getPlaceFromName(popoverPlace,true, true) | keepHtml"></span></ng-template>
+    [innerHtml]="structureNameService.getPlaceFromName(popoverPlace,true, true) | keepHtml"></span></ng-template>

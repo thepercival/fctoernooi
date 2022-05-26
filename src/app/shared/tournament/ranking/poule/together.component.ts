@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, CompetitorMap, GameAmountConfig, ScoreConfigService, TogetherGame, CompetitionSport, TogetherGamePlace, TogetherSportRoundRankingCalculator, SportRoundRankingItem, PlaceLocation, GameState, Single, AllInOneGame, Place, AgainstH2h, AgainstGpp } from 'ngx-sport';
+import { Poule, GameAmountConfig, ScoreConfigService, TogetherGame, CompetitionSport, TogetherGamePlace, TogetherSportRoundRankingCalculator, SportRoundRankingItem, PlaceLocation, GameState, Single, AllInOneGame, Place, AgainstH2h, AgainstGpp, StructureNameService } from 'ngx-sport';
 
 import { CSSService } from '../../../common/cssservice';
 import { Favorites } from '../../../../lib/favorites';
@@ -15,13 +15,12 @@ import { ViewPort, ViewPortManager, ViewPortNrOfColumnsMap } from '../../../comm
 export class PouleRankingTogetherComponent implements OnInit {
   @Input() poule!: Poule;
   @Input() tournament!: Tournament;
-  @Input() competitorMap!: CompetitorMap;
+  @Input() structureNameService!: StructureNameService;
   @Input() competitionSport!: CompetitionSport;
   @Input() header!: boolean;
   protected togetherRankingCalculator!: TogetherSportRoundRankingCalculator;
 
   public sportRankingItems!: SportRoundRankingItem[];
-  public nameService!: NameService;
   public favorites!: Favorites;
   public viewPortManager!: ViewPortManager;
   protected gameAmountConfig!: GameAmountConfig;
@@ -38,7 +37,6 @@ export class PouleRankingTogetherComponent implements OnInit {
 
   ngOnInit() {
     this.processing = true;
-    this.nameService = new NameService(this.competitorMap);
     this.favorites = this.favRepos.getObject(this.tournament);
     this.togetherRankingCalculator = new TogetherSportRoundRankingCalculator(this.competitionSport);
     this.sportRankingItems = this.togetherRankingCalculator.getItemsForPoule(this.poule);

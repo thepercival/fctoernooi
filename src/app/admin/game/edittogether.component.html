@@ -9,7 +9,8 @@
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
       <form *ngIf="!processing && tournament && hasAuthorization" [formGroup]="form" (ngSubmit)="save()" #f="ngForm"
         novalidate>
-        <app-tournament-basegame-edit [form]="getBaseFormGroup()" [nameService]="nameService" [game]="game">
+        <app-tournament-basegame-edit [form]="getBaseFormGroup()" [structureNameService]="structureNameService"
+          [game]="game">
         </app-tournament-basegame-edit>
         <div class="row mb-3">
           <div class="col-3">
@@ -18,8 +19,8 @@
           <div class="col-9">
             <div formGroupName="gamePlaces" class="d-flex flex-wrap gap-3">
               <app-tournament-togetherscorecard *ngFor="let gamePlace of game.getTogetherPlaces()"
-                [gamePlace]="gamePlace" [form]="getFormGroupGamePlace(gamePlace.getId())" [nameService]="nameService"
-                (afterEdit)="postScoreControlUpdate()">
+                [gamePlace]="gamePlace" [form]="getFormGroupGamePlace(gamePlace.getId())"
+                [structureNameService]="structureNameService" (afterEdit)="postScoreControlUpdate()">
               </app-tournament-togetherscorecard>
             </div>
           </div>

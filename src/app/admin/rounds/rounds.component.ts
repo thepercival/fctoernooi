@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { NameService, RoundNumber } from 'ngx-sport';
+import { StructureNameService } from 'ngx-sport';
 import { CSSService } from '../../shared/common/cssservice';
 import { ToggleRound } from './selector.component';
 
 @Component({
   selector: 'app-tournament-select-round',
-  templateUrl: './round.component.html',
-  styleUrls: ['./round.component.css']
+  templateUrl: './rounds.component.html',
+  styleUrls: ['./rounds.component.css']
 })
 export class StructureSelectRoundComponent implements OnInit {
   @Input() toggleRound!: ToggleRound;
@@ -15,7 +15,7 @@ export class StructureSelectRoundComponent implements OnInit {
   @Input() hasOwnConfig!: Function;
   @Output() checkRoundsSelected = new EventEmitter<void>();
   form: FormGroup;
-  public nameService!: NameService;
+  @Input() structureNameService!: StructureNameService;
 
   constructor(public cssService: CSSService, fb: FormBuilder
   ) {
@@ -25,7 +25,6 @@ export class StructureSelectRoundComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.nameService = new NameService();
     this.form.controls.selected.setValue(this.toggleRound.selected);
   }
 

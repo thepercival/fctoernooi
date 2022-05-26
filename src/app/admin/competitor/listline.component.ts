@@ -1,6 +1,6 @@
 import { AfterViewChecked, Component, ElementRef, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NameService, Place } from 'ngx-sport';
+import { Place, StructureNameService } from 'ngx-sport';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
@@ -15,7 +15,7 @@ export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
   @Input() focus!: boolean;
   @Input() hasBegun!: boolean;
   @Input() showLockerRoomNotArranged!: boolean;
-  @Input() nameService!: NameService;
+  @Input() structureNameService!: StructureNameService;
   @Output() editPressed = new EventEmitter<Place>();
   @Output() removePressed = new EventEmitter<PlaceCompetitorItem>();
   @Output() registerPressed = new EventEmitter<TournamentCompetitor>();

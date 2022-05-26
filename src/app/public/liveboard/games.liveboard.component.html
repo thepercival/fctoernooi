@@ -34,7 +34,7 @@
           <span [innerHtml]="getRoundAbbreviation(game.getRound()) | keepHtml"></span>
         </td>
         <td>
-          <span>{{nameService.getPouleName(game.getPoule(), false)}}</span>
+          <span>{{structureNameService.getPouleName(game.getPoule(), false)}}</span>
         </td>
 
         <td *ngIf="screen.getBatchViewMode()" class="width-10"
@@ -54,7 +54,7 @@
           <ng-container *ngTemplateOutlet="togetherGamePlaces;context:{$implicit: game}"></ng-container>
         </ng-container>
 
-        <td *ngIf="isScheduleScreen() && hasReferees()" class="text-end">{{nameService.getRefereeName(game)}}</td>
+        <td *ngIf="isScheduleScreen() && hasReferees()" class="text-end">{{getRefereeName(game)}}</td>
       </tr>
     </tbody>
   </table>
@@ -80,7 +80,7 @@
     <div class="d-flex flex-wrap gap-2 justify-content-center mb-2">
       <ul *ngFor="let gamePlace of game.getTogetherPlaces()" class="list-group list-group-horizontal">
         <li class="list-group-item border-start-0">
-          <span [innerHtml]="nameService.getPlaceFromName(gamePlace.getPlace(),true,true) | keepHtml"></span>
+          <span [innerHtml]="structureNameService.getPlaceFromName(gamePlace.getPlace(),true,true) | keepHtml"></span>
         </li>
         <li *ngIf="isPlayed(game)" class="list-group-item">
           {{getTogetherScore(gamePlace)}}

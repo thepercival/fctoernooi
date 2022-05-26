@@ -1,7 +1,7 @@
 <div *ngIf="tournament">
   <div class="d-flex justify-content-between mt-3">
     <h2 class="me-auto">
-      <span [innerHTML]="nameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
+      <span [innerHTML]="structureNameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
       <button *ngIf="refreshingData !== undefined && gameDatas.length > 0" type="button"
         class="btn btn-sm btn-outline-secondary ms-1" (click)="refreshData.emit()" [disabled]="refreshingData">
         <fa-icon [icon]="['fas', 'sync']" [spin]="refreshingData"></fa-icon>
@@ -149,7 +149,7 @@
             <!-- referee -->
             <td *ngIf="hasSomeReferees" class="{{hasGameModeAgainst ? 'd-none d-sm-table-cell' : ''}} text-end"
               [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
-              {{nameService.getRefereeName(gmData.game)}}</td>
+              {{getRefereeName(gmData.game)}}</td>
           </tr>
         </ng-template>
       </tbody>
@@ -166,7 +166,7 @@
 <ng-template #againstGamePlacesCell let-gmData>
   <!-- homePlaces -->
   <td class="text-end text-break" [ngClass]="{'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, Home) }">
-    <span [innerHTML]="nameService.getPlacesFromName(gmData.game.getHomePlaces(),true,true) | keepHtml"></span>
+    <span [innerHTML]="structureNameService.getPlacesFromName(gmData.game.getHomePlaces(),true,true) | keepHtml"></span>
   </td>
   <!-- score -->
   <td class="text-center text-nowrap">
@@ -183,7 +183,7 @@
       <ng-container
         *ngIf="(gmData.game.getReferee() || gmData.game.getRefereePlace()) && !isFinished(gmData.game); else noRefOrFinished">
         <button class="btn btn-outline-info btn-sm d-sm-none" placement="bottom"
-          [ngbPopover]="nameService.getRefereeName(gmData.game)">
+          [ngbPopover]="getRefereeName(gmData.game)">
           <span [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
             <app-tournament-icon name="referee"></app-tournament-icon>
           </span>
@@ -198,14 +198,14 @@
   </td>
   <!-- awayPlaces -->
   <td class="text-break" [ngClass]="{ 'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, Away) }">
-    <span [innerHTML]="nameService.getPlacesFromName(gmData.game.getAwayPlaces(),true,true) | keepHtml"></span>
+    <span [innerHTML]="structureNameService.getPlacesFromName(gmData.game.getAwayPlaces(),true,true) | keepHtml"></span>
   </td>
 </ng-template>
 
 
 <ng-template #togetherGamePlaces let-gmData>
   <!-- <button *ngIf="!gmData.canChangeResult && hasReferees && !isPlayed(gmData.game)"
-      class="btn btn-outline-info btn-sm d-sm-none" placement="top" [ngbPopover]="nameService.getRefereeName(gmData.game)">
+      class="btn btn-outline-info btn-sm d-sm-none" placement="top" [ngbPopover]="getRefereeName(gmData.game)">
       <span [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
         <app-tournament-icon name="referee"></app-tournament-icon>
       </span>
@@ -217,7 +217,7 @@
         <div *ngFor="let gamePlace of gmData.game.getTogetherPlaces()" class="btn-group" role="group">
           <div class="list-group-item border-start-0"
             [ngClass]="{'favitem': favorites?.hasTogetherGameCompetitor(gmData.game) }">
-            <span [innerHtml]="nameService.getPlaceFromName(gamePlace.getPlace(),true,true) | keepHtml"></span>
+            <span [innerHtml]="structureNameService.getPlaceFromName(gamePlace.getPlace(),true,true) | keepHtml"></span>
           </div>
           <button class="btn btn-sm border border-{{getTogetherScoreBtnBorderClass(gamePlace)}} me-1"
             (click)="linkToGameEdit(gmData.game)">
@@ -232,7 +232,7 @@
         <ul *ngFor="let gamePlace of gmData.game.getTogetherPlaces()" class="list-group list-group-horizontal">
           <li [ngClass]="{'favitem': favorites?.hasTogetherGameCompetitor(gmData.game) }"
             class="list-group-item border-start-0">
-            <span [innerHtml]="nameService.getPlaceFromName(gamePlace.getPlace(),true,true) | keepHtml"></span>
+            <span [innerHtml]="structureNameService.getPlaceFromName(gamePlace.getPlace(),true,true) | keepHtml"></span>
           </li>
           <li *ngIf="isFinished(gmData.game)" class="list-group-item me-1">
             {{getTogetherScore(gamePlace)}}

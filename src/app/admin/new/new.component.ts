@@ -7,7 +7,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { JsonTournament } from '../../lib/tournament/json';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
-import { GameMode, PointsCalculation, Structure, StructureEditor } from 'ngx-sport';
+import { Category, GameMode, PointsCalculation, Structure, StructureEditor } from 'ngx-sport';
 import { SportWithFields } from '../sport/createSportWithFields.component';
 import { CompetitionSportRepository } from '../../lib/ngx-sport/competitionSport/repository';
 import { Tournament } from '../../lib/tournament';
@@ -97,8 +97,7 @@ export class NewComponent implements OnInit {
           const jsonPlanningConfig = this.defaultService.getJsonPlanningConfig(sportWithFields.variant);
           const structure: Structure = this.structureEditor.create(
             tournament.getCompetition(),
-            this.defaultService.getPouleStructure([sportWithFields.variant]),
-            jsonPlanningConfig);
+            this.defaultService.getPouleStructure([sportWithFields.variant]), jsonPlanningConfig);
           this.structureRepository.editObject(structure, tournament)
             .subscribe({
               next: (structureOut: Structure) => {
