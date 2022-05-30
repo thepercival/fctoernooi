@@ -38,6 +38,7 @@ import { debounceTime } from 'rxjs/operators';
 import { IAlertType } from '../../shared/common/alert';
 import { Options } from 'selenium-webdriver';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { FavoritesRepository } from '../../lib/favorites/repository';
 
 @Component({
     selector: 'app-planningconfig-edit',
@@ -67,6 +68,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         tournamentRepository: TournamentRepository,
         sructureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
+        modalService: NgbModal,
+        favRepository: FavoritesRepository,
         private planningConfigRepository: PlanningConfigRepository,
         private gameAmountConfigRepository: GameAmountConfigRepository,
         private myNavigation: MyNavigation,
@@ -74,10 +77,9 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         private planningRepository: PlanningRepository,
         private mapper: PlanningConfigMapper,
         private gameAmountConfigMapper: GameAmountConfigMapper,
-        private modalService: NgbModal,
         fb: FormBuilder
     ) {
-        super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
+        super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
         this.form = fb.group({
             /*gameMode: ['', Validators.compose([
                 Validators.required

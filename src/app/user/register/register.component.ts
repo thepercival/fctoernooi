@@ -8,6 +8,7 @@ import { User } from '../../lib/user';
 import { PasswordValidation } from '../password-validation';
 import { UserRepository } from '../../lib/user/repository';
 import { UserComponent } from '../component';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
   selector: 'app-register',
@@ -30,9 +31,10 @@ export class RegisterComponent extends UserComponent implements OnInit {
     router: Router,
     userRepository: UserRepository,
     authService: AuthService,
+    globalEventsManager: GlobalEventsManager,
     fb: FormBuilder
   ) {
-    super(route, router, userRepository, authService);
+    super(route, router, userRepository, authService, globalEventsManager);
     this.form = fb.group({
       emailaddress: ['', Validators.compose([
         Validators.required,

@@ -10,15 +10,17 @@ import { GlobalEventsManager } from '../../common/eventmanager';
 })
 export class FooterComponent implements OnInit {
 
-  tournamentLiveboardLink: LiveboardLink = {};
+  showFooter: boolean = false;
 
   constructor(private globalEventsManager: GlobalEventsManager) {
-    this.globalEventsManager.toggleLiveboardIconInNavBar.subscribe((tournamentLiveboardLink: LiveboardLink) => {
-      this.tournamentLiveboardLink = tournamentLiveboardLink;
-    });
+
   }
 
   ngOnInit() {
+    this.globalEventsManager.showFooter.subscribe((show: boolean) => {
+      this.showFooter = show;
+    });
+
   }
 
 }

@@ -40,7 +40,7 @@ export class PouleRankingSportsComponent implements OnInit {
 
   ngOnInit() {
     this.processing = true;
-    this.favorites = this.favRepos.getObject(this.tournament);
+    this.favorites = this.favRepos.getObject(this.tournament, undefined);
     this.roundRankingItems = this.roundRankingCalculator.getItemsForPoule(this.poule);
     this.competitionSports = this.poule.getCompetition().getSports();
     this.viewPortManager = new ViewPortManager(this.getViewPortNrOfColumnsMap(), this.competitionSports.length);

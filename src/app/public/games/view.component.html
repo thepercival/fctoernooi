@@ -1,11 +1,9 @@
 <div class="container-fluid px-0">
   <div class="row justify-content-around g-0">
     <div class="col-sm-12 col-md-10 col-lg-8">
-      <app-tournament-title [tournament]="tournament">
-      </app-tournament-title>
-      <!-- <h2>
+      <h2>
         <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijden
-      </h2> -->
+      </h2>
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
@@ -19,11 +17,12 @@
       <div *ngIf="!processing && tournament && structure">
         <app-tournament-roundnumber-planning *ngFor="let roundNumber of structure.getRoundNumbers()"
           [structureNameService]="structureNameService" [tournament]="tournament" [roundNumber]="roundNumber"
-          [favorites]="favRepository.getObject(tournament)" [roles]="filterRefereeRole()"
-          [userRefereeId]="userRefereeId" (scroll)="scroll()" (refreshData)="refreshData()"
-          [refreshingData]="refreshingData">
+          [favorites]="favorites" [roles]="filterRefereeRole()" [userRefereeId]="userRefereeId" (scroll)="scroll()"
+          (refreshData)="refreshData()" [refreshingData]="refreshingData">
         </app-tournament-roundnumber-planning>
       </div>
+      <app-tournament-navbar [currentScreen]="GamesScreen" [public]="true" *ngIf="tournament" [tournament]="tournament">
+      </app-tournament-navbar>
     </div>
   </div>
 </div>

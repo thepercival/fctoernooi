@@ -26,7 +26,7 @@
 <td class="d-none d-sm-table-cell">
   <div *ngIf="placeCompetitor.competitor" class="form-switch text-center">
     <input type="checkbox" class="form-check-input" id="{{getSwitchId(placeCompetitor.place)}}"
-      [checked]="placeCompetitor.competitor.getRegistered()" (change)="register()">
+      [checked]="placeCompetitor.competitor.getRegistered()" (change)="register(placeCompetitor.competitor)">
     <label class="form-check-label" for="{{getSwitchId(placeCompetitor.place)}}"></label>
   </div>
 </td>

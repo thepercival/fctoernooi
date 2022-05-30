@@ -11,16 +11,20 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 import { AuthService } from '../../lib/auth/auth.service';
 import { Role } from '../../lib/role';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { TournamentScreen } from '../../shared/tournament/screenNames';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { IconName } from '@fortawesome/fontawesome-svg-core';
 
 @Component({
   selector: 'app-tournament-structure-view',
   templateUrl: './view.component.html',
-  styleUrls: ['./view.component.css']
+  styleUrls: ['./view.component.scss']
 })
 export class StructureViewComponent extends TournamentComponent implements OnInit {
   competitors: Competitor[] = [];
   private favorites!: Favorites;
   public structureNameService!: StructureNameService;
+  public showCompetitors = true;
 
   constructor(
     route: ActivatedRoute,
@@ -28,24 +32,31 @@ export class StructureViewComponent extends TournamentComponent implements OnIni
     tournamentRepository: TournamentRepository,
     structureRepository: StructureRepository,
     globalEventsManager: GlobalEventsManager,
+    modalService: NgbModal,
+    favRepository: FavoritesRepository,
     private myNavigation: MyNavigation,
     public structureEditor: StructureEditor,
-    public favRepository: FavoritesRepository,
     private authService: AuthService
   ) {
-    super(route, router, tournamentRepository, structureRepository, globalEventsManager);
+    super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
   }
 
   ngOnInit() {
     super.myNgOnInit(() => {
       this.structureNameService = new StructureNameService(new StartLocationMap(this.tournament.getCompetitors()));
-      this.favorites = this.favRepository.getObject(this.tournament);
+      this.favorites = this.favRepository.getObject(this.tournament, this.structure.getCategories());
       if (this.favorites.hasCompetitors()) {
         const competitors = this.tournament.getCompetitors();
         this.competitors = this.favorites.filterCompetitors(competitors);
       }
       this.processing = false;
     });
+  }
+
+  get StructureScreen(): TournamentScreen { return TournamentScreen.Structure }
+
+  showCompetitorIconClass(): IconName {
+    return <IconName>('eye' + (this.showCompetitors ? '-slash' : ''));
   }
 
   // @TODO CDK CATEGORY - REMOVE FUNCTION
@@ -58,6 +69,6 @@ export class StructureViewComponent extends TournamentComponent implements OnIni
   }
 
   isAdmin(): boolean {
-    return this.hasRole(this.authService, Role.ADMIN);
+    return this.hasRole(this.authService, Role.Admin);
   }
 }

@@ -43,12 +43,12 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     globalEventsManager: GlobalEventsManager,
-    private modalService: NgbModal,
+    modalService: NgbModal,
+    favRepository: FavoritesRepository,
     private lockerRoomRepository: LockerRoomRepository,
-    private authService: AuthService,
-    public favRepository: FavoritesRepository
+    private authService: AuthService
   ) {
-    super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
   }
 
   ngOnInit() {
@@ -57,7 +57,7 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
 
   initLockerRooms() {
     if (this.router.url.indexOf('/public') === 0) {
-      this.favorites = this.favRepository.getObject(this.tournament);
+      this.favorites = this.favRepository.getObject(this.tournament, this.structure.getCategories());
       this.editMode = false;
     }
     const competitors = this.tournament.getCompetitors();
@@ -67,7 +67,7 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
   }
 
   isAdmin(): boolean {
-    return this.hasRole(this.authService, Role.ADMIN);
+    return this.hasRole(this.authService, Role.Admin);
   }
 
   add() {

@@ -8,6 +8,7 @@ import { User } from '../../lib/user';
 import { PasswordValidation } from '../password-validation';
 import { UserRepository } from '../../lib/user/repository';
 import { UserComponent } from '../component';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
   selector: 'app-passwordchange',
@@ -31,9 +32,10 @@ export class PasswordchangeComponent extends UserComponent implements OnInit {
     router: Router,
     userRepository: UserRepository,
     authService: AuthService,
+    globalEventsManager: GlobalEventsManager,
     fb: FormBuilder
   ) {
-    super(route, router, userRepository, authService);
+    super(route, router, userRepository, authService, globalEventsManager);
     this.form = fb.group({
       code: ['', Validators.compose([
         Validators.required,

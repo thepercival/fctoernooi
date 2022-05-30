@@ -97,7 +97,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     this.planningConfig = this.roundNumber.getValidPlanningConfig();
     const loggedInUserId = this.authService.getLoggedInUserId();
     const currentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;
-    this.userIsAdmin = currentUser ? currentUser.hasRoles(Role.ADMIN) : false;
+    this.userIsAdmin = currentUser ? currentUser.hasRoles(Role.Admin) : false;
     this.roles = currentUser?.getRoles() ?? 0;
     this.needsRanking = this.roundNumber.needsRanking();
     this.hasMultiplePoules = this.roundNumber.getPoules().length > 1;
@@ -268,22 +268,22 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   }
 
   canChangeResult(game: Game): boolean {
-    if (this.hasRole(Role.GAMERESULTADMIN)) {
+    if (this.hasRole(Role.GameResultAdmin)) {
       return true;
     }
     const referee = game.getReferee();
     if (referee === undefined) {
       return false;
     }
-    return this.hasRole(Role.REFEREE) && this.userRefereeId === referee.getId();
+    return this.hasRole(Role.Referee) && this.userRefereeId === referee.getId();
   }
 
   hasAdminRole(): boolean {
-    return this.hasRole(Role.ADMIN);
+    return this.hasRole(Role.Admin);
   }
 
   canFilter(): boolean {
-    return !this.hasRole(Role.ADMIN + Role.GAMERESULTADMIN);
+    return !this.hasRole(Role.Admin + Role.GameResultAdmin);
   }
 
   protected hasRole(role: number): boolean {

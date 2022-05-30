@@ -12,6 +12,7 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { Observable } from 'rxjs';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { FavoritesRepository } from '../../lib/favorites/repository';
 
 @Component({
   selector: 'app-tournament-referee',
@@ -34,11 +35,12 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     globalEventsManager: GlobalEventsManager,
-    private modalService: NgbModal,
+    modalService: NgbModal,
+    favRepository: FavoritesRepository,
     private refereeRepository: RefereeRepository,
     private planningRepository: PlanningRepository,
   ) {
-    super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
   }
 
   ngOnInit() {

@@ -24,6 +24,8 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { GameEditComponent } from './edit.component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FavoritesRepository } from '../../lib/favorites/repository';
 
 @Component({
     selector: 'app-tournament-againstgame-edit',
@@ -43,6 +45,8 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
+        modalService: NgbModal,
+        favRepository: FavoritesRepository,
         authService: AuthService,
         gameRepository: GameRepository,
         mapper: GameMapper,
@@ -53,7 +57,7 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
         myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager,
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository,
             authService, gameRepository, mapper, fieldMapper, refereeMapper, placeMapper, translate, myNavigation, fb);
         // this.originalPouleState = State.Created;
         this.form.addControl('extratime', new FormControl(false));

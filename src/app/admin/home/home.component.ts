@@ -24,6 +24,7 @@ import { UserRepository } from '../../lib/user/repository';
 import { User } from '../../lib/user';
 import { TournamentExportConfig } from '../../lib/pdf/repository';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { FavoritesRepository } from '../../lib/favorites/repository';
 
 @Component({
     selector: 'app-tournament-admin',
@@ -45,8 +46,9 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
+        modalService: NgbModal,
+        favRepository: FavoritesRepository,
         private competitionSportRouter: CompetitionSportRouter,
-        private modalService: NgbModal,
         public cssService: CSSService,
         private userRepository: UserRepository,
         private tournamentMapper: TournamentMapper,
@@ -55,7 +57,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         private translate: TranslateService,
         fb: FormBuilder
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
         const date = new Date();
         this.minDateStruct = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
 
@@ -166,15 +168,15 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     isAdmin(): boolean {
-        return this.hasRole(this.authService, Role.ADMIN);
+        return this.hasRole(this.authService, Role.Admin);
     }
 
     isRoleAdmin(): boolean {
-        return this.hasRole(this.authService, Role.ROLEADMIN);
+        return this.hasRole(this.authService, Role.RoleAdmin);
     }
 
     isRefereeOrGameResultAdmin(): boolean {
-        return this.hasRole(this.authService, Role.GAMERESULTADMIN + Role.REFEREE);
+        return this.hasRole(this.authService, Role.GameResultAdmin + Role.Referee);
     }
 
     remove() {

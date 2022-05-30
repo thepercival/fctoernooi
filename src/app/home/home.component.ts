@@ -6,6 +6,7 @@ import { IAlert, IAlertType } from '../shared/common/alert';
 import { TournamentShellFilter, TournamentShellRepository } from '../lib/tournament/shell/repository';
 import { Role } from '../lib/role';
 import { TournamentShell } from '../lib/tournament/shell';
+import { GlobalEventsManager } from '../shared/common/eventmanager';
 
 @Component({
   selector: 'app-home',
@@ -41,11 +42,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private tournamentShellRepos: TournamentShellRepository
+    private tournamentShellRepos: TournamentShellRepository,
+    globalEventsManager: GlobalEventsManager
   ) {
     this.checkFirstTimeVisit();
     this.linethroughDate = new Date();
     this.linethroughDate.setHours(this.linethroughDate.getHours() + this.defaultHourRange.start);
+    globalEventsManager.showFooter.emit();
   }
 
   ngOnInit() {
@@ -76,7 +79,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const filter = { roles: Role.ALL };
+    const filter = { roles: Role.All };
     this.tournamentShellRepos.getObjects(filter)
       .subscribe({
         next: (myShells) => {
@@ -162,7 +165,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   linkToTournament(shell: TournamentShell) {
     this.processingWithRole = true;
-    const module = shell.roles > 0 && shell.roles !== Role.REFEREE ? '/admin' : '/public';
+    const module = shell.roles > 0 && shell.roles !== Role.Referee ? '/admin' : '/public';
     this.router.navigate([module, shell.tournamentId]);
   }
 

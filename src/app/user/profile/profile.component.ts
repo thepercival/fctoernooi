@@ -10,6 +10,7 @@ import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/common/navigation';
 import { JsonUser } from '../../lib/user/mapper';
 import { UserComponent } from '../component';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
   selector: 'app-profile',
@@ -30,9 +31,10 @@ export class ProfileComponent extends UserComponent implements OnInit {
     userRepository: UserRepository,
     authService: AuthService,
     public myNavigation: MyNavigation,
+    globalEventsManager: GlobalEventsManager,
     fb: FormBuilder
   ) {
-    super(route, router, userRepository, authService);
+    super(route, router, userRepository, authService, globalEventsManager);
     this.form = fb.group({
       emailaddress: ['', Validators.compose([
         Validators.required,

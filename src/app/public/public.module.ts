@@ -5,6 +5,7 @@ import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontaweso
 import {
   faListOl,
   faChevronRight,
+  faEyeSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   ScoreConfigService,
@@ -15,7 +16,6 @@ import {
 
 import { CSSService } from '../shared/common/cssservice';
 import { CommonSharedModule } from '../shared/common/shared.module';
-import { FilterComponent } from './filter/filter.component';
 import { HomeComponent } from './home/home.component';
 import { ProgressComponent } from './liveboard/progress.component';
 import { LiveboardGamesComponent } from './liveboard/games.liveboard.component';
@@ -30,6 +30,7 @@ import { TournamentModule } from '../shared/tournament/tournament.module';
 import { RankingComponent } from './ranking/view.component';
 import { RankingRoundComponent } from './ranking/round.component';
 import { ScreenConfigsModalComponent } from './liveboard/screenconfigsmodal.component';
+import { SelectFavoritesComponent } from './favorites/select.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -48,7 +49,7 @@ import { ScreenConfigsModalComponent } from './liveboard/screenconfigsmodal.comp
     LiveboardPoulesComponent,
     LiveboardSponsorsComponent,
     LiveboardGamesComponent,
-    FilterComponent,
+    SelectFavoritesComponent,
     ProgressComponent,
     RankingComponent,
     RankingRoundComponent,
@@ -65,7 +66,7 @@ import { ScreenConfigsModalComponent } from './liveboard/screenconfigsmodal.comp
 export class PublicModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(
-      faListOl, faChevronRight
+      faListOl, faChevronRight, faEyeSlash
       /*faMoneyBillAlt, faTrashAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
       faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom,
       faInfoCircle, faMedal, faUsers, faQrcode, faCopy, faDotCircle, faSync*/

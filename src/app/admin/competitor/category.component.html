@@ -11,12 +11,12 @@
 
     <div class="card-body p-0">
 
-      <button *ngIf="!hasBegun && atLeastTwoPlacesHaveACompetitor()" type="button" class="btn btn-sm me-0"
+      <!-- <button *ngIf="!hasBegun && atLeastTwoPlacesHaveACompetitor()" type="button" class="btn btn-sm me-0"
         [ngClass]="{ 'btn-outline-secondary': !orderMode, 'btn-outline-primary': orderMode }" (click)="toggleView()">
         <fa-icon [icon]="['fas', 'random']"></fa-icon> volgorde
-      </button>
+      </button> -->
 
-      <table *ngIf="!orderMode" class="table">
+      <table *ngIf="!orderMode" class="table mb-0">
         <thead>
           <tr>
             <th></th>
@@ -33,13 +33,12 @@
           <app-tournament-competitor-line *ngFor="let item of placeCompetitorItems" [placeCompetitor]="item"
             [showLockerRoomNotArranged]="showLockerRoomNotArranged(item.competitor)" [hasBegun]="hasBegun"
             [structureNameService]="structureNameService" [focus]="item.place.getId() === focusId"
-            (editPressed)="editPlace($event)" (removePressed)="preRemove($event)"
-            (registerPressed)="registerCompetitor($event)" (toLockerRooms)="linkToLockerRooms()">
+            (editPressed)="editPlace($event)" (removePressed)="preRemove($event)" [tournamentId]="tournament.getId()">
           </app-tournament-competitor-line>
         </tbody>
       </table>
 
-      <table *ngIf="orderMode" class="table">
+      <table *ngIf="orderMode" class="table mb-0">
         <thead>
           <tr>
             <th></th>

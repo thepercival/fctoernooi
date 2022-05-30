@@ -1,0 +1,14 @@
+<div class="modal-header border-bottom-0">
+    <h4 class="modal-title">
+        <fa-icon class="align-middle" [icon]="['fas', 'grip']"></fa-icon> <span class="ms-2">zichtbare categoriën</span>
+    </h4>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="activeModal.dismiss('close')"></button>
+</div>
+<div class="modal-body">
+    <app-list-category-choose [categoryItems]="getCategoryItems()" (updateCategory)="updateFavorites($event)">
+    </app-list-category-choose>
+</div>
+<div class="modal-footer border-top-0 align-items-end">
+    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+        (click)="activeModal.dismiss()">sluiten</button>
+</div>

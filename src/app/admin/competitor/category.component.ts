@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Category, Competitor, Place, StartLocationMap, StructureEditor, StructureNameService } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
 import { TournamentCompetitor } from '../../lib/competitor';
+import { LockerRoomValidator } from '../../lib/lockerroom/validator';
 import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository';
 import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 import { Tournament } from '../../lib/tournament';
@@ -20,24 +21,21 @@ export class CategoryCompetitorListComponent implements OnInit, OnChanges {
   @Input() category!: Category;
   @Input() showHeader!: boolean;
   @Input() structureNameService!: StructureNameService;
+  @Input() lockerRoomValidator!: LockerRoomValidator;
+  @Input() focusId!: string | number;
 
   @Output() alert = new EventEmitter<IAlert>();
   @Output() processing = new EventEmitter<string | false>();
   @Output() removeCompetitor = new EventEmitter<TournamentCompetitor>();
   @Output() saveStructure = new EventEmitter<string>();
-  @Output() structureNameServiceUpdate = new EventEmitter();
+  @Output() competitorsUpdate = new EventEmitter();
 
-  // @Output() editPressed = new EventEmitter<Place>();
-  // @Output() removePressed = new EventEmitter<PlaceCompetitorItem>();
-  // @Output() registerPressed = new EventEmitter<TournamentCompetitor>();
-  // @Output() toLockerRooms = new EventEmitter<void>();
-
-  // @ViewChild('btnEdit', { static: true }) private btnEditRef: ElementRef | undefined;
   public placeCompetitorItems: PlaceCompetitorItem[] = [];
   public orderMode = false;
   public hasBegun = true;
   public swapItem: PlaceCompetitorItem | undefined;
   private startLocationMap!: StartLocationMap;
+  private areSomeCompetitorsArranged: boolean = false;
   // public alert: IAlert | undefined;
 
   constructor(
@@ -51,6 +49,7 @@ export class CategoryCompetitorListComponent implements OnInit, OnChanges {
     this.hasBegun = this.category.getRootRound().hasBegun();
     // at every change of this.structureNameService
 
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -61,12 +60,19 @@ export class CategoryCompetitorListComponent implements OnInit, OnChanges {
       const startLocationMap = this.structureNameService.getStartLocationMap();
       if (startLocationMap) {
         this.startLocationMap = startLocationMap;
+        this.updatePlaceCompetitorItems();
       }
+    }
+    if (changes.lockerRoomValidator !== undefined
+      && changes.lockerRoomValidator.currentValue !== changes.lockerRoomValidator.previousValue
+      /*&& changes.structureNameService.firstChange === false*/) {
+      // this.updateItems();
+      this.areSomeCompetitorsArranged = this.lockerRoomValidator.areSomeArranged(); // caching
     }
   }
 
-  getPlaceCompetitorItems(): PlaceCompetitorItem[] {
-    return this.category.getRootRound().getPlaces().map((place: Place): PlaceCompetitorItem => {
+  updatePlaceCompetitorItems(): void {
+    this.placeCompetitorItems = this.category.getRootRound().getPlaces().map((place: Place): PlaceCompetitorItem => {
       const startLocation = place.getStartLocation();
       if (startLocation === undefined) {
         throw Error('rootroundplace should always have startLocation');
@@ -123,13 +129,7 @@ export class CategoryCompetitorListComponent implements OnInit, OnChanges {
 
   linkToEdit(tournament: Tournament, place: Place) {
     this.router.navigate(
-      ['/admin/competitor', tournament.getId(), place.getPouleNr(), place.getPlaceNr()]
-    );
-  }
-
-  linkToLockerRooms() {
-    this.router.navigate(
-      ['/admin/lockerrooms', this.tournament.getId()]
+      ['/admin/competitor', tournament.getId(), place.getRound().getCategory().getNumber(), place.getPouleNr(), place.getPlaceNr()]
     );
   }
 
@@ -212,12 +212,12 @@ export class CategoryCompetitorListComponent implements OnInit, OnChanges {
         next: () => {
           ///this.setAlert(IAlertType.Success, 'volgorde gewijzigd');
           this.swapItem = undefined;
-          this.structureNameServiceUpdate.emit();
+          this.competitorsUpdate.emit();
         },
         error: (e) => {
           // this.setAlert(IAlertType.Danger, 'volgorde niet gewijzigd: ' + e);
           this.swapItem = undefined;
-          this.structureNameServiceUpdate.emit();
+          this.competitorsUpdate.emit();
           this.alert.emit({ type: IAlertType.Danger, message: e.message });
         }
       });

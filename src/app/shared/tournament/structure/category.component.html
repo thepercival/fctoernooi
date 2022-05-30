@@ -8,6 +8,9 @@
           <button *ngIf="editable" class="btn btn-sm btn-outline-primary ms-1" (click)="changeName(category)">
             <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
           </button>
+          <button *ngIf="movable" class="btn btn-sm btn-outline-secondary ms-1" (click)="moveCategoryUp.emit(category)">
+            <fa-icon [icon]="['fas', 'level-up-alt']"></fa-icon>
+          </button>
         </h5>
         <button *ngIf="editable" class="btn btn-sm btn-outline-danger ms-1" (click)="remove.emit(category)">
           <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
@@ -19,7 +22,7 @@
     <div class="card-body p-0">
       <app-tournament-structureround [editable]="editable" [round]="category.getRootRound()" class="px-0"
         (addAction)="addAction.emit($event)" [first]="false" [structureNameService]="structureNameService"
-        [structureEditor]="structureEditor" [lastAction]="lastAction" [favorites]="favorites">
+        [structureEditor]="structureEditor" [lastAction]="lastAction" [favorites]="favoriteCompetitors">
       </app-tournament-structureround>
     </div>
   </div>

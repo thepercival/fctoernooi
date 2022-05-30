@@ -39,6 +39,8 @@ import { map } from 'rxjs/operators';
 import { EqualQualifiersChecker } from '../../lib/ngx-sport/ranking/equalQualifiersChecker';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FavoritesRepository } from '../../lib/favorites/repository';
 
 export class GameEditComponent extends TournamentComponent {
     public game: AgainstGame | TogetherGame | undefined;
@@ -59,6 +61,8 @@ export class GameEditComponent extends TournamentComponent {
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
+        modalService: NgbModal,
+        favRepository: FavoritesRepository,
         private authService: AuthService,
         private gameRepository: GameRepository,
         protected mapper: GameMapper,
@@ -69,7 +73,7 @@ export class GameEditComponent extends TournamentComponent {
         private myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
         // this.originalPouleState = State.Created;
         this.scoreConfigService = new ScoreConfigService();
         this.form = fb.group({
@@ -118,11 +122,11 @@ export class GameEditComponent extends TournamentComponent {
         if (!tournamentUser || !this.game) {
             return of(false);
         }
-        if (tournamentUser.hasRoles(Role.GAMERESULTADMIN)) {
+        if (tournamentUser.hasRoles(Role.GameResultAdmin)) {
             return of(true);
         }
         const referee = this.game.getReferee();
-        if (!tournamentUser.hasRoles(Role.REFEREE) || !referee) {
+        if (!tournamentUser.hasRoles(Role.Referee) || !referee) {
             return of(false);
         }
         return this.tournamentRepository.getUserRefereeId(this.tournament).pipe(

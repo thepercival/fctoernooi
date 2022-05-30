@@ -15,6 +15,7 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { LiveboardLink } from '../../lib/liveboard/link';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { DateFormatter } from '../../lib/dateFormatter';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-tournament-public',
@@ -34,13 +35,14 @@ export class HomeComponent extends TournamentComponent implements OnInit, OnDest
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
+        modalService: NgbModal,
+        favRepository: FavoritesRepository,
         private authService: AuthService,
         private translate: TranslateService,
         public cssService: CSSService,
-        public favRepository: FavoritesRepository,
         public dateFormatter: DateFormatter
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
     }
 
     ngOnInit() {
@@ -50,13 +52,14 @@ export class HomeComponent extends TournamentComponent implements OnInit, OnDest
     postNgOnInit() {
         this.competitors = this.tournament.getCompetitors();
         this.lockerRoomValidator = new LockerRoomValidator(this.competitors, this.tournament.getLockerRooms());
-        this.favorites = this.favRepository.getObject(this.tournament);
+        this.favorites = this.favRepository.getObject(this.tournament, undefined);
         this.initLiveboardLink();
+        this.globalEventsManager.showFooter.emit();
         this.processing = false;
     }
 
     isAnAdmin(): boolean {
-        return this.hasRole(this.authService, Role.ADMIN + Role.ROLEADMIN + Role.GAMERESULTADMIN);
+        return this.hasRole(this.authService, Role.Admin + Role.RoleAdmin + Role.GameResultAdmin);
     }
 
     lockerRoomDescription(): string {

@@ -16,9 +16,12 @@ import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { LockerRoomValidator } from '../../lib/lockerroom/validator';
 import { TournamentCompetitor } from '../../lib/competitor';
-import { CompetitorMapper } from '../../lib/competitor/mapper';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { CategoryChooseModalComponent } from '../../shared/tournament/category/chooseModal.component';
+import { FavoritesRepository } from '../../lib/favorites/repository';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { TournamentScreen } from '../../shared/tournament/screenNames';
 
 @Component({
   selector: 'app-tournament-competitors',
@@ -30,8 +33,8 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   focusId!: number | string;
   // hasBegun!: boolean;
   lockerRoomValidator!: LockerRoomValidator;
-  areSomeCompetitorsArranged!: boolean;
   public structureNameService!: StructureNameService;
+
 
   constructor(
     route: ActivatedRoute,
@@ -39,27 +42,29 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     globalEventsManager: GlobalEventsManager,
+    modalService: NgbModal,
+    favRepository: FavoritesRepository,
     private planningRepository: PlanningRepository,
     private competitorRepository: CompetitorRepository,
-    private mapper: CompetitorMapper,
     private myNavigation: MyNavigation
   ) {
-    super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
   }
 
   ngOnInit() {
     super.myNgOnInit(() => {
+      this.updateFavoriteCategories(this.structure);
       const competitors = this.tournament.getCompetitors();
       const startLocationMap = new StartLocationMap(competitors);
       this.structureNameService = new StructureNameService(startLocationMap);
       this.lockerRoomValidator = new LockerRoomValidator(competitors, this.tournament.getLockerRooms());
-      this.areSomeCompetitorsArranged = this.lockerRoomValidator.areSomeArranged(); // caching
       this.initFocus(startLocationMap);
       // this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
       this.processing = false;
     });
   }
 
+  get CompetitorsScreen(): TournamentScreen { return TournamentScreen.Competitors }
   alertType(): string { return this.alert?.type ?? IAlertType.Danger }
   alertMessage(): string { return this.alert?.message ?? '' }
 
@@ -89,27 +94,6 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     });
   }
 
-  /**
-   * verwijder de deelnemer van de pouleplek
-   */
-  registerCompetitor(competitor: TournamentCompetitor): void {
-    this.processing = true;
-    const jsonCompetitor = this.mapper.toJson(competitor);
-    jsonCompetitor.registered = competitor.getRegistered() === true ? false : true;
-    const prefix = jsonCompetitor.registered ? 'aan' : 'af';
-    this.setAlert(IAlertType.Info, 'deelnemer ' + competitor.getName() + ' wordt ' + prefix + 'gemeld');
-    this.competitorRepository.editObject(jsonCompetitor, competitor, this.tournament)
-      .subscribe({
-        next: (competitorRes: TournamentCompetitor) => {
-          this.setAlert(IAlertType.Success, 'deelnemer ' + competitor.getName() + ' is ' + prefix + 'gemeld');
-        },
-        error: (e) => {
-          this.setAlert(IAlertType.Danger, e); this.processing = false;
-        },
-        complete: () => this.processing = false
-      });
-  }
-
 
 
   removeCompetitor(competitor: TournamentCompetitor): void {
@@ -118,7 +102,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     this.competitorRepository.removeObject(competitor, this.tournament)
       .subscribe({
         next: () => {
-          this.structureNameServiceUpdate();
+          this.refreshCompetitors();
           this.setAlert(IAlertType.Success, 'deelnemer ' + competitor + ' is verwijderd');
         },
         error: (e) => {
@@ -127,9 +111,10 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
       });
   }
 
-  public structureNameServiceUpdate(): void {
+  public refreshCompetitors(): void {
     const map = new StartLocationMap(this.tournament.getCompetitors());
     this.structureNameService = new StructureNameService(map);
+    this.lockerRoomValidator = new LockerRoomValidator(this.tournament.getCompetitors(), this.tournament.getLockerRooms());
     this.processing = false;
   }
 
@@ -141,13 +126,12 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
           this.planningRepository.create(this.structure, this.tournament, 1)
             .subscribe({
               next: () => {
-                this.structureNameService = new StructureNameService(new StartLocationMap(this.tournament.getCompetitors()));
                 this.setAlert(IAlertType.Success, message);
+                this.refreshCompetitors();
               },
-              error: (e) => {
+              error: (e: string) => {
                 this.setAlert(IAlertType.Danger, e); this.processing = false;
-              },
-              complete: () => this.processing = false
+              }
             });
         },
         error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }

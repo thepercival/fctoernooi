@@ -23,6 +23,8 @@ import { TranslateService } from '../../lib/translate';
 import { GameEditComponent } from './edit.component';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FavoritesRepository } from '../../lib/favorites/repository';
 
 @Component({
     selector: 'app-tournament-togethergame-edit',
@@ -48,6 +50,8 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
+        modalService: NgbModal,
+        favRepository: FavoritesRepository,
         authService: AuthService,
         gameRepository: GameRepository,
         mapper: GameMapper,
@@ -58,7 +62,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
         myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager,
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository,
             authService, gameRepository, mapper, fieldMapper, refereeMapper, placeMapper, translate, myNavigation, fb);
         // this.originalPouleState = State.Created;        
         this.form.addControl('gamePlaces', new FormGroup({}));

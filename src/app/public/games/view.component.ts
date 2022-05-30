@@ -10,6 +10,9 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { StartLocationMap, StructureNameService } from 'ngx-sport';
+import { Favorites } from '../../lib/favorites';
+import { TournamentScreen } from '../../shared/tournament/screenNames';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-tournament-games-view',
@@ -21,6 +24,7 @@ export class GamesComponent extends TournamentComponent implements OnInit {
     roles: number = 0;
     public structureNameService!: StructureNameService;
     refreshingData = false;
+    public favorites!: Favorites;
 
     constructor(
         route: ActivatedRoute,
@@ -28,11 +32,12 @@ export class GamesComponent extends TournamentComponent implements OnInit {
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
+        modalService: NgbModal,
+        favRepository: FavoritesRepository,
         private myNavigation: MyNavigation,
         private authService: AuthService,
-        public favRepository: FavoritesRepository
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
     }
 
     ngOnInit() {
@@ -41,7 +46,8 @@ export class GamesComponent extends TournamentComponent implements OnInit {
             const tournamentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;
             const startLocationMap = new StartLocationMap(this.tournament.getCompetitors());
             this.structureNameService = new StructureNameService(startLocationMap);
-            if (tournamentUser && tournamentUser.hasRoles(Role.REFEREE)) {
+            this.favorites = this.favRepository.getObject(this.tournament, this.structure.getCategories());
+            if (tournamentUser && tournamentUser.hasRoles(Role.Referee)) {
                 this.roles = tournamentUser.getRoles();
                 this.tournamentRepository.getUserRefereeId(this.tournament)
                     .subscribe({
@@ -57,8 +63,10 @@ export class GamesComponent extends TournamentComponent implements OnInit {
         });
     }
 
+    get GamesScreen(): TournamentScreen { return TournamentScreen.Games }
+
     filterRefereeRole(): number {
-        return this.roles & Role.REFEREE;
+        return this.roles & Role.Referee;
     }
 
     scroll() {
@@ -66,7 +74,7 @@ export class GamesComponent extends TournamentComponent implements OnInit {
     }
 
     isAdmin(): boolean {
-        return this.hasRole(this.authService, Role.ADMIN);
+        return this.hasRole(this.authService, Role.Admin);
     }
 
     refreshData() {

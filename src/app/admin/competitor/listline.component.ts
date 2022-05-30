@@ -1,7 +1,10 @@
 import { AfterViewChecked, Component, ElementRef, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Place, StructureNameService } from 'ngx-sport';
 import { TournamentCompetitor } from '../../lib/competitor';
+import { CompetitorMapper } from '../../lib/competitor/mapper';
+import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository';
 import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 
@@ -16,14 +19,18 @@ export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
   @Input() hasBegun!: boolean;
   @Input() showLockerRoomNotArranged!: boolean;
   @Input() structureNameService!: StructureNameService;
+  @Input() tournamentId!: string | number;
   @Output() editPressed = new EventEmitter<Place>();
   @Output() removePressed = new EventEmitter<PlaceCompetitorItem>();
-  @Output() registerPressed = new EventEmitter<TournamentCompetitor>();
-  @Output() toLockerRooms = new EventEmitter<void>();
+  public processing: boolean = false;
 
   @ViewChild('btnEdit', { static: true }) private btnEditRef: ElementRef | undefined;
 
-  constructor(private modalService: NgbModal) {
+  constructor(
+    private modalService: NgbModal,
+    private router: Router,
+    private competitorRepository: CompetitorRepository,
+    private competitorMapper: CompetitorMapper) {
   }
 
   ngOnInit() {
@@ -37,8 +44,22 @@ export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
     this.removePressed.emit(this.placeCompetitor);
   }
 
-  register() {
-    this.registerPressed.emit(this.placeCompetitor.competitor);
+  /**
+   * verwijder de deelnemer van de pouleplek
+   */
+  register(competitor: TournamentCompetitor): void {
+    const jsonCompetitor = this.competitorMapper.toJson(competitor);
+    jsonCompetitor.registered = competitor.getRegistered() === true ? false : true;
+
+    // const prefix = jsonCompetitor.registered ? 'aan' : 'af';
+    // const message = 'deelnemer ' + competitor.getName() + ' wordt ' + prefix + 'gemeld';
+
+    // this.processing.emit(message);
+
+    this.competitorRepository.editObject(jsonCompetitor, competitor, this.tournamentId)
+      .subscribe({
+        complete: () => this.processing = false
+      });
   }
 
   getSwitchId(place: Place): string {
@@ -57,13 +78,15 @@ export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
     activeModal.componentInstance.modalContent = modalContent;
     activeModal.result.then((result) => {
       if (result === 'linkToLockerRooms') {
-        this.toLockerRooms.emit();
+        this.linkToLockerRooms();
       }
     }, (reason) => {
     });
   }
 
   linkToLockerRooms() {
-    this.toLockerRooms.emit();
+    this.router.navigate(
+      ['/admin/lockerrooms', this.tournamentId]
+    );
   }
 }

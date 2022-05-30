@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt, faMedal, faSpinner, faGrip,
-  faLevelUpAlt, faMinus, faPlus, faDoorClosed, faBaseballBall, faBasketballBall, faChess, faFutbol, faGamepad, faHockeyPuck, faTableTennis, faVolleyballBall, faHouse
+  faLevelUpAlt, faMinus, faPlus, faDoorClosed, faBaseballBall, faBasketballBall, faChess, faFutbol, faGamepad, faHockeyPuck, faTableTennis, faVolleyballBall, faHouse, faStar
 } from '@fortawesome/free-solid-svg-icons';
 import { RoundNumberPlanningComponent } from './planning/roundnumber.component';
 import { PouleRankingModalComponent } from './poulerankingmodal/rankingmodal.component';
@@ -31,8 +31,10 @@ import { PouleRankingSportsComponent } from './ranking/poule/sports.component';
 import { PouleRankingAgainstComponent } from './ranking/poule/against.component';
 import { PouleRankingTogetherComponent } from './ranking/poule/together.component';
 import { facDarts, facTennis, facBadminton, facHockey, facSquash, facKorfball, facRugby } from './icon/sporticons';
-import { BottomMenuComponent } from './bottomMenu/bottomMenu.component';
+import { TournamentNavBarComponent } from './tournamentNavBar/tournamentNavBar.component';
 import { StructureCategoryComponent } from './structure/category.component';
+import { CategoryChooseListComponent } from './category/chooseList.component';
+import { CategoryChooseModalComponent } from './category/chooseModal.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +54,8 @@ import { StructureCategoryComponent } from './structure/category.component';
     StructureRoundArrangeComponent, StructureQualifyComponent, StructureRoundComponent, StructureCategoryComponent,
     TitleComponent,
     TournamentIconComponent,
-    BottomMenuComponent
+    TournamentNavBarComponent,
+    CategoryChooseListComponent, CategoryChooseModalComponent
   ],
   imports: [
     CommonModule,
@@ -84,14 +87,14 @@ import { StructureCategoryComponent } from './structure/category.component';
     StructureCategoryComponent,
     TitleComponent,
     TournamentIconComponent,
-    BottomMenuComponent
+    TournamentNavBarComponent
   ]
 })
 export class TournamentModule {
   constructor(library: FaIconLibrary, modalConfig: NgbModalConfig, alertConfig: NgbAlertConfig) {
     library.addIcons(faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt,
       faMedal, faSpinner, faLevelUpAlt, faMinus, faDoorClosed, faPlus, faGrip,
-      facStructure, facReferee, facScoreboard, facSoccerField, faHouse);
+      facStructure, facReferee, facScoreboard, facSoccerField, faHouse, faStar);
     library.addIcons(
       facDarts, facTennis, facBadminton, facHockey, facSquash, facKorfball, facRugby, // inline
       faBasketballBall, faGamepad, faFutbol, faChess, faTableTennis, faBaseballBall, faHockeyPuck, faVolleyballBall // font awesome

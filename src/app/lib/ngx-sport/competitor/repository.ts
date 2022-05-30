@@ -26,7 +26,11 @@ export class CompetitorRepository extends APIRepository {
     }
 
     getUrl(tournament: Tournament): string {
-        return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
+        return this.getUrlById(tournament.getId());
+    }
+
+    private getUrlById(tournamentId: string | number): string {
+        return super.getApiUrl() + 'tournaments/' + tournamentId + '/' + this.getUrlpostfix();
     }
 
     reloadObjects(tournament: Tournament): Observable<TournamentCompetitor[]> {
@@ -46,8 +50,8 @@ export class CompetitorRepository extends APIRepository {
         );
     }
 
-    editObject(jsonCompetitor: JsonCompetitor, competitor: TournamentCompetitor, tournament: Tournament): Observable<TournamentCompetitor> {
-        const url = this.getUrl(tournament) + '/' + competitor.getId();
+    editObject(jsonCompetitor: JsonCompetitor, competitor: TournamentCompetitor, tournamentId: string | number): Observable<TournamentCompetitor> {
+        const url = this.getUrlById(tournamentId) + '/' + competitor.getId();
         return this.http.put<JsonCompetitor>(url, jsonCompetitor, this.getOptions()).pipe(
             map((jsonCompetitor: JsonCompetitor) => this.mapper.updateObject(jsonCompetitor, competitor)),
             catchError((err: HttpErrorResponse) => this.handleError(err))

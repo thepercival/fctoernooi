@@ -18,6 +18,7 @@ import { ScreenConfigName } from '../../lib/liveboard/screenConfig/name';
 import { ScreenConfig } from '../../lib/liveboard/screenConfig/json';
 import { SponsorMapper } from '../../lib/sponsor/mapper';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { FavoritesRepository } from '../../lib/favorites/repository';
 
 @Component({
     selector: 'app-tournament-sponsor-edit',
@@ -50,13 +51,14 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
+        modalService: NgbModal,
+        favRepository: FavoritesRepository,
         private sponsorRepository: SponsorRepository,
         private sponsorMapper: SponsorMapper,
-        private modalService: NgbModal,
         private myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
         this.logoInput = this.logoInputUpload;
         this.newLogoUploaded = false;
         this.screenConfig = this.sponsorMapper.getDefaultScreenConfig();

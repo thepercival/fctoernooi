@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Structure, Competition } from 'ngx-sport';
+import { Structure, Competition, Category } from 'ngx-sport';
 
 import { IAlert, IAlertType } from '../common/alert';
 import { Tournament } from '../../lib/tournament';
@@ -7,6 +7,9 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { AuthService } from '../../lib/auth/auth.service';
 import { GlobalEventsManager } from '../common/eventmanager';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CategoryChooseModalComponent } from './category/chooseModal.component';
+import { FavoritesRepository } from '../../lib/favorites/repository';
 
 export class TournamentComponent {
 
@@ -15,13 +18,16 @@ export class TournamentComponent {
     public structure!: Structure;
     public alert: IAlert | undefined;
     public processing = true;
+    public favoriteCategories!: Category[];
 
     constructor(
         protected route: ActivatedRoute,
         protected router: Router,
         protected tournamentRepository: TournamentRepository,
         protected structureRepository: StructureRepository,
-        protected globalEventsManager: GlobalEventsManager
+        protected globalEventsManager: GlobalEventsManager,
+        protected modalService: NgbModal,
+        protected favRepository: FavoritesRepository
     ) {
     }
 
@@ -56,6 +62,7 @@ export class TournamentComponent {
                             }
                         });
                     this.globalEventsManager.updateTitleInNavBar.emit(tournament.getName());
+                    this.globalEventsManager.showFooter.emit(false);
                 },
                 error: (e) => {
                     this.setAlert(IAlertType.Danger, e); this.processing = false;
@@ -75,6 +82,25 @@ export class TournamentComponent {
         const loggedInUserId = authService.getLoggedInUserId();
         const tournamentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;
         return tournamentUser ? tournamentUser.hasARole(roles) : false;
+    }
+
+    openCategoriesChooseModal(structure: Structure) {
+        const activeModal = this.modalService.open(CategoryChooseModalComponent);
+        activeModal.componentInstance.categories = structure.getCategories();
+        activeModal.componentInstance.tournament = this.tournament;
+        activeModal.result.then((result) => {
+        }, (reason) => {
+            this.updateFavoriteCategories(structure);
+        });
+    }
+
+    getCategoryFavoritesActiveClass(): string {
+        return this.favoriteCategories.length > 0 ? 'primary' : 'secondary';
+    }
+
+    updateFavoriteCategories(structure: Structure) {
+        const favorites = this.favRepository.getObject(this.tournament, structure.getCategories());
+        this.favoriteCategories = favorites.filterCategories(structure.getCategories());
     }
 }
 

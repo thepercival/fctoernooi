@@ -5,4 +5,5 @@ import { LiveboardLink } from '../../lib/liveboard/link';
 export class GlobalEventsManager {
     public toggleLiveboardIconInNavBar: EventEmitter<LiveboardLink> = new EventEmitter();
     public updateTitleInNavBar: EventEmitter<string> = new EventEmitter();
+    public showFooter: EventEmitter<boolean> = new EventEmitter();
 }

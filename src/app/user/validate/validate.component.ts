@@ -7,6 +7,7 @@ import { User } from '../../lib/user';
 import { UserRepository } from '../../lib/user/repository';
 import { AuthService } from '../../lib/auth/auth.service';
 import { UserComponent } from '../component';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
   selector: 'app-validate',
@@ -23,14 +24,16 @@ export class ValidateComponent extends UserComponent implements OnInit {
     router: Router,
     userRepository: UserRepository,
     authService: AuthService,
+    globalEventsManager: GlobalEventsManager,
     fb: FormBuilder
   ) {
-    super(route, router, userRepository, authService);
+    super(route, router, userRepository, authService, globalEventsManager);
     this.form = fb.group({
       code: ['', Validators.compose([
         Validators.required
       ])],
     });
+
   }
 
   ngOnInit() {

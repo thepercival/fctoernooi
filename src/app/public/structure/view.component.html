@@ -1,18 +1,31 @@
 <div class="container-fluid">
-  <app-tournament-title [tournament]="tournament">
-  </app-tournament-title>
-  <div>
-    <div class="d-flex justify-content-between mb-1">
-      <h2>
-        <app-tournament-icon name="structure"></app-tournament-icon>opzet
-      </h2>
+
+  <div class="d-flex justify-content-between mb-1">
+    <h2>
+      <app-tournament-icon name="structure"></app-tournament-icon> opzet
+    </h2>
+    <div *ngIf="!processing">
+
+      <button *ngIf="tournament.getCompetitors().length > 0" role="button" (click)="showCompetitors = !showCompetitors"
+        class="btn btn-outline-primary">
+        <fa-icon [icon]="['fas', showCompetitorIconClass()]"></fa-icon>
+        <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
+      </button>
+
+      <button *ngIf="!structure.hasSingleCategory()" type="button"
+        class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass()}}"
+        (click)="openCategoriesChooseModal(structure)">
+        <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
+
+      </button>
     </div>
-    <div>
-      <h2 *ngIf="processing" class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-      </h2>
-    </div>
+
   </div>
+
+  <h2 *ngIf="processing" class="text-center">
+    <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  </h2>
+
   <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
   <div class="text-center">
     <button *ngIf="!processing && tournament && isAdmin()" [routerLink]="['/admin', tournament.getId()]" type="button"
@@ -26,3 +39,5 @@
     </app-tournament-structureround>
   </div>
 </div>
+<app-tournament-navbar [currentScreen]="StructureScreen" [public]="true" *ngIf="tournament" [tournament]="tournament">
+</app-tournament-navbar>

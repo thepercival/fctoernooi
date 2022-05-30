@@ -11,6 +11,7 @@ import { UserComponent } from '../component';
 import { AuthService } from '../../lib/auth/auth.service';
 import { AppErrorHandler } from '../../lib/repository';
 import { Action } from 'rxjs/internal/scheduler/Action';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 @Component({
   selector: 'app-awaitpayment',
   templateUrl: './awaitpayment.component.html',
@@ -28,10 +29,11 @@ export class AwaitPaymentComponent extends UserComponent implements OnInit, OnDe
     router: Router,
     userRepository: UserRepository,
     authService: AuthService,
+    globalEventsManager: GlobalEventsManager,
     private paymentRepository: PaymentRepository,
     public myNavigation: MyNavigation
   ) {
-    super(route, router, userRepository, authService);
+    super(route, router, userRepository, authService, globalEventsManager);
     this.appErrorHandler = new AppErrorHandler();
   }
 

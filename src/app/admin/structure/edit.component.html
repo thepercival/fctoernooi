@@ -1,43 +1,50 @@
 <div class="container-fluid">
-  <div>
-    <div class="d-flex justify-content-between mb-1">
-      <h2 id="structureRound" #structureRound>
-        <app-tournament-icon name="structure"></app-tournament-icon> opzet
-      </h2>
-      <div>
-        <button *ngIf="!processing && clonedStructure && !clonedStructure.getFirstRoundNumber().hasBegun()"
-          role="button" (click)="openCategoryModal()" class="btn btn-primary ms-1">
+
+  <div class="d-flex justify-content-between mb-1">
+    <h2>
+      <app-tournament-icon name="structure"></app-tournament-icon> opzet
+    </h2>
+    <div *ngIf="!processing && clonedStructure && !structure.getFirstRoundNumber().hasBegun()">
+
+      <div class="btn-group" role="group" aria-label="aantal deelnemers">
+        <button type="button" class="btn btn-outline-primary" (click)="openCategoryModal()">
           <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-          <span> categorie</span>
         </button>
-        <button *ngIf="!processing && clonedStructure && !clonedStructure.getFirstRoundNumber().hasBegun()"
-          role="button" [disabled]="actions.length === 0" (click)="saveStructure()" class="btn btn-primary ms-1">
-          <fa-icon [icon]="['fas', 'save']"></fa-icon>
-          <span> opslaan</span>
+        <button [disabled]="clonedStructure.hasSingleCategory()" role="button"
+          (click)="openCategoriesChooseModal(this.clonedStructure)"
+          class="btn btn-outline-{{getCategoryFavoritesActiveClass()}}">
+          <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
         </button>
       </div>
+      <button role="button" [disabled]="actions.length === 0" (click)="saveStructure()" class="btn btn-primary ms-1">
+        <fa-icon [icon]="['fas', 'save']"></fa-icon>
+        <span> opslaan</span>
+      </button>
     </div>
-    <div>
-      <h2 *ngIf="processing" class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-      </h2>
-    </div>
+
   </div>
+  <div>
+    <h2 *ngIf="processing" class="text-center">
+      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    </h2>
+  </div>
+
   <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
   <div *ngIf="!processing && clonedStructure" class="row text-center">
 
-    <ng-container *ngIf="clonedStructure.getCategories().length === 1;else withCategories">
-      <app-tournament-structureround [editable]="true" [round]="clonedStructure.getCategories()[0].getRootRound()"
+    <ng-container *ngIf="clonedStructure.hasSingleCategory();else withCategories">
+      <app-tournament-structureround [editable]="true" [round]="clonedStructure.getSingleCategory().getRootRound()"
         class="px-0" (addAction)="addAction($event)" [first]="false" [structureNameService]="structureNameService"
         [structureEditor]="structureEditor" [lastAction]="lastAction">
       </app-tournament-structureround>
     </ng-container>
     <ng-template #withCategories>
       <div class="d-flex flex-wrap gap-1">
-        <app-tournament-structurecategory *ngFor="let category of clonedStructure.getCategories()" [editable]="true"
-          [category]="category" class="mx-auto card" (addAction)="addAction($event)"
-          [structureNameService]="structureNameService" [structureEditor]="structureEditor" [lastAction]="lastAction"
-          (remove)="removeCategory($event)">
+        <app-tournament-structurecategory *ngFor="let category of favoriteCategories" class="mx-auto card"
+          [editable]="true" [filterActive]="isCategoryFilterActive()" [structureNameService]="structureNameService"
+          [structureEditor]="structureEditor" [lastAction]="lastAction" [category]="category"
+          (addAction)="addAction($event)" (remove)="removeCategory($event)" (updateName)="updateCategoryName($event)"
+          (moveCategoryUp)="moveCategoryUp($event)">
         </app-tournament-structurecategory>
       </div>
     </ng-template>
@@ -50,4 +57,5 @@
     <span> opslaan</span>
   </button>
 </div>
-<app-bottom-menu *ngIf="tournament" [tournament]="tournament"></app-bottom-menu>
+<app-tournament-navbar [currentScreen]="StructureScreen" *ngIf="tournament" [tournament]="tournament">
+</app-tournament-navbar>

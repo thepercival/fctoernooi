@@ -14,13 +14,15 @@ import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { TournamentScreen } from '../../shared/tournament/screenNames';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-    selector: 'app-tournament-filter',
-    templateUrl: './filter.component.html',
-    styleUrls: ['./filter.component.scss']
+    selector: 'app-tournament-select-favorites',
+    templateUrl: './select.component.html',
+    styleUrls: ['./select.component.scss']
 })
-export class FilterComponent extends TournamentComponent implements OnInit {
+export class SelectFavoritesComponent extends TournamentComponent implements OnInit {
     public placeCompetitorItems: PlaceCompetitorItem[] = [];
     public favorites!: Favorites;
     public processingItem: Referee | Place | undefined;
@@ -32,11 +34,12 @@ export class FilterComponent extends TournamentComponent implements OnInit {
         tournamentRepository: TournamentRepository,
         sructureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
+        modalService: NgbModal,
+        favRepository: FavoritesRepository,
         private myNavigation: MyNavigation,
-        public favRepository: FavoritesRepository,
         protected authService: AuthService
     ) {
-        super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
+        super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
         this.resetAlert();
     }
 
@@ -45,7 +48,7 @@ export class FilterComponent extends TournamentComponent implements OnInit {
             const startLocationMap = new StartLocationMap(this.tournament.getCompetitors());
             this.structureNameService = new StructureNameService(startLocationMap);
             this.placeCompetitorItems = this.getPlaceCompetitorItems(startLocationMap);
-            this.favorites = this.favRepository.getObject(this.tournament);
+            this.favorites = this.favRepository.getObject(this.tournament, this.structure.getCategories());
             if (this.hasCompetitors() === false) {
                 this.setAlert(IAlertType.Info, 'er zijn nog geen deelnemers ingevuld, je kunt daarom nog geen deelnemers kiezen');
             }
@@ -54,8 +57,10 @@ export class FilterComponent extends TournamentComponent implements OnInit {
     }
 
     isAdmin(): boolean {
-        return this.hasRole(this.authService, Role.ADMIN);
+        return this.hasRole(this.authService, Role.Admin);
     }
+
+    get FavoritesScreen(): TournamentScreen { return TournamentScreen.Favorites }
 
     // @TODO CDK CATEGORY - REMOVE FUNCTION
     getDefaultCategory(structure: Structure): Category {

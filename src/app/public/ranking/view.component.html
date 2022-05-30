@@ -1,8 +1,9 @@
 <div class="container-fluid px-0">
   <div class="row justify-content-around g-0">
     <div class="col-12 col-lg-10">
-      <app-tournament-title [tournament]="tournament">
-      </app-tournament-title>
+      <h2>
+        <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> standen
+      </h2>
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
@@ -41,3 +42,5 @@
     </div>
   </div>
 </div>
+<app-tournament-navbar [public]="true" [currentScreen]="RankingScreen" *ngIf="tournament" [tournament]="tournament">
+</app-tournament-navbar>

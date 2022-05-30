@@ -36,6 +36,8 @@ import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FavoritesRepository } from '../../lib/favorites/repository';
 
 @Component({
     selector: 'app-tournament-game-add',
@@ -58,6 +60,8 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
+        modalService: NgbModal,
+        favRepository: FavoritesRepository,
         private gameRepository: GameRepository,
         private competitionSportMapper: CompetitionSportMapper,
         private fieldMapper: FieldMapper,
@@ -66,7 +70,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
         public dateFormatter: DateFormatter,
         fb: FormBuilder
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
         this.form = fb.group({
             poule: [undefined, Validators.compose([
                 Validators.required

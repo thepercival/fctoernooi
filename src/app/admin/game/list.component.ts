@@ -11,6 +11,8 @@ import { TournamentUser } from '../../lib/tournament/user';
 import { Observable, of } from 'rxjs';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { StartLocationMap, StructureNameService } from 'ngx-sport';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FavoritesRepository } from '../../lib/favorites/repository';
 
 @Component({
   selector: 'app-tournament-games-edit',
@@ -28,10 +30,12 @@ export class GameListComponent extends TournamentComponent implements OnInit {
     tournamentRepository: TournamentRepository,
     structureRepository: StructureRepository,
     globalEventsManager: GlobalEventsManager,
+    modalService: NgbModal,
+    favRepository: FavoritesRepository,
     private authService: AuthService,
     private myNavigation: MyNavigation,
   ) {
-    super(route, router, tournamentRepository, structureRepository, globalEventsManager);
+    super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
   }
 
   ngOnInit() {
@@ -57,11 +61,11 @@ export class GameListComponent extends TournamentComponent implements OnInit {
   }
 
   hasAdminRole(): boolean {
-    return (this.roles & Role.ADMIN) === Role.ADMIN;
+    return (this.roles & Role.Admin) === Role.Admin;
   }
 
   getUserRefereeId(tournamentUser: TournamentUser): Observable<string | number | undefined> {
-    if (!tournamentUser.hasRoles(Role.REFEREE)) {
+    if (!tournamentUser.hasRoles(Role.Referee)) {
       return of(0);
     }
     return this.tournamentRepository.getUserRefereeId(this.tournament);

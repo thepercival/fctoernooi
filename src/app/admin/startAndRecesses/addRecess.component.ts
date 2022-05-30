@@ -13,10 +13,11 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { IAlertType } from '../../shared/common/alert';
 import { RecessRepository } from '../../lib/recess/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Recess } from '../../lib/recess';
 import { RecessValidator } from '../../lib/recess/validator';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { FavoritesRepository } from '../../lib/favorites/repository';
 
 @Component({
     selector: 'app-tournament-competitor-edit',
@@ -34,12 +35,14 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
+        modalService: NgbModal,
+        favRepository: FavoritesRepository,
         private recessRepository: RecessRepository,
         private planningRepository: PlanningRepository,
         private myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
         this.form = fb.group({
             startdate: ['', Validators.compose([])],
             starttime: ['', Validators.compose([])],

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Role } from '../../lib/role';
+import { getRoleName, Role } from '../../lib/role';
 
 @Component({
     selector: 'app-ngbd-modal-auth-explanation',
@@ -18,10 +18,10 @@ export class AuthorizationExplanationModalComponent implements OnInit {
 
     ngOnInit() {
         this.roleDefinitions = [
-            { name: Role.getName(Role.ADMIN), description: 'kan alles behalve wat de andere rollen kunnen' },
-            { name: Role.getName(Role.ROLEADMIN), description: 'kan de gebruikers-rollen aanpassen, er moet minimaal 1 rolbeheerder zijn' },
-            { name: Role.getName(Role.GAMERESULTADMIN), description: 'kan de scores van alle wedstrijden aanpassen' },
-            { name: Role.getName(Role.REFEREE), description: 'kan de scores van eigen wedstrijden aanpassen, je deelt deze rol uit door bij de scheidsrechter het emailadres in te vullen' },
+            { name: getRoleName(Role.Admin), description: 'kan alles behalve wat de andere rollen kunnen' },
+            { name: getRoleName(Role.RoleAdmin), description: 'kan de gebruikers-rollen aanpassen, er moet minimaal 1 rolbeheerder zijn' },
+            { name: getRoleName(Role.GameResultAdmin), description: 'kan de scores van alle wedstrijden aanpassen' },
+            { name: getRoleName(Role.Referee), description: 'kan de scores van eigen wedstrijden aanpassen, je deelt deze rol uit door bij de scheidsrechter het emailadres in te vullen' },
         ]
     }
 }

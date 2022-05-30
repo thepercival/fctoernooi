@@ -1,12 +1,12 @@
-import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   BalancedPouleStructure,
   Category,
   CompetitionSportService,
   Competitor,
-  NameService,
   PlaceRanges,
+  Round,
   StartLocationMap,
   Structure,
   StructureEditor,
@@ -25,20 +25,25 @@ import { QualifyPathNode } from 'ngx-sport';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
+import { CategoryNameChecker } from '../../lib/ngx-sport/category/nameChecker';
+import { FavoritesRepository } from '../../lib/favorites/repository';
+import { CategoryChooseModalComponent } from '../../shared/tournament/category/chooseModal.component';
+import { Favorites } from '../../lib/favorites';
+import { TournamentScreen } from '../../shared/tournament/screenNames';
 @Component({
   selector: 'app-tournament-structure',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss'],
 })
-export class StructureEditComponent extends TournamentComponent implements OnInit, AfterViewChecked {
+export class StructureEditComponent extends TournamentComponent implements OnInit {
   lastAction: StructureAction | undefined;
   actions: StructureAction[] = [];
   originalCompetitors!: Competitor[];
   clonedStructure!: Structure;
+  public favorites!: Favorites;
+  public favoriteCategories!: Category[];
   public structureNameService!: StructureNameService;
   private scrolled = false;
-
-  @ViewChild('structureRound') private roundElRef: ElementRef | undefined;
 
   constructor(
     route: ActivatedRoute,
@@ -46,14 +51,15 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     tournamentRepository: TournamentRepository,
     structureRepository: StructureRepository,
     globalEventsManager: GlobalEventsManager,
+    modalService: NgbModal,
+    favRepository: FavoritesRepository,
     public structureEditor: StructureEditor,
-    private modalService: NgbModal,
     private planningRepository: PlanningRepository,
     private competitionSportService: CompetitionSportService,
     private myNavigation: MyNavigation,
     private defaultService: DefaultService
   ) {
-    super(route, router, tournamentRepository, structureRepository, globalEventsManager);
+    super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
   }
 
   ngOnInit() {
@@ -64,8 +70,10 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
         .subscribe({
           next: (structure: Structure) => {
             this.structure = structure;
-            console.log(this.structure);
+
+            // console.log(this.structure);
             this.clonedStructure = this.createClonedStructure(this.structure);
+            this.updateFavoriteCategories(this.clonedStructure);
             this.structureNameService = new StructureNameService(new StartLocationMap(this.originalCompetitors));
             this.processing = false;
           },
@@ -82,6 +90,8 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
         });
     }, noStructure);
   }
+
+  get StructureScreen(): TournamentScreen { return TournamentScreen.Structure }
 
   openCategoryModal(category?: Category) {
     const activeModal = this.modalService.open(NameModalComponent);
@@ -148,16 +158,78 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
       });
   }
 
+  getCategoryFavoritesActiveClass(): string {
+    return this.isCategoryFilterActive() ? 'primary' : 'secondary';
+  }
+
+  isCategoryFilterActive(): boolean {
+    return this.favorites.hasCategories() && this.favoriteCategories.length > 0
+  }
+
   private addCategory(name: string) {
+    if ((new CategoryNameChecker()).doesNameExists(this.clonedStructure.getCategories(), name)) {
+      this.setAlert(IAlertType.Danger, 'de category-naam bestaat al');
+      return;
+    }
     // this.addAction(new StructureAction( StructureActionName.AddCategory)
 
-    const catergory = this.structureEditor.addCategory(
+    const category = this.structureEditor.addCategory(
       name, this.clonedStructure.getCategories().length + 1,
       this.clonedStructure.getFirstRoundNumber(),
       new BalancedPouleStructure(...this.defaultService.getPouleStructure(this.competition.getSportVariants()))
     );
-    this.clonedStructure.getCategories().push(catergory);
+    this.clonedStructure.getCategories().push(category);
+
+    if (this.isCategoryFilterActive()) {
+      this.favorites.addCategory(category);
+      this.favRepository.editObject(this.favorites);
+    }
+    this.updateFavoriteCategories(this.clonedStructure);
     this.addAction({ name: StructureActionName.AddCategory, recreateStructureNameService: true });
+  }
+
+  public updateCategoryName(updateAction: UpdateCategoryNameAction) {
+    if ((new CategoryNameChecker()).doesNameExists(this.clonedStructure.getCategories(), updateAction.newName, updateAction.category)) {
+      this.setAlert(IAlertType.Danger, 'de category-naam bestaat al');
+      return;
+    }
+    updateAction.category.setName(updateAction.newName);
+
+    this.updateFavoriteCategories(this.clonedStructure);
+
+    this.addAction({ name: StructureActionName.UpdateCategory, recreateStructureNameService: false });
+  }
+
+  public moveCategoryUp(category: Category): void {
+    const previousCategory = this.getPreviousCategory(category)
+
+    const newNr = category.getNumber();
+    category.setNumber(previousCategory.getNumber());
+
+    previousCategory.setNumber(newNr);
+
+    const categories = this.clonedStructure.getCategories();
+    const idx = categories.indexOf(category);
+    const idxPrev = categories.indexOf(previousCategory);
+
+    if (idx >= 0 && idxPrev >= 0) {
+      var tmp = categories[idx];
+      categories[idx] = categories[idxPrev];
+      categories[idxPrev] = tmp;
+    }
+
+    this.updateFavoriteCategories(this.clonedStructure);
+    this.addAction({ name: StructureActionName.UpdateCategory, recreateStructureNameService: true });
+  }
+
+  private getPreviousCategory(category: Category): Category {
+    const previous = this.clonedStructure.getCategories().find((categoryIt: Category) => {
+      return categoryIt.getNumber() === (category.getNumber() - 1);
+    });
+    if (previous === undefined) {
+      throw new Error('no previous round');
+    }
+    return previous;
   }
 
   public removeCategory(category: Category): void {
@@ -167,10 +239,24 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
       categories.splice(idx, 1);
     }
     categories.slice().splice(idx).forEach((category: Category) => {
-      console.log(category);
       category.setNumber(category.getNumber() - 1);
     });
+    this.removeCategoryRoundsFromRoundNumber([category.getRootRound()]);
+
+    this.updateFavoriteCategories(this.clonedStructure);
+    // this.clonedStructure.getCategories().forEach(category => category.getRootRound().getPoules().forEach(poule => {
+    //   console.log(poule.getStructureLocation(), this.structureNameService.getPouleLetter(poule));
+    // }));
+    // console.log('removeCategory', this.clonedStructure);
+
     this.addAction({ name: StructureActionName.RemoveCategory, recreateStructureNameService: true });
+  }
+
+  private removeCategoryRoundsFromRoundNumber(rounds: Round[]): void {
+    rounds.forEach((round: Round) => {
+      this.removeCategoryRoundsFromRoundNumber(round.getChildren());
+      round.detach();
+    });
   }
 
   completeSave(structureRes: Structure) {
@@ -201,12 +287,12 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     this.myNavigation.back();
   }
 
-  ngAfterViewChecked() {
-    if (this.roundElRef !== undefined && !this.processing && !this.scrolled) {
-      this.scrolled = true;
-      this.roundElRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
-    }
-  }
+  // ngAfterViewChecked() {
+  //   if (this.roundElRef !== undefined && !this.processing && !this.scrolled) {
+  //     this.scrolled = true;
+  //     this.roundElRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
+  //   }
+  // }
 }
 
 export interface StructureAction {
@@ -223,4 +309,11 @@ export enum StructureActionName {
   RemoveQualifier, AddQualifier, // qualifyActions
   SplitQualifyGroupsFrom, MergeQualifyGroupWithNext // qualifyActions
 }
+
+export interface UpdateCategoryNameAction {
+  category: Category;
+  newName: string;
+}
+
+
 

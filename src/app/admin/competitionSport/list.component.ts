@@ -29,6 +29,7 @@ import { SportWithFields } from '../sport/createSportWithFields.component';
 import { IAlertType } from '../../shared/common/alert';
 import { GameModeModalComponent } from '../gameMode/modal.component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { FavoritesRepository } from '../../lib/favorites/repository';
 @Component({
   selector: 'app-tournament-sport',
   templateUrl: './list.component.html',
@@ -53,12 +54,13 @@ export class CompetitionSportListComponent extends TournamentComponent implement
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     globalEventsManager: GlobalEventsManager,
+    modalService: NgbModal,
+    favRepository: FavoritesRepository,
     private competitionSportRepository: CompetitionSportRepository,
     private planningRepository: PlanningRepository,
     public translateService: TranslateService,
-    private modalService: NgbModal
   ) {
-    super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
   }
 
   ngOnInit() {

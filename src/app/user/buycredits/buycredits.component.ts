@@ -11,6 +11,7 @@ import { Observable, of } from 'rxjs';
 import { CreditCardPayment, IDealIssuer, IDealPayment, PaymentMethod } from '../../lib/payment/json';
 import { UserComponent } from '../component';
 import { AuthService } from '../../lib/auth/auth.service';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 @Component({
   selector: 'app-buycredits',
   templateUrl: './buycredits.component.html',
@@ -27,11 +28,12 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
     router: Router,
     userRepository: UserRepository,
     authService: AuthService,
+    globalEventsManager: GlobalEventsManager,
     private paymentRepository: PaymentRepository,
     public myNavigation: MyNavigation,
     fb: FormBuilder
   ) {
-    super(route, router, userRepository, authService);
+    super(route, router, userRepository, authService, globalEventsManager);
     this.form = fb.group({
       purpose: ['', Validators.required],
       nrOfCredits: ['', Validators.compose([

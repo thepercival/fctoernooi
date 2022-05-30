@@ -14,6 +14,7 @@ import { TournamentAuthorization } from '../../lib/tournament/authorization';
 import { AuthorizationExplanationModalComponent } from './infomodal.component';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { FavoritesRepository } from '../../lib/favorites/repository';
 
 @Component({
     selector: 'app-tournament-authorization-list',
@@ -32,11 +33,12 @@ export class AuthorizationListComponent extends TournamentComponent implements O
         tournamentRepository: TournamentRepository,
         sructureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
+        modalService: NgbModal,
+        favRepository: FavoritesRepository,
         private tournamentUserRepository: TournamentUserRepository,
         private invitationRepository: TournamentInvitationRepository,
-        private modalService: NgbModal,
     ) {
-        super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
+        super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
     }
 
     ngOnInit() {
@@ -68,9 +70,9 @@ export class AuthorizationListComponent extends TournamentComponent implements O
 
     getAssignableRoles(authorization: TournamentAuthorization): TournamentAuthorizationRole[] {
         return [
-            { authorization, role: Role.ADMIN },
-            { authorization, role: Role.GAMERESULTADMIN },
-            { authorization, role: Role.ROLEADMIN }
+            { authorization, role: Role.Admin },
+            { authorization, role: Role.GameResultAdmin },
+            { authorization, role: Role.RoleAdmin }
         ];
     }
 
@@ -81,13 +83,13 @@ export class AuthorizationListComponent extends TournamentComponent implements O
     }
 
     canToggleRole(tournamentUser: TournamentUser, role: number) {
-        return !(role === Role.ROLEADMIN && tournamentUser.hasRoles(role) && this.getNrOfRoles(Role.ROLEADMIN) < 2);
+        return !(role === Role.RoleAdmin && tournamentUser.hasRoles(role) && this.getNrOfRoles(Role.RoleAdmin) < 2);
     }
 
-    get RoleReferee(): number { return Role.REFEREE; }
+    get RoleReferee(): number { return Role.Referee; }
 
     hasUnassignableRoles(roles: number): boolean {
-        return roles === Role.REFEREE || roles === 0;
+        return roles === Role.Referee || roles === 0;
     }
 
     toggleRole(authorizationRole: TournamentAuthorizationRole, modalContent: TemplateRef<any>) {
@@ -96,7 +98,7 @@ export class AuthorizationListComponent extends TournamentComponent implements O
         const roleDelta = (authorization.hasRoles(role) ? -role : role);
         const roleNew = authorization.getRoles() + roleDelta;
         if (this.hasUnassignableRoles(roleNew)) {
-            this.openModalRemove(modalContent, authorization, roleNew === Role.REFEREE);
+            this.openModalRemove(modalContent, authorization, roleNew === Role.Referee);
         } else {
             this.roleProcessing = authorizationRole;
             this.editRole(authorization, roleDelta);
@@ -131,7 +133,7 @@ export class AuthorizationListComponent extends TournamentComponent implements O
     }
 
     remove(authorization: TournamentAuthorization) {
-        if (authorization.getRoles() === Role.REFEREE)
+        if (authorization.getRoles() === Role.Referee)
             this.processing = true;
         if (authorization instanceof TournamentUser) {
             this.tournamentUserRepository.removeObject(<TournamentUser>authorization)
@@ -163,7 +165,7 @@ export class AuthorizationListComponent extends TournamentComponent implements O
     }
 
     canBeRemoved(tournamentUser: TournamentUser) {
-        return !tournamentUser.hasRoles(Role.ROLEADMIN) || this.getNrOfRoles(Role.ROLEADMIN) > 1;
+        return !tournamentUser.hasRoles(Role.RoleAdmin) || this.getNrOfRoles(Role.RoleAdmin) > 1;
     }
 
     rolesAreEqual(roleA: TournamentAuthorizationRole, roleB: TournamentAuthorizationRole | undefined): boolean {
@@ -188,7 +190,7 @@ export class AuthorizationListComponent extends TournamentComponent implements O
             if (result === 'remove') {
                 if (removeWithRefereeRole) {
                     authorization.setRoles(0);
-                    this.editRole(authorization, Role.REFEREE);
+                    this.editRole(authorization, Role.Referee);
                 } else {
                     this.remove(authorization);
                 }

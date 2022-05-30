@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
   selector: 'app-tournament-prenew',
@@ -7,6 +8,8 @@ import { Component } from '@angular/core';
 })
 export class PreNewComponent {
   constructor(
+    globalEventsManager: GlobalEventsManager
   ) {
+    globalEventsManager.showFooter.emit();
   }
 }

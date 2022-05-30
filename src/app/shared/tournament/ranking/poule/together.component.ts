@@ -37,7 +37,7 @@ export class PouleRankingTogetherComponent implements OnInit {
 
   ngOnInit() {
     this.processing = true;
-    this.favorites = this.favRepos.getObject(this.tournament);
+    this.favorites = this.favRepos.getObject(this.tournament, undefined);
     this.togetherRankingCalculator = new TogetherSportRoundRankingCalculator(this.competitionSport);
     this.sportRankingItems = this.togetherRankingCalculator.getItemsForPoule(this.poule);
     this.gameAmountConfig = this.poule.getRound().getNumber().getValidGameAmountConfig(this.competitionSport);

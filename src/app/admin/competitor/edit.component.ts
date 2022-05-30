@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
     JsonCompetitor,
     NameService,
+    StartLocation,
     StartLocationMap,
     StructureNameService,
 } from 'ngx-sport';
@@ -16,6 +17,8 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FavoritesRepository } from '../../lib/favorites/repository';
 
 @Component({
     selector: 'app-tournament-competitor-edit',
@@ -28,7 +31,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
     hasBegun!: boolean;
     public nameService: NameService;
     public structureNameService!: StructureNameService;
-    pouleNr!: number;
+    startLocation!: StartLocation;
     placeNr!: number;
 
     validations: CompetitorValidations = {
@@ -43,11 +46,13 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
+        modalService: NgbModal,
+        favRepository: FavoritesRepository,
         private competitorRepository: CompetitorRepository,
         private myNavigation: MyNavigation,
         fb: FormBuilder
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
         this.form = fb.group({
             name: ['', Validators.compose([
                 Validators.required,
@@ -70,26 +75,21 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
 
     ngOnInit() {
         this.route.params.subscribe(params => {
-            super.myNgOnInit(() => this.postInit(+params.pouleNr, +params.placeNr));
+            super.myNgOnInit(() => this.postInit(+params.categoryNr, +params.pouleNr, +params.placeNr));
         });
     }
 
-    private postInit(pouleNr: number, placeNr: number) {
-        if (placeNr < 1 || pouleNr < 1) {
-            this.setAlert(IAlertType.Danger, 'de rondeplek kan niet gevonden worden');
+    private postInit(categoryNr: number, pouleNr: number, placeNr: number) {
+        if (categoryNr < 1 || placeNr < 1 || pouleNr < 1) {
+            this.setAlert(IAlertType.Danger, 'de startplek kan niet gevonden worden');
             return;
         }
-        this.pouleNr = pouleNr;
-        this.placeNr = placeNr;
+        this.startLocation = new StartLocation(categoryNr, pouleNr, placeNr);
         this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
+        const startLocationMap = new StartLocationMap(this.tournament.getCompetitors());
+        this.structureNameService = new StructureNameService(startLocationMap);
 
-        this.structureNameService = new StructureNameService(
-            new StartLocationMap(this.tournament.getCompetitors())
-        );
-
-        const competitor = this.tournament.getCompetitors().find(competitorIt => {
-            return competitorIt.getPouleNr() === pouleNr && competitorIt.getPlaceNr() === placeNr;
-        });
+        const competitor = <TournamentCompetitor | undefined>startLocationMap.getCompetitor(this.startLocation);
         this.originalCompetitor = competitor;
         this.form.controls.name.setValue(this.originalCompetitor?.getName());
         this.form.controls.registered.setValue(this.originalCompetitor ? this.originalCompetitor.getRegistered() : false);
@@ -103,11 +103,11 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         return {
             id: this.originalCompetitor ? this.originalCompetitor.getId() : 0,
             name: name,
-            categoryNr: 1,/* TODO CDK */
             registered: this.form.controls.registered.value,
             info: info ? info : undefined,
-            pouleNr: this.pouleNr,
-            placeNr: this.placeNr
+            categoryNr: this.startLocation.getCategoryNr(),
+            pouleNr: this.startLocation.getPouleNr(),
+            placeNr: this.startLocation.getPlaceNr()
         };
     }
 
@@ -121,7 +121,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         this.processing = true;
         this.setAlert(IAlertType.Info, 'de deelnemer wordt opgeslagen');
         if (this.originalCompetitor) {
-            this.competitorRepository.editObject(jsonCompetitor, this.originalCompetitor, this.tournament)
+            this.competitorRepository.editObject(jsonCompetitor, this.originalCompetitor, this.tournament.getId())
                 .subscribe({
                     next: () => {
                         this.navigateBack();

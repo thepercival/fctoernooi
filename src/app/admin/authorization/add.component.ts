@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
-import { Role } from '../../lib/role';
+import { getRoleName, Role } from '../../lib/role';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { User } from '../../lib/user';
 import { TournamentInvitationRepository } from '../../lib/tournament/invitation/repository';
@@ -14,6 +14,7 @@ import { JsonTournamentInvitation } from '../../lib/tournament/invitation/mapper
 import { AuthorizationExplanationModalComponent } from './infomodal.component';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { FavoritesRepository } from '../../lib/favorites/repository';
 
 @Component({
     selector: 'app-tournament-authorization-add',
@@ -35,12 +36,14 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
+        modalService: NgbModal,
+        favRepository: FavoritesRepository,
         private invitationRepository: TournamentInvitationRepository,
         private myNavigation: MyNavigation,
         fb: FormBuilder,
-        private modalService: NgbModal,
+
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
         const config = {
             emailaddress: ['', Validators.compose([
                 Validators.required,
@@ -58,9 +61,9 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
 
     createRoleItems(): RoleItem[] {
         return [
-            { value: Role.ADMIN, selected: false },
-            { value: Role.GAMERESULTADMIN, selected: false },
-            { value: Role.ROLEADMIN, selected: false }
+            { value: Role.Admin, selected: false },
+            { value: Role.GameResultAdmin, selected: false },
+            { value: Role.RoleAdmin, selected: false }
         ];
     }
 
@@ -108,7 +111,7 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
     }
 
     getRoleName(role: number): string {
-        return Role.getName(role);
+        return getRoleName(role);
     }
 
     hasSomeRoleSelected(): boolean {

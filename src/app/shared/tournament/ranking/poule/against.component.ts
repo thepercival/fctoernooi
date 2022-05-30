@@ -30,7 +30,7 @@ export class PouleRankingAgainstComponent implements OnInit {
 
   ngOnInit() {
     this.processing = true;
-    this.favorites = this.favRepos.getObject(this.tournament);
+    this.favorites = this.favRepos.getObject(this.tournament, undefined);
     this.againstRankingCalculator = new AgainstSportRoundRankingCalculator(this.competitionSport);
     this.sportRankingItems = this.againstRankingCalculator.getItemsForPoule(this.poule);
     // console.log(this.sportRankingItems);

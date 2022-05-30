@@ -20,6 +20,7 @@ export class FavoritesBackEnd {
         if (jsonFavorites === undefined) {
             jsonFavorites = {
                 tournamentId: tournament.getId(),
+                categoryNames: [],
                 competitorIds: [],
                 refereeIds: []
             };

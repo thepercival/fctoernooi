@@ -17,7 +17,8 @@
             <label for="place" class="col-form-label">plek</label>
           </div>
           <div class="col-9">
-            <span class="form-control-plaintext">{{structureNameService.getPouleLetter(pouleNr) }}{{placeNr}}</span>
+            <span class="form-control-plaintext">{{structureNameService.getPouleLetter(startLocation.getPouleNr())
+              }}{{startLocation.getPlaceNr()}}</span>
           </div>
         </div>
         <div class="row mb-3">

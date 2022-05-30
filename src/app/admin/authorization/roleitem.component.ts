@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { Role } from '../../lib/role';
+import { getRoleName, Role } from '../../lib/role';
 import { TournamentAuthorizationRole } from './list.component';
 
 @Component({
@@ -20,7 +20,7 @@ export class RoleItemComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.description = Role.getName(this.role.role);
+        this.description = getRoleName(this.role.role);
     }
 
     toggle() {

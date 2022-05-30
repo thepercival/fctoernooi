@@ -19,6 +19,7 @@ import { ScreenConfigName } from '../../lib/liveboard/screenConfig/name';
 import { ScreenConfigsModalComponent } from './screenconfigsmodal.component';
 import { Observable, of } from 'rxjs';
 import { SponsorMapper } from '../../lib/sponsor/mapper';
+import { FavoritesRepository } from '../../lib/favorites/repository';
 
 @Component({
     selector: 'app-tournament-liveboard',
@@ -40,13 +41,14 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
+        modalService: NgbModal,
+        favRepository: FavoritesRepository,
         private screenConfigRepository: ScreenConfigRepository,
         public cssService: CSSService,
         private myNavigation: MyNavigation,
-        private modalService: NgbModal,
         private sponsorMapper: SponsorMapper
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
     }
 
     ngOnInit() {

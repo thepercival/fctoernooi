@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { NameService, Round, Competitor, StructureEditor, QualifyTarget, PlaceRanges, Place, Category, StructureNameService } from 'ngx-sport';
-import { StructureAction, StructureActionName } from '../../../admin/structure/edit.component';
-import { IAlert, IAlertType } from '../../common/alert';
+import { Competitor, StructureEditor, Category, StructureNameService } from 'ngx-sport';
+import { StructureAction, UpdateCategoryNameAction } from '../../../admin/structure/edit.component';
 import { CSSService } from '../../common/cssservice';
 import { NameModalComponent } from '../namemodal/namemodal.component';
 
@@ -15,12 +14,15 @@ export class StructureCategoryComponent implements OnInit {
   @Input() structureEditor!: StructureEditor;
   @Input() category!: Category;
   @Input() editable: boolean = false;
+  @Input() filterActive: boolean = false;
   // @Input() first!: boolean;
-  @Input() favorites: Competitor[] = [];
+  @Input() favoriteCompetitors: Competitor[] = [];
   @Input() structureNameService!: StructureNameService;
   @Input() lastAction: StructureAction | undefined;
   @Output() addAction = new EventEmitter<StructureAction>();
   @Output() remove = new EventEmitter<Category>();
+  @Output() updateName = new EventEmitter<UpdateCategoryNameAction>();
+  @Output() moveCategoryUp = new EventEmitter<Category>();
 
   constructor(public cssService: CSSService, private modalService: NgbModal) {
 
@@ -33,10 +35,12 @@ export class StructureCategoryComponent implements OnInit {
     const modal = this.getChangeNameModel('wijzigen');
     modal.componentInstance.initialName = category.getName();
     modal.result.then((newName: string) => {
-      category.setName(newName);
-      this.addAction.emit({ name: StructureActionName.UpdateCategory, recreateStructureNameService: false });
+      this.updateName.emit({ category, newName });
+    }, (reason) => {
     });
   }
+
+  get movable(): boolean { return !this.filterActive && this.category.getNumber() > 1 };
 
   getChangeNameModel(buttonLabel: string): NgbModalRef {
     const activeModal = this.modalService.open(NameModalComponent);

@@ -17,6 +17,7 @@ import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { FavoritesRepository } from '../../lib/favorites/repository';
 
 @Component({
     selector: 'app-tournament-referee-edit',
@@ -43,16 +44,17 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
+        modalService: NgbModal,
+        favRepository: FavoritesRepository,
         private refereeRepository: RefereeRepository,
         private planningRepository: PlanningRepository,
         private myNavigation: MyNavigation,
-        private modalService: NgbModal,
         fb: FormBuilder
     ) {
 
         // EditPermissions, EmailAddresses
         // andere groep moet dan zijn getEditPermission, wanneer ingelogd, bij gewone view
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
         this.form = fb.group({
             initials: ['', Validators.compose([
                 Validators.required,

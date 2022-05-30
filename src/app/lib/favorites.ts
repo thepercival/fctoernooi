@@ -1,16 +1,15 @@
-import { Referee, Competitor, Place, AgainstGame, TogetherGame, AgainstSide, AgainstGamePlace, TogetherGamePlace, StartLocationMap } from 'ngx-sport';
+import { Referee, Competitor, Place, AgainstGame, TogetherGame, AgainstSide, AgainstGamePlace, TogetherGamePlace, StartLocationMap, Category } from 'ngx-sport';
 import { LockerRoom } from './lockerroom';
 import { Tournament } from './tournament';
 
 export class Favorites {
 
     protected startLocationMap: StartLocationMap;
+    private competitors: Competitor[] = [];
+    private referees: Referee[] = []
+    private categories: Category[] = [];
 
-    constructor(
-        private tournament: Tournament,
-        private competitors: Competitor[] = [],
-        private referees: Referee[] = []
-    ) {
+    constructor(private tournament: Tournament) {
         this.startLocationMap = new StartLocationMap(tournament.getCompetitors());
     }
 
@@ -19,7 +18,7 @@ export class Favorites {
     }
 
     hasItems(): boolean {
-        return this.hasCompetitors() || this.hasReferees();
+        return this.hasCompetitors() || this.hasReferees() || this.hasCategories();
     }
 
     // removeNonExisting(tournamentCompetitors: Competitor[], referees: Referee[]) {
@@ -35,12 +34,51 @@ export class Favorites {
         return this.hasGameReferee(game) || this.hasGameCompetitor(game);
     }
 
+    getCategoryNames(): string[] {
+        return this.categories.map((category: Category) => category.getName());
+    }
+
     getCompetitorIds(): number[] {
         return this.competitors.map((competitor: Competitor) => +competitor.getId());
     }
 
     getRefereeIds(): number[] {
         return this.referees.map((referee: Referee) => +referee.getId());
+    }
+
+    hasCategories(): boolean {
+        return this.categories.length > 0;
+    }
+
+    hasCategory(category: Category): boolean {
+        return this.categories.some(categoryIt => categoryIt === category);
+    }
+
+    filterCategories(categories: Category[]): Category[] {
+        if (!this.hasCategories()) {
+            return categories;
+        }
+        return categories.filter((category: Category) => {
+            return this.categories.indexOf(category) >= 0;
+        });
+    }
+
+    addCategory(category: Category) {
+        if (this.hasCategory(category)) {
+            return;
+        }
+        this.categories.push(category);
+    }
+
+    removeCategory(category: Category) {
+        if (this.hasCategory(category) === false) {
+            return;
+        }
+        this.categories.splice(this.categories.indexOf(category), 1);
+    }
+
+    resetCategories() {
+        this.categories = [];
     }
 
     hasCompetitors(): boolean {
