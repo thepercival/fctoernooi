@@ -69,7 +69,7 @@
     <!-- endranking screen -->
     <div *ngIf="isEndRankingScreen()" class="row g-0">
       <div class="col-12 liveboard">
-        <app-tournament-endranking [structureNameService]="structureNameService" [structure]="structure"
+        <app-tournament-endranking [structureNameService]="structureNameService" [category]="getDefaultCategory()"
           [range]="getEndRankingScreen().range">
         </app-tournament-endranking>
       </div>

@@ -1,19 +1,19 @@
 <div class="container-fluid">
 
-  <div class="d-flex justify-content-between mb-1">
+  <div class="d-flex justify-content-between ms-1 mb-1">
     <h2>
       <app-tournament-icon name="structure"></app-tournament-icon> opzet
     </h2>
-    <div *ngIf="!processing">
+    <div *ngIf="!processing" class="pe-1">
 
       <button *ngIf="tournament.getCompetitors().length > 0" role="button" (click)="showCompetitors = !showCompetitors"
-        class="btn btn-outline-primary">
+        class="btn btn-sm me-1 btn-outline-primary">
         <fa-icon [icon]="['fas', showCompetitorIconClass()]"></fa-icon>
-        <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
+        <span class="d-none d-sm-inline ms-1">deelnemers</span>
       </button>
 
       <button *ngIf="!structure.hasSingleCategory()" type="button"
-        class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass()}}"
+        class="btn btn-sm btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
         (click)="openCategoriesChooseModal(structure)">
         <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
 
@@ -33,10 +33,24 @@
       naar het beheergedeelte
     </button>
   </div>
-  <div *ngIf="!processing" class="row text-center" #structureRound>
-    <app-tournament-structureround [editable]="false" [round]="getDefaultCategory(structure).getRootRound()"
-      [favorites]="competitors" [structureNameService]="structureNameService" [structureEditor]="structureEditor">
-    </app-tournament-structureround>
+  <div *ngIf="!processing" class="row text-center">
+
+    <ng-container *ngIf="structure.hasSingleCategory();else withCategories">
+      <app-tournament-structureround class="px-0" [editable]="false"
+        [round]="structure.getSingleCategory().getRootRound()" [showCompetitors]="showCompetitors"
+        [favorites]="competitors" [structureNameService]="structureNameService" [structureEditor]="structureEditor">
+      </app-tournament-structureround>
+    </ng-container>
+    <ng-template #withCategories>
+      <div class="d-flex flex-wrap gap-1">
+        <app-tournament-structurecategory *ngFor="let category of favoriteCategories" class="mx-auto" [editable]="false"
+          [filterActive]="isCategoryFilterActive()" [structureNameService]="structureNameService"
+          [showCompetitors]="showCompetitors" [structureEditor]="structureEditor" [category]="category">
+        </app-tournament-structurecategory>
+      </div>
+    </ng-template>
+
+
   </div>
 </div>
 <app-tournament-navbar [currentScreen]="StructureScreen" [public]="true" *ngIf="tournament" [tournament]="tournament">

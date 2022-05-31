@@ -136,7 +136,7 @@ import { CategoryCompetitorListComponent } from './competitor/category.component
 export class AdminModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(
-      /* homescreen */ faMoneyBillAlt, faCheckCircle, faTimesCircle, faShareAlt, faEye, faCopy, faTrashAlt
+      /* homescreen */ faMoneyBillAlt, faCheckCircle, faTimesCircle, faShareAlt, faCopy, faTrashAlt
       , faQrcode, faPrint, faFileExcel,
       /* sport select*/ faDotCircle,
       /* competitors*/ faRandom, faSort,

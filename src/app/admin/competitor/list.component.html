@@ -5,7 +5,7 @@
       <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
     </h2>
     <button *ngIf="!processing && !structure.hasSingleCategory()" type="button"
-      class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass()}}"
+      class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
       (click)="openCategoriesChooseModal(structure)">
       <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
 
@@ -21,7 +21,7 @@
 
 
   <div *ngIf="!processing" class="d-flex flex-wrap gap-1">
-    <app-tournament-category-competitors *ngFor="let category of favoriteCategories" class="mx-auto card"
+    <app-tournament-category-competitors *ngFor="let category of favoriteCategories" class="mx-auto"
       [showHeader]="favoriteCategories.length > 1" [category]="category" [tournament]="tournament"
       [structureNameService]="structureNameService" [lockerRoomValidator]="lockerRoomValidator"
       (processing)="updateProcessing($event)" (saveStructure)="saveStructure($event)"

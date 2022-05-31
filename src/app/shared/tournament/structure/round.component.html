@@ -1,4 +1,4 @@
-<div *ngIf="round" [ngClass]="{ 'ps-1': !first, 'pe-1': round.isRoot() }">
+<div *ngIf="round">
   <div class="card border-secondary round mb-2 user-select-none {{cssService.getQualifyRound(round)}}"
     *ngIf="round.isRoot() || round.getNrOfPlaces() > MinPlacesPerPoule">
     <div class="card-header px-1">
@@ -16,15 +16,17 @@
       <p *ngIf="editable && alert">
         <ngb-alert [dismissible]="true" (closed)="alert = undefined" [type]="alert.type">{{ alert.message }}</ngb-alert>
       </p>
-      <div class="d-flex flex-wrap justify-content-around">
+      <div class="d-flex flex-wrap justify-content-around gap-1">
         <ul *ngFor="let poule of round.getPoules();" class="list-group mb-3">
           <li class="list-group-item disabled px-2 py-2">
             {{structureNameService.getPouleName( poule, round.isRoot() && round.getPoules().length <= 2)}} </li>
           <li *ngFor="let place of poule.getPlaces();"
-            class="list-group-item px-2 py-2 place-list-item pointer {{cssService.getQualifyPlace(place)}}"
+            class="list-group-item px-2 py-2 place-list-item pointer {{getPlaceAlignClass()}} {{cssService.getQualifyPlace(place)}}"
             placement="top" [ngbPopover]="longName" (click)="setPopoverPlace(place)">
-            <span [ngClass]="{'favitem': isFavorite(place) }"
+            <span [ngClass]="{'favitem': isFavorite(place)}"
               [innerHtml]="structureNameService.getPlaceFromName(place,false) | keepHtml"></span>
+            <span *ngIf="showCompetitors && round.isRoot()" class="ms-1"
+              [ngClass]="{'favitem': isFavorite(place) }">{{getCompetitorName(place)}}</span>
           </li>
         </ul>
       </div>
@@ -34,12 +36,11 @@
     [structureEditor]="structureEditor" (addAction)="addAction.emit($event)" [lastAction]="lastAction">
   </app-tournament-structurequalify>
 
-  <div class="d-flex align-items-stretch text-center">
-    <app-tournament-structureround *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed(); first as first"
+  <div class="d-flex align-items-stretch text-center gap-1">
+    <app-tournament-structureround *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed();"
       class="align-self-stretch flex-wrap mb-2" [round]="qualifyGroup.getChildRound()"
-      [editable]="editable && !round.hasBegun()" [favorites]="favorites" [first]="first"
-      [structureEditor]="structureEditor" [structureNameService]="structureNameService"
-      (addAction)="addAction.emit($event)">
+      [editable]="editable && !round.hasBegun()" [favorites]="favorites" [structureEditor]="structureEditor"
+      [structureNameService]="structureNameService" (addAction)="addAction.emit($event)">
     </app-tournament-structureround>
   </div>
   <div *ngIf="!round.isRoot() && round.getNrOfPlaces() === MinPlacesPerPoule">

@@ -158,14 +158,6 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
       });
   }
 
-  getCategoryFavoritesActiveClass(): string {
-    return this.isCategoryFilterActive() ? 'primary' : 'secondary';
-  }
-
-  isCategoryFilterActive(): boolean {
-    return this.favorites.hasCategories() && this.favoriteCategories.length > 0
-  }
-
   private addCategory(name: string) {
     if ((new CategoryNameChecker()).doesNameExists(this.clonedStructure.getCategories(), name)) {
       this.setAlert(IAlertType.Danger, 'de category-naam bestaat al');
@@ -180,7 +172,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     );
     this.clonedStructure.getCategories().push(category);
 
-    if (this.isCategoryFilterActive()) {
+    if (this.isCategoryFilterActive(this.clonedStructure)) {
       this.favorites.addCategory(category);
       this.favRepository.editObject(this.favorites);
     }

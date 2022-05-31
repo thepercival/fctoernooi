@@ -43,6 +43,7 @@ export class StructureViewComponent extends TournamentComponent implements OnIni
 
   ngOnInit() {
     super.myNgOnInit(() => {
+      this.updateFavoriteCategories(this.structure);
       this.structureNameService = new StructureNameService(new StartLocationMap(this.tournament.getCompetitors()));
       this.favorites = this.favRepository.getObject(this.tournament, this.structure.getCategories());
       if (this.favorites.hasCompetitors()) {
@@ -59,9 +60,8 @@ export class StructureViewComponent extends TournamentComponent implements OnIni
     return <IconName>('eye' + (this.showCompetitors ? '-slash' : ''));
   }
 
-  // @TODO CDK CATEGORY - REMOVE FUNCTION
-  getDefaultCategory(structure: Structure): Category {
-    return structure.getCategories()[0];
+  isCategoryFilterActive(): boolean {
+    return this.favorites.hasCategories() && this.favoriteCategories.length > 0
   }
 
   navigateBack() {

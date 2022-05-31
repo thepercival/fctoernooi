@@ -7,15 +7,16 @@
             <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
         <div *ngIf="!processing" class="card-text">
-            <app-tournament-pouleranking-sports-table *ngIf="competitionSport === undefined" [poule]="poule"
-                [tournament]="tournament" [structureNameService]="structureNameService" [header]="header">
+            <app-tournament-pouleranking-sports-table *ngIf="competitionSports.length > 1" [poule]="poule"
+                [favorites]="favorites" [competitionSports]="competitionSports"
+                [structureNameService]="structureNameService" [header]="header">
             </app-tournament-pouleranking-sports-table>
-            <app-tournament-pouleranking-against-table *ngIf="competitionSport && isAgainst()" [poule]="poule"
-                [tournament]="tournament" [competitionSport]="competitionSport"
+            <app-tournament-pouleranking-against-table *ngIf="singleAgainstCompetitionSport" [poule]="poule"
+                [favorites]="favorites" [competitionSport]="singleAgainstCompetitionSport"
                 [structureNameService]="structureNameService" [header]="header">
             </app-tournament-pouleranking-against-table>
-            <app-tournament-pouleranking-together-table *ngIf="competitionSport && isTogether()" [poule]="poule"
-                [tournament]="tournament" [competitionSport]="competitionSport"
+            <app-tournament-pouleranking-together-table *ngIf="singleTogetherCompetitionSport" [poule]="poule"
+                [favorites]="favorites" [competitionSport]="singleTogetherCompetitionSport"
                 [structureNameService]="structureNameService" [header]="header">
             </app-tournament-pouleranking-together-table>
         </div>

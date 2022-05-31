@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Poule, CompetitionSport, AgainstH2h, AgainstGpp, Single, AllInOneGame, StructureNameService } from 'ngx-sport';
 
 import { CSSService } from '../../common/cssservice';
-import { Tournament } from '../../../lib/tournament';
+import { Favorites } from '../../../lib/favorites';
 
 @Component({
   selector: 'app-tournament-pouleranking',
@@ -11,8 +11,8 @@ import { Tournament } from '../../../lib/tournament';
 })
 export class PouleRankingComponent implements OnInit {
   @Input() poule!: Poule;
-  @Input() tournament!: Tournament;
-  @Input() competitionSport: CompetitionSport | undefined;
+  @Input() favorites!: Favorites;
+  @Input() competitionSports: CompetitionSport[] = [];
   @Input() structureNameService!: StructureNameService;
   @Input() header!: boolean;
 
@@ -28,13 +28,31 @@ export class PouleRankingComponent implements OnInit {
     this.processing = false;
   }
 
-  isAgainst(): boolean {
-    return (this.competitionSport?.getVariant() instanceof AgainstH2h)
-      || (this.competitionSport?.getVariant() instanceof AgainstGpp);
+  get singleAgainstCompetitionSport(): CompetitionSport | undefined {
+    const singleCompetitionSport = this.getSingleCompetitionSport();
+    if (singleCompetitionSport === undefined || !this.isAgainst(singleCompetitionSport)) {
+      return undefined;
+    }
+    return singleCompetitionSport;
   }
 
-  isTogether(): boolean {
-    return (this.competitionSport?.getVariant() instanceof Single)
-      || (this.competitionSport?.getVariant() instanceof AllInOneGame);
+  get singleTogetherCompetitionSport(): CompetitionSport | undefined {
+    const singleCompetitionSport = this.getSingleCompetitionSport();
+    if (singleCompetitionSport === undefined || !this.isTogether(singleCompetitionSport)) {
+      return undefined;
+    }
+    return singleCompetitionSport;
+  }
+
+  getSingleCompetitionSport(): CompetitionSport | undefined {
+    return this.competitionSports.length === 1 ? this.competitionSports[0] : undefined;
+  }
+
+  isAgainst(competitionSport: CompetitionSport): boolean {
+    return (competitionSport.getVariant() instanceof AgainstH2h) || (competitionSport.getVariant() instanceof AgainstGpp);
+  }
+
+  isTogether(competitionSport: CompetitionSport): boolean {
+    return (competitionSport?.getVariant() instanceof Single) || (competitionSport.getVariant() instanceof AllInOneGame);
   }
 }

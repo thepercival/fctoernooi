@@ -1,123 +1,103 @@
 <div class="row justify-content-center g-0">
-  <div class="col-sm-10 col-md-8 col-lg-6 col-xl-4">
-    <app-tournament-title [tournament]="tournament">
-    </app-tournament-title>
-    <div class="text-center">
+
+  <div class="d-flex justify-content-around mb-2">
+    <h2>
+      <fa-icon [icon]="['fas', 'star']"></fa-icon> favorieten
+    </h2>
+    <button *ngIf="!processing && !structure.hasSingleCategory()" type="button"
+      class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
+      (click)="openCategoriesChooseModal(structure)">
+      <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
+    </button>
+  </div>
+
+  <!-- <div class="text-center">
       <button *ngIf="!processing && tournament && isAdmin()" [routerLink]="['/admin', tournament.getId()]" type="button"
         class="btn btn-warning w-100 mb-3">
         naar het beheergedeelte
       </button>
+    </div> -->
+  <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+  <div *ngIf="!processing && hasCompetitors() && hasReferees()">
+    <div class="d-flex justify-content-between mb-2">
+      <h2>Instellen</h2>
     </div>
-    <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-    <div *ngIf="!processing && hasCompetitors() && hasReferees()">
-      <div class="d-flex justify-content-between mb-2">
-        <h2>Instellen</h2>
-      </div>
-      <ul ngbNav #nav="ngbNav" class="nav-tabs">
-        <li [ngbNavItem]="1">
-          <a ngbNavLink>
-            <fa-icon [icon]="['fas', 'users']"></fa-icon><span> deelnemers </span>
-            <span *ngIf="favorites.hasCompetitors()" class="badge bg-primary">{{favorites.getNrOfCompetitors()}}</span>
-          </a>
-          <ng-template ngbNavContent>
-            <ng-container *ngTemplateOutlet="competitors">
-            </ng-container>
-          </ng-template>
-        </li>
-        <li [ngbNavItem]="2">
-          <a ngbNavLink>
-            <app-tournament-icon name="referee"></app-tournament-icon> <span> scheidsrechters </span><span
-              *ngIf="favorites.hasReferees()" class="badge bg-primary">{{favorites.getNrOfReferees()}}</span>
-          </a>
-          <ng-template ngbNavContent>
-            <ng-container *ngTemplateOutlet="referees">
-            </ng-container>
-          </ng-template>
-        </li>
-      </ul>
-      <div [ngbNavOutlet]="nav"></div>
-    </div>
-
-    <div *ngIf="!processing && hasCompetitors() && !hasReferees()">
-      <div class="d-flex justify-content-between mb-2">
-        <h3>
+    <ul ngbNav #nav="ngbNav" class="nav-tabs">
+      <li [ngbNavItem]="1">
+        <a ngbNavLink>
           <fa-icon [icon]="['fas', 'users']"></fa-icon><span> deelnemers </span>
-          <small><span *ngIf="favorites.hasCompetitors()"
-              class="badge bg-primary">{{favorites.getNrOfCompetitors()}}</span></small>
-        </h3>
-      </div>
+          <span *ngIf="favorites.hasCompetitors()" class="badge bg-primary">{{favorites.getNrOfCompetitors()}}</span>
+        </a>
+        <ng-template ngbNavContent>
+          <ng-container *ngTemplateOutlet="competitors">
+          </ng-container>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="2">
+        <a ngbNavLink>
+          <app-tournament-icon name="referee"></app-tournament-icon> <span> scheidsrechters </span><span
+            *ngIf="favorites.hasReferees()" class="badge bg-primary">{{favorites.getNrOfReferees()}}</span>
+        </a>
+        <ng-template ngbNavContent>
+          <ng-container *ngTemplateOutlet="referees">
+          </ng-container>
+        </ng-template>
+      </li>
+    </ul>
+    <div [ngbNavOutlet]="nav"></div>
+  </div>
+
+  <div *ngIf="!processing && hasCompetitors() && !hasReferees()">
+
+    <h3 class="text-center">
+      <fa-icon [icon]="['fas', 'users']"></fa-icon><span> deelnemers </span>
+      <small><span *ngIf="favorites.hasCompetitors()"
+          class="badge bg-primary">{{favorites.getNrOfCompetitors()}}</span></small>
+    </h3>
+    <div class="d-flex justify-content-center">
       <ng-container *ngTemplateOutlet="competitors">
       </ng-container>
     </div>
+  </div>
 
-    <div *ngIf="!processing && !hasCompetitors() && hasReferees()">
-      <div class="d-flex justify-content-between mb-2">
-        <h3>
-          <app-tournament-icon name="referee"></app-tournament-icon> <span> scheidsrechters </span><small><span
-              *ngIf="favorites.hasReferees()" class="badge bg-primary">{{favorites.getNrOfReferees()}}</span></small>
-        </h3>
-      </div>
-      <ng-container *ngTemplateOutlet="referees">
-      </ng-container>
+  <div *ngIf="!processing && !hasCompetitors() && hasReferees()">
+    <div class="d-flex justify-content-between mb-2">
+      <h3>
+        <app-tournament-icon name="referee"></app-tournament-icon> <span> scheidsrechters </span><small><span
+            *ngIf="favorites.hasReferees()" class="badge bg-primary">{{favorites.getNrOfReferees()}}</span></small>
+      </h3>
     </div>
+    <ng-container *ngTemplateOutlet="referees">
+    </ng-container>
   </div>
 </div>
 
 <ng-template #competitors>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>plek</th>
-        <th>naam</th>
-        <th colspan=2></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let placeCompetitor of placeCompetitorItems">
-        <td>
-          <span [innerHtml]="structureNameService.getPlaceFromName(placeCompetitor.place, false) | keepHtml"></span>
-        </td>
-        <td class="text-break">
-          <span *ngIf="placeCompetitor.competitor">{{placeCompetitor.competitor.getName()}}</span>
-        </td>
-        <td class="text-end">
-          <fa-icon class="my-2" *ngIf="placeCompetitor.competitor && processingItem === placeCompetitor.place"
-            [icon]="['fas', 'spinner']" [spin]="true">
-          </fa-icon>
-          <div *ngIf="placeCompetitor.competitor && processingItem !== placeCompetitor.place"
-            class="pt-0 form-check form-switch col-form-label ps-0">
-            <input type="checkbox" class="form-check-input"
-              [checked]="favorites.hasCompetitor(placeCompetitor.competitor)"
-              (change)="toggleFavoriteCompetitor(placeCompetitor.competitor)">
-            <span class="custom-control-indicator"></span>
-          </div>
-
-
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <app-tournament-favorites-category *ngFor="let category of favoriteCategories" class="mx-auto"
+    [singleCategory]="favoriteCategories.length === 1" [category]="category" [favorites]="favorites"
+    [structureNameService]="structureNameService">
+  </app-tournament-favorites-category>
 </ng-template>
 
 <ng-template #referees>
-  <table class="table">
-    <tbody>
-      <tr *ngFor="let referee of competition.getReferees()">
-        <td>
-          <span>{{referee.getInitials()}}</span>
-          <span *ngIf="referee.getName()"> - {{referee.getName()}}</span>
-        </td>
-        <td class="text-end">
-          <fa-icon class="my-2" *ngIf="processingItem === referee" [icon]="['fas', 'spinner']" [spin]="true">
-          </fa-icon>
-          <label *ngIf="processingItem !== referee" class="pt-0 form-check form-switch col-form-label ps-0">
-            <input type="checkbox" class="form-check-input" [checked]="favorites.hasReferee(referee)"
-              (change)="toggleFavoriteReferee(referee)">
-            <span class="custom-control-indicator"></span>
-          </label>
-        </td>
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table">
+      <tbody>
+        <tr *ngFor="let referee of competition.getReferees()">
+          <td>
+            <span>{{referee.getInitials()}}</span>
+            <span *ngIf="referee.getName()"> - {{referee.getName()}}</span>
+          </td>
+          <td class="text-end">
+            <label class="pt-0 form-check form-switch col-form-label ps-0">
+              <input type="checkbox" class="form-check-input" [checked]="favorites.hasReferee(referee)"
+                (change)="toggleFavoriteReferee(referee)">
+              <span class="custom-control-indicator"></span>
+            </label>
+          </td>
+      </tbody>
+    </table>
+  </div>
 </ng-template>
 <app-tournament-navbar [currentScreen]="FavoritesScreen" [public]="true" *ngIf="tournament" [tournament]="tournament">
 </app-tournament-navbar>

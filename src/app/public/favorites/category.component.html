@@ -1,0 +1,50 @@
+<div *ngIf="category">
+  <div class="card border-secondary">
+
+    <div *ngIf="!singleCategory" class="card-header px-3">
+      <div class="d-flex justify-content-between">
+        <h5 class="my-0">
+          <span class="fw-bold align-middle">{{category.getName()}}</span>
+        </h5>
+      </div>
+    </div>
+
+    <div class="card-body pb-0 pt-1 px-1">
+
+
+      <table class="table">
+        <tbody>
+          <tr *ngFor="let placeCompetitor of placeCompetitorItems">
+            <td>
+              <span [innerHtml]="structureNameService.getPlaceFromName(placeCompetitor.place, false) | keepHtml"></span>
+            </td>
+            <td class="text-break">
+              <!-- <span *ngIf="placeCompetitor.competitor">{{placeCompetitor.competitor.getName()}}</span> -->
+              <label *ngIf="placeCompetitor.competitor" class="form-check-label pointer"
+                for="{{getId(placeCompetitor.competitor)}}">
+                <span>{{placeCompetitor.competitor.getName()}}</span>
+              </label>
+            </td>
+            <td class="text-end">
+              <!-- <div *ngIf="placeCompetitor.competitor && processingItem !== placeCompetitor.place"
+                    class="pt-0 form-check form-switch col-form-label ps-0">
+                    <input type="checkbox" class="form-check-input"
+                      [checked]="favorites.hasCompetitor(placeCompetitor.competitor)"
+                      (change)="toggleFavoriteCompetitor(placeCompetitor.competitor)">
+                    <span class="custom-control-indicator"></span>
+                  </div> -->
+
+              <div *ngIf="placeCompetitor.competitor" class="d-flex justify-content-end form-check form-switch">
+                <input type="checkbox" class="form-check-input" id="{{getId(placeCompetitor.competitor)}}"
+                  [checked]="favorites.hasCompetitor(placeCompetitor.competitor)"
+                  (change)="toggleFavoriteCompetitor(placeCompetitor.competitor)">
+
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>

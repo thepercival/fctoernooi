@@ -14,8 +14,8 @@
     <div class="card-body px-1" [ngClass]="{ 'd-none': collapsed }">
       <div class="d-flex flex-wrap gap-3 justify-content-between">
         <app-tournament-pouleranking *ngFor="let poule of poules" [poule]="poule" [header]="true"
-          [tournament]="tournament" [structureNameService]="structureNameService" class="mx-auto"
-          [competitionSport]="getCompetitionSport()">
+          [competitionSports]="competitionSports" [favorites]="favorites" [structureNameService]="structureNameService"
+          class="mx-auto">
         </app-tournament-pouleranking>
       </div>
     </div>
@@ -23,8 +23,8 @@
 </div>
 <div class="d-flex align-items-stretch text-center">
   <app-tournament-ranking-round *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed(); first as first"
-    class="align-self-stretch flex-wrap mb-2 w-100" [round]="qualifyGroup.getChildRound()" [tournament]="tournament"
-    [first]="first" [structureNameService]="structureNameService">
+    class="align-self-stretch flex-wrap mb-2 w-100" [round]="qualifyGroup.getChildRound()" [favorites]="favorites"
+    [competitionSports]="competitionSports" [first]="first" [structureNameService]="structureNameService">
   </app-tournament-ranking-round>
 </div>
 

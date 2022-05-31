@@ -5,6 +5,7 @@ import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontaweso
 import {
   faListOl,
   faChevronRight,
+  faEye,
   faEyeSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import {
@@ -31,6 +32,8 @@ import { RankingComponent } from './ranking/view.component';
 import { RankingRoundComponent } from './ranking/round.component';
 import { ScreenConfigsModalComponent } from './liveboard/screenconfigsmodal.component';
 import { SelectFavoritesComponent } from './favorites/select.component';
+import { RankingCategoryComponent } from './ranking/category.component';
+import { FavoritesCategoryComponent } from './favorites/category.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -53,6 +56,8 @@ import { SelectFavoritesComponent } from './favorites/select.component';
     ProgressComponent,
     RankingComponent,
     RankingRoundComponent,
+    RankingCategoryComponent,
+    FavoritesCategoryComponent,
     ScreenConfigsModalComponent
   ],
   providers: [
@@ -66,7 +71,7 @@ import { SelectFavoritesComponent } from './favorites/select.component';
 export class PublicModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(
-      faListOl, faChevronRight, faEyeSlash
+      faListOl, faChevronRight, faEye, faEyeSlash
       /*faMoneyBillAlt, faTrashAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
       faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom,
       faInfoCircle, faMedal, faUsers, faQrcode, faCopy, faDotCircle, faSync*/

@@ -10,7 +10,7 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { LiveboardLink } from '../../lib/liveboard/link';
-import { StartLocationMap, StructureNameService } from 'ngx-sport';
+import { Category, StartLocationMap, StructureNameService } from 'ngx-sport';
 import { IAlertType } from '../../shared/common/alert';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScreenConfigRepository } from '../../lib/liveboard/screenConfig/repository';
@@ -76,6 +76,11 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
                     });
             }
         });
+    }
+
+    // @TODO CDK CATEGORY - REMOVE FUNCTION
+    getDefaultCategory(): Category {
+        return this.structure.getCategories()[0];
     }
 
     protected getScreenConfigs(screenConfigName: ScreenConfigName | undefined): Observable<ScreenConfig[]> {

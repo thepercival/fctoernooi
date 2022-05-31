@@ -1,44 +1,43 @@
-<div class="container-fluid px-0">
-  <div class="row justify-content-around g-0">
-    <div class="col-12 col-lg-10">
-      <h2>
-        <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> standen
-      </h2>
-      <h2 *ngIf="processing" class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-      </h2>
-      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <div *ngIf="!processing && tournament && structure">
-        <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
-          <li [ngbNavItem]="1">
-            <a ngbNavLink>poulestanden</a>
-            <ng-template ngbNavContent>
-              <app-tournament-ranking-round [round]="getDefaultCategory(structure).getRootRound()"
-                [tournament]="tournament" [structureNameService]="structureNameService" [first]="true">
-              </app-tournament-ranking-round>
-            </ng-template>
-          </li>
-          <li [ngbNavItem]="2">
-            <a ngbNavLink>eindstand</a>
-            <ng-template ngbNavContent>
-              <app-tournament-endranking [structureNameService]="structureNameService" [favorites]="favorites"
-                [structure]="structure"></app-tournament-endranking>
-            </ng-template>
-          </li>
-          <li [ngbNavItem]="3">
-            <a ngbNavLink>regels</a>
-            <ng-template ngbNavContent>
-              <div class="m-3">
-                <h4>rangschikking {{getRankingRuleSuffix()}}</h4>
-                <app-ranking-rules [againstRuleSet]="tournament.getCompetition().getAgainstRuleSet()"
-                  [editMode]="isAdmin() && !hasBegun" (changed)="saveRankingRuleSet($event)">
-                </app-ranking-rules>
-              </div>
-            </ng-template>
-          </li>
-        </ul>
-        <div [ngbNavOutlet]="nav"></div>
-      </div>
+<div class="row justify-content-center g-0">
+
+  <div class="d-flex justify-content-around mb-2">
+    <h2>
+      <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> standen
+    </h2>
+    <button *ngIf="!processing && !structure.hasSingleCategory()" type="button"
+      class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
+      (click)="openCategoriesChooseModal(structure)">
+      <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
+
+    </button>
+  </div>
+
+  <!-- <li [ngbNavItem]="3">
+          <a ngbNavLink>regels</a>
+          <ng-template ngbNavContent>
+            <div class="m-3">
+              <h4>rangschikking {{getRankingRuleSuffix()}}</h4>
+              <app-ranking-rules [againstRuleSet]="tournament.getCompetition().getAgainstRuleSet()"
+                [editMode]="isAdmin() && !hasBegun" (changed)="saveRankingRuleSet($event)">
+              </app-ranking-rules>
+            </div>
+          </ng-template>
+        </li> -->
+
+
+  <h2 *ngIf="processing" class="text-center">
+    <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  </h2>
+  <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+
+  <div *ngIf="!processing && tournament && structure">
+
+    <div class="d-flex flex-wrap gap-1">
+      <app-tournament-ranking-category *ngFor="let category of favoriteCategories" class="mx-auto"
+        [showHeader]="favoriteCategories.length > 1" [category]="category" [favorites]="favorites"
+        [competitionSports]="competition.getSports()" [structureNameService]="structureNameService">
+      </app-tournament-ranking-category>
+
     </div>
   </div>
 </div>

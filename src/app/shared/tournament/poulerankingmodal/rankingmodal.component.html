@@ -1,13 +1,13 @@
 <div class="modal-header border-bottom-0">
     <h4 class="modal-title"><span>{{getHeader()}}</span></h4>
-    <button *ngIf="isAgainstSport()" type="button" class="btn btn-sm btn-outline-info ms-1"
+    <button *ngIf="singleAgainstCompetitionSport" type="button" class="btn btn-sm btn-outline-info ms-1"
         (click)="openInfoModal(contentRankingRuleSet)">
         rangschikking
     </button>
     <button type="button" class="btn-close" aria-label="sluiten" (click)="activeModal.dismiss('close')"></button>
 </div>
 <div class="modal-body p-0">
-    <app-tournament-pouleranking [poule]="poule" [competitionSport]="competitionSport" [tournament]="tournament"
+    <app-tournament-pouleranking [poule]="poule" [competitionSports]="competitionSports" [favorites]="favorites"
         [structureNameService]="structureNameService">
     </app-tournament-pouleranking>
 </div>

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { EndRankingItem, Structure, VoetbalRange, EndRankingCalculator, Category, StructureNameService } from 'ngx-sport';
+import { EndRankingItem, VoetbalRange, EndRankingCalculator, Category, StructureNameService } from 'ngx-sport';
 import { Favorites } from '../../../lib/favorites';
 
 @Component({
@@ -9,7 +9,7 @@ import { Favorites } from '../../../lib/favorites';
 })
 export class EndRankingComponent implements OnInit, OnChanges {
 
-  @Input() structure!: Structure;
+  @Input() category!: Category;
   @Input() structureNameService!: StructureNameService;
   @Input() favorites!: Favorites;
   @Input() range: VoetbalRange | undefined;
@@ -23,8 +23,8 @@ export class EndRankingComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.structure !== undefined && changes.structure.currentValue !== changes.structure.previousValue
-      && changes.structure.firstChange === false) {
+    if (changes.category !== undefined && changes.category.currentValue !== changes.category.previousValue
+      && changes.category.firstChange === false) {
       this.updateItems();
     } else if (changes.range !== undefined && changes.range.isFirstChange() === false
       && changes.range.currentValue !== changes.range.previousValue) {
@@ -33,15 +33,10 @@ export class EndRankingComponent implements OnInit, OnChanges {
   }
 
   protected updateItems() {
-    const endRankingCalculator = new EndRankingCalculator(this.getDefaultCategory());
+    const endRankingCalculator = new EndRankingCalculator(this.category);
     this.rankingItems = endRankingCalculator.getItems().filter((item: EndRankingItem): boolean => {
       return this.range === undefined || (item.getUniqueRank() >= this.range.min && item.getUniqueRank() <= this.range.max);
     });
-  }
-
-  // @TODO CDK CATEGORY - REMOVE FUNCTION
-  getDefaultCategory(): Category {
-    return this.structure.getCategories()[0];
   }
 
   hasMedal(rank: number): boolean {

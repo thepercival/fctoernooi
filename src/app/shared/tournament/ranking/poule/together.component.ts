@@ -14,14 +14,13 @@ import { ViewPort, ViewPortManager, ViewPortNrOfColumnsMap } from '../../../comm
 })
 export class PouleRankingTogetherComponent implements OnInit {
   @Input() poule!: Poule;
-  @Input() tournament!: Tournament;
+  @Input() favorites!: Favorites;
   @Input() structureNameService!: StructureNameService;
   @Input() competitionSport!: CompetitionSport;
   @Input() header!: boolean;
   protected togetherRankingCalculator!: TogetherSportRoundRankingCalculator;
 
   public sportRankingItems!: SportRoundRankingItem[];
-  public favorites!: Favorites;
   public viewPortManager!: ViewPortManager;
   protected gameAmountConfig!: GameAmountConfig;
   protected scoreMap = new ScoreMap();
@@ -37,7 +36,6 @@ export class PouleRankingTogetherComponent implements OnInit {
 
   ngOnInit() {
     this.processing = true;
-    this.favorites = this.favRepos.getObject(this.tournament, undefined);
     this.togetherRankingCalculator = new TogetherSportRoundRankingCalculator(this.competitionSport);
     this.sportRankingItems = this.togetherRankingCalculator.getItemsForPoule(this.poule);
     this.gameAmountConfig = this.poule.getRound().getNumber().getValidGameAmountConfig(this.competitionSport);

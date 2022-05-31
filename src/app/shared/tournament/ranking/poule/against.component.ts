@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Poule, ScoreConfig, AgainstSportRoundRankingCalculator, CompetitionSport, SportRoundRankingItem, StructureNameService } from 'ngx-sport';
 import { Favorites } from '../../../../lib/favorites';
 import { FavoritesRepository } from '../../../../lib/favorites/repository';
-import { Tournament } from '../../../../lib/tournament';
 import { CSSService } from '../../../common/cssservice';
 
 
@@ -14,10 +13,9 @@ import { CSSService } from '../../../common/cssservice';
 export class PouleRankingAgainstComponent implements OnInit {
   @Input() poule!: Poule;
   @Input() competitionSport!: CompetitionSport;
-  @Input() tournament!: Tournament;
+  @Input() favorites!: Favorites;
   @Input() structureNameService!: StructureNameService;
   @Input() header!: boolean;
-  public favorites!: Favorites;
   protected againstRankingCalculator!: AgainstSportRoundRankingCalculator;
   public sportRankingItems!: SportRoundRankingItem[];
   public showDifferenceDetail = false;
@@ -30,7 +28,6 @@ export class PouleRankingAgainstComponent implements OnInit {
 
   ngOnInit() {
     this.processing = true;
-    this.favorites = this.favRepos.getObject(this.tournament, undefined);
     this.againstRankingCalculator = new AgainstSportRoundRankingCalculator(this.competitionSport);
     this.sportRankingItems = this.againstRankingCalculator.getItemsForPoule(this.poule);
     // console.log(this.sportRankingItems);

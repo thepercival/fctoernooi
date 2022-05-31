@@ -44,6 +44,7 @@ export class RankingComponent extends TournamentComponent implements OnInit {
 
     ngOnInit() {
         super.myNgOnInit(() => {
+            this.updateFavoriteCategories(this.structure);
             this.againstRuleSet = this.tournament.getCompetition().getAgainstRuleSet();
             const startLocationMap = new StartLocationMap(this.tournament.getCompetitors());
             this.structureNameService = new StructureNameService(startLocationMap);
@@ -57,11 +58,6 @@ export class RankingComponent extends TournamentComponent implements OnInit {
     }
 
     get RankingScreen(): TournamentScreen { return TournamentScreen.Ranking }
-
-    // @TODO CDK CATEGORY - REMOVE FUNCTION
-    getDefaultCategory(structure: Structure): Category {
-        return structure.getCategories()[0];
-    }
 
     isAdmin(): boolean {
         return this.hasRole(this.authService, Role.Admin);

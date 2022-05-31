@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-import { Round, Competitor, StructureEditor, QualifyTarget, PlaceRanges, Place, StructureNameService } from 'ngx-sport';
+import { Round, Competitor, StructureEditor, QualifyTarget, PlaceRanges, Place, StructureNameService, StartLocation } from 'ngx-sport';
 import { StructureAction, StructureActionName } from '../../../admin/structure/edit.component';
 import { IAlert, IAlertType } from '../../common/alert';
 import { CSSService } from '../../common/cssservice';
@@ -13,7 +13,7 @@ export class StructureRoundComponent implements OnInit {
   @Input() structureEditor!: StructureEditor;
   @Input() round!: Round;
   @Input() editable: boolean = false;
-  @Input() first!: boolean;
+  @Input() showCompetitors: boolean = false;
   @Input() favorites: Competitor[] = [];
   @Input() structureNameService!: StructureNameService;
   @Input() lastAction: StructureAction | undefined;
@@ -83,11 +83,31 @@ export class StructureRoundComponent implements OnInit {
     if (startLocation === undefined) {
       return false;
     }
-    const competitor = this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
+    const competitor = this.getCompetitor(startLocation);
     if (competitor === undefined) {
       return false;
     }
     return this.favorites.indexOf(competitor) >= 0;
+  }
+
+  getCompetitorName(place: Place): string {
+    const startLocation = place.getStartLocation();
+    if (startLocation === undefined) {
+      return '';
+    }
+    const competitor = this.getCompetitor(startLocation);
+    if (competitor === undefined) {
+      return '';
+    }
+    return competitor.getName();
+  }
+
+  getCompetitor(startLocation: StartLocation): Competitor | undefined {
+    return this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
+  }
+
+  getPlaceAlignClass(): string {
+    return this.editable || !this.showCompetitors ? 'text-center' : 'text-start';
   }
 
   get AbsoluteMinPlacesPerPoule(): number {

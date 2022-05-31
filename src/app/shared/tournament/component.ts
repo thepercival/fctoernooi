@@ -94,8 +94,13 @@ export class TournamentComponent {
         });
     }
 
-    getCategoryFavoritesActiveClass(): string {
-        return this.favoriteCategories.length > 0 ? 'primary' : 'secondary';
+    getCategoryFavoritesActiveClass(structure: Structure): string {
+        return structure.getCategories().length !== this.favoriteCategories.length ? 'primary' : 'secondary';
+    }
+
+    isCategoryFilterActive(structure: Structure): boolean {
+        return structure.getCategories().length !== this.favoriteCategories.length;
+        // return this.favorites.hasCategories() && this.favoriteCategories.length > 0
     }
 
     updateFavoriteCategories(structure: Structure) {

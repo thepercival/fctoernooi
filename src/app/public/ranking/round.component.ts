@@ -4,7 +4,7 @@ import { Poule, Round, GameState, CompetitionSport, StructureNameService } from 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { CSSService } from '../../shared/common/cssservice';
-import { Tournament } from '../../lib/tournament';
+import { Favorites } from '../../lib/favorites';
 
 @Component({
     selector: 'app-tournament-ranking-round',
@@ -14,7 +14,8 @@ import { Tournament } from '../../lib/tournament';
 export class RankingRoundComponent implements OnInit {
     @Input() round!: Round;
     @Input() structureNameService!: StructureNameService;
-    @Input() tournament!: Tournament;
+    @Input() competitionSports!: CompetitionSport[];
+    @Input() favorites!: Favorites;
     @Input() first: boolean = true;
     public collapsed: boolean = true;
     public poules: Poule[] = [];
@@ -27,6 +28,7 @@ export class RankingRoundComponent implements OnInit {
     }
 
     ngOnInit() {
+        console.log('round CDK', this.poules.length);
         this.poules = this.round.getPoules().filter((poule: Poule) => poule.needsRanking());
         const roundNumber = this.round.getNumber();
         const state = this.round.getGamesState();
@@ -50,10 +52,10 @@ export class RankingRoundComponent implements OnInit {
         activeModal.componentInstance.modalContent = modalContent;
     }
 
-    getCompetitionSport(): CompetitionSport | undefined {
-        const competition = this.tournament.getCompetition();
-        return competition.hasMultipleSports() ? undefined : competition.getSingleSport();
-    }
+    // getCompetitionSport(): CompetitionSport | undefined {
+    //     const competition = this.tournament.getCompetition();
+    //     return competition.hasMultipleSports() ? undefined : competition.getSingleSport();
+    // }
     // get Against(): GameMode { return GameMode.Against; }
     // get Together(): GameMode { return GameMode.Together; }
 

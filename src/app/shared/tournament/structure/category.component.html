@@ -18,11 +18,11 @@
       </div>
     </div>
 
-
-    <div class="card-body p-0">
+    <div class="card-body pb-0 pt-1 px-1">
       <app-tournament-structureround [editable]="editable" [round]="category.getRootRound()" class="px-0"
-        (addAction)="addAction.emit($event)" [first]="false" [structureNameService]="structureNameService"
-        [structureEditor]="structureEditor" [lastAction]="lastAction" [favorites]="favoriteCompetitors">
+        (addAction)="addAction.emit($event)" [structureNameService]="structureNameService"
+        [structureEditor]="structureEditor" [lastAction]="lastAction" [showCompetitors]="showCompetitors"
+        [favorites]="favoriteCompetitors">
       </app-tournament-structureround>
     </div>
   </div>

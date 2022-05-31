@@ -15,7 +15,7 @@ export class StructureCategoryComponent implements OnInit {
   @Input() category!: Category;
   @Input() editable: boolean = false;
   @Input() filterActive: boolean = false;
-  // @Input() first!: boolean;
+  @Input() showCompetitors!: boolean;
   @Input() favoriteCompetitors: Competitor[] = [];
   @Input() structureNameService!: StructureNameService;
   @Input() lastAction: StructureAction | undefined;
@@ -40,7 +40,7 @@ export class StructureCategoryComponent implements OnInit {
     });
   }
 
-  get movable(): boolean { return !this.filterActive && this.category.getNumber() > 1 };
+  get movable(): boolean { return this.editable && !this.filterActive && this.category.getNumber() > 1 };
 
   getChangeNameModel(buttonLabel: string): NgbModalRef {
     const activeModal = this.modalService.open(NameModalComponent);
