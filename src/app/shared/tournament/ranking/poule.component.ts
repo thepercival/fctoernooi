@@ -9,9 +9,9 @@ import { Favorites } from '../../../lib/favorites';
   templateUrl: './poule.component.html',
   styleUrls: ['./poule.component.scss']
 })
-export class PouleRankingComponent implements OnInit {
+export class RankingPouleComponent implements OnInit {
   @Input() poule!: Poule;
-  @Input() favorites!: Favorites;
+  @Input() favorites: Favorites | undefined;
   @Input() competitionSports: CompetitionSport[] = [];
   @Input() structureNameService!: StructureNameService;
   @Input() header!: boolean;

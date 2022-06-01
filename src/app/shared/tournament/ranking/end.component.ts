@@ -7,11 +7,11 @@ import { Favorites } from '../../../lib/favorites';
   templateUrl: './end.component.html',
   styleUrls: ['./end.component.scss']
 })
-export class EndRankingComponent implements OnInit, OnChanges {
+export class RankingEndComponent implements OnInit, OnChanges {
 
   @Input() category!: Category;
   @Input() structureNameService!: StructureNameService;
-  @Input() favorites!: Favorites;
+  @Input() favorites: Favorites | undefined;
   @Input() range: VoetbalRange | undefined;
   public rankingItems: EndRankingItem[] = [];
 
@@ -53,7 +53,7 @@ export class EndRankingComponent implements OnInit, OnChanges {
       return false;
     }
     const competitor = this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
-    return this.favorites && competitor !== undefined && this.favorites.hasCompetitor(competitor);
+    return this.favorites !== undefined && competitor !== undefined && this.favorites.hasCompetitor(competitor);
   }
 
   getName(endRankingItem: EndRankingItem): string {

@@ -1,8 +1,6 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-            <app-tournament-title [tournament]="tournament">
-            </app-tournament-title>
             <h2 *ngIf="!processing">
                 <fa-icon [icon]="['fas', 'cogs']"></fa-icon> plannings-instellingen
             </h2>
@@ -138,6 +136,9 @@
         </div>
     </div>
 </div>
+
+<app-tournament-navbar [public]="false" *ngIf="tournament" [tournament]="tournament">
+</app-tournament-navbar>
 
 <ng-template #contentInfoManual>
     <div class="lead mb-4 text-center">Je bent nu zelf verantwoordelijk voor de planning</div>

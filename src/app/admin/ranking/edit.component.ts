@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -17,14 +17,15 @@ import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-    selector: 'app-tournament-ranking-view',
-    templateUrl: './view.component.html',
-    styleUrls: ['./view.component.scss']
+    selector: 'app-tournament-ranking-edit',
+    templateUrl: './edit.component.html',
+    styleUrls: ['./edit.component.scss']
 })
-export class RankingViewComponent extends TournamentComponent implements OnInit {
+export class RankingEditComponent extends TournamentComponent implements OnInit {
     public activeTab: number = 1;
     public favorites!: Favorites;
     public structureNameService!: StructureNameService;
+    public againstRuleSet!: AgainstRuleSet;
     public hasBegun: boolean = true;
 
     constructor(
@@ -44,9 +45,11 @@ export class RankingViewComponent extends TournamentComponent implements OnInit 
     ngOnInit() {
         super.myNgOnInit(() => {
             this.updateFavoriteCategories(this.structure);
+            this.againstRuleSet = this.tournament.getCompetition().getAgainstRuleSet();
             const startLocationMap = new StartLocationMap(this.tournament.getCompetitors());
             this.structureNameService = new StructureNameService(startLocationMap);
             this.favorites = this.favRepository.getObject(this.tournament, this.structure.getCategories());
+            this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
             if (this.structure.getLastRoundNumber().getGamesState() === GameState.Finished) {
                 this.activeTab = 2;
             }
@@ -58,5 +61,31 @@ export class RankingViewComponent extends TournamentComponent implements OnInit 
 
     isAdmin(): boolean {
         return this.hasRole(this.authService, Role.Admin);
+    }
+
+    openRankingRuleSetModal(modalContent: TemplateRef<any>) {
+        const activeModal = this.modalService.open(modalContent);
+        activeModal.result.then((againstRuleSet: AgainstRuleSet) => {
+        }, (reason) => {
+        });
+    }
+
+    getRankingRuleSuffix(): string {
+        return this.tournament.getCompetition().hasMultipleSports() ? '<small>per sport</small>' : '';
+    }
+
+    saveRankingRuleSet(againstRuleSet: AgainstRuleSet) {
+        this.resetAlert();
+        this.processing = true;
+        const json = this.tournamentMapper.toJson(this.tournament);
+        json.competition.againstRuleSet = againstRuleSet;
+        this.tournamentRepository.editObject(json)
+            .subscribe({
+                next: (tournament: Tournament) => { this.tournament = tournament; },
+                error: (e) => {
+                    this.alert = { type: IAlertType.Danger, message: e }; this.processing = false;
+                },
+                complete: () => this.processing = false
+            });
     }
 }

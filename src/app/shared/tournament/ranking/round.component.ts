@@ -2,9 +2,9 @@ import { Component, OnInit, Input, TemplateRef } from '@angular/core';
 
 import { Poule, Round, GameState, CompetitionSport, StructureNameService } from 'ngx-sport';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
-import { CSSService } from '../../shared/common/cssservice';
-import { Favorites } from '../../lib/favorites';
+import { Favorites } from '../../../lib/favorites';
+import { CSSService } from '../../common/cssservice';
+import { InfoModalComponent } from '../infomodal/infomodal.component';
 
 @Component({
     selector: 'app-tournament-ranking-round',
@@ -15,7 +15,7 @@ export class RankingRoundComponent implements OnInit {
     @Input() round!: Round;
     @Input() structureNameService!: StructureNameService;
     @Input() competitionSports!: CompetitionSport[];
-    @Input() favorites!: Favorites;
+    @Input() favorites: Favorites | undefined;
     @Input() first: boolean = true;
     public collapsed: boolean = true;
     public poules: Poule[] = [];

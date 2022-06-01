@@ -391,6 +391,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     modalRef.componentInstance.poule = poule;
     modalRef.componentInstance.competitionSports = this.roundNumber.getCompetitionSports();
     modalRef.componentInstance.favorites = this.favorites;
+    modalRef.componentInstance.structureNameService = this.structureNameService;
   }
 
   openInfoModal(header: string, modalContent: TemplateRef<any>) {

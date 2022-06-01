@@ -9,14 +9,14 @@ import { PouleRankingModalComponent } from '../../poulerankingmodal/rankingmodal
 import { ViewPort, ViewPortManager, ViewPortNrOfColumnsMap } from '../../../common/viewPortManager';
 
 @Component({
-  selector: 'app-tournament-pouleranking-sports-table',
+  selector: 'app-tournament-ranking-sports-table',
   templateUrl: './sports.component.html',
   styleUrls: ['./sports.component.scss']
 })
-export class PouleRankingSportsComponent implements OnInit {
+export class RankingSportsComponent implements OnInit {
   @Input() poule!: Poule;
   @Input() competitionSports!: CompetitionSport[];
-  @Input() favorites!: Favorites;
+  @Input() favorites: Favorites | undefined;
   @Input() structureNameService!: StructureNameService;
   @Input() header!: boolean;
   protected roundRankingCalculator: RoundRankingCalculator;

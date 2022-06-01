@@ -4,8 +4,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faListOl,
-  faChevronRight,
-  faEye,
   faEyeSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import {
@@ -28,11 +26,9 @@ import { StructureViewComponent } from './structure/view.component';
 import { RoutingModule } from './public-routing.module';
 import { GamesComponent } from './games/view.component';
 import { TournamentModule } from '../shared/tournament/tournament.module';
-import { RankingComponent } from './ranking/view.component';
-import { RankingRoundComponent } from './ranking/round.component';
+import { RankingViewComponent } from './ranking/view.component';
 import { ScreenConfigsModalComponent } from './liveboard/screenconfigsmodal.component';
 import { SelectFavoritesComponent } from './favorites/select.component';
-import { RankingCategoryComponent } from './ranking/category.component';
 import { FavoritesCategoryComponent } from './favorites/category.component';
 @NgModule({
   imports: [
@@ -54,9 +50,7 @@ import { FavoritesCategoryComponent } from './favorites/category.component';
     LiveboardGamesComponent,
     SelectFavoritesComponent,
     ProgressComponent,
-    RankingComponent,
-    RankingRoundComponent,
-    RankingCategoryComponent,
+    RankingViewComponent,
     FavoritesCategoryComponent,
     ScreenConfigsModalComponent
   ],
@@ -71,7 +65,7 @@ import { FavoritesCategoryComponent } from './favorites/category.component';
 export class PublicModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(
-      faListOl, faChevronRight, faEye, faEyeSlash
+      faListOl, faEyeSlash
       /*faMoneyBillAlt, faTrashAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
       faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom,
       faInfoCircle, faMedal, faUsers, faQrcode, faCopy, faDotCircle, faSync*/

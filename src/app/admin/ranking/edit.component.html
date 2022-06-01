@@ -1,0 +1,49 @@
+<div class="row justify-content-center g-0">
+
+  <div class="d-flex justify-content-around mb-2">
+    <h2>
+      <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> standen
+    </h2>
+    <button *ngIf="!processing" type="button" class="btn btn-sm me-1 btn-primary"
+      (click)="openRankingRuleSetModal(contentRankingRuleSet)">
+      <fa-icon [icon]="['fas', 'pencil']"></fa-icon> <span class="ms-1">rangschikking</span>
+    </button>
+    <button *ngIf="!processing && !structure.hasSingleCategory()" type="button"
+      class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
+      (click)="openCategoriesChooseModal(structure)">
+      <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
+    </button>
+  </div>
+
+  <h2 *ngIf="processing" class="text-center">
+    <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  </h2>
+  <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+
+  <div *ngIf="!processing && tournament && structure">
+
+    <div class="d-flex flex-wrap gap-1">
+      <app-tournament-ranking-category *ngFor="let category of favoriteCategories" class="mx-auto"
+        [showHeader]="favoriteCategories.length > 1" [category]="category" [competitionSports]="competition.getSports()"
+        [structureNameService]="structureNameService">
+      </app-tournament-ranking-category>
+
+    </div>
+  </div>
+</div>
+<app-tournament-navbar [public]="false" [currentScreen]="RankingScreen" *ngIf="tournament" [tournament]="tournament">
+</app-tournament-navbar>
+
+<ng-template #contentRankingRuleSet let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">
+      rangschikking {{getRankingRuleSuffix()}}
+    </h4>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
+  </div>
+  <div class="modal-body">
+    <app-ranking-rules [againstRuleSet]="tournament.getCompetition().getAgainstRuleSet()"
+      [editMode]="isAdmin() && !hasBegun" (changed)="saveRankingRuleSet($event)">
+    </app-ranking-rules>
+  </div>
+</ng-template>

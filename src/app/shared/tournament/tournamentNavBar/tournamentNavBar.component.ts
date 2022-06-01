@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../lib/auth/auth.service';
 import { Role } from '../../../lib/role';
 import { Tournament } from '../../../lib/tournament';
+import { TranslateService } from '../../../lib/translate';
 import { TournamentScreen } from '../screenNames';
 
 @Component({
@@ -20,7 +21,7 @@ export class TournamentNavBarComponent implements OnInit {
 
   constructor(
     public authService: AuthService,
-    private router: Router,
+    private router: Router
   ) {
 
   }
@@ -29,20 +30,15 @@ export class TournamentNavBarComponent implements OnInit {
 
   }
 
-  get HomeScreen(): TournamentScreen { return TournamentScreen.Home }
   get StructureScreen(): TournamentScreen { return TournamentScreen.Structure }
   get GamesScreen(): TournamentScreen { return TournamentScreen.Games }
   get RankingScreen(): TournamentScreen { return TournamentScreen.Ranking }
   get FavoritesScreen(): TournamentScreen { return TournamentScreen.Favorites }
   get CompetitorsScreen(): TournamentScreen { return TournamentScreen.Competitors }
-  get CompetitionSportsScreen(): TournamentScreen { return TournamentScreen.CompetitionSports }
+  get SettingsScreen(): TournamentScreen { return TournamentScreen.Settings }
 
   getTextColorClass(screen: TournamentScreen): string {
     return this.currentScreen !== screen ? 'btn-outline-success border-0' : 'text-secondary';
-  }
-
-  linkToHome() {
-    this.router.navigate(['/' + (this.public ? 'public' : 'admin'), this.tournament.getId()]);
   }
 
   linkToStructure() {
@@ -53,9 +49,14 @@ export class TournamentNavBarComponent implements OnInit {
     this.router.navigate(['/' + (this.public ? 'public' : 'admin') + '/games', this.tournament.getId()]);
   }
 
+  linkToRanking() {
+    this.router.navigate(['/' + (this.public ? 'public' : 'admin') + '/rannking', this.tournament.getId()]);
+  }
+
   hasRole(roles: number): boolean {
     const loggedInUserId = this.authService.getLoggedInUserId();
     const tournamentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;
     return tournamentUser ? tournamentUser.hasARole(roles) : false;
   }
+
 }

@@ -12,19 +12,6 @@
     </button>
   </div>
 
-  <!-- <li [ngbNavItem]="3">
-          <a ngbNavLink>regels</a>
-          <ng-template ngbNavContent>
-            <div class="m-3">
-              <h4>rangschikking {{getRankingRuleSuffix()}}</h4>
-              <app-ranking-rules [againstRuleSet]="tournament.getCompetition().getAgainstRuleSet()"
-                [editMode]="isAdmin() && !hasBegun" (changed)="saveRankingRuleSet($event)">
-              </app-ranking-rules>
-            </div>
-          </ng-template>
-        </li> -->
-
-
   <h2 *ngIf="processing" class="text-center">
     <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
   </h2>

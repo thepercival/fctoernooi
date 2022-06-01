@@ -6,14 +6,14 @@ import { CSSService } from '../../../common/cssservice';
 
 
 @Component({
-  selector: 'app-tournament-pouleranking-against-table',
+  selector: 'app-tournament-ranking-against-table',
   templateUrl: './against.component.html',
   styleUrls: ['./against.component.scss']
 })
-export class PouleRankingAgainstComponent implements OnInit {
+export class RankingAgainstComponent implements OnInit {
   @Input() poule!: Poule;
   @Input() competitionSport!: CompetitionSport;
-  @Input() favorites!: Favorites;
+  @Input() favorites: Favorites | undefined;
   @Input() structureNameService!: StructureNameService;
   @Input() header!: boolean;
   protected againstRankingCalculator!: AgainstSportRoundRankingCalculator;

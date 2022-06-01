@@ -8,13 +8,13 @@ import { Tournament } from '../../../../lib/tournament';
 import { ViewPort, ViewPortManager, ViewPortNrOfColumnsMap } from '../../../common/viewPortManager';
 
 @Component({
-  selector: 'app-tournament-pouleranking-together-table',
+  selector: 'app-tournament-ranking-together-table',
   templateUrl: './together.component.html',
   styleUrls: ['./together.component.scss']
 })
-export class PouleRankingTogetherComponent implements OnInit {
+export class RankingTogetherComponent implements OnInit {
   @Input() poule!: Poule;
-  @Input() favorites!: Favorites;
+  @Input() favorites: Favorites | undefined;
   @Input() structureNameService!: StructureNameService;
   @Input() competitionSport!: CompetitionSport;
   @Input() header!: boolean;

@@ -19,7 +19,6 @@ import {
   faCompressAlt,
   faExpandAlt,
   faShareAlt,
-  faEye,
   faClipboardCheck,
   faListOl,
   faExclamationCircle,
@@ -74,6 +73,7 @@ import { GameAddComponent } from './game/add.component';
 import { GameModeModalComponent } from './gameMode/modal.component';
 import { RecessAddComponent } from './startAndRecesses/addRecess.component';
 import { CategoryCompetitorListComponent } from './competitor/category.component';
+import { RankingEditComponent } from './ranking/edit.component';
 
 @NgModule({
   imports: [
@@ -106,6 +106,7 @@ import { CategoryCompetitorListComponent } from './competitor/category.component
     GameTogetherEditComponent,
     HomeComponent,
     NewComponent,
+    RankingEditComponent,
     RefereeListComponent,
     ScoreConfigEditComponent,
     SponsorEditComponent,

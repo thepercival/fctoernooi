@@ -25,6 +25,7 @@ import { GameTogetherEditComponent } from './game/edittogether.component';
 import { GameAddComponent } from './game/add.component';
 import { RecessAddComponent } from './startAndRecesses/addRecess.component';
 import { StartAndRecessesComponent } from './startAndRecesses/startAndRecesses.component';
+import { RankingEditComponent } from './ranking/edit.component';
 
 const routes: Routes = [
   { path: 'new', component: NewComponent }, // ALL ROLES
@@ -38,6 +39,7 @@ const routes: Routes = [
   { path: 'fields/:id', component: FieldListComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'lockerrooms/:id', component: LockerRoomsComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'planningconfig/:id/:startRoundNumber', component: PlanningConfigComponent, canActivate: [AuthguardService] }, // ADMIN
+  { path: 'ranking/:id', component: RankingEditComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'referees/:id', component: RefereeListComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'referee/:id/:rank', component: RefereeEditComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'referees/:id', component: RefereeListComponent, canActivate: [AuthguardService] }, // ADMIN

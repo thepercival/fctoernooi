@@ -44,7 +44,7 @@
                 <span
                     class="badge badge-rank {{getQualifyPlaceClass(roundRankingItem)}}">{{roundRankingItem.getUniqueRank()}}</span>
             </td>
-            <td class="text-break ps-0" [ngClass]="{ 'favitem': favorites.hasPlace(roundRankingItem.getPlace()) }">
+            <td class="text-break ps-0" [ngClass]="{ 'favitem': favorites?.hasPlace(roundRankingItem.getPlace()) }">
                 <span
                     [innerHtml]="structureNameService.getPlaceFromName(roundRankingItem.getPlace(), true, true) | keepHtml"></span>
             </td>

@@ -103,7 +103,7 @@
             <td></td>
             <td *ngIf="planningConfig.getEnableTime()"><span
                 *ngIf="!sameDay">{{dateFormatter.toString(gmData.recess.getStartDateTime(),
-                dateFormatter.date())}}</span>
+                dateFormatter.date())}} </span>
               <span>{{dateFormatter.toString(gmData.recess.getStartDateTime(), dateFormatter.time())}}</span>
             </td>
             <td></td>
@@ -134,7 +134,7 @@
             <!-- datetime -->
             <td *ngIf="planningConfig.getEnableTime()">
               <span *ngIf="!sameDay">{{dateFormatter.toString(gmData.game.getStartDateTime(),
-                dateFormatter.date())}}</span>
+                dateFormatter.date())}} </span>
               <span>{{dateFormatter.toString(gmData.game.getStartDateTime(), dateFormatter.time())}}</span>
             </td>
             <!-- field -->

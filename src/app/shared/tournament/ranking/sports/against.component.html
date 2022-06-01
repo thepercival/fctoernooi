@@ -17,7 +17,7 @@
                         class="badge badge-rank {{getQualifyPlaceClass(sportRankingItem)}}">{{sportRankingItem.getUniqueRank()}}</span>
                 </td>
                 <td class="text-break ps-0  width-30"
-                    [ngClass]="{ 'favitem': favorites.hasPlace(sportRankingItem.getPerformance().getPlace()) }">
+                    [ngClass]="{ 'favitem': favorites?.hasPlace(sportRankingItem.getPerformance().getPlace()) }">
                     <span
                         [innerHtml]="structureNameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true, true) | keepHtml"></span>
                 </td>

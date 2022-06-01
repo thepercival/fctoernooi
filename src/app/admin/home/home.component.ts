@@ -25,6 +25,7 @@ import { User } from '../../lib/user';
 import { TournamentExportConfig } from '../../lib/pdf/repository';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { TournamentScreen } from '../../shared/tournament/screenNames';
 
 @Component({
     selector: 'app-tournament-admin',
@@ -98,6 +99,8 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         });
     }
 
+    get SettingsScreen(): TournamentScreen { return TournamentScreen.Settings }
+
     getNrOfCompetitors(): number {
         return this.tournament.getCompetitors().length;
     }
@@ -115,16 +118,6 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         return competitors.some(competitor => competitor.getRegistered()) && !competitors.every(competitor => competitor.getRegistered());
     }
 
-    getFieldDescription(): string {
-        const sport = this.competition.hasMultipleSports() ? undefined : this.competition.getSports()[0].getSport();
-        return this.translate.getFieldNameSingular(sport);
-    }
-
-    getFieldsDescription(): string {
-        const sport = this.competition.hasMultipleSports() ? undefined : this.competition.getSports()[0].getSport();
-        return this.translate.getFieldNamePlural(sport);
-    }
-
     getNrOfFieldsDescription() {
         const nrOfFields = this.competition.getFields().length;
         if (nrOfFields < 2) {
@@ -132,6 +125,18 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         }
         return nrOfFields + ' ' + this.getFieldsDescription();
     }
+
+    getFieldDescription(): string {
+        const sport = this.competition.hasMultipleSports() ? undefined : this.competition.getSingleSport().getSport();
+        return this.translate.getFieldNameSingular(sport);
+    }
+
+    getFieldsDescription(): string {
+        const sport = this.competition.hasMultipleSports() ? undefined : this.competition.getSingleSport().getSport();
+        return this.translate.getFieldNamePlural(sport);
+    }
+
+
 
     getNrOfLockerRoomsDescription(): string {
         const nrOfLockerRooms = this.tournament.getLockerRooms().length;

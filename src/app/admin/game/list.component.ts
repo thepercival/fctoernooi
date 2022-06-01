@@ -13,6 +13,7 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { StartLocationMap, StructureNameService } from 'ngx-sport';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { TournamentScreen } from '../../shared/tournament/screenNames';
 
 @Component({
   selector: 'app-tournament-games-edit',
@@ -40,6 +41,7 @@ export class GameListComponent extends TournamentComponent implements OnInit {
 
   ngOnInit() {
     super.myNgOnInit(() => {
+      this.updateFavoriteCategories(this.structure);
       const loggedInUserId = this.authService.getLoggedInUserId();
       const tournamentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;
       if (tournamentUser === undefined) {
@@ -59,6 +61,8 @@ export class GameListComponent extends TournamentComponent implements OnInit {
         });
     });
   }
+
+  get GamesScreen(): TournamentScreen { return TournamentScreen.Games }
 
   hasAdminRole(): boolean {
     return (this.roles & Role.Admin) === Role.Admin;
