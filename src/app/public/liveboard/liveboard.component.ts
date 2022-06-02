@@ -34,6 +34,7 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     public toggleProgress = false;
     public structureNameService!: StructureNameService;
     public startLocationMap!: StartLocationMap;
+    public previewScreenConfig: undefined | ScreenConfig;
 
     constructor(
         route: ActivatedRoute,
@@ -52,22 +53,22 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     }
 
     ngOnInit() {
-        let screenConfigName: undefined | ScreenConfigName;
         this.route.queryParamMap.subscribe(params => {
             const screenConfigNameParam: string | null = params.get('screenconfigname');
             if (screenConfigNameParam !== null) {
-                screenConfigName = <ScreenConfigName>screenConfigNameParam;
+                this.previewScreenConfig = this.getPreviewScreenConfig(<ScreenConfigName>screenConfigNameParam);
             }
         });
 
         super.myNgOnInit(() => {
-            if (screenConfigName === undefined && !this.screenConfigRepository.hasObjects(this.tournament)) {
+            if (this.previewScreenConfig === undefined && !this.screenConfigRepository.hasObjects(this.tournament)) {
                 this.openConfigModal(this.screenConfigRepository.getDefaultObjects());
             } else {
                 // processScreens
-                this.getScreenConfigs(screenConfigName)
+                this.getScreenConfigs()
                     .subscribe({
                         next: (screenConfigs: ScreenConfig[]) => {
+                            console.log(screenConfigs);
                             this.processScreens(screenConfigs);
                         },
                         error: (e) => {
@@ -83,9 +84,18 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         return this.structure.getCategories()[0];
     }
 
-    protected getScreenConfigs(screenConfigName: ScreenConfigName | undefined): Observable<ScreenConfig[]> {
-        if (screenConfigName !== undefined) {
-            return of([this.sponsorMapper.getDefaultScreenConfig()]);
+    protected getPreviewScreenConfig(screenConfigName: ScreenConfigName | undefined): ScreenConfig | undefined {
+        if (screenConfigName === undefined) {
+            return undefined;
+        }
+        return this.screenConfigRepository.getDefaultObjects().find((screenConfig: ScreenConfig) => {
+            return screenConfig.name === screenConfigName;
+        });
+    }
+
+    protected getScreenConfigs(): Observable<ScreenConfig[]> {
+        if (this.previewScreenConfig !== undefined) {
+            return of([this.previewScreenConfig]);
         }
         return this.screenConfigRepository.getObjects(this.tournament);
     }

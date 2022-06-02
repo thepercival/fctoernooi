@@ -9,7 +9,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { StartLocationMap, StructureNameService } from 'ngx-sport';
+import { Category, StartLocationMap, StructureNameService } from 'ngx-sport';
 import { Favorites } from '../../lib/favorites';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -25,6 +25,7 @@ export class GamesComponent extends TournamentComponent implements OnInit {
     public structureNameService!: StructureNameService;
     refreshingData = false;
     public favorites!: Favorites;
+    public categoryMap: Map<number, Category> = new Map();
 
     constructor(
         route: ActivatedRoute,
@@ -46,6 +47,7 @@ export class GamesComponent extends TournamentComponent implements OnInit {
             const tournamentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;
             const startLocationMap = new StartLocationMap(this.tournament.getCompetitors());
             this.structureNameService = new StructureNameService(startLocationMap);
+            this.updateFavoriteCategories(this.structure);
             this.favorites = this.favRepository.getObject(this.tournament, this.structure.getCategories());
             if (tournamentUser && tournamentUser.hasRoles(Role.Referee)) {
                 this.roles = tournamentUser.getRoles();

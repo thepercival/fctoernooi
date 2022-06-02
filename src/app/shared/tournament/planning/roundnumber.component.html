@@ -20,18 +20,28 @@
     <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
   </ng-container>
   <ng-template #showProgressAndManual>
+
     <ngb-alert *ngIf="userIsAdmin && inManualMode()" type="warning">handmatig plannen staat aan</ngb-alert>
-    <div *ngIf="gameDatas.length === 0 && !inManualMode()">
-      <ngb-alert class=" mt-1" type="info">
-        <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
-        <span *ngIf="progressPerc === 0">Het berekenen van de wedstrijdplanning staat in de wachtrij. Een moment geduld
-          alsjeblieft ...</span>
-        <span *ngIf="progressPerc > 0">De wedstrijdplanning wordt berekend ...</span>
-      </ngb-alert>
-      <ngb-progressbar *ngIf="progressPerc > 0" class="custom-progress mt-4 mx-auto" type="info" [value]="progressPerc">
-        <i>{{progressPerc}}%</i>
-      </ngb-progressbar>
-    </div>
+
+    <ng-container *ngIf="!allGamesFiltered; else allGamesFilteredTemplateId">
+      <div *ngIf="gameDatas.length === 0 && !inManualMode()">
+        <ngb-alert class=" mt-1" type="info">
+          <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
+          <span *ngIf="progressPerc === 0">Het berekenen van de wedstrijdplanning staat in de wachtrij. Een moment
+            geduld
+            alsjeblieft ...</span>
+          <span *ngIf="progressPerc > 0">De wedstrijdplanning wordt berekend ...</span>
+        </ngb-alert>
+        <ngb-progressbar *ngIf="progressPerc > 0" class="custom-progress mt-4 mx-auto" type="info"
+          [value]="progressPerc">
+          <i>{{progressPerc}}%</i>
+        </ngb-progressbar>
+      </div>
+    </ng-container>
+    <ng-template #allGamesFilteredTemplateId>
+      <ngb-alert type="warning">pas je favorieten of categoriën aan</ngb-alert>
+    </ng-template>
+
     <ngb-alert *ngIf="refreshingData" type="info">de uitslagen worden bijgewerkt</ngb-alert>
   </ng-template>
   <div *ngIf="gameDatas.length > 0">

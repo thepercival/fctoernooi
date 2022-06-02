@@ -43,6 +43,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   public favorites!: Favorites;
   public favoriteCategories!: Category[];
   public structureNameService!: StructureNameService;
+  public hasBegun: boolean = true;
   private scrolled = false;
 
   constructor(
@@ -73,6 +74,11 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
 
             // console.log(this.structure);
             this.clonedStructure = this.createClonedStructure(this.structure);
+            this.hasBegun = this.clonedStructure.getFirstRoundNumber().hasBegun();
+            // MELDING DAT AL IS BEGONNEN!!! KIJK FF IN CATEGORY
+            // if (this.hasBegun) {
+
+            // }
             this.updateFavoriteCategories(this.clonedStructure);
             this.structureNameService = new StructureNameService(new StartLocationMap(this.originalCompetitors));
             this.processing = false;
@@ -83,6 +89,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
             const jsonPlanningConfig = this.defaultService.getJsonPlanningConfig(sportVariant);
             this.structure = this.structureEditor.create(this.competition, pouleStructure, jsonPlanningConfig);
             this.clonedStructure = this.createClonedStructure(this.structure);
+            this.hasBegun = this.clonedStructure.getFirstRoundNumber().hasBegun();
             this.structureNameService = new StructureNameService(new StartLocationMap(this.originalCompetitors));
             this.setAlert(IAlertType.Danger, e + ', new structure created');
             this.processing = false;

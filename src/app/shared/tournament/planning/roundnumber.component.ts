@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, TemplateRef, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, TemplateRef, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbPopover, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -22,7 +22,8 @@ import {
   Competitor,
   GameState,
   AgainstVariant,
-  StructureNameService
+  StructureNameService,
+  Category
 } from 'ngx-sport';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -48,10 +49,11 @@ import { Recess } from '../../../lib/recess';
   templateUrl: './roundnumber.component.html',
   styleUrls: ['./roundnumber.component.scss']
 })
-export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDestroy {
+export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
 
   @Input() tournament!: Tournament;
   @Input() roundNumber!: RoundNumber;
+  @Input() favoriteCategories!: Category[];
   @Input() structureNameService!: StructureNameService;
   @Input() userRefereeId: number | string | undefined;
   @Input() roles: number = 0;
@@ -68,6 +70,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   public hasBegun: boolean = false;
   public tournamentHasBegun: boolean = false;
   public gameDatas: GameData[] = [];
+  public allGamesFiltered: boolean = false;
   private scoreConfigService: ScoreConfigService;
   public needsRanking: boolean = false;
   public hasMultiplePoules: boolean = false;
@@ -108,7 +111,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     this.loadGameData();
     this.hasOnlyGameModeAgainst = this.hasOnlyAgainstGameMode();
     this.hasGameModeAgainst = this.hasAgainstGameMode();
-
     if (this.gameDatas.length === 0) {
       this.showProgress()
     }
@@ -120,7 +122,15 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     }
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.favoriteCategories !== undefined && changes.favoriteCategories.currentValue !== changes.favoriteCategories.previousValue
+      && changes.favoriteCategories.firstChange === false) {
+      this.loadGameData();
+    }
+  }
+
   private loadGameData() {
+    console.log('loadGameData..');
     this.gameDatas = this.getGameData();
     this.sameDay = this.gameDatas.length > 1 ? this.isSameDay(this.gameDatas[0], this.gameDatas[this.gameDatas.length - 1]) : true;
   }
@@ -137,15 +147,21 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     const games = this.roundNumber.getGames(this.gameOrder);
     const recesses = games.length > 0 ? this.getRecesses(this.roundNumber) : [];
     const pouleDataMap = this.getPouleDataMap();
+    const categoryMap = this.getCategoryMap();
     games.forEach((game: AgainstGame | TogetherGame) => {
+      const poule = game.getPoule();
+      const pouleData: PouleData | undefined = pouleDataMap.get(poule.getId());
+      if (pouleData === undefined) {
+        return;
+      }
+      if (!categoryMap.has(poule.getRound().getCategory().getNumber())) {
+        return;
+      }
       const somePlaceHasACompetitor = this.somePlaceHasACompetitor(game);
       if (this.filterEnabled && this.favorites?.hasItems() && !this.favorites?.hasGameItem(game)) {
         return;
       }
-      const pouleData: PouleData | undefined = pouleDataMap.get(game.getPoule().getId());
-      if (pouleData === undefined) {
-        return;
-      }
+
       const gameData: GameData = {
         canChangeResult: this.canChangeResult(game),
         somePlaceHasACompetitor: somePlaceHasACompetitor,
@@ -156,7 +172,17 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
       };
       gameDatas.push(gameData);
     });
+    console.log(games.length, gameDatas.length);
+    this.allGamesFiltered = games.length > 0 && gameDatas.length === 0;
     return gameDatas;
+  }
+
+  getCategoryMap(): Map<number, Category> {
+    const map = new Map();
+    this.favoriteCategories.forEach((category: Category) => {
+      map.set(category.getNumber(), category);
+    });
+    return map;
   }
 
   private getRecesses(roundNumber: RoundNumber): Period[] {

@@ -9,10 +9,6 @@
       <app-tournament-structureround-arrange *ngIf="editable" [round]="round" [structureEditor]="structureEditor"
         (arrangeAction)="arrangeAction($event)">
       </app-tournament-structureround-arrange>
-      <p *ngIf="editable && round.hasBegun()">
-        <ngb-alert type="warning">de ronde heeft al gespeelde wedstrijden, je kunt niet meer
-          wijzigen</ngb-alert>
-      </p>
       <p *ngIf="editable && alert">
         <ngb-alert [dismissible]="true" (closed)="alert = undefined" [type]="alert.type">{{ alert.message }}</ngb-alert>
       </p>

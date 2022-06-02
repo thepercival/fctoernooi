@@ -27,7 +27,6 @@ export class CategoryChooseModalComponent implements OnInit {
 
     getCategoryItems(): CategoryItem[] {
         const favorites = this.favRepository.getObject(this.tournament, this.categories);
-        console.log(favorites.hasCategories());
         return this.categories.map((category: Category) => {
             return {
                 category: category,

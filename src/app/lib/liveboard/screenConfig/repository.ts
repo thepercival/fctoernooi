@@ -22,11 +22,22 @@ export class ScreenConfigRepository {
     }
 
     getObjects(tournament: Tournament): Observable<ScreenConfig[]> {
+        const screenConfigs = this.getDefaultObjects();
         const items = localStorage.getItem(this.getId(tournament));
         if (items === null) {
-            return of(this.getDefaultObjects());
+            return of(screenConfigs);
         }
-        return of(JSON.parse(items));
+        const localScreenConfigs = JSON.parse(items);
+        return of(
+            screenConfigs.map((screenConfig: ScreenConfig): ScreenConfig => {
+                const localScreenConfig = localScreenConfigs.find((screenConfigIt: ScreenConfig) => screenConfigIt.name === screenConfig.name);
+                if (localScreenConfig !== undefined) {
+                    screenConfig.enabled = localScreenConfig.enabled;
+                    screenConfig.nrOfSeconds = localScreenConfig.nrOfSeconds;
+                }
+                return screenConfig;
+            })
+        );
     }
 
     saveObjects(tournament: Tournament, screenConfigs: ScreenConfig[]): Observable<undefined> {

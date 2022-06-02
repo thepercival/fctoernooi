@@ -1,9 +1,9 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../lib/auth/auth.service';
 import { IAlert, IAlertType } from '../shared/common/alert';
-import { TournamentShellFilter, TournamentShellRepository } from '../lib/tournament/shell/repository';
+import { TournamentShellRepository } from '../lib/tournament/shell/repository';
 import { Role } from '../lib/role';
 import { TournamentShell } from '../lib/tournament/shell';
 import { GlobalEventsManager } from '../shared/common/eventmanager';
@@ -14,29 +14,16 @@ import { GlobalEventsManager } from '../shared/common/eventmanager';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, AfterViewInit {
-  static readonly FUTURE: number = 1;
-  static readonly PAST: number = 2;
+  static readonly START_HOUR_IN_PAST = 4;
 
-  @ViewChild('inputsearchname') private searchElementRef: ElementRef | undefined;
-
-  shellsWithRoleTillX: TournamentShell[] = [];
-  shellsWithRoleFromX: TournamentShell[] = [];
-  shellsWithRoleX = 5;
+  shellsTillX: TournamentShell[] = [];
+  shellsFromX: TournamentShell[] = [];
+  shellsX = 5;
   linethroughDate: Date;
   showingAllWithRole = false;
-  publicShells: TournamentShell[] = [];
-  showingFuture = false;
+
   alert: IAlert | undefined;
-  processingWithRole = true;
-  publicProcessing = true;
-  public firstTimeVisit = false;
-  private defaultHourRange: HourRange = {
-    start: -4, end: 168
-  };
-  private hourRange!: HourRange;
-  searchFilterActive = false;
-  searchFilterName: string = '';
-  hasSearched = false;
+  processing = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -45,10 +32,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private tournamentShellRepos: TournamentShellRepository,
     globalEventsManager: GlobalEventsManager
   ) {
-    this.checkFirstTimeVisit();
     this.linethroughDate = new Date();
-    this.linethroughDate.setHours(this.linethroughDate.getHours() + this.defaultHourRange.start);
-    globalEventsManager.showFooter.emit();
+    this.linethroughDate.setHours(this.linethroughDate.getHours() - HomeComponent.START_HOUR_IN_PAST);
+    globalEventsManager.showFooter.emit(true);
   }
 
   ngOnInit() {
@@ -60,22 +46,17 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.disableSearchFilter();
     this.setShellsWithRole();
   }
 
-  onSearchChanges(): void {
-    if (this.searchElementRef) {
-      this.changeSearchFilterName(this.searchElementRef.nativeElement.value);
-    }
-  }
+
 
   setShellsWithRole() {
-    this.shellsWithRoleTillX = [];
-    this.shellsWithRoleFromX = [];
+    this.shellsTillX = [];
+    this.shellsFromX = [];
 
     if (!this.authService.isLoggedIn()) {
-      this.processingWithRole = false;
+      this.processing = false;
       return;
     }
 
@@ -86,47 +67,20 @@ export class HomeComponent implements OnInit, AfterViewInit {
           this.sortShellsByDateDesc(myShells);
           let myShell: TournamentShell | undefined;
           while (myShell = myShells.shift()) {
-            if (this.shellsWithRoleTillX.length < this.shellsWithRoleX) {
-              this.shellsWithRoleTillX.push(myShell);
+            if (this.shellsTillX.length < this.shellsX) {
+              this.shellsTillX.push(myShell);
             } else {
-              this.shellsWithRoleFromX.push(myShell);
+              this.shellsFromX.push(myShell);
             }
           }
-          this.processingWithRole = false;
+          this.processing = false;
           this.authService.extendToken();
         },
         error: (e) => {
-          this.setAlert(IAlertType.Danger, e); this.processingWithRole = false;
+          this.setAlert(IAlertType.Danger, e); this.processing = false;
         },
-        complete: () => this.processingWithRole = false
+        complete: () => this.processing = false
       });
-  }
-
-  addToPublicShells(pastFuture: number, hoursToAdd: number) {
-    this.publicProcessing = true;
-    const searchFilter = this.extendHourRange(pastFuture, hoursToAdd);
-    this.tournamentShellRepos.getObjects(searchFilter)
-      .subscribe({
-        next: (shellsRes: TournamentShell[]) => {
-          this.sortShellsByDateAsc(shellsRes);
-          if (pastFuture === HomeComponent.PAST) {
-            this.publicShells = shellsRes.concat(this.publicShells);
-          } else if (pastFuture === HomeComponent.FUTURE) {
-            this.publicShells = this.publicShells.concat(shellsRes);
-          }
-          // this.showingFuture = (futureDate === undefined);
-          this.publicProcessing = false;
-        },
-        error: (e) => {
-          this.setAlert(IAlertType.Danger, e); this.publicProcessing = false;
-        }
-      });
-  }
-
-  protected sortShellsByDateAsc(shells: TournamentShell[]) {
-    shells.sort((ts1, ts2) => {
-      return (ts1.startDateTime > ts2.startDateTime ? 1 : -1);
-    });
   }
 
   protected sortShellsByDateDesc(shells: TournamentShell[]) {
@@ -137,13 +91,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   protected setAlert(type: IAlertType, message: string) {
     this.alert = { 'type': type, 'message': message };
-  }
-
-  checkFirstTimeVisit() {
-    if (localStorage.getItem('firsttimevisit') === null) {
-      this.firstTimeVisit = true;
-      localStorage.setItem('firsttimevisit', JSON.stringify(false));
-    }
   }
 
   isLoggedIn() {
@@ -158,85 +105,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
   }
 
-  linkToView(shell: TournamentShell) {
-    this.publicProcessing = true;
-    this.router.navigate(['/public', shell.tournamentId]);
-  }
-
   linkToTournament(shell: TournamentShell) {
-    this.processingWithRole = true;
+    this.processing = true;
     const module = shell.roles > 0 && shell.roles !== Role.Referee ? '/admin' : '/public';
     this.router.navigate([module, shell.tournamentId]);
   }
-
-  enableSearchFilter() {
-    this.searchFilterActive = true;
-    setTimeout(() => { // this will make the execution after the above boolean has changed
-      if (this.searchElementRef) {
-        this.searchElementRef.nativeElement.scrollIntoView(true);
-        this.searchElementRef.nativeElement.focus();
-      }
-    }, 0);
-    this.publicShells = [];
-  }
-
-
-  disableSearchFilter() {
-    this.searchFilterActive = false;
-    this.publicShells = [];
-    this.hourRange = { start: this.defaultHourRange.start, end: this.defaultHourRange.start };
-    // this.searchForm.controls.filterName.setValue(undefined);
-    this.addToPublicShells(HomeComponent.FUTURE, this.defaultHourRange.end - this.defaultHourRange.start);
-  }
-
-  expandPastDays() {
-    const pastHoursToAdd = this.hourRange.start === this.defaultHourRange.start
-      ? this.defaultHourRange.start + this.defaultHourRange.end : -this.hourRange.start;
-    this.addToPublicShells(HomeComponent.PAST, pastHoursToAdd);
-  }
-
-  expandFutureDays() {
-    this.addToPublicShells(HomeComponent.FUTURE, this.hourRange.end);
-  }
-
-  private extendHourRange(pastFuture: number, hoursToAdd: number): TournamentShellFilter {
-    const startDate = new Date(), endDate = new Date();
-    if (pastFuture === HomeComponent.PAST) {
-      endDate.setHours(endDate.getHours() + this.hourRange.start);
-      this.hourRange.start -= hoursToAdd;
-      startDate.setHours(startDate.getHours() + this.hourRange.start);
-    } else if (pastFuture === HomeComponent.FUTURE) {
-      startDate.setHours(startDate.getHours() + this.hourRange.end);
-      this.hourRange.end += hoursToAdd;
-      endDate.setHours(endDate.getHours() + this.hourRange.end);
-    }
-    return this.getSearchFilter(startDate, endDate, undefined);
-  }
-
-  private getSearchFilter(startDate: Date | undefined, endDate: Date | undefined, name: string | undefined): TournamentShellFilter {
-    return { startDate: startDate, endDate: endDate, name: name };
-  }
-
-  changeSearchFilterName(searchFilterName: string) {
-    if (searchFilterName.length < 2) {
-      return;
-    }
-    this.publicProcessing = true;
-    const searchFilter = this.getSearchFilter(undefined, undefined, searchFilterName);
-    this.tournamentShellRepos.getObjects(searchFilter)
-      .subscribe({
-        next: (shellsRes: TournamentShell[]) => {
-          this.publicShells = shellsRes;
-          this.publicProcessing = false;
-        },
-        error: (e) => {
-          this.setAlert(IAlertType.Danger, e); this.publicProcessing = false;
-        }
-      });
-  }
 }
 
-interface HourRange {
-  start: number;
-  end: number;
-}
+

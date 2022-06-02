@@ -49,10 +49,6 @@ export class TournamentNavBarComponent implements OnInit {
     this.router.navigate(['/' + (this.public ? 'public' : 'admin') + '/games', this.tournament.getId()]);
   }
 
-  linkToRanking() {
-    this.router.navigate(['/' + (this.public ? 'public' : 'admin') + '/rannking', this.tournament.getId()]);
-  }
-
   hasRole(roles: number): boolean {
     const loggedInUserId = this.authService.getLoggedInUserId();
     const tournamentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;

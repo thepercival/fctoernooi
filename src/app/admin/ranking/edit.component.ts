@@ -63,6 +63,10 @@ export class RankingEditComponent extends TournamentComponent implements OnInit 
         return this.hasRole(this.authService, Role.Admin);
     }
 
+    getRankingRuleSetClass(): string {
+        return this.hasBegun ? 'outline-info' : 'primary';
+    }
+
     openRankingRuleSetModal(modalContent: TemplateRef<any>) {
         const activeModal = this.modalService.open(modalContent);
         activeModal.result.then((againstRuleSet: AgainstRuleSet) => {

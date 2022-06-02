@@ -1,13 +1,13 @@
-<div class="container-fluid">
+<div class="container-fluid-mb">
 
   <div class="d-flex justify-content-between mb-1">
     <h2>
       <app-tournament-icon name="structure"></app-tournament-icon> opzet
     </h2>
-    <div *ngIf="!processing && clonedStructure && !structure.getFirstRoundNumber().hasBegun()">
+    <div *ngIf="!processing && clonedStructure">
 
       <div class="btn-group" role="group" aria-label="aantal deelnemers">
-        <button type="button" class="btn btn-outline-primary" (click)="openCategoryModal()">
+        <button *ngIf="!hasBegun" type="button" class="btn btn-outline-primary" (click)="openCategoryModal()">
           <fa-icon [icon]="['fas', 'plus']"></fa-icon>
         </button>
         <button [disabled]="clonedStructure.hasSingleCategory()" role="button"
@@ -16,7 +16,8 @@
           <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
         </button>
       </div>
-      <button role="button" [disabled]="actions.length === 0" (click)="saveStructure()" class="btn btn-primary ms-1">
+      <button *ngIf="!hasBegun" role="button" [disabled]="actions.length === 0" (click)="saveStructure()"
+        class="btn btn-primary ms-1">
         <fa-icon [icon]="['fas', 'save']"></fa-icon>
         <span> opslaan</span>
       </button>
@@ -34,8 +35,13 @@
 
   <div *ngIf="!processing && clonedStructure" class="row text-center">
 
+    <p *ngIf="hasBegun">
+      <ngb-alert type="warning">er zijn al gespeelde wedstrijden, je kunt niet meer
+        wijzigen</ngb-alert>
+    </p>
+
     <ng-container *ngIf="clonedStructure.hasSingleCategory();else withCategories">
-      <app-tournament-structureround [editable]="true" [round]="clonedStructure.getSingleCategory().getRootRound()"
+      <app-tournament-structureround [editable]="!hasBegun" [round]="clonedStructure.getSingleCategory().getRootRound()"
         class="px-0" (addAction)="addAction($event)" [structureNameService]="structureNameService"
         [structureEditor]="structureEditor" [lastAction]="lastAction">
       </app-tournament-structureround>
@@ -43,7 +49,7 @@
     <ng-template #withCategories>
       <div class="d-flex flex-wrap gap-1">
         <app-tournament-structurecategory *ngFor="let category of favoriteCategories" class="mx-auto card"
-          [editable]="true" [filterActive]="isCategoryFilterActive(clonedStructure)"
+          [editable]="!hasBegun" [filterActive]="isCategoryFilterActive(clonedStructure)"
           [structureNameService]="structureNameService" [structureEditor]="structureEditor" [lastAction]="lastAction"
           [category]="category" (addAction)="addAction($event)" (remove)="removeCategory($event)"
           (updateName)="updateCategoryName($event)" (moveCategoryUp)="moveCategoryUp($event)">
@@ -52,15 +58,17 @@
     </ng-template>
   </div>
 
+  <div class="d-flex justify-content-around mt-3">
+    <button *ngIf="!processing && clonedStructure && !clonedStructure.getFirstRoundNumber().hasBegun()" role="button"
+      [disabled]="actions.length === 0" (click)="saveStructure()" class="btn btn-primary">
+      <fa-icon [icon]="['fas', 'save']"></fa-icon>
+      <span> opslaan</span>
+    </button>
+  </div>
+
 </div>
 
-<div class="d-flex justify-content-around mt-3 mb-1">
-  <button *ngIf="!processing && clonedStructure && !clonedStructure.getFirstRoundNumber().hasBegun()" role="button"
-    [disabled]="actions.length === 0" (click)="saveStructure()" class="btn btn-primary">
-    <fa-icon [icon]="['fas', 'save']"></fa-icon>
-    <span> opslaan</span>
-  </button>
-</div>
+
 
 <app-tournament-navbar [public]="false" [currentScreen]="StructureScreen" *ngIf="tournament" [tournament]="tournament">
 </app-tournament-navbar>

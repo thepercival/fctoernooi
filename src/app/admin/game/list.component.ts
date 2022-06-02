@@ -10,7 +10,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentUser } from '../../lib/tournament/user';
 import { Observable, of } from 'rxjs';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { StartLocationMap, StructureNameService } from 'ngx-sport';
+import { Category, StartLocationMap, StructureNameService } from 'ngx-sport';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
@@ -24,6 +24,7 @@ export class GameListComponent extends TournamentComponent implements OnInit {
   userRefereeId: number | string | undefined;
   roles: number = 0;
   public structureNameService!: StructureNameService;
+  public categoryMap: Map<number, Category> = new Map();
 
   constructor(
     route: ActivatedRoute,

@@ -1,4 +1,4 @@
-<div class="row justify-content-center g-0">
+<div class="row justify-content-center g-0 navbar-margin">
 
   <div class="d-flex justify-content-around">
     <h2>
@@ -15,12 +15,12 @@
     <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
   </h2>
 
-  <ngb-alert [ngClass]="{ invisible: !alert}" class="m-0" [type]="alertType()">
+  <ngb-alert *ngIf="alert" class="m-0" [type]="alertType()">
     {{alertMessage()}}
   </ngb-alert>
 
 
-  <div *ngIf="!processing" class="d-flex flex-wrap gap-1">
+  <div *ngIf="!processing" class="d-flex flex-wrap gap-1 mt-3">
     <app-tournament-category-competitors *ngFor="let category of favoriteCategories" class="mx-auto"
       [showHeader]="favoriteCategories.length > 1" [category]="category" [tournament]="tournament"
       [structureNameService]="structureNameService" [lockerRoomValidator]="lockerRoomValidator"

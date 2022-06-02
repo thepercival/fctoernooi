@@ -1,9 +1,9 @@
-<div class="container-fluid px-0">
+<div class="container-fluid px-0 mb-5">
   <div class="row justify-content-around g-0">
     <div class="col-sm-12 col-md-10 col-lg-8">
       <div *ngIf="!processing" class="d-flex justify-content-between">
         <h2>
-          <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> planning & wedstrijden
+          <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijden
         </h2>
         <ng-container *ngIf="structure.hasSingleCategory();else withCategories">
           <button *ngIf="tournament && structure && structure.allPoulesHaveGames() && hasAdminRole()" type="button"
@@ -26,7 +26,7 @@
       <div *ngIf="!processing && structure">
         <app-tournament-roundnumber-planning *ngFor="let roundNumber of structure.getRoundNumbers()"
           [structureNameService]="structureNameService" [tournament]="tournament" [roundNumber]="roundNumber"
-          [roles]="roles" [userRefereeId]="userRefereeId" (scroll)="scroll()">
+          [favoriteCategories]="favoriteCategories" [roles]="roles" [userRefereeId]="userRefereeId" (scroll)="scroll()">
         </app-tournament-roundnumber-planning>
       </div>
     </div>

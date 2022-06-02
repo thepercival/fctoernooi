@@ -34,7 +34,6 @@ export class FavoritesCategoryComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log('cdk');
         const map = this.structureNameService.getStartLocationMap();
         if (map !== undefined) {
             this.setPlaceCompetitorItems(map);

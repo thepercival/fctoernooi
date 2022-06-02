@@ -1,23 +1,6 @@
 <div class="row justify-content-center g-0">
   <div class="col-sm-12 col-md-10 col-lg-8">
-    <div *ngIf="firstTimeVisit === true">
-      <h1 class="text-center">
-        welkom
-      </h1>
-      <ul class="list-group text-center m-2">
-        <li class="list-group-item border-info text-info">opzet met meerdere ronden</li>
-        <li class="list-group-item border-info text-info">automatische kwalificatie en wedstrijdplanning</li>
-        <li class="list-group-item border-info text-info">live scorebord</li>
-        <li class="list-group-item border-info text-info">export naar pdf en werkblad</li>
-      </ul>
-      <div *ngIf="alert" class="alert alert-{{alert.type}}">{{alert.message}}</div>
-      <div class="d-flex justify-content-center">
-        <button name="btn-create-tournament" type="button" class="btn btn-primary" [routerLink]="['/public/prenew']">zet
-          je
-          eerste toernooi op</button>
-      </div>
-    </div>
-    <div *ngIf="firstTimeVisit === false" class="mt-3">
+    <div class="mt-3">
       <div *ngIf="alert" class="alert alert-{{alert.type}}">{{alert.message}}</div>
       <div class="d-flex justify-content-between">
         <h1>mijn toernooien</h1>
@@ -27,67 +10,41 @@
       </div>
     </div>
 
-    <table *ngIf="!processingWithRole && shellsWithRoleTillX.length > 0" class="table mt-2">
+    <table *ngIf="!processing && shellsTillX.length > 0" class="table mt-2">
       <tbody>
-        <app-home-shell class="pointer" (click)="linkToTournament(shell)" *ngFor="let shell of shellsWithRoleTillX"
+        <app-home-shell class="pointer" (click)="linkToTournament(shell)" *ngFor="let shell of shellsTillX"
           [shell]="shell" [linethroughDate]="linethroughDate" [showPublic]="true"></app-home-shell>
-        <tr *ngIf="!showingAllWithRole && shellsWithRoleFromX.length > 0"
-          (click)="showingAllWithRole = !showingAllWithRole" class="pointer">
+        <tr *ngIf="!showingAllWithRole && shellsFromX.length > 0" (click)="showingAllWithRole = !showingAllWithRole"
+          class="pointer">
           <td colspan="4" class="text-center">
             <fa-icon [icon]="['fas', 'angle-double-down']"></fa-icon>
             <span class="mx-3">meer</span>
             <fa-icon [icon]="['fas', 'angle-double-down']"></fa-icon>
           </td>
         </tr>
-        <ng-template ngFor let-shell [ngForOf]="shellsWithRoleFromX">
+        <ng-template ngFor let-shell [ngForOf]="shellsFromX">
           <app-home-shell *ngIf="showingAllWithRole" class="pointer" (click)="linkToTournament(shell)" [shell]="shell"
             [linethroughDate]="linethroughDate" [showPublic]="true">
           </app-home-shell>
         </ng-template>
       </tbody>
     </table>
-    <div class="d-flex justify-content-between mt-5">
-      <h1>publieke toernooien</h1>
-      <button *ngIf="!searchFilterActive" type="button" class="btn btn-secondary" (click)="enableSearchFilter()"
-        aria-label="search tournaments">
-        <fa-icon [icon]="['fas', 'search']"></fa-icon>
-        <span class="ms-1 d-none d-sm-inline"> zoeken</span>
-      </button>
-      <button *ngIf="searchFilterActive" type="button" class="btn btn-secondary" (click)="disableSearchFilter()"
-        aria-label="reset search tournaments">
-        <fa-icon class="mx-1 d-none d-sm-inline" [icon]="['fas', 'search']"></fa-icon>
-        <span>herstel</span>
+    <div class="d-flex justify-content-center my-4">
+      <button type="button" class="btn btn-outline-primary" [routerLink]="['/public/shells']">
+        publieke toernooien bekijken
       </button>
     </div>
-    <form *ngIf="searchFilterActive" onsubmit="false">
-      <input type="text" class="form-control form-control-search" #inputsearchname (keyup)="onSearchChanges()"
-        aria-labelledby="btn-search-tournaments" placeholder="zoek op toernooinaam">
-    </form>
-    <table *ngIf="!publicProcessing" class="table">
-      <tbody>
-        <tr *ngIf="!searchFilterActive" (click)="expandPastDays()" class="pointer">
-          <td colspan="3" class="text-center">
-            <fa-icon [icon]="['fas', 'angle-double-down']" [rotate]="180"></fa-icon>
-            <span class="mx-3">meer eerdere</span>
-            <fa-icon [icon]="['fas', 'angle-double-down']" [rotate]="180"></fa-icon>
-          </td>
-        </tr>
-        <app-home-shell class="pointer" (click)="linkToView(shell)" *ngFor="let shell of publicShells"
-          [linethroughDate]="linethroughDate" [shell]="shell" [showPublic]="false"></app-home-shell>
-        <tr *ngIf="!searchFilterActive" (click)="expandFutureDays()" class="pointer">
-          <td colspan="3" class="text-center">
-            <fa-icon [icon]="['fas', 'angle-double-down']"></fa-icon>
-            <span class="mx-3">meer latere</span>
-            <fa-icon [icon]="['fas', 'angle-double-down']"></fa-icon>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <h2 *ngIf="publicProcessing" class="text-center">
-      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-    </h2>
-    <!-- <div
-      *ngIf="searchFilterActive && ( searchForm.value['filterName'] === undefined || searchForm.value['filterName'].length < 2)"
-      class="alert alert-info">voer minimaal 2 karakters in</div> -->
+
+    <div>
+      <ul class="list-group text-center mb-3">
+        <li class="list-group-item bg-success border-white text-white">flexibele & simpele editor</li>
+        <li class="list-group-item bg-success border-white text-white">optimaal wedstrijdschema</li>
+        <li class="list-group-item bg-success border-white text-white">automatische standen</li>
+        <li class="list-group-item bg-success border-white text-white">uitgebreide pdf opties</li>
+        <li class="list-group-item bg-success border-white text-white">rollenbeheer</li>
+        <li class="list-group-item bg-success border-white text-white">live scorebord</li>
+      </ul>
+    </div>
+
   </div>
 </div>

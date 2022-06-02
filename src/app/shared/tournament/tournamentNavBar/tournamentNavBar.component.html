@@ -26,7 +26,8 @@
 
     <!--standen -->
     <h2 *ngIf="public" class="mb-0">
-      <a type="button" class="btn {{getTextColorClass(RankingScreen)}}" (click)="linkToRanking()">
+      <a type="button" class="btn {{getTextColorClass(RankingScreen)}}"
+        [routerLink]="['/public/ranking', tournament.getId()]">
         <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> <br />standen
       </a>
     </h2>

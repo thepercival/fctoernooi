@@ -24,11 +24,14 @@ export class StructureCategoryComponent implements OnInit {
   @Output() updateName = new EventEmitter<UpdateCategoryNameAction>();
   @Output() moveCategoryUp = new EventEmitter<Category>();
 
+  public canEdit: boolean = false;
+
   constructor(public cssService: CSSService, private modalService: NgbModal) {
 
   }
 
   ngOnInit() {
+
   }
 
   changeName(category: Category) {

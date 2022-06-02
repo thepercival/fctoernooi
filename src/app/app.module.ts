@@ -5,21 +5,12 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faAngleDoubleDown,
-  faBasketballBall,
-  faChess,
-  faFutbol,
-  faGamepad,
   faPlusCircle,
   faSave,
-  faSearch,
   faSpinner,
-  faTableTennis,
   faUserCircle,
   faUserFriends,
   faUserShield,
-  faVolleyballBall,
-  faBaseballBall,
-  faHockeyPuck
 } from '@fortawesome/free-solid-svg-icons';
 
 import { environment } from '../environments/environment';
@@ -70,7 +61,7 @@ import { facFavicon } from './shared/tournament/icon/icons';
 })
 export class AppModule {
   constructor(library: FaIconLibrary) {
-    library.addIcons(faPlusCircle, faSpinner, faSearch, faAngleDoubleDown
+    library.addIcons(faPlusCircle, faSpinner, faAngleDoubleDown
       , faUserShield, faUserFriends, faSave, faUserCircle, facFavicon
     );
   }

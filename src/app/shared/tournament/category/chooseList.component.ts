@@ -18,7 +18,6 @@ export class CategoryChooseListComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.categoryItems);
     }
 
     // hasSelectableCompetitors(): boolean {

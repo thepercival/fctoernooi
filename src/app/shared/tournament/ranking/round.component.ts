@@ -28,7 +28,6 @@ export class RankingRoundComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log('round CDK', this.poules.length);
         this.poules = this.round.getPoules().filter((poule: Poule) => poule.needsRanking());
         const roundNumber = this.round.getNumber();
         const state = this.round.getGamesState();

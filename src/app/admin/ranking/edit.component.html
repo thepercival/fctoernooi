@@ -4,9 +4,9 @@
     <h2>
       <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> standen
     </h2>
-    <button *ngIf="!processing" type="button" class="btn btn-sm me-1 btn-primary"
+    <button *ngIf="!processing" type="button" class="btn btn-sm me-1 btn-{{getRankingRuleSetClass()}}"
       (click)="openRankingRuleSetModal(contentRankingRuleSet)">
-      <fa-icon [icon]="['fas', 'pencil']"></fa-icon> <span class="ms-1">rangschikking</span>
+      <fa-icon *ngIf="!hasBegun" [icon]="['fas', 'pencil']"></fa-icon> <span class="ms-1">rangschikking</span>
     </button>
     <button *ngIf="!processing && !structure.hasSingleCategory()" type="button"
       class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
