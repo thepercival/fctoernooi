@@ -1,8 +1,6 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-sm-12 col-md-10 col-lg-8">
-      <app-tournament-title [tournament]="tournament">
-      </app-tournament-title>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
@@ -92,3 +90,6 @@
       </div>
     </div>
   </div>
+
+  <app-tournament-navbar [public]="false" *ngIf="tournament" [tournament]="tournament">
+  </app-tournament-navbar>

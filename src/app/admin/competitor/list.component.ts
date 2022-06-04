@@ -123,7 +123,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
       .subscribe({
         next: (structure: Structure) => {
           this.structure = structure;
-          this.planningRepository.create(this.structure, this.tournament, 1)
+          this.planningRepository.create(this.structure, this.tournament)
             .subscribe({
               next: () => {
                 this.setAlert(IAlertType.Success, message);

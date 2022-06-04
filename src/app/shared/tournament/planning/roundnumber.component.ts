@@ -23,7 +23,10 @@ import {
   GameState,
   AgainstVariant,
   StructureNameService,
-  Category
+  Category,
+  CategoryMap,
+  StructureCell,
+  GameGetter
 } from 'ngx-sport';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -102,8 +105,9 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     const currentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;
     this.userIsAdmin = currentUser ? currentUser.hasRoles(Role.Admin) : false;
     this.roles = currentUser?.getRoles() ?? 0;
-    this.needsRanking = this.roundNumber.needsRanking();
-    this.hasMultiplePoules = this.roundNumber.getPoules().length > 1;
+    this.needsRanking = this.roundNumber.getStructureCells().some(structureCell => structureCell.needsRanking());
+    const rounds = this.roundNumber.getRounds(undefined);
+    this.hasMultiplePoules = rounds.length > 1 || rounds.every(round => round.getPoules().length > 1);
     this.hasSomeReferees = this.tournament.getCompetition().getReferees().length > 0
       || this.planningConfig.getSelfReferee() !== SelfReferee.Disabled;
     this.hasBegun = this.roundNumber.hasBegun();
@@ -144,17 +148,13 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
 
   private getGameData() {
     const gameDatas: GameData[] = [];
-    const games = this.roundNumber.getGames(this.gameOrder);
+    const games = (new GameGetter()).getGames(this.gameOrder, this.roundNumber, new CategoryMap(this.favoriteCategories));
     const recesses = games.length > 0 ? this.getRecesses(this.roundNumber) : [];
     const pouleDataMap = this.getPouleDataMap();
-    const categoryMap = this.getCategoryMap();
     games.forEach((game: AgainstGame | TogetherGame) => {
       const poule = game.getPoule();
       const pouleData: PouleData | undefined = pouleDataMap.get(poule.getId());
       if (pouleData === undefined) {
-        return;
-      }
-      if (!categoryMap.has(poule.getRound().getCategory().getNumber())) {
         return;
       }
       const somePlaceHasACompetitor = this.somePlaceHasACompetitor(game);
@@ -175,14 +175,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     console.log(games.length, gameDatas.length);
     this.allGamesFiltered = games.length > 0 && gameDatas.length === 0;
     return gameDatas;
-  }
-
-  getCategoryMap(): Map<number, Category> {
-    const map = new Map();
-    this.favoriteCategories.forEach((category: Category) => {
-      map.set(category.getNumber(), category);
-    });
-    return map;
   }
 
   private getRecesses(roundNumber: RoundNumber): Period[] {
@@ -254,13 +246,13 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
 
   private getPouleDataMap(): PouleDataMap {
     const pouleDatas = new PouleDataMap();
-    this.roundNumber.getPoules().forEach(poule => {
+    this.roundNumber.getRounds(undefined).forEach((round: Round) => round.getPoules().forEach(poule => {
       pouleDatas.set(poule.getId(), {
         name: this.structureNameService.getPouleName(poule, false),
         needsRanking: poule.needsRanking(),
-        round: poule.getRound()
+        round
       });
-    });
+    }));
     return pouleDatas;
   }
 
@@ -440,7 +432,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
 
   getSameScoreConfig(competitionSport: CompetitionSport): ScoreConfig | undefined {
     let scoreConfig: ScoreConfig | undefined;
-    this.roundNumber.getRounds().some((round: Round) => {
+    this.roundNumber.getRounds(undefined).some((round: Round) => {
       const roundScoreConfig = round.getValidScoreConfig(competitionSport);
       if (scoreConfig === undefined) {
         scoreConfig = roundScoreConfig;
@@ -475,7 +467,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
             return;
           }
           const previous = this.roundNumber.getPrevious();
-          if (previous && previous.getNrOfGames() === 0) {
+          if (previous && !this.hasGames(previous)) {
             return;
           }
           this.progressPerc = progressPerc;
@@ -497,6 +489,16 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
           this.setAlert(IAlertType.Danger, e);
         }
       })
+  }
+
+  private hasGames(roundNumber: RoundNumber): boolean {
+    return roundNumber.getStructureCells().every((structureCell: StructureCell): boolean => {
+      return structureCell.getRounds().some((round: Round): boolean => {
+        return round.getPoules().some((poule: Poule): boolean => {
+          return poule.getNrOfGames() > 0;
+        })
+      })
+    })
   }
 
   validTimeValue(count: number): boolean {

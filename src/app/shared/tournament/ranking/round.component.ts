@@ -29,19 +29,32 @@ export class RankingRoundComponent implements OnInit {
 
     ngOnInit() {
         this.poules = this.round.getPoules().filter((poule: Poule) => poule.needsRanking());
-        const roundNumber = this.round.getNumber();
+        // const structureCell = this.round.getStructureCell();
         const state = this.round.getGamesState();
-        const statePrevious = roundNumber.getPrevious()?.getGamesState();
-        const nextRoundNumber = roundNumber.getNext();
-        const stateNext = nextRoundNumber?.getGamesState();
-        const nextNeedsRanking = nextRoundNumber?.needsRanking() ?? false;
+        const stateParent = this.round.getParentQualifyGroup()?.getParentRound().getGamesState();
+        const childeren = this.round.getChildren();
+        const stateChildren = this.getRoundsGameState(childeren);
+        const childNeedsRanking = this.roundsNeedRanking(childeren);
         if (state === GameState.InProgress) {
             this.collapsed = false;
-        } else if (state === GameState.Created && (statePrevious === undefined || statePrevious === GameState.Finished)) {
+        } else if (state === GameState.Created && (stateParent === undefined || stateParent === GameState.Finished)) {
             this.collapsed = false;
-        } else if (state === GameState.Finished && (stateNext === undefined || stateNext === GameState.Created || !nextNeedsRanking)) {
+        } else if (state === GameState.Finished && (stateChildren === undefined || stateChildren === GameState.Created || !childNeedsRanking)) {
             this.collapsed = false;
         }
+    }
+
+    getRoundsGameState(rounds: Round[]): GameState {
+        if (rounds.every((round: Round) => round.getGamesState() === GameState.Finished)) {
+            return GameState.Finished;
+        } else if (rounds.some((round: Round) => round.getGamesState() !== GameState.Created)) {
+            return GameState.InProgress;
+        }
+        return GameState.Created;
+    }
+
+    roundsNeedRanking(rounds: Round[]): boolean {
+        return rounds.some((round: Round) => round.needsRanking());
     }
 
     openInfoModal(modalContent: TemplateRef<any>) {

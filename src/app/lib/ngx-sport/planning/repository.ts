@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { PlanningMapper, JsonStructure, RoundNumber, Structure, Poule, GameMapper, GameOrder, StructureMapper, CompetitionSportMapper, JsonPoule } from 'ngx-sport';
+import { PlanningMapper, JsonStructure, RoundNumber, Structure, Poule, GameMapper, GameOrder, StructureMapper, CompetitionSportMapper, JsonPoule, Round, GameGetter } from 'ngx-sport';
 import { APIRepository } from '../../repository';
 import { Tournament } from '../../tournament';
 
@@ -25,8 +25,8 @@ export class PlanningRepository extends APIRepository {
         return 'planning';
     }
 
-    getUrl(tournament: Tournament, roundNumber: RoundNumber): string {
-        return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix() + '/' + roundNumber.getNumber();
+    getUrl(tournament: Tournament, roundNumberAsValue: number): string {
+        return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix() + '/' + roundNumberAsValue;
     }
 
     getUrlPoule(tournament: Tournament, poule: Poule): string {
@@ -35,7 +35,7 @@ export class PlanningRepository extends APIRepository {
 
     get(roundNumber: RoundNumber, tournament: Tournament): Observable<RoundNumber> {
         const sportMap = this.competitionSportMapper.getMap(tournament.getCompetition());
-        return this.http.get<JsonPoule[]>(this.getUrl(tournament, roundNumber), this.getOptions()).pipe(
+        return this.http.get<JsonPoule[]>(this.getUrl(tournament, roundNumber.getNumber()), this.getOptions()).pipe(
             map((jsonPoules: JsonPoule[]) => {
                 this.planningMapper.toObject(jsonPoules, roundNumber, sportMap);
                 return roundNumber;
@@ -45,25 +45,25 @@ export class PlanningRepository extends APIRepository {
     }
 
     progress(roundNumber: RoundNumber, tournament: Tournament): Observable<number> {
-        const url = this.getUrl(tournament, roundNumber) + '/progress';
+        const url = this.getUrl(tournament, roundNumber.getNumber()) + '/progress';
         return this.http.get<number>(url, this.getOptions()).pipe(
             map((jsonProgress: any) => jsonProgress.progress),
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
-    create(structure: Structure, tournament: Tournament, startRoundNumberAsValue: number): Observable<void> {
-        const startRoundNumber = structure.getRoundNumber(startRoundNumberAsValue);
-        if (startRoundNumber === undefined) {
-            throw Error('het rondenummer kan niet gevonden worden');
-        }
-        this.removeGames(startRoundNumber);
+    create(structure: Structure, tournament: Tournament): Observable<void> {
+        // const startRoundNumber = structure.getRoundNumber(startRoundNumberAsValue);
+        // if (startRoundNumber === undefined) {
+        //     throw Error('het rondenummer kan niet gevonden worden');
+        // }
+        this.removeGames(structure.getRootRounds());
 
         const sportMap = this.competitionSportMapper.getMap(tournament.getCompetition());
-        const url = this.getUrl(tournament, startRoundNumber) + '/create';
+        const url = this.getUrl(tournament, 1) + '/create';
         return this.http.post<JsonStructure>(url, undefined, this.getOptions()).pipe(
             map((jsonStructure: JsonStructure) => {
-                this.structureMapper.planningToObject(jsonStructure, startRoundNumber, sportMap);
+                this.structureMapper.planningToObject(jsonStructure, structure, tournament.getCompetition(), sportMap);
             }),
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );
@@ -126,18 +126,15 @@ export class PlanningRepository extends APIRepository {
         );
     }*/
 
-    protected removeGames(roundNumber: RoundNumber) {
-        roundNumber.getPoules().forEach(poule => {
+    protected removeGames(rounds: Round[]) {
+        rounds.forEach((round: Round) => round.getPoules().forEach((poule: Poule) => {
             poule.getGames().splice(0, poule.getGames().length);
-        });
-        const nextRoundNumber = roundNumber.getNext();
-        if (nextRoundNumber) {
-            this.removeGames(nextRoundNumber);
-        }
+            this.removeGames(round.getChildren());
+        }));
     }
 
     reschedule(roundNumber: RoundNumber, tournament: Tournament): Observable<boolean> {
-        const url = this.getUrl(tournament, roundNumber) + '/reschedule';
+        const url = this.getUrl(tournament, roundNumber.getNumber()) + '/reschedule';
         return this.http.post<Date[]>(url, undefined, this.getOptions()).pipe(
             map((dates: Date[]) => this.updateDates(roundNumber, dates)),
             catchError((err: HttpErrorResponse) => this.handleError(err))
@@ -147,7 +144,7 @@ export class PlanningRepository extends APIRepository {
     private updateDates(roundNumber: RoundNumber, dates: Date[]): boolean {
         let previousBatchNr: number | undefined;
         let gameDate: Date | undefined;
-        roundNumber.getGames(GameOrder.ByBatch).forEach(game => {
+        (new GameGetter()).getGames(GameOrder.ByBatch, roundNumber).forEach(game => {
             if (previousBatchNr === undefined || previousBatchNr !== game.getBatchNr()) {
                 previousBatchNr = game.getBatchNr();
                 if (dates.length === 0) {

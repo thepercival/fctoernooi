@@ -122,7 +122,7 @@ export class FieldListComponent implements OnInit {
     }
 
     protected updatePlanning() {
-        this.planningRepository.create(this.structure, this.tournament, 1).subscribe({
+        this.planningRepository.create(this.structure, this.tournament).subscribe({
             next: () => { },
             error: (e) => {
                 this.alert = { type: IAlertType.Danger, message: e }; this.processing = false;

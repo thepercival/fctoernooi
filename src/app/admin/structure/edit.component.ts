@@ -159,7 +159,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     this.structureRepository.editObject(this.clonedStructure, this.tournament)
       .subscribe({
         next: (structureRes: Structure) => {
-          this.syncPlanning(structureRes, 1/*this.getLowestLevelAction()*/); // should always be first roundnumber
+          this.syncPlanning(structureRes/*this.getLowestLevelAction()*/); // should always be first roundnumber
         },
         error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
       });
@@ -269,12 +269,11 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     this.setAlert(IAlertType.Success, 'de wijzigingen zijn opgeslagen');
   }
 
-  protected syncPlanning(structure: Structure, roundNumberToSync: number) {
-    let changedRoundNumber = structure.getRoundNumber(roundNumberToSync);
-    if (changedRoundNumber === undefined) {
-      return this.completeSave(structure);
-    }
-    this.planningRepository.create(structure, this.tournament, roundNumberToSync)
+  protected syncPlanning(structure: Structure) {
+    // if (structure.getRoundNumber(1) === undefined) {
+    //   return this.completeSave(structure);
+    // }
+    this.planningRepository.create(structure, this.tournament)
       .subscribe({
         next: () => this.completeSave(structure),
         error: e => { this.setAlert(IAlertType.Danger, e); this.processing = false; },

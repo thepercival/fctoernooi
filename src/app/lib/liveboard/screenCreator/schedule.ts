@@ -1,4 +1,4 @@
-import { AgainstGame, Game, GameOrder, RoundNumber, GameState, TogetherGame } from "ngx-sport";
+import { AgainstGame, Game, GameOrder, RoundNumber, GameState, TogetherGame, CategoryMap, Category, GameGetter } from "ngx-sport";
 import { ScreenConfig } from "../screenConfig/json";
 import { ScheduleScreen } from "../screens";
 export class ScheduleScreenCreator {
@@ -7,9 +7,10 @@ export class ScheduleScreenCreator {
     }
 
     // minimal current batch and next batch
-    getScreens(firstRoundNuber: RoundNumber): ScheduleScreen[] {
+    getScreens(firstRoundNuber: RoundNumber, categories: Category[]): ScheduleScreen[] {
+        const categoryMap = new CategoryMap(categories);
         const scheduleScreen = new ScheduleScreen(this.screenConfig, this.maxLines);
-        this.fillScreens(scheduleScreen, firstRoundNuber);
+        this.fillScreens(scheduleScreen, firstRoundNuber, categoryMap);
         if (scheduleScreen.isEmpty()) {
             return [];
         }
@@ -22,8 +23,8 @@ export class ScheduleScreenCreator {
         return screens;
     }
 
-    protected fillScreens(screen: ScheduleScreen, roundNumber: RoundNumber) {
-        const roundGames: (AgainstGame | TogetherGame)[] = roundNumber.getGames(GameOrder.ByDate);
+    protected fillScreens(screen: ScheduleScreen, roundNumber: RoundNumber, categoryMap: CategoryMap) {
+        const roundGames: (AgainstGame | TogetherGame)[] = (new GameGetter()).getGames(GameOrder.ByDate, roundNumber, categoryMap);
 
         const maxNrOfScreens = this.getNrOfScreens(roundGames);
 
@@ -50,7 +51,7 @@ export class ScheduleScreenCreator {
         }
         const nextRoundNumber = roundNumber.getNext();
         if (nextRoundNumber && this.screensFilled(screen, maxNrOfScreens) === false) {
-            this.fillScreens(screen, nextRoundNumber);
+            this.fillScreens(screen, nextRoundNumber, categoryMap);
         }
     }
 

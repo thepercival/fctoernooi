@@ -1,4 +1,4 @@
-import { AgainstGame, Game, GameOrder, RoundNumber, GameState, TogetherGame } from "ngx-sport";
+import { AgainstGame, Game, GameOrder, RoundNumber, GameState, TogetherGame, Category, CategoryMap, GameGetter } from "ngx-sport";
 import { ScreenConfig } from "../screenConfig/json";
 import { ResultsScreen } from "../screens";
 
@@ -7,15 +7,18 @@ export class ResultsScreenCreator {
     constructor(protected screenConfig: ScreenConfig, protected maxLines: number) {
     }
 
-    getScreen(lastRoundNumber: RoundNumber): ResultsScreen {
-
-        const screen = new ResultsScreen(this.screenConfig, this.maxLines);
-        this.addGames(screen, lastRoundNumber);
-        return screen;
+    getScreens(lastRoundNumber: RoundNumber, categories: Category[]): ResultsScreen[] {
+        return categories.map((category: Category): ResultsScreen => {
+            const screen = new ResultsScreen(this.screenConfig, this.maxLines);
+            this.addGames(screen, lastRoundNumber, new CategoryMap([category]));
+            return screen;
+        }).filter((resultsScreen: ResultsScreen): boolean => {
+            return !resultsScreen.isEmpty();
+        });
     }
 
-    protected addGames(screen: ResultsScreen, roundNumber: RoundNumber) {
-        let games: (AgainstGame | TogetherGame)[] = roundNumber.getGames(GameOrder.ByDate);
+    protected addGames(screen: ResultsScreen, roundNumber: RoundNumber, categoryMap: CategoryMap) {
+        let games: (AgainstGame | TogetherGame)[] = (new GameGetter()).getGames(GameOrder.ByDate, roundNumber, categoryMap);
         games = games.reverse().filter(game => game.getState() === GameState.Finished);
 
 
@@ -28,7 +31,7 @@ export class ResultsScreenCreator {
         if (!screen.hasEnoughLines()) {
             const previousRoundNumber = roundNumber.getPrevious();
             if (previousRoundNumber) {
-                this.addGames(screen, previousRoundNumber);
+                this.addGames(screen, previousRoundNumber, categoryMap);
             }
         }
     }

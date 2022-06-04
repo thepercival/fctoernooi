@@ -106,7 +106,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     }
 
     getNrOfPlaces(): number {
-        return this.structure.getFirstRoundNumber().getNrOfPlaces();
+        return this.structure.getRootRounds().reduce((sum, rootRound) => sum + rootRound.getNrOfPlaces(), 0);
     }
 
     allPlacesAssigned(): boolean {

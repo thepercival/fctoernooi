@@ -140,11 +140,15 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     initGameAmountConfigs(startRoundNumber: RoundNumber) {
-        startRoundNumber.getValidGameAmountConfigs().forEach((gameAmountConfig: GameAmountConfig) => {
+        this.getValidGameAmountConfigs(startRoundNumber).forEach((gameAmountConfig: GameAmountConfig) => {
             this.form.addControl('' + gameAmountConfig.getId(), new FormControl());
         });
         this.setGameAmountControls(startRoundNumber);
         this.gameAmountLabel = this.getGameAmountLabel(startRoundNumber.getCompetition().getSportVariants());
+    }
+
+    protected getValidGameAmountConfigs(roundNumber: RoundNumber): GameAmountConfig[] {
+        return this.competition.getSports().map(competitionSport => roundNumber.getValidGameAmountConfig(competitionSport));
     }
 
     // protected getCorrectAmount(
@@ -176,7 +180,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     setGameAmountControls(startRoundNumber: RoundNumber) {
         this.gameAmountConfigControls = [];
-        startRoundNumber.getValidGameAmountConfigs().forEach((gameAmountConfig: GameAmountConfig) => {
+        this.getValidGameAmountConfigs(startRoundNumber).forEach((gameAmountConfig: GameAmountConfig) => {
             const range = this.defaultService.getGameAmountRange(gameAmountConfig.getCompetitionSport().getVariant());
             this.gameAmountConfigControls.push({
                 json: this.gameAmountConfigMapper.toJson(gameAmountConfig),
@@ -244,7 +248,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.form.controls.minutesPerGameExt.setValue(json.minutesPerGameExt);
         this.form.controls.minutesBetweenGames.setValue(json.minutesBetweenGames);
         this.form.controls.minutesAfter.setValue(json.minutesAfter);
-        this.startRoundNumber.getValidGameAmountConfigs().forEach((gameAmountConfig: GameAmountConfig) => {
+        this.getValidGameAmountConfigs(this.startRoundNumber).forEach((gameAmountConfig: GameAmountConfig) => {
             const sportVariant = gameAmountConfig.getCompetitionSport().getVariant();
             const range = this.defaultService.getGameAmountRange(sportVariant);
             const id = '' + gameAmountConfig.getId();
@@ -409,7 +413,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     private savePlanning(action: PlanningAction) {
         if (action === PlanningAction.Recreate) {
-            this.planningRepository.create(this.structure, this.tournament, this.startRoundNumber.getNumber())
+            this.planningRepository.create(this.structure, this.tournament)
                 .subscribe({
                     next: () => {
                         this.setAlert(IAlertType.Success, 'de instellingen zijn opgeslagen');

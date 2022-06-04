@@ -1,4 +1,4 @@
-import { CompetitionSport, NameService, Poule, RoundNumber, GameState, Structure, StructureNameService } from "ngx-sport";
+import { CompetitionSport, RoundNumber, GameState, StructureNameService, Category, StructureCell } from "ngx-sport";
 import { ScreenConfig } from "../screenConfig/json";
 import { PoulesRankingScreen } from "../screens";
 
@@ -7,20 +7,28 @@ export class PouleRankingScreensCreator {
     constructor(protected screenConfig: ScreenConfig, protected maxLines: number) {
     }
 
-    getScreens(structure: Structure): PoulesRankingScreen[] {
+    getScreens(firstRoundNumber: RoundNumber, categories: Category[]): PoulesRankingScreen[] {
+        let screens: PoulesRankingScreen[] = [];
+        categories.forEach((category: Category) => {
+            const firstStructureCell = firstRoundNumber.getStructureCell(category);
+            screens = screens.concat(this.getCategoryScreens(firstStructureCell));
+        });
+        return screens;
+    }
+
+    getCategoryScreens(firstStructureCell: StructureCell): PoulesRankingScreen[] {
         const structureNameService = new StructureNameService();
         const screens: PoulesRankingScreen[] = [];
-        const firstRoundNumber = structure.getFirstRoundNumber();
-        const roundNumbers: RoundNumber[] = this.getRoundNumbersForPouleRankings(firstRoundNumber).filter(roundNumber => roundNumber.needsRanking());
-        if (roundNumbers.length === 0) {
+        const structureCells: StructureCell[] = this.getStructureCellsForPouleRankings(firstStructureCell).filter(structureCell => structureCell.needsRanking());
+        if (structureCells.length === 0) {
             return screens;
         }
-        const competitionSports = firstRoundNumber.getCompetitionSports();
+        const competitionSports = firstStructureCell.getRoundNumber().getCompetitionSports();
         competitionSports.forEach((competitionSport: CompetitionSport) => {
-            roundNumbers.forEach((roundNumber: RoundNumber) => {
-                const poulesForRanking = roundNumber.getPoules().filter(poule => poule.needsRanking());
+            structureCells.forEach((structureCell: StructureCell) => {
+                const poulesForRanking = structureCell.getPoules().filter(poule => poule.needsRanking());
 
-                const roundsDescription = structureNameService.getRoundNumberName(roundNumber);
+                const roundsDescription = structureNameService.getStructureCellName(structureCell);
                 let pouleOne = poulesForRanking.shift();
                 while (pouleOne !== undefined) {
                     const pouleTwo = poulesForRanking.shift();
@@ -33,17 +41,17 @@ export class PouleRankingScreensCreator {
         return screens;
     }
 
-    protected getRoundNumbersForPouleRankings(roundNumber: RoundNumber): RoundNumber[] {
-        if (roundNumber.getGamesState() === GameState.Created || roundNumber.getGamesState() === GameState.InProgress) {
-            return [roundNumber];
+    protected getStructureCellsForPouleRankings(structureCell: StructureCell): StructureCell[] {
+        if (structureCell.getGamesState() === GameState.Created || structureCell.getGamesState() === GameState.InProgress) {
+            return [structureCell];
         }
-        const nextRoundNumber = roundNumber.getNext();
-        if (nextRoundNumber === undefined) {
-            return [roundNumber];
+        const nextStructureCell = structureCell.getNext();
+        if (nextStructureCell === undefined) {
+            return [structureCell];
         }
-        if (nextRoundNumber.getGamesState() === GameState.Created) {
-            return [roundNumber, nextRoundNumber];
+        if (nextStructureCell.getGamesState() === GameState.Created) {
+            return [structureCell, nextStructureCell];
         }
-        return this.getRoundNumbersForPouleRankings(nextRoundNumber);
+        return this.getStructureCellsForPouleRankings(nextStructureCell);
     }
 }

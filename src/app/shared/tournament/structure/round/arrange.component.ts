@@ -80,17 +80,17 @@ export class StructureRoundArrangeComponent {
   }
 
   showHorizontal(): boolean {
-    const nrOfRounds = this.round.getNumber().getRounds().length;
+    const nrOfRounds = this.round.getNumber().getRounds(undefined).length;
     return nrOfRounds <= 8;
   }
 
   showVertical(): boolean {
-    const nrOfRounds = this.round.getNumber().getRounds().length;
+    const nrOfRounds = this.round.getNumber().getRounds(undefined).length;
     return nrOfRounds > 2;
   }
 
   horViewPortClass(): string {
-    const nrOfRounds = this.round.getNumber().getRounds().length;
+    const nrOfRounds = this.round.getNumber().getRounds(undefined).length;
     if (nrOfRounds <= 2) {
       return ''
     } else if (nrOfRounds <= 4) {
@@ -104,7 +104,7 @@ export class StructureRoundArrangeComponent {
   }
 
   vertViewPortClass(): string {
-    const nrOfRounds = this.round.getNumber().getRounds().length;
+    const nrOfRounds = this.round.getNumber().getRounds(undefined).length;
     if (nrOfRounds <= 2) {
       return 'd-none';
     } else if (nrOfRounds <= 4) {

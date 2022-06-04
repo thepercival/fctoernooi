@@ -144,7 +144,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   }
 
   protected updatePlanning() {
-    this.planningRepository.create(this.structure, this.tournament, 1)
+    this.planningRepository.create(this.structure, this.tournament)
       .subscribe({
         next: () => { },
         error: (e) => {

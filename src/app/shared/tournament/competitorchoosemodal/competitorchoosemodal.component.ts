@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Competitor, Place, StartLocationMap, Structure, StructureNameService } from 'ngx-sport';
+import { Competitor, Place, Round, StartLocationMap, Structure, StructureNameService } from 'ngx-sport';
 import { TournamentCompetitor } from '../../../lib/competitor';
 import { LockerRoom } from '../../../lib/lockerroom';
 import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
@@ -27,7 +27,7 @@ export class CompetitorChooseModalComponent implements OnInit {
     ngOnInit() {
         this.startLocationMap = new StartLocationMap(this.competitors);
         this.structureNameService = new StructureNameService(this.startLocationMap);
-        this.structure.getFirstRoundNumber().getPlaces().forEach((place: Place) => {
+        this.structure.getRootRounds().forEach((rootRound: Round) => rootRound.getPlaces().forEach((place: Place) => {
             const startLocation = place.getStartLocation();
             if (startLocation === undefined) {
                 return;
@@ -42,7 +42,7 @@ export class CompetitorChooseModalComponent implements OnInit {
                 selected: this.isSelected(competitor),
                 nrOtherLockerRooms: this.validator.nrArranged(competitor, this.lockerRoom)
             });
-        });
+        }));
     }
 
     hasSelectableCompetitors(): boolean {

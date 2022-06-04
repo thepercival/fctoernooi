@@ -22,10 +22,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
     styleUrls: ['./view.component.scss']
 })
 export class RankingViewComponent extends TournamentComponent implements OnInit {
-    public activeTab: number = 1;
     public favorites!: Favorites;
     public structureNameService!: StructureNameService;
-    public hasBegun: boolean = true;
 
     constructor(
         route: ActivatedRoute,
@@ -47,9 +45,7 @@ export class RankingViewComponent extends TournamentComponent implements OnInit 
             const startLocationMap = new StartLocationMap(this.tournament.getCompetitors());
             this.structureNameService = new StructureNameService(startLocationMap);
             this.favorites = this.favRepository.getObject(this.tournament, this.structure.getCategories());
-            if (this.structure.getLastRoundNumber().getGamesState() === GameState.Finished) {
-                this.activeTab = 2;
-            }
+
             this.processing = false;
         });
     }

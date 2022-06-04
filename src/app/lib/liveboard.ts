@@ -1,4 +1,4 @@
-import { Structure } from 'ngx-sport';
+import { Category, CategoryMap, RoundNumber, Structure } from 'ngx-sport';
 import { ScreenConfig } from './liveboard/screenConfig/json';
 import { ScreenConfigName } from './liveboard/screenConfig/name';
 import { EndRankingScreenCreator } from './liveboard/screenCreator/endRanking';
@@ -9,7 +9,6 @@ import { SponsorScreensCreator } from './liveboard/screenCreator/sponsors';
 
 import {
     EndRankingScreen,
-    LiveboardScreen,
     PoulesRankingScreen,
     ResultsScreen,
     ScheduleScreen,
@@ -21,27 +20,26 @@ export class Liveboard {
     static readonly MaxScreenLines: number = 8;
 
     constructor(private screenConfigs: ScreenConfig[]) {
+
     }
 
     // if more than one rank-screen, show schedulescreens in between
-    getScreens(tournament: Tournament, structure: Structure): (SponsorScreen | ResultsScreen | ScheduleScreen | EndRankingScreen | PoulesRankingScreen)[] {
+    getScreens(tournament: Tournament, firstRoundNumber: RoundNumber, categories: Category[]): (SponsorScreen | ResultsScreen | ScheduleScreen | EndRankingScreen | PoulesRankingScreen)[] {
         let screens: (SponsorScreen | ResultsScreen | ScheduleScreen | EndRankingScreen | PoulesRankingScreen)[] = [];
 
-        const resultsScreen = this.getResultsScreen(structure);
-        if (resultsScreen) {
-            screens.push(resultsScreen);
-        }
+        const resultsScreens = this.getResultsScreens(firstRoundNumber, categories);
+        resultsScreens.forEach((screenIt: ResultsScreen) => screens.push(screenIt));
 
-        const scheduleScreens: ScheduleScreen[] = this.getScheduleScreens(structure);
+        const scheduleScreens: ScheduleScreen[] = this.getScheduleScreens(firstRoundNumber, categories);
         scheduleScreens.forEach((screenIt: ScheduleScreen) => screens.push(screenIt));
 
-        const pouleRankingsScreens: PoulesRankingScreen[] = this.getPouleRankingScreens(structure);
+        const pouleRankingsScreens: PoulesRankingScreen[] = this.getPouleRankingScreens(firstRoundNumber, categories);
         pouleRankingsScreens.forEach((screenIt: PoulesRankingScreen) => screens.push(screenIt));
         if (pouleRankingsScreens.length > 0 && scheduleScreens.length > 0) {
             screens = screens.concat(scheduleScreens);
         }
 
-        const endRankingScreens: EndRankingScreen[] = this.getEndRankingScreens(structure);
+        const endRankingScreens: EndRankingScreen[] = this.getEndRankingScreens(categories);
         endRankingScreens.forEach((screenIt: EndRankingScreen) => screens.push(screenIt));
 
         const sponsorScreens: SponsorScreen[] = this.getSponsorScreens(tournament);
@@ -50,41 +48,40 @@ export class Liveboard {
         return screens;
     }
 
-    protected getResultsScreen(structure: Structure): ResultsScreen | undefined {
+    protected getResultsScreens(firstRoundNumber: RoundNumber, categories: Category[]): ResultsScreen[] {
         const screenConfig = this.getScreenConfig(ScreenConfigName.Results);
         if (screenConfig === undefined || !screenConfig.enabled) {
-            return undefined;
+            return [];
         }
         const resultsScreenCreator = new ResultsScreenCreator(screenConfig, Liveboard.MaxScreenLines);
-        const resultsScreen = resultsScreenCreator.getScreen(structure.getLastRoundNumber());
-        return resultsScreen.isEmpty() ? undefined : resultsScreen;
+        return resultsScreenCreator.getScreens(firstRoundNumber, categories);
     }
 
-    protected getScheduleScreens(structure: Structure): ScheduleScreen[] {
+    protected getScheduleScreens(firstRoundNumber: RoundNumber, categories: Category[]): ScheduleScreen[] {
         const screenConfig = this.getScreenConfig(ScreenConfigName.Schedule);
         if (screenConfig === undefined || !screenConfig.enabled) {
             return [];
         }
         const scheduleScreenCreator = new ScheduleScreenCreator(screenConfig, Liveboard.MaxScreenLines);
-        return scheduleScreenCreator.getScreens(structure.getFirstRoundNumber());
+        return scheduleScreenCreator.getScreens(firstRoundNumber, categories);
     }
 
-    protected getPouleRankingScreens(structure: Structure): PoulesRankingScreen[] {
+    protected getPouleRankingScreens(firstRoundNumber: RoundNumber, categories: Category[]): PoulesRankingScreen[] {
         const screenConfig = this.getScreenConfig(ScreenConfigName.PoulesRanking);
         if (screenConfig === undefined || !screenConfig.enabled) {
             return [];
         }
         const pouleRankingScreensCreator = new PouleRankingScreensCreator(screenConfig, Liveboard.MaxScreenLines);
-        return pouleRankingScreensCreator.getScreens(structure);
+        return pouleRankingScreensCreator.getScreens(firstRoundNumber, categories);
     }
 
-    protected getEndRankingScreens(structure: Structure): EndRankingScreen[] {
+    protected getEndRankingScreens(categories: Category[]): EndRankingScreen[] {
         const screenConfig = this.getScreenConfig(ScreenConfigName.EndRanking);
         if (screenConfig === undefined || !screenConfig.enabled) {
             return [];
         }
         const endRankingScreenCreator = new EndRankingScreenCreator(screenConfig, Liveboard.MaxScreenLines);
-        return endRankingScreenCreator.getScreens(structure);
+        return endRankingScreenCreator.getScreens(categories);
     }
 
     protected getSponsorScreens(tournament: Tournament): SponsorScreen[] {

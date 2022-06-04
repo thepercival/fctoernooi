@@ -137,7 +137,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
         this.refereeRepository.createObject(jsonReferee, this.tournament, this.invite)
             .subscribe({
                 next: (refereeRes: Referee) => {
-                    this.planningRepository.create(this.structure, this.tournament, 1)
+                    this.planningRepository.create(this.structure, this.tournament)
                         .subscribe({
                             next: () => {
                                 this.processing = false;

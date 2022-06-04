@@ -1,12 +1,11 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-sm-10 col-md-8 col-lg-6">
-      <app-tournament-title [tournament]="tournament"></app-tournament-title>
-      <div>
+      <div class="text-center">
         <h2>
           <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemer
         </h2>
-        <h2 *ngIf="processing" class="text-center">
+        <h2 *ngIf="processing">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
       </div>
@@ -17,8 +16,7 @@
             <label for="place" class="col-form-label">plek</label>
           </div>
           <div class="col-9">
-            <span class="form-control-plaintext">{{structureNameService.getPouleLetter(startLocation.getPouleNr())
-              }}{{startLocation.getPlaceNr()}}</span>
+            <span class="form-control-plaintext">{{getPlaceName()}}</span>
           </div>
         </div>
         <div class="row mb-3">
@@ -62,3 +60,6 @@
     </div>
   </div>
 </div>
+
+<app-tournament-navbar *ngIf="tournament" [tournament]="tournament">
+</app-tournament-navbar>

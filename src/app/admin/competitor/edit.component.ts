@@ -23,7 +23,7 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 @Component({
     selector: 'app-tournament-competitor-edit',
     templateUrl: './edit.component.html',
-    styleUrls: ['./edit.component.css']
+    styleUrls: ['./edit.component.scss']
 })
 export class CompetitorEditComponent extends TournamentComponent implements OnInit {
     form: FormGroup;
@@ -85,6 +85,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
             return;
         }
         this.startLocation = new StartLocation(categoryNr, pouleNr, placeNr);
+        console.log(this.startLocation);
         this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
         const startLocationMap = new StartLocationMap(this.tournament.getCompetitors());
         this.structureNameService = new StructureNameService(startLocationMap);
@@ -95,6 +96,11 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         this.form.controls.registered.setValue(this.originalCompetitor ? this.originalCompetitor.getRegistered() : false);
         this.form.controls.info.setValue(this.originalCompetitor?.getInfo());
         this.processing = false;
+    }
+
+    getPlaceName(): string {
+        const startPlace = this.structure.getStartPlace(this.startLocation);
+        return this.structureNameService.getPlaceName(startPlace);
     }
 
     formToJson(): JsonCompetitor {
@@ -169,7 +175,9 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
 
     isNameDuplicate(name: string, competitor: TournamentCompetitor | undefined): boolean {
         return this.tournament.getCompetitors().find((competitorIt: TournamentCompetitor) => {
-            return (name === competitorIt.getName() && (competitor === undefined || competitor !== competitorIt));
+            return name === competitorIt.getName()
+                && (competitor === undefined || competitor !== competitorIt)
+                && competitorIt.getStartLocation().getCategoryNr() === this.startLocation.getCategoryNr();
         }) !== undefined;
     }
 

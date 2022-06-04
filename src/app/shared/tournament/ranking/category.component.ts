@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { AgainstRuleSet, Category, CompetitionSport, StructureNameService } from 'ngx-sport';
+import { AgainstRuleSet, Category, CompetitionSport, GameState, StructureNameService } from 'ngx-sport';
 import { AuthService } from '../../../lib/auth/auth.service';
 import { Favorites } from '../../../lib/favorites';
 import { TournamentMapper } from '../../../lib/tournament/mapper';
@@ -18,7 +18,7 @@ export class RankingCategoryComponent implements OnInit {
     @Input() showHeader!: boolean;
     @Input() structureNameService!: StructureNameService;
 
-    public activeTabNr!: string;
+    public activeTabName!: string;
 
     constructor(
         protected tournamentMapper: TournamentMapper,
@@ -28,7 +28,16 @@ export class RankingCategoryComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.activeTabNr = this.getTabName(1);
+        this.initTabNr();
+    }
+
+    initTabNr(): void {
+
+        let activeTabNr = 1;
+        if (this.category.getRootRound().getStructureCell().getLast().getGamesState() === GameState.Finished) {
+            activeTabNr = 2;
+        }
+        this.activeTabName = this.getTabName(activeTabNr);
     }
 
     get RankingScreen(): TournamentScreen { return TournamentScreen.Ranking }

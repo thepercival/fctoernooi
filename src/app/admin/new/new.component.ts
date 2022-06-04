@@ -101,7 +101,7 @@ export class NewComponent implements OnInit {
           this.structureRepository.editObject(structure, tournament)
             .subscribe({
               next: (structureOut: Structure) => {
-                this.planningRepository.create(structureOut, tournament, 1)
+                this.planningRepository.create(structureOut, tournament)
                   .subscribe({
                     next: () => {
                       this.router.navigate(['/admin/structure', tournament.getId()]);

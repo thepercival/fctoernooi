@@ -1,12 +1,11 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-sm-10 col-md-8 col-lg-6">
-      <app-tournament-title [tournament]="tournament"></app-tournament-title>
-      <div>
+      <div class="text-center">
         <h2>
           <fa-icon [icon]="['fas', 'users']"></fa-icon> pauze toevoegen
         </h2>
-        <h2 *ngIf="processing" class="text-center">
+        <h2 *ngIf="processing">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
       </div>
@@ -73,3 +72,6 @@
     </div>
   </div>
 </div>
+
+<app-tournament-navbar [public]="false" *ngIf="tournament" [tournament]="tournament">
+</app-tournament-navbar>

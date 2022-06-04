@@ -6,65 +6,6 @@
       </h2>
 
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <!-- <div *ngIf="!processing && structure && ( isAdmin() || isRefereeOrGameResultAdmin() )"
-        class="d-flex flex-wrap gap-3 justify-content-center">
-        <div *ngIf="isAdmin()" class="card border-secondary pointer" (click)="linkToStructure()">
-          <div class="card-body">
-            <h5 class="card-title">
-              <app-tournament-icon name="structure"></app-tournament-icon> opzet
-            </h5>
-            <p class="card-text" *ngIf="!structure.getFirstRoundNumber().hasNext()">
-              1 ronde ingesteld
-            </p>
-            <p class="card-text text-nowrap" *ngIf="structure.getFirstRoundNumber().hasNext()">
-              meerdere ronde ingesteld
-            </p>
-          </div>
-        </div>
-        <div *ngIf="isAdmin()" class="card border-secondary pointer"
-          [routerLink]="['/admin/competitors', tournament.getId()]">
-          <div class="card-body">
-            <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
-            </h5>
-            <p class="card-text" *ngIf="allPlacesAssigned()">
-              <span *ngIf="!someCompetitorsRegistered()">
-                <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> alle namen ingevuld
-              </span>
-              <span *ngIf="someCompetitorsRegistered()">
-                <fa-icon [icon]="['fas', 'check-circle']" class="text-warning"></fa-icon> deelnemers aanmelden
-              </span>
-            </p>
-            <p class="card-text text-nowrap" *ngIf="!allPlacesAssigned()">
-              <fa-icon [icon]="['fas', 'times-circle']" class="text-warning"></fa-icon> vul de namen in
-              ({{getNrOfCompetitors()}}/{{getNrOfPlaces()}})
-            </p>
-          </div>
-        </div>
-        <div class="card {{getPlanningBorderClass()}} pointer" [routerLink]="['/admin/games', tournament.getId()]">
-          <div class="card-body">
-            <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijdplanning
-            </h5>
-
-            <ng-container *ngIf="!allPoulesHaveGames;else second">
-              <fa-icon class="text-danger" [icon]="['fas', 'info-circle']"></fa-icon> wordt berekend
-            </ng-container>
-            <ng-template #second>
-              <ng-container *ngIf="hasPlanningEditManualMode;else third">
-                <fa-icon class="text-warning" [icon]="['fas', 'exclamation-circle']"></fa-icon> handmatige planning
-              </ng-container>
-            </ng-template>
-            <ng-template #third>
-              <p class="card-text">
-                {{dateFormatter.toString(competition.getStartDateTime(),dateFormatter.datetime())}}
-              </p>
-            </ng-template>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div> -->
 
       <!-- option block referees, sports, lockerRooms, sponsors -->
       <div *ngIf="!processing && structure" class="d-flex flex-wrap gap-3 justify-content-center mt-3">
@@ -116,8 +57,8 @@
       <hr>
       <!-- option block start, ranking, liveScoreboard, changeName -->
       <div *ngIf="!processing && structure" class="d-flex flex-wrap gap-3 justify-content-center mt-3">
-        <!-- start & pauzes (ruleset) -->
-        <div class="card card-sub pointer" [routerLink]="['/public/ranking', tournament.getId()]">
+        <!-- start & pauzes -->
+        <div class="card card-sub pointer" [routerLink]="['/admin/startandrecesses', tournament.getId()]">
           <div class="card-body text-center p-1 pt-2">
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
@@ -242,57 +183,58 @@
                         </div>
                       </div> -->
     </div>
-    <app-tournament-navbar [public]="false" [currentScreen]="SettingsScreen" *ngIf="tournament"
-      [tournament]="tournament">
-    </app-tournament-navbar>
+  </div>
+</div>
+<app-tournament-navbar [public]="false" [currentScreen]="SettingsScreen" *ngIf="tournament" [tournament]="tournament">
+</app-tournament-navbar>
 
-    <!-- copy modal -->
-    <ng-template #contentcopy let-modal>
-      <div class="modal-header">
-        <h4 class="modal-title">
-          <fa-icon [icon]="['fas', 'copy']"></fa-icon> nieuwe editie
-        </h4>
-        <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
-      </div>
-      <div class="modal-body">
-        <div class="container-fluid">
-          <form *ngIf="!processing" name="form" (ngSubmit)="false" [formGroup]="copyForm" novalidate>
-            <div class="row mb-3">
-              <div class="col-5">
-                <label for="dp" class="col-form-label">startdatum</label>
-              </div>
-              <div class="col-7">
-                <div class="input-group input-group-date">
-                  <input class="form-control" formControlName="date" ngbDatepicker #d="ngbDatepicker" required
-                    [minDate]="minDateStruct">
-                  <span class="input-group-text pointer" (click)="d.toggle()">
-                    <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
-                  </span>
-                </div>
-              </div>
+<!-- copy modal -->
+<ng-template #contentcopy let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">
+      <fa-icon [icon]="['fas', 'copy']"></fa-icon> nieuwe editie
+    </h4>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
+  </div>
+  <div class="modal-body">
+    <div class="container-fluid">
+      <form *ngIf="!processing" name="form" (ngSubmit)="false" [formGroup]="copyForm" novalidate>
+        <div class="row mb-3">
+          <div class="col-5">
+            <label for="dp" class="col-form-label">startdatum</label>
+          </div>
+          <div class="col-7">
+            <div class="input-group input-group-date">
+              <input class="form-control" formControlName="date" ngbDatepicker #d="ngbDatepicker" required
+                [minDate]="minDateStruct">
+              <span class="input-group-text pointer" (click)="d.toggle()">
+                <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+              </span>
             </div>
-          </form>
+          </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="modal.close('copy')">naar nieuwe
-          editie</button>
-        <ngb-alert *ngIf="nrOfCredits === 1" class="mt-3" [type]="'info'">
-          je kunt nog 1 toernooi aanmaken, vraag daarna nieuwe credits aan</ngb-alert>
-      </div>
-    </ng-template>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="modal.close('copy')">naar nieuwe
+      editie</button>
+    <ngb-alert *ngIf="nrOfCredits === 1" class="mt-3" [type]="'info'">
+      je kunt nog 1 toernooi aanmaken, vraag daarna nieuwe credits aan</ngb-alert>
+  </div>
+</ng-template>
 
-    <!-- remove modal -->
-    <ng-template #contentremove let-modal>
-      <div class="modal-header">
-        <h4 class="modal-title">toernooi verwijderen</h4>
-        <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
-      </div>
-      <div class="modal-body">
-        <p>Weet je zeker dat je het toernooi wilt verwijderen?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="modal.close('remove')">nu
-          verwijderen</button>
-      </div>
-    </ng-template>
+<!-- remove modal -->
+<ng-template #contentremove let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">toernooi verwijderen</h4>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
+  </div>
+  <div class="modal-body">
+    <p>Weet je zeker dat je het toernooi wilt verwijderen?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="modal.close('remove')">nu
+      verwijderen</button>
+  </div>
+</ng-template>

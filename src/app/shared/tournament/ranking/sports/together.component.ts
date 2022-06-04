@@ -4,7 +4,6 @@ import { Poule, GameAmountConfig, ScoreConfigService, TogetherGame, CompetitionS
 import { CSSService } from '../../../common/cssservice';
 import { Favorites } from '../../../../lib/favorites';
 import { FavoritesRepository } from '../../../../lib/favorites/repository';
-import { Tournament } from '../../../../lib/tournament';
 import { ViewPort, ViewPortManager, ViewPortNrOfColumnsMap } from '../../../common/viewPortManager';
 
 @Component({

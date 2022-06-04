@@ -27,6 +27,7 @@ import {
     JsonAgainstGamePlace,
     StructureNameService,
     StartLocationMap,
+    CategoryMap,
 } from 'ngx-sport';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -108,7 +109,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
                     return;
                 }
                 this.roundNumber = roundNumber;
-                this.poules = this.roundNumber.getPoules();
+                this.poules = this.roundNumber.getPoules(new CategoryMap(this.structure.getCategories()));
                 this.competitionSports = this.roundNumber.getCompetitionSports();
                 this.initForm();
                 this.processing = false;

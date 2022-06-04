@@ -1,4 +1,4 @@
-import { AgainstGame, TogetherGame, Poule, GameMode, CompetitionSport } from 'ngx-sport';
+import { AgainstGame, TogetherGame, Poule, GameMode, CompetitionSport, Category } from 'ngx-sport';
 
 import { Sponsor } from '../sponsor';
 import { VoetbalRange } from 'ngx-sport';
@@ -55,9 +55,13 @@ export class PoulesRankingScreen extends LiveboardScreen {
 }
 
 export class EndRankingScreen extends LiveboardScreen {
-    constructor(config: ScreenConfig, public range: VoetbalRange) {
+    constructor(config: ScreenConfig, private category: Category, public range: VoetbalRange) {
         super(config);
         this.description = 'eindstand';
+    }
+
+    public getCategory(): Category {
+        return this.category;
     }
 }
 

@@ -142,7 +142,7 @@ export class CompetitionSportListComponent extends TournamentComponent implement
     this.competitionSportRepository.createObject(json, this.tournament, this.structure)
       .subscribe({
         next: (competitionSport: CompetitionSport) => {
-          this.planningRepository.create(this.structure, this.tournament, 1)
+          this.planningRepository.create(this.structure, this.tournament)
             .subscribe({
               next: () => this.setAlert(IAlertType.Success, 'de sport is toegevoegd'),
               error: (e) => {
@@ -176,7 +176,7 @@ export class CompetitionSportListComponent extends TournamentComponent implement
     this.competitionSportRepository.removeObject(competitionSport, this.tournament, this.structure)
       .subscribe({
         next: () => {
-          this.planningRepository.create(this.structure, this.tournament, 1)
+          this.planningRepository.create(this.structure, this.tournament)
             .subscribe({
               next: () => this.setAlert(IAlertType.Success, 'de sport is verwijderd'),
               error: (e) => {

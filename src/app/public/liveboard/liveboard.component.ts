@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { CSSService } from '../../shared/common/cssservice';
@@ -18,7 +18,6 @@ import { ScreenConfig } from '../../lib/liveboard/screenConfig/json';
 import { ScreenConfigName } from '../../lib/liveboard/screenConfig/name';
 import { ScreenConfigsModalComponent } from './screenconfigsmodal.component';
 import { Observable, of } from 'rxjs';
-import { SponsorMapper } from '../../lib/sponsor/mapper';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 
 @Component({
@@ -46,8 +45,7 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         favRepository: FavoritesRepository,
         private screenConfigRepository: ScreenConfigRepository,
         public cssService: CSSService,
-        private myNavigation: MyNavigation,
-        private sponsorMapper: SponsorMapper
+        private myNavigation: MyNavigation
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
     }
@@ -61,6 +59,7 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         });
 
         super.myNgOnInit(() => {
+            this.updateFavoriteCategories(this.structure);
             if (this.previewScreenConfig === undefined && !this.screenConfigRepository.hasObjects(this.tournament)) {
                 this.openConfigModal(this.screenConfigRepository.getDefaultObjects());
             } else {
@@ -80,9 +79,9 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     }
 
     // @TODO CDK CATEGORY - REMOVE FUNCTION
-    getDefaultCategory(): Category {
-        return this.structure.getCategories()[0];
-    }
+    // getDefaultCategory(): Category {
+    //     return this.structure.getCategories()[0];
+    // }
 
     protected getPreviewScreenConfig(screenConfigName: ScreenConfigName | undefined): ScreenConfig | undefined {
         if (screenConfigName === undefined) {
@@ -106,7 +105,7 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         this.globalEventsManager.toggleLiveboardIconInNavBar.emit(link);
         this.structureNameService = new StructureNameService(this.startLocationMap);
         const liveBoard = new Liveboard(screenConfigs);
-        this.screens = liveBoard.getScreens(this.tournament, this.structure);
+        this.screens = liveBoard.getScreens(this.tournament, this.structure.getFirstRoundNumber(), this.favoriteCategories);
         // console.log(this.screens);
         this.screenConfigs = screenConfigs;
         if (this.screens.length > 0) {
