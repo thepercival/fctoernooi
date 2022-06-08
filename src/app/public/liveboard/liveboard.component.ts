@@ -78,11 +78,6 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         });
     }
 
-    // @TODO CDK CATEGORY - REMOVE FUNCTION
-    // getDefaultCategory(): Category {
-    //     return this.structure.getCategories()[0];
-    // }
-
     protected getPreviewScreenConfig(screenConfigName: ScreenConfigName | undefined): ScreenConfig | undefined {
         if (screenConfigName === undefined) {
             return undefined;

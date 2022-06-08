@@ -2,13 +2,26 @@
   <h4 class="modal-title">selecteer ronden</h4>
   <button type="button" class="btn-close" aria-label="sluiten" (click)="activeModal.dismiss('cancel')"></button>
 </div>
-<div class="modal-body">
-  <app-tournament-select-round [toggleRound]="toggleRound" [first]="false" [hasOwnConfig]="hasOwnConfig"
-    [structureNameService]="structureNameService" (checkRoundsSelected)="checkRoundsSelected()">
-  </app-tournament-select-round>
+<div class="modal-body py-0">
+
+  <div *ngFor="let selectableCategory of selectableCategories" class="mx-auto card border-secondary mt-3">
+
+    <div class="card-cat-header px-3">
+      <h5 class="my-0">
+        <span class="fw-bold align-middle">{{selectableCategory.category.getName()}}</span>
+      </h5>
+    </div>
+
+    <div class="card-body p-0 pt-1 mb-1">
+      <app-tournament-select-round [selectableRoundNode]="selectableCategory.rootRoundNode" [first]="false"
+        [hasOwnConfig]="hasOwnConfig" [structureNameService]="structureNameService">
+      </app-tournament-select-round>
+    </div>
+  </div>
+
 </div>
 <div class="modal-footer border-top-0">
-  <button type="button" [disabled]="!someRoundSelected" class="btn btn-primary" data-dismiss="modal"
+  <button type="button" [disabled]="!getSomeRoundSelected()" class="btn btn-primary" data-dismiss="modal"
     (click)="close()">ga
     verder</button>
 </div>

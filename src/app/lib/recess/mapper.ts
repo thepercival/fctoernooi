@@ -11,7 +11,7 @@ export class RecessMapper {
     constructor() { }
 
     toObject(json: JsonRecess, tournament: Tournament): Recess {
-        const recess = new Recess(tournament, new Date(json.start), new Date(json.end));
+        const recess = new Recess(tournament, json.name, new Date(json.start), new Date(json.end));
         recess.setId(json.id);
         return recess;
     }
@@ -19,6 +19,7 @@ export class RecessMapper {
     toJson(recess: Recess): JsonRecess {
         return {
             id: recess.getId(),
+            name: recess.getName(),
             start: recess.getStartDateTime().toISOString(),
             end: recess.getEndDateTime().toISOString(),
         };

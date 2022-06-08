@@ -124,8 +124,7 @@
                         <button *ngIf="hasRoundNumbersChoice()" type="button"
                             (click)="openModalSelectStartRoundNumber()"
                             class="btn btn-outline-{{hasDifferentConfigs() ? 'warning' : 'primary'}}">
-                            <span
-                                [innerHTML]="structureNameService.getRoundNumbersName( startRoundNumber ) | keepHtml"></span>
+                            <span [innerHTML]="getRoundNumbersName( startRoundNumber ) | keepHtml"></span>
                         </button>
                     </div>
                     <div *ngIf="!startRoundNumber.hasBegun()" class="col-5">

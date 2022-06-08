@@ -229,7 +229,6 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         activeModal.componentInstance.subjects = this.getExportSubjectsFromDevice();
         activeModal.componentInstance.fieldDescription = this.getFieldDescription();
         activeModal.result.then((url: string) => {
-            window.open(url);
         }, (reason) => { });
     }
 

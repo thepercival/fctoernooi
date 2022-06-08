@@ -16,7 +16,7 @@ import { TranslateService } from '../../lib/translate';
 import { ScoreConfigRepository } from '../../lib/ngx-sport/scoreConfig/repository';
 import { Tournament } from '../../lib/tournament';
 import { IAlert, IAlertType } from '../../shared/common/alert';
-import { RoundsSelectorModalComponent, ToggleRound } from '../rounds/selector.component';
+import { RoundsSelectorModalComponent, SelectableCategory, SelectableRoundNode } from '../rounds/selector.component';
 import { forkJoin, Observable } from 'rxjs';
 
 @Component({
@@ -32,7 +32,7 @@ export class ScoreConfigEditComponent implements OnInit {
     public alert: IAlert | undefined;
     public processing: boolean = true;
     public form: FormGroup;
-    protected toggleRound!: ToggleRound;
+    protected selectableCategories!: SelectableCategory[];
     public originalScoreConfig!: ScoreConfig;
     readonly: boolean = true;
 
@@ -40,7 +40,6 @@ export class ScoreConfigEditComponent implements OnInit {
         minScore: 0,
         maxScore: 9999
     };
-
 
     constructor(
         private scoreConfigRepository: ScoreConfigRepository,
@@ -63,40 +62,32 @@ export class ScoreConfigEditComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.initToggleRound();
+        this.initSelectableCategories();
     }
 
-    // @TODO CDK CATEGORY - REMOVE FUNCTION
-    getDefaultCategory(): Category {
-        return this.structure.getCategories()[0];
+    structureHasMultipleRounds(): boolean {
+        return this.structure.getCategories().length > 1 || this.structure.getSingleCategory().getRootRound().getChildren().length > 1;
     }
 
-    initToggleRound() {
-        const toggleRoundInittializer = new ToggleRoundInittializer(this.competitionSport,
+    initSelectableCategories() {
+        const selectableCategoriesCreator = new SelectableCategoriesCreator(this.competitionSport,
             (round: Round, competitionSport: CompetitionSport) => {
                 return round.getScoreConfig(competitionSport);
             });
-        this.toggleRound = toggleRoundInittializer.createToggleRound(this.getDefaultCategory().getRootRound());
-        this.originalScoreConfig = this.toggleRound.round.getValidScoreConfig(this.competitionSport);
-        this.postToggleRoundChange();
+        this.selectableCategories = selectableCategoriesCreator.create(this.structure.getCategories());
+        this.originalScoreConfig = this.getFirstSelectedRoundNode().round.getValidScoreConfig(this.competitionSport);
+        this.postRoundsSelection();
     }
 
-    // hasACustomScoreConfig(round: Round): boolean {
-    //     if (round.getScoreConfig(this.competitionSport) !== undefined) {
-    //         return true;
-    //     }
-    //     return round.getChildren().some((child: Round) => this.hasACustomScoreConfig(child));
-    // }
 
-    protected postToggleRoundChange() {
-        this.readonly = this.allSelectedToggleRoundsBegun(this.toggleRound);
+    protected postRoundsSelection() {
+        this.readonly = this.someSelectedHasBegun(this.selectableCategories.map(selectableCategory => selectableCategory.rootRoundNode));
+        this.alert = undefined;
         if (this.readonly) {
-            this.alert = { type: IAlertType.Warning, message: 'er zijn wedstrijden gespeeld voor gekozen ronden, je kunt niet meer wijzigen' };
-        } else if (this.someSelectedToggleRoundsBegun(this.toggleRound)) {
-            this.alert = { type: IAlertType.Warning, message: 'er zijn wedstrijden gespeeld voor sommige gekozen ronden, de score-regels hiervoor worden niet opgeslagen' };
+            this.alert = { type: IAlertType.Warning, message: 'er zijn wedstrijden gespeeld voor (sommige) gekozen ronden, je kunt niet meer wijzigen' };
         }
 
-        const scoreConfigInit = this.getFirstSelectedToggleRound(this.toggleRound).round.getValidScoreConfig(this.competitionSport);
+        const scoreConfigInit = this.getFirstSelectedRoundNode().round.getValidScoreConfig(this.competitionSport);
         // this.jsonScoreConfig = this.getInputJson(this.getFirstSelectedToggleRound(this.toggleRound).round);
         this.initForm(scoreConfigInit);
     }
@@ -171,40 +162,37 @@ export class ScoreConfigEditComponent implements OnInit {
     openSelectRoundsModal() {
         const modalRef = this.modalService.open(RoundsSelectorModalComponent);
         modalRef.componentInstance.competitionSport = this.competitionSport;
-        modalRef.componentInstance.toggleRound = this.toggleRound;
+        modalRef.componentInstance.selectableCategories = this.selectableCategories;
         modalRef.componentInstance.subject = 'de score-regels';
         modalRef.componentInstance.hasOwnConfig = (round: Round): boolean => {
             return round.getScoreConfig(this.competitionSport) !== undefined;
         };
-        modalRef.result.then((result: ToggleRound) => {
-            this.toggleRound = result;
-            this.postToggleRoundChange();
+        modalRef.result.then((selectableCategories: SelectableCategory[]) => {
+            this.selectableCategories = selectableCategories;
+            this.postRoundsSelection();
         }, (reason) => { });
     }
 
-    allSelectedToggleRoundsBegun(toggleRound: ToggleRound): boolean {
-        return toggleRound.round.getNumber().hasBegun() && toggleRound.children.every(child => {
-            return this.allSelectedToggleRoundsBegun(child);
+    someSelectedHasBegun(selectableRoundNodes: SelectableRoundNode[]): boolean {
+        return selectableRoundNodes.some((selectableRoundNode: SelectableRoundNode): boolean => {
+            return selectableRoundNode.round.hasBegun() || this.someSelectedHasBegun(selectableRoundNode.children);
         });
     }
 
-    someSelectedToggleRoundsBegun(toggleRound: ToggleRound): boolean {
-        return toggleRound.round.getNumber().hasBegun() || toggleRound.children.some(child => {
-            return this.someSelectedToggleRoundsBegun(child);
-        });
-    }
-
-    getFirstSelectedToggleRound(toggleRound: ToggleRound): ToggleRound {
-        if (toggleRound.selected) {
-            return toggleRound;
-        }
-        const selected = toggleRound.children.find(child => {
-            return this.getFirstSelectedToggleRound(child);
-        });
+    getFirstSelectedRoundNode(): SelectableRoundNode {
+        const selected = this.selectableCategories.map(selectableCategory => selectableCategory.rootRoundNode)
+            .find(selectableRootRoundNode => this.getFirstSelectedRoundNodeHelper(selectableRootRoundNode) !== undefined);
         if (selected === undefined) {
             throw Error('at least one round should be selected');
         }
         return selected;
+    }
+
+    getFirstSelectedRoundNodeHelper(selectableRoundNode: SelectableRoundNode): SelectableRoundNode | undefined {
+        if (selectableRoundNode.selected) {
+            return selectableRoundNode;
+        }
+        return selectableRoundNode.children.find(child => this.getFirstSelectedRoundNodeHelper(child));
     }
 
     getPluralName(): string {
@@ -237,20 +225,26 @@ export class ScoreConfigEditComponent implements OnInit {
         this.processing = true;
         const jsonScoreConfig: JsonScoreConfig = this.formToJson();
 
-        const toggleRoundConverter = new ToggleRoundConverter();
-        const roundsSelection = toggleRoundConverter.createRoundsSelection(this.toggleRound);
+        const selectableCategoryConverter = new SelectableCategoryConverter();
+        const categoriesSelection = selectableCategoryConverter.createCategoriesSelection(this.selectableCategories);
 
-        // 1 koppel alle valid scoreregels van de unchangedChildRounds
+
+        const reposUpdates: Observable<ScoreConfig>[] = [];
         const validScoreConfigs: ValidScoreConfigOfUnchangedChildRound[] = [];
-        roundsSelection.unchangedDescendants.forEach((unchangedChildRound: Round) => {
-            const scoreConfig = unchangedChildRound.getValidScoreConfig(this.competitionSport);
-            validScoreConfigs.push({ unchangedChildRound, scoreConfig: this.mapper.toJson(scoreConfig) });
+        categoriesSelection.forEach((roundsSelection: RoundsSelection) => {
+
+            // 1 koppel alle valid scoreregels van de unchangedChildRounds
+            roundsSelection.unchangedDescendants.forEach((unchangedChildRound: Round) => {
+                const scoreConfig = unchangedChildRound.getValidScoreConfig(this.competitionSport);
+                validScoreConfigs.push({ unchangedChildRound, scoreConfig: this.mapper.toJson(scoreConfig) });
+            });
+
+            // 2 verwijder en voeg de scoreregels toe van de rootRounds
+            roundsSelection.rootRounds.forEach((round: Round) => {
+                reposUpdates.push(this.scoreConfigRepository.saveObject(jsonScoreConfig, round, this.tournament));
+            });
         });
 
-        // 2 verwijder en voeg de scoreregels toe van de rootRounds
-        const reposUpdates: Observable<ScoreConfig>[] = roundsSelection.rootRounds.map((round: Round) => {
-            return this.scoreConfigRepository.saveObject(jsonScoreConfig, round, this.tournament);
-        });
         forkJoin(reposUpdates)
             .subscribe({
                 next: () => {
@@ -285,33 +279,38 @@ export class ScoreConfigEditComponent implements OnInit {
  * wanneer 1 van deze ronden een eigen config heeft, dan meteen de gebruiker laten kiezen
  * wanneer het toernooi is afgelopen, selecteer dan de rootround
  */
-export class ToggleRoundInittializer {
+export class SelectableCategoriesCreator {
     constructor(
         private competitionSport: CompetitionSport,
         private hasOwnConfig: Function
     ) {
     }
 
-    createToggleRound(rootRound: Round): ToggleRound {
-        const toggleRound = this.createHelper(rootRound, false);
-        if (!this.isSomeSelected(toggleRound)) {
-            toggleRound.selected = true;
-        }
-        return toggleRound;
+    create(categories: Category[]): SelectableCategory[] {
+        return categories.map((category: Category): SelectableCategory => {
+            const rootRoundNode = this.createSelectableRoundNode(category.getRootRound(), false);
+            if (!this.isSomeSelected(rootRoundNode)) {
+                rootRoundNode.selected = true;
+            }
+            return {
+                category,
+                rootRoundNode
+            };
+        })
     }
 
-    protected createHelper(round: Round, differentPreviousSibblingConfig: boolean, parent?: ToggleRound): ToggleRound {
-        const toggleRound: ToggleRound = {
+    protected createSelectableRoundNode(round: Round, differentPreviousSibblingConfig: boolean, parent?: SelectableRoundNode): SelectableRoundNode {
+        const selectableRoundNode: SelectableRoundNode = {
             parent,
             round,
             selected: false,
             children: []
         };
-        toggleRound.selected = this.select(toggleRound, differentPreviousSibblingConfig);
+        selectableRoundNode.selected = this.select(selectableRoundNode, differentPreviousSibblingConfig);
 
         let previousSibblingConfig: ScoreConfig | undefined;
         let differentPreviousSibblingConfigChild = false;
-        toggleRound.children = round.getChildren().map((childRound: Round): ToggleRound => {
+        selectableRoundNode.children = round.getChildren().map((childRound: Round): SelectableRoundNode => {
             const roundConfig = round.getValidScoreConfig(this.competitionSport);
             if (!previousSibblingConfig) {
                 previousSibblingConfig = roundConfig;
@@ -319,9 +318,9 @@ export class ToggleRoundInittializer {
             if (previousSibblingConfig !== roundConfig) {
                 differentPreviousSibblingConfigChild = true;
             }
-            return this.createHelper(childRound, differentPreviousSibblingConfigChild, toggleRound);
+            return this.createSelectableRoundNode(childRound, differentPreviousSibblingConfigChild, selectableRoundNode);
         });
-        return toggleRound;
+        return selectableRoundNode;
     }
 
     protected hasDifferentConfigs(rounds: Round[]): boolean {
@@ -336,68 +335,72 @@ export class ToggleRoundInittializer {
         });
     }
 
-    protected select(toggleRound: ToggleRound, differentPreviousSibblingConfig: boolean): boolean {
-        if (toggleRound.round.getNumber().hasBegun()) {
+    protected select(selectableRoundNode: SelectableRoundNode, differentPreviousSibblingConfig: boolean): boolean {
+        if (selectableRoundNode.round.getNumber().hasBegun()) {
             return false;
         }
-        if (!this.ancestorSelected(toggleRound) && !differentPreviousSibblingConfig) {
+        if (!this.ancestorSelected(selectableRoundNode) && !differentPreviousSibblingConfig) {
             return true;
         }
-        if (this.hasOwnConfig(toggleRound.round, this.competitionSport)) {
+        if (this.hasOwnConfig(selectableRoundNode.round, this.competitionSport)) {
             return false;
         }
-        return toggleRound.parent !== undefined && toggleRound.parent.selected;
+        return selectableRoundNode.parent !== undefined && selectableRoundNode.parent.selected;
     }
 
-    protected ancestorSelected(toggleRound: ToggleRound): boolean {
-        if (!toggleRound.parent) {
+    protected ancestorSelected(selectableRoundNode: SelectableRoundNode): boolean {
+        if (!selectableRoundNode.parent) {
             return false;
         }
-        if (toggleRound.parent.selected) {
+        if (selectableRoundNode.parent.selected) {
             return true;
         }
-        return this.ancestorSelected(toggleRound.parent);
+        return this.ancestorSelected(selectableRoundNode.parent);
     }
 
-    isSomeSelected(toggleRound: ToggleRound): boolean {
-        return toggleRound.selected || toggleRound.children.some((child: ToggleRound) => this.isSomeSelected(child));
+    isSomeSelected(selectableRoundNode: SelectableRoundNode): boolean {
+        return selectableRoundNode.selected || selectableRoundNode.children.some((child: SelectableRoundNode) => this.isSomeSelected(child));
     }
 }
 
-export class ToggleRoundConverter {
+export class SelectableCategoryConverter {
     constructor(
     ) {
     }
 
-    createRoundsSelection(toggleRound: ToggleRound): RoundsSelection {
+    createCategoriesSelection(selectableCategories: SelectableCategory[]): RoundsSelection[] {
+        return selectableCategories.map(category => this.createCategoryRoundsSelection(category));
+    }
+
+    createCategoryRoundsSelection(selectableCategory: SelectableCategory): RoundsSelection {
         const selection: RoundsSelection = {
             rootRounds: [],
             unchangedDescendants: []
         }
-        this.updateRoundsSelection(toggleRound, selection);
+        this.updateRoundsSelection(selectableCategory.rootRoundNode, selection);
         return selection;
     }
 
-    protected updateRoundsSelection(toggleRound: ToggleRound, selection: RoundsSelection) {
+    protected updateRoundsSelection(selectableRoundNode: SelectableRoundNode, selection: RoundsSelection) {
 
-        if (toggleRound.selected && !this.hasSelectedAncestor(toggleRound)) {
-            selection.rootRounds.push(toggleRound.round);
+        if (selectableRoundNode.selected && !this.hasSelectedAncestor(selectableRoundNode)) {
+            selection.rootRounds.push(selectableRoundNode.round);
         }
-        if (!toggleRound.selected && this.hasSelectedAncestor(toggleRound)
-            && toggleRound.parent && toggleRound.parent.selected) {
-            selection.unchangedDescendants.push(toggleRound.round);
+        if (!selectableRoundNode.selected && this.hasSelectedAncestor(selectableRoundNode)
+            && selectableRoundNode.parent && selectableRoundNode.parent.selected) {
+            selection.unchangedDescendants.push(selectableRoundNode.round);
         }
-        toggleRound.children.forEach(child => this.updateRoundsSelection(child, selection));
+        selectableRoundNode.children.forEach(child => this.updateRoundsSelection(child, selection));
     }
 
-    protected hasSelectedAncestor(toggleRound: ToggleRound): boolean {
-        if (!toggleRound.parent) {
+    protected hasSelectedAncestor(selectableRoundNode: SelectableRoundNode): boolean {
+        if (!selectableRoundNode.parent) {
             return false;
         }
-        if (toggleRound.parent.selected) {
+        if (selectableRoundNode.parent.selected) {
             return true;
         }
-        return this.hasSelectedAncestor(toggleRound.parent);
+        return this.hasSelectedAncestor(selectableRoundNode.parent);
     }
 }
 

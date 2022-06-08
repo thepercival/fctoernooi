@@ -8,7 +8,7 @@
       [ngClass]="{pointer: !roundNumber.hasBegun()}" (click)="sendRoundNumber(roundNumber)">
       <div class="d-flex justify-content-between">
         <label for="roundNumber-{{roundNumber.getNumber()}}" class="mb-0">
-          <span [innerHTML]="structureNameService.getRoundNumbersName( roundNumber ) | keepHtml"></span>
+          <span [innerHTML]="getRoundNumbersName( roundNumber ) | keepHtml"></span>
           <span *ngIf="roundNumber.hasBegun()" class="badge bg-warning ms-1" pull="left">begonnen</span>
           <span *ngIf="showDifferentConfig(roundNumber)" class="badge bg-warning ms-1" pull="left">verschillend</span>
         </label>

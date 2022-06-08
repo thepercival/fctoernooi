@@ -1,42 +1,44 @@
-<div *ngIf="toggleRound" [ngClass]="{ 'ps-1': !first, 'pe-1': !toggleRound.parent }">
+<div *ngIf="selectableRoundNode" [ngClass]="{ 'ps-1': !first, 'pe-1': !selectableRoundNode.parent }">
   <form name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
-    <div class="card border-secondary round mb-2 {{cssService.getQualifyRound(toggleRound.round)}}"
-      *ngIf="!toggleRound.parent || toggleRound.round.getNrOfPlaces() > 2">
+    <div class="card border-secondary round {{cssService.getQualifyRound(selectableRoundNode.round)}}"
+      *ngIf="!selectableRoundNode.parent || selectableRoundNode.round.getNrOfPlaces() > 2">
       <div class="card-header px-1 text-center form-group">
         <div class="form-check form-switch">
           <input type="checkbox" class="form-check-input" [id]="getCustomSwitchId()" formControlName="selected"
             (ngModelChange)="toggleSelection()">
-          <label class="form-check-label" [for]="getCustomSwitchId()"><span class="lead"
-              [innerHTML]="structureNameService.getRoundName( toggleRound.round ) | keepHtml"></span></label>
+          <label class="form-check-label" [for]="getCustomSwitchId()"><span
+              [innerHTML]="structureNameService.getRoundName( selectableRoundNode.round ) | keepHtml"></span></label>
           <fa-icon *ngIf="hasOwnConfig2()" class="ms-1" [icon]="['fas', 'cogs']"></fa-icon>
         </div>
       </div>
-      <div class="card-body px-1">
+      <div class="card-body">
         <div class="d-flex flex-wrap justify-content-around">
-          <ul *ngFor="let poule of toggleRound.round.getPoules();" class="list-group mb-3">
-            <li class="list-group-item disabled px-2 py-2">
-              {{structureNameService.getPouleName( poule, !toggleRound.parent && toggleRound.round.getPoules().length <=
-                2)}} </li>
+          <ul *ngFor="let poule of selectableRoundNode.round.getPoules();" class="list-group mb-3">
+            <li class="list-group-item disabled px-1 py-1">
+              {{structureNameService.getPouleName( poule, !selectableRoundNode.parent &&
+              selectableRoundNode.round.getPoules().length <= 2)}} </li>
           </ul>
         </div>
       </div>
     </div>
     <div class="d-flex align-items-stretch text-center">
-      <app-tournament-select-round *ngFor="let toggleChildRound of toggleRound.children; first as first"
-        class="align-self-stretch flex-wrap mb-2" [toggleRound]="toggleChildRound" [hasOwnConfig]="hasOwnConfig"
-        [structureNameService]="structureNameService" [first]="first" (checkRoundsSelected)="emitRoundsSelected()">
+      <app-tournament-select-round *ngFor="let selectableChildRoundNode of selectableRoundNode.children; first as first"
+        class="align-self-stretch flex-wrap mt-1 mb-0" [selectableRoundNode]="selectableChildRoundNode"
+        [hasOwnConfig]="hasOwnConfig" [structureNameService]="structureNameService" [first]="first"
+        (checkRoundsSelected)="emitRoundsSelected()">
       </app-tournament-select-round>
     </div>
-    <div *ngIf="toggleRound.parent && toggleRound.round.getNrOfPlaces() === 2">
-      <div class="card round {{cssService.getQualifyRound(toggleRound.round)}}">
-        <div class="card-header px-1">
-          <span [innerHTML]="structureNameService.getRoundName(toggleRound.round) | keepHtml"></span>
+    <div *ngIf="selectableRoundNode.parent && selectableRoundNode.round.getNrOfPlaces() === MinPlacesPerPoule">
+      <div class="card round {{cssService.getQualifyRound(selectableRoundNode.round)}}">
+
+        <div class="card-header px-1 text-center form-group">
           <div class="form-check form-switch">
             <input type="checkbox" class="form-check-input" [id]="getCustomSwitchId()" formControlName="selected"
               (ngModelChange)="toggleSelection()">
-            <label class="form-check-label" [for]="getCustomSwitchId()"></label>
+            <label class="form-check-label" [for]="getCustomSwitchId()"><span
+                [innerHTML]="structureNameService.getRoundName( selectableRoundNode.round ) | keepHtml"></span></label>
+            <fa-icon *ngIf="hasOwnConfig2()" class="ms-1" [icon]="['fas', 'cogs']"></fa-icon>
           </div>
-          <fa-icon *ngIf="hasOwnConfig2()" class="ms-1" [icon]="['fas', 'cogs']"></fa-icon>
         </div>
       </div>
     </div>

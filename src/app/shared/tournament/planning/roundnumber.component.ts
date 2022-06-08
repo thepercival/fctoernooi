@@ -77,6 +77,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   private scoreConfigService: ScoreConfigService;
   public needsRanking: boolean = false;
   public hasMultiplePoules: boolean = false;
+  public hasMultipleCategories: boolean = false;
   public planningConfig!: PlanningConfig;
   public hasOnlyGameModeAgainst: boolean = true;
   public hasGameModeAgainst: boolean = true;
@@ -108,6 +109,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     this.needsRanking = this.roundNumber.getStructureCells().some(structureCell => structureCell.needsRanking());
     const rounds = this.roundNumber.getRounds(undefined);
     this.hasMultiplePoules = rounds.length > 1 || rounds.every(round => round.getPoules().length > 1);
+    this.hasMultipleCategories = this.favoriteCategories?.length > 1;
     this.hasSomeReferees = this.tournament.getCompetition().getReferees().length > 0
       || this.planningConfig.getSelfReferee() !== SelfReferee.Disabled;
     this.hasBegun = this.roundNumber.hasBegun();
@@ -250,7 +252,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
       pouleDatas.set(poule.getId(), {
         name: this.structureNameService.getPouleName(poule, false),
         needsRanking: poule.needsRanking(),
-        round
+        round,
+        categoryName: round.getCategory().getName()
       });
     }));
     return pouleDatas;
@@ -535,6 +538,7 @@ interface PouleData {
   name: string;
   needsRanking: boolean;
   round: Round;
+  categoryName: string
 }
 
 class PouleDataMap extends Map<string | number, PouleData> { }

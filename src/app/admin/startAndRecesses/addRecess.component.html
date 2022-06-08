@@ -13,6 +13,16 @@
       <form *ngIf="!processing && !hasBegun" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
         <div class="row my-3">
           <div class="col-3">
+            <label for="name" class="col-form-label">naam</label>
+          </div>
+          <div class="col-9 col-sm-6">
+            <input class="form-control" required
+              [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
+              formControlName="name">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-3">
             <label for="startdate" class="col-form-label">start</label>
           </div>
           <div class="col-9">

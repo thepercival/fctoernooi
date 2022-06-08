@@ -7,6 +7,7 @@ import { Recess } from '../recess';
 
 import { APIRepository } from '../repository';
 import { Tournament } from '../tournament';
+import { JsonRecess } from './json';
 
 @Injectable({
     providedIn: 'root'
@@ -27,10 +28,12 @@ export class RecessRepository extends APIRepository {
         return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
     }
 
-    createObject(jsonPeriod: JsonPeriod, tournament: Tournament): Observable<Recess> {
-        return this.http.post<JsonPeriod>(this.getUrl(tournament), jsonPeriod, this.getOptions()).pipe(
-            map((resPeriod: JsonPeriod): Recess => {
-                return new Recess(tournament, new Date(resPeriod.start), new Date(resPeriod.end));
+    createObject(jsonRecess: JsonRecess, tournament: Tournament): Observable<Recess> {
+        return this.http.post<JsonRecess>(this.getUrl(tournament), jsonRecess, this.getOptions()).pipe(
+            map((jsonRecessResult: JsonRecess): Recess => {
+                const recess = new Recess(tournament, jsonRecessResult.name, new Date(jsonRecessResult.start), new Date(jsonRecessResult.end));
+                recess.setId(jsonRecessResult.id);
+                return recess;
             }),
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );

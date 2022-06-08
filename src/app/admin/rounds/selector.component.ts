@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Round, CompetitionSport, StructureNameService } from 'ngx-sport';
+import { Round, CompetitionSport, StructureNameService, Category } from 'ngx-sport';
 
 @Component({
     selector: 'app-ngbd-modal-rounds',
@@ -10,10 +10,9 @@ export class RoundsSelectorModalComponent implements OnInit {
     @Input() subject!: string;
     @Input() competitionSport!: CompetitionSport;
     @Input() hasOwnConfig!: Function;
-    @Input() toggleRound!: ToggleRound;
+    @Input() selectableCategories!: SelectableCategory[];
 
     public structureNameService: StructureNameService;
-    public someRoundSelected: boolean = false;
     processing = true;
 
     constructor(
@@ -24,27 +23,41 @@ export class RoundsSelectorModalComponent implements OnInit {
 
     ngOnInit() {
         this.processing = false;
+        // this.someRoundSelected = this.selectableCategories.some((selectableCategory: SelectableCategory): boolean => {
+        //     return this.areSomeRoundsSelected(selectableCategory.rootRoundNode);
+        // });
     }
 
-    checkRoundsSelected() {
-        this.someRoundSelected = this.areSomeRoundsSelected(this.toggleRound);
+    // setSomeRoundsSelected(selectableRoundNode: SelectableRoundNode) {
+    //     this.someRoundSelected = this.areSomeRoundsSelected(selectableRoundNode);
+    // }
+
+    getSomeRoundSelected(): boolean {
+        return this.selectableCategories.some((selectableCategory: SelectableCategory): boolean => {
+            return this.areSomeRoundsSelected(selectableCategory.rootRoundNode);
+        });
     }
 
-    protected areSomeRoundsSelected(toggleRound: ToggleRound): boolean {
-        if (toggleRound.selected) {
+    protected areSomeRoundsSelected(selectableRoundNode: SelectableRoundNode): boolean {
+        if (selectableRoundNode.selected) {
             return true;
         }
-        return toggleRound.children.some(child => this.areSomeRoundsSelected(child));
+        return selectableRoundNode.children.some(child => this.areSomeRoundsSelected(child));
     }
 
     close() {
-        return this.activeModal.close(this.toggleRound);
+        return this.activeModal.close(this.selectableCategories);
     }
 }
 
-export interface ToggleRound {
-    parent: ToggleRound | undefined;
+export interface SelectableCategory {
+    category: Category;
+    rootRoundNode: SelectableRoundNode;
+}
+
+export interface SelectableRoundNode {
+    parent: SelectableRoundNode | undefined;
     round: Round;
     selected: boolean;
-    children: ToggleRound[];
+    children: SelectableRoundNode[];
 }

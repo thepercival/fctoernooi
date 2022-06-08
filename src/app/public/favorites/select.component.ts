@@ -58,11 +58,6 @@ export class SelectFavoritesComponent extends TournamentComponent implements OnI
 
     get FavoritesScreen(): TournamentScreen { return TournamentScreen.Favorites }
 
-    // @TODO CDK CATEGORY - REMOVE FUNCTION
-    getDefaultCategory(structure: Structure): Category {
-        return structure.getCategories()[0];
-    }
-
     hasCompetitors() {
         return this.tournament.getCompetitors().length > 0;
     }

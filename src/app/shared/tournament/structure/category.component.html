@@ -1,18 +1,18 @@
 <div *ngIf="category">
   <div class="card border-secondary">
 
-    <div class="card-header px-3">
+    <div class="card-cat-header px-3">
       <div class="d-flex justify-content-between">
         <h5 class="my-0">
           <span class="fw-bold align-middle">{{category.getName()}}</span>
-          <button *ngIf="editable" class="btn btn-sm btn-outline-primary ms-1" (click)="changeName(category)">
+          <button *ngIf="editable" class="btn btn-sm btn-primary ms-1" (click)="changeName(category)">
             <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
           </button>
-          <button *ngIf="movable" class="btn btn-sm btn-outline-secondary ms-1" (click)="moveCategoryUp.emit(category)">
+          <button *ngIf="movable" class="btn btn-sm btn-secondary ms-1" (click)="moveCategoryUp.emit(category)">
             <fa-icon [icon]="['fas', 'level-up-alt']"></fa-icon>
           </button>
         </h5>
-        <button *ngIf="editable" class="btn btn-sm btn-outline-danger ms-1" (click)="remove.emit(category)">
+        <button *ngIf="editable" class="btn btn-sm btn-danger ms-1" (click)="remove.emit(category)">
           <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
         </button>
       </div>

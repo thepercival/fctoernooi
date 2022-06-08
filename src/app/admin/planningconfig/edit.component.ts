@@ -467,6 +467,17 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             this._changingStartRoundNumber.next(startRoundNumber);
         }, (reason) => { });
     }
+
+    // @TODO CDK UPDATE
+    getRoundNumbersName(startRoundNumber: RoundNumber): string {
+        if (startRoundNumber.getNumber() === 1) {
+            return 'alle ronden';
+        }
+        if (startRoundNumber.hasNext()) {
+            return 'vanaf de ' + this.structureNameService.getRoundNumberName(startRoundNumber);
+        }
+        return 'alleen de ' + this.structureNameService.getRoundNumberName(startRoundNumber);
+    }
 }
 
 class PlanningActionCalculator {

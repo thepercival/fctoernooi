@@ -6,6 +6,7 @@ import {
   CompetitionSportService,
   Competitor,
   PlaceRanges,
+  QualifyTarget,
   Round,
   StartLocationMap,
   Structure,
@@ -56,7 +57,6 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     favRepository: FavoritesRepository,
     public structureEditor: StructureEditor,
     private planningRepository: PlanningRepository,
-    private competitionSportService: CompetitionSportService,
     private myNavigation: MyNavigation,
     private defaultService: DefaultService
   ) {
@@ -66,13 +66,13 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   ngOnInit() {
     const noStructure = true;
     super.myNgOnInit(() => {
-      this.structureEditor.setPlaceRanges(this.getPlaceRanges());
+      this.structureEditor.setPlaceRanges(this.defaultService.getPlaceRanges(this.competition.getSportVariants()));
       this.structureRepository.getObject(this.tournament)
         .subscribe({
           next: (structure: Structure) => {
             this.structure = structure;
 
-            // console.log(this.structure);
+            console.log('ngOninit', this.structure);
             this.clonedStructure = this.createClonedStructure(this.structure);
             this.hasBegun = this.clonedStructure.getFirstRoundNumber().hasBegun();
             // MELDING DAT AL IS BEGONNEN!!! KIJK FF IN CATEGORY
@@ -114,20 +114,6 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     });
   }
 
-  protected getPlaceRanges(): PlaceRanges {
-    const sportVariants = this.competition.getSportVariants();
-    const minNrOfPlacesPerPoule = this.competitionSportService.getMinNrOfPlacesPerPoule(sportVariants);
-    const maxNrOfPlacesPerPouleSmall = 20;
-    const maxNrOfPlacesPerPouleLarge = 12;
-    const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
-    const maxNrOfPlacesPerRoundSmall = 40;
-    const maxNrOfPlacesPerRoundLarge = 128;
-    return new PlaceRanges(
-      minNrOfPlacesPerPoule, maxNrOfPlacesPerPouleSmall, maxNrOfPlacesPerPouleLarge,
-      minNrOfPlacesPerRound, maxNrOfPlacesPerRoundSmall, maxNrOfPlacesPerRoundLarge
-    );
-  }
-
   createClonedStructure(structure: Structure): Structure {
     this.originalCompetitors = this.tournament.getCompetitors();
     return cloneDeep(structure);
@@ -138,12 +124,18 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   addAction(structureAction: StructureAction) {
     this.lastAction = structureAction;
     this.actions.push(structureAction);
-    //console.log(this.actions);
+
+    if (structureAction.name === StructureActionName.AddQualifier) {
+      console.log('AddQualifier');
+      console.log(this.clonedStructure.getCategory(2).getRootRound());
+    }
     // (new StructureOutput()).toConsole(this.clonedStructure, console);
+    // console.log('addAction(post)  has child', .getBorderQualifyGroup(QualifyTarget.Winners) !== undefined);
     this.resetAlert();
     if (structureAction.recreateStructureNameService) {
       this.structureNameService = new StructureNameService();
     }
+
   }
 
   // getLowestRoundNumberFromActions(structurePathNode: StructurePathNode): number {
@@ -151,19 +143,6 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   //   return Math.min(...arrayOfNumbers);
   //   return structurePathNode.getLevel();
   // }
-
-  saveStructure() {
-    this.processing = true;
-    this.setAlert(IAlertType.Info, 'wijzigingen worden opgeslagen');
-
-    this.structureRepository.editObject(this.clonedStructure, this.tournament)
-      .subscribe({
-        next: (structureRes: Structure) => {
-          this.syncPlanning(structureRes/*this.getLowestLevelAction()*/); // should always be first roundnumber
-        },
-        error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
-      });
-  }
 
   private addCategory(name: string) {
     if ((new CategoryNameChecker()).doesNameExists(this.clonedStructure.getCategories(), name)) {
@@ -258,15 +237,20 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     });
   }
 
-  completeSave(structureRes: Structure) {
-    // const newClonedStructure = this.createClonedStructure(structureRes);
-    // console.log((new StructureOutput()).createGrid(structureRes).equalsGrid(
-    //   (new StructureOutput()).createGrid(this.clonedStructure)
-    // ));
-    this.clonedStructure = this.createClonedStructure(structureRes);
-    this.actions = [];
-    this.processing = false;
-    this.setAlert(IAlertType.Success, 'de wijzigingen zijn opgeslagen');
+  saveStructure() {
+    this.processing = true;
+    this.setAlert(IAlertType.Info, 'wijzigingen worden opgeslagen');
+
+    // console.log('pre edit-structure has child', this.clonedStructure.getCategory(1).getRootRound().getBorderQualifyGroup(QualifyTarget.Winners) !== undefined);
+
+    this.structureRepository.editObject(this.clonedStructure, this.tournament)
+      .subscribe({
+        next: (structureRes: Structure) => {
+          console.log('post save-structure has child', this.clonedStructure.getCategory(1).getRootRound().getBorderQualifyGroup(QualifyTarget.Winners) !== undefined);
+          this.syncPlanning(structureRes/*this.getLowestLevelAction()*/); // should always be first roundnumber
+        },
+        error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
+      });
   }
 
   protected syncPlanning(structure: Structure) {
@@ -275,10 +259,24 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     // }
     this.planningRepository.create(structure, this.tournament)
       .subscribe({
-        next: () => this.completeSave(structure),
+        next: () => {
+          this.completeSave(structure)
+        },
         error: e => { this.setAlert(IAlertType.Danger, e); this.processing = false; },
         complete: () => this.processing = false
       });
+  }
+
+  completeSave(structureRes: Structure) {
+    // const newClonedStructure = this.createClonedStructure(structureRes);
+    // console.log((new StructureOutput()).createGrid(structureRes).equalsGrid(
+    //   (new StructureOutput()).createGrid(this.clonedStructure)
+    // ));
+    this.clonedStructure = this.createClonedStructure(structureRes);
+    this.updateFavoriteCategories(this.clonedStructure);
+    this.actions = [];
+    this.processing = false;
+    this.setAlert(IAlertType.Success, 'de wijzigingen zijn opgeslagen');
   }
 
   navigateBack() {

@@ -17,11 +17,14 @@
             <label for="competitors" class="col-form-label">deelnemers</label>
           </div>
           <div class="col-4 fw-bold col-form-label text-break">
-            {{structureNameService.getPlacesFromName(getGame().getHomePlaces(), true, true)}}
+            <span
+              [innerHtml]="structureNameService.getPlacesFromName(getGame().getHomePlaces(), true, true) | keepHtml"></span>
           </div>
           <div class="col-1 side-splitter">-</div>
           <div class="col-4 fw-bold col-form-label text-break">
-            {{structureNameService.getPlacesFromName(getGame().getAwayPlaces(), true, true)}}</div>
+            <span
+              [innerHtml]="structureNameService.getPlacesFromName(getGame().getAwayPlaces(), true, true) | keepHtml"></span>
+          </div>
         </div>
         <div *ngFor="let scoreControl of scoreControls" class="row mb-3">
           <label class="col-3 col-form-label">

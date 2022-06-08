@@ -38,7 +38,7 @@ export class TournamentNavBarComponent implements OnInit {
   get SettingsScreen(): TournamentScreen { return TournamentScreen.Settings }
 
   getTextColorClass(screen: TournamentScreen): string {
-    return this.currentScreen !== screen ? 'btn-outline-success border-0' : 'text-secondary';
+    return this.currentScreen !== screen ? 'btn-outline-success' : 'btn-outline-light';
   }
 
   linkToStructure() {

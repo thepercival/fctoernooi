@@ -57,6 +57,7 @@
         <table class="table">
           <thead>
             <tr>
+              <th>naam</th>
               <th>start</th>
               <th>einde</th>
               <th class="text-end">
@@ -69,6 +70,8 @@
           </thead>
           <tbody>
             <tr *ngFor="let recess of tournament.getRecesses()">
+              <td>{{recess.getName()}}
+              </td>
               <td><span *ngIf="!sameDayFormat">{{dateFormatter.toString(recess.getStartDateTime(),
                   dateFormatter.date())}}</span>
                 <span>{{dateFormatter.toString(recess.getStartDateTime(), dateFormatter.time())}}</span>

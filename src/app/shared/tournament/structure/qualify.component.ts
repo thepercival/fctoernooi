@@ -91,7 +91,15 @@ export class StructureQualifyComponent {
             if (borderQualifyGroup === undefined) {
                 const minNrOfPlacesPerPoule = this.structureEditor.getMinPlacesPerPouleSmall();
                 initialMaxNrOfPoulePlaces = minNrOfPlacesPerPoule;
+                if (target === QualifyTarget.Losers) {
+                    console.log('AddQualifier Pre');
+                    console.log(this.parentRound);
+                }
                 this.structureEditor.addChildRound(this.parentRound, target, [minNrOfPlacesPerPoule]);
+                if (target === QualifyTarget.Losers) {
+                    console.log('AddQualifier Post');
+                    console.log(this.parentRound);
+                }
                 pathNode = this.parentRound.getBorderQualifyGroup(target).getChildRound().getPathNode();
             } else {
                 pathNode = borderQualifyGroup.getChildRound().getPathNode();
@@ -103,6 +111,7 @@ export class StructureQualifyComponent {
                 }
                 this.structureEditor.addQualifiers(this.parentRound, target, 1, initialMaxNrOfPoulePlaces);
             }
+
             this.addAction.emit({
                 pathNode,
                 name: StructureActionName.AddQualifier,

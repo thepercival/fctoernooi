@@ -20,6 +20,7 @@ export class ExportModalComponent implements OnInit, OnDestroy {
     @Input() fieldDescription!: string;
     form: FormGroup;
     creating = false;
+    pdfLink: string | undefined;
     exportOptions: ExportOption[] = [];
     refreshTimer: Subscription | undefined;
     private appErrorHandler: AppErrorHandler;
@@ -119,7 +120,7 @@ export class ExportModalComponent implements OnInit, OnDestroy {
                     this.progressPercentage = progressPerc;
                     if (progressPerc === 100) {
                         this.stopTimer();
-                        this.activeModal.close(this.pdfRepository.getPdfUrl(this.tournament, fileName));
+                        this.pdfLink = this.pdfRepository.getPdfUrl(this.tournament, fileName);
                     }
                 },
                 error: (e) => {

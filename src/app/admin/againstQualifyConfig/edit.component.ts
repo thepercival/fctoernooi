@@ -16,12 +16,12 @@ import { CSSService } from '../../shared/common/cssservice';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Tournament } from '../../lib/tournament';
 import { IAlert, IAlertType } from '../../shared/common/alert';
-import { RoundsSelectorModalComponent, ToggleRound } from '../rounds/selector.component';
+import { RoundsSelectorModalComponent, SelectableCategory, SelectableRoundNode } from '../rounds/selector.component';
 import { forkJoin, Observable } from 'rxjs';
 import { AgainstQualifyConfigRepository } from '../../lib/ngx-sport/againstQualifyConfig/repository';
-import { ToggleRoundConverter, ToggleRoundInittializer } from '../scoreConfig/edit.component';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { Router } from '@angular/router';
+import { RoundsSelection, SelectableCategoriesCreator, SelectableCategoryConverter } from '../scoreConfig/edit.component';
 
 @Component({
     selector: 'app-tournament-qualifyagainstconfig-edit',
@@ -37,7 +37,7 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
     processing: boolean = true;
     public nameService!: NameService;
     form: FormGroup;
-    protected toggleRound!: ToggleRound;
+    protected selectableCategories!: SelectableCategory[];
     pointsCalculations: PointsCalculation[] = [];
     readonly: boolean = true;
     ranges: any = {};
@@ -94,42 +94,28 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
     ngOnInit() {
         this.nameService = new NameService();
         this.initRanges();
-        this.initToggleRound();
+        this.initSelectableCategories();
         this.processing = false;
     }
 
-    initToggleRound() {
-        const toggleRoundInittializer = new ToggleRoundInittializer(this.competitionSport,
+    initSelectableCategories() {
+        const selectableCategoriesCreator = new SelectableCategoriesCreator(this.competitionSport,
             (round: Round, competitionSport: CompetitionSport) => {
                 return round.getAgainstQualifyConfig(competitionSport);
             });
+        this.selectableCategories = selectableCategoriesCreator.create(this.structure.getCategories());
         this.pointsCalculations = [PointsCalculation.AgainstGamePoints, PointsCalculation.Scores, PointsCalculation.Both];
-
-        this.toggleRound = toggleRoundInittializer.createToggleRound(this.getDefaultRootRound());
-        this.postToggleRoundChange();
+        this.postRoundsSelection();
     }
 
-    // @TODO CDK CATEGORY - REMOVE FUNCTION
-    getDefaultRootRound(): Round {
-        return this.structure.getCategories()[0].getRootRound();
-    }
-
-    // hasACustomAgainstQualifyConfig(round: Round): boolean {
-    //     if (round.getAgainstQualifyConfig(this.competitionSport) !== undefined) {
-    //         return true;
-    //     }
-    //     return round.getChildren().some((child: Round) => this.hasACustomAgainstQualifyConfig(child));
-    // }
-
-    protected postToggleRoundChange() {
-        this.readonly = this.allSelectedToggleRoundsBegun(this.toggleRound);
+    protected postRoundsSelection() {
+        this.readonly = this.someSelectedHasBegun(this.selectableCategories.map(selectableCategory => selectableCategory.rootRoundNode));
         this.alert = undefined;
         if (this.readonly) {
-            this.alert = { type: IAlertType.Warning, message: 'er zijn wedstrijden gespeeld voor gekozen ronden, je kunt niet meer wijzigen' }
-        } else if (this.someSelectedToggleRoundsBegun(this.toggleRound)) {
-            this.alert = { type: IAlertType.Warning, message: 'er zijn wedstrijden gespeeld voor sommige gekozen ronden, de score-regels hiervoor worden niet opgeslagen' }
+            this.alert = { type: IAlertType.Warning, message: 'er zijn wedstrijden gespeeld voor (sommige) gekozen ronden, je kunt niet meer wijzigen' };
         }
-        const json = this.getInputJson(this.getFirstSelectedToggleRound(this.toggleRound).round);
+
+        const json = this.getInputJson(this.getFirstSelectedRoundNode().round);
         this.jsonToForm(json);
     }
 
@@ -211,61 +197,68 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
     openSelectRoundsModal() {
         const modalRef = this.modalService.open(RoundsSelectorModalComponent);
         modalRef.componentInstance.competitionSport = this.competitionSport;
-        modalRef.componentInstance.toggleRound = this.toggleRound;
+        modalRef.componentInstance.selectableCategories = this.selectableCategories;
         modalRef.componentInstance.subject = 'de qualifyagainst-regels';
         modalRef.componentInstance.hasOwnConfig = (round: Round): boolean => {
             return round.getAgainstQualifyConfig(this.competitionSport) !== undefined;
         };
-        modalRef.result.then((result: ToggleRound) => {
-            this.toggleRound = result;
-            this.postToggleRoundChange();
+        modalRef.result.then((selectableCategories: SelectableCategory[]) => {
+            this.selectableCategories = selectableCategories;
+            this.postRoundsSelection();
         }, (reason) => { });
     }
 
-    allSelectedToggleRoundsBegun(toggleRound: ToggleRound): boolean {
-        return toggleRound.round.getNumber().hasBegun() && toggleRound.children.every(child => {
-            return this.allSelectedToggleRoundsBegun(child);
+    structureHasMultipleRounds(): boolean {
+        return this.structure.getCategories().length > 1 || this.structure.getSingleCategory().getRootRound().getChildren().length > 1;
+    }
+
+    someSelectedHasBegun(selectableRoundNodes: SelectableRoundNode[]): boolean {
+        return selectableRoundNodes.some((selectableRoundNode: SelectableRoundNode): boolean => {
+            return selectableRoundNode.round.hasBegun() || this.someSelectedHasBegun(selectableRoundNode.children);
         });
     }
 
-    someSelectedToggleRoundsBegun(toggleRound: ToggleRound): boolean {
-        return toggleRound.round.getNumber().hasBegun() || toggleRound.children.some(child => {
-            return this.someSelectedToggleRoundsBegun(child);
-        });
-    }
-
-    getFirstSelectedToggleRound(toggleRound: ToggleRound): ToggleRound {
-        if (toggleRound.selected) {
-            return toggleRound;
-        }
-        const selected = toggleRound.children.find(child => {
-            return this.getFirstSelectedToggleRound(child);
-        });
+    getFirstSelectedRoundNode(): SelectableRoundNode {
+        const selected = this.selectableCategories.map(selectableCategory => selectableCategory.rootRoundNode)
+            .find(selectableRootRoundNode => this.getFirstSelectedRoundNodeHelper(selectableRootRoundNode) !== undefined);
         if (selected === undefined) {
             throw Error('at least one round should be selected');
         }
         return selected;
     }
 
+    getFirstSelectedRoundNodeHelper(selectableRoundNode: SelectableRoundNode): SelectableRoundNode | undefined {
+        if (selectableRoundNode.selected) {
+            return selectableRoundNode;
+        }
+        return selectableRoundNode.children.find(child => this.getFirstSelectedRoundNodeHelper(child));
+    }
+
     save(): boolean {
         this.alert = undefined;
         this.processing = true;
 
-        const toggleRoundConverter = new ToggleRoundConverter();
-        const roundsSelection = toggleRoundConverter.createRoundsSelection(this.toggleRound);
+        const selectableCategoryConverter = new SelectableCategoryConverter();
+        const categoriesSelection = selectableCategoryConverter.createCategoriesSelection(this.selectableCategories);
 
-        // 1 koppel alle valid qualifyagainstregels van de unchangedChildRounds
+
         const validAgainstQualifyConfigs: ValidAgainstQualifyConfigOfUnchangedChildRound[] = [];
-        roundsSelection.unchangedDescendants.forEach((unchangedChildRound: Round) => {
-            const qualifyagainstConfig = unchangedChildRound.getValidAgainstQualifyConfig(this.competitionSport);
-            const jsonAgainstQualifyConfig = this.mapper.toJson(qualifyagainstConfig);
-            validAgainstQualifyConfigs.push({ unchangedChildRound, qualifyagainstConfig: jsonAgainstQualifyConfig });
+        const reposUpdates: Observable<AgainstQualifyConfig>[] = [];
+        categoriesSelection.forEach((roundsSelection: RoundsSelection) => {
+
+            // 1 koppel alle valid qualifyagainstregels van de unchangedChildRounds
+            roundsSelection.unchangedDescendants.forEach((unchangedChildRound: Round) => {
+                const qualifyagainstConfig = unchangedChildRound.getValidAgainstQualifyConfig(this.competitionSport);
+                const jsonAgainstQualifyConfig = this.mapper.toJson(qualifyagainstConfig);
+                validAgainstQualifyConfigs.push({ unchangedChildRound, qualifyagainstConfig: jsonAgainstQualifyConfig });
+            });
+
+            // 2 verwijder en voeg de qualifyagainstregels toe van de rootRounds
+            roundsSelection.rootRounds.forEach((round: Round) => {
+                reposUpdates.push(this.againstQualifyConfigRepository.saveObject(this.formToJson(), round, this.tournament));
+            });
         });
 
-        // 2 verwijder en voeg de qualifyagainstregels toe van de rootRounds
-        const reposUpdates: Observable<AgainstQualifyConfig>[] = roundsSelection.rootRounds.map((round: Round) => {
-            return this.againstQualifyConfigRepository.saveObject(this.formToJson(), round, this.tournament);
-        });
         forkJoin(reposUpdates).subscribe({
             next: (results) => {
                 if (validAgainstQualifyConfigs.length === 0) {

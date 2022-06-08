@@ -56,6 +56,10 @@ app-root {
   @extend .navbar-margin;
 }
 
+.table-alternate {
+  background-color: #f5f4f5;
+}
+
 footer {
   flex: 1 0 auto;
 }
@@ -111,6 +115,12 @@ input.is-warning {
   @extend .bg-info;
   @extend .text-white;
   @extend .border-white;
+}
+
+.card-cat-header {
+  @extend .card-header;
+  @extend .bg-dark;
+  @extend .text-light;
 }
 
 .bg-against {

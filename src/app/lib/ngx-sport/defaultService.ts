@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
-import { AgainstGpp, AgainstH2h, AgainstRuleSet, AllInOneGame, CompetitionSportService, GameMode, GamePlaceStrategy, JsonPlanningConfig, JsonSport, PlanningEditMode, PointsCalculation, PouleStructure, SelfReferee, Single, Sport, VoetbalRange } from "ngx-sport";
+import { AgainstGpp, AgainstH2h, AgainstRuleSet, AllInOneGame, CompetitionSportService, GameMode, GamePlaceStrategy, JsonPlanningConfig, JsonSport, PlaceRanges, PlanningEditMode, PointsCalculation, PouleStructure, SelfReferee, Single, Sport, VoetbalRange } from "ngx-sport";
+import { SportVariant } from "ngx-sport/src/sport/variant";
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +13,7 @@ export class DefaultService {
     static readonly MinutesAfter: number = 5;
     static readonly AgainstRuleSet: AgainstRuleSet = AgainstRuleSet.DiffFirst;
 
-    constructor(private competitionService: CompetitionSportService) {
+    constructor(private competitionSportService: CompetitionSportService) {
     }
 
     getJsonSport(name: string): JsonSport {
@@ -57,15 +58,28 @@ export class DefaultService {
         }
     }
 
-    getPouleStructure(sportVariants: (Single | AgainstH2h | AgainstGpp | AllInOneGame)[]): PouleStructure {
-        let nrOfPlaces = this.competitionService.getMinNrOfPlacesPerPoule(sportVariants);
+    public getPlaceRanges(sportVariants: (Single | AgainstH2h | AgainstGpp | AllInOneGame)[]): PlaceRanges {
+        const minNrOfPlacesPerPoule = this.competitionSportService.getMinNrOfPlacesPerPoule(sportVariants);
+        const maxNrOfPlacesPerPouleSmall = 20;
+        const maxNrOfPlacesPerPouleLarge = 12;
+        const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
+        const maxNrOfPlacesPerRoundSmall = 40;
+        const maxNrOfPlacesPerRoundLarge = 128;
+        return new PlaceRanges(
+            minNrOfPlacesPerPoule, maxNrOfPlacesPerPouleSmall, maxNrOfPlacesPerPouleLarge,
+            minNrOfPlacesPerRound, maxNrOfPlacesPerRoundSmall, maxNrOfPlacesPerRoundLarge
+        );
+    }
+
+    public getPouleStructure(sportVariants: (Single | AgainstH2h | AgainstGpp | AllInOneGame)[]): PouleStructure {
+        let nrOfPlaces = this.competitionSportService.getMinNrOfPlacesPerPoule(sportVariants);
         if (nrOfPlaces < 5) {
             nrOfPlaces = 5;
         }
         return new PouleStructure(nrOfPlaces);
     }
 
-    getGameAmountRange(sportVariant: Single | AgainstH2h | AgainstGpp | AllInOneGame | GameMode): VoetbalRange {
+    public getGameAmountRange(sportVariant: Single | AgainstH2h | AgainstGpp | AllInOneGame | GameMode): VoetbalRange {
         if (sportVariant instanceof AgainstH2h) {
             return { min: 1, max: 4 };
         }

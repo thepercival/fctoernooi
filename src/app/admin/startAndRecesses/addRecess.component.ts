@@ -18,6 +18,7 @@ import { Recess } from '../../lib/recess';
 import { RecessValidator } from '../../lib/recess/validator';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { JsonRecess } from '../../lib/recess/json';
 
 @Component({
     selector: 'app-tournament-competitor-edit',
@@ -44,6 +45,9 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
         this.form = fb.group({
+            name: ['pauze', Validators.compose([Validators.required,
+            Validators.minLength(1),
+            Validators.maxLength(this.MaxLengthName)])],
             startdate: ['', Validators.compose([])],
             starttime: ['', Validators.compose([])],
             enddate: ['', Validators.compose([])],
@@ -85,13 +89,17 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
         this.setDate(this.form.controls.enddate, this.form.controls.endtime, endDateTime);
     }
 
+    get MaxLengthName(): number { return Recess.MAX_LENGTH_NAME };
+
     setDate(dateFormControl: AbstractControl, timeFormControl: AbstractControl, date: Date) {
         dateFormControl.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
         timeFormControl.setValue({ hour: date.getHours(), minute: date.getMinutes() });
     }
 
-    formToJson(): JsonPeriod {
+    formToJson(): JsonRecess {
         return {
+            id: 0,
+            name: this.form.controls.name.value,
             start: this.getDate(this.form.controls.startdate, this.form.controls.starttime).toISOString(),
             end: this.getDate(this.form.controls.enddate, this.form.controls.endtime).toISOString()
         };
@@ -109,9 +117,9 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
 
     save(): boolean {
         const jsonRecess = this.formToJson();
-        const newRecess = new Period(new Date(jsonRecess.start), new Date(jsonRecess.end));
+        const newRecessPeriod = new Period(new Date(jsonRecess.start), new Date(jsonRecess.end));
         const validator = new RecessValidator();
-        const message = this.validate(newRecess);
+        const message = this.validate(newRecessPeriod);
         if (message !== undefined) {
             this.setAlert(IAlertType.Danger, message);
             // return false;

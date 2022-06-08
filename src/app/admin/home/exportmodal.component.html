@@ -25,18 +25,23 @@
         <ngb-alert *ngIf="!creating && postCreateAlert" class="mt-1" type="danger">{{postCreateAlert?.message}}
         </ngb-alert>
 
-        <div *ngIf="creating">
+        <div *ngIf="creating && progressPercentage < 100">
             <ngb-alert class=" mt-1" type="info">
                 <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-                <span *ngIf="progressPercentage < 100" class="ps-2">De pdf is in de maak. Een moment geduld
-                    alsjeblieft</span>
-                <span *ngIf="progressPercentage === 100" class="ps-2">De pdf wordt opgehaald ...</span>
+                <span class="ps-2">De pdf is in de maak. Een moment geduld alsjeblieft</span>
             </ngb-alert>
             <ngb-progressbar *ngIf="progressPercentage > 0" class="custom-progress mt-4 mx-auto" type="info"
                 [value]="progressPercentage">
                 <i>{{progressPercentage}}%</i>
             </ngb-progressbar>
         </div>
+
+        <div *ngIf="pdfLink" class="text-center">
+            <ngb-alert class=" mt-1" type="success">De pdf staat klaar</ngb-alert>
+            <a type="button" class="btn btn-primary" aria-label="pdf openen" target="_blank" rel="noopener"
+                href="{{pdfLink}}" (click)="activeModal.dismiss('close')">pdf openen</a>
+        </div>
+
 
     </div>
 </div>

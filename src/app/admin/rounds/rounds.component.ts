@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { StructureNameService } from 'ngx-sport';
+import { StructureEditor, StructureNameService } from 'ngx-sport';
+import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { CSSService } from '../../shared/common/cssservice';
-import { ToggleRound } from './selector.component';
+import { SelectableRoundNode } from './selector.component';
 
 @Component({
   selector: 'app-tournament-select-round',
@@ -10,14 +11,18 @@ import { ToggleRound } from './selector.component';
   styleUrls: ['./rounds.component.css']
 })
 export class StructureSelectRoundComponent implements OnInit {
-  @Input() toggleRound!: ToggleRound;
+  @Input() selectableRoundNode!: SelectableRoundNode;
   @Input() first!: boolean;
   @Input() hasOwnConfig!: Function;
-  @Output() checkRoundsSelected = new EventEmitter<void>();
-  form: FormGroup;
   @Input() structureNameService!: StructureNameService;
+  @Output() checkSomeRoundsSelected = new EventEmitter<void>();
+  form: FormGroup;
 
-  constructor(public cssService: CSSService, fb: FormBuilder
+  constructor(
+    public cssService: CSSService,
+    fb: FormBuilder,
+    private structureEditor: StructureEditor,
+    private defaultService: DefaultService
   ) {
     this.form = fb.group({
       selected: false
@@ -25,29 +30,35 @@ export class StructureSelectRoundComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.form.controls.selected.setValue(this.toggleRound.selected);
+    const placeRanges = this.defaultService.getPlaceRanges(this.selectableRoundNode.round.getCompetition().getSportVariants())
+    this.structureEditor.setPlaceRanges(placeRanges);
+    this.form.controls.selected.setValue(this.selectableRoundNode.selected);
   }
 
   toggleSelection() {
-    this.toggleRound.selected = this.form.controls.selected.value;
-    this.toggleRound.children = this.setSelectedChildren(this.toggleRound.children, this.toggleRound);
+    this.selectableRoundNode.selected = this.form.controls.selected.value;
+    this.selectableRoundNode.children = this.setSelectedChildren(this.selectableRoundNode.children, this.selectableRoundNode);
     this.emitRoundsSelected();
   }
 
   hasOwnConfig2(): boolean {
-    return this.hasOwnConfig(this.toggleRound.round);
+    return this.hasOwnConfig(this.selectableRoundNode.round);
   }
 
   emitRoundsSelected() {
-    this.checkRoundsSelected.emit();
+    this.checkSomeRoundsSelected.emit();
   }
 
-  protected setSelectedChildren(children: ToggleRound[], parent: ToggleRound): ToggleRound[] {
-    return children.map((child: ToggleRound) => {
-      const newChild: ToggleRound = {
+  get MinPlacesPerPoule(): number {
+    return this.structureEditor.getMinPlacesPerPouleSmall();
+  }
+
+  protected setSelectedChildren(children: SelectableRoundNode[], parent: SelectableRoundNode): SelectableRoundNode[] {
+    return children.map((child: SelectableRoundNode) => {
+      const newChild: SelectableRoundNode = {
         parent: parent,
         round: child.round,
-        selected: this.toggleRound.selected,
+        selected: this.selectableRoundNode.selected,
         children: []
       };
       newChild.children = this.setSelectedChildren(child.children, newChild);
@@ -56,7 +67,7 @@ export class StructureSelectRoundComponent implements OnInit {
   }
 
   getCustomSwitchId() {
-    return 'customSwitchId' + this.toggleRound.round.getId();
+    return 'customSwitchId' + this.selectableRoundNode.round.getId();
   }
 
   save(): boolean {

@@ -111,6 +111,7 @@
         <ng-template ngFor let-gmData [ngForOf]="gameDatas">
           <tr *ngIf="gmData.recess" class="table-info">
             <td></td>
+            <td></td>
             <td *ngIf="planningConfig.getEnableTime()"><span
                 *ngIf="!sameDay">{{dateFormatter.toString(gmData.recess.getStartDateTime(),
                 dateFormatter.date())}} </span>
@@ -120,23 +121,25 @@
             <td colspan="3" class="text-center">PAUZE</td>
             <td *ngIf="hasSomeReferees" class="{{hasGameModeAgainst ? 'd-none d-sm-table-cell' : ''}}"></td>
           </tr>
-          <tr [ngClass]="{ 'table-light': (gmData.game.getBatchNr() % 2) === 0 && gameOrder === OrderByDate }">
-            <!-- poule -->
+          <tr [ngClass]="{ 'table-alternate': (gmData.game.getBatchNr() % 2) === 0 && gameOrder === OrderByDate }">
             <!-- no popover-->
-            <td *ngIf="!gmData.hasPopover" class="text-center">
-              <span
-                class="badge badge-rank fs-custom fw-normal {{cssService.getQualifyRound(gmData.poule.round)}}">{{gmData.poule.name}}</span>
+            <td *ngIf="!hasMultipleCategories" class="text-center">
+              {{gmData.poule.categoryName}}
             </td>
-            <!-- popover with ranking -->
-            <td *ngIf="gmData.hasPopover && gmData.poule.needsRanking" class="text-center">
-              <button class="btn btn-sm {{cssService.getQualifyRound(gmData.poule.round,'btn-outline-info')}}"
+            <!-- poule -->
+            <td class="text-center">
+              <!-- no popover-->
+              <span *ngIf="!gmData.hasPopover"
+                class="badge badge-rank fs-custom fw-normal {{cssService.getQualifyRound(gmData.poule.round)}}">{{gmData.poule.name}}</span>
+              <!-- popover with ranking -->
+              <button *ngIf="gmData.hasPopover && gmData.poule.needsRanking"
+                class="btn btn-sm {{cssService.getQualifyRound(gmData.poule.round,'btn-outline-info')}}"
                 (click)="openModalPouleRank(gmData.game.getPoule())">
                 <span>{{gmData.poule.name}}</span>
               </button>
-            </td>
-            <!-- popover no ranking -->
-            <td *ngIf="gmData.hasPopover && !gmData.poule.needsRanking" class="text-center">
-              <button class="btn btn-sm {{cssService.getQualifyRound(gmData.poule.round,'btn-outline-info')}}"
+              <!-- popover no ranking -->
+              <button *ngIf="gmData.hasPopover && !gmData.poule.needsRanking"
+                class="btn btn-sm {{cssService.getQualifyRound(gmData.poule.round,'btn-outline-info')}}"
                 placement="right" [ngbPopover]="getGameQualificationDescription(gmData.game)">
                 <span>{{gmData.poule.name}}</span>
               </button>
