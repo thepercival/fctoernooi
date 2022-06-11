@@ -19,7 +19,6 @@ import {
   faCompressAlt,
   faExpandAlt,
   faShareAlt,
-  faClipboardCheck,
   faListOl,
   faExclamationCircle,
 } from '@fortawesome/free-solid-svg-icons';
@@ -142,7 +141,6 @@ export class AdminModule {
       /* sport select*/ faDotCircle,
       /* competitors*/ faRandom, faSort,
       /* structure*/ faCompressAlt, faExpandAlt, faTh,
-      /* delen */ faClipboardCheck,
       /* standen */ faListOl,
       /* handmatige planningmodus */ faExclamationCircle
       /*faCircle, faListUl, faCogs, faMinus, faInfoCircle, faMedal, faUsers, faSync*/

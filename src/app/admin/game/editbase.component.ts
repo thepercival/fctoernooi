@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
-import { AgainstGame, Field, Place, PlanningConfig, PlanningEditMode, StructureNameService, TogetherGame } from 'ngx-sport';
+import { AgainstGame, Field, Place, PlanningConfig, PlanningEditMode, Structure, StructureNameService, TogetherGame } from 'ngx-sport';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { TranslateService } from '../../lib/translate';
 
@@ -13,6 +13,7 @@ export class GameBaseEditComponent implements OnInit {
   @Input() form!: FormGroup;
   @Input() game!: AgainstGame | TogetherGame;
   @Input() structureNameService!: StructureNameService;
+  @Input() structure!: Structure;
   // @Output() afterEdit = new EventEmitter<void>();
   // public firstScoreConfig!: ScoreConfig;
 

@@ -60,22 +60,6 @@ export class ScreenConfigRepository {
             return { name, enabled: true, nrOfSeconds: 15 };
         });
     }
-
-    /*
-        
-    
-        createObject(screenConfig: ScreenConfig, tournament: Tournament): Observable<ScreenConfig> {
-            return this.http.post<ScreenConfig>(this.getUrl(tournament), screenConfig, this.getOptions()).pipe(
-                catchError((err: HttpErrorResponse) => this.handleError(err))
-            );
-        }
-    
-        editObject(screenConfig: ScreenConfig, tournament: Tournament): Observable<ScreenConfig> {
-            const url = this.getUrl(tournament) + '/' + screenConfig.id;
-            return this.http.put<ScreenConfig>(url, screenConfig, this.getOptions()).pipe(
-                catchError((err: HttpErrorResponse) => this.handleError(err))
-            );
-        }*/
 }
 
 

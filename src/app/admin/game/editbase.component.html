@@ -7,8 +7,12 @@
       <label class="col-form-label"
         [innerHTML]="structureNameService.getRoundName( game.getRound() ) | keepHtml"></label>
       <label class="mx-1">-</label>
-      <label class="col-form-label"
+      <label class="col-form-label me-1"
         [innerHTML]="structureNameService.getPouleName( game.getPoule(), true) | keepHtml"></label>
+
+      <span *ngIf="structure.getCategories().length > 1"
+        class="badge bg-dark text-light">{{game.getRound().getCategory().getName()}}</span>
+
     </div>
   </div>
   <div *ngIf="getPlanningConfig().getEnableTime() && !manualEditMode()" class="row mb-3">

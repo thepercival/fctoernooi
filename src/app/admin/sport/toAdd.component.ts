@@ -36,7 +36,9 @@ export class SportToAddComponent implements OnInit {
             .subscribe({
                 next: (sports: Sport[]) => {
                     sports.sort((s1: Sport, s2: Sport) => {
-                        return (this.translate.getSportName(s1) > this.translate.getSportName(s2) ? 1 : -1);
+                        const s1Name = this.translate.getSportName(s1.getCustomId(), s1.getName());
+                        const s2Name = this.translate.getSportName(s2.getCustomId(), s2.getName());
+                        return s1Name > s2Name ? 1 : -1;
                     });
                     this.sports = sports;
                     this.processing = false;

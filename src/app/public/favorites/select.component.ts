@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Referee, Structure, Category, StructureNameService, StartLocationMap } from 'ngx-sport';
+import { Referee, StructureNameService, StartLocationMap } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
 import { Favorites } from '../../lib/favorites';
@@ -8,12 +8,10 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
-import { AuthService } from '../../lib/auth/auth.service';
-import { Role } from '../../lib/role';
-import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 
 @Component({
     selector: 'app-tournament-select-favorites',
@@ -24,6 +22,8 @@ export class SelectFavoritesComponent extends TournamentComponent implements OnI
     public favorites!: Favorites;
     public structureNameService!: StructureNameService;
 
+    @ViewChild('contentInfoModal', { static: true }) private contentInfoModal!: TemplateRef<any>;
+
     constructor(
         route: ActivatedRoute,
         router: Router,
@@ -32,8 +32,7 @@ export class SelectFavoritesComponent extends TournamentComponent implements OnI
         globalEventsManager: GlobalEventsManager,
         modalService: NgbModal,
         favRepository: FavoritesRepository,
-        private myNavigation: MyNavigation,
-        protected authService: AuthService
+        private myNavigation: MyNavigation
     ) {
         super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
         this.resetAlert();
@@ -46,14 +45,21 @@ export class SelectFavoritesComponent extends TournamentComponent implements OnI
             this.structureNameService = new StructureNameService(startLocationMap);
             this.favorites = this.favRepository.getObject(this.tournament, this.structure.getCategories());
             if (this.hasCompetitors() === false) {
-                this.setAlert(IAlertType.Info, 'er zijn nog geen deelnemers ingevuld, je kunt daarom nog geen deelnemers kiezen');
+                this.router.navigate(['/public/games', this.tournament.getId()]);
+            } else {
+                // toon modal 
+                // @TODO CDK =========>
+                // 1 wanneer nog geen cookie van dat toernooi, stuur dan naar favorites en laat een modal zijn
+                // dat ze een favoriet kunnen kiezen en dat onderaan de navigatie zit!
+
+                const shownNrOfBatchGamesAlert = localStorage.getItem('showSelectFavoriteModal' + this.tournament.getId());
+                if (shownNrOfBatchGamesAlert === null) {
+                    localStorage.setItem('showSelectFavoriteModal' + this.tournament.getId(), '1');
+                    this.openHelpModal(this.contentInfoModal);
+                }
             }
             this.processing = false;
         });
-    }
-
-    isAdmin(): boolean {
-        return this.hasRole(this.authService, Role.Admin);
     }
 
     get FavoritesScreen(): TournamentScreen { return TournamentScreen.Favorites }
@@ -77,6 +83,16 @@ export class SelectFavoritesComponent extends TournamentComponent implements OnI
 
     hasReferees() {
         return this.competition.getReferees().length > 0;
+    }
+
+    openHelpModal(modalContent: TemplateRef<any>) {
+        const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
+        activeModal.componentInstance.header = 'uitleg';
+        activeModal.componentInstance.modalContent = modalContent;
+        // activeModal.componentInstance.noHeaderBorder = true;
+        activeModal.result.then((result) => {
+            //  this.linkToPlanningConfig();
+        }, (reason) => { });
     }
 
     navigateBack() {

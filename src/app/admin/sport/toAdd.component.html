@@ -15,7 +15,7 @@
       <app-sport-icon class="float-start me-1" [customId]="sport.getCustomId()"></app-sport-icon>
       <div class="d-flex justify-content-between">
         <label for="sport-{{sport.getId()}}" class="pointer mb-0">
-          <span>{{translate.getSportName(sport)}}</span>
+          <span>{{translate.getSportName(sport.getCustomId(), sport.getName())}}</span>
         </label>
         <div class="form-check form-switch">
           <input type="checkbox" class="form-check-input" id="sport-{{sport.getId()}}" (change)="select(sport)">

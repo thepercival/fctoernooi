@@ -2,7 +2,11 @@
 
   <div class="d-flex justify-content-around mb-2">
     <h2>
-      <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> standen
+      <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> <span class="mx-1">standen</span>
+      <button *ngIf="!processing && isAdmin()" [routerLink]="['/admin/ranking', tournament.getId()]" type="button"
+        class="btn btn-sm btn-outline-primary">
+        <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+      </button>
     </h2>
     <button *ngIf="!processing && !structure.hasSingleCategory()" type="button"
       class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
@@ -19,8 +23,8 @@
 
   <div *ngIf="!processing && tournament && structure">
 
-    <div class="d-flex flex-wrap gap-1">
-      <app-tournament-ranking-category *ngFor="let category of favoriteCategories" class="mx-auto"
+    <div class="d-flex flex-wrap gap-1 gap-sm-2">
+      <app-tournament-ranking-category *ngFor=" let category of favoriteCategories" class="mx-auto"
         [showHeader]="favoriteCategories.length > 1" [category]="category" [favorites]="favorites"
         [competitionSports]="competition.getSports()" [structureNameService]="structureNameService">
       </app-tournament-ranking-category>

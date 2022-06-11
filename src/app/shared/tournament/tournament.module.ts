@@ -5,7 +5,7 @@ import {
   faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt, faMedal, faSpinner, faGrip,
   faLevelUpAlt, faMinus, faPlus, faDoorClosed, faBaseballBall, faBasketballBall, faChess, faFutbol, faGamepad, faHockeyPuck, faTableTennis, faVolleyballBall, faStar, faEye, faChevronRight
 } from '@fortawesome/free-solid-svg-icons';
-import { RoundNumberPlanningComponent } from './planning/roundnumber.component';
+import { RoundNumberPlanningComponent } from './games/roundnumber.component';
 import { PouleRankingModalComponent } from './poulerankingmodal/rankingmodal.component';
 import { RankingEndComponent } from './ranking/end.component';
 import { TitleComponent } from './title/title.component';

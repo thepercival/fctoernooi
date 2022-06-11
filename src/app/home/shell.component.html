@@ -9,6 +9,7 @@
   {{dateFormatter.toString(shell.startDateTime,dateFormatter.datetime())}}
 </td>
 <td>
-  <span class="d-none d-sm-table-cell">{{shell.sportName}}</span>
+  <span *ngIf="shell.singleCustomSport !== 0"
+    class="d-none d-sm-table-cell">{{translate.getSportName(shell.singleCustomSport, '')}}</span>
 </td>
 <td>{{shell.name}}</td>

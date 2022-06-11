@@ -12,9 +12,9 @@
       <p *ngIf="editable && alert">
         <ngb-alert [dismissible]="true" (closed)="alert = undefined" [type]="alert.type">{{ alert.message }}</ngb-alert>
       </p>
-      <div class="d-flex flex-wrap justify-content-around gap-1">
+      <div class="d-flex flex-wrap gap-1 justify-content-around">
         <ul *ngFor="let poule of round.getPoules();" class="list-group mb-3">
-          <li class="list-group-item disabled px-2 py-2">
+          <li class="list-group-item disabled py-2">
             {{structureNameService.getPouleName( poule, round.isRoot() && round.getPoules().length <= 2)}} </li>
           <li *ngFor="let place of poule.getPlaces();"
             class="list-group-item px-2 py-2 place-list-item pointer {{getPlaceAlignClass()}} {{cssService.getQualifyPlace(place)}}"

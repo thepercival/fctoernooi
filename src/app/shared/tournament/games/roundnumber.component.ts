@@ -58,6 +58,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   @Input() roundNumber!: RoundNumber;
   @Input() favoriteCategories!: Category[];
   @Input() structureNameService!: StructureNameService;
+  @Input() showLinksToAdmin = false;
   @Input() userRefereeId: number | string | undefined;
   @Input() roles: number = 0;
   @Input() favorites!: Favorites;
@@ -66,7 +67,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   @Output() scroll = new EventEmitter();
   alert: IAlert | undefined;
   public sameDay = true;
-  public userIsAdmin: boolean = false;
   public gameOrder: GameOrder = GameOrder.ByDate;
   public filterEnabled = false;
   public hasSomeReferees: boolean = false;
@@ -77,7 +77,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   private scoreConfigService: ScoreConfigService;
   public needsRanking: boolean = false;
   public hasMultiplePoules: boolean = false;
-  public hasMultipleCategories: boolean = false;
   public planningConfig!: PlanningConfig;
   public hasOnlyGameModeAgainst: boolean = true;
   public hasGameModeAgainst: boolean = true;
@@ -104,15 +103,14 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     this.planningConfig = this.roundNumber.getValidPlanningConfig();
     const loggedInUserId = this.authService.getLoggedInUserId();
     const currentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;
-    this.userIsAdmin = currentUser ? currentUser.hasRoles(Role.Admin) : false;
     this.roles = currentUser?.getRoles() ?? 0;
     this.needsRanking = this.roundNumber.getStructureCells().some(structureCell => structureCell.needsRanking());
     const rounds = this.roundNumber.getRounds(undefined);
     this.hasMultiplePoules = rounds.length > 1 || rounds.every(round => round.getPoules().length > 1);
-    this.hasMultipleCategories = this.favoriteCategories?.length > 1;
     this.hasSomeReferees = this.tournament.getCompetition().getReferees().length > 0
       || this.planningConfig.getSelfReferee() !== SelfReferee.Disabled;
     this.hasBegun = this.roundNumber.hasBegun();
+    this.filterEnabled = this.favorites && this.favorites.hasCompetitors();
     this.tournamentHasBegun = this.roundNumber.getFirst().hasBegun();
     this.loadGameData();
     this.hasOnlyGameModeAgainst = this.hasOnlyAgainstGameMode();
@@ -136,7 +134,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private loadGameData() {
-    console.log('loadGameData..');
     this.gameDatas = this.getGameData();
     this.sameDay = this.gameDatas.length > 1 ? this.isSameDay(this.gameDatas[0], this.gameDatas[this.gameDatas.length - 1]) : true;
   }
@@ -151,7 +148,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   private getGameData() {
     const gameDatas: GameData[] = [];
     const games = (new GameGetter()).getGames(this.gameOrder, this.roundNumber, new CategoryMap(this.favoriteCategories));
-    const recesses = games.length > 0 ? this.getRecesses(this.roundNumber) : [];
+    const recessItems = games.length > 0 ? this.getRecessItems(this.roundNumber) : [];
     const pouleDataMap = this.getPouleDataMap();
     games.forEach((game: AgainstGame | TogetherGame) => {
       const poule = game.getPoule();
@@ -159,49 +156,52 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
       if (pouleData === undefined) {
         return;
       }
-      const somePlaceHasACompetitor = this.somePlaceHasACompetitor(game);
       if (this.filterEnabled && this.favorites?.hasItems() && !this.favorites?.hasGameItem(game)) {
         return;
       }
-
+      const somePlaceHasACompetitor = this.somePlaceHasACompetitor(game);
       const gameData: GameData = {
         canChangeResult: this.canChangeResult(game),
         somePlaceHasACompetitor: somePlaceHasACompetitor,
         poule: pouleData,
         hasPopover: pouleData.needsRanking || (!this.roundNumber.isFirst() && somePlaceHasACompetitor),
         game: game,
-        recess: this.removeRecessBeforeGame(game, recesses)
+        recess: this.removeRecessBeforeGame(game, recessItems)
       };
       gameDatas.push(gameData);
     });
-    console.log(games.length, gameDatas.length);
     this.allGamesFiltered = games.length > 0 && gameDatas.length === 0;
     return gameDatas;
   }
 
-  private getRecesses(roundNumber: RoundNumber): Period[] {
+  private getRecessItems(roundNumber: RoundNumber): JsonRecessItem[] {
     const previousLastEndDateTime = this.getPreviousEndDateTime(roundNumber);
-    return this.tournament.getRecesses().map((recess: Recess): Period => {
+    return this.tournament.getRecesses().map((recess: Recess): JsonRecessItem => {
       const startDateTime = recess.getStartDateTime().getTime() < previousLastEndDateTime.getTime() ? previousLastEndDateTime : recess.getStartDateTime();
-      return new Period(startDateTime, recess.getEndDateTime());
+      return {
+        name: recess.getName(),
+        startDate: this.dateFormatter.toString(startDateTime, this.dateFormatter.date()),
+        startTime: this.dateFormatter.toString(startDateTime, this.dateFormatter.time()),
+        endDateTime: recess.getEndDateTime()
+      };
     });
   }
 
-  protected removeRecessBeforeGame(game: Game, recesses: Period[]): Period | undefined {
+  protected removeRecessBeforeGame(game: Game, recessItems: JsonRecessItem[]): JsonRecessItem | undefined {
     if (!this.planningConfig.getEnableTime() || this.gameOrder === GameOrder.ByPoule) {
       return undefined;
     }
-    const recess: Period | undefined = recesses.find((recess: Period) => {
-      return game.getStartDateTime()?.getTime() === recess.getEndDateTime().getTime();
+    const recessItem: JsonRecessItem | undefined = recessItems.find((recessItemIt: JsonRecessItem) => {
+      return game.getStartDateTime()?.getTime() === recessItemIt.endDateTime.getTime();
     });
-    if (recess === undefined) {
+    if (recessItem === undefined) {
       return undefined;
     }
-    const idx = recesses.indexOf(recess);
+    const idx = recessItems.indexOf(recessItem);
     if (idx >= 0) {
-      recesses.splice(idx, 1);
+      recessItems.splice(idx, 1);
     }
-    return recess;
+    return recessItem;
   }
 
   private getPreviousEndDateTime(roundNumber: RoundNumber): Date {
@@ -297,14 +297,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
       return false;
     }
     return this.hasRole(Role.Referee) && this.userRefereeId === referee.getId();
-  }
-
-  hasAdminRole(): boolean {
-    return this.hasRole(Role.Admin);
-  }
-
-  canFilter(): boolean {
-    return !this.hasRole(Role.Admin + Role.GameResultAdmin);
   }
 
   protected hasRole(role: number): boolean {
@@ -531,7 +523,14 @@ interface GameData {
   poule: PouleData;
   hasPopover: boolean;
   game: AgainstGame | TogetherGame;
-  recess: Period | undefined;
+  recess: JsonRecessItem | undefined;
+}
+
+interface JsonRecessItem {
+  name: string,
+  startDate: string,
+  startTime: string,
+  endDateTime: Date
 }
 
 interface PouleData {

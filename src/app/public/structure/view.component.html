@@ -2,7 +2,11 @@
 
   <div class="d-flex justify-content-between ms-1 mb-1">
     <h2>
-      <app-tournament-icon name="structure"></app-tournament-icon> opzet
+      <app-tournament-icon name="structure"></app-tournament-icon> <span class="mx-1">opzet</span> <button
+        *ngIf="!processing && isAdmin()" [routerLink]="['/admin/structure', tournament.getId()]" type="button"
+        class="btn btn-sm btn-outline-primary">
+        <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+      </button>
     </h2>
     <div *ngIf="!processing" class="pe-1">
 
@@ -26,13 +30,6 @@
     <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
   </h2>
 
-  <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-  <div class="text-center">
-    <button *ngIf="!processing && tournament && isAdmin()" [routerLink]="['/admin', tournament.getId()]" type="button"
-      class="btn btn-warning w-100 mb-3">
-      naar het beheergedeelte
-    </button>
-  </div>
   <div *ngIf="!processing" class="row text-center">
 
     <ng-container *ngIf="structure.hasSingleCategory();else withCategories">
@@ -44,8 +41,9 @@
     <ng-template #withCategories>
       <div class="d-flex flex-wrap gap-1">
         <app-tournament-structurecategory *ngFor="let category of favoriteCategories" class="mx-auto" [editable]="false"
-          [filterActive]="isCategoryFilterActive()" [structureNameService]="structureNameService"
-          [showCompetitors]="showCompetitors" [structureEditor]="structureEditor" [category]="category">
+          [showHeader]="favoriteCategories.length > 1" [filterActive]="isCategoryFilterActive()"
+          [structureNameService]="structureNameService" [showCompetitors]="showCompetitors"
+          [structureEditor]="structureEditor" [category]="category">
         </app-tournament-structurecategory>
       </div>
     </ng-template>

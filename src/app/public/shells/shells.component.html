@@ -18,7 +18,7 @@
       <input type="text" class="form-control form-control-search" #inputsearchname (keyup)="onSearchChanges()"
         aria-labelledby="btn-search-tournaments" placeholder="zoek op toernooinaam">
     </form>
-    <table *ngIf="!publicProcessing" class="table">
+    <table *ngIf="!processing" class="table">
       <tbody>
         <tr *ngIf="!searchFilterActive" (click)="expandFutureDays()" class="pointer">
           <td colspan="3" class="text-center">
@@ -28,7 +28,7 @@
           </td>
         </tr>
 
-        <tr class="pointer" (click)="linkToView(shell)" *ngFor="let shell of publicShells">
+        <tr class="pointer" (click)="linkToView(shell)" *ngFor="let shell of shells">
           <td *ngIf="inPast(shell.startDateTime)">
             <span
               style="text-decoration: line-through;">{{dateFormatter.toString(shell.startDateTime,dateFormatter.date())}}
@@ -38,7 +38,7 @@
             {{dateFormatter.toString(shell.startDateTime,dateFormatter.datetime())}}
           </td>
           <td>
-            <span class="d-none d-sm-table-cell">{{shell.sportName}}</span>
+            <app-sport-icon [customId]="shell.singleCustomSport"></app-sport-icon>
           </td>
           <td>{{shell.name}}</td>
         </tr>
@@ -53,7 +53,7 @@
 
       </tbody>
     </table>
-    <h2 *ngIf="publicProcessing" class="text-center">
+    <h2 *ngIf="processing" class="text-center">
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
     <!-- <div

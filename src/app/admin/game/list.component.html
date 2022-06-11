@@ -1,6 +1,6 @@
 <div class="container-fluid px-0 mb-5">
   <div class="row justify-content-around g-0">
-    <div class="col-sm-12 col-md-10 col-lg-8">
+    <div class="col-md-12 col-lg-8">
       <div *ngIf="!processing" class="d-flex justify-content-between">
         <h2>
           <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijden
@@ -10,6 +10,7 @@
             class="btn btn-sm btn-outline-primary me-0" [routerLink]="['/admin/startandrecesses', tournament.getId()]">
             start & pauzes
           </button>
+
         </ng-container>
         <ng-template #withCategories>
           <button type="button" class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
@@ -26,7 +27,8 @@
       <div *ngIf="!processing && structure">
         <app-tournament-roundnumber-planning *ngFor="let roundNumber of structure.getRoundNumbers()"
           [structureNameService]="structureNameService" [tournament]="tournament" [roundNumber]="roundNumber"
-          [favoriteCategories]="favoriteCategories" [roles]="roles" [userRefereeId]="userRefereeId" (scroll)="scroll()">
+          [showLinksToAdmin]="true" [favoriteCategories]="favoriteCategories" [roles]="roles"
+          [userRefereeId]="userRefereeId" (scroll)="scroll()">
         </app-tournament-roundnumber-planning>
       </div>
     </div>

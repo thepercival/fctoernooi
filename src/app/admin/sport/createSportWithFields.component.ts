@@ -60,7 +60,7 @@ export class CreateSportWithFieldsComponent implements OnInit {
         const nrOfFields = 2;
         this.form = new FormGroup({
             sportName: new FormControl({
-                value: this.translate.getSportName(newSport),
+                value: this.translate.getSportName(newSport.getCustomId(), newSport.getName()),
                 disabled: true
             }, Validators.required),
             nrOfFields: new FormControl(nrOfFields),

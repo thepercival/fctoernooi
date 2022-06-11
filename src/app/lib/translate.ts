@@ -7,8 +7,8 @@ import { Sport, ScoreConfig, CustomSport } from 'ngx-sport';
 export class TranslateService {
     static readonly language = 'nl';
 
-    getSportName(sport: Sport): string {
-        switch (sport.getCustomId()) {
+    getSportName(customSport: CustomSport, defaultValue: string): string {
+        switch (customSport) {
             case CustomSport.Badminton: { return 'badminton'; }
             case CustomSport.Basketball: { return 'basketbal'; }
             case CustomSport.Darts: { return 'darten'; }
@@ -28,7 +28,7 @@ export class TranslateService {
             case CustomSport.Padel: { return 'padel'; }
             case CustomSport.Rugby: { return 'rugby'; }
         }
-        return sport.getName();
+        return defaultValue;
     }
 
     getScoreNameSingular(scoreConfig: ScoreConfig): string {

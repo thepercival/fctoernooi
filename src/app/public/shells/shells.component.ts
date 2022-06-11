@@ -1,6 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DateFormatter } from '../../lib/dateFormatter';
+import { FavoritesRepository } from '../../lib/favorites/repository';
 import { TournamentShell } from '../../lib/tournament/shell';
 import { TournamentShellFilter, TournamentShellRepository } from '../../lib/tournament/shell/repository';
 import { IAlert, IAlertType } from '../../shared/common/alert';
@@ -18,9 +19,9 @@ export class PublicShellsComponent {
 
   @ViewChild('inputsearchname') private searchElementRef: ElementRef | undefined;
 
-  public publicShells: TournamentShell[] = [];
+  public shells: TournamentShell[] = [];
   public showingFuture = false;
-  public publicProcessing = true;
+  public processing = true;
   public searchFilterActive = false;
   public searchFilterName: string = '';
   public hasSearched = false;
@@ -35,6 +36,7 @@ export class PublicShellsComponent {
   constructor(
     private router: Router,
     private tournamentShellRepos: TournamentShellRepository,
+    private favoritesRepos: FavoritesRepository,
     public dateFormatter: DateFormatter,
     globalEventsManager: GlobalEventsManager
   ) {
@@ -49,7 +51,7 @@ export class PublicShellsComponent {
 
   disableSearchFilter() {
     this.searchFilterActive = false;
-    this.publicShells = [];
+    this.shells = [];
     this.hourRange = { start: this.defaultHourRange.start, end: this.defaultHourRange.start };
     // this.searchForm.controls.filterName.setValue(undefined);
     this.addToPublicShells(PublicShellsComponent.FUTURE, this.defaultHourRange.end - this.defaultHourRange.start);
@@ -91,44 +93,44 @@ export class PublicShellsComponent {
         this.searchElementRef.nativeElement.focus();
       }
     }, 0);
-    this.publicShells = [];
+    this.shells = [];
   }
 
   changeSearchFilterName(searchFilterName: string) {
     if (searchFilterName.length < 2) {
       return;
     }
-    this.publicProcessing = true;
+    this.processing = true;
     const searchFilter = this.getSearchFilter(undefined, undefined, searchFilterName);
     this.tournamentShellRepos.getObjects(searchFilter)
       .subscribe({
         next: (shellsRes: TournamentShell[]) => {
-          this.publicShells = shellsRes;
-          this.publicProcessing = false;
+          this.shells = shellsRes;
+          this.processing = false;
         },
         error: (e) => {
-          this.setAlert(IAlertType.Danger, e); this.publicProcessing = false;
+          this.setAlert(IAlertType.Danger, e); this.processing = false;
         }
       });
   }
 
   addToPublicShells(pastFuture: number, hoursToAdd: number) {
-    this.publicProcessing = true;
+    this.processing = true;
     const searchFilter = this.extendHourRange(pastFuture, hoursToAdd);
     this.tournamentShellRepos.getObjects(searchFilter)
       .subscribe({
         next: (shellsRes: TournamentShell[]) => {
           this.sortShellsByDateDesc(shellsRes);
           if (pastFuture === PublicShellsComponent.PAST) {
-            this.publicShells = shellsRes.concat(this.publicShells);
+            this.shells = shellsRes.concat(this.shells);
           } else if (pastFuture === PublicShellsComponent.FUTURE) {
-            this.publicShells = this.publicShells.concat(shellsRes);
+            this.shells = this.shells.concat(shellsRes);
           }
           // this.showingFuture = (futureDate === undefined);
-          this.publicProcessing = false;
+          this.processing = false;
         },
         error: (e) => {
-          this.setAlert(IAlertType.Danger, e); this.publicProcessing = false;
+          this.setAlert(IAlertType.Danger, e); this.processing = false;
         }
       });
   }
@@ -146,15 +148,10 @@ export class PublicShellsComponent {
   }
 
   linkToView(shell: TournamentShell) {
-    this.publicProcessing = true;
-    this.router.navigate(['/public', shell.tournamentId]);
+    this.processing = true;
+    const suffix = this.favoritesRepos.hasObject(shell.tournamentId) ? '/favorites' : '';
+    this.router.navigate(['/public' + suffix, shell.tournamentId]);
   }
-
-  // linkToTournament(shell: TournamentShell) {
-  //   this.processingWithRole = true;
-  //   const module = shell.roles > 0 && shell.roles !== Role.Referee ? '/admin' : '/public';
-  //   this.router.navigate([module, shell.tournamentId]);
-  // }
 
   protected setAlert(type: IAlertType, message: string) {
     this.alert = { 'type': type, 'message': message };

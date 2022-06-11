@@ -1,8 +1,9 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-lg-9 col-xl-7">
-      <app-tournament-title [tournament]="tournament">
-      </app-tournament-title>
+      <h2 class="text-center">
+        wedstrijd wijzigen
+      </h2>
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
@@ -10,7 +11,7 @@
       <form *ngIf="!processing && game && tournament && hasAuthorization" [formGroup]="form" (ngSubmit)="save()"
         #f="ngForm" novalidate>
         <app-tournament-basegame-edit [form]="getBaseFormGroup()" [structureNameService]="structureNameService"
-          [game]="game">
+          [game]="game" [structure]="structure">
         </app-tournament-basegame-edit>
         <div class="row mb-3">
           <div class="col-3">
@@ -121,3 +122,6 @@
     </div>
   </div>
 </div>
+
+<app-tournament-navbar [public]="false" *ngIf="tournament" [tournament]="tournament">
+</app-tournament-navbar>

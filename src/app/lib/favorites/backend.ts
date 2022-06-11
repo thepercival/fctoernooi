@@ -13,19 +13,24 @@ export class FavoritesBackEnd {
 
     constructor() { }
 
-    get(tournament: Tournament): JsonFavorites {
+    get(tournamentId: string | number): JsonFavorites {
         this.readAll();
 
-        let jsonFavorites: JsonFavorites | undefined = this.find(tournament.getId());
+        let jsonFavorites: JsonFavorites | undefined = this.find(tournamentId);
         if (jsonFavorites === undefined) {
             jsonFavorites = {
-                tournamentId: tournament.getId(),
+                tournamentId,
                 categoryNames: [],
                 competitorIds: [],
                 refereeIds: []
             };
         }
         return jsonFavorites;
+    }
+
+    has(tournamentId: string | number): boolean {
+        let jsonFavorites: JsonFavorites | undefined = this.find(tournamentId);
+        return jsonFavorites === undefined;
     }
 
     post(jsonFavorites: JsonFavorites) {

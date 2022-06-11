@@ -1,3 +1,5 @@
+<div class="bg-red mt-2">&nbsp;</div>
+<div class="bg-red mt-1">&nbsp;</div>
 <nav class="fixed-bottom navbar-dark bg-dark border-top d-flex justify-content-center">
   <div class="d-flex justify-content-between flex-shrink-1">
 
@@ -33,7 +35,7 @@
     </h2>
 
     <!--favorieten -->
-    <h2 *ngIf="public" class="mb-0">
+    <h2 *ngIf="public && tournament.getCompetitors().length > 0" class="mb-0">
       <a type="button" class="btn {{getTextColorClass(FavoritesScreen)}}"
         [routerLink]="['/public/favorites', tournament.getId()]">
         <fa-icon [icon]="['fas', 'star']"></fa-icon> <br />favorieten

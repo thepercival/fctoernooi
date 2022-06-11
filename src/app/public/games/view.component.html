@@ -1,18 +1,25 @@
 <div class="container-fluid px-0">
   <div class="row justify-content-around g-0">
-    <div class="col-sm-12 col-md-10 col-lg-8">
-      <h2>
-        <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijden
-      </h2>
+    <div class="col-md-12 col-lg-8">
+
+      <div class="d-flex justify-content-between mb-2">
+        <h2>
+          <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> <span class="mx-1">wedstrijden</span>
+          <button *ngIf="!processing && isAdmin()" [routerLink]="['/admin/games', tournament.getId()]" type="button"
+            class="btn btn-sm btn-outline-primary">
+            <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+          </button>
+        </h2>
+        <button *ngIf="!processing && !structure.hasSingleCategory()" type="button"
+          class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
+          (click)="openCategoriesChooseModal(structure)">
+          <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
+        </button>
+      </div>
+
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
-      <div class="text-center">
-        <button *ngIf="!processing && tournament && isAdmin()" [routerLink]="['/admin', tournament.getId()]"
-          type="button" class="btn btn-warning w-100">
-          naar het beheergedeelte
-        </button>
-      </div>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
       <div *ngIf="!processing && tournament && structure">
         <app-tournament-roundnumber-planning *ngFor="let roundNumber of structure.getRoundNumbers()"

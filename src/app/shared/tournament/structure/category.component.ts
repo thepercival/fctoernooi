@@ -13,6 +13,7 @@ import { NameModalComponent } from '../namemodal/namemodal.component';
 export class StructureCategoryComponent implements OnInit {
   @Input() structureEditor!: StructureEditor;
   @Input() category!: Category;
+  @Input() showHeader!: boolean;
   @Input() editable: boolean = false;
   @Input() filterActive: boolean = false;
   @Input() showCompetitors!: boolean;

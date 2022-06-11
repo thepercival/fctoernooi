@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { AgainstRuleSet, Category, CompetitionSport, GameState, StructureNameService } from 'ngx-sport';
+import { Category, CompetitionSport, GameState, StructureNameService } from 'ngx-sport';
 import { AuthService } from '../../../lib/auth/auth.service';
 import { Favorites } from '../../../lib/favorites';
 import { TournamentMapper } from '../../../lib/tournament/mapper';

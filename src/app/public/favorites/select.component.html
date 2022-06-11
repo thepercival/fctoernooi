@@ -11,12 +11,6 @@
     </button>
   </div>
 
-  <!-- <div class="text-center">
-      <button *ngIf="!processing && tournament && isAdmin()" [routerLink]="['/admin', tournament.getId()]" type="button"
-        class="btn btn-warning w-100 mb-3">
-        naar het beheergedeelte
-      </button>
-    </div> -->
   <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
   <div *ngIf="!processing && hasCompetitors() && hasReferees()">
     <div class="d-flex justify-content-between mb-2">
@@ -74,7 +68,7 @@
 
 <ng-template #competitors>
   <app-tournament-favorites-category *ngFor="let category of favoriteCategories" class="mx-auto"
-    [singleCategory]="favoriteCategories.length === 1" [category]="category" [favorites]="favorites"
+    [showHeader]="favoriteCategories.length > 1" [category]="category" [favorites]="favorites"
     [structureNameService]="structureNameService">
   </app-tournament-favorites-category>
 </ng-template>
@@ -101,3 +95,14 @@
 </ng-template>
 <app-tournament-navbar [currentScreen]="FavoritesScreen" [public]="true" *ngIf="tournament" [tournament]="tournament">
 </app-tournament-navbar>
+
+<ng-template #contentInfoModal>
+
+  <ul class="list-group">
+    <li class="list-group-item border-info">
+      Personaliseer je toernooi door een deelnemer(s) te kiezen
+    </li>
+    <li class="list-group-item border-info">Gebruik de balk onderaan het scherm om te navigeren</li>
+  </ul>
+
+</ng-template>

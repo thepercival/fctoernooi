@@ -1,7 +1,7 @@
 <div *ngIf="category">
-  <div class="card border-secondary">
+  <div class="card border-secondary" [ngClass]="{ 'border-0': !showHeader }">
 
-    <div *ngIf="showHeader" class="card-header px-3">
+    <div *ngIf="showHeader" class="card-cat-header px-3">
       <div class="d-flex justify-content-between">
         <h5 class="my-0">
           <span class="fw-bold align-middle">{{category.getName()}}</span>

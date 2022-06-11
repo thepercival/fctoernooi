@@ -19,7 +19,7 @@ export class FavoritesCategoryComponent implements OnInit {
     @Input() favorites!: Favorites;
     // @Input() competitionSports!: CompetitionSport[];
     // @Input() filterActive: boolean = false;
-    @Input() singleCategory!: boolean;
+    @Input() showHeader!: boolean;
     // @Input() favoriteCompetitors: Competitor[] = [];
     @Input() structureNameService!: StructureNameService;
 

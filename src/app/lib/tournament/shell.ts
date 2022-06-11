@@ -1,6 +1,8 @@
+import { CustomSport } from "ngx-sport";
+
 export interface TournamentShell {
     tournamentId: number;
-    sportName: string;
+    singleCustomSport: CustomSport | 0;
     name: string;
     startDateTime: Date;
     roles: number;

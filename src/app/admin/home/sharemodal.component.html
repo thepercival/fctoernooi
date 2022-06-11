@@ -6,46 +6,51 @@
 </div>
 <div class="modal-body">
     <div class="container-fluid">
-        <ngb-alert *ngIf="copied === true" type="info">de url is gekopieerd naar het
-            klembord
-        </ngb-alert>
         <form name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
             <div class="row mb-3">
-                <label for="publicotherid" class="col-9 col-form-label pointer">publiek
+                <label for="publicotherid" class="col-4 col-form-label pointer">publiek
                     <fa-icon (click)="openInfoModal(infoPublic)" [icon]="['fas', 'info-circle']" class="text-info">
                     </fa-icon>
                 </label>
-                <div class="form-check col-3">
+                <div class="form-check col-8">
                     <div class="form-control form-check form-switch">
                         <input type="checkbox" class="form-check-input" id="public" formControlName="public">
                         <label class="form-check-label" for="public"></label>
                     </div>
                 </div>
             </div>
-            <div [ngStyle]="{'visibility':form.value['public'] ? 'visible' : 'hidden'}" class="row mb-3">
+            <div [ngStyle]="{'visibility':form.value['public'] ? 'visible' : 'hidden'}" class="row">
                 <div class="col-4">
                     <label for="url" class="col-form-label">url</label>
                 </div>
                 <div class="col-8">
-                    <input type="url" class="form-control" formControlName="url">
+                    <div class="input-group">
+                        <input type="text" class="form-control" formControlName="url"
+                            placeholder="kopieer url naar klembord" aria-label="kopieer url naar klembord"
+                            aria-describedby="basic-copy">
+                        <button type="button" class="btn btn-outline-secondary" type="button" id="basic-copy"
+                            ngxClipboard [cbContent]="form.controls.url.value" (cbOnSuccess)="copied = true;">
+                            <fa-icon [icon]="['fas', 'copy']"></fa-icon>
+                        </button>
+                    </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
 
-<div class="modal-footer d-flex justify-content-{{form.value['public'] ? 'between' : 'reverse'}}">
-    <button *ngIf="form.value['public']" ngxClipboard type="button" class="btn btn-outline-primary" data-dismiss="modal"
-        (cbOnSuccess)="copied = true;" [cbContent]="form.controls.url.value">
-        <fa-icon [icon]="['fas', 'clipboard-check']"></fa-icon> kopieer url naar klembord
-    </button>
-    <button type="button" class="btn btn-primary" data-dismiss="modal"
+<div class="modal-footer d-flex justify-content-reverse">
+    <ngb-alert *ngIf="copied === true" type="info">de url is gekopieerd naar het
+        klembord
+    </ngb-alert>
+    <button *ngIf="!form.pristine" type="button" class="btn btn-primary" data-dismiss="modal"
         (click)="modal.close(form.value['public'])">opslaan</button>
 </div>
 
 <ng-template #infoPublic>
-    <p class="lead">Publieke toernooien zijn te bekijken door anderen. Standen, uitslagen, etc. zijn live te bekijken,
-        niet publieke
+    <p class="lead">Publieke toernooien zijn te bekijken door anderen. Standen, uitslagen, etc. zijn live te
+        bekijken.<br />
+        Niet publieke
         toernooien zijn alleen voor jou beschikbaar.
     </p>
 </ng-template>

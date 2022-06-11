@@ -19,8 +19,12 @@ export class FavoritesRepository {
         this.mapper = new FavoritesMapper();
     }
 
+    hasObject(tournamentId: number | string): boolean {
+        return this.backend.has(tournamentId);
+    }
+
     getObject(tournament: Tournament, categories: Category[] | undefined): Favorites {
-        return this.mapper.toObject(this.backend.get(tournament), tournament, categories);
+        return this.mapper.toObject(this.backend.get(tournament.getId()), tournament, categories);
     }
 
     editObject(favorites: Favorites) {

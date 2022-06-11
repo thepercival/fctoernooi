@@ -49,10 +49,11 @@
     <ng-template #withCategories>
       <div class="d-flex flex-wrap gap-1">
         <app-tournament-structurecategory *ngFor="let category of favoriteCategories" class="mx-auto card"
-          [editable]="!hasBegun" [filterActive]="isCategoryFilterActive(clonedStructure)"
-          [structureNameService]="structureNameService" [structureEditor]="structureEditor" [lastAction]="lastAction"
-          [category]="category" (addAction)="addAction($event)" (remove)="removeCategory($event)"
-          (updateName)="updateCategoryName($event)" (moveCategoryUp)="moveCategoryUp($event)">
+          [showHeader]="favoriteCategories.length > 1" [editable]="!hasBegun"
+          [filterActive]="isCategoryFilterActive(clonedStructure)" [structureNameService]="structureNameService"
+          [structureEditor]="structureEditor" [lastAction]="lastAction" [category]="category"
+          (addAction)="addAction($event)" (remove)="removeCategory($event)" (updateName)="updateCategoryName($event)"
+          (moveCategoryUp)="moveCategoryUp($event)">
         </app-tournament-structurecategory>
       </div>
     </ng-template>

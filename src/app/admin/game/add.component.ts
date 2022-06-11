@@ -28,6 +28,7 @@ import {
     StructureNameService,
     StartLocationMap,
     CategoryMap,
+    Category,
 } from 'ngx-sport';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -47,6 +48,7 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 })
 export class GameAddComponent extends TournamentComponent implements OnInit {
     private roundNumber!: RoundNumber;
+    public categories: Category[] = [];
     public poules: Poule[] = [];
     public competitionSports: CompetitionSport[] = [];
     public againstSportVariant: AgainstH2h | AgainstGpp | undefined;
@@ -73,6 +75,9 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
         this.form = fb.group({
+            category: [undefined, Validators.compose([
+                Validators.required
+            ])],
             poule: [undefined, Validators.compose([
                 Validators.required
             ])],
@@ -109,16 +114,26 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
                     return;
                 }
                 this.roundNumber = roundNumber;
-                this.poules = this.roundNumber.getPoules(new CategoryMap(this.structure.getCategories()));
                 this.competitionSports = this.roundNumber.getCompetitionSports();
+
+                this.categories = roundNumber.getStructureCells().map(structureCell => structureCell.getCategory());
+                this.changeCategory(this.categories[0]);
+
                 this.initForm();
                 this.processing = false;
             });
         });
     }
 
+    changeCategory(category: Category) {
+        const structureCell = this.roundNumber.getStructureCell(category);
+        this.poules = structureCell.getPoules();
+        this.form.controls.poule.setValue(this.poules[0]);
+    }
 
     protected initForm() {
+        const firstCategory = this.categories[0];
+        this.form.controls.category.setValue(firstCategory);
         // if (this.poules.length === 1) {
         this.form.controls.poule.setValue(this.poules[0]);
         // }
@@ -127,6 +142,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
         this.changeCompetitionSport(this.competitionSports[0]);
         // }
     }
+
 
     changePoule(poule: Poule) {
         this.changeCompetitionSport(this.form.controls.competitionSport.value);
