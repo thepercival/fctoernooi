@@ -8,14 +8,11 @@ import {
 import { RoundNumberPlanningComponent } from './games/roundnumber.component';
 import { PouleRankingModalComponent } from './poulerankingmodal/rankingmodal.component';
 import { RankingEndComponent } from './ranking/end.component';
-import { TitleComponent } from './title/title.component';
 import { StructureRoundArrangeComponent } from './structure/round/arrange.component';
 import { StructureQualifyComponent } from './structure/qualify.component';
 import { StructureRoundComponent } from './structure/round.component';
 import { NgbNavModule, NgbAlertModule, NgbPopoverModule, NgbDatepickerModule, NgbTimepickerModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule, NgbModalConfig, NgbAlertConfig, NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonSharedModule } from '../common/shared.module';
-import { LockerRoomsComponent } from './lockerrooms/lockerrooms.component';
-import { LockerRoomComponent } from './lockerrooms/lockerroom.component';
 import { NameModalComponent } from './namemodal/namemodal.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CompetitorChooseModalComponent } from './competitorchoosemodal/competitorchoosemodal.component';
@@ -37,19 +34,19 @@ import { RankingCategoryComponent } from './ranking/category.component';
 import { RankingAgainstComponent } from './ranking/sports/against.component';
 import { RankingSportsComponent } from './ranking/sports/sports.component';
 import { RankingTogetherComponent } from './ranking/sports/together.component';
+import { LockerRoomComponent } from './lockerroom/lockerroom.component';
 
 @NgModule({
   declarations: [
     RoundNumberPlanningComponent,
+    LockerRoomComponent,
     PouleRankingModalComponent,
     CompetitorChooseModalComponent,
     InfoModalComponent,
-    LockerRoomsComponent, LockerRoomComponent,
     NameModalComponent,
     AgainstQualifyInfoComponent,
     RankingRulesComponent,
     StructureRoundArrangeComponent, StructureQualifyComponent, StructureRoundComponent, StructureCategoryComponent,
-    TitleComponent,
     TournamentIconComponent,
     TournamentNavBarComponent,
     CategoryChooseListComponent, CategoryChooseModalComponent,
@@ -75,7 +72,6 @@ import { RankingTogetherComponent } from './ranking/sports/together.component';
   ],
   exports: [
     InfoModalComponent,
-    LockerRoomsComponent,
     NameModalComponent,
     NgbAlertModule, NgbCollapseModule, NgbDatepickerModule, NgbModalModule, NgbNavModule, NgbPopoverModule, NgbTimepickerModule, NgbProgressbarModule,
     PouleRankingModalComponent,
@@ -89,9 +85,9 @@ import { RankingTogetherComponent } from './ranking/sports/together.component';
     AgainstQualifyInfoComponent,
     RankingRulesComponent,
     RoundNumberPlanningComponent,
+    LockerRoomComponent,
     StructureRoundComponent,
     StructureCategoryComponent,
-    TitleComponent,
     TournamentIconComponent,
     TournamentNavBarComponent
   ]

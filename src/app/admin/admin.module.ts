@@ -73,6 +73,7 @@ import { GameModeModalComponent } from './gameMode/modal.component';
 import { RecessAddComponent } from './startAndRecesses/addRecess.component';
 import { CategoryCompetitorListComponent } from './competitor/category.component';
 import { RankingEditComponent } from './ranking/edit.component';
+import { LockerRoomsEditComponent } from './lockerrooms/lockerrooms.component';
 
 @NgModule({
   imports: [
@@ -81,10 +82,12 @@ import { RankingEditComponent } from './ranking/edit.component';
     RoutingModule,
     ReactiveFormsModule,
     FontAwesomeModule,
-    CommonSharedModule, TournamentModule
+    CommonSharedModule,
+    TournamentModule
 
   ],
   declarations: [
+    AgainstQualifyConfigEditComponent,
     AuthorizationAddComponent,
     AuthorizationExplanationModalComponent,
     AuthorizationListComponent,
@@ -95,37 +98,37 @@ import { RankingEditComponent } from './ranking/edit.component';
     CategoryCompetitorListComponent,
     CompetitorListLineComponent,
     CompetitorListRemoveModalComponent,
+    CreateSportWithFieldsComponent,
     ExportModalComponent,
     FieldListComponent,
     GameAddComponent,
-    GameAmountConfigEditComponent,
     GameAgainstEditComponent,
+    GameAmountConfigEditComponent,
     GameBaseEditComponent,
     GameListComponent,
+    GameModeModalComponent,
     GameTogetherEditComponent,
     HomeComponent,
+    LockerRoomsEditComponent,
     NewComponent,
-    RankingEditComponent,
-    RefereeListComponent,
-    ScoreConfigEditComponent,
-    SponsorEditComponent,
-    SponsorListComponent,
-    SportToAddComponent,
-    CreateSportWithFieldsComponent,
-    StartAndRecessesComponent,
-    RecessAddComponent,
-    StructureEditComponent,
     PlanningConfigComponent,
-    AgainstQualifyConfigEditComponent,
-    TournamentPropertiesComponent,
+    RankingEditComponent,
+    RecessAddComponent,
+    RefereeListComponent,
     RefereeEditComponent,
     RoleItemComponent,
     RoundNumbersSelectorModalComponent,
     RoundsSelectorModalComponent,
+    ScoreConfigEditComponent,
+    SponsorEditComponent,
+    SponsorListComponent,
+    SportToAddComponent,
+    StartAndRecessesComponent,
+    StructureEditComponent,
     ScoreTogetherCardComponent,
     ShareModalComponent,
     StructureSelectRoundComponent,
-    GameModeModalComponent
+    TournamentPropertiesComponent,
   ],
   providers: [
     CompetitionSportService,

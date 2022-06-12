@@ -1,13 +1,11 @@
 <div class="container-fluid px-0">
   <div class="row justify-content-center g-0">
     <div class="col-12 col-lg-10">
-      <app-tournament-title [tournament]="tournament">
-      </app-tournament-title>
       <div class="d-flex justify-content-between mb-3">
         <h2 class="me-auto">
           <fa-icon [icon]="['fas', 'door-closed']"></fa-icon> kleedkamers
         </h2>
-        <button *ngIf="!processing && editMode && hasCompetitors" role="button" (click)="add()"
+        <button *ngIf="!processing && hasCompetitors" role="button" (click)="add()"
           class="btn btn-add btn-outline-primary">
           <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon><span> toevoegen</span>
         </button>
@@ -16,12 +14,6 @@
         <h2 class="text-center">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
-      </div>
-      <div class="text-center">
-        <button *ngIf="!processing && tournament && !editMode && isAdmin()"
-          [routerLink]="['/admin', tournament.getId()]" type="button" class="btn btn-warning w-100 mb-3">
-          naar het beheergedeelte
-        </button>
       </div>
       <ngb-alert *ngIf="!processing && tournament && !hasCompetitors" type="info">er zijn nog geen
         deelnemers
@@ -35,8 +27,8 @@
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
       <div *ngIf="!processing && hasCompetitors" class="d-flex flex-wrap gap-3">
         <app-tournament-lockerroom *ngFor="let lockerRoom of tournament.getLockerRooms()" [lockerRoom]="lockerRoom"
-          [validator]="validator" [editable]="editMode" class="card mx-auto" [favorites]="favorites"
-          (remove)="remove($event)" (changeName)="changeName($event)" (changeCompetitors)="changeCompetitors($event)">
+          [validator]="validator" [editable]="true" class="card mx-auto" (remove)="remove($event)"
+          (changeName)="changeName($event)" (changeCompetitors)="changeCompetitors($event)">
         </app-tournament-lockerroom>
       </div>
       <div *ngIf="validator && !validator.areAllArranged() && hasCompetitors">
@@ -48,8 +40,7 @@
             </div>
             <ul class="list-group list-group-flush text-center">
               <ng-template ngFor let-competitor [ngForOf]="validator.getCompetitors()">
-                <li *ngIf="!validator.isArranged(competitor)" class="list-group-item"
-                  [ngClass]="{ 'favitem': favorites && favorites.hasCompetitor(competitor) }">
+                <li *ngIf="!validator.isArranged(competitor)" class="list-group-item">
                   <span>{{competitor.getName()}}</span>
                 </li>
               </ng-template>
@@ -60,3 +51,5 @@
     </div>
   </div>
 </div>
+<app-tournament-navbar *ngIf="tournament" [tournament]="tournament">
+</app-tournament-navbar>

@@ -11,7 +11,8 @@
     <button *ngIf="!processing && !structure.hasSingleCategory()" type="button"
       class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
       (click)="openCategoriesChooseModal(structure)">
-      <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
+      <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">cat</span><span
+        class="d-none d-sm-inline">egoriën</span>
     </button>
   </div>
 

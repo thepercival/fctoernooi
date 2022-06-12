@@ -1,4 +1,4 @@
-<div class="container-fluid-mb">
+<div class="container-fluid">
 
   <div class="d-flex justify-content-between mb-1">
     <h2>
@@ -13,7 +13,8 @@
         <button [disabled]="clonedStructure.hasSingleCategory()" role="button"
           (click)="openCategoriesChooseModal(this.clonedStructure)"
           class="btn btn-outline-{{getCategoryFavoritesActiveClass(clonedStructure)}}">
-          <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
+          <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">cat</span><span
+            class="d-none d-sm-inline">egoriën</span>
         </button>
       </div>
       <button *ngIf="!hasBegun" role="button" [disabled]="actions.length === 0" (click)="saveStructure()"

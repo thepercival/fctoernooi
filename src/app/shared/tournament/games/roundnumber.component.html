@@ -7,10 +7,12 @@
         <fa-icon [icon]="['fas', 'sync']" [spin]="refreshingData"></fa-icon>
       </button>
     </h2>
-    <button *ngIf="favorites?.hasItems()" type="button"
-      class="btn btn-sm btn-outline-{{filterEnabled ? 'primary' : 'secondary'}}" (click)="toggleFilter()">
-      <fa-icon [icon]="['fas', 'filter']"></fa-icon>
-      <span> filter</span>
+    <button *ngIf="favorites?.hasCompetitors() || favorites?.hasReferees()" type="button"
+      class="btn btn-sm btn-outline-{{filterFavorites ? 'primary' : 'secondary'}}" (click)="toggleFilterFavorites()">
+
+      <span>toon</span>
+      <fa-icon *ngIf="!filterFavorites" [icon]="['fas', 'star']"></fa-icon>
+      <span> {{filterFavorites ? 'alles' : 'favorieten'}}</span>
     </button>
     <button type="button" class="btn btn-sm btn-primary" *ngIf="showLinksToAdmin" (click)="linkToPlanningConfig()">
       <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellen
@@ -39,7 +41,7 @@
       </div>
     </ng-container>
     <ng-template #allGamesFilteredTemplateId>
-      <ngb-alert type="warning">pas je favorieten of categoriën aan</ngb-alert>
+      <ngb-alert type="info">geen wedstrijden, pas je {{allFilteredSubjects.join(' of ')}} aan</ngb-alert>
     </ng-template>
 
     <ngb-alert *ngIf="refreshingData" type="info">de uitslagen worden bijgewerkt</ngb-alert>

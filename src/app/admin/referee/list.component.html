@@ -1,12 +1,10 @@
 <div class="row justify-content-center g-0">
   <div class="col-sm-10 col-md-10 col-lg-6">
-    <app-tournament-title [tournament]="tournament">
-    </app-tournament-title>
     <div class="d-flex justify-content-between pointer me-1" (click)="openHelpModal(contentInfo)">
       <h2>
         <app-tournament-icon name="referee"></app-tournament-icon> scheidsrechters
       </h2>
-      <button type="button" class="btn btn-outline-info">
+      <button type="button" class="btn btn-sm btn-outline-info">
         info<span class="d-none d-sm-inline"></span>
         <fa-icon class="text-info ms-1" [icon]=" ['fas', 'info-circle' ]"></fa-icon>
       </button>
@@ -79,6 +77,7 @@
     </table>
   </div>
 </div>
+<app-tournament-navbar *ngIf="tournament" [tournament]="tournament"></app-tournament-navbar>
 
 <ng-template #contentInfo let-activeModal>
   <ul class="list-group">

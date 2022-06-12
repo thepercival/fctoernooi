@@ -47,15 +47,6 @@ app-root {
   flex: 1 0 auto;
 }
 
-.navbar-margin {
-  margin-bottom: 4rem;
-}
-
-.container-fluid-mb {
-  @extend .container-fluid;
-  @extend .navbar-margin;
-}
-
 .table-alternate {
   background-color: #f5f4f5;
 }

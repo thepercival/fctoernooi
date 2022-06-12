@@ -1,36 +1,32 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
-import { StructureRepository } from '../../../lib/ngx-sport/structure/repository';
-import { TournamentRepository } from '../../../lib/tournament/repository';
-import { TournamentComponent } from '../component';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { LockerRoom } from '../../../lib/lockerroom';
-import { AuthService } from '../../../lib/auth/auth.service';
-import { Role } from '../../../lib/role';
-import { NameModalComponent } from '../namemodal/namemodal.component';
-import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
-import { CompetitorChooseModalComponent } from '../competitorchoosemodal/competitorchoosemodal.component';
-import { FavoritesRepository } from '../../../lib/favorites/repository';
-import { Favorites } from '../../../lib/favorites';
-import { LockerRoomRepository } from '../../../lib/lockerroom/repository';
-import { TournamentCompetitor } from '../../../lib/competitor';
-import { JsonLockerRoom } from '../../../lib/lockerroom/json';
-import { IAlertType } from '../../common/alert';
-import { GlobalEventsManager } from '../../common/eventmanager';
-
+import { AuthService } from '../../lib/auth/auth.service';
+import { TournamentCompetitor } from '../../lib/competitor';
+import { Favorites } from '../../lib/favorites';
+import { FavoritesRepository } from '../../lib/favorites/repository';
+import { LockerRoom } from '../../lib/lockerroom';
+import { JsonLockerRoom } from '../../lib/lockerroom/json';
+import { LockerRoomRepository } from '../../lib/lockerroom/repository';
+import { LockerRoomValidator } from '../../lib/lockerroom/validator';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
+import { Role } from '../../lib/role';
+import { TournamentRepository } from '../../lib/tournament/repository';
+import { IAlertType } from '../../shared/common/alert';
+import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { CompetitorChooseModalComponent } from '../../shared/tournament/competitorchoosemodal/competitorchoosemodal.component';
+import { TournamentComponent } from '../../shared/tournament/component';
+import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
 
 
 @Component({
-  selector: 'app-tournament-lockerrooms',
+  selector: 'app-tournament-lockerrooms-edit',
   templateUrl: './lockerrooms.component.html',
   styleUrls: ['./lockerrooms.component.scss']
 })
-export class LockerRoomsComponent extends TournamentComponent implements OnInit {
+export class LockerRoomsEditComponent extends TournamentComponent implements OnInit {
   hasCompetitors = false;
   validator!: LockerRoomValidator;
-  favorites!: Favorites;
-  editMode: boolean = true;
 
   validations: any = {
     'minlengthname': LockerRoom.MIN_LENGTH_NAME,
@@ -56,18 +52,10 @@ export class LockerRoomsComponent extends TournamentComponent implements OnInit 
   }
 
   initLockerRooms() {
-    if (this.router.url.indexOf('/public') === 0) {
-      this.favorites = this.favRepository.getObject(this.tournament, this.structure.getCategories());
-      this.editMode = false;
-    }
     const competitors = this.tournament.getCompetitors();
     this.validator = new LockerRoomValidator(competitors, this.tournament.getLockerRooms());
     this.hasCompetitors = competitors.length > 0;
     this.processing = false;
-  }
-
-  isAdmin(): boolean {
-    return this.hasRole(this.authService, Role.Admin);
   }
 
   add() {

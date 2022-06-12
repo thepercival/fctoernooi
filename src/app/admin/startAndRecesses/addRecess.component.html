@@ -71,10 +71,13 @@
             </ngb-timepicker>
           </div>
         </div>
-        <div class="row mb-3 justify-content-end">
+        <div class="row">
+          <div class="col-3">
+            <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary">terug</button>
+          </div>
           <div class="col-9">
             <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
-              pauze toevoegen
+              toevoegen
             </button>
           </div>
         </div>

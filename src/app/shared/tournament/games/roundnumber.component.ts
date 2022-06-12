@@ -10,7 +10,6 @@ import {
   PlanningConfig,
   ScoreConfig,
   Place,
-  Period,
   AgainstGame,
   SelfReferee,
   TogetherGame,
@@ -19,14 +18,15 @@ import {
   TogetherGamePlace,
   PlanningEditMode,
   GameOrder,
-  Competitor,
   GameState,
   AgainstVariant,
   StructureNameService,
   Category,
   CategoryMap,
   StructureCell,
-  GameGetter
+  GameGetter,
+  Competitor,
+  StartLocationMap
 } from 'ngx-sport';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -61,15 +61,16 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   @Input() showLinksToAdmin = false;
   @Input() userRefereeId: number | string | undefined;
   @Input() roles: number = 0;
-  @Input() favorites!: Favorites;
+  @Input() favorites: Favorites | undefined;
   @Input() refreshingData: boolean | undefined;
   @Output() refreshData = new EventEmitter();
   @Output() scroll = new EventEmitter();
   alert: IAlert | undefined;
   public sameDay = true;
   public gameOrder: GameOrder = GameOrder.ByDate;
-  public filterEnabled = false;
+  public filterFavorites = false;
   public hasSomeReferees: boolean = false;
+  public allFilteredSubjects: string[] = [];
   public hasBegun: boolean = false;
   public tournamentHasBegun: boolean = false;
   public gameDatas: GameData[] = [];
@@ -110,7 +111,12 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     this.hasSomeReferees = this.tournament.getCompetition().getReferees().length > 0
       || this.planningConfig.getSelfReferee() !== SelfReferee.Disabled;
     this.hasBegun = this.roundNumber.hasBegun();
-    this.filterEnabled = this.favorites && this.favorites.hasCompetitors();
+    // @TODO CDK : wat is de standaard instelling voor 2e ronde met filter
+    // dubbele wedstrijden wanneer filter standaard aan
+    // ik zou zeggen filter aan, wanneer 1 van de favorites voor komt in de rondenummer
+    if (this.favorites) {
+      this.filterFavorites = (this.favorites.hasCompetitors() || this.favorites.hasReferees());
+    }
     this.tournamentHasBegun = this.roundNumber.getFirst().hasBegun();
     this.loadGameData();
     this.hasOnlyGameModeAgainst = this.hasOnlyAgainstGameMode();
@@ -150,15 +156,32 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     const games = (new GameGetter()).getGames(this.gameOrder, this.roundNumber, new CategoryMap(this.favoriteCategories));
     const recessItems = games.length > 0 ? this.getRecessItems(this.roundNumber) : [];
     const pouleDataMap = this.getPouleDataMap();
+    let nrOfFilteredByFavorites = 0, nrOfFilteredByCategories = 0;
     games.forEach((game: AgainstGame | TogetherGame) => {
+
       const poule = game.getPoule();
       const pouleData: PouleData | undefined = pouleDataMap.get(poule.getId());
       if (pouleData === undefined) {
         return;
       }
-      if (this.filterEnabled && this.favorites?.hasItems() && !this.favorites?.hasGameItem(game)) {
+
+      const filterByFavorite = this.filterFavorites && this.favorites
+        && (!this.favorites.hasGameReferee(game) && (pouleDataMap.somePlaceHasCompetitor && !this.favorites.hasGameCompetitor(game)));
+
+      const filterByCategory = this.favorites && this.favorites.hasCategories() && !this.favorites.hasCategory(game.getRound().getCategory());
+
+      if (filterByFavorite || filterByCategory) {
+        if (filterByFavorite) {
+          nrOfFilteredByFavorites++;
+        }
+        if (filterByCategory) {
+          nrOfFilteredByCategories++;
+        }
         return;
       }
+
+
+
       const somePlaceHasACompetitor = this.somePlaceHasACompetitor(game);
       const gameData: GameData = {
         canChangeResult: this.canChangeResult(game),
@@ -171,6 +194,15 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
       gameDatas.push(gameData);
     });
     this.allGamesFiltered = games.length > 0 && gameDatas.length === 0;
+
+    this.allFilteredSubjects = [];
+    if (this.allGamesFiltered && nrOfFilteredByFavorites === games.length) {
+      this.allFilteredSubjects.push('favorieten');
+    }
+    if (this.allGamesFiltered && nrOfFilteredByCategories === games.length) {
+      this.allFilteredSubjects.push('categoriën');
+    }
+
     return gameDatas;
   }
 
@@ -225,8 +257,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     return '';
   }
 
-  toggleFilter() {
-    this.filterEnabled = !this.filterEnabled;
+  toggleFilterFavorites() {
+    this.filterFavorites = !this.filterFavorites;
     this.loadGameData();
   }
 
@@ -247,16 +279,20 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private getPouleDataMap(): PouleDataMap {
-    const pouleDatas = new PouleDataMap();
+    const map = new PouleDataMap();
+    const startLocationMap = this.structureNameService.getStartLocationMap();
     this.roundNumber.getRounds(undefined).forEach((round: Round) => round.getPoules().forEach(poule => {
-      pouleDatas.set(poule.getId(), {
+      map.set(poule.getId(), {
         name: this.structureNameService.getPouleName(poule, false),
         needsRanking: poule.needsRanking(),
         round,
         categoryName: round.getCategory().getName()
       });
+      if (!map.somePlaceHasCompetitor && startLocationMap) {
+        map.checkIfSomePlaceHasCompetitor(poule, startLocationMap);
+      }
     }));
-    return pouleDatas;
+    return map;
   }
 
   getAgainstScore(game: AgainstGame): string {
@@ -540,5 +576,15 @@ interface PouleData {
   categoryName: string
 }
 
-class PouleDataMap extends Map<string | number, PouleData> { }
+class PouleDataMap extends Map<string | number, PouleData> {
+  public somePlaceHasCompetitor: boolean = false;
+
+  checkIfSomePlaceHasCompetitor(poule: Poule, startLocationMap: StartLocationMap): void {
+    // console.log(startLoc, 'rn' + this.roundNumber.getNumber());
+    this.somePlaceHasCompetitor = poule.getPlaces().some((place: Place): boolean => {
+      const startLoc = place.getStartLocation();
+      return startLoc !== undefined && startLocationMap.getCompetitor(startLoc) !== undefined;
+    });
+  }
+}
 

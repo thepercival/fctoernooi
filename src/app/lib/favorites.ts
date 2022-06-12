@@ -17,9 +17,9 @@ export class Favorites {
         return this.tournament;
     }
 
-    hasItems(): boolean {
-        return this.hasCompetitors() || this.hasReferees() || this.hasCategories();
-    }
+    // hasItems(): boolean {
+    // return this.hasCompetitors() || this.hasReferees() || this.hasCategories();
+    // }
 
     // removeNonExisting(tournamentCompetitors: Competitor[], referees: Referee[]) {
     //     this.competitors = this.competitors.filter(competitor => {
@@ -30,9 +30,9 @@ export class Favorites {
     //     });
     // }
 
-    hasGameItem(game: AgainstGame | TogetherGame): boolean {
-        return this.hasGameReferee(game) || this.hasGameCompetitor(game);
-    }
+    // hasGameItem(game: AgainstGame | TogetherGame): boolean {
+    // return this.hasGameReferee(game) || this.hasGameCompetitor(game);
+    // }
 
     getCategoryNames(): string[] {
         return this.categories.map((category: Category) => category.getName());
@@ -111,7 +111,7 @@ export class Favorites {
         return this.competitors.length;
     }
 
-    protected hasGameCompetitor(game: AgainstGame | TogetherGame): boolean {
+    hasGameCompetitor(game: AgainstGame | TogetherGame): boolean {
         if (game instanceof AgainstGame) {
             return this.hasAgainstGameCompetitor(game);
         }

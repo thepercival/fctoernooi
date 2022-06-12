@@ -1,11 +1,11 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-sm-10 col-md-8 col-lg-6">
-      <app-tournament-title [tournament]="tournament">
-      </app-tournament-title>
       <div>
         <h2>
-          <app-tournament-icon name="referee"></app-tournament-icon> scheidsrechter
+          <app-tournament-icon name="referee"></app-tournament-icon> scheidsrechter <span>{{originalReferee !==
+            undefined ?
+            'wijzigen' : 'toevoegen'}}</span>
         </h2>
         <h2 *ngIf="processing" class="text-center">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
@@ -57,14 +57,17 @@
               formControlName="info" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>
-        <div class="row mb-3">
-          <div class="offset-3 col-9">
-            <button [disabled]="form.invalid" type="submit" class="btn btn-primary me-2 mt-4">
+        <div class="row">
+          <div class="col-3">
+            <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary mt-2">terug</button>
+          </div>
+          <div class="col-9">
+            <button [disabled]="form.invalid" type="submit" class="btn btn-primary me-2 mt-2">
               <app-tournament-icon name="referee"></app-tournament-icon> <span>{{originalReferee ? 'wijzigen' :
                 'toevoegen'}}</span>
             </button>
             <button *ngIf="emailaddressChanged() && form.controls.emailaddress.value" [disabled]="form.invalid"
-              type="submit" class="btn btn-primary mt-4" (click)="invite=true">
+              type="submit" class="btn btn-primary mt-2" (click)="invite=true">
               <app-tournament-icon name="referee"></app-tournament-icon> {{ originalReferee ? 'wijzigen' : 'toevoegen'}}
               & uitnodigen
             </button>
@@ -74,6 +77,7 @@
     </div>
   </div>
 </div>
+<app-tournament-navbar *ngIf="tournament" [tournament]="tournament"></app-tournament-navbar>
 
 <ng-template #contentInfoEmail>
   <div class="text-center lead">

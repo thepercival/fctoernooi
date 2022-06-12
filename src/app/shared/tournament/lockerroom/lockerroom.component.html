@@ -11,7 +11,7 @@
 <ul class="card-body list-group list-group-flush p-0">
   <li *ngFor="let competitor of lockerRoom.getCompetitors()" class="list-group-item">
     <span [ngClass]="{ 'favitem': favorites && favorites.hasCompetitor(competitor) }">{{competitor.getName()}}</span>
-    <span *ngIf="validator.isArrangedMultiple(competitor)"
+    <span *ngIf="validator && validator.isArrangedMultiple(competitor)"
       title="ingedeeld in {{validator.nrArranged(competitor)}} kleedkamers"
       class="badge bg-warning ms-1">{{validator.nrArranged(competitor)}}</span>
   </li>

@@ -3,7 +3,8 @@
     <div class="col-sm-10 col-md-8 col-lg-6">
       <div class="text-center">
         <h2>
-          <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemer
+          <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemer <span>{{originalCompetitor !== undefined ?
+            'wijzigen' : 'toevoegen'}}</span>
         </h2>
         <h2 *ngIf="processing">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
@@ -49,10 +50,14 @@
               formControlName="info" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>
-        <div class="row mb-3 justify-content-end">
+        <div class="row mt-2">
+          <div class="col-3">
+            <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary">terug</button>
+          </div>
           <div class="col-9">
             <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
-              <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemer opslaan
+              <fa-icon [icon]="['fas', 'users']"></fa-icon> <span>{{originalCompetitor !== undefined ?
+                'wijzigen' : 'toevoegen'}}</span>
             </button>
           </div>
         </div>
@@ -60,6 +65,4 @@
     </div>
   </div>
 </div>
-
-<app-tournament-navbar *ngIf="tournament" [tournament]="tournament">
-</app-tournament-navbar>
+<app-tournament-navbar *ngIf="tournament" [tournament]="tournament"></app-tournament-navbar>

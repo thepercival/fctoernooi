@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -14,7 +14,6 @@ import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.
 import { SponsorScreensCreator } from '../../lib/liveboard/screenCreator/sponsors';
 import { SponsorScreen } from '../../lib/liveboard/screens';
 import { IAlertType } from '../../shared/common/alert';
-import { ScreenConfigName } from '../../lib/liveboard/screenConfig/name';
 import { ScreenConfig } from '../../lib/liveboard/screenConfig/json';
 import { SponsorMapper } from '../../lib/sponsor/mapper';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
@@ -225,6 +224,3 @@ export interface SponsorValidations {
     maxlengthurl: number;
 }
 
-interface HTMLInputEvent extends Event {
-    target: HTMLInputElement & EventTarget;
-}

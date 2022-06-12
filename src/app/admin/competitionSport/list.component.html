@@ -2,14 +2,12 @@
   <div class="row justify-content-center">
     <div class="col-sm-12 col-md-10 col-lg-6 pt-1">
       <div *ngIf="!showCreateSportWithFields">
-        <app-tournament-title [tournament]="tournament">
-        </app-tournament-title>
         <div class="d-flex justify-content-between mb-1">
           <h2>
             sporten
           </h2>
           <div>
-            <button role="button" (click)="openMultiSportsModal(multiInfo)" class="btn btn-outline-info ms-1">
+            <button role="button" (click)="openMultiSportsModal(multiInfo)" class="btn btn-sm btn-outline-info ms-1">
               hulp <span class="d-none d-sm-inline">multi sporten</span>
             </button>
           </div>
@@ -83,6 +81,7 @@
     </div>
   </div>
 </div>
+<app-tournament-navbar *ngIf="tournament" [tournament]="tournament"></app-tournament-navbar>
 
 <ng-template #content let-modal>
   <div class="modal-header">
