@@ -16,7 +16,7 @@ export class CompetitorChooseModalComponent implements OnInit {
     @Input() competitors: Competitor[] = [];
     @Input() lockerRoom!: LockerRoom;
     @Input() selectedCompetitors: Competitor[] = [];
-    public competitorListItems: CompetitorListItem[] = [];
+    public competitorLists: CompetitorList[] = [];
     public structureNameService!: StructureNameService;
     public startLocationMap!: StartLocationMap;
     public changed = false;
@@ -27,22 +27,29 @@ export class CompetitorChooseModalComponent implements OnInit {
     ngOnInit() {
         this.startLocationMap = new StartLocationMap(this.competitors);
         this.structureNameService = new StructureNameService(this.startLocationMap);
-        this.structure.getRootRounds().forEach((rootRound: Round) => rootRound.getPlaces().forEach((place: Place) => {
-            const startLocation = place.getStartLocation();
-            if (startLocation === undefined) {
-                return;
-            }
-            const competitor = <TournamentCompetitor | undefined>this.startLocationMap.getCompetitor(startLocation);
-            if (competitor === undefined) {
-                return;
-            }
-            this.competitorListItems.push({
-                placeName: this.structureNameService.getPlaceFromName(place, false),
-                competitor: competitor,
-                selected: this.isSelected(competitor),
-                nrOtherLockerRooms: this.validator.nrArranged(competitor, this.lockerRoom)
+        this.structure.getRootRounds().forEach((rootRound: Round) => {
+            const competitorItems: CompetitorListItem[] = [];
+            rootRound.getPlaces().forEach((place: Place) => {
+                const startLocation = place.getStartLocation();
+                if (startLocation === undefined) {
+                    return;
+                }
+                const competitor = <TournamentCompetitor | undefined>this.startLocationMap.getCompetitor(startLocation);
+                if (competitor === undefined) {
+                    return;
+                }
+                competitorItems.push({
+                    placeName: this.structureNameService.getPlaceFromName(place, false),
+                    competitor: competitor,
+                    selected: this.isSelected(competitor),
+                    nrOtherLockerRooms: this.validator.nrArranged(competitor, this.lockerRoom)
+                });
             });
-        }));
+            this.competitorLists.push({
+                categoryName: rootRound.getCategory().getName(),
+                competitorItems
+            });
+        });
     }
 
     hasSelectableCompetitors(): boolean {
@@ -67,8 +74,19 @@ export class CompetitorChooseModalComponent implements OnInit {
     }
 
     getSelectedCompetitors(): TournamentCompetitor[] {
-        return this.competitorListItems.filter(competitorListItem => competitorListItem.selected).map(competitorListItem => competitorListItem.competitor);
+        let competitorItems: TournamentCompetitor[] = [];
+
+        this.competitorLists.forEach((competitorList: CompetitorList) => {
+            const selected = competitorList.competitorItems.filter(competitorItem => competitorItem.selected).map(competitorItem => competitorItem.competitor);
+            competitorItems = competitorItems.concat(selected);
+        });
+        return competitorItems;
     }
+}
+
+interface CompetitorList {
+    categoryName: string;
+    competitorItems: CompetitorListItem[];
 }
 
 interface CompetitorListItem {

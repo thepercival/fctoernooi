@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, timer } from 'rxjs';
@@ -17,6 +17,7 @@ import { catchError, switchMap } from 'rxjs/operators';
 export class ExportModalComponent implements OnInit, OnDestroy {
     @Input() tournament!: Tournament;
     @Input() subjects!: number;
+    @Input() readonlySubjects!: number;
     @Input() fieldDescription!: string;
     form: FormGroup;
     creating = false;
@@ -45,10 +46,11 @@ export class ExportModalComponent implements OnInit, OnDestroy {
                 value: +propertyValue,
                 label: this.getLabel(+propertyValue),
                 enabled: (this.subjects & +propertyValue) > 0,
+                readonly: (this.readonlySubjects & +propertyValue) > 0,
                 iconName: TournamentExportConfig.qrCode === +propertyValue ? 'qrcode' : undefined
             };
             this.exportOptions.push(exportOption);
-            this.form.addControl(exportOption.key, this.formBuilder.control(exportOption.enabled));
+            this.form.addControl(exportOption.key, new FormControl({ value: exportOption.enabled, disabled: exportOption.readonly }));
         }
     }
 
@@ -79,7 +81,7 @@ export class ExportModalComponent implements OnInit, OnDestroy {
             case TournamentExportConfig.gamesPerField:
                 return 'wedstrijden per ' + this.fieldDescription;
             case TournamentExportConfig.planning:
-                return 'wedstrijdplanning';
+                return 'wedstrijden';
             case TournamentExportConfig.poulePivotTables:
                 return 'poule draaitabellen';
             case TournamentExportConfig.lockerRooms:
@@ -149,6 +151,7 @@ interface ExportOption {
     key: string;
     label: string;
     enabled: boolean;
+    readonly: boolean;
     value: TournamentExportConfig;
     iconName: IconName | undefined;
 }

@@ -71,6 +71,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   public filterFavorites = false;
   public hasSomeReferees: boolean = false;
   public allFilteredSubjects: string[] = [];
+  public showToggleFavorites: boolean | undefined;
   public hasBegun: boolean = false;
   public tournamentHasBegun: boolean = false;
   public gameDatas: GameData[] = [];
@@ -111,13 +112,11 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     this.hasSomeReferees = this.tournament.getCompetition().getReferees().length > 0
       || this.planningConfig.getSelfReferee() !== SelfReferee.Disabled;
     this.hasBegun = this.roundNumber.hasBegun();
-    // @TODO CDK : wat is de standaard instelling voor 2e ronde met filter
-    // dubbele wedstrijden wanneer filter standaard aan
-    // ik zou zeggen filter aan, wanneer 1 van de favorites voor komt in de rondenummer
-    if (this.favorites) {
-      this.filterFavorites = (this.favorites.hasCompetitors() || this.favorites.hasReferees());
-    }
     this.tournamentHasBegun = this.roundNumber.getFirst().hasBegun();
+    const categoryMap = new CategoryMap(this.favoriteCategories);
+    if (this.favorites) {
+      this.filterFavorites = (this.favorites.hasCompetitors(categoryMap) || this.favorites.hasReferees());
+    }
     this.loadGameData();
     this.hasOnlyGameModeAgainst = this.hasOnlyAgainstGameMode();
     this.hasGameModeAgainst = this.hasAgainstGameMode();
@@ -135,12 +134,18 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   ngOnChanges(changes: SimpleChanges) {
     if (changes.favoriteCategories !== undefined && changes.favoriteCategories.currentValue !== changes.favoriteCategories.previousValue
       && changes.favoriteCategories.firstChange === false) {
+      if (this.favorites) {
+        const categoryMap = new CategoryMap(this.favoriteCategories);
+        this.filterFavorites = (this.favorites.hasCompetitors(categoryMap) || this.favorites.hasReferees());
+      }
       this.loadGameData();
     }
   }
 
   private loadGameData() {
-    this.gameDatas = this.getGameData();
+    const categoryMap = new CategoryMap(this.favoriteCategories);
+    this.showToggleFavorites = undefined;
+    this.gameDatas = this.getGameData(categoryMap);
     this.sameDay = this.gameDatas.length > 1 ? this.isSameDay(this.gameDatas[0], this.gameDatas[this.gameDatas.length - 1]) : true;
   }
 
@@ -151,9 +156,10 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   get OrderByPoule(): GameOrder { return GameOrder.ByPoule; }
   get OrderByDate(): GameOrder { return GameOrder.ByDate; }
 
-  private getGameData() {
+  private getGameData(categoryMap: CategoryMap) {
     const gameDatas: GameData[] = [];
-    const games = (new GameGetter()).getGames(this.gameOrder, this.roundNumber, new CategoryMap(this.favoriteCategories));
+    const gameGetter = new GameGetter();
+    const games = gameGetter.getGames(this.gameOrder, this.roundNumber);
     const recessItems = games.length > 0 ? this.getRecessItems(this.roundNumber) : [];
     const pouleDataMap = this.getPouleDataMap();
     let nrOfFilteredByFavorites = 0, nrOfFilteredByCategories = 0;
@@ -165,22 +171,22 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
         return;
       }
 
+      const filterByCategory = !categoryMap.has(pouleData.categoryNr);
+
+      const category = categoryMap.get(pouleData.categoryNr);
       const filterByFavorite = this.filterFavorites && this.favorites
-        && (!this.favorites.hasGameReferee(game) && (pouleDataMap.somePlaceHasCompetitor && !this.favorites.hasGameCompetitor(game)));
+        && (!this.favorites.hasGameReferee(game)
+          && (pouleDataMap.somePlaceHasCompetitor && category && !this.favorites.hasGameCompetitor(game)));
 
-      const filterByCategory = this.favorites && this.favorites.hasCategories() && !this.favorites.hasCategory(game.getRound().getCategory());
-
-      if (filterByFavorite || filterByCategory) {
-        if (filterByFavorite) {
-          nrOfFilteredByFavorites++;
-        }
+      if (filterByCategory || filterByFavorite) {
         if (filterByCategory) {
           nrOfFilteredByCategories++;
         }
+        if (filterByFavorite) {
+          nrOfFilteredByFavorites++;
+        }
         return;
       }
-
-
 
       const somePlaceHasACompetitor = this.somePlaceHasACompetitor(game);
       const gameData: GameData = {
@@ -199,8 +205,15 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     if (this.allGamesFiltered && nrOfFilteredByFavorites === games.length) {
       this.allFilteredSubjects.push('favorieten');
     }
+    let allGamesFilteredByCategories = false;
     if (this.allGamesFiltered && nrOfFilteredByCategories === games.length) {
+      allGamesFilteredByCategories = true;
       this.allFilteredSubjects.push('categoriën');
+    }
+    if (this.showToggleFavorites === undefined) {
+      this.showToggleFavorites = !allGamesFilteredByCategories && pouleDataMap.somePlaceHasCompetitor
+        && (this.favorites?.hasCompetitors(categoryMap) || this.favorites?.hasReferees())
+        && (!this.filterFavorites || nrOfFilteredByFavorites > 0)
     }
 
     return gameDatas;
@@ -286,6 +299,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
         name: this.structureNameService.getPouleName(poule, false),
         needsRanking: poule.needsRanking(),
         round,
+        categoryNr: round.getCategory().getNumber(),
         categoryName: round.getCategory().getName()
       });
       if (!map.somePlaceHasCompetitor && startLocationMap) {
@@ -573,6 +587,7 @@ interface PouleData {
   name: string;
   needsRanking: boolean;
   round: Round;
+  categoryNr: number
   categoryName: string
 }
 
@@ -580,7 +595,6 @@ class PouleDataMap extends Map<string | number, PouleData> {
   public somePlaceHasCompetitor: boolean = false;
 
   checkIfSomePlaceHasCompetitor(poule: Poule, startLocationMap: StartLocationMap): void {
-    // console.log(startLoc, 'rn' + this.roundNumber.getNumber());
     this.somePlaceHasCompetitor = poule.getPlaces().some((place: Place): boolean => {
       const startLoc = place.getStartLocation();
       return startLoc !== undefined && startLocationMap.getCompetitor(startLoc) !== undefined;

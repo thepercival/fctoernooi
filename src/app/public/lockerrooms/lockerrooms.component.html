@@ -1,22 +1,31 @@
 <div class="container-fluid px-0">
   <div class="row justify-content-center g-0">
     <div class="col-12 col-lg-10">
-      <div class="d-flex justify-content-between mb-3">
-        <h2 class="me-auto">
-          <fa-icon [icon]="['fas', 'door-closed']"></fa-icon> kleedkamers
+      <div class="text-center">
+        <h2>
+          <fa-icon [icon]="['fas', 'door-closed']"></fa-icon><span class="mx-1">kleedkamers</span>
+          <button *ngIf="!processing && isAdmin()" [routerLink]="['/admin/lockerrooms', tournament.getId()]"
+            type="button" class="btn btn-sm btn-outline-primary">
+            <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+          </button>
         </h2>
       </div>
+
       <div *ngIf="processing">
         <h2 class="text-center">
           <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <div *ngIf="!processing && hasCompetitors" class="d-flex flex-wrap gap-3">
-        <app-tournament-lockerroom *ngFor="let lockerRoom of tournament.getLockerRooms()" [lockerRoom]="lockerRoom"
-          class="card mx-auto" [favorites]="favorites">
-        </app-tournament-lockerroom>
+      <div *ngIf="!processing && hasCompetitors && favoriteLockerRooms.length > 0" class="d-flex flex-wrap gap-3">
+        <ng-template ngFor let-lockerRoom [ngForOf]="favoriteLockerRooms">
+          <app-tournament-lockerroom *ngFor="let lockerRoom of favoriteLockerRooms" [lockerRoom]="lockerRoom"
+            class="card mx-auto" [favorites]="favorites">
+          </app-tournament-lockerroom>
+        </ng-template>
       </div>
     </div>
   </div>
 </div>
+<app-tournament-navbar [public]="true" [currentScreen]="LockerRoomsScreen" *ngIf="tournament" [tournament]="tournament">
+</app-tournament-navbar>

@@ -208,25 +208,45 @@ export class HomeComponent extends TournamentComponent implements OnInit {
             });
     }
 
-    getExportSubjectsFromDevice(): number {
+    getExportSubjectsFromDevice(readonlySubjects: number): number {
         let exportSubjectsItem = localStorage.getItem('exportSubjects');
 
         const defaultSubjects = TournamentExportConfig.gameNotes + TournamentExportConfig.lockerRooms + TournamentExportConfig.qrCode;
         let exportSubjects: number = exportSubjectsItem !== null ? +exportSubjectsItem : defaultSubjects;
 
-        if (!this.lockerRoomValidator.areSomeArranged() && (exportSubjects & TournamentExportConfig.lockerRooms) > 0) {
+        if ((readonlySubjects & TournamentExportConfig.lockerRooms) && (exportSubjects & TournamentExportConfig.lockerRooms) > 0) {
             exportSubjects -= TournamentExportConfig.lockerRooms;
         }
-        if (!this.tournament.getPublic() && (exportSubjects & TournamentExportConfig.qrCode) > 0) {
+        if ((readonlySubjects & TournamentExportConfig.qrCode) && (exportSubjects & TournamentExportConfig.qrCode) > 0) {
             exportSubjects -= TournamentExportConfig.qrCode;
         }
+        if ((readonlySubjects & TournamentExportConfig.gameNotes) && (exportSubjects & TournamentExportConfig.gameNotes) > 0) {
+            exportSubjects -= TournamentExportConfig.gameNotes;
+        }
         return exportSubjects;
+    }
+
+    getExportReadOnlySubjects(): number {
+        let readOnlySubjects = 0;
+
+        if (!this.lockerRoomValidator.areSomeArranged()) {
+            readOnlySubjects += TournamentExportConfig.lockerRooms;
+        }
+        if (!this.tournament.getPublic()) {
+            readOnlySubjects += TournamentExportConfig.qrCode;
+        }
+        if (this.structure.getLastRoundNumber().hasFinished()) {
+            readOnlySubjects += TournamentExportConfig.gameNotes;
+        }
+        return readOnlySubjects;
     }
 
     openModalExport() {
         const activeModal = this.modalService.open(ExportModalComponent, { backdrop: 'static' });
         activeModal.componentInstance.tournament = this.tournament;
-        activeModal.componentInstance.subjects = this.getExportSubjectsFromDevice();
+        const readonlySubjects = this.getExportReadOnlySubjects();
+        activeModal.componentInstance.subjects = this.getExportSubjectsFromDevice(readonlySubjects);
+        activeModal.componentInstance.readonlySubjects = readonlySubjects;
         activeModal.componentInstance.fieldDescription = this.getFieldDescription();
         activeModal.result.then((url: string) => {
         }, (reason) => { });

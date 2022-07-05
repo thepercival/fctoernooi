@@ -17,10 +17,7 @@ import { TournamentCompetitor } from '../../lib/competitor';
 export class FavoritesCategoryComponent implements OnInit {
     @Input() category!: Category;
     @Input() favorites!: Favorites;
-    // @Input() competitionSports!: CompetitionSport[];
-    // @Input() filterActive: boolean = false;
     @Input() showHeader!: boolean;
-    // @Input() favoriteCompetitors: Competitor[] = [];
     @Input() structureNameService!: StructureNameService;
 
     public placeCompetitorItems: PlaceCompetitorItem[] = [];
@@ -47,8 +44,14 @@ export class FavoritesCategoryComponent implements OnInit {
     toggleFavoriteCompetitor(competitor: Competitor) {
         if (this.favorites.hasCompetitor(competitor)) {
             this.favorites.removeCompetitor(competitor);
+            if (!this.favorites.hasCategorySomeCompetitor(this.category)) {
+                this.favorites.removeCategory(this.category);
+            }
         } else {
             this.favorites.addCompetitor(competitor);
+            if (!this.favorites.hasCategory(this.category)) {
+                this.favorites.addCategory(this.category);
+            }
         }
         this.favRepository.editObject(this.favorites);
     }
@@ -60,35 +63,4 @@ export class FavoritesCategoryComponent implements OnInit {
             return { place, competitor: <TournamentCompetitor | undefined>competitor };
         });
     }
-
-    // get RankingScreen(): TournamentScreen { return TournamentScreen.Ranking }
-
-    // getTabName(tabNr: number): string {
-    //     return this.category.getNumber() + '-' + tabNr;
-
-    // }
-
-
-    // isAdmin(): boolean {
-    //     return this.hasRole(this.authService, Role.Admin);
-    // }
-
-    // getRankingRuleSuffix(): string {
-    //     return this.tournament.getCompetition().hasMultipleSports() ? '<small>per sport</small>' : '';
-    // }
-
-    // saveRankingRuleSet(againstRuleSet: AgainstRuleSet) {
-    //     this.resetAlert();
-    //     this.processing = true;
-    //     const json = this.tournamentMapper.toJson(this.tournament);
-    //     json.competition.againstRuleSet = againstRuleSet;
-    //     this.tournamentRepository.editObject(json)
-    //         .subscribe({
-    //             next: (tournament: Tournament) => { this.tournament = tournament; },
-    //             error: (e) => {
-    //                 this.alert = { type: IAlertType.Danger, message: e }; this.processing = false;
-    //             },
-    //             complete: () => this.processing = false
-    //         });
-    // }
 }

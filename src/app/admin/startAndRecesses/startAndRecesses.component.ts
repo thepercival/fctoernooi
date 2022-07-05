@@ -126,7 +126,7 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
                                 this.myNavigation.back();
                             },
                             error: (e) => {
-                                this.setAlert(IAlertType.Danger, 'de wedstrijdplanning is niet opgeslagen: ' + e);
+                                this.setAlert(IAlertType.Danger, 'de wedstrijden is niet opgeslagen: ' + e);
                                 this.processing = false;
                             }
                         });
@@ -152,7 +152,7 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
                                 this.processing = false;
                             },
                             error: (e) => {
-                                this.setAlert(IAlertType.Danger, 'de wedstrijdplanning is niet opgeslagen: ' + e);
+                                this.setAlert(IAlertType.Danger, 'de wedstrijden is niet opgeslagen: ' + e);
                                 this.processing = false;
                             }
                         });

@@ -7,7 +7,7 @@
         <fa-icon [icon]="['fas', 'sync']" [spin]="refreshingData"></fa-icon>
       </button>
     </h2>
-    <button *ngIf="favorites?.hasCompetitors() || favorites?.hasReferees()" type="button"
+    <button *ngIf="showToggleFavorites" type="button"
       class="btn btn-sm btn-outline-{{filterFavorites ? 'primary' : 'secondary'}}" (click)="toggleFilterFavorites()">
 
       <span>toon</span>

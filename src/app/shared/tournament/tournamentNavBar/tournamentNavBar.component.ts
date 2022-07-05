@@ -31,6 +31,7 @@ export class TournamentNavBarComponent implements OnInit {
   }
 
   get StructureScreen(): TournamentScreen { return TournamentScreen.Structure }
+  get LockerRoomsScreen(): TournamentScreen { return TournamentScreen.LockerRooms }
   get GamesScreen(): TournamentScreen { return TournamentScreen.Games }
   get RankingScreen(): TournamentScreen { return TournamentScreen.Ranking }
   get FavoritesScreen(): TournamentScreen { return TournamentScreen.Favorites }
@@ -45,6 +46,10 @@ export class TournamentNavBarComponent implements OnInit {
     this.router.navigate(['/' + (this.public ? 'public' : 'admin') + '/structure', this.tournament.getId()]);
   }
 
+  linkToLockerRooms() {
+    this.router.navigate(['/' + (this.public ? 'public' : 'admin') + '/lockerrooms', this.tournament.getId()]);
+  }
+
   linkToGames() {
     this.router.navigate(['/' + (this.public ? 'public' : 'admin') + '/games', this.tournament.getId()]);
   }
@@ -55,4 +60,18 @@ export class TournamentNavBarComponent implements OnInit {
     return tournamentUser ? tournamentUser.hasARole(roles) : false;
   }
 
+  showNrOfItems(): number {
+    if (!this.public) {
+      return 4;
+    }
+    let nrOfItems = 3;
+    if (this.tournament.getLockerRooms().length > 0) {
+      nrOfItems++;
+    }
+    return this.tournament.getCompetitors().length > 0 ? nrOfItems + 1 : nrOfItems;
+  }
+
+  getFavSuffix(): string {
+    return this.showNrOfItems() > 4 ? 'd-none d-sm-inline' : '';
+  }
 }

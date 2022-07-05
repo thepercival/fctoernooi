@@ -1,4 +1,5 @@
-import { Referee, Competitor, Place, AgainstGame, TogetherGame, AgainstSide, AgainstGamePlace, TogetherGamePlace, StartLocationMap, Category } from 'ngx-sport';
+import { Referee, Competitor, Place, AgainstGame, TogetherGame, AgainstSide, AgainstGamePlace, TogetherGamePlace, StartLocationMap, Category, CategoryMap } from 'ngx-sport';
+import { TournamentCompetitor } from './competitor';
 import { LockerRoom } from './lockerroom';
 import { Tournament } from './tournament';
 
@@ -17,10 +18,6 @@ export class Favorites {
         return this.tournament;
     }
 
-    // hasItems(): boolean {
-    // return this.hasCompetitors() || this.hasReferees() || this.hasCategories();
-    // }
-
     // removeNonExisting(tournamentCompetitors: Competitor[], referees: Referee[]) {
     //     this.competitors = this.competitors.filter(competitor => {
     //         return tournamentCompetitors.some(tournamentCompetitor => (+competitor.getId()) === competitorId);
@@ -28,10 +25,6 @@ export class Favorites {
     //     this.refereeIds = this.refereeIds.filter(refereeId => {
     //         return referees.some(referee => referee.getId() === refereeId);
     //     });
-    // }
-
-    // hasGameItem(game: AgainstGame | TogetherGame): boolean {
-    // return this.hasGameReferee(game) || this.hasGameCompetitor(game);
     // }
 
     getCategoryNames(): string[] {
@@ -81,8 +74,11 @@ export class Favorites {
         this.categories = [];
     }
 
-    hasCompetitors(): boolean {
-        return this.competitors.length > 0;
+    hasCompetitors(categoryMap?: CategoryMap): boolean {
+        if (categoryMap === undefined) {
+            return this.competitors.length > 0;
+        }
+        return this.competitors.some(competitor => categoryMap.has(competitor.getStartLocation().getCategoryNr()));
     }
 
     hasPlace(place: Place): boolean {
@@ -105,6 +101,12 @@ export class Favorites {
             return false;
         }
         return this.competitors.find(competitorIt => competitorIt === competitor) !== undefined;
+    }
+
+    public hasCategorySomeCompetitor(category: Category): boolean {
+        return this.competitors.some((competitor: Competitor): boolean => {
+            return competitor.getStartLocation().getCategoryNr() === category.getNumber();
+        });
     }
 
     getNrOfCompetitors(): number {

@@ -30,7 +30,7 @@ export class FavoritesBackEnd {
 
     has(tournamentId: string | number): boolean {
         let jsonFavorites: JsonFavorites | undefined = this.find(tournamentId);
-        return jsonFavorites === undefined;
+        return jsonFavorites !== undefined;
     }
 
     post(jsonFavorites: JsonFavorites) {

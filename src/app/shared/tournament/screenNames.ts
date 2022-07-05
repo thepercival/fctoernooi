@@ -1,3 +1,3 @@
 export enum TournamentScreen {
-    Structure, Competitors, Games, Ranking, Favorites, Settings
+    Structure, LockerRooms, Competitors, Games, Ranking, Favorites, Settings
 }

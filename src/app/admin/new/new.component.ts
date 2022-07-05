@@ -107,7 +107,7 @@ export class NewComponent implements OnInit {
                       this.router.navigate(['/admin/structure', tournament.getId()]);
                     },
                     error: (e) => {
-                      this.setAlert(IAlertType.Danger, 'de wedstrijdplanning kon niet worden aangemaakt: ' + e);
+                      this.setAlert(IAlertType.Danger, 'de wedstrijden kon niet worden aangemaakt: ' + e);
                       this.processing = false;
                     },
                     complete: () => this.processing = false

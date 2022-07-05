@@ -49,15 +49,18 @@ export class TournamentComponent {
                         }
                         return;
                     }
+                    console.log('cd eded');
                     this.structureRepository.getObject(tournament)
                         .subscribe({
                             next: (structure: Structure) => {
+                                console.log(structure);
                                 this.structure = structure;
                                 if (callback !== undefined) {
                                     callback();
                                 }
                             },
                             error: (e) => {
+                                console.log(e);
                                 this.setAlert(IAlertType.Danger, e); this.processing = false;
                             }
                         });

@@ -8,36 +8,54 @@
     <ngb-alert *ngIf="!hasSelectableCompetitors()" type="danger">er zijn geen deelnemers
         die je kunt kiezen</ngb-alert>
 
-    <table class="table">
-        <tbody>
-            <ng-template ngFor let-competitorListItem [ngForOf]="competitorListItems">
-                <tr *ngIf="competitorListItem.competitor">
-                    <td>
-                        <span [innerHtml]="competitorListItem.placeName"></span>
-                    </td>
-                    <td>
-                        <label class="form-check-label pointer" for="{{getId(competitorListItem.competitor)}}">
-                            {{competitorListItem.competitor.getName()}}
-                        </label>
-                    </td>
-                    <td>
-                        <div
-                            class="d-flex justify-content-end form-check form-switch {{getSelectClass(competitorListItem)}}">
-                            <input type="checkbox" class="form-check-input"
-                                id="{{getId(competitorListItem.competitor)}}" [checked]="competitorListItem.selected"
-                                (change)="toggle(competitorListItem)">
+    <div class="d-flex flex-wrap gap-3 justify-content-center mt-3">
+        <div *ngFor="let competitorList of competitorLists" class="card border-secondary"
+            [ngClass]="{ 'border-0': competitorLists.length > 0 }">
 
-                        </div>
-                    </td>
-                </tr>
-                <tr *ngIf="!competitorListItem.competitor">
-                    <td colspan="3">{{competitorListItem.placeName}}</td>
-                </tr>
-            </ng-template>
-        </tbody>
-    </table>
+            <div *ngIf="competitorLists.length > 0" class="card-cat-header px-3">
+                <div class="d-flex justify-content-between">
+                    <h5 class="my-0">
+                        <span class="fw-bold align-middle">{{competitorList.categoryName}}</span>
+                    </h5>
+                </div>
+            </div>
+
+            <div class="card-body p-0">
+
+                <table class="table">
+                    <tbody>
+                        <ng-template ngFor let-competitorItem [ngForOf]="competitorList.competitorItems">
+                            <tr *ngIf="competitorItem.competitor">
+                                <td>
+                                    <span [innerHtml]="competitorItem.placeName"></span>
+                                </td>
+                                <td>
+                                    <label class="form-check-label pointer" for="{{getId(competitorItem.competitor)}}">
+                                        {{competitorItem.competitor.getName()}}
+                                    </label>
+                                </td>
+                                <td>
+                                    <div
+                                        class="d-flex justify-content-end form-check form-switch {{getSelectClass(competitorItem)}}">
+                                        <input type="checkbox" class="form-check-input"
+                                            id="{{getId(competitorItem.competitor)}}"
+                                            [checked]="competitorItem.selected" (change)="toggle(competitorItem)">
+
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr *ngIf="!competitorItem.competitor">
+                                <td colspan="3">{{competitorItem.placeName}}</td>
+                            </tr>
+                        </ng-template>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
 </div>
 <div class="modal-footer border-top-0 align-items-end">
-    <button type="submit" class="btn btn-outline-primary" data-dismiss="modal"
+    <button type="submit" class="btn btn-primary" data-dismiss="modal"
         (click)="activeModal.close(getSelectedCompetitors())">opslaan</button>
 </div>
