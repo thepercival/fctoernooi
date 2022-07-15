@@ -1,6 +1,7 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-sm-10 col-md-8 col-lg-6">
+
       <div class="d-flex justify-content-between mb-4">
         <h1>nieuw toernooi</h1>
         <h1 class="me-1">
@@ -10,10 +11,11 @@
           </button>
         </h1>
       </div>
+
+      <ngb-alert type="info" class="my-5 text-center">registreer je of log in om een toernooi aan te maken</ngb-alert>
+
+
       <div>
-        <blockquote class="blockquote my-5">
-          <p>Registreer je of log in om een toernooi aan te maken.</p>
-        </blockquote>
         <div class="d-flex justify-content-around">
           <button type="button" class="btn btn-outline-primary" [routerLink]="['/user/register']">
             <fa-icon [icon]="['fas', 'user-circle']"></fa-icon> registreer

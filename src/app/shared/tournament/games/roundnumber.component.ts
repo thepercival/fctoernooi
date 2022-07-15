@@ -254,8 +254,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     if (previous === undefined) {
       return roundNumber.getCompetition().getStartDateTime();
     }
-    const nrOfMinutesToAdd = previous.getValidPlanningConfig().getMaxNrOfMinutesPerGame();
-    return new Date(previous.getLastStartDateTime().getTime() + (nrOfMinutesToAdd * 60000));
+    return previous.getEndDateTime();
   }
 
   getRefereeName(game: AgainstGame | TogetherGame): string | undefined {

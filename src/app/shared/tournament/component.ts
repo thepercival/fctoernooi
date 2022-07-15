@@ -49,7 +49,6 @@ export class TournamentComponent {
                         }
                         return;
                     }
-                    console.log('cd eded');
                     this.structureRepository.getObject(tournament)
                         .subscribe({
                             next: (structure: Structure) => {

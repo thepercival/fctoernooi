@@ -67,7 +67,7 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
                 this.getScreenConfigs()
                     .subscribe({
                         next: (screenConfigs: ScreenConfig[]) => {
-                            console.log(screenConfigs);
+                            // console.log(screenConfigs);
                             this.processScreens(screenConfigs);
                         },
                         error: (e) => {

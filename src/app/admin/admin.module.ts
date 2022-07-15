@@ -46,7 +46,7 @@ import { SponsorEditComponent } from './sponsor/edit.component';
 import { SponsorListComponent } from './sponsor/list.component';
 import { CompetitionSportEditComponent } from './competitionSport/edit.component';
 import { CompetitionSportListComponent } from './competitionSport/list.component';
-import { StructureEditComponent } from './structure/edit.component';
+import { PlanningNavBarComponent } from './structure/planningNavBar.component';
 import { RoutingModule } from './admin-routing.module';
 import { ScoreConfigEditComponent } from './scoreConfig/edit.component';
 import { TournamentModule } from '../shared/tournament/tournament.module';
@@ -74,6 +74,7 @@ import { RecessAddComponent } from './startAndRecesses/addRecess.component';
 import { CategoryCompetitorListComponent } from './competitor/category.component';
 import { RankingEditComponent } from './ranking/edit.component';
 import { LockerRoomsEditComponent } from './lockerrooms/lockerrooms.component';
+import { StructureEditComponent } from './structure/edit.component';
 
 @NgModule({
   imports: [
@@ -112,6 +113,7 @@ import { LockerRoomsEditComponent } from './lockerrooms/lockerrooms.component';
     LockerRoomsEditComponent,
     NewComponent,
     PlanningConfigComponent,
+    PlanningNavBarComponent,
     RankingEditComponent,
     RecessAddComponent,
     RefereeListComponent,

@@ -85,7 +85,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
             return;
         }
         this.startLocation = new StartLocation(categoryNr, pouleNr, placeNr);
-        console.log(this.startLocation);
+        // console.log(this.startLocation);
         this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
         const startLocationMap = new StartLocationMap(this.tournament.getCompetitors());
         this.structureNameService = new StructureNameService(startLocationMap);

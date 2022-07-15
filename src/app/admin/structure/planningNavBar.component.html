@@ -1,0 +1,42 @@
+<div class="d-flex justify-content-center bg-info text-white">
+
+  <div>
+    <ngb-alert *ngIf="unknownPlanning" class="my-0 py-2 border-0" type="info">de planning wordt nog berekend..
+    </ngb-alert>
+  </div>
+
+  <div *ngIf="!unknownPlanning" class="d-flex align-items-end flex-column">
+    <div class="text-nowrap">
+      <span>start</span>
+      <span *ngIf="!processing"> {{showStart()}}</span>
+      <fa-icon *ngIf="processing" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      <span class="d-none d-sm-inline"> uur</span>
+    </div>
+    <div class="text-nowrap">
+      <span>eind</span>
+      <span *ngIf="!processing"> {{showEnd()}}</span>
+      <fa-icon *ngIf="processing" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      <span class="d-none d-sm-inline"> uur</span>
+    </div>
+  </div>
+
+  <div *ngIf="!unknownPlanning" class="mx-3 d-flex align-content-center flex-wrap">
+    <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+  </div>
+
+  <div *ngIf="!unknownPlanning" class="">
+    <div>
+      <span *ngIf="!processing"> {{showNrOfGames()}}</span>
+      <fa-icon *ngIf="processing" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      wed<span class="d-xs-inline d-sm-none">.</span><span class="d-none d-sm-inline">strijden</span> per
+      deeln<span class="d-xs-inline d-sm-none">.</span><span class="d-none d-sm-inline">emers</span>
+    </div>
+    <div>
+      <span *ngIf="!processing"> {{showNrOfMinutes()}}</span>
+      <fa-icon *ngIf="processing" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      min<span class="d-xs-inline d-sm-none">.</span><span class="d-none d-sm-inline">uten</span>
+      per deeln<span class="d-xs-inline d-sm-none">.</span><span class="d-none d-sm-inline">emers</span>
+    </div>
+  </div>
+
+</div>

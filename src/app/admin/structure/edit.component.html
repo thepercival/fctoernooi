@@ -70,7 +70,12 @@
 
 </div>
 
+<ng-template #planningNavBar>
+  <app-tournament-planningNavBar [tournament]="tournament" [structure]="clonedJsonStructure" [delayInSeconds]="2">
+  </app-tournament-planningNavBar>
+</ng-template>
 
 
-<app-tournament-navbar [public]="false" [currentScreen]="StructureScreen" *ngIf="tournament" [tournament]="tournament">
+<app-tournament-navbar [public]="false" [currentScreen]="StructureScreen" *ngIf="tournament" [tournament]="tournament"
+  [upperNavBar]="planningNavBar">
 </app-tournament-navbar>

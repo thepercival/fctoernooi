@@ -1,63 +1,70 @@
 <div>&nbsp;</div>
 <div class="mt-3">&nbsp;</div>
-<nav class="fixed-bottom navbar-dark bg-dark border-top d-flex justify-content-center">
-  <div class="d-flex justify-content-between flex-shrink-1">
+<nav class="fixed-bottom navbar-dark bg-dark border-top ">
 
-    <!-- opzet -->
-    <h2 class="mb-0">
-      <a type="button" class="btn {{getTextColorClass(StructureScreen)}}" (click)="linkToStructure()">
-        <app-tournament-icon name="structure"></app-tournament-icon> <br />opzet
-      </a>
-    </h2>
-
-    <!--kleedkamers -->
-    <h2 *ngIf="public && tournament.getLockerRooms().length > 0" class="mb-0">
-      <a type="button" class="btn {{getTextColorClass(LockerRoomsScreen)}}" (click)="linkToLockerRooms()">
-        <fa-icon [icon]="['fas', 'door-closed']"></fa-icon><br /><span>kleedk</span><span
-          class="d-none d-sm-inline">amers</span>
-      </a>
-    </h2>
-
-    <!--deelnemers -->
-    <h2 *ngIf="!public" class="mb-0">
-      <a type="button" class="btn {{getTextColorClass(CompetitorsScreen)}}"
-        [routerLink]="['/admin/competitors', tournament.getId()]">
-        <fa-icon [icon]="['fas', 'users']"></fa-icon> <br />deelnemers
-      </a>
-    </h2>
-
-    <!--wedstrijden -->
-    <h2 class="mb-0">
-      <a type="button" class="btn {{getTextColorClass(GamesScreen)}}" (click)="linkToGames()">
-        <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> <br />wedstr<span
-          class="d-xs-inline d-sm-none">.</span><span class="d-none d-sm-inline">ijden</span>
-      </a>
-    </h2>
-
-    <!--standen -->
-    <h2 *ngIf="public" class="mb-0">
-      <a type="button" class="btn {{getTextColorClass(RankingScreen)}}"
-        [routerLink]="['/public/ranking', tournament.getId()]">
-        <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> <br />standen
-      </a>
-    </h2>
-
-    <!--favorieten -->
-    <h2 *ngIf="public && tournament.getCompetitors().length > 0" class="mb-0">
-      <a type="button" class="btn {{getTextColorClass(FavoritesScreen)}}"
-        [routerLink]="['/public/favorites', tournament.getId()]">
-        <fa-icon [icon]="['fas', 'star']"></fa-icon> <br /><span>fav</span><span
-          class="{{getFavSuffix()}}">orieten</span>
-      </a>
-    </h2>
-
-    <!-- overzicht -->
-    <h2 *ngIf="!public" class="mb-0">
-      <a type="button" class="btn {{getTextColorClass(SettingsScreen)}}" [routerLink]="['/admin', tournament.getId()]">
-        <fa-icon [icon]="['fas', 'cogs']"></fa-icon> <br />opties
-      </a>
-    </h2>
-
+  <div *ngIf="upperNavBar">
+    <ng-container *ngTemplateOutlet="upperNavBar"></ng-container>
   </div>
 
+  <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-between flex-shrink-1">
+
+      <!-- opzet -->
+      <h2 class="mb-0">
+        <a type="button" class="btn {{getTextColorClass(StructureScreen)}}" (click)="linkToStructure()">
+          <app-tournament-icon name="structure"></app-tournament-icon> <br />opzet
+        </a>
+      </h2>
+
+      <!--kleedkamers -->
+      <h2 *ngIf="public && tournament.getLockerRooms().length > 0" class="mb-0">
+        <a type="button" class="btn {{getTextColorClass(LockerRoomsScreen)}}" (click)="linkToLockerRooms()">
+          <fa-icon [icon]="['fas', 'door-closed']"></fa-icon><br /><span>kleedk</span><span
+            class="d-none d-sm-inline">amers</span>
+        </a>
+      </h2>
+
+      <!--deelnemers -->
+      <h2 *ngIf="!public" class="mb-0">
+        <a type="button" class="btn {{getTextColorClass(CompetitorsScreen)}}"
+          [routerLink]="['/admin/competitors', tournament.getId()]">
+          <fa-icon [icon]="['fas', 'users']"></fa-icon> <br />deelnemers
+        </a>
+      </h2>
+
+      <!--wedstrijden -->
+      <h2 class="mb-0">
+        <a type="button" class="btn {{getTextColorClass(GamesScreen)}}" (click)="linkToGames()">
+          <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> <br />wedstr<span
+            class="d-xs-inline d-sm-none">.</span><span class="d-none d-sm-inline">ijden</span>
+        </a>
+      </h2>
+
+      <!--standen -->
+      <h2 *ngIf="public" class="mb-0">
+        <a type="button" class="btn {{getTextColorClass(RankingScreen)}}"
+          [routerLink]="['/public/ranking', tournament.getId()]">
+          <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> <br />standen
+        </a>
+      </h2>
+
+      <!--favorieten -->
+      <h2 *ngIf="public && tournament.getCompetitors().length > 0" class="mb-0">
+        <a type="button" class="btn {{getTextColorClass(FavoritesScreen)}}"
+          [routerLink]="['/public/favorites', tournament.getId()]">
+          <fa-icon [icon]="['fas', 'star']"></fa-icon> <br /><span>fav</span><span
+            class="{{getFavSuffix()}}">orieten</span>
+        </a>
+      </h2>
+
+      <!-- overzicht -->
+      <h2 *ngIf="!public" class="mb-0">
+        <a type="button" class="btn {{getTextColorClass(SettingsScreen)}}"
+          [routerLink]="['/admin', tournament.getId()]">
+          <fa-icon [icon]="['fas', 'cogs']"></fa-icon> <br />opties
+        </a>
+      </h2>
+
+    </div>
+  </div>
 </nav>

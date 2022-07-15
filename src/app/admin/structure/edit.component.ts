@@ -5,12 +5,14 @@ import {
   Category,
   CompetitionSportService,
   Competitor,
+  JsonStructure,
   PlaceRanges,
   QualifyTarget,
   Round,
   StartLocationMap,
   Structure,
   StructureEditor,
+  StructureMapper,
   StructureNameService
 } from 'ngx-sport';
 
@@ -31,6 +33,7 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 import { CategoryChooseModalComponent } from '../../shared/tournament/category/chooseModal.component';
 import { Favorites } from '../../lib/favorites';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
+import { DateFormatter } from '../../lib/dateFormatter';
 @Component({
   selector: 'app-tournament-structure',
   templateUrl: './edit.component.html',
@@ -41,11 +44,12 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   actions: StructureAction[] = [];
   originalCompetitors!: Competitor[];
   clonedStructure!: Structure;
+  clonedJsonStructure!: JsonStructure;
   public favorites!: Favorites;
   public favoriteCategories!: Category[];
   public structureNameService!: StructureNameService;
   public hasBegun: boolean = true;
-  private scrolled = false;
+  // private scrolled = false;
 
   constructor(
     route: ActivatedRoute,
@@ -58,7 +62,8 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     public structureEditor: StructureEditor,
     private planningRepository: PlanningRepository,
     private myNavigation: MyNavigation,
-    private defaultService: DefaultService
+    private defaultService: DefaultService,
+    private structureMapper: StructureMapper
   ) {
     super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
   }
@@ -72,8 +77,9 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
           next: (structure: Structure) => {
             this.structure = structure;
 
-            console.log('ngOninit', this.structure);
+            // console.log('ngOninit', this.structure);
             this.clonedStructure = this.createClonedStructure(this.structure);
+            this.clonedJsonStructure = this.structureMapper.toJson(this.clonedStructure);
             this.hasBegun = this.clonedStructure.getFirstRoundNumber().hasBegun();
             // MELDING DAT AL IS BEGONNEN!!! KIJK FF IN CATEGORY
             // if (this.hasBegun) {
@@ -90,6 +96,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
             this.structure = this.structureEditor.create(this.competition, pouleStructure, jsonPlanningConfig);
             this.clonedStructure = this.createClonedStructure(this.structure);
             this.hasBegun = this.clonedStructure.getFirstRoundNumber().hasBegun();
+            this.updateFavoriteCategories(this.clonedStructure);
             this.structureNameService = new StructureNameService(new StartLocationMap(this.originalCompetitors));
             this.setAlert(IAlertType.Danger, e + ', new structure created');
             this.processing = false;
@@ -125,16 +132,17 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     this.lastAction = structureAction;
     this.actions.push(structureAction);
 
-    if (structureAction.name === StructureActionName.AddQualifier) {
-      console.log('AddQualifier');
-      console.log(this.clonedStructure.getCategory(2).getRootRound());
-    }
+    // if (structureAction.name === StructureActionName.AddQualifier) {
+    //   console.log('AddQualifier');
+    //   console.log(this.clonedStructure.getCategory(2).getRootRound());
+    // }
     // (new StructureOutput()).toConsole(this.clonedStructure, console);
     // console.log('addAction(post)  has child', .getBorderQualifyGroup(QualifyTarget.Winners) !== undefined);
     this.resetAlert();
     if (structureAction.recreateStructureNameService) {
       this.structureNameService = new StructureNameService();
     }
+    this.clonedJsonStructure = this.structureMapper.toJson(this.clonedStructure);
 
   }
 
@@ -255,24 +263,24 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
 
   protected syncPlanning(structure: Structure) {
     // if (structure.getRoundNumber(1) === undefined) {
-    //   return this.completeSave(structure);
+    //   return this.resetVariablesAfterSave(structure);
     // }
     this.planningRepository.create(structure, this.tournament)
       .subscribe({
         next: () => {
-          this.completeSave(structure)
+          this.resetVariablesAfterSave(structure)
         },
         error: e => { this.setAlert(IAlertType.Danger, e); this.processing = false; },
         complete: () => this.processing = false
       });
   }
 
-  completeSave(structureRes: Structure) {
+  protected resetVariablesAfterSave(structureRes: Structure) {
     // const newClonedStructure = this.createClonedStructure(structureRes);
     // console.log((new StructureOutput()).createGrid(structureRes).equalsGrid(
     //   (new StructureOutput()).createGrid(this.clonedStructure)
     // ));
-    this.clonedStructure = this.createClonedStructure(structureRes);
+    this.clonedStructure = this.createClonedStructure(structureRes); // updates PlanningInfo
     this.updateFavoriteCategories(this.clonedStructure);
     this.actions = [];
     this.processing = false;
@@ -289,6 +297,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   //     this.roundElRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
   //   }
   // }
+
 }
 
 export interface StructureAction {

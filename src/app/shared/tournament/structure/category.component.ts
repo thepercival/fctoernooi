@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Competitor, StructureEditor, Category, StructureNameService } from 'ngx-sport';
-import { StructureAction, UpdateCategoryNameAction } from '../../../admin/structure/edit.component';
+import { StructureAction } from '../../../admin/structure/edit.component';
+import { UpdateCategoryNameAction } from '../../../admin/structure/planningNavBar.component';
 import { CSSService } from '../../common/cssservice';
 import { NameModalComponent } from '../namemodal/namemodal.component';
 

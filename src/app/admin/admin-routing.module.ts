@@ -15,7 +15,6 @@ import { RefereeListComponent } from './referee/list.component';
 import { SponsorEditComponent } from './sponsor/edit.component';
 import { SponsorListComponent } from './sponsor/list.component';
 import { CompetitionSportListComponent } from './competitionSport/list.component';
-import { StructureEditComponent } from './structure/edit.component';
 import { AuthorizationListComponent } from './authorization/list.component';
 import { AuthorizationAddComponent } from './authorization/add.component';
 import { CompetitionSportEditComponent } from './competitionSport/edit.component';
@@ -26,6 +25,7 @@ import { RecessAddComponent } from './startAndRecesses/addRecess.component';
 import { StartAndRecessesComponent } from './startAndRecesses/startAndRecesses.component';
 import { RankingEditComponent } from './ranking/edit.component';
 import { LockerRoomsEditComponent } from './lockerrooms/lockerrooms.component';
+import { StructureEditComponent } from './structure/edit.component';
 
 const routes: Routes = [
   { path: 'new', component: NewComponent }, // ALL ROLES

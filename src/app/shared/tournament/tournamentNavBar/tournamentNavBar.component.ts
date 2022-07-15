@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -13,7 +13,7 @@ import { TournamentScreen } from '../screenNames';
   styleUrls: ['./tournamentNavBar.component.scss']
 })
 export class TournamentNavBarComponent implements OnInit {
-
+  @Input() upperNavBar: TemplateRef<any> | undefined;
   @Input() tournament!: Tournament;
   @Input() public: boolean = false;
   @Input() currentScreen!: TournamentScreen;
