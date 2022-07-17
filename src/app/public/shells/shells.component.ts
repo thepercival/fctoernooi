@@ -150,7 +150,7 @@ export class PublicShellsComponent {
   linkToView(shell: TournamentShell) {
     this.processing = true;
     const suffix = this.favoritesRepos.hasObject(shell.tournamentId) ? '' : '/favorites';
-    console.log(shell.tournamentId, this.favoritesRepos.hasObject(shell.tournamentId));
+    // console.log(shell.tournamentId, this.favoritesRepos.hasObject(shell.tournamentId));
     this.router.navigate(['/public' + suffix, shell.tournamentId]);
   }
 

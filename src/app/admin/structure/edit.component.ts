@@ -254,7 +254,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     this.structureRepository.editObject(this.clonedStructure, this.tournament)
       .subscribe({
         next: (structureRes: Structure) => {
-          console.log('post save-structure has child', this.clonedStructure.getCategory(1).getRootRound().getBorderQualifyGroup(QualifyTarget.Winners) !== undefined);
+          // console.log('post save-structure has child', this.clonedStructure.getCategory(1).getRootRound().getBorderQualifyGroup(QualifyTarget.Winners) !== undefined);
           this.syncPlanning(structureRes/*this.getLowestLevelAction()*/); // should always be first roundnumber
         },
         error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
