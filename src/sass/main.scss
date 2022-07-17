@@ -154,6 +154,13 @@ ngb-alert {
   width: 100%;
 }
 
+.text-header-top {
+  @extend .text-success;
+  @extend .border-0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 .card-auth .card-header {
   margin: -1px;
   border-start-start-radius: 1rem;

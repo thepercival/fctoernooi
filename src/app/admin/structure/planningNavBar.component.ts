@@ -53,9 +53,9 @@ export class PlanningNavBarComponent implements OnInit, OnChanges {
 
     this.processing = true;
     this.unknownPlanning = false;
-    of(structure).pipe(delay(this.delayInSeconds * 1000)).subscribe((structure: JsonStructure) => {
+    this.refreshSubscription = of(structure).pipe(delay(this.delayInSeconds * 1000)).subscribe((structure: JsonStructure) => {
       const obsGetPlanningInfo = this.structureRepository.getPlanningInfo(structure, this.tournament);
-      this.refreshSubscription = obsGetPlanningInfo.subscribe({
+      obsGetPlanningInfo.subscribe({
         next: (planningInfo: JsonPlanningInfo) => {
           this.planningInfo = planningInfo;
           this.processing = false;
