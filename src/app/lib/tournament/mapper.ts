@@ -24,7 +24,7 @@ export class TournamentMapper {
 
     toObject(json: JsonTournament): Tournament {
         const competition = this.competitionMapper.toObject(json.competition);
-        const tournament = new Tournament(competition);
+        const tournament = new Tournament(competition, json.startEditMode);
         if (json.users) {
             json.users.map(jsonUser => this.tournamentUserMapper.toObject(jsonUser, tournament));
         }
@@ -46,7 +46,8 @@ export class TournamentMapper {
             lockerRooms: tournament.getLockerRooms().map(lockerRoom => this.lockerRoomMapper.toJson(lockerRoom)),
             recesses: tournament.getRecesses().map(recess => this.recessMapper.toJson(recess)),
             sponsors: tournament.getSponsors().map(sponsor => this.sponsorMapper.toJson(sponsor)),
-            public: tournament.getPublic()
+            public: tournament.getPublic(),
+            startEditMode: tournament.getStartEditMode()
         };
     }
 }

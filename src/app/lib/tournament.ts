@@ -7,6 +7,7 @@ import { TournamentUser } from './tournament/user';
 import { TournamentCompetitor } from './competitor';
 import { Identifiable } from 'ngx-sport';
 import { Recess } from './recess';
+import { StartEditMode } from './tournament/startEditMode';
 
 export class Tournament extends Identifiable {
     protected id: number = 0;
@@ -17,7 +18,7 @@ export class Tournament extends Identifiable {
     protected recesses: Recess[] = [];
     protected public: boolean = false;
 
-    constructor(protected competition: Competition) {
+    constructor(protected competition: Competition, protected startEditMode: StartEditMode) {
         super();
     }
 
@@ -67,5 +68,9 @@ export class Tournament extends Identifiable {
 
     setPublic(publicX: boolean): void {
         this.public = publicX;
+    }
+
+    getStartEditMode(): StartEditMode {
+        return this.startEditMode;
     }
 }

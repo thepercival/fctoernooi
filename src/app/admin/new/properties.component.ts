@@ -5,6 +5,7 @@ import { JsonTournament } from '../../lib/tournament/json';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { League } from 'ngx-sport';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
+import { StartEditMode } from '../../lib/tournament/startEditMode';
 
 
 @Component({
@@ -68,6 +69,7 @@ export class TournamentPropertiesComponent implements OnInit {
     const jsonTournament: JsonTournament = {
       id: 0,
       public: this.form.controls.public.value,
+      startEditMode: StartEditMode.EditLongTerm, /* @TODO CDK */
       competition: {
         id: 0,
         league: {

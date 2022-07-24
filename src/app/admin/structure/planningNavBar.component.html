@@ -21,7 +21,12 @@
   </div>
 
   <div *ngIf="!unknownPlanning" class="mx-3 d-flex align-content-center flex-wrap">
-    <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+    <button type="button" class="btn btn-sm btn-info border-white"
+      [routerLink]="['/admin/planningconfig', tournament.getId(), 1]">
+      <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+    </button>
+
+
   </div>
 
   <div *ngIf="!unknownPlanning" class="">

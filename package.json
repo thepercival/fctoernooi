@@ -6,9 +6,6 @@
   "scripts": {
     "ng": "ng",
     "build": "ng build",
-    "split-critical-css": "npm run split-critical-css-step1 && npm run split-critical-css-step2",
-    "split-critical-css-step1": "cat dist/index.html | critical --base dist/ --inline > dist/index.critical.html",
-    "split-critical-css-step2": "rm dist/index.html && mv dist/index.critical.html dist/index.html",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
