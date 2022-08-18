@@ -22,7 +22,7 @@
             </div>
         </form>
 
-        <ngb-alert *ngIf="!creating && postCreateAlert" class="mt-1" type="danger">{{postCreateAlert?.message}}
+        <ngb-alert *ngIf="!creating && postCreateAlert" class="mt-1" type="danger">{{postCreateAlert.message}}
         </ngb-alert>
 
         <div *ngIf="creating && progressPercentage < 100">

@@ -11,7 +11,7 @@ import { RankingEndComponent } from './ranking/end.component';
 import { StructureRoundArrangeComponent } from './structure/round/arrange.component';
 import { StructureQualifyComponent } from './structure/qualify.component';
 import { StructureRoundComponent } from './structure/round.component';
-import { NgbNavModule, NgbAlertModule, NgbPopoverModule, NgbDatepickerModule, NgbTimepickerModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule, NgbModalConfig, NgbAlertConfig, NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavModule, NgbAlertModule, NgbPopoverModule, NgbDatepickerModule, NgbTimepickerModule, NgbCollapseModule, NgbModalModule, NgbModalConfig, NgbAlertConfig, NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonSharedModule } from '../common/shared.module';
 import { NameModalComponent } from './namemodal/namemodal.component';
 import { ReactiveFormsModule } from '@angular/forms';
