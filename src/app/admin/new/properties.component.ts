@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output, TemplateRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { JsonTournament } from '../../lib/tournament/json';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
@@ -15,7 +15,7 @@ import { StartEditMode } from '../../lib/tournament/startEditMode';
 })
 export class TournamentPropertiesComponent implements OnInit {
   @Output() toNextStep = new EventEmitter<JsonTournament>();
-  form: FormGroup;
+  form: UntypedFormGroup;
   minDateStruct: NgbDateStruct;
   validations: any = {
     minlengthname: League.MIN_LENGTH_NAME,
@@ -24,7 +24,7 @@ export class TournamentPropertiesComponent implements OnInit {
 
   constructor(
     private modalService: NgbModal,
-    fb: FormBuilder
+    fb: UntypedFormBuilder
   ) {
     const date = new Date();
     this.minDateStruct = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };

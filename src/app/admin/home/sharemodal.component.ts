@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, TemplateRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Tournament } from '../../lib/tournament';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
@@ -12,12 +12,12 @@ import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.
 export class ShareModalComponent implements OnInit {
     @Input() tournament!: Tournament;
     copied: boolean = false;
-    form: FormGroup;
+    form: UntypedFormGroup;
 
     constructor(
         public modal: NgbActiveModal,
         private modalService: NgbModal,
-        formBuilder: FormBuilder) {
+        formBuilder: UntypedFormBuilder) {
         this.form = formBuilder.group({
             url: [{ value: '', disabled: true }, Validators.compose([
             ])],

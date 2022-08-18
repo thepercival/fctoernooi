@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, timer } from 'rxjs';
@@ -19,7 +19,7 @@ export class ExportModalComponent implements OnInit, OnDestroy {
     @Input() subjects!: number;
     @Input() readonlySubjects!: number;
     @Input() fieldDescription!: string;
-    form: FormGroup;
+    form: UntypedFormGroup;
     creating = false;
     pdfLink: string | undefined;
     exportOptions: ExportOption[] = [];
@@ -30,7 +30,7 @@ export class ExportModalComponent implements OnInit, OnDestroy {
 
     constructor(
         public activeModal: NgbActiveModal,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private pdfRepository: PdfRepository) {
         this.form = formBuilder.group({});
         this.appErrorHandler = new AppErrorHandler();
@@ -50,7 +50,7 @@ export class ExportModalComponent implements OnInit, OnDestroy {
                 iconName: TournamentExportConfig.qrCode === +propertyValue ? 'qrcode' : undefined
             };
             this.exportOptions.push(exportOption);
-            this.form.addControl(exportOption.key, new FormControl({ value: exportOption.enabled, disabled: exportOption.readonly }));
+            this.form.addControl(exportOption.key, new UntypedFormControl({ value: exportOption.enabled, disabled: exportOption.readonly }));
         }
     }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -25,7 +25,7 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     styleUrls: ['./edit.component.css']
 })
 export class SponsorEditComponent extends TournamentComponent implements OnInit {
-    form: FormGroup;
+    form: UntypedFormGroup;
     base64Logo!: string | ArrayBuffer | null;
 
     private sponsorScreensCreator!: SponsorScreensCreator;
@@ -55,7 +55,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         private sponsorRepository: SponsorRepository,
         private sponsorMapper: SponsorMapper,
         private myNavigation: MyNavigation,
-        fb: FormBuilder
+        fb: UntypedFormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
         this.logoInput = this.logoInputUpload;

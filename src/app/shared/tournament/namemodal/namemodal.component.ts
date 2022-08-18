@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { VoetbalRange } from 'ngx-sport';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-ngbd-modal-name',
@@ -15,10 +15,10 @@ export class NameModalComponent implements OnInit {
     @Input() labelName!: string;
     @Input() buttonName!: string;
     @Input() buttonOutline!: boolean;
-    form: FormGroup;
+    form: UntypedFormGroup;
     @Input() placeHolder: string | undefined;
 
-    constructor(public activeModal: NgbActiveModal, fb: FormBuilder) {
+    constructor(public activeModal: NgbActiveModal, fb: UntypedFormBuilder) {
         this.form = fb.group({
             name: ''
         });

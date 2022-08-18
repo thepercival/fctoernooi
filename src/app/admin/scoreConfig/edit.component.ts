@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, UntypedFormControl } from '@angular/forms';
 import {
     ScoreConfig,
     JsonScoreConfig,
@@ -31,7 +31,7 @@ export class ScoreConfigEditComponent implements OnInit {
 
     public alert: IAlert | undefined;
     public processing: boolean = true;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     protected selectableCategories!: SelectableCategory[];
     public originalScoreConfig!: ScoreConfig;
     readonly: boolean = true;
@@ -47,7 +47,7 @@ export class ScoreConfigEditComponent implements OnInit {
         public competitionSportMapper: CompetitionSportMapper,
         private mapper: ScoreConfigMapper,
         private translate: TranslateService,
-        fb: FormBuilder,
+        fb: UntypedFormBuilder,
         private modalService: NgbModal
     ) {
         this.form = fb.group({
@@ -108,7 +108,7 @@ export class ScoreConfigEditComponent implements OnInit {
         const next = scoreConfigInit.getNext();
         if (next) {
             this.form.controls.useNext.setValue(next.getEnabled());
-            this.form.addControl('maxNext', new FormControl(
+            this.form.addControl('maxNext', new UntypedFormControl(
                 next.getMaximum(),
                 Validators.compose([
                     Validators.required,

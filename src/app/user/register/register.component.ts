@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -17,7 +17,7 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 })
 export class RegisterComponent extends UserComponent implements OnInit {
   registered = false;
-  form: FormGroup;
+  form: UntypedFormGroup;
 
   validations: UserValidations = {
     minlengthemailaddress: User.MIN_LENGTH_EMAIL,
@@ -32,7 +32,7 @@ export class RegisterComponent extends UserComponent implements OnInit {
     userRepository: UserRepository,
     authService: AuthService,
     globalEventsManager: GlobalEventsManager,
-    fb: FormBuilder
+    fb: UntypedFormBuilder
   ) {
     super(route, router, userRepository, authService, globalEventsManager);
     this.form = fb.group({

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, TemplateRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import {
     NameService,
     AgainstQualifyConfig,
@@ -36,7 +36,7 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
     alert: IAlert | undefined;
     processing: boolean = true;
     public nameService!: NameService;
-    form: FormGroup;
+    form: UntypedFormGroup;
     protected selectableCategories!: SelectableCategory[];
     pointsCalculations: PointsCalculation[] = [];
     readonly: boolean = true;
@@ -57,7 +57,7 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
         private mapper: AgainstQualifyConfigMapper,
         private router: Router,
         private modalService: NgbModal,
-        fb: FormBuilder
+        fb: UntypedFormBuilder
     ) {
         this.form = fb.group({
             pointsCalculation: ['', Validators.compose([

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
 import { IAlertType } from '../../shared/common/alert';
@@ -17,7 +17,7 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 export class ValidateComponent extends UserComponent implements OnInit {
   code: string = '';
   sentValidationRequest: boolean = false;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   constructor(
     route: ActivatedRoute,
@@ -25,7 +25,7 @@ export class ValidateComponent extends UserComponent implements OnInit {
     userRepository: UserRepository,
     authService: AuthService,
     globalEventsManager: GlobalEventsManager,
-    fb: FormBuilder
+    fb: UntypedFormBuilder
   ) {
     super(route, router, userRepository, authService, globalEventsManager);
     this.form = fb.group({

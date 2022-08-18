@@ -1,4 +1,4 @@
-import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     Round,
@@ -53,7 +53,7 @@ export class GameEditComponent extends TournamentComponent {
     public warningsForEqualQualifiers: string[] = [];
     private equalQualifiersChecker!: EqualQualifiersChecker;
     public pristineScore = true;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
     constructor(
         route: ActivatedRoute,
@@ -71,14 +71,14 @@ export class GameEditComponent extends TournamentComponent {
         protected placeMapper: PlaceMapper,
         private translate: TranslateService,
         private myNavigation: MyNavigation,
-        fb: FormBuilder
+        fb: UntypedFormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
         // this.originalPouleState = State.Created;
         this.scoreConfigService = new ScoreConfigService();
         this.form = fb.group({
             played: [false],
-            base: new FormGroup({})
+            base: new UntypedFormGroup({})
         });
     }
 
@@ -114,8 +114,8 @@ export class GameEditComponent extends TournamentComponent {
         );
     }
 
-    getBaseFormGroup(): FormGroup {
-        return <FormGroup>this.form.controls.base;
+    getBaseFormGroup(): UntypedFormGroup {
+        return <UntypedFormGroup>this.form.controls.base;
     }
 
     protected getAuthorization(tournamentUser?: TournamentUser): Observable<boolean> {
@@ -281,7 +281,7 @@ export class GameEditComponent extends TournamentComponent {
     //     return this.firstScoreConfig !== this.firstScoreConfig.getCalculate();
     // }
 
-    protected getPhase(form: FormGroup): number {
+    protected getPhase(form: UntypedFormGroup): number {
         if (form.value['extratime'] === true) {
             return GamePhase.ExtraTime;
         }
@@ -371,8 +371,8 @@ export class GameEditComponent extends TournamentComponent {
 }
 
 class AgainstScoreFormControl {
-    home: FormControl;
-    away: FormControl;
+    home: UntypedFormControl;
+    away: UntypedFormControl;
 
     constructor(
         private scoreConfig: ScoreConfig,
@@ -380,8 +380,8 @@ class AgainstScoreFormControl {
         away: number,
         disabled?: boolean
     ) {
-        this.home = new FormControl({ value: home, disabled: disabled === true });
-        this.away = new FormControl({ value: away, disabled: disabled === true });
+        this.home = new UntypedFormControl({ value: home, disabled: disabled === true });
+        this.away = new UntypedFormControl({ value: away, disabled: disabled === true });
     }
 
     getScore(): AgainstScoreHelper {

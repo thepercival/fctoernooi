@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { League, PlanningEditMode, RoundNumber } from 'ngx-sport';
@@ -33,7 +33,7 @@ import { TournamentScreen } from '../../shared/tournament/screenNames';
     styleUrls: ['./home.component.css']
 })
 export class HomeComponent extends TournamentComponent implements OnInit {
-    copyForm: FormGroup;
+    copyForm: UntypedFormGroup;
     minDateStruct: NgbDateStruct;
     lockerRoomValidator!: LockerRoomValidator;
     hasBegun: boolean = true;
@@ -56,7 +56,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         private authService: AuthService,
         public dateFormatter: DateFormatter,
         private translate: TranslateService,
-        fb: FormBuilder
+        fb: UntypedFormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
         const date = new Date();

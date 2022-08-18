@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ScoreConfig, StructureNameService, TogetherGamePlace, TogetherScore } from 'ngx-sport';
 import { TranslateService } from '../../lib/translate';
 
@@ -9,7 +9,7 @@ import { TranslateService } from '../../lib/translate';
   styleUrls: ['./togetherscorecard.component.css']
 })
 export class ScoreTogetherCardComponent implements OnInit {
-  @Input() form!: FormGroup;
+  @Input() form!: UntypedFormGroup;
   @Input() gamePlace!: TogetherGamePlace;
   @Input() structureNameService!: StructureNameService;
   @Output() afterEdit = new EventEmitter<void>();
@@ -20,21 +20,21 @@ export class ScoreTogetherCardComponent implements OnInit {
 
   ngOnInit() {
     this.firstScoreConfig = this.gamePlace.getGame().getScoreConfig();
-    this.form.addControl('scores', new FormArray([]));
+    this.form.addControl('scores', new UntypedFormArray([]));
     const scoreControls = this.getScoreControls();
     this.gamePlace.getScores().forEach((score: TogetherScore) => {
-      scoreControls.push(new FormControl(score.getScore()));
+      scoreControls.push(new UntypedFormControl(score.getScore()));
     });
     if (scoreControls.length === 0) {
-      scoreControls.push(new FormControl(0));
+      scoreControls.push(new UntypedFormControl(0));
     }
     if (this.firstScoreConfig !== this.firstScoreConfig.getCalculate()) {
-      this.form.addControl('calculate', new FormControl(0));
+      this.form.addControl('calculate', new UntypedFormControl(0));
     }
   }
 
-  getScoreControls(): FormArray {
-    return <FormArray>this.form.controls.scores;
+  getScoreControls(): UntypedFormArray {
+    return <UntypedFormArray>this.form.controls.scores;
   }
 
   getCalculateScoreUnitName(): string {
@@ -99,7 +99,7 @@ export class ScoreTogetherCardComponent implements OnInit {
 
 
   addScoreControl() {
-    this.getScoreControls().push(new FormControl(0));
+    this.getScoreControls().push(new UntypedFormControl(0));
     // this.postScoreControlUpdate();
   }
 

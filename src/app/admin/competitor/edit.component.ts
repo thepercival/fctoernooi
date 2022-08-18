@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     JsonCompetitor,
@@ -26,7 +26,7 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     styleUrls: ['./edit.component.scss']
 })
 export class CompetitorEditComponent extends TournamentComponent implements OnInit {
-    form: FormGroup;
+    form: UntypedFormGroup;
     originalCompetitor: TournamentCompetitor | undefined;
     hasBegun!: boolean;
     public nameService: NameService;
@@ -50,7 +50,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         favRepository: FavoritesRepository,
         private competitorRepository: CompetitorRepository,
         private myNavigation: MyNavigation,
-        fb: FormBuilder
+        fb: UntypedFormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
         this.form = fb.group({

@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     JsonReferee,
@@ -25,7 +25,7 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     styleUrls: ['./edit.component.css']
 })
 export class RefereeEditComponent extends TournamentComponent implements OnInit {
-    form: FormGroup;
+    form: UntypedFormGroup;
     originalReferee: Referee | undefined;
     invite: boolean = false;
 
@@ -49,7 +49,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
         private refereeRepository: RefereeRepository,
         private planningRepository: PlanningRepository,
         private myNavigation: MyNavigation,
-        fb: FormBuilder
+        fb: UntypedFormBuilder
     ) {
 
         // EditPermissions, EmailAddresses

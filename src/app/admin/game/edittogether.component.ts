@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, FormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     TogetherGame,
@@ -60,12 +60,12 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
         placeMapper: PlaceMapper,
         translate: TranslateService,
         myNavigation: MyNavigation,
-        fb: FormBuilder
+        fb: UntypedFormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository,
             authService, gameRepository, mapper, fieldMapper, refereeMapper, placeMapper, translate, myNavigation, fb);
         // this.originalPouleState = State.Created;        
-        this.form.addControl('gamePlaces', new FormGroup({}));
+        this.form.addControl('gamePlaces', new UntypedFormGroup({}));
     }
 
     ngOnInit() {
@@ -85,7 +85,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
         this.planningConfig = roundNumber.getValidPlanningConfig();
         this.firstScoreConfig = this.game.getScoreConfig();
         this.game.getTogetherPlaces().forEach((gamePlace: TogetherGamePlace) => {
-            this.getFormGroupGamePlaces().addControl('' + gamePlace.getId(), new FormGroup({}));
+            this.getFormGroupGamePlaces().addControl('' + gamePlace.getId(), new UntypedFormGroup({}));
         });
         this.form.controls.played.setValue(this.game.getState() === GameState.Finished);
         //     this.form.controls.extension.setValue(this.game.getFinalPhase() === Game.Phase_ExtraTime);
@@ -98,12 +98,12 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
 
     }
 
-    getFormGroupGamePlace(gamePlaceId: string | number): FormGroup {
-        return <FormGroup>this.getFormGroupGamePlaces().controls[gamePlaceId];
+    getFormGroupGamePlace(gamePlaceId: string | number): UntypedFormGroup {
+        return <UntypedFormGroup>this.getFormGroupGamePlaces().controls[gamePlaceId];
     }
 
-    getFormGroupGamePlaces(): FormGroup {
-        return <FormGroup>this.form.controls.gamePlaces;
+    getFormGroupGamePlaces(): UntypedFormGroup {
+        return <UntypedFormGroup>this.form.controls.gamePlaces;
     }
 
     getGame(): TogetherGame {
@@ -132,7 +132,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
         if (played === false) {
             // this.form.controls.extension.setValue(false);
             this.game.getPlaces().forEach((gamePlace: AgainstGamePlace | TogetherGamePlace) => {
-                const scores = <FormArray>this.getFormGroupGamePlace(gamePlace.getId()).controls.scores;
+                const scores = <UntypedFormArray>this.getFormGroupGamePlace(gamePlace.getId()).controls.scores;
                 for (let scoreControl of scores.controls) {
                     scoreControl.setValue(0);
                 }
@@ -197,7 +197,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
         this.formToJsonHelper(jsonGame);
         jsonGame.places.forEach((jsonGamePlace: JsonTogetherGamePlace) => {
             jsonGamePlace.scores = [];
-            const scores = <FormArray>this.getFormGroupGamePlace(jsonGamePlace.id).controls.scores;
+            const scores = <UntypedFormArray>this.getFormGroupGamePlace(jsonGamePlace.id).controls.scores;
             for (let scoreControl of scores.controls) {
                 if (scoreControl.value < 0) {
                     continue;
@@ -217,7 +217,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
     areAllScoresValid(): boolean {
         return this.game.getTogetherPlaces().every((gamePlace: TogetherGamePlace) => {
             const formGroupGamePlace = this.getFormGroupGamePlace(gamePlace.getId());
-            const scores = <FormArray>formGroupGamePlace.controls.scores;
+            const scores = <UntypedFormArray>formGroupGamePlace.controls.scores;
             return scores.controls.every((scoreControl: AbstractControl) => {
                 return scoreControl.value >= 0;
             });

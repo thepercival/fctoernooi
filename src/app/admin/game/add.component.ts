@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     GameState,
@@ -54,7 +54,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
     public againstSportVariant: AgainstH2h | AgainstGpp | undefined;
     public singleSportVariant: Single | undefined;
     public allInOneGameSportVariant: AllInOneGame | undefined;
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public structureNameService!: StructureNameService;
 
     constructor(
@@ -71,7 +71,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
         private refereeMapper: RefereeMapper,
         private placeMapper: PlaceMapper,
         public dateFormatter: DateFormatter,
-        fb: FormBuilder
+        fb: UntypedFormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
         this.form = fb.group({
@@ -84,22 +84,22 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
             competitionSport: [undefined, Validators.compose([
                 Validators.required
             ])],
-            gamePlaces: new FormGroup({}),
-            homeGamePlaces: new FormGroup({}),
-            awayGamePlaces: new FormGroup({}),
+            gamePlaces: new UntypedFormGroup({}),
+            homeGamePlaces: new UntypedFormGroup({}),
+            awayGamePlaces: new UntypedFormGroup({}),
         });
     }
 
-    getGamePlacesFormGroup(): FormGroup {
-        return <FormGroup>this.form.controls.gamePlaces;
+    getGamePlacesFormGroup(): UntypedFormGroup {
+        return <UntypedFormGroup>this.form.controls.gamePlaces;
     }
 
-    getHomeGamePlacesFormGroup(): FormGroup {
-        return <FormGroup>this.form.controls.homeGamePlaces;
+    getHomeGamePlacesFormGroup(): UntypedFormGroup {
+        return <UntypedFormGroup>this.form.controls.homeGamePlaces;
     }
 
-    getAwayGamePlacesFormGroup(): FormGroup {
-        return <FormGroup>this.form.controls.awayGamePlaces;
+    getAwayGamePlacesFormGroup(): UntypedFormGroup {
+        return <UntypedFormGroup>this.form.controls.awayGamePlaces;
     }
 
     ngOnInit() {
@@ -150,20 +150,20 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
 
     changeCompetitionSport(competitionSport: CompetitionSport) {
         this.setSportVariants(competitionSport);
-        this.form.controls.homeGamePlaces = new FormGroup({});
-        this.form.controls.awayGamePlaces = new FormGroup({});
-        this.form.controls.gamePlaces = new FormGroup({});
+        this.form.controls.homeGamePlaces = new UntypedFormGroup({});
+        this.form.controls.awayGamePlaces = new UntypedFormGroup({});
+        this.form.controls.gamePlaces = new UntypedFormGroup({});
 
         if (this.againstSportVariant !== undefined) {
             for (let homeNr = 1; homeNr <= this.againstSportVariant.getNrOfHomePlaces(); homeNr++) {
-                this.getHomeGamePlacesFormGroup().addControl('' + homeNr, new FormControl({}));
+                this.getHomeGamePlacesFormGroup().addControl('' + homeNr, new UntypedFormControl({}));
             }
             for (let awayNr = 1; awayNr <= this.againstSportVariant.getNrOfAwayPlaces(); awayNr++) {
-                this.getAwayGamePlacesFormGroup().addControl('' + awayNr, new FormControl({}));
+                this.getAwayGamePlacesFormGroup().addControl('' + awayNr, new UntypedFormControl({}));
             }
         } else if (this.singleSportVariant !== undefined) {
             for (let placeNr = 1; placeNr <= this.singleSportVariant.getNrOfGamePlaces(); placeNr++) {
-                this.getGamePlacesFormGroup().addControl('' + placeNr, new FormControl({}));
+                this.getGamePlacesFormGroup().addControl('' + placeNr, new UntypedFormControl({}));
             }
         }
     }

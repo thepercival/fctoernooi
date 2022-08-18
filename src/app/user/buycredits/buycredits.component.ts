@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
 import { IAlertType } from '../../shared/common/alert';
@@ -19,7 +19,7 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 })
 export class BuyCreditsComponent extends UserComponent implements OnInit {
   purpose: Purpose | undefined;
-  form: FormGroup;
+  form: UntypedFormGroup;
   public paymentMethods!: Observable<string[]>;
   public idealIssuers!: Observable<IDealIssuer[]>;
   public nrOfCreditsOptions!: Observable<number[]>;
@@ -31,7 +31,7 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
     globalEventsManager: GlobalEventsManager,
     private paymentRepository: PaymentRepository,
     public myNavigation: MyNavigation,
-    fb: FormBuilder
+    fb: UntypedFormBuilder
   ) {
     super(route, router, userRepository, authService, globalEventsManager);
     this.form = fb.group({

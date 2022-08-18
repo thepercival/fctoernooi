@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     JsonPeriod,
@@ -26,7 +26,7 @@ import { JsonRecess } from '../../lib/recess/json';
     styleUrls: ['./addRecess.component.css']
 })
 export class RecessAddComponent extends TournamentComponent implements OnInit {
-    form: FormGroup;
+    form: UntypedFormGroup;
     hasBegun!: boolean;
     minDateStruct!: NgbDateStruct;
 
@@ -41,7 +41,7 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
         private recessRepository: RecessRepository,
         private planningRepository: PlanningRepository,
         private myNavigation: MyNavigation,
-        fb: FormBuilder
+        fb: UntypedFormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
         this.form = fb.group({

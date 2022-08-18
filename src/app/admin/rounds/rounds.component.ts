@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { StructureEditor, StructureNameService } from 'ngx-sport';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { CSSService } from '../../shared/common/cssservice';
@@ -16,11 +16,11 @@ export class StructureSelectRoundComponent implements OnInit {
   @Input() hasOwnConfig!: Function;
   @Input() structureNameService!: StructureNameService;
   @Output() checkSomeRoundsSelected = new EventEmitter<void>();
-  form: FormGroup;
+  form: UntypedFormGroup;
 
   constructor(
     public cssService: CSSService,
-    fb: FormBuilder,
+    fb: UntypedFormBuilder,
     private structureEditor: StructureEditor,
     private defaultService: DefaultService
   ) {

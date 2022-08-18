@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { AgainstGpp, AgainstH2h, AllInOneGame, GameMode, GamePlaceStrategy, NameService, PouleStructure, Single, Sport, VoetbalRange } from 'ngx-sport';
 
 import { IAlert, IAlertType } from '../../shared/common/alert';
@@ -23,7 +23,7 @@ export class CreateSportWithFieldsComponent implements OnInit {
     @Output() created = new EventEmitter<SportWithFields>();
     @Output() goToPrevious = new EventEmitter<void>();
     processing = true;
-    form: FormGroup;
+    form: UntypedFormGroup;
     public alert: IAlert | undefined;
     public gameModes: GameMode[] = [GameMode.Single, GameMode.Against, GameMode.AllInOneGame];
     public selectedGameMode!: GameMode;
@@ -43,7 +43,7 @@ export class CreateSportWithFieldsComponent implements OnInit {
         private translate: TranslateService,
         private defaultService: DefaultService,
         private modalService: NgbModal,
-        private fb: FormBuilder
+        private fb: UntypedFormBuilder
     ) {
         this.form = this.fb.group({
         });
@@ -58,20 +58,20 @@ export class CreateSportWithFieldsComponent implements OnInit {
         this.nrOfGamePlacesOptions = this.getNrOfGamePlacesOptions(newSport.getDefaultGameMode());
         this.gameAmountRange = this.defaultService.getGameAmountRange(newSport.getDefaultGameMode());
         const nrOfFields = 2;
-        this.form = new FormGroup({
-            sportName: new FormControl({
+        this.form = new UntypedFormGroup({
+            sportName: new UntypedFormControl({
                 value: this.translate.getSportName(newSport.getCustomId(), newSport.getName()),
                 disabled: true
             }, Validators.required),
-            nrOfFields: new FormControl(nrOfFields),
-            gameMode: new FormControl({
+            nrOfFields: new UntypedFormControl(nrOfFields),
+            gameMode: new UntypedFormControl({
                 value: this.nameService.getGameModeName(newSport.getDefaultGameMode()),
                 disabled: true
             }, Validators.required),
-            mixed: new FormControl(newSport.getDefaultNrOfSidePlaces() > 1),
-            nrOfHomePlaces: new FormControl(newSport.getDefaultNrOfSidePlaces()),
-            nrOfAwayPlaces: new FormControl(newSport.getDefaultNrOfSidePlaces()),
-            nrOfGamePlaces: new FormControl(1)
+            mixed: new UntypedFormControl(newSport.getDefaultNrOfSidePlaces() > 1),
+            nrOfHomePlaces: new UntypedFormControl(newSport.getDefaultNrOfSidePlaces()),
+            nrOfAwayPlaces: new UntypedFormControl(newSport.getDefaultNrOfSidePlaces()),
+            nrOfGamePlaces: new UntypedFormControl(1)
         });
         if (newSport.getCustomId() !== 0) {
             this.form.controls.gameMode.disable();

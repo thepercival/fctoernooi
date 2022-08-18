@@ -8,7 +8,7 @@ import { getRoleName, Role } from '../../lib/role';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { User } from '../../lib/user';
 import { TournamentInvitationRepository } from '../../lib/tournament/invitation/repository';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl } from '@angular/forms';
 import { MyNavigation } from '../../shared/common/navigation';
 import { JsonTournamentInvitation } from '../../lib/tournament/invitation/mapper';
 import { AuthorizationExplanationModalComponent } from './infomodal.component';
@@ -22,7 +22,7 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     styleUrls: ['./add.component.scss']
 })
 export class AuthorizationAddComponent extends TournamentComponent implements OnInit {
-    form: FormGroup;
+    form: UntypedFormGroup;
     roleItems: RoleItem[] = [];
 
     validations: AdminAuthValidations = {
@@ -40,7 +40,7 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
         favRepository: FavoritesRepository,
         private invitationRepository: TournamentInvitationRepository,
         private myNavigation: MyNavigation,
-        fb: FormBuilder,
+        fb: UntypedFormBuilder,
 
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
@@ -55,7 +55,7 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
         this.form = fb.group(config);
         this.roleItems = this.createRoleItems();
         this.roleItems.forEach((roleItem: RoleItem) => {
-            this.form.addControl('role' + roleItem.value, new FormControl(roleItem.selected));
+            this.form.addControl('role' + roleItem.value, new UntypedFormControl(roleItem.selected));
         });
     }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     GameState,
@@ -55,14 +55,14 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
         placeMapper: PlaceMapper,
         translate: TranslateService,
         myNavigation: MyNavigation,
-        fb: FormBuilder
+        fb: UntypedFormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository,
             authService, gameRepository, mapper, fieldMapper, refereeMapper, placeMapper, translate, myNavigation, fb);
         // this.originalPouleState = State.Created;
-        this.form.addControl('extratime', new FormControl(false));
-        this.form.addControl('homeExtraPoints', new FormControl(false));
-        this.form.addControl('awayExtraPoints', new FormControl(false));
+        this.form.addControl('extratime', new UntypedFormControl(false));
+        this.form.addControl('homeExtraPoints', new UntypedFormControl(false));
+        this.form.addControl('awayExtraPoints', new UntypedFormControl(false));
     }
 
     ngOnInit() {
@@ -206,8 +206,8 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
 }
 
 class AgainstScoreFormControl {
-    home: FormControl;
-    away: FormControl;
+    home: UntypedFormControl;
+    away: UntypedFormControl;
 
     constructor(
         private scoreConfig: ScoreConfig,
@@ -215,8 +215,8 @@ class AgainstScoreFormControl {
         away: number,
         disabled?: boolean
     ) {
-        this.home = new FormControl({ value: home, disabled: disabled === true });
-        this.away = new FormControl({ value: away, disabled: disabled === true });
+        this.home = new UntypedFormControl({ value: home, disabled: disabled === true });
+        this.away = new UntypedFormControl({ value: away, disabled: disabled === true });
     }
 
     getScore(): AgainstScoreHelper {

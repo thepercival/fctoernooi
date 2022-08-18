@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScreenConfig } from '../../lib/liveboard/screenConfig/json';
 import { ScreenConfigName } from '../../lib/liveboard/screenConfig/name';
@@ -13,11 +13,11 @@ export class ScreenConfigsModalComponent implements OnInit {
 
     @Input() screenConfigs!: ScreenConfig[];
 
-    public form: FormGroup;
+    public form: UntypedFormGroup;
 
     constructor(
         public activeModal: NgbActiveModal,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
     ) {
         this.form = formBuilder.group({});
 
@@ -25,8 +25,8 @@ export class ScreenConfigsModalComponent implements OnInit {
 
     ngOnInit() {
         this.screenConfigs.forEach((screenConfig: ScreenConfig) => {
-            this.form.addControl(this.getEnabledId(screenConfig), new FormControl());
-            this.form.addControl(this.getNrOfSecondsId(screenConfig), new FormControl());
+            this.form.addControl(this.getEnabledId(screenConfig), new UntypedFormControl());
+            this.form.addControl(this.getNrOfSecondsId(screenConfig), new UntypedFormControl());
             this.form.get(this.getEnabledId(screenConfig))?.setValue(screenConfig.enabled);
             this.form.get(this.getNrOfSecondsId(screenConfig))?.setValue(screenConfig.nrOfSeconds);
         });

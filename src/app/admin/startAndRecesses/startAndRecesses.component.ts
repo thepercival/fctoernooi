@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Period } from 'ngx-sport';
@@ -24,7 +24,7 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     styleUrls: ['./startAndRecesses.component.scss']
 })
 export class StartAndRecessesComponent extends TournamentComponent implements OnInit {
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public processing = true;
     public minDateStruct!: NgbDateStruct;
     public sameDayFormat = true;
@@ -43,7 +43,7 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
         private tournamentMapper: TournamentMapper,
         private myNavigation: MyNavigation,
         public dateFormatter: DateFormatter,
-        fb: FormBuilder
+        fb: UntypedFormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
 

@@ -24,7 +24,7 @@ import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl } from '@angular/forms';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { PlanningConfigRepository } from '../../lib/ngx-sport/planning/config/repository';
 import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -48,7 +48,7 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 export class PlanningConfigComponent extends TournamentComponent implements OnInit {
     startRoundNumber!: RoundNumber;
     hasBegun!: boolean;
-    form: FormGroup;
+    form: UntypedFormGroup;
     private pouleStructure!: PouleStructure;
     public structureNameService!: StructureNameService;
     public gameAmountLabel!: string;
@@ -77,7 +77,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         private planningRepository: PlanningRepository,
         private mapper: PlanningConfigMapper,
         private gameAmountConfigMapper: GameAmountConfigMapper,
-        fb: FormBuilder
+        fb: UntypedFormBuilder
     ) {
         super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
         this.form = fb.group({
@@ -141,7 +141,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     initGameAmountConfigs(startRoundNumber: RoundNumber) {
         this.getValidGameAmountConfigs(startRoundNumber).forEach((gameAmountConfig: GameAmountConfig) => {
-            this.form.addControl('' + gameAmountConfig.getId(), new FormControl());
+            this.form.addControl('' + gameAmountConfig.getId(), new UntypedFormControl());
         });
         this.setGameAmountControls(startRoundNumber);
         this.gameAmountLabel = this.getGameAmountLabel(startRoundNumber.getCompetition().getSportVariants());
