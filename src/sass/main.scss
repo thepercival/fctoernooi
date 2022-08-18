@@ -1,7 +1,6 @@
 @import './mixins';
 
 $enable-responsive-font-sizes: true !default;
-@import "./bootswatch/variables";
 @import "./bootstrap-custom-components"; // "~bootstrap/scss/bootstrap";
 @import "./bootswatch/bootswatch";
 
