@@ -65,6 +65,7 @@
         </ul>
     </div>
 </div>
+<app-tournament-navbar *ngIf="tournament" [tournament]="tournament"></app-tournament-navbar>
 
 <ng-template #contentremove let-modal>
     <div class="modal-header">

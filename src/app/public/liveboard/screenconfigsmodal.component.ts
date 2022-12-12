@@ -12,7 +12,6 @@ import { ScreenConfigName } from '../../lib/liveboard/screenConfig/name';
 export class ScreenConfigsModalComponent implements OnInit {
 
     @Input() screenConfigs!: ScreenConfig[];
-
     public form: UntypedFormGroup;
 
     constructor(
@@ -30,6 +29,11 @@ export class ScreenConfigsModalComponent implements OnInit {
             this.form.get(this.getEnabledId(screenConfig))?.setValue(screenConfig.enabled);
             this.form.get(this.getNrOfSecondsId(screenConfig))?.setValue(screenConfig.nrOfSeconds);
         });
+        setTimeout(() => {
+            if (this.form.pristine) {
+              this.activeModal.dismiss();
+            }
+        }, 15000);
     }
 
     public getEnabledId(screenConfig: ScreenConfig): string {

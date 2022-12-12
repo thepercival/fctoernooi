@@ -21,7 +21,7 @@ export abstract class UserComponent {
         public authService: AuthService,
         protected globalEventsManager: GlobalEventsManager
     ) {
-        this.globalEventsManager.showFooter.emit();
+        this.globalEventsManager.showFooter.emit(true);
     }
 
     protected setAlert(type: IAlertType, message: string) {

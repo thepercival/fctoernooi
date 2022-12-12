@@ -47,6 +47,8 @@ export class TournamentComponent {
                         if (callback !== undefined) {
                             callback();
                         }
+                        this.globalEventsManager.updateTitleInNavBar.emit(tournament.getName());
+                        this.globalEventsManager.showFooter.emit(false);
                         return;
                     }
                     this.structureRepository.getObject(tournament)
