@@ -27,6 +27,7 @@ import { TournamentShellRepository } from './lib/tournament/shell/repository';
 import { UserMapper } from './lib/user/mapper';
 import { LayoutModule } from './shared/layout/layout.module';
 import { facFavicon } from './shared/tournament/icon/icons';
+import { UntypedFormBuilder } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { facFavicon } from './shared/tournament/icon/icons';
     TournamentShellRepository,
     UserMapper,
     GlobalEventsManager,
+    UntypedFormBuilder,
     MyNavigation/*,
     {
       provide: 'placeRanges', useValue: [

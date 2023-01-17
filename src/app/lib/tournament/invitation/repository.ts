@@ -5,8 +5,8 @@ import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../repository';
 import { Tournament } from '../../tournament';
+import { TournamentInvitation } from '../invitation';
 import { TournamentInvitationMapper, JsonTournamentInvitation } from './mapper';
-import { TournamentInvitation } from '.';
 
 @Injectable({
     providedIn: 'root'

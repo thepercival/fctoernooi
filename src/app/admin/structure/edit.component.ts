@@ -46,7 +46,6 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   clonedStructure!: Structure;
   clonedJsonStructure!: JsonStructure;
   public favorites!: Favorites;
-  public favoriteCategories!: Category[];
   public structureNameService!: StructureNameService;
   public hasBegun: boolean = true;
   // private scrolled = false;

@@ -17,7 +17,8 @@ import {
     AllInOneGame,
     Single,
     StructureNameService,
-    StartLocationMap
+    StartLocationMap,
+    GameMode
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -108,6 +109,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
                 Validators.min(this.validations.minMinutes - 1),
                 Validators.max(this.validations.maxMinutes)
             ])],
+            perPoule: false,
             selfReferee: false,
             selfRefereeSamePoule: false
         });
@@ -226,6 +228,10 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         }
     }
 
+    // changeByPouleAndGameRoundNumber(byPouleAndGameRoundNumber: boolean) {
+    //     this.showNrOfBatchGamesAlert = shownNrOfBatchGamesAlert === null && selfReferee;
+    // }
+
     changeSelfReferee(selfReferee: boolean) {
         // console.log(selfReferee);
         const shownNrOfBatchGamesAlert = localStorage.getItem('shownNrOfBatchGamesAlert');
@@ -248,6 +254,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.form.controls.minutesPerGameExt.setValue(json.minutesPerGameExt);
         this.form.controls.minutesBetweenGames.setValue(json.minutesBetweenGames);
         this.form.controls.minutesAfter.setValue(json.minutesAfter);
+        this.form.controls.perPoule.setValue(json.perPoule);
         this.getValidGameAmountConfigs(this.startRoundNumber).forEach((gameAmountConfig: GameAmountConfig) => {
             const sportVariant = gameAmountConfig.getCompetitionSport().getVariant();
             const range = this.defaultService.getGameAmountRange(sportVariant);
@@ -286,6 +293,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             minutesPerGameExt: this.form.controls.minutesPerGameExt.value,
             minutesBetweenGames: this.form.controls.minutesBetweenGames.value,
             minutesAfter: this.form.controls.minutesAfter.value,
+            perPoule: this.form.controls.perPoule.value,
             selfReferee: (this.form.controls.selfReferee.disabled || !this.form.value['selfReferee']) ? SelfReferee.Disabled :
                 (this.form.value['selfRefereeSamePoule'] ? SelfReferee.SamePoule : SelfReferee.OtherPoules)
         };
@@ -299,6 +307,15 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
                 amount: gameAmountConfigControl.control.value
             };
         });
+    }
+
+    perPouleOptionAvailable(): boolean {
+        if(this.competition.hasMultipleSports()) {
+            return false;
+        } 
+
+        const sportVariant = this.competition.getSingleSport().getVariant();
+        return sportVariant.getGameMode() === GameMode.Against;
     }
 
     protected getSelfReferee(currentSelfReferee: SelfReferee): SelfReferee {
@@ -500,6 +517,9 @@ class PlanningActionCalculator {
             return true
         }
         if (config.getGamePlaceStrategy() !== json.gamePlaceStrategy) {
+            return true
+        }
+        if (config.getPerPoule() !== json.perPoule) {
             return true
         }
         return this.gameAmountConfigsChanged(jsonGameAmountConfigs);

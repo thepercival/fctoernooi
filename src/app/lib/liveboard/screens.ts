@@ -75,10 +75,6 @@ export abstract class GamesScreen extends LiveboardScreen {
         // this.screenGames = { usedGameModes: 0, games: [] };
     }
 
-    public abstract getBatchViewMode(): BatchViewMode | undefined;
-
-    // public hasgetBatchViewMode(): BatchViewMode | undefined;
-
     public getGames(): (AgainstGame | TogetherGame)[] {
         return this.games;
     }
@@ -119,8 +115,8 @@ export interface IGamesScreen {
 
 export class ScheduleScreen extends GamesScreen implements IGamesScreen {
     protected next: ScheduleScreen | undefined;
-
-    constructor(config: ScreenConfig, maxLines: number, protected previous?: ScheduleScreen) {
+    
+    constructor(config: ScreenConfig, maxLines: number, protected batchViewModeHeader: BatchViewMode, protected previous?: ScheduleScreen) {
         super(config, maxLines);
         this.setDescription('programma');
     }
@@ -146,17 +142,17 @@ export class ScheduleScreen extends GamesScreen implements IGamesScreen {
     }
 
     // if has by date else get by nr else undefined
-    public getBatchViewMode(): BatchViewMode | undefined {
-        return undefined;
+    public getBatchViewModeHeader(): BatchViewMode {
+        return this.batchViewModeHeader;
     }
 
     setDescription(description: string) {
         this.description = description;
     }
 
-    createNext(): ScheduleScreen {
+    createNext(batchViewModeHeader: BatchViewMode): ScheduleScreen {
         this.setDescription(this.description + ' <span class="badge bg-info">deel 1</span>');
-        this.next = new ScheduleScreen(this.config, this.maxLines, this);
+        this.next = new ScheduleScreen(this.config, this.maxLines, batchViewModeHeader);
         this.next.setDescription(this.next.description + ' <span class="badge bg-info">deel 2</span>');
         return this.next;
     }
@@ -170,10 +166,6 @@ export class ResultsScreen extends GamesScreen implements IGamesScreen {
 
     isScheduled(): boolean {
         return false;
-    }
-
-    public getBatchViewMode(): BatchViewMode | undefined {
-        return undefined;
     }
 }
 

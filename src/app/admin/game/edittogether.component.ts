@@ -32,7 +32,6 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     styleUrls: ['./edittogether.component.scss']
 })
 export class GameTogetherEditComponent extends GameEditComponent implements OnInit {
-    public game!: TogetherGame;
     // public scoreConfigService: ScoreConfigService;
     // public hasAuthorization: boolean = false;
     // // private originalPouleState: number;    
@@ -78,18 +77,18 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
     }
 
     protected initForm() {
-        const roundNumber = this.game.getRound().getNumber();
+        const roundNumber = this.getGame().getRound().getNumber();
         if (this.nextRoundNumberBegun(roundNumber)) {
             this.setAlert(IAlertType.Warning, 'het aanpassen van de score kan gevolgen hebben voor de al begonnen volgende ronde');
         }
         this.planningConfig = roundNumber.getValidPlanningConfig();
-        this.firstScoreConfig = this.game.getScoreConfig();
-        this.game.getTogetherPlaces().forEach((gamePlace: TogetherGamePlace) => {
+        this.firstScoreConfig = this.getGame().getScoreConfig();
+        this.getGame().getTogetherPlaces().forEach((gamePlace: TogetherGamePlace) => {
             this.getFormGroupGamePlaces().addControl('' + gamePlace.getId(), new UntypedFormGroup({}));
         });
-        this.form.controls.played.setValue(this.game.getState() === GameState.Finished);
+        this.form.controls.played.setValue(this.getGame().getState() === GameState.Finished);
         //     this.form.controls.extension.setValue(this.game.getFinalPhase() === Game.Phase_ExtraTime);
-        this.pristineScore = this.game.getTogetherPlaces().every((gamePlace: TogetherGamePlace) => {
+        this.pristineScore = this.getGame().getTogetherPlaces().every((gamePlace: TogetherGamePlace) => {
             return gamePlace.getScores().length === 0;
         });
     }
@@ -131,7 +130,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
     setPlayed(played: boolean) {
         if (played === false) {
             // this.form.controls.extension.setValue(false);
-            this.game.getPlaces().forEach((gamePlace: AgainstGamePlace | TogetherGamePlace) => {
+            this.getGame().getPlaces().forEach((gamePlace: AgainstGamePlace | TogetherGamePlace) => {
                 const scores = <UntypedFormArray>this.getFormGroupGamePlace(gamePlace.getId()).controls.scores;
                 for (let scoreControl of scores.controls) {
                     scoreControl.setValue(0);
@@ -193,7 +192,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
     // }
 
     formToJson(): JsonTogetherGame {
-        const jsonGame = this.mapper.toJsonTogether(this.game);
+        const jsonGame = this.mapper.toJsonTogether(this.getGame());
         this.formToJsonHelper(jsonGame);
         jsonGame.places.forEach((jsonGamePlace: JsonTogetherGamePlace) => {
             jsonGamePlace.scores = [];
@@ -215,7 +214,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
     }
 
     areAllScoresValid(): boolean {
-        return this.game.getTogetherPlaces().every((gamePlace: TogetherGamePlace) => {
+        return this.getGame().getTogetherPlaces().every((gamePlace: TogetherGamePlace) => {
             const formGroupGamePlace = this.getFormGroupGamePlace(gamePlace.getId());
             const scores = <UntypedFormArray>formGroupGamePlace.controls.scores;
             return scores.controls.every((scoreControl: AbstractControl) => {

@@ -8,10 +8,11 @@
         <th class="width-4">
           <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
         </th>
-        <th *ngIf="screen.getBatchViewMode()" class="width-10"
-          [ngClass]="{ 'text-center': screen.getBatchViewMode() === BatchViewModeNr }">
-          <span *ngIf="screen.getBatchViewMode() === BatchViewModeDate">{{getFirstGameStartDate()}}</span>
-          <span *ngIf="screen.getBatchViewMode() === BatchViewModeNr">batch</span>
+        <th *ngIf="isScheduleScreen()" class="width-10"
+          [ngClass]="{ 'text-center': this.getBatchViewModeHeader(screen) === BatchViewModeNr }">
+          
+          <span *ngIf="this.getBatchViewModeHeader(screen) === BatchViewModeDate">{{getFirstGameStartDate()}}</span>
+          <span *ngIf="this.getBatchViewModeHeader(screen) === BatchViewModeNr">batch</span>
         </th>
         <th *ngIf="isScheduleScreen()" class="width-8">
           <app-tournament-icon name="soccer-field"></app-tournament-icon>
@@ -29,18 +30,16 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let game of screen.getGames()" [ngClass]="{ 'table-light': (game.getBatchNr() % 2) === 0 }">
+      <tr *ngFor="let game of screen.getGames()" [ngClass]="{ 'table-alternate': (game.getBatchNr() % 2) === 0 }">
         <td class="d-none d-xl-table-cell">
-          <span [innerHtml]="getRoundAbbreviation(game.getRound()) | keepHtml"></span>
+          <span [innerHtml]="getRoundAbbreviation(game.getRound()) | keepHtml"></span>          
         </td>
         <td>
           <span>{{structureNameService.getPouleName(game.getPoule(), false)}}</span>
         </td>
 
-        <td *ngIf="screen.getBatchViewMode()" class="width-10"
-          [ngClass]="{ 'text-center': getBatchViewMode(game) === BatchViewModeNr }">
-          <span
-            *ngIf="getBatchViewMode(game) === BatchViewModeDate">{{dateFormatter.toString(game.getStartDateTime(),dateFormatter.date())}}</span>
+        <td class="width-10" *ngIf="isScheduleScreen()"
+          [ngClass]="{ 'text-center': getBatchViewMode(game) === BatchViewModeNr }">          
           <span
             *ngIf="getBatchViewMode(game) === BatchViewModeDate">{{dateFormatter.toString(game.getStartDateTime(),dateFormatter.time())}}</span>
           <span *ngIf="getBatchViewMode(game) === BatchViewModeNr">{{game.getBatchNr()}}</span>

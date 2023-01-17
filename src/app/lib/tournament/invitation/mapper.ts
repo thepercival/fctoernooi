@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { Tournament } from '../../tournament';
-import { TournamentInvitation } from '.';
 import { JsonIdentifiable } from 'ngx-sport';
+import { TournamentInvitation } from '../invitation';
 
 @Injectable({
     providedIn: 'root'

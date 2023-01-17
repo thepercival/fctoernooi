@@ -32,7 +32,14 @@ export class LiveboardGamesComponent implements OnInit {
     }
 
     get BatchViewModeNr(): BatchViewMode { return BatchViewMode.Nr }
-    get BatchViewModeDate(): BatchViewMode { return BatchViewMode.Nr }
+    get BatchViewModeDate(): BatchViewMode { return BatchViewMode.Date }
+
+    getBatchViewModeHeader(screen: ScheduleScreen|ResultsScreen): BatchViewMode | undefined{
+        if (screen instanceof ScheduleScreen) {
+            return screen.getBatchViewModeHeader();
+        }
+        return undefined;
+    }
 
     getBatchViewMode(game: AgainstGame | TogetherGame): BatchViewMode {
         return game.getPlanningConfig().getEnableTime() ? BatchViewMode.Date : BatchViewMode.Nr;

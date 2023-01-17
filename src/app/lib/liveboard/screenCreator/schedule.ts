@@ -1,4 +1,5 @@
 import { AgainstGame, Game, GameOrder, RoundNumber, GameState, TogetherGame, CategoryMap, Category, GameGetter } from "ngx-sport";
+import { BatchViewMode } from "../../../public/liveboard/games.liveboard.component";
 import { ScreenConfig } from "../screenConfig/json";
 import { ScheduleScreen } from "../screens";
 export class ScheduleScreenCreator {
@@ -9,7 +10,8 @@ export class ScheduleScreenCreator {
     // minimal current batch and next batch
     getScreens(firstRoundNuber: RoundNumber, categories: Category[]): ScheduleScreen[] {
         const categoryMap = new CategoryMap(categories);
-        const scheduleScreen = new ScheduleScreen(this.screenConfig, this.maxLines);
+        const batchViewModeHeader = firstRoundNuber.getValidPlanningConfig().getEnableTime() ? BatchViewMode.Date : BatchViewMode.Nr;
+        const scheduleScreen = new ScheduleScreen(this.screenConfig, this.maxLines, batchViewModeHeader);
         this.fillScreens(scheduleScreen, firstRoundNuber, categoryMap);
         if (scheduleScreen.isEmpty()) {
             return [];
@@ -28,9 +30,10 @@ export class ScheduleScreenCreator {
 
         const maxNrOfScreens = this.getNrOfScreens(roundGames);
 
+        const batchViewModeHeader = roundNumber.getValidPlanningConfig().getEnableTime() ? BatchViewMode.Date : BatchViewMode.Nr;
         const now = new Date();
         let game: AgainstGame | TogetherGame | undefined = roundGames.shift();
-        let nextGame: AgainstGame | TogetherGame | undefined = roundGames.shift();
+        let nextGame: AgainstGame | TogetherGame | undefined = roundGames.shift();        
         while (!this.screensFilled(screen, maxNrOfScreens) && game !== undefined) {
             const start = game.getStartDateTime();
             if (game.getState() === GameState.Finished || (roundNumber.getValidPlanningConfig().getEnableTime() && start && start < now)
@@ -42,8 +45,8 @@ export class ScheduleScreenCreator {
 
             screen.addGame(game);
 
-            if (screen.isFull() && screen.isFirst() && maxNrOfScreens > 1) {
-                screen = screen.createNext();
+            if (screen.isFull() && screen.isFirst() && maxNrOfScreens > 1) {                
+                screen = screen.createNext(batchViewModeHeader);
             }
 
             game = nextGame;

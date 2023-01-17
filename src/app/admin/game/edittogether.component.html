@@ -11,7 +11,7 @@
       <form *ngIf="!processing && tournament && hasAuthorization" [formGroup]="form" (ngSubmit)="save()" #f="ngForm"
         novalidate>
         <app-tournament-basegame-edit [form]="getBaseFormGroup()" [structureNameService]="structureNameService"
-          [game]="game" [structure]="structure">
+          [game]="getGame()" [structure]="structure">
         </app-tournament-basegame-edit>
         <div class="row mb-3">
           <div class="col-3">
@@ -19,7 +19,7 @@
           </div>
           <div class="col-9">
             <div formGroupName="gamePlaces" class="d-flex flex-wrap gap-3">
-              <app-tournament-togetherscorecard *ngFor="let gamePlace of game.getTogetherPlaces()"
+              <app-tournament-togetherscorecard *ngFor="let gamePlace of getGame().getTogetherPlaces()"
                 [gamePlace]="gamePlace" [form]="getFormGroupGamePlace(gamePlace.getId())"
                 [structureNameService]="structureNameService" (afterEdit)="postScoreControlUpdate()">
               </app-tournament-togetherscorecard>

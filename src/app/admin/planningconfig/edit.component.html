@@ -85,6 +85,16 @@
                             formControlName="minutesAfter" maxlength="3" class="form-control" />
                     </div>
                 </div>
+                <div *ngIf="!form.value['manual'] && perPouleOptionAvailable()" class="row mb-3">
+                    <label for="perPoule" class="col-7 col-form-label">per poule en wedstrijdronde</label>
+                    <div class="col-5">
+                        <div class="form-control form-check form-switch">
+                            <input type="checkbox" class="form-check-input" id="perPoule"
+                                formControlName="perPoule">
+                            <label class="form-check-label" for="perPoule"></label>
+                        </div>
+                    </div>
+                </div>
                 <div *ngIf="!form.value['manual'] && someSelfRefereeOptionAvailable()" class="row mb-3">
                     <label for="selfReferee" class="col-7 col-form-label">deelnemers zijn scheidsrechter</label>
                     <div class="col-5">
