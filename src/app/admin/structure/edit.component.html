@@ -60,7 +60,7 @@
     </ng-template>
   </div>
 
-  <div class="d-flex justify-content-around mt-3">
+  <div class="d-flex justify-content-around mt-3 mb-5">
     <button *ngIf="!processing && clonedStructure && !clonedStructure.getFirstRoundNumber().hasBegun()" role="button"
       [disabled]="actions.length === 0" (click)="saveStructure()" class="btn btn-primary">
       <fa-icon [icon]="['fas', 'save']"></fa-icon>
