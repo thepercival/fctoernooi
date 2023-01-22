@@ -14,9 +14,6 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 })
 export class PublicShellsComponent {
 
-  static readonly FUTURE: number = 1;
-  static readonly PAST: number = 2;
-
   @ViewChild('inputsearchname') private searchElementRef: ElementRef | undefined;
 
   public shells: TournamentShell[] = [];
@@ -54,26 +51,26 @@ export class PublicShellsComponent {
     this.shells = [];
     this.hourRange = { start: this.defaultHourRange.start, end: this.defaultHourRange.start };
     // this.searchForm.controls.filterName.setValue(undefined);
-    this.addToPublicShells(PublicShellsComponent.FUTURE, this.defaultHourRange.end - this.defaultHourRange.start);
+    this.addToPublicShells(PastFuture.Future, this.defaultHourRange.end - this.defaultHourRange.start);
   }
 
   expandPastDays() {
     const pastHoursToAdd = this.hourRange.start === this.defaultHourRange.start
       ? this.defaultHourRange.start + this.defaultHourRange.end : -this.hourRange.start;
-    this.addToPublicShells(PublicShellsComponent.PAST, pastHoursToAdd);
+    this.addToPublicShells(PastFuture.Past, pastHoursToAdd);
   }
 
   expandFutureDays() {
-    this.addToPublicShells(PublicShellsComponent.FUTURE, this.hourRange.end);
+    this.addToPublicShells(PastFuture.Future, this.hourRange.end);
   }
 
   private extendHourRange(pastFuture: number, hoursToAdd: number): TournamentShellFilter {
     const startDate = new Date(), endDate = new Date();
-    if (pastFuture === PublicShellsComponent.PAST) {
+    if (pastFuture === PastFuture.Past) {
       endDate.setHours(endDate.getHours() + this.hourRange.start);
       this.hourRange.start -= hoursToAdd;
       startDate.setHours(startDate.getHours() + this.hourRange.start);
-    } else if (pastFuture === PublicShellsComponent.FUTURE) {
+    } else if (pastFuture === PastFuture.Future) {
       startDate.setHours(startDate.getHours() + this.hourRange.end);
       this.hourRange.end += hoursToAdd;
       endDate.setHours(endDate.getHours() + this.hourRange.end);
@@ -114,17 +111,17 @@ export class PublicShellsComponent {
       });
   }
 
-  addToPublicShells(pastFuture: number, hoursToAdd: number) {
+  addToPublicShells(pastFuture: PastFuture, hoursToAdd: number) {
     this.processing = true;
     const searchFilter = this.extendHourRange(pastFuture, hoursToAdd);
     this.tournamentShellRepos.getObjects(searchFilter)
       .subscribe({
         next: (shellsRes: TournamentShell[]) => {
           this.sortShellsByDateDesc(shellsRes);
-          if (pastFuture === PublicShellsComponent.PAST) {
-            this.shells = shellsRes.concat(this.shells);
-          } else if (pastFuture === PublicShellsComponent.FUTURE) {
+          if (pastFuture === PastFuture.Past) {            
             this.shells = this.shells.concat(shellsRes);
+          } else if (pastFuture === PastFuture.Future) {            
+            this.shells = shellsRes.concat(this.shells);
           }
           // this.showingFuture = (futureDate === undefined);
           this.processing = false;
@@ -161,6 +158,10 @@ export class PublicShellsComponent {
   inPast(date: Date): boolean {
     return this.linethroughDate.getTime() > date.getTime();
   }
+}
+
+export enum PastFuture {
+  Future = 1, Past = 2
 }
 
 interface HourRange {

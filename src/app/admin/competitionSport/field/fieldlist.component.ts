@@ -53,7 +53,6 @@ export class FieldListComponent implements OnInit {
         activeModal.componentInstance.buttonName = buttonLabel;
         activeModal.componentInstance.initialName = initialName;
         activeModal.componentInstance.labelName = 'naam';
-        activeModal.componentInstance.buttonOutline = true;
         return activeModal;
     }
 

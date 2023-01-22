@@ -70,7 +70,7 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
     private postInit() {
         this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
 
-        const minDate = this.competition.getStartDateTime();
+        const minDate = this.getMinStartDate();
         this.minDateStruct = { year: minDate.getFullYear(), month: minDate.getMonth() + 1, day: minDate.getDate() };
         this.initForm(minDate);
         this.processing = false;
@@ -118,15 +118,15 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
     save(): boolean {
         const jsonRecess = this.formToJson();
         const newRecessPeriod = new Period(new Date(jsonRecess.start), new Date(jsonRecess.end));
-        const validator = new RecessValidator();
-        const message = this.validate(newRecessPeriod);
+        const message = this.validatePeriod(newRecessPeriod);
         if (message !== undefined) {
             this.setAlert(IAlertType.Danger, message);
-            // return false;
+            return false;
         }
+        
 
         this.processing = true;
-        this.setAlert(IAlertType.Info, 'de deelnemer wordt opgeslagen');
+        this.setAlert(IAlertType.Info, 'de pauze wordt opgeslagen');
         this.recessRepository.createObject(jsonRecess, this.tournament)
             .subscribe({
                 next: () => {
@@ -149,13 +149,21 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
         return false;
     }
 
+    validatePeriod(newRecessPeriod: Period): string|undefined {
+        const validator = new RecessValidator();
+        return validator.validateNewPeriod(newRecessPeriod, this.tournament.getRecesses(), this.getMinStartDate());
+    }
+
+    getMinStartDate(): Date {
+        const startDate = this.tournament.getCompetition().getStartDateTime();
+        const planningConfig = this.structure.getFirstRoundNumber().getValidPlanningConfig();
+        startDate.setMinutes(startDate.getMinutes() + planningConfig.getMaxNrOfMinutesPerGame() );
+        return startDate;
+    }
 
     navigateBack() {
         this.myNavigation.back();
     }
-
-
-
 
     // setName(name) {
     //     this.error = undefined;
@@ -164,23 +172,6 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
     //     }
     //     this.model.name = name;
     // }
-
-    protected validate(recess: Period): string | undefined {
-        if (recess.getStartDateTime().getTime() >= recess.getEndDateTime().getTime()) {
-            return 'de start moet voor het einde zijn';
-        }
-
-        if (!this.isOverlapping(recess)) {
-            return 'er is een overlapping met een andere pauze';
-        }
-        return undefined;
-    }
-
-    protected isOverlapping(recessPeriod: Period): boolean {
-        return this.tournament.getRecesses().some((recessIt: Recess): boolean => {
-            return recessIt.overlaps(recessPeriod);
-        });
-    }
 }
 
 export interface CompetitorValidations {

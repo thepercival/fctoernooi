@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators, AbstractControl } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Period } from 'ngx-sport';
 
@@ -17,6 +17,7 @@ import { RecessRepository } from '../../lib/recess/repository';
 import { Recess } from '../../lib/recess';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { StartEditMode } from '../../lib/tournament/startEditMode';
 
 @Component({
     selector: 'app-tournament-startandrecesses',
@@ -74,6 +75,11 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
         this.processing = false;
     }
 
+    get StartEditMode(): StartEditMode { return this.tournament.getStartEditMode(); }
+    get LongTerm(): StartEditMode { return StartEditMode.EditLongTerm; }
+    get ShortTerm(): StartEditMode { return StartEditMode.EditShortTerm; }
+    get ReadOnly(): StartEditMode { return StartEditMode.ReadOnly; }
+
     isTimeEnabled() {
         return this.structure.getFirstRoundNumber().getValidPlanningConfig().getEnableTime();
     }
@@ -103,6 +109,31 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
         return (start.getDate() === recessEnd.getDate()
             && start.getMonth() === recessEnd.getMonth()
             && start.getFullYear() === recessEnd.getFullYear());
+    }
+
+    preEdit(modalContent: TemplateRef<any>): boolean {
+        const startDateTime = this.getDate(this.form.controls.date, this.form.controls.time);
+        if( startDateTime.getTime() <= this.tournament.getCompetition().getStartDateTime().getTime() ) {
+            return this.edit();
+        }
+        this.openModalEditStart(modalContent);
+        return false;
+    }
+    
+    openModalEditStart(modalContent: TemplateRef<any> ) {
+        const activeModal = this.modalService.open(modalContent);
+        activeModal.result.then((result) => {
+            if (result === 'update') {            
+                this.edit();
+            } else { 
+                const startAsTime = this.getDate(this.form.controls.date, this.form.controls.time).getTime();
+                const navigationExtras: NavigationExtras = {
+                    queryParams: { newStartForCopyAsTime: startAsTime }
+                  };
+                this.router.navigate(['/admin', this.tournament.getId()], navigationExtras);
+            }
+        }, (reason) => {
+        });
     }
 
     edit(): boolean {

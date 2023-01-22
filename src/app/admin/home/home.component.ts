@@ -1,7 +1,7 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbModal, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { League, PlanningEditMode, RoundNumber } from 'ngx-sport';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -34,12 +34,13 @@ import { TournamentScreen } from '../../shared/tournament/screenNames';
 })
 export class HomeComponent extends TournamentComponent implements OnInit {
     copyForm: UntypedFormGroup;
-    minDateStruct: NgbDateStruct;
     lockerRoomValidator!: LockerRoomValidator;
     hasBegun: boolean = true;
     public nrOfCredits: number | undefined;
     hasPlanningEditManualMode: boolean = false;
     allPoulesHaveGames: boolean = false;
+
+    @ViewChild('contentCopyModal', { static: true }) private contentCopyModal!: TemplateRef<any>;
 
     constructor(
         route: ActivatedRoute,
@@ -60,11 +61,10 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
         const date = new Date();
-        this.minDateStruct = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
-
+        
         this.copyForm = fb.group({
-            date: ['', Validators.compose([
-            ])]
+            date: ['', Validators.compose([])],
+            time: ['', Validators.compose([])],
         });
     }
 
@@ -72,7 +72,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         super.myNgOnInit(() => this.postNgOnInit());
     }
 
-    postNgOnInit() {
+    postNgOnInit() {        
         this.lockerRoomValidator = new LockerRoomValidator(this.tournament.getCompetitors(), this.tournament.getLockerRooms());
         const date = new Date();
         const firstRoundNumber = this.structure.getFirstRoundNumber();
@@ -80,7 +80,34 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         this.allPoulesHaveGames = this.structure.allPoulesHaveGames();
         this.hasPlanningEditManualMode = this.structureHasPlanningEditManualMode(firstRoundNumber);
         this.copyForm.controls.date.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
+        this.route.queryParams.subscribe(params => {            
+            this.initCopyModal(params.newStartForCopyAsTime);
+          });
         this.processing = false;
+    }
+
+    private initCopyModal(newStartForCopyAsTime: string|undefined): void {
+        if (newStartForCopyAsTime !== undefined) {              
+            const newStartDate = new Date(parseInt(newStartForCopyAsTime, 10));
+            const newStartTimeStruct = { hour: newStartDate.getHours(), minute: newStartDate.getMinutes(), second: 0 }; 
+            const newStartDateStruct = { year: newStartDate.getFullYear(), month: newStartDate.getMonth() + 1, day: newStartDate.getDate() };              
+    
+            this.initCopyForm(newStartDateStruct, newStartTimeStruct);
+            this.openModalCopy(this.contentCopyModal);
+        }  else {
+            const tournamentDate = this.tournament.getCompetition().getStartDateTime();
+            const newStartTimeStruct = { hour: tournamentDate.getHours(), minute: tournamentDate.getMinutes(), second: 0 }; 
+
+            const currentDate = new Date();
+            const newStartDate = currentDate.getTime() > tournamentDate.getTime() ? currentDate : tournamentDate;
+            const newStartDateStruct = { year: newStartDate.getFullYear(), month: newStartDate.getMonth() + 1, day: newStartDate.getDate() };              
+            this.initCopyForm(newStartDateStruct, newStartTimeStruct);
+        }
+    }
+
+    private initCopyForm(dateStruct: NgbDateStruct, timeStruct: NgbTimeStruct): void {
+        this.copyForm.controls.date.setValue(dateStruct);        
+        this.copyForm.controls.time.setValue(timeStruct);
     }
 
     protected structureHasPlanningEditManualMode(roundNumber: RoundNumber): boolean {
@@ -277,7 +304,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
                                 queryParams: { type: IAlertType.Danger, message: 'je bet niet ingelogd' }
                             };
                             this.router.navigate(['', navigationExtras]);
-                            return
+                            return;
                         }
                         if (loggedInUser.getValidated()) {
                             this.nrOfCredits = loggedInUser.getNrOfCredits();

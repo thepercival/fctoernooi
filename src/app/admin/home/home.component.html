@@ -118,7 +118,7 @@
         </div>
 
         <!-- copy -->
-        <div *ngIf="isAdmin()" class="card card-sub pointer" (click)="openModalCopy(contentcopy)">
+        <div *ngIf="isAdmin()" class="card card-sub pointer" (click)="openModalCopy(contentCopyModal)">
           <div class="card-body text-center p-1 pt-2">
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'copy']"></fa-icon>
@@ -191,7 +191,7 @@
 </app-tournament-navbar>
 
 <!-- copy modal -->
-<ng-template #contentcopy let-modal>
+<ng-template #contentCopyModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title">
       <fa-icon [icon]="['fas', 'copy']"></fa-icon> nieuwe editie
@@ -207,12 +207,18 @@
           </div>
           <div class="col-7">
             <div class="input-group input-group-date">
-              <input class="form-control" formControlName="date" ngbDatepicker #d="ngbDatepicker" required
-                [minDate]="minDateStruct">
+              <input class="form-control" formControlName="date" ngbDatepicker #d="ngbDatepicker" required>
               <span class="input-group-text pointer" (click)="d.toggle()">
                 <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
               </span>
             </div>
+          </div>          
+        </div>
+        <div class="row mb-3">
+          <label for="starttime" class="col-5 col-form-label">starttijd</label>
+          <div class="col-7">
+            <ngb-timepicker formControlName="time" [spinners]="false" required>
+            </ngb-timepicker>
           </div>
         </div>
       </form>

@@ -6,7 +6,7 @@
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
 
-      <form *ngIf="!processing" name="form" (ngSubmit)="edit()" [formGroup]="form" novalidate>
+      <form *ngIf="!processing" name="form" (ngSubmit)="preEdit(contentChangeStart)" [formGroup]="form" novalidate>
         <h2>start</h2>
         <div *ngIf="!hasBegun" class="row mb-3">
           <div class="col-3">
@@ -93,6 +93,26 @@
       </div>
     </div>
   </div>
+</div>
 
-  <app-tournament-navbar [public]="false" *ngIf="tournament" [tournament]="tournament">
-  </app-tournament-navbar>
+<ng-template #contentChangeStart let-modal>
+  <div class="modal-header">
+      <h4 class="modal-title">start wijzigen</h4>
+      <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
+  </div>
+  <div class="modal-body">
+      <ngb-alert [type]="StartEditMode === ReadOnly ? 'warning' : 'info'">
+        <span *ngIf="StartEditMode === LongTerm">Je kunt de start hierna nog 1 keer in de toekomst verplaatsen</span>
+        <span *ngIf="StartEditMode === ShortTerm">Je kunt de start hierna niet meer in de toekomst verplaatsen</span>
+        <span *ngIf="StartEditMode === ReadOnly">Je kunt de start niet meer in de toekomst verplaatsen</span>
+      </ngb-alert>
+      
+  </div>
+  <div class="modal-footer">      
+      <button type="button" class="btn btn-outline-primary" data-dismiss="modal" (click)="modal.close('toNewEdition')">naar nieuwe editie gaan</button>
+      <button *ngIf="StartEditMode !== ReadOnly" type="button" class="btn btn-primary" data-dismiss="modal" (click)="modal.close('update')">wijzigen</button>
+  </div>
+</ng-template>
+
+<app-tournament-navbar [public]="false" *ngIf="tournament" [tournament]="tournament">
+</app-tournament-navbar>
