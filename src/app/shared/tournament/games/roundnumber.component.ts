@@ -64,7 +64,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   @Input() favorites: Favorites | undefined;
   @Input() refreshingData: boolean | undefined;
   @Output() refreshData = new EventEmitter();
-  @Output() scroll = new EventEmitter();
+  @Output() scrolling = new EventEmitter();
   alert: IAlert | undefined;
   public sameDay = true;
   public gameOrder: GameOrder = GameOrder.ByDate;
@@ -128,7 +128,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
 
   ngAfterViewInit() {
     if (this.roundNumber.getNext() === undefined) {
-      this.scroll.emit();
+      this.scrolling.emit();
     }
   }
 

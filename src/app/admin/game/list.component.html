@@ -28,7 +28,7 @@
         <app-tournament-roundnumber-planning *ngFor="let roundNumber of structure.getRoundNumbers()"
           [structureNameService]="structureNameService" [tournament]="tournament" [roundNumber]="roundNumber"
           [showLinksToAdmin]="true" [favoriteCategories]="favoriteCategories" [roles]="roles"
-          [userRefereeId]="userRefereeId" (scroll)="scroll()">
+          [userRefereeId]="userRefereeId" (scrolling)="scroll()">
         </app-tournament-roundnumber-planning>
       </div>
     </div>
