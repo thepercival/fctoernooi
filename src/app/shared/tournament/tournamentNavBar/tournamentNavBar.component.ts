@@ -1,10 +1,9 @@
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
+import { Component, Input, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../../lib/auth/auth.service';
 import { Role } from '../../../lib/role';
 import { Tournament } from '../../../lib/tournament';
-import { TranslateService } from '../../../lib/translate';
 import { TournamentScreen } from '../screenNames';
 
 @Component({
@@ -12,7 +11,7 @@ import { TournamentScreen } from '../screenNames';
   templateUrl: './tournamentNavBar.component.html',
   styleUrls: ['./tournamentNavBar.component.scss']
 })
-export class TournamentNavBarComponent implements OnInit {
+export class TournamentNavBarComponent {
   @Input() upperNavBar: TemplateRef<any> | undefined;
   @Input() tournament!: Tournament;
   @Input() public: boolean = false;
@@ -23,10 +22,6 @@ export class TournamentNavBarComponent implements OnInit {
     public authService: AuthService,
     private router: Router
   ) {
-
-  }
-
-  ngOnInit() {
 
   }
 

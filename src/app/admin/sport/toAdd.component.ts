@@ -3,7 +3,7 @@ import { AgainstGpp, AgainstH2h, AllInOneGame, Single, Sport } from 'ngx-sport';
 
 import { IAlert, IAlertType } from '../../shared/common/alert';
 import { CSSService } from '../../shared/common/cssservice';
-import { TranslateService } from '../../lib/translate';
+import { TranslateSportService } from '../../lib/translate/sport';
 import { SportRepository } from '../../lib/ngx-sport/sport/repository';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -23,7 +23,7 @@ export class SportToAddComponent implements OnInit {
     constructor(
         public cssService: CSSService,
         private sportRepository: SportRepository,
-        public translate: TranslateService,
+        public translate: TranslateSportService,
         private defaultService: DefaultService,
         private modalService: NgbModal,
     ) {

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { ScoreConfig, StructureNameService, TogetherGamePlace, TogetherScore } from 'ngx-sport';
-import { TranslateService } from '../../lib/translate';
+import { ScoreConfig, ScoreDirection, StructureNameService, TogetherGamePlace, TogetherScore } from 'ngx-sport';
+import { TranslateScoreService } from '../../lib/translate/score';
 
 @Component({
   selector: 'app-tournament-togetherscorecard',
@@ -15,7 +15,7 @@ export class ScoreTogetherCardComponent implements OnInit {
   @Output() afterEdit = new EventEmitter<void>();
   public firstScoreConfig!: ScoreConfig;
 
-  constructor(private translate: TranslateService) {
+  constructor(private translate: TranslateScoreService) {
   }
 
   ngOnInit() {
@@ -44,7 +44,7 @@ export class ScoreTogetherCardComponent implements OnInit {
 
   getInputScoreDescription() {
     let description = '';
-    if (this.firstScoreConfig.getDirection() === ScoreConfig.UPWARDS && this.firstScoreConfig.getMaximum() > 0) {
+    if (this.firstScoreConfig.getDirection() === ScoreDirection.Upwards && this.firstScoreConfig.getMaximum() > 0) {
       description = 'eerste bij ' + this.firstScoreConfig.getMaximum() + ' ';
     }
     return description + this.translate.getScoreNamePlural(this.firstScoreConfig);
@@ -68,7 +68,7 @@ export class ScoreTogetherCardComponent implements OnInit {
     if (!this.isScoreValid(formControl.value)) {
       return 'is-invalid';
     }
-    if (scoreConfig.getDirection() !== ScoreConfig.UPWARDS || scoreConfig.getMaximum() === 0) {
+    if (scoreConfig.getDirection() !== ScoreDirection.Upwards || scoreConfig.getMaximum() === 0) {
       return 'is-valid';
     }
     if (score === scoreConfig.getMaximum()) {
@@ -80,7 +80,7 @@ export class ScoreTogetherCardComponent implements OnInit {
   getCalculateScoreDescription() {
     const scoreConfig = this.firstScoreConfig.getCalculate();
     let description = '';
-    if (scoreConfig.getDirection() === ScoreConfig.UPWARDS && scoreConfig.getMaximum() > 0) {
+    if (scoreConfig.getDirection() === ScoreDirection.Upwards && scoreConfig.getMaximum() > 0) {
       description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
     }
     return description + this.translate.getScoreNamePlural(scoreConfig);

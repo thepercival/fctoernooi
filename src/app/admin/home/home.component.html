@@ -16,6 +16,9 @@
         <!-- sports -->
         <div *ngIf="isAdmin()" class="card card-sub pointer px-0" (click)="linkToCompetitionSport()">
           <div class="card-body text-center p-1 pt-2">
+            <h5 *ngIf="competition.hasMultipleSports()" class="card-title">
+              <fa-icon [icon]="['fas', 'user-friends']"></fa-icon>
+            </h5>
             <h5 *ngIf="!competition.hasMultipleSports()" class="card-title">
               <app-sport-icon [competitionSports]="competition.getSports()"></app-sport-icon>
             </h5>

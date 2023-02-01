@@ -19,7 +19,6 @@ import {
 } from 'ngx-sport';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
-import { TranslateService } from '../../lib/translate';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
@@ -57,8 +56,7 @@ export class CompetitionSportListComponent extends TournamentComponent implement
     modalService: NgbModal,
     favRepository: FavoritesRepository,
     private competitionSportRepository: CompetitionSportRepository,
-    private planningRepository: PlanningRepository,
-    public translateService: TranslateService,
+    private planningRepository: PlanningRepository
   ) {
     super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
   }

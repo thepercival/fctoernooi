@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-import { LiveboardLink } from '../../../lib/liveboard/link';
 import { GlobalEventsManager } from '../../common/eventmanager';
 
 @Component({

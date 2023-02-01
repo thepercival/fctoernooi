@@ -13,19 +13,20 @@ import {
     PlaceMapper,
     GamePhase,
     AgainstScore,
-    CustomSport,
+    ScoreDirection
 } from 'ngx-sport';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
-import { TranslateService } from '../../lib/translate';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { GameEditComponent } from './edit.component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
+import { TranslateScoreService } from '../../lib/translate/score';
 
 @Component({
     selector: 'app-tournament-againstgame-edit',
@@ -53,7 +54,7 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
         fieldMapper: FieldMapper,
         refereeMapper: RefereeMapper,
         placeMapper: PlaceMapper,
-        translate: TranslateService,
+        translate: TranslateScoreService,
         myNavigation: MyNavigation,
         fb: UntypedFormBuilder
     ) {
@@ -200,7 +201,7 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
     }
 
     get sportIsRugby(): boolean {
-        return this.game?.getCompetitionSport().getSport().getCustomId() === CustomSport.Rugby;
+        return this.game?.getCompetitionSport().getSport().getCustomId() === CustomSportId.Rugby;
     }
 }
 
@@ -230,7 +231,7 @@ class AgainstScoreFormControl {
         if (!this.isScoreValid()) {
             return 'is-invalid';
         }
-        if (this.scoreConfig.getDirection() !== ScoreConfig.UPWARDS || this.scoreConfig.getMaximum() === 0) {
+        if (this.scoreConfig.getDirection() !== ScoreDirection.Upwards || this.scoreConfig.getMaximum() === 0) {
             return 'is-valid';
         }
         const score = this.getScore();

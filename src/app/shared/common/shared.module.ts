@@ -3,13 +3,11 @@ import { NgModule } from '@angular/core';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
 
-import { SportIconComponent } from './sport/icon.component';
 import { EscapeHtmlPipe } from './escapehtmlpipe';
 import { FocusDirective } from './focus';
 
 @NgModule({
   declarations: [
-    SportIconComponent,
     EscapeHtmlPipe,
     FocusDirective
   ],
@@ -18,7 +16,6 @@ import { FocusDirective } from './focus';
     FontAwesomeModule
   ],
   exports: [
-    SportIconComponent,
     EscapeHtmlPipe,
     FocusDirective
   ]

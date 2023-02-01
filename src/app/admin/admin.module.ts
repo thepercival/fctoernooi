@@ -75,6 +75,7 @@ import { CategoryCompetitorListComponent } from './competitor/category.component
 import { RankingEditComponent } from './ranking/edit.component';
 import { LockerRoomsEditComponent } from './lockerrooms/lockerrooms.component';
 import { StructureEditComponent } from './structure/edit.component';
+import { SportIconComponent } from '../shared/tournament/sport/icon.component';
 
 @NgModule({
   imports: [
@@ -85,7 +86,6 @@ import { StructureEditComponent } from './structure/edit.component';
     FontAwesomeModule,
     CommonSharedModule,
     TournamentModule
-
   ],
   declarations: [
     AgainstQualifyConfigEditComponent,
@@ -135,7 +135,8 @@ import { StructureEditComponent } from './structure/edit.component';
   providers: [
     CompetitionSportService,
     CSSService,
-    ScoreConfigService
+    ScoreConfigService,
+    SportIconComponent
   ]
 })
 export class AdminModule {

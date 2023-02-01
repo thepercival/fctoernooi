@@ -7,6 +7,7 @@ import { APIRepository } from '../../repository';
 import { AgainstGpp, AgainstH2h, Competition, CompetitionSport, CompetitionSportMapper, CompetitionSportService, JsonCompetitionSport, JsonField, PointsCalculation, SportMapper, Structure } from 'ngx-sport';
 import { Tournament } from '../../tournament';
 import { SportWithFields } from '../../../admin/sport/createSportWithFields.component';
+import { DefaultService } from '../defaultService';
 
 @Injectable({
     providedIn: 'root'
@@ -17,6 +18,7 @@ export class CompetitionSportRepository extends APIRepository {
         private service: CompetitionSportService,
         private mapper: CompetitionSportMapper,
         private sportMapper: SportMapper,
+        private defaultService: DefaultService,
         private http: HttpClient) {
         super();
     }
@@ -108,11 +110,17 @@ export class CompetitionSportRepository extends APIRepository {
         for (let priority = 1; priority <= sportWithFields.nrOfFields; priority++) {
             fields.push({ id: priority, priority, name: fieldNamePrefix + priority });
         }
+        const customSportId = sport.getCustomId();
         let jsonVariant = this.mapper.variantToJson(sportWithFields.variant);
         return {
             id: 0,
             sport: this.sportMapper.toJson(sport),
             defaultPointsCalculation: pointsCalculation,
+            defaultWinPoints: this.defaultService.getWinPoints(customSportId),
+            defaultDrawPoints: this.defaultService.getDrawPoints(customSportId),
+            defaultWinPointsExt: this.defaultService.getWinPointsExt(customSportId),
+            defaultDrawPointsExt: this.defaultService.getDrawPointsExt(customSportId),
+            defaultLosePointsExt: this.defaultService.getLosePointsExt(customSportId),
             fields: fields,
             gameMode: jsonVariant.gameMode,
             nrOfHomePlaces: jsonVariant.nrOfHomePlaces,

@@ -35,6 +35,7 @@ import { RankingAgainstComponent } from './ranking/sports/against.component';
 import { RankingSportsComponent } from './ranking/sports/sports.component';
 import { RankingTogetherComponent } from './ranking/sports/together.component';
 import { LockerRoomComponent } from './lockerroom/lockerroom.component';
+import { SportIconComponent } from './sport/icon.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { LockerRoomComponent } from './lockerroom/lockerroom.component';
     RankingSportsComponent,
     RankingAgainstComponent,
     RankingTogetherComponent,
+    SportIconComponent
   ],
   imports: [
     CommonModule,
@@ -89,7 +91,8 @@ import { LockerRoomComponent } from './lockerroom/lockerroom.component';
     StructureRoundComponent,
     StructureCategoryComponent,
     TournamentIconComponent,
-    TournamentNavBarComponent
+    TournamentNavBarComponent,
+    SportIconComponent
   ]
 })
 export class TournamentModule {

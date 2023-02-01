@@ -12,7 +12,7 @@ import {
 } from 'ngx-sport';
 import { CSSService } from '../../shared/common/cssservice';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { TranslateService } from '../../lib/translate';
+import { TranslateScoreService } from '../../lib/translate/score';
 import { ScoreConfigRepository } from '../../lib/ngx-sport/scoreConfig/repository';
 import { Tournament } from '../../lib/tournament';
 import { IAlert, IAlertType } from '../../shared/common/alert';
@@ -46,7 +46,7 @@ export class ScoreConfigEditComponent implements OnInit {
         public cssService: CSSService,
         public competitionSportMapper: CompetitionSportMapper,
         private mapper: ScoreConfigMapper,
-        private translate: TranslateService,
+        private translate: TranslateScoreService,
         fb: UntypedFormBuilder,
         private modalService: NgbModal
     ) {

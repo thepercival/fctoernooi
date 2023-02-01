@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { FavoritesRepository } from '../../lib/favorites/repository';
@@ -12,7 +12,7 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
   templateUrl: './shells.component.html',
   styleUrls: ['./shells.component.scss']
 })
-export class PublicShellsComponent {
+export class PublicShellsComponent implements AfterViewInit{
 
   @ViewChild('inputsearchname') private searchElementRef: ElementRef | undefined;
 

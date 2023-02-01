@@ -10,7 +10,7 @@ import { Role } from '../../lib/role';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { TranslateService } from '../../lib/translate';
+import { TranslateFieldService } from '../../lib/translate/field';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
 import { LockerRoomValidator } from '../../lib/lockerroom/validator';
@@ -56,7 +56,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         private tournamentMapper: TournamentMapper,
         private authService: AuthService,
         public dateFormatter: DateFormatter,
-        private translate: TranslateService,
+        private translate: TranslateFieldService,
         fb: UntypedFormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
@@ -155,12 +155,12 @@ export class HomeComponent extends TournamentComponent implements OnInit {
 
     getFieldDescription(): string {
         const sport = this.competition.hasMultipleSports() ? undefined : this.competition.getSingleSport().getSport();
-        return this.translate.getFieldNameSingular(sport);
+        return this.translate.getFieldNameSingular(sport?.getCustomId());
     }
 
     getFieldsDescription(): string {
         const sport = this.competition.hasMultipleSports() ? undefined : this.competition.getSingleSport().getSport();
-        return this.translate.getFieldNamePlural(sport);
+        return this.translate.getFieldNamePlural(sport?.getCustomId());
     }
 
 

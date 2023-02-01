@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { AgainstGame, Field, Place, PlanningConfig, PlanningEditMode, Structure, StructureNameService, TogetherGame } from 'ngx-sport';
 import { DateFormatter } from '../../lib/dateFormatter';
-import { TranslateService } from '../../lib/translate';
+import { TranslateFieldService } from '../../lib/translate/field';
 
 @Component({
   selector: 'app-tournament-basegame-edit',
@@ -18,7 +18,7 @@ export class GameBaseEditComponent implements OnInit {
   // public firstScoreConfig!: ScoreConfig;
 
   constructor(
-    private translate: TranslateService,
+    private translate: TranslateFieldService,
     public dateFormatter: DateFormatter) {
   }
 
@@ -71,7 +71,7 @@ export class GameBaseEditComponent implements OnInit {
 
 
   getFieldDescription(): string {
-    return this.translate.getFieldNameSingular(this.game.getCompetitionSport().getSport());
+    return this.translate.getFieldNameSingular(this.game.getCompetitionSport().getSport().getCustomId());
   }
 
   areRefereesEnabled(): boolean {

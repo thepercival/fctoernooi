@@ -4,7 +4,8 @@ import { AgainstGpp, AgainstH2h, AllInOneGame, GameMode, GamePlaceStrategy, Name
 
 import { IAlert, IAlertType } from '../../shared/common/alert';
 import { CSSService } from '../../shared/common/cssservice';
-import { TranslateService } from '../../lib/translate';
+import { TranslateSportService } from '../../lib/translate/sport';
+import { TranslateFieldService } from '../../lib/translate/field';
 import { GameModeModalComponent } from '../gameMode/modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
@@ -40,7 +41,8 @@ export class CreateSportWithFieldsComponent implements OnInit {
 
     constructor(
         public cssService: CSSService,
-        private translate: TranslateService,
+        private translateSport: TranslateSportService,
+        private translateField: TranslateFieldService,
         private defaultService: DefaultService,
         private modalService: NgbModal,
         private fb: UntypedFormBuilder
@@ -60,7 +62,7 @@ export class CreateSportWithFieldsComponent implements OnInit {
         const nrOfFields = 2;
         this.form = new UntypedFormGroup({
             sportName: new UntypedFormControl({
-                value: this.translate.getSportName(newSport.getCustomId(), newSport.getName()),
+                value: this.translateSport.getSportName(newSport.getCustomId(), newSport.getName()),
                 disabled: true
             }, Validators.required),
             nrOfFields: new UntypedFormControl(nrOfFields),
@@ -85,7 +87,7 @@ export class CreateSportWithFieldsComponent implements OnInit {
     }
 
     getFieldsDescription(): string {
-        return this.translate.getFieldNamePlural(this.sport);
+        return this.translateField.getFieldNamePlural(this.sport?.getCustomId());
     }
 
     toSportToAdd() {

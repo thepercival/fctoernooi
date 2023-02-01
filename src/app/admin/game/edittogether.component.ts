@@ -19,7 +19,7 @@ import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
-import { TranslateService } from '../../lib/translate';
+import { TranslateScoreService } from '../../lib/translate/score';
 import { GameEditComponent } from './edit.component';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
@@ -57,7 +57,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
         fieldMapper: FieldMapper,
         refereeMapper: RefereeMapper,
         placeMapper: PlaceMapper,
-        translate: TranslateService,
+        translate: TranslateScoreService,
         myNavigation: MyNavigation,
         fb: UntypedFormBuilder
     ) {

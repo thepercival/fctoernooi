@@ -36,7 +36,6 @@ import { Role } from '../../../lib/role';
 import { Tournament } from '../../../lib/tournament';
 import { PlanningRepository } from '../../../lib/ngx-sport/planning/repository';
 import { PouleRankingModalComponent } from '../poulerankingmodal/rankingmodal.component';
-import { TranslateService } from '../../../lib/translate';
 import { CompetitionSportRouter } from '../competitionSport.router';
 import { CompetitionSportTab } from '../competitionSportTab';
 import { InfoModalComponent } from '../infomodal/infomodal.component';
@@ -46,6 +45,7 @@ import { of, Subscription, timer } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AppErrorHandler } from '../../../lib/repository';
 import { Recess } from '../../../lib/recess';
+import { TranslateScoreService } from '../../../lib/translate/score';
 
 @Component({
   selector: 'app-tournament-roundnumber-planning',
@@ -92,7 +92,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     private authService: AuthService,
     public cssService: CSSService,
     public dateFormatter: DateFormatter,
-    public translate: TranslateService,
+    public translate: TranslateScoreService,
     private modalService: NgbModal,
     protected planningRepository: PlanningRepository) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];

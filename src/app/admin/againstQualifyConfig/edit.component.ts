@@ -10,7 +10,6 @@ import {
     AgainstQualifyConfigMapper,
     CompetitionSportMapper,
     PointsCalculation,
-    CustomSport,
 } from 'ngx-sport';
 import { CSSService } from '../../shared/common/cssservice';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -22,6 +21,7 @@ import { AgainstQualifyConfigRepository } from '../../lib/ngx-sport/againstQuali
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { Router } from '@angular/router';
 import { RoundsSelection, SelectableCategoriesCreator, SelectableCategoryConverter } from '../scoreConfig/edit.component';
+import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
 
 @Component({
     selector: 'app-tournament-qualifyagainstconfig-edit',
@@ -139,7 +139,7 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
             this.ranges.losePoints.push(i);
         }
         const sport = this.competitionSport.getSport();
-        if (sport.getCustomId() === CustomSport.Chess) {
+        if (sport.getCustomId() === CustomSportId.Chess) {
             this.ranges.drawPoints.push(0.5);
             this.ranges.drawPoints.sort();
         }
@@ -209,7 +209,7 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
     }
 
     structureHasMultipleRounds(): boolean {
-        return this.structure.getCategories().length > 1 || this.structure.getSingleCategory().getRootRound().getChildren().length > 1;
+        return this.structure.getCategories().length > 1 || this.structure.getSingleCategory().getStructureCells().length > 1;
     }
 
     someSelectedHasBegun(selectableRoundNodes: SelectableRoundNode[]): boolean {

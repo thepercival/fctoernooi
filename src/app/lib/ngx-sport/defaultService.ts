@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AgainstGpp, AgainstH2h, AgainstRuleSet, AllInOneGame, CompetitionSportService, GameMode, GamePlaceStrategy, JsonPlanningConfig, JsonSport, PlaceRanges, PlanningEditMode, PointsCalculation, PouleStructure, SelfReferee, Single, Sport, VoetbalRange } from "ngx-sport";
-import { SportVariant } from "ngx-sport/src/sport/variant";
+import { CustomSportId } from "./sport/custom";
 
 @Injectable({
     providedIn: 'root'
@@ -26,6 +26,64 @@ export class DefaultService {
             customId: 0
         };
     }
+
+    hasNextScoreConfig(customId: CustomSportId): boolean {
+        if (
+            customId === CustomSportId.Badminton
+            || customId === CustomSportId.Darts
+            || customId === CustomSportId.Squash
+            || customId === CustomSportId.TableTennis
+            || customId === CustomSportId.Tennis
+            || customId === CustomSportId.Volleyball
+            || customId === CustomSportId.Padel
+        ) {
+            return true;
+
+        }
+        return false;
+    }
+
+    getWinPoints(customId: CustomSportId): number {
+        if (customId === CustomSportId.Rugby) {
+            return 4;
+        }
+        if (customId === CustomSportId.Chess) {
+            return 1;
+        }
+        return 3;
+    }
+
+    getDrawPoints(customId: CustomSportId): number {
+        if (customId === CustomSportId.Rugby) {
+            return 2;
+        }
+        if (customId === CustomSportId.Chess) {
+            return 0.5;
+        }
+        return 1;
+    }
+
+    getWinPointsExt(customId: CustomSportId): number {
+        if (customId === CustomSportId.Chess) {
+            return 1;
+        }
+        return 2;
+    }
+
+    getDrawPointsExt(customId: CustomSportId): number {
+        if (customId === CustomSportId.Chess) {
+            return 0.5;
+        }
+        return 1;
+    }
+
+    getLosePointsExt(customId: CustomSportId): number {
+        if (customId === CustomSportId.IceHockey) {
+            return 1;
+        }
+        return 0;
+    }
+
 
     // public getSportVariant(sport: Sport): Single | AgainstH2h | AgainstGpp | AllInOneGame {
     //     if (sport.getDefaultGameMode() === GameMode.Against) {

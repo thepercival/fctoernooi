@@ -23,6 +23,7 @@ import {
     Category,
     StructureNameService,
     StartLocationMap,
+    ScoreDirection,
 } from 'ngx-sport';
 import { Observable, of } from 'rxjs';
 
@@ -30,7 +31,7 @@ import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/common/navigation';
 import { Role } from '../../lib/role';
 import { TournamentRepository } from '../../lib/tournament/repository';
-import { TranslateService } from '../../lib/translate';
+import { TranslateScoreService } from '../../lib/translate/score';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
@@ -69,7 +70,7 @@ export class GameEditComponent extends TournamentComponent {
         protected fieldMapper: FieldMapper,
         protected refereeMapper: RefereeMapper,
         protected placeMapper: PlaceMapper,
-        private translate: TranslateService,
+        private translate: TranslateScoreService,
         private myNavigation: MyNavigation,
         fb: UntypedFormBuilder
     ) {
@@ -141,7 +142,7 @@ export class GameEditComponent extends TournamentComponent {
     getCalculateScoreDescription() {
         const scoreConfig = this.firstScoreConfig.getCalculate();
         let description = '';
-        if (scoreConfig.getDirection() === ScoreConfig.UPWARDS && scoreConfig.getMaximum() > 0) {
+        if (scoreConfig.getDirection() === ScoreDirection.Upwards && scoreConfig.getMaximum() > 0) {
             description = 'eerste bij ' + scoreConfig.getMaximum() + ' ';
         }
         return description + this.translate.getScoreNamePlural(scoreConfig);
@@ -149,7 +150,7 @@ export class GameEditComponent extends TournamentComponent {
 
     getInputScoreDescription() {
         let description = '';
-        if (this.firstScoreConfig.getDirection() === ScoreConfig.UPWARDS && this.firstScoreConfig.getMaximum() > 0) {
+        if (this.firstScoreConfig.getDirection() === ScoreDirection.Upwards && this.firstScoreConfig.getMaximum() > 0) {
             description = 'eerste bij ' + this.firstScoreConfig.getMaximum() + ' ';
         }
         return description + this.translate.getScoreNamePlural(this.firstScoreConfig);
@@ -396,7 +397,7 @@ class AgainstScoreFormControl {
         if (!this.isScoreValid()) {
             return 'is-invalid';
         }
-        if (this.scoreConfig.getDirection() !== ScoreConfig.UPWARDS || this.scoreConfig.getMaximum() === 0) {
+        if (this.scoreConfig.getDirection() !== ScoreDirection.Upwards || this.scoreConfig.getMaximum() === 0) {
             return 'is-valid';
         }
         const score = this.getScore();

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { DateFormatter } from '../lib/dateFormatter';
 import { TournamentShell } from '../lib/tournament/shell';
-import { TranslateService } from '../lib/translate';
+import { TranslateSportService } from '../lib/translate/sport';
 
 @Component({
   selector: 'app-home-shell',
@@ -13,7 +13,7 @@ export class HomeShellComponent {
   @Input() showPublic!: boolean;
   @Input() linethroughDate!: Date;
 
-  constructor(public translate: TranslateService, public dateFormatter: DateFormatter) {
+  constructor(public translate: TranslateSportService, public dateFormatter: DateFormatter) {
   }
 
   inPast(date: Date): boolean {

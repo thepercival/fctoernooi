@@ -10,7 +10,7 @@ import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.scss']
 })
-export class NavComponent implements OnInit {
+export class NavComponent {
 
   @Input() title: string = 'FCToernooi';
   navbarCollapsed = true;
@@ -27,10 +27,6 @@ export class NavComponent implements OnInit {
       this.title = title;
     });
   }
-
-  ngOnInit() {
-  }
-
 
   getLogoIconPrefix(): IconPrefix {
     return <IconPrefix>'fac';

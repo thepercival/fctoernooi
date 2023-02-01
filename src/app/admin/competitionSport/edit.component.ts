@@ -11,7 +11,7 @@ import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { TranslateService } from '../../lib/translate';
+import { TranslateFieldService } from '../../lib/translate/field';
 import { CompetitionSportTab } from '../../shared/tournament/competitionSportTab';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -37,7 +37,7 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
         modalService: NgbModal,
         favRepository: FavoritesRepository,
         public cssService: CSSService,
-        private translate: TranslateService,
+        private translate: TranslateFieldService,
         public competitionSportService: CompetitionSportService,
         private myNavigation: MyNavigation
     ) {
@@ -101,6 +101,6 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
     }
 
     getFieldsDescription(): string {
-        return this.translate.getFieldNamePlural(this.competitionSport?.getSport());
+        return this.translate.getFieldNamePlural(this.competitionSport?.getSport()?.getCustomId());
     }
 }
