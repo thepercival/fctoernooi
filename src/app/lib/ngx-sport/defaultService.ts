@@ -43,7 +43,7 @@ export class DefaultService {
         return false;
     }
 
-    getWinPoints(customId: CustomSportId): number {
+    getWinPoints(customId: CustomSportId | 0): number {
         if (customId === CustomSportId.Rugby) {
             return 4;
         }
@@ -53,7 +53,7 @@ export class DefaultService {
         return 3;
     }
 
-    getDrawPoints(customId: CustomSportId): number {
+    getDrawPoints(customId: CustomSportId | 0): number {
         if (customId === CustomSportId.Rugby) {
             return 2;
         }
@@ -63,39 +63,26 @@ export class DefaultService {
         return 1;
     }
 
-    getWinPointsExt(customId: CustomSportId): number {
+    getWinPointsExt(customId: CustomSportId | 0): number {
         if (customId === CustomSportId.Chess) {
             return 1;
         }
         return 2;
     }
 
-    getDrawPointsExt(customId: CustomSportId): number {
+    getDrawPointsExt(customId: CustomSportId | 0): number {
         if (customId === CustomSportId.Chess) {
             return 0.5;
         }
         return 1;
     }
 
-    getLosePointsExt(customId: CustomSportId): number {
+    getLosePointsExt(customId: CustomSportId | 0): number {
         if (customId === CustomSportId.IceHockey) {
             return 1;
         }
         return 0;
     }
-
-
-    // public getSportVariant(sport: Sport): Single | AgainstH2h | AgainstGpp | AllInOneGame {
-    //     if (sport.getDefaultGameMode() === GameMode.Against) {
-    //         if (sport.getDefaultNrOfSidePlaces() === 1) {
-    //             return new AgainstH2h(sport, sport.getDefaultNrOfSidePlaces(), sport.getDefaultNrOfSidePlaces(), 1);
-    //         }
-    //         return new AgainstGpp(sport, sport.getDefaultNrOfSidePlaces(), sport.getDefaultNrOfSidePlaces(), 1);
-    //     } else if (sport.getDefaultGameMode() === GameMode.Single) {
-    //         return new Single(sport, 1, 1);
-    //     }
-    //     return new AllInOneGame(sport, 1);
-    // }
 
     getJsonPlanningConfig(sportVariant: Single | AgainstH2h | AgainstGpp | AllInOneGame): JsonPlanningConfig {
         let gamePlaceStrategy = GamePlaceStrategy.EquallyAssigned;

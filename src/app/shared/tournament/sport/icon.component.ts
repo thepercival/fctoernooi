@@ -25,7 +25,7 @@ export class SportIconComponent implements OnInit {
         this.iconName = this.getIconName(customId);
     }
 
-    getCustomIdFromInput(): CustomSportId {
+    getCustomIdFromInput(): CustomSportId | 0{
         if (this.customId && this.customId > 0) {
             return this.customId;
         }
@@ -33,7 +33,8 @@ export class SportIconComponent implements OnInit {
             return 0;
         }
         if (this.competitionSports.length === 1) {
-            return this.competitionSports[0].getSport().getCustomId();
+            const competitionSport = this.competitionSports[0];
+            return competitionSport !== undefined ? competitionSport.getSport().getCustomId() : 0;
         }
         return 0;
     }
