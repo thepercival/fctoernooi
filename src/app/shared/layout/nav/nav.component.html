@@ -1,6 +1,6 @@
 <nav *ngIf="tournamentLiveboardLink.showIcon !== false"
   class="navbar bg-dark py-0 mb-2 d-flex justify-content-between flex-nowrap">
-  <button routerLink="/" class="btn text-header-top p-0 pt-1" role="button" aria-label="home" tabindex="-1">
+  <button routerLink="/" class="btn text-header-top p-0 pt-1 pe-2" role="button" aria-label="home" tabindex="-1">
     <fa-icon [icon]=" [ getLogoIconPrefix(), getLogoIconName()]" size="3x"></fa-icon>
   </button>
 
@@ -12,7 +12,7 @@
     </button>
   </ng-container>
   <ng-template #tournament>
-    <h1 class="text-header-top px-1 my-1">{{title}}</h1>
+    <h1 class="text-header-top px-2 my-1">{{title}}</h1>
   </ng-template>
 
   <!-- <a class="navbar-brand py-0" tabindex="-1" [routerLink]="['/']">
@@ -20,35 +20,12 @@
   </a> -->
 
   <button *ngIf="!authService.isLoggedIn()" routerLink="/user/login" routerLinkActive="active"
-    class="btn btn-outline-secondary" role="button" aria-label="inloggen " tabindex="-1">
-    <fa-icon [icon]=" [ 'fas', 'sign-in-alt'] "></fa-icon>
-    <span class="ms-1">inloggen</span>
+    class="btn btn-outline-success" role="button" aria-label="inloggen " tabindex="-1">
+    <fa-icon [icon]="[ 'fas', 'sign-in-alt']"></fa-icon>
+    <span class="d-none d-sm-inline ms-1">inloggen</span>
   </button>
   <button *ngIf="authService.isLoggedIn()" [routerLink]="['/user/profile']"
     class="btn btn-outline-secondary p-0 pt-1 text-header-top" role="button" tabindex="-1" aria-label="account">
     <fa-icon [icon]="[ 'fas', 'user-circle']" size="3x"></fa-icon>
   </button>
-
-  <!-- <button class="navbar-toggler navbar-toggler-right pointer" type="button" data-toggle="collapse
-    " data-target="#navbarResponsive "
-    aria-controls="navbarResponsive " aria-label="Toggle navigation " (click)="navbarCollapsed=! navbarCollapsed
-    " [attr.aria-expanded]="!navbarCollapsed ">
-    <span class="navbar-toggler-icon "></span>
-  </button>
-  <div class="collapse navbar-collapse " [ngbCollapse]="navbarCollapsed " id="navbarResponsive ">
-    <ul class="navbar-nav ">
-      <li *ngIf="isLoggedIn() " class="nav-item ">
-        <a class="nav-link " routerLink="/admin " routerLinkActive="active " (click)="navbarCollapsed=! navbarCollapsed ">admin</a>
-      </li>
-    </ul>
-
-    <ul class="nav navbar-nav ms-auto ">
-      <li *ngIf="!isLoggedIn() " class="nav-item ">
-        <a class="nav-link" routerLink="/user/login " routerLinkActive="active " (click)="navbarCollapsed=!navbarCollapsed ">inloggen</a>
-      </li>
-      <li *ngIf="isLoggedIn() " class="nav-item ">
-        <a class="nav-link" routerLink="/user/logout " routerLinkActive="active " (click)="navbarCollapsed=!navbarCollapsed ">uitloggen</a>
-      </li>
-    </ul>
-  </div> -->
 </nav>

@@ -112,21 +112,20 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
     }
 
     protected updateCalculateScoreControl(updateWarnings: boolean) {
-        if (this.calculateScoreControl === undefined) {
-            return;
+        if( this.calculateScoreControl !== undefined) {            
+            this.calculateScoreControl.home.setValue(0);
+            this.calculateScoreControl.away.setValue(0);
+            this.scoreControls.forEach(scoreControl => {
+                if (!this.calculateScoreControl || scoreControl.isScoreValid() === false) {
+                    return;
+                }
+                if (scoreControl.home.value > scoreControl.away.value) {
+                    this.calculateScoreControl.home.setValue(this.calculateScoreControl.home.value + 1);
+                } else if (scoreControl.home.value < scoreControl.away.value) {
+                    this.calculateScoreControl.away.setValue(this.calculateScoreControl.away.value + 1);
+                }
+            });
         }
-        this.calculateScoreControl.home.setValue(0);
-        this.calculateScoreControl.away.setValue(0);
-        this.scoreControls.forEach(scoreControl => {
-            if (!this.calculateScoreControl || scoreControl.isScoreValid() === false) {
-                return;
-            }
-            if (scoreControl.home.value > scoreControl.away.value) {
-                this.calculateScoreControl.home.setValue(this.calculateScoreControl.home.value + 1);
-            } else if (scoreControl.home.value < scoreControl.away.value) {
-                this.calculateScoreControl.away.setValue(this.calculateScoreControl.away.value + 1);
-            }
-        });
         this.postScoreControlUpdate(updateWarnings);
     }
 

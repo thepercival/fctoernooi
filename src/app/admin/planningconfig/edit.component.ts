@@ -18,7 +18,10 @@ import {
     Single,
     StructureNameService,
     StartLocationMap,
-    GameMode
+    GameMode,
+    EquallyAssignCalculator,
+    SportMapper,
+    Sport
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -37,7 +40,6 @@ import { GameAmountConfigRepository } from '../../lib/ngx-sport/gameAmountConfig
 import { forkJoin, Observable, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { IAlertType } from '../../shared/common/alert';
-import { Options } from 'selenium-webdriver';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 
@@ -58,6 +60,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     validations: PlanningConfigValidations = { minMinutes: 1, maxMinutes: 10080 };
     // gameAmountRange: VoetbalRange | undefined;
     public showNrOfBatchGamesAlert = false;
+    public unequallyAssigned = false;
 
     @ViewChild('updateDataAlert', { static: false }) updateDataAlert!: NgbAlert;
     updateDataMsg: string | undefined = '';
@@ -77,6 +80,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         private defaultService: DefaultService,
         private planningRepository: PlanningRepository,
         private mapper: PlanningConfigMapper,
+        private sportMapper: SportMapper,
         private gameAmountConfigMapper: GameAmountConfigMapper,
         fb: UntypedFormBuilder
     ) {
@@ -147,27 +151,22 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         });
         this.setGameAmountControls(startRoundNumber);
         this.gameAmountLabel = this.getGameAmountLabel(startRoundNumber.getCompetition().getSportVariants());
+        this.updateUnequallyAssigned(startRoundNumber);
+    }
+
+    updateUnequallyAssigned(startRoundNumber: RoundNumber) {
+        const distinctNrOfPlaces = this.getDistinctNrOfPlaces(startRoundNumber.createPouleStructure());
+
+        const jsonGameAmountConfigs = this.formToJsonGameAmountConfigs();
+        const againstGpps = this.jsonGameAmountConfigsToAgainstGpps(jsonGameAmountConfigs);
+        this.unequallyAssigned = distinctNrOfPlaces.some((nrOfPlace: number): boolean => {
+            return !(new EquallyAssignCalculator()).assignAgainstSportsEqually(nrOfPlace, againstGpps);
+        });
     }
 
     protected getValidGameAmountConfigs(roundNumber: RoundNumber): GameAmountConfig[] {
         return this.competition.getSports().map(competitionSport => roundNumber.getValidGameAmountConfig(competitionSport));
     }
-
-    // protected getCorrectAmount(
-    //     sportVariant: Single | AgainstH2h | AgainstGpp | AllInOneGame,
-    //     gameAmountConfig: GameAmountConfig): number {
-    //     if (sportVariant instanceof AgainstVariant && sportVariant.isMixed()) {
-    //         return gameAmountConfig.getNrOfGamesPerPlaceMixed();
-    //     }
-    //     return gameAmountConfig.getAmount();
-    // }
-
-    // isGameAmountEditable(): boolean {
-    //     const calculator = new GameCreationStrategyCalculator();
-    //     const strategy = calculator.calculate(this.competition.getSportVariants());
-    //     return strategy === GameCreationStrategy.Static;
-    // }
-
 
     private getGameAmountLabel(sportVariants: (Single | AgainstH2h | AgainstGpp | AllInOneGame)[]): string {
         if (sportVariants.length > 1) {
@@ -309,6 +308,22 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         });
     }
 
+    private jsonGameAmountConfigsToAgainstGpps(jsonGameAmountConfigs: JsonGameAmountConfig[]): AgainstGpp[]
+    {
+        return jsonGameAmountConfigs.filter((jsonGameAmountConfig: JsonGameAmountConfig): boolean => {
+            return jsonGameAmountConfig.competitionSport.gameMode === GameMode.Against
+                && jsonGameAmountConfig.competitionSport.nrOfGamesPerPlace > 0;
+        }).map((jsonGameAmountConfig: JsonGameAmountConfig): AgainstGpp => {
+            const sport = this.sportMapper.toObject(jsonGameAmountConfig.competitionSport.sport);
+             return new AgainstGpp(
+                sport,
+                jsonGameAmountConfig.competitionSport.nrOfHomePlaces,
+                jsonGameAmountConfig.competitionSport.nrOfAwayPlaces,
+                jsonGameAmountConfig.amount
+                );
+        });        
+    }
+
     perPouleOptionAvailable(): boolean {
         if(this.competition.hasMultipleSports()) {
             return false;
@@ -367,11 +382,30 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     showRandomGamePlaceStrategy(): boolean {
-        const sportVariants = this.startRoundNumber.getCompetition().getSportVariants();
-        return sportVariants.every((sportVariant: Single | AgainstH2h | AgainstGpp | AllInOneGame): boolean => {
-            return sportVariant instanceof AgainstGpp && sportVariant.hasMultipleSidePlaces();
+        const againstGpps = this.getAgainstGppSportVariants(this.startRoundNumber);
+        return againstGpps.every((againstGpp: AgainstGpp): boolean => {
+            return againstGpp.hasMultipleSidePlaces();
         });
+    }
 
+    getDistinctNrOfPlaces(pouleStructure: PouleStructure): number[] {
+        const nrOfPlacesMap = new Map();
+        return pouleStructure.filter((nrOfPlace: number): boolean => {
+            if(nrOfPlacesMap.has(nrOfPlace)) {
+                return false;
+            }
+            nrOfPlacesMap.set(nrOfPlace, true);
+            return true;
+        });
+    }
+
+    getAgainstGppSportVariants(roundNumber: RoundNumber): AgainstGpp[] {
+        const sportVariants = this.getValidGameAmountConfigs(roundNumber).map(gameAmountConfig => gameAmountConfig.createVariant());
+        const againstGpps = sportVariants.filter(
+            (sportVariant: Single | AgainstH2h | AgainstGpp | AllInOneGame): boolean => {
+                return sportVariant instanceof AgainstGpp;
+            });
+        return <AgainstGpp[]>againstGpps;
     }
 
     enableDisableSelfReferee() {

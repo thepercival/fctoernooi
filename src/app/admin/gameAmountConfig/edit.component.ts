@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { JsonGameAmountConfig, VoetbalRange } from 'ngx-sport';
@@ -12,6 +12,7 @@ export class GameAmountConfigEditComponent implements OnInit {
   @Input() gameAmountControls!: GameAmountConfigControl[];
   @Input() label!: string;
   @Input() form!: UntypedFormGroup;
+  @Output() closed = new EventEmitter<void>();
 
   range: number[] = [];
 
@@ -44,7 +45,9 @@ export class GameAmountConfigEditComponent implements OnInit {
   openModal(modalContent: TemplateRef<any>) {
     const activeModal = this.modalService.open(modalContent);
     activeModal.result.then(() => {
+      this.closed.emit();
     }, (reason) => {
+      this.closed.emit();
     });
   }
 }

@@ -85,7 +85,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   private refreshTimer: Subscription | undefined;
   private appErrorHandler: AppErrorHandler;
   public progressPerc = 0;
-  public firstProgressError = true;
 
   constructor(
     private router: Router,
@@ -531,17 +530,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
               });
           }
         },
-        error: (e) => {
-          if( this.firstProgressError ) {
-            this.firstProgressError = false;
-            setTimeout(() => {
-              console.log('EXTRA CHANGE');
-              this.showProgress();    
-            }, 3000);        
-          } else {
-            this.setAlert(IAlertType.Danger, e);
-            this.firstProgressError = true;
-          }          
+        error: (e) => {          
+          this.setAlert(IAlertType.Danger, e);                
         }
       })
   }

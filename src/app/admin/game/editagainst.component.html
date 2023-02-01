@@ -32,12 +32,12 @@
             <span>{{getInputScoreDescription()}}</span>
           </label>
           <div class="col-4">
-            <input [formControl]="scoreControl.home" (ngModelChange)="postScoreControlUpdate(true)"
+            <input [formControl]="scoreControl.home" (ngModelChange)="updateCalculateScoreControl(true)"
               class="form-control max-width-100 {{scoreControl.getValidateClass()}}" type="number">
           </div>
           <div class="col-1 side-splitter">-</div>
           <div class="col-4">
-            <input [formControl]="scoreControl.away" (ngModelChange)="postScoreControlUpdate(true)"
+            <input [formControl]="scoreControl.away" (ngModelChange)="updateCalculateScoreControl(true)"
               class="form-control max-width-100 {{scoreControl.getValidateClass()}}" type="number">
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
@@ -15,6 +15,7 @@ import { AuthorizationExplanationModalComponent } from './infomodal.component';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { AuthService } from '../../lib/auth/auth.service';
 
 @Component({
     selector: 'app-tournament-authorization-list',
@@ -37,6 +38,7 @@ export class AuthorizationListComponent extends TournamentComponent implements O
         favRepository: FavoritesRepository,
         private tournamentUserRepository: TournamentUserRepository,
         private invitationRepository: TournamentInvitationRepository,
+        private authService: AuthService
     ) {
         super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
     }
@@ -139,7 +141,13 @@ export class AuthorizationListComponent extends TournamentComponent implements O
             this.tournamentUserRepository.removeObject(<TournamentUser>authorization)
                 .subscribe({
                     next: () => {
-                        this.removeTournamentUserFromList(authorization);
+                        this.removeTournamentUserFromList(authorization);                        
+                        if (authorization.getUserId().getId() === this.authService.getLoggedInUserId()?.getId()) {
+                            const navigationExtras: NavigationExtras = {
+                                queryParams: { type: 'success', message: 'je rollen zijn verwijderd' }
+                              };
+                              this.router.navigate(['/'], navigationExtras);
+                        }
                         this.processing = false
                     },
                     error: (e) => {
