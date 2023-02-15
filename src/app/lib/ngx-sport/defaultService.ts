@@ -43,7 +43,7 @@ export class DefaultService {
         return false;
     }
 
-    getWinPoints(customId: CustomSportId | 0): number {
+    getWinPoints(customId: CustomSportId): number {
         if (customId === CustomSportId.Rugby) {
             return 4;
         }
@@ -53,7 +53,7 @@ export class DefaultService {
         return 3;
     }
 
-    getDrawPoints(customId: CustomSportId | 0): number {
+    getDrawPoints(customId: CustomSportId): number {
         if (customId === CustomSportId.Rugby) {
             return 2;
         }
@@ -63,21 +63,21 @@ export class DefaultService {
         return 1;
     }
 
-    getWinPointsExt(customId: CustomSportId | 0): number {
+    getWinPointsExt(customId: CustomSportId): number {
         if (customId === CustomSportId.Chess) {
             return 1;
         }
         return 2;
     }
 
-    getDrawPointsExt(customId: CustomSportId | 0): number {
+    getDrawPointsExt(customId: CustomSportId): number {
         if (customId === CustomSportId.Chess) {
             return 0.5;
         }
         return 1;
     }
 
-    getLosePointsExt(customId: CustomSportId | 0): number {
+    getLosePointsExt(customId: CustomSportId): number {
         if (customId === CustomSportId.IceHockey) {
             return 1;
         }

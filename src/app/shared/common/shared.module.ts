@@ -1,7 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faUsers } from '@fortawesome/free-solid-svg-icons';
 
 import { EscapeHtmlPipe } from './escapehtmlpipe';
 import { FocusDirective } from './focus';
@@ -12,8 +10,7 @@ import { FocusDirective } from './focus';
     FocusDirective
   ],
   imports: [
-    CommonModule,
-    FontAwesomeModule
+    CommonModule
   ],
   exports: [
     EscapeHtmlPipe,
@@ -22,8 +19,8 @@ import { FocusDirective } from './focus';
 })
 
 export class CommonSharedModule {
-  constructor(library: FaIconLibrary/*, modalConfig: NgbModalConfig,*/) {
-    library.addIcons(faUsers);
+  constructor(/*library: FaIconLibrary*//*, modalConfig: NgbModalConfig,*/) {
+    // library.addIcons(faUsers);
     /*modalConfig.centered = true;
     modalConfig.scrollable = true;
     modalConfig.size = 'lg';*/

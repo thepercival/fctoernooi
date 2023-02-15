@@ -40,7 +40,7 @@
           <td>
             <app-sport-icon [customId]="shell.singleCustomSport"></app-sport-icon>
           </td>
-          <td>{{shell.name}}</td>
+          <td class="text-break">{{shell.name}}</td>
         </tr>
 
         <tr *ngIf="!searchFilterActive" (click)="expandPastDays()" class="pointer">

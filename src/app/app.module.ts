@@ -2,17 +2,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import {
-  faAngleDoubleDown,
-  faPlusCircle,
-  faSave,
-  faSpinner,
-  faUserCircle,
-  faUserFriends,
-  faUserShield,
-} from '@fortawesome/free-solid-svg-icons';
-
 import { environment } from '../environments/environment';
 import { RoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -26,7 +15,6 @@ import { HomeShellComponent } from './home/shell.component';
 import { TournamentShellRepository } from './lib/tournament/shell/repository';
 import { UserMapper } from './lib/user/mapper';
 import { LayoutModule } from './shared/layout/layout.module';
-import { facFavicon } from './shared/tournament/icon/icons';
 
 @NgModule({
   declarations: [
@@ -40,7 +28,6 @@ import { facFavicon } from './shared/tournament/icon/icons';
     RoutingModule,
     CommonSharedModule,
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
-    FontAwesomeModule,
     LayoutModule
   ],
   providers: [
@@ -49,8 +36,6 @@ import { facFavicon } from './shared/tournament/icon/icons';
     TournamentShellRepository,
     UserMapper,
     GlobalEventsManager,
-
-
     MyNavigation/*,
     {
       provide: 'placeRanges', useValue: [
@@ -62,9 +47,6 @@ import { facFavicon } from './shared/tournament/icon/icons';
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(library: FaIconLibrary) {
-    library.addIcons(faPlusCircle, faSpinner, faAngleDoubleDown
-      , faUserShield, faUserFriends, faSave, faUserCircle, facFavicon
-    );
+  constructor() {    
   }
 }

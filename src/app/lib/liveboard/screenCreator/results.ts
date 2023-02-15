@@ -1,6 +1,4 @@
-import _ from "lodash";
 import { AgainstGame, Game, GameOrder, RoundNumber, GameState, TogetherGame, Category, CategoryMap, GameGetter } from "ngx-sport";
-import { BatchViewMode } from "../../../public/liveboard/games.liveboard.component";
 import { ScreenConfig } from "../screenConfig/json";
 import { ResultsScreen } from "../screens";
 

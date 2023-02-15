@@ -1,13 +1,14 @@
 <nav *ngIf="tournamentLiveboardLink.showIcon !== false"
   class="navbar bg-dark py-0 mb-2 d-flex justify-content-between flex-nowrap">
   <button routerLink="/" class="btn text-header-top p-0 pt-1 pe-2" role="button" aria-label="home" tabindex="-1">
-    <fa-icon [icon]=" [ getLogoIconPrefix(), getLogoIconName()]" size="3x"></fa-icon>
+    <!-- <fa-icon [icon]=" [ getLogoIconPrefix(), getLogoIconName()]" size="3x"></fa-icon> -->
+    <app-svg-icon icon="favicon"></app-svg-icon>
   </button>
 
   <ng-container *ngIf="tournamentLiveboardLink.showIcon;else tournament">
     <button [routerLink]="[tournamentLiveboardLink.link, tournamentLiveboardLink.tournamentId]"
       class="btn text-header-top d-none d-lg-block" type="button" tabindex="-1">
-      <fa-icon [icon]=" [ 'fas', 'tv'] "></fa-icon>
+      <!-- <fa-icon [icon]=" [ 'fas', 'tv'] "></fa-icon> -->
       <span> live scorebord</span>
     </button>
   </ng-container>
@@ -21,11 +22,12 @@
 
   <button *ngIf="!authService.isLoggedIn()" routerLink="/user/login" routerLinkActive="active"
     class="btn btn-outline-success" role="button" aria-label="inloggen " tabindex="-1">
-    <fa-icon [icon]="[ 'fas', 'sign-in-alt']"></fa-icon>
+    <app-svg-icon icon="sign-in-alt"></app-svg-icon>
     <span class="d-none d-sm-inline ms-1">inloggen</span>
   </button>
   <button *ngIf="authService.isLoggedIn()" [routerLink]="['/user/profile']"
     class="btn btn-outline-secondary p-0 pt-1 text-header-top" role="button" tabindex="-1" aria-label="account">
-    <fa-icon [icon]="[ 'fas', 'user-circle']" size="3x"></fa-icon>
+    <!-- <fa-icon [icon]="[ 'fas', 'user-circle']" size="3x"></fa-icon> -->
+    <app-svg-icon icon="user-circle"></app-svg-icon>
   </button>
 </nav>

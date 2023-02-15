@@ -27,12 +27,4 @@ export class NavComponent {
       this.title = title;
     });
   }
-
-  getLogoIconPrefix(): IconPrefix {
-    return <IconPrefix>'fac';
-  }
-
-  getLogoIconName(): IconName {
-    return <IconName>'favicon';
-  }
 }

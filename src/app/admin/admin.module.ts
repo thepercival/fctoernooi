@@ -21,6 +21,11 @@ import {
   faShareAlt,
   faListOl,
   faExclamationCircle,
+  faPlusCircle,
+  faSave,
+  faUserFriends,
+  faUsers,
+  faTvAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { ClipboardModule } from 'ngx-clipboard';
 import {
@@ -148,7 +153,11 @@ export class AdminModule {
       /* competitors*/ faRandom, faSort,
       /* structure*/ faCompressAlt, faExpandAlt, faTh,
       /* standen */ faListOl,
-      /* handmatige planningmodus */ faExclamationCircle
+      /* handmatige planningmodus */ faExclamationCircle,
+      /* lockerrooms, autorisatie */ faPlusCircle,
+      /* opzet */ faSave,
+      /** home, autorisatie */ faUserFriends, faUsers,
+      /** home */ faTvAlt,
       /*faCircle, faListUl, faCogs, faMinus, faInfoCircle, faMedal, faUsers, faSync*/
     );
     library.addIcons(

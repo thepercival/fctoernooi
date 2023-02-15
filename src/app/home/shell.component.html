@@ -1,5 +1,5 @@
 <td *ngIf="showPublic" [title]="shell.public ? 'publiek' : 'prive' ">
-  <fa-icon [icon]="['fas', shell.public ? 'user-friends' : 'user-shield']"></fa-icon>
+  <span>{{shell.public ? 'publiek' : 'prive'}}</span>
 </td>
 <td *ngIf="inPast(shell.startDateTime)">
   <span style="text-decoration: line-through;">{{dateFormatter.toString(shell.startDateTime,dateFormatter.date())}}
@@ -12,4 +12,4 @@
   <span *ngIf="shell.singleCustomSport !== 0"
     class="d-none d-sm-table-cell">{{translate.getSportName(shell.singleCustomSport, '')}}</span>
 </td>
-<td>{{shell.name}}</td>
+<td class="text-break">{{shell.name}}</td>

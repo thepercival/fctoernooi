@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faCheckCircle, faKey, faLevelUpAlt, faMoneyBillAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faKey, faLevelUpAlt, faMoneyBillAlt, faSignInAlt, faSpinner, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { LoginComponent } from './login/login.component';
@@ -41,6 +41,6 @@ import { AwaitPaymentComponent } from './awaitpayment/awaitpayment.component';
 })
 export class UserModule {
   constructor(library: FaIconLibrary) {
-    library.addIcons(faLevelUpAlt, faKey, faMoneyBillAlt, faCheckCircle);
+    library.addIcons(faSpinner,faUserCircle,faSignInAlt,faLevelUpAlt, faKey, faMoneyBillAlt, faCheckCircle);
   }
 }

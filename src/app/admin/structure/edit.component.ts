@@ -3,11 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   BalancedPouleStructure,
   Category,
-  CompetitionSportService,
   Competitor,
   JsonStructure,
-  PlaceRanges,
-  QualifyTarget,
   Round,
   StartLocationMap,
   Structure,
@@ -16,7 +13,6 @@ import {
   StructureNameService
 } from 'ngx-sport';
 
-import { cloneDeep } from 'lodash';
 import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
@@ -33,7 +29,8 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 import { CategoryChooseModalComponent } from '../../shared/tournament/category/chooseModal.component';
 import { Favorites } from '../../lib/favorites';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
-import { DateFormatter } from '../../lib/dateFormatter';
+import { cloneDeep } from 'lodash';
+
 @Component({
   selector: 'app-tournament-structure',
   templateUrl: './edit.component.html',
@@ -123,8 +120,6 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   createClonedStructure(structure: Structure): Structure {
     this.originalCompetitors = this.tournament.getCompetitors();
     return cloneDeep(structure);
-    /** CDK @TODO NODE 18 */
-    // return structuredClone(structure);
   }
 
   addAction(structureAction: StructureAction) {
@@ -318,6 +313,3 @@ export interface UpdateCategoryNameAction {
   category: Category;
   newName: string;
 }
-
-
-

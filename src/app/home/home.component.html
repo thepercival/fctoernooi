@@ -17,9 +17,7 @@
         <tr *ngIf="!showingAllWithRole && shellsFromX.length > 0" (click)="showingAllWithRole = !showingAllWithRole"
           class="pointer">
           <td colspan="4" class="text-center">
-            <fa-icon [icon]="['fas', 'angle-double-down']"></fa-icon>
-            <span class="mx-3">meer</span>
-            <fa-icon [icon]="['fas', 'angle-double-down']"></fa-icon>
+            <button class="btn btn-outline-secondary btn-sm mx-3">bekijk meer</button>            
           </td>
         </tr>
         <ng-template ngFor let-shell [ngForOf]="shellsFromX">
