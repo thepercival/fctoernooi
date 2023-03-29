@@ -98,6 +98,23 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
         this.processing = false;
     }
 
+    updateDisabled(): void {
+        const usePoints = this.form.controls.pointsCalculation.value !== PointsCalculation.Scores;
+        if( usePoints ) {
+            this.form.controls.winPoints.enable();
+            this.form.controls.drawPoints.enable();
+            this.form.controls.winPointsExt.enable();
+            this.form.controls.drawPointsExt.enable();
+            this.form.controls.losePointsExt.enable();
+        } else {
+            this.form.controls.winPoints.disable({onlySelf: true});
+            this.form.controls.drawPoints.disable({onlySelf: true});
+            this.form.controls.winPointsExt.disable({onlySelf: true});
+            this.form.controls.drawPointsExt.disable({onlySelf: true});
+            this.form.controls.losePointsExt.disable({onlySelf: true});
+        }
+      }
+
     initSelectableCategories() {
         const selectableCategoriesCreator = new SelectableCategoriesCreator(this.competitionSport,
             (round: Round, competitionSport: CompetitionSport) => {
@@ -163,6 +180,7 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
         this.form.controls.winPointsExt.setValue(json.winPointsExt);
         this.form.controls.drawPointsExt.setValue(json.drawPointsExt);
         this.form.controls.losePointsExt.setValue(json.losePointsExt);
+        this.updateDisabled();
     }
 
     protected formToJson(): JsonAgainstQualifyConfig {

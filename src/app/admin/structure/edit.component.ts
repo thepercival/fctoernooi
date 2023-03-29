@@ -29,7 +29,6 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 import { CategoryChooseModalComponent } from '../../shared/tournament/category/chooseModal.component';
 import { Favorites } from '../../lib/favorites';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
-import { cloneDeep } from 'lodash';
 
 @Component({
   selector: 'app-tournament-structure',
@@ -119,7 +118,8 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
 
   createClonedStructure(structure: Structure): Structure {
     this.originalCompetitors = this.tournament.getCompetitors();
-    return cloneDeep(structure);
+    const jsonStructure = this.structureMapper.toJson(structure);
+    return this.structureMapper.toObject(jsonStructure, this.tournament.getCompetition());
   }
 
   addAction(structureAction: StructureAction) {

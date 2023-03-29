@@ -23,15 +23,15 @@
     </div>
   </div>
   <div class="row mb-3">
-    <label *ngIf="form.value['useNext']" class="col-5 col-form-label">{{getPluralName()}} per
-      {{getNextSingularName()}}
+    <label class="col-3 col-form-label">
+      <span *ngIf="form.value['useNext']">{{getNextSingularName()}}-</span>
+      <span>{{getPluralName()}}</span>
     </label>
-    <label *ngIf="!form.value['useNext']" class="col-3 col-form-label">{{getPluralName()}}</label>
-    <label *ngIf="!form.value['useNext']" for="max" class="col-2 col-form-label text-end">{{getDirectionName()}}</label>
+    <label for="max" class="col-2 col-form-label text-end">{{getDirectionName()}}</label>
     <div class="col-7 form-floating">
       <input type="number" [ngClass]="{ 'is-invalid': form.controls.max.invalid, 'is-valid': form.controls.max.valid}"
         formControlName="max" maxlength="2" class="form-control" id="max" />
-      <label *ngIf="!form.value['useNext']" for="max" class="ms-3">0 = zoveel mogelijk</label>
+      <label for="max" class="ms-3">0 = zoveel mogelijk</label>
     </div>
   </div>
   <div class="row mb-3">

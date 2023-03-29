@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterContentInit, AfterViewInit, Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -33,7 +33,7 @@ import { TranslateScoreService } from '../../lib/translate/score';
     templateUrl: './editagainst.component.html',
     styleUrls: ['./editagainst.component.scss']
 })
-export class GameAgainstEditComponent extends GameEditComponent implements OnInit {
+export class GameAgainstEditComponent extends GameEditComponent implements OnInit, AfterViewInit {
 
     public calculateScoreControl: AgainstScoreFormControl | undefined;
     public scoreControls: AgainstScoreFormControl[] = [];
@@ -98,8 +98,16 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
         if (this.scoreControls.length === 0) {
             this.scoreControls.push(new AgainstScoreFormControl(this.firstScoreConfig, 0, 0));
         }
-        this.updateWarningsForEqualQualifiers(this.formToJson());
+        this.updateCalculateScoreControl(false);
     }
+
+    ngAfterViewInit() {
+        setTimeout(() => {
+            this.updateWarningsForEqualQualifiers(this.formToJson());
+        }, 250);        
+    }
+ 
+
 
     aScoreIsInvalid() {
         return this.scoreControls.some(scoreControl => !scoreControl.isScoreValid());
@@ -124,6 +132,9 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
                     this.calculateScoreControl.home.setValue(this.calculateScoreControl.home.value + 1);
                 } else if (scoreControl.home.value < scoreControl.away.value) {
                     this.calculateScoreControl.away.setValue(this.calculateScoreControl.away.value + 1);
+                } else {
+                    this.calculateScoreControl.home.setValue(this.calculateScoreControl.home.value + 0.5);
+                    this.calculateScoreControl.away.setValue(this.calculateScoreControl.away.value + 0.5);
                 }
             });
         }

@@ -20,20 +20,20 @@
           </div>
         </div>
 
-        <div class="row mb-3">
+        <div *ngIf="form.value['category']" class="row mb-3">
           <label for="poule" class="col-6 col-form-label pointer">poule</label>
           <div class="col-6">
-            <select class="form-control" formControlName="poule" required (ngModelChange)="changePoule($event)">
+            <select class="form-control" formControlName="poule" required (ngModelChange)="changePoule($event, form.value['category'], form.value['competitionSport'])">
               <option *ngFor="let poule of poules" [ngValue]="poule">
                 {{structureNameService.getPouleName(poule, true)}}</option>
             </select>
           </div>
         </div>
-        <div class="row mb-3">
+        <div *ngIf="form.value['poule']" class="row mb-3">
           <label for="competitionSport" class="col-6 col-form-label pointer">sport</label>
           <div class="col-6">
             <select class="form-control" formControlName="competitionSport" required
-              (ngModelChange)="changeCompetitionSport($event)">
+              (ngModelChange)="changeCompetitionSport($event, form.value['poule'], form.value['category'])">
               <option *ngFor="let competitionSport of competitionSports" [ngValue]="competitionSport">
                 {{competitionSport.getSport().getName()}}</option>
             </select>
@@ -54,6 +54,7 @@
           <div *ngFor="let awayNr of getPlaceNrs(againstSportVariant.getNrOfAwayPlaces())" class="row mb-3">
             <label for="{{awayNr}}" class="col-6 col-form-label pointer">uit {{awayNr}}</label>
             <div class="col-6">
+
               <select class="form-control" formControlName="{{awayNr}}" required>
                 <option *ngFor="let place of form.value['poule'].getPlaces()" [ngValue]="place">
                   {{structureNameService.getPlaceName(place, false, true)}}</option>
@@ -72,7 +73,6 @@
             </div>
           </div>
         </div>
-
         <div class="row mb-3 justify-content-end">
           <div class="col-6">
             <button type="submit" [disabled]="form.invalid || !allPlacesAreValid()"

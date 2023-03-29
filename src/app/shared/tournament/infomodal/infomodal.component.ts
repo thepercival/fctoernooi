@@ -6,16 +6,12 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
     templateUrl: './infomodal.component.html',
     styleUrls: ['./infomodal.component.scss']
 })
-export class InfoModalComponent implements OnInit {
+export class InfoModalComponent {
     @Input() header: string = '';
     @Input() modalContent!: TemplateRef<any>;
     @Input() noHeaderBorder: boolean = false;
 
     constructor(public activeModal: NgbActiveModal) {
-
-    }
-
-    ngOnInit() {
 
     }
 

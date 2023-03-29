@@ -5,13 +5,10 @@
   "projects": {
     "fctoernooi": {
       "i18n": {
+        "sourceLocale": "en-US",
         "locales": {
-          "fr": {
-            "translation": "src/locale/messages.nl.xlf",
-            "baseHref": ""
-          },
-          "nl": {
-            "translation": "src/locale/messages.nl.xlf",
+          "nl-NL": {
+            "translation": "src/locale/messages.nl-NL.xlf",
             "baseHref": ""
           }
         }
@@ -46,10 +43,7 @@
               "includePaths": [
                 "./node_modules/bootstrap/scss"
               ]
-            },
-            "allowedCommonJsDependencies": [
-              "lodash"
-            ],
+            },            
             "scripts": []
           },
           "configurations": {
@@ -78,11 +72,11 @@
               "outputHashing": "all",
               "serviceWorker": true
             },
-            "nl": {
-              "outputPath": "dist/nl",
+            "nl-NL": {
+              "outputPath": "dist/nl-NL",
               "i18nMissingTranslation": "error",
               "localize": [
-                "nl"
+                "nl-NL"
               ]
             },
             "acc": {
@@ -102,7 +96,18 @@
               "sourceMap": true,
               "namedChunks": true
             },
-            "defaultConfiguration": "prod"
+            "dev-nl-NL": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "localize": [
+                "nl-NL"
+              ],
+              "i18nMissingTranslation": "warning"
+            }            
           }
         },
         "serve": {
@@ -115,7 +120,10 @@
               "browserTarget": "fctoernooi:build:prod"
             },
             "dev": {
-              "browserTarget": "fctoernooi:build:dev"
+              "browserTarget": "fctoernooi:build:dev"        
+            },
+            "dev-nl-NL": {
+              "browserTarget": "fctoernooi:build:dev-nl-NL"
             }
           }
         },
@@ -148,7 +156,6 @@
             ]
           }
         },
-        "ci": {},
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
@@ -161,7 +168,6 @@
       }
     }
   },
-  "defaultProject": "fctoernooi",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",

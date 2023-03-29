@@ -9,7 +9,7 @@
       <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
     </label>
     <div class="col-5">
-      <select class="form-control" formControlName="pointsCalculation" required>
+      <select class="form-control" formControlName="pointsCalculation" required (change)="updateDisabled()">
         <option *ngFor="let pointsCalculation of pointsCalculations" [ngValue]="pointsCalculation">
           {{nameService.getPointsCalculationName(pointsCalculation)}}</option>
       </select>

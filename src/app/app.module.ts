@@ -37,6 +37,9 @@ import { LayoutModule } from './shared/layout/layout.module';
     UserMapper,
     GlobalEventsManager,
     MyNavigation/*,
+    { provide: LOCALE_ID, useValue: 'nl-NL'},
+    */
+    /*,
     {
       provide: 'placeRanges', useValue: [
         { min: 2, max: 40, placesPerPoule: { min: 2, max: 12 } },

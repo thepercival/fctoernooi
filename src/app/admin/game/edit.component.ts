@@ -230,6 +230,7 @@ export class GameEditComponent extends TournamentComponent {
             return;
         }
         const dateTime = this.getDate(this.getBaseFormGroup().controls.date, this.getBaseFormGroup().controls.time);
+            
         jsonGame.startDateTime = dateTime.toISOString();
         jsonGame.field = this.fieldMapper.toJson(this.getBaseFormGroup().controls.field.value);
         const referee: Referee | undefined = this.getBaseFormGroup().controls.referee.value;
@@ -239,6 +240,7 @@ export class GameEditComponent extends TournamentComponent {
     }
 
     getDate(dateFormControl: AbstractControl, timeFormControl: AbstractControl): Date {
+        
         return new Date(
             dateFormControl.value.year,
             dateFormControl.value.month - 1,

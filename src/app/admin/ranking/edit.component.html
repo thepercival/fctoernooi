@@ -38,7 +38,7 @@
 <ng-template #contentRankingRuleSet let-modal>
   <div class="modal-header">
     <h4 class="modal-title">
-      rangschikking {{getRankingRuleSuffix()}}
+      <span>rangschikking</span> <span class="ms-1" [innerHtml]="getRankingRuleSuffix() | keepHtml"></span>
     </h4>
     <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
   </div>

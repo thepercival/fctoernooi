@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en-US" datatype="plaintext" original="ng2.template">
+    <body>
+      <!-- ngb : start-->
+      <!-- <trans-unit id="ngb.alert.close" datatype="html">
+        <target>sluiten</target>
+      </trans-unit>
+      <trans-unit id="ngb.datepicker.select-month" datatype="html">
+        <source>selecteer maand</source>
+      </trans-unit>
+      <trans-unit id="ngb.datepicker.select-year" datatype="html">
+        <source>selecteer jaar</source>
+      </trans-unit>" ("Select year").
+      <trans-unit id="ngb.datepicker.previous-month" datatype="html">
+        <source>vorige maand</source>
+      </trans-unit>" ("Select year").
+      <trans-unit id="ngb.datepicker.next-month" datatype="html">
+        <source>volgende maand</source>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.HH" datatype="html">
+        <source>HH</source>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.hours" datatype="html">
+        <source>uren</source>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.increment-hours" datatype="html">
+        <source>uren ophogen</source>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.decrement-hours" datatype="html">
+        <source>uren verlagen</source>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.MM" datatype="html">
+        <source>MM</source>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.minutes" datatype="html">
+        <source>minuten</source>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.increment-minutes" datatype="html">
+        <source>minuten ophogen</source>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.decrement-minutes" datatype="html">
+        <source>minuten verlagen</source>
+      </trans-unit>      
+      <trans-unit id="ngb.timepicker.SS" datatype="html">
+        <source>SS</source>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.seconds" datatype="html">
+        <source>seconden</source>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.increment-seconds" datatype="html">
+        <source>seconden ophogen</source>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.decrement-seconds" datatype="html">
+        <source>seconden verlagen</source>
+      </trans-unit> -->
+      <trans-unit id="ngb.carousel.next" datatype="html">
+        <source>Next</source>
+        <target>volgende</target>
+      </trans-unit>
+      <trans-unit id="ngb.carousel.previous" datatype="html">
+        <source>Previous</source>
+        <source>vorige</source>
+      </trans-unit>
+      <!-- <trans-unit id="ngb.progressbar.value" datatype="html">
+        <source>
+          <x id="INTERPOLATION" equiv-text="{{ closingValue | currency:&apos;GBP&apos; }}"/>
+        </source>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.AM" datatype="html">
+        <source>
+          <x id="INTERPOLATION" equiv-text="{{ closingValue | currency:&apos;GBP&apos; }}"/>
+        </source>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.PM" datatype="html">
+        <source>
+          <x id="INTERPOLATION" equiv-text="{{ closingValue | currency:&apos;GBP&apos; }}"/>
+        </source>
+      </trans-unit> -->
+      <trans-unit id="app.home.mytournaments" datatype="html">
+        <source>my tournaments</source>
+        <target>mijn toernooien</target>
+      </trans-unit>     
+    </body>
+  </file>
+</xliff>

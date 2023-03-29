@@ -524,7 +524,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
                   this.loadGameData();
                 },
                 error: (e) => {
-                  console.log('CDK');
                   this.setAlert(IAlertType.Danger, e);
                 }
               });

@@ -8,7 +8,7 @@ import { InfoModalComponent } from '../infomodal/infomodal.component';
     templateUrl: './rankingmodal.component.html',
     styleUrls: ['./rankingmodal.component.scss']
 })
-export class PouleRankingModalComponent implements OnInit {
+export class PouleRankingModalComponent {
     public poule!: Poule;
     public competitionSports!: CompetitionSport[];
     public favorites!: Favorites;
@@ -21,9 +21,6 @@ export class PouleRankingModalComponent implements OnInit {
     constructor(
         private modalService: NgbModal,
         public activeModal: NgbActiveModal) {
-    }
-
-    ngOnInit() {
     }
 
     getHeader(): string {

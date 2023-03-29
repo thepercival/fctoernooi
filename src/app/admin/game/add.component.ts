@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     GameState,
@@ -29,6 +29,8 @@ import {
     StartLocationMap,
     CategoryMap,
     Category,
+    TogetherGamePlace,
+    AgainstGamePlace,
 } from 'ngx-sport';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -54,7 +56,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
     public againstSportVariant: AgainstH2h | AgainstGpp | undefined;
     public singleSportVariant: Single | undefined;
     public allInOneGameSportVariant: AllInOneGame | undefined;
-    public form: UntypedFormGroup;
+    public form!: FormGroup;
     public structureNameService!: StructureNameService;
 
     constructor(
@@ -71,23 +73,41 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
         private refereeMapper: RefereeMapper,
         private placeMapper: PlaceMapper,
         public dateFormatter: DateFormatter,
-        fb: UntypedFormBuilder
+        private fb: UntypedFormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
-        this.form = fb.group({
-            category: [undefined, Validators.compose([
+    }
+
+    protected createForm(category: Category, poule: Poule, competitionSport: CompetitionSport) {
+        this.form = this.fb.group({
+            category: new FormControl<Category>(category, Validators.compose([
                 Validators.required
-            ])],
-            poule: [undefined, Validators.compose([
+            ])),
+            poule: new FormControl<Poule>(poule, Validators.compose([
                 Validators.required
-            ])],
-            competitionSport: [undefined, Validators.compose([
+            ])),
+            competitionSport: new FormControl<CompetitionSport>(competitionSport, Validators.compose([
                 Validators.required
-            ])],
-            gamePlaces: new UntypedFormGroup({}),
-            homeGamePlaces: new UntypedFormGroup({}),
-            awayGamePlaces: new UntypedFormGroup({}),
+            ])),
+            gamePlaces: new FormGroup({}),
+            homeGamePlaces: new FormGroup({}),
+            awayGamePlaces: new FormGroup({}),
         });
+        if (this.againstSportVariant !== undefined) {
+            for (let homeNr = 1; homeNr <= this.againstSportVariant.getNrOfHomePlaces(); homeNr++) {
+                this.getHomeGamePlacesFormGroup().removeControl('' + homeNr);
+                this.getHomeGamePlacesFormGroup().addControl('' + homeNr, new FormControl<Place>(poule.getPlace(homeNr)));
+            }        
+            for (let awayNr = 1; awayNr <= this.againstSportVariant.getNrOfAwayPlaces(); awayNr++) {
+                this.getAwayGamePlacesFormGroup().removeControl('' + awayNr);
+                this.getAwayGamePlacesFormGroup().addControl('' + awayNr, new FormControl<Place>(poule.getPlace(awayNr)));
+            }
+        } else if (this.singleSportVariant !== undefined) {
+            for (let placeNr = 1; placeNr <= this.singleSportVariant.getNrOfGamePlaces(); placeNr++) {
+                this.getGamePlacesFormGroup().removeControl('' + placeNr);
+                this.getGamePlacesFormGroup().addControl('' + placeNr, new FormControl<Place>(poule.getPlace(placeNr)));
+            }
+        }
     }
 
     getGamePlacesFormGroup(): UntypedFormGroup {
@@ -119,7 +139,6 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
                 this.categories = roundNumber.getStructureCells().map(structureCell => structureCell.getCategory());
                 this.changeCategory(this.categories[0]);
 
-                this.initForm();
                 this.processing = false;
             });
         });
@@ -128,44 +147,34 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
     changeCategory(category: Category) {
         const structureCell = this.roundNumber.getStructureCell(category);
         this.poules = structureCell.getPoules();
-        this.form.controls.poule.setValue(this.poules[0]);
+        
+        this.changePoule(this.poules[0], category, this.competitionSports[0]);
+                
     }
 
-    protected initForm() {
-        const firstCategory = this.categories[0];
-        this.form.controls.category.setValue(firstCategory);
-        // if (this.poules.length === 1) {
-        this.form.controls.poule.setValue(this.poules[0]);
-        // }
-        // if (this.competitionSports.length === 1) {
-        this.form.controls.competitionSport.setValue(this.competitionSports[0]);
-        this.changeCompetitionSport(this.competitionSports[0]);
-        // }
+    // protected initForm() {
+    //     const firstCategory = this.categories[0];
+    //     this.form.controls.category.setValue(firstCategory);
+    //     // if (this.poules.length === 1) {
+    //     this.form.controls.poule.setValue(this.poule);
+    //     // }
+    //     // if (this.competitionSports.length === 1) {
+    //     this.form.controls.competitionSport.setValue(this.competitionSports[0]);
+    //     this.changeCompetitionSport(this.competitionSports[0], this.poules[0]);
+    //     // }
+    // }
+
+
+    changePoule(poule: Poule, category: Category, competitionSport: CompetitionSport) {
+        // console.log(poule);
+        // this.poule = poule;
+        
+        this.changeCompetitionSport(competitionSport, poule, category);
     }
 
-
-    changePoule(poule: Poule) {
-        this.changeCompetitionSport(this.form.controls.competitionSport.value);
-    }
-
-    changeCompetitionSport(competitionSport: CompetitionSport) {
+    changeCompetitionSport(competitionSport: CompetitionSport, poule: Poule, category: Category) {
         this.setSportVariants(competitionSport);
-        this.form.controls.homeGamePlaces = new UntypedFormGroup({});
-        this.form.controls.awayGamePlaces = new UntypedFormGroup({});
-        this.form.controls.gamePlaces = new UntypedFormGroup({});
-
-        if (this.againstSportVariant !== undefined) {
-            for (let homeNr = 1; homeNr <= this.againstSportVariant.getNrOfHomePlaces(); homeNr++) {
-                this.getHomeGamePlacesFormGroup().addControl('' + homeNr, new UntypedFormControl({}));
-            }
-            for (let awayNr = 1; awayNr <= this.againstSportVariant.getNrOfAwayPlaces(); awayNr++) {
-                this.getAwayGamePlacesFormGroup().addControl('' + awayNr, new UntypedFormControl({}));
-            }
-        } else if (this.singleSportVariant !== undefined) {
-            for (let placeNr = 1; placeNr <= this.singleSportVariant.getNrOfGamePlaces(); placeNr++) {
-                this.getGamePlacesFormGroup().addControl('' + placeNr, new UntypedFormControl({}));
-            }
-        }
+        this.createForm(category, poule, competitionSport);
     }
 
     setSportVariants(competitionSport: CompetitionSport) {
@@ -303,6 +312,16 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
             });
         return false;
     }
+
+    // changeHomePlace(nr: string, place: Place) {
+    //     this.form.controls.homeGamePlaces.get(nr)?.setValue(place);
+    //     console.log('HTEST', place, nr);
+    // }
+
+    // changeAwayPlace(nr: string, place: Place) {
+    //     this.form.controls.awayGamePlaces.get(nr)?.setValue(place);
+    //     console.log('ATEST', place, nr);
+    // }
 
     allPlacesAreValid(): boolean {
         const placesTaken: Place[] = [];

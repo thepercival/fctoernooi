@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormArray, UntypedFormBuilder, FormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -31,7 +31,7 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     templateUrl: './edittogether.component.html',
     styleUrls: ['./edittogether.component.scss']
 })
-export class GameTogetherEditComponent extends GameEditComponent implements OnInit {
+export class GameTogetherEditComponent extends GameEditComponent implements OnInit, AfterViewInit {
     // public scoreConfigService: ScoreConfigService;
     // public hasAuthorization: boolean = false;
     // // private originalPouleState: number;    
@@ -93,6 +93,12 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
         });
     }
 
+    ngAfterViewInit() {
+        setTimeout(() => {
+            this.updateWarningsForEqualQualifiers(this.formToJson());
+        }, 250);        
+    }
+
     protected resetScoreControlValues(): void {
 
     }
@@ -122,7 +128,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
             this.form.controls.played.setValue(true);
         }
         this.pristineScore = false;
-        this.updateWarningsForEqualQualifiers(this.formToJson());
+        super.updateWarningsForEqualQualifiers(this.formToJson());
     }
 
 
@@ -141,7 +147,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
         } // else if (this.game.getScores().length === 0) {
         // this.updateCalculateScoreControl();
         // }
-        this.updateWarningsForEqualQualifiers(this.formToJson());
+        super.updateWarningsForEqualQualifiers(this.formToJson());
     }
 
     // // getCalculateScoreDescription() {
