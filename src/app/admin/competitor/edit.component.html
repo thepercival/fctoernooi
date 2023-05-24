@@ -11,7 +11,7 @@
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
         <div class="row mb-3">
           <div class="col-3">
             <label for="place" class="col-form-label">plek</label>
@@ -26,7 +26,7 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
+              [ngClass]="{ 'is-invalid': typedForm.controls.name.invalid, 'is-valid': typedForm.controls.name.valid }" type="text"
               formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters"
               [focusMe]="originalCompetitor === undefined">
           </div>
@@ -46,7 +46,7 @@
           </div>
           <div class="col-9">
             <textarea class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.info.invalid, 'is-valid': form.controls.info.valid }"
+              [ngClass]="{ 'is-invalid': typedForm.controls.info.invalid, 'is-valid': typedForm.controls.info.valid }"
               formControlName="info" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>
@@ -55,7 +55,7 @@
             <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary">terug</button>
           </div>
           <div class="col-9">
-            <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
+            <button [disabled]="typedForm.invalid" type="submit" class="btn btn-primary">
               <fa-icon [icon]="['fas', 'users']"></fa-icon> <span>{{originalCompetitor !== undefined ?
                 'wijzigen' : 'toevoegen'}}</span>
             </button>

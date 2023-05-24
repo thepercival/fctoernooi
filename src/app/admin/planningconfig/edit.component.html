@@ -108,9 +108,20 @@
                         </div>
                     </div>
                 </div>
+                <div *ngIf="!form.value['manual'] && form.value['selfReferee']"
+                    class="row mb-3">
+                    <label for="simulSelfReferee" class="offset-1 col-6 col-form-label">per deelnemer meerdere scheidsrechters tegelijk</label>
+                    <div class="col-5">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input" id="simulSelfReferee"
+                                formControlName="simulSelfReferee">
+                            <label class="form-check-label" for="simulSelfReferee"></label>
+                        </div>
+                    </div>
+                </div>
                 <div *ngIf="!form.value['manual'] && form.value['selfReferee'] && bothSelfRefereeOptionsAvailable()"
                     class="row mb-3">
-                    <label for="selfRefereeSamePoule" class="col-7 col-form-label">scheidsrechter in eigen poule</label>
+                    <label for="selfRefereeSamePoule" class="offset-1 col-6 col-form-label">scheidsrechter in eigen poule</label>
                     <div class="col-5">
                         <div class="form-check form-switch">
                             <input type="checkbox" class="form-check-input" id="selfRefereeSamePoule"
@@ -118,7 +129,7 @@
                             <label class="form-check-label" for="selfRefereeSamePoule"></label>
                         </div>
                     </div>
-                </div>
+                </div>                
                 <ngb-alert class="mb-0" *ngIf="showNrOfBatchGamesAlert" [type]="'info'"><span class="fw-bold">Let op:
                     </span>"deelnemers zijn scheidsrechter" bepaalt onder andere het aantal tegelijk
                     te spelen wedstrijden</ngb-alert>

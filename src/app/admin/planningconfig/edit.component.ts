@@ -115,7 +115,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             ])],
             perPoule: false,
             selfReferee: false,
-            selfRefereeSamePoule: false
+            selfRefereeSamePoule: false,
+            simulSelfReferee: false
         });
     }
 
@@ -272,6 +273,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         const selfRefee = this.getSelfReferee(json.selfReferee);
         this.form.controls.selfReferee.setValue(selfRefee !== SelfReferee.Disabled);
         this.form.controls.selfRefereeSamePoule.setValue(selfRefee === SelfReferee.SamePoule);
+        this.form.controls.simulSelfReferee.setValue(selfRefee === SelfReferee.SamePoule);
 
         Object.keys(this.form.controls).forEach(key => {
             const control = this.form.controls[key];

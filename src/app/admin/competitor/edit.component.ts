@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     JsonCompetitor,
@@ -26,7 +26,11 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     styleUrls: ['./edit.component.scss']
 })
 export class CompetitorEditComponent extends TournamentComponent implements OnInit {
-    form: UntypedFormGroup;
+    public typedForm: FormGroup<{
+        name: FormControl<string>;
+        registered: FormControl<boolean>;
+        info: FormControl<string|null>;
+      }>;
     originalCompetitor: TournamentCompetitor | undefined;
     hasBegun!: boolean;
     public nameService: NameService;
@@ -50,20 +54,22 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         favRepository: FavoritesRepository,
         private competitorRepository: CompetitorRepository,
         private myNavigation: MyNavigation,
-        fb: UntypedFormBuilder
+        formBuilder: FormBuilder
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
-        this.form = fb.group({
-            name: ['', Validators.compose([
-                Validators.required,
-                Validators.minLength(this.validations.minlengthname),
-                Validators.maxLength(this.validations.maxlengthname)
-            ])],
-            registered: false,
-            info: ['', Validators.compose([
-                Validators.maxLength(this.validations.maxlengthinfo)
-            ])],
-        });
+
+        this.typedForm = formBuilder.group({
+            name: new FormControl('', { nonNullable: true, validators: 
+                [Validators.required,
+                    Validators.minLength(this.validations.minlengthname),
+                    Validators.maxLength(this.validations.maxlengthname)
+                ] 
+            }),
+            registered: new FormControl(false, { nonNullable: true }),
+            info: new FormControl('', { nonNullable: false , validators: 
+                [Validators.maxLength(this.validations.maxlengthinfo)] 
+            }),
+          });
         this.nameService = new NameService();
     }
 
@@ -92,9 +98,9 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
 
         const competitor = <TournamentCompetitor | undefined>startLocationMap.getCompetitor(this.startLocation);
         this.originalCompetitor = competitor;
-        this.form.controls.name.setValue(this.originalCompetitor?.getName());
-        this.form.controls.registered.setValue(this.originalCompetitor ? this.originalCompetitor.getRegistered() : false);
-        this.form.controls.info.setValue(this.originalCompetitor?.getInfo());
+        this.typedForm.controls.name.setValue(this.originalCompetitor?.getName() ?? '' );
+        this.typedForm.controls.registered.setValue(this.originalCompetitor ? this.originalCompetitor.getRegistered() : false);
+        this.typedForm.controls.info.setValue(this.originalCompetitor?.getInfo() ?? null);
         this.processing = false;
     }
 
@@ -104,12 +110,12 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
     }
 
     formToJson(): JsonCompetitor {
-        const name = this.form.controls.name.value;
-        const info = this.form.controls.info.value;
+        const name = this.typedForm.controls.name.value;
+        const info = this.typedForm.controls.info.value;
         return {
             id: this.originalCompetitor ? this.originalCompetitor.getId() : 0,
             name: name,
-            registered: this.form.controls.registered.value,
+            registered: this.typedForm.controls.registered.value,
             info: info ? info : undefined,
             categoryNr: this.startLocation.getCategoryNr(),
             pouleNr: this.startLocation.getPouleNr(),

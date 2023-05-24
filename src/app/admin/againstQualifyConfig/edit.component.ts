@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, TemplateRef } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
     NameService,
     AgainstQualifyConfig,
@@ -36,7 +36,14 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
     alert: IAlert | undefined;
     processing: boolean = true;
     public nameService!: NameService;
-    form: UntypedFormGroup;
+    public typedForm: FormGroup<{
+        pointsCalculation: FormControl<PointsCalculation>;
+        winPoints: FormControl<number>;
+        drawPoints: FormControl<number>;
+        winPointsExt: FormControl<number>;
+        drawPointsExt: FormControl<number>;
+        losePointsExt: FormControl<number>;
+      }>;
     protected selectableCategories!: SelectableCategory[];
     pointsCalculations: PointsCalculation[] = [];
     readonly: boolean = true;
@@ -57,37 +64,15 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
         private mapper: AgainstQualifyConfigMapper,
         private router: Router,
         private modalService: NgbModal,
-        fb: UntypedFormBuilder
+        fb: FormBuilder
     ) {
-        this.form = fb.group({
-            pointsCalculation: ['', Validators.compose([
-                Validators.required
-            ])],
-            winPoints: ['', Validators.compose([
-                Validators.required,
-                Validators.min(this.validations.minWinPoints),
-                Validators.max(this.validations.maxWinPoints)
-            ])],
-            drawPoints: ['', Validators.compose([
-                Validators.required,
-                Validators.min(this.validations.minDrawPoints),
-                Validators.max(this.validations.maxDrawPoints)
-            ])],
-            winPointsExt: ['', Validators.compose([
-                Validators.required,
-                Validators.min(this.validations.minWinPoints),
-                Validators.max(this.validations.maxWinPoints)
-            ])],
-            drawPointsExt: ['', Validators.compose([
-                Validators.required,
-                Validators.min(this.validations.minDrawPoints),
-                Validators.max(this.validations.maxDrawPoints)
-            ])],
-            losePointsExt: ['', Validators.compose([
-                Validators.required,
-                Validators.min(this.validations.minLosePoints),
-                Validators.max(this.validations.maxLosePoints)
-            ])]
+        this.typedForm = fb.group({
+            pointsCalculation: new FormControl(PointsCalculation.AgainstGamePoints, { nonNullable: true }),
+            winPoints: new FormControl(0, { nonNullable: true }),
+            drawPoints: new FormControl(0, { nonNullable: true }),
+            winPointsExt: new FormControl(0, { nonNullable: true }),
+            drawPointsExt: new FormControl(0, { nonNullable: true }),
+            losePointsExt: new FormControl(0, { nonNullable: true }),
         });
     }
 
@@ -99,19 +84,19 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
     }
 
     updateDisabled(): void {
-        const usePoints = this.form.controls.pointsCalculation.value !== PointsCalculation.Scores;
+        const usePoints = this.typedForm.controls.pointsCalculation.value !== PointsCalculation.Scores;
         if( usePoints ) {
-            this.form.controls.winPoints.enable();
-            this.form.controls.drawPoints.enable();
-            this.form.controls.winPointsExt.enable();
-            this.form.controls.drawPointsExt.enable();
-            this.form.controls.losePointsExt.enable();
+            this.typedForm.controls.winPoints.enable();
+            this.typedForm.controls.drawPoints.enable();
+            this.typedForm.controls.winPointsExt.enable();
+            this.typedForm.controls.drawPointsExt.enable();
+            this.typedForm.controls.losePointsExt.enable();
         } else {
-            this.form.controls.winPoints.disable({onlySelf: true});
-            this.form.controls.drawPoints.disable({onlySelf: true});
-            this.form.controls.winPointsExt.disable({onlySelf: true});
-            this.form.controls.drawPointsExt.disable({onlySelf: true});
-            this.form.controls.losePointsExt.disable({onlySelf: true});
+            this.typedForm.controls.winPoints.disable({onlySelf: true});
+            this.typedForm.controls.drawPoints.disable({onlySelf: true});
+            this.typedForm.controls.winPointsExt.disable({onlySelf: true});
+            this.typedForm.controls.drawPointsExt.disable({onlySelf: true});
+            this.typedForm.controls.losePointsExt.disable({onlySelf: true});
         }
       }
 
@@ -174,12 +159,12 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
     }
 
     protected jsonToForm(json: JsonAgainstQualifyConfig) {
-        this.form.controls.pointsCalculation.setValue(json.pointsCalculation);
-        this.form.controls.winPoints.setValue(json.winPoints);
-        this.form.controls.drawPoints.setValue(json.drawPoints);
-        this.form.controls.winPointsExt.setValue(json.winPointsExt);
-        this.form.controls.drawPointsExt.setValue(json.drawPointsExt);
-        this.form.controls.losePointsExt.setValue(json.losePointsExt);
+        this.typedForm.controls.pointsCalculation.setValue(json.pointsCalculation);
+        this.typedForm.controls.winPoints.setValue(json.winPoints);
+        this.typedForm.controls.drawPoints.setValue(json.drawPoints);
+        this.typedForm.controls.winPointsExt.setValue(json.winPointsExt);
+        this.typedForm.controls.drawPointsExt.setValue(json.drawPointsExt);
+        this.typedForm.controls.losePointsExt.setValue(json.losePointsExt);
         this.updateDisabled();
     }
 
@@ -187,12 +172,12 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
         return {
             id: 0,
             competitionSport: this.competitionSportMapper.toJson(this.competitionSport),
-            winPoints: this.form.value['winPoints'],
-            drawPoints: this.form.value['drawPoints'],
-            winPointsExt: this.form.value['winPointsExt'],
-            drawPointsExt: this.form.value['drawPointsExt'],
-            losePointsExt: this.form.value['losePointsExt'],
-            pointsCalculation: this.form.value['pointsCalculation']
+            pointsCalculation: this.typedForm.controls.pointsCalculation.value,
+            winPoints: this.typedForm.controls.winPoints.value,
+            drawPoints: this.typedForm.controls.drawPoints.value,
+            winPointsExt: this.typedForm.controls.winPointsExt.value,
+            drawPointsExt: this.typedForm.controls.drawPointsExt.value,
+            losePointsExt: this.typedForm.controls.losePointsExt.value
         };
     }
 

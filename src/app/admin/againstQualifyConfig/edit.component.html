@@ -2,7 +2,7 @@
   <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </h2>
 <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-<form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+<form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
   <div class="row mb-3">
     <label for="pointsCalculation" class="col-7 col-form-label pointer"
       (click)="openInfoModal('punten berekening', contentInfo)">berekening
@@ -21,7 +21,7 @@
     </div>
     <div class="col-5">
       <select class="form-control" formControlName="winPoints" required
-        [ngClass]="{ 'is-invalid': form.controls.winPoints.invalid, 'is-valid': form.controls.winPoints.valid }">
+        [ngClass]="{ 'is-invalid': typedForm.controls.winPoints.invalid, 'is-valid': typedForm.controls.winPoints.valid }">
         <option *ngFor="let winpoints of ranges.winPoints" [ngValue]="winpoints">{{winpoints}}</option>
       </select>
     </div>
@@ -32,7 +32,7 @@
     </div>
     <div class="col-5">
       <select class="form-control" formControlName="drawPoints" required
-        [ngClass]="{ 'is-invalid': form.controls.drawPoints.invalid, 'is-valid': form.controls.drawPoints.valid }">
+        [ngClass]="{ 'is-invalid': typedForm.controls.drawPoints.invalid, 'is-valid': typedForm.controls.drawPoints.valid }">
         <option *ngFor="let drawpoints of ranges.drawPoints" [ngValue]="drawpoints">{{drawpoints}}</option>
       </select>
     </div>
@@ -49,7 +49,7 @@
     </div>
     <div class="col-5">
       <select class="form-control" formControlName="winPointsExt" required
-        [ngClass]="{ 'is-invalid': form.controls.winPoints.invalid, 'is-valid': form.controls.winPointsExt.valid }">
+        [ngClass]="{ 'is-invalid': typedForm.controls.winPoints.invalid, 'is-valid': typedForm.controls.winPointsExt.valid }">
         <option *ngFor="let winpointsext of ranges.winPoints" [ngValue]="winpointsext">{{winpointsext}}</option>
       </select>
     </div>
@@ -60,7 +60,7 @@
     </div>
     <div class="col-5">
       <select class="form-control" formControlName="drawPointsExt" required
-        [ngClass]="{ 'is-invalid': form.controls.drawPointsExt.invalid, 'is-valid': form.controls.drawPointsExt.valid }">
+        [ngClass]="{ 'is-invalid': typedForm.controls.drawPointsExt.invalid, 'is-valid': typedForm.controls.drawPointsExt.valid }">
         <option *ngFor="let drawpointsext of ranges.drawPoints" [ngValue]="drawpointsext">{{drawpointsext}}
         </option>
       </select>
@@ -72,7 +72,7 @@
     </div>
     <div class="col-5">
       <select class="form-control" formControlName="losePointsExt" required
-        [ngClass]="{ 'is-invalid': form.controls.losePointsExt.invalid, 'is-valid': form.controls.losePointsExt.valid }">
+        [ngClass]="{ 'is-invalid': typedForm.controls.losePointsExt.invalid, 'is-valid': typedForm.controls.losePointsExt.valid }">
         <option *ngFor="let losepointsext of ranges.losePoints" [ngValue]="losepointsext">{{losepointsext}}
         </option>
       </select>
@@ -86,7 +86,7 @@
       </button>
     </div>
     <div *ngIf="!readonly" class="col-5">
-      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">opslaan</button>
+      <button type="submit" class="btn btn-primary" [disabled]="typedForm.invalid">opslaan</button>
     </div>
   </div>
 </form>
@@ -105,11 +105,11 @@
         <td class="border-white">deelnemer A wint met 6 - 1 van deelnemer B
           <ul class="list-unstyled">
             <li>{{getPointsCalculationDef(PointsCalculationAgainstGamePoints)}}: deelnemer A krijgt
-              {{form.value['winPoints']}} punten en
+              {{typedForm.controls.winPoints.value}} punten en
               deelnemer B 0 punten</li>
             <li>{{getPointsCalculationDef(PointsCalculationScores)}}: deelnemer A krijgt 6 punten en deelnemer B 1 punt
             </li>
-            <li>{{getPointsCalculationDef(PointsCalculationBoth)}}: deelnemer A krijgt {{6 + form.value['winPoints']}}
+            <li>{{getPointsCalculationDef(PointsCalculationBoth)}}: deelnemer A krijgt {{6 + typedForm.controls.winPoints.value}}
               punten en deelnemer B 1
               punt</li>
           </ul>
