@@ -11,14 +11,14 @@
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
         <div class="row mb-3">
           <div class="col-3">
             <label for="name" class="col-form-label">naam</label>
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
+              [ngClass]="{ 'is-invalid': typedForm.controls.name.invalid, 'is-valid': typedForm.controls.name.valid }" type="text"
               formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
         </div>
@@ -28,7 +28,7 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.url.invalid, 'is-valid': form.controls.url.valid }" type="url"
+              [ngClass]="{ 'is-invalid': typedForm.controls.url.invalid, 'is-valid': typedForm.controls.url.valid }" type="url"
               formControlName="url" placeholder="max. {{validations.maxlengthurl}} karakters">
           </div>
         </div>
@@ -48,7 +48,7 @@
           </div>
           <div class="col-9">
             <select formControlName="screennr" class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.screennr.invalid, 'is-valid': form.controls.screennr.valid }"
+              [ngClass]="{ 'is-invalid': typedForm.controls.screennr.invalid, 'is-valid': typedForm.controls.screennr.valid }"
               required>
               <option *ngFor="let screenNr of rangeScreenNrs" [ngValue]="screenNr">
                 {{screenNr}}</option>
@@ -60,18 +60,18 @@
             <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary">terug</button>
           </div>
           <div class="col-9">
-            <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
+            <button [disabled]="typedForm.invalid" type="submit" class="btn btn-primary">
               <span>{{originalSponsor !== undefined ? 'wijzigen' : 'toevoegen'}}</span>
             </button>
           </div>
         </div>
-        <div *ngIf="base64Logo || form.controls.logourl.value" class="row">
+        <div *ngIf="base64Logo || typedForm.controls.logourl.value" class="row">
           <div class="col-3">
             <label for="log">preview</label>
           </div>
           <div class="col-9">
             <img *ngIf="base64Logo" [src]="base64Logo" width="150px;" height="150px;">
-            <img *ngIf="!base64Logo && form.controls.logourl.value" [src]="form.controls.logourl.value" width="150px;"
+            <img *ngIf="!base64Logo && typedForm.controls.logourl.value" [src]="typedForm.controls.logourl.value" width="150px;"
               height="150px;">
           </div>
         </div>

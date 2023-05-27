@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators, UntypedFormControl } from '@angular/forms';
+import { Validators, FormGroup, FormControl } from '@angular/forms';
 import {
     ScoreConfig,
     JsonScoreConfig,
@@ -29,9 +29,13 @@ export class ScoreConfigEditComponent implements OnInit {
     @Input() structure!: Structure;
     @Input() competitionSport!: CompetitionSport;
 
+    public typedForm: FormGroup<{
+        useNext: FormControl<boolean>,
+        max: FormControl<number>,
+        maxNext: FormControl<number>,
+      }>;
     public alert: IAlert | undefined;
     public processing: boolean = true;
-    public form: UntypedFormGroup;
     protected selectableCategories!: SelectableCategory[];
     public originalScoreConfig!: ScoreConfig;
     readonly: boolean = true;
@@ -47,16 +51,23 @@ export class ScoreConfigEditComponent implements OnInit {
         public competitionSportMapper: CompetitionSportMapper,
         private mapper: ScoreConfigMapper,
         private translate: TranslateScoreService,
-        fb: UntypedFormBuilder,
         private modalService: NgbModal
     ) {
-        this.form = fb.group({
-            useNext: false,
-            max: ['', Validators.compose([
-                Validators.required,
-                Validators.min(this.validations.minScore),
-                Validators.max(this.validations.maxScore)
-            ])]
+        this.typedForm = new FormGroup({
+            useNext: new FormControl(false, { nonNullable: true }),
+            max: new FormControl(0, { nonNullable: true, validators: 
+                [
+                    Validators.required,
+                    Validators.minLength(this.validations.minScore),
+                    Validators.maxLength(this.validations.maxScore)
+                ] 
+            }),
+            maxNext: new FormControl(0, { nonNullable: true, validators: 
+                [
+                    Validators.minLength(this.validations.minScore),
+                    Validators.maxLength(this.validations.maxScore)
+                ] 
+            })
         });
         this.onChanges();
     }
@@ -104,18 +115,18 @@ export class ScoreConfigEditComponent implements OnInit {
     }
 
     protected initForm(scoreConfigInit: ScoreConfig) {
-        this.form.controls.max.setValue(scoreConfigInit.getMaximum());
+        this.typedForm.controls.max.setValue(scoreConfigInit.getMaximum());
         const next = scoreConfigInit.getNext();
         if (next) {
-            this.form.controls.useNext.setValue(next.getEnabled());
-            this.form.addControl('maxNext', new UntypedFormControl(
-                next.getMaximum(),
+            this.typedForm.controls.useNext.setValue(next.getEnabled());
+            this.typedForm.controls.maxNext.setValue(next.getMaximum());
+            this.typedForm.controls.max.setValidators(
                 Validators.compose([
                     Validators.required,
                     Validators.min(this.validations.minScore),
                     Validators.max(this.validations.maxScore)
                 ])
-            ));
+            );
         }
         this.processing = false;
     }
@@ -126,17 +137,17 @@ export class ScoreConfigEditComponent implements OnInit {
             id: 0,
             competitionSport: jsonCompetitionSport,
             direction: this.originalScoreConfig.getDirection(),
-            maximum: this.form.controls.max.value,
+            maximum: this.typedForm.controls.max.value,
             enabled: true,
             isFirst: true,
         };
-        if (this.form.controls.maxNext !== undefined && this.originalScoreConfig.hasNext()) {
+        if (this.typedForm.controls.useNext.value && this.originalScoreConfig.hasNext()) {
             json.next = {
                 id: 0,
                 competitionSport: jsonCompetitionSport,
                 direction: this.originalScoreConfig.getDirection(),
-                maximum: this.form.value['maxNext'],
-                enabled: this.form.value['useNext'],
+                maximum: this.typedForm.controls.maxNext.value,
+                enabled: this.typedForm.controls.useNext.value,
                 isFirst: false
             };
         }
@@ -144,17 +155,17 @@ export class ScoreConfigEditComponent implements OnInit {
     }
 
     onChanges(): void {
-        this.form.controls.useNext.valueChanges.subscribe(val => {
-            this.form.controls.max.clearValidators();
+        this.typedForm.controls.useNext.valueChanges.subscribe(val => {
+            this.typedForm.controls.max.clearValidators();
             const minScore = this.validations.minScore + (val ? 1 : 0);
-            this.form.controls.max.setValidators(
+            this.typedForm.controls.max.setValidators(
                 Validators.compose([
                     Validators.required,
                     Validators.min(minScore),
                     Validators.max(this.validations.maxScore)
                 ]));
-            if (this.form.controls.max.value === 0) {
-                this.form.controls.max.setErrors({ 'invalid': true });
+            if (this.typedForm.controls.max.value === 0) {
+                this.typedForm.controls.max.setErrors({ 'invalid': true });
             }
         });
     }

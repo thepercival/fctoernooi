@@ -7,6 +7,7 @@ import {
   faEyeSlash,
   faSearch,
   faAngleDoubleDown,
+  faUsers,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   ScoreConfigService,
@@ -69,10 +70,10 @@ import { LockerRoomsViewComponent } from './lockerrooms/lockerrooms.component';
 export class PublicModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(
-      faListOl, faSearch, faEyeSlash, faAngleDoubleDown
+      faListOl, faSearch, faEyeSlash, faAngleDoubleDown, faUsers
       /*faMoneyBillAlt, faTrashAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
       faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom,
-      faInfoCircle, faMedal, faUsers, faQrcode, faCopy, faDotCircle, faSync*/
+      faInfoCircle, faMedal, faQrcode, faCopy, faDotCircle, faSync*/
     );
     /*library.addIcons(
       faProductHunt

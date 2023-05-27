@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -25,7 +25,15 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     styleUrls: ['./edit.component.css']
 })
 export class SponsorEditComponent extends TournamentComponent implements OnInit {
-    form: UntypedFormGroup;
+    public typedForm: FormGroup<{
+        name: FormControl<string>,
+        screennr: FormControl<string>,
+        url: FormControl<string>,
+        logourl: FormControl<string>,
+        logoupload: FormControl<Blob|null>,
+      }>;
+
+
     base64Logo!: string | ArrayBuffer | null;
 
     private sponsorScreensCreator!: SponsorScreensCreator;
@@ -54,29 +62,33 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         favRepository: FavoritesRepository,
         private sponsorRepository: SponsorRepository,
         private sponsorMapper: SponsorMapper,
-        private myNavigation: MyNavigation,
-        fb: UntypedFormBuilder
+        private myNavigation: MyNavigation
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
         this.logoInput = this.logoInputUpload;
         this.newLogoUploaded = false;
         this.screenConfig = this.sponsorMapper.getDefaultScreenConfig();
 
-        this.form = fb.group({
-            name: ['', Validators.compose([
-                Validators.required,
-                Validators.minLength(this.validations.minlengthname),
-                Validators.maxLength(this.validations.maxlengthname)
-            ])],
-            screennr: ['', Validators.compose([])],
-            url: ['', Validators.compose([
-                Validators.maxLength(this.validations.maxlengthurl)
-            ])],
-            logo: null,
-            logourl: ['', Validators.compose([
-                Validators.maxLength(this.validations.maxlengthurl)
-            ])],
-            logoupload: null
+        this.typedForm = new FormGroup({
+            name: new FormControl('', { nonNullable: true, validators: 
+                [
+                    Validators.required,
+                    Validators.minLength(this.validations.minlengthname),
+                    Validators.maxLength(this.validations.maxlengthname)
+                ] 
+            }),
+            screennr:  new FormControl('', { nonNullable: true }),
+            url: new FormControl('', { nonNullable: true, validators: 
+                [
+                    Validators.maxLength(this.validations.maxlengthurl)
+                ] 
+            }),
+            logourl: new FormControl('', { nonNullable: true, validators: 
+                [
+                    Validators.maxLength(this.validations.maxlengthurl)
+                ] 
+            }),
+            logoupload:  new FormControl(),
         });
     }
 
@@ -108,16 +120,17 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
             this.rangeScreenNrs.push(screenNr);
         }
         if (this.originalSponsor === undefined) {
-            const currentScreenNr = this.rangeScreenNrs.length > 0 ? this.rangeScreenNrs[0] : undefined;
-            this.form.controls.screennr.setValue(currentScreenNr);
+            if( this.rangeScreenNrs.length > 0 ) {
+                this.typedForm.controls.screennr.setValue('' + this.rangeScreenNrs[0]);
+            }
             this.processing = false;
             return;
         }
 
-        this.form.controls.name.setValue(this.originalSponsor.getName());
-        this.form.controls.url.setValue(this.originalSponsor.getUrl());
-        this.form.controls.logourl.setValue(this.originalSponsor.getLogoUrl());
-        this.form.controls.screennr.setValue(this.originalSponsor.getScreenNr());
+        this.typedForm.controls.name.setValue(this.originalSponsor.getName());
+        this.typedForm.controls.url.setValue(this.originalSponsor.getUrl());
+        this.typedForm.controls.logourl.setValue(this.originalSponsor.getLogoUrl());
+        this.typedForm.controls.screennr.setValue('' + this.originalSponsor.getScreenNr());
         this.processing = false;
     }
 
@@ -141,14 +154,14 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
     }
 
     formToJson(): JsonSponsor {
-        const url = this.form.controls.url.value;
-        const logoUrl = this.logoInput === this.logoInputUrl ? this.form.controls.logourl.value : undefined;
+        const url = this.typedForm.controls.url.value;
+        const logoUrl = this.logoInput === this.logoInputUrl ? this.typedForm.controls.logourl.value : undefined;
         return {
             id: this.originalSponsor ? this.originalSponsor.getId() : 0,
-            name: this.form.controls.name.value,
+            name: this.typedForm.controls.name.value,
             url: url ? url : undefined,
             logoUrl: logoUrl,
-            screenNr: this.form.controls.screennr.value
+            screenNr: +this.typedForm.controls.screennr.value
         }
     }
 
@@ -159,7 +172,10 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
             return;
         }
         const input = new FormData();
-        input.append('logostream', this.form.get('logoupload')?.value);
+        const stream: Blob|null = this.typedForm.controls.logoupload.value;
+        if( stream) {
+            input.append('logostream', stream);
+        }
         this.sponsorRepository.uploadImage(input, sponsor, this.tournament)
             .subscribe({
                 next: () => {
@@ -189,7 +205,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         reader.onload = (_event) => {
             this.base64Logo = reader.result;
         };
-        this.form.controls.logoupload.setValue(file);
+        this.typedForm.controls.logoupload.setValue(file);
 
         this.newLogoUploaded = true;
     }

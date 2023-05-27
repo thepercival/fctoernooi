@@ -2,7 +2,7 @@
   <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </h2>
 <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-<form *ngIf="!processing && originalScoreConfig" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+<form *ngIf="!processing && originalScoreConfig" name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
   <div *ngIf="originalScoreConfig.hasNext()" class="row mb-3">
     <label for="useNext" class="col-5 col-form-label">gebruik {{getNextPluralName()}}</label>
     <div class="col-7">
@@ -12,24 +12,25 @@
       </div>
     </div>
   </div>
-  <div *ngIf="form.value['useNext']" class="row mb-3">
+  <div *ngIf="typedForm.value['useNext']" class="row mb-3">
     <label class="col-3 col-form-label">{{getNextPluralName()}}</label>
     <label for="maxNext" class="col-2 col-form-label text-end">{{getNextDirectionName()}}</label>
     <div class="col-7">
       <input type="number"
-        [ngClass]="{ 'is-invalid': form.controls.maxNext.invalid, 'is-valid': form.controls.maxNext.valid}"
+        [ngClass]="{ 'is-invalid': typedForm.controls.maxNext.invalid, 'is-valid': typedForm.controls.maxNext.valid}"
         formControlName="maxNext" maxlength="2" class="form-control" id="maxNext" />
-      <label *ngIf="form.value['useNext']" for="maxNext" class="ms-3">0 = zoveel mogelijk</label>
+      <label *ngIf="typedForm.value['useNext']" for="maxNext" class="ms-3">0 = zoveel mogelijk</label>
     </div>
   </div>
   <div class="row mb-3">
     <label class="col-3 col-form-label">
-      <span *ngIf="form.value['useNext']">{{getNextSingularName()}}-</span>
+      <span *ngIf="typedForm.value['useNext']">{{getNextSingularName()}}</span>
+      <span *ngIf="getNextSingularName()">-</span>
       <span>{{getPluralName()}}</span>
     </label>
     <label for="max" class="col-2 col-form-label text-end">{{getDirectionName()}}</label>
     <div class="col-7 form-floating">
-      <input type="number" [ngClass]="{ 'is-invalid': form.controls.max.invalid, 'is-valid': form.controls.max.valid}"
+      <input type="number" [ngClass]="{ 'is-invalid': typedForm.controls.max.invalid, 'is-valid': typedForm.controls.max.valid}"
         formControlName="max" maxlength="2" class="form-control" id="max" />
       <label for="max" class="ms-3">0 = zoveel mogelijk</label>
     </div>
@@ -42,7 +43,7 @@
       </button>
     </div>
     <div *ngIf="!readonly" class="col-7">
-      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">opslaan</button>
+      <button type="submit" class="btn btn-primary" [disabled]="typedForm.invalid">opslaan</button>
     </div>
 
   </div>

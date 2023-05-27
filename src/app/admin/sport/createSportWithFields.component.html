@@ -10,7 +10,7 @@
 
 <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
-<form *ngIf="sport" [formGroup]="form" name="form" (ngSubmit)="save(sport)" novalidate>
+<form *ngIf="typedForm && sport" [formGroup]="typedForm" name="form" (ngSubmit)="save(typedForm, sport)" novalidate>
   <div class="row mb-3">
     <div class="col-4">
       <label for="name" class="col-form-label">naam</label>
@@ -18,7 +18,7 @@
     <div class="col-8">
       <div class="input-group">
         <input class="form-control"
-          [ngClass]="{ 'is-invalid': form.controls.sportName.invalid, 'is-valid': form.controls.sportName.valid }"
+          [ngClass]="{ 'is-invalid': typedForm.controls.sportName.invalid, 'is-valid': typedForm.controls.sportName.valid }"
           type="text" formControlName="sportName" placeholder="naam" required>
         <span class="input-group-text pointer" (click)="toSportToAdd()">
           <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
@@ -30,7 +30,7 @@
     <label for="nrOfFields" class="col-4 col-form-label">{{getFieldsDescription()}}</label>
     <div class="col-8">
       <input type="number" class="form-control"
-        [ngClass]="{ 'is-invalid': form.controls.nrOfFields.invalid, 'is-valid': form.controls.nrOfFields.valid}"
+        [ngClass]="{ 'is-invalid': typedForm.controls.nrOfFields.invalid, 'is-valid': typedForm.controls.nrOfFields.valid}"
         formControlName="nrOfFields" [min]="minNrOfFields" [max]="maxNrOfFields" required>
     </div>
   </div>
@@ -45,7 +45,7 @@
             {{nameService.getGameModeName(gameMode)}}</option>
         </select> -->
         <input class="form-control" type="text" formControlName="gameMode" required>
-        <span class="input-group-text pointer" (click)="openGameModeChooseModal()">
+        <span class="input-group-text pointer" (click)="openGameModeChooseModal(typedForm)">
           <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
         </span>
       </div>
@@ -62,12 +62,12 @@
       </div>
     </div>
   </div>
-  <div *ngIf="tooFewPoulePlaces()" class="row mb-3">
+  <div *ngIf="tooFewPoulePlaces(typedForm)" class="row mb-3">
     <ngb-alert [type]="'danger'">er zijn te weinig poule-plekken om wedstrijden te kunnen maken, maak de poule(s) groter
       of verminder het aantal deelnemers per wedstrijd
     </ngb-alert>
   </div>
-  <div *ngIf="selectedGameMode === Against && form.controls.mixed.value" class="row mb-3">
+  <div *ngIf="selectedGameMode === Against && typedForm.controls.mixed.value" class="row mb-3">
     <label for="mixed" class="col-4 col-form-label">
       aantal deelnemers per wedstrijd
     </label>
@@ -77,14 +77,14 @@
           thuis
         </span>
         <input class="form-control"
-          [ngClass]="{ 'is-invalid': form.controls.nrOfHomePlaces.invalid, 'is-valid': form.controls.nrOfHomePlaces.valid }"
+          [ngClass]="{ 'is-invalid': typedForm.controls.nrOfHomePlaces.invalid, 'is-valid': typedForm.controls.nrOfHomePlaces.valid }"
           type="number" formControlName="nrOfHomePlaces" placeholder="1" required [min]="minNrOfSidePlaces"
           [max]="maxNrOfSidePlaces">
       </div>
       <div class="input-group mt-2">
         <span class="input-group-text pe-4">uit</span>
         <input class="form-control"
-          [ngClass]="{ 'is-invalid': form.controls.nrOfAwayPlaces.invalid, 'is-valid': form.controls.nrOfAwayPlaces.valid }"
+          [ngClass]="{ 'is-invalid': typedForm.controls.nrOfAwayPlaces.invalid, 'is-valid': typedForm.controls.nrOfAwayPlaces.valid }"
           type="number" formControlName="nrOfAwayPlaces" placeholder="1" required [min]="minNrOfSidePlaces"
           [max]="maxNrOfSidePlaces">
       </div>
@@ -107,13 +107,13 @@
     </label>
     <div class="col-8">
       <input type="number" class="form-control"
-        [ngClass]="{ 'is-invalid': form.controls.nrOfGamePlaces.invalid, 'is-valid': form.controls.nrOfGamePlaces.valid}"
+        [ngClass]="{ 'is-invalid': typedForm.controls.nrOfGamePlaces.invalid, 'is-valid': typedForm.controls.nrOfGamePlaces.valid}"
         formControlName="nrOfGamePlaces" [min]="minNrOfGamePlaces" [max]="maxNrOfGamePlaces" required>
     </div>
   </div>
   <div class="row mb-3 justify-content-end">
     <div class="col-8">
-      <button [disabled]="form.invalid || tooFewPoulePlaces()" type="submit" class="btn btn-primary">
+      <button [disabled]="typedForm.invalid || tooFewPoulePlaces(typedForm)" type="submit" class="btn btn-primary">
         {{labelBtnNext}}
       </button>
     </div>

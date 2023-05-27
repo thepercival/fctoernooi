@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { AgainstGpp, AgainstH2h, AllInOneGame, GameMode, GamePlaceStrategy, NameService, PouleStructure, Single, Sport, VoetbalRange } from 'ngx-sport';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AgainstGpp, AgainstH2h, AllInOneGame, GameMode, NameService, Single, Sport, VoetbalRange } from 'ngx-sport';
 
 import { IAlert, IAlertType } from '../../shared/common/alert';
 import { CSSService } from '../../shared/common/cssservice';
@@ -20,11 +20,20 @@ export class CreateSportWithFieldsComponent implements OnInit {
     @Input() sport: Sport | undefined;
     @Input() smallestNrOfPoulePlaces: number | undefined;
     @Input() existingSportVariants: (Single | AgainstH2h | AgainstGpp | AllInOneGame)[] = [];
-    public sportWithFields: SportWithFields | undefined;
     @Output() created = new EventEmitter<SportWithFields>();
     @Output() goToPrevious = new EventEmitter<void>();
+
+    public sportWithFields: SportWithFields | undefined;
     processing = true;
-    form: UntypedFormGroup;
+    public typedForm: FormGroup<{
+        sportName: FormControl<string>,
+        nrOfFields: FormControl<number>,
+        gameMode: FormControl<string>,
+        mixed: FormControl<boolean>,
+        nrOfHomePlaces: FormControl<number>,
+        nrOfAwayPlaces: FormControl<number>,
+        nrOfGamePlaces: FormControl<number>,
+      }>|undefined;
     public alert: IAlert | undefined;
     public gameModes: GameMode[] = [GameMode.Single, GameMode.Against, GameMode.AllInOneGame];
     public selectedGameMode!: GameMode;
@@ -44,11 +53,9 @@ export class CreateSportWithFieldsComponent implements OnInit {
         private translateSport: TranslateSportService,
         private translateField: TranslateFieldService,
         private defaultService: DefaultService,
-        private modalService: NgbModal,
-        private fb: UntypedFormBuilder
+        private modalService: NgbModal
     ) {
-        this.form = this.fb.group({
-        });
+        
     }
 
     ngOnInit() {
@@ -60,24 +67,33 @@ export class CreateSportWithFieldsComponent implements OnInit {
         this.nrOfGamePlacesOptions = this.getNrOfGamePlacesOptions(newSport.getDefaultGameMode());
         this.gameAmountRange = this.defaultService.getGameAmountRange(newSport.getDefaultGameMode());
         const nrOfFields = 2;
-        this.form = new UntypedFormGroup({
-            sportName: new UntypedFormControl({
-                value: this.translateSport.getSportName(newSport.getCustomId(), newSport.getName()),
-                disabled: true
-            }, Validators.required),
-            nrOfFields: new UntypedFormControl(nrOfFields),
-            gameMode: new UntypedFormControl({
-                value: this.nameService.getGameModeName(newSport.getDefaultGameMode()),
-                disabled: true
-            }, Validators.required),
-            mixed: new UntypedFormControl(newSport.getDefaultNrOfSidePlaces() > 1),
-            nrOfHomePlaces: new UntypedFormControl(newSport.getDefaultNrOfSidePlaces()),
-            nrOfAwayPlaces: new UntypedFormControl(newSport.getDefaultNrOfSidePlaces()),
-            nrOfGamePlaces: new UntypedFormControl(1)
+        const form = new FormGroup<{
+            sportName: FormControl<string>,
+            nrOfFields: FormControl<number>,
+            gameMode: FormControl<string>,
+            mixed: FormControl<boolean>,
+            nrOfHomePlaces: FormControl<number>,
+            nrOfAwayPlaces: FormControl<number>,
+            nrOfGamePlaces: FormControl<number>,
+          }>({
+            sportName: new FormControl(this.translateSport.getSportName(newSport.getCustomId(), newSport.getName()),{ 
+                nonNullable: true, validators: [Validators.required] 
+            }),
+            nrOfFields: new FormControl(nrOfFields, { nonNullable: true }),
+            gameMode: new FormControl(this.nameService.getGameModeName(newSport.getDefaultGameMode()),{ 
+                nonNullable: true, validators: [Validators.required] 
+            }),
+            mixed: new FormControl(newSport.getDefaultNrOfSidePlaces() > 1, { nonNullable: true }),
+            nrOfHomePlaces: new FormControl(newSport.getDefaultNrOfSidePlaces(), { nonNullable: true }),
+            nrOfAwayPlaces: new FormControl(newSport.getDefaultNrOfSidePlaces(), { nonNullable: true }),
+            nrOfGamePlaces: new FormControl(1, { nonNullable: true })
         });
+        form.controls.sportName.disable({onlySelf: true});
+        form.controls.gameMode.disable({onlySelf: true});
         if (newSport.getCustomId() !== 0) {
-            this.form.controls.gameMode.disable();
+            form.controls.gameMode.disable();
         }
+        this.typedForm = form;
         this.selectedGameMode = newSport.getDefaultGameMode();
         this.sport = newSport;
     }
@@ -112,22 +128,22 @@ export class CreateSportWithFieldsComponent implements OnInit {
         return nrOfGamePlacesOptions;
     }
 
-    protected formToSportWithFields(sport: Sport): SportWithFields {
+    protected formToSportWithFields(typedForm: FormGroup, sport: Sport): SportWithFields {
         return {
-            variant: this.formToVariant(sport),
-            nrOfFields: this.form.controls.nrOfFields.value
+            variant: this.formToVariant(typedForm, sport),
+            nrOfFields: typedForm.controls.nrOfFields.value
         };
     }
 
-    protected formToVariant(sport: Sport): Single | AgainstH2h | AgainstGpp | AllInOneGame {
+    protected formToVariant(typedForm: FormGroup, sport: Sport): Single | AgainstH2h | AgainstGpp | AllInOneGame {
         if (this.selectedGameMode === GameMode.Single) {
-            return new Single(sport, this.form.controls.nrOfGamePlaces.value, 1);
+            return new Single(sport, typedForm.controls.nrOfGamePlaces.value, 1);
         } else if (this.selectedGameMode === GameMode.Against) {
-            let home = this.form.controls.nrOfHomePlaces.value;
-            let away = this.form.controls.nrOfAwayPlaces.value;
+            let home = typedForm.controls.nrOfHomePlaces.value;
+            let away = typedForm.controls.nrOfAwayPlaces.value;
             if (away < home) {
                 home = away;
-                away = this.form.controls.nrOfHomePlaces.value;
+                away = typedForm.controls.nrOfHomePlaces.value;
             }
             if (this.existingSportVariants.length > 0 || home > 1 || away > 1) {
                 return new AgainstGpp(sport, home, away, 1);
@@ -137,19 +153,19 @@ export class CreateSportWithFieldsComponent implements OnInit {
         return new AllInOneGame(sport, 1);
     }
 
-    tooFewPoulePlaces(): boolean {
+    tooFewPoulePlaces(typedForm: FormGroup): boolean {
         if (this.smallestNrOfPoulePlaces === undefined || this.sport === undefined) {
             return false;
         }
-        const variant: Single | AgainstH2h | AgainstGpp | AllInOneGame = this.formToVariant(this.sport);
+        const variant: Single | AgainstH2h | AgainstGpp | AllInOneGame = this.formToVariant(typedForm, this.sport);
         if (variant instanceof AllInOneGame) {
             return false;
         }
         return this.smallestNrOfPoulePlaces < variant.getNrOfGamePlaces();
     }
 
-    save(sport: Sport) {
-        this.created.emit(this.formToSportWithFields(sport));
+    save(typedForm: FormGroup, sport: Sport) {
+        this.created.emit(this.formToSportWithFields(typedForm, sport));
     }
 
     get Against(): GameMode { return GameMode.Against; }
@@ -162,11 +178,11 @@ export class CreateSportWithFieldsComponent implements OnInit {
         this.modalService.open(GameModeModalComponent, { windowClass: 'info-modal' });
     }
 
-    openGameModeChooseModal() {
+    openGameModeChooseModal(typedForm: FormGroup) {
         const modalRef = this.modalService.open(GameModeModalComponent);
         modalRef.componentInstance.defaultGameMode = this.selectedGameMode;
         modalRef.result.then((gameMode: GameMode) => {
-            this.form.controls.gameMode.setValue(this.nameService.getGameModeName(gameMode));
+            typedForm.controls.gameMode.setValue(this.nameService.getGameModeName(gameMode));
             this.selectedGameMode = gameMode;
         }, (reason) => { });
     }
