@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -16,7 +16,9 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 })
 export class PasswordresetComponent extends UserComponent implements OnInit {
   codeSend = false;
-  form: UntypedFormGroup;
+  public typedForm: FormGroup<{
+    emailaddress: FormControl<string>
+  }>;
 
   validations: any = {
     minlengthemailaddress: User.MIN_LENGTH_EMAIL,
@@ -28,17 +30,20 @@ export class PasswordresetComponent extends UserComponent implements OnInit {
     router: Router,
     userRepository: UserRepository,
     authService: AuthService,
-    globalEventsManager: GlobalEventsManager,
-    fb: UntypedFormBuilder
+    globalEventsManager: GlobalEventsManager
   ) {
     super(route, router, userRepository, authService, globalEventsManager);
-    this.form = fb.group({
-      emailaddress: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(this.validations.minlengthemailaddress),
-        Validators.maxLength(this.validations.maxlengthemailaddress)
-      ])]
-    });
+    this.typedForm = new FormGroup(
+      {
+        emailaddress: new FormControl('', { nonNullable: true, validators: 
+          [
+              Validators.required,
+              Validators.minLength(this.validations.minlengthemailaddress),
+              Validators.maxLength(this.validations.maxlengmaxlengthemailaddressthcode)
+          ] 
+        })
+      }
+    );
   }
 
   ngOnInit() {
@@ -49,7 +54,7 @@ export class PasswordresetComponent extends UserComponent implements OnInit {
     this.processing = true;
     this.setAlert(IAlertType.Info, 'de code wordt verstuurd');
 
-    const emailaddress = this.form.controls.emailaddress.value;
+    const emailaddress = this.typedForm.controls.emailaddress.value;
 
     // this.activationmessage = undefined;
     this.authService.passwordReset(emailaddress).subscribe({

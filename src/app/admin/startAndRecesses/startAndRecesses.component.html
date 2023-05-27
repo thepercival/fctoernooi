@@ -6,7 +6,7 @@
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
 
-      <form *ngIf="!processing" name="form" (ngSubmit)="preEdit(contentChangeStart)" [formGroup]="form" novalidate>
+      <form *ngIf="!processing" name="form" (ngSubmit)="preEdit(contentChangeStart)" [formGroup]="typedForm" novalidate>
         <h2>start</h2>
         <div *ngIf="!hasBegun" class="row mb-3">
           <div class="col-3">
@@ -15,7 +15,7 @@
           <div class="col-9">
             <div class="input-group input-group-date">
               <input class="form-control"
-                [ngClass]="{ 'is-invalid': form.controls.date.invalid, 'is-valid': form.controls.date.valid }"
+                [ngClass]="{ 'is-invalid': typedForm.controls.date.invalid, 'is-valid': typedForm.controls.date.valid }"
                 placeholder="yyyy-mm-dd" formControlName="date" ngbDatepicker #d="ngbDatepicker" required
                 [minDate]="minDateStruct" container="body">
               <span class="input-group-text pointer" (click)="d.toggle()">
@@ -46,7 +46,7 @@
 
         <div *ngIf="!hasBegun" class="row mb-3 justify-content-end">
           <div class="col-9">
-            <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
+            <button [disabled]="typedForm.invalid" type="submit" class="btn btn-primary">
               opslaan
             </button>
           </div>

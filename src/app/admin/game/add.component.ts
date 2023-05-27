@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     GameState,
@@ -27,10 +27,7 @@ import {
     JsonAgainstGamePlace,
     StructureNameService,
     StartLocationMap,
-    CategoryMap,
-    Category,
-    TogetherGamePlace,
-    AgainstGamePlace,
+    Category
 } from 'ngx-sport';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -72,14 +69,13 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
         private fieldMapper: FieldMapper,
         private refereeMapper: RefereeMapper,
         private placeMapper: PlaceMapper,
-        public dateFormatter: DateFormatter,
-        private fb: UntypedFormBuilder
+        public dateFormatter: DateFormatter
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
     }
 
     protected createForm(category: Category, poule: Poule, competitionSport: CompetitionSport) {
-        this.form = this.fb.group({
+        this.form = new FormGroup({
             category: new FormControl<Category>(category, Validators.compose([
                 Validators.required
             ])),
@@ -110,16 +106,16 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
         }
     }
 
-    getGamePlacesFormGroup(): UntypedFormGroup {
-        return <UntypedFormGroup>this.form.controls.gamePlaces;
+    getGamePlacesFormGroup(): FormGroup {
+        return <FormGroup>this.form.controls.gamePlaces;
     }
 
-    getHomeGamePlacesFormGroup(): UntypedFormGroup {
-        return <UntypedFormGroup>this.form.controls.homeGamePlaces;
+    getHomeGamePlacesFormGroup(): FormGroup {
+        return <FormGroup>this.form.controls.homeGamePlaces;
     }
 
-    getAwayGamePlacesFormGroup(): UntypedFormGroup {
-        return <UntypedFormGroup>this.form.controls.awayGamePlaces;
+    getAwayGamePlacesFormGroup(): FormGroup {
+        return <FormGroup>this.form.controls.awayGamePlaces;
     }
 
     ngOnInit() {

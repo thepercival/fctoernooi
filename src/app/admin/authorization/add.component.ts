@@ -8,7 +8,7 @@ import { getRoleName, Role } from '../../lib/role';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { User } from '../../lib/user';
 import { TournamentInvitationRepository } from '../../lib/tournament/invitation/repository';
-import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl } from '@angular/forms';
+import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { MyNavigation } from '../../shared/common/navigation';
 import { JsonTournamentInvitation } from '../../lib/tournament/invitation/mapper';
 import { AuthorizationExplanationModalComponent } from './infomodal.component';
@@ -22,7 +22,10 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     styleUrls: ['./add.component.scss']
 })
 export class AuthorizationAddComponent extends TournamentComponent implements OnInit {
-    form: UntypedFormGroup;
+    public typedForm: FormGroup;/*<{
+        emailaddress: FormControl<string>,
+        sendinvitation: FormControl<boolean>
+      }>;*/
     roleItems: RoleItem[] = [];
 
     validations: AdminAuthValidations = {
@@ -39,23 +42,23 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
         modalService: NgbModal,
         favRepository: FavoritesRepository,
         private invitationRepository: TournamentInvitationRepository,
-        private myNavigation: MyNavigation,
-        fb: UntypedFormBuilder,
+        private myNavigation: MyNavigation
 
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
-        const config = {
-            emailaddress: ['', Validators.compose([
-                Validators.required,
-                Validators.minLength(this.validations.minlengthemailaddress),
-                Validators.maxLength(this.validations.maxlengthemailaddress)
-            ])],
-            sendinvitation: true
-        };
-        this.form = fb.group(config);
+        this.typedForm = new FormGroup({
+            emailaddress: new FormControl('', { nonNullable: true, validators: 
+                [
+                    Validators.required,
+                    Validators.minLength(this.validations.minlengthemailaddress),
+                    Validators.maxLength(this.validations.maxlengthemailaddress)
+                ] 
+            }),
+            sendinvitation: new FormControl(true, { nonNullable: true })
+        });
         this.roleItems = this.createRoleItems();
         this.roleItems.forEach((roleItem: RoleItem) => {
-            this.form.addControl('role' + roleItem.value, new UntypedFormControl(roleItem.selected));
+            this.typedForm.addControl('role' + roleItem.value, new FormControl<boolean>(roleItem.selected, { nonNullable: true }));
         });
     }
 
@@ -84,7 +87,7 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
         this.roleItems.forEach(roleItem => roles += roleItem.selected ? roleItem.value : 0);
         const json: JsonTournamentInvitation = {
             id: 0,
-            emailaddress: this.form.value['emailaddress'],
+            emailaddress: this.typedForm.controls.emailaddress.value,
             roles
         };
         this.invitationRepository.createObject(json, this.tournament).subscribe({

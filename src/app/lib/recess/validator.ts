@@ -1,6 +1,4 @@
-import { Period, PlanningConfig } from "ngx-sport";
-import { Recess } from "../recess";
-import { Tournament } from "../tournament";
+import { Period } from "ngx-sport";
 
 export class RecessValidator {
     public validateNewPeriod(recessPeriod: Period, currentRecessPeriods: Period[], minStartDate: Date): string | undefined {

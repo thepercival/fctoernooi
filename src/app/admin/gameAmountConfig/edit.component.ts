@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
-import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { JsonGameAmountConfig, VoetbalRange } from 'ngx-sport';
 
@@ -11,7 +11,7 @@ import { JsonGameAmountConfig, VoetbalRange } from 'ngx-sport';
 export class GameAmountConfigEditComponent implements OnInit {
   @Input() gameAmountControls!: GameAmountConfigControl[];
   @Input() label!: string;
-  @Input() form!: UntypedFormGroup;
+  @Input() typedForm!: FormGroup;
   @Output() closed = new EventEmitter<void>();
 
   range: number[] = [];

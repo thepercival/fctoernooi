@@ -1,4 +1,4 @@
-<ng-container *ngIf="gameAmountControls.length === 1" [formGroup]="form">
+<ng-container *ngIf="gameAmountControls.length === 1" [formGroup]="typedForm">
   <div class="row mb-3" *ngFor="let gameAmountControl of gameAmountControls">
     <label [for]="gameAmountControl.json.id" class="col-7 col-form-label">{{label}}</label>
     <div class="col-5">
@@ -25,7 +25,7 @@
     </h4>
     <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
   </div>
-  <div class="modal-body" [formGroup]="form">
+  <div class="modal-body" [formGroup]="typedForm">
     <div class="row mb-3" *ngFor="let gameAmountControl of gameAmountControls">
       <label [for]="gameAmountControl.json.id"
         class="col-8 col-form-label">{{gameAmountControl.json.competitionSport.sport.name}}</label>

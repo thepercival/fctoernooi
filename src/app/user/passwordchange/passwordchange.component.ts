@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { IAlertType } from '../../shared/common/alert';
 import { User } from '../../lib/user';
-import { PasswordValidation } from '../password-validation';
 import { UserRepository } from '../../lib/user/repository';
 import { UserComponent } from '../component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { CustomValidators } from '../password-validation';
 
 @Component({
   selector: 'app-passwordchange',
@@ -17,7 +17,11 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 })
 export class PasswordchangeComponent extends UserComponent implements OnInit {
   passwordChanged = false;
-  form: UntypedFormGroup;
+  public typedForm: FormGroup<{
+    code: FormControl<string>,
+    password: FormControl<string>,
+    passwordRepeat: FormControl<string>,
+  }>;
 
   validations: any = {
     minlengthcode: 100000,
@@ -32,29 +36,35 @@ export class PasswordchangeComponent extends UserComponent implements OnInit {
     router: Router,
     userRepository: UserRepository,
     authService: AuthService,
-    globalEventsManager: GlobalEventsManager,
-    fb: UntypedFormBuilder
+    globalEventsManager: GlobalEventsManager
   ) {
     super(route, router, userRepository, authService, globalEventsManager);
-    this.form = fb.group({
-      code: ['', Validators.compose([
-        Validators.required,
-        Validators.min(this.validations.minlengthcode),
-        Validators.max(this.validations.maxlengthcode)
-      ])],
-      password: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(this.validations.minlengthpassword),
-        Validators.maxLength(this.validations.maxlengthpassword)
-      ])],
-      passwordRepeat: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(this.validations.minlengthpassword),
-        Validators.maxLength(this.validations.maxlengthpassword)
-      ])],
-    }, {
-      validator: PasswordValidation.MatchPassword // your validation method
-    });
+    this.typedForm = new FormGroup(
+      {
+        code: new FormControl('', { nonNullable: true, validators: 
+          [
+              Validators.required,
+              Validators.minLength(this.validations.minlengthcode),
+              Validators.maxLength(this.validations.maxlengthcode)
+          ] 
+        }),
+        password: new FormControl('', { nonNullable: true, validators: 
+          [
+              Validators.required,
+              Validators.minLength(this.validations.minlengthpassword),
+              Validators.maxLength(this.validations.maxlengthpassword)
+          ] 
+        }),      
+        passwordRepeat: new FormControl('', { nonNullable: true, validators: 
+          [
+              Validators.required,
+              Validators.minLength(this.validations.minlengthpassword),
+              Validators.maxLength(this.validations.maxlengthpassword)
+          ] 
+        })
+      },
+      { validators: CustomValidators.passwordsMatching }
+    )
   }
 
   ngOnInit() {
@@ -68,8 +78,8 @@ export class PasswordchangeComponent extends UserComponent implements OnInit {
     this.processing = true;
     this.setAlert(IAlertType.Info, 'het wachtwoord wordt gewijzigd');
 
-    const code = this.form.controls.code.value;
-    const password = this.form.controls.password.value;
+    const code = this.typedForm.controls.code.value;
+    const password = this.typedForm.controls.password.value;
 
     // this.activationmessage = undefined;
     this.authService.passwordChange(this.emailaddress, password, code)

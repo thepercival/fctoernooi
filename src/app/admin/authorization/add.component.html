@@ -11,14 +11,14 @@
                 <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
             </h2>
             <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-            <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+            <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
                 <div class="row mb-3">
                     <div class="col-3 col-sm-6">
                         <label for="emailaddress" class="col-form-label">emailadres</label>
                     </div>
                     <div class="col-9 col-sm-6">
                         <input class="form-control"
-                            [ngClass]="{ 'is-invalid': form.controls.emailaddress.invalid, 'is-valid': form.controls.emailaddress.valid }"
+                            [ngClass]="{ 'is-invalid': typedForm.controls.emailaddress.invalid, 'is-valid': typedForm.controls.emailaddress.valid }"
                             type="email" formControlName="emailaddress"
                             placeholder="max. {{validations.maxlengthemailaddress}} karakters">
                     </div>
@@ -40,7 +40,7 @@
                         <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary">terug</button>
                     </div>
                     <div class="col-9 col-sm-6">
-                        <button [disabled]="form.invalid || !hasSomeRoleSelected()" type="submit"
+                        <button [disabled]="typedForm.invalid || !hasSomeRoleSelected()" type="submit"
                             class="btn btn-primary">
                             toevoegen & uitnodigen
                         </button>

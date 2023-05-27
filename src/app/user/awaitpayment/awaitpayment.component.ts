@@ -40,33 +40,40 @@ export class AwaitPaymentComponent extends UserComponent implements OnInit, OnDe
   ngOnInit() {
     this.setAlert(IAlertType.Info, 'je betaling wordt verwerkt, dit kan enkele seconden tot minuten duren ..');
 
-    this.refreshTimer = timer(0, 2000) // repeats every 2 seconds
-      .pipe(
-        switchMap((value: number) => {
-          if (!this.validTimeValue(value)) {
-            return of();
-          }
-          return this.userRepository.getLoggedInObject().pipe();
-        }),
-        catchError(err => this.appErrorHandler.handleError(err))
-      ).subscribe({
-        next: ((user: User | undefined) => {
-          if (user === undefined) {
+    this.route.params.subscribe(params => {
+      if (params.paymentId !== undefined) {
+        this.refreshTimer = timer(0, 2000) // repeats every 2 seconds
+        .pipe(
+          switchMap((value: number) => {
+            if (!this.validTimeValue(value)) {
+              return of();
+            }
+
+            // doe een status check naar de params.paymentId
+            // wanneer deze niet meer de status 'created', doe dan eenmalig this.userRepository.getLoggedInObject().pipe()
+            return this.userRepository.getLoggedInObject().pipe();
+          }),
+          catchError(err => this.appErrorHandler.handleError(err))
+        ).subscribe({
+          next: ((user: User | undefined) => {
+            if (user === undefined) {
+              this.stopTimer();
+              return;
+            }
+            if (user.getNrOfCredits() > 0) {
+              this.stopTimer();
+              this.nrOfCredits = user.getNrOfCredits();
+              this.setAlert(IAlertType.Success, 'je hebt weer credits om een toernooi aan te maken');
+            }
+          }),
+          error: (e: string) => {
+            this.errorAlert = { type: IAlertType.Danger, message: e };
+            this.resetAlert();
             this.stopTimer();
-            return;
           }
-          if (user.getNrOfCredits() > 0) {
-            this.stopTimer();
-            this.nrOfCredits = user.getNrOfCredits();
-            this.setAlert(IAlertType.Success, 'je hebt weer credits om een toernooi aan te maken');
-          }
-        }),
-        error: (e: string) => {
-          this.errorAlert = { type: IAlertType.Danger, message: e };
-          this.resetAlert();
-          this.stopTimer();
-        }
-      });
+        });
+      }
+    });    
   }
 
 

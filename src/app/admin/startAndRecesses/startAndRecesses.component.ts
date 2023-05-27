@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators, AbstractControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, AbstractControl, FormGroup, FormControl } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Period } from 'ngx-sport';
@@ -25,7 +25,10 @@ import { StartEditMode } from '../../lib/tournament/startEditMode';
     styleUrls: ['./startAndRecesses.component.scss']
 })
 export class StartAndRecessesComponent extends TournamentComponent implements OnInit {
-    public form: UntypedFormGroup;
+    public typedForm: FormGroup<{
+        date: FormControl<string>,
+        time: FormControl<string>
+      }>;
     public processing = true;
     public minDateStruct!: NgbDateStruct;
     public sameDayFormat = true;
@@ -43,14 +46,13 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
         private planningRepository: PlanningRepository,
         private tournamentMapper: TournamentMapper,
         private myNavigation: MyNavigation,
-        public dateFormatter: DateFormatter,
-        fb: UntypedFormBuilder
+        public dateFormatter: DateFormatter
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
 
-        this.form = fb.group({
-            date: ['', Validators.compose([])],
-            time: ['', Validators.compose([])]
+        this.typedForm = new FormGroup({
+            date: new FormControl('', { nonNullable: true}),
+            time: new FormControl('', { nonNullable: true})
         });
     }
 
@@ -66,7 +68,7 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
         const minDate = date > now ? now : date;
         this.minDateStruct = { year: minDate.getFullYear(), month: minDate.getMonth() + 1, day: minDate.getDate() };
 
-        this.setDate(this.form.controls.date, this.form.controls.time, date);
+        this.setDate(this.typedForm.controls.date, this.typedForm.controls.time, date);
 
         if (this.hasBegun) {
             this.setAlert(IAlertType.Warning, 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
@@ -112,7 +114,7 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
     }
 
     preEdit(modalContent: TemplateRef<any>): boolean {
-        const startDateTime = this.getDate(this.form.controls.date, this.form.controls.time);
+        const startDateTime = this.getDate(this.typedForm.controls.date, this.typedForm.controls.time);
         if( startDateTime.getTime() <= this.tournament.getCompetition().getStartDateTime().getTime() ) {
             return this.edit();
         }
@@ -126,7 +128,7 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
             if (result === 'update') {            
                 this.edit();
             } else { 
-                const startAsTime = this.getDate(this.form.controls.date, this.form.controls.time).getTime();
+                const startAsTime = this.getDate(this.typedForm.controls.date, this.typedForm.controls.time).getTime();
                 const navigationExtras: NavigationExtras = {
                     queryParams: { newStartForCopyAsTime: startAsTime }
                   };
@@ -139,7 +141,7 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
     edit(): boolean {
         this.setAlert(IAlertType.Info, 'het toernooi wordt opgeslagen');
 
-        const startDateTime = this.getDate(this.form.controls.date, this.form.controls.time);
+        const startDateTime = this.getDate(this.typedForm.controls.date, this.typedForm.controls.time);
 
         this.processing = true;
         const firstRoundNumber = this.structure.getFirstRoundNumber();

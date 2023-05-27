@@ -10,14 +10,14 @@
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing && !hasBegun" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+      <form *ngIf="!processing && !hasBegun" name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
         <div class="row my-3">
           <div class="col-3">
             <label for="name" class="col-form-label">naam</label>
           </div>
           <div class="col-9 col-sm-6">
             <input class="form-control" required
-              [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
+              [ngClass]="{ 'is-invalid': typedForm.controls.name.invalid, 'is-valid': typedForm.controls.name.valid }" type="text"
               formControlName="name">
           </div>
         </div>
@@ -28,7 +28,7 @@
           <div class="col-9">
             <div class="input-group input-group-date">
               <input class="form-control"
-                [ngClass]="{ 'is-invalid': form.controls.startdate.invalid, 'is-valid': form.controls.startdate.valid }"
+                [ngClass]="{ 'is-invalid': typedForm.controls.startdate.invalid, 'is-valid': typedForm.controls.startdate.valid }"
                 placeholder="yyyy-mm-dd" formControlName="startdate" ngbDatepicker #dStart="ngbDatepicker" required
                 [minDate]="minDateStruct" container="body">
               <span class="input-group-text pointer" (click)="dStart.toggle()">
@@ -53,7 +53,7 @@
           <div class="col-9">
             <div class="input-group input-group-date">
               <input class="form-control"
-                [ngClass]="{ 'is-invalid': form.controls.enddate.invalid, 'is-valid': form.controls.enddate.valid }"
+                [ngClass]="{ 'is-invalid': typedForm.controls.enddate.invalid, 'is-valid': typedForm.controls.enddate.valid }"
                 placeholder="yyyy-mm-dd" formControlName="enddate" ngbDatepicker #dEnd="ngbDatepicker" required
                 [minDate]="minDateStruct" container="body">
               <span class="input-group-text pointer" (click)="dEnd.toggle()">
@@ -76,7 +76,7 @@
             <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary">terug</button>
           </div>
           <div class="col-9">
-            <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
+            <button [disabled]="typedForm.invalid" type="submit" class="btn btn-primary">
               toevoegen
             </button>
           </div>

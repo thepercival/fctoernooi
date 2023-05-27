@@ -13,7 +13,7 @@
             </ngb-alert>
             <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
                 <app-tournament-gameamountconfigs-edit *ngIf="!form.value['manual']" [label]="gameAmountLabel"
-                    [gameAmountControls]="gameAmountConfigControls" [form]="form" (closed)="updateUnequallyAssigned(startRoundNumber)">
+                    [gameAmountControls]="gameAmountConfigControls" [typedForm]="form" (closed)="updateUnequallyAssigned(startRoundNumber)">
                 </app-tournament-gameamountconfigs-edit>
                 <ngb-alert *ngIf="!form.value['manual'] && unequallyAssigned" type="warning">
                     de deelnemers spelen een verschillend aantal wedstrijden

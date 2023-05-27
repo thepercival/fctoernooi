@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     JsonPeriod,
@@ -26,7 +26,13 @@ import { JsonRecess } from '../../lib/recess/json';
     styleUrls: ['./addRecess.component.css']
 })
 export class RecessAddComponent extends TournamentComponent implements OnInit {
-    form: UntypedFormGroup;
+    public typedForm: FormGroup<{
+        name: FormControl<string>,
+        startdate: FormControl<string>,
+        starttime: FormControl<string>,
+        enddate: FormControl<string>,
+        endtime: FormControl<string>,
+      }>;
     hasBegun!: boolean;
     minDateStruct!: NgbDateStruct;
 
@@ -40,18 +46,21 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
         favRepository: FavoritesRepository,
         private recessRepository: RecessRepository,
         private planningRepository: PlanningRepository,
-        private myNavigation: MyNavigation,
-        fb: UntypedFormBuilder
+        private myNavigation: MyNavigation
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
-        this.form = fb.group({
-            name: ['pauze', Validators.compose([Validators.required,
-            Validators.minLength(1),
-            Validators.maxLength(this.MaxLengthName)])],
-            startdate: ['', Validators.compose([])],
-            starttime: ['', Validators.compose([])],
-            enddate: ['', Validators.compose([])],
-            endtime: ['', Validators.compose([])],
+        this.typedForm = new FormGroup({
+            name: new FormControl('pauze', { nonNullable: true, validators: 
+                [
+                    Validators.required,
+                    Validators.minLength(1),
+                    Validators.maxLength(this.MaxLengthName)
+                ] 
+            }),
+            startdate: new FormControl('', { nonNullable: true }),
+            starttime: new FormControl('', { nonNullable: true }),
+            enddate: new FormControl('', { nonNullable: true }),
+            endtime: new FormControl('', { nonNullable: true }),
         });
     }
 
@@ -85,8 +94,8 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
         const endDateTime = new Date(startDateTime);
         endDateTime.setMinutes(startDateTime.getMinutes() + 30);
 
-        this.setDate(this.form.controls.startdate, this.form.controls.starttime, startDateTime);
-        this.setDate(this.form.controls.enddate, this.form.controls.endtime, endDateTime);
+        this.setDate(this.typedForm.controls.startdate, this.typedForm.controls.starttime, startDateTime);
+        this.setDate(this.typedForm.controls.enddate, this.typedForm.controls.endtime, endDateTime);
     }
 
     get MaxLengthName(): number { return Recess.MAX_LENGTH_NAME };
@@ -99,9 +108,9 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
     formToJson(): JsonRecess {
         return {
             id: 0,
-            name: this.form.controls.name.value,
-            start: this.getDate(this.form.controls.startdate, this.form.controls.starttime).toISOString(),
-            end: this.getDate(this.form.controls.enddate, this.form.controls.endtime).toISOString()
+            name: this.typedForm.controls.name.value,
+            start: this.getDate(this.typedForm.controls.startdate, this.typedForm.controls.starttime).toISOString(),
+            end: this.getDate(this.typedForm.controls.enddate, this.typedForm.controls.endtime).toISOString()
         };
     }
 
@@ -155,8 +164,8 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
     }
 
     getMinStartDate(): Date {
-        const startDate = this.tournament.getCompetition().getStartDateTime();
         const planningConfig = this.structure.getFirstRoundNumber().getValidPlanningConfig();
+        const startDate = new Date(this.tournament.getCompetition().getStartDateTime());
         startDate.setMinutes(startDate.getMinutes() + planningConfig.getMaxNrOfMinutesPerGame() );
         return startDate;
     }

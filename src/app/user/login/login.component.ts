@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -16,7 +16,10 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 })
 export class LoginComponent extends UserComponent implements OnInit {
   registered = false;
-  form: UntypedFormGroup;
+  public typedForm: FormGroup<{
+    emailaddress: FormControl<string>,
+    password: FormControl<string>
+  }>;
 
   validations: any = {
     minlengthemailaddress: User.MIN_LENGTH_EMAIL,
@@ -31,20 +34,24 @@ export class LoginComponent extends UserComponent implements OnInit {
     userRepository: UserRepository,
     authService: AuthService,
     globalEventsManager: GlobalEventsManager,
-    fb: UntypedFormBuilder
+    fb: FormBuilder
   ) {
     super(route, router, userRepository, authService, globalEventsManager);
-    this.form = fb.group({
-      emailaddress: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(this.validations.minlengthemailaddress),
-        Validators.maxLength(this.validations.maxlengthemailaddress)
-      ])],
-      password: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(this.validations.minlengthpassword),
-        Validators.maxLength(this.validations.maxlengthpassword)
-      ])],
+    this.typedForm = fb.group({
+      emailaddress: new FormControl('', { nonNullable: true, validators: 
+        [
+            Validators.required,
+            Validators.minLength(this.validations.minlengthemailaddress),
+            Validators.maxLength(this.validations.maxlengthemailaddress)
+        ] 
+      }),
+      password: new FormControl('', { nonNullable: true, validators: 
+        [
+            Validators.required,
+            Validators.minLength(this.validations.minlengthpassword),
+            Validators.maxLength(this.validations.maxlengthpassword)
+        ] 
+      }),
     });
   }
 
@@ -65,8 +72,8 @@ export class LoginComponent extends UserComponent implements OnInit {
     this.processing = true;
     this.setAlert(IAlertType.Info, 'je wordt ingelogd');
 
-    const emailaddress = this.form.controls.emailaddress.value;
-    const password = this.form.controls.password.value;
+    const emailaddress = this.typedForm.controls.emailaddress.value;
+    const password = this.typedForm.controls.password.value;
 
     this.authService.login(emailaddress, password)
       .subscribe({

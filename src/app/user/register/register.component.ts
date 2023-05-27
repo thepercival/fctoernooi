@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { IAlertType } from '../../shared/common/alert';
 import { User } from '../../lib/user';
-import { PasswordValidation } from '../password-validation';
 import { UserRepository } from '../../lib/user/repository';
 import { UserComponent } from '../component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { CustomValidators } from '../password-validation';
 
 @Component({
   selector: 'app-register',
@@ -17,7 +17,11 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 })
 export class RegisterComponent extends UserComponent implements OnInit {
   registered = false;
-  form: UntypedFormGroup;
+  public typedForm: FormGroup<{
+    emailaddress: FormControl<string>,
+    password: FormControl<string>,
+    passwordRepeat: FormControl<string>,
+  }>;
 
   validations: UserValidations = {
     minlengthemailaddress: User.MIN_LENGTH_EMAIL,
@@ -32,28 +36,35 @@ export class RegisterComponent extends UserComponent implements OnInit {
     userRepository: UserRepository,
     authService: AuthService,
     globalEventsManager: GlobalEventsManager,
-    fb: UntypedFormBuilder
+    fb: FormBuilder
   ) {
     super(route, router, userRepository, authService, globalEventsManager);
-    this.form = fb.group({
-      emailaddress: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(this.validations.minlengthemailaddress),
-        Validators.maxLength(this.validations.maxlengthemailaddress)
-      ])],
-      password: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(this.validations.minlengthpassword),
-        Validators.maxLength(this.validations.maxlengthpassword)
-      ])],
-      passwordRepeat: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(this.validations.minlengthpassword),
-        Validators.maxLength(this.validations.maxlengthpassword)
-      ])],
-    }, {
-      validator: PasswordValidation.MatchPassword // your validation method
-    });
+    this.typedForm = new FormGroup(
+      {
+        emailaddress: new FormControl('', { nonNullable: true, validators: 
+          [
+              Validators.required,
+              Validators.minLength(this.validations.minlengthemailaddress),
+              Validators.maxLength(this.validations.maxlengthemailaddress)
+          ] 
+        }),
+        password: new FormControl('', { nonNullable: true, validators: 
+          [
+              Validators.required,
+              Validators.minLength(this.validations.minlengthpassword),
+              Validators.maxLength(this.validations.maxlengthpassword)
+          ] 
+        }),      
+        passwordRepeat: new FormControl('', { nonNullable: true, validators: 
+          [
+              Validators.required,
+              Validators.minLength(this.validations.minlengthpassword),
+              Validators.maxLength(this.validations.maxlengthpassword)
+          ] 
+        })
+      },
+      { validators: CustomValidators.passwordsMatching }
+    )
   }
 
   ngOnInit() {
@@ -64,8 +75,8 @@ export class RegisterComponent extends UserComponent implements OnInit {
     this.processing = true;
     this.setAlert(IAlertType.Info, 'de registratie wordt opgeslagen');
 
-    const emailaddress = this.form.controls.emailaddress.value;
-    const password = this.form.controls.password.value;
+    const emailaddress = this.typedForm.controls.emailaddress.value;
+    const password = this.typedForm.controls.password.value;
 
     // this.activationmessage = undefined;
     this.authService.register({ emailaddress: emailaddress, password: password })

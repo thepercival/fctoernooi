@@ -10,7 +10,7 @@
         <div class="card-body text-center mx-auto form-validate border-top-0 border-primary">
           <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
-          <form *ngIf="!processing && !authService.isLoggedIn()" name="form" (ngSubmit)="login()" [formGroup]="form"
+          <form *ngIf="!processing && !authService.isLoggedIn()" name="form" (ngSubmit)="login()" [formGroup]="typedForm"
             novalidate>
             <div class="row mb-3">
               <div class="col-3 text-end">
@@ -18,7 +18,7 @@
               </div>
               <div class="col-9">
                 <input class="form-control"
-                  [ngClass]="{ 'is-invalid': form.controls.emailaddress.invalid, 'is-valid': form.controls.emailaddress.valid }"
+                  [ngClass]="{ 'is-invalid': typedForm.controls.emailaddress.invalid, 'is-valid': typedForm.controls.emailaddress.valid }"
                   type="text" formControlName="emailaddress"
                   placeholder="max. {{validations.maxlengthemailaddress}} karakters">
               </div>
@@ -29,14 +29,14 @@
               </div>
               <div class="col-9">
                 <input class="form-control"
-                  [ngClass]="{ 'is-invalid': form.controls.password.invalid, 'is-valid': form.controls.password.valid }"
+                  [ngClass]="{ 'is-invalid': typedForm.controls.password.invalid, 'is-valid': typedForm.controls.password.valid }"
                   type="password" formControlName="password"
                   placeholder="min. {{validations.minlengthpassword}} karakters">
               </div>
             </div>
             <div class="row mb-3">
               <div class="col-9 offset-3 text-start">
-                <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
+                <button [disabled]="typedForm.invalid" type="submit" class="btn btn-primary">
                   inloggen
                 </button>
               </div>

@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScreenConfig } from '../../lib/liveboard/screenConfig/json';
 import { ScreenConfigName } from '../../lib/liveboard/screenConfig/name';
@@ -12,25 +12,24 @@ import { ScreenConfigName } from '../../lib/liveboard/screenConfig/name';
 export class ScreenConfigsModalComponent implements OnInit {
 
     @Input() screenConfigs!: ScreenConfig[];
-    public form: UntypedFormGroup;
+    public typedForm: FormGroup;
 
     constructor(
-        public activeModal: NgbActiveModal,
-        private formBuilder: UntypedFormBuilder,
+        public activeModal: NgbActiveModal
     ) {
-        this.form = formBuilder.group({});
+        this.typedForm = new FormGroup({});
 
     }
 
     ngOnInit() {
         this.screenConfigs.forEach((screenConfig: ScreenConfig) => {
-            this.form.addControl(this.getEnabledId(screenConfig), new UntypedFormControl());
-            this.form.addControl(this.getNrOfSecondsId(screenConfig), new UntypedFormControl());
-            this.form.get(this.getEnabledId(screenConfig))?.setValue(screenConfig.enabled);
-            this.form.get(this.getNrOfSecondsId(screenConfig))?.setValue(screenConfig.nrOfSeconds);
+            this.typedForm.addControl(this.getEnabledId(screenConfig), new FormControl());
+            this.typedForm.addControl(this.getNrOfSecondsId(screenConfig), new FormControl());
+            this.typedForm.get(this.getEnabledId(screenConfig))?.setValue(screenConfig.enabled);
+            this.typedForm.get(this.getNrOfSecondsId(screenConfig))?.setValue(screenConfig.nrOfSeconds);
         });
         setTimeout(() => {
-            if (this.form.pristine) {
+            if (this.typedForm.pristine) {
               this.activeModal.dismiss();
             }
         }, 15000);
@@ -48,7 +47,7 @@ export class ScreenConfigsModalComponent implements OnInit {
     }
 
     getEnabled(screenConfig: ScreenConfig): boolean {
-        return this.form.value[this.getEnabledId(screenConfig)];
+        return this.typedForm.value[this.getEnabledId(screenConfig)];
     }
 
     public getNrOfSecondsId(screenConfig: ScreenConfig): string {
@@ -56,7 +55,7 @@ export class ScreenConfigsModalComponent implements OnInit {
     }
 
     getNrOfSeconds(screenConfig: ScreenConfig): number {
-        return this.form.value[this.getNrOfSecondsId(screenConfig)];
+        return this.typedForm.value[this.getNrOfSecondsId(screenConfig)];
     }
 
     getRefreshRange(): number[] {

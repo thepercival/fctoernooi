@@ -16,14 +16,14 @@
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing && user" name="form" (ngSubmit)="save(user)" [formGroup]="form" novalidate>
+      <form *ngIf="!processing && user" name="form" (ngSubmit)="save(user)" [formGroup]="typedForm" novalidate>
         <div class="row mb-3">
           <div class="col-3">
             <label for="emailaddress" class="col-form-label">emailadres</label>
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.emailaddress.invalid, 'is-valid': form.controls.emailaddress.valid }"
+              [ngClass]="{ 'is-invalid': typedForm.controls.emailaddress.invalid, 'is-valid': typedForm.controls.emailaddress.valid }"
               type="text" formControlName="emailaddress"
               placeholder="max. {{validations.maxlengthemailaddress}} karakters">
           </div>
@@ -39,7 +39,7 @@
         </div>
         <div class="row mb-3 justify-content-end">
           <div class="col-9">
-            <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
+            <button [disabled]="typedForm.invalid" type="submit" class="btn btn-primary">
               opslaan
             </button>
           </div>

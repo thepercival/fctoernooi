@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
 import { IAlertType } from '../../shared/common/alert';
@@ -19,7 +19,20 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 })
 export class BuyCreditsComponent extends UserComponent implements OnInit {
   purpose: Purpose | undefined;
-  form: UntypedFormGroup;
+  public typedForm: FormGroup<{
+    purpose: FormControl<number>,
+    nrOfCredits: FormControl<number>,
+    paymentMethod: FormControl<string>,
+    iDealIssuer: FormControl<IDealIssuer | null>,
+    cardNumberPart1: FormControl<string>,
+    cardNumberPart2: FormControl<string>,
+    cardNumberPart3: FormControl<string>,
+    cardNumberPart4: FormControl<string>,
+    expiryMonth: FormControl<string>,
+    expiryYear: FormControl<string>,
+    cvc: FormControl<string>,
+    agreed: FormControl<boolean>
+  }>;
   public paymentMethods!: Observable<string[]>;
   public idealIssuers!: Observable<IDealIssuer[]>;
   public nrOfCreditsOptions!: Observable<number[]>;
@@ -30,31 +43,62 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
     authService: AuthService,
     globalEventsManager: GlobalEventsManager,
     private paymentRepository: PaymentRepository,
-    public myNavigation: MyNavigation,
-    fb: UntypedFormBuilder
+    public myNavigation: MyNavigation
   ) {
     super(route, router, userRepository, authService, globalEventsManager);
-    this.form = fb.group({
-      purpose: ['', Validators.required],
-      nrOfCredits: ['', Validators.compose([
-        Validators.required,
-        Validators.min(1),
-        Validators.max(100)
-      ])],
-      paymentMethod: ['', Validators.compose([
-        Validators.required
-      ])],
-      iDealIssuer: ['', Validators.compose([
-      ])],
-      cardNumber: ['', Validators.compose([
-        Validators.maxLength(19)
-      ])],
-      cvc: ['', Validators.compose([
-        Validators.maxLength(3)
-      ])],
-      agreed: [false, Validators.compose([
-      ])],
-    });
+    this.typedForm = new FormGroup(
+      {
+        purpose: new FormControl(Purpose.Personal, { nonNullable: true, validators: 
+          [
+              Validators.required
+          ] 
+        }),
+        nrOfCredits: new FormControl(3, { nonNullable: true, validators: 
+          [
+            Validators.required,
+            Validators.min(3),
+            Validators.max(100)
+          ] 
+        }),
+        paymentMethod: new FormControl('', { nonNullable: true, validators: 
+          [
+              Validators.required
+          ] 
+        }),
+        iDealIssuer: new FormControl(),
+        cardNumberPart1: new FormControl('', { nonNullable: true, validators: 
+          [Validators.minLength(4),Validators.maxLength(4)] 
+        }),
+        cardNumberPart2: new FormControl('', { nonNullable: true, validators: 
+          [Validators.minLength(4),Validators.maxLength(4)]  
+        }),
+        cardNumberPart3: new FormControl('', { nonNullable: true, validators: 
+          [Validators.minLength(4),Validators.maxLength(4)]  
+        }),
+        cardNumberPart4: new FormControl('', { nonNullable: true, validators: 
+          [Validators.minLength(4),Validators.maxLength(4)]  
+        }),
+        expiryMonth: new FormControl('', { nonNullable: true, validators: 
+          [
+            Validators.maxLength(2)
+          ] 
+        }),
+        expiryYear: new FormControl('', { nonNullable: true, validators: 
+          [
+            Validators.maxLength(2)
+          ] 
+        }),
+        cvc: new FormControl('', { nonNullable: true, validators: 
+          [
+            Validators.maxLength(3)
+          ] 
+        }),
+        agreed: new FormControl(false, { nonNullable: true, validators: 
+          [
+          ] 
+        }),        
+      }      
+    );
   }
 
   ngOnInit() {
@@ -83,7 +127,7 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
   }
 
   canPay(): boolean {
-    return this.canAgree() && this.form.controls.agreed.value;
+    return this.canAgree() && this.typedForm.controls.agreed.value;
   }
 
   canAgree(): boolean {
@@ -94,22 +138,27 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
     // console.log(this.form.controls.nrOfCredits.value);
     // console.log(this.form.controls.paymentMethod.value);
     // console.log(this.form.controls.iDealIssuer.value?.name?.length > 0);
-    if (!this.form.controls.nrOfCredits.value) {
+    if (!this.typedForm.controls.nrOfCredits.value) {
       return undefined;
     }
-    if (this.form.controls.paymentMethod.value === PaymentMethod.IDeal
-      && this.form.controls.iDealIssuer.value?.name?.length > 0) {
+    console.log(this.typedForm.controls.iDealIssuer.value);
+    if (this.typedForm.controls.paymentMethod.value === PaymentMethod.IDeal
+      && this.typedForm.controls.iDealIssuer.value !== null) {
       return {
-        amount: this.form.controls.nrOfCredits.value * 0.5,
+        amount: this.typedForm.controls.nrOfCredits.value * 0.5,
         method: PaymentMethod.IDeal,
-        issuer: this.form.controls.iDealIssuer.value
+        issuer: this.typedForm.controls.iDealIssuer.value
       };
-    } else if (this.form.controls.paymentMethod.value === PaymentMethod.CreditCard) {
+    } else if (this.typedForm.controls.paymentMethod.value === PaymentMethod.CreditCard) {
+      const cardNumber = this.typedForm.controls.cardNumberPart1.value + '-'
+                        this.typedForm.controls.cardNumberPart2.value + '-'
+                        this.typedForm.controls.cardNumberPart3.value + '-'
+                        this.typedForm.controls.cardNumberPart4.value
       return {
-        amount: this.form.controls.nrOfCredits.value * 0.5,
+        amount: this.typedForm.controls.nrOfCredits.value * 0.5,
         method: PaymentMethod.CreditCard,
-        cardNumber: this.form.controls.cardNumber.value,
-        cvc: this.form.controls.cvc.value
+        cardNumber,
+        cvc: this.typedForm.controls.cvc.value
       };
     }
     /* if (this.form.controls.paymentMethod.value === PaymentMethod.CreditCard
@@ -163,10 +212,16 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
       .subscribe({
         next: (checkOutUrl: string) => {
           window.open(checkOutUrl, '_blank');
-          this.router.navigate(['/user/awaitpayment']);
+
+          this.paymentRepository.getMostRecentCreatedPayment()
+          .subscribe({
+            next: (paymentId: string) => {
+              this.router.navigate(['/user/awaitpayment', paymentId]);
+            }
+          });          
         },
         error: (e) => {
-          this.setAlert(IAlertType.Danger, 'de instellingen zijn niet opgeslagen: ' + e);
+          this.setAlert(IAlertType.Danger, 'geen checkoutUrl van backend gekregen: ' + e);
           this.processing = false;
         }
       });

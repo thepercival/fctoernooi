@@ -47,4 +47,14 @@ export class PaymentRepository extends APIRepository {
       catchError((err: HttpErrorResponse) => this.handleError(err))
     );
   }
+
+  getMostRecentCreatedPayment(): Observable<string> {
+    const url = this.getUrl() + 'mostrecentcreatedpayment';
+    return this.http.get<string>(url, { headers: super.getHeaders() }).pipe(
+      map((jsonPayment: any) => jsonPayment.id),
+      catchError((err: HttpErrorResponse) => this.handleError(err))
+    );
+  }
+
+  
 }

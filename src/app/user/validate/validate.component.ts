@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
 import { IAlertType } from '../../shared/common/alert';
@@ -17,22 +17,33 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 export class ValidateComponent extends UserComponent implements OnInit {
   code: string = '';
   sentValidationRequest: boolean = false;
-  public form: UntypedFormGroup;
+  public typedForm: FormGroup<{
+    code: FormControl<string>
+  }>;
+
+  validations: any = {
+    minlengthcode: 100000,
+    maxlengthcode: 999999
+  };
 
   constructor(
     route: ActivatedRoute,
     router: Router,
     userRepository: UserRepository,
     authService: AuthService,
-    globalEventsManager: GlobalEventsManager,
-    fb: UntypedFormBuilder
+    globalEventsManager: GlobalEventsManager
   ) {
     super(route, router, userRepository, authService, globalEventsManager);
-    this.form = fb.group({
-      code: ['', Validators.compose([
-        Validators.required
-      ])],
-    });
+    this.typedForm = new FormGroup(
+      {
+        code: new FormControl('', { nonNullable: true, validators: 
+          [
+              Validators.required,
+              Validators.minLength(this.validations.minlengthcode),
+              Validators.maxLength(this.validations.maxlengthcode)
+          ] 
+        })
+      });
 
   }
 

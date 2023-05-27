@@ -24,7 +24,7 @@ const routes: Routes = [
   { path: 'validate/:code', component: ValidateComponent, canActivate: [AuthguardService] },
   { path: 'validate', component: ValidateComponent, canActivate: [AuthguardService] },
   { path: 'buycredits', component: BuyCreditsComponent, canActivate: [AuthguardService] },
-  { path: 'awaitpayment', component: AwaitPaymentComponent, canActivate: [AuthguardService] }
+  { path: 'awaitpayment/:paymentId', component: AwaitPaymentComponent, canActivate: [AuthguardService] }
 ];
 
 @NgModule({

@@ -1,12 +1,17 @@
-import { AbstractControl } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-export class PasswordValidation {
-
-    static MatchPassword(AC: AbstractControl) {
-        const passwordField = AC.get('password');
-        const confirmPasswordField = AC.get('passwordRepeat');
-        if (passwordField !== null && confirmPasswordField !== null && passwordField.value !== confirmPasswordField.value) {
-            AC.get('passwordRepeat')?.setErrors({ MatchPassword: true });
-        }
-    }
-}
+export class CustomValidators {
+    static passwordsMatching: ValidatorFn = (
+      form: AbstractControl<any, any>
+    ): ValidationErrors | null => {
+      const password = form.value.password;
+      const confirmPassword = form.value.passwordRepeat;
+      return equalsOrEmpty(password, confirmPassword)
+        ? null
+        : { not_matching: true };
+    };
+  }
+  
+  function equalsOrEmpty(password: string, confirmPassword: string) {
+    return password === confirmPassword && confirmPassword !== undefined;
+  }

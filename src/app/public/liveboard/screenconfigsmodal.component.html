@@ -3,7 +3,7 @@
         <fa-icon [icon]="['fas', 'cogs']"></fa-icon> live scorebord instellingen
     </h4>
 </div>
-<div class="modal-body" [formGroup]="form">
+<div class="modal-body" [formGroup]="typedForm">
     <div class="row mb-3" *ngFor="let screenConfig of screenConfigs">
 
         <label [for]="getNrOfSecondsId(screenConfig)"

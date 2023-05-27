@@ -19,13 +19,13 @@
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
 
-      <form *ngIf="!processing" name="form" (ngSubmit)="pay()" [formGroup]="form" novalidate>
+      <form *ngIf="!processing" name="form" (ngSubmit)="pay()" [formGroup]="typedForm" novalidate>
 
         <div class="mb-3" class="btn-group mb-3" role="group">
           <input type="radio" formControlName="purpose" [value]="PersonalPurpose" class="btn-check" autocomplete="off"
             id="btnradio1">
           <label class="btn btn-outline-primary" for="btnradio1">
-            <fa-icon *ngIf="form.value['purpose'] === PersonalPurpose" [icon]="['fas', 'check-circle']"
+            <fa-icon *ngIf="typedForm.value['purpose'] === PersonalPurpose" [icon]="['fas', 'check-circle']"
               class="text-success"></fa-icon>
             persoonlijk
           </label>
@@ -34,73 +34,90 @@
             autocomplete="off" id="btnradio2">
           <label class="btn btn-outline-primary" for="btnradio2">
 
-            <fa-icon *ngIf="form.value['purpose'] === OrganizationPurpose" [icon]="['fas', 'check-circle']"
+            <fa-icon *ngIf="typedForm.value['purpose'] === OrganizationPurpose" [icon]="['fas', 'check-circle']"
               class="text-success"></fa-icon>
             zakelijk
           </label>
         </div>
 
-        <div *ngIf="form.value['purpose'] === PersonalPurpose">
+        <div *ngIf="typedForm.controls.purpose.value === PersonalPurpose">
 
 
           <div class="row mx-0 mb-3">
-            <label for="nrOfCredits" class="col-6 col-form-label text-end">aantal</label>
-            <div class="col-6">
+            <label for="nrOfCredits" class="col-4 col-form-label text-end">aantal</label>
+            <div class="col-8">
               <select class="form-control" formControlName="nrOfCredits" aria-describedby="costInfo"
-                [ngClass]="{ 'is-invalid': form.controls.nrOfCredits.value === ''}" required>
+                [ngClass]="{ 'is-invalid': typedForm.controls.nrOfCredits.value < 1 }" required>
                 <option *ngFor="let nrOfCreditsOption of nrOfCreditsOptions | async" [ngValue]="nrOfCreditsOption">
                   {{nrOfCreditsOption}}
                 </option>
               </select>
-              <small *ngIf="!form.value['nrOfCredits']" id="costInfo" class="form-text text-info">
+              <small *ngIf="!typedForm.value['nrOfCredits']" id="costInfo" class="form-text text-info">
                 &euro;0,50 per toernooi
               </small>
-              <small *ngIf="form.value['nrOfCredits']" id="costInfo" class="form-text text-info">
-                totaal &euro;{{form.value['nrOfCredits'] * 0.50}}
+              <small *ngIf="typedForm.value['nrOfCredits']" id="costInfo" class="form-text text-info">
+                totaal &euro;{{typedForm.value['nrOfCredits'] * 0.50}}
               </small>
             </div>
           </div>
 
-          <div *ngIf="form.value['nrOfCredits']" class="row mx-0 mb-3">
-            <label for="paymentMethod" class="col-6 col-form-label text-end">betaalmethode</label>
-            <div class="col-6">
+          <div *ngIf="typedForm.value['nrOfCredits']" class="row mx-0 mb-3">
+            <label for="paymentMethod" class="col-4 col-form-label text-end">betaalmethode</label>
+            <div class="col-8">
               <select class="form-control" formControlName="paymentMethod"
-                [ngClass]="{ 'is-invalid': form.controls.paymentMethod.value === ''}" required>
+                [ngClass]="{ 'is-invalid': typedForm.controls.paymentMethod.value === ''}" required>
                 <option *ngFor="let paymentMethod of paymentMethods | async" [ngValue]="paymentMethod">{{paymentMethod}}
                 </option>
               </select>
             </div>
           </div>
-          <div *ngIf="form.value['paymentMethod'] === PaymentMethodIDeal" class="row mx-0 mb-3">
-            <label for="iDealIssuer" class="col-6 col-form-label text-end">bank</label>
-            <div class="col-6">
+          <div *ngIf="typedForm.value['paymentMethod'] === PaymentMethodIDeal" class="row mx-0 mb-3">
+            <label for="iDealIssuer" class="col-4 col-form-label text-end">bank</label>
+            <div class="col-8">
               <select class="form-control" formControlName="iDealIssuer">
                 <option *ngFor="let option of idealIssuers | async" [ngValue]="option">{{option.name}}
                 </option>
               </select>
             </div>
           </div>
-          <div *ngIf="form.value['paymentMethod'] === PaymentMethodCreditCard" class="row mx-0 mb-3 card-js">
-            <label for="cardNumber" class="col-6 col-form-label text-end">kaartnummer</label>
-            <div class="col-6">
-              <input class="card-number" formControlName="cardNumber" type="tel" class="form-control"
-                placeholder="kaartnummer" x-autocompletetype="cc-number" autocompletetype="cc-number" autocorrect="off"
-                spellcheck="off" autocapitalize="off" [maxLength]="19">
+          <div *ngIf="typedForm.value['paymentMethod'] === PaymentMethodCreditCard" class="row mx-0 mb-3">
+            <label for="cardNumber" class="col-4 col-form-label text-end">kaartnummer</label>
+            <div class="col-8 ps-2 text-start">
+              <input formControlName="cardNumberPart1" class="form-control" style="width: 4rem; display: inline"
+                placeholder="0000" autocorrect="off" spellcheck="off" autocapitalize="off">
+              <input formControlName="cardNumberPart2" class="form-control" style="width: 4rem; display: inline"
+                placeholder="1111" autocorrect="off" spellcheck="off" autocapitalize="off">
+              <input formControlName="cardNumberPart3" class="form-control" style="width: 4rem; display: inline"
+                placeholder="2222" autocorrect="off" spellcheck="off" autocapitalize="off">
+              <input formControlName="cardNumberPart4" class="form-control" style="width: 4rem; display: inline"
+                placeholder="3333" autocorrect="off" spellcheck="off" autocapitalize="off">
+            </div>
+          </div>
 
-            </div>
+          <div *ngIf="typedForm.value['paymentMethod'] === PaymentMethodCreditCard" class="row mx-0 mb-3">
+            <label for="expiry-date" class="col-4 col-form-label text-end">maand/jaar</label>
+            <div class="col-4">
+              <input formControlName="expiryMonth" class="form-control"
+                placeholder="03" autocorrect="off"
+                spellcheck="off" autocapitalize="off" [minLength]="2" [maxLength]="2">              
+            </div>            
+            <div class="col-4">
+              <input formControlName="expiryYear" class="form-control"
+                placeholder="25" autocorrect="off" spellcheck="off" autocapitalize="off" [minLength]="2" [maxLength]="2">
+            </div>            
           </div>
-          <input class="expiry-month" name="expiry-month">
-          <input class="expiry-year" name="expiry-year">
-          <div *ngIf="form.value['paymentMethod'] === PaymentMethodCreditCard" class="row mx-0 mb-3">
-            <label for="cvc" class="col-6 col-form-label text-end">cvc</label>
-            <div class="col-6 col-sm-3">
-              <input type="text" class="form-control" formControlName="cvc" placeholder="000" [maxLength]="3">
-            </div>
-            <div class="col-3  col-sm-6">
-            </div>
+
+          <div *ngIf="typedForm.value['paymentMethod'] === PaymentMethodCreditCard" class="row mx-0 mb-3">                     
+              <label for="cvc" class="col-4 col-form-label text-end">cvc</label>
+              <div class="col-8 col-sm-4">
+                <input type="text" class="form-control" x-autocompletetype="cc-cvc" autocompletetype="cc-cvc" formControlName="cvc" placeholder="000" [maxLength]="3">
+              </div>
+              <div class="col-4  col-sm-8">
+              </div>
           </div>
+          
         </div>
-        <div *ngIf="form.value['purpose'] === OrganizationPurpose">
+        <div *ngIf="typedForm.value['purpose'] === OrganizationPurpose">
 
           <div class="card border-info m-3">
             <div class="card-body">
@@ -126,9 +143,9 @@
 
         </div>
         <div *ngIf="canAgree()" class="row mx-0 mb-3">
-          <label for="agreed" class="col-6 col-form-label text-end pointer"><a href="assets/betalingsvoorwaarden.pdf"
+          <label for="agreed" class="col-4 col-form-label text-end pointer"><a href="assets/betalingsvoorwaarden.pdf"
               rel="noopener">akkoord met voorwaarden</a></label>
-          <div class="col-6">
+          <div class="col-8">
             <div class="form-control form-check form-switch">
               <input type="checkbox" class="form-check-input" id="agreed" formControlName="agreed">
               <label class="form-check-label" for="agreed"></label>
@@ -136,7 +153,7 @@
           </div>
         </div>
         <div *ngIf="canPay()" class="row mx-0 mb-3">
-          <div class="offset-6 col-6 text-start">
+          <div class="offset-4 col-8 text-start">
             <button type="submit" class="btn btn-primary">betalen</button>
           </div>
         </div>

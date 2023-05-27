@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     JsonCompetitor,
@@ -27,9 +27,9 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 })
 export class CompetitorEditComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup<{
-        name: FormControl<string>;
-        registered: FormControl<boolean>;
-        info: FormControl<string|null>;
+        name: FormControl<string>,
+        registered: FormControl<boolean>,
+        info: FormControl<string|null>,
       }>;
     originalCompetitor: TournamentCompetitor | undefined;
     hasBegun!: boolean;
@@ -53,14 +53,14 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         modalService: NgbModal,
         favRepository: FavoritesRepository,
         private competitorRepository: CompetitorRepository,
-        private myNavigation: MyNavigation,
-        formBuilder: FormBuilder
+        private myNavigation: MyNavigation
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
 
-        this.typedForm = formBuilder.group({
+        this.typedForm = new FormGroup({
             name: new FormControl('', { nonNullable: true, validators: 
-                [Validators.required,
+                [
+                    Validators.required,
                     Validators.minLength(this.validations.minlengthname),
                     Validators.maxLength(this.validations.maxlengthname)
                 ] 
