@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     JsonReferee,
@@ -25,7 +25,12 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     styleUrls: ['./edit.component.css']
 })
 export class RefereeEditComponent extends TournamentComponent implements OnInit {
-    form: UntypedFormGroup;
+    public typedForm: FormGroup<{
+        initials: FormControl<string>,
+        name: FormControl<string|null>,
+        emailaddress: FormControl<string|null>,
+        info: FormControl<string|null>,
+      }>;
     originalReferee: Referee | undefined;
     invite: boolean = false;
 
@@ -48,29 +53,36 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
         favRepository: FavoritesRepository,
         private refereeRepository: RefereeRepository,
         private planningRepository: PlanningRepository,
-        private myNavigation: MyNavigation,
-        fb: UntypedFormBuilder
+        private myNavigation: MyNavigation
     ) {
 
         // EditPermissions, EmailAddresses
         // andere groep moet dan zijn getEditPermission, wanneer ingelogd, bij gewone view
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
-        this.form = fb.group({
-            initials: ['', Validators.compose([
-                Validators.required,
-                Validators.minLength(this.validations.minlengthinitials),
-                Validators.maxLength(this.validations.maxlengthinitials)
-            ])],
-            name: ['', Validators.compose([
-                Validators.maxLength(this.validations.maxlengthname)
-            ])],
-            emailaddress: ['', Validators.compose([
-                Validators.minLength(this.validations.minlengthemailaddress),
-                Validators.maxLength(this.validations.maxlengthemailaddress)
-            ])],
-            info: ['', Validators.compose([
-                Validators.maxLength(this.validations.maxlengthinfo)
-            ])],
+        this.typedForm = new FormGroup({
+            initials: new FormControl('', { nonNullable: true, validators: 
+                [
+                    Validators.required,
+                    Validators.minLength(this.validations.minlengthinitials),
+                    Validators.maxLength(this.validations.maxlengthinitials)
+                ] 
+            }),
+            name: new FormControl('', { validators: 
+                [
+                    Validators.maxLength(this.validations.maxlengthname)
+                ] 
+            }),
+            emailaddress: new FormControl('', { validators: 
+                [
+                    Validators.minLength(this.validations.minlengthemailaddress),
+                    Validators.maxLength(this.validations.maxlengthemailaddress)
+                ] 
+            }),
+            info: new FormControl('', { validators: 
+                [
+                    Validators.maxLength(this.validations.maxlengthinfo)
+                ] 
+            }),
         });
     }
 
@@ -89,25 +101,25 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
     private postInit(rank: number) {
         this.originalReferee = this.competition.getReferee(rank);
         if (this.originalReferee) {
-            this.form.controls.initials.setValue(this.originalReferee.getInitials());
-            this.form.controls.name.setValue(this.originalReferee.getName());
-            this.form.controls.emailaddress.setValue(this.originalReferee.getEmailaddress());
+            this.typedForm.controls.initials.setValue(this.originalReferee.getInitials());
+            this.typedForm.controls.name.setValue(this.originalReferee.getName() ?? null);
+            this.typedForm.controls.emailaddress.setValue(this.originalReferee.getEmailaddress() ?? null);
             if (this.originalReferee.getEmailaddress() !== undefined) {
-                this.form.controls.emailaddress.disable();
+                this.typedForm.controls.emailaddress.disable();
             }
-            this.form.controls.info.setValue(this.originalReferee.getInfo());
+            this.typedForm.controls.info.setValue(this.originalReferee.getInfo() ?? null);
         }
         this.processing = false;
     }
 
     formToJson(): JsonReferee {
-        const name = this.form.controls.name.value;
-        const emailaddress = this.form.controls.emailaddress.value;
-        const info = this.form.controls.info.value;
+        const name = this.typedForm.controls.name.value;
+        const emailaddress = this.typedForm.controls.emailaddress.value;
+        const info = this.typedForm.controls.info.value;
         return {
             id: this.originalReferee ? this.originalReferee.getId() : 0,
             priority: this.originalReferee ? this.originalReferee.getPriority() : this.competition.getReferees().length + 1,
-            initials: this.form.controls.initials.value,
+            initials: this.typedForm.controls.initials.value,
             name: name ? name : undefined,
             emailaddress: emailaddress ? emailaddress : undefined,
             info: info ? info : undefined
@@ -116,7 +128,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
 
     emailaddressChanged(): boolean {
         const original = this.originalReferee ? this.originalReferee.getEmailaddress() : undefined;
-        return original !== this.form.controls.emailaddress.value;
+        return original !== this.typedForm.controls.emailaddress.value;
     }
 
     save(): boolean {
