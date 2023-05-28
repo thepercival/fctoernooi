@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
@@ -15,6 +15,11 @@ import { HomeShellComponent } from './home/shell.component';
 import { TournamentShellRepository } from './lib/tournament/shell/repository';
 import { UserMapper } from './lib/user/mapper';
 import { LayoutModule } from './shared/layout/layout.module';
+import { registerLocaleData } from '@angular/common';
+// import localeNl from '@angular/common/locales/nl';
+
+// the second parameter 'nl' is optional
+// registerLocaleData(localeNl, 'nl');
 
 @NgModule({
   declarations: [
@@ -36,9 +41,8 @@ import { LayoutModule } from './shared/layout/layout.module';
     TournamentShellRepository,
     UserMapper,
     GlobalEventsManager,
-    MyNavigation/*,
-    { provide: LOCALE_ID, useValue: 'nl-NL'},
-    */
+    MyNavigation,
+    /*{ provide: LOCALE_ID, useValue: 'nl-NL'},*/
     /*,
     {
       provide: 'placeRanges', useValue: [

@@ -33,7 +33,6 @@ export class ExportModalComponent implements OnInit, OnDestroy {
         private pdfRepository: PdfRepository) {
         this.typedForm = new FormGroup({});
         this.appErrorHandler = new AppErrorHandler();
-        this.typedForm.controls.url.disable({onlySelf: true});
     }
 
     ngOnInit() {

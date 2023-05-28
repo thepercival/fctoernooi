@@ -18,7 +18,7 @@
       "projectType": "application",
       "architect": {
         "build": {
-          "builder" : "@angular-devkit/build-angular:browser-esbuild",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist",
             "index": "src/index.html",
@@ -73,7 +73,7 @@
               "serviceWorker": true
             },
             "nl-NL": {
-              "outputPath": "dist/nl-NL",
+              "outputPath": "dist",
               "i18nMissingTranslation": "error",
               "localize": [
                 "nl-NL"
