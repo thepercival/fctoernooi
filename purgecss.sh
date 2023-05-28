@@ -6,16 +6,16 @@
 echo -n "please enter locale(nl-NL): "
 read locale
 
-if [ -d "$locale" ]; then rm -Rf $locale; fi
-
 # go to the dist/yourProjectName folder
 cd ./dist/$locale
+
+if [ -d "css" ]; then rm -Rf css; fi
 
 # make a new directory named 'css' (you can name it anything)
 mkdir css
 
 # run PurgeCSS & make a new '.css' file inside the 'css' directory
-purgecss --css ./styles.*.css --content ['./index.html', './**/*.js'] ./*.js --output ./css
+purgecss --css ./styles.*.css --content ./index.html ./*.js --output ./css --safelist alert-info alert-warning alert-danger alert-success
 
 # replace the 'dist/yourProjectName/styles.css' file with the 'dist/yourProjectName/css/styles.css' file
 mv ./css/styles.*.css ./styles.*.css

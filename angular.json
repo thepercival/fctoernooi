@@ -86,6 +86,16 @@
                   "with": "src/environments/environment.acc.ts"
                 }
               ],
+              "optimization": {
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": true
+                },
+                "fonts": {
+                  "inline": true
+                }
+              },
+              "outputHashing": "all",
               "serviceWorker": true
             },
             "dev": {
