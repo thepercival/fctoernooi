@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, TemplateRef } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
     NameService,
     AgainstQualifyConfig,
@@ -36,14 +36,14 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
     alert: IAlert | undefined;
     processing: boolean = true;
     public nameService!: NameService;
-    public typedForm: FormGroup<{
+    public typedForm: FormGroup;/*<{
         pointsCalculation: FormControl<PointsCalculation>;
         winPoints: FormControl<number>;
         drawPoints: FormControl<number>;
         winPointsExt: FormControl<number>;
         drawPointsExt: FormControl<number>;
         losePointsExt: FormControl<number>;
-      }>;
+      }>;*/
     protected selectableCategories!: SelectableCategory[];
     pointsCalculations: PointsCalculation[] = [];
     readonly: boolean = true;
@@ -63,10 +63,9 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
         private competitionSportMapper: CompetitionSportMapper,
         private mapper: AgainstQualifyConfigMapper,
         private router: Router,
-        private modalService: NgbModal,
-        fb: FormBuilder
+        private modalService: NgbModal
     ) {
-        this.typedForm = fb.group({
+        this.typedForm = new FormGroup({
             pointsCalculation: new FormControl(PointsCalculation.AgainstGamePoints, { nonNullable: true }),
             winPoints: new FormControl(0, { nonNullable: true }),
             drawPoints: new FormControl(0, { nonNullable: true }),

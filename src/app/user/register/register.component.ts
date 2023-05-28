@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -35,8 +35,7 @@ export class RegisterComponent extends UserComponent implements OnInit {
     router: Router,
     userRepository: UserRepository,
     authService: AuthService,
-    globalEventsManager: GlobalEventsManager,
-    fb: FormBuilder
+    globalEventsManager: GlobalEventsManager
   ) {
     super(route, router, userRepository, authService, globalEventsManager);
     this.typedForm = new FormGroup(
