@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AgainstGame, Field, Place, PlanningConfig, PlanningEditMode, Structure, StructureNameService, TogetherGame } from 'ngx-sport';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { TranslateFieldService } from '../../lib/translate/field';
@@ -10,7 +10,7 @@ import { TranslateFieldService } from '../../lib/translate/field';
   styleUrls: ['./editbase.component.scss']
 })
 export class GameBaseEditComponent implements OnInit {
-  @Input() form!: UntypedFormGroup;
+  @Input() form!: FormGroup;
   @Input() game!: AgainstGame | TogetherGame;
   @Input() structureNameService!: StructureNameService;
   @Input() structure!: Structure;
@@ -23,20 +23,20 @@ export class GameBaseEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.form.addControl('field', new UntypedFormControl(
+    this.form.addControl('field', new FormControl(
       { value: this.game.getField(), disabled: !this.manualEditMode() },
       Validators.compose([
         Validators.required
       ])
     ));
-    this.form.addControl('referee', new UntypedFormControl(
+    this.form.addControl('referee', new FormControl(
       { value: this.game.getReferee(), disabled: !this.manualEditMode() }
     ));
-    this.form.addControl('refereePlace', new UntypedFormControl(
+    this.form.addControl('refereePlace', new FormControl(
       { value: this.game.getRefereePlace(), disabled: !this.manualEditMode() }
     ));
-    this.form.addControl('date', new UntypedFormControl(''));
-    this.form.addControl('time', new UntypedFormControl(''));
+    this.form.addControl('date', new FormControl(''));
+    this.form.addControl('time', new FormControl(''));
 
     this.setDate(this.form.controls.date, this.form.controls.time, this.game.getStartDateTime());
 

@@ -66,8 +66,7 @@ export class TranslateScoreService {
     protected getFirstScoreNamePlural(customSportId: CustomSportId): string {
         switch (customSportId) {
             case CustomSportId.Darts: { return 'legs'; }
-            case CustomSportId.Tennis:
-            case CustomSportId.Padel: {
+            case CustomSportId.Tennis:{
                 return 'games';
             }
             case CustomSportId.Football:
@@ -81,7 +80,7 @@ export class TranslateScoreService {
     protected getLastScoreNamePlural(customId: CustomSportId): string {
         switch (customId) {
             case CustomSportId.Jass: {
-                return 'bomem';
+                return 'bomen';
             }
             case CustomSportId.Badminton:
             case CustomSportId.Squash:

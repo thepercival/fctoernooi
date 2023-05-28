@@ -1,5 +1,5 @@
 import { AfterContentInit, AfterViewInit, Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     GameState,
@@ -55,15 +55,14 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
         refereeMapper: RefereeMapper,
         placeMapper: PlaceMapper,
         translate: TranslateScoreService,
-        myNavigation: MyNavigation,
-        fb: UntypedFormBuilder
+        myNavigation: MyNavigation
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository,
-            authService, gameRepository, mapper, fieldMapper, refereeMapper, placeMapper, translate, myNavigation, fb);
+            authService, gameRepository, mapper, fieldMapper, refereeMapper, placeMapper, translate, myNavigation);
         // this.originalPouleState = State.Created;
-        this.form.addControl('extratime', new UntypedFormControl(false));
-        this.form.addControl('homeExtraPoints', new UntypedFormControl(false));
-        this.form.addControl('awayExtraPoints', new UntypedFormControl(false));
+        this.typedForm.addControl('extratime', new FormControl(false, { nonNullable: true }));
+        this.typedForm.addControl('homeExtraPoints', new FormControl(false, { nonNullable: true }));
+        this.typedForm.addControl('awayExtraPoints', new FormControl(false, { nonNullable: true }));
     }
 
     ngOnInit() {
@@ -83,10 +82,10 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
         if (this.firstScoreConfig !== this.firstScoreConfig.getCalculate()) {
             this.calculateScoreControl = new AgainstScoreFormControl(this.firstScoreConfig.getCalculate(), 0, 0, true);
         }
-        this.form.controls.homeExtraPoints.setValue(this.getGame().getHomeExtraPoints() ?? 0);
-        this.form.controls.awayExtraPoints.setValue(this.getGame().getAwayExtraPoints() ?? 0);
-        this.form.controls.played.setValue(this.game?.getState() === GameState.Finished);
-        this.form.controls.extratime.setValue(this.getGame().getFinalPhase() === GamePhase.ExtraTime);
+        this.typedForm.controls.homeExtraPoints.setValue(this.getGame().getHomeExtraPoints() ?? 0);
+        this.typedForm.controls.awayExtraPoints.setValue(this.getGame().getAwayExtraPoints() ?? 0);
+        this.typedForm.controls.played.setValue(this.game?.getState() === GameState.Finished);
+        this.typedForm.controls.extratime.setValue(this.getGame().getFinalPhase() === GamePhase.ExtraTime);
         this.initScoreControls(); // do last!        
     }
 
@@ -104,7 +103,7 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
     ngAfterViewInit() {
         setTimeout(() => {
             this.updateWarningsForEqualQualifiers(this.formToJson());
-        }, 250);        
+        }, 1000);        
     }
  
 
@@ -154,15 +153,15 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
     setExtratime(extratime: boolean) {
         if (this.getGame().getScores().length === 0) {
             this.updateCalculateScoreControl(false);
-        } else if (extratime === true && this.form.controls.played.value !== true) {
-            this.form.controls.played.setValue(true);
+        } else if (extratime === true && this.typedForm.controls.played.value !== true) {
+            this.typedForm.controls.played.setValue(true);
         }
         super.updateWarningsForEqualQualifiers(this.formToJson());
     }
 
     setPlayed(played: boolean) {
         if (played === false) {
-            this.form.controls.extratime.setValue(false);
+            this.typedForm.controls.extratime.setValue(false);
             this.resetScoreControls();
             this.updateCalculateScoreControl(false);
         } else if (this.getGame().getScores().length === 0) {
@@ -176,7 +175,7 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
     }
 
     formToJson(): JsonAgainstGame {
-        const jsonGame = this.mapper.toJsonAgainst(this.getGame());;
+        const jsonGame = this.mapper.toJsonAgainst(this.getGame());
         this.formToJsonHelper(jsonGame);
         jsonGame.scores = [];
         this.scoreControls.forEach(scoreControl => {
@@ -187,13 +186,13 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
                 id: 0,
                 home: scoreControl.home.value ?? 0,
                 away: scoreControl.away.value ?? 0,
-                phase: this.getPhase(this.form),
+                phase: this.getPhase(this.typedForm),
                 number: jsonGame.scores.length + 1
             });
         });
-        jsonGame.state = this.form.controls.played.value === true ? GameState.Finished : GameState.Created;
-        jsonGame.homeExtraPoints = this.form.controls.homeExtraPoints.value;
-        jsonGame.awayExtraPoints = this.form.controls.awayExtraPoints.value;
+        jsonGame.state = this.typedForm.controls.played.value === true ? GameState.Finished : GameState.Created;
+        jsonGame.homeExtraPoints = this.typedForm.controls.homeExtraPoints.value;
+        jsonGame.awayExtraPoints = this.typedForm.controls.awayExtraPoints.value;
         return jsonGame;
     }
 
@@ -202,8 +201,8 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
     }
 
     postScoreControlUpdate(updateWarning: boolean) {
-        if (this.pristineScore && this.form.controls.played.value === false) {
-            this.form.controls.played.setValue(true);
+        if (this.pristineScore && this.typedForm.controls.played.value === false) {
+            this.typedForm.controls.played.setValue(true);
         }
         this.pristineScore = false;
         if (updateWarning) {
@@ -217,8 +216,8 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
 }
 
 class AgainstScoreFormControl {
-    home: UntypedFormControl;
-    away: UntypedFormControl;
+    home: FormControl;
+    away: FormControl;
 
     constructor(
         private scoreConfig: ScoreConfig,
@@ -226,8 +225,8 @@ class AgainstScoreFormControl {
         away: number,
         disabled?: boolean
     ) {
-        this.home = new UntypedFormControl({ value: home, disabled: disabled === true });
-        this.away = new UntypedFormControl({ value: away, disabled: disabled === true });
+        this.home = new FormControl({ value: home, disabled: disabled === true });
+        this.away = new FormControl({ value: away, disabled: disabled === true });
     }
 
     getScore(): AgainstScoreHelper {

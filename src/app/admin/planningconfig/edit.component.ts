@@ -27,7 +27,7 @@ import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { FormGroup, FormControl, Validators, UntypedFormControl, FormArray } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { PlanningConfigRepository } from '../../lib/ngx-sport/planning/config/repository';
 import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -169,7 +169,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     initGameAmountConfigs(startRoundNumber: RoundNumber) {
         this.getValidGameAmountConfigs(startRoundNumber).forEach((gameAmountConfig: GameAmountConfig) => {
-            this.typedForm.addControl('' + gameAmountConfig.getId(), new UntypedFormControl());
+            this.typedForm.addControl('' + gameAmountConfig.getId(), new FormControl());
         });
         this.setGameAmountControls(startRoundNumber);
         this.gameAmountLabel = this.getGameAmountLabel(startRoundNumber.getCompetition().getSportVariants());

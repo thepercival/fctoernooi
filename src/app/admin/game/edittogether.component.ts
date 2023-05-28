@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormArray, UntypedFormBuilder, FormControl, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     TogetherGame,
@@ -58,13 +58,12 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
         refereeMapper: RefereeMapper,
         placeMapper: PlaceMapper,
         translate: TranslateScoreService,
-        myNavigation: MyNavigation,
-        fb: UntypedFormBuilder
+        myNavigation: MyNavigation
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository,
-            authService, gameRepository, mapper, fieldMapper, refereeMapper, placeMapper, translate, myNavigation, fb);
+            authService, gameRepository, mapper, fieldMapper, refereeMapper, placeMapper, translate, myNavigation);
         // this.originalPouleState = State.Created;        
-        this.form.addControl('gamePlaces', new UntypedFormGroup({}));
+        this.typedForm.addControl('gamePlaces', new FormGroup({}));
     }
 
     ngOnInit() {
@@ -84,9 +83,9 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
         this.planningConfig = roundNumber.getValidPlanningConfig();
         this.firstScoreConfig = this.getGame().getScoreConfig();
         this.getGame().getTogetherPlaces().forEach((gamePlace: TogetherGamePlace) => {
-            this.getFormGroupGamePlaces().addControl('' + gamePlace.getId(), new UntypedFormGroup({}));
+            this.getFormGroupGamePlaces().addControl('' + gamePlace.getId(), new FormGroup({}));
         });
-        this.form.controls.played.setValue(this.getGame().getState() === GameState.Finished);
+        this.typedForm.controls.played.setValue(this.getGame().getState() === GameState.Finished);
         //     this.form.controls.extension.setValue(this.game.getFinalPhase() === Game.Phase_ExtraTime);
         this.pristineScore = this.getGame().getTogetherPlaces().every((gamePlace: TogetherGamePlace) => {
             return gamePlace.getScores().length === 0;
@@ -103,12 +102,12 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
 
     }
 
-    getFormGroupGamePlace(gamePlaceId: string | number): UntypedFormGroup {
-        return <UntypedFormGroup>this.getFormGroupGamePlaces().controls[gamePlaceId];
+    getFormGroupGamePlace(gamePlaceId: string | number): FormGroup {
+        return <FormGroup>this.getFormGroupGamePlaces().controls[gamePlaceId];
     }
 
-    getFormGroupGamePlaces(): UntypedFormGroup {
-        return <UntypedFormGroup>this.form.controls.gamePlaces;
+    getFormGroupGamePlaces(): FormGroup {
+        return <FormGroup>this.typedForm.controls.gamePlaces;
     }
 
     getGame(): TogetherGame {
@@ -125,7 +124,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
             return;
         }
         if (this.pristineScore) {
-            this.form.controls.played.setValue(true);
+            this.typedForm.controls.played.setValue(true);
         }
         this.pristineScore = false;
         super.updateWarningsForEqualQualifiers(this.formToJson());
@@ -137,7 +136,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
         if (played === false) {
             // this.form.controls.extension.setValue(false);
             this.getGame().getPlaces().forEach((gamePlace: AgainstGamePlace | TogetherGamePlace) => {
-                const scores = <UntypedFormArray>this.getFormGroupGamePlace(gamePlace.getId()).controls.scores;
+                const scores = <FormArray>this.getFormGroupGamePlace(gamePlace.getId()).controls.scores;
                 for (let scoreControl of scores.controls) {
                     scoreControl.setValue(0);
                 }
@@ -202,7 +201,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
         this.formToJsonHelper(jsonGame);
         jsonGame.places.forEach((jsonGamePlace: JsonTogetherGamePlace) => {
             jsonGamePlace.scores = [];
-            const scores = <UntypedFormArray>this.getFormGroupGamePlace(jsonGamePlace.id).controls.scores;
+            const scores = <FormArray>this.getFormGroupGamePlace(jsonGamePlace.id).controls.scores;
             for (let scoreControl of scores.controls) {
                 if (scoreControl.value < 0) {
                     continue;
@@ -210,19 +209,19 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
                 jsonGamePlace.scores.push({
                     id: 0,
                     score: scoreControl.value,
-                    phase: this.getPhase(this.form),
+                    phase: this.getPhase(this.typedForm),
                     number: jsonGamePlace.scores.length + 1
                 });
             }
         });
-        jsonGame.state = this.form.controls.played.value === true ? GameState.Finished : GameState.Created;
+        jsonGame.state = this.typedForm.controls.played.value === true ? GameState.Finished : GameState.Created;
         return jsonGame;
     }
 
     areAllScoresValid(): boolean {
         return this.getGame().getTogetherPlaces().every((gamePlace: TogetherGamePlace) => {
             const formGroupGamePlace = this.getFormGroupGamePlace(gamePlace.getId());
-            const scores = <UntypedFormArray>formGroupGamePlace.controls.scores;
+            const scores = <FormArray>formGroupGamePlace.controls.scores;
             return scores.controls.every((scoreControl: AbstractControl) => {
                 return scoreControl.value >= 0;
             });

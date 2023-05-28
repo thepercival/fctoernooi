@@ -8,7 +8,7 @@
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing && game && tournament && hasAuthorization" [formGroup]="form" (ngSubmit)="save()"
+      <form *ngIf="!processing && game && tournament && hasAuthorization" [formGroup]="typedForm" (ngSubmit)="save()"
         #f="ngForm" novalidate>
         <app-tournament-basegame-edit [form]="getBaseFormGroup()" [structureNameService]="structureNameService"
           [game]="game" [structure]="structure">
@@ -75,13 +75,13 @@
           </div>
           <div class="col-4">
             <input formControlName="homeExtraPoints" class="form-control max-width-100" type="number"
-              [ngClass]="{ 'is-invalid': form.controls.homeExtraPoints.invalid, 'is-valid': form.controls.homeExtraPoints.valid}"
+              [ngClass]="{ 'is-invalid': typedForm.controls.homeExtraPoints.invalid, 'is-valid': typedForm.controls.homeExtraPoints.valid}"
               required [min]="minExtraPoints" [max]="maxExtraPoints">
           </div>
           <div class="col-1 side-splitter">-</div>
           <div class="col-4">
             <input formControlName="awayExtraPoints" class="form-control max-width-100" type="number"
-              [ngClass]="{ 'is-invalid': form.controls.awayExtraPoints.invalid, 'is-valid': form.controls.awayExtraPoints.valid}"
+              [ngClass]="{ 'is-invalid': typedForm.controls.awayExtraPoints.invalid, 'is-valid': typedForm.controls.awayExtraPoints.valid}"
               required [min]="minExtraPoints" [max]="maxExtraPoints">
           </div>
         </div>
@@ -111,7 +111,7 @@
         </div>
         <div class="row mb-3 justify-content-end">
           <div class="col-9 d-inline-flex">
-            <button type="submit" [disabled]="form.invalid || aScoreIsInvalid()"
+            <button type="submit" [disabled]="typedForm.invalid || aScoreIsInvalid()"
               class="btn btn-outline-primary me-1">wijzig
               wedstrijd</button>
             <button type="button" *ngIf="manualEditMode()" class="btn btn-outline-danger"

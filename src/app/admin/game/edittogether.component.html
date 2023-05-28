@@ -8,7 +8,7 @@
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing && tournament && hasAuthorization" [formGroup]="form" (ngSubmit)="save()" #f="ngForm"
+      <form *ngIf="!processing && tournament && hasAuthorization" [formGroup]="typedForm" (ngSubmit)="save()" #f="ngForm"
         novalidate>
         <app-tournament-basegame-edit [form]="getBaseFormGroup()" [structureNameService]="structureNameService"
           [game]="getGame()" [structure]="structure">
@@ -42,7 +42,7 @@
         </div>
         <div class="row mb-3 justify-content-end">
           <div class="col-9 d-inline-flex">
-            <button type="submit" [disabled]="form.invalid || !allScoresValid"
+            <button type="submit" [disabled]="typedForm.invalid || !allScoresValid"
               class="btn btn-outline-primary me-1">wijzig
               wedstrijd</button>
             <button type="button" *ngIf="manualEditMode()" class="btn btn-outline-danger"
