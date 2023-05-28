@@ -19,6 +19,9 @@ export class RankingCategoryComponent implements OnInit {
     @Input() structureNameService!: StructureNameService;
 
     public activeTabName!: string;
+    public multipleRounds: boolean = false;
+    
+    
 
     constructor(
         protected tournamentMapper: TournamentMapper,
@@ -28,13 +31,15 @@ export class RankingCategoryComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.multipleRounds = this.category.getRootRound().getChildren().length > 0;
         this.initTabNr();
     }
 
     initTabNr(): void {
 
         let activeTabNr = 1;
-        if (this.category.getRootRound().getStructureCell().getLast().getGamesState() === GameState.Finished) {
+        if (this.multipleRounds 
+            && this.category.getRootRound().getStructureCell().getLast().getGamesState() === GameState.Finished) {
             activeTabNr = 2;
         }
         this.activeTabName = this.getTabName(activeTabNr);

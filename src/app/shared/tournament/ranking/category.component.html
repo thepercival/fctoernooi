@@ -20,7 +20,7 @@
             </app-tournament-ranking-round>
           </ng-template>
         </li>
-        <li [ngbNavItem]="getTabName(2)">
+        <li *ngIf="multipleRounds" [ngbNavItem]="getTabName(2)">
           <a ngbNavLink>eindstand</a>
           <ng-template ngbNavContent>
             <app-tournament-endranking [structureNameService]="structureNameService" [favorites]="favorites"
