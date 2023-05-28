@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NgbDateStruct, NgbModal, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { League, PlanningEditMode, RoundNumber } from 'ngx-sport';
@@ -33,7 +33,11 @@ import { TournamentScreen } from '../../shared/tournament/screenNames';
     styleUrls: ['./home.component.css']
 })
 export class HomeComponent extends TournamentComponent implements OnInit {
-    copyForm: UntypedFormGroup;
+    public copyForm: FormGroup<{
+        date: FormControl<NgbDateStruct>,
+        time: FormControl<NgbTimeStruct>,
+      }>;
+
     lockerRoomValidator!: LockerRoomValidator;
     hasBegun: boolean = true;
     public nrOfCredits: number | undefined;
@@ -56,16 +60,16 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         private tournamentMapper: TournamentMapper,
         private authService: AuthService,
         public dateFormatter: DateFormatter,
-        private translate: TranslateFieldService,
-        fb: UntypedFormBuilder
+        private translate: TranslateFieldService
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
         const date = new Date();
         
-        this.copyForm = fb.group({
-            date: ['', Validators.compose([])],
-            time: ['', Validators.compose([])],
+        this.copyForm = new FormGroup({
+            date: new FormControl(this.toDateStruct(date), { nonNullable: true }),
+            time: new FormControl(this.toTimeStruct(date), { nonNullable: true }),
         });
+
     }
 
     ngOnInit() {
@@ -108,6 +112,14 @@ export class HomeComponent extends TournamentComponent implements OnInit {
     private initCopyForm(dateStruct: NgbDateStruct, timeStruct: NgbTimeStruct): void {
         this.copyForm.controls.date.setValue(dateStruct);        
         this.copyForm.controls.time.setValue(timeStruct);
+    }
+
+    toDateStruct(date: Date): NgbDateStruct {
+        return { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
+    }
+    
+    toTimeStruct(date: Date): NgbTimeStruct {
+        return { hour: date.getHours(), minute: date.getMinutes(), second: 0 };
     }
 
     protected structureHasPlanningEditManualMode(roundNumber: RoundNumber): boolean {
@@ -370,8 +382,8 @@ export class HomeComponent extends TournamentComponent implements OnInit {
             this.copyForm.controls.date.value.year,
             this.copyForm.controls.date.value.month - 1,
             this.copyForm.controls.date.value.day,
-            this.competition.getStartDateTime().getHours(),
-            this.competition.getStartDateTime().getMinutes(),
+            this.copyForm.controls.time.value.hour,
+            this.copyForm.controls.time.value.minute,
         );
 
         this.processing = true;

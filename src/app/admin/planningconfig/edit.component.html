@@ -11,14 +11,14 @@
             <ngb-alert #updateDataAlert *ngIf="updateDataMsg" type="info" (closed)="updateDataMsg = undefined">
                 {{updateDataMsg}}
             </ngb-alert>
-            <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
-                <app-tournament-gameamountconfigs-edit *ngIf="!form.value['manual']" [label]="gameAmountLabel"
-                    [gameAmountControls]="gameAmountConfigControls" [typedForm]="form" (closed)="updateUnequallyAssigned(startRoundNumber)">
+            <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
+                <app-tournament-gameamountconfigs-edit *ngIf="!typedForm.value['manual']" [label]="gameAmountLabel"
+                    [gameAmountControls]="gameAmountConfigControls" [typedForm]="typedForm" (closed)="updateUnequallyAssigned(startRoundNumber)">
                 </app-tournament-gameamountconfigs-edit>
-                <ngb-alert *ngIf="!form.value['manual'] && unequallyAssigned" type="warning">
+                <ngb-alert *ngIf="!typedForm.value['manual'] && unequallyAssigned" type="warning">
                     de deelnemers spelen een verschillend aantal wedstrijden
                 </ngb-alert>
-                <div *ngIf="!form.value['manual'] && showRandomGamePlaceStrategy()" class="row mb-3">
+                <div *ngIf="!typedForm.value['manual'] && showRandomGamePlaceStrategy()" class="row mb-3">
                     <label for="strategyRandomly" class="col-7 col-form-label pointer">willekeurge wedstrijden</label>
                     <div class="col-5">
                         <div class="form-control form-check form-switch">
@@ -28,7 +28,7 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="!form.value['manual']" class="row mb-3">
+                <div *ngIf="!typedForm.value['manual']" class="row mb-3">
                     <label for="enableTime" class="col-7 col-form-label pointer">plannen o.b.v. tijd</label>
                     <div class="col-5">
                         <div class="form-control form-check form-switch">
@@ -39,7 +39,7 @@
                     </div>
                 </div>
 
-                <div *ngIf="!form.value['manual'] && !form.value['enableTime']" class="row mb-3">
+                <div *ngIf="!typedForm.value['manual'] && !typedForm.value['enableTime']" class="row mb-3">
                     <label for="extension" class="col-7 col-form-label pointer">met verlenging</label>
                     <div class="col-5">
                         <div class="form-control form-check form-switch">
@@ -49,33 +49,33 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="!form.value['manual'] && form.value['enableTime']" class="row mb-3">
+                <div *ngIf="!typedForm.value['manual'] && typedForm.value['enableTime']" class="row mb-3">
                     <label for="minutesPerGame" class="col-7 col-form-label">minuten per wedstrijd</label>
                     <div class="col-5">
                         <input type="number"
-                            [ngClass]="{ 'is-invalid': form.controls.minutesPerGame.invalid, 'is-valid': form.controls.minutesPerGame.valid}"
+                            [ngClass]="{ 'is-invalid': typedForm.controls.minutesPerGame.invalid, 'is-valid': typedForm.controls.minutesPerGame.valid}"
                             formControlName="minutesPerGame" maxlength="2" class="form-control" />
                     </div>
                 </div>
-                <div *ngIf="!form.value['manual'] && form.value['enableTime']" class="row mb-3">
+                <div *ngIf="!typedForm.value['manual'] && typedForm.value['enableTime']" class="row mb-3">
                     <label for="minutesPerGameExt" class="col-7 col-form-label">minuten verlenging</label>
                     <div class="col-5">
                         <input type="number"
-                            [ngClass]="{ 'is-invalid': form.controls.minutesPerGameExt.invalid, 'is-valid': form.controls.minutesPerGameExt.valid}"
+                            [ngClass]="{ 'is-invalid': typedForm.controls.minutesPerGameExt.invalid, 'is-valid': typedForm.controls.minutesPerGameExt.valid}"
                             formControlName="minutesPerGameExt" maxlength="2" class="form-control"
                             (ngModelChange)="changeMinutesPerGameExt($event)" />
                     </div>
                 </div>
-                <div *ngIf="!form.value['manual'] && form.value['enableTime']" class="row mb-3">
+                <div *ngIf="!typedForm.value['manual'] && typedForm.value['enableTime']" class="row mb-3">
                     <label for="minutesBetweenGames" class="col-7 col-form-label">minuten tussen
                         wedstrijden</label>
                     <div class="col-5">
                         <input type="number"
-                            [ngClass]="{ 'is-invalid': form.controls.minutesBetweenGames.invalid, 'is-valid': form.controls.minutesBetweenGames.valid}"
+                            [ngClass]="{ 'is-invalid': typedForm.controls.minutesBetweenGames.invalid, 'is-valid': typedForm.controls.minutesBetweenGames.valid}"
                             formControlName="minutesBetweenGames" maxlength="2" class="form-control" />
                     </div>
                 </div>
-                <div *ngIf="!form.value['manual'] && form.value['enableTime'] && startRoundNumber.hasNext()"
+                <div *ngIf="!typedForm.value['manual'] && typedForm.value['enableTime'] && startRoundNumber.hasNext()"
                     class="row mb-3">
                     <label for="minutesAfter" class="col-7 col-form-label pointer"
                         (click)="openInfoModal('minuten pauze na de ronde', 'info-modal', contentInfoMinutesAfter)">minuten
@@ -84,11 +84,11 @@
                     </label>
                     <div class="col-5">
                         <input type="number"
-                            [ngClass]="{ 'is-invalid': form.controls.minutesAfter.invalid, 'is-valid': form.controls.minutesAfter.valid}"
+                            [ngClass]="{ 'is-invalid': typedForm.controls.minutesAfter.invalid, 'is-valid': typedForm.controls.minutesAfter.valid}"
                             formControlName="minutesAfter" maxlength="3" class="form-control" />
                     </div>
                 </div>
-                <div *ngIf="!form.value['manual'] && perPouleOptionAvailable()" class="row mb-3">
+                <div *ngIf="!typedForm.value['manual'] && perPouleOptionAvailable()" class="row mb-3">
                     <label for="perPoule" class="col-7 col-form-label">per poule en wedstrijdronde</label>
                     <div class="col-5">
                         <div class="form-control form-check form-switch">
@@ -98,7 +98,7 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="!form.value['manual'] && someSelfRefereeOptionAvailable()" class="row mb-3">
+                <div *ngIf="!typedForm.value['manual'] && someSelfRefereeOptionAvailable()" class="row mb-3">
                     <label for="selfReferee" class="col-7 col-form-label">deelnemers zijn scheidsrechter</label>
                     <div class="col-5">
                         <div class="form-control form-check form-switch">
@@ -108,7 +108,7 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="!form.value['manual'] && form.value['selfReferee']"
+                <div *ngIf="!typedForm.value['manual'] && typedForm.value['selfReferee']"
                     class="row mb-3">
                     <label for="simulSelfReferee" class="offset-1 col-6 col-form-label">per deelnemer meerdere scheidsrechters tegelijk</label>
                     <div class="col-5">
@@ -119,7 +119,7 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="!form.value['manual'] && form.value['selfReferee'] && bothSelfRefereeOptionsAvailable()"
+                <div *ngIf="!typedForm.value['manual'] && typedForm.value['selfReferee'] && bothSelfRefereeOptionsAvailable()"
                     class="row mb-3">
                     <label for="selfRefereeSamePoule" class="offset-1 col-6 col-form-label">scheidsrechter in eigen poule</label>
                     <div class="col-5">
@@ -152,7 +152,7 @@
                         </button>
                     </div>
                     <div *ngIf="!startRoundNumber.hasBegun()" class="col-5">
-                        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">opslaan</button>
+                        <button type="submit" class="btn btn-primary" [disabled]="typedForm.invalid">opslaan</button>
                     </div>
                 </div>
             </form>

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output, TemplateRef } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { NgbDateStruct, NgbModal, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { JsonTournament } from '../../lib/tournament/json';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { League } from 'ngx-sport';
@@ -15,7 +15,12 @@ import { StartEditMode } from '../../lib/tournament/startEditMode';
 })
 export class TournamentPropertiesComponent implements OnInit {
   @Output() toNextStep = new EventEmitter<JsonTournament>();
-  form: UntypedFormGroup;
+  public typedForm: FormGroup<{
+    name: FormControl<string>,
+    date: FormControl<NgbDateStruct>,
+    time: FormControl<NgbTimeStruct>,
+    public: FormControl<boolean>,
+  }>;
   minDateStruct: NgbDateStruct;
   validations: any = {
     minlengthname: League.MIN_LENGTH_NAME,
@@ -23,52 +28,64 @@ export class TournamentPropertiesComponent implements OnInit {
   };
 
   constructor(
-    private modalService: NgbModal,
-    fb: UntypedFormBuilder
+    private modalService: NgbModal
   ) {
     const date = new Date();
     this.minDateStruct = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
 
-    this.form = fb.group({
-      name: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(this.validations.minlengthname),
-        Validators.maxLength(this.validations.maxlengthname)
-      ])],
-      date: ['', Validators.compose([
-      ])],
-      time: ['', Validators.compose([
-      ])],
-      public: ['', Validators.compose([
-      ])]
+    this.typedForm = new FormGroup({
+      name: new FormControl('', { nonNullable: true, validators: 
+        [
+            Validators.required,
+            Validators.minLength(this.validations.minlengthname),
+            Validators.maxLength(this.validations.maxlengthname)
+        ] 
+      }),
+      date: new FormControl(this.toDateStruct(date), { nonNullable: true }),
+      time: new FormControl(this.toTimeStruct(date), { nonNullable: true }),
+      public: new FormControl(true, { nonNullable: true }),
     });
+
   }
 
   ngOnInit() {
+    const date = this.calculateCurrentDate(); 
+    this.typedForm.controls.date.setValue(this.toDateStruct(date));
+    this.typedForm.controls.time.setValue(this.toTimeStruct(date));
+    this.typedForm.controls.public.setValue(true);
+  }
+
+  calculateCurrentDate(): Date {
     const date = new Date();
     if (date.getHours() < 23) {
       const nrOfMinutesTillQuarter = date.getMinutes() % 15;
       date.setTime(date.getTime() + ((15 + (15 - nrOfMinutesTillQuarter)) * 60 * 1000));
     }
-    this.form.controls.date.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
-    this.form.controls.time.setValue({ hour: date.getHours(), minute: date.getMinutes() });
-    this.form.controls.public.setValue(true);
+    return date;
+  }
+
+  toDateStruct(date: Date): NgbDateStruct {
+    return { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
+  }
+
+  toTimeStruct(date: Date): NgbTimeStruct {
+    return { hour: date.getHours(), minute: date.getMinutes(), second: 0 };
   }
 
   save(): boolean {
 
-    const name = this.form.controls.name.value;
+    const name = this.typedForm.controls.name.value;
     const startDateTime: Date = new Date(
-      this.form.controls.date.value.year,
-      this.form.controls.date.value.month - 1,
-      this.form.controls.date.value.day,
-      this.form.controls.time.value.hour,
-      this.form.controls.time.value.minute
+      this.typedForm.controls.date.value.year,
+      this.typedForm.controls.date.value.month - 1,
+      this.typedForm.controls.date.value.day,
+      this.typedForm.controls.time.value.hour,
+      this.typedForm.controls.time.value.minute
     );
 
     const jsonTournament: JsonTournament = {
       id: 0,
-      public: this.form.controls.public.value,
+      public: this.typedForm.controls.public.value,
       startEditMode: StartEditMode.EditLongTerm, /* @TODO CDK */
       competition: {
         id: 0,

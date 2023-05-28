@@ -6,7 +6,7 @@
 </div>
 <div class="modal-body">
     <div class="container-fluid">
-        <form name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
+        <form name="form" (ngSubmit)="false" [formGroup]="typedForm" novalidate>
             <div class="row mb-3">
                 <label for="publicotherid" class="col-4 col-form-label pointer">publiek
                     <fa-icon (click)="openInfoModal(infoPublic)" [icon]="['fas', 'info-circle']" class="text-info">
@@ -19,7 +19,7 @@
                     </div>
                 </div>
             </div>
-            <div [ngStyle]="{'visibility':form.value['public'] ? 'visible' : 'hidden'}" class="row">
+            <div [ngStyle]="{'visibility':typedForm.value['public'] ? 'visible' : 'hidden'}" class="row">
                 <div class="col-4">
                     <label for="url" class="col-form-label">url</label>
                 </div>
@@ -29,7 +29,7 @@
                             placeholder="kopieer url naar klembord" aria-label="kopieer url naar klembord"
                             aria-describedby="basic-copy">
                         <button type="button" class="btn btn-outline-secondary" type="button" id="basic-copy"
-                            ngxClipboard [cbContent]="form.controls.url.value" (cbOnSuccess)="copied = true;">
+                            ngxClipboard [cbContent]="typedForm.controls.url.value" (cbOnSuccess)="copied = true;">
                             <fa-icon [icon]="['fas', 'copy']"></fa-icon>
                         </button>
                     </div>
@@ -43,8 +43,8 @@
     <ngb-alert *ngIf="copied === true" type="info">de url is gekopieerd naar het
         klembord
     </ngb-alert>
-    <button *ngIf="!form.pristine" type="button" class="btn btn-primary" data-dismiss="modal"
-        (click)="modal.close(form.value['public'])">opslaan</button>
+    <button *ngIf="!typedForm.pristine" type="button" class="btn btn-primary" data-dismiss="modal"
+        (click)="modal.close(typedForm.value['public'])">opslaan</button>
 </div>
 
 <ng-template #infoPublic>

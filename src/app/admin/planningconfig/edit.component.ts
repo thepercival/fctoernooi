@@ -20,15 +20,14 @@ import {
     StartLocationMap,
     GameMode,
     EquallyAssignCalculator,
-    SportMapper,
-    Sport
+    SportMapper
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators, UntypedFormControl, FormArray } from '@angular/forms';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { PlanningConfigRepository } from '../../lib/ngx-sport/planning/config/repository';
 import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -49,9 +48,24 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     styleUrls: ['./edit.component.css']
 })
 export class PlanningConfigComponent extends TournamentComponent implements OnInit {
+    public typedForm: FormGroup;/*<{
+        gameAmountConfigs: FormArray<FormControl>,
+        enableTime: FormControl<boolean>,        
+        strategyRandomly: FormControl<boolean>,
+        extension: FormControl<boolean>,        
+        minutesPerGame: FormControl<number>,
+        minutesPerGameExt: FormControl<number>,
+        minutesBetweenGames: FormControl<number>,
+        minutesAfter: FormControl<number>,
+        perPoule: FormControl<boolean>,
+        selfReferee: FormControl<boolean>,
+        selfRefereeSamePoule: FormControl<boolean>,
+        simulSelfReferee: FormControl<boolean>,
+        manual: FormControl<boolean>,
+      }>*/;
+
     startRoundNumber!: RoundNumber;
     hasBegun!: boolean;
-    form: UntypedFormGroup;
     private pouleStructure!: PouleStructure;
     public structureNameService!: StructureNameService;
     public gameAmountLabel!: string;
@@ -81,42 +95,49 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         private planningRepository: PlanningRepository,
         private mapper: PlanningConfigMapper,
         private sportMapper: SportMapper,
-        private gameAmountConfigMapper: GameAmountConfigMapper,
-        fb: UntypedFormBuilder
+        private gameAmountConfigMapper: GameAmountConfigMapper
     ) {
         super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
-        this.form = fb.group({
-            /*gameMode: ['', Validators.compose([
-                Validators.required
-            ])],*/
-            manual: false,
-            strategyRandomly: false,
-            extension: false,
-            enableTime: true,
-            minutesPerGame: ['', Validators.compose([
-                Validators.required,
-                Validators.min(this.validations.minMinutes),
-                Validators.max(this.validations.maxMinutes)
-            ])],
-            minutesPerGameExt: ['', Validators.compose([
-                Validators.required,
-                Validators.min(this.validations.minMinutes - 1),
-                Validators.max(this.validations.maxMinutes)
-            ])],
-            minutesBetweenGames: ['', Validators.compose([
-                Validators.required,
-                Validators.min(this.validations.minMinutes - 1),
-                Validators.max(this.validations.maxMinutes)
-            ])],
-            minutesAfter: ['', Validators.compose([
-                Validators.required,
-                Validators.min(this.validations.minMinutes - 1),
-                Validators.max(this.validations.maxMinutes)
-            ])],
-            perPoule: false,
-            selfReferee: false,
-            selfRefereeSamePoule: false,
-            simulSelfReferee: false
+        this.typedForm = new FormGroup({
+            /*gameAmountConfigs: new FormArray([
+                new FormControl(1, { nonNullable: true })
+            ]),*/
+            enableTime: new FormControl(true, { nonNullable: true }),            
+            strategyRandomly: new FormControl(false, { nonNullable: true }),
+            extension: new FormControl(false, { nonNullable: true }),            
+            minutesPerGame: new FormControl(this.validations.minMinutes, { nonNullable: true, validators: 
+                [
+                    Validators.required,
+                    Validators.min(this.validations.minMinutes),
+                    Validators.max(this.validations.maxMinutes)
+                ] 
+            }),
+            minutesPerGameExt: new FormControl(this.validations.minMinutes - 1, { nonNullable: true, validators: 
+                [
+                    Validators.required,
+                    Validators.min(this.validations.minMinutes - 1),
+                    Validators.max(this.validations.maxMinutes)
+                ] 
+            }),
+            minutesBetweenGames: new FormControl(this.validations.minMinutes - 1, { nonNullable: true, validators: 
+                [
+                    Validators.required,
+                    Validators.min(this.validations.minMinutes - 1),
+                    Validators.max(this.validations.maxMinutes)
+                ] 
+            }),
+            minutesAfter: new FormControl(this.validations.minMinutes - 1, { nonNullable: true, validators: 
+                [
+                    Validators.required,
+                    Validators.min(this.validations.minMinutes - 1),
+                    Validators.max(this.validations.maxMinutes)
+                ] 
+            }),
+            perPoule: new FormControl(false, { nonNullable: true }),
+            selfReferee: new FormControl(false, { nonNullable: true }),
+            selfRefereeSamePoule: new FormControl(false, { nonNullable: true }),
+            simulSelfReferee: new FormControl(false, { nonNullable: true }),
+            manual: new FormControl(false, { nonNullable: true }),
         });
     }
 
@@ -148,7 +169,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     initGameAmountConfigs(startRoundNumber: RoundNumber) {
         this.getValidGameAmountConfigs(startRoundNumber).forEach((gameAmountConfig: GameAmountConfig) => {
-            this.form.addControl('' + gameAmountConfig.getId(), new UntypedFormControl());
+            this.typedForm.addControl('' + gameAmountConfig.getId(), new UntypedFormControl());
         });
         this.setGameAmountControls(startRoundNumber);
         this.gameAmountLabel = this.getGameAmountLabel(startRoundNumber.getCompetition().getSportVariants());
@@ -181,14 +202,14 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     setGameAmountControls(startRoundNumber: RoundNumber) {
-        this.gameAmountConfigControls = [];
-        this.getValidGameAmountConfigs(startRoundNumber).forEach((gameAmountConfig: GameAmountConfig) => {
+        this.gameAmountConfigControls = this.getValidGameAmountConfigs(startRoundNumber).
+            map((gameAmountConfig: GameAmountConfig): GameAmountConfigControl => {
             const range = this.defaultService.getGameAmountRange(gameAmountConfig.getCompetitionSport().getVariant());
-            this.gameAmountConfigControls.push({
+            return {
                 json: this.gameAmountConfigMapper.toJson(gameAmountConfig),
                 range: range,
-                control: this.form.controls['' + gameAmountConfig.getId()]
-            });
+                control: this.typedForm.controls['' + gameAmountConfig.getId()]
+            };
         });
     }
 
@@ -205,25 +226,25 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     changeMinutesPerGameExt(minutesPerGameExt: number) {
-        if (minutesPerGameExt === 0 && this.form.controls.extension.value) {
-            this.form.controls.extension.setValue(false);
+        if (minutesPerGameExt === 0 && this.typedForm.controls.extension.value) {
+            this.typedForm.controls.extension.setValue(false);
         }
-        if (minutesPerGameExt > 0 && this.form.controls.extension.value === false) {
-            this.form.controls.extension.setValue(true);
+        if (minutesPerGameExt > 0 && this.typedForm.controls.extension.value === false) {
+            this.typedForm.controls.extension.setValue(true);
         }
     }
 
     changeExtension(extension: boolean) {
-        if (extension && this.form.controls.minutesPerGameExt.value === 0) {
-            this.form.controls.minutesPerGameExt.setValue(DefaultService.MinutesPerGameExt);
+        if (extension && this.typedForm.controls.minutesPerGameExt.value === 0) {
+            this.typedForm.controls.minutesPerGameExt.setValue(DefaultService.MinutesPerGameExt);
         }
-        if (!extension && this.form.controls.minutesPerGameExt.value > 0) {
-            this.form.controls.minutesPerGameExt.setValue(0);
+        if (!extension && this.typedForm.controls.minutesPerGameExt.value > 0) {
+            this.typedForm.controls.minutesPerGameExt.setValue(0);
         }
     }
 
     changedEditMode(modalContent: TemplateRef<any>) {
-        if (this.form.controls.manual.value) {
+        if (this.typedForm.controls.manual.value) {
             this.openInfoModal('handmatig aanpassen', 'warning-modal', modalContent);
         }
     }
@@ -248,55 +269,55 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     private jsonToForm(json: JsonPlanningConfig) {
-        this.form.controls.extension.setValue(json.extension);
-        this.form.controls.enableTime.setValue(json.enableTime);
-        this.form.controls.minutesPerGame.setValue(json.minutesPerGame);
-        this.form.controls.minutesPerGameExt.setValue(json.minutesPerGameExt);
-        this.form.controls.minutesBetweenGames.setValue(json.minutesBetweenGames);
-        this.form.controls.minutesAfter.setValue(json.minutesAfter);
-        this.form.controls.perPoule.setValue(json.perPoule);
+        this.typedForm.controls.extension.setValue(json.extension);
+        this.typedForm.controls.enableTime.setValue(json.enableTime);
+        this.typedForm.controls.minutesPerGame.setValue(json.minutesPerGame);
+        this.typedForm.controls.minutesPerGameExt.setValue(json.minutesPerGameExt);
+        this.typedForm.controls.minutesBetweenGames.setValue(json.minutesBetweenGames);
+        this.typedForm.controls.minutesAfter.setValue(json.minutesAfter);
+        this.typedForm.controls.perPoule.setValue(json.perPoule);
         this.getValidGameAmountConfigs(this.startRoundNumber).forEach((gameAmountConfig: GameAmountConfig) => {
             const sportVariant = gameAmountConfig.getCompetitionSport().getVariant();
             const range = this.defaultService.getGameAmountRange(sportVariant);
             const id = '' + gameAmountConfig.getId();
-            this.form.controls[id].setValidators(
+            this.typedForm.controls[id].setValidators(
                 Validators.compose([
                     Validators.required,
                     Validators.min(range.min),
                     Validators.max(range.max)])
             );
-            this.form.controls[id].setValue(gameAmountConfig.getAmount());
+            this.typedForm.controls[id].setValue(gameAmountConfig.getAmount());
         });
-        this.form.controls.strategyRandomly.setValue(json.gamePlaceStrategy === GamePlaceStrategy.RandomlyAssigned);
-        this.form.controls.manual.setValue(json.editMode === PlanningEditMode.Manual);
+        this.typedForm.controls.strategyRandomly.setValue(json.gamePlaceStrategy === GamePlaceStrategy.RandomlyAssigned);
+        this.typedForm.controls.manual.setValue(json.editMode === PlanningEditMode.Manual);
 
         const selfRefee = this.getSelfReferee(json.selfReferee);
-        this.form.controls.selfReferee.setValue(selfRefee !== SelfReferee.Disabled);
-        this.form.controls.selfRefereeSamePoule.setValue(selfRefee === SelfReferee.SamePoule);
-        this.form.controls.simulSelfReferee.setValue(selfRefee === SelfReferee.SamePoule);
+        this.typedForm.controls.selfReferee.setValue(selfRefee !== SelfReferee.Disabled);
+        this.typedForm.controls.selfRefereeSamePoule.setValue(selfRefee === SelfReferee.SamePoule);
+        this.typedForm.controls.simulSelfReferee.setValue(selfRefee === SelfReferee.SamePoule);
 
-        Object.keys(this.form.controls).forEach(key => {
-            const control = this.form.controls[key];
+        Object.keys(this.typedForm.controls).forEach(key => {
+            const control = this.typedForm.controls[key];
             this.hasBegun ? control.disable() : control.enable();
         });
         this.enableDisableSelfReferee();
     }
 
     private formToJson(): JsonPlanningConfig {
-        const strategy = this.form.controls.strategyRandomly.value ? GamePlaceStrategy.RandomlyAssigned : GamePlaceStrategy.EquallyAssigned;
+        const strategy = this.typedForm.controls.strategyRandomly.value ? GamePlaceStrategy.RandomlyAssigned : GamePlaceStrategy.EquallyAssigned;
         return {
             id: 0,
-            editMode: this.form.controls.manual.value ? PlanningEditMode.Manual : PlanningEditMode.Auto,
+            editMode: this.typedForm.controls.manual.value ? PlanningEditMode.Manual : PlanningEditMode.Auto,
             gamePlaceStrategy: strategy,
-            extension: this.form.controls.extension.value,
-            enableTime: this.form.controls.enableTime.value,
-            minutesPerGame: this.form.controls.minutesPerGame.value,
-            minutesPerGameExt: this.form.controls.minutesPerGameExt.value,
-            minutesBetweenGames: this.form.controls.minutesBetweenGames.value,
-            minutesAfter: this.form.controls.minutesAfter.value,
-            perPoule: this.form.controls.perPoule.value,
-            selfReferee: (this.form.controls.selfReferee.disabled || !this.form.value['selfReferee']) ? SelfReferee.Disabled :
-                (this.form.value['selfRefereeSamePoule'] ? SelfReferee.SamePoule : SelfReferee.OtherPoules)
+            extension: this.typedForm.controls.extension.value,
+            enableTime: this.typedForm.controls.enableTime.value,
+            minutesPerGame: this.typedForm.controls.minutesPerGame.value,
+            minutesPerGameExt: this.typedForm.controls.minutesPerGameExt.value,
+            minutesBetweenGames: this.typedForm.controls.minutesBetweenGames.value,
+            minutesAfter: this.typedForm.controls.minutesAfter.value,
+            perPoule: this.typedForm.controls.perPoule.value,
+            selfReferee: (this.typedForm.controls.selfReferee.disabled || !this.typedForm.value['selfReferee']) ? SelfReferee.Disabled :
+                (this.typedForm.value['selfRefereeSamePoule'] ? SelfReferee.SamePoule : SelfReferee.OtherPoules)
         };
     }
 
@@ -412,11 +433,11 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     enableDisableSelfReferee() {
         if (this.someSelfRefereeOptionAvailable()) {
-            if (this.form.controls.selfReferee.disabled && !this.hasBegun) {
-                this.form.controls.selfReferee.enable();
+            if (this.typedForm.controls.selfReferee.disabled && !this.hasBegun) {
+                this.typedForm.controls.selfReferee.enable();
             }
-        } else if (this.form.controls.selfReferee.disabled === false) {
-            this.form.controls.selfReferee.disable();
+        } else if (this.typedForm.controls.selfReferee.disabled === false) {
+            this.typedForm.controls.selfReferee.disable();
         }
     }
 

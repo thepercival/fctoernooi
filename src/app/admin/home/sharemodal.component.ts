@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, TemplateRef } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Tournament } from '../../lib/tournament';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
@@ -11,28 +11,29 @@ import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.
 })
 export class ShareModalComponent implements OnInit {
     @Input() tournament!: Tournament;
+    public typedForm: FormGroup<{
+        public: FormControl<boolean>,
+        url: FormControl<string>,        
+      }>;
     copied: boolean = false;
-    form: UntypedFormGroup;
-
+    
     constructor(
         public modal: NgbActiveModal,
-        private modalService: NgbModal,
-        formBuilder: UntypedFormBuilder) {
-        this.form = formBuilder.group({
-            url: [{ value: '', disabled: true }, Validators.compose([
-            ])],
-            public: ['', Validators.compose([
-            ])]
+        private modalService: NgbModal) {
+        this.typedForm = new FormGroup({
+            public: new FormControl(false, { nonNullable: true }),
+            url: new FormControl('', { nonNullable: true })            
         });
+        this.typedForm.controls.url.disable({onlySelf: true});
     }
 
     ngOnInit() {
-        this.form.controls.url.setValue(location.origin + '/' + this.tournament.getId());
-        this.form.controls.public.setValue(this.tournament.getPublic());
+        this.typedForm.controls.url.setValue(location.origin + '/' + this.tournament.getId());
+        this.typedForm.controls.public.setValue(this.tournament.getPublic());
     }
 
     save(): boolean {
-        return this.form.controls.public.value;
+        return this.typedForm.controls.public.value;
     }
 
     openInfoModal(modalContent: TemplateRef<any>) {

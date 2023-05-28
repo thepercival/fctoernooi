@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, timer } from 'rxjs';
@@ -19,7 +19,7 @@ export class ExportModalComponent implements OnInit, OnDestroy {
     @Input() subjects!: number;
     @Input() readonlySubjects!: number;
     @Input() fieldDescription!: string;
-    form: UntypedFormGroup;
+    public typedForm: FormGroup;
     creating = false;
     pdfLink: string | undefined;
     exportOptions: ExportOption[] = [];
@@ -30,10 +30,10 @@ export class ExportModalComponent implements OnInit, OnDestroy {
 
     constructor(
         public activeModal: NgbActiveModal,
-        private formBuilder: UntypedFormBuilder,
         private pdfRepository: PdfRepository) {
-        this.form = formBuilder.group({});
+        this.typedForm = new FormGroup({});
         this.appErrorHandler = new AppErrorHandler();
+        this.typedForm.controls.url.disable({onlySelf: true});
     }
 
     ngOnInit() {
@@ -50,20 +50,20 @@ export class ExportModalComponent implements OnInit, OnDestroy {
                 iconName: TournamentExportConfig.qrCode === +propertyValue ? 'qrcode' : undefined
             };
             this.exportOptions.push(exportOption);
-            this.form.addControl(exportOption.key, new UntypedFormControl({ value: exportOption.enabled, disabled: exportOption.readonly }));
+            this.typedForm.addControl(exportOption.key, new FormControl({ value: exportOption.enabled, disabled: exportOption.readonly }));
         }
     }
 
 
 
     noneSelected(): boolean {
-        return this.exportOptions.every(exportOption => !this.form.value[exportOption.key]);
+        return this.exportOptions.every(exportOption => !this.typedForm.value[exportOption.key]);
     }
 
     protected formToSubjects(): number {
         let subjects: number = 0;
         this.exportOptions.forEach((exportOption: ExportOption) => {
-            if (this.form.value[exportOption.key] === true) {
+            if (this.typedForm.value[exportOption.key] === true) {
                 subjects += exportOption.value;
             };
         });

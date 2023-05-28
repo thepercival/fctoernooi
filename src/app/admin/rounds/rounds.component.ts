@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { StructureEditor, StructureNameService } from 'ngx-sport';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { CSSService } from '../../shared/common/cssservice';
@@ -16,27 +16,29 @@ export class StructureSelectRoundComponent implements OnInit {
   @Input() hasOwnConfig!: Function;
   @Input() structureNameService!: StructureNameService;
   @Output() checkSomeRoundsSelected = new EventEmitter<void>();
-  form: UntypedFormGroup;
+  
+  public typedForm: FormGroup<{
+    selected: FormControl<boolean>
+  }>;
 
   constructor(
     public cssService: CSSService,
-    fb: UntypedFormBuilder,
     private structureEditor: StructureEditor,
     private defaultService: DefaultService
   ) {
-    this.form = fb.group({
-      selected: false
+    this.typedForm = new FormGroup({
+      selected: new FormControl(false, { nonNullable: true })
     });
   }
 
   ngOnInit() {
     const placeRanges = this.defaultService.getPlaceRanges(this.selectableRoundNode.round.getCompetition().getSportVariants())
     this.structureEditor.setPlaceRanges(placeRanges);
-    this.form.controls.selected.setValue(this.selectableRoundNode.selected);
+    this.typedForm.controls.selected.setValue(this.selectableRoundNode.selected);
   }
 
   toggleSelection() {
-    this.selectableRoundNode.selected = this.form.controls.selected.value;
+    this.selectableRoundNode.selected = this.typedForm.controls.selected.value;
     this.selectableRoundNode.children = this.setSelectedChildren(this.selectableRoundNode.children, this.selectableRoundNode);
     this.emitRoundsSelected();
   }

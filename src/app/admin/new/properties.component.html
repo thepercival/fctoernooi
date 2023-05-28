@@ -7,12 +7,12 @@
     </button>
   </h1>
 </div>
-<form name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+<form name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
   <div class="row mb-3">
     <label for="name" class="col-4 col-form-label">naam</label>
     <div class="col-8">
       <input class="form-control"
-        [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
+        [ngClass]="{ 'is-invalid': typedForm.controls.name.invalid, 'is-valid': typedForm.controls.name.valid }" type="text"
         formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
     </div>
   </div>
@@ -21,7 +21,7 @@
     <div class="col-8">
       <div class="input-group input-group-date">
         <input class="form-control"
-          [ngClass]="{ 'is-invalid': form.controls.date.invalid, 'is-valid': form.controls.date.valid }"
+          [ngClass]="{ 'is-invalid': typedForm.controls.date.invalid, 'is-valid': typedForm.controls.date.valid }"
           placeholder="yyyy-mm-dd" formControlName="date" ngbDatepicker #d="ngbDatepicker" [minDate]="minDateStruct"
           container="body">
         <span class="input-group-text pointer" (click)="d.toggle()">
@@ -50,7 +50,7 @@
   </div>
   <div class="row justify-content-end">
     <div class="col-8">
-      <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
+      <button [disabled]="typedForm.invalid" type="submit" class="btn btn-primary">
         kies sport
       </button>
     </div>
