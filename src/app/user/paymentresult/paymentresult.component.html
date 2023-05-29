@@ -10,7 +10,7 @@
 
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
-      <div *ngIf="!processing && nrOfCredits">
+      <div *ngIf="!processing">
         <button class="btn btn-outline-primary my-3" [routerLink]="['/admin/new']">toernooi aanmaken</button>
         <br>
         <button class="btn btn-outline-secondary" [routerLink]="['/user/profile']">credits bekijken</button>

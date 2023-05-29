@@ -1,5 +1,9 @@
+import { PaymentState } from "./state";
+
+
 export interface Payment {
     method?: PaymentMethod;
+    state: PaymentState;
     amount: number;
 }
 

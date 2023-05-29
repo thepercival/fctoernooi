@@ -12,6 +12,7 @@ import { CreditCardPayment, IDealIssuer, IDealPayment, PaymentMethod } from '../
 import { UserComponent } from '../component';
 import { AuthService } from '../../lib/auth/auth.service';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { PaymentState } from '../../lib/payment/state';
 @Component({
   selector: 'app-buycredits',
   templateUrl: './buycredits.component.html',
@@ -146,8 +147,9 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
       && this.typedForm.controls.iDealIssuer.value !== null) {
       return {
         amount: this.typedForm.controls.nrOfCredits.value * 0.5,
-        method: PaymentMethod.IDeal,
-        issuer: this.typedForm.controls.iDealIssuer.value
+        method: PaymentMethod.IDeal,        
+        issuer: this.typedForm.controls.iDealIssuer.value,
+        state: PaymentState.Open
       };
     } else if (this.typedForm.controls.paymentMethod.value === PaymentMethod.CreditCard) {
       const cardNumber = this.typedForm.controls.cardNumberPart1.value + '-'
@@ -158,7 +160,8 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
         amount: this.typedForm.controls.nrOfCredits.value * 0.5,
         method: PaymentMethod.CreditCard,
         cardNumber,
-        cvc: this.typedForm.controls.cvc.value
+        cvc: this.typedForm.controls.cvc.value,
+        state: PaymentState.Open
       };
     }
     /* if (this.form.controls.paymentMethod.value === PaymentMethod.CreditCard
@@ -211,14 +214,15 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
     this.paymentRepository.buyCredits(jsonPayment)
       .subscribe({
         next: (checkOutUrl: string) => {
-          window.open(checkOutUrl, '_blank');
+          // window.open(checkOutUrl, '_blank');
+          window.location.href = checkOutUrl;
 
-          this.paymentRepository.getMostRecentCreatedPayment()
-          .subscribe({
-            next: (paymentId: string) => {
-              this.router.navigate(['/user/awaitpayment', paymentId]);
-            }
-          });          
+          // this.paymentRepository.getMostRecentCreatedPayment()
+          // .subscribe({
+          //   next: (paymentId: string) => {
+          //     this.router.navigate(['/user/awaitpayment', paymentId]);
+          //   }
+          // });          
         },
         error: (e) => {
           this.setAlert(IAlertType.Danger, 'geen checkoutUrl van backend gekregen: ' + e);

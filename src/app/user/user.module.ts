@@ -16,7 +16,7 @@ import { UserRepository } from '../lib/user/repository';
 import { ValidateComponent } from './validate/validate.component';
 import { UserTitleComponent } from './title/title.component';
 import { BuyCreditsComponent } from './buycredits/buycredits.component';
-import { AwaitPaymentComponent } from './awaitpayment/awaitpayment.component';
+import { PaymentResultComponent } from './paymentresult/paymentresult.component';
 
 @NgModule({
   imports: [
@@ -35,7 +35,7 @@ import { AwaitPaymentComponent } from './awaitpayment/awaitpayment.component';
     ProfileComponent,
     ValidateComponent,
     BuyCreditsComponent,
-    AwaitPaymentComponent,
+    PaymentResultComponent,
     UserTitleComponent],
   providers: [UserRepository]
 })
