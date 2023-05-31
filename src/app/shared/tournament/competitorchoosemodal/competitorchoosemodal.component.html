@@ -12,7 +12,7 @@
         <div *ngFor="let competitorList of competitorLists" class="card border-secondary"
             [ngClass]="{ 'border-0': competitorLists.length > 0 }">
 
-            <div *ngIf="competitorLists.length > 0" class="card-cat-header px-3">
+            <div *ngIf="competitorLists.length > 1 && competitorList.competitorItems.length > 0" class="card-cat-header px-3">
                 <div class="d-flex justify-content-between">
                     <h5 class="my-0">
                         <span class="fw-bold align-middle">{{competitorList.categoryName}}</span>

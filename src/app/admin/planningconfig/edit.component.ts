@@ -60,7 +60,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         perPoule: FormControl<boolean>,
         selfReferee: FormControl<boolean>,
         selfRefereeSamePoule: FormControl<boolean>,
-        simulSelfReferee: FormControl<boolean>,
+        nrOfSimSelfRefs: FormControl<number>,
         manual: FormControl<boolean>,
       }>*/;
 
@@ -135,8 +135,14 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             }),
             perPoule: new FormControl(false, { nonNullable: true }),
             selfReferee: new FormControl(false, { nonNullable: true }),
-            selfRefereeSamePoule: new FormControl(false, { nonNullable: true }),
-            simulSelfReferee: new FormControl(false, { nonNullable: true }),
+            selfRefereeSamePoule: new FormControl(false, { nonNullable: true }),/*
+            nrOfSimSelfRefs: new FormControl(0, { nonNullable: true, validators: 
+                [
+                    Validators.required,
+                    Validators.min(1),
+                    Validators.max(this.validations.maxMinutes)
+                ] 
+            }),*/
             manual: new FormControl(false, { nonNullable: true }),
         });
     }
@@ -254,7 +260,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     // }
 
     changeSelfReferee(selfReferee: boolean) {
-        // console.log(selfReferee);
+        // this.typedForm.controls.nrOfSimSelfRefs.setValue(selfReferee ? 1 : 0);
+
         const shownNrOfBatchGamesAlert = localStorage.getItem('shownNrOfBatchGamesAlert');
         if (shownNrOfBatchGamesAlert === null) {
             localStorage.setItem('shownNrOfBatchGamesAlert', '1');
@@ -294,7 +301,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         const selfRefee = this.getSelfReferee(json.selfReferee);
         this.typedForm.controls.selfReferee.setValue(selfRefee !== SelfReferee.Disabled);
         this.typedForm.controls.selfRefereeSamePoule.setValue(selfRefee === SelfReferee.SamePoule);
-        this.typedForm.controls.simulSelfReferee.setValue(selfRefee === SelfReferee.SamePoule);
+        // const nrOfSimSelfRefs = selfRefee === SelfReferee.Disabled ? 0 : json.nrOfSimSelfRefs;
+        // this.typedForm.controls.nrOfSimSelfRefs.setValue(nrOfSimSelfRefs);
 
         Object.keys(this.typedForm.controls).forEach(key => {
             const control = this.typedForm.controls[key];
@@ -305,6 +313,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     private formToJson(): JsonPlanningConfig {
         const strategy = this.typedForm.controls.strategyRandomly.value ? GamePlaceStrategy.RandomlyAssigned : GamePlaceStrategy.EquallyAssigned;
+        const noSelfReferee = this.typedForm.controls.selfReferee.disabled || !this.typedForm.value['selfReferee'];
         return {
             id: 0,
             editMode: this.typedForm.controls.manual.value ? PlanningEditMode.Manual : PlanningEditMode.Auto,
@@ -316,8 +325,9 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             minutesBetweenGames: this.typedForm.controls.minutesBetweenGames.value,
             minutesAfter: this.typedForm.controls.minutesAfter.value,
             perPoule: this.typedForm.controls.perPoule.value,
-            selfReferee: (this.typedForm.controls.selfReferee.disabled || !this.typedForm.value['selfReferee']) ? SelfReferee.Disabled :
-                (this.typedForm.value['selfRefereeSamePoule'] ? SelfReferee.SamePoule : SelfReferee.OtherPoules)
+            selfReferee: noSelfReferee ? SelfReferee.Disabled :
+                (this.typedForm.value['selfRefereeSamePoule'] ? SelfReferee.SamePoule : SelfReferee.OtherPoules),
+            nrOfSimSelfRefs: noSelfReferee ? 0 : 1
         };
     }
 
@@ -406,7 +416,10 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     showRandomGamePlaceStrategy(): boolean {
         const againstGpps = this.getAgainstGppSportVariants(this.startRoundNumber);
-        return againstGpps.every((againstGpp: AgainstGpp): boolean => {
+        if( againstGpps.length === 0) {
+            return false;
+        }
+        return  againstGpps.every((againstGpp: AgainstGpp): boolean => {
             return againstGpp.hasMultipleSidePlaces();
         });
     }

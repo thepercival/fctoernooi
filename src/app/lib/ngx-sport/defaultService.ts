@@ -100,7 +100,8 @@ export class DefaultService {
             minutesBetweenGames: DefaultService.MinutesBetweenGames,
             minutesAfter: DefaultService.MinutesAfter,
             perPoule: false,
-            selfReferee: SelfReferee.Disabled
+            selfReferee: SelfReferee.Disabled,
+            nrOfSimSelfRefs: 0
         }
     }
 

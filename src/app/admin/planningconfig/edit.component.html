@@ -108,17 +108,16 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="!typedForm.value['manual'] && typedForm.value['selfReferee']"
+<!--                <div *ngIf="!typedForm.value['manual'] && typedForm.value['selfReferee']"
                     class="row mb-3">
-                    <label for="simulSelfReferee" class="offset-1 col-6 col-form-label">per deelnemer meerdere scheidsrechters tegelijk</label>
+                    <label for="nrOfSimSelfRefs" class="offset-1 col-6 col-form-label">aantal tegelijk per deelnemer</label>
                     <div class="col-5">
-                        <div class="form-check form-switch">
-                            <input type="checkbox" class="form-check-input" id="simulSelfReferee"
-                                formControlName="simulSelfReferee">
-                            <label class="form-check-label" for="simulSelfReferee"></label>
-                        </div>
+                        <input type="number"
+                        [ngClass]="{ 'is-invalid': typedForm.controls.nrOfSimSelfRefs.invalid, 'is-valid': typedForm.controls.nrOfSimSelfRefs.valid}"
+                        formControlName="nrOfSimSelfRefs" maxlength="1" class="form-control" />                       
                     </div>
                 </div>
+-->
                 <div *ngIf="!typedForm.value['manual'] && typedForm.value['selfReferee'] && bothSelfRefereeOptionsAvailable()"
                     class="row mb-3">
                     <label for="selfRefereeSamePoule" class="offset-1 col-6 col-form-label">scheidsrechter in eigen poule</label>
