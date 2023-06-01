@@ -1,33 +1,57 @@
 <div class="row justify-content-center g-0">
   <div class="col-sm-12 col-md-10 col-lg-8">
+    <h1>publieke toernooien</h1>   
 
-    <div class="d-flex justify-content-between">
-      <h1>publieke toernooien</h1>
-      <button *ngIf="!searchFilterActive" type="button" class="btn btn-secondary" (click)="enableSearchFilter()"
-        aria-label="search tournaments">
-        <fa-icon [icon]="['fas', 'search']"></fa-icon>
-        <span class="ms-1 d-none d-sm-inline"> zoeken</span>
-      </button>
-      <button *ngIf="searchFilterActive" type="button" class="btn btn-secondary" (click)="disableSearchFilter()"
-        aria-label="reset search tournaments">
-        <fa-icon class="mx-1 d-none d-sm-inline" [icon]="['fas', 'search']"></fa-icon>
-        <span>herstel</span>
-      </button>
-    </div>
-    <form *ngIf="searchFilterActive" onsubmit="false">
-      <input type="text" class="form-control form-control-search" #inputsearchname (keyup)="onSearchChanges()"
-        aria-labelledby="btn-search-tournaments" placeholder="zoek op toernooinaam">
+    <form *ngIf="!processing" onsubmit="false" [formGroup]="searchForm" novalidate>
+      <div class="container">
+        <div class="row">
+          <div class="col-2">
+            <label for="name" class="col-form-label">naam</label>
+          </div>
+          <div class="col-7">
+            <input type="text" class="form-control" (keyup)="onSearchChanges($event)"
+                placeholder="toernooinaam">
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col-2">
+            <label for="startDate" class="col-form-label">van</label>
+          </div>
+          <div class="col-4">
+            <div class="input-group input-group-date">
+              <input class="form-control"
+                [ngClass]="{ 'is-invalid': searchForm.controls.startDate.invalid, 'is-valid': searchForm.controls.startDate.valid }"
+                placeholder="yyyy-mm-dd" formControlName="startDate" ngbDatepicker #dStart="ngbDatepicker" required
+                container="body" (dateSelect)="search()">
+              <span class="input-group-text pointer" (click)="dStart.toggle()">
+                <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+              </span>
+            </div>
+          </div>
+        </div>     
+
+        <div class="row my-2">
+          <div class="col-2">
+            <label for="endDate" class="col-form-label">tot</label>
+          </div>
+          <div class="col-4">
+            <div class="input-group input-group-date">
+              <input class="form-control"
+                [ngClass]="{ 'is-invalid': searchForm.controls.endDate.invalid, 'is-valid': searchForm.controls.endDate.valid }"
+                placeholder="yyyy-mm-dd" formControlName="endDate" ngbDatepicker #dEnd="ngbDatepicker" required
+                container="body" (input)="search()">
+              <span class="input-group-text pointer" (click)="dEnd.toggle()">
+                <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+              </span>
+            </div>
+          </div>
+        </div>     
+      </div>
     </form>
-    <table *ngIf="!processing" class="table">
-      <tbody>
-        <tr *ngIf="!searchFilterActive" (click)="expandFutureDays()" class="pointer">
-          <td colspan="3" class="text-center">
-            <fa-icon [icon]="['fas', 'angle-double-down']" [rotate]="180"></fa-icon>
-            <span class="mx-3">meer latere</span>
-            <fa-icon [icon]="['fas', 'angle-double-down']" [rotate]="180"></fa-icon>
-          </td>
-        </tr>
 
+    <table *ngIf="!processingSearch" class="table mt-4">
+      <tbody>
         <tr class="pointer" (click)="linkToView(shell)" *ngFor="let shell of shells">
           <td *ngIf="inPast(shell.startDateTime)">
             <span
@@ -42,22 +66,11 @@
           </td>
           <td class="text-break">{{shell.name}}</td>
         </tr>
-
-        <tr *ngIf="!searchFilterActive" (click)="expandPastDays()" class="pointer">
-          <td colspan="3" class="text-center">
-            <fa-icon [icon]="['fas', 'angle-double-down']"></fa-icon>
-            <span class="mx-3">meer eerdere</span>
-            <fa-icon [icon]="['fas', 'angle-double-down']"></fa-icon>
-          </td>
-        </tr>
-
       </tbody>
     </table>
-    <h2 *ngIf="processing" class="text-center">
+
+    <h2 *ngIf="processingSearch" class="text-center">
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
-    <!-- <div
-      *ngIf="searchFilterActive && ( searchForm.value['filterName'] === undefined || searchForm.value['filterName'].length < 2)"
-      class="alert alert-info">voer minimaal 2 karakters in</div> -->
   </div>
 </div>

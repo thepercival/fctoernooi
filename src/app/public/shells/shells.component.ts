@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { FavoritesRepository } from '../../lib/favorites/repository';
@@ -6,28 +6,27 @@ import { TournamentShell } from '../../lib/tournament/shell';
 import { TournamentShellFilter, TournamentShellRepository } from '../../lib/tournament/shell/repository';
 import { IAlert, IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-tournament-public-shells',
   templateUrl: './shells.component.html',
   styleUrls: ['./shells.component.scss']
 })
-export class PublicShellsComponent implements AfterViewInit{
+export class PublicShellsComponent implements OnInit{
 
-  @ViewChild('inputsearchname') private searchElementRef: ElementRef | undefined;
+  public searchForm: FormGroup;/*<{
+    name: FormControl<string>,
+    startDate: FormControl<string>,
+    endDate: FormControl<string>,
+  }>;*/
 
   public shells: TournamentShell[] = [];
-  public showingFuture = false;
   public processing = true;
-  public searchFilterActive = false;
-  public searchFilterName: string = '';
-  public hasSearched = false;
+  public processingSearch = false;
   public alert: IAlert | undefined;
 
-  private defaultHourRange: HourRange = {
-    start: -4, end: 168
-  };
-  private hourRange!: HourRange;
   private linethroughDate: Date;
 
   constructor(
@@ -38,116 +37,93 @@ export class PublicShellsComponent implements AfterViewInit{
     globalEventsManager: GlobalEventsManager
   ) {
     this.linethroughDate = new Date();
-    this.linethroughDate.setHours(this.linethroughDate.getHours() + this.defaultHourRange.start);
-    globalEventsManager.showFooter.emit(true);
-  }
+    this.linethroughDate.setHours(this.linethroughDate.getHours() + 4);
 
-  ngAfterViewInit() {
-    this.disableSearchFilter();
-  }
-
-  disableSearchFilter() {
-    this.searchFilterActive = false;
-    this.shells = [];
-    this.hourRange = { start: this.defaultHourRange.start, end: this.defaultHourRange.start };
-    // this.searchForm.controls.filterName.setValue(undefined);
-    this.addToPublicShells(PastFuture.Future, this.defaultHourRange.end - this.defaultHourRange.start);
-  }
-
-  expandPastDays() {
-    const pastHoursToAdd = this.hourRange.start === this.defaultHourRange.start
-      ? this.defaultHourRange.start + this.defaultHourRange.end : -this.hourRange.start;
-    this.addToPublicShells(PastFuture.Past, pastHoursToAdd);
-  }
-
-  expandFutureDays() {
-    this.addToPublicShells(PastFuture.Future, this.hourRange.end);
-  }
-
-  private extendHourRange(pastFuture: number, hoursToAdd: number): TournamentShellFilter {
-    const startDate = new Date(), endDate = new Date();
-    if (pastFuture === PastFuture.Past) {
-      endDate.setHours(endDate.getHours() + this.hourRange.start);
-      this.hourRange.start -= hoursToAdd;
-      startDate.setHours(startDate.getHours() + this.hourRange.start);
-    } else if (pastFuture === PastFuture.Future) {
-      startDate.setHours(startDate.getHours() + this.hourRange.end);
-      this.hourRange.end += hoursToAdd;
-      endDate.setHours(endDate.getHours() + this.hourRange.end);
-    }
-    return this.getSearchFilter(startDate, endDate, undefined);
-  }
-
-  private getSearchFilter(startDate: Date | undefined, endDate: Date | undefined, name: string | undefined): TournamentShellFilter {
-    return { startDate: startDate, endDate: endDate, name: name };
-  }
-
-  enableSearchFilter() {
-    this.searchFilterActive = true;
-    setTimeout(() => { // this will make the execution after the above boolean has changed
-      if (this.searchElementRef) {
-        this.searchElementRef.nativeElement.scrollIntoView(true);
-        this.searchElementRef.nativeElement.focus();
-      }
-    }, 0);
-    this.shells = [];
-  }
-
-  changeSearchFilterName(searchFilterName: string) {
-    if (searchFilterName.length < 2) {
-      return;
-    }
-    this.processing = true;
-    const searchFilter = this.getSearchFilter(undefined, undefined, searchFilterName);
-    this.tournamentShellRepos.getObjects(searchFilter)
-      .subscribe({
-        next: (shellsRes: TournamentShell[]) => {
-          this.shells = shellsRes;
-          this.processing = false;
-        },
-        error: (e) => {
-          this.setAlert(IAlertType.Danger, e); this.processing = false;
-        }
-      });
-  }
-
-  addToPublicShells(pastFuture: PastFuture, hoursToAdd: number) {
-    this.processing = true;
-    const searchFilter = this.extendHourRange(pastFuture, hoursToAdd);
-    this.tournamentShellRepos.getObjects(searchFilter)
-      .subscribe({
-        next: (shellsRes: TournamentShell[]) => {
-          this.sortShellsByDateDesc(shellsRes);
-          if (pastFuture === PastFuture.Past) {            
-            this.shells = this.shells.concat(shellsRes);
-          } else if (pastFuture === PastFuture.Future) {            
-            this.shells = shellsRes.concat(this.shells);
-          }
-          // this.showingFuture = (futureDate === undefined);
-          this.processing = false;
-        },
-        error: (e) => {
-          this.setAlert(IAlertType.Danger, e); this.processing = false;
-        }
-      });
-  }
-
-  onSearchChanges(): void {
-    if (this.searchElementRef) {
-      this.changeSearchFilterName(this.searchElementRef.nativeElement.value);
-    }
-  }
-
-  protected sortShellsByDateDesc(shells: TournamentShell[]) {
-    shells.sort((ts1, ts2) => {
-      return (ts1.startDateTime < ts2.startDateTime ? 1 : -1);
+    this.searchForm = new FormGroup({
+      name: new FormControl('', { nonNullable: true }),
+      startDate: new FormControl('', { nonNullable: true }),
+      endDate: new FormControl('', { nonNullable: true }),
     });
+
+    globalEventsManager.showFooter.emit(true);
+  }  
+
+  ngOnInit() {
+    const startDate = new Date();
+    startDate.setHours(0);
+    startDate.setMinutes(0);
+
+    const endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + 7);
+
+    this.setDate(this.searchForm.controls.startDate, startDate);
+    this.setDate(this.searchForm.controls.endDate, endDate);
+    this.processing = false;
+    this.search();
+  }
+
+  dateStructToDate(dateStruct: NgbDateStruct): Date {
+    return new Date(
+      dateStruct.year,
+      dateStruct.month - 1,
+      dateStruct.day
+    );
+}
+
+  private getSearchFilterFromForm(name?: string): TournamentShellFilter {
+    const filter = { 
+      name: this.searchForm.controls.name.value,
+      startDate: this.getDate(this.searchForm.controls.startDate), 
+      endDate: this.getDate(this.searchForm.controls.endDate)
+    };
+    if( name !== undefined) {
+      filter.name = name;
+    }
+    return filter;
+  }
+
+  getDate(dateFormControl: AbstractControl): Date {
+    return new Date(
+        dateFormControl.value.year,
+        dateFormControl.value.month - 1,
+        dateFormControl.value.day
+    );
+  }
+
+  setDate(dateFormControl: AbstractControl, date: Date) {
+    dateFormControl.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
+  }
+
+  search(name?: string) {
+    
+    this.processingSearch = true;
+    const searchFilter = this.getSearchFilterFromForm(name);
+    this.tournamentShellRepos.getObjects(searchFilter)
+      .subscribe({
+        next: (shellsRes: TournamentShell[]) => {
+          shellsRes.sort((ts1: TournamentShell, ts2: TournamentShell) => {
+            return (ts1.startDateTime > ts2.startDateTime ? 1 : -1);
+          });
+          this.shells = shellsRes;
+          this.processingSearch = false;
+        },
+        error: (e) => {
+          this.setAlert(IAlertType.Danger, e); this.processingSearch = false;
+        }
+      });
+  }
+
+
+  onSearchChanges(nativeElement: any): void {
+    console.log(nativeElement);
+    if (nativeElement) {
+      this.search(nativeElement.target.value);
+    }
   }
 
   linkToView(shell: TournamentShell) {
     this.processing = true;
     const suffix = this.favoritesRepos.hasObject(shell.tournamentId) ? '' : '/favorites';
-    // console.log(shell.tournamentId, this.favoritesRepos.hasObject(shell.tournamentId));
     this.router.navigate(['/public' + suffix, shell.tournamentId]);
   }
 
@@ -158,13 +134,4 @@ export class PublicShellsComponent implements AfterViewInit{
   inPast(date: Date): boolean {
     return this.linethroughDate.getTime() > date.getTime();
   }
-}
-
-export enum PastFuture {
-  Future = 1, Past = 2
-}
-
-interface HourRange {
-  start: number;
-  end: number;
 }
