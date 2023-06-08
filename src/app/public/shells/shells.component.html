@@ -9,7 +9,7 @@
             <label for="name" class="col-form-label">naam</label>
           </div>
           <div class="col-7">
-            <input type="text" class="form-control" (keyup)="onSearchChanges($event)"
+            <input type="text" class="form-control" (keyup)="onSearchNameChanges($event)"
                 placeholder="toernooinaam">
           </div>
         </div>
@@ -23,7 +23,7 @@
               <input class="form-control"
                 [ngClass]="{ 'is-invalid': searchForm.controls.startDate.invalid, 'is-valid': searchForm.controls.startDate.valid }"
                 placeholder="yyyy-mm-dd" formControlName="startDate" ngbDatepicker #dStart="ngbDatepicker" required
-                container="body" (dateSelect)="search()">
+                container="body" (dateSelect)="onSearchDateChanges()">
               <span class="input-group-text pointer" (click)="dStart.toggle()">
                 <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
               </span>
@@ -40,7 +40,7 @@
               <input class="form-control"
                 [ngClass]="{ 'is-invalid': searchForm.controls.endDate.invalid, 'is-valid': searchForm.controls.endDate.valid }"
                 placeholder="yyyy-mm-dd" formControlName="endDate" ngbDatepicker #dEnd="ngbDatepicker" required
-                container="body" (input)="search()">
+                container="body" (input)="onSearchDateChanges()">
               <span class="input-group-text pointer" (click)="dEnd.toggle()">
                 <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
               </span>

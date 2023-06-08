@@ -7,7 +7,7 @@
         <!-- right -->
         <div *ngIf="!processing" class="form-check form-switch">
             <input type="checkbox" class="form-check-input" id="role-{{role.role}}"
-                [checked]="role.authorization.hasRoles(role.role)" (change)="toggle()" [disabled]="disabled">
+                [checked]="role.authorization.hasRoles(role.role)"   [disabled]="disabled">
             <label class="form-check-label" for="role-{{role.role}}"></label>
         </div>
         <fa-icon class="my-2 me-2" *ngIf="processing" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>

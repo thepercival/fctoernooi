@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../repository';
-import { AgainstGpp, AgainstH2h, Competition, CompetitionSport, CompetitionSportMapper, CompetitionSportService, JsonCompetitionSport, JsonField, PointsCalculation, SportMapper, Structure } from 'ngx-sport';
+import { AgainstGpp, AgainstH2h, Competition, CompetitionSport, CompetitionSportEditor, CompetitionSportMapper, JsonCompetitionSport, JsonField, PointsCalculation, SportMapper, Structure } from 'ngx-sport';
 import { Tournament } from '../../tournament';
 import { SportWithFields } from '../../../admin/sport/createSportWithFields.component';
 import { DefaultService } from '../defaultService';
@@ -15,7 +15,7 @@ import { DefaultService } from '../defaultService';
 export class CompetitionSportRepository extends APIRepository {
 
     constructor(
-        private service: CompetitionSportService,
+        private editor: CompetitionSportEditor,
         private mapper: CompetitionSportMapper,
         private sportMapper: SportMapper,
         private defaultService: DefaultService,
@@ -48,7 +48,7 @@ export class CompetitionSportRepository extends APIRepository {
 
     protected add(jsonCompetitionSport: JsonCompetitionSport, competition: Competition, structure: Structure) {
         const competitionSport = this.mapper.toObject(jsonCompetitionSport, competition, true);
-        this.service.addToStructure(competitionSport, structure);
+        this.editor.addToStructure(competitionSport, structure);
     }
 
     removeObject(competitionSport: CompetitionSport, tournament: Tournament, structure: Structure): Observable<void> {
@@ -67,7 +67,7 @@ export class CompetitionSportRepository extends APIRepository {
     }
 
     protected remove(competitionSport: CompetitionSport, structure: Structure) {
-        this.service.removeFromStructure(competitionSport, structure);
+        this.editor.removeFromStructure(competitionSport, structure);
         const competitionSports = competitionSport.getCompetition().getSports();
         competitionSports.splice(competitionSports.indexOf(competitionSport), 1);
     }

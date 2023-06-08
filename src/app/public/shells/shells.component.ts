@@ -114,11 +114,17 @@ export class PublicShellsComponent implements OnInit{
   }
 
 
-  onSearchChanges(nativeElement: any): void {
-    console.log(nativeElement);
+  onSearchNameChanges(nativeElement: any): void {
+    // console.log(nativeElement);
     if (nativeElement) {
+      this.searchForm.controls.name.setValue(nativeElement.target.value);
       this.search(nativeElement.target.value);
     }
+  }
+
+  onSearchDateChanges(): void {
+    console.log(this.searchForm.controls.name.value);
+    this.search(this.searchForm.controls.name.value);
   }
 
   linkToView(shell: TournamentShell) {

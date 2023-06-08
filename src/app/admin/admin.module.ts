@@ -30,7 +30,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { ClipboardModule } from 'ngx-clipboard';
 import {
-  CompetitionSportService,
+  CompetitionSportEditor,
   ScoreConfigService,
 } from 'ngx-sport';
 
@@ -139,7 +139,7 @@ import { SportIconComponent } from '../shared/tournament/sport/icon.component';
     TournamentPropertiesComponent,
   ],
   providers: [
-    CompetitionSportService,
+    CompetitionSportEditor,
     CSSService,
     ScoreConfigService,
     SportIconComponent

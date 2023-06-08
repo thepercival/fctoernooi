@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Competitor, StructureEditor, Category, StructureNameService } from 'ngx-sport';
 import { StructureAction } from '../../../admin/structure/edit.component';
@@ -11,7 +11,7 @@ import { NameModalComponent } from '../namemodal/namemodal.component';
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.scss']
 })
-export class StructureCategoryComponent implements OnInit {
+export class StructureCategoryComponent  {
   @Input() structureEditor!: StructureEditor;
   @Input() category!: Category;
   @Input() showHeader!: boolean;
@@ -29,10 +29,6 @@ export class StructureCategoryComponent implements OnInit {
   public canEdit: boolean = false;
 
   constructor(public cssService: CSSService, private modalService: NgbModal) {
-
-  }
-
-  ngOnInit() {
 
   }
 

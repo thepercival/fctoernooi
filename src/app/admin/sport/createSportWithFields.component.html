@@ -57,7 +57,7 @@
     </label>
     <div class="col-8">
       <div class="form-control form-check form-switch">
-        <input type="checkbox" class="form-check-input" id="mixed" formControlName="mixed">
+        <input type="checkbox" class="form-check-input" id="mixed" (change)="mixedChanged(typedForm)" formControlName="mixed">
         <label class="form-check-label" for="mixed"></label>
       </div>
     </div>

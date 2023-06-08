@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 import { NameService, QualifyGroup, SingleQualifyRule, QualifyTarget, Round, StructureEditor, StructureNameService } from 'ngx-sport';
 
 import { IAlert, IAlertType } from '../../common/alert';
@@ -6,12 +6,13 @@ import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
 import { facStructure } from '../icon/icons';
 import { CSSService } from '../../common/cssservice';
 import { StructureAction, StructureActionName } from '../../../admin/structure/edit.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
     selector: 'app-tournament-structurequalify',
     templateUrl: './qualify.component.html',
-    styleUrls: ['./qualify.component.css']
+    styleUrls: ['./qualify.component.scss']
 })
 export class StructureQualifyComponent {
     @Input() structureEditor!: StructureEditor;
@@ -23,6 +24,7 @@ export class StructureQualifyComponent {
     public targetCollapsed: TargetMap = {};
 
     constructor(
+        private modalService: NgbModal,
         public cssService: CSSService) {
         this.resetAlert();
         this.targetCollapsed[QualifyTarget.Winners] = true;
@@ -69,6 +71,7 @@ export class StructureQualifyComponent {
         }
         try {
             this.structureEditor.validate(
+                borderQualifyGroup.getChildRound().getCompetition(),
                 borderQualifyGroup.getChildRound().getNrOfPlaces() + 1,
                 borderQualifyGroup.getChildRound().getPoules().length
             );
@@ -126,7 +129,8 @@ export class StructureQualifyComponent {
     splitQualifyGroupFrom(singleRule: SingleQualifyRule) {
         this.resetAlert();
         try {
-            this.structureEditor.splitQualifyGroupFrom(singleRule.getGroup(), singleRule);
+            console.log(singleRule.getGroup());
+            this.structureEditor.splitQualifyGroupFrom(singleRule.getGroup(), singleRule);            
             this.addAction.emit({
                 pathNode: this.parentRound.getPathNode(),
                 name: StructureActionName.SplitQualifyGroupsFrom,
@@ -180,6 +184,15 @@ export class StructureQualifyComponent {
         });
     }
 
+    //
+    // Het zou dan worden  
+    // "Valencia Ladies"
+    // 9 x L
+    // 2 x XL
+    // "Valencia"
+    // 1 x 2XL
+    // Jim trainingsshirt
+    // 1 x 4XL
     isQualifyGroupMergableWithNext(qualifyGroup: QualifyGroup): boolean {
         const next = qualifyGroup.getNext();
         if (next === undefined) {
@@ -189,6 +202,7 @@ export class StructureQualifyComponent {
     }
 
     isQualifyGroupSplittable(qualifyGroup: QualifyGroup): boolean {
+        //console.log('isQualifyGroupSplittable',qualifyGroup);
         let singleRule: SingleQualifyRule | undefined = qualifyGroup.getFirstSingleRule();
         while (singleRule !== undefined) {
             if (this.structureEditor.isQualifyGroupSplittableAt(singleRule)) {
@@ -214,6 +228,40 @@ export class StructureQualifyComponent {
 
     getAddQualifierBtnClass(target: QualifyTarget): string {
         return this.canAddQualifier(target) ? 'primary' : 'secondary';
+    }
+
+    isQualifyTargetBtnActive(target: QualifyTarget): boolean {
+        if( this.areSomeQualifyGroupsEditable(target) ) {
+            return true;
+        }
+        const nrOfPoules = this.parentRound.getQualifyGroups(target).
+            reduce((sum: number, current: QualifyGroup): number => {
+                const nrOfPoules = current.getChildRound().getPoules().length;
+                return sum + nrOfPoules
+            }, 0);
+            
+        return nrOfPoules  > 1;
+    }
+    getBlinkQualifierBtnClass(target: QualifyTarget): string {
+        const blinkInfoViewed = this.getQualifyInfoViewedFromLocalStorage();
+        return (!blinkInfoViewed && this.isQualifyTargetBtnActive(target) ) ? 'blink' : '';
+    }
+    
+    getQualifyInfoViewedFromLocalStorage(): boolean {
+        return localStorage.getItem('qualify-info-viewed') !== null;
+    }
+
+    showQualifGroupOptionsModal(modalContent: TemplateRef<any>): void {
+       if( !this.getQualifyInfoViewedFromLocalStorage() ) {
+        localStorage.setItem('qualify-info-viewed', '1')
+       }
+
+        const activeModal = this.modalService.open(modalContent);
+        activeModal.result.then((result) => {
+          // this.linkToPlanningConfig();
+        }, (reason) => { });
+      
+
     }
 
     resetAlert(): void {

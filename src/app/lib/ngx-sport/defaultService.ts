@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AgainstGpp, AgainstH2h, AgainstRuleSet, AllInOneGame, CompetitionSportService, GameMode, GamePlaceStrategy, JsonPlanningConfig, JsonSport, PlaceRanges, PlanningEditMode, PointsCalculation, PouleStructure, SelfReferee, Single, Sport, VoetbalRange } from "ngx-sport";
+import { AgainstGpp, AgainstH2h, AgainstRuleSet, AllInOneGame, CompetitionSportGetter, GameMode, GamePlaceStrategy, JsonPlanningConfig, JsonSport, PlaceRanges, PlanningEditMode, PointsCalculation, PouleStructure, SelfReferee, Single, Sport, VoetbalRange } from "ngx-sport";
 import { CustomSportId } from "./sport/custom";
 
 @Injectable({
@@ -13,7 +13,7 @@ export class DefaultService {
     static readonly MinutesAfter: number = 5;
     static readonly AgainstRuleSet: AgainstRuleSet = AgainstRuleSet.DiffFirst;
 
-    constructor(private competitionSportService: CompetitionSportService) {
+    constructor() {
     }
 
     getJsonSport(name: string): JsonSport {
@@ -106,7 +106,7 @@ export class DefaultService {
     }
 
     public getPlaceRanges(sportVariants: (Single | AgainstH2h | AgainstGpp | AllInOneGame)[]): PlaceRanges {
-        const minNrOfPlacesPerPoule = this.competitionSportService.getMinNrOfPlacesPerPoule(sportVariants);
+        const minNrOfPlacesPerPoule = (new CompetitionSportGetter()).getMinNrOfPlacesPerPoule(sportVariants);
         const maxNrOfPlacesPerPouleSmall = 20;
         const maxNrOfPlacesPerPouleLarge = 12;
         const minNrOfPlacesPerRound = minNrOfPlacesPerPoule;
@@ -119,7 +119,7 @@ export class DefaultService {
     }
 
     public getPouleStructure(sportVariants: (Single | AgainstH2h | AgainstGpp | AllInOneGame)[]): PouleStructure {
-        let nrOfPlaces = this.competitionSportService.getMinNrOfPlacesPerPoule(sportVariants);
+        let nrOfPlaces = (new CompetitionSportGetter()).getMinNrOfPlacesPerPoule(sportVariants);
         if (nrOfPlaces < 5) {
             nrOfPlaces = 5;
         }

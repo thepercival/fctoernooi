@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
     AgainstVariant,
     CompetitionSport,
-    CompetitionSportService,
     Sport,
 } from 'ngx-sport';
 import { CSSService } from '../../shared/common/cssservice';
@@ -38,7 +37,6 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
         favRepository: FavoritesRepository,
         public cssService: CSSService,
         private translate: TranslateFieldService,
-        public competitionSportService: CompetitionSportService,
         private myNavigation: MyNavigation
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);

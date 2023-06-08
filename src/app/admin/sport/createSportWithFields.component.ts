@@ -102,6 +102,16 @@ export class CreateSportWithFieldsComponent implements OnInit {
         this.gameAmountRange = this.defaultService.getGameAmountRange(gameMode);
     }
 
+    mixedChanged(typedForm: FormGroup): void {
+        if( typedForm.controls.mixed.value ) {
+            typedForm.controls.nrOfHomePlaces.setValue(2);
+            typedForm.controls.nrOfAwayPlaces.setValue(2);            
+        } else if( this.sport !== undefined) {
+            typedForm.controls.nrOfHomePlaces.setValue(this.sport.getDefaultNrOfSidePlaces());
+            typedForm.controls.nrOfAwayPlaces.setValue(this.sport.getDefaultNrOfSidePlaces());
+        }        
+    }
+
     getFieldsDescription(): string {
         return this.translateField.getFieldNamePlural(this.sport?.getCustomId());
     }

@@ -9,13 +9,12 @@
 </p>
 <ng-template let-target="target" #modifyToPlaces>
   <div class=" btn-group-vertical" role="group" aria-label="aantal">
-    <button type="button" [disabled]="!areSomeQualifyGroupsEditable(target)"
-      class="btn {{getQualifyGroupBtnClass(target)}} d-flex justify-content-between"
-      (click)="targetCollapsed[target] = !targetCollapsed[target]">
+    <button type="button" [disabled]="!isQualifyTargetBtnActive(target)"
+      class="btn {{getBlinkQualifierBtnClass(target)}} {{getQualifyGroupBtnClass(target)}} d-flex justify-content-between"
+      (click)="showQualifGroupOptionsModal(qualifyModal)">
       <ng-container *ngIf="areSomeQualifyGroupsEditable(target); else showReadOnly">
-        <span>kruis fin.</span>
-        <fa-icon *ngIf="targetCollapsed[target]" [icon]="['fas', 'pencil-alt']" class="ms-1"></fa-icon>
-        <fa-icon *ngIf="!targetCollapsed[target]" [icon]="['fas', 'plus']" class="rotate-45 ms-1"></fa-icon>
+        <span>kwalificatie</span>
+        <fa-icon *ngIf="targetCollapsed[target]" [icon]="['fas', 'cogs']" class="ms-1"></fa-icon>
       </ng-container>
       <ng-template #showReadOnly>
         <span>{{structureNameService.getQualifyTargetDescription(target,true)}}</span>
@@ -23,11 +22,7 @@
           {{parentRound.getNrOfPlacesChildren(target)}}</span>
       </ng-template>
     </button>
-    <div class="btn-group-vertical d-flex flex-column {{getTargetDirectionClass(target)}}" role="group"
-      *ngIf="areSomeQualifyGroupsEditable(target) && !targetCollapsed[target]">
-      <ng-container *ngTemplateOutlet="editQualifyGroups;context:{$implicit: target}">
-      </ng-container>
-    </div>
+    
     <div class="btn-group" role="group" aria-label="aantal">
       <button [disabled]="!canRemoveQualifier(target)" type="button"
         class="btn btn-outline-{{getRemoveQualifierBtnClass(target)}}" (click)="removeQualifier(target)">
@@ -69,3 +64,18 @@
   <ng-container *ngIf="singleRule.getNext()" [ngTemplateOutlet]="editSingleRule"
     [ngTemplateOutletContext]="{singleRule:singleRule.getNext()}">
   </ng-container>
+</ng-template>
+
+  <ng-template #qualifyModal let-modal let-target="target">
+    <div class="modal-header">
+      <h4 class="modal-title">kwalificatie opties</h4>
+      <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="btn-group-vertical d-flex flex-column {{getTargetDirectionClass(target)}}" role="group"
+        *ngIf="areSomeQualifyGroupsEditable(target) && !targetCollapsed[target]">
+        <ng-container *ngTemplateOutlet="editQualifyGroups;context:{$implicit: target}">
+        </ng-container>
+      </div>
+    </div>
+  </ng-template>

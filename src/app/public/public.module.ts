@@ -11,7 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import {
   ScoreConfigService,
-  CompetitionSportService,
+  CompetitionSportEditor,
   AgainstQualifyConfigService,
   GameAmountConfigService
 } from 'ngx-sport';
@@ -60,7 +60,7 @@ import { LockerRoomsViewComponent } from './lockerrooms/lockerrooms.component';
     LockerRoomsViewComponent
   ],
   providers: [
-    CompetitionSportService,
+    CompetitionSportEditor,
     CSSService,
     GameAmountConfigService,
     AgainstQualifyConfigService,
