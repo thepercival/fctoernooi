@@ -9,7 +9,7 @@ import { CSSService } from '../../common/cssservice';
   templateUrl: './round.component.html',
   styleUrls: ['./round.component.css']
 })
-export class StructureRoundComponent implements OnInit {
+export class StructureRoundComponent {
   @Input() structureEditor!: StructureEditor;
   @Input() round!: Round;
   @Input() editable: boolean = false;
@@ -25,9 +25,6 @@ export class StructureRoundComponent implements OnInit {
     this.resetAlert();
   }
 
-  ngOnInit() {
-  }
-
   arrangeAction(actionName: StructureActionName) {
     this.resetAlert();
     try {
@@ -38,7 +35,7 @@ export class StructureRoundComponent implements OnInit {
           this.structureEditor.removePouleFromRootRound(this.round);
         } catch (e: any) {
           console.log(e);
-          throw new Error('de poule kan niet verwijderd worden, pas de poules in de volgende ronde eerste aan');
+          throw new Error('de poule kan niet verwijderd worden, pas de poules in de eerst volgende ronde aan');
         }
       } else if (actionName === StructureActionName.AddPlaceToRootRound) {
         this.structureEditor.addPlaceToRootRound(this.round);

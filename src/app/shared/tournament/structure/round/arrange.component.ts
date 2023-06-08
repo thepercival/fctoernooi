@@ -40,7 +40,8 @@ export class StructureRoundArrangeComponent {
 
   canChange(delta: number): boolean {
     try {
-      this.structureEditor.validate(this.round.getNrOfPlaces(), this.round.getPoules().length + delta);
+      this.structureEditor.validate(
+        this.round.getCompetition(), this.round.getNrOfPlaces(), this.round.getPoules().length + delta);
       return true;
     } catch (e) {
       return false;
