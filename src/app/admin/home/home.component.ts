@@ -175,21 +175,31 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         return this.translate.getFieldNamePlural(sport?.getCustomId());
     }
 
-
-
     getNrOfLockerRoomsDescription(): string {
         const nrOfLockerRooms = this.tournament.getLockerRooms().length;
-        return nrOfLockerRooms + ' kleed-<br/>kamer' + (nrOfLockerRooms === 1 ? '' : 's');
+        let description = 'kleed-<br/>kamer';
+        if( nrOfLockerRooms > 0) {
+            description = nrOfLockerRooms + ' ' + description;
+        }
+        return description + (nrOfLockerRooms === 1 ? '' : 's');
     }
 
     getNrOfRefereesDescription(): string {
         const nrOfReferees = this.competition.getReferees().length;
-        return nrOfReferees + ' scheids-<br/>rechter' + (nrOfReferees === 1 ? '' : 's');
+        let description = 'scheids-<br/>rechter';
+        if( nrOfReferees > 0) {
+            description = nrOfReferees + ' ' + description;
+        }
+        return description + (nrOfReferees === 1 ? '' : 's');
     }
 
     getNrOfSponsorsDescription(): string {
         const nrOfSponsors = this.tournament.getSponsors().length;
-        return nrOfSponsors + ' sponsor' + (nrOfSponsors === 1 ? '' : 's');
+        let description = 'sponsor';
+        if( nrOfSponsors > 0) {
+            description = nrOfSponsors + ' ' + description;
+        }
+        return description + (nrOfSponsors === 1 ? '' : 's');
     }
 
     getPlanningBorderClass(): string {

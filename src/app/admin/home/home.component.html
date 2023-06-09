@@ -1,9 +1,7 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-12 col-lg-10">
-      <h2 class="text-center">
-        <fa-icon [icon]="['fas', 'cogs']"></fa-icon> opties
-      </h2>
+     
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
@@ -24,7 +22,7 @@
             </h5>
             <div *ngIf="competition.hasMultipleSports()" class="text-nowrap"><span>sporten</span></div>
             <div *ngIf="!competition.hasMultipleSports()" class="text-nowrap">
-              <span>sport</span><br />opties
+              <span>sport &</span><br />velden
             </div>
           </div>
         </div>
