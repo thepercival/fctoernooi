@@ -33,7 +33,7 @@ import { ScreenConfigsModalComponent } from './liveboard/screenconfigsmodal.comp
 import { SelectFavoritesComponent } from './favorites/select.component';
 import { FavoritesCategoryComponent } from './favorites/category.component';
 import { PublicShellsComponent } from './shells/shells.component';
-import { LockerRoomsViewComponent } from './lockerrooms/lockerrooms.component';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -56,8 +56,7 @@ import { LockerRoomsViewComponent } from './lockerrooms/lockerrooms.component';
     RankingViewComponent,
     FavoritesCategoryComponent,
     ScreenConfigsModalComponent,
-    PublicShellsComponent,
-    LockerRoomsViewComponent
+    PublicShellsComponent
   ],
   providers: [
     CompetitionSportEditor,

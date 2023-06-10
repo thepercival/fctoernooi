@@ -26,7 +26,7 @@ export class TournamentNavBarComponent {
   }
 
   get StructureScreen(): TournamentScreen { return TournamentScreen.Structure }
-  get LockerRoomsScreen(): TournamentScreen { return TournamentScreen.LockerRooms }
+  get HomeScreen(): TournamentScreen { return TournamentScreen.Home }
   get GamesScreen(): TournamentScreen { return TournamentScreen.Games }
   get RankingScreen(): TournamentScreen { return TournamentScreen.Ranking }
   get FavoritesScreen(): TournamentScreen { return TournamentScreen.Favorites }

@@ -12,6 +12,8 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
+import { LockerRoom } from '../../lib/lockerroom';
+import { TournamentCompetitor } from '../../lib/competitor';
 
 @Component({
     selector: 'app-tournament-select-favorites',
@@ -21,6 +23,8 @@ import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.
 export class SelectFavoritesComponent extends TournamentComponent implements OnInit {
     public favorites!: Favorites;
     public structureNameService!: StructureNameService;
+    public showLockerRoom = false;
+    public lockerRoomMap: Map<string, string> = new Map();
 
     @ViewChild('contentInfoModal', { static: true }) private contentInfoModal!: TemplateRef<any>;
 
@@ -47,17 +51,14 @@ export class SelectFavoritesComponent extends TournamentComponent implements OnI
             if (this.hasCompetitors() === false) {
                 this.router.navigate(['/public/games', this.tournament.getId()]);
             } else {
-                // toon modal 
-                // @TODO CDK =========>
-                // 1 wanneer nog geen cookie van dat toernooi, stuur dan naar favorites en laat een modal zijn
-                // dat ze een favoriet kunnen kiezen en dat onderaan de navigatie zit!
-
                 const shownNrOfBatchGamesAlert = localStorage.getItem('showSelectFavoriteModal' + this.tournament.getId());
                 if (shownNrOfBatchGamesAlert === null) {
                     localStorage.setItem('showSelectFavoriteModal' + this.tournament.getId(), '1');
                     this.openHelpModal(this.contentInfoModal);
                 }
             }
+            this.fillMap();
+            this.showLockerRoom = this.tournament.getLockerRooms().length > 0;
             this.processing = false;
         });
     }
@@ -93,6 +94,17 @@ export class SelectFavoritesComponent extends TournamentComponent implements OnI
         activeModal.result.then((result) => {
             //  this.linkToPlanningConfig();
         }, (reason) => { });
+    }
+
+    fillMap(): void {
+        const competitors = this.tournament.getCompetitors();
+        competitors.forEach((competitor: TournamentCompetitor) => {
+            const lockerRooms = this.tournament.getLockerRooms().filter((lockerRoom: LockerRoom): boolean => {
+                return lockerRoom.hasCompetitor(competitor);
+            });
+            const descr = lockerRooms.map(lockerRoom => lockerRoom.getName()).join(', ');
+            this.lockerRoomMap.set('comp-' + competitor.getId(), descr);
+        });        
     }
 
     navigateBack() {

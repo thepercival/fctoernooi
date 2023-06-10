@@ -1,10 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { AgainstRuleSet, Category, CompetitionSport, Competitor, Place, StartLocationMap, StructureNameService } from 'ngx-sport';
+import { Category, Competitor, Place, StartLocationMap, StructureNameService } from 'ngx-sport';
 import { AuthService } from '../../lib/auth/auth.service';
 import { TournamentMapper } from '../../lib/tournament/mapper';
 import { Favorites } from '../../lib/favorites';
-import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 import { TournamentCompetitor } from '../../lib/competitor';
@@ -18,6 +17,8 @@ export class FavoritesCategoryComponent implements OnInit {
     @Input() category!: Category;
     @Input() favorites!: Favorites;
     @Input() showHeader!: boolean;
+    @Input() showLockerRoom = false;
+    @Input() lockerRoomMap!: Map<string, string>;
     @Input() structureNameService!: StructureNameService;
 
     public placeCompetitorItems: PlaceCompetitorItem[] = [];
@@ -54,6 +55,11 @@ export class FavoritesCategoryComponent implements OnInit {
             }
         }
         this.favRepository.editObject(this.favorites);
+    }
+
+
+    getLockerRoomDescription(competitor: TournamentCompetitor): string {
+        return this.lockerRoomMap.get('comp-' + competitor.getId()) ?? '';
     }
 
     setPlaceCompetitorItems(map: StartLocationMap): void {

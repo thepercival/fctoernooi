@@ -2,10 +2,7 @@
   <div class="row justify-content-center">
     <div class="col-sm-10 col-md-8 col-lg-6">
 
-      <div class="d-flex justify-content-around mb-2">
-        <h2>
-          <fa-icon [icon]="['fas', 'star']"></fa-icon> favorieten
-        </h2>
+      <div class="d-flex justify-content-around mb-2">        
         <button *ngIf="!processing && !structure.hasSingleCategory()" type="button"
           class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
           (click)="openCategoriesChooseModal(structure)">
@@ -15,9 +12,6 @@
 
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
       <div *ngIf="!processing && hasCompetitors() && hasReferees()">
-        <div class="d-flex justify-content-between mb-2">
-          <h2>Instellen</h2>
-        </div>
         <ul ngbNav #nav="ngbNav" class="nav-tabs">
           <li [ngbNavItem]="1">
             <a ngbNavLink>
@@ -77,7 +71,8 @@
 <ng-template #competitors>
   <app-tournament-favorites-category *ngFor="let category of favoriteCategories" class="mx-auto"
     [showHeader]="favoriteCategories.length > 1" [category]="category" [favorites]="favorites"
-    [structureNameService]="structureNameService">
+    [structureNameService]="structureNameService" 
+    [showLockerRoom]="showLockerRoom" [lockerRoomMap]="lockerRoomMap">
   </app-tournament-favorites-category>
 </ng-template>
 

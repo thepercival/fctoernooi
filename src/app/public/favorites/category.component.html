@@ -14,6 +14,12 @@
 
       <table class="table">
         <tbody>
+          <tr>
+            <th>pl</th>
+            <th>naam</th>
+            <th><fa-icon [icon]="['fas', 'door-closed']"></fa-icon></th>
+            <th class="text-center"><fa-icon [icon]="['fas', 'star']"></fa-icon> </th>
+          </tr>
           <tr *ngFor="let placeCompetitor of placeCompetitorItems">
             <td>
               <span [innerHtml]="structureNameService.getPlaceFromName(placeCompetitor.place, false) | keepHtml"></span>
@@ -25,15 +31,10 @@
                 <span>{{placeCompetitor.competitor.getName()}}</span>
               </label>
             </td>
+            <td class="text-break">
+              <span *ngIf="placeCompetitor.competitor" class="">{{getLockerRoomDescription(placeCompetitor.competitor)}}</span>
+            </td>
             <td class="text-end">
-              <!-- <div *ngIf="placeCompetitor.competitor && processingItem !== placeCompetitor.place"
-                    class="pt-0 form-check form-switch col-form-label ps-0">
-                    <input type="checkbox" class="form-check-input"
-                      [checked]="favorites.hasCompetitor(placeCompetitor.competitor)"
-                      (change)="toggleFavoriteCompetitor(placeCompetitor.competitor)">
-                    <span class="custom-control-indicator"></span>
-                  </div> -->
-
               <div *ngIf="placeCompetitor.competitor" class="d-flex justify-content-end form-check form-switch">
                 <input type="checkbox" class="form-check-input" id="{{getId(placeCompetitor.competitor)}}"
                   [checked]="favorites.hasCompetitor(placeCompetitor.competitor)"
