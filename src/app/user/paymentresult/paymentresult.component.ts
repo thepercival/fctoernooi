@@ -35,7 +35,7 @@ export class PaymentResultComponent extends UserComponent implements OnInit, OnD
     public myNavigation: MyNavigation
   ) {
     super(route, router, userRepository, authService, globalEventsManager);
-    this.appErrorHandler = new AppErrorHandler();
+    this.appErrorHandler = new AppErrorHandler(router);
   }
 
   ngOnInit() {

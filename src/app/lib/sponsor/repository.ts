@@ -8,6 +8,7 @@ import { Sponsor } from '../sponsor';
 import { Tournament } from '../tournament';
 import { JsonSponsor } from './json';
 import { SponsorMapper } from './mapper';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -16,8 +17,9 @@ export class SponsorRepository extends APIRepository {
 
     constructor(
         private http: HttpClient,
-        private mapper: SponsorMapper) {
-        super();
+        private mapper: SponsorMapper,
+        router: Router) {
+        super(router);
     }
 
     getUrlpostfix(): string {

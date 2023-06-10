@@ -6,6 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import { PlanningConfigMapper, RoundNumber, JsonPlanningConfig, PlanningConfig } from 'ngx-sport';
 import { APIRepository } from '../../../repository';
 import { Tournament } from '../../../tournament';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -14,8 +15,9 @@ export class PlanningConfigRepository extends APIRepository {
 
     constructor(
         private planningConfigMapper: PlanningConfigMapper,
-        private http: HttpClient) {
-        super();
+        private http: HttpClient,
+        router: Router) {
+        super(router);
     }
 
     getUrl(tournament: Tournament, roundNumber: RoundNumber): string {

@@ -6,6 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import { APIRepository } from '../../repository';
 import { AgainstQualifyConfig, AgainstQualifyConfigMapper, JsonAgainstQualifyConfig, Round, CompetitionSportMapper, JsonCompetitionSport, AgainstQualifyConfigService } from 'ngx-sport';
 import { Tournament } from '../../tournament';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -16,8 +17,8 @@ export class AgainstQualifyConfigRepository extends APIRepository {
         private service: AgainstQualifyConfigService,
         private mapper: AgainstQualifyConfigMapper,
         private competitionSportMapper: CompetitionSportMapper,
-        private http: HttpClient) {
-        super();
+        private http: HttpClient, router: Router) {
+        super(router);
     }
 
     getUrlpostfix(): string {

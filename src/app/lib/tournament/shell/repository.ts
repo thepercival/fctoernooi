@@ -4,13 +4,14 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { APIRepository } from '../../repository';
 import { TournamentShell } from '../shell';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class TournamentShellRepository extends APIRepository {
 
     constructor(
-        private http: HttpClient) {
-        super();
+        private http: HttpClient, router: Router) {
+        super(router);
     }
 
     getUrlpostfix(withRole: boolean): string {

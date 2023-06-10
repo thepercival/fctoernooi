@@ -6,6 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import { APIRepository } from '../../repository';
 import { Referee, RefereeMapper, JsonReferee, Competition } from 'ngx-sport';
 import { Tournament } from '../../tournament';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -13,8 +14,8 @@ import { Tournament } from '../../tournament';
 export class RefereeRepository extends APIRepository {
 
     constructor(
-        private mapper: RefereeMapper, private http: HttpClient) {
-        super();
+        private mapper: RefereeMapper, private http: HttpClient, router: Router) {
+        super(router);
     }
 
     getUrlpostfix(): string {

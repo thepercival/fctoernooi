@@ -6,6 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import { Tournament } from '../tournament';
 import { APIRepository } from '../repository';
 import { TournamentMapper } from '../tournament/mapper';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -14,8 +15,8 @@ export class PdfRepository extends APIRepository {
 
     constructor(
         private http: HttpClient,
-        private mapper: TournamentMapper) {
-        super();
+        private router: Router) {
+        super(router);
     }
 
     getUrlpostfix(): string {

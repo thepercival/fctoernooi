@@ -6,6 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import { APIRepository } from '../repository';
 import { JsonUser, UserMapper } from '../user/mapper';
 import { User, UserId } from '../user';
+import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
@@ -13,8 +14,8 @@ export class AuthService extends APIRepository {
   // private userId: UserId | undefined;
   private authItem: JsonAuthItem | undefined;
 
-  constructor(private userMapper: UserMapper, private http: HttpClient) {
-    super();
+  constructor(private userMapper: UserMapper, private http: HttpClient, router: Router) {
+    super(router);
     const authStorageItem = localStorage.getItem('auth');
     const authItem = authStorageItem ? JSON.parse(authStorageItem) : undefined;
     authItem ? this.setAuthItem(authItem) : this.clearAuthItem();

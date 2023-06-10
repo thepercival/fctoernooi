@@ -98,7 +98,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
     this.resetAlert();
     this.scoreConfigService = new ScoreConfigService();
-    this.appErrorHandler = new AppErrorHandler();
+    this.appErrorHandler = new AppErrorHandler(router);
   }
 
   ngOnInit() {

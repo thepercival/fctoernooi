@@ -4,8 +4,9 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../repository';
-import { ScoreConfig, ScoreConfigMapper, JsonScoreConfig, Round, CompetitionSport, CompetitionSportMapper, JsonCompetitionSport, ScoreConfigService } from 'ngx-sport';
+import { ScoreConfig, ScoreConfigMapper, JsonScoreConfig, Round, CompetitionSportMapper, JsonCompetitionSport, ScoreConfigService } from 'ngx-sport';
 import { Tournament } from '../../tournament';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -16,8 +17,9 @@ export class ScoreConfigRepository extends APIRepository {
         private service: ScoreConfigService,
         private mapper: ScoreConfigMapper,
         private competitionSportMapper: CompetitionSportMapper,
-        private http: HttpClient) {
-        super();
+        private http: HttpClient,
+        router: Router) {
+        super(router);
     }
 
     getUrlpostfix(): string {

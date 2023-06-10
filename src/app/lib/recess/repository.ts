@@ -8,6 +8,7 @@ import { Recess } from '../recess';
 import { APIRepository } from '../repository';
 import { Tournament } from '../tournament';
 import { JsonRecess } from './json';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -15,8 +16,8 @@ import { JsonRecess } from './json';
 export class RecessRepository extends APIRepository {
 
     constructor(
-        private http: HttpClient) {
-        super();
+        private http: HttpClient, router: Router) {
+        super(router);
     }
 
     getUrlpostfix(): string {

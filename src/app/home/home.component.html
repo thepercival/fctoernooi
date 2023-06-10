@@ -1,9 +1,9 @@
 <div class="row justify-content-center g-0">
   <div class="col-sm-12 col-md-10 col-lg-8">
     <div class="mt-3">
-      <div *ngIf="alert" class="alert alert-{{alert.type}}">{{alert.message}}</div>
-      <div class="d-flex justify-content-between">
-        <h1 i18n="@@app.home.mytournaments">my tournaments</h1>
+      <div *ngIf="alert" class="alert alert-{{alert.type}} text-center">{{alert.message}}</div>
+      <div class="d-flex justify-content-{{authService.isLoggedIn() ? 'between' : 'center'}}">
+        <h1 *ngIf="authService.isLoggedIn()" i18n="@@app.home.mytournaments">my tournaments</h1>
         <button type="button" class="btn btn-primary" (click)="linkToNew()">
           toernooi opzetten
         </button>
@@ -33,16 +33,146 @@
       </button>
     </div>
 
-    <div>
-      <ul class="list-group text-center mb-3">
-        <li class="list-group-item bg-success border-white text-white">flexibele & simpele editor</li>
-        <li class="list-group-item bg-success border-white text-white">optimaal wedstrijdschema</li>
-        <li class="list-group-item bg-success border-white text-white">automatische standen</li>
-        <li class="list-group-item bg-success border-white text-white">uitgebreide pdf opties</li>
-        <li class="list-group-item bg-success border-white text-white">rollenbeheer</li>
-        <li class="list-group-item bg-success border-white text-white">live scorebord</li>
-      </ul>
-    </div>
 
+
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div class="card border-success">
+            <div class="card-header bg-success text-center">
+              <h4>
+              <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 965 965"><path d="m670.59 139.68h-139.5l-43.1-132.7c-3-9.3-7.9-9.3-11 0l-43.1 132.7h-139.5c-9.8 0-11.3 4.7-3.4 10.4l112.9 82-43.1 132.7c-3 9.3 0.9 12.2 8.9 6.4l112.9-82 112.9 82c7.9 5.8 11.9 2.9 8.9-6.4l-43.1-132.7 112.9-82c7.704-5.8 6.204-10.4-3.597-10.4zm232.9 825.3a14.98 14.98 0 0 0 15-15v-285.7a14.98 14.98 0 0 0-15-15h-150.7v-208.8a14.98 14.98 0 0 0-15-15h-240.3v-51.4a15 15 0 1 0-30 0v51.4h-240.3a14.98 14.98 0 0 0-15 15v208.7h-150.7a14.98 14.98 0 0 0-15 15v285.8a15 15 0 1 0 30 0v-270.7h301.4v270.7a15 15 0 1 0 30 0v-285.7a14.98 14.98 0 0 0-15-15h-150.7v-193.8h480.6v193.7h-150.7a14.98 14.98 0 0 0-15 15v285.8a15 15 0 1 0 30 0v-270.7h301.4v270.7a14.98 14.98 0 0 0 15 15z"/></svg> opzet
+              </h4>
+            </div>
+            <div class="card-body">
+              <ul class="card-text">
+                  <li>intuitief</li>                  
+                  <li>meerdere ronden</li>                  
+                  <li>flexibel</li>
+                  <li>meerdere categorien</li>
+                </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card border-success">
+            <div class="card-header bg-success text-center">
+              <h4>
+                <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M0 464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V192H0v272zm320-196c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40zM192 268c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40zM64 268c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6 0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6 0-12-5.4-12-12v-40zM400 64h-48V16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v48H160V16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v48H48C21.5 64 0 85.5 0 112v48h448v-48c0-26.5-21.5-48-48-48z"/></svg> wedstrijden
+              </h4>
+            </div>
+            <div class="card-body">
+              <ul class="card-text">
+                <li>automatisch aanmaken</li>                  
+                <li>pauzes toevoegen</li>                
+                <li>deelnemers spelen zo min mogelijk wedstrijden achter elkaar</li>
+                <li>minuten per wedstrijd, minuten tussen wedstrijden en vele andere instellingen mogelijk</li>
+              </ul>              
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col">
+          <div class="card border-success">
+            <div class="card-header bg-success text-center">
+              <h4>
+                eigen toernooipagina
+              </h4>
+            </div>
+            <div class="card-body">
+              <ul class="card-text">                
+                <li>opzet, deelnemers, standen, wedstrijden, favorieten</li>                  
+                <li>eigen logo*</li>                  
+                <li>eigen domeinnaam(&euro;25 per jaar)</li>                  
+                <li>locatie*</li>
+                <li>inschrijfmodule *</li>
+                </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card border-success">
+            <div class="card-header bg-success text-center">
+              <h4>
+                <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 289 289"><path d="M107.9 181.85c-13.776 2.314-26.652 7-38.232 13.64v93.228H107.9V181.85zm66.997 8.342c-13.68-6.07-28.812-9.6-44.786-9.947v108.477h44.786v-98.53zM47.484 211.93c-20.48 19.656-33.14 46.8-33.14 76.787h33.14V211.93zm153.666 41.135c-1.42-.312-2.76-.77-4.055-1.306v36.957h43.584c0-9.7-1.372-19.07-3.862-28.014l-35.667-7.637zm-14.38-33.825c-2.454 11.454 4.842 22.732 16.296 25.187l33.7 7.224c11.454 2.46 22.73-4.842 25.187-16.296l11.95-55.73c2.455-11.45-4.847-22.728-16.295-25.187l-33.694-7.22a21.22 21.22 0 0 0-25.187 16.293l-11.956 55.73zM148.833 38.512c12.704-10.006 24.106-13.867 34.008-11.565C169.905 10.42 151.404 0 130.805 0 97.23 0 69.18 27.52 61.9 64.413c21.002.956 56.423-1.872 86.933-25.9zM130.805 166.6c39.105 0 70.8-37.285 70.8-83.296 0-1.67-.124-3.304-.207-4.953-1.066-10.682-5.955-34.73-18.486-40.26-6.98-3.07-16.238-.127-27.517 8.753-33.966 26.756-72.5 29.5-95.05 28.232-.223 2.703-.35 5.444-.35 8.223-.005 46.016 31.693 83.3 70.798 83.3z"/></svg> scheidsrechters
+              </h4>
+            </div>
+            <div class="card-body">
+              <ul class="card-text">
+                <li>deelnemers als scheidsrechters</li>                  
+                <li>zelf uitslagen invoeren</li>                  
+                <li>wedstrijdbriefjes met qr-code</li>                  
+                <li>rol uitslageninvoerder</li>
+              </ul>              
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col">
+          <div class="card border-success">
+            <div class="card-header bg-success text-center">
+              <h4>
+                <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M592 0H48A48 48 0 0 0 0 48v320a48 48 0 0 0 48 48h240v32H112a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16H352v-32h240a48 48 0 0 0 48-48V48a48 48 0 0 0-48-48zm-16 352H64V64h512z"/></svg> live scorebord                
+              </h4>
+            </div>
+            <div class="card-body">
+              <ul class="card-text">
+                <li>poulestanden</li>                  
+                <li>wedstrijden</li>                  
+                <li>uitslagen</li>
+                <li>eindstand</li>
+                <li>sponsoren</li>
+                </ul>
+            </div>
+          </div>
+          
+        </div>
+        <div class="col">
+          <div class="card border-success">
+            <div class="card-header bg-success text-center">
+              <h4>
+                <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --><path d="M448 192V77.25c0-8.49-3.37-16.62-9.37-22.63L393.37 9.37c-6-6-14.14-9.37-22.63-9.37H96C78.33 0 64 14.33 64 32v160c-35.35 0-64 28.65-64 64v112c0 8.84 7.16 16 16 16h48v96c0 17.67 14.33 32 32 32h320c17.67 0 32-14.33 32-32v-96h48c8.84 0 16-7.16 16-16V256c0-35.35-28.65-64-64-64zm-64 256H128v-96h256v96zm0-224H128V64h192v48c0 8.84 7.16 16 16 16h48v96zm48 72c-13.25 0-24-10.75-24-24 0-13.26 10.75-24 24-24s24 10.74 24 24c0 13.25-10.75 24-24 24z"/></svg> printen
+              </h4>
+            </div>
+            <div class="card-body">
+              <ul class="card-text">
+                <li>opzet & indeling</li>                  
+                <li>draaitabellen</li>                  
+                <li>wedstrijden</li>
+                <li>wedstrijdbriefjes</li>
+                <li>kleedkamer indeling</li>
+                <li>qr-code</li>
+                </ul>
+            </div>
+          </div>
+        </div>
+      </div>     
+    </div>
+    
+    <div>* = nog te maken feature</div>
+
+    <div class="d-flex justify-content-center mt-3">
+      
+      <div class="card border-info w-50">
+        <div class="card-header bg-info text-center">
+          <h4>
+            prijzen
+          </h4>
+        </div>
+        <div class="card-body">
+          <p>
+            De 1ste 5 toernooien zijn gratis en blijven gratis! Daarna is het ook nog gratis :-), maar dit kan in de toekomst veranderen. 
+          </p>
+          <p class="fw-semibold">
+            Voor niet prive-gebruik graag contact opnemen met <a href="mailto:info@fctoernooi.nl" rel="noopener">info@fctoernooi.nl</a>
+          </p>
+          
+        </div>
+      </div>
+
+    </div>
+    
   </div>
 </div>

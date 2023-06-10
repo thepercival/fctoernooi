@@ -65,8 +65,8 @@ export class ScreenConfigsModalComponent implements OnInit {
     getDescription(screenConfig: ScreenConfig): string {
         switch (screenConfig.name) {
             case ScreenConfigName.PoulesRanking: { return 'poulestanden'; }
-            case ScreenConfigName.EndRanking: { return 'eind rangschikking'; }
-            case ScreenConfigName.Schedule: { return 'programma'; }
+            case ScreenConfigName.EndRanking: { return 'eindstand'; }
+            case ScreenConfigName.Schedule: { return 'wedstrijden'; }
             case ScreenConfigName.Results: { return 'uitslagen'; }
             case ScreenConfigName.Sponsors: { return 'sponsoren'; }
         }

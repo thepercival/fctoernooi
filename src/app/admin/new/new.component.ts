@@ -49,7 +49,7 @@ export class NewComponent implements OnInit {
         next: (loggedInUser: User | undefined) => {
           if (loggedInUser === undefined) {
             const navigationExtras: NavigationExtras = {
-              queryParams: { type: IAlertType.Danger, message: 'je bet niet ingelogd' }
+              queryParams: { type: IAlertType.Danger, message: 'je bent niet ingelogd' }
             };
             this.router.navigate(['', navigationExtras]);
             return

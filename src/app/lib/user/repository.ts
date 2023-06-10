@@ -7,6 +7,7 @@ import { User, UserId } from '../user';
 import { JsonUser, UserMapper } from './mapper';
 import { APIRepository } from '../repository';
 import { AuthService } from '../auth/auth.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +17,9 @@ export class UserRepository extends APIRepository {
   constructor(
     private authService: AuthService,
     private http: HttpClient,
-    private mapper: UserMapper) {
-    super();
+    private mapper: UserMapper,
+    router: Router) {
+    super(router);
   }
 
   getUrlpostfix(): string {

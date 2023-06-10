@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService,
+    public authService: AuthService,
     private tournamentShellRepos: TournamentShellRepository,
     globalEventsManager: GlobalEventsManager
   ) {

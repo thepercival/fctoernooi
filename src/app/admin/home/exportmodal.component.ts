@@ -8,6 +8,7 @@ import { AppErrorHandler } from '../../lib/repository';
 import { Tournament } from '../../lib/tournament';
 import { IAlert, IAlertType } from '../../shared/common/alert';
 import { catchError, switchMap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-ngbd-modal-export-config',
@@ -30,9 +31,10 @@ export class ExportModalComponent implements OnInit, OnDestroy {
 
     constructor(
         public activeModal: NgbActiveModal,
-        private pdfRepository: PdfRepository) {
+        private pdfRepository: PdfRepository,
+        router: Router) {
         this.typedForm = new FormGroup({});
-        this.appErrorHandler = new AppErrorHandler();
+        this.appErrorHandler = new AppErrorHandler(router);
     }
 
     ngOnInit() {

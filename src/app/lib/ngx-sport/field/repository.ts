@@ -6,6 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import { APIRepository } from '../../repository';
 import { Field, FieldMapper, JsonField, CompetitionSport } from 'ngx-sport';
 import { Tournament } from '../../tournament';
+import { Router } from '@angular/router';
 
 
 @Injectable({
@@ -14,8 +15,8 @@ import { Tournament } from '../../tournament';
 export class FieldRepository extends APIRepository {
 
     constructor(
-        private mapper: FieldMapper, private http: HttpClient) {
-        super();
+        private mapper: FieldMapper, private http: HttpClient, router: Router) {
+        super(router);
     }
 
     getUrlpostfix(): string {

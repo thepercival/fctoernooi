@@ -8,6 +8,7 @@ import { AgainstGpp, AgainstH2h, Competition, CompetitionSport, CompetitionSport
 import { Tournament } from '../../tournament';
 import { SportWithFields } from '../../../admin/sport/createSportWithFields.component';
 import { DefaultService } from '../defaultService';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -19,8 +20,9 @@ export class CompetitionSportRepository extends APIRepository {
         private mapper: CompetitionSportMapper,
         private sportMapper: SportMapper,
         private defaultService: DefaultService,
-        private http: HttpClient) {
-        super();
+        private http: HttpClient,
+        router: Router) {
+        super(router);
     }
 
     getUrlpostfix(): string {

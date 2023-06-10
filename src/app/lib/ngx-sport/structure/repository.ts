@@ -9,6 +9,7 @@ import { Tournament } from '../../tournament';
 import { TournamentCompetitor } from '../../competitor';
 import { CompetitorRepository } from '../competitor/repository';
 import { JsonPlanningInfo } from '../../../admin/structure/planningNavBar.component';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -18,8 +19,9 @@ export class StructureRepository extends APIRepository {
     constructor(
         private competitorRepository: CompetitorRepository,
         private mapper: StructureMapper,
-        private http: HttpClient) {
-        super();
+        private http: HttpClient,
+        router: Router) {
+        super(router);
     }
 
     getUrlpostfix(): string {

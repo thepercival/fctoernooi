@@ -6,6 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import { APIRepository } from '../repository';
 import { CreditCardPayment, IDealIssuer, IDealPayment, Payment } from './json';
 import { User } from '../user';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,8 @@ import { User } from '../user';
 export class PaymentRepository extends APIRepository {
 
   constructor(
-    private http: HttpClient) {
-    super();
+    private http: HttpClient, router: Router) {
+    super(router);
   }
 
   getUrlpostfix(): string {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { AuthService } from '../../lib/auth/auth.service';
+import { IAlertType } from '../../shared/common/alert';
 
 @Component({
   selector: 'app-logout',
@@ -14,7 +15,10 @@ export class LogoutComponent implements OnInit {
   ngOnInit() {
     // reset login status
     this.authService.logout();
-    this.router.navigate(['/']);
+    const navigationExtras: NavigationExtras = {
+      queryParams: { type: IAlertType.Info, message: 'je bent uitgelogd' }
+    };
+    this.router.navigate([''], navigationExtras);
   }
 
 }

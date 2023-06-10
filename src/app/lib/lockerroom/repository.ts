@@ -10,6 +10,7 @@ import { LockerRoomMapper } from './mapper';
 import { TournamentCompetitor } from '../competitor';
 import { CompetitorMapper } from '../competitor/mapper';
 import { JsonLockerRoom } from './json';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -19,8 +20,9 @@ export class LockerRoomRepository extends APIRepository {
     constructor(
         private http: HttpClient,
         private mapper: LockerRoomMapper,
-        private competitorMapper: CompetitorMapper) {
-        super();
+        private competitorMapper: CompetitorMapper,
+        router: Router) {
+        super(router);
     }
 
     getUrlpostfix(): string {

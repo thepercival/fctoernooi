@@ -8,6 +8,7 @@ import { Tournament } from '../../tournament';
 import { TournamentUserMapper } from './mapper';
 import { TournamentUser } from '../user';
 import { JsonTournamentUser } from './json';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -16,8 +17,9 @@ export class TournamentUserRepository extends APIRepository {
 
     constructor(
         private http: HttpClient,
-        private mapper: TournamentUserMapper) {
-        super();
+        private mapper: TournamentUserMapper,
+        router: Router) {
+        super(router);
     }
 
     getUrlpostfix(): string {

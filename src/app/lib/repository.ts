@@ -2,6 +2,7 @@ import { HttpParams } from '@angular/common/http';
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError as observableThrowError, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { Router } from '@angular/router';
 
 export class APIRepository {
 
@@ -9,8 +10,8 @@ export class APIRepository {
     private apiVersion: string = environment.apiVersion;
     private appErrorHandler: AppErrorHandler;
 
-    constructor() {
-        this.appErrorHandler = new AppErrorHandler();
+    constructor(router: Router) {
+        this.appErrorHandler = new AppErrorHandler(router);
     }
 
     getApiUrl(): string {
@@ -50,6 +51,9 @@ export class APIRepository {
 }
 
 export class AppErrorHandler {
+    constructor(private router: Router) {
+    }
+
     public handleError(error: HttpErrorResponse | Error): Observable<any> {
         let errortext: string = 'onbekende fout(';
         if (!navigator.onLine) {
@@ -60,6 +64,7 @@ export class AppErrorHandler {
                 errortext = 'er kan geen verbinding met de data-service gemaakt worden, ververs de pagina';
             } else if (error.status === 401) {
                 if (error.error && error.error.message === 'Expired token') {
+                    this.router.navigate(['user/logout']);
                     errortext = 'de sessie is verlopen, log uit en log daarna opnieuw in';
                 } else {
                     errortext = 'je hebt geen rechten om de aanvraag te doen, waarschijnlijk is je sessie verlopen, log dan opnieuw in';

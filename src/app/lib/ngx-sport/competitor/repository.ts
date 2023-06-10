@@ -8,6 +8,7 @@ import { Competitor, JsonCompetitor, Competition, PlaceLocation } from 'ngx-spor
 import { Tournament } from '../../tournament';
 import { CompetitorMapper } from '../../competitor/mapper';
 import { TournamentCompetitor } from '../../competitor';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -17,8 +18,8 @@ export class CompetitorRepository extends APIRepository {
     private unusedCompetitors: UnusedCompetitors[] = [];
 
     constructor(
-        private mapper: CompetitorMapper, private http: HttpClient) {
-        super();
+        private mapper: CompetitorMapper, private http: HttpClient, router: Router) {
+        super(router);
     }
 
     getUrlpostfix(): string {
