@@ -1,0 +1,32 @@
+<div class="modal-header">
+    <h4 class="modal-title">inschrijving verwerken</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('close')"></button>
+</div>
+<div class="modal-body">
+    <div class="d-flex flex-column">
+        
+        <h2 *ngIf="processing" class="text-center">
+            <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+        </h2>        
+        
+        <button *ngIf="!processing && registration.getState() !== Accepted" type="button" class="btn btn-success my-4" data-dismiss="modal"
+            (click)="accept()">
+            accepteren
+        </button>
+        <button *ngIf="!processing && registration.getState() !== Substitute" type="button" class="btn btn-warning mb-4" data-dismiss="modal"
+            (click)="substitute()">
+            als reserve
+        </button>
+        <button *ngIf="!processing && registration.getState() !== Declined" type="button" class="btn btn-danger mb-4" data-dismiss="modal"
+            (click)="decline()">
+            afwijzen
+        </button>
+        <button *ngIf="!processing && registration.getState() === Declined" type="button" class="btn btn-danger mb-4" data-dismiss="modal"
+            (click)="remove()">
+            verwijderen
+        </button>
+
+        <ngb-alert *ngIf="errorAlert" [type]="errorAlert.type">{{errorAlert.message}}</ngb-alert>
+    </div>
+         
+</div>

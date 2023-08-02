@@ -2,15 +2,16 @@ import { Injectable } from '@angular/core';
 
 import { Tournament } from '../tournament';
 import { TournamentCompetitor } from '../competitor';
-import { Competitor, JsonCompetitor, StartLocation } from 'ngx-sport';
+import { StartLocation } from 'ngx-sport';
+import { JsonTournamentCompetitor } from './json';
 
 @Injectable({
     providedIn: 'root'
 })
-export class CompetitorMapper {
+export class TournamentCompetitorMapper {
     constructor() { }
 
-    toObject(json: JsonCompetitor, tournament: Tournament, competitor?: TournamentCompetitor): TournamentCompetitor {
+    toObject(json: JsonTournamentCompetitor, tournament: Tournament, competitor?: TournamentCompetitor): TournamentCompetitor {
         if (competitor === undefined) {
             const startLocation = new StartLocation(json.categoryNr, json.pouleNr, json.placeNr);
             competitor = new TournamentCompetitor(tournament, startLocation, json.name);
@@ -19,18 +20,23 @@ export class CompetitorMapper {
         return this.updateObject(json, competitor);
     }
 
-    updateObject(json: JsonCompetitor, competitor: TournamentCompetitor): TournamentCompetitor {
+    updateObject(json: JsonTournamentCompetitor, competitor: TournamentCompetitor): TournamentCompetitor {
         if (json.registered !== undefined) { competitor.setRegistered(json.registered) };
         if (json.info !== undefined) { competitor.setInfo(json.info) };
+        competitor.setEmailaddress(json.emailaddress);
+        competitor.setTelephone(json.telephone);
         return competitor;
     }
 
-    toJson(competitor: TournamentCompetitor): JsonCompetitor {
+    toJson(competitor: TournamentCompetitor): JsonTournamentCompetitor {
         return {
             id: competitor.getId(),
             registered: competitor.getRegistered(),
+            hasLogo: competitor.hasLogo(),
             info: competitor.getInfo(),
             name: competitor.getName(),
+            emailaddress: competitor.getEmailaddress(),
+            telephone: competitor.getTelephone(),
             categoryNr: competitor.getStartLocation().getCategoryNr(),
             pouleNr: competitor.getStartLocation().getPouleNr(),
             placeNr: competitor.getStartLocation().getPlaceNr()

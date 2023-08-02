@@ -40,6 +40,40 @@
             </div>
           </div>
         </div>
+
+        <div class="row mb-3">
+          <div class="col-3">
+            <label for="emailaddress" class="col-form-label">emailadres</label>
+          </div>
+          <div class="col-9">
+            <input class="form-control"
+              [ngClass]="{ 'is-invalid': typedForm.controls.emailaddress.invalid, 'is-valid': typedForm.controls.emailaddress.valid }"
+              type="email" formControlName="emailaddress" placeholder="max. {{validations.maxlengthemailaddress}} karakters">
+          </div>
+        </div>
+        
+        <div class="row mb-3">
+          <div class="col-3">
+            <label for="telephone" class="col-form-label">telefoon</label>
+          </div>
+          <div class="col-9">
+            <input class="form-control"
+              [ngClass]="{ 'is-invalid': typedForm.controls.telephone.invalid, 'is-valid': typedForm.controls.telephone.valid }"
+              type="tel" formControlName="telephone" placeholder="max. {{validations.maxlengthtelephone}} karakters">
+          </div>
+        </div>
+
+        <div *ngIf="logoInput === logoInputUpload" class="row mb-3">
+          <div class="col-3">
+            <label for="logouploadother" (click)="openInfoModal(contentInfo)" class="pointer mt-1">logo
+              <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
+            </label>
+          </div>
+          <div class="col-9">
+            <input type="file" accept='image/*' class="form-control" (change)="onFileChange($event)" #fileInput>
+          </div>
+        </div>
+
         <div class="row mb-3">
           <div class="col-3">
             <label for="info" class="col-form-label">info</label>
@@ -50,6 +84,7 @@
               formControlName="info" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>
+
         <div class="row mt-2">
           <div class="col-3">
             <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary">terug</button>
@@ -65,4 +100,7 @@
     </div>
   </div>
 </div>
+<ng-template #contentInfo>
+  {{getLogoUploadDescription()}}
+</ng-template>
 <app-tournament-navbar *ngIf="tournament" [tournament]="tournament"></app-tournament-navbar>

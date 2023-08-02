@@ -22,6 +22,11 @@ import { CategoryChooseModalComponent } from '../../shared/tournament/category/c
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
+import { TournamentRegistrationRepository } from '../../lib/tournament/registration/repository';
+import { JsonRegistrationSettings } from '../../lib/tournament/registration/settings/json';
+import { TournamentRegistrationSettings } from '../../lib/tournament/registration/settings';
+import { TournamentRegistrationTextSubject } from '../../lib/tournament/registration/text';
+import { TextEditorModalComponent } from '../textEditor/texteditormodal.component';
 
 @Component({
   selector: 'app-tournament-competitors',
@@ -34,7 +39,11 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   // hasBegun!: boolean;
   lockerRoomValidator!: LockerRoomValidator;
   public structureNameService!: StructureNameService;
-
+  public activeTab!: number;
+  public hasBegun!: boolean;
+  public registrationSettings: TournamentRegistrationSettings|undefined;
+  public showRegistrationSettings: boolean = false;
+  public showRegistrationFormBtn: boolean = false;
 
   constructor(
     route: ActivatedRoute,
@@ -44,6 +53,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     globalEventsManager: GlobalEventsManager,
     modalService: NgbModal,
     favRepository: FavoritesRepository,
+    private tournamentRegistrationRepository: TournamentRegistrationRepository,
     private planningRepository: PlanningRepository,
     private competitorRepository: CompetitorRepository,
     private myNavigation: MyNavigation
@@ -52,24 +62,54 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   ngOnInit() {
-    super.myNgOnInit(() => {
-      this.updateFavoriteCategories(this.structure);
-      const competitors = this.tournament.getCompetitors();
-      const startLocationMap = new StartLocationMap(competitors);
-      this.structureNameService = new StructureNameService(startLocationMap);
-      this.lockerRoomValidator = new LockerRoomValidator(competitors, this.tournament.getLockerRooms());
-      this.initFocus(startLocationMap);
-      // this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
-      this.processing = false;
-    });
+    this.route.params.subscribe(params => {
+        this.activeTab = +params.tabId;
+        super.myNgOnInit(() => this.postInit(), false);
+      });
   }
+
+  postInit() {    
+
+    this.competitorRepository.reloadObjects(this.tournament, true)
+        .subscribe({
+          next: (competitors: TournamentCompetitor[]) => {
+            
+            this.updateFavoriteCategories(this.structure);
+            const startLocationMap = new StartLocationMap(competitors);
+            this.structureNameService = new StructureNameService(startLocationMap);
+            this.lockerRoomValidator = new LockerRoomValidator(competitors, this.tournament.getLockerRooms());
+            this.initFocus(startLocationMap);
+            this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
+
+            this.tournamentRegistrationRepository.getSettings(this.tournament)
+              .subscribe({
+                next: (settings: TournamentRegistrationSettings) => {
+                  this.registrationSettings = settings;
+                  this.showRegistrationSettings = !settings.isEnabled();
+                  this.showRegistrationFormBtn = settings.isEnabled();
+                  this.processing = false;
+                },
+                error: (e: string) => {
+                  this.setAlert(IAlertType.Danger, e + ', instellingen niet gevonden');
+                  this.processing = false;
+                }
+              });
+          },
+          error: (e: string) => {            
+            this.setAlert(IAlertType.Danger, e + ', instellingen niet gevonden');
+            this.processing = false;
+          }
+        });      
+  }
+
 
   get CompetitorsScreen(): TournamentScreen { return TournamentScreen.Competitors }
   alertType(): string { return this.alert?.type ?? IAlertType.Danger }
   alertMessage(): string { return this.alert?.message ?? '' }
 
-  updateProcessing(message: string | false): void {
-    if (message === false) {
+  updateProcessing(message: string): void {
+    console.log('updateProcessing: ' + message);
+    if (message.length === 0) {
       this.processing = false;
     } else {
       this.processing = true;
@@ -77,8 +117,16 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     }
   }
 
+  onTabChange(tabId: CompetitorTab) {
+    window.history.replaceState({}, '', 'admin/competitors/' + this.tournament.getId() + '/' + tabId);
+  }
+
   ngAfterViewChecked() {
     this.myNavigation.scroll();
+  }
+
+  updateLinkToRegistrationForm(enabled: boolean): void {
+    this.showRegistrationFormBtn = enabled;
   }
 
   initFocus(startLocationMap: StartLocationMap) {
@@ -94,7 +142,9 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     });
   }
 
-
+  toggleShowRegistrationSettings(): void {
+    this.showRegistrationSettings = !this.showRegistrationSettings; 
+  }
 
   removeCompetitor(competitor: TournamentCompetitor): void {
     this.processing = true;
@@ -112,6 +162,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   public refreshCompetitors(): void {
+    console.log('refreshCompetitors');
     const map = new StartLocationMap(this.tournament.getCompetitors());
     this.structureNameService = new StructureNameService(map);
     this.lockerRoomValidator = new LockerRoomValidator(this.tournament.getCompetitors(), this.tournament.getLockerRooms());
@@ -137,5 +188,55 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
         error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
       });
   }
+
+  get TabBase(): number { return CompetitorTab.Base; }  
+  get TabOrder(): number { return CompetitorTab.Order; }
+  get TabSignUp(): number { return CompetitorTab.SignUp; }
+  get TabRegister(): number { return CompetitorTab.Register; }
+
+  getTextSubjects(): TournamentRegistrationTextSubject[] {
+    return [
+      TournamentRegistrationTextSubject.Accept, TournamentRegistrationTextSubject.AcceptAsSubstitute
+      , TournamentRegistrationTextSubject.Decline]
+  }
+
+
+  getTextSubjectDescription(subject: TournamentRegistrationTextSubject): string {
+    if (subject === TournamentRegistrationTextSubject.Accept) {
+      return 'tekst bevestiging'
+    }
+    if (subject === TournamentRegistrationTextSubject.AcceptAsSubstitute) {
+      return 'tekst als-reserve'
+    }
+    return 'tekst afwijzing'
+  }
+
+  openTextEditorModal(subject: TournamentRegistrationTextSubject): void {
+    this.tournamentRegistrationRepository.getText(this.tournament, subject)
+      .subscribe({
+        next: (text: string) => {
+          // console.log(text);
+          const activeModal = this.modalService.open(TextEditorModalComponent, { size: 'xl' });
+          activeModal.componentInstance.header = this.getTextSubjectDescription(subject);
+          activeModal.componentInstance.tournament = this.tournament;
+          activeModal.componentInstance.subject = subject;
+          activeModal.componentInstance.initialText = text;
+
+          activeModal.result.then((newText: string) => {
+            // this.registrationRepository.editText(newText, this.tournament, this.subject)
+            //   .subscribe({
+            //     next: (text: string) => {
+            //       this.text = text;
+            //       this.copied = false;
+            //     }
+            //   });
+          }, (reason) => {
+          });
+        }
+      });
+  }
 }
 
+export enum CompetitorTab {
+  Base = 1, SignUp, Order, Register
+}

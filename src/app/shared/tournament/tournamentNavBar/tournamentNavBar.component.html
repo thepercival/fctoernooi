@@ -27,7 +27,7 @@
       <!--deelnemers -->
       <h2 *ngIf="!public" class="mb-0">
         <a type="button" class="btn {{getTextColorClass(CompetitorsScreen)}}"
-          [routerLink]="['/admin/competitors', tournament.getId()]">
+          [routerLink]="['/admin/competitors', tournament.getId(), CompetitorTabBase]">
           <fa-icon [icon]="['fas', 'users']"></fa-icon> <br /><span>deeln</span><span
           class="{{getFavSuffix()}}">emers</span>
         </a>

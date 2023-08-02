@@ -1,0 +1,30 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{header}}</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('close')"></button>
+</div>
+<div class="modal-body">
+    <div class="d-flex flex-column">
+        
+        <form *ngIf="form" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+            <textarea class="form-control w-100 height-vw mb-3"
+                [ngClass]="{ 'is-invalid': form.controls.text.invalid, 'is-valid': form.controls.text.valid }"
+                formControlName="text" required></textarea>
+        </form>
+        <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+        <div class="modal-footer justify-content-between px-0">
+            
+            <button type="button" class="btn btn-primary mb-4" data-dismiss="modal" ngxClipboard 
+                [cbContent]="getText()" (cbOnSuccess)="setCopyAlert()">
+                kopiëren naar klembord
+            </button>
+            <button [disabled]="initialText === getText()" type="button" class="btn btn-primary mb-4 ms-3"
+                data-dismiss="modal" (click)="save()">
+                opslaan
+            </button>
+            
+                    
+        </div>
+
+    </div>
+         
+</div>

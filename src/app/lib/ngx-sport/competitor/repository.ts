@@ -1,14 +1,16 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../repository';
-import { Competitor, JsonCompetitor, Competition, PlaceLocation } from 'ngx-sport';
+import { Competitor, JsonCompetitor, Competition } from 'ngx-sport';
 import { Tournament } from '../../tournament';
-import { CompetitorMapper } from '../../competitor/mapper';
+import { TournamentCompetitorMapper } from '../../competitor/mapper';
 import { TournamentCompetitor } from '../../competitor';
 import { Router } from '@angular/router';
+import { JsonTournamentCompetitor } from '../../competitor/json';
+import { TournamentRegistration } from '../../tournament/registration';
 
 @Injectable({
     providedIn: 'root'
@@ -18,43 +20,73 @@ export class CompetitorRepository extends APIRepository {
     private unusedCompetitors: UnusedCompetitors[] = [];
 
     constructor(
-        private mapper: CompetitorMapper, private http: HttpClient, router: Router) {
+        private mapper: TournamentCompetitorMapper, private http: HttpClient, router: Router) {
         super(router);
     }
 
-    getUrlpostfix(): string {
-        return 'competitors';
+    getUrlpostfix(competitorId?: string | number): string {
+        return 'competitors' + (competitorId !== undefined ? ('/' + competitorId) : '');
     }
 
     getUrl(tournament: Tournament): string {
         return this.getUrlById(tournament.getId());
     }
 
-    private getUrlById(tournamentId: string | number): string {
-        return super.getApiUrl() + 'tournaments/' + tournamentId + '/' + this.getUrlpostfix();
+    private getUrlById(tournamentId: string | number, competitorId?: string | number): string {
+        return super.getApiUrl() + 'tournaments/' + tournamentId + '/' + this.getUrlpostfix(competitorId);
     }
 
-    reloadObjects(tournament: Tournament): Observable<TournamentCompetitor[]> {
+    reloadObject(competitor: TournamentCompetitor, tournament: Tournament): Observable<TournamentCompetitor> {
+        const httpParams = (new HttpParams({})).set('privacy', true);    
+        const options = {
+            headers: super.getHeaders(),
+            params: httpParams
+        };
+        return this.http.get<JsonTournamentCompetitor>(this.getUrlById(tournament.getId(), competitor.getId()), options).pipe(
+            map((jsoCompetitor: JsonTournamentCompetitor) => {
+                return this.mapper.toObject(jsoCompetitor, tournament, competitor);
+            }),
+            catchError((err: HttpErrorResponse) => this.handleError(err))
+        );
+    }
+
+   reloadObjects(tournament: Tournament, privacy: boolean): Observable<TournamentCompetitor[]> {
+        let httpParams = new HttpParams({});
+        if (privacy) {
+           httpParams = httpParams.set('privacy', true);
+        }
+        const options = {
+            headers: super.getHeaders(),
+            params: httpParams
+        };
+        // @TODO CDK KIJKEN HOE DIT AAN TE ROEPEN VANAF SCHERM
         tournament.getCompetitors().splice(0);
-        return this.http.get<JsonCompetitor[]>(this.getUrl(tournament), this.getOptions()).pipe(
-            map((jsoCompetitors: JsonCompetitor[]) => jsoCompetitors.map((jsoCompetitor: JsonCompetitor): TournamentCompetitor => {
+        return this.http.get<JsonTournamentCompetitor[]>(this.getUrl(tournament), options).pipe(
+            map((jsoCompetitors: JsonTournamentCompetitor[]) => jsoCompetitors.map((jsoCompetitor: JsonTournamentCompetitor): TournamentCompetitor => {
                 return this.mapper.toObject(jsoCompetitor, tournament);
             })),
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
-    createObject(json: JsonCompetitor, tournament: Tournament): Observable<Competitor> {
-        return this.http.post<JsonCompetitor>(this.getUrl(tournament), json, this.getOptions()).pipe(
-            map((jsonCompetitor: JsonCompetitor) => this.mapper.toObject(jsonCompetitor, tournament)),
+    createObject(json: JsonCompetitor, tournament: Tournament): Observable<TournamentCompetitor> {
+        return this.http.post<JsonTournamentCompetitor>(this.getUrl(tournament), json, this.getOptions()).pipe(
+            map((jsonCompetitor: JsonTournamentCompetitor) => this.mapper.toObject(jsonCompetitor, tournament)),
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
-    editObject(jsonCompetitor: JsonCompetitor, competitor: TournamentCompetitor, tournamentId: string | number): Observable<TournamentCompetitor> {
+    createObjectFromRegistration(registration: TournamentRegistration, tournament: Tournament): Observable<TournamentCompetitor> {
+        return this.http.post<JsonTournamentCompetitor>(this.getUrl(tournament) + '/' + registration.getId(), undefined, this.getOptions()).pipe(
+            map((jsonCompetitor: JsonTournamentCompetitor) => this.mapper.toObject(jsonCompetitor, tournament)),
+            catchError((err: HttpErrorResponse) => this.handleError(err))
+        );
+    }
+
+    editObject(jsonCompetitor: JsonTournamentCompetitor, competitor: TournamentCompetitor, tournamentId: string | number): Observable<TournamentCompetitor> {
         const url = this.getUrlById(tournamentId) + '/' + competitor.getId();
-        return this.http.put<JsonCompetitor>(url, jsonCompetitor, this.getOptions()).pipe(
-            map((jsonCompetitor: JsonCompetitor) => this.mapper.updateObject(jsonCompetitor, competitor)),
+        return this.http.put<JsonTournamentCompetitor>(url, jsonCompetitor, this.getOptions()).pipe(
+            map((jsonCompetitor: JsonTournamentCompetitor) => this.mapper.updateObject(jsonCompetitor, competitor)),
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
@@ -91,6 +123,21 @@ export class CompetitorRepository extends APIRepository {
             }),
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );
+    }
+
+    uploadImage(input: FormData, competitor: TournamentCompetitor, tournament: Tournament): Observable<void> {
+        const url = this.getUrl(tournament) + '/' + competitor.getId() + '/upload';
+        return this.http.post<JsonTournamentCompetitor>(url, input, this.getUploadOptions()).pipe(
+            map((res: JsonTournamentCompetitor) => this.mapper.toObject(res, tournament, competitor)),
+            catchError((err: HttpErrorResponse) => this.handleError(err))
+        );
+    }
+
+    protected getUploadOptions() {
+        return {
+            headers: super.getHeaders().delete('Content-Type'),
+            params: new HttpParams()
+        };
     }
 }
 

@@ -29,6 +29,8 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 import { CategoryChooseModalComponent } from '../../shared/tournament/category/chooseModal.component';
 import { Favorites } from '../../lib/favorites';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
+import { TournamentRegistrationRepository } from '../../lib/tournament/registration/repository';
+import { TournamentRegistration } from '../../lib/tournament/registration';
 
 @Component({
   selector: 'app-tournament-structure',
@@ -58,7 +60,8 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     private planningRepository: PlanningRepository,
     private myNavigation: MyNavigation,
     private defaultService: DefaultService,
-    private structureMapper: StructureMapper
+    private structureMapper: StructureMapper,
+    private registrationRepository: TournamentRegistrationRepository
   ) {
     super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
   }
@@ -213,23 +216,38 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   }
 
   public removeCategory(category: Category): void {
-    const categories = this.clonedStructure.getCategories();
-    const idx = categories.indexOf(category);
-    if (idx >= 0) {
-      categories.splice(idx, 1);
-    }
-    categories.slice().splice(idx).forEach((category: Category) => {
-      category.setNumber(category.getNumber() - 1);
-    });
-    this.removeCategoryRoundsFromRoundNumber([category.getRootRound()]);
+    this.processing = true;
+    this.registrationRepository.getObjects(category, this.tournament)
+      .subscribe({
+        next: (registrations: TournamentRegistration[]) => {
+          if (registrations.length > 0) {
+            this.setAlert(IAlertType.Warning, 'er zijn al inschrijvingen voor deze category');
+            this.processing = false;
+            return;  
+          }
+          const categories = this.clonedStructure.getCategories();
+          const idx = categories.indexOf(category);
+          if (idx >= 0) {
+            categories.splice(idx, 1);
+          }
+          categories.slice().splice(idx).forEach((category: Category) => {
+            category.setNumber(category.getNumber() - 1);
+          });
+          this.removeCategoryRoundsFromRoundNumber([category.getRootRound()]);
 
-    this.updateFavoriteCategories(this.clonedStructure);
-    // this.clonedStructure.getCategories().forEach(category => category.getRootRound().getPoules().forEach(poule => {
-    //   console.log(poule.getStructureLocation(), this.structureNameService.getPouleLetter(poule));
-    // }));
-    // console.log('removeCategory', this.clonedStructure);
+          this.updateFavoriteCategories(this.clonedStructure);
+          // this.clonedStructure.getCategories().forEach(category => category.getRootRound().getPoules().forEach(poule => {
+          //   console.log(poule.getStructureLocation(), this.structureNameService.getPouleLetter(poule));
+          // }));
+          // console.log('removeCategory', this.clonedStructure);
 
-    this.addAction({ name: StructureActionName.RemoveCategory, recreateStructureNameService: true });
+          this.addAction({ name: StructureActionName.RemoveCategory, recreateStructureNameService: true });
+          this.processing = false;
+        },
+        error: (e: string) => {
+          this.processing = false;
+        }
+      });
   }
 
   private removeCategoryRoundsFromRoundNumber(rounds: Round[]): void {

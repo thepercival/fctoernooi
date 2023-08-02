@@ -1,0 +1,84 @@
+<div *ngIf="registrationSettings" class="container">
+  <h2>instellen</h2>
+
+  <h2 *ngIf="processing" class="text-center">
+    <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  </h2>
+  
+  <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+  
+  <form *ngIf="typedForm && !processing" [formGroup]="typedForm" name="form" (ngSubmit)="save()" novalidate>
+
+    <div class="row mb-3">
+      <label for="enabled" class="col-3 col-form-label">
+        aan/uit
+      </label>
+      <div class="col-9">
+        <div class="form-control form-check form-switch">
+          <input type="checkbox" class="form-check-input" id="enabled"
+            formControlName="enabled" (change)="toggleReadOnly()">
+          <label class="form-check-label" for="enabled"></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        <label for="endDate" class="col-form-label">tot</label>
+      </div>
+      <div class="col-9">
+        <div class="input-group input-group-date">
+          
+          <input class="form-control"
+            [ngClass]="{ 'is-invalid': typedForm.controls.endDate.invalid, 'is-valid': typedForm.controls.endDate.valid }"
+            placeholder="yyyy-mm-dd" formControlName="endDate" ngbDatepicker #dEnd="ngbDatepicker" required
+            [maxDate]="maxDateStruct" container="body">
+          <span class="input-group-text pointer" (click)="dEnd.toggle()">
+            <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-3">
+        <label for="endTime" class="col-form-label"></label>
+      </div>
+      <div class="col-9">
+        <ngb-timepicker formControlName="endTime" [spinners]="false" required>
+        </ngb-timepicker>
+      </div>
+    </div>
+   
+    <div class="row mb-3">
+      <label for="mailAlert" class="col-3 col-form-label">
+        ontvang mail
+      </label>
+      <div class="col-9">
+        <div class="form-control form-check form-switch">
+          <input type="checkbox" class="form-check-input" id="mailAlert" formControlName="mailAlert">
+          <label class="form-check-label" for="mailAlert"></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        <label for="remark" class="col-form-label">tonen op formulier</label>
+      </div>
+      <div class="col-9">
+        <textarea class="form-control"
+          [ngClass]="{ 'is-invalid': typedForm.controls.remark.invalid, 'is-valid': typedForm.controls.remark.valid }"
+          formControlName="remark" placeholder="max. {{validations.maxlengthremark}} karakters"></textarea>
+      </div>
+    </div>
+   
+    <div class="row mb-3 justify-content-end">
+      <div class="col-9">
+        <button [disabled]="typedForm.invalid" type="submit" class="btn btn-primary">
+          opslaan
+        </button>
+      </div>
+    </div>
+  </form>
+
+</div>

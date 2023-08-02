@@ -6,9 +6,9 @@ import { SponsorMapper } from '../sponsor/mapper';
 import { Tournament } from '../tournament';
 import { LockerRoomMapper } from '../lockerroom/mapper';
 import { JsonTournament } from './json';
-import { CompetitorMapper } from '../competitor/mapper';
 import { Recess } from '../recess';
 import { RecessMapper } from '../recess/mapper';
+import { TournamentCompetitorMapper } from '../competitor/mapper';
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +18,7 @@ export class TournamentMapper {
         private competitionMapper: CompetitionMapper,
         private tournamentUserMapper: TournamentUserMapper,
         private sponsorMapper: SponsorMapper,
-        private competitorMapper: CompetitorMapper,
+        private competitorMapper: TournamentCompetitorMapper,
         private lockerRoomMapper: LockerRoomMapper,
         private recessMapper: RecessMapper) { }
 
@@ -47,6 +47,7 @@ export class TournamentMapper {
             recesses: tournament.getRecesses().map(recess => this.recessMapper.toJson(recess)),
             sponsors: tournament.getSponsors().map(sponsor => this.sponsorMapper.toJson(sponsor)),
             public: tournament.getPublic(),
+            useSelfRegistration: tournament.useSelfRegistration(),
             startEditMode: tournament.getStartEditMode()
         };
     }

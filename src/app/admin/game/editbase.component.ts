@@ -3,6 +3,7 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 import { AgainstGame, Field, Place, PlanningConfig, PlanningEditMode, Structure, StructureNameService, TogetherGame } from 'ngx-sport';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { TranslateFieldService } from '../../lib/translate/field';
+import { DateConverter } from '../../lib/dateConverter';
 
 @Component({
   selector: 'app-tournament-basegame-edit',
@@ -19,7 +20,8 @@ export class GameBaseEditComponent implements OnInit {
 
   constructor(
     private translate: TranslateFieldService,
-    public dateFormatter: DateFormatter) {
+    public dateFormatter: DateFormatter,
+    private dateConverter: DateConverter) {
   }
 
   ngOnInit() {
@@ -38,7 +40,7 @@ export class GameBaseEditComponent implements OnInit {
     this.form.addControl('date', new FormControl(''));
     this.form.addControl('time', new FormControl(''));
 
-    this.setDate(this.form.controls.date, this.form.controls.time, this.game.getStartDateTime());
+    this.dateConverter.setDateTime(this.form.controls.date, this.form.controls.time, this.game.getStartDateTime());
 
     // const startDateTime = this.getDate(this.form.controls.date, this.form.controls.time);
 
@@ -54,11 +56,6 @@ export class GameBaseEditComponent implements OnInit {
     // if (this.firstScoreConfig !== this.firstScoreConfig.getCalculate()) {
     //   this.form.addControl('calculate', new FormControl(0));
     // }
-  }
-
-  setDate(dateFormControl: AbstractControl, timeFormControl: AbstractControl, date: Date) {
-    dateFormControl.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
-    timeFormControl.setValue({ hour: date.getHours(), minute: date.getMinutes() });
   }
 
   getPlanningConfig(): PlanningConfig {

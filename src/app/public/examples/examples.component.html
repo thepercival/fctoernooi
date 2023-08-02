@@ -1,0 +1,55 @@
+<div class="row justify-content-center g-0">
+  <div class="col-sm-12 col-md-10 col-lg-8 text-center">
+    <h1>voorbeeld toernooien</h1>   
+
+    <div class="d-flex justify-content-center my-3">
+      <div class="card border-dark w-50 text-center">
+        <div class="card-header"><h5>beheer deel</h5></div>        
+        <div class="card-body">
+          <div>
+            <button class="btn btn-outline-primary" (click)="linkExampleModal(exampleInfo)">meerdere poules & finales</button>
+          </div>
+          <div>
+            <button class="btn btn-outline-primary my-3">verschillende categoriën</button>
+          </div>
+          <div>
+            <button class="btn btn-outline-primary">meerderere sporten</button>
+          </div>      
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-center mt-4">
+      <div class="card border-dark w-50 text-center">
+        <div class="card-header"><h5>publiek deel</h5></div>
+        <div class="card-body">
+          <div>
+            <button class="btn btn-outline-primary">meerdere poules & finales</button>
+          </div>
+          <div>
+            <button class="btn btn-outline-primary my-3">verschillende categoriën</button>
+          </div>
+          <div>
+            <button class="btn btn-outline-primary">meerderere sporten</button>
+          </div>      
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<ng-template #exampleInfo let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">
+      <fa-icon [icon]="['fas', 'copy']"></fa-icon> nieuwe editie
+    </h4>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
+  </div>
+  <div class="modal-body">
+    <div class="container-fluid">
+      
+        vertel hier dat de gebruiker nu naar het toernooi wordt gestuurd
+    </div>
+  </div>
+</ng-template>

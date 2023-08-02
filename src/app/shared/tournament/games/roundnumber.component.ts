@@ -26,7 +26,8 @@ import {
   StructureCell,
   GameGetter,
   Competitor,
-  StartLocationMap
+  StartLocationMap,
+  Field
 } from 'ngx-sport';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -48,7 +49,7 @@ import { Recess } from '../../../lib/recess';
 import { TranslateScoreService } from '../../../lib/translate/score';
 
 @Component({
-  selector: 'app-tournament-roundnumber-planning',
+  selector: 'tbody[app-tournament-roundnumber-planning]',
   templateUrl: './roundnumber.component.html',
   styleUrls: ['./roundnumber.component.scss']
 })
@@ -56,6 +57,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
 
   @Input() tournament!: Tournament;
   @Input() roundNumber!: RoundNumber;
+  @Input() optionalGameColumns!: Map<OptionalGameColumn, boolean>; 
   @Input() favoriteCategories!: Category[];
   @Input() structureNameService!: StructureNameService;
   @Input() showLinksToAdmin = false;
@@ -69,7 +71,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   public sameDay = true;
   public gameOrder: GameOrder = GameOrder.ByDate;
   public filterFavorites = false;
-  public hasSomeReferees: boolean = false;
   public allFilteredSubjects: string[] = [];
   public showToggleFavorites: boolean | undefined;
   public hasBegun: boolean = false;
@@ -82,6 +83,10 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   public planningConfig!: PlanningConfig;
   public hasOnlyGameModeAgainst: boolean = true;
   public hasGameModeAgainst: boolean = true;
+  public showStartColumn = false;
+  public showRefereeColumn = false;
+  public showSportColumn = false;
+  public nrOfColumns = 0;
   private refreshTimer: Subscription | undefined;
   private appErrorHandler: AppErrorHandler;
   public progressPerc = 0;
@@ -109,8 +114,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     this.needsRanking = this.roundNumber.getStructureCells().some(structureCell => structureCell.needsRanking());
     const rounds = this.roundNumber.getRounds(undefined);
     this.hasMultiplePoules = rounds.length > 1 || rounds.every(round => round.getPoules().length > 1);
-    this.hasSomeReferees = this.tournament.getCompetition().getReferees().length > 0
-      || this.planningConfig.getSelfReferee() !== SelfReferee.Disabled;
     this.hasBegun = this.roundNumber.hasBegun();
     this.tournamentHasBegun = this.roundNumber.getFirst().hasBegun();
     const categoryMap = new CategoryMap(this.favoriteCategories);
@@ -120,6 +123,12 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     this.loadGameData();
     this.hasOnlyGameModeAgainst = this.hasOnlyAgainstGameMode();
     this.hasGameModeAgainst = this.hasAgainstGameMode();
+    this.showStartColumn = this.planningConfig.getEnableTime() || this.optionalGameColumns.get(OptionalGameColumn.Start) === true;
+    this.showRefereeColumn = this.planningConfig.getSelfReferee() !== SelfReferee.Disabled || this.optionalGameColumns.get(OptionalGameColumn.Referee) === true;
+    const nrOfColumnsForPlacesAndScores = this.hasOnlyGameModeAgainst ? 3 : 1;
+    this.nrOfColumns = 4 + (this.showRefereeColumn ? 1 : 0 ) + (this.showStartColumn ? 1 : 0) + nrOfColumnsForPlacesAndScores;
+    this.showSportColumn = this.tournament.getCompetition().hasMultipleSports();
+    
     if (this.gameDatas.length === 0) {
       this.showProgress()
     }
@@ -130,6 +139,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
       this.scrolling.emit();
     }
   }
+  
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.favoriteCategories !== undefined && changes.favoriteCategories.currentValue !== changes.favoriteCategories.previousValue
@@ -155,6 +165,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   get SportConfigTabScore(): number { return CompetitionSportTab.Score; }
   get OrderByPoule(): GameOrder { return GameOrder.ByPoule; }
   get OrderByDate(): GameOrder { return GameOrder.ByDate; }
+  get GameColumnStart(): number { return OptionalGameColumn.Start; }
 
   private getGameData(categoryMap: CategoryMap) {
     const gameDatas: GameData[] = [];
@@ -493,6 +504,10 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     return this.roundNumber.getValidPlanningConfig().getEditMode() === PlanningEditMode.Manual;
   }
 
+  getSportName(field: Field|undefined): string {
+    return field?.getCompetitionSport().getSport().getName() ?? 'onbekend';
+  }
+
   /////////////////  NO PLANNING ///////////////////////////
 
   private showProgress() {
@@ -601,3 +616,8 @@ class PouleDataMap extends Map<string | number, PouleData> {
   }
 }
 
+export enum OptionalGameColumn {
+  Start, Referee
+}
+
+// type GameColumnUsage = Record<GameColumnDefinition, boolean>

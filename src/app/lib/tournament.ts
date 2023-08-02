@@ -17,6 +17,7 @@ export class Tournament extends Identifiable {
     protected lockerRooms: LockerRoom[] = [];
     protected recesses: Recess[] = [];
     protected public: boolean = false;
+    protected useSelfRegistrationVar: boolean = false;
 
     constructor(protected competition: Competition, protected startEditMode: StartEditMode) {
         super();
@@ -69,6 +70,15 @@ export class Tournament extends Identifiable {
     setPublic(publicX: boolean): void {
         this.public = publicX;
     }
+
+    setUseSelfRegistration(useSelfRegistration: boolean): void {
+        this.useSelfRegistrationVar = useSelfRegistration;
+    }
+
+    useSelfRegistration(): boolean {
+        return this.useSelfRegistrationVar;
+    }
+
 
     getStartEditMode(): StartEditMode {
         return this.startEditMode;

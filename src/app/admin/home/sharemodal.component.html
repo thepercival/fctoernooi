@@ -26,7 +26,7 @@
                 <div class="col-8">
                     <div class="input-group">
                         <input type="text" class="form-control" formControlName="url"
-                            placeholder="kopieer url naar klembord" aria-label="kopieer url naar klembord"
+                            placeholder="kopiëer url naar klembord" aria-label="kopiëer url naar klembord"
                             aria-describedby="basic-copy">
                         <button type="button" class="btn btn-outline-secondary" type="button" id="basic-copy"
                             ngxClipboard [cbContent]="typedForm.controls.url.value" (cbOnSuccess)="copied = true;">
@@ -40,7 +40,7 @@
 </div>
 
 <div class="modal-footer d-flex justify-content-reverse">
-    <ngb-alert *ngIf="copied === true" type="info">de url is gekopieerd naar het
+    <ngb-alert *ngIf="copied === true" type="info">de url is gekopiëerd naar het
         klembord
     </ngb-alert>
     <button *ngIf="!typedForm.pristine" type="button" class="btn btn-primary" data-dismiss="modal"

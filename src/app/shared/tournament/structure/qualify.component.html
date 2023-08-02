@@ -66,16 +66,16 @@
   </ng-container>
 </ng-template>
 
-  <ng-template #qualifyModal let-modal let-target="target">
-    <div class="modal-header">
-      <h4 class="modal-title">kwalificatie opties</h4>
-      <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
+<ng-template #qualifyModal let-modal let-target="target">
+  <div class="modal-header">
+    <h4 class="modal-title">kwalificatie opties</h4>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
+  </div>
+  <div class="modal-body">
+    <div class="btn-group-vertical d-flex flex-column {{getTargetDirectionClass(target)}}" role="group"
+      *ngIf="areSomeQualifyGroupsEditable(target) && !targetCollapsed[target]">
+      <ng-container *ngTemplateOutlet="editQualifyGroups;context:{$implicit: target}">
+      </ng-container>
     </div>
-    <div class="modal-body">
-      <div class="btn-group-vertical d-flex flex-column {{getTargetDirectionClass(target)}}" role="group"
-        *ngIf="areSomeQualifyGroupsEditable(target) && !targetCollapsed[target]">
-        <ng-container *ngTemplateOutlet="editQualifyGroups;context:{$implicit: target}">
-        </ng-container>
-      </div>
-    </div>
-  </ng-template>
+  </div>
+</ng-template>

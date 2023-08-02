@@ -1,0 +1,106 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-sm-10 col-md-8 col-lg-6">
+
+      <div class="d-flex justify-content-between mb-2">
+        <h2>
+          <fa-icon [icon]="['fas', 'user-plus']"></fa-icon> <span class="mx-1">inschrijven</span>
+          
+          <button *ngIf="!processing && isAdmin()" [routerLink]="['/admin/competitors', tournament.getId(), TabSignUp]" type="button"
+            class="btn btn-sm btn-outline-primary">
+            <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+          </button>
+        </h2>
+       
+      </div>
+      
+      <h2 *ngIf="processing" class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
+      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+      
+      <div *ngIf="!processing && registration" class="card card-auth my-3">
+        <div class="card-body text-center mx-auto form-validate border-top-0 border-primary">
+          <div class="card card-body mx-auto bg-faded form-register mt-3">
+            <legend class="m-b-1 text-xs-center">bedankt voor het inschrijven!</legend>
+            <button role="button" class="btn btn-primary" (click)="reset()">nog een deelnemer inschrijven</button>
+          </div>
+          <div class="card card-body mx-auto bg-faded form-register mt-3">
+            <legend class="m-b-1 text-xs-center">naar homepagina</legend>
+            <button role="button" class="btn btn-outline-primary" routerLink="/">ga terug</button>
+          </div>
+        </div>
+      </div>
+
+      <form *ngIf="!processing && isOpen && registration === undefined" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+        <div class="row mb-3">
+          <div class="col-3">
+            <label for="name" class="col-form-label">naam</label>
+          </div>
+          <div class="col-9">
+            <input class="form-control"
+              [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }"
+              type="text" formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters"
+              [focusMe]="true">
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-3">
+            <label for="emailaddress" class="col-form-label">emailadres</label>
+          </div>
+          <div class="col-9">
+            <input class="form-control"
+              [ngClass]="{ 'is-invalid': form.controls.emailaddress.invalid, 'is-valid': form.controls.emailaddress.valid }"
+              type="email" formControlName="emailaddress" placeholder="max. {{validations.maxlengthemailaddress}} karakters">
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-3">
+            <label for="telephone" class="col-form-label">telefoon</label>
+          </div>
+          <div class="col-9">
+            <input class="form-control"
+              [ngClass]="{ 'is-invalid': form.controls.telephone.invalid, 'is-valid': form.controls.telephone.valid }"
+              type="tel" formControlName="telephone" placeholder="max. {{validations.maxlengthtelephone}} karakters">
+          </div>
+        </div>
+
+        <div *ngIf="structure.getCategories().length > 1" class="row mb-3">
+          <label for="category" class="col-3 col-form-label pointer">categorie</label>
+          <div class="col-9">
+            <select class="form-control" formControlName="category" required>
+              <option *ngFor="let category of structure.getCategories()" [ngValue]="category">
+                {{category.getName()}}</option>
+            </select>
+          </div>
+        </div>
+
+        <ngb-alert *ngIf="settings && settings.getRemark().length > 0" type="info">{{ settings.getRemark() }}</ngb-alert>
+
+        <div class="row mb-3">
+          <div class="col-3">
+            <label for="info" class="col-form-label">extra info</label>
+          </div>
+          <div class="col-9">
+            <textarea class="form-control"
+              [ngClass]="{ 'is-invalid': form.controls.info.invalid, 'is-valid': form.controls.info.valid }"
+              formControlName="info" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
+          </div>
+        </div>
+      
+        <div class="row mt-2">
+          <div class="col-3">
+            
+          </div>
+          <div class="col-9">
+            <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
+              inschrijven
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

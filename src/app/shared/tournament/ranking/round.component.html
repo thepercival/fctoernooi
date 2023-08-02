@@ -21,9 +21,9 @@
     </div>
   </div>
 </div>
-<div class="d-flex align-items-stretch text-center">
+<div class="d-flex flex-wrap gap-3 justify-content-center text-center">
   <app-tournament-ranking-round *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed(); first as first"
-    class="align-self-stretch flex-wrap mb-2 w-100" [round]="qualifyGroup.getChildRound()" [favorites]="favorites"
+    class="align-self-stretch flex-wrap mb-2" [round]="qualifyGroup.getChildRound()" [favorites]="favorites"
     [competitionSports]="competitionSports" [first]="first" [structureNameService]="structureNameService">
   </app-tournament-ranking-round>
 </div>

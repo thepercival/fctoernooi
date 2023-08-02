@@ -8,6 +8,7 @@ import { IAlert, IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { DateConverter } from '../../lib/dateConverter';
 
 @Component({
   selector: 'app-tournament-public-shells',
@@ -34,6 +35,7 @@ export class PublicShellsComponent implements OnInit{
     private tournamentShellRepos: TournamentShellRepository,
     private favoritesRepos: FavoritesRepository,
     public dateFormatter: DateFormatter,
+    private dateConverter: DateConverter,
     globalEventsManager: GlobalEventsManager
   ) {
     this.linethroughDate = new Date();
@@ -56,8 +58,8 @@ export class PublicShellsComponent implements OnInit{
     const endDate = new Date(startDate);
     endDate.setDate(endDate.getDate() + 7);
 
-    this.setDate(this.searchForm.controls.startDate, startDate);
-    this.setDate(this.searchForm.controls.endDate, endDate);
+    this.dateConverter.setDate(this.searchForm.controls.startDate, startDate);
+    this.dateConverter.setDate(this.searchForm.controls.endDate, endDate);
     this.processing = false;
     this.search();
   }
@@ -73,25 +75,13 @@ export class PublicShellsComponent implements OnInit{
   private getSearchFilterFromForm(name?: string): TournamentShellFilter {
     const filter = { 
       name: this.searchForm.controls.name.value,
-      startDate: this.getDate(this.searchForm.controls.startDate), 
-      endDate: this.getDate(this.searchForm.controls.endDate)
+      startDate: this.dateConverter.getDate(this.searchForm.controls.startDate), 
+      endDate: this.dateConverter.getDate(this.searchForm.controls.endDate)
     };
     if( name !== undefined) {
       filter.name = name;
     }
     return filter;
-  }
-
-  getDate(dateFormControl: AbstractControl): Date {
-    return new Date(
-        dateFormControl.value.year,
-        dateFormControl.value.month - 1,
-        dateFormControl.value.day
-    );
-  }
-
-  setDate(dateFormControl: AbstractControl, date: Date) {
-    dateFormControl.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
   }
 
   search(name?: string) {

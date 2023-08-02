@@ -1,34 +1,154 @@
-<div class="row justify-content-center g-0">
+<div class="container-fluid">  
+    
+  <div class="row justify-content-center">
 
-  <div class="d-flex justify-content-around">
-    <h2>
-      <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
-    </h2>
-    <button *ngIf="!processing && !structure.hasSingleCategory()" type="button"
-      class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
-      (click)="openCategoriesChooseModal(structure)">
-      <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
-    </button>
+    <div class="col-sm-12 col-md-10 col-lg-8 g-0">
+
+      <div *ngIf="!processing" class="d-flex justify-content-{{structure.hasSingleCategory() ? 'center' : 'around'}}">
+        <h2>
+          <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
+        </h2>
+        <button *ngIf="!structure.hasSingleCategory()" type="button"
+          class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
+          (click)="openCategoriesChooseModal(structure)">
+          <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
+        </button>
+      </div>
+      <h2 *ngIf="processing" class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
+
+      <ngb-alert *ngIf="alert" class="m-0" [type]="alertType()">
+        {{alertMessage()}}
+      </ngb-alert>
+
+      <div>
+        <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" (activeIdChange)="onTabChange($event)" class="nav-tabs nav-fill mt-3">
+          <li [ngbNavItem]="TabBase">
+            <a class="px-1" ngbNavLink>basis</a>
+            <ng-template ngbNavContent>
+              <div *ngIf="!processing" class="d-flex flex-wrap gap-1 mt-3">
+                <app-tournament-category-competitors-base *ngFor="let category of favoriteCategories" class="mx-auto"
+                  [showHeader]="favoriteCategories.length > 1" [category]="category" [tournament]="tournament"
+                  [structureNameService]="structureNameService" [lockerRoomValidator]="lockerRoomValidator" [activeTab]="activeTab"
+                  (saveStructure)="saveStructure($event)"
+                  (removeCompetitor)="removeCompetitor($event)" (competitorsUpdate)="refreshCompetitors()"
+                  (alert)="setAlert($event.type,$event.message)" [focusId]="focusId">
+                </app-tournament-category-competitors-base>
+              </div>
+            </ng-template>
+          </li>
+          <li [ngbNavItem]="TabOrder">
+            <a class="px-1" ngbNavLink>volgorde</a>
+            <ng-template ngbNavContent>
+      
+              <ng-container *ngIf="!hasBegun; else begunAlert">
+                <div *ngIf="!processing" class="d-flex flex-wrap gap-1 mt-3">
+                
+                  <app-tournament-category-competitors-order *ngFor="let category of favoriteCategories" class="mx-auto"
+                    [showHeader]="favoriteCategories.length > 1" [category]="category" [tournament]="tournament"
+                    [structureNameService]="structureNameService" [activeTab]="activeTab"
+                    (competitorsUpdate)="refreshCompetitors()"
+                    (alert)="setAlert($event.type,$event.message)">
+                  </app-tournament-category-competitors-order>
+                </div>
+              </ng-container>
+              <ng-template #begunAlert>
+                <ngb-alert *ngIf="alert" class="m-0" type="warning">
+                  er zijn al wedstrijden gespeeld, je kunt de volgorde niet meer aanpassen
+                </ngb-alert>
+              </ng-template>
+
+              
+
+              <!-- <button type="button" class="btn btn-sm me-0"
+                [ngClass]="{ 'btn-outline-secondary': !orderMode, 'btn-outline-primary': orderMode }" (click)="toggleView()">
+                <fa-icon [icon]="['fas', 'random']"></fa-icon> volgorde
+              </button> -->
+      
+            </ng-template>
+          </li>
+          <li [ngbNavItem]="TabSignUp">
+            <a class="px-1" ngbNavLink>
+              <span class="overflow-hidden">inschrijven</span>
+            </a>
+            <ng-template ngbNavContent>
+
+              <div *ngIf="!processing" class="text-center mb-3">
+                <button *ngIf="showRegistrationSettings" type="button" class="btn btn-outline-primary mt-2 me-3"
+                  (click)="toggleShowRegistrationSettings()">
+                  <fa-icon [icon]="['fas', 'user-plus']"></fa-icon> <span class="ms-1">inschrijvingen</span>
+                </button>
+                <button *ngIf="!showRegistrationSettings" type="button" class="btn btn-outline-primary mt-2 me-3"
+                  (click)="toggleShowRegistrationSettings()">
+                  <fa-icon [icon]="['fas', 'cogs']"></fa-icon> <span class="ms-1">instellingen</span>
+                </button>
+                <button type="button" [disabled]="!showRegistrationFormBtn" class="btn btn-outline-primary mt-2"
+                  [routerLink]="['/public/registrationform', tournament.getId()]">
+                  <fa-icon [icon]="['fas', 'eye']"></fa-icon> <span class="ms-1">bekijk formulier</span>
+                </button>
+              </div>          
+
+              <ng-container *ngIf="!showRegistrationSettings; else showMyRegistrationSettings">
+                <div class="d-flex justify-content-center">                  
+                    <h2 class="text-center">inschrijvingen</h2>
+                    <div ngbDropdown #textDropDown="ngbDropdown" class="dropdown ps-1">
+                      <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false" ngbDropdownAnchor (focus)="textDropDown.open()">
+                        <fa-icon [icon]="[ 'fas', 'file-lines'] "></fa-icon> teksten
+                      </button>
+                      <ul ngbDropdownMenu aria-labelledby="dropdownManual" class="dropdown-menu">
+                        <li *ngFor="let subject of getTextSubjects()">
+                          <a href="javascript:void(0)" ngbDropdownItem class="dropdown-item"
+                            (click)="openTextEditorModal(subject)">{{getTextSubjectDescription(subject)}}</a>
+                        </li>
+                      </ul>
+                    </div>
+                </div>
+
+                <div *ngIf="!processing" class="d-flex flex-wrap gap-3 mt-3">
+              
+                  <app-tournament-category-register-registrations *ngFor="let category of favoriteCategories" class="mx-auto"
+                    [showHeader]="favoriteCategories.length > 1" [category]="category" [tournament]="tournament"
+                    [structureNameService]="structureNameService"
+                    [activeTab]="activeTab" (competitorsUpdate)="refreshCompetitors()"
+                    (alert)="setAlert($event.type,$event.message)">
+                  </app-tournament-category-register-registrations>
+                </div>
+              </ng-container>
+              <ng-template #showMyRegistrationSettings>
+                <app-tournament-register-settings *ngIf="registrationSettings" 
+                [registrationSettings]="registrationSettings" [tournament]="tournament"
+                (registerEnabledUpdate)="updateLinkToRegistrationForm($event)">
+                </app-tournament-register-settings>
+              </ng-template>
+              
+
+              <!-- <app-tournament-qualifyagainstconfig-edit [competitionSport]="competitionSport" [tournament]="tournament"
+                          [structure]="structure">
+                        </app-tournament-qualifyagainstconfig-edit> -->
+            </ng-template>
+          </li>
+          <li [ngbNavItem]="TabRegister" class="d-inline d-sm-none">
+            <a class="px-1" ngbNavLink>
+              <span>aanmelden</span>
+            </a>
+            <ng-template ngbNavContent>
+              <div *ngIf="!processing" class="d-flex flex-wrap gap-1 mt-3">
+                <app-tournament-category-competitors-registered *ngFor="let category of favoriteCategories" class="mx-auto"
+                  [showHeader]="favoriteCategories.length > 1" [category]="category" [tournament]="tournament"
+                  [structureNameService]="structureNameService" [activeTab]="activeTab" (competitorsUpdate)="refreshCompetitors()"
+                  (alert)="setAlert($event.type,$event.message)">
+                </app-tournament-category-competitors-registered>
+              </div>
+            </ng-template>
+          </li>
+        </ul>
+        <div [ngbNavOutlet]="nav" class="mt-2"></div>
+      </div>
+
+    </div>
   </div>
-  <h2 *ngIf="processing" class="text-center">
-    <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-  </h2>
-
-  <ngb-alert *ngIf="alert" class="m-0" [type]="alertType()">
-    {{alertMessage()}}
-  </ngb-alert>
-
-
-  <div *ngIf="!processing" class="d-flex flex-wrap gap-1 mt-3">
-    <app-tournament-category-competitors *ngFor="let category of favoriteCategories" class="mx-auto"
-      [showHeader]="favoriteCategories.length > 1" [category]="category" [tournament]="tournament"
-      [structureNameService]="structureNameService" [lockerRoomValidator]="lockerRoomValidator"
-      (processing)="updateProcessing($event)" (saveStructure)="saveStructure($event)"
-      (removeCompetitor)="removeCompetitor($event)" (competitorsUpdate)="refreshCompetitors()"
-      (alert)="setAlert($event.type,$event.message)" [focusId]="focusId">
-    </app-tournament-category-competitors>
-  </div>
-
 </div>
 
 <app-tournament-navbar [currentScreen]="CompetitorsScreen" *ngIf="tournament" [tournament]="tournament">

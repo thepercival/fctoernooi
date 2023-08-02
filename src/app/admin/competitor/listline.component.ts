@@ -3,20 +3,21 @@ import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Place, StructureNameService } from 'ngx-sport';
 import { TournamentCompetitor } from '../../lib/competitor';
-import { CompetitorMapper } from '../../lib/competitor/mapper';
 import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository';
 import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
+import { TournamentCompetitorMapper } from '../../lib/competitor/mapper';
 
 @Component({
   selector: 'app-tournament-competitor-line',
   templateUrl: './listline.component.html',
   styleUrls: ['./listline.component.css']
 })
-export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
+export class CompetitorListLineComponent implements AfterViewChecked {
   @Input() placeCompetitor!: PlaceCompetitorItem;
   @Input() focus!: boolean;
   @Input() hasBegun!: boolean;
+  @Input() showEmailaddress!: boolean; 
   @Input() showLockerRoomNotArranged!: boolean;
   @Input() structureNameService!: StructureNameService;
   @Input() tournamentId!: string | number;
@@ -30,10 +31,7 @@ export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
     private modalService: NgbModal,
     private router: Router,
     private competitorRepository: CompetitorRepository,
-    private competitorMapper: CompetitorMapper) {
-  }
-
-  ngOnInit() {
+    private competitorMapper: TournamentCompetitorMapper) {
   }
 
   edit() {
@@ -44,10 +42,7 @@ export class CompetitorListLineComponent implements OnInit, AfterViewChecked {
     this.removePressed.emit(this.placeCompetitor);
   }
 
-  /**
-   * verwijder de deelnemer van de pouleplek
-   */
-  register(competitor: TournamentCompetitor): void {
+  setRegistered(competitor: TournamentCompetitor): void {
     const jsonCompetitor = this.competitorMapper.toJson(competitor);
     jsonCompetitor.registered = competitor.getRegistered() === true ? false : true;
 

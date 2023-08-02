@@ -12,23 +12,23 @@ import { IAlert, IAlertType } from '../../shared/common/alert';
 import { CompetitorListRemoveModalComponent } from './listremovemodal.component';
 
 @Component({
-  selector: 'app-tournament-category-competitors',
-  templateUrl: './category.component.html',
-  styleUrls: ['./category.component.scss']
+  selector: 'app-tournament-category-competitors-base',
+  templateUrl: './category.base.component.html',
+  styleUrls: ['./category.base.component.scss']
 })
-export class CategoryCompetitorListComponent implements OnInit, OnChanges {
+export class CategoryBaseCompetitorListComponent implements OnInit, OnChanges {
   @Input() tournament!: Tournament;
   @Input() category!: Category;
   @Input() showHeader!: boolean;
   @Input() structureNameService!: StructureNameService;
   @Input() lockerRoomValidator!: LockerRoomValidator;
   @Input() focusId!: string | number;
+  @Input() activeTab!: number;
 
   @Output() alert = new EventEmitter<IAlert>();
-  @Output() processing = new EventEmitter<string | false>();
+  @Output() processing = new EventEmitter<string>();
   @Output() removeCompetitor = new EventEmitter<TournamentCompetitor>();
   @Output() saveStructure = new EventEmitter<string>();
-  @Output() competitorsUpdate = new EventEmitter();
 
   public placeCompetitorItems: PlaceCompetitorItem[] = [];
   public orderMode = false;
@@ -36,7 +36,7 @@ export class CategoryCompetitorListComponent implements OnInit, OnChanges {
   public swapItem: PlaceCompetitorItem | undefined;
   private startLocationMap!: StartLocationMap;
   private areSomeCompetitorsArranged: boolean = false;
-  // public alert: IAlert | undefined;
+  public toClipboardMessage: string | undefined;
 
   constructor(
     private router: Router,
@@ -48,8 +48,6 @@ export class CategoryCompetitorListComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.hasBegun = this.category.getRootRound().hasBegun();
     // at every change of this.structureNameService
-
-
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -85,38 +83,34 @@ export class CategoryCompetitorListComponent implements OnInit, OnChanges {
     return this.placeCompetitorItems.every((item: PlaceCompetitorItem) => item.competitor !== undefined);
   }
 
-  atLeastTwoPlacesHaveACompetitor(): boolean {
-    let firstCompetitor: TournamentCompetitor | undefined;
-    return this.placeCompetitorItems.some((item: PlaceCompetitorItem) => {
-      if (firstCompetitor === undefined) {
-        firstCompetitor = item.competitor;
-      }
-      return firstCompetitor !== undefined && item.competitor !== undefined && firstCompetitor !== item.competitor;
-    });
-  }
-
-  getSwapSwitchId(place: Place): string {
-    return 'swap-' + place.getId();
-  }
-
-  public swap(placeCompetitorItem: PlaceCompetitorItem) {
-    // this.resetAlert();
-    if (this.swapItem === undefined) {
-      this.swapItem = placeCompetitorItem;
-      return;
-    } else if (this.swapItem === placeCompetitorItem) {
-      this.swapItem = undefined;
-      return;
-    }
-    const swapCompetitorOne = this.swapItem.competitor;
-    const swapCompetitorTwo = placeCompetitorItem.competitor;
-    if (swapCompetitorOne !== undefined && swapCompetitorTwo !== undefined) {
-      this.swapTwo(swapCompetitorOne, swapCompetitorTwo);
-    }
-  }
-
   showLockerRoomNotArranged(competitor: Competitor | undefined): boolean {
     return competitor !== undefined && this.areSomeCompetitorsArranged && !this.lockerRoomValidator.isArranged(competitor);
+  }
+
+  someCompetitorHasTelephone(): boolean {
+    return this.placeCompetitorItems.some((placeCompetitorItem: PlaceCompetitorItem): boolean => {
+      const telephone  = placeCompetitorItem.competitor?.getTelephone() ?? '';
+      return telephone.length > 0;
+    })
+  }
+
+  someCompetitorHasEmailaddress(): boolean {
+    return this.placeCompetitorItems.some((placeCompetitorItem: PlaceCompetitorItem): boolean => {
+      const telephone = placeCompetitorItem.competitor?.getEmailaddress() ?? '';
+      return telephone.length > 0;
+    })
+  }
+
+  getTelephones(): string {
+    return this.placeCompetitorItems.map((placeCompetitorItem: PlaceCompetitorItem): string => {
+      return placeCompetitorItem.competitor?.getTelephone() ?? '';
+    }).join(';') 
+  }
+
+  getEmailaddresses(): string {
+    return this.placeCompetitorItems.map((placeCompetitorItem: PlaceCompetitorItem): string => {
+      return placeCompetitorItem.competitor?.getEmailaddress() ?? '';
+    }).join(';') 
   }
 
   toggleView() {
@@ -139,7 +133,7 @@ export class CategoryCompetitorListComponent implements OnInit, OnChanges {
       const addedPlace = this.structureEditor.addPlaceToRootRound(this.category.getRootRound());
       this.saveStructure.emit('pouleplek ' + this.structureNameService.getPlaceName(addedPlace) + ' is toegevoegd');
     } catch (e: any) {
-      this.processing.emit(false);
+      this.processing.emit('');
       this.alert.emit({ type: IAlertType.Danger, message: e.message });
     }
   }
@@ -165,62 +159,18 @@ export class CategoryCompetitorListComponent implements OnInit, OnChanges {
 
     const rootRound = this.category.getRootRound();
     const competitor = item.competitor;
-    const suffix = competitor ? ' en deelnemer "' + competitor.getName() : '"';
+    
+    const suffix = competitor ? ' en deelnemer "' + competitor.getName() + '"' : '';
     const singledoubleWill = competitor ? 'worden' : 'wordt';
     this.processing.emit('een pouleplek' + suffix + ' ' + singledoubleWill + ' verwijderd');
     try {
       this.structureEditor.removePlaceFromRootRound(rootRound);
       const singledoubleIs = competitor ? 'zijn' : 'is';
-      this.saveStructure.emit('een pouleplek' + competitor + ' ' + singledoubleIs + ' verwijderd');
+      this.saveStructure.emit('een pouleplek' + suffix + ' ' + singledoubleIs + ' verwijderd');
     } catch (e: any) {
-      this.processing.emit(false);
+      this.processing.emit('');
       this.alert.emit({ type: IAlertType.Danger, message: e.message });
     }
-  }
-
-  swapTwo(swappedItem: TournamentCompetitor, substitute: TournamentCompetitor): void {
-    this.processing.emit('volgorde wordt gewijzigd');
-    this.swapHelper(
-      [this.competitorRepository.swapObjects(swappedItem, substitute, this.tournament)]);
-  }
-
-  swapAll() {
-    this.processing.emit('volgorde wordt willekeurig gewijzigd');
-
-    let reposUpdates: Observable<void>[] = [];
-    const competitors = this.tournament.getCompetitors().slice();
-    let swapCompetitor: TournamentCompetitor | undefined;
-    while (competitors.length > 1) {
-      if (swapCompetitor === undefined) {
-        swapCompetitor = competitors.shift();
-        continue;
-      }
-      const idx = this.getRandomInt(competitors.length);
-      reposUpdates.push(this.competitorRepository.swapObjects(swapCompetitor, competitors[idx], this.tournament));
-      swapCompetitor = undefined;
-    }
-    this.swapHelper(reposUpdates);
-  }
-
-  private getRandomInt(max: number): number {
-    return Math.floor(Math.random() * Math.floor(max));
-  }
-
-  protected swapHelper(reposUpdates: Observable<void>[]) {
-    forkJoin(reposUpdates)
-      .subscribe({
-        next: () => {
-          ///this.setAlert(IAlertType.Success, 'volgorde gewijzigd');
-          this.swapItem = undefined;
-          this.competitorsUpdate.emit();
-        },
-        error: (e) => {
-          // this.setAlert(IAlertType.Danger, 'volgorde niet gewijzigd: ' + e);
-          this.swapItem = undefined;
-          this.competitorsUpdate.emit();
-          this.alert.emit({ type: IAlertType.Danger, message: e.message });
-        }
-      });
   }
 
   // protected setAlert(type: IAlertType, message: string) {
@@ -231,3 +181,4 @@ export class CategoryCompetitorListComponent implements OnInit, OnChanges {
   //   this.alert = undefined;
   // }
 }
+

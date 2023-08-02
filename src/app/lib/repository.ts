@@ -1,6 +1,6 @@
 import { HttpParams } from '@angular/common/http';
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError as observableThrowError, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 
@@ -19,14 +19,8 @@ export class APIRepository {
     }
 
     getHeaders(): HttpHeaders {
-        let headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
-        headers = headers.append('X-Api-Version', this.apiVersion);
-
-        const token = this.getToken();
-        if (token !== undefined) {
-            headers = headers.append('Authorization', 'Bearer ' + token);
-        }
-        return headers;
+        let headers = this.getBaseHeaders();        
+        return headers.append('Content-Type', 'application/json' + '; charset=utf-8');
     }
 
     protected getToken(): string | undefined {
@@ -38,10 +32,23 @@ export class APIRepository {
         return undefined;
     }
 
-    protected getOptions(): { headers: HttpHeaders; params: HttpParams } {
+    getBaseHeaders(): HttpHeaders {
+        let headers = new HttpHeaders({ 'X-Api-Version': this.apiVersion });
+        
+        const token = this.getToken();
+        if (token !== undefined) {
+            headers = headers.append('Authorization', 'Bearer ' + token);
+        }
+        return headers;
+    }
+
+    
+
+    protected getOptions(): { headers: HttpHeaders; params: HttpParams, responseType?: 'json' } {
         return {
             headers: this.getHeaders(),
-            params: new HttpParams()
+            params: new HttpParams(),
+            responseType: 'json'
         };
     }
 

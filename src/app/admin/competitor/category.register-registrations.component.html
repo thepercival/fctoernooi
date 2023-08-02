@@ -1,0 +1,68 @@
+<div *ngIf="category" class="container px-0">
+
+  <div class="card border-secondary" [ngClass]="{ 'border-0': !showHeader }">
+
+    <div *ngIf="showHeader" class="card-cat-header px-3">
+      <div class="d-flex justify-content-between">
+        <h5 class="my-0">
+          <span class="fw-bold align-middle">{{category.getName()}}</span>
+        </h5>
+      </div>
+    </div>
+    <div class="card-body p-0">
+      
+      <table *ngIf="registrations.length > 0" class="table mb-0">
+        <thead>
+          <tr>
+            <th>
+            </th>
+            <th>naam</th>
+            <th class="d-none d-sm-table-cell">emailadres</th>
+            <th class="d-none d-sm-table-cell">telefoon</th>            
+            <th>              
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let registration of registrations">
+            <td>
+              <button type="button" class="btn btn-sm btn-outline-primary" 
+              [routerLink]="['/admin/registration', tournament.getId(), registration.getCategory().getNumber(), registration.getId()]">
+                <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+              </button>
+            </td>
+            <td>{{registration.getName()}}</td>
+            <td class="d-none d-sm-table-cell"><a target="_blank" href="mailto:{{registration.getEmailaddress()}}">{{registration.getEmailaddress()}}</a></td>
+            <td class="d-none d-sm-table-cell"><a target="_blank" href="tel:{{registration.getTelephone()}}">{{registration.getTelephone()}}</a></td>
+
+            <td >
+              <button *ngIf="registration.getState() === Created" type="button"
+                class="btn btn-sm btn-outline-primary" (click)="processRegistration(registration)">
+                verwerken
+              </button>
+              <button *ngIf="registration.getStartLocation()" type="button" class="btn btn-sm btn-outline-secondary" 
+              [routerLink]="['/admin/competitor', tournament.getId(), registration.getCategory().getNumber(), registration.getStartLocation()?.getPouleNr(), registration.getStartLocation()?.getPlaceNr() ]">
+                <fa-icon class="text-success" [icon]="[ 'fas', 'check-circle'] "></fa-icon> naar deeln<span class="d-xs-inline d-sm-none">.</span><span class="d-none d-sm-inline">emer</span>
+              </button>
+              <button *ngIf="registration.getState() === Substitute" type="button" 
+                class="btn btn-sm btn-outline-secondary" (click)="processRegistration(registration)">
+                <fa-icon class="text-warning" [icon]="[ 'fas', 'registered'] "></fa-icon> als reserve
+              </button>
+              <button *ngIf="registration.getState() === Declined" type="button"
+                class="btn btn-sm btn-outline-secondary"
+                (click)="processRegistration(registration)">
+                <fa-icon class="text-danger" [icon]="[ 'fas', 'times-circle'] "></fa-icon> afgewezen
+              </button>
+            </td>            
+          </tr>
+        </tbody>
+      </table>
+
+      <ngb-alert *ngIf="registrations.length === 0" class="m-0" type="info">
+        er zijn nog geen inschrijvingen gedaan
+      </ngb-alert>
+      
+      
+    </div>
+  </div>
+</div>

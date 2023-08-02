@@ -113,6 +113,7 @@ input.is-warning {
   @extend .text-light;
 }
 
+/*! purgecss start ignore */
 .bg-against {
   background-color: purple;
 }
@@ -172,45 +173,6 @@ ngb-alert {
   border-end-start-radius: 1rem;
   border-end-end-radius: 1rem;
 }
-
-// .more-than-two-rounds {
-//   @include media-breakpoint-only(xs) {
-//       flex-direction: column;
-//       align-items: flex-start;
-//       justify-content: center;
-//   }
-// }
-
-// .more-than-four-rounds {
-//   @include media-breakpoint-only(sm) {
-//       flex-direction: column;
-//       align-items: flex-start;
-//       justify-content: center;
-//   }
-// }
-
-// .more-than-eight-rounds {
-//   @include media-breakpoint-up(md) {
-//       flex-direction: column;
-//       align-items: flex-start;
-//       justify-content: center;
-//   }
-// }
-
-// .more-than {
-//   @include media-breakpoint-only(xs) {
-//     flex-direction: column;
-//     align-items: flex-start;
-//     justify-content: center;
-//     @extend .border-primary;
-//   }
-
-//   @include media-breakpoint-up(md) {
-//     flex-direction: column;
-//     align-items: flex-start;
-//     justify-content: center;
-//   }
-// }
 
 .q-w-1 {
   border-color: #298F00 !important;
@@ -305,6 +267,7 @@ ngb-alert {
   border-right-color: #FF0000 !important;
   border-bottom-color: #FF0000 !important;
 }
+/*! purgecss end ignore */
 
 span.badge-rank {
   background-color: inherit;
@@ -327,3 +290,42 @@ span.badge-rank {
 ngb-datepicker-month {
   background-color: white;
 }
+
+// .more-than-two-rounds {
+//   @include media-breakpoint-only(xs) {
+//       flex-direction: column;
+//       align-items: flex-start;
+//       justify-content: center;
+//   }
+// }
+
+// .more-than-four-rounds {
+//   @include media-breakpoint-only(sm) {
+//       flex-direction: column;
+//       align-items: flex-start;
+//       justify-content: center;
+//   }
+// }
+
+// .more-than-eight-rounds {
+//   @include media-breakpoint-up(md) {
+//       flex-direction: column;
+//       align-items: flex-start;
+//       justify-content: center;
+//   }
+// }
+
+// .more-than {
+//   @include media-breakpoint-only(xs) {
+//     flex-direction: column;
+//     align-items: flex-start;
+//     justify-content: center;
+//     @extend .border-primary;
+//   }
+
+//   @include media-breakpoint-up(md) {
+//     flex-direction: column;
+//     align-items: flex-start;
+//     justify-content: center;
+//   }
+// }

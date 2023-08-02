@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    JsonCompetitor,
+    Competitor,
     NameService,
     StartLocation,
     StartLocationMap,
@@ -19,6 +19,13 @@ import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
+import { JsonTournamentCompetitor } from '../../lib/competitor/json';
+import { NameValidator } from '../../lib/nameValidator';
+import { TournamentRegistration } from '../../lib/tournament/registration';
+import { User } from '../../lib/user';
+import { Observable, of } from 'rxjs';
+import { Tournament } from '../../lib/tournament';
 
 @Component({
     selector: 'app-tournament-competitor-edit',
@@ -28,20 +35,36 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 export class CompetitorEditComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup<{
         name: FormControl<string>,
+        emailaddress: FormControl<string | null>,
+        telephone: FormControl<string | null>, 
         registered: FormControl<boolean>,
+        logourl: FormControl<string>,
+        logoUpload: FormControl<Blob | null>,
         info: FormControl<string|null>,
       }>;
     originalCompetitor: TournamentCompetitor | undefined;
     hasBegun!: boolean;
     public nameService: NameService;
     public structureNameService!: StructureNameService;
+    
+    public logoInput: number;
+    public logoInputUpload = 1;
+    public logoInputUrl = 2;
+    public newLogoUploaded: boolean;
+    private base64Logo!: string | ArrayBuffer | null;
+
     startLocation!: StartLocation;
     placeNr!: number;
 
     validations: CompetitorValidations = {
         minlengthname: TournamentCompetitor.MIN_LENGTH_NAME,
         maxlengthname: TournamentCompetitor.MAX_LENGTH_NAME,
-        maxlengthinfo: TournamentCompetitor.MAX_LENGTH_INFO
+        minlengthemailaddress: User.MIN_LENGTH_EMAIL,
+        maxlengthemailaddress: User.MAX_LENGTH_EMAIL,
+        minlengthtelephone: TournamentCompetitor.MIN_LENGTH_TELEPHONE,
+        maxlengthtelephone: TournamentCompetitor.MAX_LENGTH_TELEPHONE,
+        maxlengthinfo: TournamentCompetitor.MAX_LENGTH_INFO,
+        maxlengthurl: TournamentCompetitor.MAX_LENGTH_IMAGEURL
     };
 
     constructor(
@@ -53,10 +76,12 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         modalService: NgbModal,
         favRepository: FavoritesRepository,
         private competitorRepository: CompetitorRepository,
-        private myNavigation: MyNavigation
+        private myNavigation: MyNavigation,
+        private nameValidator: NameValidator
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
-
+        this.logoInput = this.logoInputUpload;
+        this.newLogoUploaded = false;
         this.typedForm = new FormGroup({
             name: new FormControl('', { nonNullable: true, validators: 
                 [
@@ -65,10 +90,31 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
                     Validators.maxLength(this.validations.maxlengthname)
                 ] 
             }),
+            emailaddress: new FormControl('', {
+                validators:
+                    [
+                        Validators.minLength(this.validations.minlengthemailaddress),
+                        Validators.maxLength(this.validations.maxlengthemailaddress)
+                    ]
+            }),
+            telephone: new FormControl('', {
+                validators:
+                    [
+                        Validators.minLength(this.validations.minlengthtelephone),
+                        Validators.maxLength(this.validations.maxlengthtelephone)
+                    ]
+            }),
             registered: new FormControl(false, { nonNullable: true }),
+            logourl: new FormControl('', {
+                nonNullable: true, validators:
+                    [
+                        Validators.maxLength(this.validations.maxlengthurl)
+                    ]
+            }),
+            logoUpload: new FormControl(),
             info: new FormControl('', { nonNullable: false , validators: 
                 [Validators.maxLength(this.validations.maxlengthinfo)] 
-            }),
+            }),            
           });
         this.nameService = new NameService();
     }
@@ -97,11 +143,30 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         this.structureNameService = new StructureNameService(startLocationMap);
 
         const competitor = <TournamentCompetitor | undefined>startLocationMap.getCompetitor(this.startLocation);
-        this.originalCompetitor = competitor;
-        this.typedForm.controls.name.setValue(this.originalCompetitor?.getName() ?? '' );
-        this.typedForm.controls.registered.setValue(this.originalCompetitor ? this.originalCompetitor.getRegistered() : false);
-        this.typedForm.controls.info.setValue(this.originalCompetitor?.getInfo() ?? null);
-        this.processing = false;
+        this.reloadCompetitor(competitor)
+            .subscribe({
+                next: (competitor: TournamentCompetitor|undefined) => {
+                    this.originalCompetitor = competitor;
+                    this.typedForm.controls.name.setValue(this.originalCompetitor?.getName() ?? '');
+                    this.typedForm.controls.emailaddress.setValue(this.originalCompetitor?.getEmailaddress() ?? '');
+                    this.typedForm.controls.telephone.setValue(this.originalCompetitor?.getTelephone() ?? '');
+                    this.typedForm.controls.registered.setValue(this.originalCompetitor ? this.originalCompetitor.getRegistered() : false);
+                    this.typedForm.controls.info.setValue(this.originalCompetitor?.getInfo() ?? null);
+                    this.processing = false;
+                },
+                error: (e: string) => {
+                    this.setAlert(IAlertType.Danger, e);
+                    this.processing = false;
+                }
+            });
+
+    }
+
+    private reloadCompetitor(competitor: TournamentCompetitor | undefined): Observable<TournamentCompetitor|undefined> {
+        if ( competitor === undefined ) {
+            return of(undefined);
+        }
+        return this.competitorRepository.reloadObject(competitor, this.tournament);
     }
 
     getPlaceName(): string {
@@ -109,13 +174,15 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         return this.structureNameService.getPlaceName(startPlace);
     }
 
-    formToJson(): JsonCompetitor {
-        const name = this.typedForm.controls.name.value;
+    formToJson(): JsonTournamentCompetitor {
         const info = this.typedForm.controls.info.value;
         return {
             id: this.originalCompetitor ? this.originalCompetitor.getId() : 0,
-            name: name,
+            name: this.typedForm.controls.name.value,
+            emailaddress: this.typedForm.controls.emailaddress.value ?? undefined,
+            telephone: this.typedForm.controls.telephone.value ?? undefined,
             registered: this.typedForm.controls.registered.value,
+            hasLogo: this.logoInput === this.logoInputUrl, 
             info: info ? info : undefined,
             categoryNr: this.startLocation.getCategoryNr(),
             pouleNr: this.startLocation.getPouleNr(),
@@ -125,7 +192,12 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
 
     save(): boolean {
         const jsonCompetitor = this.formToJson();
-        const message = this.validateName(jsonCompetitor.name, this.originalCompetitor);
+        const message = this.nameValidator.validate(
+            jsonCompetitor.name, 
+            this.originalCompetitor,
+            this.tournament.getCompetitors(),
+            this.startLocation.getCategoryNr()
+        );
         if (message) {
             this.setAlert(IAlertType.Danger, message);
             return false;
@@ -135,8 +207,8 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         if (this.originalCompetitor) {
             this.competitorRepository.editObject(jsonCompetitor, this.originalCompetitor, this.tournament.getId())
                 .subscribe({
-                    next: () => {
-                        this.navigateBack();
+                    next: (competitor: Competitor) => {
+                        this.processLogoAndNavigateBack(<TournamentCompetitor>competitor);
                     },
                     error: (e) => {
                         this.setAlert(IAlertType.Danger, e); this.processing = false;
@@ -147,8 +219,8 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         }
         this.competitorRepository.createObject(jsonCompetitor, this.tournament)
             .subscribe({
-                next: () => {
-                    this.navigateBack();
+                next: (competitor: Competitor) => {
+                    this.processLogoAndNavigateBack(<TournamentCompetitor>competitor);
                 },
                 error: (e) => {
                     this.setAlert(IAlertType.Danger, e); this.processing = false;
@@ -157,37 +229,74 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         return false;
     }
 
+    processLogoAndNavigateBack(competitor: TournamentCompetitor) {
+        if (this.logoInput === this.logoInputUrl || this.newLogoUploaded !== true) {
+            this.processing = false;
+            this.navigateBack();
+            return;
+        }
+        const logoUrl = this.logoInput === this.logoInputUrl ? this.typedForm.controls.logourl.value : undefined;
+
+        const input = new FormData();
+        const stream: Blob | null = this.typedForm.controls.logoUpload.value;
+        if (stream) {
+            input.append('logostream', stream);
+        }
+        this.competitorRepository.uploadImage(input, competitor, this.tournament)
+            .subscribe({
+                next: () => {
+                    this.processing = false;
+                    this.navigateBack();
+                },
+                error: (e) => {
+                    this.setAlert(IAlertType.Danger, e); this.processing = false;
+                },
+                complete: () => this.processing = false
+            });
+    }
+
+    toggleLogoInput() {
+        if (this.logoInput === this.logoInputUpload) {
+            this.logoInput = this.logoInputUrl;
+        } else {
+            this.logoInput = this.logoInputUpload;
+        }
+    }
 
     navigateBack() {
         this.myNavigation.back();
     }
 
-    protected validateName(name: string, competitor: TournamentCompetitor | undefined): string | undefined {
-        if (this.isNameDuplicate(name, competitor)) {
-            return 'de naam bestaat al voor dit toernooi';
+    getLogoUploadDescription() {
+        return 'het plaatje moet in svg formaat worden aangeleverd, zodat het voor zowel de website als het programmaboekje gebruikt kan worden. De beeldverhouding moet vierkant zijn'
+    }
+
+    openInfoModal(modalContent: TemplateRef<any>) {
+        const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
+        activeModal.componentInstance.header = 'uitleg upload logo';
+        activeModal.componentInstance.modalContent = modalContent;
+    }
+
+    onFileChange(event: Event) {
+        const files: FileList | null = (<HTMLInputElement>event.target).files;
+        if (!files || files.length === 0) {
+            return;
         }
-        let checkName = (name: string): string | undefined => {
-            if (name.length <= 20) {
-                return undefined;
-            }
-            let pos = name.indexOf(' ');
-            if (pos < 0 || pos >= 20) {
-                return 'de naam mag maximaal 20 aaneengesloten karakters bevatten(liefst 15), gebruik een spatie';
-            }
-            return checkName(name.substring(pos + 1));
+        const file = files[0];
+        const mimeType = file.type;
+        if (mimeType.match(/image\/*/) == null) {
+            this.setAlert(IAlertType.Danger, 'alleen plaatjes worden ondersteund');
+            return;
+        }
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (_event) => {
+            this.base64Logo = reader.result;
         };
-        return checkName(name);
+        this.typedForm.controls.logoUpload.setValue(file);
+
+        this.newLogoUploaded = true;
     }
-
-    isNameDuplicate(name: string, competitor: TournamentCompetitor | undefined): boolean {
-        return this.tournament.getCompetitors().find((competitorIt: TournamentCompetitor) => {
-            return name === competitorIt.getName()
-                && (competitor === undefined || competitor !== competitorIt)
-                && competitorIt.getStartLocation().getCategoryNr() === this.startLocation.getCategoryNr();
-        }) !== undefined;
-    }
-
-
     // setName(name) {
     //     this.error = undefined;
     //     if (name.length < this.validations.minlengthinitials || name.length > this.validations.maxlengthinfo) {
@@ -200,5 +309,10 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
 export interface CompetitorValidations {
     minlengthname: number;
     maxlengthname: number;
+    minlengthemailaddress: number;
+    maxlengthemailaddress: number;
+    minlengthtelephone: number;
+    maxlengthtelephone: number;
     maxlengthinfo: number;
+    maxlengthurl: number;
 }

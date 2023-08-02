@@ -10,10 +10,11 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentUser } from '../../lib/tournament/user';
 import { Observable, of } from 'rxjs';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { Category, StartLocationMap, StructureNameService } from 'ngx-sport';
+import { Category, RoundNumber, SelfReferee, StartLocationMap, Structure, StructureNameService } from 'ngx-sport';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
+import { OptionalGameColumn } from '../../shared/tournament/games/roundnumber.component';
 
 @Component({
   selector: 'app-tournament-games-edit',
@@ -25,6 +26,7 @@ export class GameListComponent extends TournamentComponent implements OnInit {
   roles: number = 0;
   public structureNameService!: StructureNameService;
   public categoryMap: Map<number, Category> = new Map();
+  public optionalGameColumns: Map<OptionalGameColumn, boolean> = new Map(); 
 
   constructor(
     route: ActivatedRoute,
@@ -49,6 +51,7 @@ export class GameListComponent extends TournamentComponent implements OnInit {
         this.processing = false;
         return;
       }
+      this.initGameColumnDefinitions(this.structure);
       const startLocationMap = new StartLocationMap(this.tournament.getCompetitors());
       this.structureNameService = new StructureNameService(startLocationMap);
       this.roles = tournamentUser ? tournamentUser.getRoles() : 0;
@@ -61,6 +64,21 @@ export class GameListComponent extends TournamentComponent implements OnInit {
           error: (e) => this.processing = false
         });
     });
+  }
+
+  private initGameColumnDefinitions(structure: Structure): void {
+    let roundNumbers = structure.getRoundNumbers();
+    
+    const enableTime = roundNumbers.some((roundNumber: RoundNumber): boolean => {
+      return roundNumber.getValidPlanningConfig().getEnableTime();
+    });     
+    this.optionalGameColumns.set(OptionalGameColumn.Start, enableTime);
+
+    const nrOfReferees = this.tournament.getCompetition().getReferees().length;
+    const hasSomeReferees = roundNumbers.some((roundNumber: RoundNumber): boolean => {
+      return nrOfReferees > 0 || roundNumber.getValidPlanningConfig().getSelfReferee() !== SelfReferee.Disabled
+    });
+    this.optionalGameColumns.set(OptionalGameColumn.Referee, hasSomeReferees);
   }
 
   get GamesScreen(): TournamentScreen { return TournamentScreen.Games }

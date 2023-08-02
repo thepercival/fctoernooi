@@ -27,6 +27,9 @@ import {
   faUsers,
   faTvAlt,
   faEnvelope,
+  faMobile,
+  faRegistered,
+  faFileLines,
 } from '@fortawesome/free-solid-svg-icons';
 import { ClipboardModule } from 'ngx-clipboard';
 import {
@@ -77,11 +80,19 @@ import { GameBaseEditComponent } from './game/editbase.component';
 import { GameAddComponent } from './game/add.component';
 import { GameModeModalComponent } from './gameMode/modal.component';
 import { RecessAddComponent } from './startAndRecesses/addRecess.component';
-import { CategoryCompetitorListComponent } from './competitor/category.component';
+import { CategoryBaseCompetitorListComponent } from './competitor/category.base.component';
 import { RankingEditComponent } from './ranking/edit.component';
 import { LockerRoomsEditComponent } from './lockerrooms/lockerrooms.component';
 import { StructureEditComponent } from './structure/edit.component';
 import { SportIconComponent } from '../shared/tournament/sport/icon.component';
+import { CategoryOrderCompetitorListComponent } from './competitor/category.order.component';
+import { CategoryRegisteredCompetitorListComponent } from './competitor/category.registered.component';
+import { CategoryRegistrationListComponent } from './competitor/category.register-registrations.component';
+import { RegistrationSettingsComponent } from './competitor/register-settings.component';
+import { TournamentRegistrationEditComponent } from './registration/registration-edit.component';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { TournamentRegistrationProcessModalComponent } from './competitor/registration-processmodal.component';
+import { TextEditorModalComponent } from './textEditor/texteditormodal.component';
 
 @NgModule({
   imports: [
@@ -91,7 +102,8 @@ import { SportIconComponent } from '../shared/tournament/sport/icon.component';
     ReactiveFormsModule,
     FontAwesomeModule,
     CommonSharedModule,
-    TournamentModule
+    TournamentModule,
+    NgbDropdownModule
   ],
   declarations: [
     AgainstQualifyConfigEditComponent,
@@ -102,7 +114,13 @@ import { SportIconComponent } from '../shared/tournament/sport/icon.component';
     CompetitionSportEditComponent,
     CompetitorEditComponent,
     CompetitorListComponent,
-    CategoryCompetitorListComponent,
+    CategoryRegistrationListComponent,
+    CategoryRegistrationListComponent,
+    RegistrationSettingsComponent,
+    CategoryBaseCompetitorListComponent,
+    CategoryRegisteredCompetitorListComponent,
+    CategoryOrderCompetitorListComponent,
+    CategoryRegistrationListComponent,
     CompetitorListLineComponent,
     CompetitorListRemoveModalComponent,
     CreateSportWithFieldsComponent,
@@ -136,7 +154,10 @@ import { SportIconComponent } from '../shared/tournament/sport/icon.component';
     ScoreTogetherCardComponent,
     ShareModalComponent,
     StructureSelectRoundComponent,
+    TextEditorModalComponent,
     TournamentPropertiesComponent,
+    TournamentRegistrationEditComponent,
+    TournamentRegistrationProcessModalComponent,
   ],
   providers: [
     CompetitionSportEditor,
@@ -160,6 +181,7 @@ export class AdminModule {
       /** home, autorisatie */ faUserFriends, faUsers,
       /** home */ faTvAlt,
       /** referee */ faEnvelope,
+      /** registrations */ faMobile, faRegistered, faFileLines,
       /*faCircle, faListUl, faCogs, faMinus, faInfoCircle, faMedal, faUsers, faSync*/
     );
     library.addIcons(

@@ -1,5 +1,5 @@
 <td>
-  <button #btnEdit type="button" class="btn btn-sm btn-primary" (click)="edit()">
+  <button #btnEdit type="button" class="btn btn-sm btn-outline-primary" (click)="edit()">
     <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
   </button>
 </td>
@@ -10,9 +10,11 @@
   <div class="d-flex justify-content-between">
     <span>{{placeCompetitor.competitor.getName()}}</span>
     <div>
-      <fa-icon [icon]="['fas', 'door-closed']" [fixedWidth]="true" class="pointer text-warning"
-        [ngClass]="{ 'empty-fixedwidth': !showLockerRoomNotArranged}" (click)="openLockerRoomInfoModal(popLockerRoom)">
-      </fa-icon>
+      <button *ngIf="showLockerRoomNotArranged" type="button" class="btn btn-sm btn-outline-warning me-2" (click)="openLockerRoomInfoModal(popLockerRoom)">
+        <fa-icon [icon]="['fas', 'door-closed']"></fa-icon>
+      </button>
+
+      
       <fa-icon title="aangemeld" [fixedWidth]="true" [icon]="['fas', 'check-circle']"
         class="text-success d-inline d-sm-none"
         [ngClass]="{ 'empty-fixedwidth': !placeCompetitor.competitor.getRegistered()}">
@@ -21,18 +23,26 @@
   </div>
 </td>
 <td *ngIf="!placeCompetitor.competitor">
-  <button #btnEdit type="button" class="btn btn-sm btn-outline-warning" (click)="edit()">vul een naam in</button>
+  <button #btnEdit type="button" class="btn btn-sm btn-outline-warning border-0" (click)="edit()">vul een naam in</button>
+</td>
+
+<td *ngIf="showEmailaddress" class="d-none d-sm-table-cell">
+  <a *ngIf="placeCompetitor.competitor" target="_blank" href="mailto:{{placeCompetitor.competitor.getEmailaddress()}}" rel="noopener">
+    {{placeCompetitor.competitor.getEmailaddress()}}
+  </a>
 </td>
 <td class="d-none d-sm-table-cell">
   <div *ngIf="placeCompetitor.competitor" class="form-switch text-center">
     <input type="checkbox" class="form-check-input" id="{{getSwitchId(placeCompetitor.place)}}"
-      [checked]="placeCompetitor.competitor.getRegistered()" (change)="register(placeCompetitor.competitor)">
+      [checked]="placeCompetitor.competitor.getRegistered()" (change)="setRegistered(placeCompetitor.competitor)">
     <label class="form-check-label" for="{{getSwitchId(placeCompetitor.place)}}"></label>
   </div>
 </td>
-<td *ngIf="!hasBegun" class="text-end"><button type="button" class="btn btn-sm btn-danger" (click)="remove()">
+<td *ngIf="!hasBegun" class="text-end">
+  <button type="button" class="btn btn-sm btn-outline-danger" (click)="remove()">
     <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
-  </button></td>
+  </button>
+</td>
 
 <ng-template #popLockerRoom let-activeModal>
   <div class="text-center lead">

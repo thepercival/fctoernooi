@@ -17,6 +17,7 @@ import { Recess } from '../../lib/recess';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { StartEditMode } from '../../lib/tournament/startEditMode';
+import { DateConverter } from '../../lib/dateConverter';
 
 @Component({
     selector: 'app-tournament-startandrecesses',
@@ -45,7 +46,8 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
         private planningRepository: PlanningRepository,
         private tournamentMapper: TournamentMapper,
         private myNavigation: MyNavigation,
-        public dateFormatter: DateFormatter
+        public dateFormatter: DateFormatter,
+        private dateConverter: DateConverter,
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
 
@@ -67,7 +69,7 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
         const minDate = date > now ? now : date;
         this.minDateStruct = { year: minDate.getFullYear(), month: minDate.getMonth() + 1, day: minDate.getDate() };
 
-        this.setDate(this.typedForm.controls.date, this.typedForm.controls.time, date);
+        this.dateConverter.setDateTime(this.typedForm.controls.date, this.typedForm.controls.time, date);
 
         if (this.hasBegun) {
             this.setAlert(IAlertType.Warning, 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
@@ -85,21 +87,6 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
         return this.structure.getFirstRoundNumber().getValidPlanningConfig().getEnableTime();
     }
 
-    getDate(dateFormControl: AbstractControl, timeFormControl: AbstractControl): Date {
-        return new Date(
-            dateFormControl.value.year,
-            dateFormControl.value.month - 1,
-            dateFormControl.value.day,
-            timeFormControl.value.hour,
-            timeFormControl.value.minute
-        );
-    }
-
-    setDate(dateFormControl: AbstractControl, timeFormControl: AbstractControl, date: Date) {
-        dateFormControl.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
-        timeFormControl.setValue({ hour: date.getHours(), minute: date.getMinutes() });
-    }
-
     protected canUseSameDayFormat(): boolean {
         const start = this.competition.getStartDateTime();
         const lastRecess = this.tournament.getRecesses().slice().pop();
@@ -113,7 +100,7 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
     }
 
     preEdit(modalContent: TemplateRef<any>): boolean {
-        const startDateTime = this.getDate(this.typedForm.controls.date, this.typedForm.controls.time);
+        const startDateTime = this.dateConverter.getDateTime(this.typedForm.controls.date, this.typedForm.controls.time);
         if( startDateTime.getTime() <= this.tournament.getCompetition().getStartDateTime().getTime() ) {
             return this.edit();
         }
@@ -127,7 +114,7 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
             if (result === 'update') {            
                 this.edit();
             } else { 
-                const startAsTime = this.getDate(this.typedForm.controls.date, this.typedForm.controls.time).getTime();
+                const startAsTime = this.dateConverter.getDateTime(this.typedForm.controls.date, this.typedForm.controls.time).getTime();
                 const navigationExtras: NavigationExtras = {
                     queryParams: { newStartForCopyAsTime: startAsTime }
                   };
@@ -140,7 +127,7 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
     edit(): boolean {
         this.setAlert(IAlertType.Info, 'het toernooi wordt opgeslagen');
 
-        const startDateTime = this.getDate(this.typedForm.controls.date, this.typedForm.controls.time);
+        const startDateTime = this.dateConverter.getDateTime(this.typedForm.controls.date, this.typedForm.controls.time);
 
         this.processing = true;
         const firstRoundNumber = this.structure.getFirstRoundNumber();

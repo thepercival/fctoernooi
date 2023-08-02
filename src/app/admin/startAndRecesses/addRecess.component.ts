@@ -16,6 +16,7 @@ import { RecessValidator } from '../../lib/recess/validator';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { JsonRecess } from '../../lib/recess/json';
+import { DateConverter } from '../../lib/dateConverter';
 
 @Component({
     selector: 'app-tournament-competitor-edit',
@@ -43,7 +44,8 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
         favRepository: FavoritesRepository,
         private recessRepository: RecessRepository,
         private planningRepository: PlanningRepository,
-        private myNavigation: MyNavigation
+        private myNavigation: MyNavigation,
+        private dateConverter: DateConverter,
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
         this.typedForm = new FormGroup({
@@ -91,34 +93,21 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
         const endDateTime = new Date(startDateTime);
         endDateTime.setMinutes(startDateTime.getMinutes() + 30);
 
-        this.setDate(this.typedForm.controls.startdate, this.typedForm.controls.starttime, startDateTime);
-        this.setDate(this.typedForm.controls.enddate, this.typedForm.controls.endtime, endDateTime);
+        this.dateConverter.setDateTime(this.typedForm.controls.startdate, this.typedForm.controls.starttime, startDateTime);
+        this.dateConverter.setDateTime(this.typedForm.controls.enddate, this.typedForm.controls.endtime, endDateTime);
     }
 
     get MaxLengthName(): number { return Recess.MAX_LENGTH_NAME };
 
-    setDate(dateFormControl: AbstractControl, timeFormControl: AbstractControl, date: Date) {
-        dateFormControl.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
-        timeFormControl.setValue({ hour: date.getHours(), minute: date.getMinutes() });
-    }
+    
 
     formToJson(): JsonRecess {
         return {
             id: 0,
             name: this.typedForm.controls.name.value,
-            start: this.getDate(this.typedForm.controls.startdate, this.typedForm.controls.starttime).toISOString(),
-            end: this.getDate(this.typedForm.controls.enddate, this.typedForm.controls.endtime).toISOString()
+            start: this.dateConverter.getDateTime(this.typedForm.controls.startdate, this.typedForm.controls.starttime).toISOString(),
+            end: this.dateConverter.getDateTime(this.typedForm.controls.enddate, this.typedForm.controls.endtime).toISOString()
         };
-    }
-
-    getDate(dateFormControl: AbstractControl, timeFormControl: AbstractControl): Date {
-        return new Date(
-            dateFormControl.value.year,
-            dateFormControl.value.month - 1,
-            dateFormControl.value.day,
-            timeFormControl.value.hour,
-            timeFormControl.value.minute
-        );
     }
 
     save(): boolean {

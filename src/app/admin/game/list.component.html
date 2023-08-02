@@ -7,13 +7,13 @@
         </h2>
         <ng-container *ngIf="structure.hasSingleCategory();else withCategories">
           <button *ngIf="tournament && structure && structure.allPoulesHaveGames() && hasAdminRole()" type="button"
-            class="btn btn-sm btn-outline-primary me-0" [routerLink]="['/admin/startandrecesses', tournament.getId()]">
+            class="btn btn-sm btn-outline-primary me-2" [routerLink]="['/admin/startandrecesses', tournament.getId()]">
             start & pauzes
           </button>
 
         </ng-container>
         <ng-template #withCategories>
-          <button type="button" class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
+          <button type="button" class="btn btn-sm me-2 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
             (click)="openCategoriesChooseModal(structure)">
             <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
           </button>
@@ -24,13 +24,14 @@
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <div *ngIf="!processing && structure">
-        <app-tournament-roundnumber-planning *ngFor="let roundNumber of structure.getRoundNumbers()"
+      <table *ngIf="!processing && structure" class="table mt-3">
+        <tbody app-tournament-roundnumber-planning *ngFor="let roundNumber of structure.getRoundNumbers()"
           [structureNameService]="structureNameService" [tournament]="tournament" [roundNumber]="roundNumber"
+          [optionalGameColumns]="optionalGameColumns"
           [showLinksToAdmin]="true" [favoriteCategories]="favoriteCategories" [roles]="roles"
           [userRefereeId]="userRefereeId" (scrolling)="scroll()">
-        </app-tournament-roundnumber-planning>
-      </div>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

@@ -5,6 +5,7 @@ import { AuthService } from '../../../lib/auth/auth.service';
 import { Role } from '../../../lib/role';
 import { Tournament } from '../../../lib/tournament';
 import { TournamentScreen } from '../screenNames';
+import { CompetitorTab } from '../../../admin/competitor/list.component';
 
 @Component({
   selector: 'app-tournament-navbar',
@@ -32,6 +33,7 @@ export class TournamentNavBarComponent {
   get FavoritesScreen(): TournamentScreen { return TournamentScreen.Favorites }
   get CompetitorsScreen(): TournamentScreen { return TournamentScreen.Competitors }
   get SettingsScreen(): TournamentScreen { return TournamentScreen.Settings }
+  get CompetitorTabBase(): CompetitorTab { return CompetitorTab.Base } 
 
   getTextColorClass(screen: TournamentScreen): string {
     return this.currentScreen !== screen ? 'btn-outline-success' : 'btn-outline-light';

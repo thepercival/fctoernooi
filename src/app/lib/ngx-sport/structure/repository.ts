@@ -42,11 +42,13 @@ export class StructureRepository extends APIRepository {
         );
     }
 
+
+
     editObject(structure: Structure, tournament: Tournament): Observable<Structure> {
         return this.http.put<JsonStructure>(this.getUrl(tournament), this.mapper.toJson(structure), this.getOptions()).pipe(
             concatMap((jsonRes: JsonStructure) => {
                 const structure = this.mapper.toObject(jsonRes, tournament.getCompetition());
-                return this.updateCompetitors(structure, this.competitorRepository.reloadObjects(tournament));
+                return this.updateCompetitors(structure, this.competitorRepository.reloadObjects(tournament, false));
             }),
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );

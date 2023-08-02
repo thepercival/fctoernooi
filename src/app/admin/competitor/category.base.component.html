@@ -1,0 +1,79 @@
+<div *ngIf="category">
+
+  <div class="card border-secondary" [ngClass]="{ 'border-0': !showHeader }">
+
+    <div *ngIf="showHeader" class="card-cat-header px-3">
+      <div class="d-flex justify-content-between">
+        <h5 class="my-0">
+          <span class="fw-bold align-middle">{{category.getName()}}</span>
+        </h5>
+        <div *ngIf="someCompetitorHasTelephone() || someCompetitorHasEmailaddress()" ngbDropdown #copyDropDown="ngbDropdown" class="dropdown">
+          <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false" ngbDropdownAnchor (focus)="copyDropDown.open()">
+            <fa-icon [icon]="[ 'fas', 'copy'] "></fa-icon> kopiëren
+          </button>
+          <ul ngbDropdownMenu aria-labelledby="dropdownManual" class="dropdown-menu">
+            <li><a *ngIf="someCompetitorHasTelephone()" href="javascript:void(0)" ngbDropdownItem class="dropdown-item" ngxClipboard [cbContent]="getTelephones()"
+                (cbOnSuccess)="toClipboardMessage = 'de telefoonnummers zijn naar het klembord gekopiëerd'">telefoonnummers</a>
+            </li>
+        
+            <li><a *ngIf="someCompetitorHasEmailaddress()" href="javascript:void(0)" ngbDropdownItem class="dropdown-item" ngxClipboard
+                [cbContent]="getEmailaddresses()"
+                (cbOnSuccess)="toClipboardMessage = 'de emailadressen zijn naar het klembord gekopiëerd'">emailadressen</a></li>
+        
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body p-0">
+      <ngb-alert *ngIf="toClipboardMessage" class="m-0" type="success">
+        {{toClipboardMessage}}
+      </ngb-alert>
+      <table *ngIf="!orderMode" class="table mb-0">
+        <thead>
+          <tr>
+            <th></th>
+            <th>plek</th>
+            <th>naam</th>
+            <th class="text-center d-none d-sm-table-cell">
+              <span>emailadres</span>
+              <span *ngIf="!showHeader && (someCompetitorHasTelephone() || someCompetitorHasEmailaddress())" ngbDropdown #copyDropDown="ngbDropdown"
+                class="dropdown">
+                <button class="btn btn-sm btn-outline-secondary dropdown-toggle ms-1" type="button" data-bs-toggle="dropdown"
+                  aria-expanded="false" ngbDropdownAnchor (focus)="copyDropDown.open()">
+                  <fa-icon [icon]="[ 'fas', 'copy'] "></fa-icon>
+                </button>
+                <ul ngbDropdownMenu aria-labelledby="dropdownManual" class="dropdown-menu">
+                  <li><a *ngIf="someCompetitorHasTelephone()" href="javascript:void(0)" ngbDropdownItem class="dropdown-item"
+                      ngxClipboard [cbContent]="getTelephones()"
+                      (cbOnSuccess)="toClipboardMessage = 'de telefoonnummers zijn naar het klembord gekopiëerd'">telefoonnummers</a>
+                  </li>
+              
+                  <li><a *ngIf="someCompetitorHasEmailaddress()" href="javascript:void(0)" ngbDropdownItem class="dropdown-item"
+                      ngxClipboard [cbContent]="getEmailaddresses()"
+                      (cbOnSuccess)="toClipboardMessage = 'de emailadressen zijn naar het klembord gekopiëerd'">emailadressen</a></li>
+              
+                </ul>
+                </span>
+            </th>
+            <th class="text-center d-none d-sm-table-cell">aangemeld</th>
+            <th *ngIf="!hasBegun" class="text-end"><button type="button" class="btn btn-sm btn-outline-primary"
+                (click)="addPlace()">
+                <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+              </button></th>
+          </tr>
+        </thead>
+        <tbody>
+          <app-tournament-competitor-line *ngFor="let item of placeCompetitorItems" [placeCompetitor]="item"
+            [showLockerRoomNotArranged]="showLockerRoomNotArranged(item.competitor)" [hasBegun]="hasBegun"
+            [showEmailaddress]="someCompetitorHasEmailaddress()"
+            [structureNameService]="structureNameService" [focus]="item.place.getId() === focusId"
+            (editPressed)="editPlace($event)" (removePressed)="preRemove($event)" [tournamentId]="tournament.getId()">
+          </app-tournament-competitor-line>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>

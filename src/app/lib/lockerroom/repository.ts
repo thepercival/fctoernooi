@@ -8,9 +8,9 @@ import { LockerRoom } from '../lockerroom';
 import { Tournament } from '../tournament';
 import { LockerRoomMapper } from './mapper';
 import { TournamentCompetitor } from '../competitor';
-import { CompetitorMapper } from '../competitor/mapper';
 import { JsonLockerRoom } from './json';
 import { Router } from '@angular/router';
+import { TournamentCompetitorMapper } from '../competitor/mapper';
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +20,7 @@ export class LockerRoomRepository extends APIRepository {
     constructor(
         private http: HttpClient,
         private mapper: LockerRoomMapper,
-        private competitorMapper: CompetitorMapper,
+        private competitorMapper: TournamentCompetitorMapper,
         router: Router) {
         super(router);
     }

@@ -9,6 +9,8 @@ import { GamesComponent } from './games/view.component';
 import { RankingViewComponent } from './ranking/view.component';
 import { SelectFavoritesComponent } from './favorites/select.component';
 import { PublicShellsComponent } from './shells/shells.component';
+import { ExamplesComponent } from './examples/examples.component';
+import { RegistrationComponent } from './registration-form/registration-form.component';
 
 const routes: Routes = [
   { path: 'prenew', component: PreNewComponent },
@@ -18,6 +20,8 @@ const routes: Routes = [
   { path: 'structure/:id', component: StructureViewComponent },
   { path: 'favorites/:id', component: SelectFavoritesComponent },
   { path: 'liveboard/:id', component: LiveboardComponent },
+  { path: 'registrationform/:id', component: RegistrationComponent },
+  { path: 'examples', component: ExamplesComponent },  
   { path: ':id', redirectTo: 'games/:id', pathMatch: 'full' },
 ];
 
