@@ -7,7 +7,7 @@ export class Sponsor extends Identifiable {
     static readonly MAX_LENGTH_URL = 100;
 
     protected url: string = '';
-    protected logoUrl: string = '';
+    protected logoExtension: string = '';
     protected screenNr: number = 0;
 
     constructor(protected tournament: Tournament, protected name: string) {
@@ -31,12 +31,12 @@ export class Sponsor extends Identifiable {
         this.url = url;
     }
 
-    getLogoUrl(): string {
-        return this.logoUrl;
+    getLogoExtension(): string {
+        return this.logoExtension;
     }
 
-    setLogoUrl(logoUrl: string): void {
-        this.logoUrl = logoUrl;
+    setLogoExtension(logoExtension: string): void {
+        this.logoExtension = logoExtension;
     }
 
     getScreenNr(): number {

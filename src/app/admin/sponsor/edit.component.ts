@@ -29,7 +29,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         name: FormControl<string>,
         screennr: FormControl<string>,
         url: FormControl<string>,
-        logourl: FormControl<string>,
+        logoExtension: FormControl<string>,
         logoupload: FormControl<Blob|null>,
       }>;
 
@@ -50,6 +50,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         minlengthname: Sponsor.MIN_LENGTH_NAME,
         maxlengthname: Sponsor.MAX_LENGTH_NAME,
         maxlengthurl: Sponsor.MAX_LENGTH_URL,
+        maxlengthextension: 10,
     };
 
     constructor(
@@ -83,7 +84,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
                     Validators.maxLength(this.validations.maxlengthurl)
                 ] 
             }),
-            logourl: new FormControl('', { nonNullable: true, validators: 
+            logoExtension: new FormControl('', { nonNullable: true, validators: 
                 [
                     Validators.maxLength(this.validations.maxlengthurl)
                 ] 
@@ -129,7 +130,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
 
         this.typedForm.controls.name.setValue(this.originalSponsor.getName());
         this.typedForm.controls.url.setValue(this.originalSponsor.getUrl());
-        this.typedForm.controls.logourl.setValue(this.originalSponsor.getLogoUrl());
+        this.typedForm.controls.logoExtension.setValue(this.originalSponsor.getLogoExtension());
         this.typedForm.controls.screennr.setValue('' + this.originalSponsor.getScreenNr());
         this.processing = false;
     }
@@ -155,7 +156,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
 
     formToJson(): JsonSponsor {
         const url = this.typedForm.controls.url.value;
-        const logoUrl = this.logoInput === this.logoInputUrl ? this.typedForm.controls.logourl.value : undefined;
+        const logoUrl = this.logoInput === this.logoInputUrl ? this.typedForm.controls.logoExtension.value : undefined;
         return {
             id: this.originalSponsor ? this.originalSponsor.getId() : 0,
             name: this.typedForm.controls.name.value,
@@ -238,5 +239,6 @@ export interface SponsorValidations {
     minlengthname: number;
     maxlengthname: number;
     maxlengthurl: number;
+    maxlengthextension: number;
 }
 
