@@ -47,7 +47,6 @@ export class TournamentMapper {
             recesses: tournament.getRecesses().map(recess => this.recessMapper.toJson(recess)),
             sponsors: tournament.getSponsors().map(sponsor => this.sponsorMapper.toJson(sponsor)),
             public: tournament.getPublic(),
-            useSelfRegistration: tournament.useSelfRegistration(),
             startEditMode: tournament.getStartEditMode()
         };
     }

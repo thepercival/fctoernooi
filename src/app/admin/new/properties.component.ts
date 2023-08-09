@@ -86,7 +86,6 @@ export class TournamentPropertiesComponent implements OnInit {
     const jsonTournament: JsonTournament = {
       id: 0,
       public: this.typedForm.controls.public.value,
-      useSelfRegistration: false,
       startEditMode: StartEditMode.EditLongTerm, /* @TODO CDK */
       competition: {
         id: 0,
