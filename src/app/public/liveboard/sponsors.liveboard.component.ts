@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 import { Sponsor } from '../../lib/sponsor';
+import { SponsorRepository } from '../../lib/sponsor/repository';
 
 @Component({
     selector: 'app-tournament-liveboard-sponsors',
@@ -13,7 +14,7 @@ export class LiveboardSponsorsComponent implements OnChanges {
     sponsorRows: Sponsor[][] = [];
     viewHeight: number;
 
-    constructor() {
+    constructor(private sponsorRepository: SponsorRepository) {
         this.viewHeight = 90;
     }
 
@@ -45,5 +46,9 @@ export class LiveboardSponsorsComponent implements OnChanges {
             }
             this.sponsorRows.push(sponsorRow);
         }
+    }
+
+    getSponsorLogoUrl(sponsor: Sponsor): string {
+        return this.sponsorRepository.getLogoUrl(sponsor);
     }
 }

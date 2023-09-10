@@ -14,6 +14,7 @@ import { Favorites } from '../../lib/favorites';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { OptionalGameColumn } from '../../shared/tournament/games/roundnumber.component';
+import { TournamentCompetitor } from '../../lib/competitor';
 
 @Component({
     selector: 'app-tournament-games-view',
@@ -28,6 +29,7 @@ export class GamesComponent extends TournamentComponent implements OnInit {
     public favorites!: Favorites;
     public categoryMap: Map<number, Category> = new Map();
     public optionalGameColumns: Map<OptionalGameColumn, boolean> = new Map(); 
+    public hasSomeCompetitorAnImage: boolean = false;
 
     constructor(
         route: ActivatedRoute,
@@ -47,6 +49,9 @@ export class GamesComponent extends TournamentComponent implements OnInit {
         super.myNgOnInit(() => {
             const loggedInUserId = this.authService.getLoggedInUserId();
             const tournamentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;
+            this.hasSomeCompetitorAnImage = this.tournament.getCompetitors().some((competitor: TournamentCompetitor): boolean => {
+                return (competitor.getLogoExtension()?.length ?? 0) > 0;
+            });
             const startLocationMap = new StartLocationMap(this.tournament.getCompetitors());
             this.structureNameService = new StructureNameService(startLocationMap);
             this.updateFavoriteCategories(this.structure);

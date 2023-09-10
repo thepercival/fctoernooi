@@ -17,6 +17,7 @@
           <thead>
             <tr>
               <th>plek</th>
+              <th *ngIf="hasSomeCompetitorAnImage" class="d-none d-sm-table-cell"></th>
               <th colspan="2">
                 <div class="d-flex justify-content-between">
                   <span>naam</span>
@@ -36,6 +37,10 @@
             <tr *ngFor="let item of placeCompetitorItems">
               <td>
                 <span [innerHtml]="structureNameService.getPlaceFromName(item.place, false) | keepHtml"></span>
+              </td>
+              <td *ngIf="hasSomeCompetitorAnImage" class="d-none d-sm-table-cell pe-0">
+                <img *ngIf="hasImg(item.competitor)" src="{{getImgUrl(item.competitor)}}" height="20"
+                  width="20">
               </td>
               <td>
                 <span *ngIf="item.competitor">{{item.competitor.getName()}}</span>

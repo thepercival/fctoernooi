@@ -17,6 +17,7 @@ export class CompetitorListLineComponent implements AfterViewChecked {
   @Input() placeCompetitor!: PlaceCompetitorItem;
   @Input() focus!: boolean;
   @Input() hasBegun!: boolean;
+  @Input() hasSomeCompetitorAnImage!: boolean;
   @Input() showEmailaddress!: boolean; 
   @Input() showLockerRoomNotArranged!: boolean;
   @Input() structureNameService!: StructureNameService;
@@ -65,6 +66,24 @@ export class CompetitorListLineComponent implements AfterViewChecked {
     if (this.focus && this.btnEditRef) {
       this.btnEditRef.nativeElement.focus();
     }
+  }
+
+  hasImg(competitor: TournamentCompetitor|undefined): boolean {
+    if (competitor === undefined) {
+      return false;
+    }
+    return (competitor.getLogoExtension()?.length ?? 0) > 0;
+  }
+  
+  getImgUrl(competitor: TournamentCompetitor | undefined): string {
+    if (competitor === undefined) {
+      throw new Error('should have competitor');
+    }
+    const logoExtension = competitor.getLogoExtension() ?? '';
+    if (logoExtension.length === 0) {
+      return '';
+    }
+    return this.competitorRepository.getLogoUrl(competitor);
   }
 
   openLockerRoomInfoModal(modalContent: TemplateRef<any>) {

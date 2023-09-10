@@ -7,7 +7,7 @@
             <span class="">{{sponsor.getName()}}</span>
           </div>
           <div class="card-body p-1 text-center sponsor-card-body">
-            <img *ngIf="sponsor && sponsor.getLogoUrl()" src="{{sponsor.getLogoUrl()}}" class="sponsor-img" alt="img">
+            <img *ngIf="sponsor && sponsor.getLogoExtension()" src="{{getSponsorLogoUrl(sponsor)}}" class="sponsor-img" alt="img">
           </div>
           <div *ngIf="sponsor && sponsor.getUrl()" class="card-footer">
             <span class="">{{sponsor.getUrl()}}</span>

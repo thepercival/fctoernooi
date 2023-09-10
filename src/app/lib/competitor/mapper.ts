@@ -25,6 +25,7 @@ export class TournamentCompetitorMapper {
         if (json.info !== undefined) { competitor.setInfo(json.info) };
         competitor.setEmailaddress(json.emailaddress);
         competitor.setTelephone(json.telephone);
+        competitor.setLogoExtension(json.logoExtension);
         return competitor;
     }
 
@@ -32,7 +33,7 @@ export class TournamentCompetitorMapper {
         return {
             id: competitor.getId(),
             registered: competitor.getRegistered(),
-            hasLogo: competitor.hasLogo(),
+            logoExtension: competitor.getLogoExtension(),
             info: competitor.getInfo(),
             name: competitor.getName(),
             emailaddress: competitor.getEmailaddress(),

@@ -32,7 +32,7 @@
               formControlName="url" placeholder="max. {{validations.maxlengthurl}} karakters">
           </div>
         </div>
-        <div *ngIf="logoInput === logoInputUpload" class="row mb-3">
+        <div *ngIf="logoInputType === LogoInputTypeByUpload" class="row mb-3">
           <div class="col-3">
             <label for="logouploadother" (click)="openInfoModal(contentInfo)" class="pointer">logo
               <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
@@ -65,13 +65,18 @@
             </button>
           </div>
         </div>
-        <div *ngIf="base64Logo || typedForm.controls.logourl.value" class="row">
+        <div *ngIf="base64Logo || typedForm.controls.logoExtension.value" class="row">
           <div class="col-3">
             <label for="log">preview</label>
+            <br/>
+            <br />
+            <button class="btn btn-sm btn-outline-danger" (click)="removeFileStream()">
+              <span>leeg maken</span>
+            </button>
           </div>
           <div class="col-9">
             <img *ngIf="base64Logo" [src]="base64Logo" width="150px;" height="150px;">
-            <img *ngIf="!base64Logo && typedForm.controls.logourl.value" [src]="typedForm.controls.logourl.value" width="150px;"
+            <img *ngIf="!base64Logo && typedForm.controls.logoExtension.value && originalSponsor" [src]="getLogoUrl(originalSponsor)" width="150px;"
               height="150px;">
           </div>
         </div>

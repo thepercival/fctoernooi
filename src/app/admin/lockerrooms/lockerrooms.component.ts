@@ -14,7 +14,7 @@ import { Role } from '../../lib/role';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { CompetitorChooseModalComponent } from '../../shared/tournament/competitorchoosemodal/competitorchoosemodal.component';
+import { CompetitorChooseModalComponent } from '../../shared/tournament/competitor/competitorchoosemodal.component';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
 

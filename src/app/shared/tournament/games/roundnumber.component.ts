@@ -47,6 +47,8 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { AppErrorHandler } from '../../../lib/repository';
 import { Recess } from '../../../lib/recess';
 import { TranslateScoreService } from '../../../lib/translate/score';
+import { TournamentCompetitor } from '../../../lib/competitor';
+import { CompetitorRepository } from '../../../lib/ngx-sport/competitor/repository';
 
 @Component({
   selector: 'tbody[app-tournament-roundnumber-planning]',
@@ -61,6 +63,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   @Input() favoriteCategories!: Category[];
   @Input() structureNameService!: StructureNameService;
   @Input() showLinksToAdmin = false;
+  @Input() hasSomeCompetitorAnImage = false;
   @Input() userRefereeId: number | string | undefined;
   @Input() roles: number = 0;
   @Input() favorites: Favorites | undefined;
@@ -99,7 +102,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     public dateFormatter: DateFormatter,
     public translate: TranslateScoreService,
     private modalService: NgbModal,
-    protected planningRepository: PlanningRepository) {
+    protected planningRepository: PlanningRepository,
+    protected competitorRepository: CompetitorRepository) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
     this.resetAlert();
     this.scoreConfigService = new ScoreConfigService();
@@ -363,12 +367,12 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     return (this.roles & role) === role;
   }
 
-  getCompetitor(place: Place): Competitor | undefined {
+  getCompetitor(place: Place): TournamentCompetitor | undefined {
     const startLocation = place.getStartLocation();
     if (startLocation === undefined) {
       return undefined;
     }
-    return this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
+    return <TournamentCompetitor>this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
   }
 
   private hasCompetitor(place: Place): boolean {
@@ -558,6 +562,24 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
         })
       })
     })
+  }
+
+  public hasImg(place: Place): boolean {
+    const competitor = this.getCompetitor(place);
+    return (competitor?.getLogoExtension()?.length ?? 0 ) > 0;
+  //   const places = gmData.game.getSidePlaces(side);
+  //   if (places.length > 1) {
+  //     return false;
+  //   }
+  //   const place =if (places.length > 1) {
+  //     return false;
+  //   }
+  //   return this.getCompetitor();
+  }
+
+  public getCompetitorImgUrl(place: Place): string {
+    const competitor = this.getCompetitor(place);
+    return competitor !== undefined ? this.competitorRepository.getLogoUrl(competitor) : '';
   }
 
   validTimeValue(count: number): boolean {

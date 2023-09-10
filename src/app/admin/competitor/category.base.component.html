@@ -35,6 +35,8 @@
           <tr>
             <th></th>
             <th>plek</th>
+            <th *ngIf="hasSomeCompetitorAnImage" class="d-none d-sm-table-cell">
+            </th>
             <th>naam</th>
             <th class="text-center d-none d-sm-table-cell">
               <span>emailadres</span>
@@ -69,6 +71,7 @@
             [showLockerRoomNotArranged]="showLockerRoomNotArranged(item.competitor)" [hasBegun]="hasBegun"
             [showEmailaddress]="someCompetitorHasEmailaddress()"
             [structureNameService]="structureNameService" [focus]="item.place.getId() === focusId"
+            [hasSomeCompetitorAnImage]="hasSomeCompetitorAnImage"
             (editPressed)="editPlace($event)" (removePressed)="preRemove($event)" [tournamentId]="tournament.getId()">
           </app-tournament-competitor-line>
         </tbody>

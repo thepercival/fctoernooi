@@ -9,7 +9,7 @@ export class TournamentCompetitor extends CompetitorBase implements Competitor {
     static readonly MAX_LENGTH_ABBREVIATION = 7;
     static readonly MAX_LENGTH_INFO = 200;
     static readonly MAX_LENGTH_IMAGEURL = 150;
-    private hasLogoX: boolean = false;
+    protected logoExtension: string | undefined;
     private emailaddress: string|undefined;
     private telephone: string | undefined;    
 
@@ -42,15 +42,13 @@ export class TournamentCompetitor extends CompetitorBase implements Competitor {
         this.telephone = telephone;
     }
 
-    setLogo() {
-        this.hasLogoX = true;
+    getLogoExtension(): string | undefined {
+        return this.logoExtension;
     }
 
-    hasLogo(): boolean {
-        return this.hasLogoX;
+    setLogoExtension(logoExtension: string | undefined): void {
+        this.logoExtension = logoExtension;
     }
-
-
 
     updateStartLocation(pouleNr: number, placeNr: number): void {
         this.startLocation = new StartLocation(this.startLocation.getCategoryNr(), pouleNr, placeNr);

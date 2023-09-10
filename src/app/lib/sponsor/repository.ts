@@ -67,6 +67,10 @@ export class SponsorRepository extends APIRepository {
         );
     }
 
+    getLogoUrl(sponsor: Sponsor): string {
+        return this.apiurl + 'images/' + this.getUrlpostfix() + '/' + sponsor.getId() + '.' + sponsor.getLogoExtension();
+    }
+
     protected getUploadOptions() {
         return {
             headers: super.getHeaders().delete('Content-Type'),

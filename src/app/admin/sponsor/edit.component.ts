@@ -29,8 +29,8 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         name: FormControl<string>,
         screennr: FormControl<string>,
         url: FormControl<string>,
-        logoExtension: FormControl<string>,
-        logoupload: FormControl<Blob|null>,
+        logoExtension: FormControl<string|null>,
+        logoFileStream: FormControl<Blob|null>,
       }>;
 
 
@@ -38,9 +38,8 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
 
     private sponsorScreensCreator!: SponsorScreensCreator;
     rangeScreenNrs: number[] = [];
-    logoInput: number;
-    logoInputUpload = 1;
-    logoInputUrl = 2;
+    logoInputType: LogoInput;
+    
     newLogoUploaded: boolean;
     private readonly LOGO_ASPECTRATIO_THRESHOLD = 0.34;
     public originalSponsor: Sponsor | undefined;
@@ -66,7 +65,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         private myNavigation: MyNavigation
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
-        this.logoInput = this.logoInputUpload;
+        this.logoInputType = LogoInput.ByUpload;
         this.newLogoUploaded = false;
         this.screenConfig = this.sponsorMapper.getDefaultScreenConfig();
 
@@ -84,14 +83,16 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
                     Validators.maxLength(this.validations.maxlengthurl)
                 ] 
             }),
-            logoExtension: new FormControl('', { nonNullable: true, validators: 
+            logoExtension: new FormControl('', { validators: 
                 [
                     Validators.maxLength(this.validations.maxlengthurl)
                 ] 
             }),
-            logoupload:  new FormControl(),
+            logoFileStream:  new FormControl(),
         });
     }
+
+    get LogoInputTypeByUpload(): LogoInput { return LogoInput.ByUpload; }
 
     // initialsValidator(control: FormControl): { [s: string]: boolean } {
     //     if (control.value.length < this.validations.minlengthinitials || control.value.length < this.validations.maxlengthinitials) {
@@ -130,7 +131,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
 
         this.typedForm.controls.name.setValue(this.originalSponsor.getName());
         this.typedForm.controls.url.setValue(this.originalSponsor.getUrl());
-        this.typedForm.controls.logoExtension.setValue(this.originalSponsor.getLogoExtension());
+        this.typedForm.controls.logoExtension.setValue(this.originalSponsor.getLogoExtension() ?? null);
         this.typedForm.controls.screennr.setValue('' + this.originalSponsor.getScreenNr());
         this.processing = false;
     }
@@ -156,24 +157,24 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
 
     formToJson(): JsonSponsor {
         const url = this.typedForm.controls.url.value;
-        const logoUrl = this.logoInput === this.logoInputUrl ? this.typedForm.controls.logoExtension.value : undefined;
+        const logoExtension = this.logoInputType === LogoInput.ByUrl ? this.typedForm.controls.logoExtension.value ?? undefined : undefined;
         return {
             id: this.originalSponsor ? this.originalSponsor.getId() : 0,
             name: this.typedForm.controls.name.value,
             url: url ? url : undefined,
-            logoUrl: logoUrl,
+            logoExtension: logoExtension,
             screenNr: +this.typedForm.controls.screennr.value
         }
     }
 
     processLogoAndNavigateBack(sponsor: Sponsor) {
-        if (this.logoInput === this.logoInputUrl || this.newLogoUploaded !== true) {
+        if (this.logoInputType === LogoInput.ByUrl || this.newLogoUploaded !== true) {
             this.processing = false;
             this.navigateBack();
             return;
         }
         const input = new FormData();
-        const stream: Blob|null = this.typedForm.controls.logoupload.value;
+        const stream: Blob | null = this.typedForm.controls.logoFileStream.value;
         if( stream) {
             input.append('logostream', stream);
         }
@@ -206,16 +207,16 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         reader.onload = (_event) => {
             this.base64Logo = reader.result;
         };
-        this.typedForm.controls.logoupload.setValue(file);
+        this.typedForm.controls.logoFileStream.setValue(file);
 
         this.newLogoUploaded = true;
     }
 
     toggleLogoInput() {
-        if (this.logoInput === this.logoInputUpload) {
-            this.logoInput = this.logoInputUrl;
+        if (this.logoInputType === LogoInput.ByUpload) {
+            this.logoInputType = LogoInput.ByUrl;
         } else {
-            this.logoInput = this.logoInputUpload;
+            this.logoInputType = LogoInput.ByUpload;
         }
     }
 
@@ -233,6 +234,19 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         activeModal.componentInstance.header = 'uitleg upload logo';
         activeModal.componentInstance.modalContent = modalContent;
     }
+
+    getLogoUrl(sponsor: Sponsor): string {
+        return this.sponsorRepository.getLogoUrl(sponsor);
+    }
+
+    removeFileStream(): boolean {
+        this.base64Logo = null;
+        this.typedForm.controls.logoFileStream.setValue(null);
+        this.typedForm.controls.logoExtension.setValue(null);
+        this.logoInputType = LogoInput.ByUpload;
+        this.newLogoUploaded = true;
+        return false;
+    }
 }
 
 export interface SponsorValidations {
@@ -242,3 +256,6 @@ export interface SponsorValidations {
     maxlengthextension: number;
 }
 
+export enum LogoInput {
+    ByUrl = 1, ByUpload
+}

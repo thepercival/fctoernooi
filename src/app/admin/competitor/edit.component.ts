@@ -26,6 +26,7 @@ import { TournamentRegistration } from '../../lib/tournament/registration';
 import { User } from '../../lib/user';
 import { Observable, of } from 'rxjs';
 import { Tournament } from '../../lib/tournament';
+import { LogoInput } from '../sponsor/edit.component';
 
 @Component({
     selector: 'app-tournament-competitor-edit',
@@ -38,8 +39,8 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         emailaddress: FormControl<string | null>,
         telephone: FormControl<string | null>, 
         registered: FormControl<boolean>,
-        logourl: FormControl<string>,
-        logoUpload: FormControl<Blob | null>,
+        logoExtension: FormControl<string | null>,
+        logoFileStream: FormControl<Blob | null>,
         info: FormControl<string|null>,
       }>;
     originalCompetitor: TournamentCompetitor | undefined;
@@ -47,11 +48,9 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
     public nameService: NameService;
     public structureNameService!: StructureNameService;
     
-    public logoInput: number;
-    public logoInputUpload = 1;
-    public logoInputUrl = 2;
+    public logoInputType: LogoInput | undefined;
     public newLogoUploaded: boolean;
-    private base64Logo!: string | ArrayBuffer | null;
+    public base64Logo!: string | ArrayBuffer | null;
 
     startLocation!: StartLocation;
     placeNr!: number;
@@ -80,7 +79,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         private nameValidator: NameValidator
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
-        this.logoInput = this.logoInputUpload;
+        this.logoInputType = LogoInput.ByUpload;
         this.newLogoUploaded = false;
         this.typedForm = new FormGroup({
             name: new FormControl('', { nonNullable: true, validators: 
@@ -105,13 +104,13 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
                     ]
             }),
             registered: new FormControl(false, { nonNullable: true }),
-            logourl: new FormControl('', {
-                nonNullable: true, validators:
+            logoExtension: new FormControl('', {
+                validators:
                     [
                         Validators.maxLength(this.validations.maxlengthurl)
                     ]
             }),
-            logoUpload: new FormControl(),
+            logoFileStream: new FormControl(),
             info: new FormControl('', { nonNullable: false , validators: 
                 [Validators.maxLength(this.validations.maxlengthinfo)] 
             }),            
@@ -152,6 +151,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
                     this.typedForm.controls.telephone.setValue(this.originalCompetitor?.getTelephone() ?? '');
                     this.typedForm.controls.registered.setValue(this.originalCompetitor ? this.originalCompetitor.getRegistered() : false);
                     this.typedForm.controls.info.setValue(this.originalCompetitor?.getInfo() ?? null);
+                    this.typedForm.controls.logoExtension.setValue(this.originalCompetitor?.getLogoExtension() ?? null);
                     this.processing = false;
                 },
                 error: (e: string) => {
@@ -161,6 +161,8 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
             });
 
     }
+
+    get LogoInputTypeByUpload(): LogoInput { return LogoInput.ByUpload; }
 
     private reloadCompetitor(competitor: TournamentCompetitor | undefined): Observable<TournamentCompetitor|undefined> {
         if ( competitor === undefined ) {
@@ -176,13 +178,14 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
 
     formToJson(): JsonTournamentCompetitor {
         const info = this.typedForm.controls.info.value;
+        const logoExtension = this.logoInputType === LogoInput.ByUrl ? this.typedForm.controls.logoExtension.value ?? undefined : undefined;
         return {
             id: this.originalCompetitor ? this.originalCompetitor.getId() : 0,
             name: this.typedForm.controls.name.value,
             emailaddress: this.typedForm.controls.emailaddress.value ?? undefined,
             telephone: this.typedForm.controls.telephone.value ?? undefined,
             registered: this.typedForm.controls.registered.value,
-            hasLogo: this.logoInput === this.logoInputUrl, 
+            logoExtension: logoExtension, 
             info: info ? info : undefined,
             categoryNr: this.startLocation.getCategoryNr(),
             pouleNr: this.startLocation.getPouleNr(),
@@ -230,15 +233,14 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
     }
 
     processLogoAndNavigateBack(competitor: TournamentCompetitor) {
-        if (this.logoInput === this.logoInputUrl || this.newLogoUploaded !== true) {
+        if (this.logoInputType === LogoInput.ByUrl || this.newLogoUploaded !== true) {
             this.processing = false;
             this.navigateBack();
             return;
         }
-        const logoUrl = this.logoInput === this.logoInputUrl ? this.typedForm.controls.logourl.value : undefined;
 
         const input = new FormData();
-        const stream: Blob | null = this.typedForm.controls.logoUpload.value;
+        const stream: Blob | null = this.typedForm.controls.logoFileStream.value;
         if (stream) {
             input.append('logostream', stream);
         }
@@ -256,10 +258,10 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
     }
 
     toggleLogoInput() {
-        if (this.logoInput === this.logoInputUpload) {
-            this.logoInput = this.logoInputUrl;
+        if (this.logoInputType === LogoInput.ByUpload) {
+            this.logoInputType = LogoInput.ByUrl;
         } else {
-            this.logoInput = this.logoInputUpload;
+            this.logoInputType = LogoInput.ByUpload;
         }
     }
 
@@ -293,7 +295,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         reader.onload = (_event) => {
             this.base64Logo = reader.result;
         };
-        this.typedForm.controls.logoUpload.setValue(file);
+        this.typedForm.controls.logoFileStream.setValue(file);
 
         this.newLogoUploaded = true;
     }
@@ -304,6 +306,19 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
     //     }
     //     this.model.name = name;
     // }
+
+    removeFileStream(): boolean {
+        this.base64Logo = null;
+        this.typedForm.controls.logoFileStream.setValue(null);
+        this.typedForm.controls.logoExtension.setValue(null);
+        this.logoInputType = LogoInput.ByUpload;
+        this.newLogoUploaded = true;
+        return false;
+    }
+
+    getLogoUrl(competitor: TournamentCompetitor): string {
+        return this.competitorRepository.getLogoUrl(competitor);
+    }
 }
 
 export interface CompetitorValidations {

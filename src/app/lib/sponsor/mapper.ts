@@ -18,7 +18,7 @@ export class SponsorMapper {
         }
         sponsor.setId(json.id);
         if (json.url) { sponsor.setUrl(json.url) };
-        if (json.logoUrl) { sponsor.setLogoUrl(json.logoUrl) };
+        if (json.logoExtension) { sponsor.setLogoExtension(json.logoExtension) };
         if (json.screenNr) { sponsor.setScreenNr(json.screenNr) };
         return sponsor;
     }
@@ -28,7 +28,7 @@ export class SponsorMapper {
             id: sponsor.getId(),
             name: sponsor.getName(),
             url: sponsor.getUrl(),
-            logoUrl: sponsor.getLogoUrl(),
+            logoExtension: sponsor.getLogoExtension(),
             screenNr: sponsor.getScreenNr()
         };
     }

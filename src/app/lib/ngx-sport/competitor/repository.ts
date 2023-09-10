@@ -133,6 +133,10 @@ export class CompetitorRepository extends APIRepository {
         );
     }
 
+    getLogoUrl(competitor: TournamentCompetitor): string {
+        return this.apiurl + 'images/' + this.getUrlpostfix() + '/' + competitor.getId() + '.' + competitor.getLogoExtension();
+    }
+
     protected getUploadOptions() {
         return {
             headers: super.getHeaders().delete('Content-Type'),

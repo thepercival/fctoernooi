@@ -227,8 +227,13 @@
 <ng-template #againstGamePlacesCell let-gmData>
   <!-- homePlaces -->
   <td class="text-end text-break" [ngClass]="{'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, Home) }">
-    <span [innerHTML]="structureNameService.getPlacesFromName(gmData.game.getHomePlaces(),true,true) | keepHtml"></span>
-    <img class="ms-1" src="http://localhost:2998/images/competitors/122678.svg" height="20" width="20">
+
+    <ng-template ngFor let-homeGamePlace let-first [ngForOf]="gmData.game.getHomePlaces()">
+      <span *ngIf="!first"> & </span>
+      <span [innerHTML]="structureNameService.getPlaceFromName(homeGamePlace.getPlace(),true,true) | keepHtml"></span>
+      <img *ngIf="hasImg(homeGamePlace.getPlace())" class="d-none d-sm-inline ms-1" [src]="getCompetitorImgUrl(homeGamePlace.getPlace())" height="20" width="20">
+    </ng-template>
+    
   </td>
   <!-- score -->
   <td class="text-center text-nowrap">
@@ -260,7 +265,13 @@
   </td>
   <!-- awayPlaces -->
   <td class="text-break" [ngClass]="{ 'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, Away) }">
-    <span [innerHTML]="structureNameService.getPlacesFromName(gmData.game.getAwayPlaces(),true,true) | keepHtml"></span>
+    <ng-template ngFor let-awayGamePlace let-first [ngForOf]="gmData.game.getAwayPlaces()">
+      <span *ngIf="!first"> & </span>
+      <img *ngIf="hasImg(awayGamePlace.getPlace())" class="d-none d-sm-inline me-1" [src]="getCompetitorImgUrl(awayGamePlace.getPlace())"
+        height="20" width="20">
+      <span [innerHTML]="structureNameService.getPlaceFromName(awayGamePlace.getPlace(),true,true) | keepHtml"></span>
+      
+    </ng-template>
   </td>
 </ng-template>
 

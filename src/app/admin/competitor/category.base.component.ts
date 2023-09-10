@@ -36,6 +36,7 @@ export class CategoryBaseCompetitorListComponent implements OnInit, OnChanges {
   public swapItem: PlaceCompetitorItem | undefined;
   private startLocationMap!: StartLocationMap;
   private areSomeCompetitorsArranged: boolean = false;
+  public hasSomeCompetitorAnImage: boolean = false;
   public toClipboardMessage: string | undefined;
 
   constructor(
@@ -48,6 +49,7 @@ export class CategoryBaseCompetitorListComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.hasBegun = this.category.getRootRound().hasBegun();
     // at every change of this.structureNameService
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -70,6 +72,9 @@ export class CategoryBaseCompetitorListComponent implements OnInit, OnChanges {
   }
 
   updatePlaceCompetitorItems(): void {
+    this.hasSomeCompetitorAnImage = this.tournament.getCompetitors().some((competitor: TournamentCompetitor): boolean => {
+      return (competitor.getLogoExtension()?.length ?? 0 ) > 0;
+    });
     this.placeCompetitorItems = this.category.getRootRound().getPlaces().map((place: Place): PlaceCompetitorItem => {
       const startLocation = place.getStartLocation();
       if (startLocation === undefined) {

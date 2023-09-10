@@ -63,7 +63,7 @@
           </div>
         </div>
 
-        <div *ngIf="logoInput === logoInputUpload" class="row mb-3">
+        <div *ngIf="logoInputType === LogoInputTypeByUpload" class="row mb-3">
           <div class="col-3">
             <label for="logouploadother" (click)="openInfoModal(contentInfo)" class="pointer mt-1">logo
               <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
@@ -85,7 +85,7 @@
           </div>
         </div>
 
-        <div class="row mt-2">
+        <div class="row my-2">
           <div class="col-3">
             <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary">terug</button>
           </div>
@@ -96,6 +96,23 @@
             </button>
           </div>
         </div>
+
+        <div *ngIf="base64Logo || typedForm.controls.logoExtension.value" class="row">
+          <div class="col-3">
+            <label for="log">preview</label>
+            <br />
+            <br />
+            <button class="btn btn-sm btn-outline-danger" (click)="removeFileStream()">
+              <span>leeg maken</span>
+            </button>
+          </div>
+          <div class="col-9">
+            <img *ngIf="base64Logo" [src]="base64Logo" width="150px;" height="150px;">
+            <img *ngIf="!base64Logo && typedForm.controls.logoExtension.value && originalCompetitor"
+              [src]="getLogoUrl(originalCompetitor)" width="150px;" height="150px;">
+          </div>
+        </div>
+
       </form>
     </div>
   </div>
