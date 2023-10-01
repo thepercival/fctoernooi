@@ -18,7 +18,7 @@
       <ngb-alert *ngIf="!processing && tournament && !hasCompetitors" type="info">er zijn nog geen
         deelnemers
         ingevuld, ga naar
-        <button role="button" class="btn btn-secondary" [routerLink]="['/admin/competitors', tournament.getId()]">
+        <button role="button" class="btn btn-secondary" [routerLink]="['/admin/competitors', tournament.getId(), CompetitorTabBase]">
           <span>
             <fa-icon [icon]="['fas', 'users']"></fa-icon>deelnemers invullen
           </span>

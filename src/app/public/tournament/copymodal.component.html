@@ -1,0 +1,60 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+        <fa-icon [icon]="['fas', 'copy']"></fa-icon> nieuwe editie
+    </h4>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
+</div>
+<div class="modal-body">
+    <div class="container-fluid">
+        <form name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
+
+            <div class="row mb-3">
+                <div class="col-5">
+                    <label for="name" class="col-form-label">nieuwe naam</label>
+                </div>
+                <div class="col-7">                    
+                    <input class="form-control"
+                        [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
+                        formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters"
+                        [focusMe]="true">
+                    
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-5">
+                    <label for="dp" class="col-form-label">startdatum</label>
+                </div>
+                <div class="col-7">
+                    <div class="input-group input-group-date">
+                        <input class="form-control" formControlName="date" ngbDatepicker #d="ngbDatepicker" required>
+                        <span class="input-group-text pointer" (click)="d.toggle()">
+                            <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="starttime" class="col-5 col-form-label">starttijd</label>
+                <div class="col-7">
+                    <ngb-timepicker formControlName="time" [spinners]="false" required>
+                    </ngb-timepicker>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="competitors" class="col-5 col-form-label pointer">deelnemers</label>
+                <div class="col-7">
+                    <div class="form-control form-check form-switch">
+                        <input type="checkbox" class="form-check-input" id="competitors" formControlName="competitors">
+                        <label class="form-check-label" for="competitors"></label>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="modal.close(getCopyConfig())">naar nieuwe
+        editie</button>
+    <ngb-alert *ngIf="showLowCreditsWarning" class="mt-3" [type]="'info'">
+        je kunt nog 1 toernooi aanmaken, vraag daarna nieuwe credits aan</ngb-alert>
+</div>

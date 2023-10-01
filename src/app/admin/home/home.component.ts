@@ -26,6 +26,7 @@ import { TournamentExportConfig } from '../../lib/pdf/repository';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
+import { CopyConfig, CopyModalComponent } from '../../public/tournament/copymodal.component';
 
 @Component({
     selector: 'app-tournament-admin',
@@ -33,18 +34,12 @@ import { TournamentScreen } from '../../shared/tournament/screenNames';
     styleUrls: ['./home.component.css']
 })
 export class HomeComponent extends TournamentComponent implements OnInit {
-    public copyForm: FormGroup<{
-        date: FormControl<NgbDateStruct>,
-        time: FormControl<NgbTimeStruct>,
-      }>;
+
 
     lockerRoomValidator!: LockerRoomValidator;
     hasBegun: boolean = true;
-    public nrOfCredits: number | undefined;
     hasPlanningEditManualMode: boolean = false;
     allPoulesHaveGames: boolean = false;
-
-    @ViewChild('contentCopyModal', { static: true }) private contentCopyModal!: TemplateRef<any>;
 
     constructor(
         route: ActivatedRoute,
@@ -63,12 +58,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         private translate: TranslateFieldService
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
-        const date = new Date();
-        
-        this.copyForm = new FormGroup({
-            date: new FormControl(this.toDateStruct(date), { nonNullable: true }),
-            time: new FormControl(this.toTimeStruct(date), { nonNullable: true }),
-        });
+
 
     }
 
@@ -78,48 +68,31 @@ export class HomeComponent extends TournamentComponent implements OnInit {
 
     postNgOnInit() {        
         this.lockerRoomValidator = new LockerRoomValidator(this.tournament.getCompetitors(), this.tournament.getLockerRooms());
-        const date = new Date();
         const firstRoundNumber = this.structure.getFirstRoundNumber();
         this.hasBegun = firstRoundNumber.hasBegun();
         this.allPoulesHaveGames = this.structure.allPoulesHaveGames();
         this.hasPlanningEditManualMode = this.structureHasPlanningEditManualMode(firstRoundNumber);
-        this.copyForm.controls.date.setValue({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
-        this.route.queryParams.subscribe(params => {            
-            this.initCopyModal(params.newStartForCopyAsTime);
+        
+        this.route.queryParams.subscribe(params => {
+            if (params.newStartForCopyAsTime !== undefined) {
+                this.openModalCopy(params.newStartForCopyAsTime);
+            }
           });
         this.processing = false;
     }
 
-    private initCopyModal(newStartForCopyAsTime: string|undefined): void {
-        if (newStartForCopyAsTime !== undefined) {              
+    private calculateNewStartDate(newStartForCopyAsTime: string | undefined): Date {
+        if (newStartForCopyAsTime !== undefined) {
             const newStartDate = new Date(parseInt(newStartForCopyAsTime, 10));
-            const newStartTimeStruct = { hour: newStartDate.getHours(), minute: newStartDate.getMinutes(), second: 0 }; 
-            const newStartDateStruct = { year: newStartDate.getFullYear(), month: newStartDate.getMonth() + 1, day: newStartDate.getDate() };              
-    
-            this.initCopyForm(newStartDateStruct, newStartTimeStruct);
-            this.openModalCopy(this.contentCopyModal);
-        }  else {
-            const tournamentDate = this.tournament.getCompetition().getStartDateTime();
-            const newStartTimeStruct = { hour: tournamentDate.getHours(), minute: tournamentDate.getMinutes(), second: 0 }; 
-
-            const currentDate = new Date();
-            const newStartDate = currentDate.getTime() > tournamentDate.getTime() ? currentDate : tournamentDate;
-            const newStartDateStruct = { year: newStartDate.getFullYear(), month: newStartDate.getMonth() + 1, day: newStartDate.getDate() };              
-            this.initCopyForm(newStartDateStruct, newStartTimeStruct);
-        }
-    }
-
-    private initCopyForm(dateStruct: NgbDateStruct, timeStruct: NgbTimeStruct): void {
-        this.copyForm.controls.date.setValue(dateStruct);        
-        this.copyForm.controls.time.setValue(timeStruct);
-    }
-
-    toDateStruct(date: Date): NgbDateStruct {
-        return { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
-    }
-    
-    toTimeStruct(date: Date): NgbTimeStruct {
-        return { hour: date.getHours(), minute: date.getMinutes(), second: 0 };
+            newStartDate.setDate(newStartDate.getDate() + 1);
+            return newStartDate;
+        }         
+        
+        const tournamentDate = this.tournament.getCompetition().getStartDateTime();
+        const currentDate = new Date();
+        const newStartDate = currentDate.getTime() > tournamentDate.getTime() ? currentDate : tournamentDate;
+        newStartDate.setDate(newStartDate.getDate() + 1);
+        return newStartDate;
     }
 
     protected structureHasPlanningEditManualMode(roundNumber: RoundNumber): boolean {
@@ -315,39 +288,38 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         });
     }
 
-    openModalCopy(modalContent: TemplateRef<any>) {
+    openModalCopy(newStartForCopyAsTime?: string) {
+        this.processing = true;
+        const newStartDate = this.calculateNewStartDate(newStartForCopyAsTime);        
+        
+        this.userRepository.getLoggedInObject()
+            .subscribe({
+                next: (loggedInUser: User | undefined) => {
+                    if (loggedInUser === undefined) {
+                        const navigationExtras: NavigationExtras = {
+                            queryParams: { type: IAlertType.Danger, message: 'je bent niet ingelogd' }
+                        };
+                        this.router.navigate(['', navigationExtras]);
+                        return;
+                    }
+                    const nrOfCredits = loggedInUser.getNrOfCredits();
+                    if (loggedInUser.getValidated()  && nrOfCredits === 0) {
+                        this.router.navigate(['/user/buycredits']);
+                        return;
+                    }
+                    const activeModal = this.modalService.open(CopyModalComponent, { scrollable: false });
+                    activeModal.componentInstance.name = this.tournament.getName();
+                    activeModal.componentInstance.startDateTime = newStartDate;
+                    activeModal.componentInstance.showLowCreditsWarning = nrOfCredits === 1;
 
-        if (this.nrOfCredits === undefined) {
-            this.userRepository.getLoggedInObject()
-                .subscribe({
-                    next: (loggedInUser: User | undefined) => {
-                        if (loggedInUser === undefined) {
-                            const navigationExtras: NavigationExtras = {
-                                queryParams: { type: IAlertType.Danger, message: 'je bent niet ingelogd' }
-                            };
-                            this.router.navigate(['', navigationExtras]);
-                            return;
-                        }
-                        if (loggedInUser.getValidated()) {
-                            this.nrOfCredits = loggedInUser.getNrOfCredits();
-                            if (this.nrOfCredits === 0) {
-                                this.router.navigate(['/user/buycredits']);
-                                return;
-                            }
-                        }
-                        this.processing = false;
-                    },
-                    error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
-                });
-        }
-
-        const activeModal = this.modalService.open(modalContent, { scrollable: false });
-        activeModal.result.then((result) => {
-            if (result === 'copy') {
-                this.copy();
-            }
-        }, (reason) => {
-        });
+                    activeModal.result.then((result) => {
+                        this.copy(result);
+                    }, (reason) => {
+                    });
+                    this.processing = false;
+                },
+                error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
+            });
     }
 
     openModalRemove(modalContent: TemplateRef<any>) {
@@ -386,18 +358,12 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         return date.getFullYear();
     }
 
-    copy() {
+    copy(copyConfig: CopyConfig) {
         this.setAlert(IAlertType.Info, 'de nieuwe editie wordt aangemaakt');
-        const startDateTime = new Date(
-            this.copyForm.controls.date.value.year,
-            this.copyForm.controls.date.value.month - 1,
-            this.copyForm.controls.date.value.day,
-            this.copyForm.controls.time.value.hour,
-            this.copyForm.controls.time.value.minute,
-        );
+        
 
         this.processing = true;
-        this.tournamentRepository.copyObject(this.tournament, startDateTime)
+        this.tournamentRepository.copyObject(this.tournament.getId(), copyConfig.startDate)
             .subscribe({
                 next: (newTournamentId: number | string) => {
                     this.router.navigate(['/admin', newTournamentId]);

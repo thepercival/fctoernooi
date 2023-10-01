@@ -27,7 +27,7 @@
       <table *ngIf="!processing && structure" class="table mt-3">
         <tbody app-tournament-roundnumber-planning *ngFor="let roundNumber of structure.getRoundNumbers()"
           [structureNameService]="structureNameService" [tournament]="tournament" [roundNumber]="roundNumber"
-          [optionalGameColumns]="optionalGameColumns" [hasSomeCompetitorAnImage]="hasSomeCompetitorAnImage"
+          [optionalGameColumns]="optionalGameColumns"
           [showLinksToAdmin]="true" [favoriteCategories]="favoriteCategories" [roles]="roles"
           [userRefereeId]="userRefereeId" (scrolling)="scroll()">
         </tbody>

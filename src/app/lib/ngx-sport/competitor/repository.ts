@@ -133,8 +133,25 @@ export class CompetitorRepository extends APIRepository {
         );
     }
 
-    getLogoUrl(competitor: TournamentCompetitor): string {
-        return this.apiurl + 'images/' + this.getUrlpostfix() + '/' + competitor.getId() + '.' + competitor.getLogoExtension();
+    getLogoUrl(competitor: TournamentCompetitor, height: number = 20): string {
+        if (competitor === undefined) {
+            return '';
+        }
+        const suffix = (height > 0 && competitor.getLogoExtension() !== 'svg' ) ? '_h_' + height : '';
+        return this.apiurl + 'images/' + this.getUrlpostfix() + '/' + competitor.getId() + suffix + '.' + competitor.getLogoExtension();
+    }
+
+    hasSomeLogo(competitors: TournamentCompetitor[]): boolean {
+        return competitors.some((competitor: TournamentCompetitor): boolean => {
+            return (competitor.getLogoExtension()?.length ?? 0) > 0;
+        });
+    } 
+    
+    hasLogoExtension(competitor: TournamentCompetitor | undefined): boolean {
+        if (competitor === undefined) {
+            return false;
+        }
+        return (competitor.getLogoExtension()?.length ?? 0) > 0;
     }
 
     protected getUploadOptions() {

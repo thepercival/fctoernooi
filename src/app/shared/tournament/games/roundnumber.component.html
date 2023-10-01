@@ -228,10 +228,10 @@
   <!-- homePlaces -->
   <td class="text-end text-break" [ngClass]="{'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, Home) }">
 
-    <ng-template ngFor let-homeGamePlace let-first [ngForOf]="gmData.game.getHomePlaces()">
+    <ng-template ngFor let-homeGamePlace let-first="first" [ngForOf]="gmData.game.getHomePlaces()">
       <span *ngIf="!first"> & </span>
       <span [innerHTML]="structureNameService.getPlaceFromName(homeGamePlace.getPlace(),true,true) | keepHtml"></span>
-      <img *ngIf="hasImg(homeGamePlace.getPlace())" class="d-none d-sm-inline ms-1" [src]="getCompetitorImgUrl(homeGamePlace.getPlace())" height="20" width="20">
+      <img *ngIf="hasLogo(homeGamePlace.getPlace())" class="ms-1" [src]="getCompetitorLogoUrl(homeGamePlace.getPlace())" height="20" width="20">
     </ng-template>
     
   </td>
@@ -265,9 +265,9 @@
   </td>
   <!-- awayPlaces -->
   <td class="text-break" [ngClass]="{ 'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, Away) }">
-    <ng-template ngFor let-awayGamePlace let-first [ngForOf]="gmData.game.getAwayPlaces()">
+    <ng-template ngFor let-awayGamePlace let-first="first" [ngForOf]="gmData.game.getAwayPlaces()">
       <span *ngIf="!first"> & </span>
-      <img *ngIf="hasImg(awayGamePlace.getPlace())" class="d-none d-sm-inline me-1" [src]="getCompetitorImgUrl(awayGamePlace.getPlace())"
+      <img *ngIf="hasLogo(awayGamePlace.getPlace())" class="me-1" [src]="getCompetitorLogoUrl(awayGamePlace.getPlace())"
         height="20" width="20">
       <span [innerHTML]="structureNameService.getPlaceFromName(awayGamePlace.getPlace(),true,true) | keepHtml"></span>
       
@@ -287,10 +287,13 @@
     <ng-container *ngIf="gmData.canChangeResult; else canNotChangeResult">
       <div class="d-flex flex-wrap gap-2 justify-content-center mb-2">
         <div *ngFor="let gamePlace of gmData.game.getTogetherPlaces()" class="btn-group" role="group">
-          <div class="list-group-item border-start-0"
+          <div class="list-group-item border-start-0 me-1"
             [ngClass]="{'favitem': favorites?.hasTogetherGameCompetitor(gmData.game) }">
             <span [innerHtml]="structureNameService.getPlaceFromName(gamePlace.getPlace(),true,true) | keepHtml"></span>
-          </div>
+          </div>          
+          <img *ngIf="hasLogo(gamePlace.getPlace())" class="me-1"
+            [src]="getCompetitorLogoUrl(gamePlace.getPlace())" height="20" width="20">
+          
           <button class="btn btn-sm border border-{{getTogetherScoreBtnBorderClass(gamePlace)}} me-1"
             (click)="linkToGameEdit(gmData.game)">
             <fa-icon *ngIf="!isFinished(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>

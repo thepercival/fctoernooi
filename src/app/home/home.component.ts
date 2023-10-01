@@ -60,7 +60,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const filter = { roles: Role.All };
+    const filter = { roles: Role.All, example: false };
     this.tournamentShellRepos.getObjects(filter)
       .subscribe({
         next: (myShells) => {

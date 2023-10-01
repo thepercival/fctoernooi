@@ -215,8 +215,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
                     },
                     error: (e) => {
                         this.setAlert(IAlertType.Danger, e); this.processing = false;
-                    },
-                    complete: () => this.processing = false
+                    }
                 });
             return false;
         }

@@ -27,7 +27,7 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 export class SponsorEditComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup<{
         name: FormControl<string>,
-        screennr: FormControl<string>,
+        screenNr: FormControl<number|null>,
         url: FormControl<string>,
         logoExtension: FormControl<string|null>,
         logoFileStream: FormControl<Blob|null>,
@@ -48,6 +48,8 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
     validations: SponsorValidations = {
         minlengthname: Sponsor.MIN_LENGTH_NAME,
         maxlengthname: Sponsor.MAX_LENGTH_NAME,
+        minScreenNr: 1,
+        maxScreenNr: SponsorScreensCreator.MaxNrOfSponsorScreens,
         maxlengthurl: Sponsor.MAX_LENGTH_URL,
         maxlengthextension: 10,
     };
@@ -77,7 +79,14 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
                     Validators.maxLength(this.validations.maxlengthname)
                 ] 
             }),
-            screennr:  new FormControl('', { nonNullable: true }),
+            screenNr: new FormControl<number | null>(null, {
+                nonNullable: false, 
+                validators:
+                    [
+                        Validators.min(this.validations.minScreenNr),
+                        Validators.max(this.validations.maxScreenNr)
+                    ]
+            }),
             url: new FormControl('', { nonNullable: true, validators: 
                 [
                     Validators.maxLength(this.validations.maxlengthurl)
@@ -123,7 +132,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         }
         if (this.originalSponsor === undefined) {
             if( this.rangeScreenNrs.length > 0 ) {
-                this.typedForm.controls.screennr.setValue('' + this.rangeScreenNrs[0]);
+                this.typedForm.controls.screenNr.setValue(this.rangeScreenNrs[0]);
             }
             this.processing = false;
             return;
@@ -132,7 +141,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         this.typedForm.controls.name.setValue(this.originalSponsor.getName());
         this.typedForm.controls.url.setValue(this.originalSponsor.getUrl());
         this.typedForm.controls.logoExtension.setValue(this.originalSponsor.getLogoExtension() ?? null);
-        this.typedForm.controls.screennr.setValue('' + this.originalSponsor.getScreenNr());
+        this.typedForm.controls.screenNr.setValue(this.originalSponsor.getScreenNr());
         this.processing = false;
     }
 
@@ -163,7 +172,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
             name: this.typedForm.controls.name.value,
             url: url ? url : undefined,
             logoExtension: logoExtension,
-            screenNr: +this.typedForm.controls.screennr.value
+            screenNr: this.typedForm.controls.screenNr.value === null ? undefined : this.typedForm.controls.screenNr.value
         }
     }
 
@@ -254,6 +263,8 @@ export interface SponsorValidations {
     maxlengthname: number;
     maxlengthurl: number;
     maxlengthextension: number;
+    minScreenNr: number;
+    maxScreenNr: number
 }
 
 export enum LogoInput {

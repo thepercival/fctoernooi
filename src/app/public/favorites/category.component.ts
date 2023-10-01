@@ -7,6 +7,7 @@ import { Favorites } from '../../lib/favorites';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 import { TournamentCompetitor } from '../../lib/competitor';
+import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository';
 
 @Component({
     selector: 'app-tournament-favorites-category',
@@ -20,12 +21,14 @@ export class FavoritesCategoryComponent implements OnInit {
     @Input() showLockerRoom = false;
     @Input() lockerRoomMap!: Map<string, string>;
     @Input() structureNameService!: StructureNameService;
-
+    
+    public hasSomeCompetitorAnImage: boolean = false;
     public placeCompetitorItems: PlaceCompetitorItem[] = [];
 
     constructor(
         protected tournamentMapper: TournamentMapper,
         protected favRepository: FavoritesRepository,
+        public competitorRepository: CompetitorRepository,
         protected authService: AuthService
     ) {
 
@@ -34,8 +37,12 @@ export class FavoritesCategoryComponent implements OnInit {
     ngOnInit() {
         const map = this.structureNameService.getStartLocationMap();
         if (map !== undefined) {
-            this.setPlaceCompetitorItems(map);
+            this.setPlaceCompetitorItems(map);            
+            this.hasSomeCompetitorAnImage = this.placeCompetitorItems.some((competitorItem: PlaceCompetitorItem): boolean => {
+                return (competitorItem.competitor !== undefined && this.competitorRepository.hasLogoExtension(competitorItem.competitor));
+            });
         }
+        
     }
 
     getId(competitor: Competitor): string {

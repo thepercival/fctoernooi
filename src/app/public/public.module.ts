@@ -8,6 +8,7 @@ import {
   faSearch,
   faAngleDoubleDown,
   faUsers,
+  faCopy,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   ScoreConfigService,
@@ -35,6 +36,7 @@ import { FavoritesCategoryComponent } from './favorites/category.component';
 import { PublicShellsComponent } from './shells/shells.component';
 import { ExamplesComponent } from './examples/examples.component';
 import { RegistrationComponent } from './registration-form/registration-form.component';
+import { CopyModalComponent } from './tournament/copymodal.component';
 
 @NgModule({
   imports: [
@@ -46,21 +48,22 @@ import { RegistrationComponent } from './registration-form/registration-form.com
     TournamentModule
   ],
   declarations: [
-    PreNewComponent,
-    StructureViewComponent,
+    CopyModalComponent,
+    ExamplesComponent,
+    FavoritesCategoryComponent,
     GamesComponent,
     LiveboardComponent,
     LiveboardPoulesComponent,
     LiveboardSponsorsComponent,
     LiveboardGamesComponent,
+    PreNewComponent,
+    StructureViewComponent, 
     SelectFavoritesComponent,
     ProgressComponent,
-    RankingViewComponent,
-    FavoritesCategoryComponent,
-    ScreenConfigsModalComponent,
     PublicShellsComponent,
-    ExamplesComponent,
-    RegistrationComponent
+    RankingViewComponent,
+    RegistrationComponent,
+    ScreenConfigsModalComponent
   ],
   providers: [
     CompetitionSportEditor,
@@ -73,7 +76,7 @@ import { RegistrationComponent } from './registration-form/registration-form.com
 export class PublicModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(
-      faListOl, faSearch, faEyeSlash, faAngleDoubleDown, faUsers
+      faListOl, faSearch, faEyeSlash, faAngleDoubleDown, faUsers, faCopy
       /*faMoneyBillAlt, faTrashAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
       faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom,
       faInfoCircle, faMedal, faQrcode, faCopy, faDotCircle, faSync*/

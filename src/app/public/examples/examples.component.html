@@ -3,23 +3,31 @@
     <h1>voorbeeld toernooien</h1>   
 
     <div class="d-flex justify-content-center my-3">
-      <div class="card border-dark w-50 text-center">
-        <div class="card-header"><h5>beheer deel</h5></div>        
-        <div class="card-body">
-          <div>
-            <button class="btn btn-outline-primary" (click)="linkExampleModal(exampleInfo)">meerdere poules & finales</button>
-          </div>
-          <div>
-            <button class="btn btn-outline-primary my-3">verschillende categoriën</button>
-          </div>
-          <div>
-            <button class="btn btn-outline-primary">meerderere sporten</button>
-          </div>      
-        </div>
-      </div>
+      
+      <h2 *ngIf="processing" class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
+      <table *ngIf="!processing" class="table mb-0">
+        <tbody>
+          <tr *ngFor="let tournamentShell of tournamentShells">
+            <td>
+              <span>{{tournamentShell.name}}</span>
+            </td>
+            <td>
+              <button type="button" class="btn btn-sm btn-outline-primary" (click)="linkToView(tournamentShell)">
+                bekijken
+              </button>
+            </td>
+            <td>
+              <button type="button" class="btn btn-sm btn-outline-primary" (click)="openCopyModal(tournamentShell)">
+                <fa-icon [icon]="['fas', 'copy']"></fa-icon> <span class="d-none d-sm-inline ms-1">kopiëren</span>
+              </button>
+            </td>
+          </tr>
+      </table>
     </div>
 
-    <div class="d-flex justify-content-center mt-4">
+    <!-- <div class="d-flex justify-content-center mt-4">
       <div class="card border-dark w-50 text-center">
         <div class="card-header"><h5>publiek deel</h5></div>
         <div class="card-body">
@@ -34,7 +42,7 @@
           </div>      
         </div>
       </div>
-    </div>
+    </div> -->
 
   </div>
 </div>

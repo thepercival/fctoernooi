@@ -47,8 +47,8 @@
             <label for="screennr" class="col-form-label">scherm nummer</label>
           </div>
           <div class="col-9">
-            <select formControlName="screennr" class="form-control"
-              [ngClass]="{ 'is-invalid': typedForm.controls.screennr.invalid, 'is-valid': typedForm.controls.screennr.valid }"
+            <select formControlName="screenNr" class="form-control"
+              [ngClass]="{ 'is-invalid': typedForm.controls.screenNr.invalid, 'is-valid': typedForm.controls.screenNr.valid }"
               required>
               <option *ngFor="let screenNr of rangeScreenNrs" [ngValue]="screenNr">
                 {{screenNr}}</option>

@@ -58,6 +58,9 @@ export class TournamentShellRepository extends APIRepository {
         if (filter.roles !== undefined) {
             httpParams = httpParams.set('roles', '' + filter.roles);
         }
+        if (filter.example !== undefined) {
+            httpParams = httpParams.set('example', filter.example === true ? '1' : '0');
+        }
         return httpParams;
     }
 }
@@ -67,4 +70,5 @@ export interface TournamentShellFilter {
     endDate?: Date;
     name?: string;
     roles?: number;
+    example?: boolean;
 }

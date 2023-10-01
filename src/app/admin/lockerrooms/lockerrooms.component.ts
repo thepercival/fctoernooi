@@ -17,6 +17,7 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { CompetitorChooseModalComponent } from '../../shared/tournament/competitor/competitorchoosemodal.component';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
+import { CompetitorTab } from '../competitor/list.component';
 
 
 @Component({
@@ -57,6 +58,8 @@ export class LockerRoomsEditComponent extends TournamentComponent implements OnI
     this.hasCompetitors = competitors.length > 0;
     this.processing = false;
   }
+
+  get CompetitorTabBase(): CompetitorTab { return CompetitorTab .Base }
 
   add() {
     const modal = this.getChangeNameModel('naar "deelnemers selecteren"');

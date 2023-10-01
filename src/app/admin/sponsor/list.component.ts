@@ -27,6 +27,7 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
   sponsors: Sponsor[] = [];
   sponsorScreensCreator!: SponsorScreensCreator;
   public screenConfig: ScreenConfig;
+  public hasSomeSponsorAnImage: boolean = false;
 
   constructor(
     route: ActivatedRoute,
@@ -36,7 +37,7 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
     globalEventsManager: GlobalEventsManager,
     modalService: NgbModal,
     favRepository: FavoritesRepository,
-    private sponsorRepository: SponsorRepository,
+    public sponsorRepository: SponsorRepository,
     private sponsorMapper: SponsorMapper
   ) {
     super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
@@ -48,7 +49,8 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
   }
 
   initSponsors() {
-    this.createSponsorsList();
+    this.createSponsorsList(); // sets this.sponsors
+    this.hasSomeSponsorAnImage = this.sponsorRepository.hasSomeLogo(this.sponsors);
     this.sponsorScreensCreator = new SponsorScreensCreator(this.screenConfig);
     this.processing = false;
   }

@@ -63,7 +63,6 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   @Input() favoriteCategories!: Category[];
   @Input() structureNameService!: StructureNameService;
   @Input() showLinksToAdmin = false;
-  @Input() hasSomeCompetitorAnImage = false;
   @Input() userRefereeId: number | string | undefined;
   @Input() roles: number = 0;
   @Input() favorites: Favorites | undefined;
@@ -103,7 +102,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     public translate: TranslateScoreService,
     private modalService: NgbModal,
     protected planningRepository: PlanningRepository,
-    protected competitorRepository: CompetitorRepository) {
+    public competitorRepository: CompetitorRepository) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
     this.resetAlert();
     this.scoreConfigService = new ScoreConfigService();
@@ -564,23 +563,15 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     })
   }
 
-  public hasImg(place: Place): boolean {
+  public hasLogo(place: Place): boolean {
     const competitor = this.getCompetitor(place);
-    return (competitor?.getLogoExtension()?.length ?? 0 ) > 0;
-  //   const places = gmData.game.getSidePlaces(side);
-  //   if (places.length > 1) {
-  //     return false;
-  //   }
-  //   const place =if (places.length > 1) {
-  //     return false;
-  //   }
-  //   return this.getCompetitor();
+    return competitor ? this.competitorRepository.hasLogoExtension(competitor) : false;
   }
 
-  public getCompetitorImgUrl(place: Place): string {
+  public getCompetitorLogoUrl(place: Place): string {
     const competitor = this.getCompetitor(place);
-    return competitor !== undefined ? this.competitorRepository.getLogoUrl(competitor) : '';
-  }
+    return competitor ? this.competitorRepository.getLogoUrl(competitor) : '';
+  } 
 
   validTimeValue(count: number): boolean {
     return count <= 5 || (count % 10) === 0;

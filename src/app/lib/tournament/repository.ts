@@ -75,8 +75,8 @@ export class TournamentRepository extends APIRepository {
         );
     }
 
-    copyObject(tournament: Tournament, newStartDateTime: Date): Observable<number | string> {
-        const url = this.getUrl(tournament.getId()) + '/copy';
+    copyObject(tournamentId: string|number, newStartDateTime: Date): Observable<number | string> {
+        const url = this.getUrl(tournamentId) + '/copy';
         return this.http.post<number | string>(url, { startdatetime: newStartDateTime }, this.getOptions()).pipe(
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );

@@ -16,6 +16,7 @@
         <tbody>
           <tr>
             <th>pl</th>
+            <th *ngIf="hasSomeCompetitorAnImage"></th>
             <th>naam</th>
             <th><fa-icon [icon]="['fas', 'door-closed']"></fa-icon></th>
             <th class="text-center"><fa-icon [icon]="['fas', 'star']"></fa-icon> </th>
@@ -23,6 +24,10 @@
           <tr *ngFor="let placeCompetitor of placeCompetitorItems">
             <td>
               <span [innerHtml]="structureNameService.getPlaceFromName(placeCompetitor.place, false) | keepHtml"></span>
+            </td>
+            <td *ngIf="hasSomeCompetitorAnImage" class="px-1">
+              <img *ngIf="placeCompetitor.competitor && competitorRepository.hasLogoExtension(placeCompetitor.competitor)" class="ms-1"
+                [src]="competitorRepository.getLogoUrl(placeCompetitor.competitor)" height="20" width="20">
             </td>
             <td class="text-break">
               <!-- <span *ngIf="placeCompetitor.competitor">{{placeCompetitor.competitor.getName()}}</span> -->

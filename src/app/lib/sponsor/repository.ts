@@ -67,9 +67,16 @@ export class SponsorRepository extends APIRepository {
         );
     }
 
-    getLogoUrl(sponsor: Sponsor): string {
-        return this.apiurl + 'images/' + this.getUrlpostfix() + '/' + sponsor.getId() + '.' + sponsor.getLogoExtension();
+    getLogoUrl(sponsor: Sponsor, height: number = 20): string {
+        const suffix = (height > 0 && sponsor.getLogoExtension() !== 'svg') ? '_h_' + height : '';
+        return this.apiurl + 'images/' + this.getUrlpostfix() + '/' + sponsor.getId() + suffix + '.' + sponsor.getLogoExtension();
     }
+
+    hasSomeLogo(sponsors: Sponsor[]): boolean {
+        return sponsors.some((sponsor: Sponsor): boolean => {
+            return sponsor.hasLogoExtension();
+        });
+    } 
 
     protected getUploadOptions() {
         return {

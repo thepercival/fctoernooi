@@ -72,9 +72,7 @@ export class CategoryBaseCompetitorListComponent implements OnInit, OnChanges {
   }
 
   updatePlaceCompetitorItems(): void {
-    this.hasSomeCompetitorAnImage = this.tournament.getCompetitors().some((competitor: TournamentCompetitor): boolean => {
-      return (competitor.getLogoExtension()?.length ?? 0 ) > 0;
-    });
+    this.hasSomeCompetitorAnImage = this.competitorRepository.hasSomeLogo(this.tournament.getCompetitors())
     this.placeCompetitorItems = this.category.getRootRound().getPlaces().map((place: Place): PlaceCompetitorItem => {
       const startLocation = place.getStartLocation();
       if (startLocation === undefined) {

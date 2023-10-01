@@ -76,7 +76,8 @@ export class PublicShellsComponent implements OnInit{
     const filter = { 
       name: this.searchForm.controls.name.value,
       startDate: this.dateConverter.getDate(this.searchForm.controls.startDate), 
-      endDate: this.dateConverter.getDate(this.searchForm.controls.endDate)
+      endDate: this.dateConverter.getDate(this.searchForm.controls.endDate),
+      example: false
     };
     if( name !== undefined) {
       filter.name = name;

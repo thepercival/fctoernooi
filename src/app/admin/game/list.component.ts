@@ -26,7 +26,6 @@ export class GameListComponent extends TournamentComponent implements OnInit {
   userRefereeId: number | string | undefined;
   roles: number = 0;
   public structureNameService!: StructureNameService;
-  public hasSomeCompetitorAnImage: boolean = false;
   public categoryMap: Map<number, Category> = new Map();
   public optionalGameColumns: Map<OptionalGameColumn, boolean> = new Map(); 
 
@@ -54,9 +53,6 @@ export class GameListComponent extends TournamentComponent implements OnInit {
         return;
       }
       this.initGameColumnDefinitions(this.structure);
-      this.hasSomeCompetitorAnImage = this.tournament.getCompetitors().some((competitor: TournamentCompetitor): boolean => {
-        return (competitor.getLogoExtension()?.length ?? 0) > 0;
-      });
       const startLocationMap = new StartLocationMap(this.tournament.getCompetitors());
       this.structureNameService = new StructureNameService(startLocationMap);
       this.roles = tournamentUser ? tournamentUser.getRoles() : 0;

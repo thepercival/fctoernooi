@@ -36,7 +36,7 @@ export class CategoryOrderCompetitorListComponent implements OnChanges {
 
   constructor(
     private router: Router,
-    private competitorRepository: CompetitorRepository,
+    public competitorRepository: CompetitorRepository,
     private modalService: NgbModal) {
   }
 
@@ -54,9 +54,7 @@ export class CategoryOrderCompetitorListComponent implements OnChanges {
   }
 
   updatePlaceCompetitorItems(): void {
-    this.hasSomeCompetitorAnImage = this.tournament.getCompetitors().some((competitor: TournamentCompetitor): boolean => {
-      return (competitor.getLogoExtension()?.length ?? 0) > 0;
-    });
+    this.hasSomeCompetitorAnImage = this.hasSomeCompetitorAnImage = this.competitorRepository.hasSomeLogo(this.tournament.getCompetitors())
 
     this.placeCompetitorItems = this.category.getRootRound().getPlaces().map((place: Place): PlaceCompetitorItem => {
       const startLocation = place.getStartLocation();
@@ -155,23 +153,5 @@ export class CategoryOrderCompetitorListComponent implements OnChanges {
   // protected resetAlert(): void {
   //   this.alert = undefined;
   // }
-
-  hasImg(competitor: TournamentCompetitor | undefined): boolean {
-    if (competitor === undefined) {
-      return false;
-    }
-    return (competitor.getLogoExtension()?.length ?? 0) > 0;
-  }
-
-  getImgUrl(competitor: TournamentCompetitor | undefined): string {
-    if (competitor === undefined) {
-      throw new Error('should have competitor');
-    }
-    const logoExtension = competitor.getLogoExtension() ?? '';
-    if (logoExtension.length === 0) {
-      return '';
-    }
-    return this.competitorRepository.getLogoUrl(competitor);
-  }
 }
 

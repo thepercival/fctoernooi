@@ -14,6 +14,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { LockerRoom } from '../../lib/lockerroom';
 import { TournamentCompetitor } from '../../lib/competitor';
+import { AuthService } from '../../lib/auth/auth.service';
+import { Role } from '../../lib/role';
+import { CompetitorTab } from '../../admin/competitor/list.component';
 
 @Component({
     selector: 'app-tournament-select-favorites',
@@ -36,7 +39,8 @@ export class SelectFavoritesComponent extends TournamentComponent implements OnI
         globalEventsManager: GlobalEventsManager,
         modalService: NgbModal,
         favRepository: FavoritesRepository,
-        private myNavigation: MyNavigation
+        private myNavigation: MyNavigation,
+        private authService: AuthService,
     ) {
         super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
         this.resetAlert();
@@ -63,6 +67,7 @@ export class SelectFavoritesComponent extends TournamentComponent implements OnI
         });
     }
 
+    get CompetitorTabBase(): CompetitorTab { return CompetitorTab .Base; }
     get FavoritesScreen(): TournamentScreen { return TournamentScreen.Favorites }
 
     hasCompetitors() {
@@ -105,6 +110,10 @@ export class SelectFavoritesComponent extends TournamentComponent implements OnI
             const descr = lockerRooms.map(lockerRoom => lockerRoom.getName()).join(', ');
             this.lockerRoomMap.set('comp-' + competitor.getId(), descr);
         });        
+    }
+
+    isAdmin(): boolean {
+        return this.hasRole(this.authService, Role.Admin);
     }
 
     navigateBack() {

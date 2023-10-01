@@ -21,6 +21,7 @@
       <thead>
         <tr>
           <th></th>
+          <th *ngIf="hasSomeSponsorAnImage"></th>
           <th>naam</th>
           <th class="text-center">scherm nummer</th>
           <th class="d-none d-lg-table-cell">url</th>
@@ -38,6 +39,10 @@
             <button type="button" class="btn btn-sm btn-primary" (click)="editSponsor(sponsor)">
               <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
             </button>
+          </td>
+          <td *ngIf="hasSomeSponsorAnImage" class="px-1">
+            <img *ngIf="sponsor.hasLogoExtension()"
+              class="ms-1" [src]="sponsorRepository.getLogoUrl(sponsor)" height="20" width="20">
           </td>
           <td>
             <span>{{sponsor.getName()}}</span>
