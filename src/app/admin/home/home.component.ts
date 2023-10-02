@@ -363,7 +363,7 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         
 
         this.processing = true;
-        this.tournamentRepository.copyObject(this.tournament.getId(), copyConfig.startDate)
+        this.tournamentRepository.copyObject(this.tournament.getId(), copyConfig)
             .subscribe({
                 next: (newTournamentId: number | string) => {
                     this.router.navigate(['/admin', newTournamentId]);

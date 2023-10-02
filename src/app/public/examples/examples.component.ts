@@ -96,7 +96,7 @@ export class ExamplesComponent implements OnInit{
 
 
     this.processing = true;
-    this.tournamentRepository.copyObject(tournamentId, copyConfig.startDate)
+    this.tournamentRepository.copyObject(tournamentId, copyConfig)
       .subscribe({
         next: (newTournamentId: number | string) => {
           this.router.navigate(['/admin', newTournamentId]);

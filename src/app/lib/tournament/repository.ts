@@ -8,6 +8,7 @@ import { TournamentMapper } from './mapper';
 import { APIRepository } from '../repository';
 import { JsonTournament } from './json';
 import { Router } from '@angular/router';
+import { CopyConfig } from '../../public/tournament/copymodal.component';
 
 @Injectable({
     providedIn: 'root'
@@ -75,9 +76,10 @@ export class TournamentRepository extends APIRepository {
         );
     }
 
-    copyObject(tournamentId: string|number, newStartDateTime: Date): Observable<number | string> {
+    copyObject(tournamentId: string|number, copyConfig: CopyConfig): Observable<number | string> {
         const url = this.getUrl(tournamentId) + '/copy';
-        return this.http.post<number | string>(url, { startdatetime: newStartDateTime }, this.getOptions()).pipe(
+
+        return this.http.post<number | string>(url, copyConfig, this.getOptions()).pipe(
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
