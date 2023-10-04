@@ -28,7 +28,7 @@ export class RankingRoundComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.poules = this.round.getPoules().filter((poule: Poule) => poule.needsRanking());
+        this.poules = this.round.getPoules();
         // const structureCell = this.round.getStructureCell();
         const state = this.round.getGamesState();
         const stateParent = this.round.getParentQualifyGroup()?.getParentRound().getGamesState();

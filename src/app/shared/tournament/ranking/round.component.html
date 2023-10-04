@@ -1,4 +1,28 @@
 <div *ngIf="poules.length > 0">
+
+  <!-- <div *ngFor="let poule of round.getPoules();" class="btn-group mb-3" role="group" (click)="emitNavigateToPoule(poule)">
+  
+    <ng-container *ngIf="hasCompetitors;else hasNoCompetitors">
+  
+      <button type="button" class="btn btn-outline-primary ps-1">
+        {{structureNameService.getPouleName(poule,false)}}</button>
+      <button type="button" class="btn btn-outline-primary px-1 text-start">
+        <ng-container [ngTemplateOutlet]="place" [ngTemplateOutletContext]="{poule, side: Home}"></ng-container>
+        <div *ngIf="poule.getPlaces().length == 1">bye</div>
+        <ng-container *ngIf="poule.getPlaces().length == 2" [ngTemplateOutlet]="place"
+          [ngTemplateOutletContext]="{poule, side: Away}"></ng-container>
+      </button>
+  
+    </ng-container>
+  
+    <ng-template #hasNoCompetitors>
+  
+      <button type="button" class="btn btn-outline-primary">{{getPreviousPouleName(poule, Home)}}</button>
+      <button type="button" class="btn btn-outline-primary">{{getPreviousPouleName(poule, Away)}}</button>
+  
+    </ng-template>
+  </div> -->
+
   <div class="card border-secondary round mb-2 {{cssService.getQualifyRound(round)}}">
     <div class="card-header p-0">
       <div class="d-flex justify-content-between pointer" (click)="collapsed=!collapsed">
@@ -21,6 +45,7 @@
     </div>
   </div>
 </div>
+
 <div class="d-flex flex-wrap gap-3 justify-content-center text-center">
   <app-tournament-ranking-round *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed(); first as first"
     class="align-self-stretch flex-wrap mb-2" [round]="qualifyGroup.getChildRound()" [favorites]="favorites"

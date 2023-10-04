@@ -7,7 +7,7 @@
   <span [innerHtml]="structureNameService.getPlaceFromName(placeCompetitor.place, false) | keepHtml"></span>
 </td>
 <td *ngIf="hasSomeCompetitorAnImage" class="pe-0">
-  <img *ngIf="placeCompetitor.competitor && competitorRepository.hasLogoExtension(placeCompetitor.competitor)" src="{{competitorRepository.getLogoUrl(placeCompetitor.competitor)}}" height="20" width="20">
+  <img *ngIf="placeCompetitor.competitor && competitorRepository.hasLogoExtension(placeCompetitor.competitor)" src="{{competitorRepository.getLogoUrl(placeCompetitor.competitor, 20)}}" height="20" width="20">
 </td>
 <td *ngIf="placeCompetitor.competitor">
   <div class="d-flex justify-content-between">    

@@ -67,7 +67,7 @@ export class SponsorRepository extends APIRepository {
         );
     }
 
-    getLogoUrl(sponsor: Sponsor, height: number = 20): string {
+    getLogoUrl(sponsor: Sponsor, height: number = 0): string {
         const suffix = (height > 0 && sponsor.getLogoExtension() !== 'svg') ? '_h_' + height : '';
         return this.apiurl + 'images/' + this.getUrlpostfix() + '/' + sponsor.getId() + suffix + '.' + sponsor.getLogoExtension();
     }

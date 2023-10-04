@@ -39,7 +39,7 @@
                 <span [innerHtml]="structureNameService.getPlaceFromName(item.place, false) | keepHtml"></span>
               </td>
               <td *ngIf="hasSomeCompetitorAnImage" class="d-none d-sm-table-cell pe-0">
-                <img *ngIf="item.competitor && competitorRepository.hasLogoExtension(item.competitor)" src="{{competitorRepository.getLogoUrl(item.competitor)}}" height="20"
+                <img *ngIf="item.competitor && competitorRepository.hasLogoExtension(item.competitor)" src="{{competitorRepository.getLogoUrl(item.competitor, 20)}}" height="20"
                   width="20">
               </td>
               <td>

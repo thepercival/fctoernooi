@@ -42,7 +42,7 @@
           </td>
           <td *ngIf="hasSomeSponsorAnImage" class="px-1">
             <img *ngIf="sponsor.hasLogoExtension()"
-              class="ms-1" [src]="sponsorRepository.getLogoUrl(sponsor)" height="20" width="20">
+              class="ms-1" [src]="sponsorRepository.getLogoUrl(sponsor, 20)" height="20" width="20">
           </td>
           <td>
             <span>{{sponsor.getName()}}</span>

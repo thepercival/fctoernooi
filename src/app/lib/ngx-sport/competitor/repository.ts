@@ -133,7 +133,7 @@ export class CompetitorRepository extends APIRepository {
         );
     }
 
-    getLogoUrl(competitor: TournamentCompetitor, height: number = 20): string {
+    getLogoUrl(competitor: TournamentCompetitor, height: number = 0): string {
         if (competitor === undefined) {
             return '';
         }
