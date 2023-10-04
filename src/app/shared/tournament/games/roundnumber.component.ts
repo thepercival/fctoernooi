@@ -570,7 +570,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
 
   public getCompetitorLogoUrl(place: Place): string {
     const competitor = this.getCompetitor(place);
-    return competitor ? this.competitorRepository.getLogoUrl(competitor) : '';
+    return competitor ? this.competitorRepository.getLogoUrl(competitor, 20) : '';
   } 
 
   validTimeValue(count: number): boolean {

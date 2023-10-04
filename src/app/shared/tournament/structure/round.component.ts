@@ -3,6 +3,8 @@ import { Round, Competitor, StructureEditor, QualifyTarget, PlaceRanges, Place, 
 import { StructureAction, StructureActionName } from '../../../admin/structure/edit.component';
 import { IAlert, IAlertType } from '../../common/alert';
 import { CSSService } from '../../common/cssservice';
+import { CompetitorRepository } from '../../../lib/ngx-sport/competitor/repository';
+import { TournamentCompetitor } from '../../../lib/competitor';
 
 @Component({
   selector: 'app-tournament-structureround',
@@ -21,7 +23,7 @@ export class StructureRoundComponent {
   alert: IAlert | undefined;
   popoverPlace: Place | undefined;
 
-  constructor(public cssService: CSSService) {
+  constructor(public cssService: CSSService, private competitorRepository: CompetitorRepository) {
     this.resetAlert();
   }
 
@@ -99,9 +101,22 @@ export class StructureRoundComponent {
     return competitor.getName();
   }
 
-  getCompetitor(startLocation: StartLocation): Competitor | undefined {
+  getCompetitor(startLocation: StartLocation|undefined): Competitor | undefined {
+    if (startLocation === undefined ) {
+      return undefined;
+    }
     return this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
   }
+
+  public hasLogo(place: Place): boolean {
+    const competitor = this.getCompetitor(place.getStartLocation());
+    return competitor ? this.competitorRepository.hasLogoExtension(<TournamentCompetitor>competitor) : false;
+  }
+
+  public getCompetitorLogoUrl(place: Place): string {
+    const competitor = this.getCompetitor(place.getStartLocation());
+    return competitor ? this.competitorRepository.getLogoUrl(<TournamentCompetitor>competitor, 20) : '';
+  } 
 
   getPlaceAlignClass(): string {
     return this.editable || !this.showCompetitors ? 'text-center' : 'text-start';
