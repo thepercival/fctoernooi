@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th class="text-end ps-0"><span class="badge badge-rank pb-0">pl</span></th>
-            <th class="text-break ps-0">deelnemer</th>
+            <th class="text-break text-start ps-0">deelnemer</th>
             <th class="text-end ps-0" title="gespeeld">g</th>
             <th class="text-end ps-0" title="punten">p</th>
             <th class="text-center text-info ps-0 pointer" (click)="showDifferenceDetail = !showDifferenceDetail"
@@ -16,8 +16,10 @@
                     <span
                         class="badge badge-rank {{getQualifyPlaceClass(sportRankingItem)}}">{{sportRankingItem.getUniqueRank()}}</span>
                 </td>
-                <td class="text-break ps-0  width-30"
+                <td class="text-break text-start ps-0"
                     [ngClass]="{ 'favitem': favorites?.hasPlace(sportRankingItem.getPerformance().getPlace()) }">
+                    <img *ngIf="hasLogo(sportRankingItem.getPerformance().getPlace())" class="me-1" style="vertical-align:text-bottom"
+                        [src]="getCompetitorLogoUrl(sportRankingItem.getPerformance().getPlace())" height="20" width="20">
                     <span
                         [innerHtml]="structureNameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true, true) | keepHtml"></span>
                 </td>

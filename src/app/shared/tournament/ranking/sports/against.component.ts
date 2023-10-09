@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Poule, ScoreConfig, AgainstSportRoundRankingCalculator, CompetitionSport, SportRoundRankingItem, StructureNameService } from 'ngx-sport';
+import { Poule, ScoreConfig, AgainstSportRoundRankingCalculator, CompetitionSport, SportRoundRankingItem, StructureNameService, Competitor, StartLocation, Place } from 'ngx-sport';
 import { Favorites } from '../../../../lib/favorites';
 import { FavoritesRepository } from '../../../../lib/favorites/repository';
 import { CSSService } from '../../../common/cssservice';
+import { TournamentCompetitor } from '../../../../lib/competitor';
+import { CompetitorRepository } from '../../../../lib/ngx-sport/competitor/repository';
 
 
 @Component({
@@ -23,7 +25,8 @@ export class RankingAgainstComponent implements OnInit {
 
   constructor(
     public cssService: CSSService,
-    public favRepos: FavoritesRepository) {
+    public favRepos: FavoritesRepository,
+    private competitorRepository: CompetitorRepository) {
   }
 
   ngOnInit() {
@@ -43,5 +46,22 @@ export class RankingAgainstComponent implements OnInit {
   getQualifyPlaceClass(rankingItem: SportRoundRankingItem): string {
     const place = this.poule.getPlace(rankingItem.getUniqueRank());
     return place ? this.cssService.getQualifyPlace(place) : '';
+  }
+
+  getCompetitor(startLocation: StartLocation | undefined): Competitor | undefined {
+    if (startLocation === undefined) {
+      return undefined;
+    }
+    return this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
+  }
+
+  public hasLogo(place: Place): boolean {
+    const competitor = this.getCompetitor(place.getStartLocation());
+    return competitor ? this.competitorRepository.hasLogoExtension(<TournamentCompetitor>competitor) : false;
+  }
+
+  public getCompetitorLogoUrl(place: Place): string {
+    const competitor = this.getCompetitor(place.getStartLocation());
+    return competitor ? this.competitorRepository.getLogoUrl(<TournamentCompetitor>competitor, 20) : '';
   }
 }
