@@ -1,37 +1,40 @@
 <div class="row justify-content-center g-0">
+  <div class="col-sm-12 col-lg-10 text-center">
 
-  <div class="d-flex justify-content-around mb-2">
-    <h2>
-      <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> standen
+    <div class="d-flex justify-content-around mb-2">
+      <h2>
+        <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> standen
+      </h2>
+      <button *ngIf="!processing" type="button" class="btn btn-sm me-1 btn-{{getRankingRuleSetClass()}}"
+        (click)="openRankingRuleSetModal(contentRankingRuleSet)">
+        <fa-icon *ngIf="!hasBegun" [icon]="['fas', 'pencil']"></fa-icon> <span class="ms-1">rangschikking</span>
+      </button>
+      <button *ngIf="!processing && !structure.hasSingleCategory()" type="button"
+        class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
+        (click)="openCategoriesChooseModal(structure)">
+        <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">cat</span><span
+          class="d-none d-sm-inline">egoriën</span>
+      </button>
+    </div>
+
+    <h2 *ngIf="processing" class="text-center">
+      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
-    <button *ngIf="!processing" type="button" class="btn btn-sm me-1 btn-{{getRankingRuleSetClass()}}"
-      (click)="openRankingRuleSetModal(contentRankingRuleSet)">
-      <fa-icon *ngIf="!hasBegun" [icon]="['fas', 'pencil']"></fa-icon> <span class="ms-1">rangschikking</span>
-    </button>
-    <button *ngIf="!processing && !structure.hasSingleCategory()" type="button"
-      class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
-      (click)="openCategoriesChooseModal(structure)">
-      <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">cat</span><span
-        class="d-none d-sm-inline">egoriën</span>
-    </button>
-  </div>
+    <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
-  <h2 *ngIf="processing" class="text-center">
-    <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-  </h2>
-  <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+    <div *ngIf="!processing && tournament && structure">
 
-  <div *ngIf="!processing && tournament && structure">
+      <div class="d-flex flex-wrap">
+        <app-tournament-ranking-category *ngFor="let category of favoriteCategories" class="mx-auto mt-3 flex-grow-1"
+          [showHeader]="favoriteCategories.length > 1" [category]="category" [competitionSports]="competition.getSports()"
+          [structureNameService]="structureNameService">
+        </app-tournament-ranking-category>
 
-    <div class="d-flex flex-wrap gap-1">
-      <app-tournament-ranking-category *ngFor="let category of favoriteCategories" class="mx-auto"
-        [showHeader]="favoriteCategories.length > 1" [category]="category" [competitionSports]="competition.getSports()"
-        [structureNameService]="structureNameService">
-      </app-tournament-ranking-category>
-
+      </div>
     </div>
   </div>
 </div>
+
 <app-tournament-navbar [public]="false" [currentScreen]="RankingScreen" *ngIf="tournament" [tournament]="tournament">
 </app-tournament-navbar>
 

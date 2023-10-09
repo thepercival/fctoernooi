@@ -120,7 +120,7 @@ export class PublicShellsComponent implements OnInit{
 
   linkToView(shell: TournamentShell) {
     this.processing = true;
-    const suffix = this.favoritesRepos.hasObject(shell.tournamentId) ? '' : '/favorites';
+    const suffix = this.favoritesRepos.hasObject(shell.tournamentId) ? '' : '/competitors';
     this.router.navigate(['/public' + suffix, shell.tournamentId]);
   }
 

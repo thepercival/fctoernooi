@@ -31,8 +31,8 @@ import { GamesComponent } from './games/view.component';
 import { TournamentModule } from '../shared/tournament/tournament.module';
 import { RankingViewComponent } from './ranking/view.component';
 import { ScreenConfigsModalComponent } from './liveboard/screenconfigsmodal.component';
-import { SelectFavoritesComponent } from './favorites/select.component';
-import { FavoritesCategoryComponent } from './favorites/category.component';
+import { SelectFavoritesComponent } from './competitors/select.component';
+import { CompetitorsCategoryComponent } from './competitors/category.component';
 import { PublicShellsComponent } from './shells/shells.component';
 import { ExamplesComponent } from './examples/examples.component';
 import { RegistrationComponent } from './registration-form/registration-form.component';
@@ -50,7 +50,7 @@ import { CopyModalComponent } from './tournament/copymodal.component';
   declarations: [
     CopyModalComponent,
     ExamplesComponent,
-    FavoritesCategoryComponent,
+    CompetitorsCategoryComponent,
     GamesComponent,
     LiveboardComponent,
     LiveboardPoulesComponent,

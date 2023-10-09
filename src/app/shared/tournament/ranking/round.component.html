@@ -1,28 +1,5 @@
 <div *ngIf="poules.length > 0">
 
-  <!-- <div *ngFor="let poule of round.getPoules();" class="btn-group mb-3" role="group" (click)="emitNavigateToPoule(poule)">
-  
-    <ng-container *ngIf="hasCompetitors;else hasNoCompetitors">
-  
-      <button type="button" class="btn btn-outline-primary ps-1">
-        {{structureNameService.getPouleName(poule,false)}}</button>
-      <button type="button" class="btn btn-outline-primary px-1 text-start">
-        <ng-container [ngTemplateOutlet]="place" [ngTemplateOutletContext]="{poule, side: Home}"></ng-container>
-        <div *ngIf="poule.getPlaces().length == 1">bye</div>
-        <ng-container *ngIf="poule.getPlaces().length == 2" [ngTemplateOutlet]="place"
-          [ngTemplateOutletContext]="{poule, side: Away}"></ng-container>
-      </button>
-  
-    </ng-container>
-  
-    <ng-template #hasNoCompetitors>
-  
-      <button type="button" class="btn btn-outline-primary">{{getPreviousPouleName(poule, Home)}}</button>
-      <button type="button" class="btn btn-outline-primary">{{getPreviousPouleName(poule, Away)}}</button>
-  
-    </ng-template>
-  </div> -->
-
   <div class="card border-secondary round mb-2 {{cssService.getQualifyRound(round)}}">
     <div class="card-header p-0">
       <div class="d-flex justify-content-between pointer" (click)="collapsed=!collapsed">
@@ -36,11 +13,26 @@
       </div>
     </div>
     <div class="card-body px-1" [ngClass]="{ 'd-none': collapsed }">
-      <div class="d-flex flex-wrap gap-3 justify-content-between">
-        <app-tournament-pouleranking *ngFor="let poule of poules" [poule]="poule" [header]="true"
-          [competitionSports]="competitionSports" [favorites]="favorites" [structureNameService]="structureNameService"
-          class="mx-auto">
-        </app-tournament-pouleranking>
+      <div class="d-flex flex-wrap gap-3 justify-content-around">
+
+        <ng-container *ngFor="let poule of poules">
+
+          <ul *ngIf="pouleShowKnockout(poule)" class="list-group mb-3">
+
+            <li class="list-group-item disabled py-2">
+              {{structureNameService.getPouleName( poule, false)}} </li>
+
+            <ng-container [ngTemplateOutlet]="singleAgainstGame"
+              [ngTemplateOutletContext]="{poule, side: Home, game: getPouleSingleAgainstGame(poule)}">
+            </ng-container>
+
+          </ul>
+
+          <app-tournament-pouleranking *ngIf="!pouleShowKnockout(poule)" [poule]="poule" [header]="true"
+            [competitionSports]="competitionSports" [favorites]="favorites"
+            [structureNameService]="structureNameService" class="mx-auto">
+          </app-tournament-pouleranking>
+        </ng-container>
       </div>
     </div>
   </div>
@@ -48,7 +40,7 @@
 
 <div class="d-flex flex-wrap gap-3 justify-content-center text-center">
   <app-tournament-ranking-round *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed(); first as first"
-    class="align-self-stretch flex-wrap mb-2" [round]="qualifyGroup.getChildRound()" [favorites]="favorites"
+    class="flex-grow-1 align-self-stretch flex-wrap mb-2" [round]="qualifyGroup.getChildRound()" [favorites]="favorites"
     [competitionSports]="competitionSports" [first]="first" [structureNameService]="structureNameService">
   </app-tournament-ranking-round>
 </div>
@@ -57,3 +49,37 @@
 <ng-template #contentScoreRules>
   <app-qualifyagainstconfig-info [round]="round"></app-qualifyagainstconfig-info>
 </ng-template>
+
+<ng-template #singleAgainstGame let-poule="poule" let-game="game">
+
+  <ng-container *ngFor="let side of getAgainstSides()" [ngTemplateOutlet]="singleAgainstGamePlace"
+    [ngTemplateOutletContext]="{place: getSidePlace(game, side), score: getSideScore(game, side)}">
+  </ng-container>
+
+</ng-template>
+
+<ng-template #singleAgainstGamePlace let-place="place" let-score="score">
+
+  <li *ngIf="!hasCompetitor(place)" class="list-group-item px-2 py-2 place-list-item pointer {{cssService.getQualifyPlace(place)}}"
+    placement="top" [ngbPopover]="longName" (click)="setPopoverPlace(place)">
+    <span [innerHtml]="structureNameService.getPlaceFromName(place,false) | keepHtml"></span>
+  </li>
+
+  <li *ngIf="hasCompetitor(place)" class="list-group-item px-2 py-2 place-list-item pointer d-flex justify-content-between align-items-start {{cssService.getQualifyPlace(place)}}"
+      placement="top" [ngbPopover]="longName" (click)="setPopoverPlace(place)">
+    
+    <div>
+      <img *ngIf="hasLogo(place)" class="ms-1" style="vertical-align:text-bottom" [src]="getCompetitorLogoUrl(place)"
+        height="20" width="20">
+
+      <span class="ms-1"
+        [ngClass]="{'favitem': isInFavorites(place) }">{{getCompetitorName(place)}}</span>
+    </div>
+
+    <span *ngIf="showScore(place.getPoule())" class="ms-2 text-end"
+      [ngClass]="{'favitem': isInFavorites(place) }">{{score}}</span>
+  </li>
+</ng-template>
+
+<ng-template #longName><span *ngIf="popoverPlace"
+    [innerHtml]="structureNameService.getPlaceFromName(popoverPlace,false, true) | keepHtml"></span></ng-template>

@@ -10,11 +10,11 @@ import { TournamentCompetitor } from '../../lib/competitor';
 import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository';
 
 @Component({
-    selector: 'app-tournament-favorites-category',
+    selector: 'app-tournament-competitors-category',
     templateUrl: './category.component.html',
     styleUrls: ['./category.component.scss']
 })
-export class FavoritesCategoryComponent implements OnInit {
+export class CompetitorsCategoryComponent implements OnInit {
     @Input() category!: Category;
     @Input() favorites!: Favorites;
     @Input() showHeader!: boolean;
