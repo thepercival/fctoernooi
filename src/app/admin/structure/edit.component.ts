@@ -323,7 +323,7 @@ export enum StructureActionName {
   AddCategory, RemoveCategory, UpdateCategory, // categoryActions
   AddPouleToRootRound, RemovePouleFromRootRound, AddPlaceToRootRound, // roundActions
   RemovePlaceFromRootRound, IncrementNrOfPoules, DecrementNrOfPoules, // roundActions
-  RemoveQualifier, AddQualifier, // qualifyActions
+  RemoveQualifier, AddQualifier, UpdateQualifyDistribution,// qualifyActions
   SplitQualifyGroupsFrom, MergeQualifyGroupWithNext // qualifyActions
 }
 

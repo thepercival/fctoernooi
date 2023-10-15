@@ -37,6 +37,7 @@ import { PublicShellsComponent } from './shells/shells.component';
 import { ExamplesComponent } from './examples/examples.component';
 import { RegistrationComponent } from './registration-form/registration-form.component';
 import { CopyModalComponent } from './tournament/copymodal.component';
+import { PrivacyComponent } from './privacy.component';
 
 @NgModule({
   imports: [
@@ -59,6 +60,7 @@ import { CopyModalComponent } from './tournament/copymodal.component';
     PreNewComponent,
     StructureViewComponent, 
     SelectFavoritesComponent,
+    PrivacyComponent,
     ProgressComponent,
     PublicShellsComponent,
     RankingViewComponent,

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HorizontalPoule, Place, QualifyGroup, MultipleQualifyRule, QualifyTarget, Round, SingleQualifyRule } from 'ngx-sport';
+import { HorizontalMultipleQualifyRule, HorizontalPoule, HorizontalSingleQualifyRule, Place, QualifyGroup, QualifyTarget, Round, VerticalMultipleQualifyRule, VerticalSingleQualifyRule } from 'ngx-sport';
+
 
 @Injectable()
 export class CSSService {
@@ -7,12 +8,14 @@ export class CSSService {
         const horPouleWinners = place.getHorizontalPoule(QualifyTarget.Winners);
         const horPouleLosers = place.getHorizontalPoule(QualifyTarget.Losers);
 
-        const winnersRule: SingleQualifyRule | MultipleQualifyRule | undefined = horPouleWinners.getQualifyRule();
-        const losersRule: SingleQualifyRule | MultipleQualifyRule | undefined = horPouleLosers.getQualifyRule();
+        const winnersRule = horPouleWinners.getQualifyRuleNew();
+        const losersRule = horPouleLosers.getQualifyRuleNew();
 
         if (winnersRule !== undefined && losersRule !== undefined) {
-            const partialWinners = winnersRule instanceof MultipleQualifyRule;
-            const partialLosers = losersRule instanceof MultipleQualifyRule;
+            const partialWinners = (winnersRule instanceof VerticalMultipleQualifyRule
+                || winnersRule instanceof HorizontalMultipleQualifyRule);
+            const partialLosers = (losersRule instanceof VerticalMultipleQualifyRule
+                || losersRule instanceof HorizontalMultipleQualifyRule);
             if (partialWinners && partialLosers) {
                 return 'q-partial q-w-' + this.getQualifyGroupNumber(winnersRule.getGroup()) + '-double-partial q-l-'
                     + this.getQualifyGroupNumber(losersRule.getGroup()) + '-double-partial';
@@ -21,9 +24,9 @@ export class CSSService {
             }
             return 'q-l-' + this.getQualifyGroupNumber(losersRule.getGroup());
         } else if (winnersRule !== undefined) {
-            return this.getQualifyRule(winnersRule);
+            return this.getQualifyRuleClasses(winnersRule);
         } else if (losersRule !== undefined) {
-            return this.getQualifyRule(losersRule);
+            return this.getQualifyRuleClasses(losersRule);
         }
         return '';
     }
@@ -32,16 +35,19 @@ export class CSSService {
         return qualifyGroup.getNumber() > 4 ? 5 : qualifyGroup.getNumber();
     }
 
-    getQualifyPoule(horPoule: HorizontalPoule): string {
-        const qualifyRule = horPoule.getQualifyRule();
+    getQualifyPouleClasses(horPoule: HorizontalPoule): string {
+        const qualifyRule = horPoule.getQualifyRuleNew();
         if (qualifyRule === undefined) {
             return '';
         }
-        return this.getQualifyRule(qualifyRule);
+        return this.getQualifyRuleClasses(qualifyRule);
     }
 
-    getQualifyRule(rule: SingleQualifyRule | MultipleQualifyRule): string {
-        const classes = rule instanceof MultipleQualifyRule ? 'q-partial' : '';
+    getQualifyRuleClasses(
+        rule: VerticalSingleQualifyRule | VerticalMultipleQualifyRule | HorizontalSingleQualifyRule | HorizontalMultipleQualifyRule,
+        ): string {
+        const classes = (rule instanceof VerticalMultipleQualifyRule
+            || rule instanceof HorizontalMultipleQualifyRule) ? 'q-partial' : '';
         return classes + this.getQualifyGroup(rule.getGroup());
     }
 

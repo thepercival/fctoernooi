@@ -1,4 +1,6 @@
-import { JsonAgainstGame, JsonTogetherGame, AgainstGame, TogetherGame, GameMapper, GameState, MultipleQualifyRule, QualifyGroup, RoundRankingCalculator, RoundRankingItem, QualifyTarget, Round, Place, Cumulative, StructureNameService } from "ngx-sport";
+import { JsonAgainstGame, JsonTogetherGame, AgainstGame, TogetherGame, GameMapper, GameState, QualifyGroup, RoundRankingCalculator, RoundRankingItem, QualifyTarget, Round, Place, Cumulative, StructureNameService, HorizontalMultipleQualifyRule } from "ngx-sport";
+import { VerticalMultipleQualifyRule } from "ngx-sport/src/qualify/rule/vertical/multiple";
+import { VerticalSingleQualifyRule } from "ngx-sport/src/qualify/rule/vertical/single";
 
 export class EqualQualifiersChecker {
 
@@ -56,12 +58,15 @@ export class EqualQualifiersChecker {
         });
     }
 
-    protected getEqualRuleRankingItems(multipleRule: MultipleQualifyRule, rankingItems: RoundRankingItem[]): RoundRankingItem[][] {
-        if (multipleRule.getQualifyTarget() === QualifyTarget.Losers) {
+    protected getEqualRuleRankingItems(
+        rankedRule: HorizontalMultipleQualifyRule | VerticalMultipleQualifyRule | VerticalSingleQualifyRule, 
+        rankingItems: RoundRankingItem[]): RoundRankingItem[][] {
+
+        if (rankedRule.getQualifyTarget() === QualifyTarget.Losers) {
             rankingItems = this.reverseRanking(rankingItems);
         }
         const equalItemsPerRank = this.getEqualRankedItems(rankingItems);
-        const nrToQualify = multipleRule.getToPlaces().length;
+        const nrToQualify = rankedRule.getToPlaces().length;
         return equalItemsPerRank.filter(equalItems => {
             const equalRank = equalItems[0].getRank();
             const nrToQualifyTmp = nrToQualify - (equalRank - 1);
@@ -97,7 +102,7 @@ export class EqualQualifiersChecker {
 
     protected hasToQualifyRule(place: Place): boolean {
         return [QualifyTarget.Winners, QualifyTarget.Losers].some((qualifyTarget: QualifyTarget): boolean => {
-            return place.getHorizontalPoule(qualifyTarget).getQualifyRule() !== undefined;
+            return place.getHorizontalPoule(qualifyTarget).getQualifyRuleNew() !== undefined;
         });
     }
 

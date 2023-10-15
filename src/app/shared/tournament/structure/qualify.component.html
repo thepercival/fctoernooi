@@ -72,6 +72,26 @@
     <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
   </div>
   <div class="modal-body">
+
+    <div class="d-flex justify-content-center">
+      <label class="me-1 pt-1">verdeling</label>
+      <div class="btn-group ms-1" role="group" aria-label="aantal">
+        <button type="button" class="btn btn-outline-secondary" (click)="updateDistribution(target, HorizontalSnake)">
+          <fa-icon *ngIf="getDistribution(target) === HorizontalSnake" [icon]="['fas', 'check-circle']" class="text-success ms-1"></fa-icon>
+          zigzag
+        </button>
+        <button type="button" class="btn btn-outline-secondary" (click)="updateDistribution(target, Vertical)">
+          <fa-icon *ngIf="getDistribution(target) === Vertical" [icon]="['fas', 'check-circle']" class="text-success ms-1"></fa-icon>
+          verticaal
+        </button>
+      </div>
+    </div>
+
+    <div class="btn-group-horizontal mt-3 d-flex flex-column {{getTargetDirectionClass(target)}}" role="group"
+      *ngIf="areSomeQualifyGroupsEditable(target) && !targetCollapsed[target]">
+      
+    </div>
+
     <div class="btn-group-vertical d-flex flex-column {{getTargetDirectionClass(target)}}" role="group"
       *ngIf="areSomeQualifyGroupsEditable(target) && !targetCollapsed[target]">
       <ng-container *ngTemplateOutlet="editQualifyGroups;context:{$implicit: target}">

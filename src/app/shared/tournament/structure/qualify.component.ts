@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
-import { NameService, QualifyGroup, SingleQualifyRule, QualifyTarget, Round, StructureEditor, StructureNameService } from 'ngx-sport';
+import { HorizontalSingleQualifyRule, NameService, QualifyDistribution, QualifyGroup, QualifyTarget, Round, StructureEditor, StructureNameService, VerticalSingleQualifyRule } from 'ngx-sport';
 
 import { IAlert, IAlertType } from '../../common/alert';
 import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
@@ -35,7 +35,30 @@ export class StructureQualifyComponent {
         return [QualifyTarget.Winners, QualifyTarget.Losers];
     }
 
+    get HorizontalSnake(): QualifyDistribution { return QualifyDistribution.HorizontalSnake; }
+    get Vertical(): QualifyDistribution { return QualifyDistribution.Vertical; }
     get IconStructure(): [IconPrefix, IconName] { return [facStructure.prefix, facStructure.iconName]; }
+
+    getDistribution(target: QualifyTarget): QualifyDistribution|undefined {
+        const qualifyGroup = this.parentRound.getBorderQualifyGroup(target);
+        return qualifyGroup.getDistribution();
+    }
+
+    updateDistribution(target: QualifyTarget, distribution: QualifyDistribution): void {
+        this.resetAlert();
+        try {
+            const qualifyGroup = this.parentRound.getBorderQualifyGroup(target);
+            this.structureEditor.updateDistribution(qualifyGroup, distribution);
+            this.addAction.emit({
+                pathNode: this.parentRound.getPathNode(),
+                name: StructureActionName.UpdateQualifyDistribution,
+                recreateStructureNameService: true
+            });
+        } catch (e: any) {
+            this.setAlert(IAlertType.Danger, e.message);
+        }
+        
+    }
 
     canRemoveQualifier(target: QualifyTarget): boolean {
         return this.parentRound.getBorderQualifyGroup(target) !== undefined;
@@ -103,7 +126,8 @@ export class StructureQualifyComponent {
                 //     console.log('AddQualifier Post');
                 //     console.log(this.parentRound);
                 // }
-                pathNode = this.parentRound.getBorderQualifyGroup(target).getChildRound().getPathNode();
+                borderQualifyGroup = this.parentRound.getBorderQualifyGroup(target);
+                pathNode = borderQualifyGroup.getChildRound().getPathNode()    
             } else {
                 pathNode = borderQualifyGroup.getChildRound().getPathNode();
                 if (this.lastAction && this.lastAction.pathNode?.pathToString() === pathNode.pathToString()
@@ -112,8 +136,9 @@ export class StructureQualifyComponent {
                 } else {
                     initialMaxNrOfPoulePlaces = borderQualifyGroup.getChildRound().getFirstPoule().getPlaces().length;
                 }
-                this.structureEditor.addQualifiers(this.parentRound, target, 1, initialMaxNrOfPoulePlaces);
+                this.structureEditor.addQualifiers(this.parentRound, target, 1, borderQualifyGroup.getDistribution(), initialMaxNrOfPoulePlaces);
             }
+            
 
             this.addAction.emit({
                 pathNode,
@@ -126,7 +151,7 @@ export class StructureQualifyComponent {
         }
     }
 
-    splitQualifyGroupFrom(singleRule: SingleQualifyRule) {
+    splitQualifyGroupFrom(singleRule: HorizontalSingleQualifyRule | VerticalSingleQualifyRule) {
         this.resetAlert();
         try {
             console.log(singleRule.getGroup());
@@ -203,7 +228,7 @@ export class StructureQualifyComponent {
 
     isQualifyGroupSplittable(qualifyGroup: QualifyGroup): boolean {
         //console.log('isQualifyGroupSplittable',qualifyGroup);
-        let singleRule: SingleQualifyRule | undefined = qualifyGroup.getFirstSingleRule();
+        let singleRule: HorizontalSingleQualifyRule | VerticalSingleQualifyRule | undefined = qualifyGroup.getFirstSingleRule();
         while (singleRule !== undefined) {
             if (this.structureEditor.isQualifyGroupSplittableAt(singleRule)) {
                 return true;

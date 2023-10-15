@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, TemplateRef } from '@angular/core';
 
-import { Poule, Round, GameState, CompetitionSport, StructureNameService, StartLocation, Competitor, Place, AgainstSide, SingleQualifyRule, MultipleQualifyRule, AgainstGamePlace, AgainstGame, ScoreConfigService } from 'ngx-sport';
+import { Poule, Round, GameState, CompetitionSport, StructureNameService, StartLocation, Competitor, Place, AgainstSide, AgainstGamePlace, AgainstGame, ScoreConfigService, HorizontalMultipleQualifyRule, HorizontalSingleQualifyRule, VerticalMultipleQualifyRule, VerticalSingleQualifyRule } from 'ngx-sport';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Favorites } from '../../../lib/favorites';
 import { CSSService } from '../../common/cssservice';
@@ -62,20 +62,21 @@ export class RankingRoundComponent implements OnInit {
         return GameState.Created;
     }
 
-    protected getPreviousPlace(place: Place): Place | undefined {
-        let fromQualifyRule: SingleQualifyRule | MultipleQualifyRule | undefined;
+    /*protected getPreviousPlace(place: Place): Place | undefined {
+        let fromQualifyRule: HorizontalSingleQualifyRule | HorizontalMultipleQualifyRule | VerticalSingleQualifyRule | VerticalMultipleQualifyRule | undefined;
         try {
-            fromQualifyRule = place.getRound().getParentQualifyGroup()?.getRule(place);
+            fromQualifyRule = place.getRound().getParentQualifyGroup()?.getRuleByToPlace(place);
         } catch (e) { }
         if (fromQualifyRule === undefined) {
             return undefined;
         }
-        if (fromQualifyRule instanceof MultipleQualifyRule) {
+        if (fromQualifyRule instanceof HorizontalMultipleQualifyRule 
+            || fromQualifyRule instanceof VerticalMultipleQualifyRule) {
             return undefined;
         }
-        // SingleQualifyRule
-        return fromQualifyRule.getFromPlace(place);
-    }
+        // HorizontalSingleQualifyRule | VerticalSingleQualifyRule
+        return fromQualifyRule.getMappingByToPlace(place)?.;
+    }*/
     
     allPlacesHaveCompetitors(poule: Poule): boolean {
 

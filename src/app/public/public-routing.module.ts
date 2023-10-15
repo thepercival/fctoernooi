@@ -11,6 +11,7 @@ import { SelectFavoritesComponent } from './competitors/select.component';
 import { PublicShellsComponent } from './shells/shells.component';
 import { ExamplesComponent } from './examples/examples.component';
 import { RegistrationComponent } from './registration-form/registration-form.component';
+import { PrivacyComponent } from './privacy.component';
 
 const routes: Routes = [
   { path: 'prenew', component: PreNewComponent },
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'liveboard/:id', component: LiveboardComponent },
   { path: 'registrationform/:id', component: RegistrationComponent },
   { path: 'examples', component: ExamplesComponent },  
+  { path: 'privacy', component: PrivacyComponent },  
   { path: ':id', redirectTo: 'games/:id', pathMatch: 'full' },
 ];
 
