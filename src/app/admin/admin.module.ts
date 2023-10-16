@@ -93,6 +93,7 @@ import { TournamentRegistrationEditComponent } from './registration/registration
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentRegistrationProcessModalComponent } from './competitor/registration-processmodal.component';
 import { TextEditorModalComponent } from './textEditor/texteditormodal.component';
+import { CopiedModalComponent } from './home/copiedmodal.component';
 
 @NgModule({
   imports: [
@@ -123,7 +124,8 @@ import { TextEditorModalComponent } from './textEditor/texteditormodal.component
     CategoryRegistrationListComponent,
     CompetitorListLineComponent,
     CompetitorListRemoveModalComponent,
-    CreateSportWithFieldsComponent,
+    CopiedModalComponent,
+    CreateSportWithFieldsComponent,    
     ExportModalComponent,
     FieldListComponent,
     GameAddComponent,

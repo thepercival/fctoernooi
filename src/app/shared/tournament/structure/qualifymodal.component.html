@@ -1,0 +1,63 @@
+<div class="modal-header">
+    <h4 class="modal-title"><span>{{this.structureNameService.getQualifyTargetDescription(target, true)}}<small> kwalificatie opties</small></span></h4>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
+</div>
+<div class="modal-body">
+    <div class="d-flex justify-content-center">
+        <label class="me-1 pt-1">verdeling</label>
+        <div class="btn-group ms-1" role="group" aria-label="aantal">
+            <button type="button" class="btn btn-outline-secondary"
+                (click)="updateDistribution.emit(HorizontalSnake)">
+                <fa-icon *ngIf="getDistribution(target) === HorizontalSnake" [icon]="['fas', 'check-circle']"
+                    class="text-success ms-1"></fa-icon>
+                zigzag
+            </button>
+            <button type="button" class="btn btn-outline-secondary" (click)="updateDistribution.emit(Vertical)">
+                <fa-icon *ngIf="getDistribution(target) === Vertical" [icon]="['fas', 'check-circle']"
+                    class="text-success ms-1"></fa-icon>
+                verticaal
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="secondPartEditable()" role="group"
+        class="btn-group-horizontal mt-3 d-flex flex-column {{getTargetDirectionClass(target)}}">
+    </div>
+
+    <div class="btn-group-vertical d-flex flex-column {{getTargetDirectionClass(target)}}" role="group"
+        *ngIf="secondPartEditable()">
+        <ng-container *ngTemplateOutlet="editQualifyGroups;context:{$implicit: target}">
+        </ng-container>
+    </div>
+</div>   
+
+<ng-template #editQualifyGroups let-target>
+    <ng-template ngFor let-qualifyGroup [ngForOf]="parentRound.getQualifyGroups(target)">
+        <li
+            class="list-group-item text-center w-100 d-flex flex-column {{getTargetDirectionClass(target)}} py-2 {{cssService.getQualifyGroup(qualifyGroup)}}">
+            <ng-container *ngIf="qualifyGroup.getFirstSingleRule()" [ngTemplateOutlet]="editSingleRule"
+                [ngTemplateOutletContext]="{singleRule:qualifyGroup.getFirstSingleRule()}">
+            </ng-container>
+        </li>
+        <button *ngIf="isQualifyGroupMergableWithNext(qualifyGroup)" type="button" class="btn btn-outline-primary my-1"
+            (click)="mergeQualifyGroupWithNext.emit(qualifyGroup)">
+            <fa-icon class="rotate-45" [icon]="['fas', 'compress-alt']"></fa-icon><span>
+                samenvoegen</span>
+        </button>
+    </ng-template>
+</ng-template>
+
+<ng-template let-singleRule="singleRule" #editSingleRule>
+    <div>
+        <span [innerHtml]="structureNameService.getQualifyRuleName(singleRule) | keepHtml"></span>
+    </div>
+    <button *ngIf="structureEditor.isQualifyGroupSplittableAt(singleRule)" type="button"
+        id="btn-split-qualifygroup-{{parentRound.getNumberAsValue()}}" class="btn btn-outline-primary"
+        (click)="splitQualifyGroupFrom.emit(singleRule)">
+        <fa-icon class="rotate-45" [icon]="['fas', 'expand-alt']"></fa-icon><span>splitsen</span>
+    </button>
+    <ng-container *ngIf="singleRule.getNext()" [ngTemplateOutlet]="editSingleRule"
+        [ngTemplateOutletContext]="{singleRule:singleRule.getNext()}">
+    </ng-container>
+</ng-template>
+

@@ -11,18 +11,18 @@
   <div class=" btn-group-vertical" role="group" aria-label="aantal">
     <button type="button" [disabled]="!isQualifyTargetBtnActive(target)"
       class="btn {{getBlinkQualifierBtnClass(target)}} {{getQualifyGroupBtnClass(target)}} d-flex justify-content-between"
-      (click)="showQualifGroupOptionsModal(qualifyModal)">
-      <ng-container *ngIf="areSomeQualifyGroupsEditable(target); else showReadOnly">
+      (click)="showQualifGroupOptionsModal(target)">
+      <ng-container *ngIf="structureEditor.isSomeQualifyGroupEditable(parentRound, target); else showReadOnly">
         <span>kwalificatie</span>
-        <fa-icon *ngIf="targetCollapsed[target]" [icon]="['fas', 'cogs']" class="ms-1"></fa-icon>
+        <fa-icon [icon]="['fas', 'cogs']" class="ms-1"></fa-icon>
       </ng-container>
       <ng-template #showReadOnly>
         <span>{{structureNameService.getQualifyTargetDescription(target,true)}}</span>
-        <span *ngIf="parentRound.isRoot() && !areSomeQualifyGroupsEditable(target)">:
+        <span *ngIf="parentRound.isRoot() && !structureEditor.isSomeQualifyGroupEditable(parentRound, target)">:
           {{parentRound.getNrOfPlacesChildren(target)}}</span>
       </ng-template>
     </button>
-    
+
     <div class="btn-group" role="group" aria-label="aantal">
       <button [disabled]="!canRemoveQualifier(target)" type="button"
         class="btn btn-outline-{{getRemoveQualifierBtnClass(target)}}" (click)="removeQualifier(target)">
@@ -32,70 +32,6 @@
         class="btn btn-outline-{{getAddQualifierBtnClass(target)}}" (click)="addQualifier(target)">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #editQualifyGroups let-target>
-  <ng-template ngFor let-qualifyGroup [ngForOf]="parentRound.getQualifyGroups(target)">
-    <li
-      class="list-group-item text-center w-100 d-flex flex-column {{getTargetDirectionClass(target)}} py-2 {{cssService.getQualifyGroup(qualifyGroup)}}">
-      <ng-container *ngIf="qualifyGroup.getFirstSingleRule()" [ngTemplateOutlet]="editSingleRule"
-        [ngTemplateOutletContext]="{singleRule:qualifyGroup.getFirstSingleRule()}">
-      </ng-container>
-    </li>
-    <button *ngIf="isQualifyGroupMergableWithNext(qualifyGroup)" type="button" class="btn btn-outline-primary my-1"
-      (click)="mergeQualifyGroupWithNext(qualifyGroup)">
-      <fa-icon class="rotate-45" [icon]="['fas', 'compress-alt']"></fa-icon><span>
-        samenvoegen</span>
-    </button>
-  </ng-template>
-</ng-template>
-
-<ng-template let-singleRule="singleRule" #editSingleRule>
-  <div>
-    <span [innerHtml]="structureNameService.getQualifyRuleName(singleRule) | keepHtml"></span>
-  </div>
-  <button *ngIf="structureEditor.isQualifyGroupSplittableAt(singleRule)" type="button"
-    id="btn-split-qualifygroup-{{parentRound.getNumberAsValue()}}" class="btn btn-outline-primary"
-    (click)="splitQualifyGroupFrom(singleRule)">
-    <fa-icon class="rotate-45" [icon]="['fas', 'expand-alt']"></fa-icon><span>splitsen</span>
-  </button>
-  <ng-container *ngIf="singleRule.getNext()" [ngTemplateOutlet]="editSingleRule"
-    [ngTemplateOutletContext]="{singleRule:singleRule.getNext()}">
-  </ng-container>
-</ng-template>
-
-<ng-template #qualifyModal let-modal let-target="target">
-  <div class="modal-header">
-    <h4 class="modal-title">kwalificatie opties</h4>
-    <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
-  </div>
-  <div class="modal-body">
-
-    <div class="d-flex justify-content-center">
-      <label class="me-1 pt-1">verdeling</label>
-      <div class="btn-group ms-1" role="group" aria-label="aantal">
-        <button type="button" class="btn btn-outline-secondary" (click)="updateDistribution(target, HorizontalSnake)">
-          <fa-icon *ngIf="getDistribution(target) === HorizontalSnake" [icon]="['fas', 'check-circle']" class="text-success ms-1"></fa-icon>
-          zigzag
-        </button>
-        <button type="button" class="btn btn-outline-secondary" (click)="updateDistribution(target, Vertical)">
-          <fa-icon *ngIf="getDistribution(target) === Vertical" [icon]="['fas', 'check-circle']" class="text-success ms-1"></fa-icon>
-          verticaal
-        </button>
-      </div>
-    </div>
-
-    <div class="btn-group-horizontal mt-3 d-flex flex-column {{getTargetDirectionClass(target)}}" role="group"
-      *ngIf="areSomeQualifyGroupsEditable(target) && !targetCollapsed[target]">
-      
-    </div>
-
-    <div class="btn-group-vertical d-flex flex-column {{getTargetDirectionClass(target)}}" role="group"
-      *ngIf="areSomeQualifyGroupsEditable(target) && !targetCollapsed[target]">
-      <ng-container *ngTemplateOutlet="editQualifyGroups;context:{$implicit: target}">
-      </ng-container>
     </div>
   </div>
 </ng-template>

@@ -36,21 +36,22 @@ import { RankingSportsComponent } from './ranking/sports/sports.component';
 import { RankingTogetherComponent } from './ranking/sports/together.component';
 import { LockerRoomComponent } from './lockerroom/lockerroom.component';
 import { SportIconComponent } from './sport/icon.component';
+import { QualifyModalComponent } from './structure/qualifymodal.component';
 
 @NgModule({
     declarations: [
-        RoundNumberPlanningComponent,
-        LockerRoomComponent,
-        PouleRankingModalComponent,
+        AgainstQualifyInfoComponent,
+        CategoryChooseListComponent, CategoryChooseModalComponent,        
         CompetitorChooseModalComponent,
         InfoModalComponent,
         NameModalComponent,
-        AgainstQualifyInfoComponent,
+        LockerRoomComponent,
+        PouleRankingModalComponent,
+        QualifyModalComponent,
         RankingRulesComponent,
         StructureRoundArrangeComponent, StructureQualifyComponent, StructureRoundComponent, StructureCategoryComponent,
         TournamentIconComponent,
         TournamentNavBarComponent,
-        CategoryChooseListComponent, CategoryChooseModalComponent,
         RankingEndComponent,
         RankingCategoryComponent,
         RankingRoundComponent,
@@ -58,6 +59,7 @@ import { SportIconComponent } from './sport/icon.component';
         RankingSportsComponent,
         RankingAgainstComponent,
         RankingTogetherComponent,
+        RoundNumberPlanningComponent, 
         SportIconComponent
 
     ],

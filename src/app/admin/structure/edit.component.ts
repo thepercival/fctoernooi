@@ -122,7 +122,10 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   createClonedStructure(structure: Structure): Structure {
     this.originalCompetitors = this.tournament.getCompetitors();
     const jsonStructure = this.structureMapper.toJson(structure);
-    return this.structureMapper.toObject(jsonStructure, this.tournament.getCompetition());
+    
+    const copiedStructure = this.structureMapper.toObject(jsonStructure, this.tournament.getCompetition());
+    console.log(jsonStructure, ' to object', copiedStructure);
+    return copiedStructure
   }
 
   addAction(structureAction: StructureAction) {

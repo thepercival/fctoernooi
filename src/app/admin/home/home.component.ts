@@ -27,6 +27,7 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { CopyConfig, CopyModalComponent } from '../../public/tournament/copymodal.component';
+import { CopiedModalComponent } from './copiedmodal.component';
 
 @Component({
     selector: 'app-tournament-admin',
@@ -73,9 +74,15 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         this.allPoulesHaveGames = this.structure.allPoulesHaveGames();
         this.hasPlanningEditManualMode = this.structureHasPlanningEditManualMode(firstRoundNumber);
         
+        let openModalExe = false;
         this.route.queryParams.subscribe(params => {
+            console.log('params', params);
             if (params.newStartForCopyAsTime !== undefined) {
                 this.openModalCopy(params.newStartForCopyAsTime);
+            } else if (params.myPreviousId !== undefined && !openModalExe) {
+                console.log(this.router.getCurrentNavigation()?.extras.state);
+                this.openModalCopied(params.myPreviousId);
+                openModalExe = true;
             }
           });
         this.processing = false;
@@ -322,6 +329,19 @@ export class HomeComponent extends TournamentComponent implements OnInit {
             });
     }
 
+    openModalCopied(previousId: string) {        
+        const activeModal = this.modalService.open(CopiedModalComponent, { scrollable: false });
+        activeModal.componentInstance.previousId = previousId;
+        activeModal.componentInstance.title = this.tournament.getName(); 
+
+        activeModal.result.then((previousId: string) => {
+            this.router.navigate(['/admin', previousId ]);
+        }, (reason) => {
+        });
+    }
+
+    
+
     openModalRemove(modalContent: TemplateRef<any>) {
         const activeModal = this.modalService.open(modalContent);
         activeModal.result.then((result) => {
@@ -366,7 +386,10 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         this.tournamentRepository.copyObject(this.tournament.getId(), copyConfig)
             .subscribe({
                 next: (newTournamentId: number | string) => {
-                    this.router.navigate(['/admin', newTournamentId]);
+                    const navigationExtras: NavigationExtras = {
+                        queryParams: { myPreviousId: this.tournament.getId() }
+                    };
+                    this.router.navigate(['/admin', newTournamentId], navigationExtras);
                     this.setAlert(IAlertType.Success, 'de nieuwe editie is aangemaakt, je bevindt je nu in de nieuwe editie');
                 },
                 error: (e) => {
