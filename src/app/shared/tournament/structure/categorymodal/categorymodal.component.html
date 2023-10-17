@@ -1,0 +1,38 @@
+<div class="modal-header">
+    <h4 class="modal-title">categorie</h4>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="activeModal.dismiss('close')"></button>
+</div>
+<div class="modal-body">
+    <div class="container-fluid">
+        <form name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
+            <div class="row mb-3">
+                <div class="col-3 col-sm-4 col-md-5">
+                    <label for="name" class="col-form-label">naam</label>
+                </div>
+                <div class="col-9 col-sm-8 col-md-7">
+                    <input class="form-control"
+                        [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }"
+                        type="text" formControlName="name" ngbAutofocus placeholder="{{getPlaceHolder()}}">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-3 col-sm-4 col-md-5">
+                    <label for="abbreviation" class="col-form-label">afkorting</label>
+                </div>
+                <div class="col-9 col-sm-8 col-md-7">
+                    <input class="form-control"
+                        [ngClass]="{ 'is-invalid': form.controls.abbreviation.invalid, 'is-valid': form.controls.abbreviation.valid }" type="text"
+                        formControlName="abbreviation" ngbAutofocus placeholder="{{getAbbreviationPlaceHolder()}}">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal-footer d-flex justify-content-between">
+    <div>
+        <ngb-alert *ngIf="sameAbbreviationExists()" type="warning">de afkorting bestaat al</ngb-alert>
+    </div>
+    <button type="submit" [disabled]="form.invalid" class="btn btn-primary"
+        data-dismiss="modal" (click)="activeModal.close(getUpdateAction())">{{buttonLabel}}</button>
+
+</div>

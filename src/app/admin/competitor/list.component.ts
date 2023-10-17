@@ -108,7 +108,6 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   alertMessage(): string { return this.alert?.message ?? '' }
 
   updateProcessing(message: string): void {
-    console.log('updateProcessing: ' + message);
     if (message.length === 0) {
       this.processing = false;
     } else {

@@ -84,10 +84,8 @@ export class CategoryRegistrationListComponent implements OnChanges  {
     activeModal.componentInstance.tournament = this.tournament;
 
     activeModal.result.then((newState: RegistrationState) => {
-      this.updateRegistrations();
-      console.log(newState);
-      if( newState === RegistrationState.Accepted) {
-        
+      this.updateRegistrations();      
+      if( newState === RegistrationState.Accepted) {        
         this.competitorsUpdate.emit();
       }
       // if (newState === RegistrationState.Archived) {

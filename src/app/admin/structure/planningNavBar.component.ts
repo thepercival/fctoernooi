@@ -13,7 +13,7 @@ import { Tournament } from '../../lib/tournament';
   templateUrl: './planningNavBar.component.html',
   styleUrls: ['./planningNavBar.component.scss'],
 })
-export class PlanningNavBarComponent implements OnInit, OnChanges {
+export class PlanningNavBarComponent implements OnChanges {
 
   @Input() tournament!: Tournament;
   @Input() structure: JsonStructure | undefined;
@@ -28,11 +28,6 @@ export class PlanningNavBarComponent implements OnInit, OnChanges {
     private structureRepository: StructureRepository,
     private dateFormatter: DateFormatter
   ) {
-
-  }
-
-  ngOnInit() {
-    // na de refresh 2 seconden wachten, komt er een nieuwe binnen, stop de huidge en roep jezelf opnieuw aan
 
   }
 
@@ -147,11 +142,5 @@ export interface JsonCompetitorAmount {
   nrOfGames: VoetbalRange;
   nrOfMinutes: VoetbalRange;
 }
-
-export interface UpdateCategoryNameAction {
-  category: Category;
-  newName: string;
-}
-
 
 

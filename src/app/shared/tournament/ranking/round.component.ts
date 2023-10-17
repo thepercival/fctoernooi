@@ -145,7 +145,6 @@ export class RankingRoundComponent implements OnInit {
     } 
 
     getPlaceName(place: Place): string {
-        console.log(this.structureNameService.getPlaceFromName(place, true, false));
         return this.structureNameService.getPlaceFromName(place, true, false); 
     } 
 

@@ -40,7 +40,6 @@ export class Sponsor extends Identifiable {
     }
 
     hasLogoExtension(): boolean {
-        console.log(' logo ext', this.logoExtension);
         return this.logoExtension !== undefined ? this.logoExtension.length > 0 : false;
     }
 

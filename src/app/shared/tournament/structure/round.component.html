@@ -37,7 +37,7 @@
   <div class="d-flex align-items-stretch text-center gap-1">
     <app-tournament-structureround *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed();"
       class="align-self-stretch flex-wrap mb-2" [round]="qualifyGroup.getChildRound()"
-      [editable]="editable && !round.hasBegun()" [favorites]="favorites" [structureEditor]="structureEditor"
+      [editable]="editable" [favorites]="favorites" [structureEditor]="structureEditor"
       [structureNameService]="structureNameService" (addAction)="addAction.emit($event)">
     </app-tournament-structureround>
   </div>

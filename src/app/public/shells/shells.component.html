@@ -40,7 +40,7 @@
               <input class="form-control"
                 [ngClass]="{ 'is-invalid': searchForm.controls.endDate.invalid, 'is-valid': searchForm.controls.endDate.valid }"
                 placeholder="yyyy-mm-dd" formControlName="endDate" ngbDatepicker #dEnd="ngbDatepicker" required
-                container="body" (input)="onSearchDateChanges()">
+                container="body" (dateSelect)="onSearchDateChanges()">
               <span class="input-group-text pointer" (click)="dEnd.toggle()">
                 <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
               </span>

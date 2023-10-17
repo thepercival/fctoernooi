@@ -1,5 +1,5 @@
 <div class="d-flex flex-wrap justify-content-around mb-2"
-  *ngIf="parentRound.getNrOfPlaces() > structureEditor.getMinPlacesPerPouleSmall() && !parentRound.hasBegun()">
+  *ngIf="parentRound.getNrOfPlaces() > structureEditor.getMinPlacesPerPouleSmall()">
   <ng-container *ngFor="let target of getTargets()" [ngTemplateOutlet]="modifyToPlaces"
     [ngTemplateOutletContext]="{target:target}">
   </ng-container>

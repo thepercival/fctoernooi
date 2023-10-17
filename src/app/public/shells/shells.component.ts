@@ -114,7 +114,7 @@ export class PublicShellsComponent implements OnInit{
   }
 
   onSearchDateChanges(): void {
-    console.log(this.searchForm.controls.name.value);
+    // console.log(this.searchForm.controls.name.value);
     this.search(this.searchForm.controls.name.value);
   }
 

@@ -313,7 +313,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
         needsRanking: poule.needsRanking(),
         round,
         categoryNr: round.getCategory().getNumber(),
-        categoryName: round.getCategory().getName()
+        categoryName: round.getCategory().getName(),
+        categoryAbbreviation: round.getCategory().getAbbreviation(),
       });
       if (!map.somePlaceHasCompetitor && startLocationMap) {
         map.checkIfSomePlaceHasCompetitor(poule, startLocationMap);
@@ -615,7 +616,8 @@ interface PouleData {
   needsRanking: boolean;
   round: Round;
   categoryNr: number
-  categoryName: string
+  categoryName: string,
+  categoryAbbreviation: string|undefined,
 }
 
 class PouleDataMap extends Map<string | number, PouleData> {

@@ -75,14 +75,15 @@ export class HomeComponent extends TournamentComponent implements OnInit {
         this.hasPlanningEditManualMode = this.structureHasPlanningEditManualMode(firstRoundNumber);
         
         let openModalExe = false;
+        // console.log('outside params');
         this.route.queryParams.subscribe(params => {
-            console.log('params', params);
+            // console.log('params', params);
             if (params.newStartForCopyAsTime !== undefined) {
                 this.openModalCopy(params.newStartForCopyAsTime);
             } else if (params.myPreviousId !== undefined && !openModalExe) {
-                console.log(this.router.getCurrentNavigation()?.extras.state);
-                this.openModalCopied(params.myPreviousId);
-                openModalExe = true;
+                // console.log(this.router.getCurrentNavigation()?.extras.state);
+                openModalExe = true; 
+                this.openModalCopied(params.myPreviousId);                
             }
           });
         this.processing = false;

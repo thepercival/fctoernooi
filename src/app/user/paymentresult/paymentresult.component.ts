@@ -46,7 +46,7 @@ export class PaymentResultComponent extends UserComponent implements OnInit, OnD
         this.paymentRepository.getObject( '' + params.paymentId)
           .subscribe({
             next: (payment: Payment) => {              
-              console.log(payment);
+              //console.log(payment);
               if( payment.state === PaymentState.Paid ) {
                 this.setAlert(IAlertType.Success, 'je betaling is geslaagd');
               } else {

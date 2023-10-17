@@ -1,34 +1,47 @@
 <div class="modal-header">
-    <h4 class="modal-title"><span>{{this.structureNameService.getQualifyTargetDescription(target, true)}}<small> kwalificatie opties</small></span></h4>
+    <h4 class="modal-title">
+        <span [innerHTML]="structureNameService.getRoundName(parentRound)"></span>
+        <span> - </span>
+        <span class="text-{{cssService.getQualifyTargetClass(target)}}">{{structureNameService.getQualifyTargetDescription(target, true)}}</span>        
+    </h4>
     <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
 </div>
 <div class="modal-body">
-    <div class="d-flex justify-content-center">
-        <label class="me-1 pt-1">verdeling</label>
-        <div class="btn-group ms-1" role="group" aria-label="aantal">
-            <button type="button" class="btn btn-outline-secondary"
-                (click)="updateDistribution.emit(HorizontalSnake)">
-                <fa-icon *ngIf="getDistribution(target) === HorizontalSnake" [icon]="['fas', 'check-circle']"
-                    class="text-success ms-1"></fa-icon>
-                zigzag
-            </button>
-            <button type="button" class="btn btn-outline-secondary" (click)="updateDistribution.emit(Vertical)">
-                <fa-icon *ngIf="getDistribution(target) === Vertical" [icon]="['fas', 'check-circle']"
-                    class="text-success ms-1"></fa-icon>
-                verticaal
-            </button>
+    <small class="fw-bold">kwalificatie opties</small>
+
+    <div class="container">
+        <div class="row align-items-start gap-0">
+            <div class="col-4">
+                <label class="ms-2 pt-2">volgorde</label>
+            </div>
+            <div class="col-8 pe-0">
+                <div class="btn-group ms-1" role="group" aria-label="aantal">
+                    <button type="button" class="btn btn-outline-secondary text-nowrap" (click)="updateDistribution.emit(HorizontalSnake)">
+                        <fa-icon *ngIf="getDistribution(target) === HorizontalSnake" [icon]="['fas', 'check-circle']"
+                            class="text-success ms-1"></fa-icon>
+                        zigzag
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" (click)="updateDistribution.emit(Vertical)">
+                        <fa-icon *ngIf="getDistribution(target) === Vertical" [icon]="['fas', 'check-circle']"
+                            class="text-success ms-1"></fa-icon>
+                        verticaal
+                    </button>
+                </div>
+            </div>    
         </div>
-    </div>
-
-    <div *ngIf="secondPartEditable()" role="group"
-        class="btn-group-horizontal mt-3 d-flex flex-column {{getTargetDirectionClass(target)}}">
-    </div>
-
-    <div class="btn-group-vertical d-flex flex-column {{getTargetDirectionClass(target)}}" role="group"
-        *ngIf="secondPartEditable()">
-        <ng-container *ngTemplateOutlet="editQualifyGroups;context:{$implicit: target}">
-        </ng-container>
-    </div>
+        <div *ngIf="secondPartEditable()" class="row align-items-start mt-2">
+            <div class="col-4">
+                <label class="ms-2 mt-2">groepen</label>
+            </div>
+            <div class="col-8 pe-0">
+                <div class="btn-group-vertical d-flex flex-column {{getTargetDirectionClass(target)}}" role="group">
+                    <ng-container *ngTemplateOutlet="editQualifyGroups;context:{$implicit: target}">
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div> 
+    
 </div>   
 
 <ng-template #editQualifyGroups let-target>
@@ -48,13 +61,13 @@
 </ng-template>
 
 <ng-template let-singleRule="singleRule" #editSingleRule>
-    <div>
+    <div class="py-1">
         <span [innerHtml]="structureNameService.getQualifyRuleName(singleRule) | keepHtml"></span>
     </div>
     <button *ngIf="structureEditor.isQualifyGroupSplittableAt(singleRule)" type="button"
         id="btn-split-qualifygroup-{{parentRound.getNumberAsValue()}}" class="btn btn-outline-primary"
         (click)="splitQualifyGroupFrom.emit(singleRule)">
-        <fa-icon class="rotate-45" [icon]="['fas', 'expand-alt']"></fa-icon><span>splitsen</span>
+        <fa-icon class="rotate-45" [icon]="['fas', 'expand-alt']"></fa-icon><span> splitsen</span>
     </button>
     <ng-container *ngIf="singleRule.getNext()" [ngTemplateOutlet]="editSingleRule"
         [ngTemplateOutletContext]="{singleRule:singleRule.getNext()}">

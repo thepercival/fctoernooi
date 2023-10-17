@@ -1,5 +1,5 @@
 <!-- root round-->
-<div *ngIf="round && round.isRoot() && !round.hasBegun()" class="d-flex justify-content-around mb-3 gap-1">
+<div *ngIf="round && round.isRoot()" class="d-flex justify-content-around mb-3 gap-1">
   <div class="btn-group" role="group" aria-label="aantal poules">
     <button [disabled]="!canRemovePouleFromRoot()" type="button"
       class="btn btn-outline-{{getRemovePouleFromRootRoundBtnClass()}}" (click)="removePouleFromRootRound()">
@@ -22,7 +22,7 @@
   </div>
 </div>
 <!-- child round-->
-<div *ngIf="round && !round.isRoot() && !round.hasBegun()" class="text-center mb-3">
+<div *ngIf="round && !round.isRoot()" class="text-center mb-3">
 
   <div class="btn-group-vertical {{vertViewPortClass()}}" role="group" aria-label="aantal poules">
     <button type="button" disabled class="btn btn-outline-secondary">poules</button>

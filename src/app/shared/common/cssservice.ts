@@ -63,4 +63,8 @@ export class CSSService {
         return ' q-' + (qualifyGroup.getTarget() === QualifyTarget.Winners ? 'w' : 'l') + '-' +
             this.getQualifyGroupNumber(qualifyGroup);
     }
+
+    getQualifyTargetClass(qualifyTarget: QualifyTarget): string {
+        return qualifyTarget === QualifyTarget.Winners ? 'success' : (qualifyTarget === QualifyTarget.Losers ? 'danger' : '');
+    }
 }

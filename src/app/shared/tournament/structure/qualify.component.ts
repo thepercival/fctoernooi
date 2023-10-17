@@ -144,7 +144,6 @@ export class StructureQualifyComponent {
     splitQualifyGroupFrom(singleRule: HorizontalSingleQualifyRule | VerticalSingleQualifyRule) {
         this.resetAlert();
         try {
-            console.log(singleRule.getGroup());
             this.structureEditor.splitQualifyGroupFrom(singleRule.getGroup(), singleRule);            
             this.addAction.emit({
                 pathNode: this.parentRound.getPathNode(),

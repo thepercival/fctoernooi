@@ -1,10 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Competitor, StructureEditor, Category, StructureNameService } from 'ngx-sport';
-import { StructureAction } from '../../../admin/structure/edit.component';
-import { UpdateCategoryNameAction } from '../../../admin/structure/planningNavBar.component';
+import { CategoryProperties, StructureAction } from '../../../admin/structure/edit.component';
 import { CSSService } from '../../common/cssservice';
-import { NameModalComponent } from '../namemodal/namemodal.component';
+import { CategoryModalComponent } from './categorymodal/categorymodal.component';
 
 @Component({
   selector: 'app-tournament-structurecategory',
@@ -13,6 +12,7 @@ import { NameModalComponent } from '../namemodal/namemodal.component';
 })
 export class StructureCategoryComponent  {
   @Input() structureEditor!: StructureEditor;
+  @Input() categories!: Category[];
   @Input() category!: Category;
   @Input() showHeader!: boolean;
   @Input() editable: boolean = false;
@@ -23,7 +23,7 @@ export class StructureCategoryComponent  {
   @Input() lastAction: StructureAction | undefined;
   @Output() addAction = new EventEmitter<StructureAction>();
   @Output() remove = new EventEmitter<Category>();
-  @Output() updateName = new EventEmitter<UpdateCategoryNameAction>();
+  @Output() updateCategory = new EventEmitter<CategoryProperties>();
   @Output() moveCategoryUp = new EventEmitter<Category>();
 
   public canEdit: boolean = false;
@@ -32,24 +32,23 @@ export class StructureCategoryComponent  {
 
   }
 
-  changeName(category: Category) {
-    const modal = this.getChangeNameModel('wijzigen');
+  updateCategoryAction(category: Category) {
+    const modal = this.getCategoryModel(category);
     modal.componentInstance.initialName = category.getName();
-    modal.result.then((newName: string) => {
-      this.updateName.emit({ category, newName });
+    modal.result.then((categoryProperties: CategoryProperties) => {
+      this.updateCategory.emit(categoryProperties);
     }, (reason) => {
     });
   }
 
   get movable(): boolean { return this.editable && !this.filterActive && this.category.getNumber() > 1 };
 
-  getChangeNameModel(buttonLabel: string): NgbModalRef {
-    const activeModal = this.modalService.open(NameModalComponent);
-    activeModal.componentInstance.header = 'categorienaam';
-    activeModal.componentInstance.range = { min: 3, max: 15 };
-    activeModal.componentInstance.buttonName = buttonLabel;
-    activeModal.componentInstance.labelName = 'naam';
-    activeModal.componentInstance.buttonOutline = true;
+  getCategoryModel(category: Category): NgbModalRef {
+    const activeModal = this.modalService.open(CategoryModalComponent);
+    
+    activeModal.componentInstance.categories = this.categories;
+    activeModal.componentInstance.category = category;
+    activeModal.componentInstance.buttonLabel = 'wijzigen';    
     return activeModal;
   }
 }

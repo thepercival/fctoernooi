@@ -37,11 +37,12 @@ import { RankingTogetherComponent } from './ranking/sports/together.component';
 import { LockerRoomComponent } from './lockerroom/lockerroom.component';
 import { SportIconComponent } from './sport/icon.component';
 import { QualifyModalComponent } from './structure/qualifymodal.component';
+import { CategoryModalComponent } from './structure/categorymodal/categorymodal.component';
 
 @NgModule({
     declarations: [
         AgainstQualifyInfoComponent,
-        CategoryChooseListComponent, CategoryChooseModalComponent,        
+    CategoryChooseListComponent, CategoryChooseModalComponent, CategoryModalComponent,
         CompetitorChooseModalComponent,
         InfoModalComponent,
         NameModalComponent,

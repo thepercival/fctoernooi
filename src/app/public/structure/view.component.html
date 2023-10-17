@@ -43,7 +43,7 @@
         <app-tournament-structurecategory *ngFor="let category of favoriteCategories" class="mx-auto" [editable]="false"
           [showHeader]="favoriteCategories.length > 1" [filterActive]="isCategoryFilterActive()"
           [structureNameService]="structureNameService" [showCompetitors]="showCompetitors"
-          [structureEditor]="structureEditor" [category]="category">
+          [structureEditor]="structureEditor" [category]="category" [categories]="structure.getCategories()">
         </app-tournament-structurecategory>
       </div>
     </ng-template>

@@ -75,8 +75,8 @@
 <!-- START GAMES-->
 <tr *ngIf="gameDatas.length > 0">
   <!-- category -->
-  <th *ngIf="favoriteCategories.length > 1" class="d-none d-sm-table-cell">
-    <span>categorie</span>
+  <th *ngIf="favoriteCategories.length > 1" class="category-column">
+    <span class="d-none d-sm-inline">categorie</span>
   </th>
   <!-- poule -->
   <th class="text-center px-0">
@@ -148,7 +148,7 @@
 <ng-template ngFor let-gmData [ngForOf]="gameDatas">
   <!-- recess -->
   <tr *ngIf="gmData.recess" class="table-info">
-    <td *ngIf="favoriteCategories.length > 1" class="d-none d-sm-table-cell"></td>
+    <td *ngIf="favoriteCategories.length > 1"></td>
     <td></td>
     <td *ngIf="showStartColumn">
       <span *ngIf="!sameDay">{{gmData.recess.startDate}} </span>
@@ -161,8 +161,9 @@
 
   <tr [ngClass]="{ 'table-alternate': (gmData.game.getBatchNr() % 2) === 0 && gameOrder === OrderByDate }">
     <!-- category-->
-    <td *ngIf="favoriteCategories.length > 1" class="d-none d-sm-table-cell">
-      <span class="badge bg-dark text-light">{{gmData.poule.categoryName}}</span>
+    <td *ngIf="favoriteCategories.length > 1" class="category-column">
+      <span class="d-inline d-sm-none badge bg-dark text-light">{{gmData.poule.categoryAbbreviation}}</span>
+      <span class="d-none d-sm-inline badge bg-dark text-light">{{gmData.poule.categoryName}}</span>
     </td>
     <!-- poule -->
     <td class="text-center px-0">

@@ -142,7 +142,7 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
     if (!this.typedForm.controls.nrOfCredits.value) {
       return undefined;
     }
-    console.log(this.typedForm.controls.iDealIssuer.value);
+    // console.log(this.typedForm.controls.iDealIssuer.value);
     if (this.typedForm.controls.paymentMethod.value === PaymentMethod.IDeal
       && this.typedForm.controls.iDealIssuer.value !== null) {
       return {

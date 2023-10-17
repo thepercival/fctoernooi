@@ -5,7 +5,7 @@
       <div class="d-flex justify-content-between">
         <h5 class="my-0">
           <span class="fw-bold align-middle">{{category.getName()}}</span>
-          <button *ngIf="editable" class="btn btn-sm btn-primary ms-1" (click)="changeName(category)">
+          <button *ngIf="editable" class="btn btn-sm btn-primary ms-1" (click)="updateCategoryAction(category)">
             <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
           </button>
           <button *ngIf="movable" class="btn btn-sm btn-secondary ms-1" (click)="moveCategoryUp.emit(category)">

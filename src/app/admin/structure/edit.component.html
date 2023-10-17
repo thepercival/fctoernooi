@@ -7,7 +7,7 @@
     <div *ngIf="!processing && clonedStructure">
 
       <div class="btn-group" role="group" aria-label="aantal deelnemers">
-        <button *ngIf="!hasBegun" type="button" class="btn btn-outline-primary" (click)="openCategoryModal()">
+        <button *ngIf="!hasBegun" type="button" class="btn btn-outline-primary" (click)="openAddCategoryModal()">
           <fa-icon [icon]="['fas', 'plus']"></fa-icon>
         </button>
         <button [disabled]="clonedStructure.hasSingleCategory()" role="button"
@@ -53,7 +53,8 @@
           [showHeader]="favoriteCategories.length > 1" [editable]="!hasBegun"
           [filterActive]="isCategoryFilterActive(clonedStructure)" [structureNameService]="structureNameService"
           [structureEditor]="structureEditor" [lastAction]="lastAction" [category]="category"
-          (addAction)="addAction($event)" (remove)="removeCategory($event)" (updateName)="updateCategoryName($event)"
+          [categories]="clonedStructure.getCategories()"
+          (addAction)="addAction($event)" (remove)="removeCategory($event)" (updateCategory)="updateCategory(category, $event)"
           (moveCategoryUp)="moveCategoryUp($event)">
         </app-tournament-structurecategory>
       </div>
