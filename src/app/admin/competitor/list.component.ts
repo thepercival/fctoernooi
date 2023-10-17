@@ -161,7 +161,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   public refreshCompetitors(): void {
-    console.log('refreshCompetitors');
+    // console.log('refreshCompetitors');
     const map = new StartLocationMap(this.tournament.getCompetitors());
     this.structureNameService = new StructureNameService(map);
     this.lockerRoomValidator = new LockerRoomValidator(this.tournament.getCompetitors(), this.tournament.getLockerRooms());
@@ -173,6 +173,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
       .subscribe({
         next: (structure: Structure) => {
           this.structure = structure;
+          this.updateFavoriteCategories(this.structure);
           this.planningRepository.create(this.structure, this.tournament)
             .subscribe({
               next: () => {

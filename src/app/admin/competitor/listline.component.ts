@@ -18,7 +18,6 @@ export class CompetitorListLineComponent implements AfterViewChecked {
   @Input() focus!: boolean;
   @Input() hasBegun!: boolean;
   @Input() hasSomeCompetitorAnImage!: boolean;
-  @Input() showEmailaddress!: boolean; 
   @Input() showLockerRoomNotArranged!: boolean;
   @Input() structureNameService!: StructureNameService;
   @Input() tournamentId!: string | number;

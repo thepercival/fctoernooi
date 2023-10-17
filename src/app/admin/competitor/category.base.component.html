@@ -69,7 +69,6 @@
         <tbody>
           <app-tournament-competitor-line *ngFor="let item of placeCompetitorItems" [placeCompetitor]="item"
             [showLockerRoomNotArranged]="showLockerRoomNotArranged(item.competitor)" [hasBegun]="hasBegun"
-            [showEmailaddress]="someCompetitorHasEmailaddress()"
             [structureNameService]="structureNameService" [focus]="item.place.getId() === focusId"
             [hasSomeCompetitorAnImage]="hasSomeCompetitorAnImage"
             (editPressed)="editPlace($event)" (removePressed)="preRemove($event)" [tournamentId]="tournament.getId()">

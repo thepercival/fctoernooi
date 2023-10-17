@@ -28,7 +28,7 @@
   <button #btnEdit type="button" class="btn btn-sm btn-outline-warning border-0" (click)="edit()">vul een naam in</button>
 </td>
 
-<td *ngIf="showEmailaddress" class="d-none d-sm-table-cell">
+<td class="d-none d-sm-table-cell">
   <a *ngIf="placeCompetitor.competitor" target="_blank" href="mailto:{{placeCompetitor.competitor.getEmailaddress()}}" rel="noopener">
     {{placeCompetitor.competitor.getEmailaddress()}}
   </a>
