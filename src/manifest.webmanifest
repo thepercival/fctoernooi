@@ -1,12 +1,37 @@
 {
+  "id": "tournament_organizer",
   "name": "FCToernooi",
   "short_name": "FCToernooi",
   "description": "met FCToernooi kun je een toernooi opzetten. Er is onder andere een live scorebord en automatische kwalificatie en wedstrijdplanning",
   "theme_color": "#3e3f3a",
   "background_color": "#3e3f3a",
-  "display": "fullscreen",
+  "display": "standalone",
+  "display_override": [
+    "window-controls-overlay"
+  ],
   "scope": "/",
   "start_url": "/",
+  "orientation": "any",
+  "dir": "auto",
+  "iarc_rating_id": "c4b596f4-5625-4fc8-892f-152cda199b7e",
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=fctoernooi.nl.pwa"
+    }
+  ],
+  "categories": ["sports","utilities","productivity","social"],
+  "launch_handler": {
+    "client_mode": [
+      "navigate-existing",
+      "auto"
+    ]
+  },
+  "scope_extensions": [
+    {
+      "origin": "fctoernooi.nl"
+    }
+  ],
   "icons": [
     {
       "src": "assets/icons/icon-48x48.png",
@@ -55,10 +80,114 @@
       "type": "image/png"
     }
   ],
-  "related_applications": [
+  "screenshots": [
     {
-      "platform": "play",
-      "url": "https://play.google.com/store/apps/details?id=fctoernooi.nl.pwa"
+      "src": "assets/screenshots/x480-y800/admin-home.png",
+      "sizes": "800x480",
+      "type": "image/png",
+      "platform": "wide"
+    },
+    {
+      "src": "assets/screenshots/x480-y800/competitors.png",
+      "sizes": "800x480",
+      "type": "image/png",
+      "platform": "wide"
+    },
+    {
+      "src": "assets/screenshots/x480-y800/export.png",
+      "sizes": "800x480",
+      "type": "image/png",
+      "platform": "wide"
+    },
+    {
+      "src": "assets/screenshots/x480-y800/home.png",
+      "sizes": "800x480",
+      "type": "image/png",
+      "platform": "wide"
+    },
+    {
+      "src": "assets/screenshots/x480-y800/planning.png",
+      "sizes": "800x480",
+      "type": "image/png",
+      "platform": "wide"
+    },
+    {
+      "src": "assets/screenshots/x480-y800/structure.png",
+      "sizes": "800x480",
+      "type": "image/png",
+      "platform": "wide"
+    },
+      {
+        "src": "assets/screenshots/x720-y800/admin-home.png",
+        "sizes": "800x720",
+        "type": "image/png",
+        "platform": "wide"
+      },
+      {
+        "src": "assets/screenshots/x720-y800/competitors.png",
+        "sizes": "800x720",
+        "type": "image/png",
+        "platform": "wide"
+      },
+      {
+        "src": "assets/screenshots/x720-y800/export.png",
+        "sizes": "800x720",
+        "type": "image/png",
+        "platform": "wide"
+      },
+      {
+        "src": "assets/screenshots/x720-y800/home.png",
+        "sizes": "800x720",
+        "type": "image/png",
+        "platform": "wide"
+      },
+      {
+        "src": "assets/screenshots/x720-y800/planning.png",
+        "sizes": "800x720",
+        "type": "image/png",
+        "platform": "wide"
+      },
+      {
+        "src": "assets/screenshots/x720-y800/structure.png",
+        "sizes": "800x720",
+        "type": "image/png",
+        "platform": "wide"
+      },
+    {
+      "src": "assets/screenshots/x1200-y800/admin-home.png",
+      "sizes": "1200x800",
+      "type": "image/png",
+      "platform": "wide"
+    },
+    {
+      "src": "assets/screenshots/x1200-y800/competitors.png",
+      "sizes": "1200x800",
+      "type": "image/png",
+      "platform": "wide"
+    },
+    {
+      "src": "assets/screenshots/x1200-y800/export.png",
+      "sizes": "1200x800",
+      "type": "image/png",
+      "platform": "wide"
+    },
+    {
+      "src": "assets/screenshots/x1200-y800/home.png",
+      "sizes": "1200x800",
+      "type": "image/png",
+      "platform": "wide"
+    },
+    {
+      "src": "assets/screenshots/x1200-y800/planning.png",
+      "sizes": "1200x800",
+      "type": "image/png",
+      "platform": "wide"
+    },
+    {
+      "src": "assets/screenshots/x1200-y800/structure.png",
+      "sizes": "1200x800",
+      "type": "image/png",
+      "platform": "wide"
     }
   ]
 }
