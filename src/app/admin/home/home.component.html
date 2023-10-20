@@ -97,7 +97,50 @@
               <span class="fw-bold">A</span>
             </h5>
             <div>naam</div>
-            <div>wijzigen</div>
+            <div>& logo</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <ngb-alert *ngIf="!processing && isAdmin() && tournament.getPublic()" type="info"
+          [routerLink]="['/public', tournament.getId()]" class="text-center pointer mt-4 to-public">
+          bekijk <a href="javascript:void(0)" class="alert-link">het
+            publieke gedeelte</a> <fa-icon class="ms-1" [icon]="['fas', 'eye']"></fa-icon>
+        </ngb-alert>
+      </div>
+
+      <!-- option block share, export -->
+      <div *ngIf="!processing && structure" class="d-flex flex-wrap gap-3 justify-content-center mt-3">
+
+        <!-- home pagina -->
+        <div *ngIf="tournament.getPublic()" class="card card-sub pointer" [routerLink]="['/admin/homeedit', tournament.getId()]">
+        
+          <div class="card-body text-center p-0 pt-2">
+            <h5 class="card-title">
+              <fa-icon [icon]="['fas', 'home']"></fa-icon>
+            </h5>
+            <div>home</div>
+            <div>pagina</div>
+          </div>
+        </div>
+        <!-- share -->
+        <div *ngIf="allPoulesHaveGames && isAdmin()" class="card card-sub pointer" (click)="openModalShare()">
+          <div class="card-body text-center p-1 pt-2">
+            <h5 class="card-title">
+              <fa-icon [icon]="['fas', 'share-alt']"></fa-icon>
+            </h5>
+            <div>delen</div>
+          </div>
+        </div>
+        <!-- export-->
+        <div *ngIf="allPoulesHaveGames && isAdmin()" class="card card-sub pointer" (click)="openModalExport()">
+          <div class="card-body text-center p-0 pt-2">
+            <h5 class="card-title">
+              <fa-icon [icon]="['fas', 'print']"></fa-icon>
+            </h5>
+            <div>printen</div>
           </div>
         </div>
 
@@ -107,8 +150,7 @@
       <!-- option block roleadmin, copy & remove -->
       <div *ngIf="!processing && structure" class="d-flex flex-wrap gap-3 justify-content-center mt-3">
         <!-- roleadmin -->
-        <div *ngIf="isRoleAdmin()" class="card card-sub pointer"
-          [routerLink]="['/admin/authorizations', tournament.getId()]">
+        <div *ngIf="isRoleAdmin()" class="card card-sub pointer" [routerLink]="['/admin/authorizations', tournament.getId()]">
           <div class="card-body text-center p-1 pt-2">
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'user-friends']"></fa-icon>
@@ -117,7 +159,7 @@
             <div>uitdelen</div>
           </div>
         </div>
-
+      
         <!-- copy -->
         <div *ngIf="isAdmin()" class="card card-sub pointer" (click)="openModalCopy()">
           <div class="card-body text-center p-1 pt-2">
@@ -138,43 +180,10 @@
             <div>wijderen</div>
           </div>
         </div>
-
+      
       </div>
 
-      <hr>
-      <!-- option block share, export -->
-      <div *ngIf="!processing && structure" class="d-flex flex-wrap gap-3 justify-content-center mt-3">
 
-        <!-- share -->
-        <div *ngIf="allPoulesHaveGames && isAdmin()" class="card card-sub pointer" (click)="openModalShare()">
-          <div class="card-body text-center p-1 pt-2">
-            <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'share-alt']"></fa-icon>
-            </h5>
-            <div>delen</div>
-          </div>
-        </div>
-        <!-- export-->
-        <div *ngIf="allPoulesHaveGames && isAdmin()" class="card card-sub pointer" (click)="openModalExport()">
-          <div class="card-body text-center p-0 pt-2">
-            <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'print']"></fa-icon>
-            </h5>
-            <div>printen</div>
-          </div>
-        </div>
-        <!-- public-->
-        <div *ngIf="tournament.getPublic()" class="card card-sub pointer"
-          [routerLink]="['/public', tournament.getId()]">
-          <div class="card-body text-center p-0 pt-2">
-            <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'eye']"></fa-icon>
-            </h5>
-            <div>publieke</div>
-            <div>gedeelte</div>
-          </div>
-        </div>
-      </div>
       <!-- program book -->
       <!-- <div class="card card-sub pointer mt-3 mx-2" (click)="openGuide()">
                         <div class="card-body text-center p-1 pt-2">

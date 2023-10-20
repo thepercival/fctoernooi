@@ -12,11 +12,13 @@ import { PublicShellsComponent } from './shells/shells.component';
 import { ExamplesComponent } from './examples/examples.component';
 import { RegistrationComponent } from './registration-form/registration-form.component';
 import { PrivacyComponent } from './privacy.component';
+import { HomeViewComponent } from './home/homeview.component';
 
 const routes: Routes = [
   { path: 'prenew', component: PreNewComponent },
   { path: 'shells', component: PublicShellsComponent },
   { path: 'games/:id', component: GamesComponent },
+  { path: 'home/:id', component: HomeViewComponent },
   { path: 'ranking/:id', component: RankingViewComponent },
   { path: 'structure/:id', component: StructureViewComponent },
   { path: 'competitors/:id', component: SelectFavoritesComponent },
@@ -24,7 +26,7 @@ const routes: Routes = [
   { path: 'registrationform/:id', component: RegistrationComponent },
   { path: 'examples', component: ExamplesComponent },  
   { path: 'privacy', component: PrivacyComponent },  
-  { path: ':id', redirectTo: 'games/:id', pathMatch: 'full' },
+  { path: ':id', redirectTo: 'home/:id', pathMatch: 'full' },
 ];
 
 @NgModule({

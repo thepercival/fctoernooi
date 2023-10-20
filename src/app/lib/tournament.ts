@@ -11,6 +11,9 @@ import { StartEditMode } from './tournament/startEditMode';
 
 export class Tournament extends Identifiable {
     protected id: number = 0;
+    protected intro: string = '';
+    protected coordinate: string|undefined;
+    protected logoExtension: string | undefined;
     protected users: TournamentUser[] = [];
     protected sponsors: Sponsor[] = [];
     protected competitors: TournamentCompetitor[] = [];
@@ -72,5 +75,37 @@ export class Tournament extends Identifiable {
 
     getStartEditMode(): StartEditMode {
         return this.startEditMode;
+    }
+
+    getIntro(): string {
+        return this.intro;
+    }
+
+    setIntro(intro: string): void {
+        this.intro = intro;
+    }
+
+    getCoordinate(): string | undefined {
+        return this.coordinate;
+    }
+
+    setCoordinate(coordinate: string | undefined): void {
+        this.coordinate = coordinate;
+    }
+
+    hasCoordinate(): boolean {
+        return this.coordinate !== undefined ? this.coordinate.length > 0 : false;
+    }
+
+    getLogoExtension(): string | undefined {
+        return this.logoExtension;
+    }
+
+    setLogoExtension(logoExtension: string | undefined): void {
+        this.logoExtension = logoExtension;
+    }
+
+    hasLogoExtension(): boolean {
+        return this.logoExtension !== undefined ? this.logoExtension.length > 0 : false;
     }
 }

@@ -2,13 +2,15 @@
   <div class="row justify-content-around g-0">
     <div class="col-md-12 col-lg-8">
 
+      <ngb-alert type="info" *ngIf="!processing && isAdmin()"
+        [routerLink]="['/admin/games', tournament.getId()]" class="text-center pointer">
+        ga naar <a href="javascript:void(0)" class="alert-link">het
+          beheergedeelte</a>
+      </ngb-alert>
+
       <div class="d-flex justify-content-between mb-2">
         <h2>
-          <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> <span class="mx-1">wedstrijden</span>
-          <button *ngIf="!processing && isAdmin()" [routerLink]="['/admin/games', tournament.getId()]" type="button"
-            class="btn btn-sm btn-outline-primary">
-            <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
-          </button>
+          <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> <span class="mx-1">wedstrijden</span>          
         </h2>
         <button *ngIf="!processing && !structure.hasSingleCategory()" type="button"
           class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"

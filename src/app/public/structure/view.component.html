@@ -1,12 +1,14 @@
 <div class="container-fluid">
 
+  <ngb-alert type="info" *ngIf="!processing && isAdmin()" [routerLink]="['/admin/structure', tournament.getId()]"
+    class="text-center pointer">
+    ga naar <a href="javascript:void(0)" class="alert-link">het
+      beheergedeelte</a>
+  </ngb-alert>
+
   <div class="d-flex justify-content-between ms-1 mb-1">
     <h2>
-      <app-tournament-icon name="structure"></app-tournament-icon> <span class="mx-1">opzet</span> <button
-        *ngIf="!processing && isAdmin()" [routerLink]="['/admin/structure', tournament.getId()]" type="button"
-        class="btn btn-sm btn-outline-primary">
-        <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
-      </button>
+      <app-tournament-icon name="structure"></app-tournament-icon> <span class="mx-1">opzet</span>       
     </h2>
     <div *ngIf="!processing" class="pe-1">
 

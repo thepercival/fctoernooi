@@ -6,7 +6,7 @@ import { AuthguardService } from '../lib/auth/authguard.service';
 import { CompetitorEditComponent } from './competitor/edit.component';
 import { CompetitorListComponent } from './competitor/list.component';
 import { FieldListComponent } from './competitionSport/field/fieldlist.component';
-import { HomeComponent } from './home/home.component';
+import { HomeAdminComponent } from './home/home.component';
 import { NewComponent } from './new/new.component';
 import { GameListComponent } from './game/list.component';
 import { PlanningConfigComponent } from './planningconfig/edit.component';
@@ -27,10 +27,11 @@ import { RankingEditComponent } from './ranking/edit.component';
 import { LockerRoomsEditComponent } from './lockerrooms/lockerrooms.component';
 import { StructureEditComponent } from './structure/edit.component';
 import { TournamentRegistrationEditComponent } from './registration/registration-edit.component';
+import { HomeEditComponent } from './home/homeedit.component';
 
 const routes: Routes = [
   { path: 'new', component: NewComponent }, // ALL ROLES
-  { path: ':id', component: HomeComponent, canActivate: [AuthguardService] }, // GAMERESULTADMIN, ADMIN
+  { path: ':id', component: HomeAdminComponent, canActivate: [AuthguardService] }, // GAMERESULTADMIN, ADMIN
   { path: 'competitors/:id/:tabId', component: CompetitorListComponent, canActivate: [AuthguardService] }, // ADMIN  
   { path: 'competitor/:id/:categoryNr/:pouleNr/:placeNr', component: CompetitorEditComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'registration/:id/:categoryNr/:registrationId', component: TournamentRegistrationEditComponent, canActivate: [AuthguardService] }, // ADMIN
@@ -39,6 +40,7 @@ const routes: Routes = [
   { path: 'gameagainst/:id/:gameId', component: GameAgainstEditComponent, canActivate: [AuthguardService] }, // GAMERESULTADMIN
   { path: 'gametogether/:id/:gameId', component: GameTogetherEditComponent, canActivate: [AuthguardService] }, // GAMERESULTADMIN
   { path: 'fields/:id', component: FieldListComponent, canActivate: [AuthguardService] }, // ADMIN
+  { path: 'homeedit/:id', component: HomeEditComponent, canActivate: [AuthguardService] }, // GAMERESULTADMIN, ADMIN
   { path: 'lockerrooms/:id', component: LockerRoomsEditComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'planningconfig/:id/:startRoundNumber', component: PlanningConfigComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'ranking/:id', component: RankingEditComponent, canActivate: [AuthguardService] }, // ADMIN

@@ -38,6 +38,7 @@ import { ExamplesComponent } from './examples/examples.component';
 import { RegistrationComponent } from './registration-form/registration-form.component';
 import { CopyModalComponent } from './tournament/copymodal.component';
 import { PrivacyComponent } from './privacy.component';
+import { HomeViewComponent } from './home/homeview.component';
 
 @NgModule({
   imports: [
@@ -53,6 +54,7 @@ import { PrivacyComponent } from './privacy.component';
     ExamplesComponent,
     CompetitorsCategoryComponent,
     GamesComponent,
+    HomeViewComponent,
     LiveboardComponent,
     LiveboardPoulesComponent,
     LiveboardSponsorsComponent,

@@ -56,19 +56,4 @@ export class TournamentNavBarComponent {
     const tournamentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;
     return tournamentUser ? tournamentUser.hasARole(roles) : false;
   }
-
-  showNrOfItems(): number {
-    if (!this.public) {
-      return 4;
-    }
-    let nrOfItems = 3;
-    if (this.tournament.getLockerRooms().length > 0) {
-      nrOfItems++;
-    }
-    return this.tournament.getCompetitors().length > 0 ? nrOfItems + 1 : nrOfItems;
-  }
-
-  getFavSuffix(): string {
-    return this.showNrOfItems() > 4 ? 'd-none d-sm-inline' : '';
-  }
 }

@@ -44,7 +44,7 @@ import { CompetitorListComponent } from './competitor/list.component';
 import { CompetitorListLineComponent } from './competitor/listline.component';
 import { CompetitorListRemoveModalComponent } from './competitor/listremovemodal.component';
 import { FieldListComponent } from './competitionSport/field/fieldlist.component';
-import { HomeComponent } from './home/home.component';
+import { HomeAdminComponent } from './home/home.component';
 import { NewComponent } from './new/new.component';
 import { StartAndRecessesComponent } from './startAndRecesses/startAndRecesses.component';
 import { GameListComponent } from './game/list.component';
@@ -94,6 +94,7 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentRegistrationProcessModalComponent } from './competitor/registration-processmodal.component';
 import { TextEditorModalComponent } from './textEditor/texteditormodal.component';
 import { CopiedModalComponent } from './home/copiedmodal.component';
+import { HomeEditComponent } from './home/homeedit.component';
 
 @NgModule({
   imports: [
@@ -135,7 +136,8 @@ import { CopiedModalComponent } from './home/copiedmodal.component';
     GameListComponent,
     GameModeModalComponent,
     GameTogetherEditComponent,
-    HomeComponent,
+    HomeAdminComponent,
+    HomeEditComponent,
     LockerRoomsEditComponent,
     NewComponent,
     PlanningConfigComponent,

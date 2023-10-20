@@ -9,6 +9,9 @@ import { JsonTournamentCompetitor } from '../competitor/json';
 
 export interface JsonTournament extends JsonIdentifiable {
     competition: JsonCompetition;
+    intro: string;
+    logoExtension: string|undefined;
+    coordinate: string | undefined;
     public: boolean;
     startEditMode: StartEditMode;
     users: JsonTournamentUser[];

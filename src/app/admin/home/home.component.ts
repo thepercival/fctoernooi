@@ -30,11 +30,11 @@ import { CopyConfig, CopyModalComponent } from '../../public/tournament/copymoda
 import { CopiedModalComponent } from './copiedmodal.component';
 
 @Component({
-    selector: 'app-tournament-admin',
+    selector: 'app-tournament-home-admin',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css']
 })
-export class HomeComponent extends TournamentComponent implements OnInit {
+export class HomeAdminComponent extends TournamentComponent implements OnInit {
 
 
     lockerRoomValidator!: LockerRoomValidator;

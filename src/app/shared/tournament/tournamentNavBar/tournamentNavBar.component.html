@@ -9,13 +9,12 @@
   <div class="d-flex justify-content-center">
     <div class="d-flex justify-content-between flex-shrink-1">
 
-      <!--home 
       <h2 *ngIf="public" class="mb-0">
         <a type="button" class="btn {{getTextColorClass(HomeScreen)}}"
-          [routerLink]="['/public/competitors', tournament.getId()]">
+          [routerLink]="['/public/home', tournament.getId()]">
           <fa-icon [icon]="['fas', 'home']"></fa-icon> <br /><span>home</span>
         </a>
-      </h2>-->
+      </h2>
 
       <!-- opzet -->
       <h2 class="mb-0">
@@ -28,16 +27,20 @@
       <h2 *ngIf="!public" class="mb-0">
         <a type="button" class="btn {{getTextColorClass(CompetitorsScreen)}}"
           [routerLink]="['/admin/competitors', tournament.getId(), CompetitorTabBase]">
-          <fa-icon [icon]="['fas', 'users']"></fa-icon> <br /><span>deeln</span><span
-          class="{{getFavSuffix()}}">emers</span>
+          <fa-icon [icon]="['fas', 'users']"></fa-icon> <br />
+          <span>deeln</span>
+          <span class="d-inline d-sm-none">.</span>
+          <span class="d-none d-sm-inline">emers</span>
         </a>
       </h2>
       <!--deelnemers publiek -->
       <h2 *ngIf="public && tournament.getCompetitors().length > 0" class="mb-0">
         <a type="button" class="btn {{getTextColorClass(FavoritesScreen)}}"
           [routerLink]="['/public/competitors', tournament.getId()]">
-          <fa-icon [icon]="['fas', 'users']"></fa-icon> <br /><span>deeln</span><span
-          class="{{getFavSuffix()}}">emers</span>
+          <fa-icon [icon]="['fas', 'users']"></fa-icon> <br />
+          <span>deeln</span>
+          <span class="d-inline d-sm-none">.</span>
+          <span class="d-none d-sm-inline">emers</span>
         </a>
       </h2>
 

@@ -87,6 +87,9 @@ export class TournamentPropertiesComponent implements OnInit {
       id: 0,
       public: this.typedForm.controls.public.value,
       startEditMode: StartEditMode.EditLongTerm, /* @TODO CDK */
+      intro: '',
+      logoExtension: undefined,
+      coordinate: undefined,
       competition: {
         id: 0,
         league: {

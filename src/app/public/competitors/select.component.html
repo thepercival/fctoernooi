@@ -2,6 +2,12 @@
   <div class="row justify-content-center">
     <div class="col-sm-10 col-md-8 col-lg-6">
 
+      <ngb-alert type="info" *ngIf="!processing && isAdmin()" [routerLink]="['/admin/competitors', tournament.getId(), CompetitorTabBase]"
+        class="text-center pointer">
+        ga naar <a href="javascript:void(0)" class="alert-link">het
+          beheergedeelte</a>
+      </ngb-alert>
+
       <div class="d-flex justify-content-around mb-2">        
         <button *ngIf="!processing && !structure.hasSingleCategory()" type="button"
           class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
@@ -16,11 +22,7 @@
           <li [ngbNavItem]="1">
             <a ngbNavLink>
               <fa-icon [icon]="['fas', 'users']"></fa-icon><span> deelnemers </span>
-              <span *ngIf="favorites.hasCompetitors()" class="badge bg-primary">{{favorites.getNrOfCompetitors()}}</span>
-              <button *ngIf="isAdmin()" [routerLink]="['/admin/competitors', tournament.getId(), CompetitorTabBase]" type="button"
-                class="btn btn-sm btn-outline-primary pt-0" style="height:20px;">
-                <fa-icon [icon]="['fas', 'pencil-alt']" class=""></fa-icon>
-              </button>
+              <span *ngIf="favorites.hasCompetitors()" class="badge bg-primary">{{favorites.getNrOfCompetitors()}}</span>              
             </a>
             <ng-template ngbNavContent>
               <ng-container *ngTemplateOutlet="competitors">
@@ -47,10 +49,6 @@
           <fa-icon [icon]="['fas', 'users']"></fa-icon><span> deelnemers </span>
           <small><span *ngIf="favorites.hasCompetitors()"
               class="badge bg-primary">{{favorites.getNrOfCompetitors()}}</span></small>
-          <button *ngIf="isAdmin()" [routerLink]="['/admin/competitors', tournament.getId(), CompetitorTabBase]" type="button"
-            class="btn btn-sm btn-outline-primary">
-            <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
-          </button>
         </h3>
         <div class="d-flex justify-content-center">
           <ng-container *ngTemplateOutlet="competitors">

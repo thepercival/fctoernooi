@@ -79,7 +79,7 @@ export class TournamentRegistrationRepository extends APIRepository {
     removeObject(registration: TournamentRegistration, tournament: Tournament): Observable<void> {
         const category = registration.getCategory();
         const url = super.getApiUrl() + 'tournaments/' + tournament.getId() + '/categories/' + category.getId() + '/' + this.getUrlpostfix('' + registration.getId());
-        return this.http.delete<JsonTournamentRegistration>(url, this.getOptions()).pipe(
+        return this.http.delete(url, this.getOptions()).pipe(
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
