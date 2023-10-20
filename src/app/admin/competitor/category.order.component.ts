@@ -112,15 +112,16 @@ export class CategoryOrderCompetitorListComponent implements OnChanges {
 
     let reposUpdates: Observable<void>[] = [];
     const competitors = this.tournament.getCompetitors().slice();
-    let swapCompetitor: TournamentCompetitor | undefined;
     while (competitors.length > 1) {
-      if (swapCompetitor === undefined) {
-        swapCompetitor = competitors.shift();
+      const swapCompetitorA = competitors.shift();      
+      let idx = this.getRandomInt(competitors.length);
+      const removedCompetitors = competitors.splice(idx, 1);
+      const swapCompetitorB = removedCompetitors.shift();
+      if ( swapCompetitorA === undefined || swapCompetitorB === undefined) {
         continue;
       }
-      const idx = this.getRandomInt(competitors.length);
-      reposUpdates.push(this.competitorRepository.swapObjects(swapCompetitor, competitors[idx], this.tournament));
-      swapCompetitor = undefined;
+      reposUpdates.push(this.competitorRepository.swapObjects(swapCompetitorA, swapCompetitorB, this.tournament));
+      
     }
     this.swapHelper(reposUpdates);
   }
