@@ -5,10 +5,7 @@
   "description": "met FCToernooi kun je een toernooi opzetten. Er is onder andere een live scorebord en automatische kwalificatie en wedstrijdplanning",
   "theme_color": "#3e3f3a",
   "background_color": "#3e3f3a",
-  "display": "standalone",
-  "display_override": [
-    "window-controls-overlay"
-  ],
+  "display": "fullscreen",
   "scope": "/",
   "start_url": "/",
   "orientation": "any",
