@@ -8,7 +8,7 @@ import { APIRepository } from '../../repository';
 import { Tournament } from '../../tournament';
 import { TournamentCompetitor } from '../../competitor';
 import { CompetitorRepository } from '../competitor/repository';
-import { JsonPlanningInfo } from '../../../admin/structure/planningNavBar.component';
+import { JsonPlanningTotals } from '../../../admin/structure/planningNavBar.component';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -54,11 +54,11 @@ export class StructureRepository extends APIRepository {
         );
     }
 
-    getPlanningInfo(jsonStructure: JsonStructure, tournament: Tournament): Observable<JsonPlanningInfo> {
+    getPlanningTotals(jsonStructure: JsonStructure, tournament: Tournament): Observable<JsonPlanningTotals> {
         const options = this.getOptions();
         options.headers = options.headers.append('X-Ignore-Cache-Reset', 'tournamentAndStructure');
-        return this.http.put<JsonPlanningInfo>(this.getUrl(tournament) + '/planning', jsonStructure, this.getOptions()).pipe(
-            map((json: JsonPlanningInfo) => {
+        return this.http.put<JsonPlanningTotals>(this.getUrl(tournament) + '/planningtotals', jsonStructure, this.getOptions()).pipe(
+            map((json: JsonPlanningTotals) => {
                 json.start = new Date(json.start);
                 json.end = new Date(json.end);
                 return json;

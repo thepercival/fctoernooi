@@ -1,37 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  BalancedPouleStructure,
-  Category,
-  Competitor,
-  JsonStructure,
-  Round,
-  StartLocationMap,
-  Structure,
-  StructureEditor,
-  StructureMapper,
-  StructureNameService
-} from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
-import { DefaultService } from '../../lib/ngx-sport/defaultService';
-import { IAlertType } from '../../shared/common/alert';
-import { QualifyPathNode } from 'ngx-sport';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
-import { CategoryUniqueChecker } from '../../lib/ngx-sport/category/uniqueChecker';
 import { FavoritesRepository } from '../../lib/favorites/repository';
-import { CategoryChooseModalComponent } from '../../shared/tournament/category/chooseModal.component';
-import { Favorites } from '../../lib/favorites';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
-import { TournamentRegistrationRepository } from '../../lib/tournament/registration/repository';
-import { TournamentRegistration } from '../../lib/tournament/registration';
-import { CategoryModalComponent } from '../../shared/tournament/structure/categorymodal/categorymodal.component';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { IAlertType } from '../../shared/common/alert';
+import { Tournament } from '../../lib/tournament';
+import { JsonTournament } from '../../lib/tournament/json';
+import { TournamentMapper } from '../../lib/tournament/mapper';
 
 @Component({
   selector: 'app-tournament-home-edit',
@@ -39,6 +21,18 @@ import { CategoryModalComponent } from '../../shared/tournament/structure/catego
   styleUrls: ['./homeedit.component.scss'],
 })
 export class HomeEditComponent extends TournamentComponent implements OnInit {
+
+  public form: FormGroup<{
+    intro: FormControl<string>, 
+    coordinate: FormControl<string|null>
+  }>;
+  validations: HomeValidations = {
+    minlengthintro: 10,
+    maxlengthintro: 200,
+    minlengthcoordinate: 20,
+    maxlengthcoordinate: 30,
+  };
+
   constructor(
     route: ActivatedRoute,
     router: Router,
@@ -47,11 +41,29 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
     globalEventsManager: GlobalEventsManager,
     modalService: NgbModal,
     favRepository: FavoritesRepository,
+    private tournamentMapper: TournamentMapper,
     private myNavigation: MyNavigation,
   ) {
     super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
 
-
+    this.form = new FormGroup({
+      intro: new FormControl('', {
+        nonNullable: true, validators:
+          [
+            Validators.required,
+            Validators.minLength(this.validations.minlengthintro),
+            Validators.maxLength(this.validations.maxlengthintro)
+          ]
+      }),
+      coordinate: new FormControl('', {
+        nonNullable: false, validators:
+          [
+            Validators.required,
+            Validators.minLength(this.validations.minlengthcoordinate),
+            Validators.maxLength(this.validations.maxlengthcoordinate)
+          ]
+      }),      
+    });
   }
 
   ngOnInit() {
@@ -59,6 +71,10 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
   }
 
   postNgOnInit() {
+
+    this.form.controls.intro.setValue(this.tournament.getIntro());
+    this.form.controls.coordinate.setValue(this.tournament.getCoordinate() ?? null);
+
     // this.lockerRoomValidator = new LockerRoomValidator(this.tournament.getCompetitors(), this.tournament.getLockerRooms());
     // const firstRoundNumber = this.structure.getFirstRoundNumber();
     // this.hasBegun = firstRoundNumber.hasBegun();
@@ -86,11 +102,36 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
     this.myNavigation.back();
   }
 
-  // ngAfterViewChecked() {
-  //   if (this.roundElRef !== undefined && !this.processing && !this.scrolled) {
-  //     this.scrolled = true;
-  //     this.roundElRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
-  //   }
-  // }
+  formToJson(): JsonTournament {
+    const json = this.tournamentMapper.toJson(this.tournament);
+    json.intro = this.form.controls.intro.value; 
+    json.coordinate = this.form.controls.coordinate.value ?? undefined;    
+    return json;
+  }
 
+  save(): boolean {
+    this.processing = true;
+    this.setAlert(IAlertType.Info, 'de thuispagina wordt opgeslagen');
+
+    this.tournamentRepository.editObject(this.formToJson()).subscribe({
+      next: (tournament: Tournament) => {
+        this.tournament = tournament;
+        this.navigateBack(); 
+        this.processing = false;        
+      },
+      error: (e) => {
+        this.setAlert(IAlertType.Danger, e); this.processing = false;
+      },
+      complete: () => this.processing = false
+    });
+    return false;
+  }
+
+}
+
+export interface HomeValidations {
+  minlengthintro: number;
+  maxlengthintro: number;
+  minlengthcoordinate: number;
+  maxlengthcoordinate: number;
 }

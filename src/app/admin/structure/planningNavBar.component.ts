@@ -19,7 +19,7 @@ export class PlanningNavBarComponent implements OnChanges {
   @Input() structure: JsonStructure | undefined;
   @Input() delayInSeconds: number = 2;
 
-  public planningInfo: JsonPlanningInfo | undefined;
+  public planningTotals: JsonPlanningTotals | undefined;
   public processing = true;
   public unknownPlanning = false;
   private refreshSubscription!: Subscription;
@@ -49,13 +49,17 @@ export class PlanningNavBarComponent implements OnChanges {
     this.processing = true;
     this.unknownPlanning = false;
     this.refreshSubscription = of(structure).pipe(delay(this.delayInSeconds * 1000)).subscribe((structure: JsonStructure) => {
-      const obsGetPlanningInfo = this.structureRepository.getPlanningInfo(structure, this.tournament);
+      const obsGetPlanningInfo = this.structureRepository.getPlanningTotals(structure, this.tournament);
       obsGetPlanningInfo.subscribe({
-        next: (planningInfo: JsonPlanningInfo) => {
-          this.planningInfo = planningInfo;
+        next: (planningTotals: JsonPlanningTotals) => {
+          this.planningTotals = planningTotals;
           this.processing = false;
         },
-        error: ((e: string) => { this.unknownPlanning = true; this.processing = false; })
+        error: ((e: string) => { 
+          this.unknownPlanning = true;
+          this.processing = false; 
+          console.error(e);
+        })
       });
     });
 
@@ -101,44 +105,43 @@ export class PlanningNavBarComponent implements OnChanges {
 
 
   showStart(): string {
-    return this.dateFormatter.toString(this.planningInfo?.start, this.dateFormatter.time());
+    return this.dateFormatter.toString(this.planningTotals?.start, this.dateFormatter.time());
   }
 
   showEnd(): string {
-    return this.dateFormatter.toString(this.planningInfo?.end, this.dateFormatter.time());
+    return this.dateFormatter.toString(this.planningTotals?.end, this.dateFormatter.time());
   }
 
   showNrOfGames(): string {
-    if (this.planningInfo === undefined) {
+    if (this.planningTotals === undefined) {
       return '';
     }
-    const competitorAmount = this.planningInfo.competitorAmount;
-    if (competitorAmount.allTheSame) {
-      return '' + competitorAmount.nrOfGames.min;
+    const nrOfGamesRange = this.planningTotals.competitorAmount.nrOfGames;
+    if (nrOfGamesRange.min = nrOfGamesRange.max) {
+      return '' + nrOfGamesRange.min;
     }
-    return competitorAmount.nrOfGames.min + ' tot ' + competitorAmount.nrOfGames.max;
+    return nrOfGamesRange.min + ' tot ' + nrOfGamesRange.max;
   }
 
   showNrOfMinutes(): string {
-    if (this.planningInfo === undefined) {
+    if (this.planningTotals === undefined) {
       return '';
     }
-    const competitorAmount = this.planningInfo.competitorAmount;
-    if (competitorAmount.allTheSame) {
-      return '' + competitorAmount.nrOfMinutes.min;
+    const nrOfMinutesRange = this.planningTotals.competitorAmount.nrOfMinutes;
+    if (nrOfMinutesRange.min = nrOfMinutesRange.max) {
+      return '' + nrOfMinutesRange.min;
     }
-    return competitorAmount.nrOfMinutes.min + ' tot ' + competitorAmount.nrOfMinutes.max;
+    return nrOfMinutesRange.min + ' tot ' + nrOfMinutesRange.max;
   }
 }
 
-export interface JsonPlanningInfo {
+export interface JsonPlanningTotals {
   start: Date;
   end: Date;
   competitorAmount: JsonCompetitorAmount;
 }
 
 export interface JsonCompetitorAmount {
-  allTheSame: boolean;
   nrOfGames: VoetbalRange;
   nrOfMinutes: VoetbalRange;
 }

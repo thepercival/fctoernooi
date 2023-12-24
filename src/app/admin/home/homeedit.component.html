@@ -1,12 +1,54 @@
 <div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-sm-10 col-md-8 col-lg-6">
+      <div class="text-center">
+        <h2>
+          <fa-icon [icon]="['fas', 'home']"></fa-icon> thuispagina
+        </h2>
+        <h2 *ngIf="processing">
+          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+        </h2>
+      </div>
+      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
 
-    HomeEditComponent
-    <br/>
-    intro, <br />
-    locatie, <br />
-    regels<br />
+        <div class="row mb-3">
+          <div class="col-3">
+            <label for="intro" class="col-form-label">intro</label>
+          </div>
+          <div class="col-9">
+            <textarea class="form-control" rows="4"
+              [ngClass]="{ 'is-invalid': form.controls.intro.invalid, 'is-valid': form.controls.intro.valid }"
+              formControlName="intro" placeholder="max. {{validations.maxlengthintro}} karakters"></textarea>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-3">
+            <label for="coordinate" class="col-form-label">gps-locatie</label>
+          </div>
+          <div class="col-9">
+            <input class="form-control"
+              [ngClass]="{ 'is-invalid': form.controls.coordinate.invalid, 'is-valid': form.controls.coordinate.valid }"
+              type="text" formControlName="coordinate" placeholder="max. {{validations.maxlengthcoordinate}} karakters">
+          </div>
+        </div>
+
+        <div class="row my-2">
+          <div class="col-3">
+            <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary">terug</button>
+          </div>
+          <div class="col-9">
+            <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
+              <span>opslaan</span>
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
 </div>
-  
 
 <app-tournament-navbar [public]="false" [currentScreen]="HomeScreen" *ngIf="tournament" [tournament]="tournament">
 </app-tournament-navbar>
