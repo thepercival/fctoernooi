@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { AgainstSportRoundRankingCalculator, AgainstVariant, Poule, SportRoundRankingItem, StructureNameService, TogetherSportRoundRankingCalculator } from 'ngx-sport';
+import { AgainstRuleSet, AgainstSportRoundRankingCalculator, AgainstVariant, Poule, SportRoundRankingItem, StructureNameService, TogetherSportRoundRankingCalculator } from 'ngx-sport';
 
 import { CSSService } from '../../shared/common/cssservice';
 import { PoulesRankingScreen } from '../../lib/liveboard/screens';
@@ -11,7 +11,7 @@ import { PoulesRankingScreen } from '../../lib/liveboard/screens';
 })
 export class LiveboardPoulesComponent {
     @Input() screen!: PoulesRankingScreen;
-    @Input() ruleSet!: number;
+    @Input() ruleSet!: AgainstRuleSet;
     @Input() structureNameService!: StructureNameService;
 
     constructor(

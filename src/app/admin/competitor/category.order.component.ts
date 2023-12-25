@@ -107,11 +107,11 @@ export class CategoryOrderCompetitorListComponent implements OnChanges {
       [this.competitorRepository.swapObjects(swappedItem, substitute, this.tournament)]);
   }
 
-  swapAll() {
+  swapAll(category: Category) {
     this.processing = true;
 
     let reposUpdates: Observable<void>[] = [];
-    const competitors = this.tournament.getCompetitors().slice();
+    const competitors = this.getValidCompetitorsForCategory(category);
     while (competitors.length > 1) {
       const swapCompetitorA = competitors.shift();      
       let idx = this.getRandomInt(competitors.length);
@@ -120,10 +120,22 @@ export class CategoryOrderCompetitorListComponent implements OnChanges {
       if ( swapCompetitorA === undefined || swapCompetitorB === undefined) {
         continue;
       }
-      reposUpdates.push(this.competitorRepository.swapObjects(swapCompetitorA, swapCompetitorB, this.tournament));
-      
+      reposUpdates.push(this.competitorRepository.swapObjects(swapCompetitorA, swapCompetitorB, this.tournament));      
     }
     this.swapHelper(reposUpdates);
+  }
+
+  getValidCompetitorsForCategory(category: Category): TournamentCompetitor[] {
+    const rootRound = category.getRootRound();
+    return this.tournament.getCompetitors().filter((competitor: Competitor): boolean => {
+      try {
+        const poule = rootRound.getPoule(competitor.getStartLocation().getPouleNr());
+        poule.getPlace(competitor.getStartLocation().getPlaceNr());
+        return competitor.getStartLocation().getCategoryNr() === category.getNumber();
+      } catch( e) {
+        return false;
+      }      
+    });
   }
 
   private getRandomInt(max: number): number {

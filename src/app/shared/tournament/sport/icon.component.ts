@@ -21,8 +21,10 @@ export class SportIconComponent implements OnInit {
 
     ngOnInit() {
         const customId = this.getCustomIdFromInput();
-        this.prefix = this.getIconPrefix(customId);
-        this.iconName = this.getIconName(customId);
+        if (customId !== 0 ) {
+            this.prefix = this.getIconPrefix(customId);
+            this.iconName = this.getIconName(customId);
+        }
     }
 
     getCustomIdFromInput(): CustomSportId | 0{

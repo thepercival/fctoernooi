@@ -22,7 +22,7 @@
                 <div class="d-flex justify-content-between">
                   <span>naam</span>
             
-                  <button *ngIf="allPlacesHaveACompetitor()" type="button" class="btn btn-sm btn-outline-primary" (click)="swapAll()"
+                  <button *ngIf="allPlacesHaveACompetitor()" type="button" class="btn btn-sm btn-outline-primary" (click)="swapAll(category)"
                     [disabled]="swapItem && !processing" title="willekeurige volgorde">
                     <fa-icon [icon]="['fas', 'random']"></fa-icon> willekeurig
                   </button>

@@ -123,24 +123,24 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "fctoernooi:build"
+            "buildTarget": "fctoernooi:build"
           },
           "configurations": {
             "prod": {
-              "browserTarget": "fctoernooi:build:prod"
+              "buildTarget": "fctoernooi:build:prod"
             },
             "dev": {
-              "browserTarget": "fctoernooi:build:dev"        
+              "buildTarget": "fctoernooi:build:dev"
             },
             "dev-nl-NL": {
-              "browserTarget": "fctoernooi:build:dev-nl-NL"
+              "buildTarget": "fctoernooi:build:dev-nl-NL"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "fctoernooi:build"
+            "buildTarget": "fctoernooi:build"
           }
         },
         "test": {

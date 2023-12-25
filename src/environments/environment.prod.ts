@@ -2,5 +2,5 @@
 export const environment = {
   production: true,
   apiurl: 'https://api.fctoernooi.nl/',
-  apiVersion: '40'
+  apiVersion: '41'
 };

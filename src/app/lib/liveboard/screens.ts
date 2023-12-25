@@ -1,7 +1,6 @@
-import { AgainstGame, TogetherGame, Poule, GameMode, CompetitionSport, Category } from 'ngx-sport';
+import { AgainstGame, TogetherGame, Poule, GameMode, CompetitionSport, Category, VoetbalRange } from 'ngx-sport';
 
 import { Sponsor } from '../sponsor';
-import { VoetbalRange } from 'ngx-sport';
 import { BatchViewMode } from '../../public/liveboard/games.liveboard.component';
 import { ScreenConfig } from './screenConfig/json';
 import { ScreenConfigName } from './screenConfig/name';
@@ -67,7 +66,7 @@ export class EndRankingScreen extends LiveboardScreen {
 
 export abstract class GamesScreen extends LiveboardScreen {
 
-    protected usedGameModes: number = 0;
+    // protected usedGameModes: number = 0;
     protected games: (AgainstGame | TogetherGame)[] = [];
 
     constructor(config: ScreenConfig, protected maxLines: number) {
@@ -96,9 +95,9 @@ export abstract class GamesScreen extends LiveboardScreen {
         return this.games.length >= this.maxLines;
     }
 
-    onlyGameModeAgainst(): boolean {
-        return this.usedGameModes === GameMode.Against;
-    }
+    // onlyGameModeAgainst(): boolean {
+    //     return this.usedGameModes === GameMode.Against;
+    // }
 
     // onlyGameModeTogether(): boolean {
     //     return this.usedGameModes === GameMode.Together;
