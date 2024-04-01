@@ -14,6 +14,9 @@ import { IAlertType } from '../../shared/common/alert';
 import { Tournament } from '../../lib/tournament';
 import { JsonTournament } from '../../lib/tournament/json';
 import { TournamentMapper } from '../../lib/tournament/mapper';
+import { TournamentRuleRepository } from '../../lib/tournament/rule/repository';
+import { JsonTournamentRule } from '../../lib/tournament/rule/json';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-tournament-home-edit',
@@ -22,6 +25,8 @@ import { TournamentMapper } from '../../lib/tournament/mapper';
 })
 export class HomeEditComponent extends TournamentComponent implements OnInit {
 
+  public rules!: Observable<JsonTournamentRule[]>;    
+  
   public form: FormGroup<{
     intro: FormControl<string>, 
     coordinate: FormControl<string|null>
@@ -37,12 +42,13 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
     route: ActivatedRoute,
     router: Router,
     tournamentRepository: TournamentRepository,
-    structureRepository: StructureRepository,
+    structureRepository: StructureRepository,    
     globalEventsManager: GlobalEventsManager,
     modalService: NgbModal,
     favRepository: FavoritesRepository,
     private tournamentMapper: TournamentMapper,
     private myNavigation: MyNavigation,
+    private ruleRepository: TournamentRuleRepository,
   ) {
     super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
 
@@ -58,7 +64,6 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
       coordinate: new FormControl('', {
         nonNullable: false, validators:
           [
-            Validators.required,
             Validators.minLength(this.validations.minlengthcoordinate),
             Validators.maxLength(this.validations.maxlengthcoordinate)
           ]
@@ -74,6 +79,8 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
 
     this.form.controls.intro.setValue(this.tournament.getIntro());
     this.form.controls.coordinate.setValue(this.tournament.getCoordinate() ?? null);
+
+    this.rules = this.ruleRepository.getObjects(this.tournament);
 
     // this.lockerRoomValidator = new LockerRoomValidator(this.tournament.getCompetitors(), this.tournament.getLockerRooms());
     // const firstRoundNumber = this.structure.getFirstRoundNumber();
@@ -125,6 +132,10 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
       complete: () => this.processing = false
     });
     return false;
+  }
+
+  linkToRules(): void {
+    this.router.navigate(['/admin/rules', this.tournament.getId()]);
   }
 
 }

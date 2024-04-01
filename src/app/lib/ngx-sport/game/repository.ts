@@ -22,8 +22,9 @@ export class GameRepository extends APIRepository {
         return 'games' + suffix;
     }
 
-    getUrl(tournament: Tournament, suffix: string): string {
-        return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix(suffix);
+    getUrl(tournament: Tournament, competitionSport: CompetitionSport ): string {
+        const suffix: string = competitionSport.getVariant().getGameMode();
+        return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/competitionSports/' + competitionSport.getId() + '/' +this.getUrlpostfix(suffix);
     }
 
     createObject(jsonGame: JsonAgainstGame | JsonTogetherGame, competitionSport: CompetitionSport, poule: Poule, tournament: Tournament): Observable<Game> {
@@ -34,7 +35,7 @@ export class GameRepository extends APIRepository {
     }
 
     private addAgainst(jsonGame: JsonAgainstGame, competitionSport: CompetitionSport, poule: Poule, tournament: Tournament): Observable<AgainstGame> {
-        const url = this.getUrl(tournament, 'against');
+        const url = this.getUrl(tournament, competitionSport);
         return this.http.post<JsonAgainstGame>(url, jsonGame, this.getCustomOptions(poule)).pipe(
             map((jsonGameRes: JsonAgainstGame) => this.mapper.toNewAgainst(jsonGameRes, poule, competitionSport)),
             catchError((err: HttpErrorResponse) => this.handleError(err))
@@ -42,7 +43,7 @@ export class GameRepository extends APIRepository {
     }
 
     private addTogether(jsonGame: JsonTogetherGame, competitionSport: CompetitionSport, poule: Poule, tournament: Tournament): Observable<Game> {
-        const url = this.getUrl(tournament, 'together');
+        const url = this.getUrl(tournament, competitionSport);
         return this.http.post<JsonTogetherGame>(url, jsonGame, this.getCustomOptions(poule)).pipe(
             map((jsonGameRes: JsonTogetherGame) => this.mapper.toNewTogether(jsonGameRes, poule, competitionSport)),
             catchError((err: HttpErrorResponse) => this.handleError(err))
@@ -57,7 +58,7 @@ export class GameRepository extends APIRepository {
     }
 
     private editAgainst(jsonGame: JsonAgainstGame, game: AgainstGame, poule: Poule, tournament: Tournament): Observable<AgainstGame> {
-        const url = this.getUrl(tournament, 'against') + '/' + game.getId();
+        const url = this.getUrl(tournament, game.getCompetitionSport()) + '/' + game.getId();
         return this.http.put<JsonAgainstGame>(url, jsonGame, this.getCustomOptions(poule)).pipe(
             map((jsonGameRes: JsonAgainstGame) => this.mapper.toExistingAgainst(jsonGameRes, game)),
             catchError((err: HttpErrorResponse) => this.handleError(err))
@@ -65,7 +66,7 @@ export class GameRepository extends APIRepository {
     }
 
     private editTogether(jsonGame: JsonTogetherGame, game: TogetherGame, poule: Poule, tournament: Tournament): Observable<Game> {
-        const url = this.getUrl(tournament, 'together') + '/' + game.getId();
+        const url = this.getUrl(tournament, game.getCompetitionSport()) + '/' + game.getId();
         return this.http.put<JsonTogetherGame>(url, jsonGame, this.getCustomOptions(poule)).pipe(
             map((jsonGameRes: JsonTogetherGame) => this.mapper.toExistingTogether(jsonGameRes, game)),
             catchError((err: HttpErrorResponse) => this.handleError(err))
@@ -80,7 +81,7 @@ export class GameRepository extends APIRepository {
     }
 
     private removeAgainst(game: AgainstGame, poule: Poule, tournament: Tournament): Observable<AgainstGame> {
-        const url = this.getUrl(tournament, 'against') + '/' + game.getId();
+        const url = this.getUrl(tournament, game.getCompetitionSport()) + '/' + game.getId();
         return this.http.delete(url, this.getCustomOptions(poule)).pipe(
             map(() => {
                 const index = poule.getAgainstGames().indexOf(game);
@@ -93,7 +94,7 @@ export class GameRepository extends APIRepository {
     }
 
     private removeTogether(game: TogetherGame, poule: Poule, tournament: Tournament): Observable<AgainstGame> {
-        const url = this.getUrl(tournament, 'together') + '/' + game.getId();
+        const url = this.getUrl(tournament, game.getCompetitionSport()) + '/' + game.getId();
         return this.http.delete(url, this.getCustomOptions(poule)).pipe(
             map(() => {
                 const index = poule.getTogetherGames().indexOf(game);

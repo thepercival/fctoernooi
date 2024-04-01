@@ -51,17 +51,18 @@ export class TournamentComponent {
                         this.globalEventsManager.showFooter.emit(false);
                         return;
                     }
+                    console.log('structureRepository.getObject', this.processing);
                     this.structureRepository.getObject(tournament)
                         .subscribe({
                             next: (structure: Structure) => {
-                                // console.log(structure);
+                                console.log('set structure');
                                 this.structure = structure;
                                 if (callback !== undefined) {
                                     callback();
                                 }
                             },
                             error: (e) => {
-                                // console.log(e);
+                                console.log(e);
                                 this.setAlert(IAlertType.Danger, e); this.processing = false;
                             }
                         });

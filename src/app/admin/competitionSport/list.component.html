@@ -73,6 +73,12 @@
             </tr>
           </tbody>
         </table>
+
+        <div class="d-flex justify-content-center">
+          <button *ngIf="!processing && competitionSports.length > 1" type="button" class="btn btn-outline-secondary"
+            (click)="linkToPlanningConfig()">aantal wed. per deelnemer aanpassen</button>
+        </div>
+        
       </div>
       <app-tournament-create-sportwithfields *ngIf="!processing" [hidden]="!showCreateSportWithFields"
         [smallestNrOfPoulePlaces]="smallestNrOfPoulePlaces" (created)="add($event)"

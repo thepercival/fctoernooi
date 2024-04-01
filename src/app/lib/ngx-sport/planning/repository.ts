@@ -53,18 +53,16 @@ export class PlanningRepository extends APIRepository {
         );
     }
 
-    create(structure: Structure, tournament: Tournament): Observable<void> {
-        // const startRoundNumber = structure.getRoundNumber(startRoundNumberAsValue);
-        // if (startRoundNumber === undefined) {
-        //     throw Error('het rondenummer kan niet gevonden worden');
-        // }
+    create(structure: Structure, tournament: Tournament): Observable<void> {        
         this.removeGames(structure.getRootRounds());
 
-        const sportMap = this.competitionSportMapper.getMap(tournament.getCompetition());
+        const competitionSportMap = this.competitionSportMapper.getMap(tournament.getCompetition());
         const url = this.getUrl(tournament, 1) + '/create';
-        return this.http.post<JsonStructure>(url, undefined, this.getOptions()).pipe(
-            map((jsonStructure: JsonStructure) => {
-                this.structureMapper.planningToObject(jsonStructure, structure, tournament.getCompetition(), sportMap);
+        return this.http.post<JsonStructure | null>(url, undefined, this.getOptions()).pipe(
+            map((jsonStructure: JsonStructure | null) => {
+                if( jsonStructure !== null) {
+                    this.structureMapper.planningToObject(jsonStructure, structure, competitionSportMap);
+                }
             }),
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );

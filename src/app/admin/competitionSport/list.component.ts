@@ -188,4 +188,10 @@ export class CompetitionSportListComponent extends TournamentComponent implement
         }
       });
   }
+
+  linkToPlanningConfig() {
+    this.router.navigate(['/admin/planningconfig', this.tournament.getId(),
+      this.structure.getFirstRoundNumber().getNumber()
+    ]);
+  }
 }

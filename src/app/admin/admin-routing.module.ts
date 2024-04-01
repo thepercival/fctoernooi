@@ -28,6 +28,7 @@ import { LockerRoomsEditComponent } from './lockerrooms/lockerrooms.component';
 import { StructureEditComponent } from './structure/edit.component';
 import { TournamentRegistrationEditComponent } from './registration/registration-edit.component';
 import { HomeEditComponent } from './home/homeedit.component';
+import { TournamentRulesComponent } from './home/rules.component';
 
 const routes: Routes = [
   { path: 'new', component: NewComponent }, // ALL ROLES
@@ -47,6 +48,7 @@ const routes: Routes = [
   { path: 'referees/:id', component: RefereeListComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'referee/:id/:rank', component: RefereeEditComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'referees/:id', component: RefereeListComponent, canActivate: [AuthguardService] }, // ADMIN
+  { path: 'rules/:id', component: TournamentRulesComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'authorizations/:id', component: AuthorizationListComponent, canActivate: [AuthguardService] }, // ROLEADMIN
   { path: 'authorization/:id', component: AuthorizationAddComponent, canActivate: [AuthguardService] }, // ROLEADMIN
   { path: 'sponsors/:id', component: SponsorListComponent, canActivate: [AuthguardService] }, // ADMIN

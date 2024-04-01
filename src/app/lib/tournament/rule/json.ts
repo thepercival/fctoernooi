@@ -1,5 +1,6 @@
 import { JsonIdentifiable } from "ngx-sport";
 
 export interface JsonTournamentRule extends JsonIdentifiable {
-    text: string;
+    text: string; 
+    priority: number;
 }

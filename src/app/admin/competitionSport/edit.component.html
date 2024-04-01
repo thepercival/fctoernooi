@@ -7,9 +7,9 @@
           </app-sport-icon>
           <span> {{competitionSport.getSport().getName()}}</span>
         </h2>
-        <button *ngIf="competition.getSports().length === 1" (click)="linkToSports()"
+        <button (click)="linkToSports()"
           class="mb-2 btn btn-outline-secondary btn-sm">
-          <span>meerdere sporten</span>
+          <span>{{competition.getSports().length > 1 ? 'naar' : 'meerdere'}} sporten</span>
         </button>
       </div>
 

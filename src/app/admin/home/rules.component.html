@@ -1,0 +1,82 @@
+<div class="row justify-content-center g-0">
+  <div class="col-sm-10 col-md-10 col-lg-6">
+    
+    <div class="d-flex justify-content-between mb-1">
+      <h2>
+        toernooi-regels
+      </h2>
+      <div>
+        <button role="button" (click)="linkToHome()" class="btn btn-sm btn-outline-primary ms-1">
+          naar <fa-icon [icon]="['fas', 'home']"></fa-icon> thuispagina
+        </button>
+      </div>
+    </div>
+    <h2 *ngIf="processing" class="text-center">
+      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    </h2>
+    <table *ngIf="!processing && rules" class="table mt-3">
+      <thead>
+        <tr>
+          <th></th>
+          <th *ngIf="rules.length > 1" class="text-center">
+            <fa-icon [icon]="['fas', 'sort']"></fa-icon>
+          </th>
+          <th>omschrijving</th>
+          <th class="text-end">
+            <button type="button" class="btn btn-sm btn-primary" (click)="addRule()"
+              [disabled]="processing">
+              <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let rule of rules; let first = first;">
+          <td>
+            <button type="button" class="btn btn-sm btn-primary" [disabled]="processing"
+              (click)="editRule(rule)">
+              <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+            </button>
+          </td>
+          <td *ngIf="rules.length > 1" class="text-center">
+            <button *ngIf="!first" type="button" class="btn btn-sm btn-outline-secondary"
+              [disabled]="processing" (click)="upgradePriority(rule)">
+              <fa-icon [icon]="['fas', 'level-up-alt']"></fa-icon>
+            </button>
+          </td>
+          <td>
+            <span>{{rule.text}}</span>
+          </td>
+          <td class="text-end">
+            <button type="button" class="btn btn-sm btn-danger" [disabled]="processing"
+              (click)="removeRule(rule);">
+              <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<app-tournament-navbar *ngIf="tournament" [tournament]="tournament"></app-tournament-navbar>
+
+<ng-template #contentInfo let-activeModal>
+  <ul class="list-group">
+    <li class="list-group-item border-info">
+      De scheidsrechter bovenaan de lijst krijgt de eerste (laatste vanaf de tweede ronde) wedstrijd toegekend.
+    </li>
+    <li class="list-group-item border-info">Scheidsrechters kunnen zelf uitslagen invoeren wanneer hun
+      emailadres is ingevoerd
+      en ze ingelogd zijn.</li>
+    <li class="list-group-item border-info">
+      Onder <button type="submit" class="btn btn-secondary"
+        (click)="activeModal.close('linkToPlanningConfig')">plannings-instellingen</button> kun je
+      "deelnemers zijn scheidsrechter " instellen.
+    </li>
+    <li class="list-group-item bg-warning border-info">
+      <span class="fw-bold">Let op: </span>Het aantal scheidsrechters bepaalt onder andere het aantal tegelijk
+      te spelen
+      wedstrijden.
+    </li>
+  </ul>
+</ng-template>

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { JsonGameAmountConfig, VoetbalRange } from 'ngx-sport';
+import { CompetitionSport, JsonCompetitionSport, JsonGameAmountConfig, NameService, Sport, VoetbalRange } from 'ngx-sport';
 
 @Component({
   selector: 'app-tournament-gameamountconfigs-edit',
@@ -15,7 +15,7 @@ export class GameAmountConfigEditComponent implements OnInit {
   @Output() closed = new EventEmitter<void>();
 
   range: number[] = [];
-
+  public nameService = new NameService();
 
   constructor(
     private modalService: NgbModal
@@ -49,6 +49,13 @@ export class GameAmountConfigEditComponent implements OnInit {
     }, (reason) => {
       this.closed.emit();
     });
+  }
+
+  sportIsUsedMultipleTimes(jsonCompetitionSport: JsonCompetitionSport): boolean {
+    return this.gameAmountControls.some((gameAmountControl: GameAmountConfigControl) => {
+      return gameAmountControl.json.competitionSport.sport.name === jsonCompetitionSport.sport.name
+        && gameAmountControl.json.competitionSport.id !== jsonCompetitionSport.id;
+    })
   }
 }
 

@@ -202,7 +202,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
         const json: JsonGame = {
             id: 0,
             batchNr: 0,
-            competitionSport: this.competitionSportMapper.toJson(competitionSport),
+            competitionSportId: competitionSport.getId(),
             field: this.getDefaultJsonField(),
             referee: this.getDefaultJsonReferee(),
             state: GameState.Created,

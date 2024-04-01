@@ -43,6 +43,7 @@ export class StructureViewComponent extends TournamentComponent implements OnIni
 
   ngOnInit() {
     super.myNgOnInit(() => {
+      
       this.updateFavoriteCategories(this.structure);
       this.structureNameService = new StructureNameService(new StartLocationMap(this.tournament.getCompetitors()));
       this.favorites = this.favRepository.getObject(this.tournament, this.structure.getCategories());

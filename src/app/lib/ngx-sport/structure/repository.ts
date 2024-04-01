@@ -54,14 +54,17 @@ export class StructureRepository extends APIRepository {
         );
     }
 
-    getPlanningTotals(jsonStructure: JsonStructure, tournament: Tournament): Observable<JsonPlanningTotals> {
+    getPlanningTotals(jsonStructure: JsonStructure, tournament: Tournament): Observable<JsonPlanningTotals|undefined> {
         const options = this.getOptions();
         options.headers = options.headers.append('X-Ignore-Cache-Reset', 'tournamentAndStructure');
-        return this.http.put<JsonPlanningTotals>(this.getUrl(tournament) + '/planningtotals', jsonStructure, this.getOptions()).pipe(
-            map((json: JsonPlanningTotals) => {
-                json.start = new Date(json.start);
-                json.end = new Date(json.end);
-                return json;
+        return this.http.put<JsonPlanningTotals|null>(this.getUrl(tournament) + '/planningtotals', jsonStructure, this.getOptions()).pipe(
+            map((json: JsonPlanningTotals|null) => {
+                if( json !== null ) {
+                    json.start = new Date(json.start);
+                    json.end = new Date(json.end);
+                    return json;
+                }
+                return undefined;
             }),
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );

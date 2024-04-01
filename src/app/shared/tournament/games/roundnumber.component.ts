@@ -43,7 +43,7 @@ import { InfoModalComponent } from '../infomodal/infomodal.component';
 import { IAlert, IAlertType } from '../../common/alert';
 import { DateFormatter } from '../../../lib/dateFormatter';
 import { of, Subscription, timer } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, switchMap, takeWhile } from 'rxjs/operators';
 import { AppErrorHandler } from '../../../lib/repository';
 import { Recess } from '../../../lib/recess';
 import { TranslateScoreService } from '../../../lib/translate/score';
@@ -89,7 +89,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   public showRefereeColumn = false;
   public showSportColumn = false;
   public nrOfColumns = 0;
-  private refreshTimer: Subscription | undefined;
+  private refreshProgressTimer: Subscription | undefined;
+  private refreshGetPlanningTimer: Subscription | undefined;
   private appErrorHandler: AppErrorHandler;
   public progressPerc = 0;
 
@@ -129,8 +130,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     this.showStartColumn = this.planningConfig.getEnableTime() || this.optionalGameColumns.get(OptionalGameColumn.Start) === true;
     this.showRefereeColumn = this.planningConfig.getSelfReferee() !== SelfReferee.Disabled || this.optionalGameColumns.get(OptionalGameColumn.Referee) === true;
     const nrOfColumnsForPlacesAndScores = this.hasOnlyGameModeAgainst ? 3 : 1;
-    this.nrOfColumns = 4 + (this.showRefereeColumn ? 1 : 0 ) + (this.showStartColumn ? 1 : 0) + nrOfColumnsForPlacesAndScores;
     this.showSportColumn = this.tournament.getCompetition().hasMultipleSports();
+    this.nrOfColumns = 4 + (this.showSportColumn ? 1 : 0) + (this.showRefereeColumn ? 1 : 0 ) + (this.showStartColumn ? 1 : 0) + nrOfColumnsForPlacesAndScores;
     
     if (this.gameDatas.length === 0) {
       this.showProgress()
@@ -515,10 +516,10 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   /////////////////  NO PLANNING ///////////////////////////
 
   private showProgress() {
-    this.refreshTimer = timer(0, 2000) // repeats every 2 seconds
+    this.refreshProgressTimer = timer(0, 2000) // repeats every 2 seconds
       .pipe(
         switchMap((value: number) => {
-          if (!this.validTimeValue(value)) {
+          if (!this.getTimeInterval(value)) {
             return of();
           }
           return this.planningRepository.progress(this.roundNumber, this.tournament).pipe();
@@ -535,17 +536,37 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
           }
           this.progressPerc = progressPerc;
           if (progressPerc === 100) {
-            this.stopShowProgress();
-            this.planningRepository.get(this.roundNumber, this.tournament)
-              .subscribe({
-                next: () => {
+            this.stopRefreshProgressTimer();
+            console.log('stopRefreshProgressTimer');
+            this.refreshGetPlanningTimer = timer(0, 2000) // repeats every 2 seconds
+              .pipe(
+                switchMap((value: number) => {
+                  if (!this.getTimeInterval(value)) {
+                    return of();
+                  }
+                  return this.planningRepository.get(this.roundNumber, this.tournament).pipe();
+                }),
+                catchError(err => this.appErrorHandler.handleError(err))
+              ).subscribe({
+                next: (roundNumber: RoundNumber | undefined) => {
+                  if (roundNumber === undefined ) {
+                    return;
+                  }
+                  const games = (new GameGetter()).getGames(GameOrder.ByDate, roundNumber);
+                  if (games.length === 0) {
+                    return;
+                  }
+
+                  console.log('set progressPerc to 0');
+                  console.log('stopRefreshProgressTimer');
                   this.progressPerc = 0;
                   this.loadGameData();
+                  this.stopRefreshGetPlanningTimer();
                 },
                 error: (e) => {
                   this.setAlert(IAlertType.Danger, e);
                 }
-              });
+              })
           }
         },
         error: (e) => {          
@@ -574,7 +595,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     return competitor ? this.competitorRepository.getLogoUrl(competitor, 20) : '';
   } 
 
-  validTimeValue(count: number): boolean {
+  getTimeInterval(count: number): boolean {
     return count <= 5 || (count % 10) === 0;
   }
 
@@ -583,15 +604,21 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   }
 
   ngOnDestroy() {
-    this.stopShowProgress();
+    this.stopRefreshGetPlanningTimer();
+    this.stopRefreshProgressTimer();
   }
 
-  stopShowProgress() {
-    if (this.refreshTimer !== undefined) {
-      this.refreshTimer.unsubscribe();
+  stopRefreshProgressTimer() {
+    if (this.refreshProgressTimer !== undefined) {
+      this.refreshProgressTimer.unsubscribe();
     }
   }
 
+  stopRefreshGetPlanningTimer() {
+    if (this.refreshGetPlanningTimer !== undefined) {
+      this.refreshGetPlanningTimer.unsubscribe();
+    }
+  }
 
 }
 

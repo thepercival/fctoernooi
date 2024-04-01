@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { Router } from '@angular/router';
 import { APIRepository } from '../../repository';
@@ -12,6 +12,9 @@ import { JsonTournamentRule } from './json';
     providedIn: 'root'
 })
 export class TournamentRuleRepository extends APIRepository {
+
+    static readonly MIN_LENGTH_DESCRIPTION = 5;
+    static readonly MAX_LENGTH_DESCRIPTION = 80;
 
     constructor(
         private http: HttpClient,
@@ -31,8 +34,13 @@ export class TournamentRuleRepository extends APIRepository {
         )
     }
 
-    createObject(jsonRule: JsonTournamentRule, tournament: Tournament): Observable<JsonTournamentRule> {
-        return this.http.post<JsonTournamentRule>(this.getUrl(tournament), jsonRule, this.getOptions()).pipe(
+    createObject(text: string, tournament: Tournament): Observable<JsonTournamentRule> {
+        const ruleToCreate = {
+            id: 0,
+            text,
+            order: 0
+        };
+        return this.http.post<JsonTournamentRule>(this.getUrl(tournament), ruleToCreate, this.getOptions()).pipe(
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
@@ -40,6 +48,19 @@ export class TournamentRuleRepository extends APIRepository {
     editObject(jsonRule: JsonTournamentRule, tournament: Tournament): Observable<JsonTournamentRule> {
         const url = this.getUrl(tournament, jsonRule.id);
         return this.http.put<JsonTournamentRule>(url, jsonRule, this.getOptions()).pipe(
+            catchError((err: HttpErrorResponse) => this.handleError(err))
+        );
+    }
+
+    upgradeObject(ruleToUpgrade: JsonTournamentRule, ruleToDowngrade: JsonTournamentRule | undefined, tournament: Tournament): Observable<void> {
+        const url = this.getUrl(tournament) + '/' + ruleToUpgrade.id + '/priorityup';
+        return this.http.post(url, undefined, this.getOptions()).pipe(
+            map(() => {
+                ruleToUpgrade.priority--;
+                if (ruleToDowngrade) {
+                    ruleToDowngrade.priority++;
+                }
+            }),
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }

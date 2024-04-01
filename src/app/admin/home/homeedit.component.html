@@ -24,6 +24,28 @@
         </div>
 
         <div class="row mb-3">
+          <div class="col-3">    
+            <label for="rules" class="col-form-label">regels</label>
+          </div>
+          <div class="col-7">
+            <!-- rules -->
+            <ul class="list-group">
+              <li *ngFor=" let rule of rules | async"
+                class="list-group-item bg-white text-dark text-start text-nowrap overflow-hidden">
+                <span [innerHTML]="rule.text"></span>
+              </li>
+            </ul>
+          </div>
+          <div class="col-2 ps-0">
+            <!-- button -->
+            <button (click)="linkToRules()" type="button" class="btn btn-sm btn-outline-primary">
+              <fa-icon class="d-xs-inline d-sm-none" [icon]="[ 'fas', 'pencil-alt'] "></fa-icon>
+              <span class="d-none d-sm-inline">bewerken</span>
+            </button>
+          </div>       
+        </div>
+                
+        <div class="row mb-3">
           <div class="col-3">
             <label for="coordinate" class="col-form-label">gps-locatie</label>
           </div>
