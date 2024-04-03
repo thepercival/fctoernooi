@@ -12,10 +12,9 @@ export class LiveboardSponsorsComponent implements OnChanges {
     @Input() sponsors: Sponsor[] = [];
     nrOfColumns: number = 0;
     sponsorRows: Sponsor[][] = [];
-    viewHeight: number;
-
+    
     constructor(private sponsorRepository: SponsorRepository) {
-        this.viewHeight = 90;
+        
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -49,6 +48,6 @@ export class LiveboardSponsorsComponent implements OnChanges {
     }
 
     getSponsorLogoUrl(sponsor: Sponsor): string {
-        return this.sponsorRepository.getLogoUrl(sponsor);
+        return this.sponsorRepository.getLogoUrl(sponsor, 200);
     }
 }

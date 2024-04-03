@@ -11,7 +11,7 @@ export interface JsonTournament extends JsonIdentifiable {
     competition: JsonCompetition;
     intro: string;
     logoExtension: string|undefined;
-    coordinate: string | undefined;
+    location: string | undefined;
     public: boolean;
     startEditMode: StartEditMode;
     users: JsonTournamentUser[];

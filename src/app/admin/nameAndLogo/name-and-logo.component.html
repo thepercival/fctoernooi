@@ -1,0 +1,67 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-sm-10 col-md-8 col-lg-6">
+      
+      <h2>
+        naam & logo
+      </h2>
+      <h2 *ngIf="processing" class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
+      
+      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
+        <div class="row mb-3">
+          <div class="col-3">
+            <label for="name" class="col-form-label">naam</label>
+          </div>
+          <div class="col-9">
+            <input class="form-control"
+              [ngClass]="{ 'is-invalid': typedForm.controls.name.invalid, 'is-valid': typedForm.controls.name.valid }" type="text"
+              formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
+          </div>
+        </div>       
+        <div *ngIf="logoInputType === LogoInputTypeByUpload" class="row mb-3">
+          <div class="col-3">
+            <label for="logouploadother" (click)="openInfoModal(contentInfo)" class="pointer">logo
+              <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
+            </label>
+          </div>
+          <div class="col-9">
+            <input type="file" accept='image/*' class="form-control" (change)="onFileChange($event)" #fileInput>
+          </div>
+        </div>       
+        <div class="row mb-3">
+          <div class="col-3">
+            <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary">terug</button>
+          </div>
+          <div class="col-9">
+            <button [disabled]="typedForm.invalid" type="submit" class="btn btn-primary">
+              <span>wijzigen</span>
+            </button>
+          </div>
+        </div>
+        <div *ngIf="base64Logo || typedForm.controls.logoExtension.value" class="row">
+          <div class="col-3">
+            <label for="log">preview</label>
+            <br/>
+            <br />
+            <button class="btn btn-sm btn-outline-danger" (click)="removeFileStream()">
+              <span>leeg maken</span>
+            </button>
+          </div>
+          <div class="col-9">
+            <img *ngIf="base64Logo" [src]="base64Logo" width="150px;" height="150px;">
+            <img *ngIf="!base64Logo && typedForm.controls.logoExtension.value" [src]="getLogoUrl(tournament)" width="150px;"
+              height="150px;">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<app-tournament-navbar *ngIf="tournament" [tournament]="tournament"></app-tournament-navbar>
+
+<ng-template #contentInfo>
+  {{getLogoUploadDescription()}}
+</ng-template>

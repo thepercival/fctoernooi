@@ -29,8 +29,8 @@ export class TournamentMapper {
         if (json.intro) {
             tournament.setIntro(json.intro);
         }
-        if (json.coordinate) {
-            tournament.setCoordinate(json.coordinate);
+        if (json.location) {
+            tournament.setLocation(json.location);
         }
         if (json.users) {
             json.users.map(jsonUser => this.tournamentUserMapper.toObject(jsonUser, tournament));
@@ -49,7 +49,7 @@ export class TournamentMapper {
             id: tournament.getId(),
             intro: tournament.getIntro(),
             logoExtension: tournament.getLogoExtension(),
-            coordinate: tournament.getCoordinate(),
+            location: tournament.getLocation(),
             competition: this.competitionMapper.toJson(tournament.getCompetition()),
             users: tournament.getUsers().map(tournamentUser => this.tournamentUserMapper.toJson(tournamentUser)),
             competitors: tournament.getCompetitors().map(competitor => this.competitorMapper.toJson(competitor)),

@@ -77,13 +77,6 @@ export class SponsorRepository extends APIRepository {
             return sponsor.hasLogoExtension();
         });
     } 
-
-    protected getUploadOptions() {
-        return {
-            headers: super.getHeaders().delete('Content-Type'),
-            params: new HttpParams()
-        };
-    }
 }
 
 

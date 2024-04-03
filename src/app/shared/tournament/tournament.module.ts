@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt, faMedal, faSpinner, faGrip,
-  faLevelUpAlt, faMinus, faPlus, faDoorClosed, faBaseballBall, faBasketballBall, faChess, faFutbol, faGamepad, faHockeyPuck, faTableTennis, faVolleyballBall, faStar, faEye, faChevronRight, faUserCircle, faHome, faUserPlus
+  faLevelUpAlt, faMinus, faPlus, faDoorClosed, faBaseballBall, faBasketballBall, faChess, faFutbol, faGamepad, faHockeyPuck, faTableTennis, faVolleyballBall, faStar, faEye, faChevronRight, faUserCircle, faHome, faUserPlus, faLocationDot
 } from '@fortawesome/free-solid-svg-icons';
 import { RoundNumberPlanningComponent } from './games/roundnumber.component';
 import { PouleRankingModalComponent } from './poulerankingmodal/rankingmodal.component';
@@ -102,7 +102,7 @@ import { CategoryModalComponent } from './structure/categorymodal/categorymodal.
 export class TournamentModule {
   constructor(library: FaIconLibrary, modalConfig: NgbModalConfig, alertConfig: NgbAlertConfig) {
     library.addIcons(faSync, faCogs, faEye, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt,
-      faMedal, faSpinner, faLevelUpAlt, faMinus, faDoorClosed, faPlus, faGrip, faChevronRight,
+      faMedal, faSpinner, faLevelUpAlt, faMinus, faDoorClosed, faPlus, faGrip, faChevronRight, faLocationDot,
       facStructure, facReferee, facScoreboard, facSoccerField, faStar, faSpinner, faUserCircle, faHome, faUserPlus);
     library.addIcons(
       facDarts, facTennis, facBadminton, facHockey, facSquash, facKorfball, facRugby, // inline

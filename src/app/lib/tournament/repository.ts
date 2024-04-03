@@ -68,6 +68,19 @@ export class TournamentRepository extends APIRepository {
         );
     }
 
+    uploadImage(input: FormData, tournament: Tournament): Observable<void> {
+        const url = this.getUrl(tournament.getId()) + '/upload';
+        return this.http.post<JsonTournament>(url, input, this.getUploadOptions()).pipe(
+            map((res: JsonTournament) => this.mapper.toObject(res)),
+            catchError((err: HttpErrorResponse) => this.handleError(err))
+        );
+    }
+
+    getLogoUrl(tournament: Tournament, height: number = 0): string {
+        const suffix = (height > 0 && tournament.getLogoExtension() !== 'svg') ? '_h_' + height : '';
+        return this.apiurl + 'images/' + this.getUrlpostfix() + '/' + tournament.getId() + suffix + '.' + tournament.getLogoExtension();
+    }
+
     removeObject(tournament: Tournament): Observable<boolean> {
         const url = this.getUrl(tournament.getId());
         return this.http.delete(url, { headers: super.getHeaders() }).pipe(

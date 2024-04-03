@@ -12,7 +12,7 @@ import { StartEditMode } from './tournament/startEditMode';
 export class Tournament extends Identifiable {
     protected id: number = 0;
     protected intro: string = '';
-    protected coordinate: string|undefined;
+    protected location: string|undefined;
     protected logoExtension: string | undefined;
     protected users: TournamentUser[] = [];
     protected sponsors: Sponsor[] = [];
@@ -85,16 +85,16 @@ export class Tournament extends Identifiable {
         this.intro = intro;
     }
 
-    getCoordinate(): string | undefined {
-        return this.coordinate;
+    getLocation(): string | undefined {
+        return this.location;
     }
 
-    setCoordinate(coordinate: string | undefined): void {
-        this.coordinate = coordinate;
+    setLocation(location: string | undefined): void {
+        this.location = location;
     }
 
-    hasCoordinate(): boolean {
-        return this.coordinate !== undefined ? this.coordinate.length > 0 : false;
+    hasLocation(): boolean {
+        return this.location !== undefined ? this.location.length > 0 : false;
     }
 
     getLogoExtension(): string | undefined {

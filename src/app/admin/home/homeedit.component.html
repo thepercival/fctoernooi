@@ -47,12 +47,14 @@
                 
         <div class="row mb-3">
           <div class="col-3">
-            <label for="coordinate" class="col-form-label">gps-locatie</label>
+            <label for="location" (click)="openInfoModal(contentInfoLocation)" class="col-form-label pointer">locatie
+              <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
+            </label>
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.coordinate.invalid, 'is-valid': form.controls.coordinate.valid }"
-              type="text" formControlName="coordinate" placeholder="max. {{validations.maxlengthcoordinate}} karakters">
+              [ngClass]="{ 'is-invalid': form.controls.location.invalid, 'is-valid': form.controls.location.valid }"
+              type="text" formControlName="location" placeholder="lat,lng of adresomschrijving">
           </div>
         </div>
 
@@ -74,3 +76,32 @@
 
 <app-tournament-navbar [public]="false" [currentScreen]="HomeScreen" *ngIf="tournament" [tournament]="tournament">
 </app-tournament-navbar>
+
+<ng-template #contentInfoLocation>
+  <div class="text-center">
+    <p class="lead">vul een coordinaat (long/lat) of een adresomschrijving in</p>
+    <hr />
+    <div class="container-fluid text-start">
+      <div class="row">
+        <div class="col-5">
+          coordinaat (lng/lat)
+        </div>
+        <div class="col-7">
+          <input class="form-control" type="text" [disabled]="true" [readonly]="true" value="54.3123,6.3123">
+        </div>
+      </div>      
+      <div class="row my-3">
+        <div class="col-5"></div>
+        <div class="col-7"><h5>of</h5></div>
+      </div>
+      <div class="row">
+        <div class="col-5">
+          adres omschrijving
+        </div>
+        <div class="col-7">
+          <input class="form-control" type="text" [disabled]="true" [readonly]="true" value="Kerkstraat 45, Zwolle">
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -89,7 +89,7 @@ export class TournamentPropertiesComponent implements OnInit {
       startEditMode: StartEditMode.EditLongTerm, /* @TODO CDK */
       intro: '',
       logoExtension: undefined,
-      coordinate: undefined,
+      location: undefined,
       competition: {
         id: 0,
         league: {

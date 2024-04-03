@@ -30,37 +30,54 @@
       </h2>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
-      <div *ngIf="!processing && tournament" >
-        <div class="d-flex justify-content-center">
-          <div class="mt-3">
-            <span>{{tournament.getIntro()}}</span>
-          </div>
+      <div *ngIf="!processing && tournament"class="text-start">
+        <h3 class="mb-1 mt-4 text-start">welkom</h3>
+        <div>
+          <span>{{tournament.getIntro()}}</span>
         </div>
-        <hr/>
+        
+        <h3 *ngIf="rules | async" class="mb-1 mt-4">huisregels</h3>
         <ul class="list-group">
-          <li *ngFor=" let rule of rules | async" class="list-group-item bg-white border-success text-dark text-start">
+          <li *ngFor=" let rule of rules | async" class="list-group-item bg-white text-dark text-start">
             <span [innerHTML]="rule.text"></span>
           </li>
         </ul>
 
-        <ul class="list-group mt-3">
-          <li class="list-group-item bg-white border-success text-dark text-start">
-            <span>locatie</span>
-            <span>link naar google maps</span>
-          </li>
-        </ul>
+        <h3 *ngIf="tournament.getLocation()" class="mb-0 mt-4">locatie</h3>
+        <div *ngIf="tournament.getLocation()">        
+          <span *ngIf="locationIsCoordinate(tournament.getLocation())">
+            bekijk op google maps
+          </span>
+          <span *ngIf="!locationIsCoordinate(tournament.getLocation())">
+            {{tournament.getLocation()}}
+          </span>
+          <a target="_blank" href="{{getMapsUrl(tournament.getLocation())}}" type="button" class="btn btn-sm btn-secondary ms-1" rel="noopener">
+            <fa-icon [icon]="['fas', 'location-dot']"></fa-icon>
+          </a>
+        </div>        
 
-        <div class="card mt-3">
-          <div class="card-header">
-            <h5 class="mb-0">sponsors</h5>
-          </div>
-          <div card-body>
-            <div class="d-flex flex-wrap gap-1 gap-sm-2">
-              <div *ngFor=" let sponsor of tournament.getSponsors()" class="mx-auto">
-                {{sponsor.getName()}}
-              </div>
+        <h3 class="mb-0 mt-3">sponsors</h3>
+        <div class="d-flex flex-wrap gap-1 gap-sm-3">
+          <div *ngFor="let sponsor of tournament.getSponsors()" class="card h-100">
+            <div *ngIf="sponsor" class="card-header">
+              <span class="">{{sponsor.getName()}}</span>
             </div>
-          </div>
+            <div class="card-body p-1 text-center sponsor-card-body">
+              <img *ngIf="sponsor && sponsor.getLogoExtension()" src="{{getSponsorLogoUrl(sponsor)}}" class="sponsor-img"
+                alt="img">
+            </div>
+            <div *ngIf="sponsor && sponsor.getUrl()" class="card-footer">
+              <span class="text-break">{{sponsor.getUrl()}}</span>
+            </div>
+          </div>        
+        </div>
+
+        <!-- <div *ngIf="!processing && tournament.getSponsors().length > 0" class="d-flex flex-wrap gap-3">
+          <app-tournament-lockerroom *ngFor="let lockerRoom of tournament.getLockerRooms()" [lockerRoom]="lockerRoom"
+            [validator]="validator" [editable]="true" class="mx-auto" (remove)="remove($event)"
+            (changeName)="changeName($event)" (changeCompetitors)="changeCompetitors($event)">
+          </app-tournament-lockerroom>
+        </div> -->
       </div>
     </div>
   </div>

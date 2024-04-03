@@ -96,6 +96,7 @@ import { TextEditorModalComponent } from './textEditor/texteditormodal.component
 import { CopiedModalComponent } from './home/copiedmodal.component';
 import { HomeEditComponent } from './home/homeedit.component';
 import { TournamentRulesComponent } from './home/rules.component';
+import { TournamentNameAndLogoComponent } from './nameAndLogo/name-and-logo.component';
 
 @NgModule({
   imports: [
@@ -163,7 +164,8 @@ import { TournamentRulesComponent } from './home/rules.component';
     TournamentPropertiesComponent,
     TournamentRegistrationEditComponent,
     TournamentRegistrationProcessModalComponent,
-    TournamentRulesComponent
+    TournamentRulesComponent,
+    TournamentNameAndLogoComponent
   ],
   providers: [
     CompetitionSportEditor,

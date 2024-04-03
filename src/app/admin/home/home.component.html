@@ -61,6 +61,17 @@
       <hr>
       <!-- option block start, ranking, liveScoreboard, changeName -->
       <div *ngIf="!processing && structure" class="d-flex flex-wrap gap-3 justify-content-center mt-3">
+        <!-- change name & logo `-->
+        <div *ngIf="isAdmin()" class="card card-sub pointer" [routerLink]="['/admin/nameandlogo', tournament.getId()]">
+          <div class="card-body text-center p-1 pt-2">
+            <h5 class="card-title">
+              <span class="fw-bold">A</span>
+            </h5>
+            <div>naam</div>
+            <div>& logo</div>
+          </div>
+        </div>
+
         <!-- start & pauzes -->
         <div class="card card-sub pointer" [routerLink]="['/admin/startandrecesses', tournament.getId()]">
           <div class="card-body text-center p-1 pt-2">
@@ -88,16 +99,6 @@
             </h5>
             <div>live</div>
             <div class="text-nowrap">scorebord</div>
-          </div>
-        </div>
-        <!-- change name -->
-        <div *ngIf="allPoulesHaveGames && isAdmin()" class="card card-sub pointer" (click)="openModalName()">
-          <div class="card-body text-center p-1 pt-2">
-            <h5 class="card-title">
-              <span class="fw-bold">A</span>
-            </h5>
-            <div>naam</div>
-            <div>& logo</div>
           </div>
         </div>
 

@@ -79,10 +79,11 @@ export class TournamentRulesComponent extends TournamentComponent implements OnI
   }
 
   editRule(rule: JsonTournamentRule) {
-    const modal = this.getTextModal(false);
+    const modal = this.getTextModal(true);
     const initialText = rule.text;
     modal.componentInstance.initialName = rule.text;
     modal.result.then((text: string) => {
+      rule.text = text;
       this.ruleRepository.editObject(rule, this.tournament)
         .subscribe({
           next: (updatedRule: JsonTournamentRule) => {

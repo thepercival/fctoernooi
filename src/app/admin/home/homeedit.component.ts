@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -17,6 +17,7 @@ import { TournamentMapper } from '../../lib/tournament/mapper';
 import { TournamentRuleRepository } from '../../lib/tournament/rule/repository';
 import { JsonTournamentRule } from '../../lib/tournament/rule/json';
 import { Observable } from 'rxjs';
+import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 
 @Component({
   selector: 'app-tournament-home-edit',
@@ -29,13 +30,13 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
   
   public form: FormGroup<{
     intro: FormControl<string>, 
-    coordinate: FormControl<string|null>
+    location: FormControl<string|null>
   }>;
   validations: HomeValidations = {
     minlengthintro: 10,
     maxlengthintro: 200,
-    minlengthcoordinate: 20,
-    maxlengthcoordinate: 30,
+    minlengthlocation: 16,
+    maxlengthlocation: 80,
   };
 
   constructor(
@@ -61,11 +62,11 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
             Validators.maxLength(this.validations.maxlengthintro)
           ]
       }),
-      coordinate: new FormControl('', {
+      location: new FormControl('', {
         nonNullable: false, validators:
           [
-            Validators.minLength(this.validations.minlengthcoordinate),
-            Validators.maxLength(this.validations.maxlengthcoordinate)
+            Validators.minLength(this.validations.minlengthlocation),
+            Validators.maxLength(this.validations.maxlengthlocation)
           ]
       }),      
     });
@@ -78,7 +79,7 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
   postNgOnInit() {
 
     this.form.controls.intro.setValue(this.tournament.getIntro());
-    this.form.controls.coordinate.setValue(this.tournament.getCoordinate() ?? null);
+    this.form.controls.location.setValue(this.tournament.getLocation() ?? null);
 
     this.rules = this.ruleRepository.getObjects(this.tournament);
 
@@ -112,7 +113,7 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
   formToJson(): JsonTournament {
     const json = this.tournamentMapper.toJson(this.tournament);
     json.intro = this.form.controls.intro.value; 
-    json.coordinate = this.form.controls.coordinate.value ?? undefined;    
+    json.location = this.form.controls.location.value ?? undefined;    
     return json;
   }
 
@@ -120,7 +121,9 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
     this.processing = true;
     this.setAlert(IAlertType.Info, 'de thuispagina wordt opgeslagen');
 
-    this.tournamentRepository.editObject(this.formToJson()).subscribe({
+    const json = this.formToJson();
+    console.log('json', json);
+    this.tournamentRepository.editObject(json).subscribe({
       next: (tournament: Tournament) => {
         this.tournament = tournament;
         this.navigateBack(); 
@@ -138,11 +141,17 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
     this.router.navigate(['/admin/rules', this.tournament.getId()]);
   }
 
+  openInfoModal(modalContent: TemplateRef<any>) {
+    const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
+    activeModal.componentInstance.header = 'locatie';
+    activeModal.componentInstance.modalContent = modalContent;
+  }
+
 }
 
 export interface HomeValidations {
   minlengthintro: number;
   maxlengthintro: number;
-  minlengthcoordinate: number;
-  maxlengthcoordinate: number;
+  minlengthlocation: number;
+  maxlengthlocation: number;
 }

@@ -14,6 +14,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentRuleRepository } from '../../lib/tournament/rule/repository';
 import { JsonTournamentRule } from '../../lib/tournament/rule/json';
 import { Observable } from 'rxjs';
+import { SponsorRepository } from '../../lib/sponsor/repository';
+import { Sponsor } from '../../lib/sponsor';
 
 @Component({
     selector: 'app-tournament-home-view',
@@ -31,6 +33,7 @@ export class HomeViewComponent extends TournamentComponent implements OnInit {
         globalEventsManager: GlobalEventsManager,
         modalService: NgbModal,
         favRepository: FavoritesRepository,
+        private sponsorRepository: SponsorRepository,
         private rulesRepository: TournamentRuleRepository,
         protected tournamentMapper: TournamentMapper,
         protected authService: AuthService
@@ -50,5 +53,28 @@ export class HomeViewComponent extends TournamentComponent implements OnInit {
 
     isAdmin(): boolean {
         return this.hasRole(this.authService, Role.Admin);
+    }
+
+    locationIsCoordinate(location: string|undefined): boolean {
+        if (location === undefined) {
+            return false;
+        }
+        const parts = location.split(',')
+        return parts.length === 2 && parts.every((part: string) => !isNaN(+part) );
+    }
+
+    getMapsUrl(location: string|undefined): string {
+
+        if (location === undefined ) {
+            return '#';
+        }
+        if (this.locationIsCoordinate(location) ) {
+            return 'https://www.google.com/maps/place/' + location;
+        }
+        return 'https://maps.google.com/?q=' + location;
+    }
+
+    getSponsorLogoUrl(sponsor: Sponsor): string {
+        return this.sponsorRepository.getLogoUrl(sponsor, 200);
     }
 }

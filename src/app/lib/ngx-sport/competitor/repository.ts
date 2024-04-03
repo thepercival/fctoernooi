@@ -153,13 +153,6 @@ export class CompetitorRepository extends APIRepository {
         }
         return (competitor.getLogoExtension()?.length ?? 0) > 0;
     }
-
-    protected getUploadOptions() {
-        return {
-            headers: super.getHeaders().delete('Content-Type'),
-            params: new HttpParams()
-        };
-    }
 }
 
 

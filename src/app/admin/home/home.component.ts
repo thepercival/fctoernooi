@@ -1,8 +1,7 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { NgbDateStruct, NgbModal, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
-import { League, PlanningEditMode, RoundNumber } from 'ngx-sport';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PlanningEditMode, RoundNumber } from 'ngx-sport';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { CSSService } from '../../shared/common/cssservice';
@@ -12,7 +11,6 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { TranslateFieldService } from '../../lib/translate/field';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
-import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
 import { LockerRoomValidator } from '../../lib/lockerroom/validator';
 import { CompetitionSportRouter } from '../../shared/tournament/competitionSport.router';
 import { ExportModalComponent } from './exportmodal.component';
@@ -282,20 +280,6 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
         }, (reason) => { });
     }
 
-    openModalName() {
-        const activeModal = this.modalService.open(NameModalComponent);
-        activeModal.componentInstance.header = 'toernooinaam';
-        activeModal.componentInstance.range = { min: League.MIN_LENGTH_NAME, max: League.MAX_LENGTH_NAME };
-        activeModal.componentInstance.initialName = this.competition.getLeague().getName();
-        activeModal.componentInstance.labelName = this.competition.getLeague().getName();
-        activeModal.componentInstance.buttonName = 'wijzigen';
-
-        activeModal.result.then((result) => {
-            this.saveName(result);
-        }, (reason) => {
-        });
-    }
-
     openModalCopy(newStartForCopyAsTime?: string) {
         this.processing = true;
         const newStartDate = this.calculateNewStartDate(newStartForCopyAsTime);        
@@ -416,27 +400,6 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
                 },
                 error: (e) => {
                     this.setAlert(IAlertType.Danger, 'het delen kon niet worden gewijzigd');
-                    this.processing = false;
-                },
-                complete: () => this.processing = false
-            });
-    }
-
-    saveName(newName: string) {
-        this.setAlert(IAlertType.Info, 'de naam wordt opgeslagen');
-
-        this.processing = true;
-        const json = this.tournamentMapper.toJson(this.tournament);
-        json.competition.league.name = newName;
-        this.tournamentRepository.editObject(json)
-            .subscribe({
-                next: (tournament: Tournament) => {
-                    this.tournament = tournament;
-                    // this.router.navigate(['/admin', newTournamentId]);
-                    this.setAlert(IAlertType.Success, 'de naam is opgeslagen');
-                },
-                error: (e) => {
-                    this.setAlert(IAlertType.Danger, 'de naam kon niet worden opgeslagen');
                     this.processing = false;
                 },
                 complete: () => this.processing = false

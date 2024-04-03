@@ -52,6 +52,13 @@ export class APIRepository {
         };
     }
 
+    protected getUploadOptions() {
+        return {
+            headers: this.getHeaders().delete('Content-Type'),
+            params: new HttpParams()
+        };
+    }
+
     protected handleError(error: HttpErrorResponse | Error): Observable<any> {
         return this.appErrorHandler.handleError(error);
     }
