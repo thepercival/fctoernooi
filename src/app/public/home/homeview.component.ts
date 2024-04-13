@@ -16,6 +16,7 @@ import { JsonTournamentRule } from '../../lib/tournament/rule/json';
 import { Observable } from 'rxjs';
 import { SponsorRepository } from '../../lib/sponsor/repository';
 import { Sponsor } from '../../lib/sponsor';
+import { IAlertType } from '../../shared/common/alert';
 
 @Component({
     selector: 'app-tournament-home-view',
@@ -23,7 +24,7 @@ import { Sponsor } from '../../lib/sponsor';
     styleUrls: ['./homeview.component.scss']
 })
 export class HomeViewComponent extends TournamentComponent implements OnInit {
-    public rules!: Observable<JsonTournamentRule[]>;    
+    public rules: JsonTournamentRule[] = [];
 
     constructor(
         route: ActivatedRoute,
@@ -44,8 +45,17 @@ export class HomeViewComponent extends TournamentComponent implements OnInit {
     ngOnInit() {
         super.myNgOnInit(() => {
            
-            this.rules = this.rulesRepository.getObjects(this.tournament);
-            this.processing = false;
+            this.rulesRepository.getObjects(this.tournament)
+                .subscribe({
+                    next: (rules: JsonTournamentRule[]) => {
+                        this.rules = rules
+
+                        this.processing = false;
+                    },
+                    error: (e) => {
+                        this.setAlert(IAlertType.Danger, e); this.processing = false;
+                    }
+                });
         });
     }
 

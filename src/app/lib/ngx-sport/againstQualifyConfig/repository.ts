@@ -25,19 +25,22 @@ export class AgainstQualifyConfigRepository extends APIRepository {
         return 'qualifyagainstconfigs';
     }
 
-    getUrl(tournament: Tournament, round: Round, jsonCompetitionSport: JsonCompetitionSport): string {
+    getUrl(tournament: Tournament, round: Round, competitionSportId: string|number): string {
         return super.getApiUrl() +
             'tournaments/' + tournament.getId() + '/' +
             'rounds/' + round.getId() + '/' +
-            'competitionsports/' + jsonCompetitionSport.id + '/' +
+            'competitionsports/' + competitionSportId + '/' +
             this.getUrlpostfix();
     }
 
     saveObject(jsonAgainstQualifyConfig: JsonAgainstQualifyConfig, round: Round, tournament: Tournament): Observable<AgainstQualifyConfig> {
-        const url = this.getUrl(tournament, round, jsonAgainstQualifyConfig.competitionSport);
+        const competitionSport = tournament.getCompetition().getSportById(jsonAgainstQualifyConfig.competitionSportId);
+        if( competitionSport === undefined) {
+            throw new Error('competitionSport could not be found');
+        }
+        const url = this.getUrl(tournament, round, jsonAgainstQualifyConfig.competitionSportId);
         return this.http.post<JsonAgainstQualifyConfig>(url, jsonAgainstQualifyConfig, this.getOptions()).pipe(
-            map((jsonResult: JsonAgainstQualifyConfig) => {
-                const competitionSport = this.competitionSportMapper.toObject(jsonResult.competitionSport, tournament.getCompetition());
+            map((jsonResult: JsonAgainstQualifyConfig) => {                
                 round.getChildren().forEach((child: Round) => this.service.removeFromRound(competitionSport, round));
                 return this.mapper.toObject(jsonResult, round, round.getAgainstQualifyConfig(competitionSport));
             }),

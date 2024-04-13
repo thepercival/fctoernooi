@@ -170,16 +170,16 @@
       <!-- no popover-->
       <span *ngIf="!gmData.hasPopover"
         class="badge badge-rank fs-custom fw-normal {{cssService.getQualifyRound(gmData.poule.round)}}">{{gmData.poule.name}}</span>
-      <!-- popover with ranking -->
+      <!-- button with ranking-modal -->
       <button *ngIf="gmData.hasPopover && gmData.poule.needsRanking"
         class="btn btn-sm {{cssService.getQualifyRound(gmData.poule.round,'btn-outline-info')}}"
         (click)="openModalPouleRank(gmData.game.getPoule())">
         <span>{{gmData.poule.name}}</span>
       </button>
-      <!-- popover no ranking -->
+      <!-- button popover no ranking -->
       <button *ngIf="gmData.hasPopover && !gmData.poule.needsRanking"
         class="btn btn-sm {{cssService.getQualifyRound(gmData.poule.round,'btn-outline-info')}}" placement="right"
-        [ngbPopover]="getGameQualificationDescription(gmData.game)">
+        [ngbPopover]="popContent" [popoverContext]="{ game: gmData.game }">
         <span>{{gmData.poule.name}}</span>
       </button>
     </td>
@@ -218,12 +218,15 @@
       {{getRefereeName(gmData.game)}}</td>
   </tr>
 </ng-template>
-  <!-- <div *ngIf="showLinksToAdmin && inManualMode()" class="d-flex justify-content-center">
-    <button type="button" class="btn btn-outline-primary" (click)="linkToGameAdd()">
+<!-- END -->
+
+<tr *ngIf="showLinksToAdmin && inManualMode()" class="">
+  <td [attr.colspan]="nrOfColumns" class="text-center">
+    <button type="button" class="btn btn-sm btn-outline-primary" (click)="linkToGameAdd()">
       <fa-icon [icon]="['fas', 'plus']"></fa-icon> wedstrijd toevoegen
     </button>
-  </div> -->
-<!-- END -->
+  </td>
+</tr>
 
 <ng-template #againstGamePlacesCell let-gmData>
   <!-- homePlaces -->
@@ -374,3 +377,7 @@
     </ng-template>
   </ng-template>
 </ng-template>
+
+
+<ng-template #popContent let-game="game"><span [innerHtml]="getGameQualificationDescription(game)"></span></ng-template>
+

@@ -135,7 +135,7 @@ export class ScoreConfigEditComponent implements OnInit {
         const jsonCompetitionSport = this.competitionSportMapper.toJson(this.competitionSport);
         const json: JsonScoreConfig = {
             id: 0,
-            competitionSport: jsonCompetitionSport,
+            competitionSportId: jsonCompetitionSport.id,
             direction: this.originalScoreConfig.getDirection(),
             maximum: this.typedForm.controls.max.value,
             enabled: true,
@@ -144,7 +144,7 @@ export class ScoreConfigEditComponent implements OnInit {
         if (this.typedForm.controls.useNext.value && this.originalScoreConfig.hasNext()) {
             json.next = {
                 id: 0,
-                competitionSport: jsonCompetitionSport,
+                competitionSportId: jsonCompetitionSport.id,
                 direction: this.originalScoreConfig.getDirection(),
                 maximum: this.typedForm.controls.maxNext.value,
                 enabled: this.typedForm.controls.useNext.value,

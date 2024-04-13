@@ -22,14 +22,14 @@ export class TournamentRuleRepository extends APIRepository {
         super(router);
     }
 
-    getUrl(tournament: Tournament, ruleId: string | number | undefined = undefined): string {
-        const prefix = this.getToken() ? '' : 'public/';
+    getUrl(tournament: Tournament, publicT: boolean, ruleId: string | number | undefined = undefined): string {
+        const prefix = publicT/*this.getToken()*/ ? 'public/' : '';
         const suffix = ruleId !== undefined ? ('/' + ruleId) : '';
         return super.getApiUrl() + prefix + 'tournaments/' + tournament.getId() + '/rules' + suffix;
     }
 
     getObjects(tournament: Tournament): Observable<JsonTournamentRule[]> {
-        return this.http.get<JsonTournamentRule[]>(this.getUrl(tournament), this.getOptions()).pipe(
+        return this.http.get<JsonTournamentRule[]>(this.getUrl(tournament, true), this.getOptions()).pipe(
             catchError((err: HttpErrorResponse) => this.handleError(err))
         )
     }
@@ -40,20 +40,20 @@ export class TournamentRuleRepository extends APIRepository {
             text,
             order: 0
         };
-        return this.http.post<JsonTournamentRule>(this.getUrl(tournament), ruleToCreate, this.getOptions()).pipe(
+        return this.http.post<JsonTournamentRule>(this.getUrl(tournament, false), ruleToCreate, this.getOptions()).pipe(
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
     editObject(jsonRule: JsonTournamentRule, tournament: Tournament): Observable<JsonTournamentRule> {
-        const url = this.getUrl(tournament, jsonRule.id);
+        const url = this.getUrl(tournament, false, jsonRule.id);
         return this.http.put<JsonTournamentRule>(url, jsonRule, this.getOptions()).pipe(
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 
     upgradeObject(ruleToUpgrade: JsonTournamentRule, ruleToDowngrade: JsonTournamentRule | undefined, tournament: Tournament): Observable<void> {
-        const url = this.getUrl(tournament) + '/' + ruleToUpgrade.id + '/priorityup';
+        const url = this.getUrl(tournament, false) + '/' + ruleToUpgrade.id + '/priorityup';
         return this.http.post(url, undefined, this.getOptions()).pipe(
             map(() => {
                 ruleToUpgrade.priority--;
@@ -66,7 +66,7 @@ export class TournamentRuleRepository extends APIRepository {
     }
 
     removeObject(jsonRule: JsonTournamentRule, tournament: Tournament): Observable<void> {
-        const url = this.getUrl(tournament, jsonRule.id);
+        const url = this.getUrl(tournament, false, jsonRule.id);
         return this.http.delete(url, this.getOptions()).pipe(
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );

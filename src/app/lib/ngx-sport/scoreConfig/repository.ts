@@ -26,19 +26,23 @@ export class ScoreConfigRepository extends APIRepository {
         return 'scoreconfigs';
     }
 
-    getUrl(tournament: Tournament, round: Round, jsonCompetitionSport: JsonCompetitionSport): string {
+    getUrl(tournament: Tournament, round: Round, jsonCompetitionSportId: string|number): string {
         return super.getApiUrl() +
             'tournaments/' + tournament.getId() + '/' +
             'rounds/' + round.getId() + '/' +
-            'competitionsports/' + jsonCompetitionSport.id + '/' +
+            'competitionsports/' + jsonCompetitionSportId + '/' +
             this.getUrlpostfix();
     }
 
     saveObject(jsonScoreConfig: JsonScoreConfig, round: Round, tournament: Tournament): Observable<ScoreConfig> {
-        const url = this.getUrl(tournament, round, jsonScoreConfig.competitionSport);
+        const competitionSport = tournament.getCompetition().getSportById(jsonScoreConfig.competitionSportId);
+        if (competitionSport === undefined) {
+            throw new Error('competitionSport could not be found');
+        }
+        const url = this.getUrl(tournament, round, jsonScoreConfig.competitionSportId);
         return this.http.post<JsonScoreConfig>(url, jsonScoreConfig, this.getOptions()).pipe(
             map((jsonResult: JsonScoreConfig) => {
-                const competitionSport = this.competitionSportMapper.toObject(jsonResult.competitionSport, tournament.getCompetition());
+                
                 round.getChildren().forEach((child: Round) => this.service.removeFromRound(competitionSport, round));
                 return this.mapper.toObject(jsonResult, round, round.getScoreConfig(competitionSport));
             }),

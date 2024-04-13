@@ -20,7 +20,9 @@ import {
     StartLocationMap,
     GameMode,
     EquallyAssignCalculator,
-    SportMapper
+    SportMapper,
+    CompetitionSportMapper,
+    Sport
 } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -94,6 +96,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         private defaultService: DefaultService,
         private planningRepository: PlanningRepository,
         private mapper: PlanningConfigMapper,
+        private competitionSportMapper: CompetitionSportMapper, 
         private sportMapper: SportMapper,
         private gameAmountConfigMapper: GameAmountConfigMapper
     ) {
@@ -213,6 +216,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             const range = this.defaultService.getGameAmountRange(gameAmountConfig.getCompetitionSport().getVariant());
             return {
                 json: this.gameAmountConfigMapper.toJson(gameAmountConfig),
+                jsonCompetitionSport: this.competitionSportMapper.toJson(gameAmountConfig.getCompetitionSport()),
                 range: range,
                 control: this.typedForm.controls['' + gameAmountConfig.getId()]
             };
@@ -335,7 +339,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         return this.gameAmountConfigControls.map((gameAmountConfigControl: GameAmountConfigControl): JsonGameAmountConfig => {
             return {
                 id: gameAmountConfigControl.json.id,
-                competitionSport: gameAmountConfigControl.json.competitionSport,
+                competitionSportId: gameAmountConfigControl.jsonCompetitionSport.id,
                 amount: gameAmountConfigControl.control.value
             };
         });
@@ -343,18 +347,25 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     private jsonGameAmountConfigsToAgainstGpps(jsonGameAmountConfigs: JsonGameAmountConfig[]): AgainstGpp[]
     {
-        return jsonGameAmountConfigs.filter((jsonGameAmountConfig: JsonGameAmountConfig): boolean => {
-            return jsonGameAmountConfig.competitionSport.gameMode === GameMode.Against
-                && jsonGameAmountConfig.competitionSport.nrOfGamesPerPlace > 0;
-        }).map((jsonGameAmountConfig: JsonGameAmountConfig): AgainstGpp => {
-            const sport = this.sportMapper.toObject(jsonGameAmountConfig.competitionSport.sport);
-             return new AgainstGpp(
-                sport,
-                jsonGameAmountConfig.competitionSport.nrOfHomePlaces,
-                jsonGameAmountConfig.competitionSport.nrOfAwayPlaces,
-                jsonGameAmountConfig.amount
-                );
+        const competition = this.tournament.getCompetition();
+        const againstGpps: AgainstGpp[] = [];
+        jsonGameAmountConfigs.forEach((jsonGameAmountConfig: JsonGameAmountConfig) => {
+            const competitionSport = competition.getSportById(jsonGameAmountConfig.competitionSportId);
+            if (competitionSport === undefined) {
+                return;
+            }
+            const variant = competitionSport.getVariant();
+            if ((variant instanceof AgainstGpp || variant instanceof AgainstH2h) && variant.getNrOfGamePlaces() > 0) {
+                againstGpps.push( new AgainstGpp(
+                    competitionSport.getSport(),
+                    variant.getNrOfHomePlaces(),
+                    variant.getNrOfAwayPlaces(),
+                    jsonGameAmountConfig.amount
+                ));
+            };
         });        
+        return againstGpps;
+            
     }
 
     perPouleOptionAvailable(): boolean {
@@ -601,7 +612,7 @@ class PlanningActionCalculator {
         // }
         const getGameAmountConfig = (competitionSport: CompetitionSport): JsonGameAmountConfig | undefined => {
             return jsonGameAmountConfigs.find((jsonGameAmountConfigIt: JsonGameAmountConfig) => {
-                return jsonGameAmountConfigIt.competitionSport.id === competitionSport.getId();
+                return jsonGameAmountConfigIt.competitionSportId === competitionSport.getId();
             });
         };
         return this.roundNumber.getCompetitionSports().some((competitionSport: CompetitionSport) => {
@@ -636,6 +647,13 @@ class PlanningActionCalculator {
 export interface PlanningConfigValidations {
     minMinutes: number;
     maxMinutes: number;
+}
+
+interface CreateAgainstStruct {
+    sport: Sport,
+    nrOfHomePlaces: number,
+    nrOfAwayPlaces: number,
+    amount: number
 }
 
 enum PlanningAction {

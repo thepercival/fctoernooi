@@ -232,9 +232,8 @@ export class GameEditComponent extends TournamentComponent {
         const dateTime = this.getDate(this.getBaseFormGroup().controls.date, this.getBaseFormGroup().controls.time);
             
         jsonGame.startDateTime = dateTime.toISOString();
-        jsonGame.field = this.fieldMapper.toJson(this.getBaseFormGroup().controls.field.value);
-        const referee: Referee | undefined = this.getBaseFormGroup().controls.referee.value;
-        jsonGame.referee = referee instanceof Referee ? this.refereeMapper.toJson(referee) : undefined;
+        jsonGame.fieldId = this.getBaseFormGroup().controls.field.value?.getId();
+        jsonGame.refereeId = this.getBaseFormGroup().controls.referee.value?.getId();
         const refereePlace: Place | undefined = this.getBaseFormGroup().controls.refereePlace.value;
         jsonGame.refereeStructureLocation = refereePlace instanceof Place ? refereePlace.getStructureLocation() : undefined;
     }

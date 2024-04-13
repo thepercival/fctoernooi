@@ -105,8 +105,6 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
             this.updateWarningsForEqualQualifiers(this.formToJson());
         }, 1000);        
     }
- 
-
 
     aScoreIsInvalid() {
         return this.scoreControls.some(scoreControl => !scoreControl.isScoreValid());

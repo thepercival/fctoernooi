@@ -170,7 +170,7 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
     protected formToJson(): JsonAgainstQualifyConfig {
         return {
             id: 0,
-            competitionSport: this.competitionSportMapper.toJson(this.competitionSport),
+            competitionSportId: this.competitionSport.getId(),
             pointsCalculation: this.typedForm.controls.pointsCalculation.value,
             winPoints: this.typedForm.controls.winPoints.value,
             drawPoints: this.typedForm.controls.drawPoints.value,

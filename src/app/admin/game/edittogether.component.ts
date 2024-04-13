@@ -95,7 +95,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
     ngAfterViewInit() {
         setTimeout(() => {
             this.updateWarningsForEqualQualifiers(this.formToJson());
-        }, 250);        
+        }, 1000);        
     }
 
     protected resetScoreControlValues(): void {

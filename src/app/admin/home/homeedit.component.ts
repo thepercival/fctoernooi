@@ -126,7 +126,7 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
     this.tournamentRepository.editObject(json).subscribe({
       next: (tournament: Tournament) => {
         this.tournament = tournament;
-        this.navigateBack(); 
+        this.router.navigate(['/admin', this.tournament.getId()]);
         this.processing = false;        
       },
       error: (e) => {

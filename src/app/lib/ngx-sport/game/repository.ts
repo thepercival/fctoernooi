@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../repository';
-import { AgainstGame, AgainstVariant, CompetitionSport, Game, GameMapper, JsonAgainstGame, JsonTogetherGame, Poule, TogetherGame } from 'ngx-sport';
+import { AgainstGame, AgainstVariant, CompetitionSport, Game, GameMapper, GameMode, JsonAgainstGame, JsonTogetherGame, Poule, TogetherGame } from 'ngx-sport';
 import { Tournament } from '../../tournament';
 import { Router } from '@angular/router';
 
@@ -23,8 +23,8 @@ export class GameRepository extends APIRepository {
     }
 
     getUrl(tournament: Tournament, competitionSport: CompetitionSport ): string {
-        const suffix: string = competitionSport.getVariant().getGameMode();
-        return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/competitionSports/' + competitionSport.getId() + '/' +this.getUrlpostfix(suffix);
+        const suffix: string = competitionSport.getVariant().getGameMode() === GameMode.Against ? 'against' : 'together';
+        return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/competitionsports/' + competitionSport.getId() + '/' + this.getUrlpostfix(suffix);
     }
 
     createObject(jsonGame: JsonAgainstGame | JsonTogetherGame, competitionSport: CompetitionSport, poule: Poule, tournament: Tournament): Observable<Game> {

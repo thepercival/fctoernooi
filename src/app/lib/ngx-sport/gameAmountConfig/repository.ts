@@ -26,19 +26,22 @@ export class GameAmountConfigRepository extends APIRepository {
         return 'gameamountconfigs';
     }
 
-    getUrl(tournament: Tournament, roundNumber: RoundNumber, jsonCompetitionSport: JsonCompetitionSport): string {
+    getUrl(tournament: Tournament, roundNumber: RoundNumber, jsonCompetitionSportId: string|number): string {
         return super.getApiUrl() +
             'tournaments/' + tournament.getId() + '/' +
             'roundnumbers/' + roundNumber.getNumber() + '/' +
-            'competitionsports/' + jsonCompetitionSport.id + '/' +
+            'competitionsports/' + jsonCompetitionSportId + '/' +
             this.getUrlpostfix();
     }
 
     saveObject(jsonGameAmountConfig: JsonGameAmountConfig, roundNumber: RoundNumber, tournament: Tournament): Observable<GameAmountConfig> {
-        const url = this.getUrl(tournament, roundNumber, jsonGameAmountConfig.competitionSport);
+        const competitionSport = tournament.getCompetition().getSportById(jsonGameAmountConfig.competitionSportId);
+        if (competitionSport === undefined) {
+            throw new Error('competitionSport could not be found');
+        }
+        const url = this.getUrl(tournament, roundNumber, competitionSport.getId());
         return this.http.post<JsonGameAmountConfig>(url, jsonGameAmountConfig, this.getOptions()).pipe(
             map((jsonResult: JsonGameAmountConfig) => {
-                const competitionSport = this.competitionSportMapper.toObject(jsonResult.competitionSport, tournament.getCompetition());
                 const nextRoundNumber = roundNumber.getNext();
                 if (nextRoundNumber) {
                     this.service.removeFromRoundNumber(competitionSport, nextRoundNumber);

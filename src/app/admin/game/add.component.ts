@@ -203,8 +203,8 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
             id: 0,
             batchNr: 0,
             competitionSportId: competitionSport.getId(),
-            field: this.getDefaultJsonField(),
-            referee: this.getDefaultJsonReferee(),
+            fieldId: this.getDefaultJsonField().id,
+            refereeId: this.getDefaultJsonReferee()?.id,
             state: GameState.Created,
             startDateTime: this.roundNumber.getLastStartDateTime().toISOString(),
             refereeStructureLocation: undefined
@@ -230,14 +230,14 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
         for (let homeNr of this.getPlaceNrs(sportVariant.getNrOfHomePlaces())) {
             places.push({
                 id: 0,
-                place: this.placeMapper.toJson(this.getHomeGamePlacesFormGroup().value[homeNr]),
+                placeNr: this.getHomeGamePlacesFormGroup().value[homeNr].getPlaceNr(),
                 side: AgainstSide.Home,
             });
         }
         for (let awayNr of this.getPlaceNrs(sportVariant.getNrOfAwayPlaces())) {
             places.push({
                 id: 0,
-                place: this.placeMapper.toJson(this.getAwayGamePlacesFormGroup().value[awayNr]),
+                placeNr: this.getAwayGamePlacesFormGroup().value[awayNr].getPlaceNr(),
                 side: AgainstSide.Away,
             });
         }
@@ -253,7 +253,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
             }
             places.push({
                 id: 0,
-                place: this.placeMapper.toJson(place),
+                placeNr: place.getPlaceNr(),
                 scores: [],
                 gameRoundNumber: 0
             });
@@ -267,7 +267,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
         for (let place of this.form.controls.poule.value.getPlaces()) {
             places.push({
                 id: 0,
-                place: this.placeMapper.toJson(place),
+                placeNr: place.getPlaceNr(),
                 scores: [],
                 gameRoundNumber: 0
             });

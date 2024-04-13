@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Params, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlanningEditMode, RoundNumber } from 'ngx-sport';
 
@@ -39,6 +39,7 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
     hasBegun: boolean = true;
     hasPlanningEditManualMode: boolean = false;
     allPoulesHaveGames: boolean = false;
+    openModalCopiedCheck: boolean = false;
 
     constructor(
         route: ActivatedRoute,
@@ -72,15 +73,11 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
         this.allPoulesHaveGames = this.structure.allPoulesHaveGames();
         this.hasPlanningEditManualMode = this.structureHasPlanningEditManualMode(firstRoundNumber);
         
-        let openModalExe = false;
-        // console.log('outside params');
-        this.route.queryParams.subscribe(params => {
-            // console.log('params', params);
+        this.route.queryParams.subscribe((params: Params) => {
             if (params.newStartForCopyAsTime !== undefined) {
                 this.openModalCopy(params.newStartForCopyAsTime);
-            } else if (params.myPreviousId !== undefined && !openModalExe) {
-                // console.log(this.router.getCurrentNavigation()?.extras.state);
-                openModalExe = true; 
+            } else if (params.myPreviousId !== undefined && !this.openModalCopiedCheck) {
+                this.openModalCopiedCheck = true; 
                 this.openModalCopied(params.myPreviousId);                
             }
           });

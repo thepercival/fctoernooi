@@ -2,7 +2,7 @@
   <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6 text-center">
     <div class="container-fluid">
     
-      <ngb-alert type="info" *ngIf="!processing && isAdmin()" [routerLink]="['/admin/homedit', tournament.getId()]"
+      <ngb-alert type="info" *ngIf="!processing && isAdmin()" [routerLink]="['/admin/homeedit', tournament.getId()]"
         class="text-center pointer">
         ga naar <a href="javascript:void(0)" class="alert-link">het
           beheergedeelte</a>
@@ -25,6 +25,7 @@
       </button>
     </div>
   -->
+  
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
@@ -36,9 +37,9 @@
           <span>{{tournament.getIntro()}}</span>
         </div>
         
-        <h3 *ngIf="rules | async" class="mb-1 mt-4">huisregels</h3>
+        <h3 *ngIf="rules.length > 0" class="mb-1 mt-4">huisregels</h3>
         <ul class="list-group">
-          <li *ngFor=" let rule of rules | async" class="list-group-item bg-white text-dark text-start">
+          <li *ngFor=" let rule of rules" class="list-group-item bg-white text-dark text-start">
             <span [innerHTML]="rule.text"></span>
           </li>
         </ul>
@@ -56,8 +57,8 @@
           </a>
         </div>        
 
-        <h3 class="mb-0 mt-3">sponsors</h3>
-        <div class="d-flex flex-wrap gap-1 gap-sm-3">
+        <h3 *ngIf="tournament.getSponsors().length > 0" class="mb-0 mt-3">sponsors</h3>
+        <div *ngIf="tournament.getSponsors().length > 0" class="d-flex flex-wrap gap-1 gap-sm-3">
           <div *ngFor="let sponsor of tournament.getSponsors()" class="card h-100">
             <div *ngIf="sponsor" class="card-header">
               <span class="">{{sponsor.getName()}}</span>
