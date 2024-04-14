@@ -10,6 +10,7 @@ import { GlobalEventsManager } from '../common/eventmanager';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CategoryChooseModalComponent } from './category/chooseModal.component';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { NavBarData } from '../layout/nav/nav.component';
 
 export class TournamentComponent {
 
@@ -47,15 +48,13 @@ export class TournamentComponent {
                         if (callback !== undefined) {
                             callback();
                         }
-                        this.globalEventsManager.updateTitleInNavBar.emit(tournament.getName());
+                        this.globalEventsManager.updateDataInNavBar.emit(this.getNavBarData(tournament));
                         this.globalEventsManager.showFooter.emit(false);
                         return;
                     }
-                    console.log('structureRepository.getObject', this.processing);
                     this.structureRepository.getObject(tournament)
                         .subscribe({
                             next: (structure: Structure) => {
-                                console.log('set structure');
                                 this.structure = structure;
                                 if (callback !== undefined) {
                                     callback();
@@ -66,13 +65,20 @@ export class TournamentComponent {
                                 this.setAlert(IAlertType.Danger, e); this.processing = false;
                             }
                         });
-                    this.globalEventsManager.updateTitleInNavBar.emit(tournament.getName());
+                    this.globalEventsManager.updateDataInNavBar.emit(this.getNavBarData(tournament));
                     this.globalEventsManager.showFooter.emit(false);
                 },
                 error: (e) => {
                     this.setAlert(IAlertType.Danger, e); this.processing = false;
                 }
             });
+    }
+
+    private getNavBarData(tournament: Tournament): NavBarData {
+        return {
+            title: tournament.getName(),
+            logoUrl: this.tournamentRepository.getLogoUrl(tournament, 20)
+        };
     }
 
     public setAlert(type: IAlertType, message: string) {
