@@ -12,6 +12,7 @@ import {
     AgainstGamePlace,
     GameState,
     JsonTogetherGamePlace,
+    StructureLocationMapper,
 } from 'ngx-sport';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -58,10 +59,12 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
         refereeMapper: RefereeMapper,
         placeMapper: PlaceMapper,
         translate: TranslateScoreService,
-        myNavigation: MyNavigation
+        myNavigation: MyNavigation,
+        structureLocationMapper: StructureLocationMapper
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository,
-            authService, gameRepository, mapper, fieldMapper, refereeMapper, placeMapper, translate, myNavigation);
+            authService, gameRepository, mapper, fieldMapper, refereeMapper, placeMapper, translate, myNavigation,
+            structureLocationMapper);
         // this.originalPouleState = State.Created;        
         this.typedForm.addControl('gamePlaces', new FormGroup({}));
     }

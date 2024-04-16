@@ -40,6 +40,7 @@ export class RankingRoundComponent implements OnInit {
         const childeren = this.round.getChildren();
         const stateChildren = this.getRoundsGameState(childeren);
         // const childNeedsRanking = this.roundsNeedRanking(childeren);
+        
         if (state === GameState.InProgress) {
             this.collapsed = false;
         } else if (state === GameState.Created && (stateParent === undefined || stateParent === GameState.Finished)) {
@@ -53,7 +54,10 @@ export class RankingRoundComponent implements OnInit {
     get Home(): AgainstSide { return AgainstSide.Home };
     get Away(): AgainstSide { return AgainstSide.Away };
     
-    getRoundsGameState(rounds: Round[]): GameState {
+    getRoundsGameState(rounds: Round[]): GameState|undefined {
+        if( rounds.length === 0) {
+            return undefined;
+        }
         if (rounds.every((round: Round) => round.getGamesState() === GameState.Finished)) {
             return GameState.Finished;
         } else if (rounds.some((round: Round) => round.getGamesState() !== GameState.Created)) {

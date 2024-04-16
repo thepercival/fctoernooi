@@ -60,9 +60,6 @@ export class StructureRepository extends APIRepository {
         return this.http.put<JsonPlanningTotals|null>(this.getUrl(tournament) + '/planningtotals', jsonStructure, this.getOptions()).pipe(
             map((json: JsonPlanningTotals|null) => {
                 if( json !== null ) {
-                    console.log(
-                        'repo', json
-                    );
                     json.start = new Date(json.start);
                     json.end = new Date(json.end);
                     return json;

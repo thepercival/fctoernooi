@@ -8,6 +8,7 @@
         <h2>
           <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
         </h2>
+
         <button *ngIf="!structure.hasSingleCategory()" type="button"
           class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
           (click)="openCategoriesChooseModal(structure)">

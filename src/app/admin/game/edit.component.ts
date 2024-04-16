@@ -24,6 +24,7 @@ import {
     StructureNameService,
     StartLocationMap,
     ScoreDirection,
+    StructureLocationMapper,
 } from 'ngx-sport';
 import { Observable, of } from 'rxjs';
 
@@ -71,7 +72,8 @@ export class GameEditComponent extends TournamentComponent {
         protected refereeMapper: RefereeMapper,
         protected placeMapper: PlaceMapper,
         private translate: TranslateScoreService,
-        private myNavigation: MyNavigation
+        private myNavigation: MyNavigation,
+        private structureLocationMapper: StructureLocationMapper
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
         // this.originalPouleState = State.Created;
@@ -235,7 +237,11 @@ export class GameEditComponent extends TournamentComponent {
         jsonGame.fieldId = this.getBaseFormGroup().controls.field.value?.getId();
         jsonGame.refereeId = this.getBaseFormGroup().controls.referee.value?.getId();
         const refereePlace: Place | undefined = this.getBaseFormGroup().controls.refereePlace.value;
-        jsonGame.refereeStructureLocation = refereePlace instanceof Place ? refereePlace.getStructureLocation() : undefined;
+        let refereeStructureLocation;
+        if( refereePlace instanceof Place ) {
+            refereeStructureLocation = refereePlace.getStructureLocation();
+            jsonGame.refereeStructureLocation = this.structureLocationMapper.toJson(refereeStructureLocation);    
+        }
     }
 
     getDate(dateFormControl: AbstractControl, timeFormControl: AbstractControl): Date {

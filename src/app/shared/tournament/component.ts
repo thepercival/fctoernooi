@@ -77,7 +77,7 @@ export class TournamentComponent {
     private getNavBarData(tournament: Tournament): NavBarData {
         return {
             title: tournament.getName(),
-            logoUrl: this.tournamentRepository.getLogoUrl(tournament, 20)
+            logoUrl: tournament.getLogoExtension() ? this.tournamentRepository.getLogoUrl(tournament, 20) : undefined
         };
     }
 
