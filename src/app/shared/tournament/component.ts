@@ -56,6 +56,7 @@ export class TournamentComponent {
                         .subscribe({
                             next: (structure: Structure) => {
                                 this.structure = structure;
+                                // console.log(structure);
                                 if (callback !== undefined) {
                                     callback();
                                 }
