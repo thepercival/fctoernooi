@@ -11,6 +11,7 @@ import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.
 })
 export class ShareModalComponent implements OnInit {
     @Input() tournament!: Tournament;
+    @Input() publicInitial!: boolean;
     public typedForm: FormGroup<{
         public: FormControl<boolean>,
         url: FormControl<string>,        
@@ -34,6 +35,13 @@ export class ShareModalComponent implements OnInit {
 
     save(): boolean {
         return this.typedForm.controls.public.value;
+    }
+
+    getButtonLabel(): string {
+        if (this.publicInitial === false && this.typedForm.controls.public.value === true) {
+            return 'opslaan & homepagina aanpassen';
+        }
+        return 'opslaan';
     }
 
     openInfoModal(modalContent: TemplateRef<any>) {

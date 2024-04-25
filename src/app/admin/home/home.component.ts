@@ -337,8 +337,11 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
     openModalShare() {
         const activeModal = this.modalService.open(ShareModalComponent);
         activeModal.componentInstance.tournament = this.tournament;
+        const publicInitial = this.tournament.getPublic();
+        activeModal.componentInstance.publicInitial = publicInitial; 
         activeModal.result.then((publicEnabled: boolean) => {
-            this.share(publicEnabled);
+            const sendToHomeAdmin = publicInitial === false && publicEnabled;
+            this.share(publicEnabled, sendToHomeAdmin);
         }, (reason) => {
         });
     }
@@ -382,7 +385,7 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
             });
     }
 
-    share(publicEnabled: boolean) {
+    share(publicEnabled: boolean, sendToHomeEdit: boolean) {
         this.setAlert(IAlertType.Info, 'het delen wordt gewijzigd');
 
         this.processing = true;
@@ -392,7 +395,10 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
             .subscribe({
                 next: (tournament: Tournament) => {
                     this.tournament = tournament;
-                    // this.router.navigate(['/admin', newTournamentId]);
+                    if (sendToHomeEdit) {
+                        this.router.navigate(['/admin/homeedit', tournament.getId()]);
+                    }
+                    
                     this.setAlert(IAlertType.Success, 'het delen is gewijzigd');
                 },
                 error: (e) => {

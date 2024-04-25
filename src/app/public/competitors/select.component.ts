@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Referee, StructureNameService, StartLocationMap } from 'ngx-sport';
 
@@ -29,8 +29,6 @@ export class SelectFavoritesComponent extends TournamentComponent implements OnI
     public showLockerRoom = false;
     public lockerRoomMap: Map<string, string> = new Map();
 
-    @ViewChild('contentInfoModal', { static: true }) private contentInfoModal!: TemplateRef<any>;
-
     constructor(
         route: ActivatedRoute,
         router: Router,
@@ -54,12 +52,7 @@ export class SelectFavoritesComponent extends TournamentComponent implements OnI
             this.favorites = this.favRepository.getObject(this.tournament, this.structure.getCategories());
             if (this.hasCompetitors() === false) {
                 this.router.navigate(['/public/games', this.tournament.getId()]);
-            } else {
-                const shownNrOfBatchGamesAlert = localStorage.getItem('showSelectFavoriteModal' + this.tournament.getId());
-                if (shownNrOfBatchGamesAlert === null) {
-                    localStorage.setItem('showSelectFavoriteModal' + this.tournament.getId(), '1');
-                    this.openHelpModal(this.contentInfoModal);
-                }
+                return;
             }
             this.fillMap();
             this.showLockerRoom = this.tournament.getLockerRooms().length > 0;

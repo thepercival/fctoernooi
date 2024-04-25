@@ -44,7 +44,7 @@
         klembord
     </ngb-alert>
     <button *ngIf="!typedForm.pristine" type="button" class="btn btn-primary" data-dismiss="modal"
-        (click)="modal.close(typedForm.value['public'])">opslaan</button>
+        (click)="modal.close(typedForm.value['public'])">{{getButtonLabel()}}</button>
 </div>
 
 <ng-template #infoPublic>

@@ -34,8 +34,8 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
   }>;
   validations: HomeValidations = {
     minlengthintro: 10,
-    maxlengthintro: 200,
-    minlengthlocation: 16,
+    maxlengthintro: 400,
+    minlengthlocation: 5,
     maxlengthlocation: 80,
   };
 
