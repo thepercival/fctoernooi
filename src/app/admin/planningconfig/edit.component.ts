@@ -63,6 +63,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         selfReferee: FormControl<boolean>,
         selfRefereeSamePoule: FormControl<boolean>,
         nrOfSimSelfRefs: FormControl<number>,
+        bestLast: FormControl<boolean>,
         manual: FormControl<boolean>,
       }>*/;
 
@@ -137,6 +138,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
                 ] 
             }),
             perPoule: new FormControl(false, { nonNullable: true }),
+            bestLast: new FormControl(false, { nonNullable: true }),
             selfReferee: new FormControl(false, { nonNullable: true }),
             selfRefereeSamePoule: new FormControl(false, { nonNullable: true }),/*
             nrOfSimSelfRefs: new FormControl(0, { nonNullable: true, validators: 
@@ -307,6 +309,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.typedForm.controls.selfRefereeSamePoule.setValue(selfRefee === SelfReferee.SamePoule);
         // const nrOfSimSelfRefs = selfRefee === SelfReferee.Disabled ? 0 : json.nrOfSimSelfRefs;
         // this.typedForm.controls.nrOfSimSelfRefs.setValue(nrOfSimSelfRefs);
+        this.typedForm.controls.bestLast.setValue(json.bestLast);
 
         Object.keys(this.typedForm.controls).forEach(key => {
             const control = this.typedForm.controls[key];
@@ -331,7 +334,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             perPoule: this.typedForm.controls.perPoule.value,
             selfReferee: noSelfReferee ? SelfReferee.Disabled :
                 (this.typedForm.value['selfRefereeSamePoule'] ? SelfReferee.SamePoule : SelfReferee.OtherPoules),
-            nrOfSimSelfRefs: noSelfReferee ? 0 : 1
+            nrOfSimSelfRefs: noSelfReferee ? 0 : 1,
+            bestLast: this.typedForm.controls.bestLast.value,
         };
     }
 
@@ -601,6 +605,9 @@ class PlanningActionCalculator {
             return true
         }
         if (config.getPerPoule() !== json.perPoule) {
+            return true
+        }
+        if (config.getBestLast() !== json.bestLast) {
             return true
         }
         return this.gameAmountConfigsChanged(jsonGameAmountConfigs);

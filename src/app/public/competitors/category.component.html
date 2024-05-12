@@ -29,11 +29,13 @@
               <img *ngIf="placeCompetitor.competitor && competitorRepository.hasLogoExtension(placeCompetitor.competitor)" class="ms-1"
                 [src]="competitorRepository.getLogoUrl(placeCompetitor.competitor, 20)" height="20" width="20">
             </td>
-            <td class="text-break">
-              <!-- <span *ngIf="placeCompetitor.competitor">{{placeCompetitor.competitor.getName()}}</span> -->
-              <label *ngIf="placeCompetitor.competitor" class="form-check-label pointer"
-                for="{{getId(placeCompetitor.competitor)}}">
+            <td class="text-break" [ngClass]="{ 'pointer': placeCompetitor.competitor?.getPublicInfo() }"
+              (click)="openInfoModal(popCompetitor, placeCompetitor.competitor)">
+              <label *ngIf="placeCompetitor.competitor" class="form-check-label"
+                [ngClass]="{ 'pointer': placeCompetitor.competitor.getPublicInfo() }">
                 <span>{{placeCompetitor.competitor.getName()}}</span>
+                <fa-icon *ngIf="placeCompetitor.competitor.getPublicInfo()" [icon]="['fas', 'info-circle']"
+                  class="text-info"></fa-icon>
               </label>
             </td>
             <td class="text-break">
@@ -54,3 +56,9 @@
     </div>
   </div>
 </div>
+
+<ng-template #popCompetitor let-activeModal>
+  <div *ngIf="modalCompetitor" class="lead">
+    {{modalCompetitor.getPublicInfo()}}
+  </div>
+</ng-template>

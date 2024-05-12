@@ -16,7 +16,7 @@ import { CompetitorListRemoveModalComponent } from './listremovemodal.component'
   templateUrl: './category.order.component.html',
   styleUrls: ['./category.order.component.scss']
 })
-export class CategoryOrderCompetitorListComponent implements OnChanges {
+export class CategoryOrderCompetitorListComponent implements OnChanges, OnInit {
   @Input() tournament!: Tournament;
   @Input() category!: Category;
   @Input() showHeader!: boolean;
@@ -38,6 +38,10 @@ export class CategoryOrderCompetitorListComponent implements OnChanges {
     private router: Router,
     public competitorRepository: CompetitorRepository,
     private modalService: NgbModal) {
+  }
+
+  ngOnInit(): void {
+    console.log(this.category);
   }
 
   ngOnChanges(changes: SimpleChanges) {

@@ -121,7 +121,7 @@ export class PlanningNavBarComponent implements OnChanges {
       return '';
     }
     const nrOfGamesRange = this.planningTotals.competitorAmount.nrOfGames;
-    if (nrOfGamesRange.min = nrOfGamesRange.max) {
+    if (nrOfGamesRange.min === nrOfGamesRange.max) {
       return '' + nrOfGamesRange.min;
     }
     return nrOfGamesRange.min + ' tot ' + nrOfGamesRange.max;
@@ -132,7 +132,7 @@ export class PlanningNavBarComponent implements OnChanges {
       return '';
     }
     const nrOfMinutesRange = this.planningTotals.competitorAmount.nrOfMinutes;
-    if (nrOfMinutesRange.min = nrOfMinutesRange.max) {
+    if (nrOfMinutesRange.min === nrOfMinutesRange.max) {
       return '' + nrOfMinutesRange.min;
     }
     return nrOfMinutesRange.min + ' tot ' + nrOfMinutesRange.max;

@@ -6,7 +6,7 @@
         <h2>
           <fa-icon [icon]="['fas', 'user-plus']"></fa-icon> <span class="mx-1">inschrijven</span>
           
-          <button *ngIf="!processing && isAdmin()" [routerLink]="['/admin/competitors', tournament.getId(), TabSignUp]" type="button"
+          <button *ngIf="!processing && isAdmin()" [routerLink]="['/admin/competitors', tournament.getId(), TabRegistrations]" type="button"
             class="btn btn-sm btn-outline-primary">
             <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
           </button>
@@ -26,8 +26,8 @@
             <button role="button" class="btn btn-primary" (click)="reset()">nog een deelnemer inschrijven</button>
           </div>
           <div class="card card-body mx-auto bg-faded form-register mt-3">
-            <legend class="m-b-1 text-xs-center">naar homepagina</legend>
-            <button role="button" class="btn btn-outline-primary" routerLink="/">ga terug</button>
+            <button *ngIf="!isAdmin()" role="button" class="btn btn-outline-primary" [routerLink]="['/', tournament.getId()]">naar toernooi</button>
+            <button *ngIf="isAdmin()" role="button" class="btn btn-outline-primary" [routerLink]="['/admin/competitors', tournament.getId(), TabRegistrations]">naar inschrijvingen</button>
           </div>
         </div>
       </div>

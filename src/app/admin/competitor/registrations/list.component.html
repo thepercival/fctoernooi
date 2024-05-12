@@ -9,9 +9,10 @@
         </h5>
       </div>
     </div>
+
     <div class="card-body p-0">
       
-      <table *ngIf="registrations.length > 0" class="table mb-0">
+      <table class="table mb-0">
         <thead>
           <tr>
             <th>
@@ -19,7 +20,19 @@
             <th>naam</th>
             <th class="d-none d-sm-table-cell">emailadres</th>
             <th class="d-none d-sm-table-cell">telefoon</th>            
-            <th>              
+            <th>                      
+                <div ngbDropdown #textDropDown="ngbDropdown" class="dropdown ps-1">
+                  <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false" ngbDropdownAnchor (focus)="textDropDown.open()">
+                    <fa-icon [icon]="[ 'fas', 'file-lines'] "></fa-icon> teksten
+                  </button>
+                  <ul ngbDropdownMenu aria-labelledby="dropdownManual" class="dropdown-menu">
+                    <li *ngFor="let subject of getTextSubjects()">
+                      <a href="javascript:void(0)" ngbDropdownItem class="dropdown-item"
+                        (click)="openTextEditorModal(subject)">{{getTextSubjectDescription(subject)}}</a>
+                    </li>
+                  </ul>
+                </div>                      
             </th>
           </tr>
         </thead>
@@ -57,11 +70,6 @@
           </tr>
         </tbody>
       </table>
-
-      <ngb-alert *ngIf="registrations.length === 0" class="m-0" type="info">
-        er zijn nog geen inschrijvingen gedaan
-      </ngb-alert>
-      
       
     </div>
   </div>

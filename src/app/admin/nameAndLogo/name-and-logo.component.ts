@@ -176,7 +176,7 @@ export class TournamentNameAndLogoComponent extends TournamentComponent implemen
         const file = files[0];
         const mimeType = file.type;
         if (mimeType.match(/image\/*/) == null) {
-            this.setAlert(IAlertType.Danger, 'alleen plaatjes worden ondersteund');
+            this.setAlert(IAlertType.Danger, 'alleen afbeeldingen worden ondersteund');
             return;
         }
         const reader = new FileReader();
@@ -202,7 +202,7 @@ export class TournamentNameAndLogoComponent extends TournamentComponent implemen
     }
 
     getLogoUploadDescription() {
-        return 'het plaatje wordt geschaald naar een hoogte van 200px. De beeldverhouding moet liggen tussen '
+        return 'De afbeelding moet in jpg-, png-, gif-, of svgformaat worden aangeleverd. De afbeedling wordt geschaald naar een hoogte van 200px. De beeldverhouding moet liggen tussen '
             + (1 - this.LOGO_ASPECTRATIO_THRESHOLD).toFixed(2) + ' en ' + (1 + this.LOGO_ASPECTRATIO_THRESHOLD).toFixed(2);
     }
 

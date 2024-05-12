@@ -42,8 +42,6 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   public activeTab!: number;
   public hasBegun!: boolean;
   public registrationSettings: TournamentRegistrationSettings|undefined;
-  public showRegistrationSettings: boolean = false;
-  public showRegistrationFormBtn: boolean = false;
 
   constructor(
     route: ActivatedRoute,
@@ -80,20 +78,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
             this.lockerRoomValidator = new LockerRoomValidator(competitors, this.tournament.getLockerRooms());
             this.initFocus(startLocationMap);
             this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
-
-            this.tournamentRegistrationRepository.getSettings(this.tournament)
-              .subscribe({
-                next: (settings: TournamentRegistrationSettings) => {
-                  this.registrationSettings = settings;
-                  this.showRegistrationSettings = !settings.isEnabled();
-                  this.showRegistrationFormBtn = settings.isEnabled();
-                  this.processing = false;
-                },
-                error: (e: string) => {
-                  this.setAlert(IAlertType.Danger, e + ', instellingen niet gevonden');
-                  this.processing = false;
-                }
-              });
+            this.processing = false;
           },
           error: (e: string) => {            
             this.setAlert(IAlertType.Danger, e + ', instellingen niet gevonden');
@@ -123,11 +108,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   ngAfterViewChecked() {
     this.myNavigation.scroll();
   }
-
-  updateLinkToRegistrationForm(enabled: boolean): void {
-    this.showRegistrationFormBtn = enabled;
-  }
-
+  
   initFocus(startLocationMap: StartLocationMap) {
     this.structure.getCategories().some((category: Category) => {
       return category.getRootRound().getPlaces().some((place: Place) => {
@@ -139,11 +120,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
         return false;
       });
     });
-  }
-
-  toggleShowRegistrationSettings(): void {
-    this.showRegistrationSettings = !this.showRegistrationSettings; 
-  }
+  }  
 
   removeCompetitor(competitor: TournamentCompetitor): void {
     this.processing = true;
@@ -191,52 +168,10 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
 
   get TabBase(): number { return CompetitorTab.Base; }  
   get TabOrder(): number { return CompetitorTab.Order; }
-  get TabSignUp(): number { return CompetitorTab.SignUp; }
-  get TabRegister(): number { return CompetitorTab.Register; }
-
-  getTextSubjects(): TournamentRegistrationTextSubject[] {
-    return [
-      TournamentRegistrationTextSubject.Accept, TournamentRegistrationTextSubject.AcceptAsSubstitute
-      , TournamentRegistrationTextSubject.Decline]
-  }
-
-
-  getTextSubjectDescription(subject: TournamentRegistrationTextSubject): string {
-    if (subject === TournamentRegistrationTextSubject.Accept) {
-      return 'tekst bevestiging'
-    }
-    if (subject === TournamentRegistrationTextSubject.AcceptAsSubstitute) {
-      return 'tekst als-reserve'
-    }
-    return 'tekst afwijzing'
-  }
-
-  openTextEditorModal(subject: TournamentRegistrationTextSubject): void {
-    this.tournamentRegistrationRepository.getText(this.tournament, subject)
-      .subscribe({
-        next: (text: string) => {
-          // console.log(text);
-          const activeModal = this.modalService.open(TextEditorModalComponent, { size: 'xl' });
-          activeModal.componentInstance.header = this.getTextSubjectDescription(subject);
-          activeModal.componentInstance.tournament = this.tournament;
-          activeModal.componentInstance.subject = subject;
-          activeModal.componentInstance.initialText = text;
-
-          activeModal.result.then((newText: string) => {
-            // this.registrationRepository.editText(newText, this.tournament, this.subject)
-            //   .subscribe({
-            //     next: (text: string) => {
-            //       this.text = text;
-            //       this.copied = false;
-            //     }
-            //   });
-          }, (reason) => {
-          });
-        }
-      });
-  }
+  get TabRegistrations(): number { return CompetitorTab.Registrations; }
+  get TabPresent(): number { return CompetitorTab.Present; }
 }
 
 export enum CompetitorTab {
-  Base = 1, SignUp, Order, Register
+  Base = 1, Order, Registrations, Present
 }

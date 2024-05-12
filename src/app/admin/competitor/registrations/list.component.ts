@@ -3,25 +3,25 @@ import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Category, Place, StartLocationMap, StructureNameService } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
-import { TournamentCompetitor } from '../../lib/competitor';
-import { LockerRoomValidator } from '../../lib/lockerroom/validator';
-import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository';
-import { Tournament } from '../../lib/tournament';
-import { IAlert, IAlertType } from '../../shared/common/alert';
-import { TournamentCompetitorMapper } from '../../lib/competitor/mapper';
-import { TournamentRegistration } from '../../lib/tournament/registration';
-import { TournamentRegistrationRepository } from '../../lib/tournament/registration/repository';
-import { TournamentRegistrationProcessModalComponent } from './registration-processmodal.component';
-import { RegistrationState } from '../../lib/tournament/registration/state';
-import { TournamentRegistrationTextSubject } from '../../lib/tournament/registration/text';
-import { TextEditorModalComponent } from '../textEditor/texteditormodal.component';
+import { TournamentCompetitor } from '../../../lib/competitor';
+import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
+import { CompetitorRepository } from '../../../lib/ngx-sport/competitor/repository';
+import { Tournament } from '../../../lib/tournament';
+import { IAlert, IAlertType } from '../../../shared/common/alert';
+import { TournamentCompetitorMapper } from '../../../lib/competitor/mapper';
+import { TournamentRegistration } from '../../../lib/tournament/registration';
+import { TournamentRegistrationRepository } from '../../../lib/tournament/registration/repository';
+import { TournamentRegistrationProcessModalComponent } from './processmodal.component';
+import { RegistrationState } from '../../../lib/tournament/registration/state';
+import { TournamentRegistrationTextSubject } from '../../../lib/tournament/registration/text';
+import { TextEditorModalComponent } from '../../textEditor/texteditormodal.component';
 
 @Component({
-  selector: 'app-tournament-category-register-registrations',
-  templateUrl: './category.register-registrations.component.html',
-  styleUrls: ['./category.register-registrations.component.scss']
+  selector: 'app-tournament-registrations-list',
+  templateUrl: './list.component.html',
+  styleUrls: ['./list.component.scss']
 })
-export class CategoryRegistrationListComponent implements OnChanges  {
+export class RegistrationListComponent implements OnChanges  {
   @Input() tournament!: Tournament;
   @Input() category!: Category;
   @Input() showHeader!: boolean;
@@ -109,6 +109,41 @@ export class CategoryRegistrationListComponent implements OnChanges  {
     return 'success';
   }
 
+
+  getTextSubjects(): TournamentRegistrationTextSubject[] {
+    return [
+      TournamentRegistrationTextSubject.Accept,
+      TournamentRegistrationTextSubject.AcceptAsSubstitute,
+      TournamentRegistrationTextSubject.Decline]
+  }
+
+  getTextSubjectDescription(subject: TournamentRegistrationTextSubject): string {
+    if (subject === TournamentRegistrationTextSubject.Accept) {
+      return 'tekst bevestiging'
+    }
+    if (subject === TournamentRegistrationTextSubject.AcceptAsSubstitute) {
+      return 'tekst als-reserve'
+    }
+    return 'tekst afwijzing'
+  }
+
+  openTextEditorModal(subject: TournamentRegistrationTextSubject): void {
+    this.tournamentRegistrationRepository.getText(this.tournament, subject)
+      .subscribe({
+        next: (text: string) => {
+          const activeModal = this.modalService.open(TextEditorModalComponent, { size: 'xl' });
+          activeModal.componentInstance.header = this.getTextSubjectDescription(subject);
+          activeModal.componentInstance.tournament = this.tournament;
+          activeModal.componentInstance.subject = subject;
+          activeModal.componentInstance.initialText = text;
+
+          activeModal.result.then((newText: string) => {
+          }, (reason) => {
+          });
+        }
+      });
+  }
+  
   // protected setAlert(type: IAlertType, message: string) {
   //   this.alert = { 'type': type, 'message': message };
   // }

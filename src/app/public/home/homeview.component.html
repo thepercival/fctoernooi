@@ -8,24 +8,6 @@
           beheergedeelte</a>
       </ngb-alert>
 
-    <!-- intro, locatie, regels, sponsors, logo -->
-    <!-- <div class="d-flex justify-content-around mb-2">
-      <h2>
-        <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> <span class="mx-1">standen</span>
-        <button *ngIf="!processing && isAdmin()" [routerLink]="['/admin/ranking', tournament.getId()]" type="button"
-          class="btn btn-sm btn-outline-primary">
-          <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
-        </button>
-      </h2>
-      <button *ngIf="!processing && !structure.hasSingleCategory()" type="button"
-        class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
-        (click)="openCategoriesChooseModal(structure)">
-        <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
-
-      </button>
-    </div>
-  -->
-  
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </h2>
@@ -37,6 +19,16 @@
           <span>{{tournament.getIntro()}}</span>
         </div>
         
+        <ng-container *ngIf="settings">
+          <h3 *ngIf="showRegistration(settings)" class="mb-1 mt-4">inschrijven</h3>
+          <p *ngIf="showRegistration(settings)">
+            <span *ngIf="registrateIsActive(settings)">Je kan je 
+              <button type="button" class="btn btn-sm btn-primary" [routerLink]="['/public/registrationform', tournament.getId()]">
+              inschrijven</button> tot {{dateFormatter.toString(settings.getEnd(), dateFormatter.datetimeWithWeekDay())}} uur.</span>
+            <span *ngIf="registrateIsInActive(settings)">De inschrijving is op {{dateFormatter.toString(settings.getEnd(), dateFormatter.datetimeWithWeekDay())}} uur verlopen.</span>
+          </p>
+        </ng-container>
+
         <h3 *ngIf="rules.length > 0" class="mb-1 mt-4">huisregels</h3>
         <ul class="list-group">
           <li *ngFor=" let rule of rules" class="list-group-item bg-white text-dark text-start">

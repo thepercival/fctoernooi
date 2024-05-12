@@ -1,0 +1,35 @@
+<div *ngIf="settings" class="container">
+  <h2 *ngIf="processing" class="text-center">
+    <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  </h2>
+  
+  <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+  
+  <form *ngIf="typedForm && !processing" [formGroup]="typedForm" name="form" (ngSubmit)="save()" novalidate>    
+    <div class="row my-3">
+      <div class="col-5">
+        <label for="remark" class="col-form-label">extra tekst op formulier</label>
+      </div>
+      <div class="col-7">
+        <textarea class="form-control" rows="5"
+          [ngClass]="{ 'is-invalid': typedForm.controls.remark.invalid, 'is-valid': typedForm.controls.remark.valid }"
+          formControlName="remark" placeholder="max. {{validations.maxlengthremark}} karakters"></textarea>
+      </div>
+    </div>
+   
+    <div class="row mb-3">
+      <div class="col-5 d-flex justify-content-end">
+        <button type="button" class="btn btn-outline-primary"
+          [routerLink]="['/public/registrationform', tournament.getId()]">
+          <fa-icon [icon]="['fas', 'eye']"></fa-icon> <span class="ms-1">bekijk formulier</span>
+        </button>
+      </div>    
+      <div class="col-7">
+        <button [disabled]="typedForm.invalid" type="submit" class="btn btn-primary">
+          opslaan
+        </button>
+      </div>      
+    </div>
+  </form>
+
+</div>

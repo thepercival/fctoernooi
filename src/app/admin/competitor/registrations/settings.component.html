@@ -1,6 +1,4 @@
-<div *ngIf="registrationSettings" class="container">
-  <h2>instellen</h2>
-
+<div *ngIf="settings" class="container">
   <h2 *ngIf="processing" class="text-center">
     <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
   </h2>
@@ -10,10 +8,10 @@
   <form *ngIf="typedForm && !processing" [formGroup]="typedForm" name="form" (ngSubmit)="save()" novalidate>
 
     <div class="row mb-3">
-      <label for="enabled" class="col-3 col-form-label">
+      <label for="enabled" class="col-5 col-form-label">
         aan/uit
       </label>
-      <div class="col-9">
+      <div class="col-7">
         <div class="form-control form-check form-switch">
           <input type="checkbox" class="form-check-input" id="enabled"
             formControlName="enabled" (change)="toggleReadOnly()">
@@ -23,10 +21,10 @@
     </div>
 
     <div class="row mb-3">
-      <div class="col-3">
-        <label for="endDate" class="col-form-label">tot</label>
+      <div class="col-5">
+        <label for="endDate" class="col-form-label">inschrijven tot</label>
       </div>
-      <div class="col-9">
+      <div class="col-7">
         <div class="input-group input-group-date">
           
           <input class="form-control"
@@ -40,40 +38,29 @@
       </div>
     </div>
     <div class="row mb-3">
-      <div class="col-3">
+      <div class="col-5">
         <label for="endTime" class="col-form-label"></label>
       </div>
-      <div class="col-9">
+      <div class="col-7">
         <ngb-timepicker formControlName="endTime" [spinners]="false" required>
         </ngb-timepicker>
       </div>
     </div>
    
     <div class="row mb-3">
-      <label for="mailAlert" class="col-3 col-form-label">
-        ontvang mail
+      <label for="mailAlert" class="col-5 col-form-label">
+        ontvang mail bij nieuwe inschrijving
       </label>
-      <div class="col-9">
+      <div class="col-7">
         <div class="form-control form-check form-switch">
           <input type="checkbox" class="form-check-input" id="mailAlert" formControlName="mailAlert">
           <label class="form-check-label" for="mailAlert"></label>
         </div>
       </div>
     </div>
-
-    <div class="row mb-3">
-      <div class="col-3">
-        <label for="remark" class="col-form-label">tonen op formulier</label>
-      </div>
-      <div class="col-9">
-        <textarea class="form-control"
-          [ngClass]="{ 'is-invalid': typedForm.controls.remark.invalid, 'is-valid': typedForm.controls.remark.valid }"
-          formControlName="remark" placeholder="max. {{validations.maxlengthremark}} karakters"></textarea>
-      </div>
-    </div>
    
     <div class="row mb-3 justify-content-end">
-      <div class="col-9">
+      <div class="col-7">
         <button [disabled]="typedForm.invalid" type="submit" class="btn btn-primary">
           opslaan
         </button>

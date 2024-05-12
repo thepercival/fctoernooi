@@ -42,9 +42,9 @@ export class CompetitorListLineComponent implements AfterViewChecked {
     this.removePressed.emit(this.placeCompetitor);
   }
 
-  setRegistered(competitor: TournamentCompetitor): void {
+  setPresent(competitor: TournamentCompetitor): void {
     const jsonCompetitor = this.competitorMapper.toJson(competitor);
-    jsonCompetitor.registered = competitor.getRegistered() === true ? false : true;
+    jsonCompetitor.present = competitor.getPresent() === true ? false : true;
 
     // const prefix = jsonCompetitor.registered ? 'aan' : 'af';
     // const message = 'deelnemer ' + competitor.getName() + ' wordt ' + prefix + 'gemeld';

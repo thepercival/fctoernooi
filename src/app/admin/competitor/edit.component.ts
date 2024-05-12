@@ -22,10 +22,8 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { JsonTournamentCompetitor } from '../../lib/competitor/json';
 import { NameValidator } from '../../lib/nameValidator';
-import { TournamentRegistration } from '../../lib/tournament/registration';
 import { User } from '../../lib/user';
 import { Observable, of } from 'rxjs';
-import { Tournament } from '../../lib/tournament';
 import { LogoInput } from '../sponsor/edit.component';
 
 @Component({
@@ -38,10 +36,11 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         name: FormControl<string>,
         emailaddress: FormControl<string | null>,
         telephone: FormControl<string | null>, 
-        registered: FormControl<boolean>,
+        present: FormControl<boolean>,
         logoExtension: FormControl<string | null>,
         logoFileStream: FormControl<Blob | null>,
-        info: FormControl<string|null>,
+        publicInfo: FormControl<string|null>,
+        privateInfo: FormControl<string | null>,
       }>;
     originalCompetitor: TournamentCompetitor | undefined;
     hasBegun!: boolean;
@@ -103,7 +102,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
                         Validators.maxLength(this.validations.maxlengthtelephone)
                     ]
             }),
-            registered: new FormControl(false, { nonNullable: true }),
+            present: new FormControl(false, { nonNullable: true }),
             logoExtension: new FormControl('', {
                 validators:
                     [
@@ -111,9 +110,13 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
                     ]
             }),
             logoFileStream: new FormControl(),
-            info: new FormControl('', { nonNullable: false , validators: 
+            publicInfo: new FormControl('', { nonNullable: false , validators: 
                 [Validators.maxLength(this.validations.maxlengthinfo)] 
-            }),            
+            }),
+            privateInfo: new FormControl('', {
+                nonNullable: false, validators:
+                    [Validators.maxLength(this.validations.maxlengthinfo)]
+            }),
           });
         this.nameService = new NameService();
     }
@@ -149,8 +152,9 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
                     this.typedForm.controls.name.setValue(this.originalCompetitor?.getName() ?? '');
                     this.typedForm.controls.emailaddress.setValue(this.originalCompetitor?.getEmailaddress() ?? '');
                     this.typedForm.controls.telephone.setValue(this.originalCompetitor?.getTelephone() ?? '');
-                    this.typedForm.controls.registered.setValue(this.originalCompetitor ? this.originalCompetitor.getRegistered() : false);
-                    this.typedForm.controls.info.setValue(this.originalCompetitor?.getInfo() ?? null);
+                    this.typedForm.controls.present.setValue(this.originalCompetitor ? this.originalCompetitor.getPresent() : false);
+                    this.typedForm.controls.publicInfo.setValue(this.originalCompetitor?.getPublicInfo() ?? null);
+                    this.typedForm.controls.privateInfo.setValue(this.originalCompetitor?.getPrivateInfo() ?? null);
                     this.typedForm.controls.logoExtension.setValue(this.originalCompetitor?.getLogoExtension() ?? null);
                     this.processing = false;
                 },
@@ -177,16 +181,18 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
     }
 
     formToJson(): JsonTournamentCompetitor {
-        const info = this.typedForm.controls.info.value;
+        const publicInfo = this.typedForm.controls.publicInfo.value;
+        const privateInfo = this.typedForm.controls.privateInfo.value;
         const logoExtension = this.logoInputType === LogoInput.ByUrl ? this.typedForm.controls.logoExtension.value ?? undefined : undefined;
         return {
             id: this.originalCompetitor ? this.originalCompetitor.getId() : 0,
             name: this.typedForm.controls.name.value,
             emailaddress: this.typedForm.controls.emailaddress.value ?? undefined,
             telephone: this.typedForm.controls.telephone.value ?? undefined,
-            registered: this.typedForm.controls.registered.value,
+            present: this.typedForm.controls.present.value,
             logoExtension: logoExtension, 
-            info: info ? info : undefined,
+            publicInfo: publicInfo ? publicInfo : undefined,
+            privateInfo: privateInfo ? privateInfo : undefined,
             categoryNr: this.startLocation.getCategoryNr(),
             pouleNr: this.startLocation.getPouleNr(),
             placeNr: this.startLocation.getPlaceNr()
@@ -264,17 +270,13 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         }
     }
 
-    navigateBack() {
+    navigateBack(): void {
         this.myNavigation.back();
     }
 
-    getLogoUploadDescription() {
-        return 'het plaatje moet in svg formaat worden aangeleverd, zodat het voor zowel de website als het programmaboekje gebruikt kan worden. De beeldverhouding moet vierkant zijn'
-    }
-
-    openInfoModal(modalContent: TemplateRef<any>) {
+    openInfoModal(modalContent: TemplateRef<any>, title: string) {
         const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-        activeModal.componentInstance.header = 'uitleg upload logo';
+        activeModal.componentInstance.header = title;
         activeModal.componentInstance.modalContent = modalContent;
     }
 
@@ -286,7 +288,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         const file = files[0];
         const mimeType = file.type;
         if (mimeType.match(/image\/*/) == null) {
-            this.setAlert(IAlertType.Danger, 'alleen plaatjes worden ondersteund');
+            this.setAlert(IAlertType.Danger, 'alleen afbeeldingen worden ondersteund');
             return;
         }
         const reader = new FileReader();

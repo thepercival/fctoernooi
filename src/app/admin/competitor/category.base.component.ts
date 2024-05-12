@@ -16,10 +16,11 @@ import { CompetitorListRemoveModalComponent } from './listremovemodal.component'
   templateUrl: './category.base.component.html',
   styleUrls: ['./category.base.component.scss']
 })
-export class CategoryBaseCompetitorListComponent implements OnInit, OnChanges {
+export class CategoryBaseCompetitorListComponent implements OnChanges {
   @Input() tournament!: Tournament;
   @Input() category!: Category;
   @Input() showHeader!: boolean;
+  @Input() hasBegun: boolean = true;
   @Input() structureNameService!: StructureNameService;
   @Input() lockerRoomValidator!: LockerRoomValidator;
   @Input() focusId!: string | number;
@@ -32,7 +33,6 @@ export class CategoryBaseCompetitorListComponent implements OnInit, OnChanges {
 
   public placeCompetitorItems: PlaceCompetitorItem[] = [];
   public orderMode = false;
-  public hasBegun = true;
   public swapItem: PlaceCompetitorItem | undefined;
   private startLocationMap!: StartLocationMap;
   private areSomeCompetitorsArranged: boolean = false;
@@ -44,12 +44,6 @@ export class CategoryBaseCompetitorListComponent implements OnInit, OnChanges {
     private structureEditor: StructureEditor,
     private competitorRepository: CompetitorRepository,
     private modalService: NgbModal) {
-  }
-
-  ngOnInit() {
-    this.hasBegun = this.category.getRootRound().hasBegun();
-    // at every change of this.structureNameService
-
   }
 
   ngOnChanges(changes: SimpleChanges) {

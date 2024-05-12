@@ -12,11 +12,11 @@ import { IAlert, IAlertType } from '../../shared/common/alert';
 import { TournamentCompetitorMapper } from '../../lib/competitor/mapper';
 
 @Component({
-  selector: 'app-tournament-category-competitors-registered',
-  templateUrl: './category.registered.component.html',
-  styleUrls: ['./category.registered.component.scss']
+  selector: 'app-tournament-competitors-present',
+  templateUrl: './present.component.html',
+  styleUrls: ['./present.component.scss']
 })
-export class CategoryRegisteredCompetitorListComponent implements OnChanges {
+export class CompetitorPresentListComponent implements OnChanges {
   @Input() tournament!: Tournament;
   @Input() category!: Category;
   @Input() showHeader!: boolean;
@@ -62,26 +62,18 @@ export class CategoryRegisteredCompetitorListComponent implements OnChanges {
     });
   }
 
-  allPlacesHaveACompetitor(): boolean {
-    return this.placeCompetitorItems.every((item: PlaceCompetitorItem) => item.competitor !== undefined);
-  }
-
-  atLeastTwoPlacesHaveACompetitor(): boolean {
-    let firstCompetitor: TournamentCompetitor | undefined;
+  somePlaceHasACompetitor(): boolean {
     return this.placeCompetitorItems.some((item: PlaceCompetitorItem) => {
-      if (firstCompetitor === undefined) {
-        firstCompetitor = item.competitor;
-      }
-      return firstCompetitor !== undefined && item.competitor !== undefined && firstCompetitor !== item.competitor;
+      return item.competitor !== undefined;
     });
   }
 
-  setRegistered(competitor: TournamentCompetitor): void {
+  setPresency(competitor: TournamentCompetitor): void {
     this.processing = true;
     const jsonCompetitor = this.competitorMapper.toJson(competitor);
-    jsonCompetitor.registered = competitor.getRegistered() === true ? false : true;
+    jsonCompetitor.present = competitor.getPresent() === true ? false : true;
 
-    // const prefix = jsonCompetitor.registered ? 'aan' : 'af';
+    // const prefix = jsonCompetitor.present ? 'aan' : 'af';
     // const message = 'deelnemer ' + competitor.getName() + ' wordt ' + prefix + 'gemeld';
 
     // this.processing.emit(message);
@@ -92,8 +84,8 @@ export class CategoryRegisteredCompetitorListComponent implements OnChanges {
       });
   }
 
-  getRegisteredId(place: Place): string {
-    return 'registered-' + place.getId();
+  getPresentId(place: Place): string {
+    return 'present-' + place.getId();
   }
   
 

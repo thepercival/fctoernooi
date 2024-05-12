@@ -1,14 +1,10 @@
-import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { DateFormatter } from '../../lib/dateFormatter';
-import { FavoritesRepository } from '../../lib/favorites/repository';
 import { TournamentShell } from '../../lib/tournament/shell';
-import { TournamentShellFilter, TournamentShellRepository } from '../../lib/tournament/shell/repository';
+import { TournamentShellRepository } from '../../lib/tournament/shell/repository';
 import { IAlert, IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
-import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Role } from '../../lib/role';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserRepository } from '../../lib/user/repository';
 import { User } from '../../lib/user';
 import { CopyConfig, CopyModalComponent } from '../tournament/copymodal.component';

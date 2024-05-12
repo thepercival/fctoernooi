@@ -25,6 +25,7 @@ export class GameBaseEditComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.form.addControl('field', new FormControl(
       { value: this.game.getField(), disabled: !this.manualEditMode() },
       Validators.compose([

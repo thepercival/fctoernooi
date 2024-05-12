@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 
 import { Category, Competitor, Place, StartLocationMap, StructureNameService } from 'ngx-sport';
 import { AuthService } from '../../lib/auth/auth.service';
@@ -8,6 +8,8 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository';
+import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-tournament-competitors-category',
@@ -24,12 +26,14 @@ export class CompetitorsCategoryComponent implements OnInit {
     
     public hasSomeCompetitorAnImage: boolean = false;
     public placeCompetitorItems: PlaceCompetitorItem[] = [];
+    public modalCompetitor: Competitor|undefined;
 
     constructor(
         protected tournamentMapper: TournamentMapper,
         protected favRepository: FavoritesRepository,
         public competitorRepository: CompetitorRepository,
-        protected authService: AuthService
+        protected authService: AuthService,
+        private modalService: NgbModal,
     ) {
 
     }
@@ -75,5 +79,19 @@ export class CompetitorsCategoryComponent implements OnInit {
             const competitor = startLocation ? map.getCompetitor(startLocation) : undefined;
             return { place, competitor: <TournamentCompetitor | undefined>competitor };
         });
+    }
+
+    openInfoModal(modalContent: TemplateRef<any>, competitor: Competitor|undefined) {
+        if (!competitor?.getPublicInfo() ) {
+            return;
+        }
+        const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
+        activeModal.componentInstance.header = competitor.getName();
+        this.modalCompetitor = competitor;
+        activeModal.componentInstance.modalContent = modalContent;
+        // activeModal.result.then((result) => {
+            
+        // }, (reason) => {
+        // });
     }
 }

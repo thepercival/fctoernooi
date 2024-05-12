@@ -1,0 +1,35 @@
+
+
+<div>
+  <ul ngbNav #nav2="ngbNav" [(activeId)]="activeTab" class="nav-tabs nav-fill mt-3" id="registrationTab">
+    <li [ngbNavItem]="TabRegistrationSettings"> <!-- settings -->
+      <a class="px-1" ngbNavLink>instellingen</a>
+      <ng-template ngbNavContent>
+          <app-tournament-registrations-settings *ngIf="settings" [settings]="settings"
+            [tournament]="tournament" (settingsUpdate)="updateSettings($event)">
+          </app-tournament-registrations-settings>
+      </ng-template>
+    </li>
+    <li [ngbNavItem]="TabRegistrationList" [disabled]="!settings || !settings.isEnabled()"> <!-- registrations => list -->
+      <a class="px-1" ngbNavLink>lijst</a>
+      <ng-template ngbNavContent>
+        <div *ngIf="!processing" class="d-flex flex-wrap gap-3 mt-3">                    
+          <app-tournament-registrations-list *ngFor="let category of favoriteCategories" class="mx-auto"
+            [showHeader]="favoriteCategories.length > 1" [category]="category" [tournament]="tournament"
+            [structureNameService]="structureNameService" [activeTab]="activeTab" (competitorsUpdate)="competitorsUpdate.emit()"
+            (alert)="setAlert($event.type,$event.message)">
+          </app-tournament-registrations-list>
+        </div>        
+      </ng-template>
+    </li>
+    <li [ngbNavItem]="TabRegistrationForm" [disabled]="!settings || !settings.isEnabled()"> <!-- form -->
+      <a class="px-1" ngbNavLink>formulier</a>
+      <ng-template ngbNavContent>
+        <app-tournament-registrations-form *ngIf="settings" [settings]="settings" [tournament]="tournament"
+          (settingsUpdate)="updateSettings($event)">
+        </app-tournament-registrations-form>
+        </ng-template>
+    </li>
+  </ul>
+  <div [ngbNavOutlet]="nav2" class="mt-2"></div>
+</div>

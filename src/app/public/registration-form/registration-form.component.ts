@@ -121,7 +121,7 @@ export class RegistrationComponent extends TournamentComponent implements OnInit
         });
     }
 
-    get TabSignUp(): number { return CompetitorTab.SignUp; }
+    get TabRegistrations(): number { return CompetitorTab.Registrations; }
     
     isAdmin(): boolean {
         return this.hasRole(this.authService, Role.Admin);

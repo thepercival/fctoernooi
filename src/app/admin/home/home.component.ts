@@ -130,7 +130,7 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
 
     someCompetitorsRegistered(): boolean {
         const competitors = this.tournament.getCompetitors();
-        return competitors.some(competitor => competitor.getRegistered()) && !competitors.every(competitor => competitor.getRegistered());
+        return competitors.some(competitor => competitor.getPresent()) && !competitors.every(competitor => competitor.getPresent());
     }
 
     getNrOfFieldsDescription() {

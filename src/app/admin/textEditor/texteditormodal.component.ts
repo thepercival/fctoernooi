@@ -52,7 +52,6 @@ export class TextEditorModalComponent implements OnInit {
                 .subscribe({
                   next: (text: string) => {
                     this.initialText = text;
-                    // this.copied = false;
                     this.alert = { type: IAlertType.Success, message: 'de tekst is opgeslagen' }
                   }
                 });

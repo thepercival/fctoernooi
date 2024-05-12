@@ -13,10 +13,13 @@ import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentRuleRepository } from '../../lib/tournament/rule/repository';
 import { JsonTournamentRule } from '../../lib/tournament/rule/json';
-import { Observable } from 'rxjs';
 import { SponsorRepository } from '../../lib/sponsor/repository';
 import { Sponsor } from '../../lib/sponsor';
 import { IAlertType } from '../../shared/common/alert';
+import { TournamentRegistrationRepository } from '../../lib/tournament/registration/repository';
+import { TournamentRegistrationSettings } from '../../lib/tournament/registration/settings';
+import { DateFormatter } from '../../lib/dateFormatter';
+import { combineLatest } from 'rxjs';
 
 @Component({
     selector: 'app-tournament-home-view',
@@ -25,6 +28,7 @@ import { IAlertType } from '../../shared/common/alert';
 })
 export class HomeViewComponent extends TournamentComponent implements OnInit {
     public rules: JsonTournamentRule[] = [];
+    public settings: TournamentRegistrationSettings|undefined;
 
     constructor(
         route: ActivatedRoute,
@@ -36,26 +40,24 @@ export class HomeViewComponent extends TournamentComponent implements OnInit {
         favRepository: FavoritesRepository,
         private sponsorRepository: SponsorRepository,
         private rulesRepository: TournamentRuleRepository,
+        private tournamentRegistrationRepository: TournamentRegistrationRepository,
         protected tournamentMapper: TournamentMapper,
-        protected authService: AuthService
+        protected authService: AuthService,
+        public dateFormatter: DateFormatter,
     ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
     }
 
     ngOnInit() {
-        super.myNgOnInit(() => {
-           
-            this.rulesRepository.getObjects(this.tournament)
-                .subscribe({
-                    next: (rules: JsonTournamentRule[]) => {
-                        this.rules = rules
-
-                        this.processing = false;
-                    },
-                    error: (e) => {
-                        this.setAlert(IAlertType.Danger, e); this.processing = false;
-                    }
-                });
+        super.myNgOnInit(() => {           
+            const obsRules = this.rulesRepository.getObjects(this.tournament);
+            const obsSettings = this.tournamentRegistrationRepository.getSettings(this.tournament);
+            combineLatest([obsRules, obsSettings]).subscribe(
+                ([rules, settings]) => {
+                    this.rules = rules; 
+                    this.settings = settings;
+                    this.processing = false;
+                })
         });
     }
 
@@ -63,6 +65,20 @@ export class HomeViewComponent extends TournamentComponent implements OnInit {
 
     isAdmin(): boolean {
         return this.hasRole(this.authService, Role.Admin);
+    }
+
+    public showRegistration(settings: TournamentRegistrationSettings): boolean{
+        const weekBeforeStart = (new Date(this.tournament.getCompetition().getStartDateTime()));
+        weekBeforeStart.setDate(weekBeforeStart.getDate() - 7);
+        return this.registrateIsActive(settings) && (new Date()).getTime() < weekBeforeStart.getTime();
+    }
+    
+    public registrateIsActive(settings: TournamentRegistrationSettings): boolean { 
+        return settings.isEnabled() && (new Date()).getTime() < settings.getEnd().getTime()
+    }
+
+    public registrateIsInActive(settings: TournamentRegistrationSettings): boolean { 
+        return settings.isEnabled() && (new Date()).getTime() > settings.getEnd().getTime()
     }
 
     locationIsCoordinate(location: string|undefined): boolean {

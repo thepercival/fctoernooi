@@ -11,8 +11,7 @@ export class TournamentCompetitor extends CompetitorBase implements Competitor {
     static readonly MAX_LENGTH_IMAGEURL = 150;
     protected logoExtension: string | undefined;
     private emailaddress: string|undefined;
-    private telephone: string | undefined;    
-
+    private telephone: string | undefined;
     constructor(private tournament: Tournament, protected startLocation: StartLocation, private name: string) {
         super(tournament.getCompetition(), startLocation);
         this.tournament.getCompetitors().push(this);

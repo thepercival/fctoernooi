@@ -86,17 +86,19 @@ import { LockerRoomsEditComponent } from './lockerrooms/lockerrooms.component';
 import { StructureEditComponent } from './structure/edit.component';
 import { SportIconComponent } from '../shared/tournament/sport/icon.component';
 import { CategoryOrderCompetitorListComponent } from './competitor/category.order.component';
-import { CategoryRegisteredCompetitorListComponent } from './competitor/category.registered.component';
-import { CategoryRegistrationListComponent } from './competitor/category.register-registrations.component';
-import { RegistrationSettingsComponent } from './competitor/register-settings.component';
+import { CompetitorPresentListComponent } from './competitor/present.component';
+import { RegistrationListComponent } from './competitor/registrations/list.component';
+import { RegistrationSettingsComponent } from './competitor/registrations/settings.component';
 import { TournamentRegistrationEditComponent } from './registration/registration-edit.component';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { TournamentRegistrationProcessModalComponent } from './competitor/registration-processmodal.component';
+import { TournamentRegistrationProcessModalComponent } from './competitor/registrations/processmodal.component';
 import { TextEditorModalComponent } from './textEditor/texteditormodal.component';
 import { CopiedModalComponent } from './home/copiedmodal.component';
 import { HomeEditComponent } from './home/homeedit.component';
 import { TournamentRulesComponent } from './home/rules.component';
 import { TournamentNameAndLogoComponent } from './nameAndLogo/name-and-logo.component';
+import { RegistrationsNavComponent } from './competitor/registrations/nav.component';
+import { RegistrationFormComponent } from './competitor/registrations/form.component';
 
 @NgModule({
   imports: [
@@ -118,15 +120,11 @@ import { TournamentNameAndLogoComponent } from './nameAndLogo/name-and-logo.comp
     CompetitionSportEditComponent,
     CompetitorEditComponent,
     CompetitorListComponent,
-    CategoryRegistrationListComponent,
-    CategoryRegistrationListComponent,
-    RegistrationSettingsComponent,
-    CategoryBaseCompetitorListComponent,
-    CategoryRegisteredCompetitorListComponent,
+    CategoryBaseCompetitorListComponent,    
     CategoryOrderCompetitorListComponent,
-    CategoryRegistrationListComponent,
     CompetitorListLineComponent,
     CompetitorListRemoveModalComponent,
+    CompetitorPresentListComponent,
     CopiedModalComponent,
     CreateSportWithFieldsComponent,    
     ExportModalComponent,
@@ -148,6 +146,10 @@ import { TournamentNameAndLogoComponent } from './nameAndLogo/name-and-logo.comp
     RecessAddComponent,
     RefereeListComponent,
     RefereeEditComponent,
+    RegistrationFormComponent,
+    RegistrationListComponent,
+    RegistrationsNavComponent,
+    RegistrationSettingsComponent,
     RoleItemComponent,
     RoundNumbersSelectorModalComponent,
     RoundsSelectorModalComponent,

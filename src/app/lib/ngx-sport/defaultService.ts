@@ -101,7 +101,8 @@ export class DefaultService {
             minutesAfter: DefaultService.MinutesAfter,
             perPoule: false,
             selfReferee: SelfReferee.Disabled,
-            nrOfSimSelfRefs: 0
+            nrOfSimSelfRefs: 0,
+            bestLast: false
         }
     }
 
@@ -132,65 +133,6 @@ export class DefaultService {
         }
         return { min: 1, max: 50 };
     };
-
-    getNrOfPoules(nrOfPlaces: number): number {
-        switch (nrOfPlaces) {
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 7: {
-                return 1;
-            }
-            case 6:
-            case 8:
-            case 10:
-            case 11: {
-                return 2;
-            }
-            case 9:
-            case 12:
-            case 13:
-            case 14:
-            case 15: {
-                return 3;
-            }
-            case 16:
-            case 17:
-            case 18:
-            case 19: {
-                return 4;
-            }
-            case 20:
-            case 21:
-            case 22:
-            case 23:
-            case 25: {
-                return 5;
-            }
-            case 24:
-            case 26:
-            case 29:
-            case 30:
-            case 33:
-            case 34:
-            case 36: {
-                return 6;
-            }
-            case 28:
-            case 31:
-            case 35:
-            case 37:
-            case 38:
-            case 39: {
-                return 7;
-            }
-            case 27: {
-                return 9;
-            }
-        }
-        return 8;
-    }
 }
 
 export interface GameAmountConfigValidations {

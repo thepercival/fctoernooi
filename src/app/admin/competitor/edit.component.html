@@ -32,11 +32,11 @@
           </div>
         </div>
         <div class="row mb-3">
-          <label for="registered" class="col-3 col-form-label">aangemeld</label>
+          <label for="present" class="col-3 col-form-label">aanwezig</label>
           <div class="col-9">
             <div class="form-control form-check form-switch">
-              <input type="checkbox" class="form-check-input" id="registered" formControlName="registered">
-              <label class="form-check-label" for="registered"></label>
+              <input type="checkbox" class="form-check-input" id="present" formControlName="present">
+              <label class="form-check-label" for="present"></label>
             </div>
           </div>
         </div>
@@ -65,7 +65,7 @@
 
         <div *ngIf="logoInputType === LogoInputTypeByUpload" class="row mb-3">
           <div class="col-3">
-            <label for="logouploadother" (click)="openInfoModal(contentInfo)" class="pointer mt-1">logo
+            <label for="logouploadother" (click)="openInfoModal(contentLogoInfo, 'uitleg upload logo')" class="col-form-label pointer">logo
               <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
             </label>
           </div>
@@ -74,14 +74,27 @@
           </div>
         </div>
 
-        <div class="row mb-3">
+        <div *ngIf="tournament.getPublic()" class="row mb-3">
           <div class="col-3">
-            <label for="info" class="col-form-label">info</label>
+            <label for="publicInfo" (click)="openInfoModal(contentInfoInfo, 'uitleg publieke info')" class="col-form-label pointer">publieke info
+              <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
+            </label>
           </div>
           <div class="col-9">
             <textarea class="form-control"
-              [ngClass]="{ 'is-invalid': typedForm.controls.info.invalid, 'is-valid': typedForm.controls.info.valid }"
-              formControlName="info" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
+              [ngClass]="{ 'is-invalid': typedForm.controls.publicInfo.invalid, 'is-valid': typedForm.controls.publicInfo.valid }"
+              formControlName="publicInfo" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-3">
+            <label for="privateInfo" class="col-form-label">priv&#233; info</label>
+          </div>
+          <div class="col-9">
+            <textarea class="form-control"
+              [ngClass]="{ 'is-invalid': typedForm.controls.privateInfo.invalid, 'is-valid': typedForm.controls.privateInfo.valid }"
+              formControlName="privateInfo" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>
 
@@ -117,7 +130,15 @@
     </div>
   </div>
 </div>
-<ng-template #contentInfo>
-  {{getLogoUploadDescription()}}
+<ng-template #contentLogoInfo>
+  <span>de afbeelding moet in jpg-, png-, gif-, of svgformaat worden aangeleverd, zodat het voor zowel de website als het
+  programmaboekje gebruikt kan worden. De beeldverhouding moet vierkant zijn</span>>
+</ng-template>
+<ng-template #contentInfoInfo let-activeModal>
+  <div>Deze informatie wordt getoond in het 
+    <button type="button" class="btn btn-sm btn-secondary"
+      [routerLink]="['/public/competitors', tournament.getId()]" (click)="activeModal.close()">
+      <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers-scherm
+    </button></div>
 </ng-template>
 <app-tournament-navbar *ngIf="tournament" [tournament]="tournament"></app-tournament-navbar>

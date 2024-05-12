@@ -21,8 +21,9 @@ export class TournamentCompetitorMapper {
     }
 
     updateObject(json: JsonTournamentCompetitor, competitor: TournamentCompetitor): TournamentCompetitor {
-        if (json.registered !== undefined) { competitor.setRegistered(json.registered) };
-        if (json.info !== undefined) { competitor.setInfo(json.info) };
+        if (json.present !== undefined) { competitor.setPresent(json.present) };
+        if (json.publicInfo !== undefined) { competitor.setPublicInfo(json.publicInfo) };
+        if (json.privateInfo !== undefined) { competitor.setPrivateInfo(json.privateInfo) };
         competitor.setEmailaddress(json.emailaddress);
         competitor.setTelephone(json.telephone);
         competitor.setLogoExtension(json.logoExtension);
@@ -32,9 +33,10 @@ export class TournamentCompetitorMapper {
     toJson(competitor: TournamentCompetitor): JsonTournamentCompetitor {
         return {
             id: competitor.getId(),
-            registered: competitor.getRegistered(),
+            present: competitor.getPresent(),
             logoExtension: competitor.getLogoExtension(),
-            info: competitor.getInfo(),
+            publicInfo: competitor.getPublicInfo(),
+            privateInfo: competitor.getPrivateInfo(),
             name: competitor.getName(),
             emailaddress: competitor.getEmailaddress(),
             telephone: competitor.getTelephone(),

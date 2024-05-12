@@ -80,54 +80,57 @@ export class TournamentRegistrationEditComponent extends TournamentComponent imp
     return;
   }
   this.category = category;
+  
   this.tournamentRegistrationRepository.getObject(registrationId, category, this.tournament)
     .subscribe({
       next: (registration: TournamentRegistration) => {
         this.registration = registration;
-
-        this.form = new FormGroup({
-          name: new FormControl(registration.getName(), {
-            nonNullable: true, validators:
-              [
-                Validators.required,
-                Validators.minLength(this.validations.minlengthname),
-                Validators.maxLength(this.validations.maxlengthname)
-              ]
-          }),
-          emailaddress: new FormControl(registration.getEmailaddress(), {
-            nonNullable: true, validators:
-              [
-                Validators.required,
-                Validators.minLength(this.validations.minlengthemailaddress),
-                Validators.maxLength(this.validations.maxlengthemailaddress)
-              ]
-          }),
-          telephone: new FormControl(registration.getTelephone(), {
-            nonNullable: true, validators:
-              [
-                Validators.required,
-                Validators.minLength(this.validations.minlengthtelephone),
-                Validators.maxLength(this.validations.maxlengthtelephone)
-              ]
-          }),
-          category: new FormControl(registration.getCategory(), {
-            nonNullable: true, validators:
-              [
-                Validators.required
-              ]
-          }), 
-          info: new FormControl(registration.getInfo(), {
-            nonNullable: true, validators:
-              [Validators.maxLength(this.validations.maxlengthinfo)]
-          }),
-        });
-
+        this.initForm(category, registration);
         this.processing = false;
       },
       error: (e: string) => {
         this.setAlert(IAlertType.Danger, e + ', instellingen niet gevonden');
         this.processing = false;
       }
+    });
+  }
+
+  initForm(category: Category, registration: TournamentRegistration): void {
+    this.form = new FormGroup({
+      name: new FormControl(registration.getName(), {
+        nonNullable: true, validators:
+          [
+            Validators.required,
+            Validators.minLength(this.validations.minlengthname),
+            Validators.maxLength(this.validations.maxlengthname)
+          ]
+      }),
+      emailaddress: new FormControl(registration.getEmailaddress(), {
+        nonNullable: true, validators:
+          [
+            Validators.required,
+            Validators.minLength(this.validations.minlengthemailaddress),
+            Validators.maxLength(this.validations.maxlengthemailaddress)
+          ]
+      }),
+      telephone: new FormControl(registration.getTelephone(), {
+        nonNullable: true, validators:
+          [
+            Validators.required,
+            Validators.minLength(this.validations.minlengthtelephone),
+            Validators.maxLength(this.validations.maxlengthtelephone)
+          ]
+      }),
+      category: new FormControl(category, {
+        nonNullable: true, validators:
+          [
+            Validators.required
+          ]
+      }),
+      info: new FormControl(registration.getInfo(), {
+        nonNullable: true, validators:
+          [Validators.maxLength(this.validations.maxlengthinfo)]
+      }),
     });
   }
 
