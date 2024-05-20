@@ -70,7 +70,7 @@ export class RegistrationComponent extends TournamentComponent implements OnInit
     ngOnInit() {
         super.myNgOnInit(() => {     
 
-            this.tournamentRegistrationRepository.getSettings(this.tournament)
+            this.tournamentRegistrationRepository.getSettings(this.tournament, true)
                 .subscribe({
                     next: (settings: TournamentRegistrationSettings) => {
                         this.settings = settings;

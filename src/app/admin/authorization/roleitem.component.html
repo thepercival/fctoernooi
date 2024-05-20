@@ -1,15 +1,16 @@
 <li class="list-group-item">
     <div class="d-flex justify-content-between">
         <!-- left -->
-        <label for="role-{{role.role}}" class="pointer mb-0">
+        <label for="role-{{role().role}}" class="pointer mb-0">
             <span>{{description}}</span>
         </label>
         <!-- right -->
-        <div *ngIf="!processing" class="form-check form-switch">
-            <input type="checkbox" class="form-check-input" id="role-{{role.role}}"
-                [checked]="role.authorization.hasRoles(role.role)"   [disabled]="disabled">
-            <label class="form-check-label" for="role-{{role.role}}"></label>
+        <div *ngIf="!processing()" class="form-check form-switch">
+            <input type="checkbox" class="form-check-input" id="role-{{role().role}}"
+                [checked]="role().authorization.hasRoles(role().role)" [disabled]="disabled()"
+                (change)="toggle()">
+            <label class="form-check-label" for="role-{{role().role}}"></label>
         </div>
-        <fa-icon class="my-2 me-2" *ngIf="processing" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+        <fa-icon class="my-2 me-2" *ngIf="processing()" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </div>
 </li>

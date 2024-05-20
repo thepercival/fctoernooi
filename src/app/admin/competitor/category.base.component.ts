@@ -1,8 +1,7 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Category, Competitor, Place, StartLocationMap, StructureEditor, StructureNameService } from 'ngx-sport';
-import { forkJoin, Observable } from 'rxjs';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { LockerRoomValidator } from '../../lib/lockerroom/validator';
 import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository';
@@ -26,10 +25,10 @@ export class CategoryBaseCompetitorListComponent implements OnChanges {
   @Input() focusId!: string | number;
   @Input() activeTab!: number;
 
-  @Output() alert = new EventEmitter<IAlert>();
-  @Output() processing = new EventEmitter<string>();
-  @Output() removeCompetitor = new EventEmitter<TournamentCompetitor>();
-  @Output() saveStructure = new EventEmitter<string>();
+  onAlertChange = output<IAlert>();
+  onProcessingTextUpdate = output<string>();
+  onCompetitorRemove = output<TournamentCompetitor>();
+  onStructureSave = output<string>();
 
   public placeCompetitorItems: PlaceCompetitorItem[] = [];
   public orderMode = false;
@@ -125,13 +124,13 @@ export class CategoryBaseCompetitorListComponent implements OnChanges {
   }
 
   addPlace(): void {
-    this.processing.emit('er wordt een pouleplek toegevoegd');
+    this.onProcessingTextUpdate.emit('er wordt een pouleplek toegevoegd');
     try {
       const addedPlace = this.structureEditor.addPlaceToRootRound(this.category.getRootRound());
-      this.saveStructure.emit('pouleplek ' + this.structureNameService.getPlaceName(addedPlace) + ' is toegevoegd');
+      this.onStructureSave.emit('pouleplek ' + this.structureNameService.getPlaceName(addedPlace) + ' is toegevoegd');
     } catch (e: any) {
-      this.processing.emit('');
-      this.alert.emit({ type: IAlertType.Danger, message: e.message });
+      this.onProcessingTextUpdate.emit('');
+      this.onAlertChange.emit({ type: IAlertType.Danger, message: e.message });
     }
   }
 
@@ -144,7 +143,7 @@ export class CategoryBaseCompetitorListComponent implements OnChanges {
       if (result === 'remove-place') {
         this.removePlace(item);
       } else if (result === 'remove-competitor' && item.competitor) {
-        this.removeCompetitor.emit(item.competitor);
+        this.onCompetitorRemove.emit(item.competitor);
       } else if (result === 'to-structure') {
         this.router.navigate(['/admin/structure', this.tournament.getId()]);
       }
@@ -159,14 +158,14 @@ export class CategoryBaseCompetitorListComponent implements OnChanges {
     
     const suffix = competitor ? ' en deelnemer "' + competitor.getName() + '"' : '';
     const singledoubleWill = competitor ? 'worden' : 'wordt';
-    this.processing.emit('een pouleplek' + suffix + ' ' + singledoubleWill + ' verwijderd');
+    this.onProcessingTextUpdate.emit('een pouleplek' + suffix + ' ' + singledoubleWill + ' verwijderd');
     try {
       this.structureEditor.removePlaceFromRootRound(rootRound);
       const singledoubleIs = competitor ? 'zijn' : 'is';
-      this.saveStructure.emit('een pouleplek' + suffix + ' ' + singledoubleIs + ' verwijderd');
+      this.onStructureSave.emit('een pouleplek' + suffix + ' ' + singledoubleIs + ' verwijderd');
     } catch (e: any) {
-      this.processing.emit('');
-      this.alert.emit({ type: IAlertType.Danger, message: e.message });
+      this.onProcessingTextUpdate.emit('');
+      this.onAlertChange.emit({ type: IAlertType.Danger, message: e.message });
     }
   }
 

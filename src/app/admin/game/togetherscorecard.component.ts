@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit, output } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ScoreConfig, ScoreDirection, StructureNameService, TogetherGamePlace, TogetherScore } from 'ngx-sport';
 import { TranslateScoreService } from '../../lib/translate/score';
@@ -12,7 +12,8 @@ export class ScoreTogetherCardComponent implements OnInit {
   @Input() form!: FormGroup;
   @Input() gamePlace!: TogetherGamePlace;
   @Input() structureNameService!: StructureNameService;
-  @Output() afterEdit = new EventEmitter<void>();
+  
+  onAfterEdit = output<void>();
   public firstScoreConfig!: ScoreConfig;
 
   constructor(private translate: TranslateScoreService) {
@@ -51,7 +52,7 @@ export class ScoreTogetherCardComponent implements OnInit {
   }
 
   postUpdate() {
-    this.afterEdit.emit();
+    this.onAfterEdit.emit();
   }
 
   // getInputScores(): TogetherScore[] {

@@ -7,7 +7,7 @@
     </div>
     <div class="card-body px-1">
       <app-tournament-structureround-arrange *ngIf="editable" [round]="round" [structureEditor]="structureEditor"
-        (arrangeAction)="arrangeAction($event)">
+        (onActionArrange)="arrangeAction($event)">
       </app-tournament-structureround-arrange>
       <p *ngIf="editable && alert">
         <ngb-alert [dismissible]="true" (closed)="alert = undefined" [type]="alert.type">{{ alert.message }}</ngb-alert>
@@ -31,14 +31,14 @@
     </div>
   </div>
   <app-tournament-structurequalify *ngIf="editable" [parentRound]="round" [structureNameService]="structureNameService"
-    [structureEditor]="structureEditor" (addAction)="addAction.emit($event)" [lastAction]="lastAction">
+    [structureEditor]="structureEditor" (onActionAdd)="onActionAdd.emit($event)" [lastAction]="lastAction">
   </app-tournament-structurequalify>
 
   <div class="d-flex align-items-stretch text-center gap-1">
     <app-tournament-structureround *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed();"
       class="align-self-stretch flex-wrap mb-2" [round]="qualifyGroup.getChildRound()"
       [editable]="editable" [favorites]="favorites" [structureEditor]="structureEditor"
-      [structureNameService]="structureNameService" (addAction)="addAction.emit($event)">
+      [structureNameService]="structureNameService" (onActionAdd)="onActionAdd.emit($event)">
     </app-tournament-structureround>
   </div>
   <div *ngIf="!round.isRoot() && round.getNrOfPlaces() === MinPlacesPerPoule">

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, TemplateRef } from '@angular/core';
+import { Component, OnInit, output, TemplateRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { NgbDateStruct, NgbModal, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { JsonTournament } from '../../lib/tournament/json';
@@ -14,7 +14,9 @@ import { StartEditMode } from '../../lib/tournament/startEditMode';
   styleUrls: ['./properties.component.scss']
 })
 export class TournamentPropertiesComponent implements OnInit {
-  @Output() toNextStep = new EventEmitter<JsonTournament>();
+  
+  toNextStep = output<JsonTournament>();
+  
   public typedForm: FormGroup<{
     name: FormControl<string>,
     date: FormControl<NgbDateStruct>,

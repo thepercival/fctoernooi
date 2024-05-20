@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit, output } from '@angular/core';
 import { AgainstGpp, AgainstH2h, AllInOneGame, Single, Sport } from 'ngx-sport';
 
 import { IAlert, IAlertType } from '../../shared/common/alert';
@@ -14,9 +14,10 @@ import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.
     styleUrls: ['./toAdd.component.scss']
 })
 export class SportToAddComponent implements OnInit {
-    processing = true;
-    @Output() sportToAdd = new EventEmitter<Sport>();
-    @Output() goToPrevious = new EventEmitter<void>();
+    sportToAdd = output<Sport>();
+    goToPrevious = output<void>();
+    
+    processing = true;    
     sports!: Sport[];
     alert: IAlert | undefined;
 

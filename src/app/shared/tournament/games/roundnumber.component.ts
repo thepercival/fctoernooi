@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, TemplateRef, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, output, TemplateRef, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbPopover, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -43,7 +43,7 @@ import { InfoModalComponent } from '../infomodal/infomodal.component';
 import { IAlert, IAlertType } from '../../common/alert';
 import { DateFormatter } from '../../../lib/dateFormatter';
 import { of, Subscription, timer } from 'rxjs';
-import { catchError, switchMap, takeWhile } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import { AppErrorHandler } from '../../../lib/repository';
 import { Recess } from '../../../lib/recess';
 import { TranslateScoreService } from '../../../lib/translate/score';
@@ -67,8 +67,10 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   @Input() roles: number = 0;
   @Input() favorites: Favorites | undefined;
   @Input() refreshingData: boolean | undefined;
-  @Output() refreshData = new EventEmitter();
-  @Output() scrolling = new EventEmitter();
+  
+  onDataRefresh = output<void>();
+  onScrolling = output<void>();
+  
   alert: IAlert | undefined;
   public sameDay = true;
   public gameOrder: GameOrder = GameOrder.ByDate;
@@ -140,7 +142,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
 
   ngAfterViewInit() {
     if (this.roundNumber.getNext() === undefined) {
-      this.scrolling.emit();
+      this.onScrolling.emit();
     }
   }
   

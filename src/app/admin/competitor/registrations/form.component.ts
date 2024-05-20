@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit, output } from '@angular/core';
 import { Router } from '@angular/router';
 import { TournamentCompetitor } from '../../../lib/competitor';
 import { CompetitorRepository } from '../../../lib/ngx-sport/competitor/repository';
@@ -23,7 +23,7 @@ export class RegistrationFormComponent implements OnInit{
   @Input() tournament!: Tournament;
   @Input({ required: true }) settings!: TournamentRegistrationSettings;
 
-  @Output() settingsUpdate = new EventEmitter<TournamentRegistrationSettings>();
+  onSettingsUpdate = output<TournamentRegistrationSettings>();
 
   public alert: IAlert | undefined;
   public typedForm!: FormGroup<{
@@ -64,7 +64,7 @@ export class RegistrationFormComponent implements OnInit{
       .subscribe({
         next: (settings: TournamentRegistrationSettings) => {
           this.settings = settings;
-          this.settingsUpdate.emit(this.settings);
+          this.onSettingsUpdate.emit(this.settings);
           // this.router.navigate(['/admin', newTournamentId]);
           // this.setAlert(IAlertType.Success, 'het delen is gewijzigd');
         },

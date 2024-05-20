@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, output } from '@angular/core';
 import { HorizontalSingleQualifyRule, QualifyDistribution, QualifyGroup, QualifyTarget, Round, StructureEditor, StructureNameService, VerticalSingleQualifyRule } from 'ngx-sport';
 
 import { IAlert, IAlertType } from '../../common/alert';
@@ -18,9 +18,11 @@ import { QualifyModalComponent } from './qualifymodal.component';
 export class StructureQualifyComponent {
     @Input() structureEditor!: StructureEditor;
     @Input() parentRound!: Round;
-    @Output() addAction = new EventEmitter<StructureAction>();
     @Input() structureNameService!: StructureNameService;
     @Input() lastAction: StructureAction | undefined;
+    
+    onActionAdd = output<StructureAction>();
+
     alert: IAlert | undefined;
 
     constructor(
@@ -42,7 +44,7 @@ export class StructureQualifyComponent {
             const qualifyGroup = this.parentRound.getBorderQualifyGroup(target);
             this.structureEditor.updateDistribution(qualifyGroup, distribution);
             console.log(qualifyGroup);
-            this.addAction.emit({
+            this.onActionAdd.emit({
                 pathNode: this.parentRound.getPathNode(),
                 name: StructureActionName.UpdateQualifyDistribution,
                 recreateStructureNameService: true
@@ -61,7 +63,7 @@ export class StructureQualifyComponent {
         this.resetAlert();
         try {
             this.structureEditor.removeQualifier(this.parentRound, target);
-            this.addAction.emit({
+            this.onActionAdd.emit({
                 pathNode: this.parentRound.getPathNode(),
                 name: StructureActionName.RemoveQualifier,
                 recreateStructureNameService: true
@@ -130,7 +132,7 @@ export class StructureQualifyComponent {
             }
             
 
-            this.addAction.emit({
+            this.onActionAdd.emit({
                 pathNode,
                 name: StructureActionName.AddQualifier,
                 initialMaxNrOfPoulePlaces,
@@ -145,7 +147,7 @@ export class StructureQualifyComponent {
         this.resetAlert();
         try {
             this.structureEditor.splitQualifyGroupFrom(singleRule.getGroup(), singleRule);            
-            this.addAction.emit({
+            this.onActionAdd.emit({
                 pathNode: this.parentRound.getPathNode(),
                 name: StructureActionName.SplitQualifyGroupsFrom,
                 recreateStructureNameService: true
@@ -163,7 +165,7 @@ export class StructureQualifyComponent {
         this.resetAlert();
         try {
             this.structureEditor.mergeQualifyGroups(group, next);
-            this.addAction.emit({
+            this.onActionAdd.emit({
                 pathNode: this.parentRound.getPathNode(),
                 name: StructureActionName.MergeQualifyGroupWithNext,
                 recreateStructureNameService: true

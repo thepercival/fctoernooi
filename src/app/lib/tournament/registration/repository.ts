@@ -32,8 +32,8 @@ export class TournamentRegistrationRepository extends APIRepository {
         return 'registrations' + (postfix !== undefined ? ('/' + postfix) : '');
     }
 
-    getSettingsUrl(tournament: Tournament): string {
-        const prefix = this.getToken() ? '' : 'public/';
+    getSettingsUrl(tournament: Tournament, publicX: boolean): string {
+        const prefix = publicX ? 'public/' : '';
         return super.getApiUrl() + prefix + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix('settings');
     }
 
@@ -84,8 +84,8 @@ export class TournamentRegistrationRepository extends APIRepository {
         );
     }
 
-    getSettings(tournament: Tournament): Observable<TournamentRegistrationSettings> {
-        return this.http.get<JsonRegistrationSettings>(this.getSettingsUrl(tournament), this.getOptions()).pipe(
+    getSettings(tournament: Tournament, publicX: boolean): Observable<TournamentRegistrationSettings> {
+        return this.http.get<JsonRegistrationSettings>(this.getSettingsUrl(tournament, publicX), this.getOptions()).pipe(
             map((json: JsonRegistrationSettings): TournamentRegistrationSettings => {
                 return this.settingsMapper.toObject(json);
             }),
@@ -94,7 +94,7 @@ export class TournamentRegistrationRepository extends APIRepository {
     }
 
     editSettings(jsonSettings: JsonRegistrationSettings, tournament: Tournament): Observable<TournamentRegistrationSettings> {
-        const url = this.getSettingsUrl(tournament) + '/' + jsonSettings.id;
+        const url = this.getSettingsUrl(tournament, false) + '/' + jsonSettings.id;
         return this.http.put<JsonRegistrationSettings>(url, jsonSettings, this.getOptions()).pipe(
             map((json: JsonRegistrationSettings): TournamentRegistrationSettings => {
                 return this.settingsMapper.toObject(json);

@@ -27,8 +27,9 @@
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
       <div *ngIf="!processing && hasCompetitors" class="d-flex flex-wrap gap-3">
         <app-tournament-lockerroom *ngFor="let lockerRoom of tournament.getLockerRooms()" [lockerRoom]="lockerRoom"
-          [validator]="validator" [editable]="true" class="mx-auto" (remove)="remove($event)"
-          (changeName)="changeName($event)" (changeCompetitors)="changeCompetitors($event)">
+          [validator]="validator" [editable]="true" class="mx-auto" (onLockerroomRemove)="remove($event)"
+          (onLockerroomNameChange)="changeName($event)" 
+          (onCompetitorsChange)="changeCompetitors($event)">
         </app-tournament-lockerroom>
       </div>
       <div *ngIf="validator && !validator.areAllArranged() && hasCompetitors">

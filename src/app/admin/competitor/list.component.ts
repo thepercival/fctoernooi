@@ -138,7 +138,6 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   public refreshCompetitors(): void {
-    console.log('refreshCompetitors');
     const map = new StartLocationMap(this.tournament.getCompetitors());
     this.structureNameService = new StructureNameService(map);
     this.lockerRoomValidator = new LockerRoomValidator(this.tournament.getCompetitors(), this.tournament.getLockerRooms());

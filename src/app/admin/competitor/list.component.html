@@ -32,9 +32,10 @@
                 <app-tournament-category-competitors-base *ngFor="let category of favoriteCategories" class="mx-auto"
                   [showHeader]="favoriteCategories.length > 1" [category]="category" [tournament]="tournament" [hasBegun]="hasBegun"                  
                   [structureNameService]="structureNameService" [lockerRoomValidator]="lockerRoomValidator" [activeTab]="activeTab"
-                  (saveStructure)="saveStructure($event)"
-                  (removeCompetitor)="removeCompetitor($event)" (competitorsUpdate)="refreshCompetitors()"
-                  (alert)="setAlert($event.type,$event.message)" [focusId]="focusId">
+                  (onStructureSave)="saveStructure($event)"
+                  (onCompetitorRemove)="removeCompetitor($event)" 
+                  (onProcessingTextUpdate)="updateProcessing($event)"
+                  (onAlertChange)="setAlert($event.type,$event.message)" [focusId]="focusId">
                 </app-tournament-category-competitors-base>
               </div>
             </ng-template>
@@ -49,8 +50,8 @@
                   <app-tournament-category-competitors-order *ngFor="let category of favoriteCategories" class="mx-auto"
                     [showHeader]="favoriteCategories.length > 1" [category]="category" [tournament]="tournament"
                     [structureNameService]="structureNameService" [activeTab]="activeTab"
-                    (competitorsUpdate)="refreshCompetitors()"
-                    (alert)="setAlert($event.type,$event.message)">
+                    (onCompetitorsUpdate)="refreshCompetitors()"
+                    (onAlertChange)="setAlert($event.type,$event.message)">
                   </app-tournament-category-competitors-order>
                 </div>
               </ng-container>
@@ -74,7 +75,7 @@
             <ng-template ngbNavContent>
               <app-tournament-registrations-nav *ngIf="tournament" [tournament]="tournament"
               [structureNameService]="structureNameService" [favoriteCategories]="favoriteCategories"
-              (competitorsUpdate)="refreshCompetitors()">
+              (onCompetitorsUpdate)="refreshCompetitors()">
               </app-tournament-registrations-nav>               
             </ng-template>
           </li>
@@ -86,8 +87,8 @@
               <div *ngIf="!processing" class="d-flex flex-wrap gap-1 mt-3">
                 <app-tournament-competitors-present *ngFor="let category of favoriteCategories" class="mx-auto"
                   [showHeader]="favoriteCategories.length > 1" [category]="category" [tournament]="tournament"
-                  [structureNameService]="structureNameService" [activeTab]="activeTab" (competitorsUpdate)="refreshCompetitors()"
-                  (alert)="setAlert($event.type,$event.message)">
+                  [structureNameService]="structureNameService" [activeTab]="activeTab" (onCompetitorsUpdate)="refreshCompetitors()"
+                  (onAlertChange)="setAlert($event.type,$event.message)">
                 </app-tournament-competitors-present>
               </div>
             </ng-template>

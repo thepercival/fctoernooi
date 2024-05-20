@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit, output } from '@angular/core';
 import { Category } from 'ngx-sport';
 import { Favorites } from '../../../lib/favorites';
 
@@ -7,17 +7,14 @@ import { Favorites } from '../../../lib/favorites';
     templateUrl: './chooseList.component.html',
     styleUrls: ['./chooseList.component.scss']
 })
-export class CategoryChooseListComponent implements OnInit {
+export class CategoryChooseListComponent {
     @Input() categoryItems!: CategoryItem[];
 
-    @Output() updateCategory = new EventEmitter<CategoryItem>();
+    onCategoryUpdate = output<CategoryItem>();
 
 
 
     constructor() {
-    }
-
-    ngOnInit() {
     }
 
     // hasSelectableCompetitors(): boolean {
@@ -30,7 +27,7 @@ export class CategoryChooseListComponent implements OnInit {
 
     toggle(categorytItem: CategoryItem) {
         categorytItem.selected = !categorytItem.selected;
-        this.updateCategory.emit(categorytItem);
+        this.onCategoryUpdate.emit(categorytItem);
     }
 
     // getSelectedCategories(): Category[] {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { Component, Input, output, OnInit } from '@angular/core';
 import { Round, Competitor, StructureEditor, QualifyTarget, PlaceRanges, Place, StructureNameService, StartLocation } from 'ngx-sport';
 import { StructureAction, StructureActionName } from '../../../admin/structure/edit.component';
 import { IAlert, IAlertType } from '../../common/alert';
@@ -19,7 +19,9 @@ export class StructureRoundComponent {
   @Input() favorites: Competitor[] = [];
   @Input() structureNameService!: StructureNameService;
   @Input() lastAction: StructureAction | undefined;
-  @Output() addAction = new EventEmitter<StructureAction>();
+  
+  onActionAdd = output<StructureAction>();
+  
   alert: IAlert | undefined;
   popoverPlace: Place | undefined;
 
@@ -48,7 +50,7 @@ export class StructureRoundComponent {
       } else if (actionName === StructureActionName.DecrementNrOfPoules) {
         this.structureEditor.decrementNrOfPoules(this.round);
       }
-      this.addAction.emit({
+      this.onActionAdd.emit({
         pathNode: this.round.getPathNode(),
         name: actionName,
         recreateStructureNameService: true

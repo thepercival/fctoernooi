@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { getRoleName, Role } from '../../lib/role';
+import { Component, OnInit, output, input } from '@angular/core';
+import { getRoleName } from '../../lib/role';
 import { TournamentAuthorizationRole } from './list.component';
 
 @Component({
@@ -8,10 +8,11 @@ import { TournamentAuthorizationRole } from './list.component';
     styleUrls: ['./roleitem.component.scss']
 })
 export class RoleItemComponent implements OnInit {
-    @Input() role!: TournamentAuthorizationRole;
-    @Input() processing: boolean = false;
-    @Input() disabled: boolean = false;
-    @Output() toggleRole = new EventEmitter<TournamentAuthorizationRole>();
+    role = input.required<TournamentAuthorizationRole>();
+    processing = input.required<boolean>();
+    disabled = input.required<boolean>();
+    
+    onRoleChange = output<TournamentAuthorizationRole>();
     description!: string;
 
     constructor(
@@ -20,10 +21,13 @@ export class RoleItemComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.description = getRoleName(this.role.role);
+        this.description = getRoleName(this.role().role);
     }
 
     toggle() {
-        this.toggleRole.emit(this.role);
+        if (this.disabled()) {
+            return;
+        }
+        this.onRoleChange.emit(this.role());
     }
 }

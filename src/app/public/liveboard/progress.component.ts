@@ -1,12 +1,11 @@
 import {
     ChangeDetectorRef,
     Component,
-    EventEmitter,
     Input,
     NgZone,
     OnChanges,
     OnDestroy,
-    Output,
+    output,
     SimpleChanges,
 } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
@@ -19,7 +18,9 @@ import { Subscription, timer } from 'rxjs';
 export class ProgressComponent implements OnDestroy, OnChanges {
     @Input() max!: number;
     @Input() toggleProgress!: boolean;
-    @Output() executeAtZero = new EventEmitter<boolean>();
+    
+    atZeroExecute = output<boolean>();
+    
     radius = 16;
     strokeWidth = 5;
     circumference = 2 * Math.PI * this.radius;
@@ -45,7 +46,7 @@ export class ProgressComponent implements OnDestroy, OnChanges {
                 // reenter the Angular zone and display done
                 this._ngZone.run(() => {
                     this.resetProgress();
-                    this.executeAtZero.emit(true);
+                    this.atZeroExecute.emit(true);
                 });
             });
         });

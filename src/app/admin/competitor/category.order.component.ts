@@ -1,15 +1,13 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Category, Competitor, Place, StartLocationMap, StructureEditor, StructureNameService } from 'ngx-sport';
+import { Category, Competitor, Place, StartLocationMap, StructureNameService } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
 import { TournamentCompetitor } from '../../lib/competitor';
-import { LockerRoomValidator } from '../../lib/lockerroom/validator';
 import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository';
 import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 import { Tournament } from '../../lib/tournament';
 import { IAlert, IAlertType } from '../../shared/common/alert';
-import { CompetitorListRemoveModalComponent } from './listremovemodal.component';
 
 @Component({
   selector: 'app-tournament-category-competitors-order',
@@ -23,8 +21,8 @@ export class CategoryOrderCompetitorListComponent implements OnChanges, OnInit {
   @Input() structureNameService!: StructureNameService;
   @Input() activeTab!: number;
 
-  @Output() alert = new EventEmitter<IAlert>();  
-  @Output() competitorsUpdate = new EventEmitter();
+  onAlertChange = output<IAlert>();  
+  onCompetitorsUpdate = output<void>();
 
   public placeCompetitorItems: PlaceCompetitorItem[] = [];
   public orderMode = false;
@@ -35,9 +33,7 @@ export class CategoryOrderCompetitorListComponent implements OnChanges, OnInit {
   public processing = false;
 
   constructor(
-    private router: Router,
-    public competitorRepository: CompetitorRepository,
-    private modalService: NgbModal) {
+    public competitorRepository: CompetitorRepository) {
   }
 
   ngOnInit(): void {
@@ -152,13 +148,13 @@ export class CategoryOrderCompetitorListComponent implements OnChanges, OnInit {
         next: () => {          
           this.processing = false;
           this.swapItem = undefined;
-          this.competitorsUpdate.emit();
+          this.onCompetitorsUpdate.emit();
         },
         error: (e) => {
           this.processing = false;
           this.swapItem = undefined;
-          this.competitorsUpdate.emit();
-          this.alert.emit({ type: IAlertType.Danger, message: e });
+          this.onCompetitorsUpdate.emit();
+          this.onAlertChange.emit({ type: IAlertType.Danger, message: e });
         }
       });
   }

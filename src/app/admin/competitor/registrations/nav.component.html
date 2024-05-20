@@ -6,7 +6,7 @@
       <a class="px-1" ngbNavLink>instellingen</a>
       <ng-template ngbNavContent>
           <app-tournament-registrations-settings *ngIf="settings" [settings]="settings"
-            [tournament]="tournament" (settingsUpdate)="updateSettings($event)">
+            [tournament]="tournament" (onSettingsUpdate)="updateSettings($event)">
           </app-tournament-registrations-settings>
       </ng-template>
     </li>
@@ -16,8 +16,9 @@
         <div *ngIf="!processing" class="d-flex flex-wrap gap-3 mt-3">                    
           <app-tournament-registrations-list *ngFor="let category of favoriteCategories" class="mx-auto"
             [showHeader]="favoriteCategories.length > 1" [category]="category" [tournament]="tournament"
-            [structureNameService]="structureNameService" [activeTab]="activeTab" (competitorsUpdate)="competitorsUpdate.emit()"
-            (alert)="setAlert($event.type,$event.message)">
+            [structureNameService]="structureNameService" [activeTab]="activeTab" 
+            (onCompetitorsUpdate)="onCompetitorsUpdate.emit()"
+            (onAlertChange)="setAlert($event.type,$event.message)">
           </app-tournament-registrations-list>
         </div>        
       </ng-template>
@@ -26,7 +27,7 @@
       <a class="px-1" ngbNavLink>formulier</a>
       <ng-template ngbNavContent>
         <app-tournament-registrations-form *ngIf="settings" [settings]="settings" [tournament]="tournament"
-          (settingsUpdate)="updateSettings($event)">
+          (onSettingsUpdate)="updateSettings($event)">
         </app-tournament-registrations-form>
         </ng-template>
     </li>

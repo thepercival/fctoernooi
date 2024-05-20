@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, output } from '@angular/core';
 import { Round, StructureEditor } from 'ngx-sport';
 import { StructureActionName } from '../../../../admin/structure/edit.component';
 @Component({
@@ -9,33 +9,33 @@ import { StructureActionName } from '../../../../admin/structure/edit.component'
 export class StructureRoundArrangeComponent {
   @Input() structureEditor!: StructureEditor;
   @Input() round!: Round;
-  @Output() arrangeAction = new EventEmitter<StructureActionName>();
+  onActionArrange = output<StructureActionName>();
 
   constructor() {
   }
 
   addPouleToRootRound() {
-    this.arrangeAction.emit(StructureActionName.AddPouleToRootRound);
+    this.onActionArrange.emit(StructureActionName.AddPouleToRootRound);
   }
 
   removePouleFromRootRound() {
-    this.arrangeAction.emit(StructureActionName.RemovePouleFromRootRound);
+    this.onActionArrange.emit(StructureActionName.RemovePouleFromRootRound);
   }
 
   addPlaceToRootRound() {
-    this.arrangeAction.emit(StructureActionName.AddPlaceToRootRound);
+    this.onActionArrange.emit(StructureActionName.AddPlaceToRootRound);
   }
 
   removePlaceFromRootRound() {
-    this.arrangeAction.emit(StructureActionName.RemovePlaceFromRootRound);
+    this.onActionArrange.emit(StructureActionName.RemovePlaceFromRootRound);
   }
 
   incrementNrOfPoules() {
-    this.arrangeAction.emit(StructureActionName.IncrementNrOfPoules);
+    this.onActionArrange.emit(StructureActionName.IncrementNrOfPoules);
   }
 
   decrementNrOfPoules() {
-    this.arrangeAction.emit(StructureActionName.DecrementNrOfPoules);
+    this.onActionArrange.emit(StructureActionName.DecrementNrOfPoules);
   }
 
   canChange(delta: number): boolean {

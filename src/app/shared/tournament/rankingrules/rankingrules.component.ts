@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, output } from '@angular/core';
 import { AgainstRuleSet, NameService } from 'ngx-sport';
 
 @Component({
@@ -9,7 +9,7 @@ import { AgainstRuleSet, NameService } from 'ngx-sport';
 export class RankingRulesComponent {
     @Input() againstRuleSet!: AgainstRuleSet;
     @Input() editMode: boolean = false;
-    @Output() changed = new EventEmitter<AgainstRuleSet>();
+    onRuleSetChanged = output<AgainstRuleSet>();
 
     protected nameService: NameService;
 
@@ -27,6 +27,6 @@ export class RankingRulesComponent {
         } else {
             this.againstRuleSet = AgainstRuleSet.DiffFirst;
         }
-        this.changed.emit(this.againstRuleSet);
+        this.onRuleSetChanged.emit(this.againstRuleSet);
     }
 }

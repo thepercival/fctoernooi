@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, output } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Competitor, StructureEditor, Category, StructureNameService } from 'ngx-sport';
 import { CategoryProperties, StructureAction } from '../../../admin/structure/edit.component';
@@ -21,10 +21,11 @@ export class StructureCategoryComponent  {
   @Input() favoriteCompetitors: Competitor[] = [];
   @Input() structureNameService!: StructureNameService;
   @Input() lastAction: StructureAction | undefined;
-  @Output() addAction = new EventEmitter<StructureAction>();
-  @Output() remove = new EventEmitter<Category>();
-  @Output() updateCategory = new EventEmitter<CategoryProperties>();
-  @Output() moveCategoryUp = new EventEmitter<Category>();
+  
+  onActionAdd = output<StructureAction>();
+  onCategoryRemove = output<Category>();
+  onCategoryUpdate = output<CategoryProperties>();
+  onCategoryMoveUp = output<Category>();
 
   public canEdit: boolean = false;
 
@@ -36,7 +37,7 @@ export class StructureCategoryComponent  {
     const modal = this.getCategoryModel(category);
     modal.componentInstance.initialName = category.getName();
     modal.result.then((categoryProperties: CategoryProperties) => {
-      this.updateCategory.emit(categoryProperties);
+      this.onCategoryUpdate.emit(categoryProperties);
     }, (reason) => {
     });
   }

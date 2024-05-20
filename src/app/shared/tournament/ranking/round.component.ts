@@ -49,7 +49,6 @@ export class RankingRoundComponent implements OnInit {
             this.collapsed = false;
         }
     }
-
     get Finished(): GameState { return GameState.Finished };
     get Home(): AgainstSide { return AgainstSide.Home };
     get Away(): AgainstSide { return AgainstSide.Away };

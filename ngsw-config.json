@@ -33,7 +33,7 @@
       "urls": [
         ""
       ],
-      "version": 42,
+      "version": 43,
       "cacheConfig": {
         "maxSize": 100,
         "maxAge": "3d",
@@ -46,7 +46,7 @@
       "urls": [
         ""
       ],
-      "version": 42,
+      "version": 43,
       "cacheConfig": {
         "maxSize": 100,
         "maxAge": "3d",

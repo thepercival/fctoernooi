@@ -3,17 +3,17 @@
   <div class="card-cat-header pointer px-3">
     <div class="d-flex justify-content-between">
 
-      <h5 class="mb-0" (click)="changeName.emit(lockerRoom)">
+      <h5 class="mb-0" (click)="onLockerroomNameChange.emit(lockerRoom)">
         <small>
           <fa-icon [icon]="['fas', 'door-closed']"></fa-icon>
         </small>
         <span class="fw-bold mx-1 align-middle">{{lockerRoom.getName()}}</span>
-        <button *ngIf="editable" class="btn btn-sm btn-primary" (click)="changeName.emit(lockerRoom)">
+        <button *ngIf="editable" class="btn btn-sm btn-primary" (click)="onLockerroomNameChange.emit(lockerRoom)">
           <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
         </button>
       </h5>
 
-      <button *ngIf="editable" class="btn btn-sm btn-danger ms-1 py-0" (click)="remove.emit(lockerRoom)">
+      <button *ngIf="editable" class="btn btn-sm btn-danger ms-1 py-0" (click)="onLockerroomRemove.emit(lockerRoom)">
         <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
       </button>
     </div>
@@ -27,7 +27,7 @@
         class="badge bg-warning ms-1">{{validator.nrArranged(competitor)}}</span>
     </li>
   </ul>
-  <div *ngIf="editable" (click)="changeCompetitors.emit(lockerRoom)"
+  <div *ngIf="editable" (click)="onCompetitorsChange.emit(lockerRoom)"
     class="card-footer text-primary border-primary pointer text-center">
     <fa-icon [icon]="['fas', 'users']"></fa-icon><span> deelnemers selecteren</span>
   </div>

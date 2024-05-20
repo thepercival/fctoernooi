@@ -16,12 +16,12 @@
             </div>
             <div class="col-8 pe-0">
                 <div class="btn-group ms-1" role="group" aria-label="aantal">
-                    <button type="button" class="btn btn-outline-secondary text-nowrap" (click)="updateDistribution.emit(HorizontalSnake)">
+                    <button type="button" class="btn btn-outline-secondary text-nowrap" (click)="onDistributionUpdate.emit(HorizontalSnake)">
                         <fa-icon *ngIf="getDistribution(target) === HorizontalSnake" [icon]="['fas', 'check-circle']"
                             class="text-success ms-1"></fa-icon>
                         zigzag
                     </button>
-                    <button type="button" class="btn btn-outline-secondary" (click)="updateDistribution.emit(Vertical)">
+                    <button type="button" class="btn btn-outline-secondary" (click)="onDistributionUpdate.emit(Vertical)">
                         <fa-icon *ngIf="getDistribution(target) === Vertical" [icon]="['fas', 'check-circle']"
                             class="text-success ms-1"></fa-icon>
                         verticaal
@@ -53,7 +53,7 @@
             </ng-container>
         </li>
         <button *ngIf="isQualifyGroupMergableWithNext(qualifyGroup)" type="button" class="btn btn-outline-primary my-1"
-            (click)="mergeQualifyGroupWithNext.emit(qualifyGroup)">
+            (click)="onQualifyGroupWithNextMerge.emit(qualifyGroup)">
             <fa-icon class="rotate-45" [icon]="['fas', 'compress-alt']"></fa-icon><span>
                 samenvoegen</span>
         </button>
@@ -66,7 +66,7 @@
     </div>
     <button *ngIf="structureEditor.isQualifyGroupSplittableAt(singleRule)" type="button"
         id="btn-split-qualifygroup-{{parentRound.getNumberAsValue()}}" class="btn btn-outline-primary"
-        (click)="splitQualifyGroupFrom.emit(singleRule)">
+        (click)="onQualifyGroupFromSplit.emit(singleRule)">
         <fa-icon class="rotate-45" [icon]="['fas', 'expand-alt']"></fa-icon><span> splitsen</span>
     </button>
     <ng-container *ngIf="singleRule.getNext()" [ngTemplateOutlet]="editSingleRule"

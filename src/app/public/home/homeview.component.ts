@@ -51,7 +51,7 @@ export class HomeViewComponent extends TournamentComponent implements OnInit {
     ngOnInit() {
         super.myNgOnInit(() => {           
             const obsRules = this.rulesRepository.getObjects(this.tournament);
-            const obsSettings = this.tournamentRegistrationRepository.getSettings(this.tournament);
+            const obsSettings = this.tournamentRegistrationRepository.getSettings(this.tournament, true);
             combineLatest([obsRules, obsSettings]).subscribe(
                 ([rules, settings]) => {
                     this.rules = rules; 

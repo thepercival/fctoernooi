@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, output } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { HorizontalSingleQualifyRule, QualifyDistribution, QualifyGroup, QualifyTarget, Round, StructureEditor, StructureNameService, VerticalSingleQualifyRule } from 'ngx-sport';
 import { CSSService } from '../../common/cssservice';
@@ -14,9 +14,9 @@ export class QualifyModalComponent {
     @Input() structureEditor!: StructureEditor;
     @Input() structureNameService!: StructureNameService;
 
-    @Output() updateDistribution = new EventEmitter<QualifyDistribution>();
-    @Output() splitQualifyGroupFrom = new EventEmitter<HorizontalSingleQualifyRule|VerticalSingleQualifyRule>(); 
-    @Output() mergeQualifyGroupWithNext = new EventEmitter<QualifyGroup>(); 
+    onDistributionUpdate = output<QualifyDistribution>();
+    onQualifyGroupFromSplit = output<HorizontalSingleQualifyRule|VerticalSingleQualifyRule>(); 
+    onQualifyGroupWithNextMerge = output<QualifyGroup>(); 
     
     constructor(public modal: NgbActiveModal, public cssService: CSSService) {
         

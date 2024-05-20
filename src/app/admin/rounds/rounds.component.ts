@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { Component, Input, output, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { StructureEditor, StructureNameService } from 'ngx-sport';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
@@ -15,7 +15,8 @@ export class StructureSelectRoundComponent implements OnInit {
   @Input() first!: boolean;
   @Input() hasOwnConfig!: Function;
   @Input() structureNameService!: StructureNameService;
-  @Output() checkSomeRoundsSelected = new EventEmitter<void>();
+  
+  onSomeRoundsSelected = output<void>();
   
   public typedForm: FormGroup<{
     selected: FormControl<boolean>
@@ -48,7 +49,7 @@ export class StructureSelectRoundComponent implements OnInit {
   }
 
   emitRoundsSelected() {
-    this.checkSomeRoundsSelected.emit();
+    this.onSomeRoundsSelected.emit();
   }
 
   get MinPlacesPerPoule(): number {

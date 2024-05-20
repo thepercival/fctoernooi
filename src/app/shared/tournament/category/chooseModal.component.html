@@ -5,7 +5,7 @@
     <button type="button" class="btn-close" aria-label="sluiten" (click)="activeModal.dismiss('close')"></button>
 </div>
 <div class="modal-body">
-    <app-list-category-choose [categoryItems]="getCategoryItems()" (updateCategory)="updateFavorites($event)">
+    <app-list-category-choose [categoryItems]="getCategoryItems()" (onCategoryUpdate)="updateFavorites($event)">
     </app-list-category-choose>
 </div>
 <div class="modal-footer border-top-0 align-items-end">

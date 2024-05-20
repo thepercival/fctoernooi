@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit, output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AgainstGpp, AgainstH2h, AllInOneGame, GameMode, NameService, Single, Sport, VoetbalRange } from 'ngx-sport';
 
@@ -20,8 +20,9 @@ export class CreateSportWithFieldsComponent implements OnInit {
     @Input() sport: Sport | undefined;
     @Input() smallestNrOfPoulePlaces: number | undefined;
     @Input() existingSportVariants: (Single | AgainstH2h | AgainstGpp | AllInOneGame)[] = [];
-    @Output() created = new EventEmitter<SportWithFields>();
-    @Output() goToPrevious = new EventEmitter<void>();
+    
+    onCreate = output<SportWithFields>();
+    goToPrevious = output<void>();
 
     public sportWithFields: SportWithFields | undefined;
     processing = true;
@@ -175,7 +176,7 @@ export class CreateSportWithFieldsComponent implements OnInit {
     }
 
     save(typedForm: FormGroup, sport: Sport) {
-        this.created.emit(this.formToSportWithFields(typedForm, sport));
+        this.onCreate.emit(this.formToSportWithFields(typedForm, sport));
     }
 
     get Against(): GameMode { return GameMode.Against; }

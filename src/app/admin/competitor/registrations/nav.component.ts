@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Component, Input, OnInit, output} from '@angular/core';
 
 import { TournamentRegistrationSettings } from '../../../lib/tournament/registration/settings';
 import { TournamentRegistrationRepository } from '../../../lib/tournament/registration/repository';
@@ -20,7 +20,7 @@ export class RegistrationsNavComponent implements OnInit {
   @Input() structureNameService!: StructureNameService;
   @Input() favoriteCategories!: Category[];
 
-  @Output() competitorsUpdate = new EventEmitter();
+  onCompetitorsUpdate = output<void>();
   
   public alert: IAlert | undefined;  
   public activeTab!: number;
@@ -38,7 +38,7 @@ export class RegistrationsNavComponent implements OnInit {
   ngOnInit() {    
     this.activeTab = RegistrationTab.Settings;
 
-    this.tournamentRegistrationRepository.getSettings(this.tournament)
+    this.tournamentRegistrationRepository.getSettings(this.tournament, false)
       .subscribe({
         next: (settings: TournamentRegistrationSettings) => {
           this.settings = settings;

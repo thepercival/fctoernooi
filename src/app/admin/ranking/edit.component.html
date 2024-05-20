@@ -47,7 +47,7 @@
   </div>
   <div class="modal-body">
     <app-ranking-rules [againstRuleSet]="tournament.getCompetition().getAgainstRuleSet()"
-      [editMode]="isAdmin() && !hasBegun" (changed)="saveRankingRuleSet($event)">
+      [editMode]="isAdmin() && !hasBegun" (onRuleSetChanged)="saveRankingRuleSet($event)">
     </app-ranking-rules>
   </div>
 </ng-template>

@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, Input, output, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Place, StructureNameService } from 'ngx-sport';
@@ -21,8 +21,10 @@ export class CompetitorListLineComponent implements AfterViewChecked {
   @Input() showLockerRoomNotArranged!: boolean;
   @Input() structureNameService!: StructureNameService;
   @Input() tournamentId!: string | number;
-  @Output() editPressed = new EventEmitter<Place>();
-  @Output() removePressed = new EventEmitter<PlaceCompetitorItem>();
+  
+  onPressEdit = output<Place>();
+  onPressRemove = output<PlaceCompetitorItem>();
+  
   public processing: boolean = false;
 
   @ViewChild('btnEdit', { static: true }) private btnEditRef: ElementRef | undefined;
@@ -35,11 +37,11 @@ export class CompetitorListLineComponent implements AfterViewChecked {
   }
 
   edit() {
-    this.editPressed.emit(this.placeCompetitor.place);
+    this.onPressEdit.emit(this.placeCompetitor.place);
   }
 
   remove() {
-    this.removePressed.emit(this.placeCompetitor);
+    this.onPressRemove.emit(this.placeCompetitor);
   }
 
   setPresent(competitor: TournamentCompetitor): void {

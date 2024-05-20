@@ -43,7 +43,7 @@
 
     <ng-container *ngIf="clonedStructure.hasSingleCategory();else withCategories">
       <app-tournament-structureround [editable]="!hasBegun" [round]="clonedStructure.getSingleCategory().getRootRound()"
-        class="px-0" (addAction)="addAction($event)" [structureNameService]="structureNameService"
+        class="px-0" (onActionAdd)="addAction($event)" [structureNameService]="structureNameService"
         [structureEditor]="structureEditor" [lastAction]="lastAction">
       </app-tournament-structureround>
     </ng-container>
@@ -54,8 +54,9 @@
           [filterActive]="isCategoryFilterActive(clonedStructure)" [structureNameService]="structureNameService"
           [structureEditor]="structureEditor" [lastAction]="lastAction" [category]="category"
           [categories]="clonedStructure.getCategories()"
-          (addAction)="addAction($event)" (remove)="removeCategory($event)" (updateCategory)="updateCategory(category, $event)"
-          (moveCategoryUp)="moveCategoryUp($event)">
+          (onActionAdd)="addAction($event)" (onCategoryRemove)="removeCategory($event)" 
+          (onCategoryUpdate)="updateCategory(category, $event)"
+          (onCategoryMoveUp)="moveCategoryUp($event)">
         </app-tournament-structurecategory>
       </div>
     </ng-template>

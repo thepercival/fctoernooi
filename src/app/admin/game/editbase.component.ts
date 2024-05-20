@@ -15,7 +15,8 @@ export class GameBaseEditComponent implements OnInit {
   @Input() game!: AgainstGame | TogetherGame;
   @Input() structureNameService!: StructureNameService;
   @Input() structure!: Structure;
-  // @Output() afterEdit = new EventEmitter<void>();
+  
+  // onEditAfter = output<void>();
   // public firstScoreConfig!: ScoreConfig;
 
   constructor(

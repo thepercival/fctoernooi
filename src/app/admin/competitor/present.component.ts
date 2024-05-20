@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Category, Place, StartLocationMap, StructureNameService } from 'ngx-sport';
@@ -23,8 +23,8 @@ export class CompetitorPresentListComponent implements OnChanges {
   @Input() structureNameService!: StructureNameService;
   @Input() activeTab!: number;
 
-  @Output() alert = new EventEmitter<IAlert>();
-  @Output() competitorsUpdate = new EventEmitter();
+  onAlertChange = output<IAlert>();
+  onCompetitorsUpdate = output();
 
   public placeCompetitorItems: PlaceCompetitorItem[] = [];
   public orderMode = false;

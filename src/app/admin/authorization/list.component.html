@@ -39,7 +39,7 @@
                             *ngFor="let role of getAssignableRoles(userItem.tournamentUser)" [role]="role"
                             [disabled]="!canToggleRole(userItem.tournamentUser, role.role)"
                             [processing]="rolesAreEqual(role,roleProcessing)"
-                            (toggleRole)="toggleRole($event,contentremove)">
+                            (onRoleChange)="toggleRole($event,contentremove)">
                         </app-tournament-authorization-role>
                     </ul>
                 </div>
@@ -58,7 +58,7 @@
                     <ul class="list-group list-group-flush w-100">
                         <app-tournament-authorization-role *ngFor="let role of getAssignableRoles(invitation)"
                             [role]="role" [processing]="rolesAreEqual(role,roleProcessing)"
-                            (toggleRole)="toggleRole($event,contentremove)"></app-tournament-authorization-role>
+                            [disabled]="false" (onRoleChange)="toggleRole($event,contentremove)"></app-tournament-authorization-role>
                     </ul>
                 </div>
             </li>
@@ -83,3 +83,4 @@
             verwijderen</button>
     </div>
 </ng-template>
+

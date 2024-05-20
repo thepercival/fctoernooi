@@ -81,7 +81,7 @@
         
       </div>
       <app-tournament-create-sportwithfields *ngIf="!processing" [hidden]="!showCreateSportWithFields"
-        [smallestNrOfPoulePlaces]="smallestNrOfPoulePlaces" (created)="add($event)"
+        [smallestNrOfPoulePlaces]="smallestNrOfPoulePlaces" (onCreate)="add($event)"
         [existingSportVariants]="competition.getSportVariants()" (goToPrevious)="showCreateSportWithFields = false">
       </app-tournament-create-sportwithfields>
     </div>

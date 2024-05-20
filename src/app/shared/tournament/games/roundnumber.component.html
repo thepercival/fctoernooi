@@ -7,7 +7,7 @@
         <h4 class="me-auto">
           <span [innerHTML]="structureNameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
           <button *ngIf="refreshingData !== undefined && gameDatas.length > 0" type="button"
-            class="btn btn-sm btn-outline-secondary ms-1" (click)="refreshData.emit()" [disabled]="refreshingData">
+            class="btn btn-sm btn-outline-secondary ms-1" (click)="onDataRefresh.emit()" [disabled]="refreshingData">
             <fa-icon [icon]="['fas', 'sync']" [spin]="refreshingData"></fa-icon>
           </button>
         </h4>

@@ -1,8 +1,7 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, TemplateRef } from '@angular/core';
+import { Component, Input, OnChanges, output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Category, Place, StartLocationMap, StructureNameService } from 'ngx-sport';
-import { forkJoin, Observable } from 'rxjs';
 import { TournamentCompetitor } from '../../../lib/competitor';
 import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
 import { CompetitorRepository } from '../../../lib/ngx-sport/competitor/repository';
@@ -28,8 +27,8 @@ export class RegistrationListComponent implements OnChanges  {
   @Input() structureNameService!: StructureNameService;
   @Input() activeTab!: number;
 
-  @Output() alert = new EventEmitter<IAlert>();
-  @Output() competitorsUpdate = new EventEmitter();
+  onAlertChange = output<IAlert>();
+  onCompetitorsUpdate = output<void>();
 
   public registrations: TournamentRegistration[] = [];
   private startLocationMap!: StartLocationMap;
@@ -71,7 +70,7 @@ export class RegistrationListComponent implements OnChanges  {
           this.processing = false;
         },
         error: (e: string) => {
-          this.alert.emit({ type: IAlertType.Danger, message: e });
+          this.onAlertChange.emit({ type: IAlertType.Danger, message: e });
           this.processing = false;
         }
       });
@@ -86,7 +85,7 @@ export class RegistrationListComponent implements OnChanges  {
     activeModal.result.then((newState: RegistrationState) => {
       this.updateRegistrations();      
       if( newState === RegistrationState.Accepted) {        
-        this.competitorsUpdate.emit();
+        this.onCompetitorsUpdate.emit();
       }
       // if (newState === RegistrationState.Archived) {
       //   // remove registration from 
