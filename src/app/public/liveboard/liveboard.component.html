@@ -32,7 +32,7 @@
         </small>
       </h1>
       <app-progress *ngIf="activeScreen" class="d-inline-block" [toggleProgress]="toggleProgress"
-        [max]="activeScreen.getConfig().nrOfSeconds" (executeAtZero)="executeScheduledTask(screenConfigs)">
+        [max]="activeScreen.getConfig().nrOfSeconds" (atZeroExecute)="executeScheduledTask(screenConfigs)">
       </app-progress>
     </div>
 
