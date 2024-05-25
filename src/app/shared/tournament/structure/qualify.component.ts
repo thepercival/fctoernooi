@@ -220,13 +220,13 @@ export class StructureQualifyComponent {
         activeModal.componentInstance.structureEditor = this.structureEditor;
         activeModal.componentInstance.structureNameService = this.structureNameService;        
          
-        activeModal.componentInstance.updateDistribution.subscribe((distribution: QualifyDistribution) => {
+        activeModal.componentInstance.onDistributionUpdate.subscribe((distribution: QualifyDistribution) => {
             this.updateDistribution(target, distribution);
         });
-        activeModal.componentInstance.splitQualifyGroupFrom.subscribe((singleRule: HorizontalSingleQualifyRule | VerticalSingleQualifyRule) => {
+        activeModal.componentInstance.onQualifyGroupFromSplit.subscribe((singleRule: HorizontalSingleQualifyRule | VerticalSingleQualifyRule) => {
             this.splitQualifyGroupFrom(singleRule);
         });
-        activeModal.componentInstance.mergeQualifyGroupWithNext.subscribe((qualifyGroup: QualifyGroup) => {
+        activeModal.componentInstance.onQualifyGroupWithNextMerge.subscribe((qualifyGroup: QualifyGroup) => {
             this.mergeQualifyGroupWithNext(qualifyGroup);
         });
 
