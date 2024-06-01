@@ -18,12 +18,15 @@
       "projectType": "application",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist",
+            "outputPath": {
+              "base": "dist"
+            },
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "tsConfig": "src/tsconfig.app.json",
             "inlineStyleLanguage": "sass",
             "assets": [
@@ -44,7 +47,8 @@
                 "./node_modules/bootstrap/scss"
               ]
             },            
-            "scripts": []
+            "scripts": [],
+            "browser": "src/main.ts"
           },
           "configurations": {
             "prod": {
@@ -73,7 +77,9 @@
               "serviceWorker": true
             },
             "nl-NL": {
-              "outputPath": "dist",
+              "outputPath": {
+                "base": "dist"
+              },
               "i18nMissingTranslation": "error",
               "localize": [
                 "nl-NL"
@@ -99,17 +105,13 @@
               "serviceWorker": true
             },
             "dev": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
             },
             "dev-nl-NL": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true,

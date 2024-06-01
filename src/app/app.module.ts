@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -21,38 +21,24 @@ import { registerLocaleData } from '@angular/common';
 // the second parameter 'nl' is optional
 // registerLocaleData(localeNl, 'nl');
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    HomeShellComponent,
-  ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    RoutingModule,
-    CommonSharedModule,
-    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
-    LayoutModule
-  ],
-  providers: [
-    AuthService,
-    AuthguardService,
-    TournamentShellRepository,
-    UserMapper,
-    GlobalEventsManager,
-    MyNavigation,
-    /*{ provide: LOCALE_ID, useValue: 'nl-NL'},*/
-    /*,
-    {
-      provide: 'placeRanges', useValue: [
-        { min: 2, max: 40, placesPerPoule: { min: 2, max: 12 } },
-        { min: 41, max: 128, placesPerPoule: { min: 2, max: 8 } }
-      ]
-    }*/
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        HomeComponent,
+        HomeShellComponent,
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        RoutingModule,
+        CommonSharedModule,
+        ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
+        LayoutModule], providers: [
+        AuthService,
+        AuthguardService,
+        TournamentShellRepository,
+        UserMapper,
+        GlobalEventsManager,
+        MyNavigation,
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule {
   constructor() {    
   }
