@@ -105,8 +105,10 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
 
     ngAfterViewInit() {
         setTimeout(() => {
-            this.updateWarningsForEqualQualifiers(this.formToJson());
-        }, 1000);        
+            if( this.game !== undefined) {
+                this.updateWarningsForEqualQualifiers(this.formToJson());
+            } 
+        }, 1500);        
     }
 
     aScoreIsInvalid() {

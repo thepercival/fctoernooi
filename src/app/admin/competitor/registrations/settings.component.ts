@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, output } from '@angular/core';
+import { Component, Input, ModelSignal, OnInit, input, model, output } from '@angular/core';
 import { Router } from '@angular/router';
 import { IAlert } from '../../../shared/common/alert';
 import { JsonRegistrationSettings } from '../../../lib/tournament/registration/settings/json';
@@ -15,10 +15,8 @@ import { DateConverter } from '../../../lib/dateConverter';
   styleUrls: ['./settings.component.scss']
 })
 export class RegistrationSettingsComponent implements OnInit{
-  @Input() tournament!: Tournament;
-  @Input({ required: true }) settings!: TournamentRegistrationSettings;
-
-  onSettingsUpdate = output<TournamentRegistrationSettings>();
+  public tournament = input.required<Tournament>();
+  public settings = model<TournamentRegistrationSettings>();
 
   public maxDateStruct!: NgbDateStruct;
   public alert: IAlert | undefined;
@@ -39,23 +37,34 @@ export class RegistrationSettingsComponent implements OnInit{
 
   ngOnInit(): void {
 
-    const maxDate = this.tournament.getCompetition().getStartDateTime();
+    const settings = this.settings();
+    if (settings === undefined) {
+      return;
+    }
+
+    const maxDate = this.tournament().getCompetition().getStartDateTime();
     this.maxDateStruct = { year: maxDate.getFullYear(), month: maxDate.getMonth() + 1, day: maxDate.getDate() };
 
+    
     const form = new FormGroup<{
       enabled: FormControl<boolean>,
       endDate: FormControl<string>,
       endTime: FormControl<string>,
       mailAlert: FormControl<boolean>
     }>({
-      enabled: new FormControl(this.settings.isEnabled(), { nonNullable: true }),
+      enabled: new FormControl(settings.isEnabled(), { nonNullable: true }),
       endDate: new FormControl('', { nonNullable: true }),
       endTime: new FormControl('', { nonNullable: true }),
-      mailAlert: new FormControl(this.settings.hasMailAlert(), { nonNullable: true })
+      mailAlert: new FormControl(settings.hasMailAlert(), { nonNullable: true })
     });
     
-    this.dateConverter.setDateTime(form.controls.endDate, form.controls.endTime, this.settings.getEnd());
+    this.dateConverter.setDateTime(form.controls.endDate, form.controls.endTime, settings.getEnd());
     this.typedForm = form;
+
+    form.controls.enabled.events.subscribe(event => {
+      // process the individual events
+    });
+
     this.toggleReadOnly();
   }
 
@@ -65,6 +74,7 @@ export class RegistrationSettingsComponent implements OnInit{
       this.typedForm.controls.endDate.enable({ onlySelf: true });
       this.typedForm.controls.endTime.enable({ onlySelf: true });
       this.typedForm.controls.mailAlert.enable({ onlySelf: true });
+
     } else {
       this.typedForm.controls.endDate.disable({ onlySelf: true });
       this.typedForm.controls.endTime.disable({ onlySelf: true });
@@ -72,23 +82,26 @@ export class RegistrationSettingsComponent implements OnInit{
     }    
   }
 
-  formToJson(): JsonRegistrationSettings {
+  formToJson(settings: TournamentRegistrationSettings): JsonRegistrationSettings {
     return {
-      id: this.settings.getId(),
+      id: settings.getId(),
       enabled: this.typedForm.controls.enabled.value,
       end: this.dateConverter.getDateTime(this.typedForm.controls.endDate, this.typedForm.controls.endTime).toISOString(),
       mailAlert: this.typedForm.controls.mailAlert.value,
-      remark: this.settings.getRemark()
+      remark: settings.getRemark()
     };
   }
 
   save(): boolean {
+    const currentSettings = this.settings();
+    if (currentSettings === undefined) {
+      return false;
+    }
     this.processing = true;
-    this.registrationRepository.editSettings(this.formToJson(), this.tournament)
+    this.registrationRepository.editSettings(this.formToJson(currentSettings), this.tournament())
       .subscribe({
         next: (settings: TournamentRegistrationSettings) => {
-          this.settings = settings;
-          this.onSettingsUpdate.emit(this.settings);
+          this.settings.set(settings);
           // this.router.navigate(['/admin', newTournamentId]);
           // this.setAlert(IAlertType.Success, 'het delen is gewijzigd');
         },

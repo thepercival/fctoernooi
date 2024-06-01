@@ -5,8 +5,8 @@
     <li [ngbNavItem]="TabRegistrationSettings"> <!-- settings -->
       <a class="px-1" ngbNavLink>instellingen</a>
       <ng-template ngbNavContent>
-          <app-tournament-registrations-settings *ngIf="settings" [settings]="settings"
-            [tournament]="tournament" (onSettingsUpdate)="updateSettings($event)">
+          <app-tournament-registrations-settings *ngIf="settings" [settings]="settings" (settingsChange)="updateSettings($event)"
+            [tournament]="tournament">
           </app-tournament-registrations-settings>
       </ng-template>
     </li>

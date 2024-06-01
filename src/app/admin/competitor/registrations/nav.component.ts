@@ -54,7 +54,7 @@ export class RegistrationsNavComponent implements OnInit {
       });
   }
 
-  updateSettings(settings: TournamentRegistrationSettings): void {
+  updateSettings(settings: TournamentRegistrationSettings|undefined): void {
     this.settings = settings;
   }
  
