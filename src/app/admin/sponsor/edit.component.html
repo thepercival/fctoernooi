@@ -76,7 +76,7 @@
           </div>
           <div class="col-9">
             <img *ngIf="base64Logo" [src]="base64Logo" width="150px;" height="150px;">
-            <img *ngIf="!base64Logo && typedForm.controls.logoExtension.value && originalSponsor" [src]="getLogoUrl(originalSponsor)" width="150px;"
+            <img *ngIf="!base64Logo && typedForm.controls.logoExtension.value && originalSponsor" [src]="getSponsorLogoUrl(originalSponsor)" width="150px;"
               height="150px;">
           </div>
         </div>

@@ -14,9 +14,13 @@
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
       <div *ngIf="!processing && tournament"class="text-start">
-        <h3 class="mb-1 mt-4 text-start">welkom</h3>
         <div>
-          <span>{{tournament.getIntro()}}</span>
+          <img width="100" *ngIf="tournament.getLogoExtension()" src="{{getLogoUrl(tournament, 200)}}" class="img-fluid rounded float-end"
+            alt="logo">
+          <h3 class="mb-1 mt-4 text-start">welkom</h3>
+          <div>
+            <span>{{tournament.getIntro()}}</span>
+          </div>
         </div>
         
         <ng-container *ngIf="settings">

@@ -244,7 +244,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         activeModal.componentInstance.modalContent = modalContent;
     }
 
-    getLogoUrl(sponsor: Sponsor): string {
+    getSponsorLogoUrl(sponsor: Sponsor): string {
         return this.sponsorRepository.getLogoUrl(sponsor);
     }
 

@@ -20,6 +20,7 @@ import { TournamentRegistrationRepository } from '../../lib/tournament/registrat
 import { TournamentRegistrationSettings } from '../../lib/tournament/registration/settings';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { combineLatest } from 'rxjs';
+import { Tournament } from '../../lib/tournament';
 
 @Component({
     selector: 'app-tournament-home-view',

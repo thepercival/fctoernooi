@@ -317,7 +317,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         return false;
     }
 
-    getLogoUrl(competitor: TournamentCompetitor): string {
+    getCompetitorLogoUrl(competitor: TournamentCompetitor): string {
         return this.competitorRepository.getLogoUrl(competitor);
     }
 }

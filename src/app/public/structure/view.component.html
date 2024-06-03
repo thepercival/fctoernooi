@@ -10,22 +10,20 @@
     <h2>
       <app-tournament-icon name="structure"></app-tournament-icon> <span class="mx-1">opzet</span>       
     </h2>
-    <div *ngIf="!processing" class="pe-1">
-
+    <img *ngIf="tournament.getLogoExtension()" height=40 src="{{getLogoUrl(tournament, 200)}}" class="img-fluid"
+        style="width: auto;" alt="logo">
+    <div *ngIf="!processing && (tournament.getCompetitors().length > 0 || !structure.hasSingleCategory())" class="pe-1">
       <button *ngIf="tournament.getCompetitors().length > 0" role="button" (click)="showCompetitors = !showCompetitors"
         class="btn btn-sm me-1 btn-outline-primary">
         <fa-icon [icon]="['fas', showCompetitorIconClass()]"></fa-icon>
         <span class="d-none d-sm-inline ms-1">deelnemers</span>
       </button>
-
       <button *ngIf="!structure.hasSingleCategory()" type="button"
         class="btn btn-sm btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
         (click)="openCategoriesChooseModal(structure)">
         <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
-
       </button>
     </div>
-
   </div>
 
   <h2 *ngIf="processing" class="text-center">

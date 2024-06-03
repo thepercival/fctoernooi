@@ -78,7 +78,7 @@ export class TournamentComponent {
     private getNavBarData(tournament: Tournament|undefined): NavBarData {
         return {
             title: tournament === undefined ? 'FCToernooi' : tournament.getName(),
-            home: tournament === undefined// tournament .getLogoExtension() ? this.tournamentRepository.getLogoUrl(tournament, 20) : undefined
+            home: tournament === undefined
         };
     }
 
@@ -118,6 +118,10 @@ export class TournamentComponent {
     updateFavoriteCategories(structure: Structure) {
         const favorites = this.favRepository.getObject(this.tournament, structure.getCategories());
         this.favoriteCategories = favorites.filterCategories(structure.getCategories());
+    }
+
+    getLogoUrl(tournament: Tournament, width: 20 | 200): string {
+        return this.tournamentRepository.getLogoUrl(tournament, width);
     }
 }
 

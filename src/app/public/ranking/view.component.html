@@ -7,10 +7,12 @@
         beheergedeelte</a>
     </ngb-alert>
 
-    <div class="d-flex justify-content-around mb-2">
+    <div class="d-flex justify-content-between mb-2">
       <h2>
         <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> <span class="mx-1">standen</span>
       </h2>
+      <img *ngIf="tournament.getLogoExtension()" height=40 src="{{getLogoUrl(tournament, 200)}}"
+        class="img-fluid" style="width: auto;" alt="logo">
       <button *ngIf="!processing && !structure.hasSingleCategory()" type="button"
         class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
         (click)="openCategoriesChooseModal(structure)">
