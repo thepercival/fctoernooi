@@ -3,7 +3,7 @@
 # run production build
 #ng build --prod --output-hashing none
 
-echo -n "please enter locale(nl-NL): "
+echo -n "please enter locale(nl): "
 read locale
 
 # go to the dist/yourProjectName folder

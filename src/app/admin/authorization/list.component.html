@@ -13,7 +13,7 @@
             </div>
         </div>
         <h2 *ngIf="processing" class="text-center">
-            <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+            <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
         </h2>
         <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
         <ul *ngIf="!processing" class="list-unstyled">
@@ -24,7 +24,7 @@
                             <h5 class="mb-0 mt-2">
                                 <span *ngIf="userItem.emailaddress">{{userItem.emailaddress}}</span>
                                 <span></span>
-                                <fa-icon *ngIf="!userItem.emailaddress" [icon]="['fas', 'spinner']" [spin]="true">
+                                <fa-icon *ngIf="!userItem.emailaddress" [icon]="['fas', 'spinner']" animations="spin">
                                 </fa-icon>
                             </h5>
                             <button *ngIf="canBeRemoved(userItem.tournamentUser)" [disabled]="roleProcessing"

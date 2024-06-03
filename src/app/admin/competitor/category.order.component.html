@@ -54,7 +54,7 @@
                     </div>
                   </ng-container>
                   <ng-template #isProcessing>
-                    <fa-icon *ngIf="item.competitor" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+                    <fa-icon *ngIf="item.competitor" [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
                   </ng-template>
                   
                 </div>
@@ -65,7 +65,7 @@
       </ng-container>
       <ng-template #lessThanTwoCompetitors>
         <ngb-alert class="m-0" type="warning">
-          om de volgorde te kunnen aanpassen zijn er minimaal twee deelnemers nodig, ga naar de tab "BASIS"
+          om de volgorde te kunnen aanpassen zijn er minimaal twee deelnemers nodig, ga naar de tab "lijst"
         </ngb-alert>
       </ng-template>
     </div>

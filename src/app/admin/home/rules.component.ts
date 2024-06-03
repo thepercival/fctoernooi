@@ -115,15 +115,10 @@ export class TournamentRulesComponent extends TournamentComponent implements OnI
   upgradePriority(ruleToUpgrade: JsonTournamentRule) {
     this.processing = true;
     const ruleToDowngrade: JsonTournamentRule | undefined = this.getRule(ruleToUpgrade.priority - 1);
-    console.log('prio ruleToUpgrade: ' + ruleToUpgrade.priority);
-    console.log('prio ruleToDownGrade: ' + ruleToDowngrade?.priority ?? '?');
     this.ruleRepository.upgradeObject(ruleToUpgrade, ruleToDowngrade, this.tournament)
       .subscribe({
         next: () => {
           this.rules.sort((ruleA, ruleB) => ruleA.priority - ruleB.priority);
-          console.log('after Sort: ');
-          console.log(' prio ruleToUpgrade: ' + ruleToUpgrade.priority);
-          console.log(' prio ruleToDownGrade: ' + ruleToDowngrade?.priority ?? '?');
           this.processing = false;
         },
         error: (e: string) => {
@@ -158,4 +153,3 @@ export class TournamentRulesComponent extends TournamentComponent implements OnI
     this.router.navigate(['/admin/homeedit', this.tournament.getId()]);
   }
 }
-

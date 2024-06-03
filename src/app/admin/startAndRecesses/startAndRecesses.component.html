@@ -3,7 +3,7 @@
     <div class="col-sm-12 col-md-10 col-lg-8">
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
       <h2 *ngIf="processing" class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
       </h2>
 
       <form *ngIf="!processing" name="form" (ngSubmit)="preEdit(contentChangeStart)" [formGroup]="typedForm" novalidate>

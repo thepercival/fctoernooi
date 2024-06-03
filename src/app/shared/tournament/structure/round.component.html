@@ -1,11 +1,8 @@
 <div *ngIf="round">
   <div class="card border-secondary round mb-2 user-select-none {{cssService.getQualifyRound(round)}}"
     *ngIf="round.isRoot() || round.getNrOfPlaces() > MinPlacesPerPoule">
-    <div class="card-header px-1">
-      <span class="lead" [innerHTML]="structureNameService.getRoundName( round ) | keepHtml"></span>
-      &nbsp;
-    </div>
-    <div class="card-body px-1">
+    <h5 class="border-bottom-0 pt-1 pb-0" [innerHTML]="structureNameService.getRoundName( round ) | keepHtml"></h5>
+    <div class="card-body px-1 pt-0">
       <app-tournament-structureround-arrange *ngIf="editable" [round]="round" [structureEditor]="structureEditor"
         (onActionArrange)="arrangeAction($event)">
       </app-tournament-structureround-arrange>
@@ -14,7 +11,7 @@
       </p>
       <div class="d-flex flex-wrap gap-1 justify-content-around"> <!-- show poules with places -->
         <ul *ngFor="let poule of round.getPoules();" class="list-group mb-3">
-          <li class="list-group-item disabled py-2">
+          <li class="list-group-item py-2">
             {{structureNameService.getPouleName( poule, round.isRoot() && round.getPoules().length <= 2)}} </li>
           <li *ngFor="let place of poule.getPlaces();"
             class="list-group-item px-2 py-2 place-list-item pointer {{getPlaceAlignClass()}} {{cssService.getQualifyPlace(place)}}"
@@ -43,9 +40,7 @@
   </div>
   <div *ngIf="!round.isRoot() && round.getNrOfPlaces() === MinPlacesPerPoule">
     <div class="card round {{cssService.getQualifyRound(round)}}">
-      <div class="card-header px-1">
-        <span [innerHTML]="structureNameService.getRoundName(round) | keepHtml"></span>
-      </div>
+      <div class="border-bottom-0 pt-1 pb-0" [innerHTML]="structureNameService.getRoundName( round ) | keepHtml"></div>
     </div>
   </div>
   <div *ngIf="round.getNrOfPlaces() < AbsoluteMinPlacesPerPoule">

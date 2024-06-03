@@ -12,7 +12,7 @@
       </div>
       <div *ngIf="processing">
         <h2 class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+          <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
         </h2>
       </div>
       <ngb-alert *ngIf="!processing && tournament && !hasCompetitors" type="info">er zijn nog geen

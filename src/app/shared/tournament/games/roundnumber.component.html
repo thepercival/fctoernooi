@@ -1,14 +1,14 @@
   
 <!-- START HEADER (ROUNDNUMBER X "SETTINGS") -->
 <tr *ngIf="tournament">
-  <td [attr.colspan]="nrOfColumns">
+  <td [attr.colspan]="nrOfColumns" class="border-0">
     <div class="d-flex flex-justify-between" [ngClass]="{'mt-3': !roundNumber.isFirst()}">
         
         <h4 class="me-auto">
           <span [innerHTML]="structureNameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
           <button *ngIf="refreshingData !== undefined && gameDatas.length > 0" type="button"
             class="btn btn-sm btn-outline-secondary ms-1" (click)="onDataRefresh.emit()" [disabled]="refreshingData">
-            <fa-icon [icon]="['fas', 'sync']" [spin]="refreshingData"></fa-icon>
+            <fa-icon [icon]="['fas', 'sync']" [animation]="refreshingData ? 'spin' : undefined"></fa-icon>
           </button>
         </h4>
         
@@ -44,7 +44,7 @@
     <tr *ngIf="gameDatas.length === 0 && !inManualMode()" class="border-0 border-white">
       <td [attr.colspan]="nrOfColumns" class="p-0">    
         <ngb-alert class=" mt-1 text-center" type="info">
-          <h3><fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon></h3>
+          <h3><fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon></h3>
           <br/>
           <span *ngIf="progressPerc === 0">Het berekenen van de wedstrijdplanning staat in de wachtrij. Een moment
             geduld alsjeblieft.</span>
@@ -65,9 +65,9 @@
     </tr>
   </ng-template>
 
-  <tr class="border-0 border-white">
+  <tr *ngIf="refreshingData" class="border-0 border-white">
     <td [attr.colspan]="nrOfColumns" class="p-0">
-      <ngb-alert *ngIf="refreshingData" type="info">de uitslagen worden bijgewerkt</ngb-alert>
+      <ngb-alert type="info">de uitslagen worden bijgewerkt</ngb-alert>
     </td>
   </tr>
 </ng-template>
@@ -159,7 +159,7 @@
     <td *ngIf="showRefereeColumn" class="{{hasGameModeAgainst ? 'd-none d-sm-table-cell' : ''}}"></td>
   </tr>
 
-  <tr [ngClass]="{ 'table-alternate': (gmData.game.getBatchNr() % 2) === 0 && gameOrder === OrderByDate }">
+  <tr class="{{getAlternateClass(gmData)}}">
     <!-- category-->
     <td *ngIf="favoriteCategories.length > 1" class="category-column">
       <span class="d-inline d-sm-none badge bg-dark text-light">{{gmData.poule.categoryAbbreviation}}</span>

@@ -2,7 +2,7 @@ import { Component, Input, ModelSignal, OnInit, input, model, output } from '@an
 import { Router } from '@angular/router';
 import { IAlert } from '../../../shared/common/alert';
 import { JsonRegistrationSettings } from '../../../lib/tournament/registration/settings/json';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, ValueChangeEvent } from '@angular/forms';
 import { TournamentRegistrationSettings } from '../../../lib/tournament/registration/settings';
 import { Tournament } from '../../../lib/tournament';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
@@ -16,7 +16,7 @@ import { DateConverter } from '../../../lib/dateConverter';
 })
 export class RegistrationSettingsComponent implements OnInit{
   public tournament = input.required<Tournament>();
-  public settings = model<TournamentRegistrationSettings>();
+  public settings = model.required<TournamentRegistrationSettings>();
 
   public maxDateStruct!: NgbDateStruct;
   public alert: IAlert | undefined;
@@ -62,24 +62,22 @@ export class RegistrationSettingsComponent implements OnInit{
     this.typedForm = form;
 
     form.controls.enabled.events.subscribe(event => {
-      // process the individual events
-    });
-
-    this.toggleReadOnly();
+      if( event instanceof ValueChangeEvent) {
+        this.onChangeEnabled();
+      }
+    });    
   }
-
   
-  toggleReadOnly(): void {
+  onChangeEnabled(): void {
     if (this.typedForm.controls.enabled.value) {
       this.typedForm.controls.endDate.enable({ onlySelf: true });
       this.typedForm.controls.endTime.enable({ onlySelf: true });
-      this.typedForm.controls.mailAlert.enable({ onlySelf: true });
-
+      this.typedForm.controls.mailAlert.enable({ onlySelf: true });      
     } else {
       this.typedForm.controls.endDate.disable({ onlySelf: true });
       this.typedForm.controls.endTime.disable({ onlySelf: true });
       this.typedForm.controls.mailAlert.disable({ onlySelf: true });
-    }    
+    }
   }
 
   formToJson(settings: TournamentRegistrationSettings): JsonRegistrationSettings {
@@ -101,7 +99,7 @@ export class RegistrationSettingsComponent implements OnInit{
     this.registrationRepository.editSettings(this.formToJson(currentSettings), this.tournament())
       .subscribe({
         next: (settings: TournamentRegistrationSettings) => {
-          this.settings.set(settings);
+          this.settings.set(settings);          
           // this.router.navigate(['/admin', newTournamentId]);
           // this.setAlert(IAlertType.Success, 'het delen is gewijzigd');
         },

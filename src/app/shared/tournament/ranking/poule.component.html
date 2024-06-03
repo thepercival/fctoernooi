@@ -4,7 +4,7 @@
     </div>
     <div class="card-body p-0">
         <h2 *ngIf="processing" class="text-center">
-            <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+            <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
         </h2>
         <div *ngIf="!processing" class="card-text">
             <app-tournament-ranking-sports-table *ngIf="competitionSports.length > 1" [poule]="poule"

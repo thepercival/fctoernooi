@@ -7,7 +7,7 @@
             'wijzigen' : 'toevoegen'}}</span>
         </h2>
         <h2 *ngIf="processing">
-          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+          <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>

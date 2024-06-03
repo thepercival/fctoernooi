@@ -75,10 +75,10 @@ export class TournamentComponent {
             });
     }
 
-    private getNavBarData(tournament: Tournament): NavBarData {
+    private getNavBarData(tournament: Tournament|undefined): NavBarData {
         return {
-            title: tournament.getName(),
-            logoUrl: tournament.getLogoExtension() ? this.tournamentRepository.getLogoUrl(tournament, 20) : undefined
+            title: tournament === undefined ? 'FCToernooi' : tournament.getName(),
+            home: tournament === undefined// tournament .getLogoExtension() ? this.tournamentRepository.getLogoUrl(tournament, 20) : undefined
         };
     }
 

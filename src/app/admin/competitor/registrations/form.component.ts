@@ -1,17 +1,13 @@
-import { Component, Input, OnInit, output } from '@angular/core';
+import { Component, OnInit, input, model } from '@angular/core';
 import { Router } from '@angular/router';
 import { TournamentCompetitor } from '../../../lib/competitor';
-import { CompetitorRepository } from '../../../lib/ngx-sport/competitor/repository';
-import { IAlert, IAlertType } from '../../../shared/common/alert';
-import { TournamentCompetitorMapper } from '../../../lib/competitor/mapper';
+import { IAlert } from '../../../shared/common/alert';
 import { JsonRegistrationSettings } from '../../../lib/tournament/registration/settings/json';
-import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { TournamentRegistrationSettings } from '../../../lib/tournament/registration/settings';
 import { Tournament } from '../../../lib/tournament';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentRegistrationRepository } from '../../../lib/tournament/registration/repository';
 import { DateConverter } from '../../../lib/dateConverter';
-import { TournamentRegistrationMapper } from '../../../lib/tournament/registration/mapper';
 import { TournamentRegistrationSettingsMapper } from '../../../lib/tournament/registration/settings/mapper';
 
 @Component({
@@ -20,11 +16,9 @@ import { TournamentRegistrationSettingsMapper } from '../../../lib/tournament/re
   styleUrls: ['./form.component.scss']
 })
 export class RegistrationFormComponent implements OnInit{
-  @Input() tournament!: Tournament;
-  @Input({ required: true }) settings!: TournamentRegistrationSettings;
-
-  onSettingsUpdate = output<TournamentRegistrationSettings>();
-
+  public tournament = input.required<Tournament>();
+  public settings = model.required<TournamentRegistrationSettings>();
+  
   public alert: IAlert | undefined;
   public typedForm!: FormGroup<{
     remark: FormControl<string>
@@ -46,25 +40,24 @@ export class RegistrationFormComponent implements OnInit{
   ngOnInit(): void {
 
     const form = new FormGroup<{remark: FormControl<string>}>({
-      remark: new FormControl(this.settings.getRemark(), { nonNullable: true })
+      remark: new FormControl(this.settings().getRemark(), { nonNullable: true })
     });    
     this.typedForm = form;
   }
 
 
   formToJson(): JsonRegistrationSettings {
-    const json = this.settingsMapper.toJson(this.settings);
+    const json = this.settingsMapper.toJson(this.settings());
     json.remark = this.typedForm.controls.remark.value;
     return json;
   }
 
   save(): boolean {
     this.processing = true;
-    this.registrationRepository.editSettings(this.formToJson(), this.tournament)
+    this.registrationRepository.editSettings(this.formToJson(), this.tournament())
       .subscribe({
         next: (settings: TournamentRegistrationSettings) => {
-          this.settings = settings;
-          this.onSettingsUpdate.emit(this.settings);
+          this.settings.set(settings);
           // this.router.navigate(['/admin', newTournamentId]);
           // this.setAlert(IAlertType.Success, 'het delen is gewijzigd');
         },

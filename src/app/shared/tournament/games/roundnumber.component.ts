@@ -49,6 +49,7 @@ import { Recess } from '../../../lib/recess';
 import { TranslateScoreService } from '../../../lib/translate/score';
 import { TournamentCompetitor } from '../../../lib/competitor';
 import { CompetitorRepository } from '../../../lib/ngx-sport/competitor/repository';
+import { ColorMode } from '../../layout/nav/nav.component';
 
 @Component({
   selector: 'tbody[app-tournament-roundnumber-planning]',
@@ -421,6 +422,18 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
       + ' om ' + this.dateFormatter.toString(date, this.dateFormatter.time()) + ' uur';
   }
 
+  getAlternateClass(gameData: GameData): string {
+    if (this.gameOrder !== GameOrder.ByDate ) {
+      return '';
+    }
+    if( (gameData.game.getBatchNr() % 2) !== 0) {
+      return '';
+    }
+    
+    const colorModeDark = localStorage.getItem('colorMode') === ColorMode.Dark;
+
+    return 'table-alternate' + (colorModeDark ? '-dark' : '');
+  }
 
   showPouleRanking(popOver: NgbPopover, poule: Poule) {
     if (popOver.isOpen()) {

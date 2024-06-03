@@ -4,7 +4,7 @@ import { TournamentShell } from '../lib/tournament/shell';
 import { TranslateSportService } from '../lib/translate/sport';
 
 @Component({
-  selector: 'app-home-shell',
+  selector: '[app-home-shell]',
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.css']
 })

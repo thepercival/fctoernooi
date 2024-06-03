@@ -1,6 +1,6 @@
 <div *ngIf="settings" class="container">
   <h2 *ngIf="processing" class="text-center">
-    <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
   </h2>
   
   <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
@@ -13,8 +13,7 @@
       </label>
       <div class="col-7">
         <div class="form-control form-check form-switch">
-          <input type="checkbox" class="form-check-input" id="enabled"
-            formControlName="enabled" (change)="toggleReadOnly()">
+          <input type="checkbox" class="form-check-input" id="enabled" formControlName="enabled">
           <label class="form-check-label" for="enabled"></label>
         </div>
       </div>
@@ -61,7 +60,7 @@
    
     <div class="row mb-3 justify-content-end">
       <div class="col-7">
-        <button [disabled]="typedForm.invalid" type="submit" class="btn btn-primary">
+        <button [disabled]="typedForm.invalid || typedForm.pristine" type="submit" class="btn btn-primary">
           opslaan
         </button>
       </div>

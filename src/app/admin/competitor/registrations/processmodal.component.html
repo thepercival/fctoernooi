@@ -6,7 +6,7 @@
     <div class="d-flex flex-column">
         
         <h2 *ngIf="processing" class="text-center">
-            <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+            <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
         </h2>        
         
         <button *ngIf="!processing && registration.getState() !== Accepted" type="button" class="btn btn-success my-4" data-dismiss="modal"

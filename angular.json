@@ -7,8 +7,8 @@
       "i18n": {
         "sourceLocale": "en-US",
         "locales": {
-          "nl-NL": {
-            "translation": "src/locale/messages.nl-NL.xlf",
+          "nl": {
+            "translation": "src/locale/messages.nl.xlf",
             "baseHref": ""
           }
         }
@@ -76,13 +76,13 @@
               "outputHashing": "all",
               "serviceWorker": true
             },
-            "nl-NL": {
+            "nl": {
               "outputPath": {
                 "base": "dist"
               },
               "i18nMissingTranslation": "error",
               "localize": [
-                "nl-NL"
+                "nl"
               ]
             },
             "acc": {
@@ -110,13 +110,13 @@
               "sourceMap": true,
               "namedChunks": true
             },
-            "dev-nl-NL": {
+            "dev-nl": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true,
               "localize": [
-                "nl-NL"
+                "nl"
               ],
               "i18nMissingTranslation": "warning"
             }            
@@ -134,8 +134,8 @@
             "dev": {
               "buildTarget": "fctoernooi:build:dev"
             },
-            "dev-nl-NL": {
-              "buildTarget": "fctoernooi:build:dev-nl-NL"
+            "dev-nl": {
+              "buildTarget": "fctoernooi:build:dev-nl"
             }
           }
         },

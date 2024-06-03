@@ -53,10 +53,6 @@ export class RegistrationsNavComponent implements OnInit {
         }
       });
   }
-
-  updateSettings(settings: TournamentRegistrationSettings|undefined): void {
-    this.settings = settings;
-  }
  
   get TabRegistrationSettings(): number { return RegistrationTab.Settings; }
   get TabRegistrationList(): number { return RegistrationTab.List; }

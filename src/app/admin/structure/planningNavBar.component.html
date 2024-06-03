@@ -9,13 +9,13 @@
     <div class="text-nowrap">
       <span>start</span>
       <span *ngIf="!processing"> {{showStart()}}</span>
-      <fa-icon *ngIf="processing" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      <fa-icon *ngIf="processing" [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
       <span class="d-none d-sm-inline"> uur</span>
     </div>
     <div class="text-nowrap">
       <span>eind</span>
       <span *ngIf="!processing"> {{showEnd()}}</span>
-      <fa-icon *ngIf="processing" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      <fa-icon *ngIf="processing" [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
       <span class="d-none d-sm-inline"> uur</span>
     </div>
   </div>
@@ -30,13 +30,13 @@
   <div *ngIf="!unknownPlanning" class="">
     <div>
       <span *ngIf="!processing"> {{showNrOfGames()}}</span>
-      <fa-icon *ngIf="processing" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      <fa-icon *ngIf="processing" [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
       wed<span class="d-xs-inline d-sm-none">.</span><span class="d-none d-sm-inline">strijden</span> per
       deeln<span class="d-xs-inline d-sm-none">.</span><span class="d-none d-sm-inline">emer</span>
     </div>
     <div>
       <span *ngIf="!processing"> {{showNrOfMinutes()}}</span>
-      <fa-icon *ngIf="processing" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      <fa-icon *ngIf="processing" [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
       min<span class="d-xs-inline d-sm-none">.</span><span class="d-none d-sm-inline">uten</span>
       per deeln<span class="d-xs-inline d-sm-none">.</span><span class="d-none d-sm-inline">emer</span>
     </div>

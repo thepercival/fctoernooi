@@ -5,7 +5,7 @@
                 <fa-icon [icon]="['fas', 'cogs']"></fa-icon> plannings-instellingen
             </h2>
             <h2 *ngIf="processing" class="text-center">
-                <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+                <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
             </h2>
             <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
             <ngb-alert #updateDataAlert *ngIf="updateDataMsg" type="info" (closed)="updateDataMsg = undefined">

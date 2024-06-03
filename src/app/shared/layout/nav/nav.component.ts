@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 export class NavComponent {
 
   public defaultTitle: string = 'FCToernooi';
+  private colorMode: ColorMode;
   @Input() data: NavBarData = this.getDefaultNavBarData();
   navbarCollapsed = true;
   tournamentLiveboardLink: LiveboardLink = {};
@@ -29,6 +30,24 @@ export class NavComponent {
     this.globalEventsManager.updateDataInNavBar.subscribe((data: NavBarData) => {
       this.data = data;
     });
+    let colorMode = <ColorMode>localStorage.getItem('colorMode');
+    if (colorMode === null) {
+      colorMode = ColorMode.Light
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        colorMode = ColorMode.Dark
+      }      
+    }    
+    this.colorMode = colorMode;    
+    this.setAndApplyColorMode(colorMode);
+  }
+
+  execLeftButton(home: boolean) {
+    if (!home) {
+      this.linkToHome();
+    } else {
+      let colorMode = this.colorMode === ColorMode.Light ? ColorMode.Dark : ColorMode.Light;
+      this.setAndApplyColorMode(colorMode);
+    }
   }
 
   linkToHome(){
@@ -36,12 +55,22 @@ export class NavComponent {
     this.router.navigate(['/']);
   }
 
+  setAndApplyColorMode(colorMode: ColorMode) {
+    this.colorMode = colorMode;    
+    localStorage.setItem('colorMode', colorMode);
+    document.body.setAttribute('data-bs-theme', this.colorMode);
+  }
+
   getDefaultNavBarData(): NavBarData {
-    return { title: this.defaultTitle, logoUrl: undefined };
+    return { title: this.defaultTitle, home: true };
   }
 }
 
 export interface NavBarData {
   title: string;
-  logoUrl: string | undefined;
+  home: boolean;
+}
+
+export enum ColorMode {
+  Light = 'light', Dark = 'dark'
 }

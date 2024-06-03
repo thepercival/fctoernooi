@@ -5,7 +5,7 @@ import { GlobalEventsManager } from '../../common/eventmanager';
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.css']
+  styleUrl: './footer.component.scss'
 })
 export class FooterComponent implements OnInit {
 

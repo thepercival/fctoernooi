@@ -1,6 +1,6 @@
 <div *ngIf="settings" class="container">
   <h2 *ngIf="processing" class="text-center">
-    <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
   </h2>
   
   <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
@@ -20,7 +20,7 @@
     <div class="row mb-3">
       <div class="col-5 d-flex justify-content-end">
         <button type="button" class="btn btn-outline-primary"
-          [routerLink]="['/public/registrationform', tournament.getId()]">
+          [routerLink]="['/public/registrationform', tournament().getId()]">
           <fa-icon [icon]="['fas', 'eye']"></fa-icon> <span class="ms-1">bekijk formulier</span>
         </button>
       </div>    
