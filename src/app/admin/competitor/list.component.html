@@ -4,11 +4,12 @@
 
     <div class="col-sm-12 col-md-10 col-lg-8 g-0">
 
-      <div *ngIf="!processing" class="d-flex justify-content-{{structure.hasSingleCategory() ? 'center' : 'around'}}">
+      <div *ngIf="!processing" class="d-flex justify-content-between">
         <h2>
           <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
         </h2>
-
+        <img *ngIf="tournament.getLogoExtension()" height=30 src="{{getLogoUrl(tournament, 200)}}" class="img-fluid"
+          style="width: auto;" alt="logo">
         <button *ngIf="!structure.hasSingleCategory()" type="button"
           class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
           (click)="openCategoriesChooseModal(structure)">

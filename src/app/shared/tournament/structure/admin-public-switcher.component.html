@@ -1,0 +1,11 @@
+<div *ngIf="tournament().getPublic() && currentWebsitePart()" class="d-flex justify-content-center mb-3">    
+    <div class="card card-sub border-info pointer" (click)="linkToAdminOrPublic()">
+        <div class="card-body text-center p-0 px-1 pt-2">
+            <h5 class="card-title text-info">
+                <fa-icon *ngIf="currentWebsitePart() === PublicWebsitePart" [icon]="['fas', 'cogs']"></fa-icon>
+                <fa-icon *ngIf="currentWebsitePart() === AdminWebsitePart" [icon]="['fas', 'cogs']"></fa-icon>
+            </h5>
+            naar {{getOppositeWebsitePartName()}} gedeelte
+        </div>
+    </div>
+</div>

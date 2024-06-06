@@ -1,11 +1,10 @@
 <div class="row justify-content-center g-0">
   <div class="col-sm-12 col-md-10 col-lg-8 text-center">
 
-    <ngb-alert type="info" *ngIf="!processing && isAdmin()" [routerLink]="['/admin/ranking', tournament.getId()]"
-      class="text-center">
-      ga naar <a href="javascript:void(0)" [routerLink]="['/admin/ranking', tournament.getId()]" class="alert-link">het
-        beheergedeelte</a>
-    </ngb-alert>
+    <app-admin-public-switcher *ngIf="!processing && isAdmin() && tournament.getPublic()"
+      [currentWebsitePart]="PublicWebsitePart" [tournament]="tournament"
+      [routerLink]="['/admin/ranking', tournament.getId()]">
+    </app-admin-public-switcher>
 
     <div class="d-flex justify-content-between mb-2">
       <h2>

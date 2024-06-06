@@ -20,9 +20,10 @@
     </div>
 
     <div class="row mb-3">
-      <div class="col-5">
-        <label for="endDate" class="col-form-label">inschrijven tot</label>
+      <div class="col-5 pointer" (click)="openHelpModal(contentInfo)">
+        <label for="endDate" class="col-form-label pointer">inschrijven tot <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon></label>
       </div>
+      
       <div class="col-7">
         <div class="input-group input-group-date">
           
@@ -68,3 +69,13 @@
   </form>
 
 </div>
+
+<ng-template #contentInfo let-activeModal>
+  <p>
+    De uiterste inschrijfdatum is gelijk aan de startdatum van het toernooi : 
+    {{dateFormatter.toString(tournament().getCompetition().getStartDateTime(), dateFormatter.datetimeWithWeekDay())}}
+  </p>    
+  Ga naar <button type="submit" class="btn btn-secondary"
+        (click)="activeModal.close('linkToEditStart')">startdatum-aanpassen</button> om de startdatum van het toernooi aan te passen.
+
+</ng-template>

@@ -1,16 +1,15 @@
 <div class="container-fluid">
 
-  <ngb-alert type="info" *ngIf="!processing && isAdmin()" [routerLink]="['/admin/structure', tournament.getId()]"
-    class="text-center pointer">
-    ga naar <a href="javascript:void(0)" class="alert-link">het
-      beheergedeelte</a>
-  </ngb-alert>
+  <app-admin-public-switcher *ngIf="!processing && isAdmin() && tournament.getPublic()"
+    [currentWebsitePart]="PublicWebsitePart" [tournament]="tournament"
+    [routerLink]="['/admin/structure', tournament.getId()]">
+  </app-admin-public-switcher>
 
-  <div class="d-flex justify-content-between ms-1 mb-1">
+  <div *ngIf="!processing" class="d-flex justify-content-between ms-1 mb-1">
     <h2>
       <app-tournament-icon name="structure"></app-tournament-icon> <span class="mx-1">opzet</span>       
     </h2>
-    <img *ngIf="tournament.getLogoExtension()" height=40 src="{{getLogoUrl(tournament, 200)}}" class="img-fluid"
+    <img *ngIf="tournament.getLogoExtension()" height=30 src="{{getLogoUrl(tournament, 200)}}" class="img-fluid"
         style="width: auto;" alt="logo">
     <div *ngIf="!processing && (tournament.getCompetitors().length > 0 || !structure.hasSingleCategory())" class="pe-1">
       <button *ngIf="tournament.getCompetitors().length > 0" role="button" (click)="showCompetitors = !showCompetitors"

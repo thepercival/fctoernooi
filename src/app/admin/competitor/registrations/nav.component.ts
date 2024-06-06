@@ -29,7 +29,6 @@ export class RegistrationsNavComponent implements OnInit {
   public settings: TournamentRegistrationSettings|undefined;
 
   constructor(
-    private modalService: NgbModal,
     private tournamentRegistrationRepository: TournamentRegistrationRepository,
   ) {
    

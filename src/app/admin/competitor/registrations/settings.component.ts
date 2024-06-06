@@ -1,13 +1,15 @@
-import { Component, Input, ModelSignal, OnInit, input, model, output } from '@angular/core';
+import { Component, Input, ModelSignal, OnInit, TemplateRef, input, model, output } from '@angular/core';
 import { Router } from '@angular/router';
 import { IAlert } from '../../../shared/common/alert';
 import { JsonRegistrationSettings } from '../../../lib/tournament/registration/settings/json';
 import { FormControl, FormGroup, ValueChangeEvent } from '@angular/forms';
 import { TournamentRegistrationSettings } from '../../../lib/tournament/registration/settings';
 import { Tournament } from '../../../lib/tournament';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentRegistrationRepository } from '../../../lib/tournament/registration/repository';
 import { DateConverter } from '../../../lib/dateConverter';
+import { InfoModalComponent } from '../../../shared/tournament/infomodal/infomodal.component';
+import { DateFormatter } from '../../../lib/dateFormatter';
 
 @Component({
   selector: 'app-tournament-registrations-settings',
@@ -31,7 +33,9 @@ export class RegistrationSettingsComponent implements OnInit{
 
   constructor(
     private router: Router,
+    private modalService: NgbModal,
     private registrationRepository: TournamentRegistrationRepository,
+    public dateFormatter: DateFormatter,
     private dateConverter: DateConverter) {
   }
 
@@ -66,6 +70,16 @@ export class RegistrationSettingsComponent implements OnInit{
         this.onChangeEnabled();
       }
     });    
+  }
+
+  openHelpModal(modalContent: TemplateRef<any>) {
+    const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
+    activeModal.componentInstance.header = 'inschrijven tot';
+    activeModal.componentInstance.modalContent = modalContent;
+    activeModal.componentInstance.noHeaderBorder = true;
+    activeModal.result.then((result) => {      
+      this.router.navigate(['/admin/startandrecesses', this.tournament().getId()]);
+    }, (reason) => { });
   }
   
   onChangeEnabled(): void {

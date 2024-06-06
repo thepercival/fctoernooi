@@ -45,7 +45,6 @@ export class PlanningNavBarComponent implements OnChanges {
     if (this.refreshSubscription) {
       this.refreshSubscription.unsubscribe();
     }
-
     this.processing = true;
     this.unknownPlanning = false;
     this.refreshSubscription = of(structure).pipe(delay(this.delayInSeconds * 1000)).subscribe((structure: JsonStructure) => {

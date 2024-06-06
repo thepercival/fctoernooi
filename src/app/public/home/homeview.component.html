@@ -2,11 +2,11 @@
   <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6 text-center">
     <div class="container-fluid">
     
-      <ngb-alert type="info" *ngIf="!processing && tournament && isAdmin()" [routerLink]="['/admin/homeedit', tournament.getId()]"
-        class="text-center pointer">
-        ga naar <a href="javascript:void(0)" class="alert-link">het
-          beheergedeelte</a>
-      </ngb-alert>
+
+      <app-admin-public-switcher *ngIf="!processing && isAdmin() && tournament.getPublic()"
+        [currentWebsitePart]="PublicWebsitePart" [tournament]="tournament"
+        [routerLink]="['/admin/homeedit', tournament.getId()]">
+      </app-admin-public-switcher>
 
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
@@ -35,7 +35,7 @@
 
         <h3 *ngIf="rules.length > 0" class="mb-1 mt-4">huisregels</h3>
         <ul class="list-group">
-          <li *ngFor=" let rule of rules" class="list-group-item bg-white text-dark text-start">
+          <li *ngFor=" let rule of rules" class="list-group-item text-start">
             <span [innerHTML]="rule.text"></span>
           </li>
         </ul>

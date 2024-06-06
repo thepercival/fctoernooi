@@ -38,6 +38,7 @@ import { LockerRoomComponent } from './lockerroom/lockerroom.component';
 import { SportIconComponent } from './sport/icon.component';
 import { QualifyModalComponent } from './structure/qualifymodal.component';
 import { CategoryModalComponent } from './structure/categorymodal/categorymodal.component';
+import { AdminPublicSwitcherComponent } from './structure/admin-public-switcher.component';
 
 @NgModule({
     declarations: [
@@ -61,7 +62,8 @@ import { CategoryModalComponent } from './structure/categorymodal/categorymodal.
         RankingAgainstComponent,
         RankingTogetherComponent,
         RoundNumberPlanningComponent, 
-        SportIconComponent
+        SportIconComponent,
+      AdminPublicSwitcherComponent
 
     ],
     providers: [
@@ -88,6 +90,7 @@ import { CategoryModalComponent } from './structure/categorymodal/categorymodal.
         StructureCategoryComponent,
         TournamentIconComponent,
         TournamentNavBarComponent,
+        AdminPublicSwitcherComponent
     ],
     imports: [
         CommonModule,

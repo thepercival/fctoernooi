@@ -26,6 +26,7 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { CopyConfig, CopyModalComponent } from '../../public/tournament/copymodal.component';
 import { CopiedModalComponent } from './copiedmodal.component';
+import { WebsitePart } from '../../shared/tournament/structure/admin-public-switcher.component';
 
 @Component({
     selector: 'app-tournament-home-admin',
@@ -115,6 +116,7 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
     }
 
     get SettingsScreen(): TournamentScreen { return TournamentScreen.Settings }
+    get AdminWebsitePart(): WebsitePart { return WebsitePart.Admin }
 
     getNrOfCompetitors(): number {
         return this.tournament.getCompetitors().length;

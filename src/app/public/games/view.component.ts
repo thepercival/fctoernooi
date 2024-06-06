@@ -15,6 +15,7 @@ import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { OptionalGameColumn } from '../../shared/tournament/games/roundnumber.component';
 import { TournamentCompetitor } from '../../lib/competitor';
+import { WebsitePart } from '../../shared/tournament/structure/admin-public-switcher.component';
 
 @Component({
     selector: 'app-tournament-games-view',
@@ -85,6 +86,7 @@ export class GamesComponent extends TournamentComponent implements OnInit {
     }
 
     get GamesScreen(): TournamentScreen { return TournamentScreen.Games }
+    get PublicWebsitePart(): WebsitePart { return WebsitePart.Public } 
 
     filterRefereeRole(): number {
         return this.roles & Role.Referee;

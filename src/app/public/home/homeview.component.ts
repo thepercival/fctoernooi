@@ -21,6 +21,7 @@ import { TournamentRegistrationSettings } from '../../lib/tournament/registratio
 import { DateFormatter } from '../../lib/dateFormatter';
 import { combineLatest } from 'rxjs';
 import { Tournament } from '../../lib/tournament';
+import { WebsitePart } from '../../shared/tournament/structure/admin-public-switcher.component';
 
 @Component({
     selector: 'app-tournament-home-view',
@@ -63,6 +64,7 @@ export class HomeViewComponent extends TournamentComponent implements OnInit {
     }
 
     get HomeScreen(): TournamentScreen { return TournamentScreen.Home }
+    get PublicWebsitePart(): WebsitePart { return WebsitePart.Public }
 
     isAdmin(): boolean {
         return this.hasRole(this.authService, Role.Admin);

@@ -2,13 +2,12 @@
   <div class="row justify-content-center">
     <div class="col-sm-10 col-md-8 col-lg-6">
 
-      <ngb-alert type="info" *ngIf="!processing && isAdmin()" [routerLink]="['/admin/competitors', tournament.getId(), CompetitorTabBase]"
-        class="text-center pointer">
-        ga naar <a href="javascript:void(0)" class="alert-link">het
-          beheergedeelte</a>
-      </ngb-alert>
+      <app-admin-public-switcher *ngIf="!processing && isAdmin() && tournament.getPublic()"
+        [currentWebsitePart]="PublicWebsitePart" [tournament]="tournament"
+        [routerLink] = "['/admin/competitors', tournament.getId(), CompetitorTabBase]">
+      </app-admin-public-switcher>
 
-      <div class="d-flex justify-content-around mb-2">        
+      <div class="d-flex justify-content-end mb-2">        
         <button *ngIf="!processing && !structure.hasSingleCategory()" type="button"
           class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
           (click)="openCategoriesChooseModal(structure)">
@@ -45,11 +44,19 @@
 
       <div *ngIf="!processing && hasCompetitors() && !hasReferees()">
 
-        <h3 class="text-center">
-          <fa-icon [icon]="['fas', 'users']"></fa-icon><span> deelnemers </span>
-          <small><span *ngIf="favorites.hasCompetitors()"
-              class="badge bg-primary">{{favorites.getNrOfCompetitors()}}</span></small>
-        </h3>
+        <div class="d-flex justify-content-between ms-1 mb-1">
+          <h3>
+            <fa-icon [icon]="['fas', 'users']"></fa-icon><span> deelnemers </span>
+            <small><span *ngIf="favorites.hasCompetitors()"
+                class="badge bg-primary ms-1">{{favorites.getNrOfCompetitors()}}</span></small>
+          </h3>
+          <img *ngIf="tournament && tournament.getLogoExtension()" height=30 src="{{getLogoUrl(tournament, 200)}}" class="img-fluid"
+            style="width: auto;" alt="logo">
+
+        </div>
+
+        
+
         <div class="d-flex justify-content-center">
           <ng-container *ngTemplateOutlet="competitors">
           </ng-container>
@@ -76,7 +83,7 @@
 
 <ng-template #competitors>
   <div class="d-flex flex-wrap gap-1 justify-content-around">
-    <app-tournament-competitors-category *ngFor="let category of favoriteCategories"
+    <app-tournament-competitors-category class="w-100" *ngFor="let category of favoriteCategories"
       [showHeader]="favoriteCategories.length > 1" [category]="category" [favorites]="favorites"
       [structureNameService]="structureNameService" [showLockerRoom]="showLockerRoom" [lockerRoomMap]="lockerRoomMap">
     </app-tournament-competitors-category>

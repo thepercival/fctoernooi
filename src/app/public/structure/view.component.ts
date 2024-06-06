@@ -14,6 +14,7 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
+import { WebsitePart } from '../../shared/tournament/structure/admin-public-switcher.component';
 
 @Component({
   selector: 'app-tournament-structure-view',
@@ -56,6 +57,7 @@ export class StructureViewComponent extends TournamentComponent implements OnIni
   }
 
   get StructureScreen(): TournamentScreen { return TournamentScreen.Structure }
+  get PublicWebsitePart(): WebsitePart { return WebsitePart.Public } 
 
   showCompetitorIconClass(): IconName {
     return <IconName>('eye' + (this.showCompetitors ? '-slash' : ''));

@@ -17,6 +17,7 @@ import { TournamentCompetitor } from '../../lib/competitor';
 import { AuthService } from '../../lib/auth/auth.service';
 import { Role } from '../../lib/role';
 import { CompetitorTab } from '../../admin/competitor/list.component';
+import { WebsitePart } from '../../shared/tournament/structure/admin-public-switcher.component';
 
 @Component({
     selector: 'app-tournament-select-favorites',
@@ -54,6 +55,7 @@ export class SelectFavoritesComponent extends TournamentComponent implements OnI
                 this.router.navigate(['/public/games', this.tournament.getId()]);
                 return;
             }
+            
             this.fillMap();
             this.showLockerRoom = this.tournament.getLockerRooms().length > 0;
             this.processing = false;
@@ -62,6 +64,7 @@ export class SelectFavoritesComponent extends TournamentComponent implements OnI
 
     get CompetitorTabBase(): CompetitorTab { return CompetitorTab .Base; }
     get FavoritesScreen(): TournamentScreen { return TournamentScreen.Favorites }
+    get PublicWebsitePart(): WebsitePart { return WebsitePart.Public }
 
     hasCompetitors() {
         return this.tournament.getCompetitors().length > 0;

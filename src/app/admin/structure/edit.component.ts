@@ -23,10 +23,8 @@ import { IAlertType } from '../../shared/common/alert';
 import { QualifyPathNode } from 'ngx-sport';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
 import { CategoryUniqueChecker } from '../../lib/ngx-sport/category/uniqueChecker';
 import { FavoritesRepository } from '../../lib/favorites/repository';
-import { CategoryChooseModalComponent } from '../../shared/tournament/category/chooseModal.component';
 import { Favorites } from '../../lib/favorites';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { TournamentRegistrationRepository } from '../../lib/tournament/registration/repository';
@@ -79,7 +77,8 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
 
             // GAMES WORDEN NIET GECLONED
             this.clonedStructure = this.createClonedStructure(this.structure);
-            this.clonedJsonStructure = this.structureMapper.toJson(this.clonedStructure);                                    
+            this.clonedJsonStructure = this.structureMapper.toJson(this.clonedStructure);
+            this.favorites = this.favRepository.getObject(this.tournament, this.clonedStructure.getCategories());
             this.updateFavoriteCategories(this.clonedStructure);
             this.structureNameService = new StructureNameService(new StartLocationMap(this.originalCompetitors));
             this.processing = false;
@@ -137,7 +136,8 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
       this.structureNameService = new StructureNameService();
     }
     this.clonedJsonStructure = this.structureMapper.toJson(this.clonedStructure);
-
+    console.log('structure', this.clonedStructure);
+    console.log('jsonStructure', this.clonedStructure);
   }
 
   // getLowestRoundNumberFromActions(structurePathNode: StructurePathNode): number {
@@ -183,29 +183,17 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   }
 
   public moveCategoryUp(category: Category): void {
-    const previousCategory = this.getPreviousCategory(category)
+    const previousCategory = this.getPreviousCategory(this.clonedStructure, category)
 
-    const newNr = category.getNumber();
-    category.setNumber(previousCategory.getNumber());
-
-    previousCategory.setNumber(newNr);
-
-    const categories = this.clonedStructure.getCategories();
-    const idx = categories.indexOf(category);
-    const idxPrev = categories.indexOf(previousCategory);
-
-    if (idx >= 0 && idxPrev >= 0) {
-      var tmp = categories[idx];
-      categories[idx] = categories[idxPrev];
-      categories[idxPrev] = tmp;
-    }
-
+    
+    this.structureEditor.switchCategories(this.clonedStructure, previousCategory, category);
+    
     this.updateFavoriteCategories(this.clonedStructure);
     this.addAction({ name: StructureActionName.UpdateCategory, recreateStructureNameService: true });
   }
 
-  private getPreviousCategory(category: Category): Category {
-    const previous = this.clonedStructure.getCategories().find((categoryIt: Category) => {
+  private getPreviousCategory(structure: Structure, category: Category): Category {
+    const previous = structure.getCategories().find((categoryIt: Category) => {
       return categoryIt.getNumber() === (category.getNumber() - 1);
     });
     if (previous === undefined) {

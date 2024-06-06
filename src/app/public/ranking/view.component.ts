@@ -15,6 +15,7 @@ import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { WebsitePart } from '../../shared/tournament/structure/admin-public-switcher.component';
 
 @Component({
     selector: 'app-tournament-ranking-view',
@@ -51,6 +52,7 @@ export class RankingViewComponent extends TournamentComponent implements OnInit 
     }
 
     get RankingScreen(): TournamentScreen { return TournamentScreen.Ranking }
+    get PublicWebsitePart(): WebsitePart { return WebsitePart.Public } 
 
     isAdmin(): boolean {
         return this.hasRole(this.authService, Role.Admin);
