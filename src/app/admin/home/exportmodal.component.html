@@ -44,10 +44,15 @@
 
 
     </div>
+    <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 </div>
-<div *ngIf="!creating" class="modal-footer text-end">
-    <button type="button" class="btn btn-outline-primary" [disabled]="noneSelected()" data-dismiss="modal"
-        (click)="createPdfAndShowProgress()">
+<div *ngIf="!creating && tournament" class="modal-footer d-flex justify-content-between">    
+    <button type="button" class="btn btn-primary" data-dismiss="modal"
+        (click)="openModalAboutPrintService(tournament)">
+        boekwerk printen
+    </button>
+    <button type="button" class="btn btn-primary" [disabled]="noneSelected()" data-dismiss="modal"
+        (click)="createPdfAndShowProgress(tournament)">
         <fa-icon [icon]="['fas', 'print']"></fa-icon> adrukken
     </button>
     <!-- <button type="button" class="btn btn-outline-primary" [disabled]="noneSelected()" data-dismiss="modal"

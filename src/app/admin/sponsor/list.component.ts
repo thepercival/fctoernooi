@@ -63,7 +63,7 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
   }
 
   createSponsorsList() {
-    this.sponsors = this.tournament.getSponsors().sort((s1, s2) => {
+    this.sponsors = this.tournament.getSponsors().sort((s1: Sponsor, s2: Sponsor) => {
       return (s1.getScreenNr() > s2.getScreenNr() ? 1 : -1);
     });
   }

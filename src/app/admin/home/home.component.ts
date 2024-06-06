@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, InputSignal, input } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Params, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlanningEditMode, RoundNumber } from 'ngx-sport';
@@ -27,6 +27,8 @@ import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { CopyConfig, CopyModalComponent } from '../../public/tournament/copymodal.component';
 import { CopiedModalComponent } from './copiedmodal.component';
 import { WebsitePart } from '../../shared/tournament/structure/admin-public-switcher.component';
+import { TournamentRegistrationRepository } from '../../lib/tournament/registration/repository';
+import { TournamentRegistrationSettings } from '../../lib/tournament/registration/settings';
 
 @Component({
     selector: 'app-tournament-home-admin',
@@ -35,7 +37,7 @@ import { WebsitePart } from '../../shared/tournament/structure/admin-public-swit
 })
 export class HomeAdminComponent extends TournamentComponent implements OnInit {
 
-
+    settings: TournamentRegistrationSettings|undefined;
     lockerRoomValidator!: LockerRoomValidator;
     hasBegun: boolean = true;
     hasPlanningEditManualMode: boolean = false;
@@ -45,11 +47,12 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
     constructor(
         route: ActivatedRoute,
         router: Router,
-        tournamentRepository: TournamentRepository,
+        tournamentRepository: TournamentRepository,        
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
         modalService: NgbModal,
         favRepository: FavoritesRepository,
+        private tournamentRegistrationRepository: TournamentRegistrationRepository,
         private competitionSportRouter: CompetitionSportRouter,
         public cssService: CSSService,
         private userRepository: UserRepository,
@@ -67,22 +70,32 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
         super.myNgOnInit(() => this.postNgOnInit());
     }
 
-    postNgOnInit() {        
-        this.lockerRoomValidator = new LockerRoomValidator(this.tournament.getCompetitors(), this.tournament.getLockerRooms());
-        const firstRoundNumber = this.structure.getFirstRoundNumber();
-        this.hasBegun = firstRoundNumber.hasBegun();
-        this.allPoulesHaveGames = this.structure.allPoulesHaveGames();
-        this.hasPlanningEditManualMode = this.structureHasPlanningEditManualMode(firstRoundNumber);
-        
-        this.route.queryParams.subscribe((params: Params) => {
-            if (params.newStartForCopyAsTime !== undefined) {
-                this.openModalCopy(params.newStartForCopyAsTime);
-            } else if (params.myPreviousId !== undefined && !this.openModalCopiedCheck) {
-                this.openModalCopiedCheck = true; 
-                this.openModalCopied(params.myPreviousId);                
-            }
-          });
-        this.processing = false;
+    postNgOnInit() {
+
+        this.tournamentRegistrationRepository.getSettings(this.tournament, true)
+            .subscribe({
+                next: (settings: TournamentRegistrationSettings) => {
+                    this.settings = settings;
+                    this.lockerRoomValidator = new LockerRoomValidator(this.tournament.getCompetitors(), this.tournament.getLockerRooms());
+                    const firstRoundNumber = this.structure.getFirstRoundNumber();
+                    this.hasBegun = firstRoundNumber.hasBegun();
+                    this.allPoulesHaveGames = this.structure.allPoulesHaveGames();
+                    this.hasPlanningEditManualMode = this.structureHasPlanningEditManualMode(firstRoundNumber);
+
+                    this.route.queryParams.subscribe((params: Params) => {
+                        if (params.newStartForCopyAsTime !== undefined) {
+                            this.openModalCopy(params.newStartForCopyAsTime);
+                        } else if (params.myPreviousId !== undefined && !this.openModalCopiedCheck) {
+                            this.openModalCopiedCheck = true;
+                            this.openModalCopied(params.myPreviousId);
+                        }
+                    });
+                    this.processing = false;
+                },
+                error: (e) => {
+                    this.setAlert(IAlertType.Danger, e); this.processing = false;
+                }
+            });
     }
 
     private calculateNewStartDate(newStartForCopyAsTime: string | undefined): Date {
@@ -272,10 +285,13 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
         const activeModal = this.modalService.open(ExportModalComponent, { backdrop: 'static' });
         activeModal.componentInstance.tournament = this.tournament;
         const readonlySubjects = this.getExportReadOnlySubjects();
-        activeModal.componentInstance.subjects = this.getExportSubjectsFromDevice(readonlySubjects);
+        activeModal.componentInstance.settings = this.settings;
+        const subjects = this.getExportSubjectsFromDevice(readonlySubjects);
+        activeModal.componentInstance.subjects = subjects;
         activeModal.componentInstance.readonlySubjects = readonlySubjects;
         activeModal.componentInstance.fieldDescription = this.getFieldDescription();
         activeModal.result.then((url: string) => {
+            
         }, (reason) => { });
     }
 

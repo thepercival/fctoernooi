@@ -99,6 +99,7 @@ import { TournamentRulesComponent } from './home/rules.component';
 import { TournamentNameAndLogoComponent } from './nameAndLogo/name-and-logo.component';
 import { RegistrationsNavComponent } from './competitor/registrations/nav.component';
 import { RegistrationFormComponent } from './competitor/registrations/form.component';
+import { PrintServiceModalComponent } from './home/print-service-modal.component';
 
 @NgModule({
   imports: [
@@ -128,6 +129,7 @@ import { RegistrationFormComponent } from './competitor/registrations/form.compo
     CopiedModalComponent,
     CreateSportWithFieldsComponent,    
     ExportModalComponent,
+    PrintServiceModalComponent,
     FieldListComponent,
     GameAddComponent,
     GameAgainstEditComponent,

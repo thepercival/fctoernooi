@@ -22,6 +22,7 @@ import { NameValidator } from '../../lib/nameValidator';
 import { JsonTournamentRegistration } from '../../lib/tournament/registration/json';
 import { User } from '../../lib/user';
 import { RegistrationState } from '../../lib/tournament/registration/state';
+import { WebsitePart } from '../../shared/tournament/structure/admin-public-switcher.component';
 
 @Component({
     selector: 'app-tournament-registration-form',
@@ -122,6 +123,7 @@ export class RegistrationComponent extends TournamentComponent implements OnInit
     }
 
     get TabRegistrations(): number { return CompetitorTab.Registrations; }
+    get PublicWebsitePart(): WebsitePart { return WebsitePart.Public }
     
     isAdmin(): boolean {
         return this.hasRole(this.authService, Role.Admin);

@@ -2,16 +2,17 @@
   <div class="row justify-content-center">
     <div class="col-sm-10 col-md-8 col-lg-6">
 
+      <app-admin-public-switcher *ngIf="!processing && isAdmin() && tournament.getPublic()"
+        [currentWebsitePart]="PublicWebsitePart" [tournament]="tournament"
+        [routerLink]="['/admin/competitors', tournament.getId(), TabRegistrations]">
+      </app-admin-public-switcher>
+
       <div class="d-flex justify-content-between mb-2">
         <h2>
           <fa-icon [icon]="['fas', 'user-plus']"></fa-icon> <span class="mx-1">inschrijven</span>
-          
-          <button *ngIf="!processing && isAdmin()" [routerLink]="['/admin/competitors', tournament.getId(), TabRegistrations]" type="button"
-            class="btn btn-sm btn-outline-primary">
-            <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
-          </button>
         </h2>
-       
+        <img *ngIf="tournament.getLogoExtension()" height=30 src="{{getLogoUrl(tournament, 200)}}" class="img-fluid"
+          style="width: auto;" alt="logo">
       </div>
       
       <h2 *ngIf="processing" class="text-center">

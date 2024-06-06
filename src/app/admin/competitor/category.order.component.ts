@@ -14,7 +14,7 @@ import { IAlert, IAlertType } from '../../shared/common/alert';
   templateUrl: './category.order.component.html',
   styleUrls: ['./category.order.component.scss']
 })
-export class CategoryOrderCompetitorListComponent implements OnChanges, OnInit {
+export class CategoryOrderCompetitorListComponent implements OnChanges {
   @Input() tournament!: Tournament;
   @Input() category!: Category;
   @Input() showHeader!: boolean;
@@ -34,10 +34,6 @@ export class CategoryOrderCompetitorListComponent implements OnChanges, OnInit {
 
   constructor(
     public competitorRepository: CompetitorRepository) {
-  }
-
-  ngOnInit(): void {
-    console.log(this.category);
   }
 
   ngOnChanges(changes: SimpleChanges) {

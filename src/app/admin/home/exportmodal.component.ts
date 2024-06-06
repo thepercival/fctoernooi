@@ -1,7 +1,7 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, timer } from 'rxjs';
 import { PdfRepository, TournamentExportConfig } from '../../lib/pdf/repository';
 import { AppErrorHandler } from '../../lib/repository';
@@ -9,6 +9,8 @@ import { Tournament } from '../../lib/tournament';
 import { IAlert, IAlertType } from '../../shared/common/alert';
 import { catchError, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { TournamentRegistrationSettings } from '../../lib/tournament/registration/settings';
+import { PrintServiceModalComponent } from './print-service-modal.component';
 
 @Component({
     selector: 'app-ngbd-modal-export-config',
@@ -16,14 +18,17 @@ import { Router } from '@angular/router';
     styleUrls: ['./exportmodal.component.scss']
 })
 export class ExportModalComponent implements OnInit, OnDestroy {
-    @Input() tournament!: Tournament;
-    @Input() subjects!: number;
-    @Input() readonlySubjects!: number;
-    @Input() fieldDescription!: string;
+    tournament: Tournament|undefined;
+    subjects: number = 0;
+    readonlySubjects: number = 0;
+    fieldDescription: string = '';
+    settings: TournamentRegistrationSettings|undefined;
+    
+    alert: IAlert|undefined;    
     public typedForm: FormGroup;
     creating = false;
     pdfLink: string | undefined;
-    exportOptions: ExportOption[] = [];
+    public exportOptions: ExportOption[] = [];
     refreshTimer: Subscription | undefined;
     private appErrorHandler: AppErrorHandler;
     progressPercentage = 0;
@@ -32,14 +37,20 @@ export class ExportModalComponent implements OnInit, OnDestroy {
     constructor(
         public activeModal: NgbActiveModal,
         private pdfRepository: PdfRepository,
+        private modalService: NgbModal,
         router: Router) {
         this.typedForm = new FormGroup({});
         this.appErrorHandler = new AppErrorHandler(router);
+        
     }
 
-    ngOnInit() {
+    ngOnInit() {      
+
         for (const [propertyKey, propertyValue] of Object.entries(TournamentExportConfig)) {
             if (!Number.isNaN(Number(propertyKey))) {
+                continue;
+            }
+            if (TournamentExportConfig.registrationForm === +propertyValue && this.settings?.isEnabled() !== true ) {
                 continue;
             }
             const exportOption: ExportOption = {
@@ -53,6 +64,13 @@ export class ExportModalComponent implements OnInit, OnDestroy {
             this.exportOptions.push(exportOption);
             this.typedForm.addControl(exportOption.key, new FormControl({ value: exportOption.enabled, disabled: exportOption.readonly }));
         }
+        this.exportOptions.sort((exportOptionA: ExportOption, exportOptionB: ExportOption): number => {
+            
+            if (exportOptionA.value === TournamentExportConfig.registrationForm ) {
+                return -1;
+            }
+            return exportOptionA.value - exportOptionB.value;
+        });
     }
 
 
@@ -73,6 +91,8 @@ export class ExportModalComponent implements OnInit, OnDestroy {
 
     getLabel(configItem: number): string {
         switch (configItem) {
+            case TournamentExportConfig.registrationForm:
+                return 'inschrijfformulier'; 
             case TournamentExportConfig.gameNotes:
                 return 'wedstrijdbriefjes';
             case TournamentExportConfig.structure:
@@ -93,16 +113,16 @@ export class ExportModalComponent implements OnInit, OnDestroy {
         return '';
     }
 
-    createPdfAndShowProgress() {
+    createPdfAndShowProgress(tournament: Tournament) {
         const subjects = this.formToSubjects();
         localStorage.setItem('exportSubjects', JSON.stringify(subjects));
         this.postCreateAlert = undefined;
         this.creating = true;
         this.progressPercentage = 0;
-        this.pdfRepository.createObject(this.tournament, subjects)
+        this.pdfRepository.createObject(tournament, subjects)
             .subscribe({
                 next: (fileName: string) => {
-                    this.showProgress(fileName);
+                    this.showProgress(tournament,fileName);
                 },
                 error: (e) => {
                     this.setPostCreateAlert(IAlertType.Danger, e);
@@ -110,10 +130,10 @@ export class ExportModalComponent implements OnInit, OnDestroy {
             });
     }
 
-    showProgress(fileName: string) {
+    showProgress(tournament: Tournament, fileName: string) {
         this.refreshTimer = timer(0, 2000) // repeats every 2 seconds
             .pipe(
-                switchMap(() => this.pdfRepository.progress(this.tournament).pipe()),
+                switchMap(() => this.pdfRepository.progress(tournament).pipe()),
                 catchError(err => this.appErrorHandler.handleError(err))
             ).subscribe({
                 next: (progressPerc: number | undefined) => {
@@ -123,7 +143,7 @@ export class ExportModalComponent implements OnInit, OnDestroy {
                     this.progressPercentage = progressPerc;
                     if (progressPerc === 100) {
                         this.stopTimer();
-                        this.pdfLink = this.pdfRepository.getPdfUrl(this.tournament, fileName);
+                        this.pdfLink = this.pdfRepository.getPdfUrl(tournament, fileName);
                     }
                 },
                 error: (e) => {
@@ -145,6 +165,24 @@ export class ExportModalComponent implements OnInit, OnDestroy {
     protected setPostCreateAlert(type: IAlertType, message: string) {
         this.postCreateAlert = { 'type': type, 'message': message };
         this.creating = false;
+    }
+
+    openModalAboutPrintService(tournament: Tournament) {
+        const activeModal = this.modalService.open(PrintServiceModalComponent);
+        activeModal.result.then((apply: boolean) => {
+            if (apply) {
+                this.pdfRepository.applyService(tournament)
+                    .subscribe({
+                        next: () => {
+                            this.alert = { type: IAlertType.Info, message: 'je aanvraag wordt verwerkt' };
+                        },
+                        error: (e) => {
+                            this.alert = { type: IAlertType.Danger, message: 'de aanvraag kan niet verwerkt worden' };
+                        }
+                    });
+            }
+        }, (reason) => {
+        });
     }
 }
 

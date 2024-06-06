@@ -35,6 +35,13 @@ export class PdfRepository extends APIRepository {
         );
     }
 
+    applyService(tournament: Tournament): Observable<void> {
+        const url = this.getUrl(tournament)  + '/apply-service';
+        return this.http.post<void>(url, undefined, { headers: super.getHeaders() }).pipe(
+            catchError((err: HttpErrorResponse) => this.handleError(err))
+        );
+    }
+
     progress(tournament: Tournament): Observable<number> {
         const url = this.getUrl(tournament) + '/progress';
         return this.http.get<number>(url, this.getOptions()).pipe(
@@ -56,5 +63,6 @@ export enum TournamentExportConfig {
     gamesPerField = 16,
     gameNotes = 32,
     lockerRooms = 64,
-    qrCode = 128
+    qrCode = 128,
+    registrationForm = 256,
 }

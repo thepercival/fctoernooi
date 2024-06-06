@@ -1,0 +1,27 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+        <fa-icon [icon]="['fas', 'print']"></fa-icon> programma boekje
+    </h4>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="activeModal.dismiss('close')"></button>
+</div>
+<div class="modal-body">
+    <p>Vraag de printservice voor een programmaboekje aan</p>
+    
+    <ul class="list-group mt-2 mb-3">
+        <li class="list-group-item">
+            Bepaal zelf de geprinte oplage
+        </li>
+        <li class="list-group-item">
+            De geprinte oplage wordt bezorgd
+        </li>
+        <li class="list-group-item">
+            Beslis mee over het ontwerp
+        </li>
+    </ul>
+    <p>Na een eerste uitvraag, ontvang je een offerte</p>
+</div>
+<div class="modal-footer text-end">
+    <button type="button" class="btn btn-primary" (click)="activeModal.close(true)">
+        aanvragen
+    </button>
+</div>
