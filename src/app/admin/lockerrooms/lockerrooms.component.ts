@@ -17,7 +17,7 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { CompetitorChooseModalComponent } from '../../shared/tournament/competitor/competitorchoosemodal.component';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
-import { CompetitorTab } from '../competitor/list.component';
+import { CompetitorTab } from '../../shared/common/tab-ids';
 
 
 @Component({

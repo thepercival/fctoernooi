@@ -12,7 +12,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { AuthService } from '../../lib/auth/auth.service';
 import { Role } from '../../lib/role';
-import { CompetitorTab } from '../../admin/competitor/list.component';
 import { TournamentRegistrationRepository } from '../../lib/tournament/registration/repository';
 import { TournamentRegistrationSettings } from '../../lib/tournament/registration/settings';
 import { IAlertType } from '../../shared/common/alert';
@@ -23,6 +22,7 @@ import { JsonTournamentRegistration } from '../../lib/tournament/registration/js
 import { User } from '../../lib/user';
 import { RegistrationState } from '../../lib/tournament/registration/state';
 import { WebsitePart } from '../../shared/tournament/structure/admin-public-switcher.component';
+import { CompetitorTab, RegistrationTab } from '../../shared/common/tab-ids';
 
 @Component({
     selector: 'app-tournament-registration-form',
@@ -123,6 +123,7 @@ export class RegistrationComponent extends TournamentComponent implements OnInit
     }
 
     get TabRegistrations(): number { return CompetitorTab.Registrations; }
+    get TabRegistrationForm(): number { return RegistrationTab.Form; }
     get PublicWebsitePart(): WebsitePart { return WebsitePart.Public }
     
     isAdmin(): boolean {

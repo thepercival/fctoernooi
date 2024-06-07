@@ -8,7 +8,7 @@
         <h2>
           <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
         </h2>
-        <img *ngIf="tournament.getLogoExtension()" height=30 src="{{getLogoUrl(tournament, 200)}}" class="img-fluid"
+        <img *ngIf="tournament?.getLogoExtension()" height=30 src="{{getLogoUrl(tournament, 200)}}" class="img-fluid"
           style="width: auto;" alt="logo">
         <button *ngIf="!structure.hasSingleCategory()" type="button"
           class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
@@ -76,7 +76,7 @@
             <ng-template ngbNavContent>
               <app-tournament-registrations-nav *ngIf="tournament" [tournament]="tournament"
               [structureNameService]="structureNameService" [favoriteCategories]="favoriteCategories"
-              (onCompetitorsUpdate)="refreshCompetitors()">
+              [startTab]="activeRegistrationTab" (onCompetitorsUpdate)="refreshCompetitors()">
               </app-tournament-registrations-nav>               
             </ng-template>
           </li>

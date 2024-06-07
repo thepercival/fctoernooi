@@ -5,7 +5,7 @@ import { AuthService } from '../../../lib/auth/auth.service';
 import { Role } from '../../../lib/role';
 import { Tournament } from '../../../lib/tournament';
 import { TournamentScreen } from '../screenNames';
-import { CompetitorTab } from '../../../admin/competitor/list.component';
+import { CompetitorTab } from '../../common/tab-ids';
 
 @Component({
   selector: 'app-tournament-navbar',

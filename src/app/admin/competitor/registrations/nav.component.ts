@@ -1,13 +1,11 @@
-import { Component, Input, OnInit, output} from '@angular/core';
+import { Component, OnInit, input, output} from '@angular/core';
 
 import { TournamentRegistrationSettings } from '../../../lib/tournament/registration/settings';
 import { TournamentRegistrationRepository } from '../../../lib/tournament/registration/repository';
 import { IAlert, IAlertType } from '../../../shared/common/alert';
 import { Tournament } from '../../../lib/tournament';
-import { TournamentRegistrationTextSubject } from '../../../lib/tournament/registration/text';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { TextEditorModalComponent } from '../../textEditor/texteditormodal.component';
 import { Category, StructureNameService } from 'ngx-sport';
+import { RegistrationTab } from '../../../shared/common/tab-ids';
 
 @Component({
   selector: 'app-tournament-registrations-nav',
@@ -16,14 +14,15 @@ import { Category, StructureNameService } from 'ngx-sport';
 })
 export class RegistrationsNavComponent implements OnInit {
 
-  @Input() tournament!: Tournament;
-  @Input() structureNameService!: StructureNameService;
-  @Input() favoriteCategories!: Category[];
+  tournament = input.required<Tournament>();
+  structureNameService = input.required<StructureNameService>();
+  favoriteCategories = input.required<Category[]>();
+  startTab = input<RegistrationTab>();
 
   onCompetitorsUpdate = output<void>();
   
-  public alert: IAlert | undefined;  
-  public activeTab!: number;
+  public alert: IAlert | undefined;
+  public activeTab = RegistrationTab.Settings;
   public hasBegun!: boolean;
   public processing: boolean = false;
   public settings: TournamentRegistrationSettings|undefined;
@@ -34,14 +33,19 @@ export class RegistrationsNavComponent implements OnInit {
    
   }
 
-  ngOnInit() {    
-    this.activeTab = RegistrationTab.Settings;
+  ngOnInit() {   
+    const startTab = this.startTab(); 
+    if (startTab !== undefined ) {
+      this.activeTab = startTab;
+    }
+    console.log(this.activeTab);
 
-    this.tournamentRegistrationRepository.getSettings(this.tournament, false)
+    
+    this.tournamentRegistrationRepository.getSettings(this.tournament(), false)
       .subscribe({
         next: (settings: TournamentRegistrationSettings) => {
           this.settings = settings;
-          if( settings?.isEnabled() ) {
+          if ( startTab === undefined && settings?.isEnabled() ) {
             this.activeTab = RegistrationTab.List;
           }
           this.processing = false;
@@ -63,6 +67,3 @@ export class RegistrationsNavComponent implements OnInit {
 }
 
 
-export enum RegistrationTab {
-  Settings = 10, List, Form
-}

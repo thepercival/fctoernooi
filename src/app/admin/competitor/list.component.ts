@@ -27,6 +27,7 @@ import { JsonRegistrationSettings } from '../../lib/tournament/registration/sett
 import { TournamentRegistrationSettings } from '../../lib/tournament/registration/settings';
 import { TournamentRegistrationTextSubject } from '../../lib/tournament/registration/text';
 import { TextEditorModalComponent } from '../textEditor/texteditormodal.component';
+import { CompetitorTab, RegistrationTab } from '../../shared/common/tab-ids';
 
 @Component({
   selector: 'app-tournament-competitors',
@@ -40,6 +41,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   lockerRoomValidator!: LockerRoomValidator;
   public structureNameService!: StructureNameService;
   public activeTab!: number;
+  public activeRegistrationTab: RegistrationTab|undefined;
   public hasBegun!: boolean;
   public registrationSettings: TournamentRegistrationSettings|undefined;
 
@@ -62,8 +64,10 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   ngOnInit() {
     this.route.params.subscribe(params => {
         this.activeTab = +params.tabId;
+        this.activeRegistrationTab = params.registrationTabId !== undefined ? +params.registrationTabId : undefined; 
         super.myNgOnInit(() => this.postInit(), false);
       });
+      
   }
 
   postInit() {    
@@ -169,8 +173,4 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   get TabOrder(): number { return CompetitorTab.Order; }
   get TabRegistrations(): number { return CompetitorTab.Registrations; }
   get TabPresent(): number { return CompetitorTab.Present; }
-}
-
-export enum CompetitorTab {
-  Base = 1, Order, Registrations, Present
 }

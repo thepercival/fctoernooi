@@ -9,7 +9,7 @@
     <h2>
       <app-tournament-icon name="structure"></app-tournament-icon> <span class="mx-1">opzet</span>       
     </h2>
-    <img *ngIf="tournament.getLogoExtension()" height=30 src="{{getLogoUrl(tournament, 200)}}" class="img-fluid"
+    <img *ngIf="tournament?.getLogoExtension()" height=30 src="{{getLogoUrl(tournament, 200)}}" class="img-fluid"
         style="width: auto;" alt="logo">
     <div *ngIf="!processing && (tournament.getCompetitors().length > 0 || !structure.hasSingleCategory())" class="pe-1">
       <button *ngIf="tournament.getCompetitors().length > 0" role="button" (click)="showCompetitors = !showCompetitors"

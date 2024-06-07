@@ -4,14 +4,14 @@
 
       <app-admin-public-switcher *ngIf="!processing && isAdmin() && tournament.getPublic()"
         [currentWebsitePart]="PublicWebsitePart" [tournament]="tournament"
-        [routerLink]="['/admin/competitors', tournament.getId(), TabRegistrations]">
+        [routerLink]="['/admin/competitors', tournament.getId(), TabRegistrations, TabRegistrationForm]">
       </app-admin-public-switcher>
 
       <div class="d-flex justify-content-between mb-2">
         <h2>
           <fa-icon [icon]="['fas', 'user-plus']"></fa-icon> <span class="mx-1">inschrijven</span>
         </h2>
-        <img *ngIf="tournament.getLogoExtension()" height=30 src="{{getLogoUrl(tournament, 200)}}" class="img-fluid"
+        <img *ngIf="tournament?.getLogoExtension()" height=30 src="{{getLogoUrl(tournament, 200)}}" class="img-fluid"
           style="width: auto;" alt="logo">
       </div>
       

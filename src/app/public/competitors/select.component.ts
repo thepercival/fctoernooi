@@ -16,8 +16,8 @@ import { LockerRoom } from '../../lib/lockerroom';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { AuthService } from '../../lib/auth/auth.service';
 import { Role } from '../../lib/role';
-import { CompetitorTab } from '../../admin/competitor/list.component';
 import { WebsitePart } from '../../shared/tournament/structure/admin-public-switcher.component';
+import { CompetitorTab } from '../../shared/common/tab-ids';
 
 @Component({
     selector: 'app-tournament-select-favorites',

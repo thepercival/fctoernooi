@@ -35,6 +35,7 @@ const routes: Routes = [
   { path: 'new', component: NewComponent }, // ALL ROLES
   { path: ':id', component: HomeAdminComponent, canActivate: [AuthguardService] }, // GAMERESULTADMIN, ADMIN
   { path: 'competitors/:id/:tabId', component: CompetitorListComponent, canActivate: [AuthguardService] }, // ADMIN  
+  { path: 'competitors/:id/:tabId/:registrationTabId', component: CompetitorListComponent, canActivate: [AuthguardService] }, // ADMIN  
   { path: 'competitor/:id/:categoryNr/:pouleNr/:placeNr', component: CompetitorEditComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'registration/:id/:categoryNr/:registrationId', component: TournamentRegistrationEditComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'games/:id', component: GameListComponent, canActivate: [AuthguardService] }, // GAMERESULTADMIN

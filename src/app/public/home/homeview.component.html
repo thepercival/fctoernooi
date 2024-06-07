@@ -13,7 +13,7 @@
       </h2>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
-      <div *ngIf="!processing && tournament"class="text-start">
+      <div *ngIf="!processing && tournament" class="text-start">
         <div>
           <img width="100" *ngIf="tournament.getLogoExtension()" src="{{getLogoUrl(tournament, 200)}}" class="img-fluid rounded float-end"
             alt="logo">
