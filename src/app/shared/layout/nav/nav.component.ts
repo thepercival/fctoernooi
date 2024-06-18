@@ -46,7 +46,6 @@ export class NavComponent implements OnInit, AfterContentInit {
     });
     this.globalEventsManager.updateDataInNavBar.subscribe((navBarData: NavBarData) => {
       this.navBarData = navBarData;
-      console.log();
       this.updateCustomProperty();
     });
     this.updateCustomProperty();

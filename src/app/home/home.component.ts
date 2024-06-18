@@ -7,6 +7,7 @@ import { TournamentShellRepository } from '../lib/tournament/shell/repository';
 import { Role } from '../lib/role';
 import { TournamentShell } from '../lib/tournament/shell';
 import { GlobalEventsManager } from '../shared/common/eventmanager';
+import { DefaultJsonTheme } from '../lib/tournament/theme';
 
 @Component({
   selector: 'app-home',
@@ -30,7 +31,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private router: Router,
     public authService: AuthService,
     private tournamentShellRepos: TournamentShellRepository,
-    globalEventsManager: GlobalEventsManager
+    private globalEventsManager: GlobalEventsManager
   ) {
     this.linethroughDate = new Date();
     this.linethroughDate.setHours(this.linethroughDate.getHours() - HomeComponent.START_HOUR_IN_PAST);
@@ -103,6 +104,24 @@ export class HomeComponent implements OnInit, AfterViewInit {
     } else {
       this.router.navigate(['/public/prenew']);
     }
+  }
+
+  linkToExamples() {  
+    this.globalEventsManager.updateDataInNavBar.emit({
+      title: 'FCToernooi',
+      atHome: false,
+      theme: DefaultJsonTheme
+    });
+    this.router.navigate(['/public/examples']);
+  }
+
+  linkToPublicTournaments() {
+    this.globalEventsManager.updateDataInNavBar.emit({
+      title: 'FCToernooi',
+      atHome: false,
+      theme: DefaultJsonTheme
+    });
+    this.router.navigate(['/public/shells']);
   }
 
   linkToTournament(shell: TournamentShell) {

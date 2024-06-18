@@ -46,10 +46,10 @@
     </table>
 
     <div class="d-flex justify-content-center m-3 my-5">
-      <button type="button" class="btn btn-outline-info" [routerLink]="['/public/examples']">
+      <button type="button" class="btn btn-outline-info" (click)="linkToExamples()">
         voorbeeld toernooien
       </button>
-      <button type="button" class="btn btn-outline-primary ms-3" [routerLink]="['/public/shells']">
+      <button type="button" class="btn btn-outline-primary ms-3" (click)="linkToPublicTournaments()">
         publieke toernooien
       </button>
     </div>
