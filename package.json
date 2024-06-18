@@ -10,7 +10,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "bundle-report": "npm run build-bundle-report && webpack-bundle-analyzer dist/stats.json",
-    "build-bundle-report": "ng build --stats-json"
+    "analyze": "ng build -c dev-nl --stats-json && esbuild-visualizer --open=true --metadata dist/stats.json"
   },
   "private": true,
   "dependencies": {
@@ -63,7 +63,7 @@
     "ts-node": "^10.9",
     "typescript": "^5.4",
     "typescript-eslint": "^7.0",
-    "webpack-bundle-analyzer": "^4.7",
+    "esbuild-visualizer": "^0.6",
     "webpack-dev-server": "^5.0"
   }
 }
