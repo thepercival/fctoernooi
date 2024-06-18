@@ -1,0 +1,60 @@
+<nav class="navbar p-0 mb-2 d-flex flex-nowrap mt-n2 mb-4" style="background-color: inherit;">
+
+  <span class="smaller ps-1">{{getOrigin()}}/{{tournament().getId()}}</span>
+
+  <div *ngIf="tournament()">
+    <div class="d-inline-block pb-0">
+      <h2>
+        <app-sport-icon class="smaller" [competitionSports]="tournament().getCompetition().getSports()"></app-sport-icon>
+        <span class="text-truncate">{{tournament().getName()}}</span>
+        <span class="vr mx-2 mt-1"></span>
+        <span *ngIf="activeScreen()">
+          <span [innerHTML]="activeScreen().getDescription() | keepHtml"></span>
+        </span>
+      </h2>      
+    </div>
+    
+    
+  </div>
+
+    <!-- <h1 class="px-2 my-1 text-nowrap overflow-hidden">
+      <app-svg-icon class="pb-1" [width]=20 *ngIf="navBarData.atHome" icon="favicon"></app-svg-icon>
+      <span class="ms-1">{{navBarData.title}}</span>
+    </h1>
+  
+  
+    <button [routerLink]="[tournamentLiveboardLink.link, tournamentLiveboardLink.tournamentId]"
+      class="btn btn-navbar d-none d-lg-block" type="button" tabindex="-1">    
+      <span> live scorebord</span>
+    </button>     -->
+  
+
+  <!-- <a class="navbar-brand py-0" tabindex="-1" [routerLink]="['/']">
+    <fa-icon [icon]=" [ getLogoIconPrefix(), getLogoIconName()] "></fa-icon> 
+  </a> -->
+
+  <app-progress *ngIf="activeScreen()" class="d-inline-block mt-1"
+    [startNrOfSecondsFromZero]="this.activeScreen().getConfig().nrOfSeconds"
+    [theme]="tournament().getTheme()" (newNrOfSecondsFromZero)="countingDown($event)">
+  </app-progress>
+
+  <div *ngIf="tournament()" class="d-flex flex-nowrap me-1">    
+    <!-- *ngIf="previewScreenConfig === undefined" -->    
+    <div class="vr mx-2"></div>
+    <button (click)="onScreenConfigsButtonPressed.emit()"
+      class="btn btn-navbar" type="button">        
+      <fa-icon [icon]="['fas', 'cogs']"></fa-icon>
+    </button>
+    <div class="vr mx-2"></div>
+    <button *ngIf="showCategoryButton" type="button"
+      class="btn btn-navbar" (click)="onCategoryButtonPressed.emit()">
+      <fa-icon [icon]="['fas', 'grip']"></fa-icon>
+    </button>
+    <div class="vr mx-2"></div>
+    <button (click)="navigateBack()" class="btn btn-navbar" type="button">
+      <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
+      <span> terug</span>
+    </button>
+  </div>
+</nav>
+

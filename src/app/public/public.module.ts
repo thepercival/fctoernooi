@@ -39,6 +39,7 @@ import { RegistrationComponent } from './registration-form/registration-form.com
 import { CopyModalComponent } from './tournament/copymodal.component';
 import { PrivacyComponent } from './privacy.component';
 import { HomeViewComponent } from './home/homeview.component';
+import { LiveboardNavComponent } from './liveboard/nav.component';
 
 @NgModule({
   imports: [
@@ -56,6 +57,7 @@ import { HomeViewComponent } from './home/homeview.component';
     GamesComponent,
     HomeViewComponent,
     LiveboardComponent,
+    LiveboardNavComponent,
     LiveboardPoulesComponent,
     LiveboardSponsorsComponent,
     LiveboardGamesComponent,

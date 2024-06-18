@@ -1,43 +1,40 @@
 import {
     ChangeDetectorRef,
     Component,
-    Input,
+    effect,
+    ElementRef,
+    input,
     NgZone,
-    OnChanges,
     OnDestroy,
     output,
-    SimpleChanges,
 } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
+import { DefaultJsonTheme, JsonTheme } from '../../lib/tournament/theme';
 
 @Component({
     selector: 'app-progress',
     templateUrl: './progress.component.html',
     styleUrls: ['./progress.component.scss']
 })
-export class ProgressComponent implements OnDestroy, OnChanges {
-    @Input() max!: number;
-    @Input() toggleProgress!: boolean;
-    
-    atZeroExecute = output<boolean>();
+export class ProgressComponent implements OnDestroy {
+    startNrOfSecondsFromZero = input.required<number>();
+    theme = input<JsonTheme>();        
+    newNrOfSecondsFromZero = output<number>();
+
+    private nrOfSecondsFromZero: number = 0;
     
     radius = 16;
     strokeWidth = 5;
     circumference = 2 * Math.PI * this.radius;
     length = (this.radius + this.strokeWidth) * 2;
     private timer!: Subscription;
-    private progress!: number;
     public dashoffset!: number;
 
-    constructor(private _ngZone: NgZone, private changeRef: ChangeDetectorRef) {
-        this.resetProgress();
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes.toggleProgress !== undefined
-            && changes.toggleProgress.currentValue !== changes.toggleProgress.previousValue) {
-            this.processOutsideOfAngularZone();
-        }
+    constructor(private elRef: ElementRef, private _ngZone: NgZone, private changeRef: ChangeDetectorRef) {        
+        effect(() => {
+            this.resetProgress(this.startNrOfSecondsFromZero());
+            this.updateCustomProperty(); 
+        });
     }
 
     processOutsideOfAngularZone() {
@@ -45,8 +42,7 @@ export class ProgressComponent implements OnDestroy, OnChanges {
             this._increaseProgress(() => {
                 // reenter the Angular zone and display done
                 this._ngZone.run(() => {
-                    this.resetProgress();
-                    this.atZeroExecute.emit(true);
+                    this.resetProgress(this.startNrOfSecondsFromZero());
                 });
             });
         });
@@ -56,10 +52,11 @@ export class ProgressComponent implements OnDestroy, OnChanges {
         this.increaseProgress();
         this.changeRef.markForCheck();
         this.changeRef.detectChanges();
-        if (this.progress < this.max) {
+        if (this.nrOfSecondsFromZero > 0) {
             this.timer = timer(1000).subscribe(counter => {
                 this._increaseProgress(doneCallback);
             });
+
         } else {
             doneCallback();
         }
@@ -71,18 +68,31 @@ export class ProgressComponent implements OnDestroy, OnChanges {
         }
     }
 
-    private resetProgress() {
-        this.progress = 0;
+    private resetProgress(startNrOfSecondsFromZero: number) {
+        this.nrOfSecondsFromZero = startNrOfSecondsFromZero;
+        this.ngOnDestroy();
+        this.newNrOfSecondsFromZero.emit(this.nrOfSecondsFromZero);
         this.dashoffset = this.circumference;
+        this.processOutsideOfAngularZone();
     }
 
     private increaseProgress() {
-        this.progress += 1;
-        this.dashoffset = this.circumference * (1 - (this.progress / this.max));
+        this.nrOfSecondsFromZero--;
+        this.newNrOfSecondsFromZero.emit(this.nrOfSecondsFromZero);
+        const progress = this.startNrOfSecondsFromZero() - this.nrOfSecondsFromZero;
+        this.dashoffset = this.circumference * (1 - (progress / this.startNrOfSecondsFromZero()));
     }
 
     getSeconds(): string {
-        const val = this.max - this.progress;
+        const val = this.nrOfSecondsFromZero;
         return (val < 10) ? '0' + val : '' + val;
+    }
+
+    updateCustomProperty() {
+        const theme = this.theme() ?? DefaultJsonTheme;
+        if (theme !== undefined) {
+            this.elRef.nativeElement.style.setProperty('--nav-bg', theme.bgColor);
+            this.elRef.nativeElement.style.setProperty('--nav-color', theme.textColor);
+        }
     }
 }

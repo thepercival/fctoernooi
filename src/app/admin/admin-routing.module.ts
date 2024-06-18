@@ -29,7 +29,7 @@ import { StructureEditComponent } from './structure/edit.component';
 import { TournamentRegistrationEditComponent } from './registration/registration-edit.component';
 import { HomeEditComponent } from './home/homeedit.component';
 import { TournamentRulesComponent } from './home/rules.component';
-import { TournamentNameAndLogoComponent } from './nameAndLogo/name-and-logo.component';
+import { TournamentNameAndThemeComponent } from './nameAndTheme/name-and-theme.component';
 
 const routes: Routes = [
   { path: 'new', component: NewComponent }, // ALL ROLES
@@ -45,7 +45,7 @@ const routes: Routes = [
   { path: 'fields/:id', component: FieldListComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'homeedit/:id', component: HomeEditComponent, canActivate: [AuthguardService] }, // GAMERESULTADMIN, ADMIN
   { path: 'lockerrooms/:id', component: LockerRoomsEditComponent, canActivate: [AuthguardService] }, // ADMIN
-  { path: 'nameandlogo/:id', component: TournamentNameAndLogoComponent, canActivate: [AuthguardService] }, // ADMIN
+  { path: 'nameandtheme/:id', component: TournamentNameAndThemeComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'planningconfig/:id/:startRoundNumber', component: PlanningConfigComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'ranking/:id', component: RankingEditComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'referees/:id', component: RefereeListComponent, canActivate: [AuthguardService] }, // ADMIN

@@ -7,8 +7,8 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class SvgIconComponent implements OnInit {
   @Input() icon!: string;
-  @Input() width?: number;
-  @Input() height?: number;
+  @Input() width?: number = 40;
+  @Input() height?: number = 40;
   @Input() size?: number = 24;
   @Input() fill?: string;
   @Input() class?: string;

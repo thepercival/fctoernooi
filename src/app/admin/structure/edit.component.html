@@ -79,5 +79,5 @@
 
 
 <app-tournament-navbar [public]="false" [currentScreen]="StructureScreen" *ngIf="tournament" [tournament]="tournament"
-  [upperNavBar]="planningNavBar">
+  [upperNavBar]="planningNavBar" [theme]="getTheme(tournament)">
 </app-tournament-navbar>

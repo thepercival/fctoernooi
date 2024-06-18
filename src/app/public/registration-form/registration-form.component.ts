@@ -30,7 +30,7 @@ import { CompetitorTab, RegistrationTab } from '../../shared/common/tab-ids';
     styleUrls: ['./registration-form.component.scss']
 })
 export class RegistrationComponent extends TournamentComponent implements OnInit {
-    public settings!: TournamentRegistrationSettings;
+    public settings: TournamentRegistrationSettings|undefined;
     public isOpen: boolean = false;
     public registration: TournamentRegistration|undefined;
     public form!: FormGroup<{
@@ -129,6 +129,11 @@ export class RegistrationComponent extends TournamentComponent implements OnInit
     isAdmin(): boolean {
         return this.hasRole(this.authService, Role.Admin);
     }
+
+    getRemarkAsHtml(settings: TournamentRegistrationSettings): string {
+        const remarkArray = settings.getRemark().split(/\r?\n/);
+        return remarkArray.join('<br/>');
+    }    
 
     formToJson(): JsonTournamentRegistration {
         return {

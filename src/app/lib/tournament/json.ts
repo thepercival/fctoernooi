@@ -6,10 +6,12 @@ import { JsonRecess } from '../recess/json';
 import { JsonTournamentUser } from './user/json';
 import { StartEditMode } from './startEditMode';
 import { JsonTournamentCompetitor } from '../competitor/json';
+import { JsonTheme } from './theme';
 
 export interface JsonTournament extends JsonIdentifiable {
     competition: JsonCompetition;
     intro: string;
+    theme: JsonTheme|undefined;
     logoExtension: string|undefined;
     location: string | undefined;
     public: boolean;

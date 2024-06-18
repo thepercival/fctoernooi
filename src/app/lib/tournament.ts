@@ -8,10 +8,12 @@ import { TournamentCompetitor } from './competitor';
 import { Identifiable } from 'ngx-sport';
 import { Recess } from './recess';
 import { StartEditMode } from './tournament/startEditMode';
+import { JsonTheme } from './tournament/theme';
 
 export class Tournament extends Identifiable {
     protected id: number = 0;
     protected intro: string = '';
+    protected theme: JsonTheme|undefined;
     protected location: string|undefined;
     protected logoExtension: string | undefined;
     protected users: TournamentUser[] = [];
@@ -83,6 +85,14 @@ export class Tournament extends Identifiable {
 
     setIntro(intro: string): void {
         this.intro = intro;
+    }
+
+    getTheme(): JsonTheme | undefined {
+        return this.theme;
+    }
+
+    setTheme(theme: JsonTheme): void {
+        this.theme = theme;
     }
 
     getLocation(): string | undefined {

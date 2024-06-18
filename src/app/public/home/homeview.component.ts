@@ -22,6 +22,7 @@ import { DateFormatter } from '../../lib/dateFormatter';
 import { combineLatest } from 'rxjs';
 import { Tournament } from '../../lib/tournament';
 import { WebsitePart } from '../../shared/tournament/structure/admin-public-switcher.component';
+import { DefaultJsonTheme } from '../../lib/tournament/theme';
 
 @Component({
     selector: 'app-tournament-home-view',
@@ -58,6 +59,11 @@ export class HomeViewComponent extends TournamentComponent implements OnInit {
                 ([rules, settings]) => {
                     this.rules = rules; 
                     this.settings = settings;
+                    this.globalEventsManager.updateDataInNavBar.emit({
+                        title: 'FCToernooi',
+                        atHome: false,
+                        theme: this.tournament.getTheme() ?? DefaultJsonTheme
+                    });
                     this.processing = false;
                 })
         });

@@ -29,6 +29,9 @@ export class TournamentMapper {
         if (json.intro) {
             tournament.setIntro(json.intro);
         }
+        if (json.theme) {
+            tournament.setTheme(json.theme);
+        }
         if (json.location) {
             tournament.setLocation(json.location);
         }
@@ -48,6 +51,7 @@ export class TournamentMapper {
         return {
             id: tournament.getId(),
             intro: tournament.getIntro(),
+            theme: tournament.getTheme(),
             logoExtension: tournament.getLogoExtension(),
             location: tournament.getLocation(),
             competition: this.competitionMapper.toJson(tournament.getCompetition()),

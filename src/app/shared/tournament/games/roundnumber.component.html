@@ -254,7 +254,7 @@
       <ng-container
         *ngIf="(gmData.game.getReferee() || gmData.game.getRefereePlace()) && !isFinished(gmData.game); else noRefOrFinished">
         <button class="btn btn-outline-info btn-sm d-sm-none" placement="bottom"
-          [ngbPopover]="getRefereeName(gmData.game)">
+          [ngbPopover]="getRefereeName(gmData.game, false)">
           <span [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
             <app-tournament-icon name="referee"></app-tournament-icon>
           </span>

@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
   apiurl: 'https://acc-api.fctoernooi.nl/',
-  apiVersion: '45'
+  apiVersion: '46'
 };

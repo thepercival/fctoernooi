@@ -17,7 +17,7 @@
         <div>
           <img width="100" *ngIf="tournament.getLogoExtension()" src="{{getLogoUrl(tournament, 200)}}" class="img-fluid rounded float-end"
             alt="logo">
-          <h3 class="mb-1 mt-4 text-start">welkom</h3>
+          <h3 class="mb-1 text-start">welkom</h3>
           <div>
             <span>{{tournament.getIntro()}}</span>
           </div>
@@ -54,17 +54,22 @@
         </div>        
 
         <h3 *ngIf="tournament.getSponsors().length > 0" class="mb-0 mt-3">sponsors</h3>
-        <div *ngIf="tournament.getSponsors().length > 0" class="d-flex flex-wrap gap-1 gap-sm-3">
-          <div *ngFor="let sponsor of tournament.getSponsors()" class="card h-100">
-            <div *ngIf="sponsor" class="card-header">
-              <span class="">{{sponsor.getName()}}</span>
-            </div>
-            <div class="card-body p-1 text-center sponsor-card-body">
-              <img *ngIf="sponsor && sponsor.getLogoExtension()" src="{{getSponsorLogoUrl(sponsor)}}" class="sponsor-img"
-                alt="img">
-            </div>
-            <div *ngIf="sponsor && sponsor.getUrl()" class="card-footer">
-              <span class="text-break">{{sponsor.getUrl()}}</span>
+        <div *ngIf="tournament.getSponsors().length > 0" class="">
+          <div class="row row-cols-1 row-cols-md-2 g-4">
+            
+
+          <div *ngFor="let sponsor of tournament.getSponsors()" class="col">
+            <div class="card h-100">
+              <div class="card-header">
+                <span class="">{{sponsor.getName()}}</span>
+              </div>
+              <div class="card-body p-1 text-center sponsor-card-body">
+                <img *ngIf="sponsor && sponsor.getLogoExtension()" src="{{getSponsorLogoUrl(sponsor)}}" class="sponsor-img"
+                  alt="img">
+              </div>
+              <div *ngIf="sponsor.getUrl()" class="card-footer">
+                <span class="text-break">{{sponsor.getUrl()}}</span>
+              </div>
             </div>
           </div>        
         </div>
@@ -80,5 +85,5 @@
   </div>
 </div>
 
-<app-tournament-navbar [public]="true" [currentScreen]="HomeScreen" *ngIf="tournament" [tournament]="tournament">
+<app-tournament-navbar [public]="true" [currentScreen]="HomeScreen" *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)">
 </app-tournament-navbar>

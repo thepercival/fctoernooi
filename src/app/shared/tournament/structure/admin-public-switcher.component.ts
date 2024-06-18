@@ -10,17 +10,12 @@ import { Router } from '@angular/router';
     templateUrl: './admin-public-switcher.component.html',
     styleUrls: ['./admin-public-switcher.component.scss']
 })
-export class AdminPublicSwitcherComponent implements OnInit {
+export class AdminPublicSwitcherComponent {
     public tournament = input.required<Tournament>();
     public currentWebsitePart = input.required<WebsitePart>(); 
     public routerLink = input.required<any[]>(); 
     
-    constructor(private router: Router,) {
-        
-    }
-
-    ngOnInit(): void {
-        console.log(this.currentWebsitePart());
+    constructor(private router: Router) {        
     }
 
     get PublicWebsitePart(): WebsitePart { return WebsitePart.Public }

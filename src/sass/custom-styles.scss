@@ -11,10 +11,12 @@
 // }
 
 .btn-navbar {
-    @extend .text-success;
     @extend .border-0;
+    @extend .btn-sm;
+    @extend .p-1;
     white-space: nowrap;
     overflow: hidden;
+    color: inherit;
 }
 
 .favitem {

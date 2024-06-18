@@ -74,7 +74,7 @@
   </div>
 </div>
 
-<app-tournament-navbar [public]="false" [currentScreen]="HomeScreen" *ngIf="tournament" [tournament]="tournament">
+<app-tournament-navbar [public]="false" [currentScreen]="HomeScreen" *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)">
 </app-tournament-navbar>
 
 <ng-template #contentInfoLocation>

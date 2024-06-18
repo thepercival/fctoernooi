@@ -29,8 +29,7 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     public activeScreen: SponsorScreen | ResultsScreen | ScheduleScreen | EndRankingScreen | PoulesRankingScreen | undefined;
     private screens: (SponsorScreen | ResultsScreen | ScheduleScreen | EndRankingScreen | PoulesRankingScreen)[] = [];
     public screenConfigs: ScreenConfig[] | undefined;
-    public configModalIsOpen = false;
-    public toggleProgress = false;
+    public configModalIsOpen = false;    
     public structureNameService!: StructureNameService;
     public startLocationMap!: StartLocationMap;
     public previewScreenConfig: undefined | ScreenConfig;
@@ -61,7 +60,7 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         super.myNgOnInit(() => {
             this.updateFavoriteCategories(this.structure);
             if (this.previewScreenConfig === undefined && !this.screenConfigRepository.hasObjects(this.tournament)) {
-                this.openConfigModal(this.screenConfigRepository.getDefaultObjects());
+                this.openScreenConfigsModal(this.screenConfigRepository.getDefaultObjects());
             } else {
                 // processScreens
                 this.getScreenConfigs()
@@ -94,6 +93,10 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         return this.screenConfigRepository.getObjects(this.tournament);
     }
 
+    public openCategoriesModal() {
+        this.openCategoriesChooseModal(this.structure);
+    }
+
     processScreens(screenConfigs: ScreenConfig[]) {
         this.startLocationMap = new StartLocationMap(this.tournament.getCompetitors());
         const link: LiveboardLink = { showIcon: false, tournamentId: this.tournament.getId(), link: 'wim' };
@@ -115,13 +118,14 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         if (this.configModalIsOpen) {
             return;
         }
-        this.activeScreen = this.screens.shift();
+        const activeScreen = this.screens.shift();
         // this.processing = false;
-        if (this.activeScreen === undefined) {
+        if (activeScreen === undefined) {
             this.processing = true;
             this.getDataAndProcessScreens(screenConfigs);
         } else {
-            this.toggleProgress = !this.toggleProgress;
+            this.activeScreen = activeScreen;
+            //this.activeScreen = this.screens.shift();
         }
     }
 
@@ -181,11 +185,7 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         return activeScreen;
     }
 
-    getOrigin(): string {
-        return location.origin;
-    }
-
-    openConfigModal(screenConfigs: ScreenConfig[]): void {
+    openScreenConfigsModal(screenConfigs: ScreenConfig[]): void {
         this.activeScreen = undefined;
         this.configModalIsOpen = true;
 
@@ -211,8 +211,6 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         });
         return false;
     }
-
-
 
     navigateBack() {
         this.router.navigateByUrl(this.myNavigation.getPreviousUrl(''));

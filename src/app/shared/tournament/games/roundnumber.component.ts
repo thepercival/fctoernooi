@@ -275,10 +275,10 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     return previous.getEndDateTime();
   }
 
-  getRefereeName(game: AgainstGame | TogetherGame): string | undefined {
+  getRefereeName(game: AgainstGame | TogetherGame, onlyInitials: boolean = true): string | undefined {
     const referee = game.getReferee();
     if (referee) {
-      return referee.getInitials();
+      return referee.getInitials() + (onlyInitials ? '' : ' - ' + referee.getName() );
     }
     const refereePlace = game.getRefereePlace();
     if (refereePlace) {

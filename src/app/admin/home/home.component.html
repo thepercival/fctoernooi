@@ -8,8 +8,8 @@
 
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
-      <!-- option block referees, sports, lockerRooms, sponsors -->
-      <div *ngIf="!processing && structure" class="d-flex flex-wrap gap-3 justify-content-center mt-3">
+      <!-- option block sports, referees, lockerRooms, sponsors -->
+      <div *ngIf="!processing && structure" class="d-flex flex-wrap gap-3 justify-content-center">
 
         <!-- sports -->
         <div *ngIf="isAdmin()" class="card card-sub pointer px-0" (click)="linkToCompetitionSport()">
@@ -61,14 +61,16 @@
       <hr>
       <!-- option block start, ranking, liveScoreboard, changeName -->
       <div *ngIf="!processing && structure" class="d-flex flex-wrap gap-3 justify-content-center mt-3">
-        <!-- change name & logo `-->
-        <div *ngIf="isAdmin()" class="card card-sub pointer" [routerLink]="['/admin/nameandlogo', tournament.getId()]">
+        <!-- change name & theme -->
+        <div *ngIf="isAdmin()" class="card card-sub pointer" [routerLink]="['/admin/nameandtheme', tournament.getId()]">
           <div class="card-body text-center p-1 pt-2">
             <h5 class="card-title">
-              <span class="fw-bold">A</span>
+              <img *ngIf="tournament?.getLogoExtension()" src="{{getLogoUrl(tournament, 20)}}"
+                class="img-fluid" height="25px" alt="logo">
+              <span *ngIf="tournament?.getLogoExtension() === undefined">A</span>
             </h5>
             <div>naam</div>
-            <div>& logo</div>
+            <div>& thema</div>
           </div>
         </div>
 
@@ -103,8 +105,8 @@
         </div>
       </div>
 
-      <div *ngIf="!processing && tournament.getPublic()" class="mt-3">
-        <app-admin-public-switcher [currentWebsitePart]="AdminWebsitePart"
+      <div *ngIf="!processing" class="mt-3 d-flex justify-content-center">
+        <app-admin-public-switcher *ngIf="tournament.getPublic()" [currentWebsitePart]="AdminWebsitePart"
           [tournament]="tournament" [routerLink]="['/public', tournament.getId()]">
         </app-admin-public-switcher>
       </div>
@@ -177,25 +179,12 @@
             <div>ver-</div>
             <div>wijderen</div>
           </div>
-        </div>
-      
+        </div>      
       </div>
-
-
-      <!-- program book -->
-      <!-- <div class="card card-sub pointer mt-3 mx-2" (click)="openGuide()">
-                        <div class="card-body text-center p-1 pt-2">
-                          <h5 class="card-title">
-                            <fa-icon [icon]="['fas', '?????']"></fa-icon>
-                          </h5>
-                          <div>programma</div>
-                          <div>boekje</div>
-                        </div>
-                      </div> -->
     </div>
   </div>
 </div>
-<app-tournament-navbar [public]="false" [currentScreen]="SettingsScreen" *ngIf="tournament" [tournament]="tournament">
+<app-tournament-navbar [public]="false" [currentScreen]="SettingsScreen" *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)">
 </app-tournament-navbar>
 
 <!-- copy modal -->

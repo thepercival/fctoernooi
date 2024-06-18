@@ -24,13 +24,15 @@ import { JsonTournament } from '../../lib/tournament/json';
 import { Tournament } from '../../lib/tournament';
 
 @Component({
-    selector: 'app-tournament-name-and-logo',
-    templateUrl: './name-and-logo.component.html',
-    styleUrls: ['./name-and-logo.component.css']
+    selector: 'app-tournament-name-and-theme',
+    templateUrl: './name-and-theme.component.html',
+    styleUrls: ['./name-and-theme.component.scss']
 })
-export class TournamentNameAndLogoComponent extends TournamentComponent implements OnInit {
+export class TournamentNameAndThemeComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup<{
         name: FormControl<string>,
+        textColor: FormControl<string>,
+        bgColor: FormControl<string>,
         logoExtension: FormControl<string|null>,
         logoFileStream: FormControl<Blob|null>,
       }>;
@@ -65,15 +67,28 @@ export class TournamentNameAndLogoComponent extends TournamentComponent implemen
 
 
         this.typedForm = new FormGroup({
-            name: new FormControl('', { nonNullable: true, validators: 
-                [
+            name: new FormControl('', { 
+                nonNullable: true, 
+                validators: [
                     Validators.required,
                     Validators.minLength(this.validations.minlengthname),
                     Validators.maxLength(this.validations.maxlengthname)
                 ] 
             }),
-            logoExtension: new FormControl('', { validators: 
-                [
+            textColor: new FormControl('#93c54b', {
+                nonNullable: true, 
+                validators:[
+                        Validators.maxLength(15)
+                    ]
+            }),
+            bgColor: new FormControl('#3e3f3a', {
+                nonNullable: true, 
+                validators: [
+                    Validators.maxLength(15)
+                ]
+            }),
+            logoExtension: new FormControl('', { 
+                validators: [
                     Validators.maxLength(this.validations.maxlengthname)
                 ] 
             }),
@@ -93,6 +108,13 @@ export class TournamentNameAndLogoComponent extends TournamentComponent implemen
         this.route.params.subscribe(params => {
             super.myNgOnInit(() => {
                 this.typedForm.controls.name.setValue(this.tournament.getName());
+                const theme = this.tournament.getTheme();
+                console.log('textcolor', theme?.textColor);
+                if (theme!== undefined ) {
+                    
+                    this.typedForm.controls.textColor.setValue(theme.textColor);
+                    this.typedForm.controls.bgColor.setValue(theme.bgColor);
+                }
                 this.typedForm.controls.logoExtension.setValue(this.tournament.getLogoExtension() ?? null);
                 this.processing = false; 
             });
@@ -138,9 +160,12 @@ export class TournamentNameAndLogoComponent extends TournamentComponent implemen
 
     formToJson(): JsonTournament {
         const json = this.tournamentMapper.toJson(this.tournament);
-        const logoExtension = this.logoInputType === LogoInput.ByUrl ? this.typedForm.controls.logoExtension.value ?? undefined : undefined;
+        const logoExtension = this.logoInputType === LogoInput.ByUrl ? (this.typedForm.controls.logoExtension.value ?? undefined) : undefined;
         json.logoExtension = logoExtension;
         json.competition.league.name = this.typedForm.controls.name.value;
+        const textColor = this.typedForm.controls.textColor.value;
+        const bgColor = this.typedForm.controls.bgColor.value;
+        json.theme = { textColor, bgColor };        
         return json;
     }
 

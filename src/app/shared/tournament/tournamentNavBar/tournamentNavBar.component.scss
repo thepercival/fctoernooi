@@ -1,3 +1,24 @@
 .btn {
     border: 0;
 }
+
+.btn-text-white {
+    color: white;
+}
+
+.btn-text-black {
+    color: black;
+}
+
+nav {
+    --nav-bg: none;
+    background-color: var(--nav-bg);
+
+    --nav-color: none;
+    color: var(--nav-color);
+}
+
+.vr {
+    color: inherit;
+    opacity: 1;
+}

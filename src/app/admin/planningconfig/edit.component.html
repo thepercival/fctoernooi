@@ -168,7 +168,7 @@
     </div>
 </div>
 
-<app-tournament-navbar [public]="false" *ngIf="tournament" [tournament]="tournament">
+<app-tournament-navbar [public]="false" *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)">
 </app-tournament-navbar>
 
 <ng-template #contentInfoManual>

@@ -1,5 +1,15 @@
+:host {
+  --nav-bg: none;
+  background-color: var(--nav-bg);
+
+  --nav-color: none;
+  color: var(--nav-color);
+}
+
 .progress {
   position: relative;
+    color: inherit;
+      background-color: inherit;
 }
 
 .progress__value-text {
@@ -11,13 +21,24 @@
 
 .progress__svg {
   transform: rotate(-90deg);
+  
 }
 
-.progress__meter,
 .progress__value {
-  fill: none;
+  stroke: var(--nav-bg);
+
+  fill: var(--nav-bg);
 }
+
+.progress__meter {
+  stroke: currentColor;
+}
+
 
 .progress__value {
   transition: all 100ms;
+}
+
+svg {
+  stroke: currentColor;
 }

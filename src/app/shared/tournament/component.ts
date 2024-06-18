@@ -11,6 +11,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CategoryChooseModalComponent } from './category/chooseModal.component';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { NavBarData } from '../layout/nav/nav.component';
+import { DefaultJsonTheme, JsonTheme } from '../../lib/tournament/theme';
 
 export class TournamentComponent {
 
@@ -75,11 +76,16 @@ export class TournamentComponent {
             });
     }
 
-    private getNavBarData(tournament: Tournament|undefined): NavBarData {
+    private getNavBarData(tournament: Tournament): NavBarData {
         return {
-            title: tournament === undefined ? 'FCToernooi' : tournament.getName(),
-            home: tournament === undefined
+            title: tournament.getName(),
+            atHome: false,
+            theme: tournament?.getTheme() ?? DefaultJsonTheme
         };
+    }
+
+    public getTheme(tournament: Tournament): JsonTheme {
+        return tournament.getTheme() ?? DefaultJsonTheme;
     }
 
     public setAlert(type: IAlertType, message: string) {

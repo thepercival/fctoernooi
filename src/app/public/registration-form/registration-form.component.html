@@ -78,7 +78,7 @@
           </div>
         </div>
 
-        <ngb-alert *ngIf="settings && settings.getRemark().length > 0" type="info">{{ settings.getRemark() }}</ngb-alert>
+        <ngb-alert *ngIf="settings && settings.getRemark().length > 0" type="info" [innerHtml]="getRemarkAsHtml(settings)"></ngb-alert>
 
         <div class="row mb-3">
           <div class="col-3">

@@ -3,7 +3,7 @@
     <div class="col-sm-10 col-md-8 col-lg-6">
       
       <h2>
-        naam & logo
+        naam & thema
       </h2>
       <h2 *ngIf="processing" class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
@@ -20,7 +20,23 @@
               [ngClass]="{ 'is-invalid': typedForm.controls.name.invalid, 'is-valid': typedForm.controls.name.valid }" type="text"
               formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
-        </div>       
+        </div>
+        <div class="row mb-3">
+          <div class="col-3">
+            <label for="textColor" class="col-form-label">tekst kleur</label>
+          </div>
+          <div class="col-9">            
+            <input type="color" class="form-control form-control-color" formControlName="textColor">
+          </div> 
+        </div>
+        <div class="row mb-3">
+          <div class="col-3">
+            <label for="bgColor" class="col-form-label">achteground kleur</label>
+          </div>
+          <div class="col-9">
+            <input type="color" class="form-control form-control-color" formControlName="bgColor">
+          </div>
+        </div>
         <div *ngIf="logoInputType === LogoInputTypeByUpload" class="row mb-3">
           <div class="col-3">
             <label for="logouploadother" (click)="openInfoModal(contentInfo)" class="pointer">logo
@@ -60,7 +76,7 @@
     </div>
   </div>
 </div>
-<app-tournament-navbar *ngIf="tournament" [tournament]="tournament"></app-tournament-navbar>
+<app-tournament-navbar *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)"></app-tournament-navbar>
 
 <ng-template #contentInfo>
   {{getLogoUploadDescription()}}

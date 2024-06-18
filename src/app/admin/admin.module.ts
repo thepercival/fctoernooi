@@ -96,7 +96,7 @@ import { TextEditorModalComponent } from './textEditor/texteditormodal.component
 import { CopiedModalComponent } from './home/copiedmodal.component';
 import { HomeEditComponent } from './home/homeedit.component';
 import { TournamentRulesComponent } from './home/rules.component';
-import { TournamentNameAndLogoComponent } from './nameAndLogo/name-and-logo.component';
+import { TournamentNameAndThemeComponent } from './nameAndTheme/name-and-theme.component';
 import { RegistrationsNavComponent } from './competitor/registrations/nav.component';
 import { RegistrationFormComponent } from './competitor/registrations/form.component';
 import { PrintServiceModalComponent } from './home/print-service-modal.component';
@@ -169,7 +169,7 @@ import { PrintServiceModalComponent } from './home/print-service-modal.component
     TournamentRegistrationEditComponent,
     TournamentRegistrationProcessModalComponent,
     TournamentRulesComponent,
-    TournamentNameAndLogoComponent
+    TournamentNameAndThemeComponent
   ],
   providers: [
     CompetitionSportEditor,

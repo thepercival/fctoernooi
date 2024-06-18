@@ -36,5 +36,5 @@
   </div>
 </div>
 
-<app-tournament-navbar [public]="false" [currentScreen]="GamesScreen" *ngIf="tournament" [tournament]="tournament">
+<app-tournament-navbar [public]="false" [currentScreen]="GamesScreen" *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)">
 </app-tournament-navbar>

@@ -63,7 +63,7 @@
     </table>
   </div>
 </div>
-<app-tournament-navbar *ngIf="tournament" [tournament]="tournament"></app-tournament-navbar>
+<app-tournament-navbar *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)"></app-tournament-navbar>
 
 <ng-template #contentInfo>
   <ul class="list-group">

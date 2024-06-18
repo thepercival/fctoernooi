@@ -1,6 +1,6 @@
 <div>&nbsp;</div>
-<div class="mt-3">&nbsp;</div>
-<nav class="fixed-bottom navbar-dark bg-dark border-top ">
+<div class="mt-3" >&nbsp;</div>
+<nav #navbar *ngIf="theme()" class="fixed-bottom border-top" >
 
   <div *ngIf="upperNavBar">
     <ng-container *ngTemplateOutlet="upperNavBar"></ng-container>
@@ -10,60 +10,66 @@
     <div class="d-flex justify-content-between flex-shrink-1">
 
       <h2 *ngIf="public" class="mb-0">
-        <a type="button" class="btn {{getTextColorClass(HomeScreen)}}"
-          [routerLink]="['/public/home', tournament.getId()]">
+        <a type="button" class="btn {{getBtnClass(HomeScreen)}}"
+          [routerLink]="['/public/home', tournament().getId()]">
           <fa-icon [icon]="['fas', 'home']"></fa-icon> <br /><span>home</span>
         </a>
       </h2>
+      <div *ngIf="public" class="vr my-1 mx-2"></div>
 
       <!-- opzet -->
       <h2 class="mb-0">
-        <a type="button" class="btn {{getTextColorClass(StructureScreen)}}" (click)="linkToStructure()">
+        <a type="button" class="btn {{getBtnClass(StructureScreen)}}" (click)="linkToStructure()">
           <app-tournament-icon name="structure"></app-tournament-icon> <br />opzet
         </a>
       </h2>
+      <div class="vr my-1 mx-2"></div>
 
       <!--deelnemers admin -->
       <h2 *ngIf="!public" class="mb-0">
-        <a type="button" class="btn {{getTextColorClass(CompetitorsScreen)}}"
-          [routerLink]="['/admin/competitors', tournament.getId(), CompetitorTabBase]">
+        <a type="button" class="btn {{getBtnClass(CompetitorsScreen)}}"
+          [routerLink]="['/admin/competitors', tournament().getId(), CompetitorTabBase]">
           <fa-icon [icon]="['fas', 'users']"></fa-icon> <br />
           <span>deeln</span>
           <span class="d-inline d-sm-none">.</span>
           <span class="d-none d-sm-inline">emers</span>
         </a>
       </h2>
+      <div *ngIf="!public" class="vr my-1 mx-2"></div>
       <!--deelnemers publiek -->
-      <h2 *ngIf="public && tournament.getCompetitors().length > 0" class="mb-0">
-        <a type="button" class="btn {{getTextColorClass(FavoritesScreen)}}"
-          [routerLink]="['/public/competitors', tournament.getId()]">
+      <h2 *ngIf="public && tournament().getCompetitors().length > 0" class="mb-0">
+        <a type="button" class="btn {{getBtnClass(FavoritesScreen)}}"
+          [routerLink]="['/public/competitors', tournament().getId()]">
           <fa-icon [icon]="['fas', 'users']"></fa-icon> <br />
           <span>deeln</span>
           <span class="d-inline d-sm-none">.</span>
           <span class="d-none d-sm-inline">emers</span>
         </a>
       </h2>
+      <div *ngIf="public && tournament().getCompetitors().length > 0" class="vr my-1 text-success"></div>
 
       <!--wedstrijden -->
       <h2 class="mb-0">
-        <a type="button" class="btn {{getTextColorClass(GamesScreen)}}" (click)="linkToGames()">
+        <a type="button" class="btn {{getBtnClass(GamesScreen)}}" (click)="linkToGames()">
           <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> <br />wedstr<span
             class="d-xs-inline d-sm-none">.</span><span class="d-none d-sm-inline">ijden</span>
         </a>
       </h2>
 
+      <div class="vr my-1 mx-2"></div>
       <!--standen -->
       <h2 *ngIf="public" class="mb-0">
-        <a type="button" class="btn {{getTextColorClass(RankingScreen)}}"
-          [routerLink]="['/public/ranking', tournament.getId()]">
+        <a type="button" class="btn {{getBtnClass(RankingScreen)}}"
+          [routerLink]="['/public/ranking', tournament().getId()]">
           <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> <br />standen
         </a>
       </h2>      
 
+
       <!-- overzicht -->
       <h2 *ngIf="!public" class="mb-0">
-        <a type="button" class="btn {{getTextColorClass(SettingsScreen)}}"
-          [routerLink]="['/admin', tournament.getId()]">
+        <a type="button" class="btn {{getBtnClass(SettingsScreen)}}"
+          [routerLink]="['/admin', tournament().getId()]">
           <fa-icon [icon]="['fas', 'cogs']"></fa-icon> <br />opties
         </a>
       </h2>

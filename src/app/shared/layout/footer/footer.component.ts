@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-
+import { Component,  OnInit,  input } from '@angular/core';
 import { GlobalEventsManager } from '../../common/eventmanager';
 
 @Component({
@@ -9,17 +8,14 @@ import { GlobalEventsManager } from '../../common/eventmanager';
 })
 export class FooterComponent implements OnInit {
 
-  showFooter: boolean = false;
+  public showFooter: boolean = false;
 
   constructor(private globalEventsManager: GlobalEventsManager) {
-
   }
 
   ngOnInit() {
-    this.globalEventsManager.showFooter.subscribe((show: boolean) => {
-      this.showFooter = show;
+    this.globalEventsManager.showFooter.subscribe((showFooter: boolean) => {
+      this.showFooter = showFooter;
     });
-
   }
-
 }

@@ -1,33 +1,43 @@
-<nav *ngIf="tournamentLiveboardLink.showIcon !== false"
-  class="navbar bg-fct py-0 mb-2 d-flex justify-content-between flex-nowrap">
-  <button (click)="execLeftButton(data.home)" class="btn btn-navbar p-0 pt-1 pe-2" role="button" aria-label="home" tabindex="-1">
-    <app-svg-icon icon="{{data.home ? 'darklight' : 'house'}}"></app-svg-icon>
-  </button>
+<nav *ngIf="tournamentLiveboardLink.showIcon !== false" class="navbar p-0 mb-0 d-flex flex-nowrap">
 
-  <ng-container *ngIf="tournamentLiveboardLink.showIcon;else tournament">
+  <div class="d-flex flex-nowrap">
+    <button (click)="execLeftButton(navBarData.atHome)" class="btn btn-navbar" role="button" aria-label="home" tabindex="-1">
+      <app-svg-icon icon="{{navBarData.atHome ? 'darklight' : 'house'}}"></app-svg-icon>
+    </button>
+    <div class="vr my-1"></div>
+  </div>
+
+  <ng-container *ngIf="!tournamentLiveboardLink.showIcon;else tournamentLiveboard">
+    <h1 class="px-2 my-1 text-nowrap overflow-hidden">
+      <app-svg-icon class="pb-1" [width]=20 *ngIf="navBarData.atHome" icon="favicon"></app-svg-icon>
+      <span class="ms-1">{{navBarData.title}}</span>
+    </h1>
+  </ng-container>
+  <ng-template #tournamentLiveboard >
     <button [routerLink]="[tournamentLiveboardLink.link, tournamentLiveboardLink.tournamentId]"
       class="btn btn-navbar d-none d-lg-block" type="button" tabindex="-1">
       <!-- <fa-icon [icon]=" [ 'fas', 'tv'] "></fa-icon> -->
       <span> live scorebord</span>
-    </button>
-  </ng-container>
-  <ng-template #tournament>
-    <h1 class="text-success px-2 my-1">
-      <app-svg-icon *ngIf="data.home" icon="favicon"></app-svg-icon>
-      <span>{{data.title}}</span></h1>
+    </button>    
   </ng-template>
 
   <!-- <a class="navbar-brand py-0" tabindex="-1" [routerLink]="['/']">
     <fa-icon [icon]=" [ getLogoIconPrefix(), getLogoIconName()] "></fa-icon> 
   </a> -->
 
-  <button *ngIf="!authService.isLoggedIn()" routerLink="/user/login" routerLinkActive="active"
-    class="btn btn-navbar" role="button" aria-label="inloggen " tabindex="-1">
-    <app-svg-icon icon="sign-in-alt"></app-svg-icon>
-    <span class="d-none d-sm-inline ms-1">inloggen</span>
-  </button>
-  <button *ngIf="authService.isLoggedIn()" [routerLink]="['/user/profile']"
-    class="btn btn-navbar p-0 pt-1 custom-header" role="button" tabindex="-1" aria-label="account">    
-    <app-svg-icon icon="user-circle"></app-svg-icon>
-  </button>
+  <div class="d-flex flex-nowrap">
+    <div class="vr my-1"></div>
+    <ng-container *ngIf="authService.isLoggedIn();else userNotLoggedIn">
+      <button [routerLink]="['/user/profile']" class="btn btn-navbar" role="button" tabindex="-1" aria-label="account">
+        <app-svg-icon icon="user-circle"></app-svg-icon>
+      </button>
+    </ng-container>
+    <ng-template #userNotLoggedIn>
+      <button routerLink="/user/login" routerLinkActive="active" class="btn btn-navbar"
+        role="button" aria-label="inloggen " tabindex="-1">
+        <app-svg-icon icon="sign-in-alt"></app-svg-icon>
+        <span class="d-none d-sm-inline ms-1">inloggen</span>
+      </button>
+    </ng-template>
+  </div>
 </nav>

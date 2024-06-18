@@ -77,7 +77,7 @@
     </div>
   </div>
 </div>
-<app-tournament-navbar [currentScreen]="FavoritesScreen" [public]="true" *ngIf="tournament" [tournament]="tournament">
+<app-tournament-navbar [currentScreen]="FavoritesScreen" [public]="true" *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)">
 </app-tournament-navbar>
 
 
