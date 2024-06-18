@@ -7,7 +7,7 @@ echo -n "please enter locale(nl): "
 read locale
 
 # go to the dist/yourProjectName folder
-cd ./dist/$locale
+cd ./dist/browser/$locale
 
 if [ -d "css" ]; then rm -Rf css; fi
 
@@ -16,7 +16,7 @@ mkdir css
 
 # run PurgeCSS & make a new '.css' file inside the 'css' directory
 #purgecss --css ./styles.*.css --content ./index.html ./*.js --output ./css --safelist alert-info alert-warning alert-danger alert-success
-purgecss --config ../../purgecss.config.cjs --output ./css
+purgecss --config ../../../purgecss.config.cjs --output ./css
 
 # replace the 'dist/yourProjectName/styles.css' file with the 'dist/yourProjectName/css/styles.css' file
 mv ./css/styles*.css ./styles*.css
@@ -25,4 +25,5 @@ mv ./css/styles*.css ./styles*.css
 rm -r css
 
 # back to project
+cd ..
 cd ..
