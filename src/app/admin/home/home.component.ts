@@ -72,7 +72,7 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
 
     postNgOnInit() {
 
-        this.tournamentRegistrationRepository.getSettings(this.tournament, true)
+        this.tournamentRegistrationRepository.getSettings(this.tournament, this.tournament.getPublic())
             .subscribe({
                 next: (settings: TournamentRegistrationSettings) => {
                     this.settings = settings;
@@ -203,8 +203,8 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
         return 'border-secondary';
     }
 
-    getLockerRoomBorderClass(): string {
-        const arrangedIncompleet = !this.lockerRoomValidator.areAllArranged() && this.lockerRoomValidator.areSomeArranged();
+    getLockerRoomBorderClass(lockerRoomValidator: LockerRoomValidator): string {
+        const arrangedIncompleet = !lockerRoomValidator.areAllArranged() && lockerRoomValidator.areSomeArranged();
         return arrangedIncompleet ? 'border-warning' : '';
     }
 

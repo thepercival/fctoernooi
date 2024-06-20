@@ -37,7 +37,7 @@
           </div>
         </div>
         <!-- lockerRooms -->
-        <div *ngIf="isAdmin()" class="card card-sub {{getLockerRoomBorderClass()}} pointer"
+        <div *ngIf="isAdmin() && lockerRoomValidator" class="card card-sub {{getLockerRoomBorderClass(lockerRoomValidator)}} pointer"
           [routerLink]="['/admin/lockerrooms', tournament.getId()]">
           <div class="card-body text-center p-1 pt-2">
             <h5 class="card-title">

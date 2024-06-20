@@ -74,10 +74,9 @@
               <span>leeg maken</span>
             </button>
           </div>
-          <div class="col-9">
-            <img *ngIf="base64Logo" [src]="base64Logo" width="150px;" height="150px;">
-            <img *ngIf="!base64Logo && typedForm.controls.logoExtension.value && originalSponsor" [src]="getSponsorLogoUrl(originalSponsor)" width="150px;"
-              height="150px;">
+          <div class="col-9 overflow-hidden">
+            <img *ngIf="base64Logo" [src]="base64Logo" height="150px;">
+            <img *ngIf="!base64Logo && typedForm.controls.logoExtension.value && originalSponsor" [src]="getSponsorLogoUrl(originalSponsor)" height="150px;">
           </div>
         </div>
       </form>

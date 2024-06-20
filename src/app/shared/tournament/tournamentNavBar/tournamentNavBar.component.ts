@@ -1,4 +1,4 @@
-import { AfterContentInit, AfterViewChecked, Component, ElementRef, Input, OnInit, TemplateRef, ViewChild, input } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, Input, OnInit, TemplateRef, ViewChild, input } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -24,7 +24,6 @@ export class TournamentNavBarComponent implements AfterViewChecked {
   @ViewChild("navbar") private navbarRef: ElementRef<HTMLElement> | undefined;
 
   constructor(
-    private elRef: ElementRef<HTMLElement>,
     public authService: AuthService,
     private router: Router
   ) {

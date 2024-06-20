@@ -73,8 +73,10 @@
             <a class="px-1" ngbNavLink>
               <span class="overflow-hidden">inschrijven</span> 
             </a>
+
             <ng-template ngbNavContent>
-              <app-tournament-registrations-nav *ngIf="tournament" [tournament]="tournament"
+              <ngb-alert *ngIf="tournament && !tournament.getPublic()" type="info">Het toernooi is niet publiek. Onder "opties"=>"delen" kun je dit aanpassen.</ngb-alert>
+              <app-tournament-registrations-nav *ngIf="tournament && tournament.getPublic()" [tournament]="tournament"
               [structureNameService]="structureNameService" [favoriteCategories]="favoriteCategories"
               [startTab]="activeRegistrationTab" (onCompetitorsUpdate)="refreshCompetitors()">
               </app-tournament-registrations-nav>               

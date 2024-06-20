@@ -60,7 +60,7 @@ export class HomeViewComponent extends TournamentComponent implements OnInit {
                     this.rules = rules; 
                     this.settings = settings;
                     this.globalEventsManager.updateDataInNavBar.emit({
-                        title: 'FCToernooi',
+                        title: this.tournament.getName(),
                         atHome: false,
                         theme: this.tournament.getTheme() ?? DefaultJsonTheme
                     });
