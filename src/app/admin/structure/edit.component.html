@@ -41,25 +41,23 @@
         wijzigen</ngb-alert>
     </p>
 
-    <ng-container *ngIf="clonedStructure.hasSingleCategory();else withCategories">
+    @if (clonedStructure.hasSingleCategory()) {
       <app-tournament-structureround [editable]="!hasBegun" [round]="clonedStructure.getSingleCategory().getRootRound()"
         class="px-0" (onActionAdd)="addAction($event)" [structureNameService]="structureNameService"
         [structureEditor]="structureEditor" [lastAction]="lastAction">
       </app-tournament-structureround>
-    </ng-container>
-    <ng-template #withCategories>
+    } @else {
       <div class="d-flex flex-wrap gap-1">
         <app-tournament-structurecategory *ngFor="let category of favoriteCategories" class="mx-auto card"
           [showHeader]="favoriteCategories.length > 1" [editable]="!hasBegun"
           [filterActive]="isCategoryFilterActive(clonedStructure)" [structureNameService]="structureNameService"
           [structureEditor]="structureEditor" [lastAction]="lastAction" [category]="category"
-          [categories]="clonedStructure.getCategories()"
-          (onActionAdd)="addAction($event)" (onCategoryRemove)="removeCategory($event)" 
-          (onCategoryUpdate)="updateCategory(category, $event)"
+          [categories]="clonedStructure.getCategories()" (onActionAdd)="addAction($event)"
+          (onCategoryRemove)="removeCategory($event)" (onCategoryUpdate)="updateCategory(category, $event)"
           (onCategoryMoveUp)="moveCategoryUp($event)">
         </app-tournament-structurecategory>
       </div>
-    </ng-template>
+    }
   </div>
 
   <div class="d-flex justify-content-around mt-3 mb-5">

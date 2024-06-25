@@ -78,6 +78,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   public filterFavorites = false;
   public allFilteredSubjects: string[] = [];
   public showToggleFavorites: boolean | undefined;
+  public colorModeDark: boolean;
   public hasBegun: boolean = false;
   public tournamentHasBegun: boolean = false;
   public gameDatas: GameData[] = [];
@@ -111,6 +112,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     this.resetAlert();
     this.scoreConfigService = new ScoreConfigService();
     this.appErrorHandler = new AppErrorHandler(router);
+    this.colorModeDark = localStorage.getItem('colorMode') == ColorMode.Dark
   }
 
   ngOnInit() {
@@ -429,10 +431,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     if( (gameData.game.getBatchNr() % 2) !== 0) {
       return '';
     }
-    
-    const colorModeDark = localStorage.getItem('colorMode') === ColorMode.Dark;
-
-    return 'table-alternate' + (colorModeDark ? '-dark' : '');
+    return 'table-alternate' + (this.colorModeDark ? '-dark' : '');
   }
 
   showPouleRanking(popOver: NgbPopover, poule: Poule) {

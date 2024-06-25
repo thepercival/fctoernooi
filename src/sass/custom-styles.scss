@@ -55,8 +55,8 @@ tr.table-alternate > td {
 }
 
 tr.table-alternate-dark>td {
-    background-color: #{$dark}; // fixed for darkmode in bootstrap@v6
-    color: #{$light}; // fixed for darkmode in bootstrap@v6
+    --#{$prefix}table-color-type: var(--#{$prefix}table-striped-color);
+    --#{$prefix}table-bg-type: var(--#{$prefix}table-striped-bg);
 }
 
 footer {

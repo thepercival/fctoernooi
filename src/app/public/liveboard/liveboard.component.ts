@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { CSSService } from '../../shared/common/cssservice';
@@ -10,7 +10,7 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { LiveboardLink } from '../../lib/liveboard/link';
-import { Category, StartLocationMap, StructureNameService } from 'ngx-sport';
+import { StartLocationMap, StructureNameService } from 'ngx-sport';
 import { IAlertType } from '../../shared/common/alert';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScreenConfigRepository } from '../../lib/liveboard/screenConfig/repository';
@@ -25,7 +25,7 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     templateUrl: './liveboard.component.html',
     styleUrls: ['./liveboard.component.scss']
 })
-export class LiveboardComponent extends TournamentComponent implements OnInit, OnDestroy {
+export class LiveboardComponent extends TournamentComponent implements OnInit {
     public activeScreen: SponsorScreen | ResultsScreen | ScheduleScreen | EndRankingScreen | PoulesRankingScreen | undefined;
     private screens: (SponsorScreen | ResultsScreen | ScheduleScreen | EndRankingScreen | PoulesRankingScreen)[] = [];
     public screenConfigs: ScreenConfig[] | undefined;
@@ -100,7 +100,6 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     processScreens(screenConfigs: ScreenConfig[]) {
         this.startLocationMap = new StartLocationMap(this.tournament.getCompetitors());
         const link: LiveboardLink = { showIcon: false, tournamentId: this.tournament.getId(), link: 'wim' };
-        this.globalEventsManager.toggleLiveboardIconInNavBar.emit(link);
         this.structureNameService = new StructureNameService(this.startLocationMap);
         const liveBoard = new Liveboard(screenConfigs);
         this.screens = liveBoard.getScreens(this.tournament, this.structure.getFirstRoundNumber(), this.favoriteCategories);
@@ -131,10 +130,6 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
 
     getDataAndProcessScreens(screenConfigs: ScreenConfig[]) {
         this.setData(this.tournament.getId(), () => { this.processScreens(screenConfigs); });
-    }
-
-    ngOnDestroy() {
-        this.globalEventsManager.toggleLiveboardIconInNavBar.emit({});
     }
 
     isPoulesRankingScreen(): boolean {

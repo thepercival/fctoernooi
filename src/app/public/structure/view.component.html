@@ -30,14 +30,12 @@
   </h2>
 
   <div *ngIf="!processing" class="row text-center">
-
-    <ng-container *ngIf="structure.hasSingleCategory();else withCategories">
-      <app-tournament-structureround class="px-0" [editable]="false"
-        [round]="structure.getSingleCategory().getRootRound()" [showCompetitors]="showCompetitors"
-        [favorites]="competitors" [structureNameService]="structureNameService" [structureEditor]="structureEditor">
+    @if (structure.hasSingleCategory()) {
+      <app-tournament-structureround class="px-0" [editable]="false" [round]="structure.getSingleCategory().getRootRound()"
+        [showCompetitors]="showCompetitors" [favorites]="competitors" [structureNameService]="structureNameService"
+        [structureEditor]="structureEditor">
       </app-tournament-structureround>
-    </ng-container>
-    <ng-template #withCategories>
+    } @else {
       <div class="d-flex flex-wrap gap-1">
         <app-tournament-structurecategory *ngFor="let category of favoriteCategories" class="mx-auto" [editable]="false"
           [showHeader]="favoriteCategories.length > 1" [filterActive]="isCategoryFilterActive()"
@@ -45,9 +43,7 @@
           [structureEditor]="structureEditor" [category]="category" [categories]="structure.getCategories()">
         </app-tournament-structurecategory>
       </div>
-    </ng-template>
-
-
+    }
   </div>
 </div>
 <app-tournament-navbar [currentScreen]="StructureScreen" [public]="true" *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)">
