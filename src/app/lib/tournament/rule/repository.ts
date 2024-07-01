@@ -15,6 +15,7 @@ export class TournamentRuleRepository extends APIRepository {
 
     static readonly MIN_LENGTH_DESCRIPTION = 5;
     static readonly MAX_LENGTH_DESCRIPTION = 80;
+    static readonly MAX_PER_TOURNAMENT = 25;
 
     constructor(
         private http: HttpClient,

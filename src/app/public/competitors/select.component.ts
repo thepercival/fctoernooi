@@ -52,7 +52,9 @@ export class SelectFavoritesComponent extends TournamentComponent implements OnI
             this.structureNameService = new StructureNameService(startLocationMap);
             this.favorites = this.favRepository.getObject(this.tournament, this.structure.getCategories());
             if (this.hasCompetitors() === false) {
-                this.router.navigate(['/public/games', this.tournament.getId()]);
+                this.router.navigate(['/public/games', this.tournament.getId()], {
+                    skipLocationChange: true 
+                });
                 return;
             }
             

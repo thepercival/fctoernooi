@@ -14,16 +14,17 @@
     <h2 *ngIf="processing" class="text-center">
       <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
     </h2>
+    <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
     <table *ngIf="!processing && rules" class="table mt-3">
       <thead>
         <tr>
-          <th></th>
+          <th>{{rules.length}}</th>
           <th *ngIf="rules.length > 1" class="text-center">
             <fa-icon [icon]="['fas', 'sort']"></fa-icon>
           </th>
           <th>omschrijving</th>
           <th class="text-end">
-            <button type="button" class="btn btn-sm btn-primary" (click)="addRule()"
+            <button *ngIf="rules.length < MaxPerTournament" type="button" class="btn btn-sm btn-primary" (click)="addRule()"
               [disabled]="processing">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button>

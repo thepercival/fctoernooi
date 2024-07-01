@@ -44,6 +44,9 @@ export class TournamentRulesComponent extends TournamentComponent implements OnI
     super.myNgOnInit(() => this.initRules());
   }
 
+  
+  get MaxPerTournament(): number { return TournamentRuleRepository.MAX_PER_TOURNAMENT };
+
   initRules() {
     
     this.ruleRepository.getObjects(this.tournament)
@@ -70,6 +73,7 @@ export class TournamentRulesComponent extends TournamentComponent implements OnI
           next: (newRule: JsonTournamentRule) => {
             this.rules.push(newRule);
             this.processing = false;
+            this.alert = undefined;
           },
           error: (e) => {
             this.setAlert(IAlertType.Danger, e); this.processing = false;
@@ -79,14 +83,17 @@ export class TournamentRulesComponent extends TournamentComponent implements OnI
   }
 
   editRule(rule: JsonTournamentRule) {
+    this.processing = true;
     const modal = this.getTextModal(true);
-    const initialText = rule.text;
+    const initialText = rule.text;    
     modal.componentInstance.initialName = rule.text;
     modal.result.then((text: string) => {
       rule.text = text;
       this.ruleRepository.editObject(rule, this.tournament)
         .subscribe({
           next: (updatedRule: JsonTournamentRule) => {
+            this.alert = undefined;
+            this.processing = false;
           },
           error: (e) => {
             this.setAlert(IAlertType.Danger, e); 
@@ -108,7 +115,7 @@ export class TournamentRulesComponent extends TournamentComponent implements OnI
     activeModal.componentInstance.range = { min: this.validations.minlengthdescription, max: this.validations.maxlengthdescription };
     activeModal.componentInstance.buttonName = edit ? 'wijzigen' : 'maken';
     activeModal.componentInstance.labelName = 'omschrijving';
-    activeModal.componentInstance.buttonOutline = true;
+    activeModal.componentInstance.buttonOutline = false;
     return activeModal;
   }
 
