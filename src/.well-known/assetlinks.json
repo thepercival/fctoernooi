@@ -1,0 +1,14 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "fctoernooi.nl.pwa",
+            "sha256_cert_fingerprints": [
+                "E0:2C:7E:34:53:53:25:79:A5:1B:B9:9A:B7:39:66:3F:C4:59:2D:43:D5:03:08:62:36:A9:72:FC:65:B7:14:5D"
+            ]
+        }
+    }
+]

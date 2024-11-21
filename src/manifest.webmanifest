@@ -6,6 +6,10 @@
   "theme_color": "#3e3f3a",
   "background_color": "#3e3f3a",
   "display": "fullscreen",
+  "display_override": [
+    "fullscreen",
+    "windows-controls-overlay"
+  ],
   "scope": "/",
   "start_url": "/",
   "orientation": "any",
@@ -24,6 +28,17 @@
       "auto"
     ]
   },
+  "shortcuts": [    
+      {
+        "name": "mijn toernooien",
+        "url": "/"
+      },
+      {
+        "name": "nieuw toernooi",
+        "url": "/admin/new",
+        "description": "maak een nieuw toernooi aan"
+      }    
+  ],
   "scope_extensions": [
     {
       "origin": "fctoernooi.nl"

@@ -35,8 +35,9 @@
                 "input": "src/assets",
                 "output": "assets"
               },
-              "src//assets/favicon/favicon.ico",
+              "src/assets/favicon/favicon.ico",
               "src/manifest.webmanifest",
+              "src/.well-known/assetlinks.json",
               "src/robots.txt"
             ],
             "styles": [
