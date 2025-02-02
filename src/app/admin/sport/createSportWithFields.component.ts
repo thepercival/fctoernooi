@@ -31,8 +31,6 @@ export class CreateSportWithFieldsComponent implements OnInit {
         nrOfFields: FormControl<number>,
         gameMode: FormControl<string>,
         mixed: FormControl<boolean>,
-        nrOfHomePlaces: FormControl<number>,
-        nrOfAwayPlaces: FormControl<number>,
         nrOfGamePlaces: FormControl<number>,
       }>|undefined;
     public alert: IAlert | undefined;
@@ -73,8 +71,6 @@ export class CreateSportWithFieldsComponent implements OnInit {
             nrOfFields: FormControl<number>,
             gameMode: FormControl<string>,
             mixed: FormControl<boolean>,
-            nrOfHomePlaces: FormControl<number>,
-            nrOfAwayPlaces: FormControl<number>,
             nrOfGamePlaces: FormControl<number>,
           }>({
             sportName: new FormControl(this.translateSport.getSportName(newSport.getCustomId(), newSport.getName()),{ 
@@ -84,9 +80,7 @@ export class CreateSportWithFieldsComponent implements OnInit {
             gameMode: new FormControl(this.nameService.getGameModeName(newSport.getDefaultGameMode()),{ 
                 nonNullable: true, validators: [Validators.required] 
             }),
-            mixed: new FormControl(newSport.getDefaultNrOfSidePlaces() > 1, { nonNullable: true }),
-            nrOfHomePlaces: new FormControl(newSport.getDefaultNrOfSidePlaces(), { nonNullable: true }),
-            nrOfAwayPlaces: new FormControl(newSport.getDefaultNrOfSidePlaces(), { nonNullable: true }),
+            mixed: new FormControl(newSport.getDefaultNrOfSidePlaces() > 1, { nonNullable: true }),            
             nrOfGamePlaces: new FormControl(1, { nonNullable: true })
         });
         form.controls.sportName.disable({onlySelf: true});
