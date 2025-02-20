@@ -30,7 +30,8 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 @Component({
     selector: 'app-tournament-togethergame-edit',
     templateUrl: './edittogether.component.html',
-    styleUrls: ['./edittogether.component.scss']
+    styleUrls: ['./edittogether.component.scss'],
+    standalone: false
 })
 export class GameTogetherEditComponent extends GameEditComponent implements OnInit, AfterViewInit {
     // public scoreConfigService: ScoreConfigService;

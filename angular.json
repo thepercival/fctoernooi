@@ -25,7 +25,8 @@
             },
             "index": "src/index.html",
             "polyfills": [
-              "src/polyfills.ts"
+              "src/polyfills.ts",
+              "@angular/localize/init"
             ],
             "tsConfig": "src/tsconfig.app.json",
             "inlineStyleLanguage": "sass",
@@ -46,8 +47,11 @@
             "stylePreprocessorOptions": {
               "includePaths": [
                 "./node_modules/bootstrap/scss"
-              ]
-            },            
+              ],
+              "sass": {
+                "silenceDeprecations": ["color-functions", "global-builtin", "import", "mixed-decls"]
+              }
+            },
             "scripts": [],
             "browser": "src/main.ts"
           },

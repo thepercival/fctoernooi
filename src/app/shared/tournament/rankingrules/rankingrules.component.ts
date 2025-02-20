@@ -4,7 +4,8 @@ import { AgainstRuleSet, NameService } from 'ngx-sport';
 @Component({
     selector: 'app-ranking-rules',
     templateUrl: './rankingrules.component.html',
-    styleUrls: ['./rankingrules.component.scss']
+    styleUrls: ['./rankingrules.component.scss'],
+    standalone: false
 })
 export class RankingRulesComponent {
     @Input() againstRuleSet!: AgainstRuleSet;

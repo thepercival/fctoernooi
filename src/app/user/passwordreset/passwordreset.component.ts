@@ -10,9 +10,10 @@ import { UserRepository } from '../../lib/user/repository';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
-  selector: 'app-passwordreset',
-  templateUrl: './passwordreset.component.html',
-  styleUrls: ['./passwordreset.component.css']
+    selector: 'app-passwordreset',
+    templateUrl: './passwordreset.component.html',
+    styleUrls: ['./passwordreset.component.css'],
+    standalone: false
 })
 export class PasswordresetComponent extends UserComponent implements OnInit {
   codeSend = false;

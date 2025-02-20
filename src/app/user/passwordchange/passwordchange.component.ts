@@ -11,9 +11,10 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { CustomValidators } from '../password-validation';
 
 @Component({
-  selector: 'app-passwordchange',
-  templateUrl: './passwordchange.component.html',
-  styleUrls: ['./passwordchange.component.css']
+    selector: 'app-passwordchange',
+    templateUrl: './passwordchange.component.html',
+    styleUrls: ['./passwordchange.component.css'],
+    standalone: false
 })
 export class PasswordchangeComponent extends UserComponent implements OnInit {
   passwordChanged = false;

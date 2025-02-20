@@ -4,7 +4,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
     selector: 'app-ngbd-modal-info',
     templateUrl: './infomodal.component.html',
-    styleUrls: ['./infomodal.component.scss']
+    styleUrls: ['./infomodal.component.scss'],
+    standalone: false
 })
 export class InfoModalComponent {
     @Input() header: string = '';

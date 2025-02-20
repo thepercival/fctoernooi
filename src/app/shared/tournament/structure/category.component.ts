@@ -6,9 +6,10 @@ import { CSSService } from '../../common/cssservice';
 import { CategoryModalComponent } from './categorymodal/categorymodal.component';
 
 @Component({
-  selector: 'app-tournament-structurecategory',
-  templateUrl: './category.component.html',
-  styleUrls: ['./category.component.scss']
+    selector: 'app-tournament-structurecategory',
+    templateUrl: './category.component.html',
+    styleUrls: ['./category.component.scss'],
+    standalone: false
 })
 export class StructureCategoryComponent  {
   @Input() structureEditor!: StructureEditor;

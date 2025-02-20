@@ -32,7 +32,8 @@ import { TranslateScoreService } from '../../lib/translate/score';
 @Component({
     selector: 'app-tournament-againstgame-edit',
     templateUrl: './editagainst.component.html',
-    styleUrls: ['./editagainst.component.scss']
+    styleUrls: ['./editagainst.component.scss'],
+    standalone: false
 })
 export class GameAgainstEditComponent extends GameEditComponent implements OnInit, AfterViewInit {
 

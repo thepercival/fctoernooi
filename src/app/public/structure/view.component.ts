@@ -17,9 +17,10 @@ import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { WebsitePart } from '../../shared/tournament/structure/admin-public-switcher.component';
 
 @Component({
-  selector: 'app-tournament-structure-view',
-  templateUrl: './view.component.html',
-  styleUrls: ['./view.component.scss']
+    selector: 'app-tournament-structure-view',
+    templateUrl: './view.component.html',
+    styleUrls: ['./view.component.scss'],
+    standalone: false
 })
 export class StructureViewComponent extends TournamentComponent implements OnInit {
   competitors: Competitor[] = [];

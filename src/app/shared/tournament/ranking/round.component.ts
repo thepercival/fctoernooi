@@ -11,7 +11,8 @@ import { TournamentCompetitor } from '../../../lib/competitor';
 @Component({
     selector: 'app-tournament-ranking-round',
     templateUrl: './round.component.html',
-    styleUrls: ['./round.component.scss']
+    styleUrls: ['./round.component.scss'],
+    standalone: false
 })
 export class RankingRoundComponent implements OnInit {
     @Input() round!: Round;

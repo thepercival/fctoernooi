@@ -30,9 +30,10 @@ import { TextEditorModalComponent } from '../textEditor/texteditormodal.componen
 import { CompetitorTab, RegistrationTab } from '../../shared/common/tab-ids';
 
 @Component({
-  selector: 'app-tournament-competitors',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss']
+    selector: 'app-tournament-competitors',
+    templateUrl: './list.component.html',
+    styleUrls: ['./list.component.scss'],
+    standalone: false
 })
 export class CompetitorListComponent extends TournamentComponent implements OnInit, AfterViewChecked {
 

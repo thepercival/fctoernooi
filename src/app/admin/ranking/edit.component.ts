@@ -19,7 +19,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
     selector: 'app-tournament-ranking-edit',
     templateUrl: './edit.component.html',
-    styleUrls: ['./edit.component.scss']
+    styleUrls: ['./edit.component.scss'],
+    standalone: false
 })
 export class RankingEditComponent extends TournamentComponent implements OnInit {
     public favorites!: Favorites;

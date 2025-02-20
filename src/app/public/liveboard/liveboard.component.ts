@@ -23,7 +23,8 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 @Component({
     selector: 'app-tournament-liveboard',
     templateUrl: './liveboard.component.html',
-    styleUrls: ['./liveboard.component.scss']
+    styleUrls: ['./liveboard.component.scss'],
+    standalone: false
 })
 export class LiveboardComponent extends TournamentComponent implements OnInit {
     public activeScreen: SponsorScreen | ResultsScreen | ScheduleScreen | EndRankingScreen | PoulesRankingScreen | undefined;

@@ -8,7 +8,8 @@ import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
 @Component({
     selector: 'app-ngbd-modal-competitor-choose',
     templateUrl: './competitorchoosemodal.component.html',
-    styleUrls: ['./competitorchoosemodal.component.scss']
+    styleUrls: ['./competitorchoosemodal.component.scss'],
+    standalone: false
 })
 export class CompetitorChooseModalComponent implements OnInit {
     @Input() validator!: LockerRoomValidator;

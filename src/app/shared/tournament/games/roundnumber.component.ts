@@ -52,9 +52,10 @@ import { CompetitorRepository } from '../../../lib/ngx-sport/competitor/reposito
 import { ColorMode } from '../../layout/nav/nav.component';
 
 @Component({
-  selector: 'tbody[app-tournament-roundnumber-planning]',
-  templateUrl: './roundnumber.component.html',
-  styleUrls: ['./roundnumber.component.scss']
+    selector: 'tbody[app-tournament-roundnumber-planning]',
+    templateUrl: './roundnumber.component.html',
+    styleUrls: ['./roundnumber.component.scss'],
+    standalone: false
 })
 export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
 

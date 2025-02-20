@@ -10,7 +10,8 @@ import { CategoryItem } from './chooseList.component';
 @Component({
     selector: 'app-modal-category-choose',
     templateUrl: './chooseModal.component.html',
-    styleUrls: ['./chooseModal.component.scss']
+    styleUrls: ['./chooseModal.component.scss'],
+    standalone: false
 })
 export class CategoryChooseModalComponent implements OnInit {
     @Input() categories!: Category[];

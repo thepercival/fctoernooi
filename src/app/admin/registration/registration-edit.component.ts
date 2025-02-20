@@ -24,9 +24,10 @@ import { JsonTournamentRegistration } from '../../lib/tournament/registration/js
 import { Role } from '../../lib/role';
 
 @Component({
-  selector: 'app-tournament-registration-edit',
-  templateUrl: './registration-edit.component.html',
-  styleUrls: ['./registration-edit.component.scss']
+    selector: 'app-tournament-registration-edit',
+    templateUrl: './registration-edit.component.html',
+    styleUrls: ['./registration-edit.component.scss'],
+    standalone: false
 })
 export class TournamentRegistrationEditComponent extends TournamentComponent implements OnInit {
   public settings!: TournamentRegistrationSettings;

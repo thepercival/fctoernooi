@@ -20,9 +20,10 @@ import { Observable } from 'rxjs';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 
 @Component({
-  selector: 'app-tournament-home-edit',
-  templateUrl: './homeedit.component.html',
-  styleUrls: ['./homeedit.component.scss'],
+    selector: 'app-tournament-home-edit',
+    templateUrl: './homeedit.component.html',
+    styleUrls: ['./homeedit.component.scss'],
+    standalone: false
 })
 export class HomeEditComponent extends TournamentComponent implements OnInit {
 

@@ -19,7 +19,8 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 @Component({
     selector: 'app-tournament-authorization-add',
     templateUrl: './add.component.html',
-    styleUrls: ['./add.component.scss']
+    styleUrls: ['./add.component.scss'],
+    standalone: false
 })
 export class AuthorizationAddComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup;/*<{

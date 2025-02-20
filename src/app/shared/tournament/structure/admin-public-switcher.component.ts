@@ -8,7 +8,8 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'app-admin-public-switcher',
     templateUrl: './admin-public-switcher.component.html',
-    styleUrls: ['./admin-public-switcher.component.scss']
+    styleUrls: ['./admin-public-switcher.component.scss'],
+    standalone: false
 })
 export class AdminPublicSwitcherComponent {
     public tournament = input.required<Tournament>();

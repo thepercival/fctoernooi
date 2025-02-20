@@ -11,9 +11,10 @@ import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { DateConverter } from '../../lib/dateConverter';
 
 @Component({
-  selector: 'app-tournament-public-shells',
-  templateUrl: './shells.component.html',
-  styleUrls: ['./shells.component.scss']
+    selector: 'app-tournament-public-shells',
+    templateUrl: './shells.component.html',
+    styleUrls: ['./shells.component.scss'],
+    standalone: false
 })
 export class PublicShellsComponent implements OnInit{
 

@@ -32,9 +32,10 @@ import { TournamentRegistration } from '../../lib/tournament/registration';
 import { CategoryModalComponent } from '../../shared/tournament/structure/categorymodal/categorymodal.component';
 
 @Component({
-  selector: 'app-tournament-structure',
-  templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.scss'],
+    selector: 'app-tournament-structure',
+    templateUrl: './edit.component.html',
+    styleUrls: ['./edit.component.scss'],
+    standalone: false
 })
 export class StructureEditComponent extends TournamentComponent implements OnInit {
   lastAction: StructureAction | undefined;

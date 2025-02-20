@@ -10,9 +10,10 @@ import { Tournament } from '../../lib/tournament';
 import { IAlert, IAlertType } from '../../shared/common/alert';
 
 @Component({
-  selector: 'app-tournament-category-competitors-order',
-  templateUrl: './category.order.component.html',
-  styleUrls: ['./category.order.component.scss']
+    selector: 'app-tournament-category-competitors-order',
+    templateUrl: './category.order.component.html',
+    styleUrls: ['./category.order.component.scss'],
+    standalone: false
 })
 export class CategoryOrderCompetitorListComponent implements OnChanges {
   @Input() tournament!: Tournament;

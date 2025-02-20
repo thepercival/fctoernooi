@@ -4,9 +4,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CompetitionSport, JsonCompetitionSport, JsonGameAmountConfig, JsonSport, NameService, Sport, VoetbalRange } from 'ngx-sport';
 
 @Component({
-  selector: 'app-tournament-gameamountconfigs-edit',
-  templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.css']
+    selector: 'app-tournament-gameamountconfigs-edit',
+    templateUrl: './edit.component.html',
+    styleUrls: ['./edit.component.css'],
+    standalone: false
 })
 export class GameAmountConfigEditComponent implements OnInit {
   @Input() gameAmountControls!: GameAmountConfigControl[];

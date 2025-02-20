@@ -6,7 +6,8 @@ import { CustomSportId } from '../../../lib/ngx-sport/sport/custom';
 @Component({
     selector: 'app-sport-icon',
     templateUrl: './icon.component.html',
-    styleUrls: ['./icon.component.scss']
+    styleUrls: ['./icon.component.scss'],
+    standalone: false
 })
 export class SportIconComponent implements OnInit {
     @Input() competitionSports: CompetitionSport[] | undefined;

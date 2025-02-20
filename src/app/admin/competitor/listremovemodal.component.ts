@@ -5,7 +5,8 @@ import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 @Component({
     selector: 'app-ngbd-modal-listremove',
     templateUrl: './listremovemodal.component.html',
-    styleUrls: ['./listremovemodal.component.scss']
+    styleUrls: ['./listremovemodal.component.scss'],
+    standalone: false
 })
 export class CompetitorListRemoveModalComponent {
     item!: PlaceCompetitorItem;

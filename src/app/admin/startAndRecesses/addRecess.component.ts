@@ -21,7 +21,8 @@ import { DateConverter } from '../../lib/dateConverter';
 @Component({
     selector: 'app-tournament-competitor-edit',
     templateUrl: './addRecess.component.html',
-    styleUrls: ['./addRecess.component.css']
+    styleUrls: ['./addRecess.component.css'],
+    standalone: false
 })
 export class RecessAddComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup<{

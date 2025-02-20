@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 export class APIRepository {
 
     protected apiurl: string = environment.apiurl;
-    private apiVersion: string = environment.apiVersion;
     private appErrorHandler: AppErrorHandler;
 
     constructor(router: Router) {
@@ -33,7 +32,7 @@ export class APIRepository {
     }
 
     getBaseHeaders(): HttpHeaders {
-        let headers = new HttpHeaders({ 'X-Api-Version': this.apiVersion });
+        let headers = new HttpHeaders();
         
         const token = this.getToken();
         if (token !== undefined) {

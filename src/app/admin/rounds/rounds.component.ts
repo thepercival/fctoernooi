@@ -6,9 +6,10 @@ import { CSSService } from '../../shared/common/cssservice';
 import { SelectableRoundNode } from './selector.component';
 
 @Component({
-  selector: 'app-tournament-select-round',
-  templateUrl: './rounds.component.html',
-  styleUrls: ['./rounds.component.css']
+    selector: 'app-tournament-select-round',
+    templateUrl: './rounds.component.html',
+    styleUrls: ['./rounds.component.css'],
+    standalone: false
 })
 export class StructureSelectRoundComponent implements OnInit {
   @Input() selectableRoundNode!: SelectableRoundNode;

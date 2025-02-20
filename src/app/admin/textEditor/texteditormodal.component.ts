@@ -10,7 +10,8 @@ import { IAlert, IAlertType } from '../../shared/common/alert';
 @Component({
     selector: 'app-ngbd-modal-texteditor',
     templateUrl: './texteditormodal.component.html',
-    styleUrls: ['./texteditormodal.component.scss']
+    styleUrls: ['./texteditormodal.component.scss'],
+    standalone: false
 })
 export class TextEditorModalComponent implements OnInit {
     public initialText!: string;

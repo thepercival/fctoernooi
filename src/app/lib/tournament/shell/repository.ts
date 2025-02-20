@@ -14,12 +14,12 @@ export class TournamentShellRepository extends APIRepository {
         super(router);
     }
 
-    getUrlpostfix(withRole: boolean): string {
-        return 'shells' + (withRole ? 'withrole' : '');
+    getUrlpostfix(): string {
+        return 'shells';
     }
 
-    getUrl(withRole: boolean): string {
-        return super.getApiUrl() + (this.getToken() === undefined ? 'public/' : '') + this.getUrlpostfix(withRole);
+    getUrl(): string {
+        return super.getApiUrl() + this.getUrlpostfix();
     }
 
     getObjects(filter?: TournamentShellFilter): Observable<TournamentShell[]> {
@@ -27,8 +27,7 @@ export class TournamentShellRepository extends APIRepository {
             headers: super.getHeaders(),
             params: this.getHttpParams(filter)
         };
-        const withRole: boolean = filter && filter.roles ? filter.roles > 0 : false;
-        return this.http.get<TournamentShell[]>(this.getUrl(withRole), options).pipe(
+        return this.http.get<TournamentShell[]>(this.getUrl(), options).pipe(
             map((jsonShells: TournamentShell[]) => this.convertObjects(jsonShells)),
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );

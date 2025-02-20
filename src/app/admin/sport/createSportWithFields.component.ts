@@ -13,7 +13,8 @@ import { DefaultService } from '../../lib/ngx-sport/defaultService';
 @Component({
     selector: 'app-tournament-create-sportwithfields',
     templateUrl: './createSportWithFields.component.html',
-    styleUrls: ['./createSportWithFields.component.scss']
+    styleUrls: ['./createSportWithFields.component.scss'],
+    standalone: false
 })
 export class CreateSportWithFieldsComponent implements OnInit {
     @Input() labelBtnNext: string = 'toevoegen';

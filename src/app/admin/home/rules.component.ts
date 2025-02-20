@@ -15,9 +15,10 @@ import { JsonTournamentRule } from '../../lib/tournament/rule/json';
 import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
 
 @Component({
-  selector: 'app-tournament-rules',
-  templateUrl: './rules.component.html',
-  styleUrls: ['./rules.component.scss']
+    selector: 'app-tournament-rules',
+    templateUrl: './rules.component.html',
+    styleUrls: ['./rules.component.scss'],
+    standalone: false
 })
 export class TournamentRulesComponent extends TournamentComponent implements OnInit {
   public rules!: JsonTournamentRule[];

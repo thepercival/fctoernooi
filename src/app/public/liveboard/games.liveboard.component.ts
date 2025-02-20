@@ -6,7 +6,8 @@ import { ResultsScreen, ScheduleScreen } from '../../lib/liveboard/screens';
 @Component({
     selector: 'app-tournament-liveboard-games',
     templateUrl: './games.liveboard.component.html',
-    styleUrls: ['./games.liveboard.component.scss']
+    styleUrls: ['./games.liveboard.component.scss'],
+    standalone: false
 })
 export class LiveboardGamesComponent implements OnInit {
     @Input() screen!: ScheduleScreen | ResultsScreen;

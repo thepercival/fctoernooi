@@ -10,9 +10,10 @@ import { UserComponent } from '../component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
-  selector: 'app-validate',
-  templateUrl: './validate.component.html',
-  styleUrls: ['./validate.component.css']
+    selector: 'app-validate',
+    templateUrl: './validate.component.html',
+    styleUrls: ['./validate.component.css'],
+    standalone: false
 })
 export class ValidateComponent extends UserComponent implements OnInit {
   code: string = '';

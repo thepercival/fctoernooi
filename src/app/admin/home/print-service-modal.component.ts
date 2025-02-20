@@ -6,7 +6,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
     selector: 'app-ngbd-modal-export-print',
     templateUrl: './print-service-modal.component.html',
-    styleUrls: ['./print-service-modal.component.scss']
+    styleUrls: ['./print-service-modal.component.scss'],
+    standalone: false
 })
 export class PrintServiceModalComponent {
     constructor(public activeModal: NgbActiveModal) {

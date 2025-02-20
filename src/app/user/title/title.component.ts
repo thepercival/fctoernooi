@@ -3,8 +3,9 @@ import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { MyNavigation } from '../../shared/common/navigation';
 
 @Component({
-  selector: 'app-user-title',
-  templateUrl: './title.component.html'
+    selector: 'app-user-title',
+    templateUrl: './title.component.html',
+    standalone: false
 })
 export class UserTitleComponent {
 

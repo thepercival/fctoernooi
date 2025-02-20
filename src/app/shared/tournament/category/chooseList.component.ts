@@ -5,7 +5,8 @@ import { Favorites } from '../../../lib/favorites';
 @Component({
     selector: 'app-list-category-choose',
     templateUrl: './chooseList.component.html',
-    styleUrls: ['./chooseList.component.scss']
+    styleUrls: ['./chooseList.component.scss'],
+    standalone: false
 })
 export class CategoryChooseListComponent {
     @Input() categoryItems!: CategoryItem[];

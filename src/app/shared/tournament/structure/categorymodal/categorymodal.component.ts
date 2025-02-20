@@ -8,7 +8,8 @@ import { CategoryUniqueChecker } from '../../../../lib/ngx-sport/category/unique
 @Component({
     selector: 'app-ngbd-modal-category',
     templateUrl: './categorymodal.component.html',
-    styleUrls: ['./categorymodal.component.scss']
+    styleUrls: ['./categorymodal.component.scss'],
+    standalone: false
 })
 export class CategoryModalComponent implements OnInit {
     @Input() categories: Category[] = [];

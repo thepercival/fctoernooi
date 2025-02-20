@@ -4,7 +4,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
     selector: 'app-ngbd-modal-copied',
     templateUrl: './copiedmodal.component.html',
-    styleUrls: ['./copiedmodal.component.scss']
+    styleUrls: ['./copiedmodal.component.scss'],
+    standalone: false
 })
 export class CopiedModalComponent {
     @Input() previousId!: string;

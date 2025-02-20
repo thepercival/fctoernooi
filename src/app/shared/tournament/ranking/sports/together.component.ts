@@ -7,9 +7,10 @@ import { FavoritesRepository } from '../../../../lib/favorites/repository';
 import { ViewPort, ViewPortManager, ViewPortNrOfColumnsMap } from '../../../common/viewPortManager';
 
 @Component({
-  selector: 'app-tournament-ranking-together-table',
-  templateUrl: './together.component.html',
-  styleUrls: ['./together.component.scss']
+    selector: 'app-tournament-ranking-together-table',
+    templateUrl: './together.component.html',
+    styleUrls: ['./together.component.scss'],
+    standalone: false
 })
 export class RankingTogetherComponent implements OnInit {
   @Input() poule!: Poule;

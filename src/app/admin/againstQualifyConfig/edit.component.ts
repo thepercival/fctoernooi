@@ -26,7 +26,8 @@ import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
 @Component({
     selector: 'app-tournament-qualifyagainstconfig-edit',
     templateUrl: './edit.component.html',
-    styleUrls: ['./edit.component.scss']
+    styleUrls: ['./edit.component.scss'],
+    standalone: false
 })
 export class AgainstQualifyConfigEditComponent implements OnInit {
     @Input() tournament!: Tournament;

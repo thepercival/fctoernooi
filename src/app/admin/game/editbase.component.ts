@@ -6,9 +6,10 @@ import { TranslateFieldService } from '../../lib/translate/field';
 import { DateConverter } from '../../lib/dateConverter';
 
 @Component({
-  selector: 'app-tournament-basegame-edit',
-  templateUrl: './editbase.component.html',
-  styleUrls: ['./editbase.component.scss']
+    selector: 'app-tournament-basegame-edit',
+    templateUrl: './editbase.component.html',
+    styleUrls: ['./editbase.component.scss'],
+    standalone: false
 })
 export class GameBaseEditComponent implements OnInit {
   @Input() form!: FormGroup;
