@@ -50,6 +50,9 @@ export class DefaultService {
         if (customId === CustomSportId.Chess) {
             return 1;
         }
+        if (customId === CustomSportId.Korfball) {
+            return 2;
+        }
         return 3;
     }
 
