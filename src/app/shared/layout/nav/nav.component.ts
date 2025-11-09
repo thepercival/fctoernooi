@@ -41,9 +41,6 @@ export class NavComponent implements OnInit, AfterContentInit {
   }
 
   ngOnInit() {
-    this.globalEventsManager.toggleLiveboardIconInNavBar.subscribe((tournamentLiveboardLink: LiveboardLink) => {
-      this.tournamentLiveboardLink = tournamentLiveboardLink;
-    });
     this.globalEventsManager.updateDataInNavBar.subscribe((navBarData: NavBarData) => {
       this.navBarData = navBarData;
       this.updateCustomProperty();
@@ -82,6 +79,24 @@ export class NavComponent implements OnInit, AfterContentInit {
       theme: DefaultJsonTheme
     });
     this.router.navigate(['/']);
+  }
+
+  linkToUserProfile() {
+    this.globalEventsManager.updateDataInNavBar.emit({
+      title: this.defaultTitle,
+      atHome: false,
+      theme: DefaultJsonTheme
+    });
+    this.router.navigate(['/user/profile']);
+  }
+
+  linkToLogin() {
+    this.globalEventsManager.updateDataInNavBar.emit({
+      title: this.defaultTitle,
+      atHome: false,
+      theme: DefaultJsonTheme
+    });
+    this.router.navigate(['/user/login']);
   }
 
   setAndApplyColorMode(colorMode: ColorMode) {

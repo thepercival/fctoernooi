@@ -16,6 +16,7 @@ export class CompetitorChooseModalComponent implements OnInit {
     @Input() competitors: Competitor[] = [];
     @Input() lockerRoom!: LockerRoom;
     @Input() selectedCompetitors: Competitor[] = [];
+    @Input() competitorsAssignedElsewhere: Competitor[] = []; 
     public competitorLists: CompetitorList[] = [];
     public structureNameService!: StructureNameService;
     public startLocationMap!: StartLocationMap;
@@ -54,6 +55,10 @@ export class CompetitorChooseModalComponent implements OnInit {
 
     hasSelectableCompetitors(): boolean {
         return this.validator && this.validator.getCompetitors().length > 0;
+    }
+
+    alreadyAssignedElsewhere(competitor: TournamentCompetitor): boolean {
+        return this.competitorsAssignedElsewhere.find(competitorIt => competitorIt === competitor) !== undefined
     }
 
     getId(competitor: TournamentCompetitor): string {

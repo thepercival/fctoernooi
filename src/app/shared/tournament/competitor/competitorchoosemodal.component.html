@@ -29,6 +29,9 @@
                                 <td>
                                     <span [innerHtml]="competitorItem.placeName"></span>
                                 </td>
+                                <td *ngIf="this.competitorsAssignedElsewhere.length > 0">
+                                    <fa-icon *ngIf="alreadyAssignedElsewhere(competitorItem.competitor)" [icon]="['fas', 'door-closed']"></fa-icon>
+                                </td>
                                 <td>
                                     <label class="form-check-label pointer" for="{{getId(competitorItem.competitor)}}">
                                         {{competitorItem.competitor.getName()}}

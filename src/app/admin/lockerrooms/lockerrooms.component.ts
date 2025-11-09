@@ -130,6 +130,7 @@ export class LockerRoomsEditComponent extends TournamentComponent implements OnI
       activeModal.componentInstance.structure = this.structure;
     }
     activeModal.componentInstance.competitors = this.tournament.getCompetitors();
+    activeModal.componentInstance.competitorsAssignedElsewhere = this.getCompetitorsAssignedElsewhere(lockerRoom);
     activeModal.componentInstance.lockerRoom = lockerRoom;
     activeModal.componentInstance.selectedCompetitors = lockerRoom.getCompetitors().slice();
     activeModal.result.then((selectedCompetitors: TournamentCompetitor[]) => {
@@ -143,5 +144,15 @@ export class LockerRoomsEditComponent extends TournamentComponent implements OnI
           complete: () => this.processing = false
         });
     }, (reason) => { });
+  }
+
+  private getCompetitorsAssignedElsewhere(lockerRoom: LockerRoom): TournamentCompetitor[] {
+    let competitors: TournamentCompetitor[] = [];
+    this.tournament.getLockerRooms().forEach((lockerRoomIt: LockerRoom) => {
+      if (lockerRoomIt !== lockerRoom) {
+        competitors = competitors.concat(lockerRoomIt.getCompetitors())
+      }
+    })
+    return competitors;
   }
 }
