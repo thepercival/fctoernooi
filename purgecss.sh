@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # run production build
-ng build -c prod,nl #--output-hashing none
+#ng build -c prod,nl
 
 LOCALE_DEFAULT="nl"
 echo -n "please enter locale($LOCALE_DEFAULT): "
