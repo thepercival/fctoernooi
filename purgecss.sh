@@ -1,13 +1,15 @@
 #!/bin/bash
 
 # run production build
-#ng build --prod --output-hashing none
+ng build -c prod,nl #--output-hashing none
 
-echo -n "please enter locale(nl): "
-read locale
+LOCALE_DEFAULT="nl"
+echo -n "please enter locale($LOCALE_DEFAULT): "
+read LOCALE_INPUT
+LOCALE=${LOCALE_INPUT:-$LOCALE_DEFAULT}
 
 # go to the dist/yourProjectName folder
-cd ./dist/browser/$locale
+cd ./dist/browser/$LOCALE
 
 if [ -d "css" ]; then rm -Rf css; fi
 
@@ -15,8 +17,8 @@ if [ -d "css" ]; then rm -Rf css; fi
 mkdir css
 
 # run PurgeCSS & make a new '.css' file inside the 'css' directory
-#purgecss --css ./styles.*.css --content ./index.html ./*.js --output ./css --safelist alert-info alert-warning alert-danger alert-success
-purgecss --config ../../../purgecss.config.cjs --output ./css
+purgecss --css ./styles*.css --content ./index.html ./*.js --output ./css --safelist alert-info alert-warning alert-danger alert-success /^q-/
+#purgecss --config ../../../purgecss.config.cjs --output ./css
 
 # replace the 'dist/yourProjectName/styles.css' file with the 'dist/yourProjectName/css/styles.css' file
 mv ./css/styles*.css ./styles*.css
@@ -25,5 +27,6 @@ mv ./css/styles*.css ./styles*.css
 rm -r css
 
 # back to project
+cd ..
 cd ..
 cd ..
