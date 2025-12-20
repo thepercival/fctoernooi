@@ -17,7 +17,7 @@ if [ -d "css" ]; then rm -Rf css; fi
 mkdir css
 
 # run PurgeCSS & make a new '.css' file inside the 'css' directory
-purgecss --css ./styles*.css --content ./index.html ./*.js --output ./css --safelist alert-info alert-warning alert-danger alert-success table-alternate-dark /^q-/
+purgecss --css ./styles*.css --content ./index.html ./*.js --output ./css --safelist alert-info alert-warning alert-danger alert-success table-alternate-dark q-w-1 q-w-2 q-w-3 q-w-4 q-w-5 q-l-5 q-l-4 q-l-3 q-l-2 q-l-1 q-partial q-w-1-double-partial q-w-2-double-partial q-w-3-double-partial q-w-4-double-partial q-w-5-double-partial q-l-5-double-partial q-l-4-double-partial q-l-3-double-partial q-l-2-double-partial q-l-1-double-partial
 # purgecss --config ../../../purgecss.config.cjs --output ./css
 
 # replace the 'dist/yourProjectName/styles.css' file with the 'dist/yourProjectName/css/styles.css' file
