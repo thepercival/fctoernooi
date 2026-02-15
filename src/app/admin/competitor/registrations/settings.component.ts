@@ -12,9 +12,10 @@ import { InfoModalComponent } from '../../../shared/tournament/infomodal/infomod
 import { DateFormatter } from '../../../lib/dateFormatter';
 
 @Component({
-  selector: 'app-tournament-registrations-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss']
+    selector: 'app-tournament-registrations-settings',
+    templateUrl: './settings.component.html',
+    styleUrls: ['./settings.component.scss'],
+    standalone: false
 })
 export class RegistrationSettingsComponent implements OnInit{
   public tournament = input.required<Tournament>();

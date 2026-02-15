@@ -9,7 +9,8 @@ import { TournamentScreen } from '../screenNames';
 @Component({
     selector: 'app-tournament-ranking-category',
     templateUrl: './category.component.html',
-    styleUrls: ['./category.component.scss']
+    styleUrls: ['./category.component.scss'],
+    standalone: false
 })
 export class RankingCategoryComponent implements OnInit {
     @Input() category!: Category;

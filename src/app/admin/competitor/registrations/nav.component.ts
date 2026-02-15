@@ -8,9 +8,10 @@ import { Category, StructureNameService } from 'ngx-sport';
 import { RegistrationTab } from '../../../shared/common/tab-ids';
 
 @Component({
-  selector: 'app-tournament-registrations-nav',
-  templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.scss']
+    selector: 'app-tournament-registrations-nav',
+    templateUrl: './nav.component.html',
+    styleUrls: ['./nav.component.scss'],
+    standalone: false
 })
 export class RegistrationsNavComponent implements OnInit {
 

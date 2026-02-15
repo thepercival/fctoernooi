@@ -12,9 +12,10 @@ import { IAlert, IAlertType } from '../../shared/common/alert';
 import { TournamentCompetitorMapper } from '../../lib/competitor/mapper';
 
 @Component({
-  selector: 'app-tournament-competitors-present',
-  templateUrl: './present.component.html',
-  styleUrls: ['./present.component.scss']
+    selector: 'app-tournament-competitors-present',
+    templateUrl: './present.component.html',
+    styleUrls: ['./present.component.scss'],
+    standalone: false
 })
 export class CompetitorPresentListComponent implements OnChanges {
   @Input() tournament!: Tournament;

@@ -21,9 +21,10 @@ import { CompetitorTab } from '../../shared/common/tab-ids';
 
 
 @Component({
-  selector: 'app-tournament-lockerrooms-edit',
-  templateUrl: './lockerrooms.component.html',
-  styleUrls: ['./lockerrooms.component.scss']
+    selector: 'app-tournament-lockerrooms-edit',
+    templateUrl: './lockerrooms.component.html',
+    styleUrls: ['./lockerrooms.component.scss'],
+    standalone: false
 })
 export class LockerRoomsEditComponent extends TournamentComponent implements OnInit {
   hasCompetitors = false;

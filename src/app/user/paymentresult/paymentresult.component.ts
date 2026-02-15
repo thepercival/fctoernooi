@@ -15,9 +15,10 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { Payment } from '../../lib/payment/json';
 import { PaymentState } from '../../lib/payment/state';
 @Component({
-  selector: 'app-paymentresult',
-  templateUrl: './paymentresult.component.html',
-  styleUrls: ['./paymentresult.component.css']
+    selector: 'app-paymentresult',
+    templateUrl: './paymentresult.component.html',
+    styleUrls: ['./paymentresult.component.css'],
+    standalone: false
 })
 export class PaymentResultComponent extends UserComponent implements OnInit, OnDestroy {
   public errorAlert: IAlert | undefined;

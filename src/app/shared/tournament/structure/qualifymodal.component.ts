@@ -6,7 +6,8 @@ import { CSSService } from '../../common/cssservice';
 @Component({
     selector: 'app-ngbd-modal-qualify',
     templateUrl: './qualifymodal.component.html',
-    styleUrls: ['./qualifymodal.component.scss']
+    styleUrls: ['./qualifymodal.component.scss'],
+    standalone: false
 })
 export class QualifyModalComponent {
     @Input() target!: QualifyTarget;

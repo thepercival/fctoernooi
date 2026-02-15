@@ -20,7 +20,8 @@ import { AuthService } from '../../lib/auth/auth.service';
 @Component({
     selector: 'app-tournament-authorization-list',
     templateUrl: './list.component.html',
-    styleUrls: ['./list.component.scss']
+    styleUrls: ['./list.component.scss'],
+    standalone: false
 })
 export class AuthorizationListComponent extends TournamentComponent implements OnInit {
     public invitations: TournamentInvitation[] = [];

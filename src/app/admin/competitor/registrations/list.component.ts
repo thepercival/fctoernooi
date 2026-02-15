@@ -16,9 +16,10 @@ import { TournamentRegistrationTextSubject } from '../../../lib/tournament/regis
 import { TextEditorModalComponent } from '../../textEditor/texteditormodal.component';
 
 @Component({
-  selector: 'app-tournament-registrations-list',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss']
+    selector: 'app-tournament-registrations-list',
+    templateUrl: './list.component.html',
+    styleUrls: ['./list.component.scss'],
+    standalone: false
 })
 export class RegistrationListComponent implements OnChanges  {
   @Input() tournament!: Tournament;

@@ -8,7 +8,8 @@ import { League } from 'ngx-sport';
 @Component({
     selector: 'app-ngbd-modal-copy',
     templateUrl: './copymodal.component.html',
-    styleUrls: ['./copymodal.component.scss']
+    styleUrls: ['./copymodal.component.scss'],
+    standalone: false
 })
 export class CopyModalComponent implements OnInit {
     @Input() name!: string;

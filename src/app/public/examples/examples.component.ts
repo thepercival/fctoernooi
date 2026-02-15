@@ -11,9 +11,10 @@ import { CopyConfig, CopyModalComponent } from '../tournament/copymodal.componen
 import { TournamentRepository } from '../../lib/tournament/repository';
 
 @Component({
-  selector: 'app-tournament-examples',
-  templateUrl: './examples.component.html',
-  styleUrls: ['./examples.component.scss']
+    selector: 'app-tournament-examples',
+    templateUrl: './examples.component.html',
+    styleUrls: ['./examples.component.scss'],
+    standalone: false
 })
 export class ExamplesComponent implements OnInit{
 

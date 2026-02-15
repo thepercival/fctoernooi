@@ -3,9 +3,10 @@ import { EndRankingItem, VoetbalRange, EndRankingCalculator, Category, Structure
 import { Favorites } from '../../../lib/favorites';
 
 @Component({
-  selector: 'app-tournament-endranking',
-  templateUrl: './end.component.html',
-  styleUrls: ['./end.component.scss']
+    selector: 'app-tournament-endranking',
+    templateUrl: './end.component.html',
+    styleUrls: ['./end.component.scss'],
+    standalone: false
 })
 export class RankingEndComponent implements OnInit, OnChanges {
 

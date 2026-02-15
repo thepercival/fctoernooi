@@ -5,9 +5,10 @@ import { CSSService } from '../../common/cssservice';
 import { Favorites } from '../../../lib/favorites';
 
 @Component({
-  selector: 'app-tournament-pouleranking',
-  templateUrl: './poule.component.html',
-  styleUrls: ['./poule.component.scss']
+    selector: 'app-tournament-pouleranking',
+    templateUrl: './poule.component.html',
+    styleUrls: ['./poule.component.scss'],
+    standalone: false
 })
 export class RankingPouleComponent implements OnInit {
   @Input() poule!: Poule;

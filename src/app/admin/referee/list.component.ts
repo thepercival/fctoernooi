@@ -15,9 +15,10 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 
 @Component({
-  selector: 'app-tournament-referee',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss']
+    selector: 'app-tournament-referee',
+    templateUrl: './list.component.html',
+    styleUrls: ['./list.component.scss'],
+    standalone: false
 })
 export class RefereeListComponent extends TournamentComponent implements OnInit {
   public refereeItems!: RefereeItem[];

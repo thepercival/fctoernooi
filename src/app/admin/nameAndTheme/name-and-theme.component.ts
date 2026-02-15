@@ -26,7 +26,8 @@ import { Tournament } from '../../lib/tournament';
 @Component({
     selector: 'app-tournament-name-and-theme',
     templateUrl: './name-and-theme.component.html',
-    styleUrls: ['./name-and-theme.component.scss']
+    styleUrls: ['./name-and-theme.component.scss'],
+    standalone: false
 })
 export class TournamentNameAndThemeComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup<{

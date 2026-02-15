@@ -11,9 +11,10 @@ import { DateConverter } from '../../../lib/dateConverter';
 import { TournamentRegistrationSettingsMapper } from '../../../lib/tournament/registration/settings/mapper';
 
 @Component({
-  selector: 'app-tournament-registrations-form',
-  templateUrl: './form.component.html',
-  styleUrls: ['./form.component.scss']
+    selector: 'app-tournament-registrations-form',
+    templateUrl: './form.component.html',
+    styleUrls: ['./form.component.scss'],
+    standalone: false
 })
 export class RegistrationFormComponent implements OnInit{
   public tournament = input.required<Tournament>();

@@ -13,7 +13,8 @@ import { QualifyModalComponent } from './qualifymodal.component';
 @Component({
     selector: 'app-tournament-structurequalify',
     templateUrl: './qualify.component.html',
-    styleUrls: ['./qualify.component.scss']
+    styleUrls: ['./qualify.component.scss'],
+    standalone: false
 })
 export class StructureQualifyComponent {
     @Input() structureEditor!: StructureEditor;

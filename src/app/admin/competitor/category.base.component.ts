@@ -11,9 +11,10 @@ import { IAlert, IAlertType } from '../../shared/common/alert';
 import { CompetitorListRemoveModalComponent } from './listremovemodal.component';
 
 @Component({
-  selector: 'app-tournament-category-competitors-base',
-  templateUrl: './category.base.component.html',
-  styleUrls: ['./category.base.component.scss']
+    selector: 'app-tournament-category-competitors-base',
+    templateUrl: './category.base.component.html',
+    styleUrls: ['./category.base.component.scss'],
+    standalone: false
 })
 export class CategoryBaseCompetitorListComponent implements OnChanges {
   @Input() tournament!: Tournament;

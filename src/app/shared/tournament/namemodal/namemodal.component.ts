@@ -6,7 +6,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 @Component({
     selector: 'app-ngbd-modal-name',
     templateUrl: './namemodal.component.html',
-    styleUrls: ['./namemodal.component.scss']
+    styleUrls: ['./namemodal.component.scss'],
+    standalone: false
 })
 export class NameModalComponent implements OnInit {
     @Input() header!: string;

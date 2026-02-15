@@ -9,9 +9,10 @@ import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.
 import { TournamentCompetitorMapper } from '../../lib/competitor/mapper';
 
 @Component({
-  selector: 'app-tournament-competitor-line',
-  templateUrl: './listline.component.html',
-  styleUrls: ['./listline.component.css']
+    selector: 'app-tournament-competitor-line',
+    templateUrl: './listline.component.html',
+    styleUrls: ['./listline.component.css'],
+    standalone: false
 })
 export class CompetitorListLineComponent implements AfterViewChecked {
   @Input() placeCompetitor!: PlaceCompetitorItem;

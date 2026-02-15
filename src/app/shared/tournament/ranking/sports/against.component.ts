@@ -8,9 +8,10 @@ import { CompetitorRepository } from '../../../../lib/ngx-sport/competitor/repos
 
 
 @Component({
-  selector: 'app-tournament-ranking-against-table',
-  templateUrl: './against.component.html',
-  styleUrls: ['./against.component.scss']
+    selector: 'app-tournament-ranking-against-table',
+    templateUrl: './against.component.html',
+    styleUrls: ['./against.component.scss'],
+    standalone: false
 })
 export class RankingAgainstComponent implements OnInit {
   @Input() poule!: Poule;

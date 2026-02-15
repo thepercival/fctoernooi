@@ -17,9 +17,10 @@ import { User } from '../../lib/user';
 
 
 @Component({
-  selector: 'app-tournament-new',
-  templateUrl: './new.component.html',
-  styleUrls: ['./new.component.scss']
+    selector: 'app-tournament-new',
+    templateUrl: './new.component.html',
+    styleUrls: ['./new.component.scss'],
+    standalone: false
 })
 export class NewComponent implements OnInit {
   public processing = true;

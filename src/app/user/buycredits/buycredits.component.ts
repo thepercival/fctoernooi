@@ -14,9 +14,10 @@ import { AuthService } from '../../lib/auth/auth.service';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { PaymentState } from '../../lib/payment/state';
 @Component({
-  selector: 'app-buycredits',
-  templateUrl: './buycredits.component.html',
-  styleUrls: ['./buycredits.component.css']
+    selector: 'app-buycredits',
+    templateUrl: './buycredits.component.html',
+    styleUrls: ['./buycredits.component.css'],
+    standalone: false
 })
 export class BuyCreditsComponent extends UserComponent implements OnInit {
   purpose: Purpose | undefined;

@@ -7,9 +7,10 @@ import { CompetitorRepository } from '../../../lib/ngx-sport/competitor/reposito
 import { TournamentCompetitor } from '../../../lib/competitor';
 
 @Component({
-  selector: 'app-tournament-structureround',
-  templateUrl: './round.component.html',
-  styleUrls: ['./round.component.css']
+    selector: 'app-tournament-structureround',
+    templateUrl: './round.component.html',
+    styleUrls: ['./round.component.css'],
+    standalone: false
 })
 export class StructureRoundComponent {
   @Input() structureEditor!: StructureEditor;

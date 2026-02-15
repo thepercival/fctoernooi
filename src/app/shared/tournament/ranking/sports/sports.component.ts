@@ -9,9 +9,10 @@ import { PouleRankingModalComponent } from '../../poulerankingmodal/rankingmodal
 import { ViewPort, ViewPortManager, ViewPortNrOfColumnsMap } from '../../../common/viewPortManager';
 
 @Component({
-  selector: 'app-tournament-ranking-sports-table',
-  templateUrl: './sports.component.html',
-  styleUrls: ['./sports.component.scss']
+    selector: 'app-tournament-ranking-sports-table',
+    templateUrl: './sports.component.html',
+    styleUrls: ['./sports.component.scss'],
+    standalone: false
 })
 export class RankingSportsComponent implements OnInit {
   @Input() poule!: Poule;

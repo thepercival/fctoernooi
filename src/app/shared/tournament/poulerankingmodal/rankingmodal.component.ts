@@ -6,7 +6,8 @@ import { InfoModalComponent } from '../infomodal/infomodal.component';
 @Component({
     selector: 'app-ngbd-modal-poule-ranking',
     templateUrl: './rankingmodal.component.html',
-    styleUrls: ['./rankingmodal.component.scss']
+    styleUrls: ['./rankingmodal.component.scss'],
+    standalone: false
 })
 export class PouleRankingModalComponent {
     public poule!: Poule;

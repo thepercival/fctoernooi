@@ -7,7 +7,8 @@ import { Favorites } from '../../../lib/favorites';
 @Component({
     selector: 'app-tournament-lockerroom',
     templateUrl: './lockerroom.component.html',
-    styleUrls: ['./lockerroom.component.scss']
+    styleUrls: ['./lockerroom.component.scss'],
+    standalone: false
 })
 export class LockerRoomComponent {
     @Input() validator: LockerRoomValidator | undefined;

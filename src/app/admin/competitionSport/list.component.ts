@@ -30,9 +30,10 @@ import { GameModeModalComponent } from '../gameMode/modal.component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 @Component({
-  selector: 'app-tournament-sport',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss']
+    selector: 'app-tournament-sport',
+    templateUrl: './list.component.html',
+    styleUrls: ['./list.component.scss'],
+    standalone: false
 })
 export class CompetitionSportListComponent extends TournamentComponent implements OnInit {
   public smallestNrOfPoulePlaces!: number;

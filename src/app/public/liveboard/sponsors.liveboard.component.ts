@@ -6,7 +6,8 @@ import { SponsorRepository } from '../../lib/sponsor/repository';
 @Component({
     selector: 'app-tournament-liveboard-sponsors',
     templateUrl: './sponsors.liveboard.component.html',
-    styleUrls: ['./sponsors.liveboard.component.scss']
+    styleUrls: ['./sponsors.liveboard.component.scss'],
+    standalone: false
 })
 export class LiveboardSponsorsComponent implements OnChanges {
     @Input() sponsors: Sponsor[] = [];

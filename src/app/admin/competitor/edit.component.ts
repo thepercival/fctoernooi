@@ -29,7 +29,8 @@ import { LogoInput } from '../sponsor/edit.component';
 @Component({
     selector: 'app-tournament-competitor-edit',
     templateUrl: './edit.component.html',
-    styleUrls: ['./edit.component.scss']
+    styleUrls: ['./edit.component.scss'],
+    standalone: false
 })
 export class CompetitorEditComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup<{

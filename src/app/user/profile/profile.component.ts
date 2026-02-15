@@ -12,9 +12,10 @@ import { UserComponent } from '../component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+    selector: 'app-profile',
+    templateUrl: './profile.component.html',
+    styleUrls: ['./profile.component.css'],
+    standalone: false
 })
 export class ProfileComponent extends UserComponent implements OnInit {
   public typedForm: FormGroup<{

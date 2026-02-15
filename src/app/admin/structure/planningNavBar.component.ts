@@ -9,9 +9,10 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { Tournament } from '../../lib/tournament';
 
 @Component({
-  selector: 'app-tournament-planningNavBar',
-  templateUrl: './planningNavBar.component.html',
-  styleUrls: ['./planningNavBar.component.scss'],
+    selector: 'app-tournament-planningNavBar',
+    templateUrl: './planningNavBar.component.html',
+    styleUrls: ['./planningNavBar.component.scss'],
+    standalone: false
 })
 export class PlanningNavBarComponent implements OnChanges {
 

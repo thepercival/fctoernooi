@@ -11,9 +11,10 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { CustomValidators } from '../password-validation';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.css'],
+    standalone: false
 })
 export class RegisterComponent extends UserComponent implements OnInit {
   registered = false;

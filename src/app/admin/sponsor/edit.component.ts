@@ -22,7 +22,8 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 @Component({
     selector: 'app-tournament-sponsor-edit',
     templateUrl: './edit.component.html',
-    styleUrls: ['./edit.component.css']
+    styleUrls: ['./edit.component.css'],
+    standalone: false
 })
 export class SponsorEditComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup<{

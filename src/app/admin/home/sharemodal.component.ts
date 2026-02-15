@@ -7,7 +7,8 @@ import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.
 @Component({
     selector: 'app-ngbd-modal-share-config',
     templateUrl: './sharemodal.component.html',
-    styleUrls: ['./sharemodal.component.scss']
+    styleUrls: ['./sharemodal.component.scss'],
+    standalone: false
 })
 export class ShareModalComponent implements OnInit {
     @Input() tournament!: Tournament;

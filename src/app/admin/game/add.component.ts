@@ -43,7 +43,8 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 @Component({
     selector: 'app-tournament-game-add',
     templateUrl: './add.component.html',
-    styleUrls: ['./add.component.scss']
+    styleUrls: ['./add.component.scss'],
+    standalone: false
 })
 export class GameAddComponent extends TournamentComponent implements OnInit {
     private roundNumber!: RoundNumber;

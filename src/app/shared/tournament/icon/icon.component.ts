@@ -4,7 +4,8 @@ import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
 @Component({
     selector: 'app-tournament-icon',
     templateUrl: './icon.component.html',
-    styleUrls: ['./icon.component.scss']
+    styleUrls: ['./icon.component.scss'],
+    standalone: false
 })
 export class TournamentIconComponent {
     @Input() name!: CustomIconName;

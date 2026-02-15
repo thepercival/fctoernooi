@@ -20,7 +20,8 @@ import { WebsitePart } from '../../shared/tournament/structure/admin-public-swit
 @Component({
     selector: 'app-tournament-games-view',
     templateUrl: './view.component.html',
-    styleUrls: ['./view.component.scss']
+    styleUrls: ['./view.component.scss'],
+    standalone: false
 })
 export class GamesComponent extends TournamentComponent implements OnInit {
     userRefereeId: number | string | undefined;

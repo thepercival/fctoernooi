@@ -4,9 +4,10 @@ import { ScoreConfig, ScoreDirection, StructureNameService, TogetherGamePlace, T
 import { TranslateScoreService } from '../../lib/translate/score';
 
 @Component({
-  selector: 'app-tournament-togetherscorecard',
-  templateUrl: './togetherscorecard.component.html',
-  styleUrls: ['./togetherscorecard.component.css']
+    selector: 'app-tournament-togetherscorecard',
+    templateUrl: './togetherscorecard.component.html',
+    styleUrls: ['./togetherscorecard.component.css'],
+    standalone: false
 })
 export class ScoreTogetherCardComponent implements OnInit {
   @Input() form!: FormGroup;

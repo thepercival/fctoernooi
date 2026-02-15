@@ -9,9 +9,10 @@ import { CompetitorTab } from '../../common/tab-ids';
 import { JsonTheme } from '../../../lib/tournament/theme';
 
 @Component({
-  selector: 'app-tournament-navbar',
-  templateUrl: './tournamentNavBar.component.html',
-  styleUrls: ['./tournamentNavBar.component.scss']
+    selector: 'app-tournament-navbar',
+    templateUrl: './tournamentNavBar.component.html',
+    styleUrls: ['./tournamentNavBar.component.scss'],
+    standalone: false
 })
 export class TournamentNavBarComponent implements AfterViewChecked {
   @Input() upperNavBar: TemplateRef<any> | undefined;  

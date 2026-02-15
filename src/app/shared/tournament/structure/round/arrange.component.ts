@@ -2,9 +2,10 @@ import { Component, Input, output } from '@angular/core';
 import { Round, StructureEditor } from 'ngx-sport';
 import { StructureActionName } from '../../../../admin/structure/edit.component';
 @Component({
-  selector: 'app-tournament-structureround-arrange',
-  templateUrl: './arrange.component.html',
-  styleUrls: ['./arrange.component.scss']
+    selector: 'app-tournament-structureround-arrange',
+    templateUrl: './arrange.component.html',
+    styleUrls: ['./arrange.component.scss'],
+    standalone: false
 })
 export class StructureRoundArrangeComponent {
   @Input() structureEditor!: StructureEditor;
