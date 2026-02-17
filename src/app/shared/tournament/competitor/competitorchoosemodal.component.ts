@@ -1,29 +1,34 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Competitor, Place, Round, StartLocationMap, Structure, StructureNameService } from 'ngx-sport';
 import { TournamentCompetitor } from '../../../lib/competitor';
 import { LockerRoom } from '../../../lib/lockerroom';
 import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
+import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
 
 @Component({
     selector: 'app-ngbd-modal-competitor-choose',
     templateUrl: './competitorchoosemodal.component.html',
     styleUrls: ['./competitorchoosemodal.component.scss'],
-    standalone: false
+    imports: [TOURNAMENT_UI_IMPORTS],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true
 })
 export class CompetitorChooseModalComponent implements OnInit {
-    @Input() validator!: LockerRoomValidator;
-    @Input() structure!: Structure;
-    @Input() competitors: Competitor[] = [];
-    @Input() lockerRoom!: LockerRoom;
-    @Input() selectedCompetitors: Competitor[] = [];
-    @Input() competitorsAssignedElsewhere: Competitor[] = []; 
+    readonly _validator = input.required<LockerRoomValidator>();
+    readonly _structure = input.required<Structure>();
+    readonly _competitors = input<Competitor[]>([]);
+    readonly _lockerRoom = input.required<LockerRoom>();
+    readonly _selectedCompetitors = input<Competitor[]>([]);
+    readonly _competitorsAssignedElsewhere = input<Competitor[]>([]);
     public competitorLists: CompetitorList[] = [];
     public structureNameService!: StructureNameService;
     public startLocationMap!: StartLocationMap;
     public changed = false;
 
-    constructor(public activeModal: NgbActiveModal) {
+    constructor(
+        public favRepository = inject(FavoritesRepository),
+        public activeModal = inject(NgbActiveModal) 
     }
 
     ngOnInit() {
@@ -87,6 +92,30 @@ export class CompetitorChooseModalComponent implements OnInit {
             competitorItems = competitorItems.concat(selected);
         });
         return competitorItems;
+    }
+
+    get validator(): LockerRoomValidator {
+        return this._validator();
+    }
+
+    get structure(): Structure {
+        return this._structure();
+    }
+
+    get competitors(): Competitor[] {
+        return this._competitors();
+    }
+
+    get lockerRoom(): LockerRoom {
+        return this._lockerRoom();
+    }
+
+    get selectedCompetitors(): Competitor[] {
+        return this._selectedCompetitors();
+    }
+
+    get competitorsAssignedElsewhere(): Competitor[] {
+        return this._competitorsAssignedElsewhere();
     }
 }
 

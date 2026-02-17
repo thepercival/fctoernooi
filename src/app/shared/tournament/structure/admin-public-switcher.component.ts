@@ -1,15 +1,15 @@
-import { Component, Input, OnInit, input, output } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { HorizontalSingleQualifyRule, QualifyDistribution, QualifyGroup, QualifyTarget, Round, StructureEditor, StructureNameService, VerticalSingleQualifyRule } from 'ngx-sport';
-import { CSSService } from '../../common/cssservice';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { Tournament } from '../../../lib/tournament';
 import { Router } from '@angular/router';
+import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
 
 @Component({
     selector: 'app-admin-public-switcher',
     templateUrl: './admin-public-switcher.component.html',
     styleUrls: ['./admin-public-switcher.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [TOURNAMENT_UI_IMPORTS],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminPublicSwitcherComponent {
     public tournament = input.required<Tournament>();

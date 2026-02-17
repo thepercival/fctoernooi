@@ -9,12 +9,15 @@ import { League } from 'ngx-sport';
     selector: 'app-ngbd-modal-copy',
     templateUrl: './copymodal.component.html',
     styleUrls: ['./copymodal.component.scss'],
-    standalone: false
+    
 })
 export class CopyModalComponent implements OnInit {
     @Input() name!: string;
     @Input() startDateTime!: Date; 
     @Input() showLowCreditsWarning: boolean = false; 
+
+    public modal: NgbActiveModal = inject(NgbActiveModal);
+    private modalService: NgbModal = inject(NgbModal);
     
     public form: FormGroup<{
         name: FormControl<string>,
@@ -29,9 +32,7 @@ export class CopyModalComponent implements OnInit {
         maxlengthname: League.MAX_LENGTH_NAME
     };
     
-    constructor(
-        public modal: NgbActiveModal,
-        private modalService: NgbModal) {
+    constructor() {
         const date = new Date();
 
         this.form = new FormGroup({

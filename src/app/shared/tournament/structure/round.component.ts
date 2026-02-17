@@ -1,27 +1,36 @@
-import { Component, Input, output, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, forwardRef, input, output } from '@angular/core';
 import { Round, Competitor, StructureEditor, QualifyTarget, PlaceRanges, Place, StructureNameService, StartLocation } from 'ngx-sport';
 import { StructureAction, StructureActionName } from '../../../admin/structure/edit.component';
 import { IAlert, IAlertType } from '../../common/alert';
 import { CSSService } from '../../common/cssservice';
 import { CompetitorRepository } from '../../../lib/ngx-sport/competitor/repository';
 import { TournamentCompetitor } from '../../../lib/competitor';
+import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
+import { StructureRoundArrangeComponent } from './round/arrange.component';
+import { StructureQualifyComponent } from './qualify.component';
 
 @Component({
     selector: 'app-tournament-structureround',
     templateUrl: './round.component.html',
     styleUrls: ['./round.component.css'],
-    standalone: false
+    standalone: true,
+    imports: [
+      TOURNAMENT_UI_IMPORTS,
+      StructureRoundArrangeComponent,
+      StructureQualifyComponent
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructureRoundComponent {
-  @Input() structureEditor!: StructureEditor;
-  @Input() round!: Round;
-  @Input() editable: boolean = false;
-  @Input() showCompetitors: boolean = false;
-  @Input() favorites: Competitor[] = [];
-  @Input() structureNameService!: StructureNameService;
-  @Input() lastAction: StructureAction | undefined;
+  readonly _structureEditor = input.required<StructureEditor>();
+  public _round = input.required<Round>();
+  readonly _editable = input(false);
+  readonly _showCompetitors = input(false);
+  readonly _favorites = input<Competitor[]>([]);
+  readonly _structureNameService = input.required<StructureNameService>();
+  readonly _lastAction = input<StructureAction | undefined>(undefined);
   
-  onActionAdd = output<StructureAction>();
+  readonly onActionAdd = output<StructureAction>();
   
   alert: IAlert | undefined;
   popoverPlace: Place | undefined;
@@ -143,5 +152,33 @@ export class StructureRoundComponent {
 
   setPopoverPlace(place: Place) {
     this.popoverPlace = place;
+  }
+
+  get structureEditor(): StructureEditor {
+    return this._structureEditor();
+  }
+
+  get round(): Round {
+    return this._round();
+  }
+
+  get editable(): boolean {
+    return this._editable();
+  }
+
+  get showCompetitors(): boolean {
+    return this._showCompetitors();
+  }
+
+  get favorites(): Competitor[] {
+    return this._favorites();
+  }
+
+  get structureNameService(): StructureNameService {
+    return this._structureNameService();
+  }
+
+  get lastAction(): StructureAction | undefined {
+    return this._lastAction();
   }
 }

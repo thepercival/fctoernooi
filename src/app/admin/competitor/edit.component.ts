@@ -30,7 +30,7 @@ import { LogoInput } from '../sponsor/edit.component';
     selector: 'app-tournament-competitor-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.scss'],
-    standalone: false
+    
 })
 export class CompetitorEditComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup<{
@@ -55,6 +55,8 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
     startLocation!: StartLocation;
     placeNr!: number;
 
+    private modalService = inject(NgbModal);
+
     validations: CompetitorValidations = {
         minlengthname: TournamentCompetitor.MIN_LENGTH_NAME,
         maxlengthname: TournamentCompetitor.MAX_LENGTH_NAME,
@@ -72,7 +74,6 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
         favRepository: FavoritesRepository,
         private competitorRepository: CompetitorRepository,
         private myNavigation: MyNavigation,

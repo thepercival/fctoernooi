@@ -9,7 +9,7 @@ import { SelectableRoundNode } from './selector.component';
     selector: 'app-tournament-select-round',
     templateUrl: './rounds.component.html',
     styleUrls: ['./rounds.component.css'],
-    standalone: false
+    
 })
 export class StructureSelectRoundComponent implements OnInit {
   @Input() selectableRoundNode!: SelectableRoundNode;

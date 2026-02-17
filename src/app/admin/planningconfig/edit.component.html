@@ -1,24 +1,38 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-            <h2 *ngIf="!processing">
+            @if(!processing) {
+            <h2>
                 <fa-icon [icon]="['fas', 'cogs']"></fa-icon> plannings-instellingen
             </h2>
-            <h2 *ngIf="processing" class="text-center">
+            }
+            @if(processing) {
+            <h2 class="text-center">
                 <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
             </h2>
-            <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-            <ngb-alert #updateDataAlert *ngIf="updateDataMsg" type="info" (closed)="updateDataMsg = undefined">
+            }
+            @if(alert) {
+            <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+            }
+            @if(updateDataMsg) {
+            <ngb-alert #updateDataAlert type="info" (closed)="updateDataMsg = undefined">
                 {{updateDataMsg}}
             </ngb-alert>
-            <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
-                <app-tournament-gameamountconfigs-edit *ngIf="!typedForm.value['manual']" [label]="gameAmountLabel"
+            }
+            @if(!processing) {
+            <form name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
+                @if(!typedForm.value['manual']) {
+                <app-tournament-gameamountconfigs-edit [label]="gameAmountLabel"
                     [gameAmountControls]="gameAmountConfigControls" [typedForm]="typedForm" (closed)="updateUnequallyAssigned(startRoundNumber)">
                 </app-tournament-gameamountconfigs-edit>
-                <ngb-alert *ngIf="!typedForm.value['manual'] && unequallyAssigned" type="warning">
+                }
+                @if(!typedForm.value['manual'] && unequallyAssigned) {
+                <ngb-alert type="warning">
                     de deelnemers spelen een verschillend aantal wedstrijden
                 </ngb-alert>
-                <div *ngIf="!typedForm.value['manual'] && showRandomGamePlaceStrategy()" class="row mb-3">
+                }
+                @if(!typedForm.value['manual'] && showRandomGamePlaceStrategy()) {
+                <div class="row mb-3">
                     <label for="strategyRandomly" class="col-7 col-form-label pointer">willekeurge wedstrijden</label>
                     <div class="col-5">
                         <div class="form-control form-check form-switch">
@@ -28,7 +42,9 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="!typedForm.value['manual']" class="row mb-3">
+                }
+                @if(!typedForm.value['manual']) {
+                <div class="row mb-3">
                     <label for="enableTime" class="col-7 col-form-label pointer">plannen o.b.v. tijd</label>
                     <div class="col-5">
                         <div class="form-control form-check form-switch">
@@ -38,8 +54,10 @@
                         </div>
                     </div>
                 </div>
+                }
 
-                <div *ngIf="!typedForm.value['manual'] && !typedForm.value['enableTime']" class="row mb-3">
+                @if(!typedForm.value['manual'] && !typedForm.value['enableTime']) {
+                <div class="row mb-3">
                     <label for="extension" class="col-7 col-form-label pointer">met verlenging</label>
                     <div class="col-5">
                         <div class="form-control form-check form-switch">
@@ -49,7 +67,9 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="!typedForm.value['manual'] && typedForm.value['enableTime']" class="row mb-3">
+                }
+                @if(!typedForm.value['manual'] && typedForm.value['enableTime']) {
+                <div class="row mb-3">
                     <label for="minutesPerGame" class="col-7 col-form-label">minuten per wedstrijd</label>
                     <div class="col-5">
                         <input type="number"
@@ -57,7 +77,9 @@
                             formControlName="minutesPerGame" maxlength="2" class="form-control" />
                     </div>
                 </div>
-                <div *ngIf="!typedForm.value['manual'] && typedForm.value['enableTime']" class="row mb-3">
+                }
+                @if(!typedForm.value['manual'] && typedForm.value['enableTime']) {
+                <div class="row mb-3">
                     <label for="minutesPerGameExt" class="col-7 col-form-label">minuten verlenging</label>
                     <div class="col-5">
                         <input type="number"
@@ -66,7 +88,9 @@
                             (ngModelChange)="changeMinutesPerGameExt($event)" />
                     </div>
                 </div>
-                <div *ngIf="!typedForm.value['manual'] && typedForm.value['enableTime']" class="row mb-3">
+                }
+                @if(!typedForm.value['manual'] && typedForm.value['enableTime']) {
+                <div class="row mb-3">
                     <label for="minutesBetweenGames" class="col-7 col-form-label">minuten tussen
                         wedstrijden</label>
                     <div class="col-5">
@@ -75,8 +99,9 @@
                             formControlName="minutesBetweenGames" maxlength="2" class="form-control" />
                     </div>
                 </div>
-                <div *ngIf="!typedForm.value['manual'] && typedForm.value['enableTime'] && startRoundNumber.hasNext()"
-                    class="row mb-3">
+                }
+                @if(!typedForm.value['manual'] && typedForm.value['enableTime'] && startRoundNumber.hasNext()) {
+                <div class="row mb-3">
                     <label for="minutesAfter" class="col-7 col-form-label pointer"
                         (click)="openInfoModal('minuten pauze na de ronde', 'info-modal', contentInfoMinutesAfter)">minuten
                         pauze na de ronde
@@ -88,7 +113,9 @@
                             formControlName="minutesAfter" maxlength="3" class="form-control" />
                     </div>
                 </div>
-                <div *ngIf="!typedForm.value['manual'] && perPouleOptionAvailable()" class="row mb-3">
+                }
+                @if(!typedForm.value['manual'] && perPouleOptionAvailable()) {
+                <div class="row mb-3">
                     <label for="perPoule" class="col-7 col-form-label">per poule en wedstrijdronde</label>
                     <div class="col-5">
                         <div class="form-control form-check form-switch">
@@ -98,7 +125,9 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="!typedForm.value['manual'] && someSelfRefereeOptionAvailable()" class="row mb-3">
+                }
+                @if(!typedForm.value['manual'] && someSelfRefereeOptionAvailable()) {
+                <div class="row mb-3">
                     <label for="selfReferee" class="col-7 col-form-label">deelnemers zijn scheidsrechter</label>
                     <div class="col-5">
                         <div class="form-control form-check form-switch">
@@ -108,8 +137,9 @@
                         </div>
                     </div>
                 </div>
-<!--                <div *ngIf="!typedForm.value['manual'] && typedForm.value['selfReferee']"
-                    class="row mb-3">
+                }
+<!--                @if(!typedForm.value['manual'] && typedForm.value['selfReferee']) {
+                <div class="row mb-3">
                     <label for="nrOfSimSelfRefs" class="offset-1 col-6 col-form-label">aantal tegelijk per deelnemer</label>
                     <div class="col-5">
                         <input type="number"
@@ -117,9 +147,10 @@
                         formControlName="nrOfSimSelfRefs" maxlength="1" class="form-control" />                       
                     </div>
                 </div>
+                }
 -->
-                <div *ngIf="!typedForm.value['manual'] && typedForm.value['selfReferee'] && bothSelfRefereeOptionsAvailable()"
-                    class="row mb-3">
+                @if(!typedForm.value['manual'] && typedForm.value['selfReferee'] && bothSelfRefereeOptionsAvailable()) {
+                <div class="row mb-3">
                     <label for="selfRefereeSamePoule" class="offset-1 col-6 col-form-label">scheidsrechter in eigen poule</label>
                     <div class="col-5">
                         <div class="form-check form-switch">
@@ -129,7 +160,9 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="!typedForm.value['manual']" class="row mb-3">
+                }
+                @if(!typedForm.value['manual']) {
+                <div class="row mb-3">
                     <label for="bestLast" class="col-7 col-form-label">beste als laatste</label>
                     <div class="col-5">
                         <div class="form-control form-check form-switch">
@@ -138,9 +171,12 @@
                         </div>
                     </div>
                 </div>
-                <ngb-alert class="mb-0" *ngIf="showNrOfBatchGamesAlert" [type]="'info'"><span class="fw-bold">Let op:
+                }
+                @if(showNrOfBatchGamesAlert) {
+                <ngb-alert class="mb-0" type="info"><span class="fw-bold">Let op:
                     </span>"deelnemers zijn scheidsrechter" bepaalt onder andere het aantal tegelijk
                     te spelen wedstrijden</ngb-alert>
+                }
                 <div class="row mb-3">
                     <label for="manual" class="col-7 col-form-label pointer">handmatig wedstrijden aanpassen</label>
                     <div class="col-5">
@@ -153,23 +189,30 @@
                 </div>
                 <div class="row mb-3">
                     <div class="col-7 d-flex justify-content-end">
-                        <button *ngIf="hasRoundNumbersChoice()" type="button"
+                        @if(hasRoundNumbersChoice()) {
+                        <button type="button"
                             (click)="openModalSelectStartRoundNumber()"
                             class="btn btn-outline-{{hasDifferentConfigs() ? 'warning' : 'primary'}}">
                             <span [innerHTML]="getRoundNumbersName( startRoundNumber ) | keepHtml"></span>
                         </button>
+                        }
                     </div>
-                    <div *ngIf="!startRoundNumber.hasBegun()" class="col-5">
+                    @if(!startRoundNumber.hasBegun()) {
+                    <div class="col-5">
                         <button type="submit" class="btn btn-primary" [disabled]="typedForm.invalid">opslaan</button>
                     </div>
+                    }
                 </div>
             </form>
+            }
         </div>
     </div>
 </div>
 
-<app-tournament-navbar [public]="false" *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)">
+@if(tournament) {
+<app-tournament-navbar [public]="false" [tournament]="tournament" [theme]="getTheme(tournament)">
 </app-tournament-navbar>
+}
 
 <ng-template #contentInfoManual>
     <div class="lead mb-4 text-center">Je bent nu zelf verantwoordelijk voor de planning</div>

@@ -1,21 +1,27 @@
-import { Component, Input, OnInit, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { Category } from 'ngx-sport';
-import { Favorites } from '../../../lib/favorites';
+import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
 
 @Component({
     selector: 'app-list-category-choose',
     templateUrl: './chooseList.component.html',
     styleUrls: ['./chooseList.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [TOURNAMENT_UI_IMPORTS],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategoryChooseListComponent {
-    @Input() categoryItems!: CategoryItem[];
+    readonly _categoryItems = input.required<CategoryItem[]>();
 
-    onCategoryUpdate = output<CategoryItem>();
+    readonly onCategoryUpdate = output<CategoryItem>();
 
 
 
     constructor() {
+    }
+
+    get categoryItems(): CategoryItem[] {
+        return this._categoryItems();
     }
 
     // hasSelectableCompetitors(): boolean {

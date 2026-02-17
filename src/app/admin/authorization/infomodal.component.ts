@@ -6,7 +6,6 @@ import { getRoleName, Role } from '../../lib/role';
     selector: 'app-ngbd-modal-auth-explanation',
     templateUrl: './infomodal.component.html',
     styleUrls: ['./infomodal.component.scss'],
-    standalone: false
 })
 export class AuthorizationExplanationModalComponent implements OnInit {
     @Input() header!: string;

@@ -12,7 +12,7 @@ import { Tournament } from '../../lib/tournament';
     selector: 'app-tournament-planningNavBar',
     templateUrl: './planningNavBar.component.html',
     styleUrls: ['./planningNavBar.component.scss'],
-    standalone: false
+    
 })
 export class PlanningNavBarComponent implements OnChanges {
 

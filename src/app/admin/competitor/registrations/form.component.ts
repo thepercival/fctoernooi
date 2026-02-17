@@ -14,7 +14,7 @@ import { TournamentRegistrationSettingsMapper } from '../../../lib/tournament/re
     selector: 'app-tournament-registrations-form',
     templateUrl: './form.component.html',
     styleUrls: ['./form.component.scss'],
-    standalone: false
+    
 })
 export class RegistrationFormComponent implements OnInit{
   public tournament = input.required<Tournament>();

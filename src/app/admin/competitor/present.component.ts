@@ -15,7 +15,7 @@ import { TournamentCompetitorMapper } from '../../lib/competitor/mapper';
     selector: 'app-tournament-competitors-present',
     templateUrl: './present.component.html',
     styleUrls: ['./present.component.scss'],
-    standalone: false
+    
 })
 export class CompetitorPresentListComponent implements OnChanges {
   @Input() tournament!: Tournament;

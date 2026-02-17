@@ -18,10 +18,11 @@ import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.
     selector: 'app-tournament-rules',
     templateUrl: './rules.component.html',
     styleUrls: ['./rules.component.scss'],
-    standalone: false
+    
 })
 export class TournamentRulesComponent extends TournamentComponent implements OnInit {
   public rules!: JsonTournamentRule[];
+  private modalService = inject(NgbModal);
   
   validations: any = {
     'minlengthdescription': TournamentRuleRepository.MIN_LENGTH_DESCRIPTION,
@@ -33,12 +34,11 @@ export class TournamentRulesComponent extends TournamentComponent implements OnI
     router: Router,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
-    globalEventsManager: GlobalEventsManager,
-    modalService: NgbModal,
+    globalEventsManager: GlobalEventsManager,    
     favRepository: FavoritesRepository,
     private ruleRepository: TournamentRuleRepository
   ) {
-    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, favRepository);
   }
 
   ngOnInit() {

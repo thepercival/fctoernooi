@@ -48,7 +48,7 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     selector: 'app-planningconfig-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css'],
-    standalone: false
+    
 })
 export class PlanningConfigComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup;/*<{

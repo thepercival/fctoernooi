@@ -14,7 +14,7 @@ import { DateConverter } from '../../lib/dateConverter';
     selector: 'app-tournament-public-shells',
     templateUrl: './shells.component.html',
     styleUrls: ['./shells.component.scss'],
-    standalone: false
+    
 })
 export class PublicShellsComponent implements OnInit{
 

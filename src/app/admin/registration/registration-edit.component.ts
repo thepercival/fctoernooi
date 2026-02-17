@@ -27,7 +27,7 @@ import { Role } from '../../lib/role';
     selector: 'app-tournament-registration-edit',
     templateUrl: './registration-edit.component.html',
     styleUrls: ['./registration-edit.component.scss'],
-    standalone: false
+    
 })
 export class TournamentRegistrationEditComponent extends TournamentComponent implements OnInit {
   public settings!: TournamentRegistrationSettings;

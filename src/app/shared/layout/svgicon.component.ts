@@ -1,10 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 
 @Component({
     selector: 'app-svg-icon',
     templateUrl: 'svgicon.component.html',
     styleUrls: ['./svgicon.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SvgIconComponent implements OnInit {
   @Input() icon!: string;

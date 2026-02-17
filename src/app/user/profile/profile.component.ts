@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, NavigationExtras, Router, RouterModule } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 
 import { IAlertType } from '../../shared/common/alert';
 import { User } from '../../lib/user';
@@ -15,7 +18,9 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
     selector: 'app-profile',
     templateUrl: './profile.component.html',
     styleUrls: ['./profile.component.css'],
-    standalone: false
+    standalone: true,
+  imports: [CommonModule, FontAwesomeModule, NgbAlert, ReactiveFormsModule, RouterModule],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileComponent extends UserComponent implements OnInit {
   public typedForm: FormGroup<{
@@ -62,9 +67,9 @@ export class ProfileComponent extends UserComponent implements OnInit {
           this.typedForm.controls.emailaddress.setValue(this.user.getEmailaddress());
         },
         error: (e: string) => {
-          this.setAlert(IAlertType.Danger, e); this.processing = false;
+          this.setAlert(IAlertType.Danger, e); this.processing.set(false);
         },
-        complete: () => this.processing = false
+        complete: () => this.processing.set(false)
       });
   }
 
@@ -79,7 +84,7 @@ export class ProfileComponent extends UserComponent implements OnInit {
   }
 
   save(user: User): boolean {
-    this.processing = true;
+    this.processing.set(true);
 
 
     this.userRepository.editObject(this.formToJson(user))
@@ -89,17 +94,17 @@ export class ProfileComponent extends UserComponent implements OnInit {
           this.typedForm.controls.emailaddress.setValue(user.getEmailaddress());
         },
         error: (e: string) => {
-          this.setAlert(IAlertType.Danger, 'het opslaan is niet gelukt: ' + e); this.processing = false;
+          this.setAlert(IAlertType.Danger, 'het opslaan is niet gelukt: ' + e); this.processing.set(false);
         },
         complete: () => {
-          this.processing = false
+          this.processing.set(false)
         }
       });
     return false;
   }
 
   remove(user: User) {
-    this.processing = true;
+    this.processing.set(true);
     this.userRepository.removeObject(user.getId())
       .subscribe({
         next: () => {
@@ -107,9 +112,9 @@ export class ProfileComponent extends UserComponent implements OnInit {
           this.router.navigate(['']);
         },
         error: (e: string) => {
-          this.setAlert(IAlertType.Danger, 'het opslaan is niet gelukt: ' + e); this.processing = false;
+          this.setAlert(IAlertType.Danger, 'het opslaan is niet gelukt: ' + e); this.processing.set(false);
         },
-        complete: () => this.processing = false
+        complete: () => this.processing.set(false)
       });
   }
 }

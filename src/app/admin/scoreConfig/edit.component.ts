@@ -23,7 +23,7 @@ import { forkJoin, Observable } from 'rxjs';
     selector: 'app-tournament-scoreconfig-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.scss'],
-    standalone: false
+    
 })
 export class ScoreConfigEditComponent implements OnInit {
     @Input() tournament!: Tournament;

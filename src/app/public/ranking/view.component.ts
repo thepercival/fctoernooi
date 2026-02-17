@@ -21,7 +21,7 @@ import { WebsitePart } from '../../shared/tournament/structure/admin-public-swit
     selector: 'app-tournament-ranking-view',
     templateUrl: './view.component.html',
     styleUrls: ['./view.component.scss'],
-    standalone: false
+    
 })
 export class RankingViewComponent extends TournamentComponent implements OnInit {
     public favorites!: Favorites;

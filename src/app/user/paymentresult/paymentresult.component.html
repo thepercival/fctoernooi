@@ -4,18 +4,23 @@
 
       <h1>betaling verwerken</h1>
 
-      <h2 *ngIf="processing">
+      @if(processing()) {
+      <h2>
         <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
       </h2>
+      }
 
-      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+      @if(alert()) {
+      <ngb-alert [type]="alert()?.type">{{ alert()?.message }}</ngb-alert>
+      }
 
-      <div *ngIf="!processing">
+      @if(!processing()) {
+      <div>
         <button class="btn btn-outline-primary my-3" [routerLink]="['/admin/new']">toernooi aanmaken</button>
         <br>
         <button class="btn btn-outline-secondary" [routerLink]="['/user/profile']">credits bekijken</button>
       </div>
+      }
     </div>
   </div>
-
 </div>

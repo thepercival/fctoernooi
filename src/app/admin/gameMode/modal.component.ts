@@ -6,7 +6,7 @@ import { GameMode, NameService } from 'ngx-sport';
     selector: 'app-modal-gamemode',
     templateUrl: './modal.component.html',
     styleUrls: ['./modal.component.scss'],
-    standalone: false
+    
 })
 export class GameModeModalComponent {
     @Input() defaultGameMode: GameMode | undefined;

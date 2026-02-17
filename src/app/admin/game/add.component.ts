@@ -44,7 +44,7 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     selector: 'app-tournament-game-add',
     templateUrl: './add.component.html',
     styleUrls: ['./add.component.scss'],
-    standalone: false
+    
 })
 export class GameAddComponent extends TournamentComponent implements OnInit {
     private roundNumber!: RoundNumber;
@@ -56,6 +56,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
     public allInOneGameSportVariant: AllInOneGame | undefined;
     public form!: FormGroup;
     public structureNameService!: StructureNameService;
+    private modalService = inject(NgbModal);
 
     constructor(
         route: ActivatedRoute,
@@ -63,7 +64,6 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
         favRepository: FavoritesRepository,
         private gameRepository: GameRepository,
         private competitionSportMapper: CompetitionSportMapper,
@@ -72,7 +72,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
         private placeMapper: PlaceMapper,
         public dateFormatter: DateFormatter
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
     }
 
     protected createForm(category: Category, poule: Poule, competitionSport: CompetitionSport) {

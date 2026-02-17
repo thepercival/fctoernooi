@@ -20,21 +20,19 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     selector: 'app-tournament-sportconfig-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css'],
-    standalone: false
 })
 export class CompetitionSportEditComponent extends TournamentComponent implements OnInit {
     competitionSport: CompetitionSport | undefined;
     activeTab!: number;
     hasBegun!: boolean;
-    // startRoundNumber: RoundNumber;
+    private modalService = inject(NgbModal);
 
     constructor(
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
+        globalEventsManager: GlobalEventsManager,        
         favRepository: FavoritesRepository,
         public cssService: CSSService,
         private translate: TranslateFieldService,

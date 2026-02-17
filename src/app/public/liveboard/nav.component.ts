@@ -14,7 +14,7 @@ import { MyNavigation } from '../../shared/common/navigation';
     selector: 'app-liveboard-nav',
     templateUrl: './nav.component.html',
     styleUrls: ['./nav.component.scss'],
-    standalone: false
+    
 })
 export class LiveboardNavComponent implements OnInit, AfterContentInit {
 

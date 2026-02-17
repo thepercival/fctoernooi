@@ -28,7 +28,7 @@ import { CompetitorTab, RegistrationTab } from '../../shared/common/tab-ids';
     selector: 'app-tournament-registration-form',
     templateUrl: './registration-form.component.html',
     styleUrls: ['./registration-form.component.scss'],
-    standalone: false
+    
 })
 export class RegistrationComponent extends TournamentComponent implements OnInit {
     public settings: TournamentRegistrationSettings|undefined;

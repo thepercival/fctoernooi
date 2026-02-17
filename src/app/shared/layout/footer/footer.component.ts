@@ -1,11 +1,14 @@
-import { Component,  OnInit,  input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { GlobalEventsManager } from '../../common/eventmanager';
 
 @Component({
     selector: 'app-footer',
     templateUrl: './footer.component.html',
     styleUrl: './footer.component.scss',
-    standalone: false
+    standalone: true,
+    imports: [CommonModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FooterComponent implements OnInit {
 

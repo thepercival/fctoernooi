@@ -15,7 +15,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
     selector: 'app-tournament-competitors-category',
     templateUrl: './category.component.html',
     styleUrls: ['./category.component.scss'],
-    standalone: false
+    
 })
 export class CompetitorsCategoryComponent implements OnInit {
     @Input() category!: Category;

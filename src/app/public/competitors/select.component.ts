@@ -23,7 +23,7 @@ import { CompetitorTab } from '../../shared/common/tab-ids';
     selector: 'app-tournament-select-favorites',
     templateUrl: './select.component.html',
     styleUrls: ['./select.component.scss'],
-    standalone: false
+    
 })
 export class SelectFavoritesComponent extends TournamentComponent implements OnInit {
     public favorites!: Favorites;

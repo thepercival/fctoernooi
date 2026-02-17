@@ -2,32 +2,48 @@
   <div class="row justify-content-center">
     <div class="col-xs-12 col-md-8">
      
-      <h2 *ngIf="processing" class="text-center">
+      @if(processing) {
+      <h2 class="text-center">
         <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
       </h2>
+      }
 
-      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+      @if(alert) {
+      <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+      }
 
       <!-- option block sports, referees, lockerRooms, sponsors -->
-      <div *ngIf="!processing && structure" class="d-flex flex-wrap gap-3 justify-content-center">
+      @if(!processing && structure) {
+      <div class="d-flex flex-wrap gap-3 justify-content-center">
 
         <!-- sports -->
-        <div *ngIf="isAdmin()" class="card card-sub pointer px-0" (click)="linkToCompetitionSport()">
+        @if(isAdmin()) {
+        <div class="card card-sub pointer px-0" (click)="linkToCompetitionSport()">
           <div class="card-body text-center p-1 pt-2">
-            <h5 *ngIf="competition.hasMultipleSports()" class="card-title">
+            @if(competition.hasMultipleSports()) {
+            <h5 class="card-title">
               <fa-icon [icon]="['fas', 'user-friends']"></fa-icon>
             </h5>
-            <h5 *ngIf="!competition.hasMultipleSports()" class="card-title">
+            }
+            @if(!competition.hasMultipleSports()) {
+            <h5 class="card-title">
               <app-sport-icon [competitionSports]="competition.getSports()"></app-sport-icon>
             </h5>
-            <div *ngIf="competition.hasMultipleSports()" class="text-nowrap"><span>sporten</span></div>
-            <div *ngIf="!competition.hasMultipleSports()" class="text-nowrap">
+            }
+            @if(competition.hasMultipleSports()) {
+            <div class="text-nowrap"><span>sporten</span></div>
+            }
+            @if(!competition.hasMultipleSports()) {
+            <div class="text-nowrap">
               <span>sport &</span><br />velden
             </div>
+            }
           </div>
         </div>
+        }
         <!-- referees -->
-        <div *ngIf="isAdmin()" class="card card-sub pointer px-0"
+        @if(isAdmin()) {
+        <div class="card card-sub pointer px-0"
           [routerLink]="['/admin/referees', tournament.getId()]">
           <div class="card-body text-center p-1 pt-2">
             <h5 class="card-title">
@@ -36,8 +52,10 @@
             <div class="text-nowrap" [innerHTML]="getNrOfRefereesDescription()"></div>
           </div>
         </div>
+        }
         <!-- lockerRooms -->
-        <div *ngIf="isAdmin() && lockerRoomValidator" class="card card-sub {{getLockerRoomBorderClass(lockerRoomValidator)}} pointer"
+        @if(isAdmin() && lockerRoomValidator) {
+        <div class="card card-sub {{getLockerRoomBorderClass(lockerRoomValidator)}} pointer"
           [routerLink]="['/admin/lockerrooms', tournament.getId()]">
           <div class="card-body text-center p-1 pt-2">
             <h5 class="card-title">
@@ -46,8 +64,10 @@
             <div [innerHTML]="getNrOfLockerRoomsDescription()"></div>
           </div>
         </div>
+        }
         <!-- sponsors -->
-        <div *ngIf="isAdmin()" class="card card-sub pointer" [routerLink]="['/admin/sponsors', tournament.getId()]">
+        @if(isAdmin()) {
+        <div class="card card-sub pointer" [routerLink]="['/admin/sponsors', tournament.getId()]">
           <div class="card-body text-center p-1 pt-2">
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon>
@@ -55,24 +75,33 @@
             <p class="card-text">{{getNrOfSponsorsDescription()}}</p>
           </div>
         </div>
+        }
 
       </div>
+      }
 
       <hr>
       <!-- option block start, ranking, liveScoreboard, changeName -->
-      <div *ngIf="!processing && structure" class="d-flex flex-wrap gap-3 justify-content-center mt-3">
+      @if(!processing && structure) {
+      <div class="d-flex flex-wrap gap-3 justify-content-center mt-3">
         <!-- change name & theme -->
-        <div *ngIf="isAdmin()" class="card card-sub pointer" [routerLink]="['/admin/nameandtheme', tournament.getId()]">
+        @if(isAdmin()) {
+        <div class="card card-sub pointer" [routerLink]="['/admin/nameandtheme', tournament.getId()]">
           <div class="card-body text-center p-1 pt-2">
             <h5 class="card-title">
-              <img *ngIf="tournament?.getLogoExtension()" src="{{getLogoUrl(tournament, 20)}}"
+              @if(tournament?.getLogoExtension()) {
+              <img src="{{getLogoUrl(tournament, 20)}}"
                 class="img-fluid" height="25px" alt="logo">
-              <span *ngIf="tournament?.getLogoExtension() === undefined">A</span>
+              }
+              @if(!tournament?.getLogoExtension()) {
+              <span>A</span>
+              }
             </h5>
             <div>naam</div>
             <div>& thema</div>
           </div>
         </div>
+        }
 
         <!-- start & pauzes -->
         <div class="card card-sub pointer" [routerLink]="['/admin/startandrecesses', tournament.getId()]">
@@ -93,7 +122,8 @@
           </div>
         </div>
         <!-- live scoreboard -->
-        <div *ngIf="allPoulesHaveGames" class="card card-sub {{getLiveBoardBorderClass()}} pointer"
+        @if(allPoulesHaveGames) {
+        <div class="card card-sub {{getLiveBoardBorderClass()}} pointer"
           [routerLink]="['/public/liveboard', tournament.getId()]">
           <div class="card-body text-center p-1 pt-2">
             <h5 class="card-title">
@@ -103,19 +133,27 @@
             <div class="text-nowrap">scorebord</div>
           </div>
         </div>
+        }
       </div>
+      }
 
-      <div *ngIf="!processing" class="mt-3 d-flex justify-content-center">
-        <app-admin-public-switcher *ngIf="tournament.getPublic()" [currentWebsitePart]="AdminWebsitePart"
+      @if(!processing) {
+      <div class="mt-3 d-flex justify-content-center">
+        @if(tournament.getPublic()) {
+        <app-admin-public-switcher [currentWebsitePart]="AdminWebsitePart"
           [tournament]="tournament" [routerLink]="['/public', tournament.getId()]">
         </app-admin-public-switcher>
+        }
       </div>
+      }
 
       <!-- option block share, export -->
-      <div *ngIf="!processing && structure" class="d-flex flex-wrap gap-3 justify-content-center mt-3">
+      @if(!processing && structure) {
+      <div class="d-flex flex-wrap gap-3 justify-content-center mt-3">
 
         <!-- home pagina -->
-        <div *ngIf="tournament.getPublic()" class="card card-sub pointer" [routerLink]="['/admin/homeedit', tournament.getId()]">
+        @if(tournament.getPublic()) {
+        <div class="card card-sub pointer" [routerLink]="['/admin/homeedit', tournament.getId()]">
         
           <div class="card-body text-center p-0 pt-2">
             <h5 class="card-title">
@@ -125,8 +163,10 @@
             <div>pagina</div>
           </div>
         </div>
+        }
         <!-- share -->
-        <div *ngIf="allPoulesHaveGames && isAdmin()" class="card card-sub pointer" (click)="openModalShare()">
+        @if(allPoulesHaveGames && isAdmin()) {
+        <div class="card card-sub pointer" (click)="openModalShare()">
           <div class="card-body text-center p-1 pt-2">
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'share-alt']"></fa-icon>
@@ -134,8 +174,10 @@
             <div>delen</div>
           </div>
         </div>
+        }
         <!-- export-->
-        <div *ngIf="allPoulesHaveGames && isAdmin()" class="card card-sub pointer" (click)="openModalExport()">
+        @if(allPoulesHaveGames && isAdmin()) {
+        <div class="card card-sub pointer" (click)="openModalExport()">
           <div class="card-body text-center p-0 pt-2">
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'print']"></fa-icon>
@@ -143,14 +185,18 @@
             <div>printen</div>
           </div>
         </div>
+        }
 
       </div>
+      }
 
       <hr>
       <!-- option block roleadmin, copy & remove -->
-      <div *ngIf="!processing && structure" class="d-flex flex-wrap gap-3 justify-content-center mt-3">
+      @if(!processing && structure) {
+      <div class="d-flex flex-wrap gap-3 justify-content-center mt-3">
         <!-- roleadmin -->
-        <div *ngIf="isRoleAdmin()" class="card card-sub pointer" [routerLink]="['/admin/authorizations', tournament.getId()]">
+        @if(isRoleAdmin()) {
+        <div class="card card-sub pointer" [routerLink]="['/admin/authorizations', tournament.getId()]">
           <div class="card-body text-center p-1 pt-2">
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'user-friends']"></fa-icon>
@@ -159,9 +205,11 @@
             <div>uitdelen</div>
           </div>
         </div>
+        }
       
         <!-- copy -->
-        <div *ngIf="isAdmin()" class="card card-sub pointer" (click)="openModalCopy()">
+        @if(isAdmin()) {
+        <div class="card card-sub pointer" (click)="openModalCopy()">
           <div class="card-body text-center p-1 pt-2">
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'copy']"></fa-icon>
@@ -170,8 +218,10 @@
             <div>editie</div>
           </div>
         </div>
+        }
         <!-- remove -->
-        <div *ngIf="isAdmin()" class="card card-sub pointer" (click)="openModalRemove(contentremove)">
+        @if(isAdmin()) {
+        <div class="card card-sub pointer" (click)="openModalRemove(contentremove)">
           <div class="card-body text-center p-1 pt-2">
             <h5 class="card-title">
               <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
@@ -179,13 +229,17 @@
             <div>ver-</div>
             <div>wijderen</div>
           </div>
-        </div>      
+        </div>
+        }      
       </div>
+      }
     </div>
   </div>
 </div>
-<app-tournament-navbar [public]="false" [currentScreen]="SettingsScreen" *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)">
+@if(tournament) {
+<app-tournament-navbar [public]="false" [currentScreen]="SettingsScreen" [tournament]="tournament" [theme]="getTheme(tournament)">
 </app-tournament-navbar>
+}
 
 <!-- copy modal -->
 <ng-template #contentCopyModal let-modal>

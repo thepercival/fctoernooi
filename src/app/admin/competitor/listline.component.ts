@@ -12,7 +12,7 @@ import { TournamentCompetitorMapper } from '../../lib/competitor/mapper';
     selector: 'app-tournament-competitor-line',
     templateUrl: './listline.component.html',
     styleUrls: ['./listline.component.css'],
-    standalone: false
+    
 })
 export class CompetitorListLineComponent implements AfterViewChecked {
   @Input() placeCompetitor!: PlaceCompetitorItem;

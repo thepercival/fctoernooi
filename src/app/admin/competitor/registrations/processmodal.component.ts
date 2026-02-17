@@ -15,7 +15,7 @@ import { TournamentRegistrationMapper } from '../../../lib/tournament/registrati
     selector: 'app-ngbd-modal-process-tournamentregistration',
     templateUrl: './processmodal.component.html',
     styleUrls: ['./processmodal.component.scss'],
-    standalone: false
+    
 })
 export class TournamentRegistrationProcessModalComponent {
     tournament!: Tournament;    

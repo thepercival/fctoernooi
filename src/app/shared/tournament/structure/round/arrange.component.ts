@@ -1,16 +1,19 @@
-import { Component, Input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { Round, StructureEditor } from 'ngx-sport';
 import { StructureActionName } from '../../../../admin/structure/edit.component';
+import { TOURNAMENT_UI_IMPORTS } from '../../tournament.ui-imports';
 @Component({
     selector: 'app-tournament-structureround-arrange',
     templateUrl: './arrange.component.html',
     styleUrls: ['./arrange.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [TOURNAMENT_UI_IMPORTS],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructureRoundArrangeComponent {
-  @Input() structureEditor!: StructureEditor;
-  @Input() round!: Round;
-  onActionArrange = output<StructureActionName>();
+  readonly _structureEditor = input.required<StructureEditor>();
+  readonly _round = input.required<Round>();
+  readonly onActionArrange = output<StructureActionName>();
 
   constructor() {
   }
@@ -117,6 +120,14 @@ export class StructureRoundArrangeComponent {
       return 'd-xl-none'
     }
     return '';
+  }
+
+  get structureEditor(): StructureEditor {
+    return this._structureEditor();
+  }
+
+  get round(): Round {
+    return this._round();
   }
 
   /* chilround(arrange)

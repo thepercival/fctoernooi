@@ -9,7 +9,7 @@ import { DateConverter } from '../../lib/dateConverter';
     selector: 'app-tournament-basegame-edit',
     templateUrl: './editbase.component.html',
     styleUrls: ['./editbase.component.scss'],
-    standalone: false
+    
 })
 export class GameBaseEditComponent implements OnInit {
   @Input() form!: FormGroup;

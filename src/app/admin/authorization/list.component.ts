@@ -21,13 +21,13 @@ import { AuthService } from '../../lib/auth/auth.service';
     selector: 'app-tournament-authorization-list',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
-    standalone: false
 })
 export class AuthorizationListComponent extends TournamentComponent implements OnInit {
     public invitations: TournamentInvitation[] = [];
     public roleProcessing: TournamentAuthorizationRole | undefined;
     public removeWithRefereeRole: boolean | undefined;
     public validUserItems!: UserItem[];
+    private modalService = inject(NgbModal);
 
     constructor(
         route: ActivatedRoute,
@@ -35,7 +35,6 @@ export class AuthorizationListComponent extends TournamentComponent implements O
         tournamentRepository: TournamentRepository,
         sructureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
         favRepository: FavoritesRepository,
         private tournamentUserRepository: TournamentUserRepository,
         private invitationRepository: TournamentInvitationRepository,

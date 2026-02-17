@@ -1,24 +1,27 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, input } from '@angular/core';
 import { Poule, ScoreConfig, AgainstSportRoundRankingCalculator, CompetitionSport, SportRoundRankingItem, StructureNameService, Competitor, StartLocation, Place } from 'ngx-sport';
 import { Favorites } from '../../../../lib/favorites';
 import { FavoritesRepository } from '../../../../lib/favorites/repository';
 import { CSSService } from '../../../common/cssservice';
 import { TournamentCompetitor } from '../../../../lib/competitor';
 import { CompetitorRepository } from '../../../../lib/ngx-sport/competitor/repository';
+import { TOURNAMENT_UI_IMPORTS } from '../../tournament.ui-imports';
 
 
 @Component({
     selector: 'app-tournament-ranking-against-table',
     templateUrl: './against.component.html',
     styleUrls: ['./against.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [TOURNAMENT_UI_IMPORTS],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingAgainstComponent implements OnInit {
-  @Input() poule!: Poule;
-  @Input() competitionSport!: CompetitionSport;
-  @Input() favorites: Favorites | undefined;
-  @Input() structureNameService!: StructureNameService;
-  @Input() header!: boolean;
+  readonly _poule = input.required<Poule>();
+  readonly _competitionSport = input.required<CompetitionSport>();
+  readonly _favorites = input<Favorites | undefined>(undefined);
+  readonly _structureNameService = input.required<StructureNameService>();
+  readonly _header = input.required<boolean>();
   protected againstRankingCalculator!: AgainstSportRoundRankingCalculator;
   public sportRankingItems!: SportRoundRankingItem[];
   public showDifferenceDetail = false;
@@ -64,5 +67,25 @@ export class RankingAgainstComponent implements OnInit {
   public getCompetitorLogoUrl(place: Place): string {
     const competitor = this.getCompetitor(place.getStartLocation());
     return competitor ? this.competitorRepository.getLogoUrl(<TournamentCompetitor>competitor, 20) : '';
+  }
+
+  get poule(): Poule {
+    return this._poule();
+  }
+
+  get competitionSport(): CompetitionSport {
+    return this._competitionSport();
+  }
+
+  get favorites(): Favorites | undefined {
+    return this._favorites();
+  }
+
+  get structureNameService(): StructureNameService {
+    return this._structureNameService();
+  }
+
+  get header(): boolean {
+    return this._header();
   }
 }

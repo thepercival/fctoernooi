@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit, output, TemplateRef, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, OnDestroy, OnChanges, SimpleChanges, TemplateRef, input, output } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbPopover, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -50,28 +50,31 @@ import { TranslateScoreService } from '../../../lib/translate/score';
 import { TournamentCompetitor } from '../../../lib/competitor';
 import { CompetitorRepository } from '../../../lib/ngx-sport/competitor/repository';
 import { ColorMode } from '../../layout/nav/nav.component';
+import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
+import { TournamentIconComponent } from '../icon/icon.component';
 
 @Component({
     selector: 'tbody[app-tournament-roundnumber-planning]',
     templateUrl: './roundnumber.component.html',
     styleUrls: ['./roundnumber.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [TOURNAMENT_UI_IMPORTS, TournamentIconComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
-
-  @Input() tournament!: Tournament;
-  @Input() roundNumber!: RoundNumber;
-  @Input() optionalGameColumns!: Map<OptionalGameColumn, boolean>; 
-  @Input() favoriteCategories!: Category[];
-  @Input() structureNameService!: StructureNameService;
-  @Input() showLinksToAdmin = false;
-  @Input() userRefereeId: number | string | undefined;
-  @Input() roles: number = 0;
-  @Input() favorites: Favorites | undefined;
-  @Input() refreshingData: boolean | undefined;
+  readonly _tournament = input.required<Tournament>({ alias: 'tournament' });
+  readonly _roundNumber = input.required<RoundNumber>({ alias: 'roundNumber' });
+  readonly _optionalGameColumns = input.required<Map<OptionalGameColumn, boolean>>({ alias: 'optionalGameColumns' });
+  readonly _favoriteCategories = input.required<Category[]>({ alias: 'favoriteCategories' });
+  readonly _structureNameService = input.required<StructureNameService>({ alias: 'structureNameService' });
+  readonly _showLinksToAdmin = input(false, { alias: 'showLinksToAdmin' });
+  readonly _userRefereeId = input<number | string | undefined>(undefined, { alias: 'userRefereeId' });
+  readonly _roles = input(0, { alias: 'roles' });
+  readonly _favorites = input<Favorites | undefined>(undefined, { alias: 'favorites' });
+  readonly _refreshingData = input<boolean | undefined>(undefined, { alias: 'refreshingData' });
   
-  onDataRefresh = output<void>();
-  onScrolling = output<void>();
+  readonly onDataRefresh = output<void>();
+  readonly onScrolling = output<void>();
   
   alert: IAlert | undefined;
   public sameDay = true;
@@ -98,6 +101,9 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   private refreshGetPlanningTimer: Subscription | undefined;
   private appErrorHandler: AppErrorHandler;
   public progressPerc = 0;
+  private rolesValue = 0;
+
+  private modalService: NgbModal = inject(NgbModal),
 
   constructor(
     private router: Router,
@@ -105,8 +111,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     private authService: AuthService,
     public cssService: CSSService,
     public dateFormatter: DateFormatter,
-    public translate: TranslateScoreService,
-    private modalService: NgbModal,
+    public translate: TranslateScoreService,    
     protected planningRepository: PlanningRepository,
     public competitorRepository: CompetitorRepository) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
@@ -120,7 +125,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     this.planningConfig = this.roundNumber.getValidPlanningConfig();
     const loggedInUserId = this.authService.getLoggedInUserId();
     const currentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;
-    this.roles = currentUser?.getRoles() ?? 0;
+    this.rolesValue = currentUser?.getRoles() ?? this.roles;
     this.needsRanking = this.roundNumber.getStructureCells().some(structureCell => structureCell.needsRanking());
     const rounds = this.roundNumber.getRounds(undefined);
     this.hasMultiplePoules = rounds.length > 1 || rounds.every(round => round.getPoules().length > 1);
@@ -152,8 +157,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.favoriteCategories !== undefined && changes.favoriteCategories.currentValue !== changes.favoriteCategories.previousValue
-      && changes.favoriteCategories.firstChange === false) {
+    if (changes._favoriteCategories !== undefined && changes._favoriteCategories.currentValue !== changes._favoriteCategories.previousValue
+      && changes._favoriteCategories.firstChange === false) {
       if (this.favorites) {
         const categoryMap = new CategoryMap(this.favoriteCategories);
         this.filterFavorites = (this.favorites.hasCompetitors(categoryMap) || this.favorites.hasReferees());
@@ -371,7 +376,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   }
 
   protected hasRole(role: number): boolean {
-    return (this.roles & role) === role;
+    return (this.rolesValue & role) === role;
   }
 
   getCompetitor(place: Place): TournamentCompetitor | undefined {
@@ -616,6 +621,46 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
 
   public showError(): boolean {
     return this.alert?.type === IAlertType.Danger;
+  }
+
+  get tournament(): Tournament {
+    return this._tournament();
+  }
+
+  get roundNumber(): RoundNumber {
+    return this._roundNumber();
+  }
+
+  get optionalGameColumns(): Map<OptionalGameColumn, boolean> {
+    return this._optionalGameColumns();
+  }
+
+  get favoriteCategories(): Category[] {
+    return this._favoriteCategories();
+  }
+
+  get structureNameService(): StructureNameService {
+    return this._structureNameService();
+  }
+
+  get showLinksToAdmin(): boolean {
+    return this._showLinksToAdmin();
+  }
+
+  get userRefereeId(): number | string | undefined {
+    return this._userRefereeId();
+  }
+
+  get roles(): number {
+    return this._roles();
+  }
+
+  get favorites(): Favorites | undefined {
+    return this._favorites();
+  }
+
+  get refreshingData(): boolean | undefined {
+    return this._refreshingData();
   }
 
   ngOnDestroy() {

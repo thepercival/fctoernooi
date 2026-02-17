@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   BalancedPouleStructure,
@@ -35,7 +35,7 @@ import { CategoryModalComponent } from '../../shared/tournament/structure/catego
     selector: 'app-tournament-structure',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.scss'],
-    standalone: false
+    
 })
 export class StructureEditComponent extends TournamentComponent implements OnInit {
   lastAction: StructureAction | undefined;
@@ -54,7 +54,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     tournamentRepository: TournamentRepository,
     structureRepository: StructureRepository,
     globalEventsManager: GlobalEventsManager,
-    modalService: NgbModal,
+    @Inject(NgbModal) modalService: NgbModal,
     favRepository: FavoritesRepository,
     public structureEditor: StructureEditor,
     private planningRepository: PlanningRepository,

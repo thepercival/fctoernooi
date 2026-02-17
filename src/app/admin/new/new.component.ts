@@ -20,7 +20,7 @@ import { User } from '../../lib/user';
     selector: 'app-tournament-new',
     templateUrl: './new.component.html',
     styleUrls: ['./new.component.scss'],
-    standalone: false
+    
 })
 export class NewComponent implements OnInit {
   public processing = true;

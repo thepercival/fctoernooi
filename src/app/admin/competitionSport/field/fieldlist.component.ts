@@ -13,7 +13,6 @@ import { TranslateFieldService } from '../../../lib/translate/field';
     selector: 'app-tournament-fields',
     templateUrl: './fieldlist.component.html',
     styleUrls: ['./fieldlist.component.scss'],
-    standalone: false
 })
 export class FieldListComponent implements OnInit {
 

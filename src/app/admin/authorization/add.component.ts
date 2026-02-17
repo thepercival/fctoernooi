@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -20,7 +20,6 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     selector: 'app-tournament-authorization-add',
     templateUrl: './add.component.html',
     styleUrls: ['./add.component.scss'],
-    standalone: false
 })
 export class AuthorizationAddComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup;/*<{
@@ -28,6 +27,7 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
         sendinvitation: FormControl<boolean>
       }>;*/
     roleItems: RoleItem[] = [];
+    private modalService = inject(NgbModal);
 
     validations: AdminAuthValidations = {
         minlengthemailaddress: User.MIN_LENGTH_EMAIL,
@@ -40,13 +40,12 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
         favRepository: FavoritesRepository,
         private invitationRepository: TournamentInvitationRepository,
         private myNavigation: MyNavigation
 
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, this.modalService, favRepository);
         this.typedForm = new FormGroup({
             emailaddress: new FormControl('', { nonNullable: true, validators: 
                 [

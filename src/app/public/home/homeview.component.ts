@@ -28,7 +28,7 @@ import { DefaultJsonTheme } from '../../lib/tournament/theme';
     selector: 'app-tournament-home-view',
     templateUrl: './homeview.component.html',
     styleUrls: ['./homeview.component.scss'],
-    standalone: false
+    
 })
 export class HomeViewComponent extends TournamentComponent implements OnInit {
     public rules: JsonTournamentRule[] = [];

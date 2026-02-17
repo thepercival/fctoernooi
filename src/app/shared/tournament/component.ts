@@ -28,7 +28,6 @@ export class TournamentComponent {
         protected tournamentRepository: TournamentRepository,
         protected structureRepository: StructureRepository,
         protected globalEventsManager: GlobalEventsManager,
-        protected modalService: NgbModal,
         protected favRepository: FavoritesRepository
     ) {
     }
@@ -102,15 +101,15 @@ export class TournamentComponent {
         return tournamentUser ? tournamentUser.hasARole(roles) : false;
     }
 
-    openCategoriesChooseModal(structure: Structure) {
-        const activeModal = this.modalService.open(CategoryChooseModalComponent);
-        activeModal.componentInstance.categories = structure.getCategories();
-        activeModal.componentInstance.tournament = this.tournament;
-        activeModal.result.then((result) => {
-        }, (reason) => {
-            this.updateFavoriteCategories(structure);
-        });
-    }
+    // openCategoriesChooseModal(structure: Structure) {
+    //     const activeModal = this.modalService.open(CategoryChooseModalComponent);
+    //     activeModal.componentInstance.categories = structure.getCategories();
+    //     activeModal.componentInstance.tournament = this.tournament;
+    //     activeModal.result.then((result) => {
+    //     }, (reason) => {
+    //         this.updateFavoriteCategories(structure);
+    //     });
+    // }
 
     getCategoryFavoritesActiveClass(structure: Structure): string {
         return structure.getCategories().length !== this.favoriteCategories.length ? 'primary' : 'secondary';

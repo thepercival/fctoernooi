@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, forwardRef, input } from '@angular/core';
 
 import { Poule, Round, GameState, CompetitionSport, StructureNameService, StartLocation, Competitor, Place, AgainstSide, AgainstGamePlace, AgainstGame, ScoreConfigService, HorizontalMultipleQualifyRule, HorizontalSingleQualifyRule, VerticalMultipleQualifyRule, VerticalSingleQualifyRule } from 'ngx-sport';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -7,29 +7,40 @@ import { CSSService } from '../../common/cssservice';
 import { InfoModalComponent } from '../infomodal/infomodal.component';
 import { CompetitorRepository } from '../../../lib/ngx-sport/competitor/repository';
 import { TournamentCompetitor } from '../../../lib/competitor';
+import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
+import { RankingPouleComponent } from './poule.component';
+import { AgainstQualifyInfoComponent } from '../againstQualifyConfig/info.component';
 
 @Component({
     selector: 'app-tournament-ranking-round',
     templateUrl: './round.component.html',
     styleUrls: ['./round.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+        TOURNAMENT_UI_IMPORTS,
+        RankingPouleComponent,
+        AgainstQualifyInfoComponent,
+        forwardRef(() => RankingRoundComponent)
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingRoundComponent implements OnInit {
-    @Input() round!: Round;
-    @Input() structureNameService!: StructureNameService;
-    @Input() competitionSports!: CompetitionSport[];
-    @Input() favorites: Favorites | undefined;
-    @Input() first: boolean = true;
+    readonly _round = input.required<Round>();
+    readonly _structureNameService = input.required<StructureNameService>();
+    readonly _competitionSports = input.required<CompetitionSport[]>();
+    readonly _favorites = input<Favorites | undefined>(undefined);
+    readonly _first = input(true);
     public collapsed: boolean = true;
     public poules: Poule[] = [];
     // public gameMode!: GameMode;
     public popoverPlace: Place | undefined;
 
+    private modalService = inject(NgbModal);
+
     constructor(
         public cssService: CSSService,
         private competitorRepository: CompetitorRepository,
-        private scoreConfigService: ScoreConfigService,
-        private modalService: NgbModal
+        private scoreConfigService: ScoreConfigService
     ) {
     }
 
@@ -207,5 +218,25 @@ export class RankingRoundComponent implements OnInit {
 
     setPopoverPlace(place: Place) {
         this.popoverPlace = place;
+    }
+
+    get round(): Round {
+        return this._round();
+    }
+
+    get structureNameService(): StructureNameService {
+        return this._structureNameService();
+    }
+
+    get competitionSports(): CompetitionSport[] {
+        return this._competitionSports();
+    }
+
+    get favorites(): Favorites | undefined {
+        return this._favorites();
+    }
+
+    get first(): boolean {
+        return this._first();
     }
 }

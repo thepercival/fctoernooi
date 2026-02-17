@@ -13,7 +13,7 @@ import { IAlert, IAlertType } from '../../shared/common/alert';
     selector: 'app-tournament-category-competitors-order',
     templateUrl: './category.order.component.html',
     styleUrls: ['./category.order.component.scss'],
-    standalone: false
+    
 })
 export class CategoryOrderCompetitorListComponent implements OnChanges {
   @Input() tournament!: Tournament;

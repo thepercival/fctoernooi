@@ -22,7 +22,7 @@ import { DateConverter } from '../../lib/dateConverter';
     selector: 'app-tournament-competitor-edit',
     templateUrl: './addRecess.component.html',
     styleUrls: ['./addRecess.component.css'],
-    standalone: false
+    
 })
 export class RecessAddComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup<{

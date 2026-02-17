@@ -1,25 +1,28 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Category, VoetbalRange } from 'ngx-sport';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CategoryProperties } from '../../../../admin/structure/edit.component';
 import { CategoryUniqueChecker } from '../../../../lib/ngx-sport/category/uniqueChecker';
+import { TOURNAMENT_UI_IMPORTS } from '../../tournament.ui-imports';
 
 @Component({
     selector: 'app-ngbd-modal-category',
     templateUrl: './categorymodal.component.html',
     styleUrls: ['./categorymodal.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [TOURNAMENT_UI_IMPORTS],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategoryModalComponent implements OnInit {
-    @Input() categories: Category[] = [];
-    @Input() category: Category|undefined;
-    @Input() buttonLabel!: string;
+    readonly _categories = input<Category[]>([]);
+    readonly _category = input<Category | undefined>(undefined);
+    readonly _buttonLabel = input.required<string>();
     form: FormGroup;    
-    
+    public activeModal: NgbActiveModal = inject(NgbActiveModal);
     public nameRange: VoetbalRange = { min: 3, max: 15 };
 
-    constructor(public activeModal: NgbActiveModal) {
+    constructor() {
         this.form = new FormGroup({
             name: new FormControl(''),
             abbreviation: new FormControl('')
@@ -75,5 +78,17 @@ export class CategoryModalComponent implements OnInit {
             this.categories, 
             this.form.controls.abbreviation.value,
             this.category);
+    }
+
+    get categories(): Category[] {
+        return this._categories();
+    }
+
+    get category(): Category | undefined {
+        return this._category();
+    }
+
+    get buttonLabel(): string {
+        return this._buttonLabel();
     }
 }

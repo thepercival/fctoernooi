@@ -1,5 +1,4 @@
-import { OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../lib/auth/auth.service';
 import { User } from '../lib/user';
@@ -11,8 +10,8 @@ import { GlobalEventsManager } from '../shared/common/eventmanager';
 export abstract class UserComponent {
     public user: User | undefined;
 
-    public alert: IAlert | undefined;
-    public processing = true;
+    public alert: WritableSignal<IAlert|undefined> = signal(undefined);
+    public processing: WritableSignal<boolean> = signal(true);
 
     constructor(
         protected route: ActivatedRoute,
@@ -25,10 +24,10 @@ export abstract class UserComponent {
     }
 
     protected setAlert(type: IAlertType, message: string) {
-        this.alert = { 'type': type, 'message': message };
+        this.alert.set({ 'type': type, 'message': message });
     }
 
     protected resetAlert(): void {
-        this.alert = undefined;
+        this.alert.set(undefined);
     }
 }

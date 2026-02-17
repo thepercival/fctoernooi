@@ -8,7 +8,7 @@ import { ScreenConfigName } from '../../lib/liveboard/screenConfig/name';
     selector: 'app-ngbd-modal-screenconfigs',
     templateUrl: './screenconfigsmodal.component.html',
     styleUrls: ['./screenconfigsmodal.component.scss'],
-    standalone: false
+    
 })
 export class ScreenConfigsModalComponent implements OnInit {
 

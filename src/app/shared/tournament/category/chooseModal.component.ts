@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Category } from 'ngx-sport';
 
@@ -6,20 +6,25 @@ import { Favorites } from '../../../lib/favorites';
 import { FavoritesRepository } from '../../../lib/favorites/repository';
 import { Tournament } from '../../../lib/tournament';
 import { CategoryItem } from './chooseList.component';
+import { CategoryChooseListComponent } from './chooseList.component';
+import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
 
 @Component({
     selector: 'app-modal-category-choose',
     templateUrl: './chooseModal.component.html',
     styleUrls: ['./chooseModal.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [TOURNAMENT_UI_IMPORTS, CategoryChooseListComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategoryChooseModalComponent implements OnInit {
-    @Input() categories!: Category[];
-    @Input() tournament!: Tournament;
+    readonly _categories = input.required<Category[]>();
+    readonly _tournament = input.required<Tournament>();
 
     constructor(
         public favRepository: FavoritesRepository,
-        public activeModal: NgbActiveModal) {
+        public favRepository = inject(FavoritesRepository),
+        public activeModal = inject(NgbActiveModal)
     }
 
     ngOnInit() {
@@ -58,5 +63,13 @@ export class CategoryChooseModalComponent implements OnInit {
         this.categories.forEach((category: Category) => {
             favorites.addCategory(category);
         });
+    }
+
+    get categories(): Category[] {
+        return this._categories();
+    }
+
+    get tournament(): Tournament {
+        return this._tournament();
     }
 }

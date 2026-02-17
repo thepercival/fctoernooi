@@ -15,7 +15,7 @@ import { DefaultJsonTheme, JsonTheme } from '../../lib/tournament/theme';
     selector: 'app-progress',
     templateUrl: './progress.component.html',
     styleUrls: ['./progress.component.scss'],
-    standalone: false
+    
 })
 export class ProgressComponent implements OnDestroy {
     startNrOfSecondsFromZero = input.required<number>();

@@ -20,7 +20,7 @@ import { WebsitePart } from '../../shared/tournament/structure/admin-public-swit
     selector: 'app-tournament-structure-view',
     templateUrl: './view.component.html',
     styleUrls: ['./view.component.scss'],
-    standalone: false
+    
 })
 export class StructureViewComponent extends TournamentComponent implements OnInit {
   competitors: Competitor[] = [];
@@ -33,14 +33,13 @@ export class StructureViewComponent extends TournamentComponent implements OnIni
     router: Router,
     tournamentRepository: TournamentRepository,
     structureRepository: StructureRepository,
-    globalEventsManager: GlobalEventsManager,
-    modalService: NgbModal,
+    globalEventsManager: GlobalEventsManager,    
     favRepository: FavoritesRepository,
     private myNavigation: MyNavigation,
     public structureEditor: StructureEditor,
     private authService: AuthService
   ) {
-    super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+    super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
   }
 
   ngOnInit() {

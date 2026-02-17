@@ -1,25 +1,30 @@
-import { Component, Input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { HorizontalSingleQualifyRule, QualifyDistribution, QualifyGroup, QualifyTarget, Round, StructureEditor, StructureNameService, VerticalSingleQualifyRule } from 'ngx-sport';
 import { CSSService } from '../../common/cssservice';
+import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
 
 @Component({
     selector: 'app-ngbd-modal-qualify',
     templateUrl: './qualifymodal.component.html',
     styleUrls: ['./qualifymodal.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [TOURNAMENT_UI_IMPORTS],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QualifyModalComponent {
-    @Input() target!: QualifyTarget;
-    @Input() parentRound!: Round; 
-    @Input() structureEditor!: StructureEditor;
-    @Input() structureNameService!: StructureNameService;
+    readonly _target = input.required<QualifyTarget>();
+    readonly _parentRound = input.required<Round>(); 
+    readonly _structureEditor = input.required<StructureEditor>();
+    readonly _structureNameService = input.required<StructureNameService>();
 
-    onDistributionUpdate = output<QualifyDistribution>();
-    onQualifyGroupFromSplit = output<HorizontalSingleQualifyRule|VerticalSingleQualifyRule>(); 
-    onQualifyGroupWithNextMerge = output<QualifyGroup>(); 
+    readonly onDistributionUpdate = output<QualifyDistribution>();
+    readonly onQualifyGroupFromSplit = output<HorizontalSingleQualifyRule|VerticalSingleQualifyRule>(); 
+    readonly onQualifyGroupWithNextMerge = output<QualifyGroup>(); 
+
+    public modal: NgbActiveModal = inject(NgbActiveModal);
     
-    constructor(public modal: NgbActiveModal, public cssService: CSSService) {
+    constructor(public cssService: CSSService) {
         
     }
 
@@ -56,5 +61,21 @@ export class QualifyModalComponent {
 
     getTargetDirectionClass(target: QualifyTarget): string {
         return target === QualifyTarget.Losers ? 'flex-column-reverse' : '';
+    }
+
+    get target(): QualifyTarget {
+        return this._target();
+    }
+
+    get parentRound(): Round {
+        return this._parentRound();
+    }
+
+    get structureEditor(): StructureEditor {
+        return this._structureEditor();
+    }
+
+    get structureNameService(): StructureNameService {
+        return this._structureNameService();
     }
 }

@@ -7,7 +7,7 @@ import { TranslateSportService } from '../lib/translate/sport';
     selector: '[app-home-shell]',
     templateUrl: './shell.component.html',
     styleUrls: ['./shell.component.css'],
-    standalone: false
+    
 })
 export class HomeShellComponent {
   @Input() shell!: TournamentShell;

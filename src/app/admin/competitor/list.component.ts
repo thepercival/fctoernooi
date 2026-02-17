@@ -33,7 +33,7 @@ import { CompetitorTab, RegistrationTab } from '../../shared/common/tab-ids';
     selector: 'app-tournament-competitors',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
-    standalone: false
+    
 })
 export class CompetitorListComponent extends TournamentComponent implements OnInit, AfterViewChecked {
 
@@ -46,20 +46,21 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   public hasBegun!: boolean;
   public registrationSettings: TournamentRegistrationSettings|undefined;
 
+  private modalService = inject(NgbModal);
+
   constructor(
     route: ActivatedRoute,
     router: Router,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     globalEventsManager: GlobalEventsManager,
-    modalService: NgbModal,
     favRepository: FavoritesRepository,
     private tournamentRegistrationRepository: TournamentRegistrationRepository,
     private planningRepository: PlanningRepository,
     private competitorRepository: CompetitorRepository,
     private myNavigation: MyNavigation
   ) {
-    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, favRepository);
   }
 
   ngOnInit() {

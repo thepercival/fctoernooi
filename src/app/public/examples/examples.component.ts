@@ -14,7 +14,7 @@ import { TournamentRepository } from '../../lib/tournament/repository';
     selector: 'app-tournament-examples',
     templateUrl: './examples.component.html',
     styleUrls: ['./examples.component.scss'],
-    standalone: false
+    
 })
 export class ExamplesComponent implements OnInit{
 

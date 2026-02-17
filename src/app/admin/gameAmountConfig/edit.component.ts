@@ -7,7 +7,7 @@ import { CompetitionSport, JsonCompetitionSport, JsonGameAmountConfig, JsonSport
     selector: 'app-tournament-gameamountconfigs-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css'],
-    standalone: false
+    
 })
 export class GameAmountConfigEditComponent implements OnInit {
   @Input() gameAmountControls!: GameAmountConfigControl[];

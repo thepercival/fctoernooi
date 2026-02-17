@@ -8,7 +8,7 @@ import { PoulesRankingScreen } from '../../lib/liveboard/screens';
     selector: 'app-tournament-liveboard-poules',
     templateUrl: './poules.liveboard.component.html',
     styleUrls: ['./poules.liveboard.component.scss'],
-    standalone: false
+    
 })
 export class LiveboardPoulesComponent {
     @Input() screen!: PoulesRankingScreen;

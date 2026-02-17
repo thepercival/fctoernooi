@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, Input, OnInit, TemplateRef, ViewChild, input } from '@angular/core';
+import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, TemplateRef, ViewChild, input } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -7,18 +7,22 @@ import { Tournament } from '../../../lib/tournament';
 import { TournamentScreen } from '../screenNames';
 import { CompetitorTab } from '../../common/tab-ids';
 import { JsonTheme } from '../../../lib/tournament/theme';
+import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
+import { TournamentIconComponent } from '../icon/icon.component';
 
 @Component({
     selector: 'app-tournament-navbar',
     templateUrl: './tournamentNavBar.component.html',
     styleUrls: ['./tournamentNavBar.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [TOURNAMENT_UI_IMPORTS, TournamentIconComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TournamentNavBarComponent implements AfterViewChecked {
-  @Input() upperNavBar: TemplateRef<any> | undefined;  
-  @Input() public: boolean = false;
-  @Input() currentScreen!: TournamentScreen;
-  @Input() roles!: Role[];
+  readonly _upperNavBar = input<TemplateRef<any> | undefined>(undefined);  
+  readonly _public = input(false);
+  readonly _currentScreen = input.required<TournamentScreen>();
+  readonly _roles = input.required<Role[]>();
   public tournament = input.required<Tournament>();
   public theme = input.required<JsonTheme>();
 
@@ -47,6 +51,10 @@ export class TournamentNavBarComponent implements AfterViewChecked {
   get CompetitorsScreen(): TournamentScreen { return TournamentScreen.Competitors }
   get SettingsScreen(): TournamentScreen { return TournamentScreen.Settings }
   get CompetitorTabBase(): CompetitorTab { return CompetitorTab.Base } 
+  get upperNavBar(): TemplateRef<any> | undefined { return this._upperNavBar(); }
+  get public(): boolean { return this._public(); }
+  get currentScreen(): TournamentScreen { return this._currentScreen(); }
+  get roles(): Role[] { return this._roles(); }
 
   getBtnClass(screen: TournamentScreen): string {
     if (this.currentScreen === screen) {

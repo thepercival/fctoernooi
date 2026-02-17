@@ -5,7 +5,7 @@ import { Round, CompetitionSport, StructureNameService, Category } from 'ngx-spo
 @Component({
     selector: 'app-ngbd-modal-rounds',
     templateUrl: './selector.component.html',
-    standalone: false
+    
 })
 export class RoundsSelectorModalComponent implements OnInit {
     @Input() subject!: string;

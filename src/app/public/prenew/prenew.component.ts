@@ -5,7 +5,6 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
     selector: 'app-tournament-prenew',
     templateUrl: './prenew.component.html',
     styleUrls: ['./prenew.component.scss'],
-    standalone: false
 })
 export class PreNewComponent {
   constructor(

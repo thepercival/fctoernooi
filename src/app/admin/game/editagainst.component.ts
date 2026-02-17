@@ -33,7 +33,7 @@ import { TranslateScoreService } from '../../lib/translate/score';
     selector: 'app-tournament-againstgame-edit',
     templateUrl: './editagainst.component.html',
     styleUrls: ['./editagainst.component.scss'],
-    standalone: false
+    
 })
 export class GameAgainstEditComponent extends GameEditComponent implements OnInit, AfterViewInit {
 

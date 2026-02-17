@@ -1,36 +1,27 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
 import { EndRankingItem, VoetbalRange, EndRankingCalculator, Category, StructureNameService } from 'ngx-sport';
 import { Favorites } from '../../../lib/favorites';
+import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
 
 @Component({
     selector: 'app-tournament-endranking',
     templateUrl: './end.component.html',
     styleUrls: ['./end.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [TOURNAMENT_UI_IMPORTS],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RankingEndComponent implements OnInit, OnChanges {
-
-  @Input() category!: Category;
-  @Input() structureNameService!: StructureNameService;
-  @Input() favorites: Favorites | undefined;
-  @Input() range: VoetbalRange | undefined;
+export class RankingEndComponent {
+  readonly _category = input.required<Category>();
+  readonly _structureNameService = input.required<StructureNameService>();
+  readonly _favorites = input<Favorites | undefined>(undefined);
+  readonly _range = input<VoetbalRange | undefined>(undefined);
   public rankingItems: EndRankingItem[] = [];
 
   constructor() {
-  }
-
-  ngOnInit() {
-    this.updateItems();
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.category !== undefined && changes.category.currentValue !== changes.category.previousValue
-      && changes.category.firstChange === false) {
+    effect(() => {
       this.updateItems();
-    } else if (changes.range !== undefined && changes.range.isFirstChange() === false
-      && changes.range.currentValue !== changes.range.previousValue) {
-      this.updateItems();
-    }
+    });
   }
 
   protected updateItems() {
@@ -63,5 +54,21 @@ export class RankingEndComponent implements OnInit, OnChanges {
       return 'nog onbekend';
     }
     return this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation)?.getName() ?? 'onbekend';
+  }
+
+  get category(): Category {
+    return this._category();
+  }
+
+  get structureNameService(): StructureNameService {
+    return this._structureNameService();
+  }
+
+  get favorites(): Favorites | undefined {
+    return this._favorites();
+  }
+
+  get range(): VoetbalRange | undefined {
+    return this._range();
   }
 }

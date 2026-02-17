@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { IAlertType } from '../../shared/common/alert';
 import { User } from '../../lib/user';
@@ -17,7 +20,9 @@ import { PaymentState } from '../../lib/payment/state';
     selector: 'app-buycredits',
     templateUrl: './buycredits.component.html',
     styleUrls: ['./buycredits.component.css'],
-    standalone: false
+    standalone: true,
+  imports: [CommonModule, FontAwesomeModule, ReactiveFormsModule, NgbAlertModule],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BuyCreditsComponent extends UserComponent implements OnInit {
   purpose: Purpose | undefined;
@@ -45,7 +50,7 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
     authService: AuthService,
     globalEventsManager: GlobalEventsManager,
     private paymentRepository: PaymentRepository,
-    public myNavigation: MyNavigation
+    public myNavigation: MyNavigation,
   ) {
     super(route, router, userRepository, authService, globalEventsManager);
     this.typedForm = new FormGroup(
@@ -120,12 +125,12 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
           this.user = loggedInUser;
         },
         error: (e: string) => {
-          this.setAlert(IAlertType.Danger, e); this.processing = false;
+          this.setAlert(IAlertType.Danger, e); this.processing.set(false);
         },
-        complete: () => this.processing = false
+        complete: () => this.processing.set(false)
       });
 
-    this.processing = false;
+    this.processing.set(false);
   }
 
   canPay(): boolean {
@@ -210,7 +215,7 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
     }
 
     this.setAlert(IAlertType.Info, 'je wordt doorgestuurd naar de betaalpagina..');
-    this.processing = true;
+    this.processing.set(true);
 
     this.paymentRepository.buyCredits(jsonPayment)
       .subscribe({
@@ -227,7 +232,7 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
         },
         error: (e) => {
           this.setAlert(IAlertType.Danger, 'geen checkoutUrl van backend gekregen: ' + e);
-          this.processing = false;
+          this.processing.set(false);
         }
       });
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, input } from '@angular/core';
 import { Poule, CompetitionSport, RoundRankingCalculator, RoundRankingItem, Cumulative, StructureNameService } from 'ngx-sport';
 
 import { CSSService } from '../../../common/cssservice';
@@ -7,19 +7,22 @@ import { FavoritesRepository } from '../../../../lib/favorites/repository';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PouleRankingModalComponent } from '../../poulerankingmodal/rankingmodal.component';
 import { ViewPort, ViewPortManager, ViewPortNrOfColumnsMap } from '../../../common/viewPortManager';
+import { TOURNAMENT_UI_IMPORTS } from '../../tournament.ui-imports';
 
 @Component({
     selector: 'app-tournament-ranking-sports-table',
     templateUrl: './sports.component.html',
     styleUrls: ['./sports.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [TOURNAMENT_UI_IMPORTS],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingSportsComponent implements OnInit {
-  @Input() poule!: Poule;
-  @Input() competitionSports!: CompetitionSport[];
-  @Input() favorites: Favorites | undefined;
-  @Input() structureNameService!: StructureNameService;
-  @Input() header!: boolean;
+  readonly _poule = input.required<Poule>();
+  readonly _competitionSports = input<CompetitionSport[]>([]);
+  readonly _favorites = input<Favorites | undefined>(undefined);
+  readonly _structureNameService = input.required<StructureNameService>();
+  readonly _header = input.required<boolean>();
   protected roundRankingCalculator: RoundRankingCalculator;
   public roundRankingItems!: RoundRankingItem[];
   public viewPortManager!: ViewPortManager;
@@ -28,11 +31,11 @@ export class RankingSportsComponent implements OnInit {
   viewPointStart: number = 1;
   public showDifferenceDetail = false;
   public processing = true;
-
+  private resolvedCompetitionSports: CompetitionSport[] = [];
+  private modalService = inject(NgbModal);
 
   constructor(
     public cssService: CSSService,
-    private modalService: NgbModal,
     public favRepos: FavoritesRepository) {
     this.roundRankingCalculator = new RoundRankingCalculator(undefined, Cumulative.byPerformance);
   }
@@ -40,7 +43,8 @@ export class RankingSportsComponent implements OnInit {
   ngOnInit() {
     this.processing = true;
     this.roundRankingItems = this.roundRankingCalculator.getItemsForPoule(this.poule);
-    this.competitionSports = this.poule.getCompetition().getSports();
+    const inputSports = this._competitionSports();
+    this.resolvedCompetitionSports = inputSports.length > 0 ? inputSports : this.poule.getCompetition().getSports();
     this.viewPortManager = new ViewPortManager(this.getViewPortNrOfColumnsMap(), this.competitionSports.length);
     this.processing = false;
   }
@@ -77,6 +81,26 @@ export class RankingSportsComponent implements OnInit {
     modalRef.componentInstance.poule = this.poule;
     modalRef.componentInstance.competitionSports = [competitionSport];
     modalRef.componentInstance.favorites = this.favorites;
+  }
+
+  get poule(): Poule {
+    return this._poule();
+  }
+
+  get competitionSports(): CompetitionSport[] {
+    return this.resolvedCompetitionSports;
+  }
+
+  get favorites(): Favorites | undefined {
+    return this._favorites();
+  }
+
+  get structureNameService(): StructureNameService {
+    return this._structureNameService();
+  }
+
+  get header(): boolean {
+    return this._header();
   }
 }
 

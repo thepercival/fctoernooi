@@ -1,4 +1,4 @@
-import { Component, Input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { HorizontalSingleQualifyRule, QualifyDistribution, QualifyGroup, QualifyTarget, Round, StructureEditor, StructureNameService, VerticalSingleQualifyRule } from 'ngx-sport';
 
 import { IAlert, IAlertType } from '../../common/alert';
@@ -8,26 +8,30 @@ import { CSSService } from '../../common/cssservice';
 import { StructureAction, StructureActionName } from '../../../admin/structure/edit.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { QualifyModalComponent } from './qualifymodal.component';
+import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
 
 
 @Component({
     selector: 'app-tournament-structurequalify',
     templateUrl: './qualify.component.html',
     styleUrls: ['./qualify.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [TOURNAMENT_UI_IMPORTS],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructureQualifyComponent {
-    @Input() structureEditor!: StructureEditor;
-    @Input() parentRound!: Round;
-    @Input() structureNameService!: StructureNameService;
-    @Input() lastAction: StructureAction | undefined;
+    readonly _structureEditor = input.required<StructureEditor>();
+    readonly _parentRound = input.required<Round>();
+    readonly _structureNameService = input.required<StructureNameService>();
+    readonly _lastAction = input<StructureAction | undefined>(undefined);
     
-    onActionAdd = output<StructureAction>();
+    readonly onActionAdd = output<StructureAction>();
 
     alert: IAlert | undefined;
 
+    private modalService = inject(NgbModal);
+
     constructor(
-        private modalService: NgbModal,
         public cssService: CSSService) {
         this.resetAlert();
     }
@@ -244,6 +248,22 @@ export class StructureQualifyComponent {
 
     protected setAlert(type: IAlertType, message: string) {
         this.alert = { type: type, message: message };
+    }
+
+    get structureEditor(): StructureEditor {
+        return this._structureEditor();
+    }
+
+    get parentRound(): Round {
+        return this._parentRound();
+    }
+
+    get structureNameService(): StructureNameService {
+        return this._structureNameService();
+    }
+
+    get lastAction(): StructureAction | undefined {
+        return this._lastAction();
     }
 }
 

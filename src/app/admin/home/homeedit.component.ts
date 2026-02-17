@@ -23,7 +23,7 @@ import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.
     selector: 'app-tournament-home-edit',
     templateUrl: './homeedit.component.html',
     styleUrls: ['./homeedit.component.scss'],
-    standalone: false
+    
 })
 export class HomeEditComponent extends TournamentComponent implements OnInit {
 

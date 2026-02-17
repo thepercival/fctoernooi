@@ -16,7 +16,7 @@ import { PrintServiceModalComponent } from './print-service-modal.component';
     selector: 'app-ngbd-modal-export-config',
     templateUrl: './exportmodal.component.html',
     styleUrls: ['./exportmodal.component.scss'],
-    standalone: false
+    
 })
 export class ExportModalComponent implements OnInit, OnDestroy {
     tournament: Tournament|undefined;

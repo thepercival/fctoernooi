@@ -23,7 +23,7 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     selector: 'app-tournament-referee-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css'],
-    standalone: false
+    
 })
 export class RefereeEditComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup<{

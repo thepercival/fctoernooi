@@ -18,7 +18,7 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     selector: 'app-tournament-referee',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
-    standalone: false
+    
 })
 export class RefereeListComponent extends TournamentComponent implements OnInit {
   public refereeItems!: RefereeItem[];

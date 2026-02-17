@@ -24,7 +24,7 @@ import { CompetitorTab } from '../../shared/common/tab-ids';
     selector: 'app-tournament-lockerrooms-edit',
     templateUrl: './lockerrooms.component.html',
     styleUrls: ['./lockerrooms.component.scss'],
-    standalone: false
+    
 })
 export class LockerRoomsEditComponent extends TournamentComponent implements OnInit {
   hasCompetitors = false;

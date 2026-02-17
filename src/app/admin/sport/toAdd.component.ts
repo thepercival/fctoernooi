@@ -12,7 +12,7 @@ import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.
     selector: 'app-tournament-sport-to-add',
     templateUrl: './toAdd.component.html',
     styleUrls: ['./toAdd.component.scss'],
-    standalone: false
+    
 })
 export class SportToAddComponent implements OnInit {
     sportToAdd = output<Sport>();

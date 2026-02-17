@@ -22,7 +22,7 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     selector: 'app-tournament-sponsor',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
-    standalone: false
+    
 })
 export class SponsorListComponent extends TournamentComponent implements OnInit {
   sponsors: Sponsor[] = [];

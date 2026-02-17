@@ -21,7 +21,7 @@ import { TournamentCompetitor } from '../../lib/competitor';
     selector: 'app-tournament-games-edit',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.css'],
-    standalone: false
+    
 })
 export class GameListComponent extends TournamentComponent implements OnInit {
   userRefereeId: number | string | undefined;

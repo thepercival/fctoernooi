@@ -6,7 +6,6 @@ import { TournamentAuthorizationRole } from './list.component';
     selector: 'app-tournament-authorization-role',
     templateUrl: './roleitem.component.html',
     styleUrls: ['./roleitem.component.scss'],
-    standalone: false
 })
 export class RoleItemComponent implements OnInit {
     role = input.required<TournamentAuthorizationRole>();

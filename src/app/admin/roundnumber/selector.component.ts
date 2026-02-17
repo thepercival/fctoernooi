@@ -5,7 +5,7 @@ import { Structure, RoundNumber, NameService, StructureNameService } from 'ngx-s
 @Component({
     selector: 'app-ngbd-modal-roundnumbers',
     templateUrl: './selector.component.html',
-    standalone: false
+    
 })
 export class RoundNumbersSelectorModalComponent implements OnInit {
     @Input() structure!: Structure;

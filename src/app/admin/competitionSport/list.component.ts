@@ -33,7 +33,6 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
     selector: 'app-tournament-sport',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
-    standalone: false
 })
 export class CompetitionSportListComponent extends TournamentComponent implements OnInit {
   public smallestNrOfPoulePlaces!: number;
@@ -42,6 +41,8 @@ export class CompetitionSportListComponent extends TournamentComponent implement
   public nameService = new NameService();
   public hasBegun!: boolean;
   public maxReached = true;
+
+  private modalService = inject(NgbModal);
 
   validations: any = {
     'minlengthname': Sport.MIN_LENGTH_NAME,
@@ -54,12 +55,11 @@ export class CompetitionSportListComponent extends TournamentComponent implement
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     globalEventsManager: GlobalEventsManager,
-    modalService: NgbModal,
     favRepository: FavoritesRepository,
     private competitionSportRepository: CompetitionSportRepository,
     private planningRepository: PlanningRepository
   ) {
-    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, favRepository);
   }
 
   ngOnInit() {

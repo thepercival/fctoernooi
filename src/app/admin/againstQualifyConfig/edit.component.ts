@@ -27,7 +27,6 @@ import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
     selector: 'app-tournament-qualifyagainstconfig-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.scss'],
-    standalone: false
 })
 export class AgainstQualifyConfigEditComponent implements OnInit {
     @Input() tournament!: Tournament;
@@ -58,14 +57,14 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
         maxLosePoints: 5,
     };
 
-    constructor(
-        private againstQualifyConfigRepository: AgainstQualifyConfigRepository,
-        public cssService: CSSService,
-        private competitionSportMapper: CompetitionSportMapper,
-        private mapper: AgainstQualifyConfigMapper,
-        private router: Router,
-        private modalService: NgbModal
-    ) {
+    private againstQualifyConfigRepository = inject(AgainstQualifyConfigRepository);
+    cssService = inject(CSSService);
+    private competitionSportMapper = inject(CompetitionSportMapper);
+    private mapper = inject(AgainstQualifyConfigMapper);
+    private router = inject(Router);
+    private modalService = inject(NgbModal);
+
+    constructor() {
         this.typedForm = new FormGroup({
             pointsCalculation: new FormControl(PointsCalculation.AgainstGamePoints, { nonNullable: true }),
             winPoints: new FormControl(0, { nonNullable: true }),

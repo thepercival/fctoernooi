@@ -6,12 +6,17 @@
           <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemer <span>{{originalCompetitor !== undefined ?
             'wijzigen' : 'toevoegen'}}</span>
         </h2>
-        <h2 *ngIf="processing">
+        @if(processing) {
+        <h2>
           <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
         </h2>
+        }
       </div>
-      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
+      @if(alert) {
+      <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+      }
+      @if(!processing) {
+      <form name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
         <div class="row mb-3">
           <div class="col-3">
             <label for="place" class="col-form-label">plek</label>
@@ -63,7 +68,8 @@
           </div>
         </div>
 
-        <div *ngIf="logoInputType === LogoInputTypeByUpload" class="row mb-3">
+        @if(logoInputType === LogoInputTypeByUpload) {
+        <div class="row mb-3">
           <div class="col-3">
             <label for="logouploadother" (click)="openInfoModal(contentLogoInfo, 'uitleg upload logo')" class="col-form-label pointer">logo
               <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
@@ -73,8 +79,10 @@
             <input type="file" accept='image/*' class="form-control" (change)="onFileChange($event)" #fileInput>
           </div>
         </div>
+        }
 
-        <div *ngIf="tournament.getPublic()" class="row mb-3">
+        @if(tournament.getPublic()) {
+        <div class="row mb-3">
           <div class="col-3">
             <label for="publicInfo" (click)="openInfoModal(contentInfoInfo, 'uitleg publieke info')" class="col-form-label pointer">publieke info
               <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
@@ -86,6 +94,7 @@
               formControlName="publicInfo" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>
+        }
 
         <div class="row mb-3">
           <div class="col-3">
@@ -110,7 +119,8 @@
           </div>
         </div>
 
-        <div *ngIf="base64Logo || typedForm.controls.logoExtension.value" class="row">
+        @if(base64Logo || typedForm.controls.logoExtension.value) {
+        <div class="row">
           <div class="col-3">
             <label for="log">preview</label>
             <br />
@@ -120,13 +130,18 @@
             </button>
           </div>
           <div class="col-9">
-            <img *ngIf="base64Logo" [src]="base64Logo" width="150px;" height="150px;">
-            <img *ngIf="!base64Logo && typedForm.controls.logoExtension.value && originalCompetitor"
-              [src]="getCompetitorLogoUrl(originalCompetitor)" width="150px;" height="150px;">
+            @if(base64Logo) {
+            <img [src]="base64Logo" width="150px;" height="150px;">
+            }
+            @if(!base64Logo && typedForm.controls.logoExtension.value && originalCompetitor) {
+            <img [src]="getCompetitorLogoUrl(originalCompetitor)" width="150px;" height="150px;">
+            }
           </div>
         </div>
+        }
 
       </form>
+      }
     </div>
   </div>
 </div>
@@ -141,4 +156,6 @@
       <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers-scherm
     </button></div>
 </ng-template>
-<app-tournament-navbar *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)"></app-tournament-navbar>
+@if(tournament) {
+<app-tournament-navbar [tournament]="tournament" [theme]="getTheme(tournament)"></app-tournament-navbar>
+}

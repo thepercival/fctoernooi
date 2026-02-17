@@ -34,7 +34,7 @@ import { TournamentRegistrationSettings } from '../../lib/tournament/registratio
     selector: 'app-tournament-home-admin',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css'],
-    standalone: false
+    
 })
 export class HomeAdminComponent extends TournamentComponent implements OnInit {
 

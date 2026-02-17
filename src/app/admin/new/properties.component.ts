@@ -12,7 +12,7 @@ import { StartEditMode } from '../../lib/tournament/startEditMode';
     selector: 'app-tournament-properties',
     templateUrl: './properties.component.html',
     styleUrls: ['./properties.component.scss'],
-    standalone: false
+    
 })
 export class TournamentPropertiesComponent implements OnInit {
   

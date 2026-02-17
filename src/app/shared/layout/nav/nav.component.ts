@@ -1,16 +1,21 @@
-import { AfterContentInit, Component, ElementRef, OnInit, input } from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 import { AuthService } from '../../../lib/auth/auth.service';
 import { GlobalEventsManager } from '../../../shared/common/eventmanager';
 import { LiveboardLink } from '../../../lib/liveboard/link';
 import { Router } from '@angular/router';
 import { DefaultJsonTheme, JsonTheme } from '../../../lib/tournament/theme';
+import { SvgIconComponent } from '../svgicon.component';
 
 @Component({
     selector: 'app-nav',
     templateUrl: './nav.component.html',
     styleUrls: ['./nav.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, RouterModule, SvgIconComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavComponent implements OnInit, AfterContentInit {
 

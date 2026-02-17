@@ -15,7 +15,7 @@ import { DateFormatter } from '../../../lib/dateFormatter';
     selector: 'app-tournament-registrations-settings',
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.scss'],
-    standalone: false
+    
 })
 export class RegistrationSettingsComponent implements OnInit{
   public tournament = input.required<Tournament>();
