@@ -1,324 +1,429 @@
-  
 <!-- START HEADER (ROUNDNUMBER X "SETTINGS") -->
-<tr *ngIf="tournament">
+@if(tournament) {
+<tr>
   <td [attr.colspan]="nrOfColumns" class="border-0">
-    <div class="d-flex flex-justify-between" ngClass="{'mt-3': !roundNumber.isFirst()}">
+    <div class="d-flex flex-justify-between" [class.mt-3]="!roundNumber.isFirst()">
         
         <h4 class="me-auto">
           <span [innerHTML]="structureNameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
-          <button *ngIf="refreshingData !== undefined && gameDatas.length > 0" type="button"
+          @if(refreshingData !== undefined && gameDatas.length > 0) {
+          <button type="button"
             class="btn btn-sm btn-outline-secondary ms-1" (click)="onDataRefresh.emit()" [disabled]="refreshingData">
             <fa-icon [icon]="['fas', 'sync']" [animation]="refreshingData ? 'spin' : undefined"></fa-icon>
           </button>
+          }
         </h4>
         
         <div>
-          <button *ngIf="showToggleFavorites" type="button"
+          @if(showToggleFavorites) {
+          <button type="button"
             class="btn btn-sm btn-outline-{{filterFavorites ? 'primary' : 'secondary'}}" (click)="toggleFilterFavorites()">
           
             <span>toon</span>
-            <fa-icon *ngIf="!filterFavorites" [icon]="['fas', 'star']"></fa-icon>
+            @if(!filterFavorites) {
+            <fa-icon [icon]="['fas', 'star']"></fa-icon>
+            }
             <span> {{filterFavorites ? 'alles' : 'favorieten'}}</span>
           </button>
-          <button *ngIf="showLinksToAdmin" type="button" class="btn btn-primary" (click)="linkToPlanningConfig()">
+          }
+          @if(showLinksToAdmin) {
+          <button type="button" class="btn btn-primary" (click)="linkToPlanningConfig()">
             <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellen
           </button>
+          }
         </div>
     </div>
   </td>  
 </tr>
+}
 <!-- END HEADER (ROUNDNUMBER X "SETTINGS") -->
       
-<ng-container *ngIf="showError(); else showProgressAndManual">
-  <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-</ng-container>
-<ng-template #showProgressAndManual>
+@if(showError()) {
+  @if(alert) {
+  <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+  }
+} @else {
 
   <tr class="border-0 border-white">
     <td [attr.colspan]="nrOfColumns" class="p-0">
-      <ngb-alert *ngIf="showLinksToAdmin && inManualMode()" type="warning">handmatig plannen staat aan</ngb-alert>
+      @if(showLinksToAdmin && inManualMode()) {
+      <ngb-alert type="warning">handmatig plannen staat aan</ngb-alert>
+      }
     </td>
   </tr>
 
-  <ng-container *ngIf="!allGamesFiltered; else allGamesFilteredTemplateId">
-    <tr *ngIf="gameDatas.length === 0 && !inManualMode()" class="border-0 border-white">
+  @if(!allGamesFiltered) {
+    @if(gameDatas.length === 0 && !inManualMode()) {
+    <tr class="border-0 border-white">
       <td [attr.colspan]="nrOfColumns" class="p-0">    
         <ngb-alert class=" mt-1 text-center" type="info">
-          <h3><fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon></h3>
+          <h3><fa-icon [icon]="['fas', 'spinner']" animation="spin"></fa-icon></h3>
           <br/>
-          <span *ngIf="progressPerc === 0">Het berekenen van de wedstrijdplanning staat in de wachtrij. Een moment
+          @if(progressPerc === 0) {
+          <span>Het berekenen van de wedstrijdplanning staat in de wachtrij. Een moment
             geduld alsjeblieft.</span>
-          <span *ngIf="progressPerc > 0">De wedstrijdplanning wordt berekend ...</span>
+          }
+          @if(progressPerc > 0) {
+          <span>De wedstrijdplanning wordt berekend ...</span>
+          }
         </ngb-alert>
-        <ngb-progressbar *ngIf="progressPerc > 0" class="custom-progress mt-4 mx-auto" type="info"
+        @if(progressPerc > 0) {
+        <ngb-progressbar class="custom-progress mt-4 mx-auto" type="info"
           [value]="progressPerc">
           <i>{{progressPerc}}%</i>
         </ngb-progressbar>
+        }
       </td>
     </tr>
-  </ng-container>
-  <ng-template #allGamesFilteredTemplateId>
+    }
+  } @else {
     <tr class="border-0 border-white">
       <td [attr.colspan]="nrOfColumns" class="p-0">          
         <ngb-alert type="info">geen wedstrijden, pas je {{allFilteredSubjects.join(' of ')}} aan</ngb-alert>
       </td>
     </tr>
-  </ng-template>
+  }
 
-  <tr *ngIf="refreshingData" class="border-0 border-white">
+  @if(refreshingData) {
+  <tr class="border-0 border-white">
     <td [attr.colspan]="nrOfColumns" class="p-0">
       <ngb-alert type="info">de uitslagen worden bijgewerkt</ngb-alert>
     </td>
   </tr>
-</ng-template>
+  }
+}
 
 <!-- START GAMES-->
-<tr *ngIf="gameDatas.length > 0">
+@if(gameDatas.length > 0) {
+<tr>
   <!-- category -->
-  <th *ngIf="favoriteCategories.length > 1" class="category-column">
+  @if(favoriteCategories.length > 1) {
+  <th class="category-column">
     <span class="d-none d-sm-inline">categorie</span>
   </th>
+  }
   <!-- poule -->
   <th class="text-center px-0">
-    <button *ngIf="needsRanking && hasMultiplePoules" type="button"
+    @if(needsRanking && hasMultiplePoules) {
+    <button type="button"
       class="btn btn-sm btn-outline-{{ gameOrder === OrderByDate ? 'secondary' : 'primary' }}"
       (click)="sortGames()">
       <fa-icon [icon]="['fas', 'list-ul']" title="poule">
       </fa-icon>
     </button>
-    <span *ngIf="needsRanking && !hasMultiplePoules">
+    }
+    @if(needsRanking && !hasMultiplePoules) {
+    <span>
       <fa-icon [icon]="['fas', 'list-ul']" title="poule"></fa-icon>
     </span>
-    <span *ngIf="!needsRanking" title="wedstrijd">vs</span>
+    }
+    @if(!needsRanking) {
+    <span title="wedstrijd">vs</span>
+    }
   </th>
   <!-- start -->
-  <th *ngIf="showStartColumn">
+  @if(showStartColumn) {
+  <th>
     <button class="btn btn-sm btn-outline-info" (click)="openInfoModal('wedstrijdplanning',planningInfo)">
       <span>start</span>
     </button>
   </th>
+  }
   <!-- field -->
   <th class="px-1">
-    <button *ngIf="showLinksToAdmin" title="wijzig velden"
+    @if(showLinksToAdmin) {
+    <button title="wijzig velden"
       class="btn btn-sm btn-outline-{{tournamentHasBegun ? 'warning' : 'secondary'}}"
       (click)="linkToCompetitionSport(SportConfigTabFields)">
       <app-tournament-icon name="soccer-field"></app-tournament-icon>
     </button>
-    <app-tournament-icon *ngIf="!showLinksToAdmin" title="veld" name="soccer-field"></app-tournament-icon>
+    }
+    @if(!showLinksToAdmin) {
+    <app-tournament-icon title="veld" name="soccer-field"></app-tournament-icon>
+    }
   </th>
   <!-- sport -->
-  <th *ngIf="showSportColumn" class="d-none d-sm-table-cell">
-    <button *ngIf="showLinksToAdmin" title="wijzig sport"
+  @if(showSportColumn) {
+  <th class="d-none d-sm-table-cell">
+    @if(showLinksToAdmin) {
+    <button title="wijzig sport"
       class="btn btn-sm btn-outline-{{tournamentHasBegun ? 'warning' : 'secondary'}}"
       (click)="linkToCompetitionSport(SportConfigTabFields)">
       sport
     </button>
-    <span *ngIf="!showLinksToAdmin">sport</span>
+    }
+    @if(!showLinksToAdmin) {
+    <span>sport</span>
+    }
   </th>
+  }
   <!-- gamePlaces & score -->
-  <th *ngIf="hasOnlyGameModeAgainst" class="text-end">thuis</th>
-  <th *ngIf="hasOnlyGameModeAgainst" class="text-center">
-    <button *ngIf="showLinksToAdmin" title="wijzig score-regels"
+  @if(hasOnlyGameModeAgainst) {
+  <th class="text-end">thuis</th>
+  <th class="text-center">
+    @if(showLinksToAdmin) {
+    <button title="wijzig score-regels"
       class="btn btn-sm btn-outline-{{hasBegun ? 'warning' : 'secondary'}}"
       (click)="linkToCompetitionSport(SportConfigTabScore)">
       <app-tournament-icon name="scoreboard"></app-tournament-icon>
     </button>
-    <button *ngIf="!showLinksToAdmin && getUniqueScoreConfigs().length > 0" title="score"
+    }
+    @if(!showLinksToAdmin && getUniqueScoreConfigs().length > 0) {
+    <button title="score"
       class="btn btn-sm btn-outline-info" (click)="openInfoModal('score informatie',scoreInfo)">
       <app-tournament-icon name="scoreboard"></app-tournament-icon>
     </button>
+    }
   </th>
-  <th *ngIf="hasOnlyGameModeAgainst">uit</th>
-  <th *ngIf="!hasOnlyGameModeAgainst" colspan="3" class="text-center">deelnemers & score</th>
+  <th>uit</th>
+  }
+  @if(!hasOnlyGameModeAgainst) {
+  <th colspan="3" class="text-center">deelnemers & score</th>
+  }
   <!-- referee -->
-  <th *ngIf="showRefereeColumn" class="text-end {{hasGameModeAgainst ? 'd-none d-sm-table-cell' : ''}}"
+  @if(showRefereeColumn) {
+  <th class="text-end {{hasGameModeAgainst ? 'd-none d-sm-table-cell' : ''}}"
     title="scheidsrechter">
-    <ng-container *ngIf="showLinksToAdmin && !planningConfig.getSelfReferee(); else noAdminOrSelfReferee">
+    @if(showLinksToAdmin && !planningConfig.getSelfReferee()) {
       <button title="wijzig scheidsrechters"
         class="btn btn-sm btn-outline-{{tournamentHasBegun ? 'warning' : 'secondary'}}" (click)="linkToReferee()">
         <app-tournament-icon name="referee"></app-tournament-icon>
       </button>
-    </ng-container>
-    <ng-template #noAdminOrSelfReferee>
+    } @else {
       <app-tournament-icon name="referee"></app-tournament-icon>
-    </ng-template>
+    }
   </th>
+  }
 </tr>
+}
 
-<ng-template ngFor let-gmData [ngForOf]="gameDatas">
+@for(gmData of gameDatas; track gmData) {
   <!-- recess -->
-  <tr *ngIf="gmData.recess" class="table-info">
-    <td *ngIf="favoriteCategories.length > 1"></td>
+  @if(gmData.recess) {
+  <tr class="table-info">
+    @if(favoriteCategories.length > 1) {
     <td></td>
-    <td *ngIf="showStartColumn">
-      <span *ngIf="!sameDay">{{gmData.recess.startDate}} </span>
+    }
+    <td></td>
+    @if(showStartColumn) {
+    <td>
+      @if(!sameDay) {
+      <span>{{gmData.recess.startDate}} </span>
+      }
       <span>{{gmData.recess.startTime}}</span>
     </td>
+    }
     <td></td>
     <td colspan="3" class="text-center">{{gmData.recess.name}}</td>
-    <td *ngIf="showRefereeColumn" class="{{hasGameModeAgainst ? 'd-none d-sm-table-cell' : ''}}"></td>
+    @if(showRefereeColumn) {
+    <td class="{{hasGameModeAgainst ? 'd-none d-sm-table-cell' : ''}}"></td>
+    }
   </tr>
+  }
 
   <tr class="{{getAlternateClass(gmData)}}">
     <!-- category-->
-    <td *ngIf="favoriteCategories.length > 1" class="category-column">
+    @if(favoriteCategories.length > 1) {
+    <td class="category-column">
       <span class="d-inline d-sm-none badge bg-dark text-light">{{gmData.poule.categoryAbbreviation}}</span>
       <span class="d-none d-sm-inline badge bg-dark text-light">{{gmData.poule.categoryName}}</span>
     </td>
+    }
     <!-- poule -->
     <td class="text-center px-0">
       <!-- no popover-->
-      <span *ngIf="!gmData.hasPopover"
+      @if(!gmData.hasPopover) {
+      <span
         class="badge badge-rank fs-custom fw-normal {{cssService.getQualifyRound(gmData.poule.round)}}">{{gmData.poule.name}}</span>
+      }
       <!-- button with ranking-modal -->
-      <button *ngIf="gmData.hasPopover && gmData.poule.needsRanking"
+      @if(gmData.hasPopover && gmData.poule.needsRanking) {
+      <button
         class="btn btn-sm {{cssService.getQualifyRound(gmData.poule.round,'btn-outline-info')}}"
         (click)="openModalPouleRank(gmData.game.getPoule())">
         <span>{{gmData.poule.name}}</span>
       </button>
+      }
       <!-- button popover no ranking -->
-      <button *ngIf="gmData.hasPopover && !gmData.poule.needsRanking"
+      @if(gmData.hasPopover && !gmData.poule.needsRanking) {
+      <button
         class="btn btn-sm {{cssService.getQualifyRound(gmData.poule.round,'btn-outline-info')}}" placement="right"
-        [ngbPopover]="popContent" [popoverContext]="{ game: gmData.game }">
+        ngbPopover="popContent" popoverContext="{ game: gmData.game }">
         <span>{{gmData.poule.name}}</span>
       </button>
+      }
     </td>
     <!-- datetime -->
-    <td *ngIf="showStartColumn">
-      <span *ngIf="!sameDay && planningConfig.getEnableTime()">{{dateFormatter.toString(gmData.game.getStartDateTime(),
+    @if(showStartColumn) {
+    <td>
+      @if(!sameDay && planningConfig.getEnableTime()) {
+      <span>{{dateFormatter.toString(gmData.game.getStartDateTime(),
         dateFormatter.date())}} </span>
-      <span *ngIf="planningConfig.getEnableTime()">{{dateFormatter.toString(gmData.game.getStartDateTime(), dateFormatter.time())}}</span>
+      }
+      @if(planningConfig.getEnableTime()) {
+      <span>{{dateFormatter.toString(gmData.game.getStartDateTime(), dateFormatter.time())}}</span>
+      }
     </td>
+    }
     <!-- field -->
     <td class="px-1">
-      <span *ngIf="!showSportColumn">
+      @if(!showSportColumn) {
+      <span>
         {{gmData.game.getField()?.getName()}}
       </span>
-      <span *ngIf="showSportColumn" class="d-none d-sm-table-cell">
+      }
+      @if(showSportColumn) {
+      <span class="d-none d-sm-table-cell">
         {{gmData.game.getField()?.getName()}}
       </span>
-      <button *ngIf="showSportColumn" class="btn btn-outline-info btn-sm d-sm-none" placement="bottom" [ngbPopover]="getSportName(gmData.game.getField())">
+      <button class="btn btn-outline-info btn-sm d-sm-none" placement="bottom" ngbPopover="getSportName(gmData.game.getField())">
         <span>{{gmData.game.getField()?.getName()}}</span>
       </button>
+      }
     </td>
     <!-- sport -->
-    <td *ngIf="showSportColumn" class="d-none d-sm-table-cell">
+    @if(showSportColumn) {
+    <td class="d-none d-sm-table-cell">
       {{gmData.game.getField()?.getCompetitionSport()?.getSport()?.getName()}}
     </td>
+    }
     <!-- gamePlaces & score -->
-    <ng-container *ngIf="isAgainst(gmData.game)">
-      <ng-container *ngTemplateOutlet="againstGamePlacesCell;context:{$implicit: gmData}"></ng-container>
-    </ng-container>
-    <ng-container *ngIf="!isAgainst(gmData.game)">
-      <ng-container *ngTemplateOutlet="togetherGamePlaces;context:{$implicit: gmData}"></ng-container>
-    </ng-container>
+    @if(isAgainst(gmData.game)) {
+      <ng-container [ngTemplateOutlet]="againstGamePlacesCell" [ngTemplateOutletContext]="{$implicit: gmData}"></ng-container>
+    }
+    @if(!isAgainst(gmData.game)) {
+      <ng-container [ngTemplateOutlet]="togetherGamePlaces" [ngTemplateOutletContext]="{$implicit: gmData}"></ng-container>
+    }
     <!-- referee -->
-    <td *ngIf="showRefereeColumn" class="{{hasGameModeAgainst ? 'd-none d-sm-table-cell' : ''}} text-end"
-      ngClass="{'favitem': favorites?.hasGameReferee(gmData.game) }">
+    @if(showRefereeColumn) {
+    <td class="{{hasGameModeAgainst ? 'd-none d-sm-table-cell' : ''}} text-end"
+      [class.favitem]="favorites?.hasGameReferee(gmData.game)">
       {{getRefereeName(gmData.game)}}</td>
+    }
   </tr>
-</ng-template>
+}
 <!-- END -->
 
-<tr *ngIf="showLinksToAdmin && inManualMode()" class="">
+@if(showLinksToAdmin && inManualMode()) {
+<tr class="">
   <td [attr.colspan]="nrOfColumns" class="text-center">
     <button type="button" class="btn btn-sm btn-outline-primary" (click)="linkToGameAdd()">
       <fa-icon [icon]="['fas', 'plus']"></fa-icon> wedstrijd toevoegen
     </button>
   </td>
 </tr>
+}
 
 <ng-template #againstGamePlacesCell let-gmData>
   <!-- homePlaces -->
-  <td class="text-end text-break" ngClass="{'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, Home) }">
+  <td class="text-end text-break" [class.favitem]="favorites?.hasAgainstGameCompetitor(gmData.game, Home)">
 
-    <ng-template ngFor let-homeGamePlace let-first="first" [ngForOf]="gmData.game.getHomePlaces()">
-      <span *ngIf="!first"> & </span>
+    @for(homeGamePlace of gmData.game.getHomePlaces(); track homeGamePlace; let first = $first) {
+      @if(!first) {
+      <span> & </span>
+      }
       <span [innerHTML]="structureNameService.getPlaceFromName(homeGamePlace.getPlace(),true,true) | keepHtml"></span>
-      <img *ngIf="hasLogo(homeGamePlace.getPlace())" class="ms-1" [src]="getCompetitorLogoUrl(homeGamePlace.getPlace())" height="20" width="20">
-    </ng-template>
+      @if(hasLogo(homeGamePlace.getPlace())) {
+      <img class="ms-1" [src]="getCompetitorLogoUrl(homeGamePlace.getPlace())" height="20" width="20">
+      }
+    }
     
   </td>
   <!-- score -->
   <td class="text-center text-nowrap">
 
-    <ng-container *ngIf="gmData.canChangeResult; else canNotChangeResult">
+    @if(gmData.canChangeResult) {
       <button class="btn btn-sm btn-outline-primary" (click)="linkToGameEdit(gmData.game)">
-        <fa-icon *ngIf="!isFinished(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
-        <span *ngIf="isFinished(gmData.game)">{{getAgainstScore(gmData.game)}}</span>
+        @if(!isFinished(gmData.game)) {
+        <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+        }
+        @if(isFinished(gmData.game)) {
+        <span>{{getAgainstScore(gmData.game)}}</span>
+        }
       </button>
-    </ng-container>
-    <ng-template #canNotChangeResult>
+    } @else {
       <span class="d-none d-sm-inline">{{getAgainstScore(gmData.game)}}</span>
 
-      <ng-container
-        *ngIf="(gmData.game.getReferee() || gmData.game.getRefereePlace()) && !isFinished(gmData.game); else noRefOrFinished">
+      @if((gmData.game.getReferee() || gmData.game.getRefereePlace()) && !isFinished(gmData.game)) {
         <button class="btn btn-outline-info btn-sm d-sm-none" placement="bottom"
-          [ngbPopover]="getRefereeName(gmData.game, false)">
-          <span ngClass="{'favitem': favorites?.hasGameReferee(gmData.game) }">
+          ngbPopover="getRefereeName(gmData.game, false)">
+          <span [class.favitem]="favorites?.hasGameReferee(gmData.game)">
             <app-tournament-icon name="referee"></app-tournament-icon>
           </span>
         </button>
-      </ng-container>
-      <ng-template #noRefOrFinished>
+      } @else {
         <span class="d-sm-none fw-bold">{{getAgainstScore(gmData.game)}}</span>
-      </ng-template>
-
-    </ng-template>
+      }
+    }
 
   </td>
   <!-- awayPlaces -->
-  <td class="text-break" ngClass="{ 'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, Away) }">
-    <ng-template ngFor let-awayGamePlace let-first="first" [ngForOf]="gmData.game.getAwayPlaces()">
-      <span *ngIf="!first"> & </span>
-      <img *ngIf="hasLogo(awayGamePlace.getPlace())" class="me-1" [src]="getCompetitorLogoUrl(awayGamePlace.getPlace())"
+  <td class="text-break" [class.favitem]="favorites?.hasAgainstGameCompetitor(gmData.game, Away)">
+    @for(awayGamePlace of gmData.game.getAwayPlaces(); track awayGamePlace; let first = $first) {
+      @if(!first) {
+      <span> & </span>
+      }
+      @if(hasLogo(awayGamePlace.getPlace())) {
+      <img class="me-1" [src]="getCompetitorLogoUrl(awayGamePlace.getPlace())"
         height="20" width="20">
+      }
       <span [innerHTML]="structureNameService.getPlaceFromName(awayGamePlace.getPlace(),true,true) | keepHtml"></span>
       
-    </ng-template>
+    }
   </td>
 </ng-template>
 
 <ng-template #togetherGamePlaces let-gmData>
   <!-- <button *ngIf="!gmData.canChangeResult && hasReferees && !isPlayed(gmData.game)"
       class="btn btn-outline-info btn-sm d-sm-none" placement="top" [ngbPopover]="getRefereeName(gmData.game)">
-      <span ngClass="{'favitem': favorites?.hasGameReferee(gmData.game) }">
+      <span [class.favitem]="favorites?.hasGameReferee(gmData.game)">
         <app-tournament-icon name="referee"></app-tournament-icon>
       </span>
     </button> -->
 
   <td colspan="3" class="text-break pb-0">
-    <ng-container *ngIf="gmData.canChangeResult; else canNotChangeResult">
+    @if(gmData.canChangeResult) {
       <div class="d-flex flex-wrap gap-2 justify-content-center mb-2">
-        <div *ngFor="let gamePlace of gmData.game.getTogetherPlaces()" class="btn-group" role="group">
+        @for(gamePlace of gmData.game.getTogetherPlaces(); track gamePlace) {
+        <div class="btn-group" role="group">
           <div class="list-group-item border-start-0 me-1"
-            ngClass="{'favitem': favorites?.hasTogetherGameCompetitor(gmData.game) }">
+            [class.favitem]="favorites?.hasTogetherGameCompetitor(gmData.game)">
             <span [innerHtml]="structureNameService.getPlaceFromName(gamePlace.getPlace(),true,true) | keepHtml"></span>
           </div>          
-          <img *ngIf="hasLogo(gamePlace.getPlace())" class="me-1"
+          @if(hasLogo(gamePlace.getPlace())) {
+          <img class="me-1"
             [src]="getCompetitorLogoUrl(gamePlace.getPlace())" height="20" width="20">
+          }
           
           <button class="btn btn-sm border border-{{getTogetherScoreBtnBorderClass(gamePlace)}} me-1"
             (click)="linkToGameEdit(gmData.game)">
-            <fa-icon *ngIf="!isFinished(gmData.game)" [icon]="['fas', 'pencil-alt']"></fa-icon>
-            <span *ngIf="isFinished(gmData.game)">{{getTogetherScore(gamePlace)}}</span>
+            @if(!isFinished(gmData.game)) {
+            <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+            }
+            @if(isFinished(gmData.game)) {
+            <span>{{getTogetherScore(gamePlace)}}</span>
+            }
           </button>
         </div>
+        }
       </div>
-    </ng-container>
-    <ng-template #canNotChangeResult>
+    } @else {
       <div class="d-flex flex-wrap gap-2 justify-content-center">
-        <ul *ngFor="let gamePlace of gmData.game.getTogetherPlaces()" class="list-group list-group-horizontal">
-          <li ngClass="{'favitem': favorites?.hasTogetherGameCompetitor(gmData.game) }"
+        @for(gamePlace of gmData.game.getTogetherPlaces(); track gamePlace) {
+        <ul class="list-group list-group-horizontal">
+          <li [class.favitem]="favorites?.hasTogetherGameCompetitor(gmData.game)"
             class="list-group-item border-start-0">
             <span [innerHtml]="structureNameService.getPlaceFromName(gamePlace.getPlace(),true,true) | keepHtml"></span>
           </li>
-          <li *ngIf="isFinished(gmData.game)" class="list-group-item me-1">
+          @if(isFinished(gmData.game)) {
+          <li class="list-group-item me-1">
             {{getTogetherScore(gamePlace)}}
           </li>
+          }
         </ul>
+        }
       </div>
-    </ng-template>
+    }
   </td>
 </ng-template>
 
@@ -331,35 +436,49 @@
     <li class="list-group-item border-info">
       de wedstrijden duren {{planningConfig.getMinutesPerGame()}} minuten
     </li>
-    <li *ngIf="planningConfig.getExtension()" class="list-group-item border-info">
+    @if(planningConfig.getExtension()) {
+    <li class="list-group-item border-info">
       de eventuele verlenging duurt {{planningConfig.getMinutesPerGameExt()}} minuten
     </li>
+    }
     <li class="list-group-item border-info">er is {{planningConfig.getMinutesBetweenGames()}} minuten
       pauze tussen de wedstrijden</li>
-    <li *ngIf="roundNumber.hasNext()" class="list-group-item border-info">er is {{planningConfig.getMinutesAfter()}}
+    @if(roundNumber.hasNext()) {
+    <li class="list-group-item border-info">er is {{planningConfig.getMinutesAfter()}}
       extra minuten
       pauze na deze ronde</li>
+    }
   </ul>
 </ng-template>
 
 <ng-template #scoreInfo let-modal>
-  <ng-template ngFor let-scoreConfig [ngForOf]="getUniqueScoreConfigs()">
+  @for(scoreConfig of getUniqueScoreConfigs(); track scoreConfig) {
     <h2>{{scoreConfig.getSport().getName()}}</h2>
 
-    <ul *ngIf="scoreConfig.getNext()?.getEnabled()" class="list-group">
-      <ng-container *ngTemplateOutlet="withNext; context: {$implicit: scoreConfig.getNext()}"></ng-container>
+    @if(scoreConfig.getNext()?.getEnabled()) {
+    <ul class="list-group">
+      <ng-container [ngTemplateOutlet]="withNext" [ngTemplateOutletContext]="{$implicit: scoreConfig.getNext()}"></ng-container>
     </ul>
-    <ul *ngIf="!scoreConfig.hasNext()" class="list-group">
-      <ng-container *ngTemplateOutlet="single"></ng-container>
+    }
+    @if(!scoreConfig.hasNext()) {
+    <ul class="list-group">
+      <ng-container [ngTemplateOutlet]="single"></ng-container>
     </ul>
+    }
 
     <ng-template #withNext let-next>
       <li class="list-group-item border-info">
-        <span *ngIf="next.getMaximum() === 0">behaal zoveel mogelijk
+        @if(next.getMaximum() === 0) {
+        <span>behaal zoveel mogelijk
           {{translate.getScoreNamePlural(next)}}</span>
-        <span *ngIf="next.getMaximum() > 0">wie het eerst {{next.getMaximum()}}
+        }
+        @if(next.getMaximum() > 0) {
+        <span>wie het eerst {{next.getMaximum()}}
           {{translate.getScoreNamePlural(next)}} heeft behaald</span>
-        <span *ngIf="planningConfig.getEnableTime()"> binnen de tijd</span>
+        }
+        @if(planningConfig.getEnableTime()) {
+        <span> binnen de tijd</span>
+        }
       </li>
       <li class="list-group-item border-info">
         <span>per {{translate.getScoreNameSingular(next)}} moet(en) er
@@ -368,16 +487,21 @@
     </ng-template>
     <ng-template #single>
       <li class="list-group-item border-info">
-        <span *ngIf="scoreConfig.getMaximum() === 0">behaal zoveel mogelijk
+        @if(scoreConfig.getMaximum() === 0) {
+        <span>behaal zoveel mogelijk
           {{translate.getScoreNamePlural(scoreConfig)}}</span>
-        <span *ngIf="scoreConfig.getMaximum() > 0">wie het eerst {{scoreConfig.getMaximum()}}
+        }
+        @if(scoreConfig.getMaximum() > 0) {
+        <span>wie het eerst {{scoreConfig.getMaximum()}}
           {{translate.getScoreNamePlural(scoreConfig)}} heeft behaald</span>
-        <span *ngIf="planningConfig.getEnableTime()"> binnen de tijd</span>
+        }
+        @if(planningConfig.getEnableTime()) {
+        <span> binnen de tijd</span>
+        }
       </li>
     </ng-template>
-  </ng-template>
+  }
 </ng-template>
 
 
 <ng-template #popContent let-game="game"><span [innerHtml]="getGameQualificationDescription(game)"></span></ng-template>
-

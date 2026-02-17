@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { VoetbalRange } from 'ngx-sport';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -22,7 +22,7 @@ export class NameModalComponent implements OnInit {
     form: FormGroup;
     readonly _placeHolder = input<string | undefined>(undefined);
 
-    private activeModal = inject(NgbActiveModal);
+    public activeModal = inject(NgbActiveModal);
 
     constructor() {
         this.form = new FormGroup({

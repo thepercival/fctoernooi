@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, input } from '@angular/core';
 import { Poule, CompetitionSport, AgainstH2h, AgainstGpp, Single, AllInOneGame, StructureNameService } from 'ngx-sport';
-import { CommonModule } from "module";
 
 import { CSSService } from '../../common/cssservice';
 import { Favorites } from '../../../lib/favorites';
@@ -14,15 +13,15 @@ import { RankingTogetherComponent } from './sports/together.component';
     templateUrl: './poule.component.html',
     styleUrls: ['./poule.component.scss'],
     standalone: true,
-    imports: [NgIf, TOURNAMENT_UI_IMPORTS, RankingSportsComponent, RankingAgainstComponent, RankingTogetherComponent],
+    imports: [TOURNAMENT_UI_IMPORTS, RankingSportsComponent, RankingAgainstComponent, RankingTogetherComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingPouleComponent implements OnInit {
-  readonly _poule = input.required<Poule>();
-  readonly _favorites = input<Favorites | undefined>(undefined);
-  readonly _competitionSports = input<CompetitionSport[]>([]);
-  readonly _structureNameService = input.required<StructureNameService>();
-  readonly _header = input.required<boolean>();
+  public poule = input.required<Poule>();
+  public favorites = input<Favorites | undefined>(undefined);
+  public competitionSports = input<CompetitionSport[]>([]);
+  public structureNameService = input.required<StructureNameService>();
+  public header = input.required<boolean>();
 
   public processing = true;
 
@@ -53,7 +52,7 @@ export class RankingPouleComponent implements OnInit {
   }
 
   getSingleCompetitionSport(): CompetitionSport | undefined {
-    return this.competitionSports.length === 1 ? this.competitionSports[0] : undefined;
+    return this.competitionSports.length === 1 ? this.competitionSports()[0] : undefined;
   }
 
   isAgainst(competitionSport: CompetitionSport): boolean {
@@ -62,25 +61,5 @@ export class RankingPouleComponent implements OnInit {
 
   isTogether(competitionSport: CompetitionSport): boolean {
     return (competitionSport?.getVariant() instanceof Single) || (competitionSport.getVariant() instanceof AllInOneGame);
-  }
-
-  get poule(): Poule {
-    return this._poule();
-  }
-
-  get favorites(): Favorites | undefined {
-    return this._favorites();
-  }
-
-  get competitionSports(): CompetitionSport[] {
-    return this._competitionSports();
-  }
-
-  get structureNameService(): StructureNameService {
-    return this._structureNameService();
-  }
-
-  get header(): boolean {
-    return this._header();
   }
 }

@@ -12,9 +12,5 @@ import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
     standalone: true
 })
 export class AgainstQualifyInfoComponent {
-    readonly _round = input.required<Round>();
-
-    get round(): Round {
-        return this._round();
-    }
+    public round = input.required<Round>();
 }

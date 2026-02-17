@@ -6,13 +6,14 @@ import { Favorites } from '../../../../lib/favorites';
 import { FavoritesRepository } from '../../../../lib/favorites/repository';
 import { ViewPort, ViewPortManager, ViewPortNrOfColumnsMap } from '../../../common/viewPortManager';
 import { TOURNAMENT_UI_IMPORTS } from '../../tournament.ui-imports';
+import { EscapeHtmlPipe } from '../../../common/escapehtmlpipe';
 
 @Component({
     selector: 'app-tournament-ranking-together-table',
     templateUrl: './together.component.html',
     styleUrls: ['./together.component.scss'],
     standalone: true,
-    imports: [TOURNAMENT_UI_IMPORTS],
+    imports: [TOURNAMENT_UI_IMPORTS, EscapeHtmlPipe],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingTogetherComponent implements OnInit {

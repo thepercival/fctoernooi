@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Competitor, StructureEditor, Category, StructureNameService } from 'ngx-sport';
 import { CategoryProperties, StructureAction } from '../../../admin/structure/edit.component';

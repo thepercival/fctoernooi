@@ -12,10 +12,10 @@ import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingEndComponent {
-  readonly _category = input.required<Category>();
-  readonly _structureNameService = input.required<StructureNameService>();
-  readonly _favorites = input<Favorites | undefined>(undefined);
-  readonly _range = input<VoetbalRange | undefined>(undefined);
+  public category = input.required<Category>();
+  public structureNameService = input.required<StructureNameService>();
+  public favorites = input<Favorites | undefined>(undefined);
+  public range = input<VoetbalRange | undefined>(undefined);
   public rankingItems: EndRankingItem[] = [];
 
   constructor() {
@@ -25,9 +25,10 @@ export class RankingEndComponent {
   }
 
   protected updateItems() {
-    const endRankingCalculator = new EndRankingCalculator(this.category);
+    const endRankingCalculator = new EndRankingCalculator(this.category());
     this.rankingItems = endRankingCalculator.getItems().filter((item: EndRankingItem): boolean => {
-      return this.range === undefined || (item.getUniqueRank() >= this.range.min && item.getUniqueRank() <= this.range.max);
+      const range = this.range();
+      return range === undefined || (item.getUniqueRank() >= range.min && item.getUniqueRank() <= range.max);
     });
   }
 
@@ -44,8 +45,9 @@ export class RankingEndComponent {
     if (startLocation === undefined) {
       return false;
     }
-    const competitor = this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
-    return this.favorites !== undefined && competitor !== undefined && this.favorites.hasCompetitor(competitor);
+    const competitor = this.structureNameService().getStartLocationMap()?.getCompetitor(startLocation);
+    const favorites = this.favorites();
+    return competitor !== undefined && favorites !== undefined && favorites.hasCompetitor(competitor);
   }
 
   getName(endRankingItem: EndRankingItem): string {
@@ -53,22 +55,6 @@ export class RankingEndComponent {
     if (startLocation === undefined) {
       return 'nog onbekend';
     }
-    return this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation)?.getName() ?? 'onbekend';
-  }
-
-  get category(): Category {
-    return this._category();
-  }
-
-  get structureNameService(): StructureNameService {
-    return this._structureNameService();
-  }
-
-  get favorites(): Favorites | undefined {
-    return this._favorites();
-  }
-
-  get range(): VoetbalRange | undefined {
-    return this._range();
+    return this.structureNameService().getStartLocationMap()?.getCompetitor(startLocation)?.getName() ?? 'onbekend';
   }
 }

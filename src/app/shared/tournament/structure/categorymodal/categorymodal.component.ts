@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit, input } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ChangeDetectionStrategy, Component, OnInit, inject, input } from '@angular/core';
+import { NgbActiveModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { Category, VoetbalRange } from 'ngx-sport';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CategoryProperties } from '../../../../admin/structure/edit.component';
@@ -11,7 +11,7 @@ import { TOURNAMENT_UI_IMPORTS } from '../../tournament.ui-imports';
     templateUrl: './categorymodal.component.html',
     styleUrls: ['./categorymodal.component.scss'],
     standalone: true,
-    imports: [TOURNAMENT_UI_IMPORTS],
+    imports: [TOURNAMENT_UI_IMPORTS, NgbAlert],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategoryModalComponent implements OnInit {

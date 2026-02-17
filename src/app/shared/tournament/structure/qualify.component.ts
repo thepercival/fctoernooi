@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { HorizontalSingleQualifyRule, QualifyDistribution, QualifyGroup, QualifyTarget, Round, StructureEditor, StructureNameService, VerticalSingleQualifyRule } from 'ngx-sport';
 
 import { IAlert, IAlertType } from '../../common/alert';
@@ -6,7 +6,7 @@ import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
 import { facStructure } from '../icon/icons';
 import { CSSService } from '../../common/cssservice';
 import { StructureAction, StructureActionName } from '../../../admin/structure/edit.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { QualifyModalComponent } from './qualifymodal.component';
 import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
 
@@ -16,7 +16,7 @@ import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
     templateUrl: './qualify.component.html',
     styleUrls: ['./qualify.component.scss'],
     standalone: true,
-    imports: [TOURNAMENT_UI_IMPORTS],
+    imports: [TOURNAMENT_UI_IMPORTS, NgbAlert],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructureQualifyComponent {

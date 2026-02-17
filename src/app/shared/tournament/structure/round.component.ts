@@ -22,13 +22,13 @@ import { StructureQualifyComponent } from './qualify.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructureRoundComponent {
-  readonly _structureEditor = input.required<StructureEditor>();
-  public _round = input.required<Round>();
-  readonly _editable = input(false);
-  readonly _showCompetitors = input(false);
-  readonly _favorites = input<Competitor[]>([]);
-  readonly _structureNameService = input.required<StructureNameService>();
-  readonly _lastAction = input<StructureAction | undefined>(undefined);
+  public structureEditor = input.required<StructureEditor>();
+  public round = input.required<Round>();
+  public editable = input(false);
+  public showCompetitors = input(false);
+  public favorites = input<Competitor[]>([]);
+  public structureNameService = input.required<StructureNameService>();
+  public lastAction = input<StructureAction | undefined>(undefined);
   
   readonly onActionAdd = output<StructureAction>();
   
@@ -43,25 +43,25 @@ export class StructureRoundComponent {
     this.resetAlert();
     try {
       if (actionName === StructureActionName.AddPouleToRootRound) {
-        this.structureEditor.addPouleToRootRound(this.round);
+        this.structureEditor().addPouleToRootRound(this.round());
       } else if (actionName === StructureActionName.RemovePouleFromRootRound) {
         try {
-          this.structureEditor.removePouleFromRootRound(this.round);
+          this.structureEditor().removePouleFromRootRound(this.round());
         } catch (e: any) {
           console.log(e);
           throw new Error('de poule kan niet verwijderd worden, pas de poules in de eerst volgende ronde aan');
         }
       } else if (actionName === StructureActionName.AddPlaceToRootRound) {
-        this.structureEditor.addPlaceToRootRound(this.round);
+        this.structureEditor().addPlaceToRootRound(this.round());
       } else if (actionName === StructureActionName.RemovePlaceFromRootRound) {
-        this.structureEditor.removePlaceFromRootRound(this.round);
+        this.structureEditor().removePlaceFromRootRound(this.round());
       } else if (actionName === StructureActionName.IncrementNrOfPoules) {
-        this.structureEditor.incrementNrOfPoules(this.round);
+        this.structureEditor().incrementNrOfPoules(this.round());
       } else if (actionName === StructureActionName.DecrementNrOfPoules) {
-        this.structureEditor.decrementNrOfPoules(this.round);
+        this.structureEditor().decrementNrOfPoules(this.round());
       }
       this.onActionAdd.emit({
-        pathNode: this.round.getPathNode(),
+        pathNode: this.round().getPathNode(),
         name: actionName,
         recreateStructureNameService: true
       });
@@ -98,7 +98,7 @@ export class StructureRoundComponent {
     if (competitor === undefined) {
       return false;
     }
-    return this.favorites.indexOf(competitor) >= 0;
+    return this.favorites().indexOf(competitor) >= 0;
   }
 
   getCompetitorName(place: Place): string {
@@ -117,7 +117,7 @@ export class StructureRoundComponent {
     if (startLocation === undefined ) {
       return undefined;
     }
-    return this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
+    return this.structureNameService().getStartLocationMap()?.getCompetitor(startLocation);
   }
 
   public hasLogo(place: Place): boolean {
@@ -131,7 +131,7 @@ export class StructureRoundComponent {
   } 
 
   getPlaceAlignClass(): string {
-    return this.editable || !this.showCompetitors ? 'text-center' : 'text-start';
+    return this.editable() || !this.showCompetitors ? 'text-center' : 'text-start';
   }
 
   get AbsoluteMinPlacesPerPoule(): number {
@@ -139,7 +139,7 @@ export class StructureRoundComponent {
   }
 
   get MinPlacesPerPoule(): number {
-    return this.structureEditor.getMinPlacesPerPouleSmall();
+    return this.structureEditor().getMinPlacesPerPouleSmall();
   }
 
   protected resetAlert(): void {
@@ -152,33 +152,5 @@ export class StructureRoundComponent {
 
   setPopoverPlace(place: Place) {
     this.popoverPlace = place;
-  }
-
-  get structureEditor(): StructureEditor {
-    return this._structureEditor();
-  }
-
-  get round(): Round {
-    return this._round();
-  }
-
-  get editable(): boolean {
-    return this._editable();
-  }
-
-  get showCompetitors(): boolean {
-    return this._showCompetitors();
-  }
-
-  get favorites(): Competitor[] {
-    return this._favorites();
-  }
-
-  get structureNameService(): StructureNameService {
-    return this._structureNameService();
-  }
-
-  get lastAction(): StructureAction | undefined {
-    return this._lastAction();
   }
 }

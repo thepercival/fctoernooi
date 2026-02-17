@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, InputSignal, input } from '@angular/core';
+import { Component, OnInit, TemplateRef, InputSignal, input, inject } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Params, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlanningEditMode, RoundNumber } from 'ngx-sport';
@@ -34,7 +34,8 @@ import { TournamentRegistrationSettings } from '../../lib/tournament/registratio
     selector: 'app-tournament-home-admin',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css'],
-    
+    standalone: true,
+    imports: []
 })
 export class HomeAdminComponent extends TournamentComponent implements OnInit {
 
@@ -45,13 +46,14 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
     allPoulesHaveGames: boolean = false;
     openModalCopiedCheck: boolean = false;
 
+    private modalService: NgbModal= inject(NgbModal);
+
     constructor(
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,        
         structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
+        globalEventsManager: GlobalEventsManager,        
         favRepository: FavoritesRepository,
         private tournamentRegistrationRepository: TournamentRegistrationRepository,
         private competitionSportRouter: CompetitionSportRouter,
@@ -62,7 +64,7 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
         public dateFormatter: DateFormatter,
         private translate: TranslateFieldService
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
 
 
     }

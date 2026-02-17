@@ -1,6 +1,6 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, OnDestroy, OnChanges, SimpleChanges, TemplateRef, input, output } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, OnDestroy, OnChanges, SimpleChanges, TemplateRef, input, output, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbPopover, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbPopover, NgbModal, NgbAlert, NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
 import {
   Game,
   Poule,
@@ -52,13 +52,14 @@ import { CompetitorRepository } from '../../../lib/ngx-sport/competitor/reposito
 import { ColorMode } from '../../layout/nav/nav.component';
 import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
 import { TournamentIconComponent } from '../icon/icon.component';
+import { EscapeHtmlPipe } from '../../common/escapehtmlpipe';
 
 @Component({
     selector: 'tbody[app-tournament-roundnumber-planning]',
     templateUrl: './roundnumber.component.html',
     styleUrls: ['./roundnumber.component.scss'],
     standalone: true,
-    imports: [TOURNAMENT_UI_IMPORTS, TournamentIconComponent],
+    imports: [TOURNAMENT_UI_IMPORTS, TournamentIconComponent, NgbAlert, EscapeHtmlPipe, NgbProgressbar],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
@@ -103,7 +104,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   public progressPerc = 0;
   private rolesValue = 0;
 
-  private modalService: NgbModal = inject(NgbModal),
+  private modalService: NgbModal = inject(NgbModal);
 
   constructor(
     private router: Router,

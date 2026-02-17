@@ -10,16 +10,18 @@
         </tr>
     </thead>
     <tbody>
-        <ng-template ngFor let-sportRankingItem [ngForOf]="sportRankingItems">
+        @for(sportRankingItem of sportRankingItems; track sportRankingItem) {
             <tr>
                 <td class="rankingnr text-end ps-0">
                     <span
                         class="badge badge-rank {{getQualifyPlaceClass(sportRankingItem)}}">{{sportRankingItem.getUniqueRank()}}</span>
                 </td>
                 <td class="text-break text-start ps-0"
-                    ngClass="{ 'favitem': favorites?.hasPlace(sportRankingItem.getPerformance().getPlace()) }">
-                    <img *ngIf="hasLogo(sportRankingItem.getPerformance().getPlace())" class="me-1" style="vertical-align:text-bottom"
+                    [class.favitem]="favorites?.hasPlace(sportRankingItem.getPerformance().getPlace())">
+                    @if(hasLogo(sportRankingItem.getPerformance().getPlace())) {
+                    <img class="me-1" style="vertical-align:text-bottom"
                         [src]="getCompetitorLogoUrl(sportRankingItem.getPerformance().getPlace())" height="20" width="20">
+                    }
                     <span
                         [innerHtml]="structureNameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true, true) | keepHtml"></span>
                 </td>
@@ -30,13 +32,17 @@
                         {{sportRankingItem.getPerformance().getDiff() > 0 ? '+' :
                         ''}}{{sportRankingItem.getPerformance().getDiff()}}
                     </div>
-                    <div *ngIf="showDifferenceDetail">( {{sportRankingItem.getPerformance().getScored()}} -
+                    @if(showDifferenceDetail) {
+                    <div>( {{sportRankingItem.getPerformance().getScored()}} -
                         {{sportRankingItem.getPerformance().getReceived()}} )</div>
-                    <div *ngIf="showDifferenceDetail && useSubScore()">(
+                    }
+                    @if(showDifferenceDetail && useSubScore()) {
+                    <div>(
                         {{sportRankingItem.getPerformance().getSubScored()}} -
                         {{sportRankingItem.getPerformance().getSubReceived()}} )</div>
+                    }
                 </td>
             </tr>
-        </ng-template>
+        }
     </tbody>
 </table>

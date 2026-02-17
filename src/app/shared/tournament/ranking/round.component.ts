@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, forwardRef, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, forwardRef, inject, input } from '@angular/core';
 
 import { Poule, Round, GameState, CompetitionSport, StructureNameService, StartLocation, Competitor, Place, AgainstSide, AgainstGamePlace, AgainstGame, ScoreConfigService, HorizontalMultipleQualifyRule, HorizontalSingleQualifyRule, VerticalMultipleQualifyRule, VerticalSingleQualifyRule } from 'ngx-sport';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -10,6 +10,7 @@ import { TournamentCompetitor } from '../../../lib/competitor';
 import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
 import { RankingPouleComponent } from './poule.component';
 import { AgainstQualifyInfoComponent } from '../againstQualifyConfig/info.component';
+import { EscapeHtmlPipe } from '../../common/escapehtmlpipe';
 
 @Component({
     selector: 'app-tournament-ranking-round',
@@ -20,16 +21,17 @@ import { AgainstQualifyInfoComponent } from '../againstQualifyConfig/info.compon
         TOURNAMENT_UI_IMPORTS,
         RankingPouleComponent,
         AgainstQualifyInfoComponent,
+        EscapeHtmlPipe,
         forwardRef(() => RankingRoundComponent)
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingRoundComponent implements OnInit {
-    readonly _round = input.required<Round>();
-    readonly _structureNameService = input.required<StructureNameService>();
-    readonly _competitionSports = input.required<CompetitionSport[]>();
-    readonly _favorites = input<Favorites | undefined>(undefined);
-    readonly _first = input(true);
+    public round = input.required<Round>();
+    public structureNameService = input.required<StructureNameService>();
+    public competitionSports = input.required<CompetitionSport[]>();
+    public favorites = input<Favorites | undefined>(undefined);
+    public first = input(true);
     public collapsed: boolean = true;
     public poules: Poule[] = [];
     // public gameMode!: GameMode;
@@ -45,11 +47,11 @@ export class RankingRoundComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.poules = this.round.getPoules();
+        this.poules = this.round().getPoules();
         // const structureCell = this.round.getStructureCell();
-        const state = this.round.getGamesState();
-        const stateParent = this.round.getParentQualifyGroup()?.getParentRound().getGamesState();
-        const childeren = this.round.getChildren();
+        const state = this.round().getGamesState();
+        const stateParent = this.round().getParentQualifyGroup()?.getParentRound().getGamesState();
+        const childeren = this.round().getChildren();
         const stateChildren = this.getRoundsGameState(childeren);
         // const childNeedsRanking = this.roundsNeedRanking(childeren);
         
@@ -110,7 +112,7 @@ export class RankingRoundComponent implements OnInit {
         if (startLocation === undefined) {
             return false;
         }
-        return this.favorites?.hasPlace(place) ?? false;
+        return this.favorites()?.hasPlace(place) ?? false;
     }
 
     hasCompetitor(place: Place): boolean {
@@ -160,11 +162,11 @@ export class RankingRoundComponent implements OnInit {
     } 
 
     getPlaceName(place: Place): string {
-        return this.structureNameService.getPlaceFromName(place, true, false); 
+        return this.structureNameService().getPlaceFromName(place, true, false); 
     } 
 
     getCompetitor(startLocation: StartLocation): Competitor | undefined {
-        return this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
+        return this.structureNameService().getStartLocationMap()?.getCompetitor(startLocation);
     }
 
     openInfoModal(modalContent: TemplateRef<any>) {
@@ -218,25 +220,5 @@ export class RankingRoundComponent implements OnInit {
 
     setPopoverPlace(place: Place) {
         this.popoverPlace = place;
-    }
-
-    get round(): Round {
-        return this._round();
-    }
-
-    get structureNameService(): StructureNameService {
-        return this._structureNameService();
-    }
-
-    get competitionSports(): CompetitionSport[] {
-        return this._competitionSports();
-    }
-
-    get favorites(): Favorites | undefined {
-        return this._favorites();
-    }
-
-    get first(): boolean {
-        return this._first();
     }
 }

@@ -1,35 +1,43 @@
-<div *ngIf="category">
-  <div class="card border-secondary" ngClass="{ 'border-0': !showHeader }">
+@if(category) {
+<div>
+  <div class="card border-secondary" [class.border-0]="!showHeader">
 
-    <div *ngIf="showHeader" class="card-cat-header px-3">
+    @if(showHeader) {
+    <div class="card-cat-header px-3">
       <div class="d-flex justify-content-between">
         <h5 class="my-0">
           <span class="fw-bold align-middle">{{category.getName()}}</span>
         </h5>
       </div>
     </div>
+    }
 
     <div class="card-body pb-0 pt-1 px-1">
 
-      <ul ngbNav #nav="ngbNav" [(activeId)]="activeTabName" class="nav-tabs">
-        <li [ngbNavItem]="getTabName(1)">
+      <ul ngbNav nav="ngbNav" (activeId)="activeTabName" class="nav-tabs">
+        <li ngbNavItem="getTabName(1)">
           <a ngbNavLink>poulestanden</a>
           <ng-template ngbNavContent>
-            <app-tournament-ranking-round [round]="category.getRootRound()" [favorites]="favorites"
-              [competitionSports]="competitionSports" [structureNameService]="structureNameService" [first]="true">
+            <app-tournament-ranking-round [round]="category.getRootRound()"
+              [favorites]="favorites"
+              [competitionSports]="competitionSports" 
+              [structureNameService]="structureNameService" [first]="true">
             </app-tournament-ranking-round>
           </ng-template>
         </li>
-        <li *ngIf="multipleRounds" [ngbNavItem]="getTabName(2)">
+        @if(multipleRounds) {
+        <li ngbNavItem="getTabName(2)">
           <a ngbNavLink>eindstand</a>
           <ng-template ngbNavContent>
-            <app-tournament-endranking [structureNameService]="structureNameService" [favorites]="favorites"
-              [category]="category"></app-tournament-endranking>
+            <app-tournament-endranking [structureNameService]="structureNameService" 
+              [favorites]="favorites" [category]="category"></app-tournament-endranking>
           </ng-template>
         </li>
+        }
 
       </ul>
-      <div [ngbNavOutlet]="nav"></div>
+      <div ngbNavOutlet="nav"></div>
     </div>
   </div>
 </div>
+}

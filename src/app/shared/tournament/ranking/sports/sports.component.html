@@ -9,27 +9,32 @@
             <th class="ps-0" title="gespeeld">
                 <div class="d-flex justify-content-between">
                     <span>g</span>
-                    <ng-template ngFor let-viewPort [ngForOf]="viewPortManager.getViewPorts()">
-                        <button *ngIf="viewPortManager.showBackArrow(viewPort)"
+                    @for(viewPort of viewPortManager.getViewPorts(); track viewPort) {
+                        @if(viewPortManager.showBackArrow(viewPort)) {
+                        <button
                             class="btn btn-sm btn-outline-secondary {{viewPortManager.getSingleVisibleClass(viewPort)}}"
                             (click)="viewPortManager.decrement()">
                             < </button>
-                    </ng-template>
+                        }
+                    }
                 </div>
             </th>
-            <th *ngFor="let competitionSport of competitionSports; let counter = index"
-                class="text-end ps-0 {{viewPortManager.getClass(counter+1)}}">
+            @for(competitionSport of competitionSports; track competitionSport; let counter = $index) {
+            <th class="text-end ps-0 {{viewPortManager.getClass(counter+1)}}">
                 <span class="">
                     {{competitionSport.getSport().getName()}}
                 </span>
             </th>
+            }
             <th class="ps-0 text-end" title="totaal">
-                <ng-template ngFor let-viewPort [ngForOf]="viewPortManager.getViewPorts()">
-                    <button *ngIf="viewPortManager.showForwardArrow(viewPort)"
+                @for(viewPort of viewPortManager.getViewPorts(); track viewPort) {
+                    @if(viewPortManager.showForwardArrow(viewPort)) {
+                    <button
                         class="btn btn-sm btn-outline-secondary {{viewPortManager.getSingleVisibleClass(viewPort)}}"
                         (click)="viewPortManager.increment()">
                         > </button>
-                </ng-template>
+                    }
+                }
                 <span class="ps-1 d-xs-inline">t</span>
                 <span class="d-none d-sm-inline">ot.</span>
             </th>
@@ -39,28 +44,33 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let roundRankingItem of roundRankingItems">
+        @for(roundRankingItem of roundRankingItems; track roundRankingItem) {
+        <tr>
             <td class="rankingnr text-end ps-0">
                 <span
                     class="badge badge-rank {{getQualifyPlaceClass(roundRankingItem)}}">{{roundRankingItem.getUniqueRank()}}</span>
             </td>
-            <td class="text-break ps-0" ngClass="{ 'favitem': favorites?.hasPlace(roundRankingItem.getPlace()) }">
+            <td class="text-break ps-0" [class.favitem]="favorites?.hasPlace(roundRankingItem.getPlace())">
                 <span
                     [innerHtml]="structureNameService.getPlaceFromName(roundRankingItem.getPlace(), true, true) | keepHtml"></span>
             </td>
             <td class="ps-0">{{roundRankingItem.getCumulativePerformance().getGames()}}</td>
-            <td *ngFor="let competitionSport of competitionSports; let counter = index;"
-                class="text-end ps-0 {{viewPortManager.getClass(counter+1)}}">
+            @for(competitionSport of competitionSports; track competitionSport; let counter = $index) {
+            <td class="text-end ps-0 {{viewPortManager.getClass(counter+1)}}">
                 {{roundRankingItem.getSportItem(competitionSport).getPerformance().getPoints()}}</td>
+            }
             <td class="text-end fw-bold ps-0">{{roundRankingItem.getCumulativePerformance().getPoints()}}</td>
             <td class="text-center unitdiff d-none d-sm-table-cell ps-0">
                 <div>
                     {{roundRankingItem.getCumulativePerformance().getDiff() > 0 ? '+' :
                     ''}}{{roundRankingItem.getCumulativePerformance().getDiff()}}
                 </div>
-                <div *ngIf="showDifferenceDetail">( {{roundRankingItem.getCumulativePerformance().getScored()}} -
+                @if(showDifferenceDetail) {
+                <div>( {{roundRankingItem.getCumulativePerformance().getScored()}} -
                     {{roundRankingItem.getCumulativePerformance().getReceived()}} )</div>
+                }
             </td>
         </tr>
+        }
     </tbody>
 </table>

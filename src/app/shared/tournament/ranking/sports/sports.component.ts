@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, input } from '@angular/core';
 import { Poule, CompetitionSport, RoundRankingCalculator, RoundRankingItem, Cumulative, StructureNameService } from 'ngx-sport';
 
 import { CSSService } from '../../../common/cssservice';
@@ -8,13 +8,14 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PouleRankingModalComponent } from '../../poulerankingmodal/rankingmodal.component';
 import { ViewPort, ViewPortManager, ViewPortNrOfColumnsMap } from '../../../common/viewPortManager';
 import { TOURNAMENT_UI_IMPORTS } from '../../tournament.ui-imports';
+import { EscapeHtmlPipe } from '../../../common/escapehtmlpipe';
 
 @Component({
     selector: 'app-tournament-ranking-sports-table',
     templateUrl: './sports.component.html',
     styleUrls: ['./sports.component.scss'],
     standalone: true,
-    imports: [TOURNAMENT_UI_IMPORTS],
+    imports: [TOURNAMENT_UI_IMPORTS, EscapeHtmlPipe],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingSportsComponent implements OnInit {

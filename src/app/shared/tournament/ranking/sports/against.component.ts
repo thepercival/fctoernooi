@@ -6,6 +6,7 @@ import { CSSService } from '../../../common/cssservice';
 import { TournamentCompetitor } from '../../../../lib/competitor';
 import { CompetitorRepository } from '../../../../lib/ngx-sport/competitor/repository';
 import { TOURNAMENT_UI_IMPORTS } from '../../tournament.ui-imports';
+import { EscapeHtmlPipe } from '../../../common/escapehtmlpipe';
 
 
 @Component({
@@ -13,7 +14,7 @@ import { TOURNAMENT_UI_IMPORTS } from '../../tournament.ui-imports';
     templateUrl: './against.component.html',
     styleUrls: ['./against.component.scss'],
     standalone: true,
-    imports: [TOURNAMENT_UI_IMPORTS],
+    imports: [TOURNAMENT_UI_IMPORTS, EscapeHtmlPipe],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingAgainstComponent implements OnInit {
