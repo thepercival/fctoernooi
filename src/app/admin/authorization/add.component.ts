@@ -5,21 +5,26 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { getRoleName, Role } from '../../lib/role';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { User } from '../../lib/user';
 import { TournamentInvitationRepository } from '../../lib/tournament/invitation/repository';
-import { Validators, FormGroup, FormControl } from '@angular/forms';
+import { Validators, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MyNavigation } from '../../shared/common/navigation';
 import { JsonTournamentInvitation } from '../../lib/tournament/invitation/mapper';
 import { AuthorizationExplanationModalComponent } from './infomodal.component';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 
 @Component({
     selector: 'app-tournament-authorization-add',
     templateUrl: './add.component.html',
     styleUrls: ['./add.component.scss'],
+    standalone: true,
+    imports: [FontAwesomeModule,NgbAlert, ReactiveFormsModule, TournamentNavBarComponent]
 })
 export class AuthorizationAddComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup;/*<{
@@ -34,6 +39,8 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
         maxlengthemailaddress: User.MAX_LENGTH_EMAIL
     };
 
+    faSpinner = faSpinner;
+
     constructor(
         route: ActivatedRoute,
         router: Router,
@@ -45,7 +52,7 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
         private myNavigation: MyNavigation
 
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, this.modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
         this.typedForm = new FormGroup({
             emailaddress: new FormControl('', { nonNullable: true, validators: 
                 [

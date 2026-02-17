@@ -1,16 +1,20 @@
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { inject, Injectable } from '@angular/core';
 import { APIRepository } from '../../repository';
 import { TournamentShell } from '../shell';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common';
+import { catchError, map } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class TournamentShellRepository extends APIRepository {
+    
+    private http: HttpClient = inject(HttpClient);
 
-    constructor(
-        private http: HttpClient, router: Router) {
+    constructor(        
+        router: Router) {
         super(router);
     }
 

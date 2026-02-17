@@ -8,7 +8,7 @@
         <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
       </h2>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing && tournament && hasAuthorization" [formGroup]="typedForm" (ngSubmit)="save()" #f="ngForm"
+      <form *ngIf="!processing && tournament && hasAuthorization" formGroup="typedForm" (ngSubmit)="save()" #f="ngForm"
         novalidate>
         <app-tournament-basegame-edit [form]="getBaseFormGroup()" [structureNameService]="structureNameService"
           [game]="getGame()" [structure]="structure">

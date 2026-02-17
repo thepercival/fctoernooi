@@ -1,13 +1,14 @@
-import { ChangeDetectionStrategy, Component, TemplateRef, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, inject, input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
+import { EscapeHtmlPipe } from '../../common/escapehtmlpipe';
 
 @Component({
     selector: 'app-ngbd-modal-info',
     templateUrl: './infomodal.component.html',
     styleUrls: ['./infomodal.component.scss'],
     standalone: true,
-    imports: [TOURNAMENT_UI_IMPORTS],
+    imports: [TOURNAMENT_UI_IMPORTS,EscapeHtmlPipe],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InfoModalComponent {

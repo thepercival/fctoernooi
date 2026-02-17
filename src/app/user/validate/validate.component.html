@@ -7,7 +7,7 @@
       </h2>
       }
       @if(alert()) {
-      <ngb-alert [type]="alert()?.type">{{ alert()?.message }}</ngb-alert>
+      <ngb-alert type="alert()?.type">{{ alert()?.message }}</ngb-alert>
       }
       @if(!processing()) {
       @if(!code) {

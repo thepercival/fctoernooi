@@ -11,14 +11,14 @@
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
+      <form *ngIf="!processing" name="form" (ngSubmit)="save()" formGroup="typedForm" novalidate>
         <div class="row mb-3">
           <div class="col-3">
             <label for="name" class="col-form-label">naam</label>
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': typedForm.controls.name.invalid, 'is-valid': typedForm.controls.name.valid }" type="text"
+              ngClass="{ 'is-invalid': typedForm.controls.name.invalid, 'is-valid': typedForm.controls.name.valid }" type="text"
               formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
         </div>
@@ -28,7 +28,7 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': typedForm.controls.url.invalid, 'is-valid': typedForm.controls.url.valid }" type="url"
+              ngClass="{ 'is-invalid': typedForm.controls.url.invalid, 'is-valid': typedForm.controls.url.valid }" type="url"
               formControlName="url" placeholder="max. {{validations.maxlengthurl}} karakters">
           </div>
         </div>
@@ -48,7 +48,7 @@
           </div>
           <div class="col-9">
             <select formControlName="screenNr" class="form-control"
-              [ngClass]="{ 'is-invalid': typedForm.controls.screenNr.invalid, 'is-valid': typedForm.controls.screenNr.valid }"
+              ngClass="{ 'is-invalid': typedForm.controls.screenNr.invalid, 'is-valid': typedForm.controls.screenNr.valid }"
               required>
               <option *ngFor="let screenNr of rangeScreenNrs" [ngValue]="screenNr">
                 {{screenNr}}</option>

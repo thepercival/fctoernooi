@@ -1,11 +1,34 @@
 import { Routes } from '@angular/router';
+import { AuthguardService } from '../lib/auth/authguard.service';
+import { AuthorizationAddComponent } from './authorization/add.component';
+import { AuthorizationListComponent } from './authorization/list.component';
+import { CompetitionSportEditComponent } from './competitionSport/edit.component';
+import { FieldListComponent } from './competitionSport/field/fieldlist.component';
+import { CompetitionSportListComponent } from './competitionSport/list.component';
+import { CompetitorEditComponent } from './competitor/edit.component';
+import { CompetitorListComponent } from './competitor/list.component';
+import { GameAddComponent } from './game/add.component';
+import { GameAgainstEditComponent } from './game/editagainst.component';
+import { GameTogetherEditComponent } from './game/edittogether.component';
+import { GameListComponent } from './game/list.component';
+import { HomeAdminComponent } from './home/home.component';
+import { HomeEditComponent } from './home/homeedit.component';
+import { TournamentRulesComponent } from './home/rules.component';
+import { LockerRoomsEditComponent } from './lockerrooms/lockerrooms.component';
+import { TournamentNameAndThemeComponent } from './nameAndTheme/name-and-theme.component';
+import { NewComponent } from './new/new.component';
+import { PlanningConfigComponent } from './planningconfig/edit.component';
+import { RankingEditComponent } from './ranking/edit.component';
+import { RefereeEditComponent } from './referee/edit.component';
+import { RefereeListComponent } from './referee/list.component';
+import { TournamentRegistrationEditComponent } from './registration/registration-edit.component';
+import { SponsorEditComponent } from './sponsor/edit.component';
+import { SponsorListComponent } from './sponsor/list.component';
+import { RecessAddComponent } from './startAndRecesses/addRecess.component';
+import { StartAndRecessesComponent } from './startAndRecesses/startAndRecesses.component';
+import { StructureEditComponent } from './structure/edit.component';
 
-// import { HomeComponent } from './home/home.component';
-// import { userRoutes } from "./usermodule/user.routes";
-// import { poolRoutes } from "./poolmodule/pool.routes";
-// import { PoolListComponent } from './poollist/poollist.component';
-
-export const routes: Routes = [
+export const adminRoutes: Routes = [
   { path: 'new', component: NewComponent }, // ALL ROLES
   { path: ':id', component: HomeAdminComponent, canActivate: [AuthguardService] }, // GAMERESULTADMIN, ADMIN
   { path: 'competitors/:id/:tabId', component: CompetitorListComponent, canActivate: [AuthguardService] }, // ADMIN  

@@ -5,14 +5,14 @@
   
   <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
   
-  <form *ngIf="typedForm && !processing" [formGroup]="typedForm" name="form" (ngSubmit)="save()" novalidate>    
+  <form *ngIf="typedForm && !processing" formGroup="typedForm" name="form" (ngSubmit)="save()" novalidate>    
     <div class="row my-3">
       <div class="col-5">
         <label for="remark" class="col-form-label">extra tekst op formulier</label>
       </div>
       <div class="col-7">
         <textarea class="form-control" rows="5"
-          [ngClass]="{ 'is-invalid': typedForm.controls.remark.invalid, 'is-valid': typedForm.controls.remark.valid }"
+          ngClass="{ 'is-invalid': typedForm.controls.remark.invalid, 'is-valid': typedForm.controls.remark.valid }"
           formControlName="remark" placeholder="max. {{validations.maxlengthremark}} karakters"></textarea>
       </div>
     </div>

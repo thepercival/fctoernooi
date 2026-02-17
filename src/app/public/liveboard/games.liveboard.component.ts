@@ -2,11 +2,16 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AgainstGame, AgainstGamePlace, AgainstSide, NameService, Round, ScoreConfigService, GameState, TogetherGame, TogetherGamePlace, AgainstVariant, StructureNameService } from 'ngx-sport';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { ResultsScreen, ScheduleScreen } from '../../lib/liveboard/screens';
+import { TournamentIconComponent } from '../../shared/tournament/icon/icon.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
 
 @Component({
     selector: 'app-tournament-liveboard-games',
     templateUrl: './games.liveboard.component.html',
     styleUrls: ['./games.liveboard.component.scss'],
+    standalone: true,
+    imports: [TournamentIconComponent, FontAwesomeModule, EscapeHtmlPipe]
     
 })
 export class LiveboardGamesComponent implements OnInit {

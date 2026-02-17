@@ -8,7 +8,7 @@
         <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
       </h2>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing && game && tournament && hasAuthorization" [formGroup]="typedForm" (ngSubmit)="save()"
+      <form *ngIf="!processing && game && tournament && hasAuthorization" formGroup="typedForm" (ngSubmit)="save()"
         #f="ngForm" novalidate>
         <app-tournament-basegame-edit [form]="getBaseFormGroup()" [structureNameService]="structureNameService"
           [game]="game" [structure]="structure">
@@ -75,13 +75,13 @@
           </div>
           <div class="col-4">
             <input formControlName="homeExtraPoints" class="form-control max-width-100" type="number"
-              [ngClass]="{ 'is-invalid': typedForm.controls.homeExtraPoints.invalid, 'is-valid': typedForm.controls.homeExtraPoints.valid}"
+              ngClass="{ 'is-invalid': typedForm.controls.homeExtraPoints.invalid, 'is-valid': typedForm.controls.homeExtraPoints.valid}"
               required [min]="minExtraPoints" [max]="maxExtraPoints">
           </div>
           <div class="col-1 side-splitter">-</div>
           <div class="col-4">
             <input formControlName="awayExtraPoints" class="form-control max-width-100" type="number"
-              [ngClass]="{ 'is-invalid': typedForm.controls.awayExtraPoints.invalid, 'is-valid': typedForm.controls.awayExtraPoints.valid}"
+              ngClass="{ 'is-invalid': typedForm.controls.awayExtraPoints.invalid, 'is-valid': typedForm.controls.awayExtraPoints.valid}"
               required [min]="minExtraPoints" [max]="maxExtraPoints">
           </div>
         </div>

@@ -15,17 +15,17 @@
 
       @if(processing()) {
       <h2 class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+        <fa-icon [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
       </h2>
       }
       @if(alert()) {
-      <ngb-alert [type]="alert()?.type">{{ alert()?.message }}</ngb-alert>
+      <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
       }
 
       @if(!processing()) {
       <form name="form" (ngSubmit)="pay()" [formGroup]="typedForm" novalidate>
 
-        <div class="mb-3" class="btn-group mb-3" role="group">
+        <div class="btn-group mb-3" role="group">
           <input type="radio" formControlName="purpose" [value]="PersonalPurpose" class="btn-check" autocomplete="off"
             id="btnradio1">
           <label class="btn btn-outline-primary" for="btnradio1">
@@ -54,8 +54,8 @@
             <label for="nrOfCredits" class="col-4 col-form-label text-end">aantal</label>
             <div class="col-8">
               <select class="form-control" formControlName="nrOfCredits" aria-describedby="costInfo"
-                [ngClass]="{ 'is-invalid': typedForm.controls.nrOfCredits.value < 1 }" required>
-                @for(let nrOfCreditsOption of nrOfCreditsOptions | async; track $index) {
+                [class.is-invalid]="typedForm.controls.nrOfCredits.value < 1" required>
+                @for(nrOfCreditsOption of nrOfCreditsOptions | async; track $index) {
                 <option [ngValue]="nrOfCreditsOption">
                   {{nrOfCreditsOption}}
                 </option>
@@ -79,8 +79,8 @@
             <label for="paymentMethod" class="col-4 col-form-label text-end">betaalmethode</label>
             <div class="col-8">
               <select class="form-control" formControlName="paymentMethod"
-                [ngClass]="{ 'is-invalid': typedForm.controls.paymentMethod.value === ''}" required>
-                @for(let paymentMethod of paymentMethods | async; track $index) {
+                [class.is-invalid]="typedForm.controls.paymentMethod.value === ''" required>
+                @for(paymentMethod of paymentMethods | async; track $index) {
                 <option [ngValue]="paymentMethod">{{paymentMethod}}
                 </option>
                 }
@@ -93,7 +93,7 @@
             <label for="iDealIssuer" class="col-4 col-form-label text-end">bank</label>
             <div class="col-8">
               <select class="form-control" formControlName="iDealIssuer">
-                @for(let option of idealIssuers | async; track $index) {
+                @for(option of idealIssuers | async; track $index) {
                 <option [ngValue]="option">{{option.name}}
                 </option>
                 }

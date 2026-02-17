@@ -5,7 +5,7 @@ import { Routes } from '@angular/router';
 // import { poolRoutes } from "./poolmodule/pool.routes";
 // import { PoolListComponent } from './poollist/poollist.component';
 
-export const routes: Routes = []
+export const publicRoutes: Routes = []
 
 // const routes: Routes = [
 //   { path: 'prenew', component: PreNewComponent },

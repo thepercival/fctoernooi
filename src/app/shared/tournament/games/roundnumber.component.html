@@ -2,7 +2,7 @@
 <!-- START HEADER (ROUNDNUMBER X "SETTINGS") -->
 <tr *ngIf="tournament">
   <td [attr.colspan]="nrOfColumns" class="border-0">
-    <div class="d-flex flex-justify-between" [ngClass]="{'mt-3': !roundNumber.isFirst()}">
+    <div class="d-flex flex-justify-between" ngClass="{'mt-3': !roundNumber.isFirst()}">
         
         <h4 class="me-auto">
           <span [innerHTML]="structureNameService.getRoundNumberName( roundNumber ) | keepHtml"></span>
@@ -214,7 +214,7 @@
     </ng-container>
     <!-- referee -->
     <td *ngIf="showRefereeColumn" class="{{hasGameModeAgainst ? 'd-none d-sm-table-cell' : ''}} text-end"
-      [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
+      ngClass="{'favitem': favorites?.hasGameReferee(gmData.game) }">
       {{getRefereeName(gmData.game)}}</td>
   </tr>
 </ng-template>
@@ -230,7 +230,7 @@
 
 <ng-template #againstGamePlacesCell let-gmData>
   <!-- homePlaces -->
-  <td class="text-end text-break" [ngClass]="{'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, Home) }">
+  <td class="text-end text-break" ngClass="{'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, Home) }">
 
     <ng-template ngFor let-homeGamePlace let-first="first" [ngForOf]="gmData.game.getHomePlaces()">
       <span *ngIf="!first"> & </span>
@@ -255,7 +255,7 @@
         *ngIf="(gmData.game.getReferee() || gmData.game.getRefereePlace()) && !isFinished(gmData.game); else noRefOrFinished">
         <button class="btn btn-outline-info btn-sm d-sm-none" placement="bottom"
           [ngbPopover]="getRefereeName(gmData.game, false)">
-          <span [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
+          <span ngClass="{'favitem': favorites?.hasGameReferee(gmData.game) }">
             <app-tournament-icon name="referee"></app-tournament-icon>
           </span>
         </button>
@@ -268,7 +268,7 @@
 
   </td>
   <!-- awayPlaces -->
-  <td class="text-break" [ngClass]="{ 'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, Away) }">
+  <td class="text-break" ngClass="{ 'favitem': favorites?.hasAgainstGameCompetitor(gmData.game, Away) }">
     <ng-template ngFor let-awayGamePlace let-first="first" [ngForOf]="gmData.game.getAwayPlaces()">
       <span *ngIf="!first"> & </span>
       <img *ngIf="hasLogo(awayGamePlace.getPlace())" class="me-1" [src]="getCompetitorLogoUrl(awayGamePlace.getPlace())"
@@ -282,7 +282,7 @@
 <ng-template #togetherGamePlaces let-gmData>
   <!-- <button *ngIf="!gmData.canChangeResult && hasReferees && !isPlayed(gmData.game)"
       class="btn btn-outline-info btn-sm d-sm-none" placement="top" [ngbPopover]="getRefereeName(gmData.game)">
-      <span [ngClass]="{'favitem': favorites?.hasGameReferee(gmData.game) }">
+      <span ngClass="{'favitem': favorites?.hasGameReferee(gmData.game) }">
         <app-tournament-icon name="referee"></app-tournament-icon>
       </span>
     </button> -->
@@ -292,7 +292,7 @@
       <div class="d-flex flex-wrap gap-2 justify-content-center mb-2">
         <div *ngFor="let gamePlace of gmData.game.getTogetherPlaces()" class="btn-group" role="group">
           <div class="list-group-item border-start-0 me-1"
-            [ngClass]="{'favitem': favorites?.hasTogetherGameCompetitor(gmData.game) }">
+            ngClass="{'favitem': favorites?.hasTogetherGameCompetitor(gmData.game) }">
             <span [innerHtml]="structureNameService.getPlaceFromName(gamePlace.getPlace(),true,true) | keepHtml"></span>
           </div>          
           <img *ngIf="hasLogo(gamePlace.getPlace())" class="me-1"
@@ -309,7 +309,7 @@
     <ng-template #canNotChangeResult>
       <div class="d-flex flex-wrap gap-2 justify-content-center">
         <ul *ngFor="let gamePlace of gmData.game.getTogetherPlaces()" class="list-group list-group-horizontal">
-          <li [ngClass]="{'favitem': favorites?.hasTogetherGameCompetitor(gmData.game) }"
+          <li ngClass="{'favitem': favorites?.hasTogetherGameCompetitor(gmData.game) }"
             class="list-group-item border-start-0">
             <span [innerHtml]="structureNameService.getPlaceFromName(gamePlace.getPlace(),true,true) | keepHtml"></span>
           </li>

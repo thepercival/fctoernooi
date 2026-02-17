@@ -1,9 +1,13 @@
 <div class="row justify-content-center g-0">
   <div class="col-sm-12 col-md-10 col-lg-8">
     <div class="mt-3">
-      <div *ngIf="alert" class="alert alert-{{alert.type}} text-center">{{alert.message}}</div>
+      @if (alert) {
+        <div class="alert alert-{{alert.type}} text-center">{{alert.message}}</div>
+      }
       <div class="d-flex justify-content-{{authService.isLoggedIn() ? 'between' : 'center'}}">
-        <h1 *ngIf="authService.isLoggedIn()" i18n="@@app.home.mytournaments">my tournaments</h1>
+        @if (authService.isLoggedIn()) {
+          <h1 i18n="@@app.home.mytournaments">my tournaments</h1>
+        }
         <button type="button" class="btn btn-primary" (click)="linkToNew()">
           toernooi opzetten
         </button>
@@ -27,23 +31,31 @@
           </ul>
         </div> -->
 
-    <table *ngIf="!processing && shellsTillX.length > 0" class="table mt-2">
-      <tbody>
-        <tr app-home-shell class="pointer" (click)="linkToTournament(shell)" *ngFor="let shell of shellsTillX"
-          [shell]="shell" [linethroughDate]="linethroughDate" [showPublic]="true"></tr>
-        <tr *ngIf="!showingAllWithRole && shellsFromX.length > 0" (click)="showingAllWithRole = !showingAllWithRole"
-          class="pointer">
-          <td colspan="4" class="text-center">
-            <button class="btn btn-outline-secondary btn-sm mx-3">bekijk meer</button>            
-          </td>
-        </tr>
-        <ng-template ngFor let-shell [ngForOf]="shellsFromX">
-          <tr app-home-shell *ngIf="showingAllWithRole" class="pointer" (click)="linkToTournament(shell)" [shell]="shell"
-            [linethroughDate]="linethroughDate" [showPublic]="true">
-          </tr>
-        </ng-template>
-      </tbody>
-    </table>
+    @if (!processing && shellsTillX.length > 0) {
+      <table class="table mt-2">
+        <tbody>
+          @for (shell of shellsTillX; track shell.tournamentId) {
+            <tr app-home-shell class="pointer" (click)="linkToTournament(shell)"
+              [shell]="shell" [linethroughDate]="linethroughDate" [showPublic]="true"></tr>
+          }
+          @if (!showingAllWithRole && shellsFromX.length > 0) {
+            <tr (click)="showingAllWithRole = !showingAllWithRole"
+              class="pointer">
+              <td colspan="4" class="text-center">
+                <button class="btn btn-outline-secondary btn-sm mx-3">bekijk meer</button>            
+              </td>
+            </tr>
+          }
+          @for (shell of shellsFromX; track shell.tournamentId) {
+            @if (showingAllWithRole) {
+              <tr app-home-shell class="pointer" (click)="linkToTournament(shell)" [shell]="shell"
+                [linethroughDate]="linethroughDate" [showPublic]="true">
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    }
 
     <div class="d-flex justify-content-center m-3 my-5">
       <button type="button" class="btn btn-outline-info" (click)="linkToExamples()">

@@ -10,11 +10,16 @@ import { TournamentCompetitor } from '../../lib/competitor';
 import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
 
 @Component({
     selector: 'app-tournament-competitors-category',
     templateUrl: './category.component.html',
     styleUrls: ['./category.component.scss'],
+    standalone: true,
+    imports: [FontAwesomeModule,EscapeHtmlPipe]
     
 })
 export class CompetitorsCategoryComponent implements OnInit {
@@ -28,6 +33,8 @@ export class CompetitorsCategoryComponent implements OnInit {
     public hasSomeCompetitorAnImage: boolean = false;
     public placeCompetitorItems: PlaceCompetitorItem[] = [];
     public modalCompetitor: Competitor|undefined;
+
+    faInfoCircle = faInfoCircle;
 
     constructor(
         protected tournamentMapper: TournamentMapper,

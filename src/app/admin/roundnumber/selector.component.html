@@ -5,7 +5,7 @@
 <div class="modal-body">
   <ul class="list-group">
     <li *ngFor="let roundNumber of structure.getRoundNumbers()" class="list-group-item border-primary"
-      [ngClass]="{pointer: !roundNumber.hasBegun()}" (click)="sendRoundNumber(roundNumber)">
+      ngClass="{pointer: !roundNumber.hasBegun()}" (click)="sendRoundNumber(roundNumber)">
       <div class="d-flex justify-content-between">
         <label for="roundNumber-{{roundNumber.getNumber()}}" class="mb-0">
           <span [innerHTML]="getRoundNumbersName( roundNumber ) | keepHtml"></span>

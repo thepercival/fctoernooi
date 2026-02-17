@@ -2,75 +2,89 @@
   <div class="col-sm-12 col-md-10 col-lg-8">
     <h1>publieke toernooien</h1>   
 
-    <form *ngIf="!processing" onsubmit="false" [formGroup]="searchForm" novalidate>
-      <div class="container">
-        <div class="row">
-          <div class="col-2">
-            <label for="name" class="col-form-label">naam</label>
+    @if (!processing) {
+      <form onsubmit="false" formGroup="searchForm" novalidate>
+        <div class="container">
+          <div class="row">
+            <div class="col-2">
+              <label for="name" class="col-form-label">naam</label>
+            </div>
+            <div class="col-7">
+              <input type="text" class="form-control" (keyup)="onSearchNameChanges($event)"
+                  placeholder="toernooinaam">
+            </div>
           </div>
-          <div class="col-7">
-            <input type="text" class="form-control" (keyup)="onSearchNameChanges($event)"
-                placeholder="toernooinaam">
-          </div>
+
+          <div class="row mt-2">
+            <div class="col-2">
+              <label for="startDate" class="col-form-label">van</label>
+            </div>
+            <div class="col-4">
+              <div class="input-group input-group-date">
+                <input class="form-control"
+                  [class.is-invalid]="searchForm.controls.startDate.invalid"
+                  [class.is-valid]="searchForm.controls.startDate.valid"
+                  placeholder="yyyy-mm-dd" formControlName="startDate" ngbDatepicker #dStart="ngbDatepicker" required
+                  container="body" (dateSelect)="onSearchDateChanges()">
+                <span class="input-group-text pointer" (click)="dStart.toggle()">
+                  <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+                </span>
+              </div>
+            </div>
+          </div>     
+
+          <div class="row my-2">
+            <div class="col-2">
+              <label for="endDate" class="col-form-label">tot</label>
+            </div>
+            <div class="col-4">
+              <div class="input-group input-group-date">
+                <input class="form-control"
+                  [class.is-invalid]="searchForm.controls.endDate.invalid"
+                  [class.is-valid]="searchForm.controls.endDate.valid"
+                  placeholder="yyyy-mm-dd" formControlName="endDate" ngbDatepicker #dEnd="ngbDatepicker" required
+                  container="body" (dateSelect)="onSearchDateChanges()">
+                <span class="input-group-text pointer" (click)="dEnd.toggle()">
+                  <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+                </span>
+              </div>
+            </div>
+          </div>     
         </div>
+      </form>
+    }
 
-        <div class="row mt-2">
-          <div class="col-2">
-            <label for="startDate" class="col-form-label">van</label>
-          </div>
-          <div class="col-4">
-            <div class="input-group input-group-date">
-              <input class="form-control"
-                [ngClass]="{ 'is-invalid': searchForm.controls.startDate.invalid, 'is-valid': searchForm.controls.startDate.valid }"
-                placeholder="yyyy-mm-dd" formControlName="startDate" ngbDatepicker #dStart="ngbDatepicker" required
-                container="body" (dateSelect)="onSearchDateChanges()">
-              <span class="input-group-text pointer" (click)="dStart.toggle()">
-                <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
-              </span>
-            </div>
-          </div>
-        </div>     
+    @if (!processingSearch) {
+      <table class="table mt-4">
+        <tbody>
+          @for (shell of shells; track shell) {
+            <tr class="pointer" (click)="linkToView(shell)">
+              @if (inPast(shell.startDateTime)) {
+                <td>
+                  <span
+                    style="text-decoration: line-through;">{{dateFormatter.toString(shell.startDateTime,dateFormatter.date())}}
+                    {{shell.startDateTime.getFullYear()}}</span>
+                </td>
+              }
+              @if (!inPast(shell.startDateTime)) {
+                <td [title]="shell.startDateTime.getFullYear()">
+                  {{dateFormatter.toString(shell.startDateTime,dateFormatter.datetime())}}
+                </td>
+              }
+              <td>
+                <app-sport-icon customId="shell.singleCustomSport"></app-sport-icon>
+              </td>
+              <td class="text-break">{{shell.name}}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
 
-        <div class="row my-2">
-          <div class="col-2">
-            <label for="endDate" class="col-form-label">tot</label>
-          </div>
-          <div class="col-4">
-            <div class="input-group input-group-date">
-              <input class="form-control"
-                [ngClass]="{ 'is-invalid': searchForm.controls.endDate.invalid, 'is-valid': searchForm.controls.endDate.valid }"
-                placeholder="yyyy-mm-dd" formControlName="endDate" ngbDatepicker #dEnd="ngbDatepicker" required
-                container="body" (dateSelect)="onSearchDateChanges()">
-              <span class="input-group-text pointer" (click)="dEnd.toggle()">
-                <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
-              </span>
-            </div>
-          </div>
-        </div>     
-      </div>
-    </form>
-
-    <table *ngIf="!processingSearch" class="table mt-4">
-      <tbody>
-        <tr class="pointer" (click)="linkToView(shell)" *ngFor="let shell of shells">
-          <td *ngIf="inPast(shell.startDateTime)">
-            <span
-              style="text-decoration: line-through;">{{dateFormatter.toString(shell.startDateTime,dateFormatter.date())}}
-              {{shell.startDateTime.getFullYear()}}</span>
-          </td>
-          <td *ngIf="!inPast(shell.startDateTime)" [title]="shell.startDateTime.getFullYear()">
-            {{dateFormatter.toString(shell.startDateTime,dateFormatter.datetime())}}
-          </td>
-          <td>
-            <app-sport-icon [customId]="shell.singleCustomSport"></app-sport-icon>
-          </td>
-          <td class="text-break">{{shell.name}}</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h2 *ngIf="processingSearch" class="text-center">
-      <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
-    </h2>
+    @if (processingSearch) {
+      <h2 class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+      </h2>
+    }
   </div>
 </div>

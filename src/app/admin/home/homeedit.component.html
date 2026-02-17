@@ -5,12 +5,17 @@
         <h2>
           <fa-icon [icon]="['fas', 'home']"></fa-icon> thuispagina
         </h2>
-        <h2 *ngIf="processing">
+        @if(processing) {
+        <h2>
           <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
         </h2>
+        }
       </div>
-      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+      @if(alert) {
+      <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+      }
+      @if(!processing) {
+      <form name="form" (ngSubmit)="save()" formGroup="form" novalidate>
 
         <div class="row mb-3">
           <div class="col-3">
@@ -18,7 +23,7 @@
           </div>
           <div class="col-9">
             <textarea class="form-control" rows="4"
-              [ngClass]="{ 'is-invalid': form.controls.intro.invalid, 'is-valid': form.controls.intro.valid }"
+              ngClass="{ 'is-invalid': form.controls.intro.invalid, 'is-valid': form.controls.intro.valid }"
               formControlName="intro" placeholder="max. {{validations.maxlengthintro}} karakters"></textarea>
           </div>
         </div>
@@ -30,10 +35,11 @@
           <div class="col-7">
             <!-- rules -->
             <ul class="list-group">
-              <li *ngFor=" let rule of rules | async"
-                class="list-group-item bg-white text-dark text-start text-nowrap overflow-hidden">
+              @for(rule of rules | async; track rule) {
+              <li class="list-group-item bg-white text-dark text-start text-nowrap overflow-hidden">
                 <span [innerHTML]="rule.text"></span>
               </li>
+              }
             </ul>
           </div>
           <div class="col-2 ps-0">
@@ -53,7 +59,7 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.location.invalid, 'is-valid': form.controls.location.valid }"
+              ngClass="{ 'is-invalid': form.controls.location.invalid, 'is-valid': form.controls.location.valid }"
               type="text" formControlName="location" placeholder="lat,lng of adresomschrijving">
           </div>
         </div>
@@ -70,12 +76,15 @@
         </div>
 
       </form>
+      }
     </div>
   </div>
 </div>
 
-<app-tournament-navbar [public]="false" [currentScreen]="HomeScreen" *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)">
+@if(tournament) {
+<app-tournament-navbar [public]="false" [currentScreen]="HomeScreen" [tournament]="tournament" [theme]="getTheme(tournament)">
 </app-tournament-navbar>
+}
 
 <ng-template #contentInfoLocation>
   <div class="text-center">

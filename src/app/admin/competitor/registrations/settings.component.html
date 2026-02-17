@@ -5,7 +5,7 @@
   
   <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
   
-  <form *ngIf="typedForm && !processing" [formGroup]="typedForm" name="form" (ngSubmit)="save()" novalidate>
+  <form *ngIf="typedForm && !processing" formGroup="typedForm" name="form" (ngSubmit)="save()" novalidate>
 
     <div class="row mb-3">
       <label for="enabled" class="col-5 col-form-label">
@@ -28,7 +28,7 @@
         <div class="input-group input-group-date">
           
           <input class="form-control"
-            [ngClass]="{ 'is-invalid': typedForm.controls.endDate.invalid, 'is-valid': typedForm.controls.endDate.valid }"
+            ngClass="{ 'is-invalid': typedForm.controls.endDate.invalid, 'is-valid': typedForm.controls.endDate.valid }"
             placeholder="yyyy-mm-dd" formControlName="endDate" ngbDatepicker #dEnd="ngbDatepicker" required
             [maxDate]="maxDateStruct" container="body">
           <span class="input-group-text pointer" (click)="dEnd.toggle()">

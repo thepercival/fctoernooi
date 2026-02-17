@@ -1,9 +1,7 @@
-egy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgbAlert } from '@ng-bootstrap/ng-bootstrap/ng-bootstrap-alert';
-import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { IAlertType } from '../../shared/common/alert';
@@ -13,13 +11,14 @@ import { UserComponent } from '../component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { CustomValidators } from '../password-validation';
 import { UserTitleComponent } from '../title/title.component';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.css'],
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule, NgbAlert, ReactiveFormsModule, RouterModule, UserTitleComponent],
+  imports: [FontAwesomeModule, NgbAlert, ReactiveFormsModule, RouterModule, UserTitleComponent],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegisterComponent extends UserComponent implements OnInit {

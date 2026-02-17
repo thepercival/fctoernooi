@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -18,16 +18,20 @@ import { TournamentRuleRepository } from '../../lib/tournament/rule/repository';
 import { JsonTournamentRule } from '../../lib/tournament/rule/json';
 import { Observable } from 'rxjs';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 
 @Component({
     selector: 'app-tournament-home-edit',
     templateUrl: './homeedit.component.html',
     styleUrls: ['./homeedit.component.scss'],
-    
+    standalone: true,
+    imports: [FontAwesomeModule, TournamentNavBarComponent]
 })
 export class HomeEditComponent extends TournamentComponent implements OnInit {
 
   public rules!: Observable<JsonTournamentRule[]>;    
+  private modalService: NgbModal = inject(NgbModal);
   
   public form: FormGroup<{
     intro: FormControl<string>, 
@@ -45,14 +49,13 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
     router: Router,
     tournamentRepository: TournamentRepository,
     structureRepository: StructureRepository,    
-    globalEventsManager: GlobalEventsManager,
-    modalService: NgbModal,
+    globalEventsManager: GlobalEventsManager,    
     favRepository: FavoritesRepository,
     private tournamentMapper: TournamentMapper,
     private myNavigation: MyNavigation,
     private ruleRepository: TournamentRuleRepository,
   ) {
-    super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+    super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
 
     this.form = new FormGroup({
       intro: new FormControl('', {

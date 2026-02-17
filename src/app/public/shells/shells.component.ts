@@ -7,14 +7,17 @@ import { TournamentShellFilter, TournamentShellRepository } from '../../lib/tour
 import { IAlert, IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap';
 import { DateConverter } from '../../lib/dateConverter';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { SportIconComponent } from '../../shared/tournament/sport/icon.component';
 
 @Component({
     selector: 'app-tournament-public-shells',
     templateUrl: './shells.component.html',
     styleUrls: ['./shells.component.scss'],
-    
+    standalone: true,
+    imports: [FontAwesomeModule, SportIconComponent, NgbInputDatepicker]
 })
 export class PublicShellsComponent implements OnInit{
 

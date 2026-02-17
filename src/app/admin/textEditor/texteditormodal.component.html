@@ -5,9 +5,9 @@
 <div class="modal-body">
     <div class="d-flex flex-column">
         
-        <form *ngIf="form" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+        <form *ngIf="form" name="form" (ngSubmit)="save()" formGroup="form" novalidate>
             <textarea class="form-control w-100 height-vw mb-3"
-                [ngClass]="{ 'is-invalid': form.controls.text.invalid, 'is-valid': form.controls.text.valid }"
+                ngClass="{ 'is-invalid': form.controls.text.invalid, 'is-valid': form.controls.text.valid }"
                 formControlName="text" required></textarea>
         </form>
         <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>

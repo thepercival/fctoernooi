@@ -11,14 +11,9 @@ import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TournamentIconComponent {
-    readonly _name = input.required<CustomIconName>();
-
-    get name(): CustomIconName {
-        return this._name();
-    }
+    readonly name = input.required<CustomIconName>();
 
     get prefix(): IconPrefix { return <IconPrefix>'fac'; }
-    get iconName(): IconName { return <IconName>this.name; }
 }
 
 type CustomIconName = 'referee' | 'scoreboard' | 'soccer-field' | 'structure';

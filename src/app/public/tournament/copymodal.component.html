@@ -14,9 +14,9 @@
                 </div>
                 <div class="col-7">                    
                     <input class="form-control"
-                        [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
+                        ngClass="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
                         formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters"
-                        [focusMe]="true">
+                        focusMe="true">
                     
                 </div>
             </div>

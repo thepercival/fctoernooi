@@ -1,15 +1,16 @@
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgbActiveModal, NgbDateStruct, NgbModal, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
-import { Tournament } from '../../lib/tournament';
-import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
+import { Component, inject, Input, OnInit, TemplateRef } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NgbActiveModal, NgbAlert, NgbDateStruct, NgbInputDatepicker, NgbModal, NgbTimepicker, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { League } from 'ngx-sport';
+import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-ngbd-modal-copy',
     templateUrl: './copymodal.component.html',
     styleUrls: ['./copymodal.component.scss'],
-    
+    standalone: true,
+    imports: [NgbAlert, FontAwesomeModule, NgbTimepicker, NgbInputDatepicker, ReactiveFormsModule]
 })
 export class CopyModalComponent implements OnInit {
     @Input() name!: string;
@@ -31,6 +32,8 @@ export class CopyModalComponent implements OnInit {
         minlengthname: League.MIN_LENGTH_NAME,
         maxlengthname: League.MAX_LENGTH_NAME
     };
+
+    faCalendarAlt = faCalendarAlt;
     
     constructor() {
         const date = new Date();

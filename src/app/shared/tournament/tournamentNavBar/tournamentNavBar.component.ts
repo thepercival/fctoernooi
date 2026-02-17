@@ -19,10 +19,11 @@ import { TournamentIconComponent } from '../icon/icon.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TournamentNavBarComponent implements AfterViewChecked {
-  readonly _upperNavBar = input<TemplateRef<any> | undefined>(undefined);  
-  readonly _public = input(false);
-  readonly _currentScreen = input.required<TournamentScreen>();
-  readonly _roles = input.required<Role[]>();
+  public upperNavBar = input<TemplateRef<any> | undefined>(undefined);  
+  public public = input(false);
+  public currentScreen = input.required<TournamentScreen>();
+  public roles = input.required<Role[]>();
+
   public tournament = input.required<Tournament>();
   public theme = input.required<JsonTheme>();
 
@@ -50,29 +51,25 @@ export class TournamentNavBarComponent implements AfterViewChecked {
   get FavoritesScreen(): TournamentScreen { return TournamentScreen.Favorites }
   get CompetitorsScreen(): TournamentScreen { return TournamentScreen.Competitors }
   get SettingsScreen(): TournamentScreen { return TournamentScreen.Settings }
-  get CompetitorTabBase(): CompetitorTab { return CompetitorTab.Base } 
-  get upperNavBar(): TemplateRef<any> | undefined { return this._upperNavBar(); }
-  get public(): boolean { return this._public(); }
-  get currentScreen(): TournamentScreen { return this._currentScreen(); }
-  get roles(): Role[] { return this._roles(); }
+  get CompetitorTabBase(): CompetitorTab { return CompetitorTab.Base }   
 
   getBtnClass(screen: TournamentScreen): string {
-    if (this.currentScreen === screen) {
+    if (this.currentScreen() === screen) {
       return this.getTextContrastColorClass();
     }
     return 'btn-navbar';
   }
 
   linkToStructure() {
-    this.router.navigate(['/' + (this.public ? 'public' : 'admin') + '/structure', this.tournament().getId()]);
+    this.router.navigate(['/' + (this.public() ? 'public' : 'admin') + '/structure', this.tournament().getId()]);
   }
 
   linkToLockerRooms() {
-    this.router.navigate(['/' + (this.public ? 'public' : 'admin') + '/lockerrooms', this.tournament().getId()]);
+    this.router.navigate(['/' + (this.public() ? 'public' : 'admin') + '/lockerrooms', this.tournament().getId()]);
   }
 
   linkToGames() {
-    this.router.navigate(['/' + (this.public ? 'public' : 'admin') + '/games', this.tournament().getId()]);
+    this.router.navigate(['/' + (this.public() ? 'public' : 'admin') + '/games', this.tournament().getId()]);
   }
 
   hasRole(roles: number): boolean {

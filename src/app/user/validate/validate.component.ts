@@ -1,9 +1,8 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router, Params } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgbAlert } from '@ng-bootstrap/ng-bootstrap/alert';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 
 import { IAlertType } from '../../shared/common/alert';
 import { User } from '../../lib/user';
@@ -18,8 +17,8 @@ import { UserTitleComponent } from '../title/title.component';
     templateUrl: './validate.component.html',
     styleUrls: ['./validate.component.css'],
     standalone: true,
-    imports: [CommonModule, FontAwesomeModule, NgbAlert, ReactiveFormsModule, UserTitleComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [FontAwesomeModule, ReactiveFormsModule, UserTitleComponent, NgbAlert]
 })
 export class ValidateComponent extends UserComponent implements OnInit {
   code: string = '';
@@ -56,7 +55,7 @@ export class ValidateComponent extends UserComponent implements OnInit {
 
   ngOnInit() {
 
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params: Params) => {
       if (params.code && params.code.length > 0) {
         this.code = params.code;
       }

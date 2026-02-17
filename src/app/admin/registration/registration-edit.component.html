@@ -16,14 +16,14 @@
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
       <form *ngIf="!processing && registration" name="form" (ngSubmit)="save(registration)"
-        [formGroup]="form" novalidate>
+        formGroup="form" novalidate>
         <div class="row mb-3">
           <div class="col-3">
             <label for="name" class="col-form-label">naam</label>
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
+              ngClass="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
               formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters" [focusMe]="true">
           </div>
         </div>
@@ -34,7 +34,7 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.emailaddress.invalid, 'is-valid': form.controls.emailaddress.valid }"
+              ngClass="{ 'is-invalid': form.controls.emailaddress.invalid, 'is-valid': form.controls.emailaddress.valid }"
               type="email" formControlName="emailaddress"
               placeholder="max. {{validations.maxlengthemailaddress}} karakters">
           </div>
@@ -46,7 +46,7 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.telephone.invalid, 'is-valid': form.controls.telephone.valid }"
+              ngClass="{ 'is-invalid': form.controls.telephone.invalid, 'is-valid': form.controls.telephone.valid }"
               type="tel" formControlName="telephone" placeholder="max. {{validations.maxlengthtelephone}} karakters">
           </div>
         </div>
@@ -70,7 +70,7 @@
           </div>
           <div class="col-9">
             <textarea class="form-control"
-              [ngClass]="{ 'is-invalid': form.controls.info.invalid, 'is-valid': form.controls.info.valid }"
+              ngClass="{ 'is-invalid': form.controls.info.invalid, 'is-valid': form.controls.info.valid }"
               formControlName="info" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>

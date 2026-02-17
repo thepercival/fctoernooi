@@ -8,9 +8,12 @@ import { Role } from '../lib/role';
 import { TournamentShell } from '../lib/tournament/shell';
 import { GlobalEventsManager } from '../shared/common/eventmanager';
 import { DefaultJsonTheme } from '../lib/tournament/theme';
+import { HomeShellComponent } from './shell.component';
 
 @Component({
     selector: 'app-home',
+    standalone: true,
+    imports: [HomeShellComponent],
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
     

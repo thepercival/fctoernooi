@@ -12,7 +12,7 @@
         </app-user-title>
         <div class="card-body text-center mx-auto form-validate border-top-0 border-primary">
           @if(alert()) {
-          <ngb-alert [type]="alert()?.type">{{ alert()?.message }}</ngb-alert>
+          <ngb-alert type="alert()?.type">{{ alert()?.message }}</ngb-alert>
           }
 
           @if(!processing() && !authService.isLoggedIn()) {
@@ -24,7 +24,7 @@
               </div>
               <div class="col-9">
                 <input class="form-control"
-                  [ngClass]="{ 'is-invalid': typedForm.controls.emailaddress.invalid, 'is-valid': typedForm.controls.emailaddress.valid }"
+                  ngClass="{ 'is-invalid': typedForm.controls.emailaddress.invalid, 'is-valid': typedForm.controls.emailaddress.valid }"
                   type="text" formControlName="emailaddress"
                   placeholder="max. {{validations.maxlengthemailaddress}} karakters">
               </div>
@@ -35,7 +35,7 @@
               </div>
               <div class="col-9">
                 <input class="form-control"
-                  [ngClass]="{ 'is-invalid': typedForm.controls.password.invalid, 'is-valid': typedForm.controls.password.valid }"
+                  ngClass="{ 'is-invalid': typedForm.controls.password.invalid, 'is-valid': typedForm.controls.password.valid }"
                   type="password" formControlName="password"
                   placeholder="min. {{validations.minlengthpassword}} karakters">
               </div>

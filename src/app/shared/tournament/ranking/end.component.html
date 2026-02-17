@@ -10,13 +10,13 @@
     <tbody>
       <tr *ngFor="let rankingItem of rankingItems">
         <td class="text-end">
-          <span [ngClass]="{ 'favitem': isFavorite(rankingItem) }">{{rankingItem.getRank()}}</span>
+          <span ngClass="{ 'favitem': isFavorite(rankingItem) }">{{rankingItem.getRank()}}</span>
         </td>
         <td>
           <fa-icon *ngIf="hasMedal(rankingItem.getRank())" [icon]="['fas', 'medal']"
             class="{{getMedalColor(rankingItem.getRank())}}"></fa-icon>
         </td>
-        <td [ngClass]="{ 'favitem': isFavorite(rankingItem) }">{{getName(rankingItem)}}</td>
+        <td ngClass="{ 'favitem': isFavorite(rankingItem) }">{{getName(rankingItem)}}</td>
       </tr>
     </tbody>
   </table>

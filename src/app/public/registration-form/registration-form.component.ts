@@ -8,7 +8,7 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { AuthService } from '../../lib/auth/auth.service';
 import { Role } from '../../lib/role';
@@ -21,14 +21,17 @@ import { NameValidator } from '../../lib/nameValidator';
 import { JsonTournamentRegistration } from '../../lib/tournament/registration/json';
 import { User } from '../../lib/user';
 import { RegistrationState } from '../../lib/tournament/registration/state';
-import { WebsitePart } from '../../shared/tournament/structure/admin-public-switcher.component';
+import { AdminPublicSwitcherComponent, WebsitePart } from '../../shared/tournament/structure/admin-public-switcher.component';
 import { CompetitorTab, RegistrationTab } from '../../shared/common/tab-ids';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-registration-form',
     templateUrl: './registration-form.component.html',
     styleUrls: ['./registration-form.component.scss'],
-    
+    standalone: true,
+    imports: [FontAwesomeModule, AdminPublicSwitcherComponent, NgbAlert]
 })
 export class RegistrationComponent extends TournamentComponent implements OnInit {
     public settings: TournamentRegistrationSettings|undefined;
@@ -51,6 +54,7 @@ export class RegistrationComponent extends TournamentComponent implements OnInit
         maxlengthinfo: TournamentCompetitor.MAX_LENGTH_INFO,
     };
     // 17056
+    faSpinner = faSpinner;
 
     constructor(
         route: ActivatedRoute,
@@ -58,14 +62,13 @@ export class RegistrationComponent extends TournamentComponent implements OnInit
         tournamentRepository: TournamentRepository,
         sructureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
         favRepository: FavoritesRepository,
         private tournamentRegistrationRepository: TournamentRegistrationRepository,
         private nameValidator: NameValidator,
         private myNavigation: MyNavigation,
         private authService: AuthService,
     ) {
-        super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, sructureRepository, globalEventsManager, favRepository);
         this.resetAlert();
     }
 

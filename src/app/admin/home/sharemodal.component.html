@@ -6,7 +6,7 @@
 </div>
 <div class="modal-body">
     <div class="container-fluid">
-        <form name="form" (ngSubmit)="false" [formGroup]="typedForm" novalidate>
+        <form name="form" (ngSubmit)="false" formGroup="typedForm" novalidate>
             <div class="row mb-3">
                 <label for="publicotherid" class="col-4 col-form-label pointer">publiek
                     <fa-icon (click)="openInfoModal(infoPublic)" [icon]="['fas', 'info-circle']" class="text-info">

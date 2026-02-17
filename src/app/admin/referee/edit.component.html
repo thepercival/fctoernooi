@@ -12,14 +12,14 @@
         </h2>
       </div>
       <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
+      <form *ngIf="!processing" name="form" (ngSubmit)="save()" formGroup="typedForm" novalidate>
         <div class="row mb-3">
           <div class="col-3">
             <label for="initials" class="col-form-label">initialen</label>
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': typedForm.controls.initials.invalid, 'is-valid': typedForm.controls.initials.valid }"
+              ngClass="{ 'is-invalid': typedForm.controls.initials.invalid, 'is-valid': typedForm.controls.initials.valid }"
               type="text" formControlName="initials" placeholder="max. {{validations.maxlengthinitials}} karakters"
               [focusMe]="originalReferee === undefined">
           </div>
@@ -30,7 +30,7 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': typedForm.controls.name.invalid, 'is-valid': typedForm.controls.name.valid }" type="text"
+              ngClass="{ 'is-invalid': typedForm.controls.name.invalid, 'is-valid': typedForm.controls.name.valid }" type="text"
               formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
           </div>
         </div>
@@ -42,7 +42,7 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': typedForm.controls.emailaddress.invalid, 'is-valid': typedForm.controls.emailaddress.valid }"
+              ngClass="{ 'is-invalid': typedForm.controls.emailaddress.invalid, 'is-valid': typedForm.controls.emailaddress.valid }"
               type="email" formControlName="emailaddress"
               placeholder="max. {{validations.maxlengthemailaddress}} karakters">
           </div>
@@ -53,7 +53,7 @@
           </div>
           <div class="col-9">
             <textarea class="form-control"
-              [ngClass]="{ 'is-invalid': typedForm.controls.info.invalid, 'is-valid': typedForm.controls.info.valid }"
+              ngClass="{ 'is-invalid': typedForm.controls.info.invalid, 'is-valid': typedForm.controls.info.valid }"
               formControlName="info" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>

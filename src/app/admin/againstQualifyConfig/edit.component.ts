@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
     NameService,
@@ -12,7 +12,7 @@ import {
     PointsCalculation,
 } from 'ngx-sport';
 import { CSSService } from '../../shared/common/cssservice';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Tournament } from '../../lib/tournament';
 import { IAlert, IAlertType } from '../../shared/common/alert';
 import { RoundsSelectorModalComponent, SelectableCategory, SelectableRoundNode } from '../rounds/selector.component';
@@ -22,10 +22,15 @@ import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.
 import { Router } from '@angular/router';
 import { RoundsSelection, SelectableCategoriesCreator, SelectableCategoryConverter } from '../scoreConfig/edit.component';
 import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
+import { faSpinner, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
 
 @Component({
     selector: 'app-tournament-qualifyagainstconfig-edit',
     templateUrl: './edit.component.html',
+    standalone: true,
+    imports: [FontAwesomeModule,NgbAlert],
     styleUrls: ['./edit.component.scss'],
 })
 export class AgainstQualifyConfigEditComponent implements OnInit {
@@ -63,6 +68,9 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
     private mapper = inject(AgainstQualifyConfigMapper);
     private router = inject(Router);
     private modalService = inject(NgbModal);
+
+      protected readonly faSpinner = faSpinner;
+    protected readonly faInfoCircle = faInfoCircle;
 
     constructor() {
         this.typedForm = new FormGroup({

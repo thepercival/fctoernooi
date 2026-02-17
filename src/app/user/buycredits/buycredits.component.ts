@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
+
 
 import { IAlertType } from '../../shared/common/alert';
 import { User } from '../../lib/user';
@@ -16,12 +16,13 @@ import { UserComponent } from '../component';
 import { AuthService } from '../../lib/auth/auth.service';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { PaymentState } from '../../lib/payment/state';
+
 @Component({
     selector: 'app-buycredits',
     templateUrl: './buycredits.component.html',
     styleUrls: ['./buycredits.component.css'],
     standalone: true,
-  imports: [CommonModule, FontAwesomeModule, ReactiveFormsModule, NgbAlertModule],
+  imports: [FontAwesomeModule, ReactiveFormsModule, NgbAlert],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BuyCreditsComponent extends UserComponent implements OnInit {
