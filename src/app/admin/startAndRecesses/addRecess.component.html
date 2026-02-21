@@ -5,20 +5,26 @@
         <h2>
           <fa-icon [icon]="['fas', 'users']"></fa-icon> pauze toevoegen
         </h2>
-        <h2 *ngIf="processing">
+        @if(processing) {
+        <h2>
           <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
         </h2>
+        }
       </div>
-      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing && !hasBegun" name="form" (ngSubmit)="save()" formGroup="typedForm" novalidate>
+      @if(alert) {
+      <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+      }
+      @if(!processing && !hasBegun) {
+      <form name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
         <div class="row my-3">
           <div class="col-3">
             <label for="name" class="col-form-label">naam</label>
           </div>
           <div class="col-9 col-sm-6">
             <input class="form-control" required
-              ngClass="{ 'is-invalid': typedForm.controls.name.invalid, 'is-valid': typedForm.controls.name.valid }" type="text"
-              formControlName="name">
+              [class.is-invalid]="typedForm.controls.name.invalid"
+              [class.is-valid]="typedForm.controls.name.valid"
+              type="text" formControlName="name">
           </div>
         </div>
         <div class="row mb-3">
@@ -28,7 +34,8 @@
           <div class="col-9">
             <div class="input-group input-group-date">
               <input class="form-control"
-                ngClass="{ 'is-invalid': typedForm.controls.startdate.invalid, 'is-valid': typedForm.controls.startdate.valid }"
+                [class.is-invalid]="typedForm.controls.startdate.invalid"
+                [class.is-valid]="typedForm.controls.startdate.valid"
                 placeholder="yyyy-mm-dd" formControlName="startdate" ngbDatepicker #dStart="ngbDatepicker" required
                 [minDate]="minDateStruct" container="body">
               <span class="input-group-text pointer" (click)="dStart.toggle()">
@@ -53,7 +60,8 @@
           <div class="col-9">
             <div class="input-group input-group-date">
               <input class="form-control"
-                ngClass="{ 'is-invalid': typedForm.controls.enddate.invalid, 'is-valid': typedForm.controls.enddate.valid }"
+                [class.is-invalid]="typedForm.controls.enddate.invalid"
+                [class.is-valid]="typedForm.controls.enddate.valid"
                 placeholder="yyyy-mm-dd" formControlName="enddate" ngbDatepicker #dEnd="ngbDatepicker" required
                 [minDate]="minDateStruct" container="body">
               <span class="input-group-text pointer" (click)="dEnd.toggle()">
@@ -82,9 +90,12 @@
           </div>
         </div>
       </form>
+      }
     </div>
   </div>
 </div>
 
-<app-tournament-navbar [public]="false" *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)">
+@if(tournament) {
+<app-tournament-navbar [public]="false" [tournament]="tournament" [theme]="getTheme(tournament)">
 </app-tournament-navbar>
+}

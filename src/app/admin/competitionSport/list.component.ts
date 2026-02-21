@@ -1,10 +1,9 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   Sport,
   CompetitionSport,
-  PouleStructure,
   Round,
   Poule,
   NameService,
@@ -24,15 +23,20 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { CompetitionSportTab } from '../../shared/tournament/competitionSportTab';
 import { CompetitionSportRepository } from '../../lib/ngx-sport/competitionSport/repository';
-import { SportWithFields } from '../sport/createSportWithFields.component';
+import { CreateSportWithFieldsComponent, SportWithFields } from '../sport/createSportWithFields.component';
 import { IAlertType } from '../../shared/common/alert';
 import { GameModeModalComponent } from '../gameMode/modal.component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TournamentIconComponent } from '../../shared/tournament/icon/icon.component';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 @Component({
     selector: 'app-tournament-sport',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
+    standalone: true,
+    imports: [TournamentNavBarComponent,FontAwesomeModule,NgbAlert,TournamentIconComponent,CreateSportWithFieldsComponent]
 })
 export class CompetitionSportListComponent extends TournamentComponent implements OnInit {
   public smallestNrOfPoulePlaces!: number;

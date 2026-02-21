@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -11,17 +11,21 @@ import { TournamentUser } from '../../lib/tournament/user';
 import { Observable, of } from 'rxjs';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { Category, RoundNumber, SelfReferee, StartLocationMap, Structure, StructureNameService } from 'ngx-sport';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
-import { OptionalGameColumn } from '../../shared/tournament/games/roundnumber.component';
+import { OptionalGameColumn, RoundNumberPlanningComponent } from '../../shared/tournament/games/roundnumber.component';
 import { TournamentCompetitor } from '../../lib/competitor';
+import { CategoryChooseModalComponent } from '../../shared/tournament/category/chooseModal.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 
 @Component({
     selector: 'app-tournament-games-edit',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.css'],
-    
+    standalone: true,
+    imports: [NgbAlert,FontAwesomeModule,RoundNumberPlanningComponent,TournamentNavBarComponent]
 })
 export class GameListComponent extends TournamentComponent implements OnInit {
   userRefereeId: number | string | undefined;
@@ -30,18 +34,19 @@ export class GameListComponent extends TournamentComponent implements OnInit {
   public categoryMap: Map<number, Category> = new Map();
   public optionalGameColumns: Map<OptionalGameColumn, boolean> = new Map(); 
 
+  private modalService: NgbModal = inject(NgbModal);
+
   constructor(
     route: ActivatedRoute,
     router: Router,
     tournamentRepository: TournamentRepository,
     structureRepository: StructureRepository,
-    globalEventsManager: GlobalEventsManager,
-    modalService: NgbModal,
+    globalEventsManager: GlobalEventsManager,    
     favRepository: FavoritesRepository,
     private authService: AuthService,
     private myNavigation: MyNavigation,
   ) {
-    super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+    super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
   }
 
   ngOnInit() {
@@ -99,4 +104,14 @@ export class GameListComponent extends TournamentComponent implements OnInit {
   scroll() {
     this.myNavigation.scroll();
   }
+
+  openCategoriesChooseModal(structure: Structure) {
+    const activeModal = this.modalService.open(CategoryChooseModalComponent);
+    activeModal.componentInstance.categories = structure.getCategories();
+    activeModal.componentInstance.tournament = this.tournament;
+    activeModal.result.then((result) => {
+    }, (reason) => {
+        this.updateFavoriteCategories(structure);
+    });
+}
 }

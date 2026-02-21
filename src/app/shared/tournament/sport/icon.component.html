@@ -1,2 +1,6 @@
-<fa-icon *ngIf="iconName" [icon]="[prefix, iconName]"></fa-icon>
-<span *ngIf="!iconName">&nbsp;</span>
+@if( iconName) {
+    <fa-icon [icon]="[prefix, iconName]"></fa-icon>
+} @else {
+    <span>&nbsp;</span>
+}
+

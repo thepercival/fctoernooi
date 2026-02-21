@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -18,7 +17,7 @@ import { UserTitleComponent } from '../title/title.component';
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css'],
     standalone: true,
-    imports: [CommonModule, FontAwesomeModule, NgbAlert, ReactiveFormsModule, RouterModule, UserTitleComponent],
+    imports: [FontAwesomeModule, NgbAlert, ReactiveFormsModule, RouterModule, UserTitleComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent extends UserComponent implements OnInit {

@@ -21,8 +21,8 @@ import { TournamentIconComponent } from '../icon/icon.component';
 export class TournamentNavBarComponent implements AfterViewChecked {
   public upperNavBar = input<TemplateRef<any> | undefined>(undefined);  
   public public = input(false);
-  public currentScreen = input.required<TournamentScreen>();
-  public roles = input.required<Role[]>();
+  public currentScreen = input<TournamentScreen|undefined>();
+  // public roles = input.required<Role[]>();
 
   public tournament = input.required<Tournament>();
   public theme = input.required<JsonTheme>();
@@ -33,7 +33,6 @@ export class TournamentNavBarComponent implements AfterViewChecked {
     public authService: AuthService,
     private router: Router
   ) {
-
   }
 
   ngAfterViewChecked() {

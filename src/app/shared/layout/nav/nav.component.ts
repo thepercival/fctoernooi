@@ -1,5 +1,4 @@
 import { AfterContentInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -14,7 +13,7 @@ import { SvgIconComponent } from '../svgicon.component';
     templateUrl: './nav.component.html',
     styleUrls: ['./nav.component.scss'],
     standalone: true,
-    imports: [CommonModule, RouterModule, SvgIconComponent],
+    imports: [RouterModule, SvgIconComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavComponent implements OnInit, AfterContentInit {

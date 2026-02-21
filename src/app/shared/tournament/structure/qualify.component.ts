@@ -20,12 +20,12 @@ import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructureQualifyComponent {
-    readonly _structureEditor = input.required<StructureEditor>();
-    readonly _parentRound = input.required<Round>();
-    readonly _structureNameService = input.required<StructureNameService>();
-    readonly _lastAction = input<StructureAction | undefined>(undefined);
+    public structureEditor = input.required<StructureEditor>();
+    public parentRound = input.required<Round>();
+    public structureNameService = input.required<StructureNameService>();
+    public lastAction = input<StructureAction | undefined>(undefined);
     
-    readonly onActionAdd = output<StructureAction>();
+    public onActionAdd = output<StructureAction>();
 
     alert: IAlert | undefined;
 
@@ -46,11 +46,11 @@ export class StructureQualifyComponent {
     updateDistribution(target: QualifyTarget, distribution: QualifyDistribution): void {
         this.resetAlert();
         try {
-            const qualifyGroup = this.parentRound.getBorderQualifyGroup(target);
-            this.structureEditor.updateDistribution(qualifyGroup, distribution);
+            const qualifyGroup = this.parentRound().getBorderQualifyGroup(target);
+            this.structureEditor().updateDistribution(qualifyGroup, distribution);
             console.log(qualifyGroup);
             this.onActionAdd.emit({
-                pathNode: this.parentRound.getPathNode(),
+                pathNode: this.parentRound().getPathNode(),
                 name: StructureActionName.UpdateQualifyDistribution,
                 recreateStructureNameService: true
             });
@@ -61,15 +61,15 @@ export class StructureQualifyComponent {
     }
 
     canRemoveQualifier(target: QualifyTarget): boolean {
-        return this.parentRound.getBorderQualifyGroup(target) !== undefined;
+        return this.parentRound().getBorderQualifyGroup(target) !== undefined;
     }
 
     removeQualifier(target: QualifyTarget) {
         this.resetAlert();
         try {
-            this.structureEditor.removeQualifier(this.parentRound, target);
+            this.structureEditor().removeQualifier(this.parentRound(), target);
             this.onActionAdd.emit({
-                pathNode: this.parentRound.getPathNode(),
+                pathNode: this.parentRound().getPathNode(),
                 name: StructureActionName.RemoveQualifier,
                 recreateStructureNameService: true
             });
@@ -79,10 +79,10 @@ export class StructureQualifyComponent {
     }
 
     canAddQualifier(target: QualifyTarget): boolean {
-        let nrOfToPlacesChildren = this.parentRound.getNrOfPlacesChildren();
-        const nrOfPlaces = this.parentRound.getNrOfPlaces();
+        let nrOfToPlacesChildren = this.parentRound().getNrOfPlacesChildren();
+        const nrOfPlaces = this.parentRound().getNrOfPlaces();
         const availableNrOfPlacesToAdd = nrOfPlaces - nrOfToPlacesChildren;
-        const borderQualifyGroup = this.parentRound.getBorderQualifyGroup(target);
+        const borderQualifyGroup = this.parentRound().getBorderQualifyGroup(target);
         if (borderQualifyGroup === undefined) {
             return this.canAddChildRound(availableNrOfPlacesToAdd);
         }
@@ -90,7 +90,7 @@ export class StructureQualifyComponent {
             return false;
         }
         try {
-            this.structureEditor.validate(
+            this.structureEditor().validate(
                 borderQualifyGroup.getChildRound().getCompetition(),
                 borderQualifyGroup.getChildRound().getNrOfPlaces() + 1,
                 borderQualifyGroup.getChildRound().getPoules().length
@@ -102,7 +102,7 @@ export class StructureQualifyComponent {
     }
 
     canAddChildRound(availableNrOfPlacesToAdd: number): boolean {
-        return availableNrOfPlacesToAdd >= this.structureEditor.getMinPlacesPerPouleSmall();
+        return availableNrOfPlacesToAdd >= this.structureEditor().getMinPlacesPerPouleSmall();
     }
 
     addQualifier(target: QualifyTarget) {
@@ -110,30 +110,31 @@ export class StructureQualifyComponent {
         try {
             let initialMaxNrOfPoulePlaces;
             let pathNode;
-            let borderQualifyGroup = this.parentRound.getBorderQualifyGroup(target);
+            let borderQualifyGroup = this.parentRound().getBorderQualifyGroup(target);
             if (borderQualifyGroup === undefined) {
-                const minNrOfPlacesPerPoule = this.structureEditor.getMinPlacesPerPouleSmall();
+                const minNrOfPlacesPerPoule = this.structureEditor().getMinPlacesPerPouleSmall();
                 initialMaxNrOfPoulePlaces = minNrOfPlacesPerPoule;
                 // if (target === QualifyTarget.Losers) {
                 //     console.log('AddQualifier Pre');
                 //     console.log(this.parentRound);
                 // }
-                this.structureEditor.addChildRound(this.parentRound, target, [minNrOfPlacesPerPoule]);
+                this.structureEditor().addChildRound(this.parentRound(), target, [minNrOfPlacesPerPoule]);
                 // if (target === QualifyTarget.Losers) {
                 //     console.log('AddQualifier Post');
                 //     console.log(this.parentRound);
                 // }
-                borderQualifyGroup = this.parentRound.getBorderQualifyGroup(target);
+                borderQualifyGroup = this.parentRound().getBorderQualifyGroup(target);
                 pathNode = borderQualifyGroup.getChildRound().getPathNode()    
             } else {
                 pathNode = borderQualifyGroup.getChildRound().getPathNode();
-                if (this.lastAction && this.lastAction.pathNode?.pathToString() === pathNode.pathToString()
-                    && this.lastAction.name === StructureActionName.AddQualifier) {
-                    initialMaxNrOfPoulePlaces = this.lastAction.initialMaxNrOfPoulePlaces;
+                const lastAction = this.lastAction();
+                if (lastAction && lastAction.pathNode?.pathToString() === pathNode.pathToString()
+                    && lastAction.name === StructureActionName.AddQualifier) {
+                    initialMaxNrOfPoulePlaces = lastAction.initialMaxNrOfPoulePlaces;
                 } else {
                     initialMaxNrOfPoulePlaces = borderQualifyGroup.getChildRound().getFirstPoule().getPlaces().length;
                 }
-                this.structureEditor.addQualifiers(this.parentRound, target, 1, borderQualifyGroup.getDistribution(), initialMaxNrOfPoulePlaces);
+                this.structureEditor().addQualifiers(this.parentRound(), target, 1, borderQualifyGroup.getDistribution(), initialMaxNrOfPoulePlaces);
             }
             
 
@@ -151,9 +152,9 @@ export class StructureQualifyComponent {
     splitQualifyGroupFrom(singleRule: HorizontalSingleQualifyRule | VerticalSingleQualifyRule) {
         this.resetAlert();
         try {
-            this.structureEditor.splitQualifyGroupFrom(singleRule.getGroup(), singleRule);            
+            this.structureEditor().splitQualifyGroupFrom(singleRule.getGroup(), singleRule);            
             this.onActionAdd.emit({
-                pathNode: this.parentRound.getPathNode(),
+                pathNode: this.parentRound().getPathNode(),
                 name: StructureActionName.SplitQualifyGroupsFrom,
                 recreateStructureNameService: true
             });
@@ -169,9 +170,9 @@ export class StructureQualifyComponent {
         }
         this.resetAlert();
         try {
-            this.structureEditor.mergeQualifyGroups(group, next);
+            this.structureEditor().mergeQualifyGroups(group, next);
             this.onActionAdd.emit({
-                pathNode: this.parentRound.getPathNode(),
+                pathNode: this.parentRound().getPathNode(),
                 name: StructureActionName.MergeQualifyGroupWithNext,
                 recreateStructureNameService: true
             });
@@ -181,7 +182,7 @@ export class StructureQualifyComponent {
     }
 
     getQualifyGroupBtnClass(target: QualifyTarget): string {
-        const editable = this.structureEditor.isSomeQualifyGroupEditable(this.parentRound, target);
+        const editable = this.structureEditor().isSomeQualifyGroupEditable(this.parentRound(), target);
         return 'btn-outline-' + (editable ? 'primary' : 'secondary');
     }
 
@@ -194,10 +195,10 @@ export class StructureQualifyComponent {
     }
 
     isQualifyTargetBtnActive(target: QualifyTarget): boolean {
-        if( this.structureEditor.isSomeQualifyGroupEditable(this.parentRound, target) ) {
+        if( this.structureEditor().isSomeQualifyGroupEditable(this.parentRound(), target) ) {
             return true;
         }
-        const nrOfPoules = this.parentRound.getQualifyGroups(target).
+        const nrOfPoules = this.parentRound().getQualifyGroups(target).
             reduce((sum: number, current: QualifyGroup): number => {
                 const nrOfPoules = current.getChildRound().getPoules().length;
                 return sum + nrOfPoules
@@ -248,22 +249,6 @@ export class StructureQualifyComponent {
 
     protected setAlert(type: IAlertType, message: string) {
         this.alert = { type: type, message: message };
-    }
-
-    get structureEditor(): StructureEditor {
-        return this._structureEditor();
-    }
-
-    get parentRound(): Round {
-        return this._parentRound();
-    }
-
-    get structureNameService(): StructureNameService {
-        return this._structureNameService();
-    }
-
-    get lastAction(): StructureAction | undefined {
-        return this._lastAction();
     }
 }
 

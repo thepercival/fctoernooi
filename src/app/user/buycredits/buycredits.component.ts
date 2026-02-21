@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -18,11 +18,15 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { PaymentState } from '../../lib/payment/state';
 
 @Component({
-    selector: 'app-buycredits',
-    templateUrl: './buycredits.component.html',
-    styleUrls: ['./buycredits.component.css'],
-    standalone: true,
-  imports: [FontAwesomeModule, ReactiveFormsModule, NgbAlert],
+  selector: 'app-buycredits',
+  templateUrl: './buycredits.component.html',
+  styleUrls: ['./buycredits.component.css'],
+  imports: [
+    FontAwesomeModule,
+    ReactiveFormsModule,
+    NgbAlert
+    
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BuyCreditsComponent extends UserComponent implements OnInit {
@@ -41,9 +45,10 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
     cvc: FormControl<string>,
     agreed: FormControl<boolean>
   }>;
-  public paymentMethods!: Observable<string[]>;
-  public idealIssuers!: Observable<IDealIssuer[]>;
-  public nrOfCreditsOptions!: Observable<number[]>;
+  public paymentMethods = model.required<string[]>();
+  public idealIssuers = model.required<IDealIssuer[]>();
+  public nrOfCreditsOptions = model.required<number[]>();
+
   constructor(
     route: ActivatedRoute,
     router: Router,
@@ -110,9 +115,19 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.nrOfCreditsOptions = of([3, 5, 10, 15, 20, 35, 50, 100]);
-    this.paymentMethods = this.paymentRepository.getMethods();
-    this.idealIssuers = this.paymentRepository.getIDealIssuers();
+    this.nrOfCreditsOptions.set([3, 5, 10, 15, 20, 35, 50, 100]);
+    this.paymentRepository.getMethods()
+      .subscribe({
+        next: (paymentMethods: string[]) => {
+          this.paymentMethods.set(paymentMethods);
+        }
+      });
+    this.paymentRepository.getIDealIssuers()
+      .subscribe({
+        next: (idealIssuers: IDealIssuer[]) => {
+          this.idealIssuers.set(idealIssuers);
+        }
+      });
     this.userRepository.getLoggedInObject()
       .subscribe({
         next: (loggedInUser: User | undefined) => {

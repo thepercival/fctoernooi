@@ -6,13 +6,15 @@ import { CSSService } from '../../shared/common/cssservice';
 import { TranslateSportService } from '../../lib/translate/sport';
 import { SportRepository } from '../../lib/ngx-sport/sport/repository';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
+import { SportIconComponent } from '../../shared/tournament/sport/icon.component';
 @Component({
     selector: 'app-tournament-sport-to-add',
     templateUrl: './toAdd.component.html',
     styleUrls: ['./toAdd.component.scss'],
-    
+    standalone: true,
+    imports: [NgbAlert,SportIconComponent]
 })
 export class SportToAddComponent implements OnInit {
     sportToAdd = output<Sport>();

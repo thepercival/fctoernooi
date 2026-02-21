@@ -1,6 +1,6 @@
-import { Component, OnInit, TemplateRef, InputSignal, input, inject } from '@angular/core';
+import { Component, OnInit, TemplateRef, inject } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Params, Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlanningEditMode, RoundNumber } from 'ngx-sport';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -26,16 +26,20 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { CopyConfig, CopyModalComponent } from '../../public/tournament/copymodal.component';
 import { CopiedModalComponent } from './copiedmodal.component';
-import { WebsitePart } from '../../shared/tournament/structure/admin-public-switcher.component';
+import { WebsitePart, AdminPublicSwitcherComponent } from '../../shared/tournament/structure/admin-public-switcher.component';
 import { TournamentRegistrationRepository } from '../../lib/tournament/registration/repository';
 import { TournamentRegistrationSettings } from '../../lib/tournament/registration/settings';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TournamentIconComponent } from "../../shared/tournament/icon/icon.component";
+import { SportIconComponent } from "../../shared/tournament/sport/icon.component";
 
 @Component({
     selector: 'app-tournament-home-admin',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css'],
     standalone: true,
-    imports: []
+    imports: [TournamentNavBarComponent, NgbAlert, FontAwesomeModule, AdminPublicSwitcherComponent, TournamentIconComponent, SportIconComponent]
 })
 export class HomeAdminComponent extends TournamentComponent implements OnInit {
 

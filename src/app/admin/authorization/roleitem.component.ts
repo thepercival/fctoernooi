@@ -1,11 +1,14 @@
 import { Component, OnInit, output, input } from '@angular/core';
 import { getRoleName } from '../../lib/role';
 import { TournamentAuthorizationRole } from './list.component';
+import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 
 @Component({
     selector: 'app-tournament-authorization-role',
     templateUrl: './roleitem.component.html',
     styleUrls: ['./roleitem.component.scss'],
+    standalone: true,
+    imports: [FaIconComponent],
 })
 export class RoleItemComponent implements OnInit {
     role = input.required<TournamentAuthorizationRole>();

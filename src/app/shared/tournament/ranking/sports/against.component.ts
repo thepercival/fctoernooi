@@ -18,11 +18,11 @@ import { EscapeHtmlPipe } from '../../../common/escapehtmlpipe';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingAgainstComponent implements OnInit {
-  readonly _poule = input.required<Poule>();
-  readonly _competitionSport = input.required<CompetitionSport>();
-  readonly _favorites = input<Favorites | undefined>(undefined);
-  readonly _structureNameService = input.required<StructureNameService>();
-  readonly _header = input.required<boolean>();
+  public poule = input.required<Poule>();
+  public competitionSport = input.required<CompetitionSport>();
+  public favorites = input<Favorites | undefined>(undefined);
+  public structureNameService = input.required<StructureNameService>();
+  public header = input.required<boolean>();
   protected againstRankingCalculator!: AgainstSportRoundRankingCalculator;
   public sportRankingItems!: SportRoundRankingItem[];
   public showDifferenceDetail = false;
@@ -36,20 +36,20 @@ export class RankingAgainstComponent implements OnInit {
 
   ngOnInit() {
     this.processing = true;
-    this.againstRankingCalculator = new AgainstSportRoundRankingCalculator(this.competitionSport);
-    this.sportRankingItems = this.againstRankingCalculator.getItemsForPoule(this.poule);
+    this.againstRankingCalculator = new AgainstSportRoundRankingCalculator(this.competitionSport());
+    this.sportRankingItems = this.againstRankingCalculator.getItemsForPoule(this.poule());
     // console.log(this.sportRankingItems);
     this.processing = false;
   }
 
   useSubScore() {
-    return this.poule.getRound().getValidScoreConfigs().some((scoreConfig: ScoreConfig) => {
+    return this.poule().getRound().getValidScoreConfigs().some((scoreConfig: ScoreConfig) => {
       return scoreConfig.useSubScore();
     });
   }
 
   getQualifyPlaceClass(rankingItem: SportRoundRankingItem): string {
-    const place = this.poule.getPlace(rankingItem.getUniqueRank());
+    const place = this.poule().getPlace(rankingItem.getUniqueRank());
     return place ? this.cssService.getQualifyPlace(place) : '';
   }
 
@@ -57,7 +57,7 @@ export class RankingAgainstComponent implements OnInit {
     if (startLocation === undefined) {
       return undefined;
     }
-    return this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
+    return this.structureNameService().getStartLocationMap()?.getCompetitor(startLocation);
   }
 
   public hasLogo(place: Place): boolean {
@@ -68,25 +68,5 @@ export class RankingAgainstComponent implements OnInit {
   public getCompetitorLogoUrl(place: Place): string {
     const competitor = this.getCompetitor(place.getStartLocation());
     return competitor ? this.competitorRepository.getLogoUrl(<TournamentCompetitor>competitor, 20) : '';
-  }
-
-  get poule(): Poule {
-    return this._poule();
-  }
-
-  get competitionSport(): CompetitionSport {
-    return this._competitionSport();
-  }
-
-  get favorites(): Favorites | undefined {
-    return this._favorites();
-  }
-
-  get structureNameService(): StructureNameService {
-    return this._structureNameService();
-  }
-
-  get header(): boolean {
-    return this._header();
   }
 }

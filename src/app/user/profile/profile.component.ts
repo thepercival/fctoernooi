@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router, RouterModule } from '@angular/router';
@@ -19,7 +18,7 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
     templateUrl: './profile.component.html',
     styleUrls: ['./profile.component.css'],
     standalone: true,
-  imports: [CommonModule, FontAwesomeModule, NgbAlert, ReactiveFormsModule, RouterModule],
+  imports: [FontAwesomeModule, NgbAlert, ReactiveFormsModule, RouterModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileComponent extends UserComponent implements OnInit {

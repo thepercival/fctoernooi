@@ -4,12 +4,16 @@ import { AgainstGame, Field, Place, PlanningConfig, PlanningEditMode, Structure,
 import { DateFormatter } from '../../lib/dateFormatter';
 import { TranslateFieldService } from '../../lib/translate/field';
 import { DateConverter } from '../../lib/dateConverter';
+import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
+import { NgbAlert, NgbInputDatepicker, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-tournament-basegame-edit',
     templateUrl: './editbase.component.html',
     styleUrls: ['./editbase.component.scss'],
-    
+    standalone: true,
+    imports: [EscapeHtmlPipe,NgbTimepicker,NgbInputDatepicker,FontAwesomeModule]
 })
 export class GameBaseEditComponent implements OnInit {
   @Input() form!: FormGroup;

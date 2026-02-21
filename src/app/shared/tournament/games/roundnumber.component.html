@@ -289,10 +289,10 @@
     }
     <!-- gamePlaces & score -->
     @if(isAgainst(gmData.game)) {
-      <ng-container [ngTemplateOutlet]="againstGamePlacesCell" [ngTemplateOutletContext]="{$implicit: gmData}"></ng-container>
+      <ng-container ngTemplateOutlet="againstGamePlacesCell" ngTemplateOutletContext="{$implicit: gmData}"></ng-container>
     }
     @if(!isAgainst(gmData.game)) {
-      <ng-container [ngTemplateOutlet]="togetherGamePlaces" [ngTemplateOutletContext]="{$implicit: gmData}"></ng-container>
+      <ng-container ngTemplateOutlet="togetherGamePlaces" ngTemplateOutletContext="{$implicit: gmData}"></ng-container>
     }
     <!-- referee -->
     @if(showRefereeColumn) {
@@ -457,12 +457,12 @@
 
     @if(scoreConfig.getNext()?.getEnabled()) {
     <ul class="list-group">
-      <ng-container [ngTemplateOutlet]="withNext" [ngTemplateOutletContext]="{$implicit: scoreConfig.getNext()}"></ng-container>
+      <ng-container ngTemplateOutlet="withNext" ngTemplateOutletContext="{$implicit: scoreConfig.getNext()}"></ng-container>
     </ul>
     }
     @if(!scoreConfig.hasNext()) {
     <ul class="list-group">
-      <ng-container [ngTemplateOutlet]="single"></ng-container>
+      <ng-container ngTemplateOutlet="single"></ng-container>
     </ul>
     }
 

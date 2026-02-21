@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../lib/auth/auth.service';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { Favorites } from '../../lib/favorites';
@@ -18,12 +18,16 @@ import { CompetitorChooseModalComponent } from '../../shared/tournament/competit
 import { TournamentComponent } from '../../shared/tournament/component';
 import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
 import { CompetitorTab } from '../../shared/common/tab-ids';
+import { TournamentNavBarComponent } from "../../shared/tournament/tournamentNavBar/tournamentNavBar.component";
+import { LockerRoomComponent } from "../../shared/tournament/lockerroom/lockerroom.component";
+import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 
 
 @Component({
     selector: 'app-tournament-lockerrooms-edit',
     templateUrl: './lockerrooms.component.html',
     styleUrls: ['./lockerrooms.component.scss'],
+    imports: [TournamentNavBarComponent, LockerRoomComponent, NgbAlert, FaIconComponent],
     
 })
 export class LockerRoomsEditComponent extends TournamentComponent implements OnInit {
@@ -34,6 +38,7 @@ export class LockerRoomsEditComponent extends TournamentComponent implements OnI
     'minlengthname': LockerRoom.MIN_LENGTH_NAME,
     'maxlengthname': LockerRoom.MAX_LENGTH_NAME
   };
+  modalService: NgbModal = inject(NgbModal);
 
   constructor(
     route: ActivatedRoute,
@@ -41,12 +46,11 @@ export class LockerRoomsEditComponent extends TournamentComponent implements OnI
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     globalEventsManager: GlobalEventsManager,
-    modalService: NgbModal,
     favRepository: FavoritesRepository,
     private lockerRoomRepository: LockerRoomRepository,
     private authService: AuthService
   ) {
-    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, favRepository);
   }
 
   ngOnInit() {

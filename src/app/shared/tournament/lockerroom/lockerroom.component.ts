@@ -14,10 +14,10 @@ import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LockerRoomComponent {
-    readonly _validator = input<LockerRoomValidator | undefined>(undefined);
-    readonly _lockerRoom = input.required<LockerRoom>();
-    readonly _editable = input(false);
-    readonly _favorites = input<Favorites | undefined>(undefined);
+    public validator = input.required<LockerRoomValidator>();
+    public lockerRoom = input.required<LockerRoom>();
+    public editable = input(false);
+    public favorites = input<Favorites | undefined>(undefined);
     
     readonly onLockerroomRemove = output<LockerRoom>();
     readonly onLockerroomNameChange = output<LockerRoom>();
@@ -27,22 +27,6 @@ export class LockerRoomComponent {
     }
 
     hasCompetitors(): boolean {
-        return this.lockerRoom.getCompetitors().length > 0;
-    }
-
-    get validator(): LockerRoomValidator | undefined {
-        return this._validator();
-    }
-
-    get lockerRoom(): LockerRoom {
-        return this._lockerRoom();
-    }
-
-    get editable(): boolean {
-        return this._editable();
-    }
-
-    get favorites(): Favorites | undefined {
-        return this._favorites();
+        return this.lockerRoom().getCompetitors().length > 0;
     }
 }

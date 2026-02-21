@@ -1,33 +1,29 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MyNavigation } from '../../shared/common/navigation';
-import { Sponsor } from '../../lib/sponsor';
-import { JsonSponsor } from '../../lib/sponsor/json';
-import { SponsorRepository } from '../../lib/sponsor/repository';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
-import { SponsorScreensCreator } from '../../lib/liveboard/screenCreator/sponsors';
-import { SponsorScreen } from '../../lib/liveboard/screens';
 import { IAlertType } from '../../shared/common/alert';
-import { ScreenConfig } from '../../lib/liveboard/screenConfig/json';
-import { SponsorMapper } from '../../lib/sponsor/mapper';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { League } from 'ngx-sport';
 import { TournamentMapper } from '../../lib/tournament/mapper';
 import { JsonTournament } from '../../lib/tournament/json';
 import { Tournament } from '../../lib/tournament';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 
 @Component({
     selector: 'app-tournament-name-and-theme',
     templateUrl: './name-and-theme.component.html',
     styleUrls: ['./name-and-theme.component.scss'],
-    
+    standalone: true,
+    imports: [FontAwesomeModule,NgbAlert,TournamentNavBarComponent]
 })
 export class TournamentNameAndThemeComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup<{
@@ -49,18 +45,19 @@ export class TournamentNameAndThemeComponent extends TournamentComponent impleme
         maxlengthname: League.MAX_LENGTH_NAME
     };
 
+    modalService: NgbModal = inject(NgbModal);
+
     constructor(
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
+        globalEventsManager: GlobalEventsManager,        
         favRepository: FavoritesRepository,
         private tournamentMapper: TournamentMapper,
         private myNavigation: MyNavigation
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
         this.logoInputType = LogoInput.ByUpload;
         this.newLogoUploaded = false;
         

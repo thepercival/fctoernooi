@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject, input } from '@angular/core';
 import { NgbActiveModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
-import { NgbAlert } from '@ng-bootstrap/ng-bootstrap/ng-bootstrap-alert';
 
 @Component({
     selector: 'app-ngbd-modal-copied',

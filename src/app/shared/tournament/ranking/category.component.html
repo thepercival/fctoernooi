@@ -1,12 +1,12 @@
-@if(category) {
+@if(category()) {
 <div>
-  <div class="card border-secondary" [class.border-0]="!showHeader">
+  <div class="card border-secondary" [class.border-0]="!showHeader()">
 
-    @if(showHeader) {
+    @if(showHeader()) {
     <div class="card-cat-header px-3">
       <div class="d-flex justify-content-between">
         <h5 class="my-0">
-          <span class="fw-bold align-middle">{{category.getName()}}</span>
+          <span class="fw-bold align-middle">{{category().getName()}}</span>
         </h5>
       </div>
     </div>
@@ -18,10 +18,10 @@
         <li ngbNavItem="getTabName(1)">
           <a ngbNavLink>poulestanden</a>
           <ng-template ngbNavContent>
-            <app-tournament-ranking-round [round]="category.getRootRound()"
-              [favorites]="favorites"
-              [competitionSports]="competitionSports" 
-              [structureNameService]="structureNameService" [first]="true">
+            <app-tournament-ranking-round [round]="category().getRootRound()"
+              [favorites]="favorites()"
+              [competitionSports]="competitionSports()" 
+              [structureNameService]="structureNameService()" [first]="true">
             </app-tournament-ranking-round>
           </ng-template>
         </li>
@@ -29,8 +29,8 @@
         <li ngbNavItem="getTabName(2)">
           <a ngbNavLink>eindstand</a>
           <ng-template ngbNavContent>
-            <app-tournament-endranking [structureNameService]="structureNameService" 
-              [favorites]="favorites" [category]="category"></app-tournament-endranking>
+            <app-tournament-endranking [structureNameService]="structureNameService()" 
+              [favorites]="favorites()" [category]="category()"></app-tournament-endranking>
           </ng-template>
         </li>
         }

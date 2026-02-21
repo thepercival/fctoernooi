@@ -7,20 +7,25 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { JsonTournament } from '../../lib/tournament/json';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
-import { Category, GameMode, PointsCalculation, Structure, StructureEditor } from 'ngx-sport';
-import { SportWithFields } from '../sport/createSportWithFields.component';
+import { GameMode, PointsCalculation, Structure, StructureEditor } from 'ngx-sport';
+import { SportWithFields, CreateSportWithFieldsComponent } from '../sport/createSportWithFields.component';
 import { CompetitionSportRepository } from '../../lib/ngx-sport/competitionSport/repository';
 import { Tournament } from '../../lib/tournament';
 import { UserRepository } from '../../lib/user/repository';
 import { AuthService } from '../../lib/auth/auth.service';
 import { User } from '../../lib/user';
+import { TournamentPropertiesComponent } from "./properties.component";
+import { NgbAlert } from "@ng-bootstrap/ng-bootstrap";
+import { FaIconComponent } from "@fortawesome/angular-fontawesome";
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @Component({
     selector: 'app-tournament-new',
     templateUrl: './new.component.html',
     styleUrls: ['./new.component.scss'],
-    
+    standalone: true,
+    imports: [TournamentPropertiesComponent, NgbAlert, CreateSportWithFieldsComponent, FaIconComponent,ReactiveFormsModule]
 })
 export class NewComponent implements OnInit {
   public processing = true;

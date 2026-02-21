@@ -1,39 +1,26 @@
-import { ChangeDetectionStrategy, Component, TemplateRef, inject, input } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
+import { Component, input, ChangeDetectionStrategy, TemplateRef, inject } from '@angular/core';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { EscapeHtmlPipe } from '../../common/escapehtmlpipe';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-    selector: 'app-ngbd-modal-info',
+    selector: 'app-infomodal',
     templateUrl: './infomodal.component.html',
-    styleUrls: ['./infomodal.component.scss'],
     standalone: true,
-    imports: [TOURNAMENT_UI_IMPORTS,EscapeHtmlPipe],
+    imports: [FontAwesomeModule,EscapeHtmlPipe],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InfoModalComponent {
-    readonly _header = input('');
-    readonly _modalContent = input.required<TemplateRef<any>>();
-    readonly _noHeaderBorder = input(false);
+    public modalContent = input.required<TemplateRef<any>>();
     public activeModal = inject(NgbActiveModal);
 
+    public header = input.required<string>();
+    public noHeaderBorder = input(false);
+    
     constructor() {
-
     }
 
     close(value: string) {
         this.activeModal.close(value);
-    }
-
-    get header(): string {
-        return this._header();
-    }
-
-    get modalContent(): TemplateRef<any> {
-        return this._modalContent();
-    }
-
-    get noHeaderBorder(): boolean {
-        return this._noHeaderBorder();
     }
 }

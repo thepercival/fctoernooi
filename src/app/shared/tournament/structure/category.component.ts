@@ -16,16 +16,16 @@ import { StructureRoundComponent } from './round.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructureCategoryComponent  {
-  readonly _structureEditor = input.required<StructureEditor>();
-  readonly _categories = input.required<Category[]>();
-  readonly _category = input.required<Category>();
-  readonly _showHeader = input.required<boolean>();
-  readonly _editable = input(false);
-  readonly _filterActive = input(false);
-  readonly _showCompetitors = input.required<boolean>();
-  readonly _favoriteCompetitors = input<Competitor[]>([]);
-  readonly _structureNameService = input.required<StructureNameService>();
-  readonly _lastAction = input<StructureAction | undefined>(undefined);
+  public structureEditor = input.required<StructureEditor>();
+  public categories = input.required<Category[]>();
+  public category = input.required<Category>();
+  public showHeader = input.required<boolean>();
+  public editable = input(false);
+  public filterActive = input(false);
+  public showCompetitors = input.required<boolean>();
+  public favoriteCompetitors = input<Competitor[]>([]);
+  public structureNameService = input.required<StructureNameService>();
+  public lastAction = input<StructureAction | undefined>(undefined);
   
   readonly onActionAdd = output<StructureAction>();
   readonly onCategoryRemove = output<Category>();
@@ -49,7 +49,7 @@ export class StructureCategoryComponent  {
     });
   }
 
-  get movable(): boolean { return this.editable && !this.filterActive && this.category.getNumber() > 1 };
+  get movable(): boolean { return this.editable() && !this.filterActive && this.category().getNumber() > 1 };
 
   getCategoryModel(category: Category): NgbModalRef {
     const activeModal = this.modalService.open(CategoryModalComponent);
@@ -58,45 +58,5 @@ export class StructureCategoryComponent  {
     activeModal.componentInstance.category = category;
     activeModal.componentInstance.buttonLabel = 'wijzigen';    
     return activeModal;
-  }
-
-  get structureEditor(): StructureEditor {
-    return this._structureEditor();
-  }
-
-  get categories(): Category[] {
-    return this._categories();
-  }
-
-  get category(): Category {
-    return this._category();
-  }
-
-  get showHeader(): boolean {
-    return this._showHeader();
-  }
-
-  get editable(): boolean {
-    return this._editable();
-  }
-
-  get filterActive(): boolean {
-    return this._filterActive();
-  }
-
-  get showCompetitors(): boolean {
-    return this._showCompetitors();
-  }
-
-  get favoriteCompetitors(): Competitor[] {
-    return this._favoriteCompetitors();
-  }
-
-  get structureNameService(): StructureNameService {
-    return this._structureNameService();
-  }
-
-  get lastAction(): StructureAction | undefined {
-    return this._lastAction();
   }
 }

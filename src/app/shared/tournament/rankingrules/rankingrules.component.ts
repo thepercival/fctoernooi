@@ -11,9 +11,9 @@ import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingRulesComponent {
-    readonly _againstRuleSet = input.required<AgainstRuleSet>();
-    readonly _editMode = input(false);
-    readonly onRuleSetChanged = output<AgainstRuleSet>();
+    public againstRuleSet = input.required<AgainstRuleSet>();
+    public editMode = input(false);
+    public onRuleSetChanged = output<AgainstRuleSet>();
 
     private readonly currentRuleSet = signal<AgainstRuleSet>(AgainstRuleSet.DiffFirst);
 
@@ -22,7 +22,7 @@ export class RankingRulesComponent {
     constructor() {
         this.nameService = new NameService();
         effect(() => {
-            this.currentRuleSet.set(this._againstRuleSet());
+            this.currentRuleSet.set(this.againstRuleSet());
         });
     }
 
@@ -37,9 +37,5 @@ export class RankingRulesComponent {
             this.currentRuleSet.set(AgainstRuleSet.DiffFirst);
         }
         this.onRuleSetChanged.emit(this.currentRuleSet());
-    }
-
-    get editMode(): boolean {
-        return this._editMode();
     }
 }

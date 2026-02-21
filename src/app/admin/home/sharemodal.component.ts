@@ -1,14 +1,16 @@
 import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Tournament } from '../../lib/tournament';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-ngbd-modal-share-config',
     templateUrl: './sharemodal.component.html',
     styleUrls: ['./sharemodal.component.scss'],
-    
+    standalone: true,
+    imports: [NgbAlert, FontAwesomeModule]
 })
 export class ShareModalComponent implements OnInit {
     @Input() tournament!: Tournament;

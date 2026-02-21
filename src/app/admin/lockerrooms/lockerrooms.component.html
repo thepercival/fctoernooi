@@ -5,52 +5,70 @@
         <h2 class="me-auto">
           <fa-icon [icon]="['fas', 'door-closed']"></fa-icon> kleedkamers
         </h2>
-        <button *ngIf="!processing && hasCompetitors" role="button" (click)="add()"
-          class="btn btn-add btn-outline-primary">
-          <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon><span> toevoegen</span>
-        </button>
+        @if (!processing && hasCompetitors) {
+          <button role="button" (click)="add()"
+            class="btn btn-add btn-outline-primary">
+            <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon><span> toevoegen</span>
+          </button>
+        }
       </div>
-      <div *ngIf="processing">
-        <h2 class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
-        </h2>
-      </div>
-      <ngb-alert *ngIf="!processing && tournament && !hasCompetitors" type="info">er zijn nog geen
-        deelnemers
-        ingevuld, ga naar
-        <button role="button" class="btn btn-secondary" [routerLink]="['/admin/competitors', tournament.getId(), CompetitorTabBase]">
-          <span>
-            <fa-icon [icon]="['fas', 'users']"></fa-icon>deelnemers invullen
-          </span>
-        </button>
-      </ngb-alert>
-      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <div *ngIf="!processing && hasCompetitors" class="d-flex flex-wrap gap-3">
-        <app-tournament-lockerroom *ngFor="let lockerRoom of tournament.getLockerRooms()" [lockerRoom]="lockerRoom"
-          [validator]="validator" [editable]="true" class="mx-auto" (onLockerroomRemove)="remove($event)"
-          (onLockerroomNameChange)="changeName($event)" 
-          (onCompetitorsChange)="changeCompetitors($event)">
-        </app-tournament-lockerroom>
-      </div>
-      <div *ngIf="validator && !validator.areAllArranged() && hasCompetitors">
-        <hr />
-        <div *ngIf="!validator.areAllArranged()" class="d-flex justify-content-center">
-          <div class="card border-warning unarranged-competitors text-center">
-            <div class="card-header">
-              <h5 class="mb-0">niet ingedeelde deelnemers</h5>
-            </div>
-            <ul class="list-group list-group-flush text-center">
-              <ng-template ngFor let-competitor [ngForOf]="validator.getCompetitors()">
-                <li *ngIf="!validator.isArranged(competitor)" class="list-group-item">
-                  <span>{{competitor.getName()}}</span>
-                </li>
-              </ng-template>
-            </ul>
-          </div>
+      @if (processing) {
+        <div>
+          <h2 class="text-center">
+            <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+          </h2>
         </div>
-      </div>
+      }
+      @if (!processing && tournament && !hasCompetitors) {
+        <ngb-alert type="info">er zijn nog geen
+          deelnemers
+          ingevuld, ga naar
+          <button role="button" class="btn btn-secondary" routerLink="['/admin/competitors', tournament.getId(), CompetitorTabBase]">
+            <span>
+              <fa-icon [icon]="['fas', 'users']"></fa-icon>deelnemers invullen
+            </span>
+          </button>
+        </ngb-alert>
+      }
+      @if (alert) {
+        <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+      }
+      @if (!processing && hasCompetitors) {
+        <div class="d-flex flex-wrap gap-3">
+          @for (lockerRoom of tournament.getLockerRooms(); track lockerRoom) {
+            <app-tournament-lockerroom [lockerRoom]="lockerRoom"
+              [validator]="validator" [editable]="true" class="mx-auto" (onLockerroomRemove)="remove($event)"
+              (onLockerroomNameChange)="changeName($event)" 
+              (onCompetitorsChange)="changeCompetitors($event)">
+            </app-tournament-lockerroom>
+          }
+        </div>
+      }
+      @if (validator && !validator.areAllArranged() && hasCompetitors) {
+        <hr />
+        @if (!validator.areAllArranged()) {
+          <div class="d-flex justify-content-center">
+            <div class="card border-warning unarranged-competitors text-center">
+              <div class="card-header">
+                <h5 class="mb-0">niet ingedeelde deelnemers</h5>
+              </div>
+              <ul class="list-group list-group-flush text-center">
+                @for (competitor of validator.getCompetitors(); track competitor) {
+                  @if (!validator.isArranged(competitor)) {
+                    <li class="list-group-item">
+                      <span>{{competitor.getName()}}</span>
+                    </li>
+                  }
+                }
+              </ul>
+            </div>
+          </div>
+        }
+      }
     </div>
   </div>
 </div>
-<app-tournament-navbar *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)">
-</app-tournament-navbar>
+@if (tournament) {
+  <app-tournament-navbar [tournament]="tournament" [theme]="getTheme(tournament)">
+  </app-tournament-navbar>
+}

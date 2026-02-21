@@ -12,7 +12,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { NameValidator } from '../../lib/nameValidator';
 import { TournamentRegistration } from '../../lib/tournament/registration';
@@ -22,12 +22,15 @@ import { TournamentRegistrationRepository } from '../../lib/tournament/registrat
 import { AuthService } from '../../lib/auth/auth.service';
 import { JsonTournamentRegistration } from '../../lib/tournament/registration/json';
 import { Role } from '../../lib/role';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-tournament-registration-edit',
     templateUrl: './registration-edit.component.html',
     styleUrls: ['./registration-edit.component.scss'],
-    
+    standalone: true,
+    imports: [NgbAlert, TournamentNavBarComponent,FontAwesomeModule]
 })
 export class TournamentRegistrationEditComponent extends TournamentComponent implements OnInit {
   public settings!: TournamentRegistrationSettings;
@@ -57,14 +60,13 @@ export class TournamentRegistrationEditComponent extends TournamentComponent imp
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     globalEventsManager: GlobalEventsManager,
-    modalService: NgbModal,
     favRepository: FavoritesRepository,
     private tournamentRegistrationRepository: TournamentRegistrationRepository,
     private nameValidator: NameValidator,
     private myNavigation: MyNavigation,
     private authService: AuthService,
   ) {
-    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, favRepository);
     this.resetAlert();
   }
 

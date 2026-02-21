@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Sponsor } from '../../lib/sponsor';
@@ -7,7 +7,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { Tournament } from '../../lib/tournament';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { SponsorScreensCreator } from '../../lib/liveboard/screenCreator/sponsors';
 import { IAlertType } from '../../shared/common/alert';
@@ -16,32 +16,35 @@ import { ScreenConfig } from '../../lib/liveboard/screenConfig/json';
 import { SponsorMapper } from '../../lib/sponsor/mapper';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 @Component({
     selector: 'app-tournament-sponsor',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
-    
+    standalone: true,
+    imports: [TournamentNavBarComponent, FontAwesomeModule, NgbAlert]
 })
 export class SponsorListComponent extends TournamentComponent implements OnInit {
   sponsors: Sponsor[] = [];
   sponsorScreensCreator!: SponsorScreensCreator;
   public screenConfig: ScreenConfig;
   public hasSomeSponsorAnImage: boolean = false;
+  private modalService: NgbModal = inject(NgbModal);
 
   constructor(
     route: ActivatedRoute,
     router: Router,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
-    globalEventsManager: GlobalEventsManager,
-    modalService: NgbModal,
+    globalEventsManager: GlobalEventsManager,    
     favRepository: FavoritesRepository,
     public sponsorRepository: SponsorRepository,
     private sponsorMapper: SponsorMapper
   ) {
-    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, favRepository);
     this.screenConfig = this.sponsorMapper.getDefaultScreenConfig();
   }
 

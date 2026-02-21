@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Poule, NameService, CompetitionSport, AgainstGpp, AgainstH2h, StructureNameService } from 'ngx-sport';
 import { Favorites } from '../../../lib/favorites';
@@ -25,7 +25,7 @@ export class PouleRankingModalComponent {
     public structureNameService!: StructureNameService;
     // public rankingService!: RankingService;
     private modalService = inject(NgbModal);
-    private activeModal = inject(NgbActiveModal);
+    public activeModal = inject(NgbActiveModal);
 
     constructor(
         ) {

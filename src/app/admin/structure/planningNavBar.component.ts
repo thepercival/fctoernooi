@@ -1,18 +1,21 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import {
-  Category, JsonStructure, Structure, VoetbalRange,
+  Category, JsonStructure, VoetbalRange,
 } from 'ngx-sport';
-import { of, delay, pipe, concatMap, Subscription } from 'rxjs';
+import { of, delay, Subscription } from 'rxjs';
 
 import { DateFormatter } from '../../lib/dateFormatter';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { Tournament } from '../../lib/tournament';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-tournament-planningNavBar',
     templateUrl: './planningNavBar.component.html',
     styleUrls: ['./planningNavBar.component.scss'],
-    
+    standalone: true,
+    imports: [FontAwesomeModule,NgbAlert]
 })
 export class PlanningNavBarComponent implements OnChanges {
 

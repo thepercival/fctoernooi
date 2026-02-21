@@ -4,56 +4,71 @@
 </div>
 <div class="modal-body">
     <div class="container-fluid">
-        <div *ngIf="hasMinimumNrOfPlacesPerPoule() || allCompetitorsQualifyForNextRound()" class="row">
-            <div *ngIf="allCompetitorsQualifyForNextRound()" class="">
-                <ngb-alert [type]="'warning'">Alle deelnemers gaan door naar de volgende ronde.
-                    Om
-                    een pouleplek te kunnen verwijderen, moet de
-                    "Opzet" gewijzigd worden.</ngb-alert>
-                <ngb-alert *ngIf="allPlacesAssigned" [type]="'info'">Wanneer je een
-                    pouleplek bij de opzet verwijderd,
-                    wordt de laatste
-                    pouleplek verwijderd. Verplaats daarom eventueel eerst de te verwijderen deelnemer naar de laatste
-                    pouleplek m.b.v. de vinkjes en de
-                    vierkantjes. </ngb-alert>
+        @if (hasMinimumNrOfPlacesPerPoule() || allCompetitorsQualifyForNextRound()) {
+            <div class="row">
+                @if (allCompetitorsQualifyForNextRound()) {
+                    <ngb-alert [type]="'warning'">Alle deelnemers gaan door naar de volgende ronde.
+                        Om
+                        een pouleplek te kunnen verwijderen, moet de
+                        "Opzet" gewijzigd worden.</ngb-alert>
+                    @if (allPlacesAssigned) {
+                        <ngb-alert [type]="'info'">Wanneer je een
+                            pouleplek bij de opzet verwijderd,
+                            wordt de laatste
+                            pouleplek verwijderd. Verplaats daarom eventueel eerst de te verwijderen deelnemer naar de laatste
+                            pouleplek m.b.v. de vinkjes en de
+                            vierkantjes. </ngb-alert>
+                    }
+                }
+                @if (hasMinimumNrOfPlacesPerPoule()) {
+                    <ngb-alert [type]="'warning'">Het minimaal aantal deelnemers aan een poule is 2.
+                        Om een deelnemer te kunnen verwijderen, moet de "Opzet" gewijzigd worden.</ngb-alert>
+                }
             </div>
-            <div *ngIf="hasMinimumNrOfPlacesPerPoule()" class="">
-                <ngb-alert [type]="'warning'">Het minimaal aantal deelnemers aan een poule is 2.
-                    Om een deelnemer te kunnen verwijderen, moet de "Opzet" gewijzigd worden.</ngb-alert>
+        }
+        @if (!hasMinimumNrOfPlacesPerPoule() && !allCompetitorsQualifyForNextRound()) {
+            <div class="row">
+                <ngb-alert [type]="'info'">Bij het verwijderen van de pouleplek worden de opzet en
+                    de wedstrijden automatisch gewijzigd.</ngb-alert>
             </div>
-        </div>
-        <div *ngIf="!hasMinimumNrOfPlacesPerPoule() && !allCompetitorsQualifyForNextRound()" class="row">
-            <ngb-alert [type]="'info'">Bij het verwijderen van de pouleplek worden de opzet en
-                de wedstrijden automatisch gewijzigd.</ngb-alert>
-        </div>
+        }
     </div>
 </div>
-<div *ngIf="hasMinimumNrOfPlacesPerPoule() || allCompetitorsQualifyForNextRound()"
-    class="modal-footer justify-content-around">
-    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
-        (click)="activeModal.close('to-structure')">naar
-        <app-tournament-icon name="structure"></app-tournament-icon> opzet
-    </button>
-    <button *ngIf="item.competitor" type="button" class="btn btn-outline-secondary" data-dismiss="modal"
-        (click)="activeModal.close('remove-competitor')">
-        <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon> <span> deelnemer</span>
-        <span class="d-none d-sm-inline"> verwijderen</span>
-    </button>
-    <button *ngIf="item.competitor === undefined" type="button" class="btn btn-outline-secondary" data-dismiss="modal"
-        (click)="activeModal.close('close')">sluiten</button>
-</div>
-
-<div *ngIf="!hasMinimumNrOfPlacesPerPoule() && !allCompetitorsQualifyForNextRound()"
-    class="modal-footer justify-content-around">
-    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="activeModal.close('remove-place')">
-        <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon><span> pouleplek</span>
-        <span class="d-none d-sm-inline"> verwijderen</span>
-    </button>
-    <button *ngIf="item.competitor" type="button" class="btn btn-danger" data-dismiss="modal"
-        (click)="activeModal.close('remove-competitor')">
-        <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon> <span> deelnemer</span>
-        <span class="d-none d-sm-inline"> verwijderen</span>
-    </button>
-    <button *ngIf="item.competitor === undefined" type="button" class="btn btn-outline-secondary" data-dismiss="modal"
-        (click)="activeModal.close('close')">sluiten</button>
-</div>
+@if (hasMinimumNrOfPlacesPerPoule() || allCompetitorsQualifyForNextRound()) {
+    <div class="modal-footer justify-content-around">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+            (click)="activeModal.close('to-structure')">naar
+            <app-tournament-icon name="structure"></app-tournament-icon> opzet
+        </button>
+        @if (item.competitor) {
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+                (click)="activeModal.close('remove-competitor')">
+                <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon> <span> deelnemer</span>
+                <span class="d-none d-sm-inline"> verwijderen</span>
+            </button>
+        }
+        @if (item.competitor === undefined) {
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+                (click)="activeModal.close('close')">sluiten</button>
+        }
+    </div>
+}
+@if (!hasMinimumNrOfPlacesPerPoule() && !allCompetitorsQualifyForNextRound()) {
+    <div class="modal-footer justify-content-around">
+        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="activeModal.close('remove-place')">
+            <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon><span> pouleplek</span>
+            <span class="d-none d-sm-inline"> verwijderen</span>
+        </button>
+        @if (item.competitor) {
+            <button type="button" class="btn btn-danger" data-dismiss="modal"
+                (click)="activeModal.close('remove-competitor')">
+                <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon> <span> deelnemer</span>
+                <span class="d-none d-sm-inline"> verwijderen</span>
+            </button>
+        }
+        @if (item.competitor === undefined) {
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+                (click)="activeModal.close('close')">sluiten</button>
+        }
+    </div>
+}

@@ -55,7 +55,7 @@
             <div class="col-8">
               <select class="form-control" formControlName="nrOfCredits" aria-describedby="costInfo"
                 [class.is-invalid]="typedForm.controls.nrOfCredits.value < 1" required>
-                @for(nrOfCreditsOption of nrOfCreditsOptions | async; track $index) {
+                @for(nrOfCreditsOption of nrOfCreditsOptions(); track $index) {
                 <option [ngValue]="nrOfCreditsOption">
                   {{nrOfCreditsOption}}
                 </option>
@@ -80,7 +80,7 @@
             <div class="col-8">
               <select class="form-control" formControlName="paymentMethod"
                 [class.is-invalid]="typedForm.controls.paymentMethod.value === ''" required>
-                @for(paymentMethod of paymentMethods | async; track $index) {
+                @for(paymentMethod of paymentMethods(); track $index) {
                 <option [ngValue]="paymentMethod">{{paymentMethod}}
                 </option>
                 }
@@ -93,7 +93,7 @@
             <label for="iDealIssuer" class="col-4 col-form-label text-end">bank</label>
             <div class="col-8">
               <select class="form-control" formControlName="iDealIssuer">
-                @for(option of idealIssuers | async; track $index) {
+                @for(option of idealIssuers(); track $index) {
                 <option [ngValue]="option">{{option.name}}
                 </option>
                 }

@@ -1,7 +1,7 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
-import { AbstractControl, FormGroup, FormControl } from '@angular/forms';
+import { Component, inject, OnInit, TemplateRef } from '@angular/core';
+import { AbstractControl, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbDateStruct, NgbInputDatepicker, NgbModal, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
 
 import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -18,12 +18,15 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { StartEditMode } from '../../lib/tournament/startEditMode';
 import { DateConverter } from '../../lib/dateConverter';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 
 @Component({
     selector: 'app-tournament-startandrecesses',
     templateUrl: './startAndRecesses.component.html',
     styleUrls: ['./startAndRecesses.component.scss'],
-    
+    standalone: true,
+    imports: [TournamentNavBarComponent,NgbAlert, NgbTimepicker, NgbInputDatepicker, FontAwesomeModule, ReactiveFormsModule]
 })
 export class StartAndRecessesComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup<{
@@ -35,13 +38,14 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
     public sameDayFormat = true;
     public hasBegun!: boolean;
 
+    private modalService: NgbModal = inject(NgbModal);
+
     constructor(
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
+        globalEventsManager: GlobalEventsManager,        
         favRepository: FavoritesRepository,
         private recessRepository: RecessRepository,
         private planningRepository: PlanningRepository,
@@ -50,7 +54,7 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
         public dateFormatter: DateFormatter,
         private dateConverter: DateConverter,
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
 
         this.typedForm = new FormGroup({
             date: new FormControl('', { nonNullable: true}),

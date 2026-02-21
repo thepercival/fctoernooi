@@ -1,11 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Round, CompetitionSport, StructureNameService, Category } from 'ngx-sport';
+import { StructureSelectRoundComponent } from "./rounds.component";
 
 @Component({
     selector: 'app-ngbd-modal-rounds',
     templateUrl: './selector.component.html',
-    
+    standalone: true,
+    imports: [StructureSelectRoundComponent],    
 })
 export class RoundsSelectorModalComponent implements OnInit {
     @Input() subject!: string;

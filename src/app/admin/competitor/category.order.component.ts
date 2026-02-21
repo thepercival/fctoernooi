@@ -1,6 +1,5 @@
-import { Component, Input, OnChanges, OnInit, output, SimpleChanges } from '@angular/core';
-import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Input, OnChanges, output, SimpleChanges } from '@angular/core';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { Category, Competitor, Place, StartLocationMap, StructureNameService } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
 import { TournamentCompetitor } from '../../lib/competitor';
@@ -8,12 +7,15 @@ import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository'
 import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 import { Tournament } from '../../lib/tournament';
 import { IAlert, IAlertType } from '../../shared/common/alert';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
 
 @Component({
     selector: 'app-tournament-category-competitors-order',
     templateUrl: './category.order.component.html',
     styleUrls: ['./category.order.component.scss'],
-    
+    standalone: true,
+    imports: [NgbAlert,FontAwesomeModule,EscapeHtmlPipe]
 })
 export class CategoryOrderCompetitorListComponent implements OnChanges {
   @Input() tournament!: Tournament;

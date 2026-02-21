@@ -1,64 +1,64 @@
-import { ChangeDetectionStrategy, Component, forwardRef, input, output } from '@angular/core';
-import { Round, Competitor, StructureEditor, QualifyTarget, PlaceRanges, Place, StructureNameService, StartLocation } from 'ngx-sport';
+import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { Round, StructureNameService, StructureEditor, QualifyTarget, Competitor, Place, PlaceRanges, StartLocation } from 'ngx-sport';
 import { StructureAction, StructureActionName } from '../../../admin/structure/edit.component';
+import { StructureQualifyComponent } from './qualify.component';
+import { StructureRoundArrangeComponent } from './round/arrange.component';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { IAlert, IAlertType } from '../../common/alert';
+import { TournamentCompetitor } from '../../../lib/competitor';
 import { CSSService } from '../../common/cssservice';
 import { CompetitorRepository } from '../../../lib/ngx-sport/competitor/repository';
-import { TournamentCompetitor } from '../../../lib/competitor';
-import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
-import { StructureRoundArrangeComponent } from './round/arrange.component';
-import { StructureQualifyComponent } from './qualify.component';
+import { EscapeHtmlPipe } from '../../common/escapehtmlpipe';
 
 @Component({
     selector: 'app-tournament-structureround',
     templateUrl: './round.component.html',
-    styleUrls: ['./round.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [
-      TOURNAMENT_UI_IMPORTS,
-      StructureRoundArrangeComponent,
-      StructureQualifyComponent
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [EscapeHtmlPipe,NgbAlert,StructureRoundArrangeComponent,StructureQualifyComponent]
 })
 export class StructureRoundComponent {
-  public structureEditor = input.required<StructureEditor>();
+
+  public showCompetitors = input.required<boolean>();
+  public favorites = input<Competitor[]>([]);
+  
   public round = input.required<Round>();
   public editable = input(false);
-  public showCompetitors = input(false);
-  public favorites = input<Competitor[]>([]);
   public structureNameService = input.required<StructureNameService>();
-  public lastAction = input<StructureAction | undefined>(undefined);
-  
-  readonly onActionAdd = output<StructureAction>();
+  public structureEditor = input.required<StructureEditor>();
+  public lastAction = input<StructureAction>();
   
   alert: IAlert | undefined;
   popoverPlace: Place | undefined;
+  public onActionAdd = output<StructureAction>();
 
-  constructor(public cssService: CSSService, private competitorRepository: CompetitorRepository) {
+  constructor(
+    public cssService: CSSService, 
+    private competitorRepository: CompetitorRepository) {
     this.resetAlert();
   }
 
   arrangeAction(actionName: StructureActionName) {
     this.resetAlert();
     try {
+      const structureEditor = this.structureEditor();
       if (actionName === StructureActionName.AddPouleToRootRound) {
-        this.structureEditor().addPouleToRootRound(this.round());
+        structureEditor.addPouleToRootRound(this.round());
       } else if (actionName === StructureActionName.RemovePouleFromRootRound) {
         try {
-          this.structureEditor().removePouleFromRootRound(this.round());
+          structureEditor.removePouleFromRootRound(this.round());
         } catch (e: any) {
           console.log(e);
           throw new Error('de poule kan niet verwijderd worden, pas de poules in de eerst volgende ronde aan');
         }
       } else if (actionName === StructureActionName.AddPlaceToRootRound) {
-        this.structureEditor().addPlaceToRootRound(this.round());
+        structureEditor.addPlaceToRootRound(this.round());
       } else if (actionName === StructureActionName.RemovePlaceFromRootRound) {
-        this.structureEditor().removePlaceFromRootRound(this.round());
+        structureEditor.removePlaceFromRootRound(this.round());
       } else if (actionName === StructureActionName.IncrementNrOfPoules) {
-        this.structureEditor().incrementNrOfPoules(this.round());
+        structureEditor.incrementNrOfPoules(this.round());
       } else if (actionName === StructureActionName.DecrementNrOfPoules) {
-        this.structureEditor().decrementNrOfPoules(this.round());
+        structureEditor.decrementNrOfPoules(this.round());
       }
       this.onActionAdd.emit({
         pathNode: this.round().getPathNode(),
@@ -87,7 +87,7 @@ export class StructureRoundComponent {
   }
 
   isFavorite(place: Place): boolean {
-    if (this.favorites.length === 0) {
+    if (this.favorites().length === 0) {
       return false;
     }
     const startLocation = place.getStartLocation();

@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -14,16 +14,20 @@ import { RefereeRepository } from '../../lib/ngx-sport/referee/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TournamentIconComponent } from '../../shared/tournament/icon/icon.component';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 
 @Component({
     selector: 'app-tournament-referee-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css'],
-    
+    standalone: true,
+    imports: [NgbAlert,FontAwesomeModule,TournamentIconComponent,TournamentNavBarComponent]
 })
 export class RefereeEditComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup<{
@@ -44,6 +48,8 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
         maxlengthemailaddress: User.MAX_LENGTH_EMAIL,
     };
 
+    private modalService = inject(NgbModal);
+
     constructor(
         route: ActivatedRoute,
         router: Router,
@@ -59,7 +65,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
 
         // EditPermissions, EmailAddresses
         // andere groep moet dan zijn getEditPermission, wanneer ingelogd, bij gewone view
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
         this.typedForm = new FormGroup({
             initials: new FormControl('', { nonNullable: true, validators: 
                 [

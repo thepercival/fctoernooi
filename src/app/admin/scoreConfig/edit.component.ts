@@ -11,19 +11,21 @@ import {
     Category,
 } from 'ngx-sport';
 import { CSSService } from '../../shared/common/cssservice';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateScoreService } from '../../lib/translate/score';
 import { ScoreConfigRepository } from '../../lib/ngx-sport/scoreConfig/repository';
 import { Tournament } from '../../lib/tournament';
 import { IAlert, IAlertType } from '../../shared/common/alert';
 import { RoundsSelectorModalComponent, SelectableCategory, SelectableRoundNode } from '../rounds/selector.component';
 import { forkJoin, Observable } from 'rxjs';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-tournament-scoreconfig-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.scss'],
-    
+    standalone: true,
+    imports: [FontAwesomeModule,NgbAlert]
 })
 export class ScoreConfigEditComponent implements OnInit {
     @Input() tournament!: Tournament;

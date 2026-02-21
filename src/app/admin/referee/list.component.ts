@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Referee } from 'ngx-sport';
 
@@ -7,24 +7,28 @@ import { RefereeRepository } from '../../lib/ngx-sport/referee/repository';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
-import { Observable } from 'rxjs';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { TournamentIconComponent } from '../../shared/tournament/icon/icon.component';
 
 @Component({
     selector: 'app-tournament-referee',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
-    
+    standalone: true,
+    imports: [NgbAlert,FontAwesomeModule,TournamentNavBarComponent,TournamentIconComponent]
 })
 export class RefereeListComponent extends TournamentComponent implements OnInit {
   public refereeItems!: RefereeItem[];
   alertSelfReferee: IAlert | undefined;
   hasBegun: boolean = true;
 
+  modalService: NgbModal = inject(NgbModal);
   validations: any = {
     'minlengthname': Referee.MIN_LENGTH_NAME,
     'maxlengthname': Referee.MAX_LENGTH_NAME
@@ -35,13 +39,12 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     router: Router,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
-    globalEventsManager: GlobalEventsManager,
-    modalService: NgbModal,
+    globalEventsManager: GlobalEventsManager,    
     favRepository: FavoritesRepository,
     private refereeRepository: RefereeRepository,
     private planningRepository: PlanningRepository,
   ) {
-    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, favRepository);
   }
 
   ngOnInit() {

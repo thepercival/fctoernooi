@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
-import { NgbActiveModal, NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbAlert, NgbModal, NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, timer } from 'rxjs';
 import { PdfRepository, TournamentExportConfig } from '../../lib/pdf/repository';
 import { AppErrorHandler } from '../../lib/repository';
@@ -11,12 +11,14 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { TournamentRegistrationSettings } from '../../lib/tournament/registration/settings';
 import { PrintServiceModalComponent } from './print-service-modal.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-ngbd-modal-export-config',
     templateUrl: './exportmodal.component.html',
     styleUrls: ['./exportmodal.component.scss'],
-    
+    standalone: true,
+    imports: [NgbAlert,FontAwesomeModule,NgbProgressbar]
 })
 export class ExportModalComponent implements OnInit, OnDestroy {
     tournament: Tournament|undefined;

@@ -11,18 +11,10 @@ import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategoryChooseListComponent {
-    readonly _categoryItems = input.required<CategoryItem[]>();
+    public categoryItems = input.required<CategoryItem[]>();
 
     readonly onCategoryUpdate = output<CategoryItem>();
 
-
-
-    constructor() {
-    }
-
-    get categoryItems(): CategoryItem[] {
-        return this._categoryItems();
-    }
 
     // hasSelectableCompetitors(): boolean {
     //     return this.validator && this.validator.getCompetitors().length > 0;

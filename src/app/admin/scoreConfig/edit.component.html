@@ -1,9 +1,15 @@
-<h2 *ngIf="processing" class="text-center">
+@if(processing) {
+<h2 class="text-center">
   <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
 </h2>
-<ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-<form *ngIf="!processing && originalScoreConfig" name="form" (ngSubmit)="save()" formGroup="typedForm" novalidate>
-  <div *ngIf="originalScoreConfig.hasNext()" class="row mb-3">
+}
+@if(alert) {
+<ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+}
+@if(!processing && originalScoreConfig) {
+<form name="form" (ngSubmit)="save()" formGroup="typedForm" novalidate>
+  @if(originalScoreConfig.hasNext()) {
+  <div class="row mb-3">
     <label for="useNext" class="col-5 col-form-label">gebruik {{getNextPluralName()}}</label>
     <div class="col-7">
       <div class="form-control form-check form-switch">
@@ -12,19 +18,24 @@
       </div>
     </div>
   </div>
-  <div *ngIf="typedForm.value['useNext']" class="row mb-3">
+  }
+  @if(typedForm.value['useNext']) {
+  <div class="row mb-3">
     <label class="col-3 col-form-label">{{getNextPluralName()}}</label>
     <label for="maxNext" class="col-2 col-form-label text-end">{{getNextDirectionName()}}</label>
     <div class="col-7">
       <input type="number"
         ngClass="{ 'is-invalid': typedForm.controls.maxNext.invalid, 'is-valid': typedForm.controls.maxNext.valid}"
         formControlName="maxNext" maxlength="2" class="form-control" id="maxNext" />
-      <label *ngIf="typedForm.value['useNext']" for="maxNext" class="ms-3">0 = zoveel mogelijk</label>
+      <label for="maxNext" class="ms-3">0 = zoveel mogelijk</label>
     </div>
   </div>
+  }
   <div class="row mb-3">
     <label class="col-3 col-form-label">
-      <span *ngIf="typedForm.value['useNext']">{{getNextSingularName()}}<span *ngIf="getNextSingularName()">-</span></span>      
+      @if(typedForm.value['useNext']) {
+      <span>{{getNextSingularName()}}@if(getNextSingularName()) {<span>-</span>}</span>
+      }
       <span>{{getPluralName()}}</span>
     </label>
     <label for="max" class="col-2 col-form-label text-end">{{getDirectionName()}}</label>
@@ -36,15 +47,18 @@
   </div>
   <div class="row mb-3">
     <div class="col-5 d-flex justify-content-end">
-      <button *ngIf="structureHasMultipleRounds()" type="button" (click)="openSelectRoundsModal()"
+      @if(structureHasMultipleRounds()) {
+      <button type="button" (click)="openSelectRoundsModal()"
         class="btn btn-outline-primary">
         selecteer ronden
       </button>
+      }
     </div>
-    <div *ngIf="!readonly" class="col-7">
+    @if(!readonly) {
+    <div class="col-7">
       <button type="submit" class="btn btn-primary" [disabled]="typedForm.invalid">opslaan</button>
     </div>
-
+    }
   </div>
-
 </form>
+}

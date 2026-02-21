@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     RoundNumber,
@@ -29,26 +29,30 @@ import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { PlanningConfigRepository } from '../../lib/ngx-sport/planning/config/repository';
 import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RoundNumbersSelectorModalComponent } from '../roundnumber/selector.component';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
-import { GameAmountConfigControl } from '../gameAmountConfig/edit.component';
+import { GameAmountConfigControl, GameAmountConfigEditComponent } from '../gameAmountConfig/edit.component';
 import { GameAmountConfigRepository } from '../../lib/ngx-sport/gameAmountConfig/repository';
 import { forkJoin, Observable, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 
 @Component({
     selector: 'app-planningconfig-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css'],
-    
+    standalone: true,
+    imports: [NgbAlert,GameAmountConfigEditComponent,FontAwesomeModule,EscapeHtmlPipe,TournamentNavBarComponent,ReactiveFormsModule]
 })
 export class PlanningConfigComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup;/*<{
@@ -79,6 +83,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     // gameAmountRange: VoetbalRange | undefined;
     public showNrOfBatchGamesAlert = false;
     public unequallyAssigned = false;
+    public modalService: NgbModal = inject(NgbModal);
 
     @ViewChild('updateDataAlert', { static: false }) updateDataAlert!: NgbAlert;
     updateDataMsg: string | undefined = '';
@@ -102,7 +107,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         private sportMapper: SportMapper,
         private gameAmountConfigMapper: GameAmountConfigMapper
     ) {
-        super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, sructureRepository, globalEventsManager, favRepository);
         this.typedForm = new FormGroup({
             /*gameAmountConfigs: new FormArray([
                 new FormControl(1, { nonNullable: true })

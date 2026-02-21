@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { IAlert, IAlertType } from '../../shared/common/alert';
@@ -6,18 +6,21 @@ import { RefereeRepository } from '../../lib/ngx-sport/referee/repository';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { TournamentRuleRepository } from '../../lib/tournament/rule/repository';
 import { JsonTournamentRule } from '../../lib/tournament/rule/json';
 import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
+import { TournamentNavBarComponent } from "../../shared/tournament/tournamentNavBar/tournamentNavBar.component";
+import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 
 @Component({
     selector: 'app-tournament-rules',
     templateUrl: './rules.component.html',
     styleUrls: ['./rules.component.scss'],
+    imports: [TournamentNavBarComponent, FaIconComponent, NgbAlert],
     
 })
 export class TournamentRulesComponent extends TournamentComponent implements OnInit {

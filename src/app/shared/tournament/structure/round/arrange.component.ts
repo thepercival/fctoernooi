@@ -11,8 +11,9 @@ import { TOURNAMENT_UI_IMPORTS } from '../../tournament.ui-imports';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructureRoundArrangeComponent {
-  readonly _structureEditor = input.required<StructureEditor>();
-  readonly _round = input.required<Round>();
+  public structureEditor = input.required<StructureEditor>();
+  public round = input.required<Round>();
+  
   readonly onActionArrange = output<StructureActionName>();
 
   constructor() {
@@ -44,8 +45,8 @@ export class StructureRoundArrangeComponent {
 
   canChange(delta: number): boolean {
     try {
-      this.structureEditor.validate(
-        this.round.getCompetition(), this.round.getNrOfPlaces(), this.round.getPoules().length + delta);
+      this.structureEditor().validate(
+        this.round().getCompetition(), this.round().getNrOfPlaces(), this.round().getPoules().length + delta);
       return true;
     } catch (e) {
       return false;
@@ -53,11 +54,11 @@ export class StructureRoundArrangeComponent {
   }
 
   canRemovePouleFromRoot(): boolean {
-    return this.round.getPoules().length > 1;
+    return this.round().getPoules().length > 1;
   }
 
   canRemovePlaceFromRoot(): boolean {
-    return this.round.getPlaces().length > this.structureEditor.getMinPlacesPerPouleSmall();
+    return this.round().getPlaces().length > this.structureEditor().getMinPlacesPerPouleSmall();
   }
 
   canDecrementNrOfPoules(): boolean {
@@ -85,17 +86,17 @@ export class StructureRoundArrangeComponent {
   }
 
   showHorizontal(): boolean {
-    const nrOfRounds = this.round.getNumber().getRounds(undefined).length;
+    const nrOfRounds = this.round().getNumber().getRounds(undefined).length;
     return nrOfRounds <= 8;
   }
 
   showVertical(): boolean {
-    const nrOfRounds = this.round.getNumber().getRounds(undefined).length;
+    const nrOfRounds = this.round().getNumber().getRounds(undefined).length;
     return nrOfRounds > 2;
   }
 
   horViewPortClass(): string {
-    const nrOfRounds = this.round.getNumber().getRounds(undefined).length;
+    const nrOfRounds = this.round().getNumber().getRounds(undefined).length;
     if (nrOfRounds <= 2) {
       return ''
     } else if (nrOfRounds <= 4) {
@@ -109,7 +110,7 @@ export class StructureRoundArrangeComponent {
   }
 
   vertViewPortClass(): string {
-    const nrOfRounds = this.round.getNumber().getRounds(undefined).length;
+    const nrOfRounds = this.round().getNumber().getRounds(undefined).length;
     if (nrOfRounds <= 2) {
       return 'd-none';
     } else if (nrOfRounds <= 4) {
@@ -120,14 +121,6 @@ export class StructureRoundArrangeComponent {
       return 'd-xl-none'
     }
     return '';
-  }
-
-  get structureEditor(): StructureEditor {
-    return this._structureEditor();
-  }
-
-  get round(): Round {
-    return this._round();
   }
 
   /* chilround(arrange)

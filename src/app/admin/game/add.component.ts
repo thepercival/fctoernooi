@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     GameState,
@@ -37,14 +37,17 @@ import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 
 @Component({
     selector: 'app-tournament-game-add',
     templateUrl: './add.component.html',
     styleUrls: ['./add.component.scss'],
-    
+    standalone: true,
+    imports: [NgbAlert,FontAwesomeModule,TournamentNavBarComponent,ReactiveFormsModule]
 })
 export class GameAddComponent extends TournamentComponent implements OnInit {
     private roundNumber!: RoundNumber;

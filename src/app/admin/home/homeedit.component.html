@@ -35,7 +35,7 @@
           <div class="col-7">
             <!-- rules -->
             <ul class="list-group">
-              @for(rule of rules | async; track rule) {
+              @for(rule of rules(); track rule) {
               <li class="list-group-item bg-white text-dark text-start text-nowrap overflow-hidden">
                 <span [innerHTML]="rule.text"></span>
               </li>

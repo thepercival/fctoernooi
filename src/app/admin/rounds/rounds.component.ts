@@ -4,12 +4,15 @@ import { StructureEditor, StructureNameService } from 'ngx-sport';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { CSSService } from '../../shared/common/cssservice';
 import { SelectableRoundNode } from './selector.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
 
 @Component({
     selector: 'app-tournament-select-round',
     templateUrl: './rounds.component.html',
     styleUrls: ['./rounds.component.css'],
-    
+    standalone: true,
+    imports: [FontAwesomeModule, EscapeHtmlPipe]
 })
 export class StructureSelectRoundComponent implements OnInit {
   @Input() selectableRoundNode!: SelectableRoundNode;

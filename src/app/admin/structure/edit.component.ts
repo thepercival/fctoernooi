@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   BalancedPouleStructure,
@@ -22,7 +22,7 @@ import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { IAlertType } from '../../shared/common/alert';
 import { QualifyPathNode } from 'ngx-sport';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CategoryUniqueChecker } from '../../lib/ngx-sport/category/uniqueChecker';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { Favorites } from '../../lib/favorites';
@@ -30,12 +30,20 @@ import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { TournamentRegistrationRepository } from '../../lib/tournament/registration/repository';
 import { TournamentRegistration } from '../../lib/tournament/registration';
 import { CategoryModalComponent } from '../../shared/tournament/structure/categorymodal/categorymodal.component';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { PlanningNavBarComponent } from './planningNavBar.component';
+import { StructureCategoryComponent } from '../../shared/tournament/structure/category.component';
+import { StructureRoundComponent } from '../../shared/tournament/structure/round.component';
+import { TournamentIconComponent } from '../../shared/tournament/icon/icon.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { CategoryChooseModalComponent } from '../../shared/tournament/category/chooseModal.component';
 
 @Component({
     selector: 'app-tournament-structure',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.scss'],
-    
+    standalone: true,
+    imports: [StructureRoundComponent,NgbAlert,StructureCategoryComponent,FontAwesomeModule, TournamentNavBarComponent, PlanningNavBarComponent, StructureCategoryComponent, StructureRoundComponent, TournamentIconComponent]
 })
 export class StructureEditComponent extends TournamentComponent implements OnInit {
   lastAction: StructureAction | undefined;
@@ -47,14 +55,15 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   public structureNameService!: StructureNameService;
   public hasBegun: boolean = true;
   // private scrolled = false;
+  
+  private modalService: NgbModal = inject(NgbModal);
 
   constructor(
     route: ActivatedRoute,
     router: Router,
     tournamentRepository: TournamentRepository,
     structureRepository: StructureRepository,
-    globalEventsManager: GlobalEventsManager,
-    @Inject(NgbModal) modalService: NgbModal,
+    globalEventsManager: GlobalEventsManager,    
     favRepository: FavoritesRepository,
     public structureEditor: StructureEditor,
     private planningRepository: PlanningRepository,
@@ -63,7 +72,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     private structureMapper: StructureMapper,
     private registrationRepository: TournamentRegistrationRepository
   ) {
-    super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+    super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
   }
 
   ngOnInit() {
@@ -298,6 +307,15 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   //   }
   // }
 
+  openCategoriesChooseModal(structure: Structure) {
+    const activeModal = this.modalService.open(CategoryChooseModalComponent);
+    activeModal.componentInstance.categories = structure.getCategories();
+    activeModal.componentInstance.tournament = this.tournament;
+    activeModal.result.then((result) => {
+    }, (reason) => {
+        this.updateFavoriteCategories(structure);
+    });
+  }
 }
 
 export interface StructureAction {

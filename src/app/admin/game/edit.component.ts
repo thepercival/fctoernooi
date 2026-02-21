@@ -75,7 +75,7 @@ export class GameEditComponent extends TournamentComponent {
         private myNavigation: MyNavigation,
         private structureLocationMapper: StructureLocationMapper
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
         // this.originalPouleState = State.Created;
         this.scoreConfigService = new ScoreConfigService();
 

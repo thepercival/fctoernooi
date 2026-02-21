@@ -1,30 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgbAlert } from '@ng-bootstrap/ng-bootstrap/types/alert';
-import {
-  NgbCollapse,
-  NgbDatepicker,
-  NgbDatepickerContent,
-  NgbDatepickerMonth,
-  NgbInputDatepicker,
-  NgbNav,
-  NgbNavContent,
-  NgbNavItem,
-  NgbNavItemRole,
-  NgbNavLink,
-  NgbNavLinkBase,
-  NgbNavLinkButton,
-  NgbNavOutlet,
-  NgbNavPane,
-  NgbPopover,
-  NgbProgressbar,
-  NgbTimepicker,
-} from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 
 export const TOURNAMENT_UI_IMPORTS = [
-  CommonModule,
   FontAwesomeModule,
   ReactiveFormsModule,
   RouterModule,
@@ -48,4 +27,5 @@ export const TOURNAMENT_UI_IMPORTS = [
   NgbProgressbarModule,
   NgbTimepickerModule,
    */
+  NgbAlert,
 ];

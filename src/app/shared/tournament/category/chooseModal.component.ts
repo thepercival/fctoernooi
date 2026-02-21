@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Category } from 'ngx-sport';
 
@@ -17,23 +17,15 @@ import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
     imports: [TOURNAMENT_UI_IMPORTS, CategoryChooseListComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CategoryChooseModalComponent implements OnInit {
-    readonly _categories = input.required<Category[]>();
-    readonly _tournament = input.required<Tournament>();
-
-    constructor(
-        public favRepository: FavoritesRepository,
-        public favRepository = inject(FavoritesRepository),
-        public activeModal = inject(NgbActiveModal)
-    }
-
-    ngOnInit() {
-
-    }
+export class CategoryChooseModalComponent { // implements OnInit {
+    public categories = input.required<Category[]>();
+    public tournament = input.required<Tournament>();
+    public favRepository = inject(FavoritesRepository);
+    public activeModal = inject(NgbActiveModal);
 
     getCategoryItems(): CategoryItem[] {
-        const favorites = this.favRepository.getObject(this.tournament, this.categories);
-        return this.categories.map((category: Category) => {
+        const favorites = this.favRepository.getObject(this.tournament(), this.categories());
+        return this.categories().map((category: Category) => {
             return {
                 category: category,
                 selected: !favorites.hasCategories() || favorites.hasCategory(category)
@@ -42,15 +34,17 @@ export class CategoryChooseModalComponent implements OnInit {
     }
 
     updateFavorites(categoryItem: CategoryItem): void {
-        const favorites = this.favRepository.getObject(this.tournament, this.categories);
+        const favorites = this.favRepository.getObject(this.tournament(), this.categories());
+
         if (!favorites.hasCategories() && categoryItem.selected === false) {
             this.initialFill(favorites);
         }
+
         const category = categoryItem.category;
         categoryItem.selected ? favorites.addCategory(category) : favorites.removeCategory(category);
 
         if (favorites.hasCategories()) {
-            const allFavorite = this.categories.every((category: Category) => favorites.hasCategory(category));
+            const allFavorite = this.categories().every((category: Category) => favorites.hasCategory(category));
             if (allFavorite) {
                 favorites.resetCategories();
             }
@@ -59,17 +53,17 @@ export class CategoryChooseModalComponent implements OnInit {
         this.favRepository.editObject(favorites);
     }
 
-    initialFill(favorites: Favorites): void {
-        this.categories.forEach((category: Category) => {
+    private initialFill(favorites: Favorites): void {
+        this.categories().forEach((category: Category) => {
             favorites.addCategory(category);
         });
     }
 
-    get categories(): Category[] {
-        return this._categories();
-    }
+    // get categories(): Category[] {
+    //     return this.categoryRepository.getCategories(this.tournament);
+    // }
 
-    get tournament(): Tournament {
-        return this._tournament();
-    }
+    // get tournament(): Tournament {
+    //     return this.tournamentRepository.getCurrent();
+    // }
 }

@@ -17,11 +17,11 @@ import { RankingEndComponent } from './end.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingCategoryComponent implements OnInit {
-    readonly _category = input.required<Category>();
-    readonly _favorites = input<Favorites | undefined>(undefined);
-    readonly _competitionSports = input.required<CompetitionSport[]>();
-    readonly _showHeader = input.required<boolean>();
-    readonly _structureNameService = input.required<StructureNameService>();
+    public category = input.required<Category>();
+    public favorites = input<Favorites | undefined>(undefined);
+    public competitionSports = input.required<CompetitionSport[]>();
+    public showHeader = input.required<boolean>();
+    public structureNameService = input.required<StructureNameService>();
 
     public activeTabName!: string;
     public multipleRounds: boolean = false;
@@ -36,7 +36,7 @@ export class RankingCategoryComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.multipleRounds = this.category.getRootRound().getChildren().length > 0;
+        this.multipleRounds = this.category().getRootRound().getChildren().length > 0;
         this.initTabNr();
     }
 
@@ -44,7 +44,7 @@ export class RankingCategoryComponent implements OnInit {
 
         let activeTabNr = 1;
         if (this.multipleRounds 
-            && this.category.getRootRound().getStructureCell().getLast().getGamesState() === GameState.Finished) {
+            && this.category().getRootRound().getStructureCell().getLast().getGamesState() === GameState.Finished) {
             activeTabNr = 2;
         }
         this.activeTabName = this.getTabName(activeTabNr);
@@ -53,26 +53,6 @@ export class RankingCategoryComponent implements OnInit {
     get RankingScreen(): TournamentScreen { return TournamentScreen.Ranking }
 
     getTabName(tabNr: number): string {
-        return this.category.getNumber() + '-' + tabNr;
-    }
-
-    get category(): Category {
-        return this._category();
-    }
-
-    get favorites(): Favorites | undefined {
-        return this._favorites();
-    }
-
-    get competitionSports(): CompetitionSport[] {
-        return this._competitionSports();
-    }
-
-    get showHeader(): boolean {
-        return this._showHeader();
-    }
-
-    get structureNameService(): StructureNameService {
-        return this._structureNameService();
+        return this.category().getNumber() + '-' + tabNr;
     }
 }

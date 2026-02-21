@@ -9,12 +9,15 @@ import { Tournament } from '../../../lib/tournament';
 import { TournamentRegistrationRepository } from '../../../lib/tournament/registration/repository';
 import { DateConverter } from '../../../lib/dateConverter';
 import { TournamentRegistrationSettingsMapper } from '../../../lib/tournament/registration/settings/mapper';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-tournament-registrations-form',
     templateUrl: './form.component.html',
     styleUrls: ['./form.component.scss'],
-    
+    standalone: true,
+    imports: [NgbAlert,FontAwesomeModule]
 })
 export class RegistrationFormComponent implements OnInit{
   public tournament = input.required<Tournament>();

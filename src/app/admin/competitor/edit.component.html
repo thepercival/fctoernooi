@@ -33,7 +33,7 @@
             <input class="form-control"
               ngClass="{ 'is-invalid': typedForm.controls.name.invalid, 'is-valid': typedForm.controls.name.valid }" type="text"
               formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters"
-              [focusMe]="originalCompetitor === undefined">
+              focusMe="originalCompetitor === undefined">
           </div>
         </div>
         <div class="row mb-3">
@@ -152,7 +152,7 @@
 <ng-template #contentInfoInfo let-activeModal>
   <div>Deze informatie wordt getoond in het 
     <button type="button" class="btn btn-sm btn-secondary"
-      [routerLink]="['/public/competitors', tournament.getId()]" (click)="activeModal.close()">
+      routerLink="['/public/competitors', tournament.getId()]" (click)="activeModal.close()">
       <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers-scherm
     </button></div>
 </ng-template>

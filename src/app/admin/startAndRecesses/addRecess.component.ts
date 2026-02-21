@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Period } from 'ngx-sport';
 
@@ -10,19 +10,22 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { IAlertType } from '../../shared/common/alert';
 import { RecessRepository } from '../../lib/recess/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
-import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbDateStruct, NgbInputDatepicker, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
 import { Recess } from '../../lib/recess';
 import { RecessValidator } from '../../lib/recess/validator';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { JsonRecess } from '../../lib/recess/json';
 import { DateConverter } from '../../lib/dateConverter';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-tournament-competitor-edit',
     templateUrl: './addRecess.component.html',
     styleUrls: ['./addRecess.component.css'],
-    
+    standalone: true,
+    imports: [TournamentNavBarComponent,NgbAlert,NgbTimepicker,NgbInputDatepicker,FontAwesomeModule,ReactiveFormsModule]
 })
 export class RecessAddComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup<{
@@ -41,14 +44,13 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
         favRepository: FavoritesRepository,
         private recessRepository: RecessRepository,
         private planningRepository: PlanningRepository,
         private myNavigation: MyNavigation,
         private dateConverter: DateConverter,
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
         this.typedForm = new FormGroup({
             name: new FormControl('pauze', { nonNullable: true, validators: 
                 [

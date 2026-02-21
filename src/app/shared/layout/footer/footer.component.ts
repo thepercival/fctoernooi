@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { GlobalEventsManager } from '../../common/eventmanager';
 
 @Component({
@@ -7,7 +6,7 @@ import { GlobalEventsManager } from '../../common/eventmanager';
     templateUrl: './footer.component.html',
     styleUrl: './footer.component.scss',
     standalone: true,
-    imports: [CommonModule],
+    imports: [],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FooterComponent implements OnInit {

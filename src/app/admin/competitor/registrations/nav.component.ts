@@ -6,11 +6,16 @@ import { IAlert, IAlertType } from '../../../shared/common/alert';
 import { Tournament } from '../../../lib/tournament';
 import { Category, StructureNameService } from 'ngx-sport';
 import { RegistrationTab } from '../../../shared/common/tab-ids';
+import { RegistrationListComponent } from "./list.component";
+import { RegistrationFormComponent } from "./form.component";
+import { RegistrationSettingsComponent } from "./settings.component";
+import { NgbNav } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-tournament-registrations-nav',
     templateUrl: './nav.component.html',
     styleUrls: ['./nav.component.scss'],
+    imports: [RegistrationListComponent, RegistrationFormComponent, RegistrationSettingsComponent,NgbNav],
     
 })
 export class RegistrationsNavComponent implements OnInit {

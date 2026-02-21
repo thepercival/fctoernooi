@@ -1,24 +1,49 @@
-<div *ngIf="poule" class="card border-1">
-    <div *ngIf="header" class="card-header text-center pb-0">
-        <h5>{{structureNameService.getPouleName(poule, true)}}</h5>
-    </div>
-    <div class="card-body p-0">
-        <h2 *ngIf="processing" class="text-center">
-            <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
-        </h2>
-        <div *ngIf="!processing" class="card-text">
-            <app-tournament-ranking-sports-table *ngIf="competitionSports.length > 1" [poule]="poule"
-                [favorites]="favorites" [competitionSports]="competitionSports"
-                [structureNameService]="structureNameService" [header]="header">
-            </app-tournament-ranking-sports-table>
-            <app-tournament-ranking-against-table *ngIf="singleAgainstCompetitionSport" [poule]="poule"
-                [favorites]="favorites" [competitionSport]="singleAgainstCompetitionSport"
-                [structureNameService]="structureNameService" [header]="header">
-            </app-tournament-ranking-against-table>
-            <app-tournament-ranking-together-table *ngIf="singleTogetherCompetitionSport" [poule]="poule"
-                [favorites]="favorites" [competitionSport]="singleTogetherCompetitionSport"
-                [structureNameService]="structureNameService" [header]="header">
-            </app-tournament-ranking-together-table>
+@if (poule()) {
+    <div class="card border-1">
+        @if (header()) {
+            <div class="card-header text-center pb-0">
+                <h5>{{structureNameService().getPouleName(poule(), true)}}</h5>
+            </div>
+        }
+        <div class="card-body p-0">
+            @if (processing()) {
+                <h2 class="text-center">
+                    <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+                </h2>
+            }
+            @if (!processing()) {
+                <div class="card-text">
+                    @if (competitionSports().length > 1) {
+                        <app-tournament-ranking-sports-table
+                            [poule]="poule()"
+                            [favorites]="favorites()"
+                            [competitionSports]="competitionSports()"
+                            [structureNameService]="structureNameService()"
+                            [header]="header()">
+                        </app-tournament-ranking-sports-table>
+                    }
+
+                    @if (singleAgainstCompetitionSport) {
+                        <app-tournament-ranking-against-table
+                            [poule]="poule()"
+                            [favorites]="favorites()"
+                            [competitionSport]="singleAgainstCompetitionSport"
+                            [structureNameService]="structureNameService()"
+                            [header]="header()">
+                        </app-tournament-ranking-against-table>
+                    }
+
+                    @if (singleTogetherCompetitionSport) {
+                        <app-tournament-ranking-together-table
+                            [_poule]="poule()"
+                            [_favorites]="favorites()"
+                            [_competitionSport]="singleTogetherCompetitionSport"
+                            [_structureNameService]="structureNameService()"
+                            [_header]="header()">
+                        </app-tournament-ranking-together-table>
+                    }
+                </div>
+            }
         </div>
     </div>
-</div>
+}

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { AuthService } from '../../lib/auth/auth.service';
@@ -9,7 +8,7 @@ import { IAlertType } from '../../shared/common/alert';
     templateUrl: './logout.component.html',
     styleUrls: ['./logout.component.css'],
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LogoutComponent implements OnInit {

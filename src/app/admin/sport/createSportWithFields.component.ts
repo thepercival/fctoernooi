@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AgainstGpp, AgainstH2h, AllInOneGame, GameMode, NameService, Single, Sport, VoetbalRange } from 'ngx-sport';
 
 import { IAlert, IAlertType } from '../../shared/common/alert';
@@ -7,14 +7,17 @@ import { CSSService } from '../../shared/common/cssservice';
 import { TranslateSportService } from '../../lib/translate/sport';
 import { TranslateFieldService } from '../../lib/translate/field';
 import { GameModeModalComponent } from '../gameMode/modal.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { SportToAddComponent } from './toAdd.component';
 
 @Component({
     selector: 'app-tournament-create-sportwithfields',
     templateUrl: './createSportWithFields.component.html',
     styleUrls: ['./createSportWithFields.component.scss'],
-    
+    standalone: true,
+    imports: [FontAwesomeModule,ReactiveFormsModule, NgbAlert,SportToAddComponent]
 })
 export class CreateSportWithFieldsComponent implements OnInit {
     @Input() labelBtnNext: string = 'toevoegen';

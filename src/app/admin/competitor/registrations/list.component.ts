@@ -1,10 +1,7 @@
 import { Component, Input, OnChanges, output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Category, Place, StartLocationMap, StructureNameService } from 'ngx-sport';
-import { TournamentCompetitor } from '../../../lib/competitor';
-import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
-import { CompetitorRepository } from '../../../lib/ngx-sport/competitor/repository';
+import { NgbAlert, NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Category, StartLocationMap, StructureNameService } from 'ngx-sport';
 import { Tournament } from '../../../lib/tournament';
 import { IAlert, IAlertType } from '../../../shared/common/alert';
 import { TournamentCompetitorMapper } from '../../../lib/competitor/mapper';
@@ -14,12 +11,14 @@ import { TournamentRegistrationProcessModalComponent } from './processmodal.comp
 import { RegistrationState } from '../../../lib/tournament/registration/state';
 import { TournamentRegistrationTextSubject } from '../../../lib/tournament/registration/text';
 import { TextEditorModalComponent } from '../../textEditor/texteditormodal.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-tournament-registrations-list',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
-    
+    standalone: true,
+    imports: [FontAwesomeModule, NgbDropdown]
 })
 export class RegistrationListComponent implements OnChanges  {
   @Input() tournament!: Tournament;

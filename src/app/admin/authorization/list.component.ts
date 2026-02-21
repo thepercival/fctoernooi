@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -6,7 +6,7 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentUserRepository } from '../../lib/tournament/user/repository';
 import { Role } from '../../lib/role';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentInvitationRepository } from '../../lib/tournament/invitation/repository';
 import { TournamentInvitation } from '../../lib/tournament/invitation';
 import { TournamentUser } from '../../lib/tournament/user';
@@ -16,11 +16,15 @@ import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { AuthService } from '../../lib/auth/auth.service';
+import { TournamentNavBarComponent } from "../../shared/tournament/tournamentNavBar/tournamentNavBar.component";
+import { RoleItemComponent } from "./roleitem.component";
+import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 
 @Component({
     selector: 'app-tournament-authorization-list',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
+    imports: [TournamentNavBarComponent, RoleItemComponent, FaIconComponent, NgbAlert],
 })
 export class AuthorizationListComponent extends TournamentComponent implements OnInit {
     public invitations: TournamentInvitation[] = [];
@@ -40,7 +44,7 @@ export class AuthorizationListComponent extends TournamentComponent implements O
         private invitationRepository: TournamentInvitationRepository,
         private authService: AuthService
     ) {
-        super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, sructureRepository, globalEventsManager, favRepository);
     }
 
     ngOnInit() {

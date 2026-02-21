@@ -1,11 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Structure, RoundNumber, NameService, StructureNameService } from 'ngx-sport';
+import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
 
 @Component({
     selector: 'app-ngbd-modal-roundnumbers',
     templateUrl: './selector.component.html',
-    
+    standalone: true,
+    imports: [EscapeHtmlPipe]
 })
 export class RoundNumbersSelectorModalComponent implements OnInit {
     @Input() structure!: Structure;

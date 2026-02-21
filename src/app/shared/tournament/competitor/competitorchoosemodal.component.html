@@ -5,57 +5,68 @@
     <button type="button" class="btn-close" aria-label="sluiten" (click)="activeModal.dismiss('close')"></button>
 </div>
 <div class="modal-body">
-    <ngb-alert *ngIf="!hasSelectableCompetitors()" type="danger">er zijn geen deelnemers
-        die je kunt kiezen</ngb-alert>
+    @if (!hasSelectableCompetitors()) {
+        <ngb-alert type="danger">er zijn geen deelnemers
+            die je kunt kiezen</ngb-alert>
+    }
 
     <div class="d-flex flex-wrap gap-3 justify-content-center mt-3">
-        <div *ngFor="let competitorList of competitorLists" class="card border-secondary"
-            ngClass="{ 'border-0': competitorLists.length > 0 }">
+        @for (competitorList of competitorLists; track competitorList) {
+            <div class="card border-secondary" [class.border-0]="competitorLists.length > 0">
 
-            <div *ngIf="competitorLists.length > 1 && competitorList.competitorItems.length > 0" class="card-cat-header px-3">
-                <div class="d-flex justify-content-between">
-                    <h5 class="my-0">
-                        <span class="fw-bold align-middle">{{competitorList.categoryName}}</span>
-                    </h5>
+                @if (competitorLists.length > 1 && competitorList.competitorItems.length > 0) {
+                    <div class="card-cat-header px-3">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="my-0">
+                                <span class="fw-bold align-middle">{{competitorList.categoryName}}</span>
+                            </h5>
+                        </div>
+                    </div>
+                }
+
+                <div class="card-body p-0">
+
+                    <table class="table">
+                        <tbody>
+                            @for (competitorItem of competitorList.competitorItems; track competitorItem) {
+                                @if (competitorItem.competitor) {
+                                    <tr>
+                                        <td>
+                                            <span [innerHtml]="competitorItem.placeName"></span>
+                                        </td>
+                                        @if (competitorsAssignedElsewhere.length > 0) {
+                                            <td>
+                                                @if (alreadyAssignedElsewhere(competitorItem.competitor)) {
+                                                    <fa-icon [icon]="['fas', 'door-closed']"></fa-icon>
+                                                }
+                                            </td>
+                                        }
+                                        <td>
+                                            <label class="form-check-label pointer" [for]="getId(competitorItem.competitor)">
+                                                {{competitorItem.competitor.getName()}}
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex justify-content-end form-check form-switch"
+                                                [class]="getSelectClass(competitorItem)">
+                                                <input type="checkbox" class="form-check-input"
+                                                    [id]="getId(competitorItem.competitor)"
+                                                    [checked]="competitorItem.selected" (change)="toggle(competitorItem)">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                } @else {
+                                    <tr>
+                                        <td colspan="3">{{competitorItem.placeName}}</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
-
-            <div class="card-body p-0">
-
-                <table class="table">
-                    <tbody>
-                        <ng-template ngFor let-competitorItem [ngForOf]="competitorList.competitorItems">
-                            <tr *ngIf="competitorItem.competitor">
-                                <td>
-                                    <span [innerHtml]="competitorItem.placeName"></span>
-                                </td>
-                                <td *ngIf="this.competitorsAssignedElsewhere.length > 0">
-                                    <fa-icon *ngIf="alreadyAssignedElsewhere(competitorItem.competitor)" [icon]="['fas', 'door-closed']"></fa-icon>
-                                </td>
-                                <td>
-                                    <label class="form-check-label pointer" for="{{getId(competitorItem.competitor)}}">
-                                        {{competitorItem.competitor.getName()}}
-                                    </label>
-                                </td>
-                                <td>
-                                    <div
-                                        class="d-flex justify-content-end form-check form-switch {{getSelectClass(competitorItem)}}">
-                                        <input type="checkbox" class="form-check-input"
-                                            id="{{getId(competitorItem.competitor)}}"
-                                            [checked]="competitorItem.selected" (change)="toggle(competitorItem)">
-
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr *ngIf="!competitorItem.competitor">
-                                <td colspan="3">{{competitorItem.placeName}}</td>
-                            </tr>
-                        </ng-template>
-                    </tbody>
-                </table>
-
-            </div>
-        </div>
+        }
     </div>
 </div>
 <div class="modal-footer border-top-0 align-items-end">

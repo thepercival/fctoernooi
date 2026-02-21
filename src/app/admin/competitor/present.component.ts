@@ -1,21 +1,22 @@
 import { Component, Input, OnChanges, output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { Category, Place, StartLocationMap, StructureNameService } from 'ngx-sport';
-import { forkJoin, Observable } from 'rxjs';
 import { TournamentCompetitor } from '../../lib/competitor';
-import { LockerRoomValidator } from '../../lib/lockerroom/validator';
 import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository';
 import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 import { Tournament } from '../../lib/tournament';
-import { IAlert, IAlertType } from '../../shared/common/alert';
+import { IAlert } from '../../shared/common/alert';
 import { TournamentCompetitorMapper } from '../../lib/competitor/mapper';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
 
 @Component({
     selector: 'app-tournament-competitors-present',
     templateUrl: './present.component.html',
     styleUrls: ['./present.component.scss'],
-    
+    standalone: true,
+    imports: [NgbAlert,FontAwesomeModule,EscapeHtmlPipe]
 })
 export class CompetitorPresentListComponent implements OnChanges {
   @Input() tournament!: Tournament;

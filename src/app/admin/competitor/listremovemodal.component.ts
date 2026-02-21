@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
+import { FaIconComponent } from "@fortawesome/angular-fontawesome";
+import { TournamentIconComponent } from "../../shared/tournament/icon/icon.component";
 
 @Component({
     selector: 'app-ngbd-modal-listremove',
     templateUrl: './listremovemodal.component.html',
     styleUrls: ['./listremovemodal.component.scss'],
+    imports: [FaIconComponent, TournamentIconComponent, NgbAlert],
     
 })
 export class CompetitorListRemoveModalComponent {

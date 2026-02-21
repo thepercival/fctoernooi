@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { MyNavigation } from '../../shared/common/navigation';
@@ -8,7 +7,7 @@ import { MyNavigation } from '../../shared/common/navigation';
     selector: 'app-user-title',
     templateUrl: './title.component.html',
     standalone: true,
-    imports: [CommonModule, FontAwesomeModule],
+    imports: [FontAwesomeModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserTitleComponent {

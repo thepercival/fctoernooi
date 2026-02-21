@@ -7,12 +7,15 @@ import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository'
 import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { TournamentCompetitorMapper } from '../../lib/competitor/mapper';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
 
 @Component({
     selector: 'app-tournament-competitor-line',
     templateUrl: './listline.component.html',
     styleUrls: ['./listline.component.css'],
-    
+    standalone: true,
+    imports: [FontAwesomeModule, EscapeHtmlPipe]
 })
 export class CompetitorListLineComponent implements AfterViewChecked {
   @Input() placeCompetitor!: PlaceCompetitorItem;

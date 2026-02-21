@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Place,
@@ -20,20 +20,25 @@ import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { CategoryChooseModalComponent } from '../../shared/tournament/category/chooseModal.component';
 import { FavoritesRepository } from '../../lib/favorites/repository';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal, NgbNav } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { TournamentRegistrationRepository } from '../../lib/tournament/registration/repository';
-import { JsonRegistrationSettings } from '../../lib/tournament/registration/settings/json';
 import { TournamentRegistrationSettings } from '../../lib/tournament/registration/settings';
-import { TournamentRegistrationTextSubject } from '../../lib/tournament/registration/text';
-import { TextEditorModalComponent } from '../textEditor/texteditormodal.component';
 import { CompetitorTab, RegistrationTab } from '../../shared/common/tab-ids';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { CategoryBaseCompetitorListComponent } from "./category.base.component";
+import { ReactiveFormsModule } from '@angular/forms';
+import { CategoryOrderCompetitorListComponent } from "./category.order.component";
+import { RegistrationsNavComponent } from "./registrations/nav.component";
+import { CompetitorPresentListComponent } from "./present.component";
+import { TournamentNavBarComponent } from "../../shared/tournament/tournamentNavBar/tournamentNavBar.component";
 
 @Component({
     selector: 'app-tournament-competitors',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
-    
+    standalone: true,
+    imports: [NgbAlert, FontAwesomeModule, CategoryBaseCompetitorListComponent, ReactiveFormsModule, NgbNav, CategoryOrderCompetitorListComponent, RegistrationsNavComponent, CompetitorPresentListComponent, TournamentNavBarComponent]
 })
 export class CompetitorListComponent extends TournamentComponent implements OnInit, AfterViewChecked {
 
@@ -169,6 +174,16 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
         },
         error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
       });
+  }
+
+  openCategoriesChooseModal(structure: Structure) {
+    const activeModal = this.modalService.open(CategoryChooseModalComponent);
+    activeModal.componentInstance.categories = structure.getCategories();
+    activeModal.componentInstance.tournament = this.tournament;
+    activeModal.result.then((result) => {
+    }, (reason) => {
+        this.updateFavoriteCategories(structure);
+    });
   }
 
   get TabBase(): number { return CompetitorTab.Base; }  

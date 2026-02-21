@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -9,7 +9,7 @@ import { SponsorRepository } from '../../lib/sponsor/repository';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { SponsorScreensCreator } from '../../lib/liveboard/screenCreator/sponsors';
 import { SponsorScreen } from '../../lib/liveboard/screens';
@@ -18,12 +18,15 @@ import { ScreenConfig } from '../../lib/liveboard/screenConfig/json';
 import { SponsorMapper } from '../../lib/sponsor/mapper';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 
 @Component({
     selector: 'app-tournament-sponsor-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css'],
-    
+    standalone: true,
+    imports: [NgbAlert, FontAwesomeModule,TournamentNavBarComponent]
 })
 export class SponsorEditComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup<{
@@ -46,6 +49,8 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
     public originalSponsor: Sponsor | undefined;
     private screenConfig: ScreenConfig;
 
+    private modalService: NgbModal = inject(NgbModal);
+
     validations: SponsorValidations = {
         minlengthname: Sponsor.MIN_LENGTH_NAME,
         maxlengthname: Sponsor.MAX_LENGTH_NAME,
@@ -60,14 +65,13 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
+        globalEventsManager: GlobalEventsManager,        
         favRepository: FavoritesRepository,
         private sponsorRepository: SponsorRepository,
         private sponsorMapper: SponsorMapper,
         private myNavigation: MyNavigation
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
         this.logoInputType = LogoInput.ByUpload;
         this.newLogoUploaded = false;
         this.screenConfig = this.sponsorMapper.getDefaultScreenConfig();

@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { APIRepository } from '../../repository';
 import { TournamentShell } from '../shell';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common';
 import { catchError, map } from 'rxjs/operators';
 
 @Injectable({

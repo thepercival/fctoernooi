@@ -1,68 +1,259 @@
 <div class="container-fluid">
-  @if(tournament) {
-  <h1 class="d-none d-sm-block">{{tournament.getName()}}</h1>
-  <app-tournament-navbar [tournament]="tournament" [public]="false"></app-tournament-navbar>
+  <div class="row justify-content-center">
+    <div class="col-xs-12 col-md-8">
+     
+      @if (processing) {
+        <h2 class="text-center">
+          <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+        </h2>
+      }
 
-  <ngb-alert [type]="'info'" [dismissible]="false">
-    <h2 class="mt-2">Welkom {{user?.getName()}}!</h2>
-    <p>Je kan aan de slag met je toernooi door <strong>hieronder te klikken op het tabblad "opties"</strong>.</p>
-  </ngb-alert>
+      @if (alert) {
+        <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+      }
 
-  @if(hasCompetitorConfig()) {
-    @if(tournament.getCompetitors().length === 0) {
-    <ngb-alert [type]="'warning'" [dismissible]="false">
-      <fa-icon [icon]="['fas', 'exclamation-triangle']"></fa-icon>
-      <span class="ms-1">er zijn nog <strong>geen deelnemers</strong></span>
-    </ngb-alert>
-    }
+      <!-- option block sports, referees, lockerRooms, sponsors -->
+      @if (!processing && structure) {
+        <div class="d-flex flex-wrap gap-3 justify-content-center">
+          <!-- sports -->
+          @if (isAdmin()) {
+            <div class="card card-sub pointer px-0" (click)="linkToCompetitionSport()">
+              <div class="card-body text-center p-1 pt-2">
+                @if (competition.hasMultipleSports()) {
+                  <h5 class="card-title">
+                    <fa-icon [icon]="['fas', 'user-friends']"></fa-icon>
+                  </h5>
+                }
+                @if (!competition.hasMultipleSports()) {
+                  <h5 class="card-title">
+                    <app-sport-icon competitionSports="competition.getSports()"></app-sport-icon>
+                  </h5>
+                }
+                @if (competition.hasMultipleSports()) {
+                  <div class="text-nowrap"><span>sporten</span></div>
+                }
+                @if (!competition.hasMultipleSports()) {
+                  <div class="text-nowrap">
+                    <span>sport &</span><br />velden
+                  </div>
+                }
+              </div>
+            </div>
+          }
+          <!-- referees -->
+          @if (isAdmin()) {
+            <div class="card card-sub pointer px-0"
+              routerLink="['/admin/referees', tournament.getId()]">
+              <div class="card-body text-center p-1 pt-2">
+                <h5 class="card-title">
+                  <app-tournament-icon name="referee"></app-tournament-icon>
+                </h5>
+                <div class="text-nowrap" [innerHTML]="getNrOfRefereesDescription()"></div>
+              </div>
+            </div>
+          }
+          <!-- lockerRooms -->
+          @if (isAdmin() && lockerRoomValidator) {
+            <div class="card card-sub {{getLockerRoomBorderClass(lockerRoomValidator)}} pointer"
+              routerLink="['/admin/lockerrooms', tournament.getId()]">
+              <div class="card-body text-center p-1 pt-2">
+                <h5 class="card-title">
+                  <fa-icon [icon]="['fas', 'door-closed']"></fa-icon>
+                </h5>
+                <div [innerHTML]="getNrOfLockerRoomsDescription()"></div>
+              </div>
+            </div>
+          }
+          <!-- sponsors -->
+          @if (isAdmin()) {
+            <div class="card card-sub pointer" routerLink="['/admin/sponsors', tournament.getId()]">
+              <div class="card-body text-center p-1 pt-2">
+                <h5 class="card-title">
+                  <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon>
+                </h5>
+                <p class="card-text">{{getNrOfSponsorsDescription()}}</p>
+              </div>
+            </div>
+          }
+        </div>
+      }
 
-    @if(nrOfPlacesAssigned() !== nrOfPlaces()) {
-    <ngb-alert [type]="'warning'" [dismissible]="false">
-      <fa-icon [icon]="['fas', 'exclamation-triangle']"></fa-icon>
-      <span class="ms-1">er zijn nog <strong>niet alle plekken toegewezen</strong> aan
-        deelnemers</span>
-    </ngb-alert>
-    }
-  }
+      <hr>
+      <!-- option block start, ranking, liveScoreboard, changeName -->
+      @if (!processing && structure) {
+        <div class="d-flex flex-wrap gap-3 justify-content-center mt-3">
+          <!-- change name & theme -->
+          @if (isAdmin()) {
+            <div class="card card-sub pointer" routerLink="['/admin/nameandtheme', tournament.getId()]">
+              <div class="card-body text-center p-1 pt-2">
+                <h5 class="card-title">
+                  @if (tournament.getLogoExtension()) {
+                    <img src="{{getLogoUrl(tournament, 20)}}"
+                      class="img-fluid" height="25px" alt="logo">
+                  }
+                  @if (tournament.getLogoExtension() === undefined) {
+                    <span>A</span>
+                  }
+                </h5>
+                <div>naam</div>
+                <div>& thema</div>
+              </div>
+            </div>
+          }
 
-  @if(!hasReferees() && hasRefereePlaces()) {
-  <ngb-alert [type]="'warning'" [dismissible]="false">
-    <fa-icon [icon]="['fas', 'exclamation-triangle']"></fa-icon>
-    <span class="ms-1"><strong>deelnemers fluiten</strong> deze wedstrijden</span>
-  </ngb-alert>
-  }
+          <!-- start & pauzes -->
+          <div class="card card-sub pointer" routerLink="['/admin/startandrecesses', tournament.getId()]">
+            <div class="card-body text-center p-1 pt-2">
+              <h5 class="card-title">
+                <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+              </h5>
+              <div>start &<br />pauzes</div>
+            </div>
+          </div>
+          <!-- ranking (ruleset) -->
+          <div class="card card-sub pointer" routerLink="['/admin/ranking', tournament.getId()]">
+            <div class="card-body text-center p-1 pt-2">
+              <h5 class="card-title">
+                <fa-icon [icon]="['fas', 'list-ol']"></fa-icon>
+              </h5>
+              <div>standen</div>
+            </div>
+          </div>
+          <!-- live scoreboard -->
+          @if (allPoulesHaveGames) {
+            <div class="card card-sub {{getLiveBoardBorderClass()}} pointer"
+              routerLink="['/public/liveboard', tournament.getId()]">
+              <div class="card-body text-center p-1 pt-2">
+                <h5 class="card-title">
+                  <fa-icon [icon]=" [ 'fas', 'tv'] "></fa-icon>
+                </h5>
+                <div>live</div>
+                <div class="text-nowrap">scorebord</div>
+              </div>
+            </div>
+          }
+        </div>
+      }
 
-  @if(hasReferees() && nrOfRefereesAssigned() !== nrOfReferees()) {
-  <ngb-alert [type]="'warning'" [dismissible]="false">
-    <fa-icon [icon]="['fas', 'exclamation-triangle']"></fa-icon>
-    <span class="ms-1">er zijn nog <strong>niet alle scheidsrechters</strong> toegewezen aan
-      wedstrijden</span>
-  </ngb-alert>
-  }
+      @if (!processing) {
+        <div class="mt-3 d-flex justify-content-center">
+          @if (tournament.getPublic()) {
+            <app-admin-public-switcher [currentWebsitePart]="AdminWebsitePart"
+              [tournament]="tournament" [routerLink]="['/public', tournament.getId()]">
+            </app-admin-public-switcher>
+          }
+        </div>
+      }
 
-  @if(structure) {
-  <ng-template [ngTemplateOutlet]="recentActionsTmpl"></ng-template>
-  }
-  }
-</div>
+      <!-- option block share, export -->
+      @if (!processing && structure) {
+        <div class="d-flex flex-wrap gap-3 justify-content-center mt-3">
 
-<ng-template #recentActionsTmpl>
-  <div class="card">
-    <div class="card-header">
-      <h5 class="card-title mb-0">Recente acties</h5>
-    </div>
-    <div class="card-body">
-      @if(recentActions.length === 0) {
-      <p class="card-text">Er zijn nog geen acties uitgevoerd.</p>
-      } @else {
-      <ul class="list-group list-group-flush">
-        @for(action of recentActions; track action) {
-        <li class="list-group-item">
-          <strong>{{action.date | date:'short'}}</strong>: {{action.description}}
-        </li>
-        }
-      </ul>
+          <!-- home pagina -->
+          @if (tournament.getPublic()) {
+            <div class="card card-sub pointer" routerLink="['/admin/homeedit', tournament.getId()]">
+              <div class="card-body text-center p-0 pt-2">
+                <h5 class="card-title">
+                  <fa-icon [icon]="['fas', 'home']"></fa-icon>
+                </h5>
+                <div>home</div>
+                <div>pagina</div>
+              </div>
+            </div>
+          }
+          <!-- share -->
+          @if (allPoulesHaveGames && isAdmin()) {
+            <div class="card card-sub pointer" (click)="openModalShare()">
+              <div class="card-body text-center p-1 pt-2">
+                <h5 class="card-title">
+                  <fa-icon [icon]="['fas', 'share-alt']"></fa-icon>
+                </h5>
+                <div>delen</div>
+              </div>
+            </div>
+          }
+          <!-- export-->
+          @if (allPoulesHaveGames && isAdmin()) {
+            <div class="card card-sub pointer" (click)="openModalExport()">
+              <div class="card-body text-center p-0 pt-2">
+                <h5 class="card-title">
+                  <fa-icon [icon]="['fas', 'print']"></fa-icon>
+                </h5>
+                <div>printen</div>
+              </div>
+            </div>
+          }
+
+        </div>
+      }
+
+      <hr>
+      <!-- option block roleadmin, copy & remove -->
+      @if (!processing && structure) {
+        <div class="d-flex flex-wrap gap-3 justify-content-center mt-3">
+          <!-- roleadmin -->
+          @if (isRoleAdmin()) {
+            <div class="card card-sub pointer" routerLink]="['/admin/authorizations', tournament.getId()]">
+              <div class="card-body text-center p-1 pt-2">
+                <h5 class="card-title">
+                  <fa-icon [icon]="['fas', 'user-friends']"></fa-icon>
+                </h5>
+                <div>rollen</div>
+                <div>uitdelen</div>
+              </div>
+            </div>
+          }
+        
+          <!-- copy -->
+          @if (isAdmin()) {
+            <div class="card card-sub pointer" (click)="openModalCopy()">
+              <div class="card-body text-center p-1 pt-2">
+                <h5 class="card-title">
+                  <fa-icon [icon]="['fas', 'copy']"></fa-icon>
+                </h5>
+                <div>nieuwe</div>
+                <div>editie</div>
+              </div>
+            </div>
+          }
+          <!-- remove -->
+          @if (isAdmin()) {
+            <div class="card card-sub pointer" (click)="openModalRemove(contentremove)">
+              <div class="card-body text-center p-1 pt-2">
+                <h5 class="card-title">
+                  <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+                </h5>
+                <div>ver-</div>
+                <div>wijderen</div>
+              </div>
+            </div>      
+          }
+        </div>
       }
     </div>
+  </div>
+</div>
+@if (tournament) {
+  <app-tournament-navbar [public]="false" [currentScreen]="SettingsScreen" [tournament]="tournament" [theme]="getTheme(tournament)">
+  </app-tournament-navbar>
+}
+
+<!-- copy modal -->
+<ng-template #contentCopyModal let-modal>
+ 
+</ng-template>
+
+<!-- remove modal -->
+<ng-template #contentremove let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">toernooi verwijderen</h4>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
+  </div>
+  <div class="modal-body">
+    <p>Weet je zeker dat je het toernooi wilt verwijderen?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="modal.close('remove')">nu
+      verwijderen</button>
   </div>
 </ng-template>

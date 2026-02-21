@@ -4,15 +4,17 @@ import { Field, CompetitionSport, JsonField, Structure } from 'ngx-sport';
 import { FieldRepository } from '../../../lib/ngx-sport/field/repository';
 import { PlanningRepository } from '../../../lib/ngx-sport/planning/repository';
 import { IAlert, IAlertType } from '../../../shared/common/alert';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { Tournament } from '../../../lib/tournament';
 import { NameModalComponent } from '../../../shared/tournament/namemodal/namemodal.component';
 import { TranslateFieldService } from '../../../lib/translate/field';
+import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 
 @Component({
     selector: 'app-tournament-fields',
     templateUrl: './fieldlist.component.html',
     styleUrls: ['./fieldlist.component.scss'],
+    imports: [NgbAlert, FaIconComponent],
 })
 export class FieldListComponent implements OnInit {
 

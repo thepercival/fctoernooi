@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, input, model } from '@angular/core';
 import { Poule, CompetitionSport, AgainstH2h, AgainstGpp, Single, AllInOneGame, StructureNameService } from 'ngx-sport';
 
 import { CSSService } from '../../common/cssservice';
@@ -13,7 +13,7 @@ import { RankingTogetherComponent } from './sports/together.component';
     templateUrl: './poule.component.html',
     styleUrls: ['./poule.component.scss'],
     standalone: true,
-    imports: [TOURNAMENT_UI_IMPORTS, RankingSportsComponent, RankingAgainstComponent, RankingTogetherComponent],
+    imports: [TOURNAMENT_UI_IMPORTS, RankingAgainstComponent, RankingSportsComponent, RankingAgainstComponent, RankingTogetherComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingPouleComponent implements OnInit {
@@ -23,7 +23,7 @@ export class RankingPouleComponent implements OnInit {
   public structureNameService = input.required<StructureNameService>();
   public header = input.required<boolean>();
 
-  public processing = true;
+  public processing = model(true);
 
   constructor(
     public cssService: CSSService
@@ -31,8 +31,7 @@ export class RankingPouleComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.processing = true;
-    this.processing = false;
+    this.processing.set(false);
   }
 
   get singleAgainstCompetitionSport(): CompetitionSport | undefined {

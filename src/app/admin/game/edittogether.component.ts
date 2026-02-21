@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     TogetherGame,
@@ -24,14 +24,20 @@ import { TranslateScoreService } from '../../lib/translate/score';
 import { GameEditComponent } from './edit.component';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { ScoreTogetherCardComponent } from './togetherscorecard.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { GameBaseEditComponent } from "./editbase.component";
 
 @Component({
     selector: 'app-tournament-togethergame-edit',
     templateUrl: './edittogether.component.html',
     styleUrls: ['./edittogether.component.scss'],
-    
+    standalone: true,
+    imports: [NgbAlert, FontAwesomeModule, ScoreTogetherCardComponent, EscapeHtmlPipe, TournamentNavBarComponent, GameBaseEditComponent,ReactiveFormsModule]
 })
 export class GameTogetherEditComponent extends GameEditComponent implements OnInit, AfterViewInit {
     // public scoreConfigService: ScoreConfigService;

@@ -1,4 +1,5 @@
-<div *ngIf="sport" class="d-flex justify-content-between mb-4">
+@if(sport) {
+<div class="d-flex justify-content-between mb-4">
   <h1 class="text-truncate">sport-instellingen</h1>
   <h1 class="me-1">
     <button (click)="goToPrevious.emit()" type="button" class="btn btn-outline-secondary">
@@ -7,10 +8,14 @@
     </button>
   </h1>
 </div>
+}
 
-<ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+@if(alert) {
+<ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+}
 
-<form *ngIf="typedForm && sport" formGroup="typedForm" name="form" (ngSubmit)="save(typedForm, sport)" novalidate>
+@if(typedForm && sport) {
+<form [formGroup]="typedForm" name="form" (ngSubmit)="save(typedForm, sport)" novalidate>
   <div class="row mb-3">
     <div class="col-4">
       <label for="name" class="col-form-label">naam</label>
@@ -51,7 +56,8 @@
       </div>
     </div>
   </div>
-  <div *ngIf="selectedGameMode === Against" class="row mb-3">
+  @if(selectedGameMode === Against) {
+  <div class="row mb-3">
     <label for="mixed" class="col-4 col-form-label">
       van samenstelling wisselende teams
     </label>
@@ -62,12 +68,16 @@
       </div>
     </div>
   </div>
-  <div *ngIf="tooFewPoulePlaces(typedForm)" class="row mb-3">
+  }
+  @if(tooFewPoulePlaces(typedForm)) {
+  <div class="row mb-3">
     <ngb-alert [type]="'danger'">er zijn te weinig poule-plekken om wedstrijden te kunnen maken, maak de poule(s) groter
       of verminder het aantal deelnemers per wedstrijd
     </ngb-alert>
   </div>
-  <div *ngIf="selectedGameMode === Against && typedForm.controls.mixed.value" class="row mb-3">
+  }
+  @if(selectedGameMode === Against && typedForm.controls.mixed.value) {
+  <div class="row mb-3">
     <label for="mixed" class="col-4 col-form-label">
       aantal deelnemers per wedstrijd
     </label>
@@ -90,6 +100,7 @@
       </div>
     </div>
   </div>
+  }
 
   <!-- <div *ngIf="form.value['gameMode'] !== Against && getCreationStrategy(sport) === Static" class="row mb-3">
     <label for="gameAmount" class="col-6 col-form-label">
@@ -101,7 +112,8 @@
         formControlName="nrOfFields" [min]="gameAmountRange.min" [max]="gameAmountRange.max">
     </div>
   </div> -->
-  <div *ngIf="selectedGameMode === Single" class="row mb-3">
+  @if(selectedGameMode === Single) {
+  <div class="row mb-3">
     <label for="nrOfGamePlaces" class="col-4 col-form-label">
       aantal deelnemers per wedstrijd (planning)
     </label>
@@ -111,6 +123,7 @@
         formControlName="nrOfGamePlaces" [min]="minNrOfGamePlaces" [max]="maxNrOfGamePlaces" required>
     </div>
   </div>
+  }
   <div class="row mb-3 justify-content-end">
     <div class="col-8">
       <button [disabled]="typedForm.invalid || tooFewPoulePlaces(typedForm)" type="submit" class="btn btn-primary">
@@ -119,6 +132,9 @@
     </div>
   </div>
 </form>
+}
 
-<app-tournament-sport-to-add *ngIf="sport === undefined" (sportToAdd)="sportChanged($event)">
+@if(sport === undefined) {
+<app-tournament-sport-to-add (sportToAdd)="sportChanged($event)">
 </app-tournament-sport-to-add>
+}

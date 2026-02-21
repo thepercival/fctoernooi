@@ -3,32 +3,43 @@
   <div class="card-cat-header pointer px-3">
     <div class="d-flex justify-content-between">
 
-      <h5 class="mb-0" (click)="onLockerroomNameChange.emit(lockerRoom)">
+      <h5 class="mb-0" (click)="onLockerroomNameChange.emit(lockerRoom())">
         <small>
           <fa-icon [icon]="['fas', 'door-closed']"></fa-icon>
         </small>
-        <span class="fw-bold mx-1 align-middle">{{lockerRoom.getName()}}</span>
-        <button *ngIf="editable" class="btn btn-sm btn-primary" (click)="onLockerroomNameChange.emit(lockerRoom)">
-          <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
-        </button>
+        <span class="fw-bold mx-1 align-middle">{{lockerRoom().getName()}}</span>
+        @if (editable()) {
+          <button class="btn btn-sm btn-primary" (click)="onLockerroomNameChange.emit(lockerRoom())">
+            <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+          </button>
+        }
       </h5>
 
-      <button *ngIf="editable" class="btn btn-sm btn-danger ms-1 py-0" (click)="onLockerroomRemove.emit(lockerRoom)">
-        <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
-      </button>
+      @if (editable()) {
+        <button class="btn btn-sm btn-danger ms-1 py-0" (click)="onLockerroomRemove.emit(lockerRoom())">
+          <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+        </button>
+      }
     </div>
   </div>
 
   <ul class="card-body list-group list-group-flush p-0">
-    <li *ngFor="let competitor of lockerRoom.getCompetitors()" class="list-group-item">
-      <span ngClass="{ 'favitem': favorites && favorites.hasCompetitor(competitor) }">{{competitor.getName()}}</span>
-      <span *ngIf="validator && validator.isArrangedMultiple(competitor)"
-        title="ingedeeld in {{validator.nrArranged(competitor)}} kleedkamers"
-        class="badge bg-warning ms-1">{{validator.nrArranged(competitor)}}</span>
-    </li>
+    @let tmplFavorites = favorites();
+    @for (competitor of lockerRoom().getCompetitors(); track competitor) {
+      <li class="list-group-item">
+        <span [class.favitem]="tmplFavorites && tmplFavorites.hasCompetitor(competitor)">{{competitor.getName()}}</span>
+        @if (validator().isArrangedMultiple(competitor)) {
+          <span
+            title="ingedeeld in {{validator().nrArranged(competitor)}} kleedkamers"
+            class="badge bg-warning ms-1">{{validator().nrArranged(competitor)}}</span>
+        }
+      </li>
+    }
   </ul>
-  <div *ngIf="editable" (click)="onCompetitorsChange.emit(lockerRoom)"
-    class="card-footer text-primary border-primary pointer text-center">
-    <fa-icon [icon]="['fas', 'users']"></fa-icon><span> deelnemers selecteren</span>
-  </div>
+  @if (editable()) {
+    <div (click)="onCompetitorsChange.emit(lockerRoom())"
+      class="card-footer text-primary border-primary pointer text-center">
+      <fa-icon [icon]="['fas', 'users']"></fa-icon><span> deelnemers selecteren</span>
+    </div>
+  }
 </div>

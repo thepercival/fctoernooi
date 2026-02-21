@@ -23,8 +23,8 @@
             <li class="list-group-item disabled py-2">
               {{structureNameService().getPouleName( poule, false)}} </li>
 
-            <ng-container [ngTemplateOutlet]="singleAgainstGame"
-              [ngTemplateOutletContext]="{poule, side: Home, game: getPouleSingleAgainstGame(poule)}">
+            <ng-container ngTemplateOutlet="singleAgainstGame"
+              ngTemplateOutletContext="{poule, side: Home, game: getPouleSingleAgainstGame(poule)}">
             </ng-container>
 
           </ul>
@@ -60,8 +60,8 @@
 <ng-template #singleAgainstGame let-poule="poule" let-game="game">
 
   @for(side of getAgainstSides(); track side) {
-    <ng-container [ngTemplateOutlet]="singleAgainstGamePlace"
-      [ngTemplateOutletContext]="{place: getSidePlace(game, side), score: getSideScore(game, side)}">
+    <ng-container ngTemplateOutlet="singleAgainstGamePlace"
+      ngTemplateOutletContext="{place: getSidePlace(game, side), score: getSideScore(game, side)}">
     </ng-container>
   }
 

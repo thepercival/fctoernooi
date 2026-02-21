@@ -20,7 +20,7 @@
             </ngb-alert>
             }
             @if(!processing) {
-            <form name="form" (ngSubmit)="save()" formGroup="typedForm" novalidate>
+            <form name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
                 @if(!typedForm.value['manual']) {
                 <app-tournament-gameamountconfigs-edit [label]="gameAmountLabel"
                     [gameAmountControls]="gameAmountConfigControls" [typedForm]="typedForm" (closed)="updateUnequallyAssigned(startRoundNumber)">
@@ -73,7 +73,8 @@
                     <label for="minutesPerGame" class="col-7 col-form-label">minuten per wedstrijd</label>
                     <div class="col-5">
                         <input type="number"
-                            ngClass="{ 'is-invalid': typedForm.controls.minutesPerGame.invalid, 'is-valid': typedForm.controls.minutesPerGame.valid}"
+                            [class.is-invalid]="typedForm.controls.minutesPerGame.invalid"
+                            [class.is-valid]="typedForm.controls.minutesPerGame.valid"
                             formControlName="minutesPerGame" maxlength="2" class="form-control" />
                     </div>
                 </div>
@@ -83,7 +84,8 @@
                     <label for="minutesPerGameExt" class="col-7 col-form-label">minuten verlenging</label>
                     <div class="col-5">
                         <input type="number"
-                            ngClass="{ 'is-invalid': typedForm.controls.minutesPerGameExt.invalid, 'is-valid': typedForm.controls.minutesPerGameExt.valid}"
+                            [class.is-invalid]="typedForm.controls.minutesPerGameExt.invalid"
+                            [class.is-valid]="typedForm.controls.minutesPerGameExt.valid"
                             formControlName="minutesPerGameExt" maxlength="2" class="form-control"
                             (ngModelChange)="changeMinutesPerGameExt($event)" />
                     </div>
@@ -95,7 +97,8 @@
                         wedstrijden</label>
                     <div class="col-5">
                         <input type="number"
-                            ngClass="{ 'is-invalid': typedForm.controls.minutesBetweenGames.invalid, 'is-valid': typedForm.controls.minutesBetweenGames.valid}"
+                            [class.is-invalid]="typedForm.controls.minutesBetweenGames.invalid"
+                            [class.is-valid]="typedForm.controls.minutesBetweenGames.valid"
                             formControlName="minutesBetweenGames" maxlength="2" class="form-control" />
                     </div>
                 </div>
@@ -109,7 +112,8 @@
                     </label>
                     <div class="col-5">
                         <input type="number"
-                            ngClass="{ 'is-invalid': typedForm.controls.minutesAfter.invalid, 'is-valid': typedForm.controls.minutesAfter.valid}"
+                            [class.is-invalid]="typedForm.controls.minutesAfter.invalid"
+                            [class.is-valid]="typedForm.controls.minutesAfter.valid"
                             formControlName="minutesAfter" maxlength="3" class="form-control" />
                     </div>
                 </div>

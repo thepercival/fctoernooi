@@ -19,11 +19,12 @@ import { EscapeHtmlPipe } from '../../../common/escapehtmlpipe';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingSportsComponent implements OnInit {
-  readonly _poule = input.required<Poule>();
-  readonly _competitionSports = input<CompetitionSport[]>([]);
-  readonly _favorites = input<Favorites | undefined>(undefined);
-  readonly _structureNameService = input.required<StructureNameService>();
-  readonly _header = input.required<boolean>();
+  public poule = input.required<Poule>();
+  public competitionSports = input<CompetitionSport[]>([]);
+  public favorites = input<Favorites | undefined>(undefined);
+  public structureNameService = input.required<StructureNameService>();
+  public header = input.required<boolean>();
+
   protected roundRankingCalculator: RoundRankingCalculator;
   public roundRankingItems!: RoundRankingItem[];
   public viewPortManager!: ViewPortManager;
@@ -43,9 +44,9 @@ export class RankingSportsComponent implements OnInit {
 
   ngOnInit() {
     this.processing = true;
-    this.roundRankingItems = this.roundRankingCalculator.getItemsForPoule(this.poule);
-    const inputSports = this._competitionSports();
-    this.resolvedCompetitionSports = inputSports.length > 0 ? inputSports : this.poule.getCompetition().getSports();
+    this.roundRankingItems = this.roundRankingCalculator.getItemsForPoule(this.poule());
+    const inputSports = this.competitionSports();
+    this.resolvedCompetitionSports = inputSports.length > 0 ? inputSports : this.poule().getCompetition().getSports();
     this.viewPortManager = new ViewPortManager(this.getViewPortNrOfColumnsMap(), this.competitionSports.length);
     this.processing = false;
   }
@@ -61,7 +62,7 @@ export class RankingSportsComponent implements OnInit {
   }
 
   getQualifyPlaceClass(roundRankingItem: RoundRankingItem): string {
-    const place = this.poule.getPlace(roundRankingItem.getUniqueRank());
+    const place = this.poule().getPlace(roundRankingItem.getUniqueRank());
     return place ? this.cssService.getQualifyPlace(place) : '';
   }
 
@@ -82,26 +83,6 @@ export class RankingSportsComponent implements OnInit {
     modalRef.componentInstance.poule = this.poule;
     modalRef.componentInstance.competitionSports = [competitionSport];
     modalRef.componentInstance.favorites = this.favorites;
-  }
-
-  get poule(): Poule {
-    return this._poule();
-  }
-
-  get competitionSports(): CompetitionSport[] {
-    return this.resolvedCompetitionSports;
-  }
-
-  get favorites(): Favorites | undefined {
-    return this._favorites();
-  }
-
-  get structureNameService(): StructureNameService {
-    return this._structureNameService();
-  }
-
-  get header(): boolean {
-    return this._header();
   }
 }
 

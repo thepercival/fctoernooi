@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { PlaceCompetitorItem } from '../../../lib/ngx-sport/placeCompetitorItem';
 import { TournamentRegistration } from '../../../lib/tournament/registration';
 import { JsonTournamentCompetitor } from '../../../lib/competitor/json';
@@ -10,11 +10,13 @@ import { IAlert, IAlertType } from '../../../shared/common/alert';
 import { RegistrationState } from '../../../lib/tournament/registration/state';
 import { TournamentRegistrationRepository } from '../../../lib/tournament/registration/repository';
 import { TournamentRegistrationMapper } from '../../../lib/tournament/registration/mapper';
+import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 
 @Component({
     selector: 'app-ngbd-modal-process-tournamentregistration',
     templateUrl: './processmodal.component.html',
     styleUrls: ['./processmodal.component.scss'],
+    imports: [FaIconComponent, NgbAlert],
     
 })
 export class TournamentRegistrationProcessModalComponent {

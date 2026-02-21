@@ -2,12 +2,15 @@ import { Component, Input, OnInit, output } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ScoreConfig, ScoreDirection, StructureNameService, TogetherGamePlace, TogetherScore } from 'ngx-sport';
 import { TranslateScoreService } from '../../lib/translate/score';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
 
 @Component({
     selector: 'app-tournament-togetherscorecard',
     templateUrl: './togetherscorecard.component.html',
     styleUrls: ['./togetherscorecard.component.css'],
-    
+    standalone: true,
+    imports: [FontAwesomeModule,EscapeHtmlPipe]
 })
 export class ScoreTogetherCardComponent implements OnInit {
   @Input() form!: FormGroup;

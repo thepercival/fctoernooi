@@ -19,7 +19,7 @@
                     }
                 </div>
             </th>
-            @for(competitionSport of competitionSports; track competitionSport; let counter = $index) {
+            @for(competitionSport of competitionSports(); track competitionSport; let counter = $index) {
             <th class="text-end ps-0 {{viewPortManager.getClass(counter+1)}}">
                 <span class="">
                     {{competitionSport.getSport().getName()}}
@@ -50,12 +50,12 @@
                 <span
                     class="badge badge-rank {{getQualifyPlaceClass(roundRankingItem)}}">{{roundRankingItem.getUniqueRank()}}</span>
             </td>
-            <td class="text-break ps-0" [class.favitem]="favorites?.hasPlace(roundRankingItem.getPlace())">
+            <td class="text-break ps-0" [class.favitem]="favorites()?.hasPlace(roundRankingItem.getPlace())">
                 <span
-                    [innerHtml]="structureNameService.getPlaceFromName(roundRankingItem.getPlace(), true, true) | keepHtml"></span>
+                    [innerHtml]="structureNameService().getPlaceFromName(roundRankingItem.getPlace(), true, true) | keepHtml"></span>
             </td>
             <td class="ps-0">{{roundRankingItem.getCumulativePerformance().getGames()}}</td>
-            @for(competitionSport of competitionSports; track competitionSport; let counter = $index) {
+            @for(competitionSport of competitionSports(); track competitionSport; let counter = $index) {
             <td class="text-end ps-0 {{viewPortManager.getClass(counter+1)}}">
                 {{roundRankingItem.getSportItem(competitionSport).getPerformance().getPoints()}}</td>
             }

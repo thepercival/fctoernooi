@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TournamentRegistrationRepository } from '../../lib/tournament/registration/repository';
@@ -11,7 +11,8 @@ import { IAlert, IAlertType } from '../../shared/common/alert';
     selector: 'app-ngbd-modal-texteditor',
     templateUrl: './texteditormodal.component.html',
     styleUrls: ['./texteditormodal.component.scss'],
-    
+    standalone: true,
+    imports: [NgbAlert]
 })
 export class TextEditorModalComponent implements OnInit {
     public initialText!: string;

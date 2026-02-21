@@ -1,11 +1,11 @@
 <div class="modal-header" ngClass="{ 'border-bottom-0': noHeaderBorder }">
     <h4 class="modal-title">
         <fa-icon class="text-info" [icon]=" ['fas', 'info-circle' ]"></fa-icon>
-        <span class="ms-1" [innerHtml]="header | keepHtml"></span>
+        <span class="ms-1" [innerHtml]="header() | keepHtml"></span>
     </h4>
     <button type="button" class="btn-close" aria-label="sluiten" (click)="activeModal.dismiss('close')"></button>
 </div>
 <div class="modal-body">
-    <ng-container *ngTemplateOutlet="modalContent;context:{$implicit: activeModal}">
+    <ng-container ngTemplateOutlet="modalContent;context:{$implicit: activeModal}">
     </ng-container>
 </div>

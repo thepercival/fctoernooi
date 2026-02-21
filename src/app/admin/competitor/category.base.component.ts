@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Category, Competitor, Place, StartLocationMap, StructureEditor, StructureNameService } from 'ngx-sport';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { LockerRoomValidator } from '../../lib/lockerroom/validator';
@@ -9,11 +9,15 @@ import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 import { Tournament } from '../../lib/tournament';
 import { IAlert, IAlertType } from '../../shared/common/alert';
 import { CompetitorListRemoveModalComponent } from './listremovemodal.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { CompetitorListLineComponent } from "./listline.component";
 
 @Component({
     selector: 'app-tournament-category-competitors-base',
     templateUrl: './category.base.component.html',
     styleUrls: ['./category.base.component.scss'],
+    standalone: true,
+    imports: [NgbAlert, FontAwesomeModule, CompetitorListLineComponent,NgbDropdown]
 })
 export class CategoryBaseCompetitorListComponent implements OnChanges {
   @Input() tournament!: Tournament;

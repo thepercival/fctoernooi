@@ -57,11 +57,11 @@
             </tr>
           </thead>
           <tbody>
-            @for(let competitionSport of competitionSports; track competitionSport.getId(); let last = $last) {
+            @for(competitionSport of competitionSports; track competitionSport.getId(); let last = $last) {
             <tr>
               <td>
                 <button type="button" class="btn btn-sm btn-outline-primary"
-                  [routerLink]="['/admin/competitionsport', tournament.getId(), competitionSport.getId(), TabFields]">
+                  routerLink="['/admin/competitionsport', tournament.getId(), competitionSport.getId(), TabFields]">
                   <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
                 </button>
               </td>

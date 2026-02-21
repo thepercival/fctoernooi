@@ -5,17 +5,19 @@ import { JsonRegistrationSettings } from '../../../lib/tournament/registration/s
 import { FormControl, FormGroup, ValueChangeEvent } from '@angular/forms';
 import { TournamentRegistrationSettings } from '../../../lib/tournament/registration/settings';
 import { Tournament } from '../../../lib/tournament';
-import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbDateStruct, NgbInputDatepicker, NgbModal, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentRegistrationRepository } from '../../../lib/tournament/registration/repository';
 import { DateConverter } from '../../../lib/dateConverter';
 import { InfoModalComponent } from '../../../shared/tournament/infomodal/infomodal.component';
 import { DateFormatter } from '../../../lib/dateFormatter';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-tournament-registrations-settings',
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.scss'],
-    
+    standalone: true,
+    imports: [NgbAlert,FontAwesomeModule,NgbTimepicker,NgbInputDatepicker]
 })
 export class RegistrationSettingsComponent implements OnInit{
   public tournament = input.required<Tournament>();

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     AgainstVariant,
@@ -13,19 +13,25 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { TranslateFieldService } from '../../lib/translate/field';
 import { CompetitionSportTab } from '../../shared/tournament/competitionSportTab';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbAlert, NgbNav } from '@ng-bootstrap/ng-bootstrap';
 import { FavoritesRepository } from '../../lib/favorites/repository';
+import { SportIconComponent } from "../../shared/tournament/sport/icon.component";
+import { FaIconComponent } from "@fortawesome/angular-fontawesome";
+import { FieldListComponent } from "./field/fieldlist.component";
+import { ScoreConfigEditComponent } from "../scoreConfig/edit.component";
+import { TournamentNavBarComponent } from "../../shared/tournament/tournamentNavBar/tournamentNavBar.component";
+import { AgainstQualifyConfigEditComponent } from "../againstQualifyConfig/edit.component";
 
 @Component({
     selector: 'app-tournament-sportconfig-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css'],
+    imports: [SportIconComponent, FaIconComponent, NgbAlert, NgbNav, FieldListComponent, ScoreConfigEditComponent, TournamentNavBarComponent, AgainstQualifyConfigEditComponent],
 })
 export class CompetitionSportEditComponent extends TournamentComponent implements OnInit {
     competitionSport: CompetitionSport | undefined;
     activeTab!: number;
     hasBegun!: boolean;
-    private modalService = inject(NgbModal);
 
     constructor(
         route: ActivatedRoute,
@@ -38,7 +44,7 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
         private translate: TranslateFieldService,
         private myNavigation: MyNavigation
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
     }
 
     ngOnInit() {

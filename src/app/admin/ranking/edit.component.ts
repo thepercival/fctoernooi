@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -14,19 +14,27 @@ import { Favorites } from '../../lib/favorites';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CategoryChooseModalComponent } from '../../shared/tournament/category/chooseModal.component';
+import { RankingCategoryComponent } from '../../shared/tournament/ranking/category.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { RankingRulesComponent } from '../../shared/tournament/rankingrules/rankingrules.component';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
 
 @Component({
     selector: 'app-tournament-ranking-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.scss'],
-    
+    standalone: true,
+    imports: [EscapeHtmlPipe,NgbAlert,RankingCategoryComponent,FontAwesomeModule,RankingRulesComponent,TournamentNavBarComponent]
 })
 export class RankingEditComponent extends TournamentComponent implements OnInit {
     public favorites!: Favorites;
     public structureNameService!: StructureNameService;
     public againstRuleSet!: AgainstRuleSet;
     public hasBegun: boolean = true;
+    private modalService: NgbModal = inject(NgbModal);
 
     constructor(
         route: ActivatedRoute,
@@ -34,12 +42,11 @@ export class RankingEditComponent extends TournamentComponent implements OnInit 
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
         favRepository: FavoritesRepository,
         protected tournamentMapper: TournamentMapper,
         protected authService: AuthService
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
     }
 
     ngOnInit() {
@@ -88,5 +95,15 @@ export class RankingEditComponent extends TournamentComponent implements OnInit 
                 },
                 complete: () => this.processing = false
             });
+    }
+
+    openCategoriesChooseModal(structure: Structure) {
+        const activeModal = this.modalService.open(CategoryChooseModalComponent);
+        activeModal.componentInstance.categories = structure.getCategories();
+        activeModal.componentInstance.tournament = this.tournament;
+        activeModal.result.then((result) => {
+        }, (reason) => {
+            this.updateFavoriteCategories(structure);
+        });
     }
 }

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, input, model, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -6,7 +6,7 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -26,11 +26,11 @@ import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNav
     templateUrl: './homeedit.component.html',
     styleUrls: ['./homeedit.component.scss'],
     standalone: true,
-    imports: [FontAwesomeModule, TournamentNavBarComponent]
+    imports: [FontAwesomeModule, TournamentNavBarComponent,NgbAlert]
 })
 export class HomeEditComponent extends TournamentComponent implements OnInit {
 
-  public rules!: Observable<JsonTournamentRule[]>;    
+  public rules = model<JsonTournamentRule[]>([]);
   private modalService: NgbModal = inject(NgbModal);
   
   public form: FormGroup<{
@@ -85,8 +85,10 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
     this.form.controls.intro.setValue(this.tournament.getIntro());
     this.form.controls.location.setValue(this.tournament.getLocation() ?? null);
 
-    this.rules = this.ruleRepository.getObjects(this.tournament);
-
+    this.ruleRepository.getObjects(this.tournament).subscribe((rules: JsonTournamentRule[]) => {
+      this.rules.set(rules);
+    });
+  
     // this.lockerRoomValidator = new LockerRoomValidator(this.tournament.getCompetitors(), this.tournament.getLockerRooms());
     // const firstRoundNumber = this.structure.getFirstRoundNumber();
     // this.hasBegun = firstRoundNumber.hasBegun();

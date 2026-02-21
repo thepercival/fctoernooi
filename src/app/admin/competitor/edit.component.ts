@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -17,7 +17,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { JsonTournamentCompetitor } from '../../lib/competitor/json';
@@ -25,12 +25,15 @@ import { NameValidator } from '../../lib/nameValidator';
 import { User } from '../../lib/user';
 import { Observable, of } from 'rxjs';
 import { LogoInput } from '../sponsor/edit.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TournamentNavBarComponent } from "../../shared/tournament/tournamentNavBar/tournamentNavBar.component";
 
 @Component({
     selector: 'app-tournament-competitor-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.scss'],
-    
+    standalone: true,
+    imports: [NgbAlert, FontAwesomeModule, TournamentNavBarComponent]
 })
 export class CompetitorEditComponent extends TournamentComponent implements OnInit {
     public typedForm: FormGroup<{
@@ -79,7 +82,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         private myNavigation: MyNavigation,
         private nameValidator: NameValidator
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
         this.logoInputType = LogoInput.ByUpload;
         this.newLogoUploaded = false;
         this.typedForm = new FormGroup({
