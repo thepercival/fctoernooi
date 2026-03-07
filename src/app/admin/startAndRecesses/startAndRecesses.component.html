@@ -1,16 +1,16 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-sm-12 col-md-10 col-lg-8">
-      @if(alert) {
-      <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+      @if(alert()) {
+      <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
       }
-      @if(processing) {
+      @if(processing()) {
       <h2 class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+        <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
       </h2>
       }
 
-      @if(!processing) {
+      @if(!processing()) {
       <form name="form" (ngSubmit)="preEdit(contentChangeStart)" [formGroup]="typedForm" novalidate>
         <h2>start</h2>
         @if(!hasBegun) {
@@ -25,7 +25,7 @@
                 placeholder="yyyy-mm-dd" formControlName="date" ngbDatepicker #d="ngbDatepicker" required
                 [minDate]="minDateStruct" container="body">
               <span class="input-group-text pointer" (click)="d.toggle()">
-                <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+                <fa-icon [icon]="faCalendarAlt"></fa-icon>
               </span>
             </div>
           </div>
@@ -66,7 +66,7 @@
         }
       </form>
       }
-      @if(!processing && isTimeEnabled()) {
+      @if(!processing() && isTimeEnabled()) {
       <div>
         <h2>pauzes</h2>
         <table class="table">
@@ -78,8 +78,8 @@
               <th class="text-end">
                 @if(!hasBegun) {
                 <button type="button" class="btn btn-sm btn-primary"
-                  routerLink="['/admin/recess',tournament.getId()]" [disabled]="processing">
-                  <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+                  routerLink="['/admin/recess',tournament.getId()]" [disabled]="processing()">
+                  <fa-icon [icon]="faPlus"></fa-icon>
                 </button>
                 }
               </th>
@@ -104,9 +104,9 @@
               </td>
               <td class="text-end">
                 @if(!hasBegun) {
-                <button type="button" class="btn btn-sm btn-danger" [disabled]="processing"
+                <button type="button" class="btn btn-sm btn-danger" [disabled]="processing()"
                   (click)="removeRecess(recess);">
-                  <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+                  <fa-icon [icon]="faTrashAlt"></fa-icon>
                 </button>
                 }
               </td>

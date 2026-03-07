@@ -8,6 +8,7 @@ import { Tournament } from '../../../lib/tournament';
 import { CategoryItem } from './chooseList.component';
 import { CategoryChooseListComponent } from './chooseList.component';
 import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
+import { faGrip } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-modal-category-choose',
@@ -22,6 +23,7 @@ export class CategoryChooseModalComponent { // implements OnInit {
     public tournament = input.required<Tournament>();
     public favRepository = inject(FavoritesRepository);
     public activeModal = inject(NgbActiveModal);
+    public faGrip = faGrip;
 
     getCategoryItems(): CategoryItem[] {
         const favorites = this.favRepository.getObject(this.tournament(), this.categories());

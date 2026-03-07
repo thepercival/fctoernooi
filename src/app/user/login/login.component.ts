@@ -11,6 +11,7 @@ import { UserComponent } from '../component';
 import { UserRepository } from '../../lib/user/repository';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { UserTitleComponent } from '../title/title.component';
+import { faSignInAlt, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-login',
@@ -26,6 +27,9 @@ export class LoginComponent extends UserComponent implements OnInit {
     emailaddress: FormControl<string>,
     password: FormControl<string>
   }>;
+
+  faSignInAlt = faSignInAlt;
+  faSpinner = faSpinner;
 
   validations: any = {
     minlengthemailaddress: User.MIN_LENGTH_EMAIL,

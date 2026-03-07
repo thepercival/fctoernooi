@@ -5,9 +5,18 @@ import { User } from '../lib/user';
 import { UserRepository } from '../lib/user/repository';
 import { IAlert, IAlertType } from '../shared/common/alert';
 import { GlobalEventsManager } from '../shared/common/eventmanager';
+import { faCheckCircle, faKey, faLevelUpAlt, faMoneyBillAlt, faSignInAlt, faSpinner, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 
 export abstract class UserComponent {
+    public readonly faCheckCircle = faCheckCircle;
+    public readonly faKey = faKey;
+    public readonly faLevelUpAlt = faLevelUpAlt;
+    public readonly faMoneyBillAlt = faMoneyBillAlt;
+    public readonly faSignInAlt = faSignInAlt;
+    public readonly faSpinner = faSpinner;
+    public readonly faUserCircle = faUserCircle;
+
     public user: User | undefined;
 
     public alert: WritableSignal<IAlert|undefined> = signal(undefined);

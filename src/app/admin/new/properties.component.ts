@@ -1,5 +1,5 @@
 import { Component, OnInit, output, TemplateRef } from '@angular/core';
-import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { NgbDateStruct, NgbInputDatepicker, NgbModal, NgbTimepicker, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { JsonTournament } from '../../lib/tournament/json';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
@@ -7,6 +7,7 @@ import { League } from 'ngx-sport';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { StartEditMode } from '../../lib/tournament/startEditMode';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCalendarAlt, faInfoCircle, faLevelUpAlt } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -14,7 +15,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     templateUrl: './properties.component.html',
     styleUrls: ['./properties.component.scss'],
     standalone: true,
-    imports: [FontAwesomeModule,NgbInputDatepicker,NgbTimepicker]
+    imports: [FontAwesomeModule,NgbInputDatepicker,NgbTimepicker,ReactiveFormsModule]
 })
 export class TournamentPropertiesComponent implements OnInit {
   
@@ -31,6 +32,10 @@ export class TournamentPropertiesComponent implements OnInit {
     minlengthname: League.MIN_LENGTH_NAME,
     maxlengthname: League.MAX_LENGTH_NAME
   };
+
+  faInfoCircle = faInfoCircle;
+  faCalendarAlt = faCalendarAlt;
+  faLevelUpAlt = faLevelUpAlt;
 
   constructor(
     private modalService: NgbModal
@@ -127,7 +132,7 @@ export class TournamentPropertiesComponent implements OnInit {
 
   openInfoModal(header: string, modalContent: TemplateRef<any>) {
     const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-    activeModal.componentInstance.header = header;
-    activeModal.componentInstance.modalContent = modalContent;
+    activeModal.componentInstance.header = () => header;
+    activeModal.componentInstance.modalContent = () => modalContent;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, TemplateRef, inject } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, inject, WritableSignal, signal } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
     NameService,
@@ -39,7 +39,7 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
     @Input() competitionSport!: CompetitionSport;
 
     alert: IAlert | undefined;
-    processing: boolean = true;
+    public readonly processing: WritableSignal<boolean> = signal(true);
     public nameService!: NameService;
     public typedForm: FormGroup;/*<{
         pointsCalculation: FormControl<PointsCalculation>;
@@ -69,7 +69,7 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
     private router = inject(Router);
     private modalService = inject(NgbModal);
 
-      protected readonly faSpinner = faSpinner;
+    protected readonly faSpinner = faSpinner;
     protected readonly faInfoCircle = faInfoCircle;
 
     constructor() {
@@ -87,7 +87,7 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
         this.nameService = new NameService();
         this.initRanges();
         this.initSelectableCategories();
-        this.processing = false;
+        this.processing.set(false);
     }
 
     updateDisabled(): void {
@@ -190,8 +190,8 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
 
     openInfoModal(header: string, modalContent: TemplateRef<any>) {
         const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-        activeModal.componentInstance.header = header;
-        activeModal.componentInstance.modalContent = modalContent;
+        activeModal.componentInstance.header = () => header;
+        activeModal.componentInstance.modalContent = () => modalContent;
     }
 
     getPointsCalculationDescription(pointsCalculation: PointsCalculation): string {
@@ -246,7 +246,7 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
 
     save(): boolean {
         this.alert = undefined;
-        this.processing = true;
+        this.processing.set(true);
 
         const selectableCategoryConverter = new SelectableCategoryConverter();
         const categoriesSelection = selectableCategoryConverter.createCategoriesSelection(this.selectableCategories);
@@ -272,7 +272,7 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
         forkJoin(reposUpdates).subscribe({
             next: (results) => {
                 if (validAgainstQualifyConfigs.length === 0) {
-                    this.processing = false;
+                    this.processing.set(false);
                     return;
                 }
                 // 3 voeg de qualifyagainstregels toe van de unchangedChildRounds
@@ -280,16 +280,16 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
                     return this.againstQualifyConfigRepository.saveObject(validAgainstQualifyConfig.qualifyagainstConfig, validAgainstQualifyConfig.unchangedChildRound, this.tournament);
                 });
                 forkJoin(reposChildUpdates).subscribe({
-                    next: () => this.processing = false,
+                    next: () => this.processing.set(false),
                     error: (e) => {
                         this.alert = { type: IAlertType.Danger, message: 'de qualifyagainstregels zijn niet opgeslagen: ' + e };
-                        this.processing = false;
+                        this.processing.set(false);
                     }
                 });
             },
             error: (e) => {
                 this.alert = { type: IAlertType.Danger, message: 'de qualifyagainstregels zijn niet opgeslagen: ' + e };
-                this.processing = false;
+                this.processing.set(false);
             }
         });
         return true;

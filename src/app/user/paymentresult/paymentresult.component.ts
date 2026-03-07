@@ -16,6 +16,7 @@ import { Action } from 'rxjs/internal/scheduler/Action';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { Payment } from '../../lib/payment/json';
 import { PaymentState } from '../../lib/payment/state';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 @Component({
     selector: 'app-paymentresult',
     templateUrl: './paymentresult.component.html',
@@ -24,6 +25,7 @@ import { PaymentState } from '../../lib/payment/state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PaymentResultComponent extends UserComponent implements OnInit, OnDestroy {
+  faSpinner = faSpinner;
   public errorAlert: IAlert | undefined;
   refreshTimer: Subscription | undefined;
   private appErrorHandler: AppErrorHandler;

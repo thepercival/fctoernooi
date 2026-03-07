@@ -40,7 +40,7 @@
                 </td>
                 <td>
                   <div class="d-flex justify-content-center">
-                    @if (!processing) {
+                    @if (!processing()) {
                       @if (item.competitor) {
                         <div class="form-check form-switch">
                           <input type="checkbox" class="form-check-input" [id]="getPresentId(item.place)"
@@ -50,7 +50,7 @@
                       }
                     } @else {
                       @if (item.competitor) {
-                        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+                        <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
                       }
                     }
                   </div>

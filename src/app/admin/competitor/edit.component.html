@@ -3,19 +3,19 @@
     <div class="col-sm-10 col-md-8 col-lg-6">
       <div class="text-center">
         <h2>
-          <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemer <span>{{originalCompetitor !== undefined ?
+          <fa-icon [icon]="faUsers"></fa-icon> deelnemer <span>{{originalCompetitor !== undefined ?
             'wijzigen' : 'toevoegen'}}</span>
         </h2>
-        @if(processing) {
+        @if(processing()) {
         <h2>
-          <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
         </h2>
         }
       </div>
-      @if(alert) {
-      <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+      @if(alert()) {
+      <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
       }
-      @if(!processing) {
+      @if(!processing()) {
       <form name="form" (ngSubmit)="save()" formGroup="typedForm" novalidate>
         <div class="row mb-3">
           <div class="col-3">
@@ -72,7 +72,7 @@
         <div class="row mb-3">
           <div class="col-3">
             <label for="logouploadother" (click)="openInfoModal(contentLogoInfo, 'uitleg upload logo')" class="col-form-label pointer">logo
-              <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
+              <fa-icon [icon]="faInfoCircle" class="text-info"></fa-icon>
             </label>
           </div>
           <div class="col-9">
@@ -85,7 +85,7 @@
         <div class="row mb-3">
           <div class="col-3">
             <label for="publicInfo" (click)="openInfoModal(contentInfoInfo, 'uitleg publieke info')" class="col-form-label pointer">publieke info
-              <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
+              <fa-icon [icon]="faInfoCircle" class="text-info"></fa-icon>
             </label>
           </div>
           <div class="col-9">
@@ -113,7 +113,7 @@
           </div>
           <div class="col-9">
             <button [disabled]="typedForm.invalid" type="submit" class="btn btn-primary">
-              <fa-icon [icon]="['fas', 'users']"></fa-icon> <span>{{originalCompetitor !== undefined ?
+              <fa-icon [icon]="faUsers"></fa-icon> <span>{{originalCompetitor !== undefined ?
                 'wijzigen' : 'toevoegen'}}</span>
             </button>
           </div>
@@ -153,7 +153,7 @@
   <div>Deze informatie wordt getoond in het 
     <button type="button" class="btn btn-sm btn-secondary"
       routerLink="['/public/competitors', tournament.getId()]" (click)="activeModal.close()">
-      <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers-scherm
+      <fa-icon [icon]="faUsers"></fa-icon> deelnemers-scherm
     </button></div>
 </ng-template>
 @if(tournament) {

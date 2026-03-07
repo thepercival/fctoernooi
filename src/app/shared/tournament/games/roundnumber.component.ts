@@ -1,4 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, OnDestroy, OnChanges, SimpleChanges, TemplateRef, input, output, inject } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { Router } from '@angular/router';
 import { NgbPopover, NgbModal, NgbAlert, NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -51,18 +52,29 @@ import { TournamentCompetitor } from '../../../lib/competitor';
 import { CompetitorRepository } from '../../../lib/ngx-sport/competitor/repository';
 import { ColorMode } from '../../layout/nav/nav.component';
 import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
-import { TournamentIconComponent } from '../icon/icon.component';
 import { EscapeHtmlPipe } from '../../common/escapehtmlpipe';
+import { faCogs, faListUl, faPencilAlt, faPlus, faSpinner, faStar, faSync } from '@fortawesome/free-solid-svg-icons';
+import { facReferee, facScoreboard, facSoccerField } from '../../customicons';
 
 @Component({
     selector: 'tbody[app-tournament-roundnumber-planning]',
     templateUrl: './roundnumber.component.html',
     styleUrls: ['./roundnumber.component.scss'],
     standalone: true,
-    imports: [TOURNAMENT_UI_IMPORTS, TournamentIconComponent, NgbAlert, EscapeHtmlPipe, NgbProgressbar],
+    imports: [TOURNAMENT_UI_IMPORTS, NgbAlert, EscapeHtmlPipe, NgbProgressbar, NgTemplateOutlet],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
+  public faSpinner = faSpinner;
+  public faSync = faSync;
+  public faStar = faStar;
+  public faCogs = faCogs;
+  public faListUl = faListUl;
+  public faPlus = faPlus;
+  public faPencilAlt = faPencilAlt;
+  public facSoccerField = facSoccerField;
+  public facScoreboard = facScoreboard;
+  public facReferee = facReferee;
   readonly _tournament = input.required<Tournament>({ alias: 'tournament' });
   readonly _roundNumber = input.required<RoundNumber>({ alias: 'roundNumber' });
   readonly _optionalGameColumns = input.required<Map<OptionalGameColumn, boolean>>({ alias: 'optionalGameColumns' });
@@ -495,9 +507,9 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
 
   openInfoModal(header: string, modalContent: TemplateRef<any>) {
     const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-    activeModal.componentInstance.header = header;
-    activeModal.componentInstance.noHeaderBorder = true;
-    activeModal.componentInstance.modalContent = modalContent;
+    activeModal.componentInstance.header = () => header;
+    activeModal.componentInstance.noHeaderBorder = () => true;
+    activeModal.componentInstance.modalContent = () => modalContent;
   }
 
   getUniqueScoreConfigs(): ScoreConfig[] {

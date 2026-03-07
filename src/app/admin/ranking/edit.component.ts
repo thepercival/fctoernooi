@@ -1,11 +1,10 @@
-import { Component, inject, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { AgainstRuleSet, Category, GameState, StartLocationMap, Structure, StructureNameService } from 'ngx-sport';
-import { FavoritesRepository } from '../../lib/favorites/repository';
 import { AuthService } from '../../lib/auth/auth.service';
 import { Role } from '../../lib/role';
 import { TournamentMapper } from '../../lib/tournament/mapper';
@@ -21,6 +20,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RankingRulesComponent } from '../../shared/tournament/rankingrules/rankingrules.component';
 import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-ranking-edit',
@@ -30,11 +30,11 @@ import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
     imports: [EscapeHtmlPipe,NgbAlert,RankingCategoryComponent,FontAwesomeModule,RankingRulesComponent,TournamentNavBarComponent]
 })
 export class RankingEditComponent extends TournamentComponent implements OnInit {
+    faSpinner = faSpinner;
     public favorites!: Favorites;
     public structureNameService!: StructureNameService;
     public againstRuleSet!: AgainstRuleSet;
     public hasBegun: boolean = true;
-    private modalService: NgbModal = inject(NgbModal);
 
     constructor(
         route: ActivatedRoute,
@@ -42,11 +42,10 @@ export class RankingEditComponent extends TournamentComponent implements OnInit 
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        favRepository: FavoritesRepository,
         protected tournamentMapper: TournamentMapper,
         protected authService: AuthService
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
     }
 
     ngOnInit() {
@@ -57,7 +56,7 @@ export class RankingEditComponent extends TournamentComponent implements OnInit 
             this.structureNameService = new StructureNameService(startLocationMap);
             this.favorites = this.favRepository.getObject(this.tournament, this.structure.getCategories());
             this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
-            this.processing = false;
+            this.processing.set(false);
         });
     }
 
@@ -83,17 +82,17 @@ export class RankingEditComponent extends TournamentComponent implements OnInit 
     }
 
     saveRankingRuleSet(againstRuleSet: AgainstRuleSet) {
-        this.resetAlert();
-        this.processing = true;
+        this.alert.set(undefined);
+        this.processing.set(true);
         const json = this.tournamentMapper.toJson(this.tournament);
         json.competition.againstRuleSet = againstRuleSet;
         this.tournamentRepository.editObject(json)
             .subscribe({
                 next: (tournament: Tournament) => { this.tournament = tournament; },
                 error: (e) => {
-                    this.alert = { type: IAlertType.Danger, message: e }; this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
                 },
-                complete: () => this.processing = false
+                complete: () => this.processing.set(false)
             });
     }
 

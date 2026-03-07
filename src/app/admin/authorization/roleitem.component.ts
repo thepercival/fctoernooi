@@ -1,7 +1,8 @@
-import { Component, OnInit, output, input } from '@angular/core';
+import { Component, OnInit, output, input, WritableSignal } from '@angular/core';
 import { getRoleName } from '../../lib/role';
 import { TournamentAuthorizationRole } from './list.component';
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-authorization-role',
@@ -11,8 +12,9 @@ import { FaIconComponent } from "@fortawesome/angular-fontawesome";
     imports: [FaIconComponent],
 })
 export class RoleItemComponent implements OnInit {
+    faSpinner = faSpinner;
     role = input.required<TournamentAuthorizationRole>();
-    processing = input.required<boolean>();
+    public readonly processing = input.required<boolean>();
     disabled = input.required<boolean>();
     
     onRoleChange = output<TournamentAuthorizationRole>();

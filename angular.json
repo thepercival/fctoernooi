@@ -46,7 +46,7 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "./node_modules/bootstrap/scss"
+                "node_modules/bootstrap/scss"
               ]
             },            
             "scripts": [],
@@ -163,12 +163,12 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "../../node_modules/bootstrap/scss"
+                "node_modules/bootstrap/scss"
               ]
             },
             "assets": [
               "src/assets",
-              "src//assets/favicon/favicon.ico",
+              "src/assets/favicon/favicon.ico",
               "src/manifest.webmanifest"
             ]
           }

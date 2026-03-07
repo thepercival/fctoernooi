@@ -11,19 +11,23 @@ import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { FavoritesRepository } from '../../lib/favorites/repository';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
-import { TournamentIconComponent } from '../../shared/tournament/icon/icon.component';
+import { faEnvelope, faInfoCircle, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { facReferee } from '../../shared/customicons';
 
 @Component({
     selector: 'app-tournament-referee',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
     standalone: true,
-    imports: [NgbAlert,FontAwesomeModule,TournamentNavBarComponent,TournamentIconComponent]
+    imports: [NgbAlert,FontAwesomeModule,TournamentNavBarComponent]
 })
 export class RefereeListComponent extends TournamentComponent implements OnInit {
+  faSpinner = faSpinner;
+  faEnvelope = faEnvelope;
+  faInfoCircle = faInfoCircle;
+  facReferee = facReferee;
   public refereeItems!: RefereeItem[];
   alertSelfReferee: IAlert | undefined;
   hasBegun: boolean = true;
@@ -33,6 +37,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     'minlengthname': Referee.MIN_LENGTH_NAME,
     'maxlengthname': Referee.MAX_LENGTH_NAME
   };
+  faPlus = faPlus;
 
   constructor(
     route: ActivatedRoute,
@@ -40,11 +45,10 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     globalEventsManager: GlobalEventsManager,    
-    favRepository: FavoritesRepository,
     private refereeRepository: RefereeRepository,
     private planningRepository: PlanningRepository,
   ) {
-    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, favRepository);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
   }
 
   ngOnInit() {
@@ -56,9 +60,9 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
 
     this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
     if (this.hasBegun) {
-      this.setAlert(IAlertType.Warning, 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen en verwijderen');
+      this.alert.set({ type: IAlertType.Warning, message: 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen en verwijderen' });
     }
-    this.processing = false;
+    this.processing.set(false);
   }
 
   createRefereesList() {
@@ -101,30 +105,30 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
 
   openHelpModal(modalContent: TemplateRef<any>) {
     const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-    activeModal.componentInstance.header = 'uitleg scheidsrechters';
-    activeModal.componentInstance.modalContent = modalContent;
-    activeModal.componentInstance.noHeaderBorder = true;
+      activeModal.componentInstance.header = () => 'uitleg scheidsrechters';
+      activeModal.componentInstance.modalContent = () => modalContent;
+      activeModal.componentInstance.noHeaderBorder = () => true;
     activeModal.result.then((result) => {
       this.linkToPlanningConfig();
     }, (reason) => { });
   }
 
   upgradePriority(referee: Referee) {
-    this.processing = true;
+    this.processing.set(true);
     this.refereeRepository.upgradeObject(referee, this.tournament)
       .subscribe({
         next: () => {
           this.updatePlanning()
         },
         error: (e) => {
-          this.setAlert(IAlertType.Danger, e); this.processing = false;
+          this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
         }
       });
   }
 
   removeReferee(referee: Referee) {
-    this.processing = true;
-    this.resetAlert();
+    this.processing.set(true);
+    this.alert.set(undefined);
     this.refereeRepository.removeObject(referee, this.tournament)
       .subscribe({
         next: () => {
@@ -132,7 +136,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
           this.updatePlanning()
         },
         error: (e) => {
-          this.setAlert(IAlertType.Danger, e); this.processing = false;
+          this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
         }
       });
   }
@@ -152,9 +156,9 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
       .subscribe({
         next: () => { },
         error: (e) => {
-          this.setAlert(IAlertType.Danger, e); this.processing = false;
+          this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
         },
-        complete: () => this.processing = false
+        complete: () => this.processing.set(false)
       });
   }
 }

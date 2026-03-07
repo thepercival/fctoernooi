@@ -1,11 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { getRoleName, Role } from '../../lib/role';
-import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { User } from '../../lib/user';
 import { TournamentInvitationRepository } from '../../lib/tournament/invitation/repository';
 import { Validators, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -14,9 +14,8 @@ import { JsonTournamentInvitation } from '../../lib/tournament/invitation/mapper
 import { AuthorizationExplanationModalComponent } from './infomodal.component';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { FavoritesRepository } from '../../lib/favorites/repository';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 
 @Component({
@@ -32,7 +31,6 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
         sendinvitation: FormControl<boolean>
       }>;*/
     roleItems: RoleItem[] = [];
-    private modalService = inject(NgbModal);
 
     validations: AdminAuthValidations = {
         minlengthemailaddress: User.MIN_LENGTH_EMAIL,
@@ -40,6 +38,7 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
     };
 
     faSpinner = faSpinner;
+    faInfoCircle = faInfoCircle;
 
     constructor(
         route: ActivatedRoute,
@@ -47,12 +46,11 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        favRepository: FavoritesRepository,
         private invitationRepository: TournamentInvitationRepository,
         private myNavigation: MyNavigation
 
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
         this.typedForm = new FormGroup({
             emailaddress: new FormControl('', { nonNullable: true, validators: 
                 [
@@ -84,12 +82,12 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
     }
 
     private postInit() {
-        this.processing = false;
+        this.processing.set(false);
     }
 
     save(): boolean {
-        this.processing = true;
-        this.setAlert(IAlertType.Info, 'de deelnemer wordt opgeslagen');
+        this.processing.set(true);
+        this.alert.set({ type: IAlertType.Info, message: 'de deelnemer wordt opgeslagen' });
         let roles = 0;
         this.roleItems.forEach(roleItem => roles += roleItem.selected ? roleItem.value : 0);
         const json: JsonTournamentInvitation = {
@@ -100,10 +98,10 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
         this.invitationRepository.createObject(json, this.tournament).subscribe({
             next: () => this.navigateBack(),
             error: (e) => {
-                this.setAlert(IAlertType.Danger, 'de rol kon niet worden aangemaakt: ' + e);
-                this.processing = false;
+                this.alert.set({ type: IAlertType.Danger, message: 'de rol kon niet worden aangemaakt: ' + e });
+                this.processing.set(false);
             },
-            complete: () => this.processing = false
+            complete: () => this.processing.set(false)
         });
         return false;
     }

@@ -10,8 +10,8 @@ import { User } from '../../lib/user';
 import { UserComponent } from '../component';
 import { UserRepository } from '../../lib/user/repository';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { UserTitleComponent } from '../title/title.component';
+import { faKey, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-passwordreset',
@@ -27,6 +27,7 @@ export class PasswordresetComponent extends UserComponent implements OnInit {
     emailaddress: FormControl<string>
   }>;
   public faSpinner = faSpinner;
+  faKey = faKey;
 
   validations: any = {
     minlengthemailaddress: User.MIN_LENGTH_EMAIL,

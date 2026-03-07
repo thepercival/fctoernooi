@@ -12,6 +12,7 @@ import { UserComponent } from '../component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { CustomValidators } from '../password-validation';
 import { UserTitleComponent } from '../title/title.component';
+import { faKey, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-passwordchange',
@@ -23,6 +24,8 @@ import { UserTitleComponent } from '../title/title.component';
 })
 export class PasswordchangeComponent extends UserComponent implements OnInit {
   passwordChanged = false;
+  faKey = faKey;
+  faSpinner = faSpinner;
   public typedForm: FormGroup<{
     code: FormControl<string>,
     password: FormControl<string>,

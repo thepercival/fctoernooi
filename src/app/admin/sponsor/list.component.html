@@ -1,31 +1,31 @@
 <div class="row justify-content-center g-0">
   <div class="col-sm-10 col-md-8 col-lg-6">
-    @if (!processing) {
+    @if (!processing()) {
       <div class="d-flex justify-content-between">
         <h2 (click)="openHelpModal(contentInfo)" class="pointer me-auto">
-          <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon> sponsoren <fa-icon class="text-info"
-            [icon]=" ['fas', 'info-circle' ]"></fa-icon>
+          <fa-icon [icon]="faMoneyBillAlt"></fa-icon> sponsoren <fa-icon class="text-info"
+            [icon]="faInfoCircle"></fa-icon>
         </h2>
         @if (sponsors.length > 0) {
           <button routerLink="['/public/liveboard', tournament.getId()]"
             queryParams="{screenconfigname: screenConfig.name}" type="button" class="btn btn-secondary">
-            <fa-icon [icon]="['fas', 'eye']"></fa-icon>
+            <fa-icon [icon]="faEye"></fa-icon>
             <span> preview</span>
           </button>
         }
       </div>
     }
-    @if (processing) {
+    @if (processing()) {
       <div>
         <h2 class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
         </h2>
       </div>
     }
-    @if (alert) {
-      <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+    @if (alert()) {
+      <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
     }
-    @if (!processing) {
+    @if (!processing()) {
       <table class="table">
         <thead>
           <tr>
@@ -39,7 +39,7 @@
             <th class="text-end">
               @if (sponsors.length < sponsorScreensCreator.getMaxNrOfSponsors()) {
                 <button type="button" class="btn btn-sm btn-primary" (click)="addSponsor()">
-                  <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+                  <fa-icon [icon]="faPlus"></fa-icon>
                 </button>
               }
             </th>
@@ -50,7 +50,7 @@
             <tr>
               <td>
                 <button type="button" class="btn btn-sm btn-primary" (click)="editSponsor(sponsor)">
-                  <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+                  <fa-icon [icon]="faPencilAlt"></fa-icon>
                 </button>
               </td>
               @if (hasSomeSponsorAnImage) {
@@ -71,7 +71,7 @@
               </td>
               <td class="text-end">
                 <button type="button" class="btn btn-sm btn-danger" (click)="removeSponsor(sponsor);">
-                  <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+                  <fa-icon [icon]="faTrashAlt"></fa-icon>
                 </button>
               </td>
             </tr>

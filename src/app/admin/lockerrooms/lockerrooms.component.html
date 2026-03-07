@@ -3,37 +3,37 @@
     <div class="col-12 col-lg-10">
       <div class="d-flex justify-content-between mb-3">
         <h2 class="me-auto">
-          <fa-icon [icon]="['fas', 'door-closed']"></fa-icon> kleedkamers
+          <fa-icon [icon]="faDoorClosed"></fa-icon> kleedkamers
         </h2>
-        @if (!processing && hasCompetitors) {
+        @if (!processing() && hasCompetitors) {
           <button role="button" (click)="add()"
             class="btn btn-add btn-outline-primary">
-            <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon><span> toevoegen</span>
+            <fa-icon [icon]="faPlusCircle"></fa-icon><span> toevoegen</span>
           </button>
         }
       </div>
-      @if (processing) {
+      @if (processing()) {
         <div>
           <h2 class="text-center">
-            <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+            <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
           </h2>
         </div>
       }
-      @if (!processing && tournament && !hasCompetitors) {
+      @if (!processing() && tournament && !hasCompetitors) {
         <ngb-alert type="info">er zijn nog geen
           deelnemers
           ingevuld, ga naar
           <button role="button" class="btn btn-secondary" routerLink="['/admin/competitors', tournament.getId(), CompetitorTabBase]">
             <span>
-              <fa-icon [icon]="['fas', 'users']"></fa-icon>deelnemers invullen
+              <fa-icon [icon]="faUsers"></fa-icon>deelnemers invullen
             </span>
           </button>
         </ngb-alert>
       }
-      @if (alert) {
-        <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+      @if (alert()) {
+        <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
       }
-      @if (!processing && hasCompetitors) {
+      @if (!processing() && hasCompetitors) {
         <div class="d-flex flex-wrap gap-3">
           @for (lockerRoom of tournament.getLockerRooms(); track lockerRoom) {
             <app-tournament-lockerroom [lockerRoom]="lockerRoom"

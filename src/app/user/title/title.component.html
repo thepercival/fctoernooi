@@ -1,9 +1,6 @@
-<div class="card-header text-center bg-primary text-white">
+<div class="card-header text-center">
   <h1>
-    @if(icon()) {
-    <fa-icon [icon]="['fas', icon()!]"></fa-icon>
-    }
-    <br />
-    <small>{{title()}}</small>
+    <fa-icon [icon]="icon()"></fa-icon>
+    <small class="ms-2">{{title()}}</small>
   </h1>
 </div>

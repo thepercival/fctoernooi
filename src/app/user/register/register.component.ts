@@ -12,6 +12,7 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { CustomValidators } from '../password-validation';
 import { UserTitleComponent } from '../title/title.component';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { faSpinner, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-register',
@@ -23,6 +24,8 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 })
 export class RegisterComponent extends UserComponent implements OnInit {
   registered = false;
+  faSpinner = faSpinner;
+  faUserCircle = faUserCircle;
   public typedForm: FormGroup<{
     emailaddress: FormControl<string>,
     password: FormControl<string>,

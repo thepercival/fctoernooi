@@ -1,4 +1,4 @@
-import { Component, Input, ModelSignal, OnInit, TemplateRef, input, model, output } from '@angular/core';
+import { Component, Input, ModelSignal, OnInit, TemplateRef, WritableSignal, input, model, output, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { IAlert } from '../../../shared/common/alert';
 import { JsonRegistrationSettings } from '../../../lib/tournament/registration/settings/json';
@@ -11,6 +11,7 @@ import { DateConverter } from '../../../lib/dateConverter';
 import { InfoModalComponent } from '../../../shared/tournament/infomodal/infomodal.component';
 import { DateFormatter } from '../../../lib/dateFormatter';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCalendarDays, faCircleInfo, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-registrations-settings',
@@ -20,6 +21,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     imports: [NgbAlert,FontAwesomeModule,NgbTimepicker,NgbInputDatepicker]
 })
 export class RegistrationSettingsComponent implements OnInit{
+  faSpinner = faSpinner;
+  faInfoCircle = faCircleInfo;
+  faCalendarAlt = faCalendarDays;
   public tournament = input.required<Tournament>();
   public settings = model.required<TournamentRegistrationSettings>();
 
@@ -32,7 +36,7 @@ export class RegistrationSettingsComponent implements OnInit{
     mailAlert: FormControl<boolean>
   }>;
         
-  public processing = false;
+  public readonly processing: WritableSignal<boolean> = signal(true);
 
   constructor(
     private router: Router,
@@ -77,9 +81,9 @@ export class RegistrationSettingsComponent implements OnInit{
 
   openHelpModal(modalContent: TemplateRef<any>) {
     const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-    activeModal.componentInstance.header = 'inschrijven tot';
-    activeModal.componentInstance.modalContent = modalContent;
-    activeModal.componentInstance.noHeaderBorder = true;
+    activeModal.componentInstance.header = () => 'inschrijven tot';
+    activeModal.componentInstance.modalContent = () => modalContent;
+    activeModal.componentInstance.noHeaderBorder = () => true;
     activeModal.result.then((result) => {      
       this.router.navigate(['/admin/startandrecesses', this.tournament().getId()]);
     }, (reason) => { });
@@ -112,7 +116,7 @@ export class RegistrationSettingsComponent implements OnInit{
     if (currentSettings === undefined) {
       return false;
     }
-    this.processing = true;
+    this.processing.set(true);
     this.registrationRepository.editSettings(this.formToJson(currentSettings), this.tournament())
       .subscribe({
         next: (settings: TournamentRegistrationSettings) => {
@@ -122,9 +126,9 @@ export class RegistrationSettingsComponent implements OnInit{
         },
         error: (e) => {
           // this.setAlert(IAlertType.Danger, 'het delen kon niet worden gewijzigd');
-          this.processing = false;
+          this.processing.set(false);
         },
-        complete: () => this.processing = false
+        complete: () => this.processing.set(false)
       }); 
 
     return true;

@@ -6,6 +6,7 @@ import { CSSService } from '../../common/cssservice';
 import { CategoryModalComponent } from './categorymodal/categorymodal.component';
 import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
 import { StructureRoundComponent } from './round.component';
+import { faLevelUpAlt, faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-structurecategory',
@@ -26,6 +27,9 @@ export class StructureCategoryComponent  {
   public favoriteCompetitors = input<Competitor[]>([]);
   public structureNameService = input.required<StructureNameService>();
   public lastAction = input<StructureAction | undefined>(undefined);
+  public faPencilAlt = faPencilAlt;
+  public faLevelUpAlt = faLevelUpAlt;
+  public faTrashAlt = faTrashAlt;
   
   readonly onActionAdd = output<StructureAction>();
   readonly onCategoryRemove = output<Category>();

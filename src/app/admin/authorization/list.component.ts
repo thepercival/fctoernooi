@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -6,7 +6,7 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentUserRepository } from '../../lib/tournament/user/repository';
 import { Role } from '../../lib/role';
-import { NgbModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentInvitationRepository } from '../../lib/tournament/invitation/repository';
 import { TournamentInvitation } from '../../lib/tournament/invitation';
 import { TournamentUser } from '../../lib/tournament/user';
@@ -14,11 +14,11 @@ import { TournamentAuthorization } from '../../lib/tournament/authorization';
 import { AuthorizationExplanationModalComponent } from './infomodal.component';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { FavoritesRepository } from '../../lib/favorites/repository';
 import { AuthService } from '../../lib/auth/auth.service';
 import { TournamentNavBarComponent } from "../../shared/tournament/tournamentNavBar/tournamentNavBar.component";
 import { RoleItemComponent } from "./roleitem.component";
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
+import { faPlusCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-authorization-list',
@@ -28,10 +28,11 @@ import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 })
 export class AuthorizationListComponent extends TournamentComponent implements OnInit {
     public invitations: TournamentInvitation[] = [];
-    public roleProcessing: TournamentAuthorizationRole | undefined;
+    faSpinner = faSpinner;
+    faPlusCircle = faPlusCircle;
+    public roleToProcess: TournamentAuthorizationRole | undefined;
     public removeWithRefereeRole: boolean | undefined;
     public validUserItems!: UserItem[];
-    private modalService = inject(NgbModal);
 
     constructor(
         route: ActivatedRoute,
@@ -39,12 +40,11 @@ export class AuthorizationListComponent extends TournamentComponent implements O
         tournamentRepository: TournamentRepository,
         sructureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        favRepository: FavoritesRepository,
         private tournamentUserRepository: TournamentUserRepository,
         private invitationRepository: TournamentInvitationRepository,
         private authService: AuthService
     ) {
-        super(route, router, tournamentRepository, sructureRepository, globalEventsManager, favRepository);
+        super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
     }
 
     ngOnInit() {
@@ -61,10 +61,10 @@ export class AuthorizationListComponent extends TournamentComponent implements O
                 next: (invitations: TournamentInvitation[]) => {
                     this.invitations = invitations
 
-                    this.processing = false;
+                    this.processing.set(false);
                 },
                 error: (e) => {
-                    this.setAlert(IAlertType.Danger, e); this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
                 }
             });
 
@@ -106,7 +106,7 @@ export class AuthorizationListComponent extends TournamentComponent implements O
         if (this.hasUnassignableRoles(roleNew)) {
             this.openModalRemove(modalContent, authorization, roleNew === Role.Referee);
         } else {
-            this.roleProcessing = authorizationRole;
+            this.roleToProcess = authorizationRole;
             this.editRole(authorization, roleDelta);
         }
     }
@@ -117,22 +117,22 @@ export class AuthorizationListComponent extends TournamentComponent implements O
             this.tournamentUserRepository.editObject(<TournamentUser>authorization)
                 .subscribe({
                     next: (tournamentUser: TournamentUser) => {
-                        this.roleProcessing = undefined;
+                        this.roleToProcess = undefined;
                     },
                     error: (e) => {
-                        this.setAlert(IAlertType.Danger, e);
-                        this.roleProcessing = undefined;
+                        this.alert.set({ type: IAlertType.Danger, message: e });
+                        this.roleToProcess = undefined;
                     }
                 });
         } else {
             this.invitationRepository.editObject(<TournamentInvitation>authorization)
                 .subscribe({
                     next: (invitation: TournamentInvitation) => {
-                        this.roleProcessing = undefined;
+                        this.roleToProcess = undefined;
                     },
                     error: (e) => {
-                        this.setAlert(IAlertType.Danger, e);
-                        this.roleProcessing = undefined;
+                        this.alert.set({ type: IAlertType.Danger, message: e });
+                        this.roleToProcess = undefined;
                     }
                 });
         }
@@ -140,7 +140,7 @@ export class AuthorizationListComponent extends TournamentComponent implements O
 
     remove(authorization: TournamentAuthorization) {
         if (authorization.getRoles() === Role.Referee)
-            this.processing = true;
+            this.processing.set(true);
         if (authorization instanceof TournamentUser) {
             this.tournamentUserRepository.removeObject(<TournamentUser>authorization)
                 .subscribe({
@@ -152,10 +152,10 @@ export class AuthorizationListComponent extends TournamentComponent implements O
                               };
                               this.router.navigate(['/'], navigationExtras);
                         }
-                        this.processing = false
+                        this.processing.set(false)
                     },
                     error: (e) => {
-                        this.setAlert(IAlertType.Danger, e); this.processing = false;
+                        this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
                     }
                 });
         } else {
@@ -167,10 +167,10 @@ export class AuthorizationListComponent extends TournamentComponent implements O
                         if (idx >= 0) {
                             this.invitations.splice(idx, 1);
                         }
-                        this.processing = false;
+                        this.processing.set(false);
                     },
                     error: (e) => {
-                        this.setAlert(IAlertType.Danger, e); this.processing = false;
+                        this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
                     }
                 });
         }

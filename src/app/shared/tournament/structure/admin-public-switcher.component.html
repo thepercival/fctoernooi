@@ -4,10 +4,10 @@
             <div class="card-body text-center p-0 px-1 pt-2">
                 <h5 class="card-title text-info">
                     @if (currentWebsitePart() === PublicWebsitePart) {
-                        <fa-icon [icon]="['fas', 'cogs']"></fa-icon>
+                        <fa-icon [icon]="faCogs"></fa-icon>
                     }
                     @if (currentWebsitePart() === AdminWebsitePart) {
-                        <fa-icon [icon]="['fas', 'eye']"></fa-icon>
+                        <fa-icon [icon]="faEye"></fa-icon>
                     }
                 </h5>
                 naar {{getOppositeWebsitePartName()}} gedeelte

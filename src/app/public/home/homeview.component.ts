@@ -4,13 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { FavoritesRepository } from '../../lib/favorites/repository';
 import { AuthService } from '../../lib/auth/auth.service';
 import { Role } from '../../lib/role';
 import { TournamentMapper } from '../../lib/tournament/mapper';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentRuleRepository } from '../../lib/tournament/rule/repository';
 import { JsonTournamentRule } from '../../lib/tournament/rule/json';
 import { SponsorRepository } from '../../lib/sponsor/repository';
@@ -23,14 +21,22 @@ import { combineLatest } from 'rxjs';
 import { Tournament } from '../../lib/tournament';
 import { WebsitePart } from '../../shared/tournament/structure/admin-public-switcher.component';
 import { DefaultJsonTheme } from '../../lib/tournament/theme';
+import { AdminPublicSwitcherComponent } from '../../shared/tournament/structure/admin-public-switcher.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { RouterModule } from '@angular/router';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-home-view',
     templateUrl: './homeview.component.html',
     styleUrls: ['./homeview.component.scss'],
+    imports: [FontAwesomeModule, NgbAlert, AdminPublicSwitcherComponent, TournamentNavBarComponent, RouterModule]
     
 })
 export class HomeViewComponent extends TournamentComponent implements OnInit {
+    faSpinner = faSpinner;
     public rules: JsonTournamentRule[] = [];
     public settings: TournamentRegistrationSettings|undefined;
 
@@ -40,8 +46,6 @@ export class HomeViewComponent extends TournamentComponent implements OnInit {
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
-        favRepository: FavoritesRepository,
         private sponsorRepository: SponsorRepository,
         private rulesRepository: TournamentRuleRepository,
         private tournamentRegistrationRepository: TournamentRegistrationRepository,
@@ -49,7 +53,7 @@ export class HomeViewComponent extends TournamentComponent implements OnInit {
         protected authService: AuthService,
         public dateFormatter: DateFormatter,
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
     }
 
     ngOnInit() {
@@ -65,7 +69,7 @@ export class HomeViewComponent extends TournamentComponent implements OnInit {
                         atHome: false,
                         theme: this.tournament.getTheme() ?? DefaultJsonTheme
                     });
-                    this.processing = false;
+                    this.processing.set(false);
                 })
         });
     }

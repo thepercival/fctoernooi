@@ -13,28 +13,23 @@
             </button>
           </div>
         </div>
-        @if(processing) {
+        @if(processing()) {
         <h2 class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
         </h2>
         }
-        @if(alert) {
-        <ngb-alert [type]="alert.type">{{alert.message}}</ngb-alert>
+        @if(alert()) {
+        <ngb-alert [type]="alert()!.type">{{alert()!.message}}</ngb-alert>
         }
-        <!-- <div *ngIf="!processing && !structure.getFirstRoundNumber().getConfig().getSelfReferee()" class="text-info">
-        "deelnemers zijn scheidsrechter" kun je aanzetten onder <a [routerLink]="" (click)="linkToRoundSettings()">
-          <fa-icon [icon]="['fas', 'cogs']"></fa-icon> <span>instellingen</span>
-        </a>
-      </div> -->
 
-        @if(!processing) {
+        @if(!processing()) {
         <table class="table">
           <thead>
             <tr>
               <th></th>
               <th>naam</th>
               <th title="aantal">
-                <app-tournament-icon class="d-none d-sm-inline" name="soccer-field"></app-tournament-icon> velden
+                <fa-icon class="d-none d-sm-inline" [icon]="facSoccerField"></fa-icon> velden
               </th>
               <th>
                 <button title="wedstrijd-modus" class="btn btn-sm btn-outline-info" (click)="openGameModeInfoModal()">
@@ -48,8 +43,8 @@
                 @if(!hasBegun) {
                 @if(!maxReached) {
                 <button type="button" class="btn btn-sm btn-primary"
-                  (click)="showCreateSportWithFields = true" [disabled]="processing">
-                  <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+                  (click)="showCreateSportWithFields = true" [disabled]="processing()">
+                  <fa-icon [icon]="faPlus"></fa-icon>
                 </button>
                 }
                 }
@@ -62,7 +57,7 @@
               <td>
                 <button type="button" class="btn btn-sm btn-outline-primary"
                   routerLink="['/admin/competitionsport', tournament.getId(), competitionSport.getId(), TabFields]">
-                  <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+                  <fa-icon [icon]="faPencilAlt"></fa-icon>
                 </button>
               </td>
               <td>
@@ -79,8 +74,8 @@
                 @if(!hasBegun) {
                 @if(competitionSports.length > 1) {
                 <button type="button" class="btn btn-sm btn-danger"
-                  [disabled]="processing" (click)="openRemoveModal(content, competitionSport)">
-                  <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+                  [disabled]="processing()" (click)="openRemoveModal(content, competitionSport)">
+                  <fa-icon [icon]="faTrashAlt"></fa-icon>
                 </button>
                 }
                 }
@@ -92,7 +87,7 @@
         }
 
         <div class="d-flex justify-content-center">
-          @if(!processing && competitionSports.length > 1) {
+          @if(!processing() && competitionSports.length > 1) {
           <button type="button" class="btn btn-outline-secondary"
             (click)="linkToPlanningConfig()">aantal wed. per deelnemer aanpassen</button>
           }
@@ -100,7 +95,7 @@
         
       </div>
       }
-      @if(!processing) {
+      @if(!processing()) {
       <app-tournament-create-sportwithfields [hidden]="!showCreateSportWithFields"
         [smallestNrOfPoulePlaces]="smallestNrOfPoulePlaces" (onCreate)="add($event)"
         [existingSportVariants]="competition.getSportVariants()" (goToPrevious)="showCreateSportWithFields = false">

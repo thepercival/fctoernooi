@@ -1,10 +1,10 @@
 <div class="container-fluid px-0">
   <div class="row justify-content-around g-0">
     <div class="col-md-12 col-lg-8">
-      @if (!processing && structure) {
+      @if (!processing() && structure) {
         <div class="d-flex justify-content-between">
           <h2>
-            <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijden
+            <fa-icon [icon]="faCalendarAlt"></fa-icon> wedstrijden
           </h2>
           @if (structure.hasSingleCategory()) {
             @if (tournament && structure.allPoulesHaveGames() && hasAdminRole()) {
@@ -16,26 +16,26 @@
           } @else {
             <button type="button" class="btn btn-sm me-2 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
               (click)="openCategoriesChooseModal(structure)">
-              <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
+              <fa-icon [icon]="faGrip"></fa-icon> <span class="ms-1">categoriën</span>
             </button>
           }
         </div>
       }
-      @if (processing) {
+      @if (processing()) {
         <h2 class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
         </h2>
       }
-      @if (alert) {
-        <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+      @if (alert()) {
+        <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
       }
-      @if (!processing && structure) {
+      @if (!processing() && structure) {
         <table class="table mt-3">
           @for (roundNumber of structure.getRoundNumbers(); track roundNumber.getNumber()) {
             <tbody app-tournament-roundnumber-planning
               [structureNameService]="structureNameService" [tournament]="tournament" [roundNumber]="roundNumber"
               [optionalGameColumns]="optionalGameColumns"
-              [showLinksToAdmin]="true" [favoriteCategories]="favoriteCategories" [roles]="roles"
+              [showLinksToAdmin]="true" [favoriteCategories]="favoriteCategories()" [roles]="roles"
               [userRefereeId]="userRefereeId" (scrolling)="scroll()">
             </tbody>
           }

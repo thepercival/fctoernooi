@@ -1,4 +1,4 @@
-import { Component, OnInit, input, output} from '@angular/core';
+import { Component, OnInit, WritableSignal, input, output, signal} from '@angular/core';
 
 import { TournamentRegistrationSettings } from '../../../lib/tournament/registration/settings';
 import { TournamentRegistrationRepository } from '../../../lib/tournament/registration/repository';
@@ -30,7 +30,7 @@ export class RegistrationsNavComponent implements OnInit {
   public alert: IAlert | undefined;
   public activeTab = RegistrationTab.Settings;
   public hasBegun!: boolean;
-  public processing: boolean = false;
+  public readonly processing: WritableSignal<boolean> = signal(true);
   public settings: TournamentRegistrationSettings|undefined;
 
   constructor(
@@ -54,11 +54,11 @@ export class RegistrationsNavComponent implements OnInit {
           if ( startTab === undefined && settings?.isEnabled() ) {
             this.activeTab = RegistrationTab.List;
           }
-          this.processing = false;
+          this.processing.set(false);
         },
         error: (e: string) => {
           this.setAlert(IAlertType.Danger, e + ', instellingen niet gevonden');
-          this.processing = false;
+          this.processing.set(false);
         }
       });
   }

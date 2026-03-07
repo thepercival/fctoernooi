@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { Tournament } from '../../../lib/tournament';
 import { Router } from '@angular/router';
 import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
+import { faCogs, faEye } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-admin-public-switcher',
@@ -15,6 +16,8 @@ export class AdminPublicSwitcherComponent {
     public tournament = input.required<Tournament>();
     public currentWebsitePart = input.required<WebsitePart>(); 
     public routerLink = input.required<any[]>(); 
+    public faCogs = faCogs;
+    public faEye = faEye;
     
     constructor(private router: Router) {        
     }

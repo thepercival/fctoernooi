@@ -9,7 +9,7 @@
         <form name="form" (ngSubmit)="false" formGroup="typedForm" novalidate>
             <div class="row mb-3">
                 <label for="publicotherid" class="col-4 col-form-label pointer">publiek
-                    <fa-icon (click)="openInfoModal(infoPublic)" [icon]="['fas', 'info-circle']" class="text-info">
+                    <fa-icon (click)="openInfoModal(infoPublic)" [icon]="faInfoCircle" class="text-info">
                     </fa-icon>
                 </label>
                 <div class="form-check col-8">
@@ -30,7 +30,7 @@
                             aria-describedby="basic-copy">
                         <button type="button" class="btn btn-outline-secondary" id="basic-copy"
                             ngxClipboard cbContent="typedForm.controls.url.value" (cbOnSuccess)="copied = true;">
-                            <fa-icon [icon]="['fas', 'copy']"></fa-icon>
+                            <fa-icon [icon]="faCopy"></fa-icon>
                         </button>
                     </div>
                 </div>

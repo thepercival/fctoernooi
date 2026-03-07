@@ -27,7 +27,7 @@
                   <div ngbDropdown #textDropDown="ngbDropdown" class="dropdown ps-1">
                     <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
                       aria-expanded="false" ngbDropdownAnchor (focus)="textDropDown.open()">
-                      <fa-icon [icon]="[ 'fas', 'file-lines'] "></fa-icon> teksten
+                      <fa-icon [icon]="faFileLines"></fa-icon> teksten
                     </button>
                     <ul ngbDropdownMenu aria-labelledby="dropdownManual" class="dropdown-menu">
                       @for (subject of getTextSubjects(); track subject) {
@@ -47,7 +47,7 @@
                 <td>
                   <button type="button" class="btn btn-sm btn-outline-primary" 
                   routerLink="['/admin/registration', tournament.getId(), registration.getCategory().getNumber(), registration.getId()]">
-                    <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+                    <fa-icon [icon]="faPencilAlt"></fa-icon>
                   </button>
                 </td>
                 <td>{{registration.getName()}}</td>
@@ -64,20 +64,20 @@
                   @if (registration.getStartLocation()) {
                     <button type="button" class="btn btn-sm btn-outline-secondary" 
                     routerLink="['/admin/competitor', tournament.getId(), registration.getCategory().getNumber(), registration.getStartLocation()?.getPouleNr(), registration.getStartLocation()?.getPlaceNr() ]">
-                      <fa-icon class="text-success" [icon]="[ 'fas', 'check-circle'] "></fa-icon> naar deeln<span class="d-xs-inline d-sm-none">.</span><span class="d-none d-sm-inline">emer</span>
+                      <fa-icon class="text-success" [icon]="faCheckCircle"></fa-icon> naar deeln<span class="d-xs-inline d-sm-none">.</span><span class="d-none d-sm-inline">emer</span>
                     </button>
                   }
                   @if (registration.getState() === Substitute) {
                     <button type="button" 
                       class="btn btn-sm btn-outline-secondary" (click)="processRegistration(registration)">
-                      <fa-icon class="text-warning" [icon]="[ 'fas', 'registered'] "></fa-icon> als reserve
+                      <fa-icon class="text-warning" [icon]="faRegistered"></fa-icon> als reserve
                     </button>
                   }
                   @if (registration.getState() === Declined) {
                     <button type="button"
                       class="btn btn-sm btn-outline-secondary"
                       (click)="processRegistration(registration)">
-                      <fa-icon class="text-danger" [icon]="[ 'fas', 'times-circle'] "></fa-icon> afgewezen
+                      <fa-icon class="text-danger" [icon]="faTimesCircle"></fa-icon> afgewezen
                     </button>
                   }
                 </td>            

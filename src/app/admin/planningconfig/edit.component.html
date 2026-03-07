@@ -1,25 +1,25 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-            @if(!processing) {
+            @if(!processing()) {
             <h2>
-                <fa-icon [icon]="['fas', 'cogs']"></fa-icon> plannings-instellingen
+                <fa-icon [icon]="faCogs"></fa-icon> plannings-instellingen
             </h2>
             }
-            @if(processing) {
+            @if(processing()) {
             <h2 class="text-center">
-                <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+                <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
             </h2>
             }
-            @if(alert) {
-            <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+            @if(alert()) {
+            <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
             }
             @if(updateDataMsg) {
             <ngb-alert #updateDataAlert type="info" (closed)="updateDataMsg = undefined">
                 {{updateDataMsg}}
             </ngb-alert>
             }
-            @if(!processing) {
+            @if(!processing()) {
             <form name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
                 @if(!typedForm.value['manual']) {
                 <app-tournament-gameamountconfigs-edit [label]="gameAmountLabel"
@@ -108,7 +108,7 @@
                     <label for="minutesAfter" class="col-7 col-form-label pointer"
                         (click)="openInfoModal('minuten pauze na de ronde', 'info-modal', contentInfoMinutesAfter)">minuten
                         pauze na de ronde
-                        <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
+                        <fa-icon [icon]="faInfoCircle" class="text-info"></fa-icon>
                     </label>
                     <div class="col-5">
                         <input type="number"

@@ -5,7 +5,7 @@
 
   @if(upperNavBar()) {
     <div>
-      <ng-container ngTemplateOutlet="upperNavBar()"></ng-container>
+      <ng-container [ngTemplateOutlet]="upperNavBar()"></ng-container>
     </div>
   }
 
@@ -16,7 +16,7 @@
       <h2 class="mb-0">
         <a type="button" class="btn {{getBtnClass(HomeScreen)}}"
           [routerLink]="['/public/home', tournament().getId()]">
-          <fa-icon [icon]="['fas', 'home']"></fa-icon> <br /><span>home</span>
+          <fa-icon [icon]="faHome"></fa-icon> <br /><span>home</span>
         </a>
       </h2>
       <div class="vr my-1 mx-2"></div>
@@ -25,7 +25,7 @@
       <!-- opzet -->
       <h2 class="mb-0">
         <a type="button" class="btn {{getBtnClass(StructureScreen)}}" (click)="linkToStructure()">
-          <app-tournament-icon name="structure"></app-tournament-icon> <br />opzet
+          <fa-icon [icon]="facStructure"></fa-icon> <br />opzet
         </a>
       </h2>
       <div class="vr my-1 mx-2"></div>
@@ -35,7 +35,7 @@
       <h2 class="mb-0">
         <a type="button" class="btn {{getBtnClass(CompetitorsScreen)}}"
           [routerLink]="['/admin/competitors', tournament().getId(), CompetitorTabBase]">
-          <fa-icon [icon]="['fas', 'users']"></fa-icon> <br />
+          <fa-icon [icon]="faUsers"></fa-icon> <br />
           <span>deeln</span>
           <span class="d-inline d-sm-none">.</span>
           <span class="d-none d-sm-inline">emers</span>
@@ -48,7 +48,7 @@
       <h2 class="mb-0">
         <a type="button" class="btn {{getBtnClass(FavoritesScreen)}}"
           [routerLink]="['/public/competitors', tournament().getId()]">
-          <fa-icon [icon]="['fas', 'users']"></fa-icon> <br />
+          <fa-icon [icon]="faUsers"></fa-icon> <br />
           <span>deeln</span>
           <span class="d-inline d-sm-none">.</span>
           <span class="d-none d-sm-inline">emers</span>
@@ -60,7 +60,7 @@
       <!--wedstrijden -->
       <h2 class="mb-0">
         <a type="button" class="btn {{getBtnClass(GamesScreen)}}" (click)="linkToGames()">
-          <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> <br />wedstr<span
+          <fa-icon [icon]="faCalendarAlt"></fa-icon> <br />wedstr<span
             class="d-xs-inline d-sm-none">.</span><span class="d-none d-sm-inline">ijden</span>
         </a>
       </h2>
@@ -71,7 +71,7 @@
       <h2 class="mb-0">
         <a type="button" class="btn {{getBtnClass(RankingScreen)}}"
           [routerLink]="['/public/ranking', tournament().getId()]">
-          <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> <br />standen
+          <fa-icon [icon]="faListOl"></fa-icon> <br />standen
         </a>
       </h2>
       }
@@ -82,7 +82,7 @@
       <h2 class="mb-0">
         <a type="button" class="btn {{getBtnClass(SettingsScreen)}}"
           [routerLink]="['/admin', tournament().getId()]">
-          <fa-icon [icon]="['fas', 'cogs']"></fa-icon> <br />opties
+          <fa-icon [icon]="faCogs"></fa-icon> <br />opties
         </a>
       </h2>
       }

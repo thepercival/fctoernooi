@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -37,10 +37,10 @@ import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FavoritesRepository } from '../../lib/favorites/repository';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-game-add',
@@ -50,6 +50,7 @@ import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNav
     imports: [NgbAlert,FontAwesomeModule,TournamentNavBarComponent,ReactiveFormsModule]
 })
 export class GameAddComponent extends TournamentComponent implements OnInit {
+    faSpinner = faSpinner;
     private roundNumber!: RoundNumber;
     public categories: Category[] = [];
     public poules: Poule[] = [];
@@ -59,7 +60,6 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
     public allInOneGameSportVariant: AllInOneGame | undefined;
     public form!: FormGroup;
     public structureNameService!: StructureNameService;
-    private modalService = inject(NgbModal);
 
     constructor(
         route: ActivatedRoute,
@@ -67,7 +67,6 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        favRepository: FavoritesRepository,
         private gameRepository: GameRepository,
         private competitionSportMapper: CompetitionSportMapper,
         private fieldMapper: FieldMapper,
@@ -75,7 +74,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
         private placeMapper: PlaceMapper,
         public dateFormatter: DateFormatter
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
     }
 
     protected createForm(category: Category, poule: Poule, competitionSport: CompetitionSport) {
@@ -129,8 +128,8 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
                 const roundNumber = this.structure.getRoundNumber(+params.roundNumber);
 
                 if (roundNumber === undefined) {
-                    this.setAlert(IAlertType.Danger, 'de wedstrijd kan niet gevonden worden');
-                    this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: 'de wedstrijd kan niet gevonden worden' });
+                    this.processing.set(false);
                     return;
                 }
                 this.roundNumber = roundNumber;
@@ -139,7 +138,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
                 this.categories = roundNumber.getStructureCells().map(structureCell => structureCell.getCategory());
                 this.changeCategory(this.categories[0]);
 
-                this.processing = false;
+                this.processing.set(false);
             });
         });
     }
@@ -292,8 +291,8 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
     }
 
     save(): boolean {
-        this.processing = true;
-        this.setAlert(IAlertType.Info, 'de wedstrijd wordt opgeslagen');
+        this.processing.set(true);
+        this.alert.set({ type: IAlertType.Info, message: 'de wedstrijd wordt opgeslagen' });
 
         const jsonGame = this.formToJson();
         this.gameRepository.createObject(
@@ -307,7 +306,7 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
                     this.router.navigate(['/admin/game' + suffix, this.tournament.getId(), gameRes.getId()], { replaceUrl: true });
                 },
                 error: (e) => {
-                    this.setAlert(IAlertType.Danger, e); this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
                 }
             });
         return false;

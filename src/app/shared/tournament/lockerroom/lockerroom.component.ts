@@ -4,6 +4,7 @@ import { LockerRoom } from '../../../lib/lockerroom';
 import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
 import { Favorites } from '../../../lib/favorites';
 import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
+import { faDoorClosed, faPencilAlt, faTrashAlt, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-lockerroom',
@@ -18,6 +19,10 @@ export class LockerRoomComponent {
     public lockerRoom = input.required<LockerRoom>();
     public editable = input(false);
     public favorites = input<Favorites | undefined>(undefined);
+    public faDoorClosed = faDoorClosed;
+    public faPencilAlt = faPencilAlt;
+    public faTrashAlt = faTrashAlt;
+    public faUsers = faUsers;
     
     readonly onLockerroomRemove = output<LockerRoom>();
     readonly onLockerroomNameChange = output<LockerRoom>();

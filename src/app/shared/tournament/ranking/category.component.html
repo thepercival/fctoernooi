@@ -14,8 +14,8 @@
 
     <div class="card-body pb-0 pt-1 px-1">
 
-      <ul ngbNav nav="ngbNav" (activeId)="activeTabName" class="nav-tabs">
-        <li ngbNavItem="getTabName(1)">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="activeTabName" class="nav-tabs">
+        <li [ngbNavItem]="getTabName(1)">
           <a ngbNavLink>poulestanden</a>
           <ng-template ngbNavContent>
             <app-tournament-ranking-round [round]="category().getRootRound()"
@@ -26,7 +26,7 @@
           </ng-template>
         </li>
         @if(multipleRounds) {
-        <li ngbNavItem="getTabName(2)">
+        <li [ngbNavItem]="getTabName(2)">
           <a ngbNavLink>eindstand</a>
           <ng-template ngbNavContent>
             <app-tournament-endranking [structureNameService]="structureNameService()" 
@@ -36,7 +36,7 @@
         }
 
       </ul>
-      <div ngbNavOutlet="nav"></div>
+      <div [ngbNavOutlet]="nav"></div>
     </div>
   </div>
 </div>

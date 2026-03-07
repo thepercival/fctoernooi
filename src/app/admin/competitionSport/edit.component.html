@@ -4,8 +4,9 @@
       @if(competitionSport) {
       <div class="d-flex justify-content-between">
         <h2 class="text-truncate">
-          <app-sport-icon customId="competitionSport.getSport().getCustomId()">
-          </app-sport-icon>
+          @if (getSportIcon(competitionSport.getSport().getCustomId()); as sportIcon) {
+            <fa-icon [icon]="sportIcon"></fa-icon>
+          }
           <span> {{competitionSport.getSport().getName()}}</span>
         </h2>
         <button (click)="linkToSports()"
@@ -15,17 +16,17 @@
       </div>
       }
 
-      @if(processing) {
+      @if(processing()) {
       <h2 class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+        <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
       </h2>
       }
 
-      @if(alert) {
-      <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+      @if(alert()) {
+      <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
       }
 
-      @if(!processing && competitionSport) {
+      @if(!processing() && competitionSport) {
       <div>
         <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav nav-tabs nav-fill">
           <li ngbNavItem="TabFields" class="nav-item">

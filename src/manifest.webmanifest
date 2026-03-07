@@ -39,11 +39,8 @@
         "description": "maak een nieuw toernooi aan"
       }    
   ],
-  "scope_extensions": [
-    {
-      "origin": "fctoernooi.nl"
-    }
-  ],
+  "type": "website",
+  "origin": "https://fctoernooi.nl",
   "icons": [
     {
       "src": "assets/icons/icon-48x48.png",

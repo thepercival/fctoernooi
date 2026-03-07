@@ -12,6 +12,7 @@ import { MyNavigation } from '../../shared/common/navigation';
 import { JsonUser } from '../../lib/user/mapper';
 import { UserComponent } from '../component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-profile',
@@ -22,6 +23,7 @@ import { GlobalEventsManager } from '../../shared/common/eventmanager';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileComponent extends UserComponent implements OnInit {
+  faSpinner = faSpinner;
   public typedForm: FormGroup<{
     emailaddress: FormControl<string>
   }>;

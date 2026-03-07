@@ -21,8 +21,8 @@
                 <th></th>
               }
               <th>naam</th>
-              <th><fa-icon [icon]="['fas', 'door-closed']"></fa-icon></th>
-              <th class="text-end"><fa-icon [icon]="['fas', 'star']"></fa-icon> </th>
+              <th><fa-icon [icon]="faDoorClosed"></fa-icon></th>
+              <th class="text-end"><fa-icon [icon]="faStar"></fa-icon> </th>
             </tr>
             @for (placeCompetitor of placeCompetitorItems; track placeCompetitor) {
               <tr>
@@ -44,7 +44,7 @@
                       [class.pointer]="placeCompetitor.competitor.getPublicInfo()">
                       <span>{{placeCompetitor.competitor.getName()}}</span>
                       @if (placeCompetitor.competitor.getPublicInfo()) {
-                        <fa-icon [icon]="['fas', 'info-circle']"
+                        <fa-icon [icon]="faInfoCircle"
                           class="text-info"></fa-icon>
                       }
                     </label>

@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
-import { FavoritesRepository } from '../../lib/favorites/repository';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
@@ -16,6 +15,7 @@ import { TournamentRegistrationRepository } from '../../lib/tournament/registrat
 import { TournamentRegistrationSettings } from '../../lib/tournament/registration/settings';
 import { IAlertType } from '../../shared/common/alert';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TournamentRegistration } from '../../lib/tournament/registration';
 import { NameValidator } from '../../lib/nameValidator';
 import { JsonTournamentRegistration } from '../../lib/tournament/registration/json';
@@ -31,7 +31,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './registration-form.component.html',
     styleUrls: ['./registration-form.component.scss'],
     standalone: true,
-    imports: [FontAwesomeModule, AdminPublicSwitcherComponent, NgbAlert]
+    imports: [FontAwesomeModule, AdminPublicSwitcherComponent, NgbAlert, FormsModule, ReactiveFormsModule]
 })
 export class RegistrationComponent extends TournamentComponent implements OnInit {
     public settings: TournamentRegistrationSettings|undefined;
@@ -62,14 +62,13 @@ export class RegistrationComponent extends TournamentComponent implements OnInit
         tournamentRepository: TournamentRepository,
         sructureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        favRepository: FavoritesRepository,
         private tournamentRegistrationRepository: TournamentRegistrationRepository,
         private nameValidator: NameValidator,
         private myNavigation: MyNavigation,
         private authService: AuthService,
     ) {
-        super(route, router, tournamentRepository, sructureRepository, globalEventsManager, favRepository);
-        this.resetAlert();
+        super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
+        this.alert.set(undefined);
     }
 
     ngOnInit() {
@@ -81,7 +80,7 @@ export class RegistrationComponent extends TournamentComponent implements OnInit
                         this.settings = settings;
                         this.isOpen = (new Date()).getTime() < settings.getEnd().getTime();
                         if( !this.isOpen) {
-                            this.setAlert(IAlertType.Danger, 'de inschrijvingsperiode is verstreken');
+                            this.alert.set({ type: IAlertType.Danger, message: 'de inschrijvingsperiode is verstreken' });
                         }
 
                         this.form = new FormGroup({
@@ -116,11 +115,11 @@ export class RegistrationComponent extends TournamentComponent implements OnInit
                             }),
                         });
 
-                        this.processing = false;
+                        this.processing.set(false);
                     },
                     error: (e: string) => {
-                        this.setAlert(IAlertType.Danger, e + ', instellingen niet gevonden');
-                        this.processing = false;
+                        this.alert.set({ type: IAlertType.Danger, message: e + ', instellingen niet gevonden' });
+                        this.processing.set(false);
                     }
                 });
         });
@@ -155,7 +154,7 @@ export class RegistrationComponent extends TournamentComponent implements OnInit
         const jsonRegistration = this.formToJson();
         const message = this.nameValidator.validateName(jsonRegistration.name);
         if (message) {
-            this.setAlert(IAlertType.Danger, message);
+            this.alert.set({ type: IAlertType.Danger, message });
             return false;
         }
         let category = this.form.controls.category.value;
@@ -163,22 +162,22 @@ export class RegistrationComponent extends TournamentComponent implements OnInit
             category = this.structure.getCategories()[0];
         }
         if (category === undefined) {
-            this.setAlert(IAlertType.Danger, 'vul een category in');
+            this.alert.set({ type: IAlertType.Danger, message: 'vul een category in' });
             return false;
         }
-        this.processing = true;
-        this.setAlert(IAlertType.Info, 'de inschrijving wordt opgeslagen');
+        this.processing.set(true);
+        this.alert.set({ type: IAlertType.Info, message: 'de inschrijving wordt opgeslagen' });
         
         this.tournamentRegistrationRepository.createObject(jsonRegistration, category, this.tournament)
             .subscribe({
                 next: (registration: TournamentRegistration) => {
                     this.registration = registration;
-                    this.resetAlert();
+                    this.alert.set(undefined);
                 },
                 error: (e) => {
-                    this.setAlert(IAlertType.Danger, e); this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
                 },
-                complete: () => this.processing = false
+                complete: () => this.processing.set(false)
             });
         return false;
     }

@@ -4,6 +4,7 @@ import { ScoreConfig, ScoreDirection, StructureNameService, TogetherGamePlace, T
 import { TranslateScoreService } from '../../lib/translate/score';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
+import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-togetherscorecard',
@@ -16,6 +17,7 @@ export class ScoreTogetherCardComponent implements OnInit {
   @Input() form!: FormGroup;
   @Input() gamePlace!: TogetherGamePlace;
   @Input() structureNameService!: StructureNameService;
+  faTrashAlt = faTrashCan;
   
   onAfterEdit = output<void>();
   public firstScoreConfig!: ScoreConfig;

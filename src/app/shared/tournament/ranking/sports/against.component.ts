@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, WritableSignal, input, signal } from '@angular/core';
 import { Poule, ScoreConfig, AgainstSportRoundRankingCalculator, CompetitionSport, SportRoundRankingItem, StructureNameService, Competitor, StartLocation, Place } from 'ngx-sport';
 import { Favorites } from '../../../../lib/favorites';
 import { FavoritesRepository } from '../../../../lib/favorites/repository';
@@ -26,7 +26,7 @@ export class RankingAgainstComponent implements OnInit {
   protected againstRankingCalculator!: AgainstSportRoundRankingCalculator;
   public sportRankingItems!: SportRoundRankingItem[];
   public showDifferenceDetail = false;
-  public processing = true;
+  public readonly processing: WritableSignal<boolean> = signal(true);
 
   constructor(
     public cssService: CSSService,
@@ -35,11 +35,11 @@ export class RankingAgainstComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.processing = true;
+    this.processing.set(true);
     this.againstRankingCalculator = new AgainstSportRoundRankingCalculator(this.competitionSport());
     this.sportRankingItems = this.againstRankingCalculator.getItemsForPoule(this.poule());
     // console.log(this.sportRankingItems);
-    this.processing = false;
+    this.processing.set(false);
   }
 
   useSubScore() {

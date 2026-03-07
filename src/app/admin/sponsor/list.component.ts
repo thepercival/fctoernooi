@@ -15,9 +15,9 @@ import { ScreenConfigName } from '../../lib/liveboard/screenConfig/name';
 import { ScreenConfig } from '../../lib/liveboard/screenConfig/json';
 import { SponsorMapper } from '../../lib/sponsor/mapper';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { FavoritesRepository } from '../../lib/favorites/repository';
 import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faInfoCircle, faMoneyBillAlt, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -28,11 +28,13 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     imports: [TournamentNavBarComponent, FontAwesomeModule, NgbAlert]
 })
 export class SponsorListComponent extends TournamentComponent implements OnInit {
+  faSpinner = faSpinner;
+  faMoneyBillAlt = faMoneyBillAlt;
+  faInfoCircle = faInfoCircle;
   sponsors: Sponsor[] = [];
   sponsorScreensCreator!: SponsorScreensCreator;
   public screenConfig: ScreenConfig;
-  public hasSomeSponsorAnImage: boolean = false;
-  private modalService: NgbModal = inject(NgbModal);
+  public hasSomeSponsorAnImage: boolean = false;  
 
   constructor(
     route: ActivatedRoute,
@@ -40,11 +42,10 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     globalEventsManager: GlobalEventsManager,    
-    favRepository: FavoritesRepository,
     public sponsorRepository: SponsorRepository,
     private sponsorMapper: SponsorMapper
   ) {
-    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, favRepository);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
     this.screenConfig = this.sponsorMapper.getDefaultScreenConfig();
   }
 
@@ -56,14 +57,14 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
     this.createSponsorsList(); // sets this.sponsors
     this.hasSomeSponsorAnImage = this.sponsorRepository.hasSomeLogo(this.sponsors);
     this.sponsorScreensCreator = new SponsorScreensCreator(this.screenConfig);
-    this.processing = false;
+    this.processing.set(false);
   }
 
   openHelpModal(modalContent: TemplateRef<any>) {
     const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-    activeModal.componentInstance.header = 'uitleg sponsoren';
-    activeModal.componentInstance.modalContent = modalContent;
-    activeModal.componentInstance.noHeaderBorder = true;
+      activeModal.componentInstance.header = () => 'uitleg sponsoren';
+      activeModal.componentInstance.modalContent = () => modalContent;
+      activeModal.componentInstance.noHeaderBorder = () => true;
   }
 
   createSponsorsList() {
@@ -85,18 +86,18 @@ export class SponsorListComponent extends TournamentComponent implements OnInit 
   }
 
   removeSponsor(sponsor: Sponsor) {
-    this.setAlert(IAlertType.Info, 'de sponsor wordt verwijderd');
-    this.processing = true;
+    this.alert.set({ type: IAlertType.Info, message: 'de sponsor wordt verwijderd' });
+    this.processing.set(true);
 
     this.sponsorRepository.removeObject(sponsor, this.tournament)
       .subscribe({
         next: () => {
-          this.setAlert(IAlertType.Success, 'de sponsor is verwijderd');
+          this.alert.set({ type: IAlertType.Success, message: 'de sponsor is verwijderd' });
         },
         error: (e) => {
-          this.setAlert(IAlertType.Danger, e); this.processing = false;
+          this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
         },
-        complete: () => this.processing = false
+        complete: () => this.processing.set(false)
       });
   }
 }

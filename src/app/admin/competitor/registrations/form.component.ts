@@ -1,4 +1,4 @@
-import { Component, OnInit, input, model } from '@angular/core';
+import { Component, OnInit, WritableSignal, input, model, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { TournamentCompetitor } from '../../../lib/competitor';
 import { IAlert } from '../../../shared/common/alert';
@@ -11,6 +11,7 @@ import { DateConverter } from '../../../lib/dateConverter';
 import { TournamentRegistrationSettingsMapper } from '../../../lib/tournament/registration/settings/mapper';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
+import { faEye, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-registrations-form',
@@ -20,6 +21,8 @@ import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
     imports: [NgbAlert,FontAwesomeModule]
 })
 export class RegistrationFormComponent implements OnInit{
+  faSpinner = faSpinner;
+  faEye = faEye;
   public tournament = input.required<Tournament>();
   public settings = model.required<TournamentRegistrationSettings>();
   
@@ -28,7 +31,7 @@ export class RegistrationFormComponent implements OnInit{
     remark: FormControl<string>
   }>;
         
-  public processing = false;
+  public readonly processing: WritableSignal<boolean> = signal(true);
 
   public validations: RegisterSettingsValidations = {
     maxlengthremark: TournamentCompetitor.MAX_LENGTH_INFO
@@ -57,7 +60,7 @@ export class RegistrationFormComponent implements OnInit{
   }
 
   save(): boolean {
-    this.processing = true;
+    this.processing.set(true);
     this.registrationRepository.editSettings(this.formToJson(), this.tournament())
       .subscribe({
         next: (settings: TournamentRegistrationSettings) => {
@@ -67,9 +70,9 @@ export class RegistrationFormComponent implements OnInit{
         },
         error: (e) => {
           // this.setAlert(IAlertType.Danger, 'het delen kon niet worden gewijzigd');
-          this.processing = false;
+          this.processing.set(false);
         },
-        complete: () => this.processing = false
+        complete: () => this.processing.set(false)
       }); 
 
     return true;

@@ -1,6 +1,6 @@
 <div class="modal-header border-bottom-0">
     <h4 class="modal-title">
-        <fa-icon [icon]="['fas', 'users']"></fa-icon> <span> deelnemers selecteren</span>
+        <fa-icon [icon]="faUsers"></fa-icon> <span> deelnemers selecteren</span>
     </h4>
     <button type="button" class="btn-close" aria-label="sluiten" (click)="activeModal.dismiss('close')"></button>
 </div>
@@ -37,7 +37,7 @@
                                         @if (competitorsAssignedElsewhere.length > 0) {
                                             <td>
                                                 @if (alreadyAssignedElsewhere(competitorItem.competitor)) {
-                                                    <fa-icon [icon]="['fas', 'door-closed']"></fa-icon>
+                                                    <fa-icon [icon]="faDoorClosed"></fa-icon>
                                                 }
                                             </td>
                                         }

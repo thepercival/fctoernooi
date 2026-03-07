@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { HorizontalSingleQualifyRule, QualifyDistribution, QualifyGroup, QualifyTarget, Round, StructureEditor, StructureNameService, VerticalSingleQualifyRule } from 'ngx-sport';
 
 import { IAlert, IAlertType } from '../../common/alert';
-import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
-import { facStructure } from '../icon/icons';
 import { CSSService } from '../../common/cssservice';
 import { StructureAction, StructureActionName } from '../../../admin/structure/edit.component';
 import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { QualifyModalComponent } from './qualifymodal.component';
 import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
+import { faCogs, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -16,7 +16,7 @@ import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
     templateUrl: './qualify.component.html',
     styleUrls: ['./qualify.component.scss'],
     standalone: true,
-    imports: [TOURNAMENT_UI_IMPORTS, NgbAlert],
+    imports: [TOURNAMENT_UI_IMPORTS, NgbAlert, NgTemplateOutlet],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructureQualifyComponent {
@@ -24,6 +24,9 @@ export class StructureQualifyComponent {
     public parentRound = input.required<Round>();
     public structureNameService = input.required<StructureNameService>();
     public lastAction = input<StructureAction | undefined>(undefined);
+    public faCogs = faCogs;
+    public faMinus = faMinus;
+    public faPlus = faPlus;
     
     public onActionAdd = output<StructureAction>();
 
@@ -39,8 +42,6 @@ export class StructureQualifyComponent {
     getTargets(): QualifyTarget[] {
         return [QualifyTarget.Winners, QualifyTarget.Losers];
     }
-
-    get IconStructure(): [IconPrefix, IconName] { return [facStructure.prefix, facStructure.iconName]; }
 
 
     updateDistribution(target: QualifyTarget, distribution: QualifyDistribution): void {

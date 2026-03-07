@@ -47,7 +47,6 @@ export const adminRoutes: Routes = [
   { path: 'ranking/:id', component: RankingEditComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'referees/:id', component: RefereeListComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'referee/:id/:rank', component: RefereeEditComponent, canActivate: [AuthguardService] }, // ADMIN
-  { path: 'referees/:id', component: RefereeListComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'rules/:id', component: TournamentRulesComponent, canActivate: [AuthguardService] }, // ADMIN
   { path: 'authorizations/:id', component: AuthorizationListComponent, canActivate: [AuthguardService] }, // ROLEADMIN
   { path: 'authorization/:id', component: AuthorizationAddComponent, canActivate: [AuthguardService] }, // ROLEADMIN

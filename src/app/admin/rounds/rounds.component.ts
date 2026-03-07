@@ -6,6 +6,7 @@ import { CSSService } from '../../shared/common/cssservice';
 import { SelectableRoundNode } from './selector.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
+import { faCogs } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-select-round',
@@ -25,6 +26,8 @@ export class StructureSelectRoundComponent implements OnInit {
   public typedForm: FormGroup<{
     selected: FormControl<boolean>
   }>;
+
+  faCogs = faCogs;
 
   constructor(
     public cssService: CSSService,

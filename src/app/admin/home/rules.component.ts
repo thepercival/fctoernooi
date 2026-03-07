@@ -1,20 +1,18 @@
-import { Component, inject, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { IAlert, IAlertType } from '../../shared/common/alert';
-import { RefereeRepository } from '../../lib/ngx-sport/referee/repository';
+import { IAlertType } from '../../shared/common/alert';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { NgbModal, NgbModalRef, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
-import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
+import { NgbModalRef, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { FavoritesRepository } from '../../lib/favorites/repository';
 import { TournamentRuleRepository } from '../../lib/tournament/rule/repository';
 import { JsonTournamentRule } from '../../lib/tournament/rule/json';
 import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
 import { TournamentNavBarComponent } from "../../shared/tournament/tournamentNavBar/tournamentNavBar.component";
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-rules',
@@ -24,8 +22,8 @@ import { FaIconComponent } from "@fortawesome/angular-fontawesome";
     
 })
 export class TournamentRulesComponent extends TournamentComponent implements OnInit {
+  faSpinner = faSpinner;
   public rules!: JsonTournamentRule[];
-  private modalService = inject(NgbModal);
   
   validations: any = {
     'minlengthdescription': TournamentRuleRepository.MIN_LENGTH_DESCRIPTION,
@@ -38,10 +36,9 @@ export class TournamentRulesComponent extends TournamentComponent implements OnI
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     globalEventsManager: GlobalEventsManager,    
-    favRepository: FavoritesRepository,
     private ruleRepository: TournamentRuleRepository
   ) {
-    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, favRepository);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
   }
 
   ngOnInit() {
@@ -57,37 +54,37 @@ export class TournamentRulesComponent extends TournamentComponent implements OnI
       .subscribe({
         next: (rules: JsonTournamentRule[]) => {
           this.rules = rules;
-          this.processing = false;
+          this.processing.set(false);
         },
         error: (e) => {
-          this.setAlert(IAlertType.Danger, e); this.processing = false;
+          this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
         }
       });
     
-    this.processing = false;
+    this.processing.set(false);
   }
 
   addRule() {
     const modal = this.getTextModal(false);
     modal.result.then((text: string) => {
-      this.processing = true;
-      this.resetAlert();
+      this.processing.set(true);
+      this.alert.set(undefined);
       this.ruleRepository.createObject(text, this.tournament)
         .subscribe({
           next: (newRule: JsonTournamentRule) => {
             this.rules.push(newRule);
-            this.processing = false;
-            this.alert = undefined;
+            this.processing.set(false);
+            this.alert.set(undefined);
           },
           error: (e) => {
-            this.setAlert(IAlertType.Danger, e); this.processing = false;
+            this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
           }
         });
     }, (reason) => { });
   }
 
   editRule(rule: JsonTournamentRule) {
-    this.processing = true;
+    this.processing.set(true);
     const modal = this.getTextModal(true);
     const initialText = rule.text;    
     modal.componentInstance.initialName = rule.text;
@@ -96,13 +93,13 @@ export class TournamentRulesComponent extends TournamentComponent implements OnI
       this.ruleRepository.editObject(rule, this.tournament)
         .subscribe({
           next: (updatedRule: JsonTournamentRule) => {
-            this.alert = undefined;
-            this.processing = false;
+            this.alert.set(undefined);
+            this.processing.set(false);
           },
           error: (e) => {
-            this.setAlert(IAlertType.Danger, e); 
+            this.alert.set({ type: IAlertType.Danger, message: e }); 
             rule.text = initialText
-            this.processing = false;
+            this.processing.set(false);
           }
         });
     }, (reason) => { });
@@ -124,31 +121,31 @@ export class TournamentRulesComponent extends TournamentComponent implements OnI
   }
 
   upgradePriority(ruleToUpgrade: JsonTournamentRule) {
-    this.processing = true;
+    this.processing.set(true);
     const ruleToDowngrade: JsonTournamentRule | undefined = this.getRule(ruleToUpgrade.priority - 1);
     this.ruleRepository.upgradeObject(ruleToUpgrade, ruleToDowngrade, this.tournament)
       .subscribe({
         next: () => {
           this.rules.sort((ruleA, ruleB) => ruleA.priority - ruleB.priority);
-          this.processing = false;
+          this.processing.set(false);
         },
         error: (e: string) => {
-          this.setAlert(IAlertType.Danger, e); this.processing = false;
+          this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
         }
       });
   }
 
   removeRule(rule: JsonTournamentRule) {
-    this.processing = true;
-    this.resetAlert();
+    this.processing.set(true);
+    this.alert.set(undefined);
     this.ruleRepository.removeObject(rule, this.tournament)
       .subscribe({
         next: () => {
           this.removeFromList(rule);
-          this.processing = false;
+          this.processing.set(false);
         },
         error: (e) => {
-          this.setAlert(IAlertType.Danger, e); this.processing = false;
+          this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
         }
       });
   }

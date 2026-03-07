@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, output, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, output, signal, SimpleChanges, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbAlert, NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Category, StartLocationMap, StructureNameService } from 'ngx-sport';
@@ -12,6 +12,7 @@ import { RegistrationState } from '../../../lib/tournament/registration/state';
 import { TournamentRegistrationTextSubject } from '../../../lib/tournament/registration/text';
 import { TextEditorModalComponent } from '../../textEditor/texteditormodal.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCheckCircle, faFileLines, faPencilAlt, faRegistered, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-registrations-list',
@@ -34,7 +35,13 @@ export class RegistrationListComponent implements OnChanges  {
   private startLocationMap!: StartLocationMap;
   // public alert: IAlert | undefined;
   
-  public processing = false;
+  public readonly processing: WritableSignal<boolean> = signal(true);
+
+  faRegistered = faRegistered;
+  faTimesCircle = faTimesCircle;
+  faFileLines = faFileLines;
+  faPencilAlt = faPencilAlt;
+  faCheckCircle = faCheckCircle;
 
   constructor(
     private router: Router,
@@ -62,16 +69,16 @@ export class RegistrationListComponent implements OnChanges  {
   get Declined(): RegistrationState { return RegistrationState.Declined; } 
 
   updateRegistrations(): void {
-    this.processing = true;
+    this.processing.set(true);
     this.tournamentRegistrationRepository.getObjects(this.category, this.tournament)
       .subscribe({
         next: (registrations: TournamentRegistration[]) => {
           this.registrations = registrations;
-          this.processing = false;
+          this.processing.set(false);
         },
         error: (e: string) => {
           this.onAlertChange.emit({ type: IAlertType.Danger, message: e });
-          this.processing = false;
+          this.processing.set(false);
         }
       });
   }

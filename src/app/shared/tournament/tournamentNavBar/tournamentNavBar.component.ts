@@ -1,4 +1,5 @@
 import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, TemplateRef, ViewChild, input } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -8,17 +9,24 @@ import { TournamentScreen } from '../screenNames';
 import { CompetitorTab } from '../../common/tab-ids';
 import { JsonTheme } from '../../../lib/tournament/theme';
 import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
-import { TournamentIconComponent } from '../icon/icon.component';
+import { facStructure } from '../../customicons';
+import { faCalendarAlt, faCogs, faHome, faListOl, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-navbar',
     templateUrl: './tournamentNavBar.component.html',
     styleUrls: ['./tournamentNavBar.component.scss'],
     standalone: true,
-    imports: [TOURNAMENT_UI_IMPORTS, TournamentIconComponent],
+    imports: [TOURNAMENT_UI_IMPORTS, NgTemplateOutlet],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TournamentNavBarComponent implements AfterViewChecked {
+  public facStructure = facStructure;
+  public faHome = faHome;
+  public faUsers = faUsers;
+  public faCalendarAlt = faCalendarAlt;
+  public faListOl = faListOl;
+  public faCogs = faCogs;
   public upperNavBar = input<TemplateRef<any> | undefined>(undefined);  
   public public = input(false);
   public currentScreen = input<TournamentScreen|undefined>();

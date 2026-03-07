@@ -1,4 +1,4 @@
-import { Component, inject, input, model, OnInit, TemplateRef } from '@angular/core';
+import { Component, input, model, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -6,8 +6,7 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FavoritesRepository } from '../../lib/favorites/repository';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IAlertType } from '../../shared/common/alert';
@@ -20,6 +19,7 @@ import { Observable } from 'rxjs';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-home-edit',
@@ -30,8 +30,9 @@ import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNav
 })
 export class HomeEditComponent extends TournamentComponent implements OnInit {
 
+  faSpinner = faSpinner;
+
   public rules = model<JsonTournamentRule[]>([]);
-  private modalService: NgbModal = inject(NgbModal);
   
   public form: FormGroup<{
     intro: FormControl<string>, 
@@ -50,12 +51,11 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
     tournamentRepository: TournamentRepository,
     structureRepository: StructureRepository,    
     globalEventsManager: GlobalEventsManager,    
-    favRepository: FavoritesRepository,
     private tournamentMapper: TournamentMapper,
     private myNavigation: MyNavigation,
     private ruleRepository: TournamentRuleRepository,
   ) {
-    super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
+    super(route, router, tournamentRepository, structureRepository, globalEventsManager);
 
     this.form = new FormGroup({
       intro: new FormControl('', {
@@ -107,7 +107,7 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
     //     this.openModalCopied(params.myPreviousId);
     //   }
     // });
-    this.processing = false;
+    this.processing.set(false);
   }
 
   get HomeScreen(): TournamentScreen { return TournamentScreen.Home }
@@ -124,8 +124,8 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
   }
 
   save(): boolean {
-    this.processing = true;
-    this.setAlert(IAlertType.Info, 'de thuispagina wordt opgeslagen');
+    this.processing.set(true);
+    this.alert.set({ type: IAlertType.Info, message: 'de thuispagina wordt opgeslagen' });
 
     const json = this.formToJson();
     console.log('json', json);
@@ -133,12 +133,12 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
       next: (tournament: Tournament) => {
         this.tournament = tournament;
         this.router.navigate(['/admin', this.tournament.getId()]);
-        this.processing = false;        
+        this.processing.set(false);        
       },
       error: (e) => {
-        this.setAlert(IAlertType.Danger, e); this.processing = false;
+        this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
       },
-      complete: () => this.processing = false
+      complete: () => this.processing.set(false)
     });
     return false;
   }
@@ -149,8 +149,8 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
 
   openInfoModal(modalContent: TemplateRef<any>) {
     const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-    activeModal.componentInstance.header = 'locatie';
-    activeModal.componentInstance.modalContent = modalContent;
+    activeModal.componentInstance.header = () => 'locatie';
+    activeModal.componentInstance.modalContent = () => modalContent;
   }
 
 }

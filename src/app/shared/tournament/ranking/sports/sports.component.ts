@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, WritableSignal, inject, input, signal } from '@angular/core';
 import { Poule, CompetitionSport, RoundRankingCalculator, RoundRankingItem, Cumulative, StructureNameService } from 'ngx-sport';
 
 import { CSSService } from '../../../common/cssservice';
@@ -32,7 +32,7 @@ export class RankingSportsComponent implements OnInit {
   togetherRankingMap: TogetherRankingMap = new TogetherRankingMap();
   viewPointStart: number = 1;
   public showDifferenceDetail = false;
-  public processing = true;
+  public readonly processing: WritableSignal<boolean> = signal(true);
   private resolvedCompetitionSports: CompetitionSport[] = [];
   private modalService = inject(NgbModal);
 
@@ -43,12 +43,12 @@ export class RankingSportsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.processing = true;
+    this.processing.set(true);
     this.roundRankingItems = this.roundRankingCalculator.getItemsForPoule(this.poule());
     const inputSports = this.competitionSports();
     this.resolvedCompetitionSports = inputSports.length > 0 ? inputSports : this.poule().getCompetition().getSports();
-    this.viewPortManager = new ViewPortManager(this.getViewPortNrOfColumnsMap(), this.competitionSports.length);
-    this.processing = false;
+    this.viewPortManager = new ViewPortManager(this.getViewPortNrOfColumnsMap(), this.resolvedCompetitionSports.length);
+    this.processing.set(false);
   }
 
   protected getViewPortNrOfColumnsMap(): ViewPortNrOfColumnsMap {

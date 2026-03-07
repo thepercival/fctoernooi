@@ -9,7 +9,7 @@
           @if(refreshingData !== undefined && gameDatas.length > 0) {
           <button type="button"
             class="btn btn-sm btn-outline-secondary ms-1" (click)="onDataRefresh.emit()" [disabled]="refreshingData">
-            <fa-icon [icon]="['fas', 'sync']" [animation]="refreshingData ? 'spin' : undefined"></fa-icon>
+            <fa-icon [icon]="faSync" [animation]="refreshingData ? 'spin' : undefined"></fa-icon>
           </button>
           }
         </h4>
@@ -21,14 +21,14 @@
           
             <span>toon</span>
             @if(!filterFavorites) {
-            <fa-icon [icon]="['fas', 'star']"></fa-icon>
+            <fa-icon [icon]="faStar"></fa-icon>
             }
             <span> {{filterFavorites ? 'alles' : 'favorieten'}}</span>
           </button>
           }
           @if(showLinksToAdmin) {
           <button type="button" class="btn btn-primary" (click)="linkToPlanningConfig()">
-            <fa-icon [icon]="['fas', 'cogs']"></fa-icon> instellen
+            <fa-icon [icon]="faCogs"></fa-icon> instellen
           </button>
           }
         </div>
@@ -57,7 +57,7 @@
     <tr class="border-0 border-white">
       <td [attr.colspan]="nrOfColumns" class="p-0">    
         <ngb-alert class=" mt-1 text-center" type="info">
-          <h3><fa-icon [icon]="['fas', 'spinner']" animation="spin"></fa-icon></h3>
+          <h3><fa-icon [icon]="faSpinner" animation="spin"></fa-icon></h3>
           <br/>
           @if(progressPerc === 0) {
           <span>Het berekenen van de wedstrijdplanning staat in de wachtrij. Een moment
@@ -108,13 +108,13 @@
     <button type="button"
       class="btn btn-sm btn-outline-{{ gameOrder === OrderByDate ? 'secondary' : 'primary' }}"
       (click)="sortGames()">
-      <fa-icon [icon]="['fas', 'list-ul']" title="poule">
+      <fa-icon [icon]="faListUl" title="poule">
       </fa-icon>
     </button>
     }
     @if(needsRanking && !hasMultiplePoules) {
     <span>
-      <fa-icon [icon]="['fas', 'list-ul']" title="poule"></fa-icon>
+      <fa-icon [icon]="faListUl" title="poule"></fa-icon>
     </span>
     }
     @if(!needsRanking) {
@@ -135,11 +135,11 @@
     <button title="wijzig velden"
       class="btn btn-sm btn-outline-{{tournamentHasBegun ? 'warning' : 'secondary'}}"
       (click)="linkToCompetitionSport(SportConfigTabFields)">
-      <app-tournament-icon name="soccer-field"></app-tournament-icon>
+      <fa-icon [icon]="facSoccerField"></fa-icon>
     </button>
     }
     @if(!showLinksToAdmin) {
-    <app-tournament-icon title="veld" name="soccer-field"></app-tournament-icon>
+    <fa-icon [icon]="facSoccerField" title="veld"></fa-icon>
     }
   </th>
   <!-- sport -->
@@ -165,13 +165,13 @@
     <button title="wijzig score-regels"
       class="btn btn-sm btn-outline-{{hasBegun ? 'warning' : 'secondary'}}"
       (click)="linkToCompetitionSport(SportConfigTabScore)">
-      <app-tournament-icon name="scoreboard"></app-tournament-icon>
+      <fa-icon [icon]="facScoreboard"></fa-icon>
     </button>
     }
     @if(!showLinksToAdmin && getUniqueScoreConfigs().length > 0) {
     <button title="score"
       class="btn btn-sm btn-outline-info" (click)="openInfoModal('score informatie',scoreInfo)">
-      <app-tournament-icon name="scoreboard"></app-tournament-icon>
+      <fa-icon [icon]="facScoreboard"></fa-icon>
     </button>
     }
   </th>
@@ -187,10 +187,10 @@
     @if(showLinksToAdmin && !planningConfig.getSelfReferee()) {
       <button title="wijzig scheidsrechters"
         class="btn btn-sm btn-outline-{{tournamentHasBegun ? 'warning' : 'secondary'}}" (click)="linkToReferee()">
-        <app-tournament-icon name="referee"></app-tournament-icon>
+        <fa-icon [icon]="facReferee"></fa-icon>
       </button>
     } @else {
-      <app-tournament-icon name="referee"></app-tournament-icon>
+      <fa-icon [icon]="facReferee"></fa-icon>
     }
   </th>
   }
@@ -289,10 +289,10 @@
     }
     <!-- gamePlaces & score -->
     @if(isAgainst(gmData.game)) {
-      <ng-container ngTemplateOutlet="againstGamePlacesCell" ngTemplateOutletContext="{$implicit: gmData}"></ng-container>
+      <ng-container [ngTemplateOutlet]="againstGamePlacesCell" [ngTemplateOutletContext]="{$implicit: gmData}"></ng-container>
     }
     @if(!isAgainst(gmData.game)) {
-      <ng-container ngTemplateOutlet="togetherGamePlaces" ngTemplateOutletContext="{$implicit: gmData}"></ng-container>
+      <ng-container [ngTemplateOutlet]="togetherGamePlaces" [ngTemplateOutletContext]="{$implicit: gmData}"></ng-container>
     }
     <!-- referee -->
     @if(showRefereeColumn) {
@@ -308,7 +308,7 @@
 <tr class="">
   <td [attr.colspan]="nrOfColumns" class="text-center">
     <button type="button" class="btn btn-sm btn-outline-primary" (click)="linkToGameAdd()">
-      <fa-icon [icon]="['fas', 'plus']"></fa-icon> wedstrijd toevoegen
+      <fa-icon [icon]="faPlus"></fa-icon> wedstrijd toevoegen
     </button>
   </td>
 </tr>
@@ -335,7 +335,7 @@
     @if(gmData.canChangeResult) {
       <button class="btn btn-sm btn-outline-primary" (click)="linkToGameEdit(gmData.game)">
         @if(!isFinished(gmData.game)) {
-        <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+        <fa-icon [icon]="faPencilAlt"></fa-icon>
         }
         @if(isFinished(gmData.game)) {
         <span>{{getAgainstScore(gmData.game)}}</span>
@@ -348,7 +348,7 @@
         <button class="btn btn-outline-info btn-sm d-sm-none" placement="bottom"
           ngbPopover="getRefereeName(gmData.game, false)">
           <span [class.favitem]="favorites?.hasGameReferee(gmData.game)">
-            <app-tournament-icon name="referee"></app-tournament-icon>
+            <fa-icon [icon]="facReferee"></fa-icon>
           </span>
         </button>
       } @else {
@@ -374,13 +374,6 @@
 </ng-template>
 
 <ng-template #togetherGamePlaces let-gmData>
-  <!-- <button *ngIf="!gmData.canChangeResult && hasReferees && !isPlayed(gmData.game)"
-      class="btn btn-outline-info btn-sm d-sm-none" placement="top" [ngbPopover]="getRefereeName(gmData.game)">
-      <span [class.favitem]="favorites?.hasGameReferee(gmData.game)">
-        <app-tournament-icon name="referee"></app-tournament-icon>
-      </span>
-    </button> -->
-
   <td colspan="3" class="text-break pb-0">
     @if(gmData.canChangeResult) {
       <div class="d-flex flex-wrap gap-2 justify-content-center mb-2">
@@ -398,7 +391,7 @@
           <button class="btn btn-sm border border-{{getTogetherScoreBtnBorderClass(gamePlace)}} me-1"
             (click)="linkToGameEdit(gmData.game)">
             @if(!isFinished(gmData.game)) {
-            <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+            <fa-icon [icon]="faPencilAlt"></fa-icon>
             }
             @if(isFinished(gmData.game)) {
             <span>{{getTogetherScore(gamePlace)}}</span>
@@ -457,12 +450,12 @@
 
     @if(scoreConfig.getNext()?.getEnabled()) {
     <ul class="list-group">
-      <ng-container ngTemplateOutlet="withNext" ngTemplateOutletContext="{$implicit: scoreConfig.getNext()}"></ng-container>
+      <ng-container [ngTemplateOutlet]="withNext" [ngTemplateOutletContext]="{$implicit: scoreConfig.getNext()}"></ng-container>
     </ul>
     }
     @if(!scoreConfig.hasNext()) {
     <ul class="list-group">
-      <ng-container ngTemplateOutlet="single"></ng-container>
+      <ng-container [ngTemplateOutlet]="single"></ng-container>
     </ul>
     }
 

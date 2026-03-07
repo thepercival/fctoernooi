@@ -8,18 +8,18 @@
           <span class="fw-bold align-middle">{{category().getName()}}</span>
           @if(editable()) {
           <button class="btn btn-sm btn-primary ms-1" (click)="updateCategoryAction(category())">
-            <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+            <fa-icon [icon]="faPencilAlt"></fa-icon>
           </button>
           }
           @if(movable) {
           <button class="btn btn-sm btn-secondary ms-1" (click)="onCategoryMoveUp.emit(category())">
-            <fa-icon [icon]="['fas', 'level-up-alt']"></fa-icon>
+            <fa-icon [icon]="faLevelUpAlt"></fa-icon>
           </button>
           }
         </h5>
         @if(editable()) {
         <button class="btn btn-sm btn-danger ms-1" (click)="onCategoryRemove.emit(category())">
-          <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+          <fa-icon [icon]="faTrashAlt"></fa-icon>
         </button>
         }
       </div>

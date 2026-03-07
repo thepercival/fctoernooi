@@ -6,7 +6,7 @@
           ronde
         </th>
         <th class="width-4">
-          <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
+          <fa-icon [icon]="faListUl"></fa-icon>
         </th>
         @if (isScheduleScreen()) {
           <th class="width-10"
@@ -22,7 +22,7 @@
         }
         @if (isScheduleScreen()) {
           <th class="width-8">
-            <app-tournament-icon name="soccer-field"></app-tournament-icon>
+            <fa-icon [icon]="facSoccerField"></fa-icon>
           </th>
         }
         <!-- gamePlaces & score -->
@@ -31,7 +31,7 @@
         }
         @if (hasOnlyGameModeAgainst) {
           <th class="text-center width-8">
-            <app-tournament-icon name="scoreboard"></app-tournament-icon>
+            <fa-icon [icon]="facScoreboard"></fa-icon>
           </th>
         }
         @if (hasOnlyGameModeAgainst) {
@@ -42,7 +42,7 @@
         }
         @if (isScheduleScreen() && hasReferees()) {
           <th class="width-14 text-end">
-            <app-tournament-icon name="referee"></app-tournament-icon>
+            <fa-icon [icon]="facReferee"></fa-icon>
           </th>
         }
       </tr>
@@ -73,10 +73,10 @@
           }
 
           @if (isAgainst(game)) {
-            <ng-container ngTemplateOutlet="againstGamePlacesCell;context:{$implicit: game}"></ng-container>
+            <ng-container [ngTemplateOutlet]="againstGamePlacesCell" [ngTemplateOutletContext]="{$implicit: game}"></ng-container>
           }
           @if (!isAgainst(game)) {
-            <ng-container ngTemplateOutlet="togetherGamePlaces;context:{$implicit: game}"></ng-container>
+            <ng-container [ngTemplateOutlet]="togetherGamePlaces" [ngTemplateOutletContext]="{$implicit: game}"></ng-container>
           }
 
           @if (isScheduleScreen() && hasReferees()) {

@@ -2,27 +2,27 @@
 
   <div class="d-flex justify-content-between mb-1">
     <h2>
-      <app-tournament-icon name="structure"></app-tournament-icon> opzet
+      <fa-icon [icon]="facStructure"></fa-icon> opzet
     </h2>
     <div>
-      @if (!processing && clonedStructure) {
+      @if (!processing() && clonedStructure) {
         <div class="btn-group" role="group" aria-label="aantal deelnemers">
           @if (!hasBegun) {
             <button type="button" class="btn btn-outline-primary" (click)="openAddCategoryModal()">
-              <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+              <fa-icon [icon]="faPlus"></fa-icon>
             </button>
           }
           <button [disabled]="clonedStructure.hasSingleCategory()" role="button"
             (click)="openCategoriesChooseModal(this.clonedStructure)"
             class="btn btn-outline-{{getCategoryFavoritesActiveClass(clonedStructure)}}">
-            <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">cat</span><span
+            <fa-icon [icon]="faGrip"></fa-icon> <span class="ms-1">cat</span><span
               class="d-none d-sm-inline">egoriën</span>
           </button>
         </div>
         @if (!hasBegun) {
           <button role="button" [disabled]="actions.length === 0" (click)="saveStructure()"
             class="btn btn-primary ms-1">
-            <fa-icon [icon]="['fas', 'save']"></fa-icon>
+            <fa-icon [icon]="faSave"></fa-icon>
             <span> opslaan</span>
           </button>
         }
@@ -32,18 +32,18 @@
   </div>
 
   <div>
-    @if (processing) {
+    @if (processing()) {
       <h2 class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+        <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
       </h2>
     }
   </div>
 
-  @if (alert) {
-    <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+  @if (alert()) {
+    <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
   }
 
-  @if (!processing && clonedStructure) {
+  @if (!processing() && clonedStructure) {
     <div class="row text-center">
 
       @if (hasBegun) {
@@ -61,9 +61,9 @@
         </app-tournament-structureround>
       } @else {
         <div class="d-flex flex-wrap gap-1">
-          @for (category of favoriteCategories; track category.getId()) {
+          @for (category of favoriteCategories(); track category.getId()) {
             <app-tournament-structurecategory class="mx-auto card"
-              [showHeader]="favoriteCategories.length > 1" [editable]="!hasBegun"
+              [showHeader]="favoriteCategories().length > 1" [editable]="!hasBegun"
               [showCompetitors]="false"
               [filterActive]="isCategoryFilterActive(clonedStructure)" [structureNameService]="structureNameService"
               [structureEditor]="structureEditor" [lastAction]="lastAction" [category]="category"
@@ -78,10 +78,10 @@
   }
 
   <div class="d-flex justify-content-around mt-3 mb-5">
-    @if (!processing && clonedStructure && !clonedStructure.getFirstRoundNumber().hasBegun()) {
+    @if (!processing() && clonedStructure && !clonedStructure.getFirstRoundNumber().hasBegun()) {
       <button role="button"
         [disabled]="actions.length === 0" (click)="saveStructure()" class="btn btn-primary">
-        <fa-icon [icon]="['fas', 'save']"></fa-icon>
+        <fa-icon [icon]="faSave"></fa-icon>
         <span> opslaan</span>
       </button>
     }

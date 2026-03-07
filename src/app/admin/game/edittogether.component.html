@@ -4,15 +4,15 @@
       <h2 class="text-center">
         wedstrijd wijzigen
       </h2>
-      @if (processing) {
+      @if (processing()) {
         <h2 class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
         </h2>
       }
-      @if (alert) {
-        <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+      @if (alert()) {
+        <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
       }
-      @if (!processing && tournament && hasAuthorization) {
+      @if (!processing() && tournament && hasAuthorization) {
         <form [formGroup]="typedForm" (ngSubmit)="save()" #f="ngForm"
           novalidate>
           <app-tournament-basegame-edit [form]="getBaseFormGroup()" [structureNameService]="structureNameService"

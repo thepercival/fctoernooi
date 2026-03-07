@@ -41,8 +41,6 @@ import { map } from 'rxjs/operators';
 import { EqualQualifiersChecker } from '../../lib/ngx-sport/ranking/equalQualifiersChecker';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FavoritesRepository } from '../../lib/favorites/repository';
 
 export class GameEditComponent extends TournamentComponent {
     public game: AgainstGame | TogetherGame | undefined;
@@ -63,8 +61,6 @@ export class GameEditComponent extends TournamentComponent {
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
-        favRepository: FavoritesRepository,
         private authService: AuthService,
         private gameRepository: GameRepository,
         protected mapper: GameMapper,
@@ -75,7 +71,7 @@ export class GameEditComponent extends TournamentComponent {
         private myNavigation: MyNavigation,
         private structureLocationMapper: StructureLocationMapper
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
         // this.originalPouleState = State.Created;
         this.scoreConfigService = new ScoreConfigService();
 
@@ -89,8 +85,8 @@ export class GameEditComponent extends TournamentComponent {
         this.structureNameService = new StructureNameService(new StartLocationMap(this.tournament.getCompetitors()));
         const game = this.getGameById(gameId);
         if (game === undefined) {
-            this.setAlert(IAlertType.Danger, 'de wedstrijd kan niet gevonden worden');
-            this.processing = false;
+            this.alert.set({ type: IAlertType.Danger, message: 'de wedstrijd kan niet gevonden worden' });
+            this.processing.set(false);
             return;
         }
         this.game = game;
@@ -99,7 +95,7 @@ export class GameEditComponent extends TournamentComponent {
         this.equalQualifiersChecker = new EqualQualifiersChecker(this.game, this.structureNameService, this.mapper, cumulative);
 
         if (this.nextRoundNumberBegun(roundNumber)) {
-            this.setAlert(IAlertType.Warning, 'het aanpassen van de score kan gevolgen hebben voor de al begonnen volgende ronde');
+            this.alert.set({ type: IAlertType.Warning, message: 'het aanpassen van de score kan gevolgen hebben voor de al begonnen volgende ronde' });
         }
         this.planningConfig = roundNumber.getValidPlanningConfig();
         this.firstScoreConfig = this.game.getScoreConfig();
@@ -110,9 +106,9 @@ export class GameEditComponent extends TournamentComponent {
                 /* happy path */ hasAuthorization => {
                 this.hasAuthorization = hasAuthorization;
                 if (!this.hasAuthorization) {
-                    this.setAlert(IAlertType.Danger, 'je bent geen scheidsrechter voor deze wedstrijd of uitslagen-invoerder voor dit toernooi, je emailadres moet door de beheerder gekoppeld zijn');
+                    this.alert.set({ type: IAlertType.Danger, message: 'je bent geen scheidsrechter voor deze wedstrijd of uitslagen-invoerder voor dit toernooi, je emailadres moet door de beheerder gekoppeld zijn' });
                 }
-                this.processing = false;
+                this.processing.set(false);
             }
         );
     }
@@ -311,8 +307,8 @@ export class GameEditComponent extends TournamentComponent {
         if (this.game === undefined) {
             return false;
         }
-        this.processing = true;
-        this.setAlert(IAlertType.Info, 'de wedstrijd wordt opgeslagen');
+        this.processing.set(true);
+        this.alert.set({ type: IAlertType.Info, message: 'de wedstrijd wordt opgeslagen' });
 
         this.gameRepository.editObject(jsonGame, this.game, this.game.getPoule(), this.tournament)
             .subscribe(
@@ -321,7 +317,7 @@ export class GameEditComponent extends TournamentComponent {
                         this.navigateBack();
                     },
                     error: (e) => {
-                        this.setAlert(IAlertType.Danger, e); this.processing = false;
+                        this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
                     }
                 }
             );
@@ -333,11 +329,11 @@ export class GameEditComponent extends TournamentComponent {
             return;
         }
         if (this.game.getPoule().getNrOfGames() === 1) {
-            this.setAlert(IAlertType.Warning, 'de laatste wedstrijd uit de poule kun je niet verwijderen');
+            this.alert.set({ type: IAlertType.Warning, message: 'de laatste wedstrijd uit de poule kun je niet verwijderen' });
             return;
         }
-        this.processing = true;
-        this.setAlert(IAlertType.Info, 'de wedstrijd wordt verwijderd');
+        this.processing.set(true);
+        this.alert.set({ type: IAlertType.Info, message: 'de wedstrijd wordt verwijderd' });
 
         this.gameRepository.removeObject(this.game, this.game.getPoule(), this.tournament)
             .subscribe({
@@ -345,9 +341,9 @@ export class GameEditComponent extends TournamentComponent {
                     this.navigateBack();
                 },
                 error: (e) => {
-                    this.setAlert(IAlertType.Danger, 'het opslaan is niet gelukt: ' + e); this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: 'het opslaan is niet gelukt: ' + e }); this.processing.set(false);
                 },
-                complete: () => this.processing = false
+                complete: () => this.processing.set(false)
             });
     }
 

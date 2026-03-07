@@ -2,29 +2,28 @@
   <div class="row justify-content-center">
     <div class="col-sm-12 col-md-10 col-lg-6 pt-1">
 
-      @if (alert) {
-        <ngb-alert [type]="alert.type">
-          {{ alert.message }}
-        </ngb-alert>
-      }
+      @if (!processing()) {
+        @if (alert) {
+          <ngb-alert [type]="alert.type">
+            {{ alert.message }}
+          </ngb-alert>
+        }  
+        <app-tournament-properties [hidden]="currentStep !== stepEditProperties"
+          (toNextStep)="toStepCreateSportWithFields($event)">
+        </app-tournament-properties>
+        <app-tournament-create-sportwithfields [hidden]="currentStep !== stepCreateSportWithFields"
+          labelBtnNext="naar opzet" (onCreate)="create($event)" (goToPrevious)="toStepEditProperties()">
+        </app-tournament-create-sportwithfields>
 
-      @if (processing) {
+        @if (nrOfCredits === 1) {
+          <ngb-alert class="mt-3" type="'info'">
+            je kunt nog 1 toernooi aanmaken, vraag daarna nieuwe credits aan
+          </ngb-alert>
+        }
+      } @else {
         <h2 class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
+          <fa-icon [icon]="faSpinner" animation="spin"></fa-icon>
         </h2>
-      }
-
-      <app-tournament-properties [hidden]="currentStep !== stepEditProperties"
-        (toNextStep)="toStepCreateSportWithFields($event)">
-      </app-tournament-properties>
-      <app-tournament-create-sportwithfields [hidden]="currentStep !== stepCreateSportWithFields"
-        labelBtnNext="naar opzet" (onCreate)="create($event)" (goToPrevious)="toStepEditProperties()">
-      </app-tournament-create-sportwithfields>
-
-      @if (nrOfCredits === 1) {
-        <ngb-alert class="mt-3" type="'info'">
-          je kunt nog 1 toernooi aanmaken, vraag daarna nieuwe credits aan
-        </ngb-alert>
       }
     </div>
   </div>

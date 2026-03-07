@@ -4,6 +4,7 @@ import { NgbActiveModal, NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Tournament } from '../../lib/tournament';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCopy, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-ngbd-modal-share-config',
@@ -20,6 +21,8 @@ export class ShareModalComponent implements OnInit {
         url: FormControl<string>,        
       }>;
     copied: boolean = false;
+    faCopy = faCopy;
+    faInfoCircle = faInfoCircle;
     
     constructor(
         public modal: NgbActiveModal,
@@ -49,7 +52,7 @@ export class ShareModalComponent implements OnInit {
 
     openInfoModal(modalContent: TemplateRef<any>) {
         const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-        activeModal.componentInstance.header = 'publiek';
-        activeModal.componentInstance.modalContent = modalContent;
+            activeModal.componentInstance.header = () => 'publiek';
+            activeModal.componentInstance.modalContent = () => modalContent;
     }
 }

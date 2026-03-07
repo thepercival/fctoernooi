@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, input } from '@angular/core';
+import { NgbNav, NgbNavContent, NgbNavItem, NgbNavLink, NgbNavOutlet } from '@ng-bootstrap/ng-bootstrap';
 
 import { Category, CompetitionSport, GameState, StructureNameService } from 'ngx-sport';
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -13,7 +14,7 @@ import { RankingEndComponent } from './end.component';
     selector: 'app-tournament-ranking-category',
     templateUrl: './category.component.html',
     styleUrls: ['./category.component.scss'],
-    imports: [TOURNAMENT_UI_IMPORTS, RankingEndComponent, RankingRoundComponent],
+    imports: [TOURNAMENT_UI_IMPORTS, NgbNav, NgbNavItem, NgbNavLink, NgbNavContent, NgbNavOutlet, RankingEndComponent, RankingRoundComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingCategoryComponent implements OnInit {

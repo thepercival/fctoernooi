@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -17,8 +17,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FavoritesRepository } from '../../lib/favorites/repository';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { JsonTournamentCompetitor } from '../../lib/competitor/json';
 import { NameValidator } from '../../lib/nameValidator';
@@ -27,6 +26,7 @@ import { Observable, of } from 'rxjs';
 import { LogoInput } from '../sponsor/edit.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TournamentNavBarComponent } from "../../shared/tournament/tournamentNavBar/tournamentNavBar.component";
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-competitor-edit',
@@ -36,6 +36,7 @@ import { TournamentNavBarComponent } from "../../shared/tournament/tournamentNav
     imports: [NgbAlert, FontAwesomeModule, TournamentNavBarComponent]
 })
 export class CompetitorEditComponent extends TournamentComponent implements OnInit {
+    faSpinner = faSpinner;
     public typedForm: FormGroup<{
         name: FormControl<string>,
         emailaddress: FormControl<string | null>,
@@ -58,8 +59,6 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
     startLocation!: StartLocation;
     placeNr!: number;
 
-    private modalService = inject(NgbModal);
-
     validations: CompetitorValidations = {
         minlengthname: TournamentCompetitor.MIN_LENGTH_NAME,
         maxlengthname: TournamentCompetitor.MAX_LENGTH_NAME,
@@ -77,12 +76,11 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        favRepository: FavoritesRepository,
         private competitorRepository: CompetitorRepository,
         private myNavigation: MyNavigation,
         private nameValidator: NameValidator
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
         this.logoInputType = LogoInput.ByUpload;
         this.newLogoUploaded = false;
         this.typedForm = new FormGroup({
@@ -140,7 +138,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
 
     private postInit(categoryNr: number, pouleNr: number, placeNr: number) {
         if (categoryNr < 1 || placeNr < 1 || pouleNr < 1) {
-            this.setAlert(IAlertType.Danger, 'de startplek kan niet gevonden worden');
+            this.alert.set({ type: IAlertType.Danger, message: 'de startplek kan niet gevonden worden' });
             return;
         }
         this.startLocation = new StartLocation(categoryNr, pouleNr, placeNr);
@@ -161,11 +159,11 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
                     this.typedForm.controls.publicInfo.setValue(this.originalCompetitor?.getPublicInfo() ?? null);
                     this.typedForm.controls.privateInfo.setValue(this.originalCompetitor?.getPrivateInfo() ?? null);
                     this.typedForm.controls.logoExtension.setValue(this.originalCompetitor?.getLogoExtension() ?? null);
-                    this.processing = false;
+                    this.processing.set(false);
                 },
                 error: (e: string) => {
-                    this.setAlert(IAlertType.Danger, e);
-                    this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: e });
+                    this.processing.set(false);
                 }
             });
 
@@ -213,11 +211,11 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
             this.startLocation.getCategoryNr()
         );
         if (message) {
-            this.setAlert(IAlertType.Danger, message);
+            this.alert.set({ type: IAlertType.Danger, message });
             return false;
         }
-        this.processing = true;
-        this.setAlert(IAlertType.Info, 'de deelnemer wordt opgeslagen');
+        this.processing.set(true);
+        this.alert.set({ type: IAlertType.Info, message: 'de deelnemer wordt opgeslagen' });
         if (this.originalCompetitor) {
             this.competitorRepository.editObject(jsonCompetitor, this.originalCompetitor, this.tournament.getId())
                 .subscribe({
@@ -225,7 +223,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
                         this.processLogoAndNavigateBack(<TournamentCompetitor>competitor);
                     },
                     error: (e) => {
-                        this.setAlert(IAlertType.Danger, e); this.processing = false;
+                        this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
                     }
                 });
             return false;
@@ -236,7 +234,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
                     this.processLogoAndNavigateBack(<TournamentCompetitor>competitor);
                 },
                 error: (e) => {
-                    this.setAlert(IAlertType.Danger, e); this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
                 }
             });
         return false;
@@ -244,7 +242,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
 
     processLogoAndNavigateBack(competitor: TournamentCompetitor) {
         if (this.logoInputType === LogoInput.ByUrl || this.newLogoUploaded !== true) {
-            this.processing = false;
+            this.processing.set(false);
             this.navigateBack();
             return;
         }
@@ -257,13 +255,13 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         this.competitorRepository.uploadImage(input, competitor, this.tournament)
             .subscribe({
                 next: () => {
-                    this.processing = false;
+                    this.processing.set(false);
                     this.navigateBack();
                 },
                 error: (e) => {
-                    this.setAlert(IAlertType.Danger, e); this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
                 },
-                complete: () => this.processing = false
+                complete: () => this.processing.set(false)
             });
     }
 
@@ -281,8 +279,8 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
 
     openInfoModal(modalContent: TemplateRef<any>, title: string) {
         const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-        activeModal.componentInstance.header = title;
-        activeModal.componentInstance.modalContent = modalContent;
+            activeModal.componentInstance.header = () => title;
+            activeModal.componentInstance.modalContent = () => modalContent;
     }
 
     onFileChange(event: Event) {
@@ -293,7 +291,7 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
         const file = files[0];
         const mimeType = file.type;
         if (mimeType.match(/image\/*/) == null) {
-            this.setAlert(IAlertType.Danger, 'alleen afbeeldingen worden ondersteund');
+            this.alert.set({ type: IAlertType.Danger, message: 'alleen afbeeldingen worden ondersteund' });
             return;
         }
         const reader = new FileReader();

@@ -2,39 +2,57 @@
   <div class="row justify-content-around g-0">
     <div class="col-md-12 col-lg-8">
 
-      <app-admin-public-switcher *ngIf="!processing && isAdmin() && tournament.getPublic()"
-        [currentWebsitePart]="PublicWebsitePart" [tournament]="tournament"
-        [routerLink]="['/admin/games', tournament.getId()]">
-      </app-admin-public-switcher>
+      @if (!processing() && isAdmin() && tournament.getPublic()) {
+        <app-admin-public-switcher
+          [currentWebsitePart]="PublicWebsitePart" [tournament]="tournament"
+          [routerLink]="['/admin/games', tournament.getId()]">
+        </app-admin-public-switcher>
+      }
 
-      <div *ngIf="!processing" class="d-flex justify-content-between mb-2">
-        <h2>
-          <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> <span class="mx-1">wedstrijden</span>          
+      @if (!processing()) {
+        <div class="d-flex justify-content-between mb-2">
+          <h2>
+            <fa-icon [icon]="faCalendarAlt"></fa-icon> <span class="mx-1">wedstrijden</span>
+          </h2>
+          @if (tournament.getLogoExtension()) {
+            <img height=40 src="{{getLogoUrl(tournament, 200)}}" class="img-fluid"
+              style="width: auto;" alt="logo">
+          }
+          @if (!processing() && !structure.hasSingleCategory()) {
+            <button type="button"
+              class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
+              (click)="openCategoriesChooseModal(structure)">
+              <fa-icon [icon]="faGrip"></fa-icon> <span class="ms-1">categoriën</span>
+            </button>
+          }
+        </div>
+      }
+
+      @if (processing()) {
+        <h2 class="text-center">
+          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
         </h2>
-        <img *ngIf="tournament?.getLogoExtension()" height=40 src="{{getLogoUrl(tournament, 200)}}" class="img-fluid"
-          style="width: auto;" alt="logo">
-        <button *ngIf="!processing && !structure.hasSingleCategory()" type="button"
-          class="btn btn-sm me-0 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
-          (click)="openCategoriesChooseModal(structure)">
-          <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
-        </button>
-      </div>
-
-      <h2 *ngIf="processing" class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
-      </h2>
-      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <table *ngIf="!processing && structure" class="table mt-3">
-        <tbody app-tournament-roundnumber-planning *ngFor="let roundNumber of structure.getRoundNumbers()"
-          [favoriteCategories]="favoriteCategories" [structureNameService]="structureNameService"
-          [optionalGameColumns]="optionalGameColumns"
-          [tournament]="tournament" [roundNumber]="roundNumber" [favorites]="favorites" [roles]="filterRefereeRole()"
-          [userRefereeId]="userRefereeId" (scrolling)="scroll()" (refreshData)="refreshData()"
-          [refreshingData]="refreshingData">
-        </tbody>
-      </table>
-      <app-tournament-navbar [currentScreen]="GamesScreen" [public]="true" *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)">
-      </app-tournament-navbar>
+      }
+      @if (alert()) {
+        <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
+      }
+      @if (!processing() && structure) {
+        <table class="table mt-3">
+          @for (roundNumber of structure.getRoundNumbers(); track roundNumber) {
+            <tbody app-tournament-roundnumber-planning
+              [favoriteCategories]="favoriteCategories()" [structureNameService]="structureNameService"
+              [optionalGameColumns]="optionalGameColumns"
+              [tournament]="tournament" [roundNumber]="roundNumber" [favorites]="favorites" [roles]="filterRefereeRole()"
+              [userRefereeId]="userRefereeId" (scrolling)="scroll()" (refreshData)="refreshData()"
+              [refreshingData]="refreshingData">
+            </tbody>
+          }
+        </table>
+      }
+      @if (tournament) {
+        <app-tournament-navbar [currentScreen]="GamesScreen" [public]="true" [tournament]="tournament" [theme]="getTheme(tournament)">
+        </app-tournament-navbar>
+      }
     </div>
   </div>
 </div>

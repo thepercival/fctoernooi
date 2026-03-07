@@ -2,7 +2,7 @@
   <div class="row justify-content-center">
     <div class="col-sm-10 col-md-8 col-lg-6">
 
-      @if (!processing && isAdmin() && tournament.getPublic()) {
+      @if (!processing() && isAdmin() && tournament.getPublic()) {
         <app-admin-public-switcher
           [currentWebsitePart]="PublicWebsitePart" [tournament]="tournament"
           [routerLink]="['/admin/competitors', tournament.getId(), TabRegistrations, TabRegistrationForm]">
@@ -11,7 +11,7 @@
 
       <div class="d-flex justify-content-between mb-2">
         <h2>
-          <fa-icon [icon]="['fas', 'user-plus']"></fa-icon> <span class="mx-1">inschrijven</span>
+          <fa-icon [icon]="faUserPlus"></fa-icon> <span class="mx-1">inschrijven</span>
         </h2>
         @if (tournament.getLogoExtension()) {
           <img height=30 src="{{getLogoUrl(tournament, 200)}}" class="img-fluid"
@@ -19,16 +19,16 @@
         }
       </div>
       
-      @if (processing) {
+      @if (processing()) {
         <h2 class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
         </h2>
       }
-      @if (alert) {
-        <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+      @if (alert()) {
+        <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
       }
       
-      @if (!processing && registration) {
+      @if (!processing() && registration) {
         <div class="card card-auth my-3">
           <div class="card-body text-center mx-auto form-validate border-top-0 border-primary">
             <div class="card card-body mx-auto bg-faded form-register mt-3">
@@ -47,8 +47,8 @@
         </div>
       }
 
-      @if (!processing && isOpen && registration === undefined) {
-        <form name="form" (ngSubmit)="save()" formGroup="form" novalidate>
+      @if (!processing() && isOpen && registration === undefined) {
+        <form name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
           <div class="row mb-3">
             <div class="col-3">
               <label for="name" class="col-form-label">naam</label>
@@ -92,7 +92,7 @@
               <div class="col-9">
                 <select class="form-control" formControlName="category" required>
                   @for (category of structure.getCategories(); track category) {
-                    <option ngValue="category">
+                    <option [ngValue]="category">
                       {{category.getName()}}</option>
                   }
                 </select>

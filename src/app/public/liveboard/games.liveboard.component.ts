@@ -2,22 +2,28 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AgainstGame, AgainstGamePlace, AgainstSide, NameService, Round, ScoreConfigService, GameState, TogetherGame, TogetherGamePlace, AgainstVariant, StructureNameService } from 'ngx-sport';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { ResultsScreen, ScheduleScreen } from '../../lib/liveboard/screens';
-import { TournamentIconComponent } from '../../shared/tournament/icon/icon.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faListUl } from '@fortawesome/free-solid-svg-icons';
 import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
+import { facReferee, facScoreboard, facSoccerField } from '../../shared/customicons';
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
     selector: 'app-tournament-liveboard-games',
     templateUrl: './games.liveboard.component.html',
     styleUrls: ['./games.liveboard.component.scss'],
     standalone: true,
-    imports: [TournamentIconComponent, FontAwesomeModule, EscapeHtmlPipe]
+    imports: [FontAwesomeModule, EscapeHtmlPipe, NgTemplateOutlet]
     
 })
 export class LiveboardGamesComponent implements OnInit {
     @Input() screen!: ScheduleScreen | ResultsScreen;
     @Input() structureNameService!: StructureNameService;
     public hasOnlyGameModeAgainst: boolean = true;
+    public facSoccerField = facSoccerField;
+    public facScoreboard = facScoreboard;
+    public facReferee = facReferee;
+    public faListUl = faListUl;
 
     constructor(
         private scoreConfigService: ScoreConfigService,

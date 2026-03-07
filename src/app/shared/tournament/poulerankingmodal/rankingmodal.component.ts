@@ -47,9 +47,9 @@ export class PouleRankingModalComponent {
             header += '<small> per sport</small>';
         }
         const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-        activeModal.componentInstance.header = header;
-        activeModal.componentInstance.noHeaderBorder = true;
-        activeModal.componentInstance.modalContent = modalContent;
+        activeModal.componentInstance.header = () => header;
+        activeModal.componentInstance.noHeaderBorder = () => true;
+        activeModal.componentInstance.modalContent = () => modalContent;
     }
 
     get singleAgainstCompetitionSport(): CompetitionSport | undefined {

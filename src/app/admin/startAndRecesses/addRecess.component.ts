@@ -19,6 +19,7 @@ import { JsonRecess } from '../../lib/recess/json';
 import { DateConverter } from '../../lib/dateConverter';
 import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-competitor-edit',
@@ -28,6 +29,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     imports: [TournamentNavBarComponent,NgbAlert,NgbTimepicker,NgbInputDatepicker,FontAwesomeModule,ReactiveFormsModule]
 })
 export class RecessAddComponent extends TournamentComponent implements OnInit {
+    
     public typedForm: FormGroup<{
         name: FormControl<string>,
         startdate: FormControl<string>,
@@ -38,19 +40,20 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
     hasBegun!: boolean;
     minDateStruct!: NgbDateStruct;
 
+    faSpinner = faSpinner;
+
     constructor(
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        favRepository: FavoritesRepository,
         private recessRepository: RecessRepository,
         private planningRepository: PlanningRepository,
         private myNavigation: MyNavigation,
         private dateConverter: DateConverter,
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
         this.typedForm = new FormGroup({
             name: new FormControl('pauze', { nonNullable: true, validators: 
                 [
@@ -84,7 +87,7 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
         const minDate = this.getMinStartDate();
         this.minDateStruct = { year: minDate.getFullYear(), month: minDate.getMonth() + 1, day: minDate.getDate() };
         this.initForm(minDate);
-        this.processing = false;
+        this.processing.set(false);
     }
 
     initForm(minDate: Date) {
@@ -118,13 +121,13 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
         const newRecessPeriod = new Period(new Date(jsonRecess.start), new Date(jsonRecess.end));
         const message = this.validatePeriod(newRecessPeriod);
         if (message !== undefined) {
-            this.setAlert(IAlertType.Danger, message);
+            this.alert.set({ type: IAlertType.Danger, message });
             return false;
         }
         
 
-        this.processing = true;
-        this.setAlert(IAlertType.Info, 'de pauze wordt opgeslagen');
+        this.processing.set(true);
+        this.alert.set({ type: IAlertType.Info, message: 'de pauze wordt opgeslagen' });
         this.recessRepository.createObject(jsonRecess, this.tournament)
             .subscribe({
                 next: () => {
@@ -134,14 +137,14 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
                                 this.myNavigation.back();
                             },
                             error: (e) => {
-                                this.setAlert(IAlertType.Danger, 'de wedstrijdplanning is niet opgeslagen: ' + e);
-                                this.processing = false;
+                                this.alert.set({ type: IAlertType.Danger, message: 'de wedstrijdplanning is niet opgeslagen: ' + e });
+                                this.processing.set(false);
                             }
                         });
                 },
                 error: (e) => {
-                    this.setAlert(IAlertType.Danger, e);
-                    this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: e });
+                    this.processing.set(false);
                 }
             });
         return false;

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { Round, StructureEditor } from 'ngx-sport';
 import { StructureActionName } from '../../../../admin/structure/edit.component';
 import { TOURNAMENT_UI_IMPORTS } from '../../tournament.ui-imports';
+import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 @Component({
     selector: 'app-tournament-structureround-arrange',
     templateUrl: './arrange.component.html',
@@ -13,6 +14,8 @@ import { TOURNAMENT_UI_IMPORTS } from '../../tournament.ui-imports';
 export class StructureRoundArrangeComponent {
   public structureEditor = input.required<StructureEditor>();
   public round = input.required<Round>();
+  public faMinus = faMinus;
+  public faPlus = faPlus;
   
   readonly onActionArrange = output<StructureActionName>();
 

@@ -1,12 +1,12 @@
-@if(processing) {
+@if(processing()) {
 <h2 class="text-center">
-  <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+  <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
 </h2>
 }
-@if(alert) {
+@if(alert(); as alert) {
 <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
 }
-@if(!processing && originalScoreConfig) {
+@if(!processing() && originalScoreConfig) {
 <form name="form" (ngSubmit)="save()" formGroup="typedForm" novalidate>
   @if(originalScoreConfig.hasNext()) {
   <div class="row mb-3">

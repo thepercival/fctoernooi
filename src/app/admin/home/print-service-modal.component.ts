@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
+import { faPrint } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -11,6 +12,8 @@ import { FaIconComponent } from "@fortawesome/angular-fontawesome";
     
 })
 export class PrintServiceModalComponent {
+    faPrint = faPrint;
+
     constructor(public activeModal: NgbActiveModal) {
     }    
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, output, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, output, signal, SimpleChanges, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { Category, Place, StartLocationMap, StructureNameService } from 'ngx-sport';
@@ -10,6 +10,7 @@ import { IAlert } from '../../shared/common/alert';
 import { TournamentCompetitorMapper } from '../../lib/competitor/mapper';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-competitors-present',
@@ -19,6 +20,7 @@ import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
     imports: [NgbAlert,FontAwesomeModule,EscapeHtmlPipe]
 })
 export class CompetitorPresentListComponent implements OnChanges {
+  faSpinner = faSpinner;
   @Input() tournament!: Tournament;
   @Input() category!: Category;
   @Input() showHeader!: boolean;
@@ -33,8 +35,8 @@ export class CompetitorPresentListComponent implements OnChanges {
   public swapItem: PlaceCompetitorItem | undefined;
   private startLocationMap!: StartLocationMap;
   // public alert: IAlert | undefined;
-  public processing = false;
-
+  public readonly processing: WritableSignal<boolean> = signal(true);
+  
   constructor(
     private router: Router,
     private competitorRepository: CompetitorRepository,
@@ -71,7 +73,7 @@ export class CompetitorPresentListComponent implements OnChanges {
   }
 
   setPresency(competitor: TournamentCompetitor): void {
-    this.processing = true;
+    this.processing.set(true);
     const jsonCompetitor = this.competitorMapper.toJson(competitor);
     jsonCompetitor.present = competitor.getPresent() === true ? false : true;
 
@@ -82,7 +84,7 @@ export class CompetitorPresentListComponent implements OnChanges {
 
     this.competitorRepository.editObject(jsonCompetitor, competitor, this.tournament.getId())
       .subscribe({
-        complete: () => this.processing = false
+        complete: () => this.processing.set(false)
       });
   }
 

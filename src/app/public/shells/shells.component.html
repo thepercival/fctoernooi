@@ -2,8 +2,8 @@
   <div class="col-sm-12 col-md-10 col-lg-8">
     <h1>publieke toernooien</h1>   
 
-    @if (!processing) {
-      <form onsubmit="false" formGroup="searchForm" novalidate>
+    @if (!processing()) {
+      <form onsubmit="false" [formGroup]="searchForm" novalidate>
         <div class="container">
           <div class="row">
             <div class="col-2">
@@ -19,7 +19,7 @@
             <div class="col-2">
               <label for="startDate" class="col-form-label">van</label>
             </div>
-            <div class="col-4">
+            <div class="col-6 col-md-5 col-lg-4">
               <div class="input-group input-group-date">
                 <input class="form-control"
                   [class.is-invalid]="searchForm.controls.startDate.invalid"
@@ -27,7 +27,7 @@
                   placeholder="yyyy-mm-dd" formControlName="startDate" ngbDatepicker #dStart="ngbDatepicker" required
                   container="body" (dateSelect)="onSearchDateChanges()">
                 <span class="input-group-text pointer" (click)="dStart.toggle()">
-                  <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+                  <fa-icon [icon]="faCalendarAlt"></fa-icon>
                 </span>
               </div>
             </div>
@@ -37,7 +37,7 @@
             <div class="col-2">
               <label for="endDate" class="col-form-label">tot</label>
             </div>
-            <div class="col-4">
+            <div class="col-6 col-md-5 col-lg-4">
               <div class="input-group input-group-date">
                 <input class="form-control"
                   [class.is-invalid]="searchForm.controls.endDate.invalid"
@@ -45,7 +45,7 @@
                   placeholder="yyyy-mm-dd" formControlName="endDate" ngbDatepicker #dEnd="ngbDatepicker" required
                   container="body" (dateSelect)="onSearchDateChanges()">
                 <span class="input-group-text pointer" (click)="dEnd.toggle()">
-                  <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+                  <fa-icon [icon]="faCalendarAlt"></fa-icon>
                 </span>
               </div>
             </div>
@@ -54,7 +54,7 @@
       </form>
     }
 
-    @if (!processingSearch) {
+    @if (!processingSearch()) {
       <table class="table mt-4">
         <tbody>
           @for (shell of shells; track shell) {
@@ -72,7 +72,11 @@
                 </td>
               }
               <td>
-                <app-sport-icon customId="shell.singleCustomSport"></app-sport-icon>
+                @if (getSportIcon(shell.singleCustomSport); as sportIcon) {
+                  <fa-icon [icon]="sportIcon"></fa-icon>
+                } @else {
+                  <span>&nbsp;</span>
+                }
               </td>
               <td class="text-break">{{shell.name}}</td>
             </tr>
@@ -81,9 +85,9 @@
       </table>
     }
 
-    @if (processingSearch) {
+    @if (processingSearch()) {
       <h2 class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+        <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
       </h2>
     }
   </div>

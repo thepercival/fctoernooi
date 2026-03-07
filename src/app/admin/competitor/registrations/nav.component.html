@@ -13,11 +13,11 @@
     <li ngbNavItem="TabRegistrationList" disabled="!settings || !settings.isEnabled()"> <!-- registrations => list -->
       <a class="px-1" ngbNavLink>lijst</a>
       <ng-template ngbNavContent>
-        @if (!processing) {
+        @if (!processing()) {
           <div class="d-flex flex-wrap gap-3 mt-3">
             @for (category of favoriteCategories(); track category) {
               <app-tournament-registrations-list class="mx-auto"
-                [showHeader]="favoriteCategories.length > 1" [category]="category" [tournament]="tournament()"
+                [showHeader]="favoriteCategories().length > 1" [category]="category" [tournament]="tournament()"
                 [structureNameService]="structureNameService()" [activeTab]="activeTab" 
                 (onCompetitorsUpdate)="onCompetitorsUpdate.emit()"
                 (onAlertChange)="setAlert($event.type,$event.message)">

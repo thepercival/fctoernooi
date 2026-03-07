@@ -7,6 +7,7 @@ import { DateConverter } from '../../lib/dateConverter';
 import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
 import { NgbAlert, NgbInputDatepicker, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-basegame-edit',
@@ -20,6 +21,7 @@ export class GameBaseEditComponent implements OnInit {
   @Input() game!: AgainstGame | TogetherGame;
   @Input() structureNameService!: StructureNameService;
   @Input() structure!: Structure;
+  faCalendarAlt = faCalendarDays;
   
   // onEditAfter = output<void>();
   // public firstScoreConfig!: ScoreConfig;

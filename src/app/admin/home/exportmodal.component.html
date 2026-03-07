@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h4 class="modal-title">
-        <fa-icon [icon]="['fas', 'print']"></fa-icon> afdruk-opties
+        <fa-icon [icon]="faPrint"></fa-icon> afdruk-opties
     </h4>
     <button type="button" class="btn-close" aria-label="sluiten" (click)="activeModal.dismiss('close')"></button>
 </div>
@@ -12,8 +12,8 @@
                 @for (exportOption of exportOptions; track exportOption.key) {
                     <div class="row mb-3">
                         <label [for]="exportOption.key" class="col-9 col-form-label pointer">{{exportOption.label}}
-                            @if (exportOption.iconName) {
-                                <fa-icon [icon]="['fas', exportOption.iconName]"></fa-icon>
+                            @if (exportOption.iconDef) {
+                                <fa-icon [icon]="exportOption.iconDef"></fa-icon>
                             }
                         </label>
                         <div class="form-check col-3">
@@ -34,7 +34,7 @@
 
         @if (creating && progressPercentage < 100) {
             <ngb-alert class=" mt-1" type="info">
-                <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+                <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
                 <span class="ps-2">De pdf is in de maak. Een moment geduld alsjeblieft</span>
             </ngb-alert>
             @if (progressPercentage > 0) {
@@ -65,11 +65,11 @@
         </button>
         <button type="button" class="btn btn-primary" [disabled]="noneSelected()" data-dismiss="modal"
             (click)="createPdfAndShowProgress(tournament)">
-            <fa-icon [icon]="['fas', 'print']"></fa-icon> adrukken
+            <fa-icon [icon]="faPrint"></fa-icon> adrukken
         </button>
         <!-- <button type="button" class="btn btn-outline-primary" [disabled]="noneSelected()" data-dismiss="modal"
             (click)="closeExcel()">
-            <fa-icon [icon]="['fas', 'file-excel']"></fa-icon> naar excel
+            <fa-icon [icon]="faFileExcel"></fa-icon> naar excel
         </button> -->
     </div>
 }

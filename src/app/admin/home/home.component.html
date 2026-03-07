@@ -2,18 +2,18 @@
   <div class="row justify-content-center">
     <div class="col-xs-12 col-md-8">
      
-      @if (processing) {
+      @if (processing()) {
         <h2 class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
         </h2>
       }
 
-      @if (alert) {
-        <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+      @if (alert()) {
+        <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
       }
 
       <!-- option block sports, referees, lockerRooms, sponsors -->
-      @if (!processing && structure) {
+      @if (!processing() && structure) {
         <div class="d-flex flex-wrap gap-3 justify-content-center">
           <!-- sports -->
           @if (isAdmin()) {
@@ -21,12 +21,14 @@
               <div class="card-body text-center p-1 pt-2">
                 @if (competition.hasMultipleSports()) {
                   <h5 class="card-title">
-                    <fa-icon [icon]="['fas', 'user-friends']"></fa-icon>
+                    <fa-icon [icon]="faUserFriends"></fa-icon>
                   </h5>
                 }
                 @if (!competition.hasMultipleSports()) {
                   <h5 class="card-title">
-                    <app-sport-icon competitionSports="competition.getSports()"></app-sport-icon>
+                    @if (getSportIconByCompetitionSports(competition.getSports()); as sportIcon) {
+                      <fa-icon [icon]="sportIcon"></fa-icon>
+                    }
                   </h5>
                 }
                 @if (competition.hasMultipleSports()) {
@@ -46,7 +48,7 @@
               routerLink="['/admin/referees', tournament.getId()]">
               <div class="card-body text-center p-1 pt-2">
                 <h5 class="card-title">
-                  <app-tournament-icon name="referee"></app-tournament-icon>
+                  <fa-icon [icon]="facReferee"></fa-icon>
                 </h5>
                 <div class="text-nowrap" [innerHTML]="getNrOfRefereesDescription()"></div>
               </div>
@@ -58,7 +60,7 @@
               routerLink="['/admin/lockerrooms', tournament.getId()]">
               <div class="card-body text-center p-1 pt-2">
                 <h5 class="card-title">
-                  <fa-icon [icon]="['fas', 'door-closed']"></fa-icon>
+                  <fa-icon [icon]="faDoorClosed"></fa-icon>
                 </h5>
                 <div [innerHTML]="getNrOfLockerRoomsDescription()"></div>
               </div>
@@ -69,7 +71,7 @@
             <div class="card card-sub pointer" routerLink="['/admin/sponsors', tournament.getId()]">
               <div class="card-body text-center p-1 pt-2">
                 <h5 class="card-title">
-                  <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon>
+                  <fa-icon [icon]="faMoneyBillAlt"></fa-icon>
                 </h5>
                 <p class="card-text">{{getNrOfSponsorsDescription()}}</p>
               </div>
@@ -80,7 +82,7 @@
 
       <hr>
       <!-- option block start, ranking, liveScoreboard, changeName -->
-      @if (!processing && structure) {
+      @if (!processing() && structure) {
         <div class="d-flex flex-wrap gap-3 justify-content-center mt-3">
           <!-- change name & theme -->
           @if (isAdmin()) {
@@ -105,7 +107,7 @@
           <div class="card card-sub pointer" routerLink="['/admin/startandrecesses', tournament.getId()]">
             <div class="card-body text-center p-1 pt-2">
               <h5 class="card-title">
-                <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+                <fa-icon [icon]="faCalendarAlt"></fa-icon>
               </h5>
               <div>start &<br />pauzes</div>
             </div>
@@ -114,7 +116,7 @@
           <div class="card card-sub pointer" routerLink="['/admin/ranking', tournament.getId()]">
             <div class="card-body text-center p-1 pt-2">
               <h5 class="card-title">
-                <fa-icon [icon]="['fas', 'list-ol']"></fa-icon>
+                <fa-icon [icon]="faListOl"></fa-icon>
               </h5>
               <div>standen</div>
             </div>
@@ -125,7 +127,7 @@
               routerLink="['/public/liveboard', tournament.getId()]">
               <div class="card-body text-center p-1 pt-2">
                 <h5 class="card-title">
-                  <fa-icon [icon]=" [ 'fas', 'tv'] "></fa-icon>
+                  <fa-icon [icon]="faTv"></fa-icon>
                 </h5>
                 <div>live</div>
                 <div class="text-nowrap">scorebord</div>
@@ -135,7 +137,7 @@
         </div>
       }
 
-      @if (!processing) {
+      @if (!processing()) {
         <div class="mt-3 d-flex justify-content-center">
           @if (tournament.getPublic()) {
             <app-admin-public-switcher [currentWebsitePart]="AdminWebsitePart"
@@ -146,7 +148,7 @@
       }
 
       <!-- option block share, export -->
-      @if (!processing && structure) {
+      @if (!processing() && structure) {
         <div class="d-flex flex-wrap gap-3 justify-content-center mt-3">
 
           <!-- home pagina -->
@@ -154,7 +156,7 @@
             <div class="card card-sub pointer" routerLink="['/admin/homeedit', tournament.getId()]">
               <div class="card-body text-center p-0 pt-2">
                 <h5 class="card-title">
-                  <fa-icon [icon]="['fas', 'home']"></fa-icon>
+                  <fa-icon [icon]="faHome"></fa-icon>
                 </h5>
                 <div>home</div>
                 <div>pagina</div>
@@ -166,7 +168,7 @@
             <div class="card card-sub pointer" (click)="openModalShare()">
               <div class="card-body text-center p-1 pt-2">
                 <h5 class="card-title">
-                  <fa-icon [icon]="['fas', 'share-alt']"></fa-icon>
+                  <fa-icon [icon]="faShareAlt"></fa-icon>
                 </h5>
                 <div>delen</div>
               </div>
@@ -177,7 +179,7 @@
             <div class="card card-sub pointer" (click)="openModalExport()">
               <div class="card-body text-center p-0 pt-2">
                 <h5 class="card-title">
-                  <fa-icon [icon]="['fas', 'print']"></fa-icon>
+                  <fa-icon [icon]="faPrint"></fa-icon>
                 </h5>
                 <div>printen</div>
               </div>
@@ -189,14 +191,14 @@
 
       <hr>
       <!-- option block roleadmin, copy & remove -->
-      @if (!processing && structure) {
+      @if (!processing() && structure) {
         <div class="d-flex flex-wrap gap-3 justify-content-center mt-3">
           <!-- roleadmin -->
           @if (isRoleAdmin()) {
             <div class="card card-sub pointer" routerLink]="['/admin/authorizations', tournament.getId()]">
               <div class="card-body text-center p-1 pt-2">
                 <h5 class="card-title">
-                  <fa-icon [icon]="['fas', 'user-friends']"></fa-icon>
+                  <fa-icon [icon]="faUserFriends"></fa-icon>
                 </h5>
                 <div>rollen</div>
                 <div>uitdelen</div>
@@ -209,7 +211,7 @@
             <div class="card card-sub pointer" (click)="openModalCopy()">
               <div class="card-body text-center p-1 pt-2">
                 <h5 class="card-title">
-                  <fa-icon [icon]="['fas', 'copy']"></fa-icon>
+                  <fa-icon [icon]="faCopy"></fa-icon>
                 </h5>
                 <div>nieuwe</div>
                 <div>editie</div>
@@ -221,7 +223,7 @@
             <div class="card card-sub pointer" (click)="openModalRemove(contentremove)">
               <div class="card-body text-center p-1 pt-2">
                 <h5 class="card-title">
-                  <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+                  <fa-icon [icon]="faTrashAlt"></fa-icon>
                 </h5>
                 <div>ver-</div>
                 <div>wijderen</div>

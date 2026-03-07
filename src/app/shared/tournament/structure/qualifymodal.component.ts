@@ -1,15 +1,17 @@
 import { Component, input, ChangeDetectionStrategy, output } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { inject } from '@angular/core';
 import { HorizontalSingleQualifyRule, QualifyDistribution, QualifyGroup, QualifyTarget, Round, StructureEditor, StructureNameService, VerticalSingleQualifyRule } from 'ngx-sport';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { EscapeHtmlPipe } from '../../common/escapehtmlpipe';
 import { CSSService } from '../../common/cssservice';
+import { faCheckCircle, faCompressAlt, faExpandAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-qualify-modal',
     templateUrl: './qualifymodal.component.html',
-    imports: [FontAwesomeModule,EscapeHtmlPipe],
+    imports: [FontAwesomeModule,EscapeHtmlPipe, NgTemplateOutlet],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QualifyModalComponent {
@@ -18,6 +20,9 @@ export class QualifyModalComponent {
     public parentRound = input.required<Round>(); 
     public structureEditor = input.required<StructureEditor>();
     public structureNameService = input.required<StructureNameService>();
+    public faCheckCircle = faCheckCircle;
+    public faCompressAlt = faCompressAlt;
+    public faExpandAlt = faExpandAlt;
 
     readonly onDistributionUpdate = output<QualifyDistribution>();
     readonly onQualifyGroupFromSplit = output<HorizontalSingleQualifyRule|VerticalSingleQualifyRule>(); 

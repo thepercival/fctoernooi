@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core
 import { EndRankingItem, VoetbalRange, EndRankingCalculator, Category, StructureNameService } from 'ngx-sport';
 import { Favorites } from '../../../lib/favorites';
 import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
+import { faMedal } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-endranking',
@@ -17,6 +18,7 @@ export class RankingEndComponent {
   public favorites = input<Favorites | undefined>(undefined);
   public range = input<VoetbalRange | undefined>(undefined);
   public rankingItems: EndRankingItem[] = [];
+  public faMedal = faMedal;
 
   constructor() {
     effect(() => {

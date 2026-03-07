@@ -6,6 +6,7 @@ import { LockerRoom } from '../../../lib/lockerroom';
 import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
 import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
 import { FavoritesRepository } from '../../../lib/favorites/repository';
+import { faDoorClosed, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-ngbd-modal-competitor-choose',
@@ -26,6 +27,8 @@ export class CompetitorChooseModalComponent implements OnInit {
     public structureNameService!: StructureNameService;
     public startLocationMap!: StartLocationMap;
     public changed = false;
+    public faUsers = faUsers;
+    public faDoorClosed = faDoorClosed;
 
     public activeModal: NgbActiveModal = inject(NgbActiveModal) 
     public favRepository = inject(FavoritesRepository);

@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, inject, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Place,
@@ -19,7 +19,6 @@ import { TournamentCompetitor } from '../../lib/competitor';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { CategoryChooseModalComponent } from '../../shared/tournament/category/chooseModal.component';
-import { FavoritesRepository } from '../../lib/favorites/repository';
 import { NgbAlert, NgbModal, NgbNav } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { TournamentRegistrationRepository } from '../../lib/tournament/registration/repository';
@@ -32,6 +31,7 @@ import { CategoryOrderCompetitorListComponent } from "./category.order.component
 import { RegistrationsNavComponent } from "./registrations/nav.component";
 import { CompetitorPresentListComponent } from "./present.component";
 import { TournamentNavBarComponent } from "../../shared/tournament/tournamentNavBar/tournamentNavBar.component";
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-competitors',
@@ -51,21 +51,20 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   public hasBegun!: boolean;
   public registrationSettings: TournamentRegistrationSettings|undefined;
 
-  private modalService = inject(NgbModal);
-
+  faSpinner = faSpinner;
+  
   constructor(
     route: ActivatedRoute,
     router: Router,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     globalEventsManager: GlobalEventsManager,
-    favRepository: FavoritesRepository,
     private tournamentRegistrationRepository: TournamentRegistrationRepository,
     private planningRepository: PlanningRepository,
     private competitorRepository: CompetitorRepository,
     private myNavigation: MyNavigation
   ) {
-    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, favRepository);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
   }
 
   ngOnInit() {
@@ -89,26 +88,26 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
             this.lockerRoomValidator = new LockerRoomValidator(competitors, this.tournament.getLockerRooms());
             this.initFocus(startLocationMap);
             this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
-            this.processing = false;
+            this.processing.set(false);
           },
           error: (e: string) => {            
-            this.setAlert(IAlertType.Danger, e + ', instellingen niet gevonden');
-            this.processing = false;
+            this.alert.set({ type: IAlertType.Danger, message: e + ', instellingen niet gevonden' });
+            this.processing.set(false);
           }
         });      
   }
 
 
   get CompetitorsScreen(): TournamentScreen { return TournamentScreen.Competitors }
-  alertType(): string { return this.alert?.type ?? IAlertType.Danger }
-  alertMessage(): string { return this.alert?.message ?? '' }
+  alertType(): string { return this.alert()?.type ?? IAlertType.Danger }
+  alertMessage(): string { return this.alert()?.message ?? '' }
 
   updateProcessing(message: string): void {
     if (message.length === 0) {
-      this.processing = false;
+      this.processing.set(false);
     } else {
-      this.processing = true;
-      this.setAlert(IAlertType.Info, message);
+      this.processing.set(true);
+      this.alert.set({ type: IAlertType.Info, message });
     }
   }
 
@@ -134,16 +133,16 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }  
 
   removeCompetitor(competitor: TournamentCompetitor): void {
-    this.processing = true;
-    this.setAlert(IAlertType.Info, 'deelnemer ' + competitor.getName() + ' wordt verwijderd');
+    this.processing.set(true);
+    this.alert.set({ type: IAlertType.Info, message: 'deelnemer ' + competitor.getName() + ' wordt verwijderd' });
     this.competitorRepository.removeObject(competitor, this.tournament)
       .subscribe({
         next: () => {
           this.refreshCompetitors();
-          this.setAlert(IAlertType.Success, 'deelnemer ' + competitor + ' is verwijderd');
+          this.alert.set({ type: IAlertType.Success, message: 'deelnemer ' + competitor + ' is verwijderd' });
         },
         error: (e) => {
-          this.setAlert(IAlertType.Danger, e); this.processing = false;
+          this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
         }
       });
   }
@@ -152,7 +151,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     const map = new StartLocationMap(this.tournament.getCompetitors());
     this.structureNameService = new StructureNameService(map);
     this.lockerRoomValidator = new LockerRoomValidator(this.tournament.getCompetitors(), this.tournament.getLockerRooms());
-    this.processing = false;
+    this.processing.set(false);
   }
 
   public saveStructure(message: string) {
@@ -164,15 +163,15 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
           this.planningRepository.create(this.structure, this.tournament)
             .subscribe({
               next: () => {
-                this.setAlert(IAlertType.Success, message);
+                this.alert.set({ type: IAlertType.Success, message });
                 this.refreshCompetitors();
               },
               error: (e: string) => {
-                this.setAlert(IAlertType.Danger, e); this.processing = false;
+                this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
               }
             });
         },
-        error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
+        error: (e) => { this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false); }
       });
   }
 

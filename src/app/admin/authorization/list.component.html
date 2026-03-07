@@ -2,27 +2,27 @@
     <div class="col-sm-10 col-md-8 col-lg-6">
         <div class="d-flex justify-content-between mx-2">
             <h2 (click)="openHelpModal()" class="pointer">
-                <fa-icon [icon]="['fas', 'user-friends']"></fa-icon> gebruikers <fa-icon class="text-info"
-                    [icon]=" ['fas', 'info-circle' ]"></fa-icon>
+                <fa-icon [icon]="faUserFriends"></fa-icon> gebruikers <fa-icon class="text-info"
+                    [icon]="faInfoCircle"></fa-icon>
             </h2>
-            @if (!processing){
+            @if (!processing()){
             <div>
                 <button type="button" class="btn btn-sm btn-outline-primary"
                     routerLink="['/admin/authorization', tournament.getId()]">
-                    <fa-icon [icon]=" ['fas', 'plus-circle' ]"></fa-icon> toevoegen
+                    <fa-icon [icon]="faPlusCircle"></fa-icon> toevoegen
                 </button>
             </div>
             }
         </div>
-        @if (processing) {
+        @if (processing()) {
             <h2 class="text-center">
-                <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+                <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
             </h2>
         }
-        @if (alert) {
-            <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+        @if (alert()) {
+            <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
         }
-        @if (!processing) {
+        @if (!processing()) {
             <ul class="list-unstyled">
                 <li>
                     @for (userItem of validUserItems; track userItem) {
@@ -35,14 +35,14 @@
                                         }
                                         <span></span>
                                         @if (!userItem.emailaddress) {
-                                            <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+                                            <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
                                         }
                                     </h5>
                                     @if (canBeRemoved(userItem.tournamentUser)) {
-                                        <button [disabled]="roleProcessing"
+                                        <button [disabled]="roleToProcess"
                                             class="btn btn-sm btn-outline-danger ms-1"
                                             (click)="openModalRemove(contentremove, userItem.tournamentUser, userItem.tournamentUser.hasARole(RoleReferee))">
-                                            <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+                                            <fa-icon [icon]="faTrashAlt"></fa-icon>
                                         </button>
                                     }
                                 </div>
@@ -52,7 +52,7 @@
                                     <app-tournament-authorization-role
                                         [role]="role"
                                         [disabled]="!canToggleRole(userItem.tournamentUser, role.role)"
-                                        [processing]="rolesAreEqual(role,roleProcessing)"
+                                        [processing]="rolesAreEqual(role,roleToProcess)"
                                         (onRoleChange)="toggleRole($event,contentremove)">
                                     </app-tournament-authorization-role>
                                 }
@@ -66,9 +66,9 @@
                                 <div class="d-flex justify-content-between">
                                     <h5 class="mb-0 mt-2">{{invitation.getEmailaddress()}} <span class="badge bg-info">gebruiker
                                             nog onbekend</span></h5>
-                                    <button class="btn btn-sm btn-outline-danger ms-1" [disabled]="roleProcessing"
+                                    <button class="btn btn-sm btn-outline-danger ms-1" [disabled]="roleToProcess"
                                         (click)="openModalRemove(contentremove, invitation)">
-                                        <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+                                        <fa-icon [icon]="faTrashAlt"></fa-icon>
                                     </button>
                                 </div>
                             </div>
@@ -76,7 +76,7 @@
                                 @for (role of getAssignableRoles(invitation); track role) {
                                     <app-tournament-authorization-role
                                         [role]="role"
-                                        [processing]="rolesAreEqual(role,roleProcessing)"
+                                        [processing]="rolesAreEqual(role,roleToProcess)"
                                         [disabled]="false"
                                         (onRoleChange)="toggleRole($event,contentremove)">
                                     </app-tournament-authorization-role>

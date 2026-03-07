@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, forwardRef, inject, input } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 
 import { Poule, Round, GameState, CompetitionSport, StructureNameService, StartLocation, Competitor, Place, AgainstSide, AgainstGamePlace, AgainstGame, ScoreConfigService, HorizontalMultipleQualifyRule, HorizontalSingleQualifyRule, VerticalMultipleQualifyRule, VerticalSingleQualifyRule } from 'ngx-sport';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -11,6 +12,7 @@ import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
 import { RankingPouleComponent } from './poule.component';
 import { AgainstQualifyInfoComponent } from '../againstQualifyConfig/info.component';
 import { EscapeHtmlPipe } from '../../common/escapehtmlpipe';
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-ranking-round',
@@ -22,6 +24,7 @@ import { EscapeHtmlPipe } from '../../common/escapehtmlpipe';
         RankingPouleComponent,
         AgainstQualifyInfoComponent,
         EscapeHtmlPipe,
+        NgTemplateOutlet,
         forwardRef(() => RankingRoundComponent)
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -33,6 +36,7 @@ export class RankingRoundComponent implements OnInit {
     public favorites = input<Favorites | undefined>(undefined);
     public first = input(true);
     public collapsed: boolean = true;
+    public faChevronRight = faChevronRight;
     public poules: Poule[] = [];
     // public gameMode!: GameMode;
     public popoverPlace: Place | undefined;
@@ -171,9 +175,9 @@ export class RankingRoundComponent implements OnInit {
 
     openInfoModal(modalContent: TemplateRef<any>) {
         const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-        activeModal.componentInstance.header = 'puntentelling';
-        activeModal.componentInstance.noHeaderBorder = true;
-        activeModal.componentInstance.modalContent = modalContent;
+        activeModal.componentInstance.header = () => 'puntentelling';
+        activeModal.componentInstance.noHeaderBorder = () => true;
+        activeModal.componentInstance.modalContent = () => modalContent;
     }
 
     getAgainstSides(): AgainstSide[] {

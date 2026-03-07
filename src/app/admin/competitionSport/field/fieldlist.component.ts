@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, signal, WritableSignal } from '@angular/core';
 import { Field, CompetitionSport, JsonField, Structure } from 'ngx-sport';
 
 import { FieldRepository } from '../../../lib/ngx-sport/field/repository';
@@ -9,6 +9,7 @@ import { Tournament } from '../../../lib/tournament';
 import { NameModalComponent } from '../../../shared/tournament/namemodal/namemodal.component';
 import { TranslateFieldService } from '../../../lib/translate/field';
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
+import { faArrowUp, faPencil, faPlus, faSort, faSpinner, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-fields',
@@ -18,13 +19,20 @@ import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 })
 export class FieldListComponent implements OnInit {
 
-    alert: IAlert | undefined;
-    processing: boolean;
+    public readonly alert: WritableSignal<IAlert | undefined> = signal(undefined);
+    public readonly processing: WritableSignal<boolean> = signal(true);
     @Input() tournament!: Tournament;
     @Input() structure!: Structure;
     @Input() competitionSport!: CompetitionSport;
     @Input() hasBegun!: boolean;
     prioritizable!: boolean;
+
+    faSpinner = faSpinner;
+    faSort = faSort;
+    faPlus = faPlus;
+    faPencilAlt = faPencil;
+    faLevelUpAlt = faArrowUp;
+    faTrashAlt = faTrashCan;
 
     constructor(
         private fieldRepository: FieldRepository,
@@ -32,16 +40,16 @@ export class FieldListComponent implements OnInit {
         private translate: TranslateFieldService,
         private modalService: NgbModal,
     ) {
-        this.processing = true;
+        this.processing.set(true);
 
     }
 
     ngOnInit() {
         if (this.hasBegun) {
-            this.alert = { type: IAlertType.Warning, message: 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen of verwijderen' };
+            this.alert.set({ type: IAlertType.Warning, message: 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen of verwijderen' });
         }
         this.prioritizable = !this.competitionSport.getCompetition().hasMultipleSports();
-        this.processing = false;
+        this.processing.set(false);
     }
 
     getFieldDescription(): string {
@@ -67,16 +75,16 @@ export class FieldListComponent implements OnInit {
     }
 
     addField() {
-        this.alert = undefined;
+        this.alert.set(undefined);
         const modal = this.getChangeNameModel('toevoegen');
         modal.result.then((resName: string) => {
-            this.processing = true;
+            this.processing.set(true);
             const jsonField = this.formToJson(resName);
             this.fieldRepository.createObject(jsonField, this.competitionSport, this.tournament)
                 .subscribe({
                     next: () => this.updatePlanning(),
                     error: (e) => {
-                        this.alert = { type: IAlertType.Danger, message: e }; this.processing = false;
+                        this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
                     }
                 });
         }, (reason) => {
@@ -84,40 +92,40 @@ export class FieldListComponent implements OnInit {
     }
 
     editField(field: Field) {
-        this.alert = undefined;
+        this.alert.set(undefined);
         const modal = this.getChangeNameModel('wijzigen', field.getName());
         modal.result.then((resName: string) => {
-            this.processing = true;
+            this.processing.set(true);
             const jsonField = this.formToJson(resName, field);
             this.fieldRepository.editObject(jsonField, field, this.tournament)
                 .subscribe({
                     next: () => { },
                     error: (e) => {
-                        this.alert = { type: IAlertType.Danger, message: e }; this.processing = false;
+                        this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
                     },
-                    complete: () => this.processing = false
+                    complete: () => this.processing.set(false)
                 });
         }, (reason) => {
         });
     }
 
     upgradePriority(field: Field) {
-        this.processing = true;
+        this.processing.set(true);
         this.fieldRepository.upgradeObject(field, this.tournament).subscribe({
             next: () => this.updatePlanning(),
             error: (e) => {
-                this.alert = { type: IAlertType.Danger, message: e }; this.processing = false;
+                this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
             }
         });
     }
 
     removeField(field: Field) {
-        this.processing = true;
+        this.processing.set(true);
 
         this.fieldRepository.removeObject(field, this.tournament).subscribe({
             next: () => this.updatePlanning(),
             error: (e) => {
-                this.alert = { type: IAlertType.Danger, message: e }; this.processing = false;
+                this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
             }
         });
     }
@@ -126,9 +134,9 @@ export class FieldListComponent implements OnInit {
         this.planningRepository.create(this.structure, this.tournament).subscribe({
             next: () => { },
             error: (e) => {
-                this.alert = { type: IAlertType.Danger, message: e }; this.processing = false;
+                this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
             },
-            complete: () => this.processing = false
+            complete: () => this.processing.set(false)
         });
     }
 }

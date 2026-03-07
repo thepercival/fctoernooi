@@ -24,14 +24,14 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { GameEditComponent } from './edit.component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { NgbModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
-import { FavoritesRepository } from '../../lib/favorites/repository';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
 import { TranslateScoreService } from '../../lib/translate/score';
 import { GameBaseEditComponent } from "./editbase.component";
 import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-againstgame-edit',
@@ -41,6 +41,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     
 })
 export class GameAgainstEditComponent extends GameEditComponent implements OnInit, AfterViewInit {
+
+    faSpinner = faSpinner;
 
     public calculateScoreControl: AgainstScoreFormControl | undefined;
     public scoreControls: AgainstScoreFormControl[] = [];
@@ -53,8 +55,6 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
-        favRepository: FavoritesRepository,
         authService: AuthService,
         gameRepository: GameRepository,
         mapper: GameMapper,
@@ -65,7 +65,7 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
         myNavigation: MyNavigation,
         structureLocationMapper: StructureLocationMapper
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository,
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager,
             authService, gameRepository, mapper, fieldMapper, refereeMapper, placeMapper, translate, myNavigation,
             structureLocationMapper);
         // this.originalPouleState = State.Created;

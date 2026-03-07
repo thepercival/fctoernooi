@@ -3,20 +3,20 @@
     <div class="col-sm-10 col-md-8 col-lg-6">
       <div>
         <h2>
-          <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon> sponsor <span>{{originalSponsor !== undefined ?
+          <fa-icon [icon]="faMoneyBillAlt"></fa-icon> sponsor <span>{{originalSponsor !== undefined ?
             'wijzigen' : 'toevoegen'}}</span>
         </h2>
-        @if(processing) {
+        @if(processing()) {
         <h2 class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
         </h2>
         }
       </div>
-      @if(alert) {
-      <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+      @if(alert()) {
+      <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
       }
-      @if(!processing) {
-      <form name="form" (ngSubmit)="save()" formGroup="typedForm" novalidate>
+      @if(!processing()) {
+      <form name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
         <div class="row mb-3">
           <div class="col-3">
             <label for="name" class="col-form-label">naam</label>
@@ -41,7 +41,7 @@
         <div class="row mb-3">
           <div class="col-3">
             <label for="logouploadother" (click)="openInfoModal(contentInfo)" class="pointer">logo
-              <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
+              <fa-icon [icon]="faInfoCircle" class="text-info"></fa-icon>
             </label>
           </div>
           <div class="col-9">
@@ -58,7 +58,7 @@
               ngClass="{ 'is-invalid': typedForm.controls.screenNr.invalid, 'is-valid': typedForm.controls.screenNr.valid }"
               required>
               @for(screenNr of rangeScreenNrs; track screenNr) {
-              <option ngValue="screenNr">
+              <option [ngValue]="screenNr">
                 {{screenNr}}</option>
               }
             </select>

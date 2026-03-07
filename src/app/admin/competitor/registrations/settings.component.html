@@ -1,8 +1,8 @@
 @if (settings()) {
   <div class="container">
-    @if (processing) {
+    @if (processing()) {
       <h2 class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+        <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
       </h2>
     }
     
@@ -10,7 +10,7 @@
       <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
     }
     
-    @if (typedForm && !processing) {
+    @if (typedForm && !processing()) {
       <form formGroup="typedForm" name="form" (ngSubmit)="save()" novalidate>
 
         <div class="row mb-3">
@@ -27,7 +27,7 @@
 
         <div class="row mb-3">
           <div class="col-5 pointer" (click)="openHelpModal(contentInfo)">
-            <label for="endDate" class="col-form-label pointer">inschrijven tot <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon></label>
+            <label for="endDate" class="col-form-label pointer">inschrijven tot <fa-icon [icon]="faInfoCircle" class="text-info"></fa-icon></label>
           </div>
           
           <div class="col-7">
@@ -39,7 +39,7 @@
                 placeholder="yyyy-mm-dd" formControlName="endDate" ngbDatepicker #dEnd="ngbDatepicker" required
                 [maxDate]="maxDateStruct" container="body">
               <span class="input-group-text pointer" (click)="dEnd.toggle()">
-                <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+                <fa-icon [icon]="faCalendarAlt"></fa-icon>
               </span>
             </div>
           </div>

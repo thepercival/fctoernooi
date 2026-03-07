@@ -5,19 +5,19 @@
 
       <h5 class="mb-0" (click)="onLockerroomNameChange.emit(lockerRoom())">
         <small>
-          <fa-icon [icon]="['fas', 'door-closed']"></fa-icon>
+          <fa-icon [icon]="faDoorClosed"></fa-icon>
         </small>
         <span class="fw-bold mx-1 align-middle">{{lockerRoom().getName()}}</span>
         @if (editable()) {
           <button class="btn btn-sm btn-primary" (click)="onLockerroomNameChange.emit(lockerRoom())">
-            <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+            <fa-icon [icon]="faPencilAlt"></fa-icon>
           </button>
         }
       </h5>
 
       @if (editable()) {
         <button class="btn btn-sm btn-danger ms-1 py-0" (click)="onLockerroomRemove.emit(lockerRoom())">
-          <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+          <fa-icon [icon]="faTrashAlt"></fa-icon>
         </button>
       }
     </div>
@@ -39,7 +39,7 @@
   @if (editable()) {
     <div (click)="onCompetitorsChange.emit(lockerRoom())"
       class="card-footer text-primary border-primary pointer text-center">
-      <fa-icon [icon]="['fas', 'users']"></fa-icon><span> deelnemers selecteren</span>
+      <fa-icon [icon]="faUsers"></fa-icon><span> deelnemers selecteren</span>
     </div>
   }
 </div>

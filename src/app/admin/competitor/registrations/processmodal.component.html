@@ -5,31 +5,31 @@
 <div class="modal-body">
     <div class="d-flex flex-column">
         
-        @if (processing) {
+        @if (processing()) {
             <h2 class="text-center">
-                <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+                <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
             </h2>
         }        
         
-        @if (!processing && registration.getState() !== Accepted) {
+        @if (!processing() && registration.getState() !== Accepted) {
             <button type="button" class="btn btn-success my-4" data-dismiss="modal"
                 (click)="accept()">
                 accepteren
             </button>
         }
-        @if (!processing && registration.getState() !== Substitute) {
+        @if (!processing() && registration.getState() !== Substitute) {
             <button type="button" class="btn btn-warning mb-4" data-dismiss="modal"
                 (click)="substitute()">
                 als reserve
             </button>
         }
-        @if (!processing && registration.getState() !== Declined) {
+        @if (!processing() && registration.getState() !== Declined) {
             <button type="button" class="btn btn-danger mb-4" data-dismiss="modal"
                 (click)="decline()">
                 afwijzen
             </button>
         }
-        @if (!processing && registration.getState() === Declined) {
+        @if (!processing() && registration.getState() === Declined) {
             <button type="button" class="btn btn-danger mb-4" data-dismiss="modal"
                 (click)="remove()">
                 verwijderen

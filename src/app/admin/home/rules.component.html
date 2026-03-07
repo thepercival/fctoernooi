@@ -7,34 +7,34 @@
       </h2>
       <div>
         <button role="button" (click)="linkToHome()" class="btn btn-sm btn-outline-primary ms-1">
-          naar <fa-icon [icon]="['fas', 'home']"></fa-icon> thuispagina
+          naar <fa-icon [icon]="faHome"></fa-icon> thuispagina
         </button>
       </div>
     </div>
-    @if (processing) {
+    @if (processing()) {
       <h2 class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+        <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
       </h2>
     }
-    @if (alert) {
-      <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+    @if (alert()) {
+      <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
     }
-    @if (!processing && rules) {
+    @if (!processing() && rules) {
       <table class="table mt-3">
         <thead>
           <tr>
             <th>{{rules.length}}</th>
             @if (rules.length > 1) {
               <th class="text-center">
-                <fa-icon [icon]="['fas', 'sort']"></fa-icon>
+                <fa-icon [icon]="faSort"></fa-icon>
               </th>
             }
             <th>omschrijving</th>
             <th class="text-end">
               @if (rules.length < MaxPerTournament) {
                 <button type="button" class="btn btn-sm btn-primary" (click)="addRule()"
-                  [disabled]="processing">
-                  <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+                  [disabled]="processing()">
+                  <fa-icon [icon]="faPlus"></fa-icon>
                 </button>
               }
             </th>
@@ -44,17 +44,17 @@
           @for (rule of rules; track rule; let first = $first) {
             <tr>
               <td>
-                <button type="button" class="btn btn-sm btn-primary" [disabled]="processing"
+                <button type="button" class="btn btn-sm btn-primary" [disabled]="processing()"
                   (click)="editRule(rule)">
-                  <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+                  <fa-icon [icon]="faPencilAlt"></fa-icon>
                 </button>
               </td>
               @if (rules.length > 1) {
                 <td class="text-center">
                   @if (!first) {
                     <button type="button" class="btn btn-sm btn-outline-secondary"
-                      [disabled]="processing" (click)="upgradePriority(rule)">
-                      <fa-icon [icon]="['fas', 'level-up-alt']"></fa-icon>
+                      [disabled]="processing()" (click)="upgradePriority(rule)">
+                      <fa-icon [icon]="faLevelUpAlt"></fa-icon>
                     </button>
                   }
                 </td>
@@ -63,9 +63,9 @@
                 <span>{{rule.text}}</span>
               </td>
               <td class="text-end">
-                <button type="button" class="btn btn-sm btn-danger" [disabled]="processing"
+                <button type="button" class="btn btn-sm btn-danger" [disabled]="processing()"
                   (click)="removeRule(rule);">
-                  <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+                  <fa-icon [icon]="faTrashAlt"></fa-icon>
                 </button>
               </td>
             </tr>

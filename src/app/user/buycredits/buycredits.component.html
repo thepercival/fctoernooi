@@ -3,11 +3,11 @@
     <div class="col-sm-12 col-md-10 col-lg-6 g-0 text-center">
       <div class="d-flex justify-content-between mb-4">
         <h1>
-          <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon> toernooien kopen
+          <fa-icon [icon]="faMoneyBillAlt"></fa-icon> toernooien kopen
         </h1>
         <h1 class="me-1">
           <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary">
-            <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
+            <fa-icon [icon]="faLevelUpAlt" [rotate]="270"></fa-icon>
             <span class="ms-1 d-none d-sm-inline"> terug</span>
           </button>
         </h1>
@@ -15,7 +15,7 @@
 
       @if(processing()) {
       <h2 class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
+        <fa-icon [icon]="faSpinner" animation="spin"></fa-icon>
       </h2>
       }
       @if(alert()) {
@@ -30,7 +30,7 @@
             id="btnradio1">
           <label class="btn btn-outline-primary" for="btnradio1">
             @if(typedForm.value['purpose'] === PersonalPurpose) {
-            <fa-icon [icon]="['fas', 'check-circle']"
+            <fa-icon [icon]="faCheckCircle"
               class="text-success"></fa-icon>
             }
             persoonlijk
@@ -41,7 +41,7 @@
           <label class="btn btn-outline-primary" for="btnradio2">
 
             @if(typedForm.value['purpose'] === OrganizationPurpose) {
-            <fa-icon [icon]="['fas', 'check-circle']"
+            <fa-icon [icon]="faCheckCircle"
               class="text-success"></fa-icon>
             }
             zakelijk

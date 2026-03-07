@@ -42,10 +42,10 @@ import { forkJoin, Observable, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { FavoritesRepository } from '../../lib/favorites/repository';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
 import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-planningconfig-edit',
@@ -55,6 +55,7 @@ import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNav
     imports: [NgbAlert,GameAmountConfigEditComponent,FontAwesomeModule,EscapeHtmlPipe,TournamentNavBarComponent,ReactiveFormsModule]
 })
 export class PlanningConfigComponent extends TournamentComponent implements OnInit {
+    faSpinner = faSpinner;
     public typedForm: FormGroup;/*<{
         gameAmountConfigs: FormArray<FormControl>,
         enableTime: FormControl<boolean>,        
@@ -95,8 +96,6 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         tournamentRepository: TournamentRepository,
         sructureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
-        favRepository: FavoritesRepository,
         private planningConfigRepository: PlanningConfigRepository,
         private gameAmountConfigRepository: GameAmountConfigRepository,
         private myNavigation: MyNavigation,
@@ -107,7 +106,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         private sportMapper: SportMapper,
         private gameAmountConfigMapper: GameAmountConfigMapper
     ) {
-        super(route, router, tournamentRepository, sructureRepository, globalEventsManager, favRepository);
+        super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
         this.typedForm = new FormGroup({
             /*gameAmountConfigs: new FormArray([
                 new FormControl(1, { nonNullable: true })
@@ -167,7 +166,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             if (this.updateDataAlert) {
                 this.updateDataAlert.close();
             }
-            this.processing = false;
+            this.processing.set(false);
         });
         this.route.params.subscribe(params => {
             super.myNgOnInit(() => this.initConfig(+params.startRoundNumber));
@@ -178,7 +177,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.structureNameService = new StructureNameService(new StartLocationMap(this.tournament.getCompetitors()));
         const startRoundNumber = this.structure.getRoundNumber(startRoundNumberAsValue);
         if (startRoundNumber === undefined) {
-            this.setAlert(IAlertType.Danger, 'het rondenumber is niet gevonden');
+            this.alert.set({ type: IAlertType.Danger, message: 'het rondenumber is niet gevonden' });
             return;
         }
         this._changingStartRoundNumber.next(startRoundNumber);
@@ -237,9 +236,9 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         this.hasBegun = this.startRoundNumber.hasBegun();
         this.initGameAmountConfigs(startRoundNumber);
         this.jsonToForm(this.mapper.toJson(startRoundNumber.getValidPlanningConfig()));
-        this.resetAlert();
+        this.alert.set(undefined);
         if (this.hasBegun) {
-            this.setAlert(IAlertType.Warning, 'er zijn wedstrijden gespeeld voor deze ronde, je kunt niet meer wijzigen');
+            this.alert.set({ type: IAlertType.Warning, message: 'er zijn wedstrijden gespeeld voor deze ronde, je kunt niet meer wijzigen' });
         }
     }
 
@@ -283,8 +282,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     openInfoModal(header: string, windowClass: string, modalContent: TemplateRef<any>) {
         const activeModal = this.modalService.open(InfoModalComponent, { windowClass });
-        activeModal.componentInstance.header = header;
-        activeModal.componentInstance.modalContent = modalContent;
+            activeModal.componentInstance.header = () => header;
+            activeModal.componentInstance.modalContent = () => modalContent;
     }
 
     private jsonToForm(json: JsonPlanningConfig) {
@@ -492,8 +491,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     }
 
     save(): boolean {
-        this.setAlert(IAlertType.Info, 'instellingen worden opgeslagen');
-        this.processing = true;
+        this.alert.set({ type: IAlertType.Info, message: 'instellingen worden opgeslagen' });
+        this.processing.set(true);
 
         const jsonConfig: JsonPlanningConfig = this.formToJson();
         const jsonGameAmountConfigs: JsonGameAmountConfig[] = this.formToJsonGameAmountConfigs();
@@ -506,13 +505,13 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
                     if (jsonConfig.editMode === PlanningEditMode.Auto) {
                         this.saveGameAmountConfigs(jsonGameAmountConfigs, planningAction);
                     } else {
-                        this.processing = false;
+                        this.processing.set(false);
                         this.myNavigation.back();
                     }
                 },
                 error: (e) => {
-                    this.setAlert(IAlertType.Danger, 'de instellingen zijn niet opgeslagen: ' + e);
-                    this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: 'de instellingen zijn niet opgeslagen: ' + e });
+                    this.processing.set(false);
                 }
             });
 
@@ -524,29 +523,29 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             this.planningRepository.create(this.structure, this.tournament)
                 .subscribe({
                     next: () => {
-                        this.setAlert(IAlertType.Success, 'de instellingen zijn opgeslagen');
+                        this.alert.set({ type: IAlertType.Success, message: 'de instellingen zijn opgeslagen' });
                         this.myNavigation.back();
                     },
                     error: (e) => {
-                        this.setAlert(IAlertType.Danger, 'de instellingen zijn niet opgeslagen: ' + e); this.processing = false;
+                        this.alert.set({ type: IAlertType.Danger, message: 'de instellingen zijn niet opgeslagen: ' + e }); this.processing.set(false);
                     },
-                    complete: () => this.processing = false
+                    complete: () => this.processing.set(false)
                 });
         } else if (action === PlanningAction.Reschedule) {
             this.planningRepository.reschedule(this.startRoundNumber, this.tournament)
                 .subscribe({
                     next: () => {
-                        this.setAlert(IAlertType.Success, 'de instellingen zijn opgeslagen');
+                        this.alert.set({ type: IAlertType.Success, message: 'de instellingen zijn opgeslagen' });
                         this.myNavigation.back();
                     },
                     error: (e) => {
-                        this.setAlert(IAlertType.Danger, 'de instellingen zijn niet opgeslagen: ' + e); this.processing = false;
+                        this.alert.set({ type: IAlertType.Danger, message: 'de instellingen zijn niet opgeslagen: ' + e }); this.processing.set(false);
                     },
-                    complete: () => this.processing = false
+                    complete: () => this.processing.set(false)
                 });
         } else {
-            this.processing = false;
-            this.setAlert(IAlertType.Success, 'de instellingen zijn opgeslagen');
+            this.processing.set(false);
+            this.alert.set({ type: IAlertType.Success, message: 'de instellingen zijn opgeslagen' });
             this.myNavigation.back();
         }
     }
@@ -560,8 +559,8 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
                 this.savePlanning(planningAction);
             },
             error: (e) => {
-                this.alert = { type: IAlertType.Danger, message: 'de wedstrijd-aantallen zijn niet opgeslagen: ' + e };
-                this.processing = false;
+                this.alert.set({ type: IAlertType.Danger, message: 'de wedstrijd-aantallen zijn niet opgeslagen: ' + e });
+                this.processing.set(false);
             }
         });
     }
@@ -571,7 +570,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
         modalRef.componentInstance.structure = this.structure;
         modalRef.componentInstance.subject = 'de score-regels';
         modalRef.result.then((startRoundNumber: RoundNumber) => {
-            this.processing = true;
+            this.processing.set(true);
             this._changingStartRoundNumber.next(startRoundNumber);
         }, (reason) => { });
     }

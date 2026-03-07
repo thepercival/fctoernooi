@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, input, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, WritableSignal, input, model, signal } from '@angular/core';
 import { Poule, CompetitionSport, AgainstH2h, AgainstGpp, Single, AllInOneGame, StructureNameService } from 'ngx-sport';
 
 import { CSSService } from '../../common/cssservice';
@@ -7,6 +7,7 @@ import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
 import { RankingSportsComponent } from './sports/sports.component';
 import { RankingAgainstComponent } from './sports/against.component';
 import { RankingTogetherComponent } from './sports/together.component';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-pouleranking',
@@ -17,13 +18,14 @@ import { RankingTogetherComponent } from './sports/together.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingPouleComponent implements OnInit {
+  faSpinner = faSpinner;
   public poule = input.required<Poule>();
   public favorites = input<Favorites | undefined>(undefined);
   public competitionSports = input<CompetitionSport[]>([]);
   public structureNameService = input.required<StructureNameService>();
   public header = input.required<boolean>();
 
-  public processing = model(true);
+  public readonly processing: WritableSignal<boolean> = signal(true);
 
   constructor(
     public cssService: CSSService

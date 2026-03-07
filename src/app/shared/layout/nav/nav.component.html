@@ -1,31 +1,33 @@
 @if (tournamentLiveboardLink.showIcon !== false) {
   <nav class="navbar p-0 mb-0 d-flex flex-nowrap">
 
-  <div class="d-flex flex-nowrap">
-    <button (click)="execLeftButton(navBarData.atHome)" class="btn btn-navbar" role="button" aria-label="home" tabindex="-1">
-      <app-svg-icon icon="{{navBarData.atHome ? 'darklight' : 'house'}}"></app-svg-icon>
-    </button>
-    <div class="vr my-1"></div>
-  </div>
+    <div class="d-flex flex-nowrap">
+      <button (click)="execLeftButton(navBarData.atHome)" class="btn btn-navbar" role="button" aria-label="home" tabindex="-1">
+        <app-svg-icon icon="{{navBarData.atHome ? 'darklight' : 'house'}}"></app-svg-icon>
+      </button>
+      <div class="vr my-1"></div>
+    </div>
 
-  <h1 class="px-2 my-1 text-nowrap overflow-hidden">
-    <app-svg-icon class="pb-1" [width]=20 *ngIf="navBarData.atHome" icon="favicon"></app-svg-icon>
-    <span class="ms-1">{{navBarData.title}}</span>
-  </h1>
-  
-  <div class="d-flex flex-nowrap">
-    <div class="vr my-1"></div>
-    @if (authService.isLoggedIn()) {
-      <button (click)="linkToUserProfile()" class="btn btn-navbar" role="button" tabindex="-1" aria-label="account">
-        <app-svg-icon icon="user-circle"></app-svg-icon>
-      </button>
-    } @else {
-      <button (click)="linkToLogin()" routerLinkActive="active" class="btn btn-navbar" role="button" aria-label="inloggen "
-        tabindex="-1">
-        <app-svg-icon icon="sign-in-alt"></app-svg-icon>
-        <span class="d-none d-sm-inline ms-1">inloggen</span>
-      </button>
-    }
-  </div>
-</nav>
+    <h1 class="px-2 my-1 text-nowrap overflow-hidden">
+      @if (navBarData.atHome) {
+        <app-svg-icon class="pb-1" [width]=20 icon="favicon"></app-svg-icon>
+      }
+      <span class="ms-1">{{navBarData.title}}</span>
+    </h1>
+
+    <div class="d-flex flex-nowrap">
+      <div class="vr my-1"></div>
+      @if (authService.isLoggedIn()) {
+        <button (click)="linkToUserProfile()" class="btn btn-navbar" role="button" tabindex="-1" aria-label="account">
+          <app-svg-icon icon="user-circle"></app-svg-icon>
+        </button>
+      } @else {
+        <button (click)="linkToLogin()" routerLinkActive="active" class="btn btn-navbar" role="button" aria-label="inloggen "
+          tabindex="-1">
+          <app-svg-icon icon="sign-in-alt"></app-svg-icon>
+          <span class="d-none d-sm-inline ms-1">inloggen</span>
+        </button>
+      }
+    </div>
+  </nav>
 }

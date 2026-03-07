@@ -11,6 +11,7 @@ import { IAlert, IAlertType } from '../../shared/common/alert';
 import { CompetitorListRemoveModalComponent } from './listremovemodal.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CompetitorListLineComponent } from "./listline.component";
+import { faCopy, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-category-competitors-base',
@@ -20,6 +21,8 @@ import { CompetitorListLineComponent } from "./listline.component";
     imports: [NgbAlert, FontAwesomeModule, CompetitorListLineComponent,NgbDropdown]
 })
 export class CategoryBaseCompetitorListComponent implements OnChanges {
+  faCopy = faCopy;
+  faPlus = faPlus;
   @Input() tournament!: Tournament;
   @Input() category!: Category;
   @Input() showHeader!: boolean;

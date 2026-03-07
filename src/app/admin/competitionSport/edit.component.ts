@@ -13,22 +13,25 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { TranslateFieldService } from '../../lib/translate/field';
 import { CompetitionSportTab } from '../../shared/tournament/competitionSportTab';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { NgbModal, NgbAlert, NgbNav } from '@ng-bootstrap/ng-bootstrap';
-import { FavoritesRepository } from '../../lib/favorites/repository';
-import { SportIconComponent } from "../../shared/tournament/sport/icon.component";
+import { NgbAlert, NgbNav } from '@ng-bootstrap/ng-bootstrap';
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { FieldListComponent } from "./field/fieldlist.component";
 import { ScoreConfigEditComponent } from "../scoreConfig/edit.component";
 import { TournamentNavBarComponent } from "../../shared/tournament/tournamentNavBar/tournamentNavBar.component";
 import { AgainstQualifyConfigEditComponent } from "../againstQualifyConfig/edit.component";
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { getSportIconDef } from '../../shared/tournament/sport/icon.mapper';
+import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
 
 @Component({
     selector: 'app-tournament-sportconfig-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css'],
-    imports: [SportIconComponent, FaIconComponent, NgbAlert, NgbNav, FieldListComponent, ScoreConfigEditComponent, TournamentNavBarComponent, AgainstQualifyConfigEditComponent],
+    imports: [FaIconComponent, NgbAlert, NgbNav, FieldListComponent, ScoreConfigEditComponent, TournamentNavBarComponent, AgainstQualifyConfigEditComponent],
 })
 export class CompetitionSportEditComponent extends TournamentComponent implements OnInit {
+    faSpinner = faSpinner;
     competitionSport: CompetitionSport | undefined;
     activeTab!: number;
     hasBegun!: boolean;
@@ -39,12 +42,11 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,        
-        favRepository: FavoritesRepository,
         public cssService: CSSService,
         private translate: TranslateFieldService,
         private myNavigation: MyNavigation
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
     }
 
     ngOnInit() {
@@ -64,7 +66,7 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
             return;
         }
         this.competitionSport = competitionSport;
-        this.processing = false;
+        this.processing.set(false);
     }
 
     getSports(): Sport[] {
@@ -105,5 +107,9 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
 
     getFieldsDescription(): string {
         return this.translate.getFieldNamePlural(this.competitionSport?.getSport()?.getCustomId());
+    }
+
+    getSportIcon(customId: number): IconDefinition | undefined {
+        return getSportIconDef(customId as CustomSportId);
     }
 }

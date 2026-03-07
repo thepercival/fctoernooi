@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, input, model, OnInit, signal, WritableSignal } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 
 import { IAlert, IAlertType } from '../../shared/common/alert';
@@ -18,6 +18,7 @@ import { TournamentPropertiesComponent } from "./properties.component";
 import { NgbAlert } from "@ng-bootstrap/ng-bootstrap";
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 import { ReactiveFormsModule } from '@angular/forms';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -28,7 +29,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     imports: [TournamentPropertiesComponent, NgbAlert, CreateSportWithFieldsComponent, FaIconComponent,ReactiveFormsModule]
 })
 export class NewComponent implements OnInit {
-  public processing = true;
+  faSpinner = faSpinner;
+  public readonly processing: WritableSignal<boolean> = signal(true);
   public alert: IAlert | undefined;
   protected jsonTournament!: JsonTournament;
   public nrOfCredits: number | undefined;
@@ -36,7 +38,6 @@ export class NewComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authService: AuthService,
     private userRepository: UserRepository,
     private tournamentRepository: TournamentRepository,
     private structureRepository: StructureRepository,
@@ -48,8 +49,6 @@ export class NewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.processing = true;
-
     this.userRepository.getLoggedInObject()
       .subscribe({
         next: (loggedInUser: User | undefined) => {
@@ -72,9 +71,9 @@ export class NewComponent implements OnInit {
               return;
             }
           }
-          this.processing = false;
+          this.processing.set(false);
         },
-        error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
+        error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing.set(false); }
       });
   }
 
@@ -88,7 +87,7 @@ export class NewComponent implements OnInit {
   }
 
   create(sportWithFields: SportWithFields): boolean {
-    this.processing = true;
+    this.processing.set(true);
     this.currentStep = NewTournamentStep.editProperties;
     this.setAlert(IAlertType.Info, 'het toernooi wordt aangemaakt');
 
@@ -100,6 +99,7 @@ export class NewComponent implements OnInit {
     this.tournamentRepository.createObject(this.jsonTournament)
       .subscribe({
         next: (tournament: Tournament) => {
+          console.log('tournament created: ' + tournament.getId());
           const jsonPlanningConfig = this.defaultService.getJsonPlanningConfig(sportWithFields.variant);
           const structure: Structure = this.structureEditor.create(
             tournament.getCompetition(),
@@ -114,21 +114,21 @@ export class NewComponent implements OnInit {
                     },
                     error: (e) => {
                       this.setAlert(IAlertType.Danger, 'de wedstrijden kon niet worden aangemaakt: ' + e);
-                      this.processing = false;
+                      this.processing.set(false);
                     },
-                    complete: () => this.processing = false
+                    complete: () => this.processing.set(false)
                   });
               },
               error: (e) => {
                 this.setAlert(IAlertType.Danger, 'de opzet kon niet worden aangemaakt: ' + e);
-                this.processing = false;
+                this.processing.set(false);
               },
               complete: () => {
 
               }
             });
         },
-        error: (e) => { this.setAlert(IAlertType.Danger, 'het toernooi kon niet worden aangemaakt: ' + e); this.processing = false; }
+        error: (e) => { this.setAlert(IAlertType.Danger, 'het toernooi kon niet worden aangemaakt: ' + e); this.processing.set(false); }
       });
     return false;
   }

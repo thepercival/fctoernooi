@@ -2,38 +2,38 @@
   <div class="col-sm-10 col-md-10 col-lg-6">
     <div class="d-flex justify-content-between pointer me-1" (click)="openHelpModal(contentInfo)">
       <h2>
-        <app-tournament-icon name="referee"></app-tournament-icon> scheidsrechters
+        <fa-icon [icon]="facReferee"></fa-icon> scheidsrechters
       </h2>
       <button type="button" class="btn btn-sm btn-outline-info">
         info<span class="d-none d-sm-inline"></span>
-        <fa-icon class="text-info ms-1" [icon]=" ['fas', 'info-circle' ]"></fa-icon>
+        <fa-icon class="text-info ms-1" [icon]="faInfoCircle"></fa-icon>
       </button>
     </div>
-    @if (processing) {
+    @if (processing()) {
       <h2 class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+        <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
       </h2>
     }
-    @if (!processing && competition.getReferees().length === 0) {
+    @if (!processing() && competition.getReferees().length === 0) {
       <ngb-alert class="mb-0" [type]="'info'"><span class="fw-bold">Let op:
       </span>Het aantal scheidsrechters bepaalt onder andere het aantal tegelijk
       te spelen wedstrijden.</ngb-alert>
     }
-    @if (alert) {
-      <ngb-alert [type]="alert.type">{{alert.message}}</ngb-alert>
+    @if (alert()) {
+      <ngb-alert [type]="alert()!.type">{{alert()!.message}}</ngb-alert>
     }
-    @if (!processing) {
+    @if (!processing()) {
       <table class="table mt-3">
         <thead>
           <tr>
             <th></th>
             @if (!hasBegun && competition.getReferees().length > 1) {
               <th class="text-center">
-                <fa-icon [icon]="['fas', 'sort']"></fa-icon>
+                <fa-icon [icon]="faSort"></fa-icon>
               </th>
             }
             <th title="rol scheidsrechter">
-              <fa-icon [icon]="[ 'fas', 'envelope'] "></fa-icon>
+              <fa-icon [icon]="faEnvelope"></fa-icon>
             </th>
             <th>initialen</th>
             <th class="d-none d-sm-table-cell">naam</th>
@@ -41,8 +41,8 @@
             <th class="text-end">
               @if (!hasBegun) {
                 <button type="button" class="btn btn-sm btn-primary" (click)="addReferee()"
-                  [disabled]="processing">
-                  <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+                  [disabled]="processing()">
+                  <fa-icon [icon]="faPlus"></fa-icon>
                 </button>
               }
             </th>
@@ -52,24 +52,24 @@
           @for (refereeItem of refereeItems; track refereeItem; let last = $last) {
             <tr>
               <td>
-                <button type="button" class="btn btn-sm btn-primary" [disabled]="processing"
+                <button type="button" class="btn btn-sm btn-primary" [disabled]="processing()"
                   (click)="editReferee(refereeItem.referee)">
-                  <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+                  <fa-icon [icon]="faPencilAlt"></fa-icon>
                 </button>
               </td>
               @if (!hasBegun && competition.getReferees().length > 1) {
                 <td class="text-center">
                   @if (refereeItem.referee.getPriority() > 1) {
                     <button type="button" class="btn btn-sm btn-outline-secondary"
-                      [disabled]="processing" (click)="upgradePriority(refereeItem.referee)">
-                      <fa-icon [icon]="['fas', 'level-up-alt']"></fa-icon>
+                      [disabled]="processing()" (click)="upgradePriority(refereeItem.referee)">
+                      <fa-icon [icon]="faLevelUpAlt"></fa-icon>
                     </button>
                   }
                 </td>
               }
               <td>
                 @if (refereeItem.rolState) {
-                  <fa-icon [icon]="['fas', 'check-circle']"
+                  <fa-icon [icon]="faCheckCircle"
                     (click)="openHelpModal(contentRoleStateInfo)" class="pointer {{getRoleStateClass(refereeItem)}}">
                   </fa-icon>
                 }
@@ -85,9 +85,9 @@
               </td>
               <td class="text-end">
                 @if (!hasBegun) {
-                  <button type="button" class="btn btn-sm btn-danger" [disabled]="processing"
+                  <button type="button" class="btn btn-sm btn-danger" [disabled]="processing()"
                     (click)="removeReferee(refereeItem.referee);">
-                    <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+                    <fa-icon [icon]="faTrashAlt"></fa-icon>
                   </button>
                 }
               </td>
@@ -126,11 +126,11 @@
 <ng-template #contentRoleStateInfo let-activeModal>
   <ul class="list-group">
     <li class="list-group-item border-info">
-      <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon>
+      <fa-icon [icon]="faCheckCircle" class="text-success"></fa-icon>
       De scheidsrechter heeft de rol scheidsrechter.
     </li>
     <li class="list-group-item border-info">
-      <fa-icon [icon]="['fas', 'check-circle']" class="text-warning"></fa-icon>
+      <fa-icon [icon]="faCheckCircle" class="text-warning"></fa-icon>
       De scheidsrechter heeft de uitnodiging nog niet geaccepteerd
     </li>
   </ul>

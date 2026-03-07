@@ -3,7 +3,7 @@
     <div class="col-sm-10 col-md-6 col-lg-4 g-0">
       @if(processing()) {
       <h2 class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+        <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
       </h2>
       }
       @if(alert()) {
@@ -12,7 +12,7 @@
       @if(!processing()) {
       @if(!code) {
       <div class="card card-auth my-3">
-        <app-user-title title="valideren" icon="user-circle">
+        <app-user-title title="valideren" [icon]="faUserCircle">
         </app-user-title>
         <div class="card-body text-center mx-auto form-validate border-top-0 border-primary">
           @if(!sentValidationRequest) {

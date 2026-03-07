@@ -16,7 +16,13 @@
     @extend .p-1;
     white-space: nowrap;
     overflow: hidden;
-    color: inherit;
+    color: inherit !important;
+}
+
+.btn-navbar:hover,
+.btn-navbar:focus,
+.btn-navbar:active {
+    color: inherit !important;
 }
 
 .favitem {
@@ -169,12 +175,15 @@ ngb-alert {
 
 .card-auth .card-header {
     margin: -1px;
+    @extend .bg-dark;
+    @extend .text-white;
     border-start-start-radius: 1rem;
     border-start-end-radius: 1rem;
 }
 
 .card-auth {
-    @extend .border-primary;
+    @extend .border-dark;
+    border-color: var(--nav-bg);
     border-radius: 1rem;
     border-end-start-radius: 1rem;
     border-end-end-radius: 1rem;

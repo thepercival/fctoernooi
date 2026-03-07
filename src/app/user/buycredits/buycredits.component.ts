@@ -16,6 +16,7 @@ import { UserComponent } from '../component';
 import { AuthService } from '../../lib/auth/auth.service';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { PaymentState } from '../../lib/payment/state';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-buycredits',
@@ -31,6 +32,7 @@ import { PaymentState } from '../../lib/payment/state';
 })
 export class BuyCreditsComponent extends UserComponent implements OnInit {
   purpose: Purpose | undefined;
+  faSpinner = faSpinner;
   public typedForm: FormGroup<{
     purpose: FormControl<number>,
     nrOfCredits: FormControl<number>,
@@ -206,9 +208,9 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
   //         this.paymentMethods = methods;
   //       },
   //       error: (e: string) => {
-  //         this.setAlert(IAlertType.Danger, e); this.processing = false;
+  //         this.setAlert(IAlertType.Danger, e); this.processing.set(false);
   //       },
-  //       complete: () => this.processing = false
+  //       complete: () => this.processing.set(false)
   //     });
   // }
 

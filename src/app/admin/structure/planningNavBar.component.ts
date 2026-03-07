@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, signal, SimpleChanges, WritableSignal } from '@angular/core';
 import {
   Category, JsonStructure, VoetbalRange,
 } from 'ngx-sport';
@@ -9,6 +9,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { Tournament } from '../../lib/tournament';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
+import { faCalendarAlt, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-planningNavBar',
@@ -19,12 +20,15 @@ import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 })
 export class PlanningNavBarComponent implements OnChanges {
 
+  faSpinner = faSpinner;
+  faCalendarAlt = faCalendarAlt;
+
   @Input() tournament!: Tournament;
   @Input() structure: JsonStructure | undefined;
   @Input() delayInSeconds: number = 2;
 
   public planningTotals: JsonPlanningTotals | undefined;
-  public processing = true;
+  public readonly processing: WritableSignal<boolean> = signal(true);
   public unknownPlanning = false;
   private refreshSubscription!: Subscription;
 
@@ -49,7 +53,7 @@ export class PlanningNavBarComponent implements OnChanges {
     if (this.refreshSubscription) {
       this.refreshSubscription.unsubscribe();
     }
-    this.processing = true;
+    this.processing.set(true);
     this.unknownPlanning = false;
     this.refreshSubscription = of(structure).pipe(delay(this.delayInSeconds * 1000)).subscribe((structure: JsonStructure) => {
       const obsGetPlanningInfo = this.structureRepository.getPlanningTotals(structure, this.tournament);
@@ -60,11 +64,11 @@ export class PlanningNavBarComponent implements OnChanges {
           } else {
             this.unknownPlanning = true;
           }
-          this.processing = false;
+          this.processing.set(false);
         },
         error: ((e: string) => { 
           this.unknownPlanning = true;
-          this.processing = false; 
+          this.processing.set(false); 
           console.error(e);
         })
       });
@@ -93,7 +97,7 @@ export class PlanningNavBarComponent implements OnChanges {
 
 
   // saveStructure() {
-  //   this.processing = true;
+  //   this.processing.set(true);
   //   this.setAlert(IAlertType.Info, 'wijzigingen worden opgeslagen');
 
   //   // console.log('pre edit-structure has child', this.clonedStructure.getCategory(1).getRootRound().getBorderQualifyGroup(QualifyTarget.Winners) !== undefined);
@@ -104,7 +108,7 @@ export class PlanningNavBarComponent implements OnChanges {
   //         console.log('post save-structure has child', this.clonedStructure.getCategory(1).getRootRound().getBorderQualifyGroup(QualifyTarget.Winners) !== undefined);
   //         this.syncPlanning(structureRes/*this.getLowestLevelAction()*/); // should always be first roundnumber
   //       },
-  //       error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
+  //       error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing.set(false); }
   //     });
   // }
 

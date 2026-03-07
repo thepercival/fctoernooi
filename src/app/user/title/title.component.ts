@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { IconName } from '@fortawesome/fontawesome-svg-core';
+import { IconDefinition, IconName } from '@fortawesome/fontawesome-svg-core';
 import { MyNavigation } from '../../shared/common/navigation';
 
 @Component({
@@ -12,7 +12,7 @@ import { MyNavigation } from '../../shared/common/navigation';
 })
 export class UserTitleComponent {
   readonly title = input('');
-  readonly icon = input<IconName | undefined>(undefined);
+  readonly icon = input.required<IconDefinition>();
 
   constructor(private myNavigation: MyNavigation) {
   }

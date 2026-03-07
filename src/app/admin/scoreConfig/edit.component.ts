@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, WritableSignal, signal } from '@angular/core';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 import {
     ScoreConfig,
@@ -19,6 +19,7 @@ import { IAlert, IAlertType } from '../../shared/common/alert';
 import { RoundsSelectorModalComponent, SelectableCategory, SelectableRoundNode } from '../rounds/selector.component';
 import { forkJoin, Observable } from 'rxjs';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-scoreconfig-edit',
@@ -28,6 +29,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     imports: [FontAwesomeModule,NgbAlert]
 })
 export class ScoreConfigEditComponent implements OnInit {
+    faSpinner = faSpinner;
     @Input() tournament!: Tournament;
     @Input() structure!: Structure;
     @Input() competitionSport!: CompetitionSport;
@@ -37,8 +39,8 @@ export class ScoreConfigEditComponent implements OnInit {
         max: FormControl<number>,
         maxNext: FormControl<number>,
       }>;
-    public alert: IAlert | undefined;
-    public processing: boolean = true;
+    public readonly alert: WritableSignal<IAlert | undefined> = signal(undefined);
+    public readonly processing: WritableSignal<boolean> = signal(true);
     protected selectableCategories!: SelectableCategory[];
     public originalScoreConfig!: ScoreConfig;
     readonly: boolean = true;
@@ -96,9 +98,9 @@ export class ScoreConfigEditComponent implements OnInit {
 
     protected postRoundsSelection() {
         this.readonly = this.someSelectedHasBegun(this.selectableCategories.map(selectableCategory => selectableCategory.rootRoundNode));
-        this.alert = undefined;
+        this.alert.set(undefined);
         if (this.readonly) {
-            this.alert = { type: IAlertType.Warning, message: 'er zijn wedstrijden gespeeld voor (sommige) gekozen ronden, je kunt niet meer wijzigen' };
+            this.alert.set({ type: IAlertType.Warning, message: 'er zijn wedstrijden gespeeld voor (sommige) gekozen ronden, je kunt niet meer wijzigen' });
         }
 
         const scoreConfigInit = this.getFirstSelectedRoundNode().round.getValidScoreConfig(this.competitionSport);
@@ -131,7 +133,7 @@ export class ScoreConfigEditComponent implements OnInit {
                 ])
             );
         }
-        this.processing = false;
+        this.processing.set(false);
     }
 
     protected formToJson(): JsonScoreConfig {
@@ -235,8 +237,8 @@ export class ScoreConfigEditComponent implements OnInit {
     }
 
     save(): boolean {
-        this.alert = undefined;
-        this.processing = true;
+        this.alert.set(undefined);
+        this.processing.set(true);
         const jsonScoreConfig: JsonScoreConfig = this.formToJson();
 
         const selectableCategoryConverter = new SelectableCategoryConverter();
@@ -263,7 +265,7 @@ export class ScoreConfigEditComponent implements OnInit {
             .subscribe({
                 next: () => {
                     if (validScoreConfigs.length === 0) {
-                        this.processing = false;
+                        this.processing.set(false);
                         return;
                     }
                     // 3 voeg de scoreregels toe van de unchangedChildRounds
@@ -272,16 +274,16 @@ export class ScoreConfigEditComponent implements OnInit {
                     });
                     forkJoin(reposChildUpdates)
                         .subscribe({
-                            next: () => this.processing = false,
+                            next: () => this.processing.set(false),
                             error: (e) => {
-                                this.alert = { type: IAlertType.Danger, message: 'de scoreregels zijn niet opgeslagen: ' + e };
-                                this.processing = false;
+                                this.alert.set({ type: IAlertType.Danger, message: 'de scoreregels zijn niet opgeslagen: ' + e });
+                                this.processing.set(false);
                             }
                         });
                 },
                 error: (e) => {
-                    this.alert = { type: IAlertType.Danger, message: 'de scoreregels zijn niet opgeslagen: ' + e };
-                    this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: 'de scoreregels zijn niet opgeslagen: ' + e });
+                    this.processing.set(false);
                 }
             });
         return true;

@@ -28,12 +28,12 @@
             
                   @if (allPlacesHaveACompetitor()) {
                     <button type="button" class="btn btn-sm btn-outline-primary" (click)="swapAll(category)"
-                      [disabled]="swapItem && !processing" title="willekeurige volgorde">
-                      <fa-icon [icon]="['fas', 'random']"></fa-icon> willekeurig
+                      [disabled]="swapItem && !processing()" title="willekeurige volgorde">
+                      <fa-icon [icon]="faRandom"></fa-icon> willekeurig
                     </button>
                   } @else {
                     <span>volgorde </span>
-                    <fa-icon title="omwisselen" [icon]="['fas', 'sort']"></fa-icon>
+                    <fa-icon title="omwisselen" [icon]="faSort"></fa-icon>
                   }
                 </div>
               </th>
@@ -60,7 +60,7 @@
                 </td>
                 <td>
                   <div class="d-flex justify-content-center">
-                    @if (!processing) {
+                    @if (!processing()) {
                       @if (item.competitor) {
                         <div class="form-check form-switch">
                           <input type="checkbox" class="form-check-input" [id]="getSwapSwitchId(item.place)"
@@ -70,7 +70,7 @@
                       }
                     } @else {
                       @if (item.competitor) {
-                        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+                        <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
                       }
                     }
                   </div>

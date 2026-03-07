@@ -5,16 +5,16 @@
       <h2>
         naam & thema
       </h2>
-      @if (processing) {
+      @if (processing()) {
         <h2 class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
         </h2>
       }
       
-      @if (alert) {
-        <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+      @if (alert()) {
+        <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
       }
-      @if (!processing) {
+      @if (!processing()) {
         <form name="form" (ngSubmit)="save()" formGroup="typedForm" novalidate>
           <div class="row mb-3">
             <div class="col-3">
@@ -48,7 +48,7 @@
             <div class="row mb-3">
               <div class="col-3">
                 <label for="logouploadother" (click)="openInfoModal(contentInfo)" class="pointer">logo
-                  <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
+                  <fa-icon [icon]="faInfoCircle" class="text-info"></fa-icon>
                 </label>
               </div>
               <div class="col-9">

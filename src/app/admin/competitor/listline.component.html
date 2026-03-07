@@ -1,6 +1,6 @@
 <td>
   <button #btnEdit type="button" class="btn btn-sm btn-outline-primary" (click)="edit()">
-    <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+    <fa-icon [icon]="faPencilAlt"></fa-icon>
   </button>
 </td>
 <td>
@@ -20,11 +20,11 @@
       <div>
         @if (showLockerRoomNotArranged) {
           <button type="button" class="btn btn-sm btn-outline-warning me-2" (click)="openLockerRoomInfoModal(popLockerRoom)">
-            <fa-icon [icon]="['fas', 'door-closed']"></fa-icon>
+            <fa-icon [icon]="faDoorClosed"></fa-icon>
           </button>
         }
         
-        <fa-icon title="aanwezig" [fixedWidth]="true" [icon]="['fas', 'check-circle']"
+        <fa-icon title="aanwezig" [fixedWidth]="true" [icon]="faCheckCircle"
           [class.text-success]="placeCompetitor.competitor.getPresent()"
           [class.d-inline]="true"
           [class.d-sm-none]="true"
@@ -59,7 +59,7 @@
 @if (!hasBegun) {
   <td class="text-end">
     <button type="button" class="btn btn-sm btn-outline-danger" (click)="remove()">
-      <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+      <fa-icon [icon]="faTrashAlt"></fa-icon>
     </button>
   </td>
 }

@@ -24,13 +24,13 @@ import { TranslateScoreService } from '../../lib/translate/score';
 import { GameEditComponent } from './edit.component';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FavoritesRepository } from '../../lib/favorites/repository';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { ScoreTogetherCardComponent } from './togetherscorecard.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
 import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 import { GameBaseEditComponent } from "./editbase.component";
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-togethergame-edit',
@@ -40,6 +40,7 @@ import { GameBaseEditComponent } from "./editbase.component";
     imports: [NgbAlert, FontAwesomeModule, ScoreTogetherCardComponent, EscapeHtmlPipe, TournamentNavBarComponent, GameBaseEditComponent,ReactiveFormsModule]
 })
 export class GameTogetherEditComponent extends GameEditComponent implements OnInit, AfterViewInit {
+    faSpinner = faSpinner;
     // public scoreConfigService: ScoreConfigService;
     // public hasAuthorization: boolean = false;
     // // private originalPouleState: number;    
@@ -57,8 +58,6 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
-        favRepository: FavoritesRepository,
         authService: AuthService,
         gameRepository: GameRepository,
         mapper: GameMapper,
@@ -69,7 +68,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
         myNavigation: MyNavigation,
         structureLocationMapper: StructureLocationMapper
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository,
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager,
             authService, gameRepository, mapper, fieldMapper, refereeMapper, placeMapper, translate, myNavigation,
             structureLocationMapper);
         // this.originalPouleState = State.Created;        
@@ -88,7 +87,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
     protected initForm() {
         const roundNumber = this.getGame().getRound().getNumber();
         if (this.nextRoundNumberBegun(roundNumber)) {
-            this.setAlert(IAlertType.Warning, 'het aanpassen van de score kan gevolgen hebben voor de al begonnen volgende ronde');
+            this.alert.set({ type: IAlertType.Warning, message: 'het aanpassen van de score kan gevolgen hebben voor de al begonnen volgende ronde' });
         }
         this.planningConfig = roundNumber.getValidPlanningConfig();
         this.firstScoreConfig = this.getGame().getScoreConfig();
@@ -248,7 +247,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
     // // }
 
     // save(): boolean {
-    //     this.processing = true;
+    //     this.processing.set(true);
     //     this.setAlert(IAlertType.Info, 'de wedstrijd wordt opgeslagen');
 
     //     const jsonGame = this.formToJson();
@@ -257,7 +256,7 @@ export class GameTogetherEditComponent extends GameEditComponent implements OnIn
     //             /* happy path */ gameRes => {
     //                 this.navigateBack();
     //             },
-    //          /* error path */ e => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
+    //          /* error path */ e => { this.setAlert(IAlertType.Danger, e); this.processing.set(false); }
     //         );
     //     return false;
     // }

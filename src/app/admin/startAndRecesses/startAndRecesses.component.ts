@@ -1,7 +1,7 @@
-import { Component, inject, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { AbstractControl, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { NgbAlert, NgbDateStruct, NgbInputDatepicker, NgbModal, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbDateStruct, NgbInputDatepicker, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
 
 import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -20,6 +20,7 @@ import { StartEditMode } from '../../lib/tournament/startEditMode';
 import { DateConverter } from '../../lib/dateConverter';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-startandrecesses',
@@ -29,16 +30,16 @@ import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNav
     imports: [TournamentNavBarComponent,NgbAlert, NgbTimepicker, NgbInputDatepicker, FontAwesomeModule, ReactiveFormsModule]
 })
 export class StartAndRecessesComponent extends TournamentComponent implements OnInit {
+    
     public typedForm: FormGroup<{
         date: FormControl<string>,
         time: FormControl<string>
       }>;
-    public processing = true;
     public minDateStruct!: NgbDateStruct;
     public sameDayFormat = true;
     public hasBegun!: boolean;
 
-    private modalService: NgbModal = inject(NgbModal);
+    faSpinner = faSpinner;
 
     constructor(
         route: ActivatedRoute,
@@ -46,7 +47,6 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,        
-        favRepository: FavoritesRepository,
         private recessRepository: RecessRepository,
         private planningRepository: PlanningRepository,
         private tournamentMapper: TournamentMapper,
@@ -54,7 +54,7 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
         public dateFormatter: DateFormatter,
         private dateConverter: DateConverter,
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
 
         this.typedForm = new FormGroup({
             date: new FormControl('', { nonNullable: true}),
@@ -77,10 +77,10 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
         this.dateConverter.setDateTime(this.typedForm.controls.date, this.typedForm.controls.time, date);
 
         if (this.hasBegun) {
-            this.setAlert(IAlertType.Warning, 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen');
+            this.alert.set({ type: IAlertType.Warning, message: 'er zijn al wedstrijden gespeeld, je kunt niet meer wijzigen' });
         }
         this.sameDayFormat = this.canUseSameDayFormat();
-        this.processing = false;
+        this.processing.set(false);
     }
 
     get StartEditMode(): StartEditMode { return this.tournament.getStartEditMode(); }
@@ -130,11 +130,11 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
     }
 
     edit(): boolean {
-        this.setAlert(IAlertType.Info, 'het toernooi wordt opgeslagen');
+        this.alert.set({ type: IAlertType.Info, message: 'het toernooi wordt opgeslagen' });
 
         const startDateTime = this.dateConverter.getDateTime(this.typedForm.controls.date, this.typedForm.controls.time);
 
-        this.processing = true;
+        this.processing.set(true);
         const firstRoundNumber = this.structure.getFirstRoundNumber();
 
         const json = this.tournamentMapper.toJson(this.tournament);
@@ -150,14 +150,14 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
                                 this.myNavigation.back();
                             },
                             error: (e) => {
-                                this.setAlert(IAlertType.Danger, 'de wedstrijden is niet opgeslagen: ' + e);
-                                this.processing = false;
+                                this.alert.set({ type: IAlertType.Danger, message: 'de wedstrijden is niet opgeslagen: ' + e });
+                                this.processing.set(false);
                             }
                         });
                 },
                 error: (e) => {
-                    this.setAlert(IAlertType.Danger, 'het toernooi is niet opgeslagen: ' + e);
-                    this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: 'het toernooi is niet opgeslagen: ' + e });
+                    this.processing.set(false);
                 }
             });
 
@@ -165,7 +165,7 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
     }
 
     removeRecess(recess: Recess) {
-        this.processing = true;
+        this.processing.set(true);
 
         this.recessRepository.removeObject(recess, this.tournament)
             .subscribe({
@@ -173,17 +173,17 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
                     this.planningRepository.reschedule(this.structure.getFirstRoundNumber(), this.tournament)
                         .subscribe({
                             next: () => {
-                                this.processing = false;
+                                this.processing.set(false);
                             },
                             error: (e) => {
-                                this.setAlert(IAlertType.Danger, 'de wedstrijden is niet opgeslagen: ' + e);
-                                this.processing = false;
+                                this.alert.set({ type: IAlertType.Danger, message: 'de wedstrijden is niet opgeslagen: ' + e });
+                                this.processing.set(false);
                             }
                         });
                 },
                 error: (e) => {
-                    this.setAlert(IAlertType.Danger, 'het toernooi is niet opgeslagen: ' + e);
-                    this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: 'het toernooi is niet opgeslagen: ' + e });
+                    this.processing.set(false);
                 }
             });
     }

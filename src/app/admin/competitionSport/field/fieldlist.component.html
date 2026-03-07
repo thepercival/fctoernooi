@@ -1,5 +1,5 @@
-@if(!processing){
-    @if(alert){
+@if(!processing()){
+    @if(alert(); as alert){
     <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
     }
     @if(competitionSport){
@@ -9,15 +9,15 @@
                 <th></th>
                 @if (!hasBegun && prioritizable) {
                     <th class="text-center">
-                        <fa-icon [icon]="['fas', 'sort']"></fa-icon>
+                        <fa-icon [icon]="faSort"></fa-icon>
                     </th>
                 }
                 <th>naam</th>
                 <th class="text-end">
-                    @if (!hasBegun) {
+                        @if (!hasBegun) {
                         <button type="button" class="btn btn-sm btn-primary" (click)="addField()"
-                            [disabled]="processing">
-                            <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+                            [disabled]="processing()">
+                            <fa-icon [icon]="faPlus"></fa-icon>
                         </button>
                     }
                 </th>
@@ -27,16 +27,16 @@
             @for (field of competitionSport.getFields(); track field) {
                 <tr>
                     <td>
-                        <button type="button" class="btn btn-sm btn-primary" [disabled]="processing" (click)="editField(field)">
-                            <fa-icon [icon]="['fas', 'pencil-alt' ]"></fa-icon>
+                        <button type="button" class="btn btn-sm btn-primary" [disabled]="processing()" (click)="editField(field)">
+                            <fa-icon [icon]="faPencilAlt"></fa-icon>
                         </button>
                     </td>
                     @if (!hasBegun && prioritizable) {
                         <td class="text-center">
                             @if (field.getPriority() > 1) {
-                                <button type="button" class="btn btn-sm btn-outline-secondary"
-                                    [disabled]="processing" (click)="upgradePriority(field)">
-                                    <fa-icon [icon]="['fas', 'level-up-alt']"></fa-icon>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                                        [disabled]="processing()" (click)="upgradePriority(field)">
+                                    <fa-icon [icon]="faLevelUpAlt"></fa-icon>
                                 </button>
                             }
                         </td>
@@ -47,8 +47,8 @@
                     <td class="text-end">
                         @if (!hasBegun) {
                             <button type="button" class="btn btn-sm btn-danger"
-                                [disabled]="processing || competitionSport.getFields().length === 1" (click)="removeField(field);">
-                                <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+                                [disabled]="processing() || competitionSport.getFields().length === 1" (click)="removeField(field);">
+                                <fa-icon [icon]="faTrashAlt"></fa-icon>
                             </button>
                         }
                     </td>
@@ -59,6 +59,6 @@
     }
 } @else {
 <h2  class="text-center">
-    <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+    <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
 </h2>
 }

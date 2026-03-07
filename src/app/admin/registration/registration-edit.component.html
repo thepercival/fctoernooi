@@ -5,27 +5,27 @@
       <div class="d-flex justify-content-between mb-2">
         <h2>
           <span class="mx-1">inschrijving</span>
-          @if (!processing && !structure.hasSingleCategory()) {
+          @if (!processing() && !structure.hasSingleCategory()) {
             <span class="d-none d-sm-inline mx-1">categorie </span>
           }
-          @if (!processing && !structure.hasSingleCategory() && category) {
+          @if (!processing() && !structure.hasSingleCategory() && category) {
             <span>"{{category.getName()}}"</span>
           }
         </h2>
       </div>
 
-      @if (processing) {
+      @if (processing()) {
         <h2 class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
         </h2>
       }
-      @if (alert) {
-        <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+      @if (alert()) {
+        <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
       }
 
-      @if (!processing && registration) {
+      @if (!processing() && registration) {
         <form name="form" (ngSubmit)="save(registration)"
-          formGroup="form" novalidate>
+          [formGroup]="form" novalidate>
           <div class="row mb-3">
             <div class="col-3">
               <label for="name" class="col-form-label">naam</label>
@@ -70,7 +70,7 @@
               <div class="col-9">
                 <select class="form-control" formControlName="category" required>
                   @for (category of structure.getCategories(); track category.getId()) {
-                    <option ngValue="category">{{category.getName()}}</option>
+                    <option [ngValue]="category">{{category.getName()}}</option>
                   }
                 </select>
               </div>

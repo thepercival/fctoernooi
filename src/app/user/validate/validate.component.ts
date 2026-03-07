@@ -11,6 +11,7 @@ import { AuthService } from '../../lib/auth/auth.service';
 import { UserComponent } from '../component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { UserTitleComponent } from '../title/title.component';
+import { faSpinner, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-validate',
@@ -31,6 +32,8 @@ export class ValidateComponent extends UserComponent implements OnInit {
     minlengthcode: 100000,
     maxlengthcode: 999999
   };
+  faSpinner = faSpinner;
+  faUserCircle = faUserCircle;
 
   constructor(
     route: ActivatedRoute,

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, WritableSignal, input, signal } from '@angular/core';
 import { Poule, GameAmountConfig, ScoreConfigService, TogetherGame, CompetitionSport, TogetherGamePlace, TogetherSportRoundRankingCalculator, SportRoundRankingItem, PlaceLocation, GameState, Single, AllInOneGame, Place, AgainstH2h, AgainstGpp, StructureNameService } from 'ngx-sport';
 
 import { CSSService } from '../../../common/cssservice';
@@ -29,7 +29,7 @@ export class RankingTogetherComponent implements OnInit {
   protected gameAmountConfig!: GameAmountConfig;
   protected scoreMap = new ScoreMap();
   nrOfGameRounds!: number;
-  public processing = true;
+  public readonly processing: WritableSignal<boolean> = signal(true);
 
 
   constructor(
@@ -39,14 +39,14 @@ export class RankingTogetherComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.processing = true;
+    this.processing.set(true);
     this.togetherRankingCalculator = new TogetherSportRoundRankingCalculator(this.competitionSport);
     this.sportRankingItems = this.togetherRankingCalculator.getItemsForPoule(this.poule);
     this.gameAmountConfig = this.poule.getRound().getNumber().getValidGameAmountConfig(this.competitionSport);
     //this.initGameRoundMap();    
     this.viewPortManager = new ViewPortManager(this.getViewPortNrOfColumnsMap(), this.getGameRounds().length);
     this.initTableData();
-    this.processing = false;
+    this.processing.set(false);
   }
 
   protected getViewPortNrOfColumnsMap(): ViewPortNrOfColumnsMap {

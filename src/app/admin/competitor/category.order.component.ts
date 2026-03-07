@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, output, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, output, signal, SimpleChanges, WritableSignal } from '@angular/core';
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { Category, Competitor, Place, StartLocationMap, StructureNameService } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
@@ -9,6 +9,7 @@ import { Tournament } from '../../lib/tournament';
 import { IAlert, IAlertType } from '../../shared/common/alert';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
+import { faShuffle, faSort, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-category-competitors-order',
@@ -18,6 +19,9 @@ import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
     imports: [NgbAlert,FontAwesomeModule,EscapeHtmlPipe]
 })
 export class CategoryOrderCompetitorListComponent implements OnChanges {
+  faSpinner = faSpinner;
+  faRandom = faShuffle;
+  faSort = faSort;
   @Input() tournament!: Tournament;
   @Input() category!: Category;
   @Input() showHeader!: boolean;
@@ -33,7 +37,7 @@ export class CategoryOrderCompetitorListComponent implements OnChanges {
   private startLocationMap!: StartLocationMap;
   public hasSomeCompetitorAnImage: boolean = false;
   // public alert: IAlert | undefined;
-  public processing = false;
+  public readonly processing: WritableSignal<boolean> = signal(true);
 
   constructor(
     public competitorRepository: CompetitorRepository) {
@@ -101,13 +105,13 @@ export class CategoryOrderCompetitorListComponent implements OnChanges {
   
 
   swapTwo(swappedItem: TournamentCompetitor, substitute: TournamentCompetitor): void {
-    this.processing = true;
+    this.processing.set(true);
     this.swapHelper(
       [this.competitorRepository.swapObjects(swappedItem, substitute, this.tournament)]);
   }
 
   swapAll(category: Category) {
-    this.processing = true;
+    this.processing.set(true);
 
     let reposUpdates: Observable<void>[] = [];
     const competitors = this.getValidCompetitorsForCategory(category);
@@ -145,12 +149,12 @@ export class CategoryOrderCompetitorListComponent implements OnChanges {
     forkJoin(reposUpdates)
       .subscribe({
         next: () => {          
-          this.processing = false;
+          this.processing.set(false);
           this.swapItem = undefined;
           this.onCompetitorsUpdate.emit();
         },
         error: (e) => {
-          this.processing = false;
+          this.processing.set(false);
           this.swapItem = undefined;
           this.onCompetitorsUpdate.emit();
           this.onAlertChange.emit({ type: IAlertType.Danger, message: e });

@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-between mb-4">
   <h1 class="text-truncate">sport kiezen</h1>
   <h1 class="mx-1">
-    @if (!processing) {
+    @if (!processing()) {
       <button type="button" (click)="createCustom()" class="btn btn-outline-secondary">
         zelf invoeren
       </button>
@@ -13,12 +13,14 @@
   <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
 }
 
-@if (!processing) {
+@if (!processing()) {
   <div>
     <ul class="list-group pointer">
       @for (sport of sports; track sport) {
         <li class="list-group-item" (click)="select(sport)">
-          <app-sport-icon class="float-start me-1" customId="sport.getCustomId()"></app-sport-icon>
+          @if (getSportIcon(sport.getCustomId()); as sportIcon) {
+            <fa-icon class="float-start me-1" [icon]="sportIcon"></fa-icon>
+          }
           <div class="d-flex justify-content-between">
             <label for="sport-{{sport.getId()}}" class="pointer mb-0">
               <span>{{translate.getSportName(sport.getCustomId(), sport.getName())}}</span>

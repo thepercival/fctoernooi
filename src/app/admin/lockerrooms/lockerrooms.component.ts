@@ -3,8 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../lib/auth/auth.service';
 import { TournamentCompetitor } from '../../lib/competitor';
-import { Favorites } from '../../lib/favorites';
-import { FavoritesRepository } from '../../lib/favorites/repository';
 import { LockerRoom } from '../../lib/lockerroom';
 import { JsonLockerRoom } from '../../lib/lockerroom/json';
 import { LockerRoomRepository } from '../../lib/lockerroom/repository';
@@ -21,6 +19,7 @@ import { CompetitorTab } from '../../shared/common/tab-ids';
 import { TournamentNavBarComponent } from "../../shared/tournament/tournamentNavBar/tournamentNavBar.component";
 import { LockerRoomComponent } from "../../shared/tournament/lockerroom/lockerroom.component";
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -31,6 +30,7 @@ import { FaIconComponent } from "@fortawesome/angular-fontawesome";
     
 })
 export class LockerRoomsEditComponent extends TournamentComponent implements OnInit {
+  faSpinner = faSpinner;
   hasCompetitors = false;
   validator!: LockerRoomValidator;
 
@@ -46,11 +46,10 @@ export class LockerRoomsEditComponent extends TournamentComponent implements OnI
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     globalEventsManager: GlobalEventsManager,
-    favRepository: FavoritesRepository,
     private lockerRoomRepository: LockerRoomRepository,
     private authService: AuthService
   ) {
-    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, favRepository);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
   }
 
   ngOnInit() {
@@ -61,7 +60,7 @@ export class LockerRoomsEditComponent extends TournamentComponent implements OnI
     const competitors = this.tournament.getCompetitors();
     this.validator = new LockerRoomValidator(competitors, this.tournament.getLockerRooms());
     this.hasCompetitors = competitors.length > 0;
-    this.processing = false;
+    this.processing.set(false);
   }
 
   get CompetitorTabBase(): CompetitorTab { return CompetitorTab .Base }
@@ -69,16 +68,16 @@ export class LockerRoomsEditComponent extends TournamentComponent implements OnI
   add() {
     const modal = this.getChangeNameModel('naar "deelnemers selecteren"');
     modal.result.then((resName: string) => {
-      this.processing = true;
+      this.processing.set(true);
       const jsonLockerRoom: JsonLockerRoom = { id: 0, name: resName, competitorIds: [] };
       this.lockerRoomRepository.createObject(jsonLockerRoom, this.tournament)
         .subscribe({
           next: (lockerRoomRes: LockerRoom) => this.changeCompetitors(lockerRoomRes),
           error: (e) => {
-            this.setAlert(IAlertType.Danger, e); this.processing = false;
+            this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
           },
           complete: () => {
-            this.processing = false
+            this.processing.set(false)
           }
         });
     }, (reason) => {
@@ -86,15 +85,15 @@ export class LockerRoomsEditComponent extends TournamentComponent implements OnI
   }
 
   remove(lockerRoom: LockerRoom) {
-    this.processing = true;
+    this.processing.set(true);
     this.lockerRoomRepository.removeObject(lockerRoom, this.tournament)
       .subscribe({
         next: () => { },
         error: (e) => {
-          this.setAlert(IAlertType.Danger, e); this.processing = false;
+          this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
         },
         complete: () => {
-          this.processing = false
+          this.processing.set(false)
         }
       });
   }
@@ -104,15 +103,15 @@ export class LockerRoomsEditComponent extends TournamentComponent implements OnI
     modal.componentInstance.initialName = lockerRoom.getName();
     modal.result.then((result) => {
       lockerRoom.setName(result);
-      this.processing = true;
+      this.processing.set(true);
       this.lockerRoomRepository.editObject(lockerRoom, this.tournament)
         .subscribe({
           next: () => { },
           error: (e) => {
-            this.setAlert(IAlertType.Danger, e); this.processing = false;
+            this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
           },
           complete: () => {
-            this.processing = false
+            this.processing.set(false)
           }
         });
     }, (reason) => { });
@@ -139,14 +138,14 @@ export class LockerRoomsEditComponent extends TournamentComponent implements OnI
     activeModal.componentInstance.lockerRoom = lockerRoom;
     activeModal.componentInstance.selectedCompetitors = lockerRoom.getCompetitors().slice();
     activeModal.result.then((selectedCompetitors: TournamentCompetitor[]) => {
-      this.processing = true;
+      this.processing.set(true);
       this.lockerRoomRepository.syncCompetitors(lockerRoom, selectedCompetitors)
         .subscribe({
           next: () => { },
           error: (e) => {
-            this.setAlert(IAlertType.Danger, e); this.processing = false;
+            this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
           },
-          complete: () => this.processing = false
+          complete: () => this.processing.set(false)
         });
     }, (reason) => { });
   }
