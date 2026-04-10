@@ -2,17 +2,17 @@
   <nav class="navbar p-0 mb-0 d-flex flex-nowrap">
 
     <div class="d-flex flex-nowrap">
-      <button (click)="execLeftButton(navBarData.atHome)" class="btn btn-navbar" role="button" aria-label="home" tabindex="-1">
-        <app-svg-icon icon="{{navBarData.atHome ? 'darklight' : 'house'}}"></app-svg-icon>
+      <button (click)="execLeftButton()" class="btn btn-navbar" role="button" [attr.aria-label]="isAtHome() ? 'toggle dark mode' : 'home'" tabindex="-1">
+        <app-svg-icon [icon]="isAtHome() ? 'darklight' : 'house'"></app-svg-icon>
       </button>
       <div class="vr my-1"></div>
     </div>
 
     <h1 class="px-2 my-1 text-nowrap overflow-hidden">
-      @if (navBarData.atHome) {
+      @if (isAtHome()) {
         <app-svg-icon class="pb-1" [width]=20 icon="favicon"></app-svg-icon>
       }
-      <span class="ms-1">{{navBarData.title}}</span>
+      <span class="ms-1">{{navBarData().title}}</span>
     </h1>
 
     <div class="d-flex flex-nowrap">

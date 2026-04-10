@@ -6,14 +6,14 @@
 </div>
 <div class="modal-body">
     <div class="container-fluid">
-        <form name="form" (ngSubmit)="false" formGroup="typedForm" novalidate>
+        <form name="form" (ngSubmit)="false" [formGroup]="typedForm" novalidate>
             <div class="row mb-3">
                 <label for="publicotherid" class="col-4 col-form-label pointer">publiek
                     <fa-icon (click)="openInfoModal(infoPublic)" [icon]="faInfoCircle" class="text-info">
                     </fa-icon>
                 </label>
                 <div class="form-check col-8">
-                    <div class="form-control form-check form-switch">
+                    <div class="form-check form-switch">
                         <input type="checkbox" class="form-check-input" id="public" formControlName="public">
                         <label class="form-check-label" for="public"></label>
                     </div>

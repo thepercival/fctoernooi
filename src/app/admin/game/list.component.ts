@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/common/navigation';
@@ -25,7 +25,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.css'],
     standalone: true,
-    imports: [NgbAlert,FontAwesomeModule,RoundNumberPlanningComponent,TournamentNavBarComponent]
+    imports: [NgbAlert,FontAwesomeModule,RoundNumberPlanningComponent,TournamentNavBarComponent,RouterLink]
 })
 export class GameListComponent extends TournamentComponent implements OnInit {
   faSpinner = faSpinner;

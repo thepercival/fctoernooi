@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { TournamentCompetitor } from '../../../lib/competitor';
 import { IAlert } from '../../../shared/common/alert';
 import { JsonRegistrationSettings } from '../../../lib/tournament/registration/settings/json';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TournamentRegistrationSettings } from '../../../lib/tournament/registration/settings';
 import { Tournament } from '../../../lib/tournament';
 import { TournamentRegistrationRepository } from '../../../lib/tournament/registration/repository';
@@ -11,18 +11,20 @@ import { DateConverter } from '../../../lib/dateConverter';
 import { TournamentRegistrationSettingsMapper } from '../../../lib/tournament/registration/settings/mapper';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
-import { faEye, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faPrint, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-tournament-registrations-form',
     templateUrl: './form.component.html',
     styleUrls: ['./form.component.scss'],
     standalone: true,
-    imports: [NgbAlert,FontAwesomeModule]
+    imports: [NgbAlert, FontAwesomeModule, RouterLink, ReactiveFormsModule]
 })
 export class RegistrationFormComponent implements OnInit{
   faSpinner = faSpinner;
   faEye = faEye;
+  faPrint = faPrint;
   public tournament = input.required<Tournament>();
   public settings = model.required<TournamentRegistrationSettings>();
   
@@ -50,6 +52,7 @@ export class RegistrationFormComponent implements OnInit{
       remark: new FormControl(this.settings().getRemark(), { nonNullable: true })
     });    
     this.typedForm = form;
+    this.processing.set(false);
   }
 
 

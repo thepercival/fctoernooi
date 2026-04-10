@@ -4,13 +4,14 @@ import { NgbActiveModal, NgbAlert, NgbDateStruct, NgbInputDatepicker, NgbModal, 
 import { League } from 'ngx-sport';
 import { faCalendarAlt, faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FocusDirective } from '../../shared/common/focus';
 
 @Component({
     selector: 'app-ngbd-modal-copy',
     templateUrl: './copymodal.component.html',
     styleUrls: ['./copymodal.component.scss'],
     standalone: true,
-    imports: [NgbAlert, FontAwesomeModule, NgbTimepicker, NgbInputDatepicker, ReactiveFormsModule]
+    imports: [NgbAlert, FontAwesomeModule, NgbTimepicker, NgbInputDatepicker, ReactiveFormsModule, FocusDirective]
 })
 export class CopyModalComponent implements OnInit {
     @Input() name!: string;

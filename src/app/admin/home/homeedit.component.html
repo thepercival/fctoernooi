@@ -15,7 +15,7 @@
       <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
       }
       @if(!processing()) {
-      <form name="form" (ngSubmit)="save()" formGroup="form" novalidate>
+      <form name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
 
         <div class="row mb-3">
           <div class="col-3">
@@ -23,7 +23,7 @@
           </div>
           <div class="col-9">
             <textarea class="form-control" rows="4"
-              ngClass="{ 'is-invalid': form.controls.intro.invalid, 'is-valid': form.controls.intro.valid }"
+              [class.is-invalid]="form.controls.intro.invalid" [class.is-valid]="form.controls.intro.valid "
               formControlName="intro" placeholder="max. {{validations.maxlengthintro}} karakters"></textarea>
           </div>
         </div>
@@ -59,7 +59,7 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              ngClass="{ 'is-invalid': form.controls.location.invalid, 'is-valid': form.controls.location.valid }"
+              [class.is-invalid]="form.controls.location.invalid" [class.is-valid]="form.controls.location.valid "
               type="text" formControlName="location" placeholder="lat,lng of adresomschrijving">
           </div>
         </div>

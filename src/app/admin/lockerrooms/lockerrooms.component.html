@@ -23,7 +23,7 @@
         <ngb-alert type="info">er zijn nog geen
           deelnemers
           ingevuld, ga naar
-          <button role="button" class="btn btn-secondary" routerLink="['/admin/competitors', tournament.getId(), CompetitorTabBase]">
+          <button role="button" class="btn btn-secondary" [routerLink]="['/admin/competitors', tournament.getId(), CompetitorTabBase]">
             <span>
               <fa-icon [icon]="faUsers"></fa-icon>deelnemers invullen
             </span>

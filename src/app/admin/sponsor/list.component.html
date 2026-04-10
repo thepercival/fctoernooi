@@ -7,8 +7,8 @@
             [icon]="faInfoCircle"></fa-icon>
         </h2>
         @if (sponsors.length > 0) {
-          <button routerLink="['/public/liveboard', tournament.getId()]"
-            queryParams="{screenconfigname: screenConfig.name}" type="button" class="btn btn-secondary">
+          <button [routerLink]="['/public/liveboard', tournament.getId()]"
+            [queryParams]="{screenconfigname: screenConfig.name}" type="button" class="btn btn-secondary">
             <fa-icon [icon]="faEye"></fa-icon>
             <span> preview</span>
           </button>

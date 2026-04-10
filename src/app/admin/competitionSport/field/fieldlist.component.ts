@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, signal, WritableSignal } from '@angular/core';
+import { Component, OnInit, Input, signal, WritableSignal, Injector } from '@angular/core';
 import { Field, CompetitionSport, JsonField, Structure } from 'ngx-sport';
 
 import { FieldRepository } from '../../../lib/ngx-sport/field/repository';
@@ -6,7 +6,7 @@ import { PlanningRepository } from '../../../lib/ngx-sport/planning/repository';
 import { IAlert, IAlertType } from '../../../shared/common/alert';
 import { NgbModal, NgbModalRef, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { Tournament } from '../../../lib/tournament';
-import { NameModalComponent } from '../../../shared/tournament/namemodal/namemodal.component';
+import { NAME_MODAL_DATA, NameModalComponent } from '../../../shared/tournament/namemodal/namemodal.component';
 import { TranslateFieldService } from '../../../lib/translate/field';
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 import { faArrowUp, faPencil, faPlus, faSort, faSpinner, faTrashCan } from '@fortawesome/free-solid-svg-icons';
@@ -39,6 +39,7 @@ export class FieldListComponent implements OnInit {
         private planningRepository: PlanningRepository,
         private translate: TranslateFieldService,
         private modalService: NgbModal,
+        private injector: Injector,
     ) {
         this.processing.set(true);
 
@@ -57,13 +58,21 @@ export class FieldListComponent implements OnInit {
     }
 
     getChangeNameModel(buttonLabel: string, initialName?: string): NgbModalRef {
-        const activeModal = this.modalService.open(NameModalComponent);
-        activeModal.componentInstance.header = this.getFieldDescription() + 'naam';
-        activeModal.componentInstance.range = { min: Field.MIN_LENGTH_NAME, max: Field.MAX_LENGTH_NAME };
-        activeModal.componentInstance.buttonName = buttonLabel;
-        activeModal.componentInstance.initialName = initialName;
-        activeModal.componentInstance.labelName = 'naam';
-        return activeModal;
+        return this.modalService.open(NameModalComponent, {
+            injector: Injector.create({
+                providers: [{
+                    provide: NAME_MODAL_DATA,
+                    useValue: {
+                        header: this.getFieldDescription() + 'naam',
+                        range: { min: Field.MIN_LENGTH_NAME, max: Field.MAX_LENGTH_NAME },
+                        buttonName: buttonLabel,
+                        initialName: initialName ?? '',
+                        labelName: 'naam'
+                    }
+                }],
+                parent: this.injector
+            })
+        });
     }
 
     formToJson(name: string, field?: Field): JsonField {

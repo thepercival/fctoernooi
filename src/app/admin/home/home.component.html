@@ -45,7 +45,7 @@
           <!-- referees -->
           @if (isAdmin()) {
             <div class="card card-sub pointer px-0"
-              routerLink="['/admin/referees', tournament.getId()]">
+              [routerLink]="['/admin/referees', tournament.getId()]">
               <div class="card-body text-center p-1 pt-2">
                 <h5 class="card-title">
                   <fa-icon [icon]="facReferee"></fa-icon>
@@ -57,7 +57,7 @@
           <!-- lockerRooms -->
           @if (isAdmin() && lockerRoomValidator) {
             <div class="card card-sub {{getLockerRoomBorderClass(lockerRoomValidator)}} pointer"
-              routerLink="['/admin/lockerrooms', tournament.getId()]">
+              [routerLink]="['/admin/lockerrooms', tournament.getId()]">
               <div class="card-body text-center p-1 pt-2">
                 <h5 class="card-title">
                   <fa-icon [icon]="faDoorClosed"></fa-icon>
@@ -68,7 +68,7 @@
           }
           <!-- sponsors -->
           @if (isAdmin()) {
-            <div class="card card-sub pointer" routerLink="['/admin/sponsors', tournament.getId()]">
+            <div class="card card-sub pointer" [routerLink]="['/admin/sponsors', tournament.getId()]">
               <div class="card-body text-center p-1 pt-2">
                 <h5 class="card-title">
                   <fa-icon [icon]="faMoneyBillAlt"></fa-icon>
@@ -86,7 +86,7 @@
         <div class="d-flex flex-wrap gap-3 justify-content-center mt-3">
           <!-- change name & theme -->
           @if (isAdmin()) {
-            <div class="card card-sub pointer" routerLink="['/admin/nameandtheme', tournament.getId()]">
+            <div class="card card-sub pointer" [routerLink]="['/admin/nameandtheme', tournament.getId()]">
               <div class="card-body text-center p-1 pt-2">
                 <h5 class="card-title">
                   @if (tournament.getLogoExtension()) {
@@ -104,7 +104,7 @@
           }
 
           <!-- start & pauzes -->
-          <div class="card card-sub pointer" routerLink="['/admin/startandrecesses', tournament.getId()]">
+          <div class="card card-sub pointer" [routerLink]="['/admin/startandrecesses', tournament.getId()]">
             <div class="card-body text-center p-1 pt-2">
               <h5 class="card-title">
                 <fa-icon [icon]="faCalendarAlt"></fa-icon>
@@ -113,7 +113,7 @@
             </div>
           </div>
           <!-- ranking (ruleset) -->
-          <div class="card card-sub pointer" routerLink="['/admin/ranking', tournament.getId()]">
+          <div class="card card-sub pointer" [routerLink]="['/admin/ranking', tournament.getId()]">
             <div class="card-body text-center p-1 pt-2">
               <h5 class="card-title">
                 <fa-icon [icon]="faListOl"></fa-icon>
@@ -124,7 +124,7 @@
           <!-- live scoreboard -->
           @if (allPoulesHaveGames) {
             <div class="card card-sub {{getLiveBoardBorderClass()}} pointer"
-              routerLink="['/public/liveboard', tournament.getId()]">
+              [routerLink]="['/public/liveboard', tournament.getId()]">
               <div class="card-body text-center p-1 pt-2">
                 <h5 class="card-title">
                   <fa-icon [icon]="faTv"></fa-icon>
@@ -153,7 +153,7 @@
 
           <!-- home pagina -->
           @if (tournament.getPublic()) {
-            <div class="card card-sub pointer" routerLink="['/admin/homeedit', tournament.getId()]">
+            <div class="card card-sub pointer" [routerLink]="['/admin/homeedit', tournament.getId()]">
               <div class="card-body text-center p-0 pt-2">
                 <h5 class="card-title">
                   <fa-icon [icon]="faHome"></fa-icon>
@@ -195,7 +195,7 @@
         <div class="d-flex flex-wrap gap-3 justify-content-center mt-3">
           <!-- roleadmin -->
           @if (isRoleAdmin()) {
-            <div class="card card-sub pointer" routerLink]="['/admin/authorizations', tournament.getId()]">
+            <div class="card card-sub pointer" [routerLink]="['/admin/authorizations', tournament.getId()]">
               <div class="card-body text-center p-1 pt-2">
                 <h5 class="card-title">
                   <fa-icon [icon]="faUserFriends"></fa-icon>

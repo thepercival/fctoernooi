@@ -23,7 +23,7 @@
     <div class="col-8">
       <div class="input-group">
         <input class="form-control"
-          ngClass="{ 'is-invalid': typedForm.controls.sportName.invalid, 'is-valid': typedForm.controls.sportName.valid }"
+          [class.is-invalid]="typedForm.controls.sportName.invalid" [class.is-valid]="typedForm.controls.sportName.valid "
           type="text" formControlName="sportName" placeholder="naam" required>
         <span class="input-group-text pointer" (click)="toSportToAdd()">
           <fa-icon [icon]="faPencilAlt"></fa-icon>
@@ -35,7 +35,7 @@
     <label for="nrOfFields" class="col-4 col-form-label">{{getFieldsDescription()}}</label>
     <div class="col-8">
       <input type="number" class="form-control"
-        ngClass="{ 'is-invalid': typedForm.controls.nrOfFields.invalid, 'is-valid': typedForm.controls.nrOfFields.valid}"
+        [class.is-invalid]="typedForm.controls.nrOfFields.invalid" [class.is-valid]="typedForm.controls.nrOfFields.valid"
         formControlName="nrOfFields" [min]="minNrOfFields" [max]="maxNrOfFields" required>
     </div>
   </div>
@@ -58,7 +58,7 @@
       van samenstelling wisselende teams
     </label>
     <div class="col-8">
-      <div class="form-control form-check form-switch">
+      <div class="form-check form-switch">
         <input type="checkbox" class="form-check-input" id="mixed" (change)="mixedChanged(typedForm)" formControlName="mixed">
         <label class="form-check-label" for="mixed"></label>
       </div>
@@ -83,14 +83,14 @@
           thuis
         </span>
         <input class="form-control"
-          ngClass="{ 'is-invalid': typedForm.controls.nrOfHomePlaces.invalid, 'is-valid': typedForm.controls.nrOfHomePlaces.valid }"
+          [class.is-invalid]="typedForm.controls.nrOfHomePlaces.invalid" [class.is-valid]="typedForm.controls.nrOfHomePlaces.valid "
           type="number" formControlName="nrOfHomePlaces" placeholder="1" required [min]="minNrOfSidePlaces"
           [max]="maxNrOfSidePlaces">
       </div>
       <div class="input-group mt-2">
         <span class="input-group-text pe-4">uit</span>
         <input class="form-control"
-          ngClass="{ 'is-invalid': typedForm.controls.nrOfAwayPlaces.invalid, 'is-valid': typedForm.controls.nrOfAwayPlaces.valid }"
+          [class.is-invalid]="typedForm.controls.nrOfAwayPlaces.invalid" [class.is-valid]="typedForm.controls.nrOfAwayPlaces.valid "
           type="number" formControlName="nrOfAwayPlaces" placeholder="1" required [min]="minNrOfSidePlaces"
           [max]="maxNrOfSidePlaces">
       </div>
@@ -105,7 +105,7 @@
     </label>
     <div class="col-8">
       <input type="number" class="form-control"
-        ngClass="{ 'is-invalid': typedForm.controls.nrOfGamePlaces.invalid, 'is-valid': typedForm.controls.nrOfGamePlaces.valid}"
+        [class.is-invalid]="typedForm.controls.nrOfGamePlaces.invalid" [class.is-valid]="typedForm.controls.nrOfGamePlaces.valid"
         formControlName="nrOfGamePlaces" [min]="minNrOfGamePlaces" [max]="maxNrOfGamePlaces" required>
     </div>
   </div>

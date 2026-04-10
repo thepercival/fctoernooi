@@ -19,7 +19,7 @@ import { TournamentCompetitor } from '../../lib/competitor';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { CategoryChooseModalComponent } from '../../shared/tournament/category/chooseModal.component';
-import { NgbAlert, NgbModal, NgbNav } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal, NgbNav, NgbNavContent, NgbNavItem, NgbNavLink, NgbNavOutlet } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { TournamentRegistrationRepository } from '../../lib/tournament/registration/repository';
 import { TournamentRegistrationSettings } from '../../lib/tournament/registration/settings';
@@ -38,7 +38,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
     standalone: true,
-    imports: [NgbAlert, FontAwesomeModule, CategoryBaseCompetitorListComponent, ReactiveFormsModule, NgbNav, CategoryOrderCompetitorListComponent, RegistrationsNavComponent, CompetitorPresentListComponent, TournamentNavBarComponent]
+    imports: [NgbAlert, FontAwesomeModule, CategoryBaseCompetitorListComponent, ReactiveFormsModule, NgbNav, NgbNavItem, NgbNavLink, NgbNavContent, NgbNavOutlet, CategoryOrderCompetitorListComponent, RegistrationsNavComponent, CompetitorPresentListComponent, TournamentNavBarComponent]
 })
 export class CompetitorListComponent extends TournamentComponent implements OnInit, AfterViewChecked {
 
@@ -112,7 +112,12 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   onTabChange(tabId: CompetitorTab) {
-    window.history.replaceState({}, '', 'admin/competitors/' + this.tournament.getId() + '/' + tabId);
+    this.activeTab = tabId;
+    if (tabId === CompetitorTab.Registrations && this.activeRegistrationTab !== undefined) {
+      this.router.navigate(['/admin/competitors', this.tournament.getId(), tabId, this.activeRegistrationTab], { replaceUrl: true });
+      return;
+    }
+    this.router.navigate(['/admin/competitors', this.tournament.getId(), tabId], { replaceUrl: true });
   }
 
   ngAfterViewChecked() {

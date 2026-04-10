@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, output } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, FormGroupDirective, FormArrayName, FormControlName } from '@angular/forms';
 import { ScoreConfig, ScoreDirection, StructureNameService, TogetherGamePlace, TogetherScore } from 'ngx-sport';
 import { TranslateScoreService } from '../../lib/translate/score';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -11,7 +11,7 @@ import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './togetherscorecard.component.html',
     styleUrls: ['./togetherscorecard.component.css'],
     standalone: true,
-    imports: [FontAwesomeModule,EscapeHtmlPipe]
+    imports: [FontAwesomeModule, EscapeHtmlPipe, ReactiveFormsModule]
 })
 export class ScoreTogetherCardComponent implements OnInit {
   @Input() form!: FormGroup;

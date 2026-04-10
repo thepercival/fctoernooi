@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, output, TemplateRef } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CompetitionSport, JsonCompetitionSport, JsonGameAmountConfig, JsonSport, NameService, Sport, VoetbalRange } from 'ngx-sport';
 
@@ -7,7 +7,8 @@ import { CompetitionSport, JsonCompetitionSport, JsonGameAmountConfig, JsonSport
     selector: 'app-tournament-gameamountconfigs-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css'],
-    
+  standalone: true,
+  imports: [ReactiveFormsModule],
 })
 export class GameAmountConfigEditComponent implements OnInit {
   @Input() gameAmountControls!: GameAmountConfigControl[];

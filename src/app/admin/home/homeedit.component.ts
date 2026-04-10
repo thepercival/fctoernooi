@@ -8,7 +8,7 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IAlertType } from '../../shared/common/alert';
 import { Tournament } from '../../lib/tournament';
 import { JsonTournament } from '../../lib/tournament/json';
@@ -26,7 +26,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './homeedit.component.html',
     styleUrls: ['./homeedit.component.scss'],
     standalone: true,
-    imports: [FontAwesomeModule, TournamentNavBarComponent,NgbAlert]
+    imports: [FontAwesomeModule, TournamentNavBarComponent, NgbAlert, ReactiveFormsModule]
 })
 export class HomeEditComponent extends TournamentComponent implements OnInit {
 

@@ -1,5 +1,5 @@
 import { Component, Input, output, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { StructureEditor, StructureNameService } from 'ngx-sport';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { CSSService } from '../../shared/common/cssservice';
@@ -13,7 +13,7 @@ import { faCogs } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './rounds.component.html',
     styleUrls: ['./rounds.component.css'],
     standalone: true,
-    imports: [FontAwesomeModule, EscapeHtmlPipe]
+    imports: [FontAwesomeModule, EscapeHtmlPipe, ReactiveFormsModule]
 })
 export class StructureSelectRoundComponent implements OnInit {
   @Input() selectableRoundNode!: SelectableRoundNode;

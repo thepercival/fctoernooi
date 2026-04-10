@@ -8,7 +8,7 @@
             @if (!processing()){
             <div>
                 <button type="button" class="btn btn-sm btn-outline-primary"
-                    routerLink="['/admin/authorization', tournament.getId()]">
+                    [routerLink]="['/admin/authorization', tournament.getId()]">
                     <fa-icon [icon]="faPlusCircle"></fa-icon> toevoegen
                 </button>
             </div>

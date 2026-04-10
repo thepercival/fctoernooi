@@ -151,7 +151,6 @@ export class TournamentComponent {
                                 }
                             },
                             error: (e) => {
-                                console.log(e);
                                 this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
                             }
                         });

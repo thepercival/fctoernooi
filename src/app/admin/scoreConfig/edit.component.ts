@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, WritableSignal, signal } from '@angular/core';
-import { Validators, FormGroup, FormControl } from '@angular/forms';
+import { Component, Input, OnInit, ViewChild, WritableSignal, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Validators, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import {
     ScoreConfig,
     JsonScoreConfig,
@@ -17,7 +18,8 @@ import { ScoreConfigRepository } from '../../lib/ngx-sport/scoreConfig/repositor
 import { Tournament } from '../../lib/tournament';
 import { IAlert, IAlertType } from '../../shared/common/alert';
 import { RoundsSelectorModalComponent, SelectableCategory, SelectableRoundNode } from '../rounds/selector.component';
-import { forkJoin, Observable } from 'rxjs';
+import { Subject, forkJoin, Observable } from 'rxjs';
+import { debounceTime, tap } from 'rxjs/operators';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
@@ -26,7 +28,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.scss'],
     standalone: true,
-    imports: [FontAwesomeModule,NgbAlert]
+    imports: [FontAwesomeModule, NgbAlert, ReactiveFormsModule]
 })
 export class ScoreConfigEditComponent implements OnInit {
     faSpinner = faSpinner;
@@ -41,10 +43,14 @@ export class ScoreConfigEditComponent implements OnInit {
       }>;
     public readonly alert: WritableSignal<IAlert | undefined> = signal(undefined);
     public readonly processing: WritableSignal<boolean> = signal(true);
+    public readonly saving: WritableSignal<boolean> = signal(false);
     protected selectableCategories!: SelectableCategory[];
     public originalScoreConfig!: ScoreConfig;
     readonly: boolean = true;
+    public saveAlert: IAlert | undefined;
+    private readonly successMessage$ = new Subject<string>();
 
+    @ViewChild('selfClosingAlert', { static: false }) selfClosingAlert?: NgbAlert;
     validations: ScoreValidations = {
         minScore: 0,
         maxScore: 9999
@@ -58,20 +64,30 @@ export class ScoreConfigEditComponent implements OnInit {
         private translate: TranslateScoreService,
         private modalService: NgbModal
     ) {
+        this.successMessage$
+            .pipe(
+                takeUntilDestroyed(),
+                tap((message) => {
+                    this.saveAlert = { type: IAlertType.Success, message };
+                }),
+                debounceTime(3000),
+            )
+            .subscribe(() => this.selfClosingAlert?.close());
+
         this.typedForm = new FormGroup({
             useNext: new FormControl(false, { nonNullable: true }),
-            max: new FormControl(0, { nonNullable: true, validators: 
+            max: new FormControl(0, { nonNullable: true, validators:
                 [
                     Validators.required,
                     Validators.minLength(this.validations.minScore),
                     Validators.maxLength(this.validations.maxScore)
-                ] 
+                ]
             }),
-            maxNext: new FormControl(0, { nonNullable: true, validators: 
+            maxNext: new FormControl(0, { nonNullable: true, validators:
                 [
                     Validators.minLength(this.validations.minScore),
                     Validators.maxLength(this.validations.maxScore)
-                ] 
+                ]
             })
         });
         this.onChanges();
@@ -95,10 +111,10 @@ export class ScoreConfigEditComponent implements OnInit {
         this.postRoundsSelection();
     }
 
-
     protected postRoundsSelection() {
         this.readonly = this.someSelectedHasBegun(this.selectableCategories.map(selectableCategory => selectableCategory.rootRoundNode));
         this.alert.set(undefined);
+        this.saveAlert = undefined;
         if (this.readonly) {
             this.alert.set({ type: IAlertType.Warning, message: 'er zijn wedstrijden gespeeld voor (sommige) gekozen ronden, je kunt niet meer wijzigen' });
         }
@@ -169,9 +185,7 @@ export class ScoreConfigEditComponent implements OnInit {
                     Validators.min(minScore),
                     Validators.max(this.validations.maxScore)
                 ]));
-            if (this.typedForm.controls.max.value === 0) {
-                this.typedForm.controls.max.setErrors({ 'invalid': true });
-            }
+            this.typedForm.controls.max.updateValueAndValidity({ emitEvent: false });
         });
     }
 
@@ -237,8 +251,8 @@ export class ScoreConfigEditComponent implements OnInit {
     }
 
     save(): boolean {
-        this.alert.set(undefined);
-        this.processing.set(true);
+        this.saveAlert = { type: IAlertType.Info, message: 'opslaan bezig...' };
+        this.saving.set(true);
         const jsonScoreConfig: JsonScoreConfig = this.formToJson();
 
         const selectableCategoryConverter = new SelectableCategoryConverter();
@@ -265,7 +279,7 @@ export class ScoreConfigEditComponent implements OnInit {
             .subscribe({
                 next: () => {
                     if (validScoreConfigs.length === 0) {
-                        this.processing.set(false);
+                        this.handleSaveSuccess();
                         return;
                     }
                     // 3 voeg de scoreregels toe van de unchangedChildRounds
@@ -274,19 +288,31 @@ export class ScoreConfigEditComponent implements OnInit {
                     });
                     forkJoin(reposChildUpdates)
                         .subscribe({
-                            next: () => this.processing.set(false),
+                            next: () => this.handleSaveSuccess(),
                             error: (e) => {
-                                this.alert.set({ type: IAlertType.Danger, message: 'de scoreregels zijn niet opgeslagen: ' + e });
-                                this.processing.set(false);
+                                this.handleSaveError(e);
                             }
                         });
                 },
                 error: (e) => {
-                    this.alert.set({ type: IAlertType.Danger, message: 'de scoreregels zijn niet opgeslagen: ' + e });
-                    this.processing.set(false);
+                    this.handleSaveError(e);
                 }
             });
         return true;
+    }
+
+    private handleSaveSuccess(): void {
+        this.saving.set(false);
+        this.successMessage$.next('score-regels opgeslagen');
+    }
+
+    private handleSaveError(error: unknown): void {
+        this.saveAlert = { type: IAlertType.Danger, message: 'de scoreregels zijn niet opgeslagen: ' + error };
+        this.saving.set(false);
+    }
+
+    onSaveAlertClosed(): void {
+        this.saveAlert = undefined;
     }
 }
 

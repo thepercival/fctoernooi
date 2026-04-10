@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h4 class="modal-title">{{header}}</h4>
+    <h4 class="modal-title">{{data.header}}</h4>
     <button type="button" class="btn-close" aria-label="sluiten" (click)="activeModal.dismiss('close')"></button>
 </div>
 <div class="modal-body">
@@ -7,11 +7,11 @@
         <form name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
             <div class="row mb-3">
                 <div class="col-3 col-sm-4 col-md-5">
-                    <label for="name" class="col-form-label">{{labelName}}</label>
+                    <label for="name" class="col-form-label">{{data.labelName}}</label>
                 </div>
                 <div class="col-9 col-sm-8 col-md-7">
                     <input class="form-control"
-                        ngClass="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }"
+                        [class.is-invalid]="form.controls.name.invalid" [class.is-valid]="form.controls.name.valid "
                         type="text" formControlName="name" ngbAutofocus placeholder="{{getPlaceHolder()}}">
                 </div>
             </div>
@@ -19,7 +19,7 @@
     </div>
 </div>
 <div class="modal-footer align-items-end">
-    <button type="submit" [disabled]="form.invalid" class="btn btn{{buttonOutline ? '-outline' : ''}}-primary"
-        data-dismiss="modal" (click)="activeModal.close(form.controls.name.value)">{{buttonName}}</button>
+    <button type="submit" [disabled]="form.invalid" class="btn btn{{data.buttonOutline ? '-outline' : ''}}-primary"
+        data-dismiss="modal" (click)="activeModal.close(form.controls.name.value)">{{data.buttonName}}</button>
 
 </div>

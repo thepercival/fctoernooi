@@ -7,7 +7,7 @@
   <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
 }
 @if (!processing()) {
-  <form name="form" (ngSubmit)="save()" formGroup="typedForm" novalidate>
+  <form name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
     <div class="row mb-3">
       <label for="pointsCalculation" class="col-7 col-form-label pointer"
         (click)="openInfoModal('punten berekening', contentInfo)">berekening
@@ -16,7 +16,7 @@
       <div class="col-5">
         <select class="form-control" formControlName="pointsCalculation" required (change)="updateDisabled()">
           @for (pointsCalculation of pointsCalculations; track pointsCalculation) {
-            <option ngValue="pointsCalculation">
+            <option [ngValue]="pointsCalculation">
               {{nameService.getPointsCalculationName(pointsCalculation)}}</option>
           }
         </select>
@@ -30,7 +30,7 @@
         <select class="form-control" formControlName="winPoints" required
           [class.is-invalid]="typedForm.controls.winPoints.invalid" [class.is-valid]="typedForm.controls.winPoints.valid">
           @for (winpoints of ranges.winPoints; track winpoints) {
-            <option ngValue="winpoints">{{winpoints}}</option>
+            <option [ngValue]="winpoints">{{winpoints}}</option>
           }
         </select>
       </div>
@@ -43,7 +43,7 @@
         <select class="form-control" formControlName="drawPoints" required
           [class.is-invalid]="typedForm.controls.drawPoints.invalid" [class.is-valid]="typedForm.controls.drawPoints.valid">
           @for (drawpoints of ranges.drawPoints; track drawpoints) {
-            <option ngValue="drawpoints">{{drawpoints}}</option>
+            <option [ngValue]="drawpoints">{{drawpoints}}</option>
           }
         </select>
       </div>
@@ -62,7 +62,7 @@
         <select class="form-control" formControlName="winPointsExt" required
           [class.is-invalid]="typedForm.controls.winPoints.invalid" [class.is-valid]="typedForm.controls.winPointsExt.valid">
           @for (winpointsext of ranges.winPoints; track winpointsext) {
-            <option ngValue="winpointsext">{{winpointsext}}</option>
+            <option [ngValue]="winpointsext">{{winpointsext}}</option>
           }
         </select>
       </div>
@@ -75,7 +75,7 @@
         <select class="form-control" formControlName="drawPointsExt" required
           [class.is-invalid]="typedForm.controls.drawPointsExt.invalid" [class.is-valid]="typedForm.controls.drawPointsExt.valid">
           @for (drawpointsext of ranges.drawPoints; track drawpointsext) {
-            <option ngValue="drawpointsext">{{drawpointsext}}
+            <option [ngValue]="drawpointsext">{{drawpointsext}}
             </option>
           }
         </select>
@@ -89,7 +89,7 @@
         <select class="form-control" formControlName="losePointsExt" required
           [class.is-invalid]="typedForm.controls.losePointsExt.invalid" [class.is-valid]="typedForm.controls.losePointsExt.valid">
           @for (losepointsext of ranges.losePoints; track losepointsext) {
-            <option ngValue="losepointsext">{{losepointsext}}
+            <option [ngValue]="losepointsext">{{losepointsext}}
             </option>
           }
         </select>

@@ -29,20 +29,23 @@
       }
       
       @if (!processing() && registration) {
-        <div class="card card-auth my-3">
-          <div class="card-body text-center mx-auto form-validate border-top-0 border-primary">
-            <div class="card card-body mx-auto bg-faded form-register mt-3">
-              <legend class="m-b-1 text-xs-center">bedankt voor het inschrijven!</legend>
+        <div class="card card-auth my-3 registration-confirmation">
+          <div class="card-body text-center form-validate border-top-0 border-primary">
+            <ngb-alert type="success" [dismissible]="false" class="mb-2">je bent ingeschreven</ngb-alert>
+            <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 mt-4">
               <button role="button" class="btn btn-primary" (click)="reset()">nog een deelnemer inschrijven</button>
-            </div>
-            <div class="card card-body mx-auto bg-faded form-register mt-3">
               @if (!isAdmin()) {
-                <button role="button" class="btn btn-outline-primary" routerLink="['/', tournament.getId()]">naar toernooi</button>
+                <a class="btn btn-outline-primary" [routerLink]="['/', tournament.getId()]">naar toernooi</a>
               }
               @if (isAdmin()) {
-                <button role="button" class="btn btn-outline-primary" routerLink="['/admin/competitors', tournament.getId(), TabRegistrations]">naar inschrijvingen</button>
+                <a class="btn btn-outline-primary" [routerLink]="['/admin/competitors', tournament.getId(), TabRegistrations, TabRegistrationList]">naar inschrijvingen</a>
               }
             </div>
+            @if (!isAdmin()) {
+              <div class="mt-3">
+                <a class="registration-confirmation__link" [routerLink]="['/', tournament.getId()]">bekijk het toernooi</a>
+              </div>
+            }
           </div>
         </div>
       }
@@ -57,8 +60,8 @@
               <input class="form-control"
                 [class.is-invalid]="form.controls.name.invalid"
                 [class.is-valid]="form.controls.name.valid"
-                type="text" formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters"
-                focusMe="true">
+                type="text" formControlName="name" placeholder="{{validations.minlengthname}}-{{validations.maxlengthname}} karakters"
+                [focusMe]="true">
             </div>
           </div>
 
@@ -70,7 +73,7 @@
               <input class="form-control"
                 [class.is-invalid]="form.controls.emailaddress.invalid"
                 [class.is-valid]="form.controls.emailaddress.valid"
-                type="email" formControlName="emailaddress" placeholder="max. {{validations.maxlengthemailaddress}} karakters">
+                type="email" formControlName="emailaddress" placeholder="{{validations.minlengthemailaddress}}-{{validations.maxlengthemailaddress}} karakters">
             </div>
           </div>
 
@@ -82,7 +85,7 @@
               <input class="form-control"
                 [class.is-invalid]="form.controls.telephone.invalid"
                 [class.is-valid]="form.controls.telephone.valid"
-                type="tel" formControlName="telephone" placeholder="max. {{validations.maxlengthtelephone}} karakters">
+                type="tel" formControlName="telephone" placeholder="{{validations.minlengthtelephone}}-{{validations.maxlengthtelephone}} karakters">
             </div>
           </div>
 

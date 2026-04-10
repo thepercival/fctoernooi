@@ -1,8 +1,8 @@
 <div class="modal-header">
     <h4 class="modal-title">
-        <span [innerHTML]="structureNameService().getRoundName(parentRound())"></span>
+        <span [innerHTML]="data.structureNameService.getRoundName(data.parentRound)"></span>
         <span> - </span>
-        <span class="text-{{cssService.getQualifyTargetClass(target())}}">{{structureNameService().getQualifyTargetDescription(target(), true)}}</span>        
+        <span class="text-{{cssService.getQualifyTargetClass(data.target)}}">{{data.structureNameService.getQualifyTargetDescription(data.target, true)}}</span>
     </h4>
     <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
 </div>
@@ -17,14 +17,14 @@
             <div class="col-8 pe-0">
                 <div class="btn-group ms-1" role="group" aria-label="aantal">
                     <button type="button" class="btn btn-outline-secondary text-nowrap" (click)="onDistributionUpdate.emit(HorizontalSnake)">
-                        @if (getDistribution(target()) === HorizontalSnake) {
+                        @if (getDistribution(data.target) === HorizontalSnake) {
                             <fa-icon [icon]="faCheckCircle"
                                 class="text-success ms-1"></fa-icon>
                         }
                         zigzag
                     </button>
                     <button type="button" class="btn btn-outline-secondary" (click)="onDistributionUpdate.emit(Vertical)">
-                        @if (getDistribution(target()) === Vertical) {
+                        @if (getDistribution(data.target) === Vertical) {
                             <fa-icon [icon]="faCheckCircle"
                                 class="text-success ms-1"></fa-icon>
                         }
@@ -39,8 +39,8 @@
                     <label class="ms-2 mt-2">groepen</label>
                 </div>
                 <div class="col-8 pe-0">
-                    <div class="btn-group-vertical d-flex flex-column {{getTargetDirectionClass(target())}}" role="group">
-                        <ng-container [ngTemplateOutlet]="editQualifyGroups" [ngTemplateOutletContext]="{$implicit: target}">
+                    <div class="btn-group-vertical d-flex flex-column {{getTargetDirectionClass(data.target)}}" role="group">
+                        <ng-container [ngTemplateOutlet]="editQualifyGroups" [ngTemplateOutletContext]="{$implicit: data.target}">
                         </ng-container>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
 </div>   
 
 <ng-template #editQualifyGroups let-target>
-    @for (qualifyGroup of parentRound().getQualifyGroups(target); track qualifyGroup.getId()) {
+    @for (qualifyGroup of data.parentRound.getQualifyGroups(target); track qualifyGroup.getId()) {
         <li
             class="list-group-item text-center w-100 d-flex flex-column {{getTargetDirectionClass(target)}} py-2 {{cssService.getQualifyGroup(qualifyGroup)}}">
             @if (qualifyGroup.getFirstSingleRule()) {
@@ -72,11 +72,11 @@
 
 <ng-template let-singleRule="singleRule" #editSingleRule>
     <div class="py-1">
-        <span [innerHtml]="structureNameService().getQualifyRuleName(singleRule) | keepHtml"></span>
+        <span [innerHtml]="data.structureNameService.getQualifyRuleName(singleRule) | keepHtml"></span>
     </div>
-    @if (structureEditor().isQualifyGroupSplittableAt(singleRule)) {
+    @if (data.structureEditor.isQualifyGroupSplittableAt(singleRule)) {
         <button type="button"
-            id="btn-split-qualifygroup-{{parentRound().getNumberAsValue()}}" class="btn btn-outline-primary"
+            id="btn-split-qualifygroup-{{data.parentRound.getNumberAsValue()}}" class="btn btn-outline-primary"
             (click)="onQualifyGroupFromSplit.emit(singleRule)">
             <fa-icon class="rotate-45" [icon]="faExpandAlt"></fa-icon><span> splitsen</span>
         </button>

@@ -7,13 +7,27 @@
 <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
 }
 @if(!processing() && originalScoreConfig) {
-<form name="form" (ngSubmit)="save()" formGroup="typedForm" novalidate>
-  @if(originalScoreConfig.hasNext()) {
+<form name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
   <div class="row mb-3">
-    <label for="useNext" class="col-5 col-form-label">gebruik {{getNextPluralName()}}</label>
-    <div class="col-7">
-      <div class="form-control form-check form-switch">
-        <input type="checkbox" class="form-check-input" id="useNext" formControlName="useNext">
+    <label class="col-3 col-form-label">
+      @if(typedForm.value['useNext']) {
+      <span>{{getNextSingularName()}}@if(getNextSingularName()) {<span>-</span>}</span>
+      }
+      <span>{{getPluralName()}}</span>
+    </label>
+    <label for="max" class="col-2 col-form-label text-end">{{getDirectionName()}}</label>
+    <div class="col-7 form-floating">
+      <input type="number" [class.is-invalid]="typedForm.controls.max.invalid" [class.is-valid]="typedForm.controls.max.valid"
+        [formControl]="typedForm.controls.max" maxlength="2" class="form-control" id="max" />
+      <label for="max" class="ms-3">0 = zoveel mogelijk</label>
+    </div>
+  </div>
+  @if(originalScoreConfig.hasNext()) {
+  <div class="row mb-3 align-items-center">
+    <label for="useNext" class="col-5 col-form-label">gebruik "{{getNextPluralName()}}"</label>
+    <div class="col-7 d-flex align-items-center">
+      <div class="form-check form-switch mb-0">
+        <input type="checkbox" class="form-check-input" id="useNext" [formControl]="typedForm.controls.useNext">
         <label class="form-check-label" for="useNext"></label>
       </div>
     </div>
@@ -25,38 +39,36 @@
     <label for="maxNext" class="col-2 col-form-label text-end">{{getNextDirectionName()}}</label>
     <div class="col-7">
       <input type="number"
-        ngClass="{ 'is-invalid': typedForm.controls.maxNext.invalid, 'is-valid': typedForm.controls.maxNext.valid}"
-        formControlName="maxNext" maxlength="2" class="form-control" id="maxNext" />
+        [class.is-invalid]="typedForm.controls.maxNext.invalid" [class.is-valid]="typedForm.controls.maxNext.valid"
+        [formControl]="typedForm.controls.maxNext" maxlength="2" class="form-control" id="maxNext" />
       <label for="maxNext" class="ms-3">0 = zoveel mogelijk</label>
     </div>
   </div>
   }
-  <div class="row mb-3">
-    <label class="col-3 col-form-label">
-      @if(typedForm.value['useNext']) {
-      <span>{{getNextSingularName()}}@if(getNextSingularName()) {<span>-</span>}</span>
+  <div class="row mb-3 align-items-center">
+    <div class="col-5 d-flex justify-content-end gap-2">
+      @if(saveAlert; as saveAlert) {
+      <ngb-alert #selfClosingAlert="ngbAlert" class="py-1 mb-0" [type]="saveAlert.type" [dismissible]="false" [animation]="true" (closed)="onSaveAlertClosed()">
+        {{ saveAlert.message }}
+      </ngb-alert>
       }
-      <span>{{getPluralName()}}</span>
-    </label>
-    <label for="max" class="col-2 col-form-label text-end">{{getDirectionName()}}</label>
-    <div class="col-7 form-floating">
-      <input type="number" ngClass="{ 'is-invalid': typedForm.controls.max.invalid, 'is-valid': typedForm.controls.max.valid}"
-        formControlName="max" maxlength="2" class="form-control" id="max" />
-      <label for="max" class="ms-3">0 = zoveel mogelijk</label>
-    </div>
-  </div>
-  <div class="row mb-3">
-    <div class="col-5 d-flex justify-content-end">
       @if(structureHasMultipleRounds()) {
       <button type="button" (click)="openSelectRoundsModal()"
-        class="btn btn-outline-primary">
+        class="btn btn-outline-primary" [disabled]="saving()">
         selecteer ronden
       </button>
       }
     </div>
     @if(!readonly) {
     <div class="col-7">
-      <button type="submit" class="btn btn-primary" [disabled]="typedForm.invalid">opslaan</button>
+      <button type="submit" class="btn btn-primary" [disabled]="typedForm.invalid || saving()">
+        @if(saving()) {
+        <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+        <span class="ms-1">opslaan...</span>
+        } @else {
+        <span>opslaan</span>
+        }
+      </button>
     </div>
     }
   </div>

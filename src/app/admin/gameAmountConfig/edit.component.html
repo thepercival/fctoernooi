@@ -1,18 +1,18 @@
 @if (gameAmountControls.length === 1) {
-  <ng-container formGroup="typedForm">
+  <div [formGroup]="typedForm">
     @for (gameAmountControl of gameAmountControls; track gameAmountControl.json.id) {
       <div class="row mb-3">
         <label [for]="gameAmountControl.json.id" class="col-7 col-form-label">{{label}}</label>
         <div class="col-5">
-          <select class="form-control" formControlName="gameAmountControl.json.id" required>
+          <select class="form-control" [formControlName]="gameAmountControl.json.id" required>
             @for (n of getRange(gameAmountControl.range); track n) {
-              <option ngValue="n">{{n}}</option>
+              <option [ngValue]="n">{{n}}</option>
             }
           </select>
         </div>
       </div>
     }
-  </ng-container>
+  </div>
 }
 
 @if (gameAmountControls.length > 1) {
@@ -33,7 +33,7 @@
     </h4>
     <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
   </div>
-  <div class="modal-body" formGroup="typedForm">
+  <div class="modal-body" [formGroup]="typedForm">
     @for (gameAmountControl of gameAmountControls; track gameAmountControl.json.id) {
       <div class="row mb-3">
         <label [for]="gameAmountControl.json.id"
@@ -45,9 +45,9 @@
         }
         </label>
         <div class="col-4">
-          <select class="form-control" formControlName="gameAmountControl.json.id" required>
+          <select class="form-control" [formControlName]="gameAmountControl.json.id" required>
             @for (n of getRange(gameAmountControl.range); track n) {
-              <option ngValue="n">{{n}}</option>
+              <option [ngValue]="n">{{n}}</option>
             }
           </select>
         </div>

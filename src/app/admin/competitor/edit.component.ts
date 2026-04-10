@@ -1,6 +1,7 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
     Competitor,
     NameService,
@@ -27,13 +28,14 @@ import { LogoInput } from '../sponsor/edit.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TournamentNavBarComponent } from "../../shared/tournament/tournamentNavBar/tournamentNavBar.component";
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FocusDirective } from '../../shared/common/focus';
 
 @Component({
     selector: 'app-tournament-competitor-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.scss'],
     standalone: true,
-    imports: [NgbAlert, FontAwesomeModule, TournamentNavBarComponent]
+    imports: [NgbAlert, FontAwesomeModule, TournamentNavBarComponent, RouterLink, ReactiveFormsModule, FocusDirective]
 })
 export class CompetitorEditComponent extends TournamentComponent implements OnInit {
     faSpinner = faSpinner;

@@ -26,8 +26,8 @@
               <input class="form-control"
                 [class.is-invalid]="typedForm.controls.initials.invalid"
                 [class.is-valid]="typedForm.controls.initials.valid"
-                type="text" formControlName="initials" placeholder="max. {{validations.maxlengthinitials}} karakters"
-                focusMe="originalReferee === undefined">
+                type="text" formControlName="initials" placeholder="{{validations.minlengthinitials}}-{{validations.maxlengthinitials}} karakters"
+                [focusMe]="originalReferee === undefined">
             </div>
           </div>
           <div class="row mb-3">
@@ -52,7 +52,7 @@
                 [class.is-invalid]="typedForm.controls.emailaddress.invalid"
                 [class.is-valid]="typedForm.controls.emailaddress.valid"
                 type="email" formControlName="emailaddress"
-                placeholder="max. {{validations.maxlengthemailaddress}} karakters">
+                placeholder="{{validations.minlengthemailaddress}}-{{validations.maxlengthemailaddress}} karakters">
             </div>
           </div>
           <div class="row mb-3">

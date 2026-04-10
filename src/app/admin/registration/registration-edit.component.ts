@@ -26,13 +26,14 @@ import { Role } from '../../lib/role';
 import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FocusDirective } from '../../shared/common/focus';
 
 @Component({
     selector: 'app-tournament-registration-edit',
     templateUrl: './registration-edit.component.html',
     styleUrls: ['./registration-edit.component.scss'],
     standalone: true,
-    imports: [NgbAlert, TournamentNavBarComponent,FontAwesomeModule, FormsModule, ReactiveFormsModule]
+    imports: [NgbAlert, TournamentNavBarComponent,FontAwesomeModule, FormsModule, ReactiveFormsModule, FocusDirective]
 })
 export class TournamentRegistrationEditComponent extends TournamentComponent implements OnInit {
   faSpinner = faSpinner;

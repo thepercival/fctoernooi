@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, output, signal, SimpleChanges, WritableSignal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { NgbAlert, NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Category, StartLocationMap, StructureNameService } from 'ngx-sport';
 import { Tournament } from '../../../lib/tournament';
@@ -19,7 +19,7 @@ import { faCheckCircle, faFileLines, faPencilAlt, faRegistered, faTimesCircle } 
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
     standalone: true,
-    imports: [FontAwesomeModule, NgbDropdown]
+    imports: [FontAwesomeModule, NgbAlert, NgbDropdown, RouterLink]
 })
 export class RegistrationListComponent implements OnChanges  {
   @Input() tournament!: Tournament;

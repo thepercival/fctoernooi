@@ -35,7 +35,7 @@
                 <div class="row mb-3">
                     <label for="strategyRandomly" class="col-7 col-form-label pointer">willekeurge wedstrijden</label>
                     <div class="col-5">
-                        <div class="form-control form-check form-switch">
+                        <div class="form-check form-switch">
                             <input type="checkbox" class="form-check-input" id="strategyRandomly"
                                 formControlName="strategyRandomly">
                             <label class="form-check-label" for="strategyRandomly"></label>
@@ -47,7 +47,7 @@
                 <div class="row mb-3">
                     <label for="enableTime" class="col-7 col-form-label pointer">plannen o.b.v. tijd</label>
                     <div class="col-5">
-                        <div class="form-control form-check form-switch">
+                        <div class="form-check form-switch">
                             <input type="checkbox" class="form-check-input" id="enableTime"
                                 formControlName="enableTime">
                             <label class="form-check-label" for="enableTime"></label>
@@ -60,7 +60,7 @@
                 <div class="row mb-3">
                     <label for="extension" class="col-7 col-form-label pointer">met verlenging</label>
                     <div class="col-5">
-                        <div class="form-control form-check form-switch">
+                        <div class="form-check form-switch">
                             <input type="checkbox" class="form-check-input" id="extension" formControlName="extension"
                                 (ngModelChange)="changeExtension($event)">
                             <label class="form-check-label" for="extension"></label>
@@ -122,7 +122,7 @@
                 <div class="row mb-3">
                     <label for="perPoule" class="col-7 col-form-label">per poule en wedstrijdronde</label>
                     <div class="col-5">
-                        <div class="form-control form-check form-switch">
+                        <div class="form-check form-switch">
                             <input type="checkbox" class="form-check-input" id="perPoule"
                                 formControlName="perPoule">
                             <label class="form-check-label" for="perPoule"></label>
@@ -134,7 +134,7 @@
                 <div class="row mb-3">
                     <label for="selfReferee" class="col-7 col-form-label">deelnemers zijn scheidsrechter</label>
                     <div class="col-5">
-                        <div class="form-control form-check form-switch">
+                        <div class="form-check form-switch">
                             <input type="checkbox" class="form-check-input" id="selfReferee"
                                 formControlName="selfReferee" (ngModelChange)="changeSelfReferee($event)">
                             <label class="form-check-label" for="selfReferee"></label>
@@ -147,7 +147,7 @@
                     <label for="nrOfSimSelfRefs" class="offset-1 col-6 col-form-label">aantal tegelijk per deelnemer</label>
                     <div class="col-5">
                         <input type="number"
-                        ngClass="{ 'is-invalid': typedForm.controls.nrOfSimSelfRefs.invalid, 'is-valid': typedForm.controls.nrOfSimSelfRefs.valid}"
+                        [class.is-invalid]="typedForm.controls.nrOfSimSelfRefs.invalid" [class.is-valid]="typedForm.controls.nrOfSimSelfRefs.valid"
                         formControlName="nrOfSimSelfRefs" maxlength="1" class="form-control" />                       
                     </div>
                 </div>
@@ -169,7 +169,7 @@
                 <div class="row mb-3">
                     <label for="bestLast" class="col-7 col-form-label">beste als laatste</label>
                     <div class="col-5">
-                        <div class="form-control form-check form-switch">
+                        <div class="form-check form-switch">
                             <input type="checkbox" class="form-check-input" id="bestLast" formControlName="bestLast">
                             <label class="form-check-label" for="bestLast"></label>
                         </div>
@@ -184,7 +184,7 @@
                 <div class="row mb-3">
                     <label for="manual" class="col-7 col-form-label pointer">handmatig wedstrijden aanpassen</label>
                     <div class="col-5">
-                        <div class="form-control form-check form-switch">
+                        <div class="form-check form-switch">
                             <input type="checkbox" class="form-check-input" id="manual" formControlName="manual"
                                 (ngModelChange)="changedEditMode(contentInfoManual)">
                             <label class="form-check-label" for="manual"></label>

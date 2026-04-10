@@ -166,6 +166,7 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
             if (this.updateDataAlert) {
                 this.updateDataAlert.close();
             }
+            this.updateDataMsg = undefined;
             this.processing.set(false);
         });
         this.route.params.subscribe(params => {

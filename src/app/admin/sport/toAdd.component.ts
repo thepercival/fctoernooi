@@ -1,4 +1,4 @@
-import { Component, OnInit, WritableSignal, output, signal } from '@angular/core';
+import { Component, inject, Injector, OnInit, WritableSignal, output, signal } from '@angular/core';
 import { AgainstGpp, AgainstH2h, AllInOneGame, Single, Sport } from 'ngx-sport';
 
 import { IAlert, IAlertType } from '../../shared/common/alert';
@@ -7,7 +7,7 @@ import { TranslateSportService } from '../../lib/translate/sport';
 import { SportRepository } from '../../lib/ngx-sport/sport/repository';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { NgbAlert, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
+import { NAME_MODAL_DATA, NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { getSportIconDef } from '../../shared/tournament/sport/icon.mapper';
@@ -26,6 +26,7 @@ export class SportToAddComponent implements OnInit {
     public readonly processing: WritableSignal<boolean> = signal(true);
     sports!: Sport[];
     alert: IAlert | undefined;
+    private injector = inject(Injector);
 
     constructor(
         public cssService: CSSService,
@@ -58,13 +59,21 @@ export class SportToAddComponent implements OnInit {
     }
 
     getNameModal(): NgbModalRef {
-        const activeModal = this.modalService.open(NameModalComponent);
-        activeModal.componentInstance.header = 'nieuwe sport';
-        activeModal.componentInstance.range = { min: Sport.MIN_LENGTH_NAME, max: Sport.MAX_LENGTH_NAME };
-        activeModal.componentInstance.initialName = '';
-        activeModal.componentInstance.labelName = 'naam';
-        activeModal.componentInstance.buttonName = 'opslaan';
-        return activeModal;
+        return this.modalService.open(NameModalComponent, {
+            injector: Injector.create({
+                providers: [{
+                    provide: NAME_MODAL_DATA,
+                    useValue: {
+                        header: 'nieuwe sport',
+                        range: { min: Sport.MIN_LENGTH_NAME, max: Sport.MAX_LENGTH_NAME },
+                        initialName: '',
+                        labelName: 'naam',
+                        buttonName: 'opslaan'
+                    }
+                }],
+                parent: this.injector
+            })
+        });
 
 
     }

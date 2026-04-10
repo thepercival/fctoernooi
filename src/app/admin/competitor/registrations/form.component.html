@@ -11,7 +11,7 @@
     }
     
     @if (typedForm && !processing()) {
-      <form formGroup="typedForm" name="form" (ngSubmit)="save()" novalidate>    
+      <form [formGroup]="typedForm" name="form" (ngSubmit)="save()" novalidate>    
         <div class="row my-3">
           <div class="col-5">
             <label for="remark" class="col-form-label">extra tekst op formulier</label>
@@ -26,24 +26,22 @@
         </div>
      
         <div class="row mb-3">
-          <div class="col-5 d-flex justify-content-end">
-            <button type="button" class="btn btn-outline-primary"
-              routerLink="['/public/registrationform', tournament().getId()]">
-              <fa-icon [icon]="faEye"></fa-icon> <span class="ms-1">bekijk formulier</span>
-            </button>
-          </div>    
-          <div class="col-7">
+          <div class="col-12 d-flex justify-content-end gap-2">
+            <a class="btn btn-outline-secondary"
+              [routerLink]="['/public/registrationform', tournament().getId()]">
+              <fa-icon [icon]="faEye"></fa-icon> <span class="ms-1">digitaal formulier</span>
+            </a>
+            <a class="btn btn-outline-primary"
+              [routerLink]="['/admin', tournament().getId()]"
+              [queryParams]="{openExport: '1'}">
+              <fa-icon [icon]="faPrint"></fa-icon> <span class="ms-1">print formulier</span>
+            </a>
             <button [disabled]="typedForm.invalid" type="submit" class="btn btn-primary">
               opslaan
             </button>
-          </div>      
+          </div>
         </div>
       </form>
     }
-
-    <div class="row mb-3">
-      <ngb-alert type="info"><b>printen:</b> kies voor "opties" en dan "printen"</ngb-alert>
-    </div>
-
   </div>
 }

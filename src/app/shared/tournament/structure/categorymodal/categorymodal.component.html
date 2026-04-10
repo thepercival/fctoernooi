@@ -11,7 +11,7 @@
         </div>
         <div class="col-9 col-sm-8 col-md-7">
           <input class="form-control"
-            ngClass="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }"
+            [class.is-invalid]="form.controls.name.invalid" [class.is-valid]="form.controls.name.valid "
             type="text" formControlName="name" ngbAutofocus placeholder="{{getPlaceHolder()}}">
         </div>
       </div>
@@ -21,7 +21,7 @@
         </div>
         <div class="col-9 col-sm-8 col-md-7">
           <input class="form-control"
-            ngClass="{ 'is-invalid': form.controls.abbreviation.invalid, 'is-valid': form.controls.abbreviation.valid }" type="text"
+            [class.is-invalid]="form.controls.abbreviation.invalid" [class.is-valid]="form.controls.abbreviation.valid " type="text"
             formControlName="abbreviation" ngbAutofocus placeholder="{{getAbbreviationPlaceHolder()}}">
         </div>
       </div>

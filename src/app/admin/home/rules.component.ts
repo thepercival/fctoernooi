@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { IAlertType } from '../../shared/common/alert';
@@ -9,7 +9,7 @@ import { NgbModalRef, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { TournamentRuleRepository } from '../../lib/tournament/rule/repository';
 import { JsonTournamentRule } from '../../lib/tournament/rule/json';
-import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
+import { NAME_MODAL_DATA, NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
 import { TournamentNavBarComponent } from "../../shared/tournament/tournamentNavBar/tournamentNavBar.component";
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -24,6 +24,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 export class TournamentRulesComponent extends TournamentComponent implements OnInit {
   faSpinner = faSpinner;
   public rules!: JsonTournamentRule[];
+  private injector = inject(Injector);
   
   validations: any = {
     'minlengthdescription': TournamentRuleRepository.MIN_LENGTH_DESCRIPTION,
@@ -85,9 +86,8 @@ export class TournamentRulesComponent extends TournamentComponent implements OnI
 
   editRule(rule: JsonTournamentRule) {
     this.processing.set(true);
-    const modal = this.getTextModal(true);
+    const modal = this.getTextModal(true, rule.text);
     const initialText = rule.text;    
-    modal.componentInstance.initialName = rule.text;
     modal.result.then((text: string) => {
       rule.text = text;
       this.ruleRepository.editObject(rule, this.tournament)
@@ -110,14 +110,23 @@ export class TournamentRulesComponent extends TournamentComponent implements OnI
   }
 
 
-  getTextModal(edit: boolean): NgbModalRef {
-    const activeModal = this.modalService.open(NameModalComponent);
-    activeModal.componentInstance.header = 'regel omschrijving';
-    activeModal.componentInstance.range = { min: this.validations.minlengthdescription, max: this.validations.maxlengthdescription };
-    activeModal.componentInstance.buttonName = edit ? 'wijzigen' : 'maken';
-    activeModal.componentInstance.labelName = 'omschrijving';
-    activeModal.componentInstance.buttonOutline = false;
-    return activeModal;
+  getTextModal(edit: boolean, initialName: string = ''): NgbModalRef {
+    return this.modalService.open(NameModalComponent, {
+      injector: Injector.create({
+        providers: [{
+          provide: NAME_MODAL_DATA,
+          useValue: {
+            header: 'regel omschrijving',
+            range: { min: this.validations.minlengthdescription, max: this.validations.maxlengthdescription },
+            buttonName: edit ? 'wijzigen' : 'maken',
+            labelName: 'omschrijving',
+            buttonOutline: false,
+            initialName
+          }
+        }],
+        parent: this.injector
+      })
+    });
   }
 
   upgradePriority(ruleToUpgrade: JsonTournamentRule) {

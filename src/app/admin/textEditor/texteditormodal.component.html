@@ -5,9 +5,9 @@
 <div class="modal-body">
     <div class="d-flex flex-column">
         @if(form) {
-        <form name="form" (ngSubmit)="save()" formGroup="form" novalidate>
+        <form name="form" (ngSubmit)="save()" [formGroup]="form!" novalidate>
             <textarea class="form-control w-100 height-vw mb-3"
-                ngClass="{ 'is-invalid': form.controls.text.invalid, 'is-valid': form.controls.text.valid }"
+                [class.is-invalid]="form.controls.text.invalid" [class.is-valid]="form.controls.text.valid "
                 formControlName="text" required></textarea>
         </form>
         }

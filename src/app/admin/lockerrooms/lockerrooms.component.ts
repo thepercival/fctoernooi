@@ -1,5 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, inject, Injector, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgbModal, NgbModalRef, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../lib/auth/auth.service';
 import { TournamentCompetitor } from '../../lib/competitor';
@@ -14,7 +14,7 @@ import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { CompetitorChooseModalComponent } from '../../shared/tournament/competitor/competitorchoosemodal.component';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
+import { NAME_MODAL_DATA, NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
 import { CompetitorTab } from '../../shared/common/tab-ids';
 import { TournamentNavBarComponent } from "../../shared/tournament/tournamentNavBar/tournamentNavBar.component";
 import { LockerRoomComponent } from "../../shared/tournament/lockerroom/lockerroom.component";
@@ -26,7 +26,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-tournament-lockerrooms-edit',
     templateUrl: './lockerrooms.component.html',
     styleUrls: ['./lockerrooms.component.scss'],
-    imports: [TournamentNavBarComponent, LockerRoomComponent, NgbAlert, FaIconComponent],
+    imports: [TournamentNavBarComponent, LockerRoomComponent, NgbAlert, FaIconComponent, RouterLink],
     
 })
 export class LockerRoomsEditComponent extends TournamentComponent implements OnInit {
@@ -51,6 +51,8 @@ export class LockerRoomsEditComponent extends TournamentComponent implements OnI
   ) {
     super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
   }
+
+  private injector = inject(Injector);
 
   ngOnInit() {
     super.myNgOnInit(() => this.initLockerRooms());
@@ -99,8 +101,7 @@ export class LockerRoomsEditComponent extends TournamentComponent implements OnI
   }
 
   changeName(lockerRoom: LockerRoom) {
-    const modal = this.getChangeNameModel('wijzigen');
-    modal.componentInstance.initialName = lockerRoom.getName();
+    const modal = this.getChangeNameModel('wijzigen', lockerRoom.getName());
     modal.result.then((result) => {
       lockerRoom.setName(result);
       this.processing.set(true);
@@ -117,14 +118,23 @@ export class LockerRoomsEditComponent extends TournamentComponent implements OnI
     }, (reason) => { });
   }
 
-  getChangeNameModel(buttonLabel: string): NgbModalRef {
-    const activeModal = this.modalService.open(NameModalComponent);
-    activeModal.componentInstance.header = 'kleedkamernaam';
-    activeModal.componentInstance.range = { min: LockerRoom.MIN_LENGTH_NAME, max: LockerRoom.MAX_LENGTH_NAME };
-    activeModal.componentInstance.buttonName = buttonLabel;
-    activeModal.componentInstance.labelName = 'naam';
-    activeModal.componentInstance.buttonOutline = true;
-    return activeModal;
+  getChangeNameModel(buttonLabel: string, initialName: string = ''): NgbModalRef {
+    return this.modalService.open(NameModalComponent, {
+      injector: Injector.create({
+        providers: [{
+          provide: NAME_MODAL_DATA,
+          useValue: {
+            header: 'kleedkamernaam',
+            range: { min: LockerRoom.MIN_LENGTH_NAME, max: LockerRoom.MAX_LENGTH_NAME },
+            buttonName: buttonLabel,
+            labelName: 'naam',
+            buttonOutline: true,
+            initialName
+          }
+        }],
+        parent: this.injector
+      })
+    });
   }
 
   changeCompetitors(lockerRoom: LockerRoom) {

@@ -51,7 +51,7 @@
   <div class="d-flex align-items-stretch text-center gap-1">
   @for (qualifyGroup of tmplRound.getQualifyGroupsLosersReversed(); track qualifyGroup.getId()) {
     <app-tournament-structureround
-      class="align-self-stretch flex-wrap mb-2" [round]="qualifyGroup.getChildRound()"
+      class="align-self-stretch flex-wrap w-100 mb-2" [round]="qualifyGroup.getChildRound()"
       [editable]="editable()" [favorites]="favorites()" [structureEditor]="structureEditor()"
       [structureNameService]="structureNameService()" (onActionAdd)="onActionAdd.emit($event)"
       [showCompetitors]="showCompetitors()">

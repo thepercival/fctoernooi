@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, TemplateRef, inject, WritableSignal, signal } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
     NameService,
     AgainstQualifyConfig,
@@ -30,7 +30,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     selector: 'app-tournament-qualifyagainstconfig-edit',
     templateUrl: './edit.component.html',
     standalone: true,
-    imports: [FontAwesomeModule,NgbAlert],
+    imports: [FontAwesomeModule, NgbAlert, ReactiveFormsModule],
     styleUrls: ['./edit.component.scss'],
 })
 export class AgainstQualifyConfigEditComponent implements OnInit {

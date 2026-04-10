@@ -21,7 +21,7 @@
               <div class="col-6">
                 <select class="form-control" formControlName="category" required (ngModelChange)="changeCategory($event)">
                   @for (category of categories; track category) {
-                    <option ngValue="category">
+                    <option [ngValue]="category">
                       {{category.getName()}}</option>
                   }
                 </select>
@@ -35,7 +35,7 @@
               <div class="col-6">
                 <select class="form-control" formControlName="poule" required (ngModelChange)="changePoule($event, form.value['category'], form.value['competitionSport'])">
                   @for (poule of poules; track poule) {
-                    <option ngValue="poule">
+                    <option [ngValue]="poule">
                       {{structureNameService.getPouleName(poule, true)}}</option>
                   }
                 </select>
@@ -49,7 +49,7 @@
                 <select class="form-control" formControlName="competitionSport" required
                   (ngModelChange)="changeCompetitionSport($event, form.value['poule'], form.value['category'])">
                   @for (competitionSport of competitionSports; track competitionSport) {
-                    <option ngValue="competitionSport">
+                    <option [ngValue]="competitionSport">
                       {{competitionSport.getSport().getName()}}</option>
                   }
                 </select>
@@ -64,7 +64,7 @@
                   <div class="col-6">
                     <select class="form-control" formControlName="{{homeNr}}" required>
                       @for (place of form.value['poule'].getPlaces(); track place) {
-                        <option ngValue="place">
+                        <option [ngValue]="place">
                           {{structureNameService.getPlaceName(place, false, true)}}</option>
                       }
                     </select>
@@ -82,7 +82,7 @@
 
                     <select class="form-control" formControlName="{{awayNr}}" required>
                       @for (place of form.value['poule'].getPlaces(); track place) {
-                        <option ngValue="place">
+                        <option [ngValue]="place">
                           {{structureNameService.getPlaceName(place, false, true)}}</option>
                       }
                     </select>
@@ -99,7 +99,7 @@
                   <div class="col-6">
                     <select class="form-control" formControlName="{{placeNr}}" required>
                       @for (place of form.value['poule'].getPlaces(); track place) {
-                        <option ngValue="place">
+                        <option [ngValue]="place">
                           {{structureNameService.getPlaceName(place, false, true)}}</option>
                       }
                     </select>

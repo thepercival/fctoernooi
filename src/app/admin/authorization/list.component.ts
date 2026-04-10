@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router, RouterLink } from '@angular/router';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
@@ -24,7 +24,7 @@ import { faPlusCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-tournament-authorization-list',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
-    imports: [TournamentNavBarComponent, RoleItemComponent, FaIconComponent, NgbAlert],
+    imports: [TournamentNavBarComponent, RoleItemComponent, FaIconComponent, NgbAlert, RouterLink],
 })
 export class AuthorizationListComponent extends TournamentComponent implements OnInit {
     public invitations: TournamentInvitation[] = [];

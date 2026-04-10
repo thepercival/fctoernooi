@@ -21,7 +21,7 @@
           <div class="col-9">
             <div class="input-group input-group-date">
               <input class="form-control"
-                ngClass="{ 'is-invalid': typedForm.controls.date.invalid, 'is-valid': typedForm.controls.date.valid }"
+                [class.is-invalid]="typedForm.controls.date.invalid" [class.is-valid]="typedForm.controls.date.valid "
                 placeholder="yyyy-mm-dd" formControlName="date" ngbDatepicker #d="ngbDatepicker" required
                 [minDate]="minDateStruct" container="body">
               <span class="input-group-text pointer" (click)="d.toggle()">
@@ -78,7 +78,7 @@
               <th class="text-end">
                 @if(!hasBegun) {
                 <button type="button" class="btn btn-sm btn-primary"
-                  routerLink="['/admin/recess',tournament.getId()]" [disabled]="processing()">
+                  [routerLink]="['/admin/recess', tournament.getId()]" [disabled]="processing()">
                   <fa-icon [icon]="faPlus"></fa-icon>
                 </button>
                 }

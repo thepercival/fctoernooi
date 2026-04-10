@@ -1,4 +1,5 @@
 import { Component, OnInit, output, TemplateRef } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { NgbDateStruct, NgbInputDatepicker, NgbModal, NgbTimepicker, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { JsonTournament } from '../../lib/tournament/json';
@@ -15,7 +16,7 @@ import { faCalendarAlt, faInfoCircle, faLevelUpAlt } from '@fortawesome/free-sol
     templateUrl: './properties.component.html',
     styleUrls: ['./properties.component.scss'],
     standalone: true,
-    imports: [FontAwesomeModule,NgbInputDatepicker,NgbTimepicker,ReactiveFormsModule]
+    imports: [FontAwesomeModule,NgbInputDatepicker,NgbTimepicker,ReactiveFormsModule,RouterLink]
 })
 export class TournamentPropertiesComponent implements OnInit {
   

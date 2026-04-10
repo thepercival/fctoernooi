@@ -26,7 +26,7 @@
                                 [class.is-invalid]="typedForm.controls.emailaddress.invalid"
                                 [class.is-valid]="typedForm.controls.emailaddress.valid"
                                 type="email" formControlName="emailaddress"
-                                placeholder="max. {{validations.maxlengthemailaddress}} karakters">
+                                placeholder="{{validations.minlengthemailaddress}}-{{validations.maxlengthemailaddress}} karakters">
                         </div>
                     </div>
 
@@ -35,7 +35,7 @@
                             <label for="role{{roleItem.value}}" class="col-3 col-sm-6 col-form-label pointer">
                                 <span>{{getRoleName(roleItem.value)}}</span></label>
                             <div class="col-9 col-sm-6">
-                                <div class="form-control form-check form-switch">
+                                <div class="form-check form-switch">
                                     <input type="checkbox" class="form-check-input" id="role{{roleItem.value}}"
                                         formControlName="role{{roleItem.value}}" (ngModelChange)="toggleRoleItem(roleItem)">
                                     <label class="form-check-label" for="role{{roleItem.value}}"></label>

@@ -3,7 +3,7 @@
     <span class="fw-bold text-break"
       [innerHtml]="structureNameService.getPlaceFromName(gamePlace.getPlace(), true, true) | keepHtml"></span>
   </div>
-  <div class="card-body pb-0" formGroup="form">
+  <div class="card-body pb-0" [formGroup]="form">
     <div formArrayName="scores">
       @for (inputControl of getScoreControls().controls; track inputControl; let idx = $index) {
         <div class="row mb-3">

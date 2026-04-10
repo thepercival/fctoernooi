@@ -15,7 +15,7 @@
         <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
       }
       @if (!processing()) {
-        <form name="form" (ngSubmit)="save()" formGroup="typedForm" novalidate>
+        <form name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
           <div class="row mb-3">
             <div class="col-3">
               <label for="name" class="col-form-label">naam</label>
@@ -25,7 +25,7 @@
                 [class.is-invalid]="typedForm.controls.name.invalid"
                 [class.is-valid]="typedForm.controls.name.valid"
                 type="text"
-                formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
+                formControlName="name" placeholder="{{validations.minlengthname}}-{{validations.maxlengthname}} karakters">
             </div>
           </div>
           <div class="row mb-3">

@@ -13,7 +13,7 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { TranslateFieldService } from '../../lib/translate/field';
 import { CompetitionSportTab } from '../../shared/tournament/competitionSportTab';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { NgbAlert, NgbNav } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbNav, NgbNavContent, NgbNavItem, NgbNavLink, NgbNavOutlet } from '@ng-bootstrap/ng-bootstrap';
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { FieldListComponent } from "./field/fieldlist.component";
@@ -28,7 +28,7 @@ import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
     selector: 'app-tournament-sportconfig-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css'],
-    imports: [FaIconComponent, NgbAlert, NgbNav, FieldListComponent, ScoreConfigEditComponent, TournamentNavBarComponent, AgainstQualifyConfigEditComponent],
+    imports: [FaIconComponent, NgbAlert, NgbNav, NgbNavItem, NgbNavLink, NgbNavContent, NgbNavOutlet, FieldListComponent, ScoreConfigEditComponent, TournamentNavBarComponent, AgainstQualifyConfigEditComponent],
 })
 export class CompetitionSportEditComponent extends TournamentComponent implements OnInit {
     faSpinner = faSpinner;
@@ -83,6 +83,14 @@ export class CompetitionSportEditComponent extends TournamentComponent implement
     get TabFields(): number { return CompetitionSportTab.Fields; }
     get TabScore(): number { return CompetitionSportTab.Score; }
     get TabPoints(): number { return CompetitionSportTab.Points; }
+
+    onTabChange(tabId: number) {
+        if (this.competitionSport === undefined) {
+            return;
+        }
+        this.activeTab = tabId;
+        this.router.navigate(['/admin/competitionsport', this.tournament.getId(), this.competitionSport.getId(), tabId], { replaceUrl: true });
+    }
 
     showAgainstQualifyConfig(competitionSport: CompetitionSport): boolean {
         return competitionSport.getVariant() instanceof AgainstVariant;

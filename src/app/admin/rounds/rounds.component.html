@@ -1,6 +1,6 @@
 @if (selectableRoundNode) {
   <div [class.ps-1]="!first" [class.pe-1]="!selectableRoundNode.parent">
-    <form name="form" (ngSubmit)="save()" formGroup="typedForm" novalidate>
+    <form name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
       @if (!selectableRoundNode.parent || selectableRoundNode.round.getNrOfPlaces() > 2) {
         <div class="card border-secondary round {{cssService.getQualifyRound(selectableRoundNode.round)}}">
           <div class="card-header px-1 text-center form-group">

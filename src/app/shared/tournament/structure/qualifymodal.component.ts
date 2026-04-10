@@ -1,12 +1,20 @@
-import { Component, input, ChangeDetectionStrategy, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, InjectionToken, inject, output } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { inject } from '@angular/core';
 import { HorizontalSingleQualifyRule, QualifyDistribution, QualifyGroup, QualifyTarget, Round, StructureEditor, StructureNameService, VerticalSingleQualifyRule } from 'ngx-sport';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { EscapeHtmlPipe } from '../../common/escapehtmlpipe';
 import { CSSService } from '../../common/cssservice';
 import { faCheckCircle, faCompressAlt, faExpandAlt } from '@fortawesome/free-solid-svg-icons';
+
+export interface QualifyModalData {
+    target: QualifyTarget;
+    parentRound: Round;
+    structureEditor: StructureEditor;
+    structureNameService: StructureNameService;
+}
+
+export const QUALIFY_MODAL_DATA = new InjectionToken<QualifyModalData>('QUALIFY_MODAL_DATA');
 
 @Component({
     selector: 'app-qualify-modal',
@@ -15,11 +23,8 @@ import { faCheckCircle, faCompressAlt, faExpandAlt } from '@fortawesome/free-sol
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QualifyModalComponent {
-    
-    public target = input.required<QualifyTarget>();
-    public parentRound = input.required<Round>(); 
-    public structureEditor = input.required<StructureEditor>();
-    public structureNameService = input.required<StructureNameService>();
+
+    readonly data = inject(QUALIFY_MODAL_DATA);
     public faCheckCircle = faCheckCircle;
     public faCompressAlt = faCompressAlt;
     public faExpandAlt = faExpandAlt;
@@ -38,13 +43,13 @@ export class QualifyModalComponent {
     get Vertical(): QualifyDistribution { return QualifyDistribution.Vertical; }
 
     getDistribution(target: QualifyTarget): QualifyDistribution | undefined {
-        const qualifyGroup = this.parentRound().getBorderQualifyGroup(target);
+        const qualifyGroup = this.data.parentRound.getBorderQualifyGroup(target);
         return qualifyGroup.getDistribution();
     }
 
     secondPartEditable(): boolean {
-        return this.structureEditor().isSomeQualifyGroupSplittable(this.parentRound(), this.target())
-            || this.structureEditor().isSomeQualifyGroupMergable(this.parentRound(), this.target())
+        return this.data.structureEditor.isSomeQualifyGroupSplittable(this.data.parentRound, this.data.target)
+            || this.data.structureEditor.isSomeQualifyGroupMergable(this.data.parentRound, this.data.target)
     }
     
 
@@ -62,7 +67,7 @@ export class QualifyModalComponent {
         if (next === undefined) {
             return false;
         }
-        return this.structureEditor().areQualifyGroupsMergable(qualifyGroup, next);
+        return this.data.structureEditor.areQualifyGroupsMergable(qualifyGroup, next);
     }
 
     getTargetDirectionClass(target: QualifyTarget): string {

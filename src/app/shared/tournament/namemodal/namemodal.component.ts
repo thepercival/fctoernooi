@@ -1,8 +1,20 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, InjectionToken, OnInit, inject } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { VoetbalRange } from 'ngx-sport';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
+
+export interface NameModalData {
+    header: string;
+    range: VoetbalRange;
+    initialName?: string;
+    labelName: string;
+    buttonName: string;
+    buttonOutline?: boolean;
+    placeHolder?: string;
+}
+
+export const NAME_MODAL_DATA = new InjectionToken<NameModalData>('NAME_MODAL_DATA');
 
 @Component({
     selector: 'app-ngbd-modal-name',
@@ -13,14 +25,8 @@ import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NameModalComponent implements OnInit {
-    readonly _header = input.required<string>();
-    readonly _range = input.required<VoetbalRange>();
-    readonly _initialName = input.required<string>();
-    readonly _labelName = input.required<string>();
-    readonly _buttonName = input.required<string>();
-    readonly _buttonOutline = input.required<boolean>();
+    readonly data = inject(NAME_MODAL_DATA);
     form: FormGroup;
-    readonly _placeHolder = input<string | undefined>(undefined);
 
     public activeModal = inject(NgbActiveModal);
 
@@ -31,44 +37,16 @@ export class NameModalComponent implements OnInit {
     }
 
     getPlaceHolder(): string {
-        return this.placeHolder ?? 'max ' + this.range.max + ' karakters';
+        return this.data.placeHolder ?? 'max ' + this.data.range.max + ' karakters';
     }
 
     ngOnInit() {
         this.form.get('name')?.setValidators(
             Validators.compose([
                 Validators.required,
-                Validators.minLength(this.range.min),
-                Validators.maxLength(this.range.max)
+                    Validators.minLength(this.data.range.min),
+                    Validators.maxLength(this.data.range.max)
             ]));
-        this.form.controls.name.setValue(this.initialName);
-    }
-
-    get header(): string {
-        return this._header();
-    }
-
-    get range(): VoetbalRange {
-        return this._range();
-    }
-
-    get initialName(): string {
-        return this._initialName();
-    }
-
-    get labelName(): string {
-        return this._labelName();
-    }
-
-    get buttonName(): string {
-        return this._buttonName();
-    }
-
-    get buttonOutline(): boolean {
-        return this._buttonOutline();
-    }
-
-    get placeHolder(): string | undefined {
-        return this._placeHolder();
+        this.form.controls.name.setValue(this.data.initialName ?? '');
     }
 }

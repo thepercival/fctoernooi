@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, TemplateRef } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -23,7 +23,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './name-and-theme.component.html',
     styleUrls: ['./name-and-theme.component.scss'],
     standalone: true,
-    imports: [FontAwesomeModule,NgbAlert,TournamentNavBarComponent]
+    imports: [FontAwesomeModule, NgbAlert, TournamentNavBarComponent, ReactiveFormsModule]
 })
 export class TournamentNameAndThemeComponent extends TournamentComponent implements OnInit {
     faSpinner = faSpinner;

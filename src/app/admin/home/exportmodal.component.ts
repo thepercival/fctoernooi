@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, input } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { IconDefinition, IconName } from '@fortawesome/fontawesome-svg-core';
 import { NgbActiveModal, NgbAlert, NgbModal, NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, timer } from 'rxjs';
@@ -19,7 +19,7 @@ import { faPrint, faQrcode, faSpinner } from '@fortawesome/free-solid-svg-icons'
     templateUrl: './exportmodal.component.html',
     styleUrls: ['./exportmodal.component.scss'],
     standalone: true,
-    imports: [NgbAlert,FontAwesomeModule,NgbProgressbar]
+    imports: [NgbAlert, FontAwesomeModule, NgbProgressbar, ReactiveFormsModule]
 })
 export class ExportModalComponent implements OnInit, OnDestroy {
     faSpinner = faSpinner;

@@ -9,13 +9,13 @@ import { RegistrationTab } from '../../../shared/common/tab-ids';
 import { RegistrationListComponent } from "./list.component";
 import { RegistrationFormComponent } from "./form.component";
 import { RegistrationSettingsComponent } from "./settings.component";
-import { NgbNav } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNav, NgbNavContent, NgbNavItem, NgbNavLink, NgbNavOutlet } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-tournament-registrations-nav',
     templateUrl: './nav.component.html',
     styleUrls: ['./nav.component.scss'],
-    imports: [RegistrationListComponent, RegistrationFormComponent, RegistrationSettingsComponent,NgbNav],
+    imports: [RegistrationListComponent, RegistrationFormComponent, RegistrationSettingsComponent, NgbNav, NgbNavItem, NgbNavLink, NgbNavContent, NgbNavOutlet],
     
 })
 export class RegistrationsNavComponent implements OnInit {
@@ -44,16 +44,12 @@ export class RegistrationsNavComponent implements OnInit {
     if (startTab !== undefined ) {
       this.activeTab = startTab;
     }
-    console.log(this.activeTab);
 
     
     this.tournamentRegistrationRepository.getSettings(this.tournament(), false)
       .subscribe({
         next: (settings: TournamentRegistrationSettings) => {
           this.settings = settings;
-          if ( startTab === undefined && settings?.isEnabled() ) {
-            this.activeTab = RegistrationTab.List;
-          }
           this.processing.set(false);
         },
         error: (e: string) => {
@@ -62,7 +58,7 @@ export class RegistrationsNavComponent implements OnInit {
         }
       });
   }
- 
+
   get TabRegistrationSettings(): number { return RegistrationTab.Settings; }
   get TabRegistrationList(): number { return RegistrationTab.List; }
   get TabRegistrationForm(): number { return RegistrationTab.Form; }

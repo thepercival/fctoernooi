@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Category } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -25,13 +25,14 @@ import { AdminPublicSwitcherComponent, WebsitePart } from '../../shared/tourname
 import { CompetitorTab, RegistrationTab } from '../../shared/common/tab-ids';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FocusDirective } from '../../shared/common/focus';
 
 @Component({
     selector: 'app-tournament-registration-form',
     templateUrl: './registration-form.component.html',
     styleUrls: ['./registration-form.component.scss'],
     standalone: true,
-    imports: [FontAwesomeModule, AdminPublicSwitcherComponent, NgbAlert, FormsModule, ReactiveFormsModule]
+    imports: [FontAwesomeModule, AdminPublicSwitcherComponent, NgbAlert, FormsModule, ReactiveFormsModule, RouterLink, FocusDirective]
 })
 export class RegistrationComponent extends TournamentComponent implements OnInit {
     public settings: TournamentRegistrationSettings|undefined;
@@ -126,6 +127,7 @@ export class RegistrationComponent extends TournamentComponent implements OnInit
     }
 
     get TabRegistrations(): number { return CompetitorTab.Registrations; }
+    get TabRegistrationList(): number { return RegistrationTab.List; }
     get TabRegistrationForm(): number { return RegistrationTab.Form; }
     get PublicWebsitePart(): WebsitePart { return WebsitePart.Public }
     

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
     selector: 'app-svg-icon',
@@ -8,18 +8,11 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
     imports: [],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SvgIconComponent implements OnInit {
-  @Input() icon!: string;
-  @Input() width?: number = 40;
-  @Input() height?: number = 40;
-  @Input() size?: number = 24;
-  @Input() fill?: string;
-  @Input() class?: string;
-
-  ngOnInit(): void {
-    if (!this.width || !this.height) {
-      this.width = this.size;
-      this.height = this.size;
-    }
-  }
+export class SvgIconComponent {
+  readonly icon = input.required<string>();
+  readonly width = input<number | undefined>(40);
+  readonly height = input<number | undefined>(40);
+  readonly size = input<number | undefined>(24);
+  readonly fill = input<string | undefined>(undefined);
+  readonly className = input<string | undefined>(undefined, { alias: 'class' });
 }

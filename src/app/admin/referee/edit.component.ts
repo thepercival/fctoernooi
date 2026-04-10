@@ -18,13 +18,14 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { facReferee } from '../../shared/customicons';
+import { FocusDirective } from '../../shared/common/focus';
 
 @Component({
     selector: 'app-tournament-referee-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css'],
     standalone: true,
-    imports: [NgbAlert, FontAwesomeModule, TournamentNavBarComponent, ReactiveFormsModule]
+    imports: [NgbAlert, FontAwesomeModule, TournamentNavBarComponent, ReactiveFormsModule, FocusDirective]
 })
 export class RefereeEditComponent extends TournamentComponent implements OnInit {
     faSpinner = faSpinner;

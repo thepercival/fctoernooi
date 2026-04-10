@@ -9,7 +9,7 @@
           @if (structure.hasSingleCategory()) {
             @if (tournament && structure.allPoulesHaveGames() && hasAdminRole()) {
               <button type="button"
-                class="btn btn-sm btn-outline-primary me-2" routerLink="['/admin/startandrecesses', tournament.getId()]">
+                class="btn btn-sm btn-outline-primary me-2" [routerLink]="['/admin/startandrecesses', tournament.getId()]">
                 start & pauzes
               </button>
             }

@@ -28,8 +28,8 @@
 
       @if(!processing() && competitionSport) {
       <div>
-        <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav nav-tabs nav-fill">
-          <li ngbNavItem="TabFields" class="nav-item">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" (activeIdChange)="onTabChange($event)" class="nav nav-tabs nav-fill">
+          <li [ngbNavItem]="TabFields" class="nav-item">
             <a ngbNavLink class="nav-link">{{getFieldsDescription()}}</a>
             <ng-template ngbNavContent>
               <app-tournament-fields [competitionSport]="competitionSport" [hasBegun]="hasBegun"
@@ -37,7 +37,7 @@
               </app-tournament-fields>
             </ng-template>
           </li>
-          <li ngbNavItem="TabScore" class="nav-item">
+          <li [ngbNavItem]="TabScore" class="nav-item">
             <a ngbNavLink class="nav-link">score-regels</a>
             <ng-template ngbNavContent>
               <app-tournament-scoreconfig-edit [competitionSport]="competitionSport" [tournament]="tournament"
@@ -46,7 +46,7 @@
             </ng-template>
           </li>
           @if(showAgainstQualifyConfig(competitionSport)) {
-          <li ngbNavItem="TabPoints" class="nav-item">
+          <li [ngbNavItem]="TabPoints" class="nav-item">
             <a ngbNavLink class="nav-link">puntentelling</a>
             <ng-template ngbNavContent>
               <app-tournament-qualifyagainstconfig-edit [competitionSport]="competitionSport" [tournament]="tournament"
@@ -56,7 +56,7 @@
           </li>
           }
         </ul>
-        <div ngbNavOutlet="nav" class="mt-2"></div>
+        <div [ngbNavOutlet]="nav" class="mt-2"></div>
       </div>
       }
     </div>

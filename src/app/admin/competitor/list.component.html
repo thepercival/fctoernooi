@@ -35,9 +35,9 @@
       }
 
       <div>
-        <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" (activeIdChange)="onTabChange($event)" class="nav-tabs nav-fill mt-3">
-          <li ngbNavItem="TabBase">
-            <a class="px-1" ngbNavLink>lijst</a>
+        <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" (activeIdChange)="onTabChange($event)" class="nav nav-tabs nav-fill mt-3">
+          <li [ngbNavItem]="TabBase" class="nav-item">
+            <a class="nav-link px-1" ngbNavLink>lijst</a>
             <ng-template ngbNavContent>
               @if(!processing()) {
                 <div class="d-flex flex-wrap gap-1 mt-3">
@@ -55,8 +55,8 @@
               }
             </ng-template>
           </li>
-          <li ngbNavItem="TabOrder"> <!-- order -->
-            <a class="px-1" ngbNavLink>volgorde</a>
+          <li [ngbNavItem]="TabOrder" class="nav-item"> <!-- order -->
+            <a class="nav-link px-1" ngbNavLink>volgorde</a>
             <ng-template ngbNavContent>
 
               @if(!hasBegun) {
@@ -86,8 +86,8 @@
 
           </ng-template>
         </li>
-        <li ngbNavItem="TabRegistrations"> <!-- registrations -->
-          <a class="px-1" ngbNavLink>
+        <li [ngbNavItem]="TabRegistrations" class="nav-item"> <!-- registrations -->
+          <a class="nav-link px-1" ngbNavLink>
             <span class="overflow-hidden">inschrijven</span>
           </a>
 
@@ -103,8 +103,8 @@
             }
           </ng-template>
         </li>
-        <li ngbNavItem="TabPresent" class="d-inline d-sm-none"> <!-- present -->
-          <a class="px-1" ngbNavLink>
+        <li [ngbNavItem]="TabPresent" class="nav-item d-inline d-sm-none"> <!-- present -->
+          <a class="nav-link px-1" ngbNavLink>
             <span>aanwezig</span>
           </a>
           <ng-template ngbNavContent>
@@ -122,7 +122,7 @@
           </ng-template>
         </li>
       </ul>
-      <div ngbNavOutlet="nav" class="mt-2"></div>
+      <div [ngbNavOutlet]="nav" class="mt-2"></div>
     </div>
 
   </div>

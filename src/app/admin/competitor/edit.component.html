@@ -16,7 +16,7 @@
       <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
       }
       @if(!processing()) {
-      <form name="form" (ngSubmit)="save()" formGroup="typedForm" novalidate>
+      <form name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
         <div class="row mb-3">
           <div class="col-3">
             <label for="place" class="col-form-label">plek</label>
@@ -27,19 +27,20 @@
         </div>
         <div class="row mb-3">
           <div class="col-3">
-            <label for="name" class="col-form-label">naam</label>
+            <label for="name" class="col-form-label">naam <span class="text-danger" aria-hidden="true">*</span><span class="visually-hidden">verplicht</span></label>
           </div>
           <div class="col-9">
             <input class="form-control"
-              ngClass="{ 'is-invalid': typedForm.controls.name.invalid, 'is-valid': typedForm.controls.name.valid }" type="text"
-              formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters"
-              focusMe="originalCompetitor === undefined">
+              [class.is-invalid]="typedForm.controls.name.invalid" [class.is-valid]="typedForm.controls.name.valid" type="text"
+              formControlName="name" placeholder="{{validations.minlengthname}}-{{validations.maxlengthname}} karakters"
+              required
+              [focusMe]="originalCompetitor === undefined">
           </div>
         </div>
-        <div class="row mb-3">
+        <div class="row mb-3 align-items-center">
           <label for="present" class="col-3 col-form-label">aanwezig</label>
-          <div class="col-9">
-            <div class="form-control form-check form-switch">
+          <div class="col-9 d-flex align-items-center">
+            <div class="form-check form-switch present-switch mb-0">
               <input type="checkbox" class="form-check-input" id="present" formControlName="present">
               <label class="form-check-label" for="present"></label>
             </div>
@@ -52,8 +53,8 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              ngClass="{ 'is-invalid': typedForm.controls.emailaddress.invalid, 'is-valid': typedForm.controls.emailaddress.valid }"
-              type="email" formControlName="emailaddress" placeholder="max. {{validations.maxlengthemailaddress}} karakters">
+              [class.is-invalid]="typedForm.controls.emailaddress.invalid" [class.is-valid]="typedForm.controls.emailaddress.valid"
+              type="email" formControlName="emailaddress" placeholder="{{validations.minlengthemailaddress}}-{{validations.maxlengthemailaddress}} karakters">
           </div>
         </div>
         
@@ -63,8 +64,8 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              ngClass="{ 'is-invalid': typedForm.controls.telephone.invalid, 'is-valid': typedForm.controls.telephone.valid }"
-              type="tel" formControlName="telephone" placeholder="max. {{validations.maxlengthtelephone}} karakters">
+              [class.is-invalid]="typedForm.controls.telephone.invalid" [class.is-valid]="typedForm.controls.telephone.valid"
+              type="tel" formControlName="telephone" placeholder="{{validations.minlengthtelephone}}-{{validations.maxlengthtelephone}} karakters">
           </div>
         </div>
 
@@ -84,13 +85,13 @@
         @if(tournament.getPublic()) {
         <div class="row mb-3">
           <div class="col-3">
-            <label for="publicInfo" (click)="openInfoModal(contentInfoInfo, 'uitleg publieke info')" class="col-form-label pointer">publieke info
+            <label for="publicInfo" (click)="openInfoModal(contentInfoCompetitor, 'uitleg publieke info')" class="col-form-label pointer">publieke info
               <fa-icon [icon]="faInfoCircle" class="text-info"></fa-icon>
             </label>
           </div>
           <div class="col-9">
             <textarea class="form-control"
-              ngClass="{ 'is-invalid': typedForm.controls.publicInfo.invalid, 'is-valid': typedForm.controls.publicInfo.valid }"
+              [class.is-invalid]="typedForm.controls.publicInfo.invalid" [class.is-valid]="typedForm.controls.publicInfo.valid"
               formControlName="publicInfo" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>
@@ -102,7 +103,7 @@
           </div>
           <div class="col-9">
             <textarea class="form-control"
-              ngClass="{ 'is-invalid': typedForm.controls.privateInfo.invalid, 'is-valid': typedForm.controls.privateInfo.valid }"
+              [class.is-invalid]="typedForm.controls.privateInfo.invalid" [class.is-valid]="typedForm.controls.privateInfo.valid"
               formControlName="privateInfo" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
           </div>
         </div>
@@ -149,10 +150,10 @@
   <span>de afbeelding moet in jpg-, png-, gif-, of svgformaat worden aangeleverd, zodat het voor zowel de website als het
   programmaboekje gebruikt kan worden. De beeldverhouding moet vierkant zijn</span>>
 </ng-template>
-<ng-template #contentInfoInfo let-activeModal>
+<ng-template #contentInfoCompetitor let-activeModal>
   <div>Deze informatie wordt getoond in het 
     <button type="button" class="btn btn-sm btn-secondary"
-      routerLink="['/public/competitors', tournament.getId()]" (click)="activeModal.close()">
+      [routerLink]="['/public/competitors', tournament.getId()]" (click)="activeModal.close()">
       <fa-icon [icon]="faUsers"></fa-icon> deelnemers-scherm
     </button></div>
 </ng-template>

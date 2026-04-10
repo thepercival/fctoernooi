@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   Sport,
@@ -36,7 +36,7 @@ import { facSoccerField } from '../../shared/customicons';
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
     standalone: true,
-    imports: [TournamentNavBarComponent,FontAwesomeModule,NgbAlert,CreateSportWithFieldsComponent]
+    imports: [TournamentNavBarComponent,FontAwesomeModule,NgbAlert,CreateSportWithFieldsComponent,RouterLink]
 })
 export class CompetitionSportListComponent extends TournamentComponent implements OnInit {
   public smallestNrOfPoulePlaces!: number;

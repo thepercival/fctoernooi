@@ -1,17 +1,21 @@
 <div>
-  <ul ngbNav #nav2="ngbNav" [(activeId)]="activeTab" class="nav-tabs nav-fill mt-3" id="registrationTab">
-    <li ngbNavItem="TabRegistrationSettings"> <!-- settings -->
-      <a class="px-1" ngbNavLink>instellingen</a>
+  <ul ngbNav #nav2="ngbNav" [(activeId)]="activeTab" class="nav nav-tabs nav-fill mt-3" id="registrationTab">
+    <li [ngbNavItem]="TabRegistrationSettings"> <!-- settings -->
+        <a class="nav-link px-1" ngbNavLink>instellingen</a>
       <ng-template ngbNavContent>
-        @if (settings) {
+        @if (processing()) {
+          <div class="text-center mt-3" role="status" aria-label="laden">
+            <div class="spinner-border"></div>
+          </div>
+        } @else if (settings) {
           <app-tournament-registrations-settings [(settings)]="settings"
             [tournament]="tournament()">
           </app-tournament-registrations-settings>
         }
       </ng-template>
     </li>
-    <li ngbNavItem="TabRegistrationList" disabled="!settings || !settings.isEnabled()"> <!-- registrations => list -->
-      <a class="px-1" ngbNavLink>lijst</a>
+    <li [ngbNavItem]="TabRegistrationList" [disabled]="processing()"> <!-- registrations => list -->
+        <a class="nav-link px-1" ngbNavLink>inschrijvingen</a>
       <ng-template ngbNavContent>
         @if (!processing()) {
           <div class="d-flex flex-wrap gap-3 mt-3">
@@ -27,8 +31,8 @@
         }
       </ng-template>
     </li>
-    <li ngbNavItem="TabRegistrationForm" disabled="!settings || !settings.isEnabled()"> <!-- form -->
-      <a class="px-1" ngbNavLink>formulier</a>
+    <li [ngbNavItem]="TabRegistrationForm" [disabled]="processing()"> <!-- form -->
+        <a class="nav-link px-1" ngbNavLink>formulier</a>
       <ng-template ngbNavContent>
         @if (settings) {
           <app-tournament-registrations-form [settings]="settings" [tournament]="tournament()">
@@ -37,5 +41,5 @@
         </ng-template>
     </li>
   </ul>
-  <div ngbNavOutlet="nav2" class="mt-2"></div>
+  <div [ngbNavOutlet]="nav2" class="mt-2"></div>
 </div>

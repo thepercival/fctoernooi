@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, signal, SimpleChanges, WritableSignal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import {
   Category, JsonStructure, VoetbalRange,
 } from 'ngx-sport';
@@ -16,7 +17,7 @@ import { faCalendarAlt, faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './planningNavBar.component.html',
     styleUrls: ['./planningNavBar.component.scss'],
     standalone: true,
-    imports: [FontAwesomeModule,NgbAlert]
+    imports: [FontAwesomeModule,NgbAlert,RouterLink]
 })
 export class PlanningNavBarComponent implements OnChanges {
 

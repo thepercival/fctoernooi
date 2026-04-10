@@ -23,8 +23,8 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              ngClass="{ 'is-invalid': typedForm.controls.name.invalid, 'is-valid': typedForm.controls.name.valid }" type="text"
-              formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
+              [class.is-invalid]="typedForm.controls.name.invalid" [class.is-valid]="typedForm.controls.name.valid " type="text"
+              formControlName="name" placeholder="{{validations.minlengthname}}-{{validations.maxlengthname}} karakters">
           </div>
         </div>
         <div class="row mb-3">
@@ -33,7 +33,7 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              ngClass="{ 'is-invalid': typedForm.controls.url.invalid, 'is-valid': typedForm.controls.url.valid }" type="url"
+              [class.is-invalid]="typedForm.controls.url.invalid" [class.is-valid]="typedForm.controls.url.valid " type="url"
               formControlName="url" placeholder="max. {{validations.maxlengthurl}} karakters">
           </div>
         </div>
@@ -55,7 +55,7 @@
           </div>
           <div class="col-9">
             <select formControlName="screenNr" class="form-control"
-              ngClass="{ 'is-invalid': typedForm.controls.screenNr.invalid, 'is-valid': typedForm.controls.screenNr.valid }"
+              [class.is-invalid]="typedForm.controls.screenNr.invalid" [class.is-valid]="typedForm.controls.screenNr.valid "
               required>
               @for(screenNr of rangeScreenNrs; track screenNr) {
               <option [ngValue]="screenNr">

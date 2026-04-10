@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, TemplateRef } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Tournament } from '../../lib/tournament';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
@@ -11,7 +11,7 @@ import { faCopy, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './sharemodal.component.html',
     styleUrls: ['./sharemodal.component.scss'],
     standalone: true,
-    imports: [NgbAlert, FontAwesomeModule]
+    imports: [NgbAlert, FontAwesomeModule, ReactiveFormsModule]
 })
 export class ShareModalComponent implements OnInit {
     @Input() tournament!: Tournament;

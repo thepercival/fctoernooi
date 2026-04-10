@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Params, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Params, Router, RouterLink } from '@angular/router';
 import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CompetitionSport, PlanningEditMode, RoundNumber } from 'ngx-sport';
 
@@ -41,7 +41,7 @@ import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css'],
     standalone: true,
-    imports: [TournamentNavBarComponent, NgbAlert, FontAwesomeModule, AdminPublicSwitcherComponent]
+    imports: [TournamentNavBarComponent, NgbAlert, FontAwesomeModule, AdminPublicSwitcherComponent, RouterLink]
 })
 export class HomeAdminComponent extends TournamentComponent implements OnInit {
 
@@ -98,6 +98,8 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
                         } else if (params.myPreviousId !== undefined && !this.openModalCopiedCheck) {
                             this.openModalCopiedCheck = true;
                             this.openModalCopied(params.myPreviousId);
+                        } else if (params['openExport'] !== undefined) {
+                            this.openModalExport(true);
                         }
                     });
                     this.processing.set(false);
@@ -297,12 +299,15 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
         return readOnlySubjects;
     }
 
-    openModalExport() {
+    openModalExport(withRegistrations: boolean = false) {
         const activeModal = this.modalService.open(ExportModalComponent, { backdrop: 'static' });
         activeModal.componentInstance.tournament = this.tournament;
         const readonlySubjects = this.getExportReadOnlySubjects();
         activeModal.componentInstance.settings = this.settings;
-        const subjects = this.getExportSubjectsFromDevice(readonlySubjects);
+        let subjects = this.getExportSubjectsFromDevice(readonlySubjects);
+        if (withRegistrations && this.settings?.isEnabled()) {
+            subjects |= TournamentExportConfig.registrationForm;
+        }
         activeModal.componentInstance.subjects = subjects;
         activeModal.componentInstance.readonlySubjects = readonlySubjects;
         activeModal.componentInstance.fieldDescription = this.getFieldDescription();

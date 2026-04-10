@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, TemplateRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { Sponsor } from '../../lib/sponsor';
 import { SponsorRepository } from '../../lib/sponsor/repository';
@@ -25,7 +25,7 @@ import { faInfoCircle, faMoneyBillAlt, faSpinner } from '@fortawesome/free-solid
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
     standalone: true,
-    imports: [TournamentNavBarComponent, FontAwesomeModule, NgbAlert]
+    imports: [TournamentNavBarComponent, FontAwesomeModule, NgbAlert, RouterLink]
 })
 export class SponsorListComponent extends TournamentComponent implements OnInit {
   faSpinner = faSpinner;

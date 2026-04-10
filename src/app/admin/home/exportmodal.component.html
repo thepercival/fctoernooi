@@ -8,7 +8,7 @@
     <div class="container-fluid">
         <!-- als  -->
         @if (!creating) {
-            <form formGroup="typedForm">
+            <form [formGroup]="typedForm">
                 @for (exportOption of exportOptions; track exportOption.key) {
                     <div class="row mb-3">
                         <label [for]="exportOption.key" class="col-9 col-form-label pointer">{{exportOption.label}}
@@ -17,9 +17,9 @@
                             }
                         </label>
                         <div class="form-check col-3">
-                            <div class="form-control form-check form-switch">
+                            <div class="form-check form-switch">
                                 <input type="checkbox" class="form-check-input" [id]="exportOption.key"
-                                    formControlName="exportOption.key">
+                                    [formControlName]="exportOption.key">
                                 <label class="form-check-label" [for]="exportOption.key"></label>
                             </div>
                         </div>

@@ -14,9 +14,9 @@
         </div>
         <div class="col-7">
           <input class="form-control"
-            ngClass="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
-            formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters"
-            focusMe="true">
+            [class.is-invalid]="form.controls.name.invalid" [class.is-valid]="form.controls.name.valid " type="text"
+            formControlName="name" placeholder="{{validations.minlengthname}}-{{validations.maxlengthname}} karakters"
+            [focusMe]="true">
 
         </div>
       </div>
@@ -43,7 +43,7 @@
       <div class="row mb-3">
         <label for="competitors" class="col-5 col-form-label pointer">deelnemers</label>
         <div class="col-7">
-          <div class="form-control form-check form-switch">
+          <div class="form-check form-switch">
             <input type="checkbox" class="form-check-input" id="competitors" formControlName="competitors">
             <label class="form-check-label" for="competitors"></label>
           </div>

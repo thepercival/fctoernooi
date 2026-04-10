@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Injector, input, output } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { HorizontalSingleQualifyRule, QualifyDistribution, QualifyGroup, QualifyTarget, Round, StructureEditor, StructureNameService, VerticalSingleQualifyRule } from 'ngx-sport';
 
@@ -6,7 +6,7 @@ import { IAlert, IAlertType } from '../../common/alert';
 import { CSSService } from '../../common/cssservice';
 import { StructureAction, StructureActionName } from '../../../admin/structure/edit.component';
 import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { QualifyModalComponent } from './qualifymodal.component';
+import { QUALIFY_MODAL_DATA, QualifyModalComponent } from './qualifymodal.component';
 import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
 import { faCogs, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 
@@ -33,6 +33,7 @@ export class StructureQualifyComponent {
     alert: IAlert | undefined;
 
     private modalService = inject(NgbModal);
+    private injector = inject(Injector);
 
     constructor(
         public cssService: CSSService) {
@@ -221,11 +222,20 @@ export class StructureQualifyComponent {
         localStorage.setItem('qualify-info-viewed', '1')
        }
 
-        const activeModal = this.modalService.open(QualifyModalComponent); 
-        activeModal.componentInstance.target = target;
-        activeModal.componentInstance.parentRound = this.parentRound;
-        activeModal.componentInstance.structureEditor = this.structureEditor;
-        activeModal.componentInstance.structureNameService = this.structureNameService;        
+        const activeModal = this.modalService.open(QualifyModalComponent, {
+            injector: Injector.create({
+                providers: [{
+                    provide: QUALIFY_MODAL_DATA,
+                    useValue: {
+                        target,
+                        parentRound: this.parentRound(),
+                        structureEditor: this.structureEditor(),
+                        structureNameService: this.structureNameService()
+                    }
+                }],
+                parent: this.injector
+            })
+        });
          
         activeModal.componentInstance.onDistributionUpdate.subscribe((distribution: QualifyDistribution) => {
             this.updateDistribution(target, distribution);

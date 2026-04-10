@@ -1,8 +1,8 @@
-import { Component, Input, ModelSignal, OnInit, TemplateRef, WritableSignal, input, model, output, signal } from '@angular/core';
+import { Component, Input, ModelSignal, OnDestroy, OnInit, TemplateRef, WritableSignal, input, model, output, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { IAlert } from '../../../shared/common/alert';
+import { IAlert, IAlertType } from '../../../shared/common/alert';
 import { JsonRegistrationSettings } from '../../../lib/tournament/registration/settings/json';
-import { FormControl, FormGroup, ValueChangeEvent } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, ValueChangeEvent } from '@angular/forms';
 import { TournamentRegistrationSettings } from '../../../lib/tournament/registration/settings';
 import { Tournament } from '../../../lib/tournament';
 import { NgbAlert, NgbDateStruct, NgbInputDatepicker, NgbModal, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
@@ -18,9 +18,9 @@ import { faCalendarDays, faCircleInfo, faSpinner } from '@fortawesome/free-solid
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.scss'],
     standalone: true,
-    imports: [NgbAlert,FontAwesomeModule,NgbTimepicker,NgbInputDatepicker]
+    imports: [ReactiveFormsModule, NgbAlert, FontAwesomeModule, NgbTimepicker, NgbInputDatepicker]
 })
-export class RegistrationSettingsComponent implements OnInit{
+export class RegistrationSettingsComponent implements OnInit, OnDestroy {
   faSpinner = faSpinner;
   faInfoCircle = faCircleInfo;
   faCalendarAlt = faCalendarDays;
@@ -37,6 +37,9 @@ export class RegistrationSettingsComponent implements OnInit{
   }>;
         
   public readonly processing: WritableSignal<boolean> = signal(true);
+  public readonly saving: WritableSignal<boolean> = signal(false);
+  public saveAlert: IAlert | undefined;
+  private saveAlertTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
   constructor(
     private router: Router,
@@ -50,6 +53,7 @@ export class RegistrationSettingsComponent implements OnInit{
 
     const settings = this.settings();
     if (settings === undefined) {
+      this.processing.set(false);
       return;
     }
 
@@ -76,7 +80,14 @@ export class RegistrationSettingsComponent implements OnInit{
       if( event instanceof ValueChangeEvent) {
         this.onChangeEnabled();
       }
-    });    
+    });
+
+    this.onChangeEnabled();
+    this.processing.set(false);
+  }
+
+  ngOnDestroy(): void {
+    this.clearSaveAlertTimer();
   }
 
   openHelpModal(modalContent: TemplateRef<any>) {
@@ -116,22 +127,38 @@ export class RegistrationSettingsComponent implements OnInit{
     if (currentSettings === undefined) {
       return false;
     }
-    this.processing.set(true);
+    this.alert = undefined;
+    this.clearSaveAlertTimer();
+    this.saveAlert = { type: IAlertType.Info, message: 'opslaan bezig...' };
+    this.saving.set(true);
     this.registrationRepository.editSettings(this.formToJson(currentSettings), this.tournament())
       .subscribe({
         next: (settings: TournamentRegistrationSettings) => {
-          this.settings.set(settings);          
-          // this.router.navigate(['/admin', newTournamentId]);
-          // this.setAlert(IAlertType.Success, 'het delen is gewijzigd');
+          this.settings.set(settings);
+          this.typedForm.markAsPristine();
+          this.saveAlert = { type: IAlertType.Success, message: 'instellingen opgeslagen' };
+          this.saving.set(false);
+          this.saveAlertTimeoutId = setTimeout(() => {
+            this.saveAlert = undefined;
+            this.saveAlertTimeoutId = undefined;
+          }, 3000);
         },
         error: (e) => {
-          // this.setAlert(IAlertType.Danger, 'het delen kon niet worden gewijzigd');
-          this.processing.set(false);
+          this.saveAlert = undefined;
+          this.alert = { type: IAlertType.Danger, message: 'opslaan mislukt: ' + e };
+          this.saving.set(false);
         },
-        complete: () => this.processing.set(false)
+        complete: () => {}
       }); 
 
     return true;
+  }
+
+  private clearSaveAlertTimer(): void {
+    if (this.saveAlertTimeoutId !== undefined) {
+      clearTimeout(this.saveAlertTimeoutId);
+      this.saveAlertTimeoutId = undefined;
+    }
   }
 
   // protected setAlert(type: IAlertType, message: string) {
