@@ -53,7 +53,7 @@ export class RankingPouleComponent implements OnInit {
   }
 
   getSingleCompetitionSport(): CompetitionSport | undefined {
-    return this.competitionSports.length === 1 ? this.competitionSports()[0] : undefined;
+    return this.competitionSports().length === 1 ? this.competitionSports()[0] : undefined;
   }
 
   isAgainst(competitionSport: CompetitionSport): boolean {

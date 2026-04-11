@@ -36,8 +36,8 @@
       class="btn btn-navbar" type="button">
       <fa-icon [icon]="faCogs"></fa-icon>
     </button>
-    <div class="vr mx-2"></div>
     @if (showCategoryButton()) {
+      <div class="vr mx-2"></div>    
       <button type="button"
         class="btn btn-navbar" (click)="onCategoryButtonPressed.emit()">
         <fa-icon [icon]="faGrip"></fa-icon>

@@ -20,17 +20,11 @@ export class NavComponent implements OnInit, AfterContentInit {
 
   public defaultTitle: string = 'FCToernooi';
   private colorMode: ColorMode;
-  public navBarDataInput = input<NavBarData>({
-    title: this.defaultTitle,
-    theme: DefaultJsonTheme,
-    atHome: true
-  }, { alias: 'navBarData' });
   public navBarData = signal<NavBarData>({
     title: this.defaultTitle,
     theme: DefaultJsonTheme,
     atHome: true
-  });
-  public isAtHome = signal<boolean>(true);
+  });  
   tournamentLiveboardLink: LiveboardLink = {};
   navbarCollapsed = true;
 
@@ -48,7 +42,7 @@ export class NavComponent implements OnInit, AfterContentInit {
     this.setAndApplyColorMode(colorMode);
 
     effect(() => {
-      this.navBarData.set(this.navBarDataInput());
+      // this.navBarData.set(this.navBarDataInput());
       this.updateCustomProperty();
     });
   }
@@ -84,7 +78,7 @@ export class NavComponent implements OnInit, AfterContentInit {
   }
 
   execLeftButton() {
-    if (!this.isAtHome()) {
+    if (!this.navBarData().atHome) {
       this.linkToHome();
     } else {
       let colorMode = this.colorMode === ColorMode.Dark ? ColorMode.Light : ColorMode.Dark;
@@ -93,7 +87,10 @@ export class NavComponent implements OnInit, AfterContentInit {
   }
 
   private updateIsAtHome() {
-    this.isAtHome.set(this.router.url === '/');
+    this.navBarData.update((navBarData: NavBarData): NavBarData => ({
+      ...navBarData,
+      atHome: this.router.url === '/'
+    }));
   }
 
   linkToHome(){

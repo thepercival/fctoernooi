@@ -6,6 +6,7 @@
 - Match existing formatting and lint rules; do not reformat unrelated code.
 - Add tests only when relevant; do not delete existing tests without asking.
 - Use English in code comments and commit messages.
+- Do not add or modify SCSS files unless the user explicitly grants permission in the current request; prefer existing utility classes.
 
 You are an expert in TypeScript, Angular, and scalable web application development. You write functional, maintainable, performant, and accessible code following Angular and TypeScript best practices.
 ## TypeScript Best Practices

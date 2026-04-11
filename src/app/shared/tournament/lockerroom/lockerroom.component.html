@@ -9,7 +9,7 @@
         </small>
         <span class="fw-bold mx-1 align-middle">{{lockerRoom().getName()}}</span>
         @if (editable()) {
-          <button class="btn btn-sm btn-primary" (click)="onLockerroomNameChange.emit(lockerRoom())">
+          <button class="btn btn-sm btn-primary">
             <fa-icon [icon]="faPencilAlt"></fa-icon>
           </button>
         }
@@ -38,7 +38,7 @@
   </ul>
   @if (editable()) {
     <div (click)="onCompetitorsChange.emit(lockerRoom())"
-      class="card-footer text-primary border-primary pointer text-center">
+      class="card-footer text-info border-info pointer text-center">
       <fa-icon [icon]="faUsers"></fa-icon><span> deelnemers selecteren</span>
     </div>
   }

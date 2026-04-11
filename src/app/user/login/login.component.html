@@ -12,7 +12,7 @@
         </app-user-title>
         <div class="card-body text-center mx-auto form-validate border-top-0 border-primary">
           @if(alert()) {
-          <ngb-alert type="alert()?.type">{{ alert()?.message }}</ngb-alert>
+          <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
           }
 
           @if(!processing() && !authService.isLoggedIn()) {

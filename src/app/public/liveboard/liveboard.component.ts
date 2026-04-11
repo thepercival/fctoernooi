@@ -197,6 +197,7 @@ export class LiveboardComponent extends TournamentComponent implements OnInit {
             this.save(screenConfigs);
         }, (reason) => {
             this.configModalIsOpen = false;
+            this.processing.set(true);
             this.getDataAndProcessScreens(screenConfigs);
         });
     }
@@ -208,7 +209,10 @@ export class LiveboardComponent extends TournamentComponent implements OnInit {
             next: () => {
                 this.getDataAndProcessScreens(screenConfigs);
             },
-            complete: () => this.processing.set(false)
+            error: (e) => {
+                this.alert.set({ type: IAlertType.Danger, message: e });
+                this.processing.set(false);
+            }
         });
         return false;
     }

@@ -12,7 +12,7 @@ import { Role } from '../../lib/role';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { CompetitorChooseModalComponent } from '../../shared/tournament/competitor/competitorchoosemodal.component';
+import { COMPETITOR_CHOOSE_MODAL_DATA, CompetitorChooseModalComponent } from '../../shared/tournament/competitor/competitorchoosemodal.component';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { NAME_MODAL_DATA, NameModalComponent } from '../../shared/tournament/namemodal/namemodal.component';
 import { CompetitorTab } from '../../shared/common/tab-ids';
@@ -68,7 +68,7 @@ export class LockerRoomsEditComponent extends TournamentComponent implements OnI
   get CompetitorTabBase(): CompetitorTab { return CompetitorTab .Base }
 
   add() {
-    const modal = this.getChangeNameModel('naar "deelnemers selecteren"');
+    const modal = this.getChangeNameModel('naar "deelnemers selecteren"', '', false);
     modal.result.then((resName: string) => {
       this.processing.set(true);
       const jsonLockerRoom: JsonLockerRoom = { id: 0, name: resName, competitorIds: [] };
@@ -118,7 +118,7 @@ export class LockerRoomsEditComponent extends TournamentComponent implements OnI
     }, (reason) => { });
   }
 
-  getChangeNameModel(buttonLabel: string, initialName: string = ''): NgbModalRef {
+  getChangeNameModel(buttonLabel: string, initialName: string = '', buttonOutline: boolean = true): NgbModalRef {
     return this.modalService.open(NameModalComponent, {
       injector: Injector.create({
         providers: [{
@@ -128,7 +128,7 @@ export class LockerRoomsEditComponent extends TournamentComponent implements OnI
             range: { min: LockerRoom.MIN_LENGTH_NAME, max: LockerRoom.MAX_LENGTH_NAME },
             buttonName: buttonLabel,
             labelName: 'naam',
-            buttonOutline: true,
+            buttonOutline,
             initialName
           }
         }],
@@ -138,15 +138,25 @@ export class LockerRoomsEditComponent extends TournamentComponent implements OnI
   }
 
   changeCompetitors(lockerRoom: LockerRoom) {
-    const activeModal = this.modalService.open(CompetitorChooseModalComponent);
-    activeModal.componentInstance.validator = this.validator;
-    if (this.structure) {
-      activeModal.componentInstance.structure = this.structure;
+    if (!this.structure) {
+      return;
     }
-    activeModal.componentInstance.competitors = this.tournament.getCompetitors();
-    activeModal.componentInstance.competitorsAssignedElsewhere = this.getCompetitorsAssignedElsewhere(lockerRoom);
-    activeModal.componentInstance.lockerRoom = lockerRoom;
-    activeModal.componentInstance.selectedCompetitors = lockerRoom.getCompetitors().slice();
+    const activeModal = this.modalService.open(CompetitorChooseModalComponent, {
+      injector: Injector.create({
+        providers: [{
+          provide: COMPETITOR_CHOOSE_MODAL_DATA,
+          useValue: {
+            validator: this.validator,
+            structure: this.structure,
+            competitors: this.tournament.getCompetitors(),
+            competitorsAssignedElsewhere: this.getCompetitorsAssignedElsewhere(lockerRoom),
+            lockerRoom,
+            selectedCompetitors: lockerRoom.getCompetitors().slice()
+          }
+        }],
+        parent: this.injector
+      })
+    });
     activeModal.result.then((selectedCompetitors: TournamentCompetitor[]) => {
       this.processing.set(true);
       this.lockerRoomRepository.syncCompetitors(lockerRoom, selectedCompetitors)

@@ -34,7 +34,7 @@
                                         <td>
                                             <span [innerHtml]="competitorItem.placeName"></span>
                                         </td>
-                                        @if (competitorsAssignedElsewhere.length > 0) {
+                                        @if (data.competitorsAssignedElsewhere.length > 0) {
                                             <td>
                                                 @if (alreadyAssignedElsewhere(competitorItem.competitor)) {
                                                     <fa-icon [icon]="faDoorClosed"></fa-icon>

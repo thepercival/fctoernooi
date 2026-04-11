@@ -10,8 +10,8 @@
             <fa-icon [icon]="faUsers"></fa-icon> deelnemers
           </h2>
           @if(tournament.getLogoExtension() != undefined) {
-            <img height=30 src="{{getLogoUrl(tournament, 200)}}" class="img-fluid"
-              style="width: auto;" alt="logo">
+            <img height="30" width="30" src="{{getLogoUrl(tournament, 200)}}"
+              class="align-self-center" alt="logo">
           }
           @if(!structure.hasSingleCategory()) {
             <button type="button"

@@ -23,17 +23,21 @@
                 <th class="d-none d-sm-table-cell"></th>
               }
               <th colspan="2">
-                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between align-items-center">
                   <span>naam</span>
             
                   @if (allPlacesHaveACompetitor()) {
-                    <button type="button" class="btn btn-sm btn-outline-primary" (click)="swapAll(category)"
-                      [disabled]="swapItem && !processing()" title="willekeurige volgorde">
-                      <fa-icon [icon]="faRandom"></fa-icon> willekeurig
-                    </button>
+                    <span class="ps-3">
+                      <button type="button" class="btn btn-sm btn-outline-primary" (click)="swapAll(category)"
+                        [disabled]="swapItem && !processing()" title="willekeurige volgorde">
+                        <fa-icon [icon]="faRandom"></fa-icon> willekeurig
+                      </button>
+                    </span>
                   } @else {
-                    <span>volgorde </span>
-                    <fa-icon title="omwisselen" [icon]="faSort"></fa-icon>
+                    <span class="ps-3 d-inline-flex align-items-center">
+                      <span>volgorde </span>
+                      <fa-icon title="omwisselen" [icon]="faSort"></fa-icon>
+                    </span>
                   }
                 </div>
               </th>
@@ -70,7 +74,7 @@
                       }
                     } @else {
                       @if (item.competitor) {
-                        <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+                        <fa-icon [icon]="faSpinner" animation="spin"></fa-icon>
                       }
                     }
                   </div>

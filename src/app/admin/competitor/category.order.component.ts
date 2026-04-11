@@ -37,7 +37,7 @@ export class CategoryOrderCompetitorListComponent implements OnChanges {
   private startLocationMap!: StartLocationMap;
   public hasSomeCompetitorAnImage: boolean = false;
   // public alert: IAlert | undefined;
-  public readonly processing: WritableSignal<boolean> = signal(true);
+  public readonly processing: WritableSignal<boolean> = signal(false);
 
   constructor(
     public competitorRepository: CompetitorRepository) {

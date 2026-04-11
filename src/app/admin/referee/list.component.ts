@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, OnInit, signal, TemplateRef, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Referee } from 'ngx-sport';
 
@@ -28,7 +28,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   faEnvelope = faEnvelope;
   faInfoCircle = faInfoCircle;
   facReferee = facReferee;
-  public refereeItems!: RefereeItem[];
+  public readonly refereeItems: WritableSignal<RefereeItem[]> = signal([]);
   alertSelfReferee: IAlert | undefined;
   hasBegun: boolean = true;
 
@@ -56,7 +56,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
   }
 
   initReferees() {
-    this.createRefereesList();
+    this.updateRefereesList();
 
     this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
     if (this.hasBegun) {
@@ -65,15 +65,24 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     this.processing.set(false);
   }
 
-  createRefereesList() {
-    this.refereeItems = this.competition.getReferees().map((referee: Referee): RefereeItem => {
+  updateRefereesList() {
+    const refereeItems = this.competition.getReferees().map((referee: Referee): RefereeItem => {
       return { referee };
     });
-    this.refereeItems.forEach((refereeItem: RefereeItem) => {
-
+    refereeItems.forEach((refereeItem: RefereeItem, index: number) => {
       this.refereeRepository.getRoleState(refereeItem.referee, this.tournament)
-        .subscribe((roleState: number) => refereeItem.rolState = roleState);
+        .subscribe((roleState: number) => {
+          this.refereeItems.update((items: RefereeItem[]) => {
+            if (items[index] === undefined || items[index].referee !== refereeItem.referee) {
+              return items;
+            }
+            const updated = [...items];
+            updated[index] = { ...updated[index], rolState: roleState };
+            return updated;
+          });
+        });
     });
+    this.refereeItems.set(refereeItems);
   }
 
   addReferee() {
@@ -118,6 +127,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     this.refereeRepository.upgradeObject(referee, this.tournament)
       .subscribe({
         next: () => {
+          this.updateRefereesList()
           this.updatePlanning()
         },
         error: (e) => {
@@ -132,7 +142,7 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     this.refereeRepository.removeObject(referee, this.tournament)
       .subscribe({
         next: () => {
-          this.removeRefereeFromList(referee);
+          this.updateRefereesList(); // this.removeRefereeFromList(referee);
           this.updatePlanning()
         },
         error: (e) => {
@@ -141,15 +151,9 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
       });
   }
 
-  removeRefereeFromList(referee: Referee) {
-    const refereeItem = this.refereeItems.find(refereeItem => refereeItem.referee === referee);
-    if (refereeItem) {
-      const idx = this.refereeItems.indexOf(refereeItem);
-      if (idx >= 0) {
-        this.refereeItems.splice(idx, 1);
-      }
-    }
-  }
+  // removeRefereeFromList(referee: Referee) {
+  //   this.refereeItems.update((items: RefereeItem[]) => items.filter((item: RefereeItem) => item.referee !== referee));
+  // }
 
   protected updatePlanning() {
     this.planningRepository.create(this.structure, this.tournament)

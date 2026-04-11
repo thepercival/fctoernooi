@@ -15,8 +15,7 @@
             <fa-icon [icon]="faCalendarAlt"></fa-icon> <span class="mx-1">wedstrijden</span>
           </h2>
           @if (tournament.getLogoExtension()) {
-            <img height=40 src="{{getLogoUrl(tournament, 200)}}" class="img-fluid"
-              style="width: auto;" alt="logo">
+            <img height="30" width="30" src="{{getLogoUrl(tournament, 200)}}" class="align-self-center" alt="logo">
           }
           @if (!processing() && !structure.hasSingleCategory()) {
             <button type="button"

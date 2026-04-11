@@ -13,8 +13,7 @@
         <fa-icon [icon]="facStructure"></fa-icon> <span class="mx-1">opzet</span>
       </h2>
       @if (tournament.getLogoExtension()) {
-        <img height=30 src="{{getLogoUrl(tournament, 200)}}" class="img-fluid"
-          style="width: auto;" alt="logo">
+        <img height="30" width="30" src="{{getLogoUrl(tournament, 20)}}" class="align-self-center" alt="logo">
       }
       @if (!processing() && (tournament.getCompetitors().length > 0 || !structure.hasSingleCategory())) {
         <div class="pe-1">

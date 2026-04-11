@@ -31,11 +31,12 @@ export class CompetitorPresentListComponent implements OnChanges {
   onCompetitorsUpdate = output();
 
   public placeCompetitorItems: PlaceCompetitorItem[] = [];
+  public poulePlaceCompetitorItems: { pouleNr: number, items: PlaceCompetitorItem[] }[] = [];
   public orderMode = false;
   public swapItem: PlaceCompetitorItem | undefined;
   private startLocationMap!: StartLocationMap;
   // public alert: IAlert | undefined;
-  public readonly processing: WritableSignal<boolean> = signal(true);
+  public readonly processingCompetitorIds: WritableSignal<(string | number)[]> = signal([]);
   
   constructor(
     private router: Router,
@@ -64,6 +65,25 @@ export class CompetitorPresentListComponent implements OnChanges {
       }
       return { place, competitor: <TournamentCompetitor | undefined>this.startLocationMap.getCompetitor(startLocation) };
     });
+
+    const pouleMap = new Map<number, PlaceCompetitorItem[]>();
+    this.placeCompetitorItems.forEach((item: PlaceCompetitorItem) => {
+      const startLocation = item.place.getStartLocation();
+      if (startLocation === undefined) {
+        return;
+      }
+      const pouleNr = startLocation.getPouleNr();
+      const existing = pouleMap.get(pouleNr);
+      if (existing === undefined) {
+        pouleMap.set(pouleNr, [item]);
+        return;
+      }
+      existing.push(item);
+    });
+
+    this.poulePlaceCompetitorItems = Array.from(pouleMap.entries())
+      .sort((a, b) => a[0] - b[0])
+      .map(([pouleNr, items]) => ({ pouleNr, items }));
   }
 
   somePlaceHasACompetitor(): boolean {
@@ -73,9 +93,14 @@ export class CompetitorPresentListComponent implements OnChanges {
   }
 
   setPresency(competitor: TournamentCompetitor): void {
-    this.processing.set(true);
+    const competitorId = competitor.getId();
+    this.processingCompetitorIds.update((ids: (string | number)[]) => {
+      return ids.includes(competitorId) ? ids : [...ids, competitorId];
+    });
+    const previousPresent = competitor.getPresent();
     const jsonCompetitor = this.competitorMapper.toJson(competitor);
-    jsonCompetitor.present = competitor.getPresent() === true ? false : true;
+    jsonCompetitor.present = previousPresent === true ? false : true;
+    competitor.setPresent(jsonCompetitor.present);
 
     // const prefix = jsonCompetitor.present ? 'aan' : 'af';
     // const message = 'deelnemer ' + competitor.getName() + ' wordt ' + prefix + 'gemeld';
@@ -84,8 +109,17 @@ export class CompetitorPresentListComponent implements OnChanges {
 
     this.competitorRepository.editObject(jsonCompetitor, competitor, this.tournament.getId())
       .subscribe({
-        complete: () => this.processing.set(false)
+        next: () => this.onCompetitorsUpdate.emit(),
+        error: () => {
+          competitor.setPresent(previousPresent);
+          this.processingCompetitorIds.update((ids: (string | number)[]) => ids.filter((id) => id !== competitorId));
+        },
+        complete: () => this.processingCompetitorIds.update((ids: (string | number)[]) => ids.filter((id) => id !== competitorId))
       });
+  }
+
+  isProcessing(competitor: TournamentCompetitor): boolean {
+    return this.processingCompetitorIds().includes(competitor.getId());
   }
 
   getPresentId(place: Place): string {

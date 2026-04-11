@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "ng": "ng",
+    "start": "ng serve -c dev",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
